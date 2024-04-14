@@ -10,7 +10,6 @@
     <i class="pi pi-sort-alpha-down"></i>
   </button>
   <button (click)="loadAll(50,totalTracks)" class="p-button">Load {{ totalTracks }} Songs</button>
-  <button class="p-button" onclick="window.location.href='/tag'">Tags</button>
 </div>
 
 <div *ngIf="artists.length === 0" class="no-artists">No artists found</div>
@@ -30,5 +29,3 @@
     </p-card>
   </ng-container>
 </div>
-
-
