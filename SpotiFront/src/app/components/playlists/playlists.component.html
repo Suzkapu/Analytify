@@ -1,0 +1,30 @@
+<div *ngIf="playlists.length !== 0" class="card flex flex-wrap justify-content-center gap-3">
+    <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+    <input (input)="filterPlaylists()" [(ngModel)]="searchText" class="search-input"
+           pInputText
+           placeholder="Suche nach deiner Playlist" type="text"/>
+    </span>
+  <button class="p-button" onclick="window.location.href='/tag'">Tags</button>
+</div>
+
+<div *ngIf="playlists.length === 0" class="no-playlists">No playlists found</div>
+
+<div class="card-container">
+  <ng-container *ngFor="let playlist of filteredPlaylists">
+
+    <p-card styleClass="custom-card">
+      <div class="card-content">
+        <div class="image-box">
+          <img [src]="playlist.images[0].url" alt="Playlist Image">
+        </div>
+        <div class="playlist-details">
+          <h2>{{ playlist.name }}</h2>
+          <p class="description">{{ playlist.description }}</p>
+        </div>
+        <p-button (click)="viewArtists(playlist.id)" class="view-artists-button" label="Artists"/>
+      </div>
+    </p-card>
+    <br>
+  </ng-container>
+</div>

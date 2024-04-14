@@ -1,0 +1,67 @@
+.card {
+  background: var(--surface-card);
+  padding: 2rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.search-input {
+  font-size: 20px;
+  padding-left: 30px;
+  width: 40vw;
+  border-radius: 15px;
+}
+
+.search-input::placeholder {
+  font-size: 16px;
+  padding-left: 10px;
+  color: rgb(0, 0, 0, 0.3);
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.custom-card {
+  background-color: #d7d7d7;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  width: 80vw;
+
+  .card-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .group-left {
+    display: flex;
+    align-items: center;
+
+    .track-count {
+      font-size: 20px;
+      margin-right: 20px;
+    }
+  }
+}
+
+.sort-button {
+  background-color: #d7d7d7;
+  color: #000;
+}
+
+.playlist-name {
+  text-align: center;
+}
+
+.no-artists {
+  font-size: 20px;
+  color: #888;
+  text-align: center;
+  margin-top: 20px;
+  font-weight: bold;
+}

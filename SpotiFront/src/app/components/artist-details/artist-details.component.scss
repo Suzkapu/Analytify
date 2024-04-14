@@ -1,0 +1,124 @@
+.card-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+
+.p-card {
+  min-width: 800px;
+  text-align: center;
+  background-color: #d7d7d7;
+  border-radius: 20px;
+  width: 50vw;
+  height: 70vh;
+  min-height: 300px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-image:hover {
+    cursor: pointer;
+}
+
+.name {
+  margin-top: 10px;
+  font-size: 35px;
+}
+
+.card-image {
+  clip-path: circle(45% at 50% 50%);
+  width: 20%;
+  max-width: 130px;
+  margin-top: 10px;
+  align-self: center;
+}
+
+.detail-infos {
+  font-size: 12px;
+  color: #888;
+  margin-top: -20px;
+  margin-bottom: 10px;
+}
+
+.track-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.p-card-track {
+  background-color: #8f8f8f;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  margin: 0 auto 10px auto;
+}
+
+.p-card-track .track-name:hover,
+.p-card-track .track-image
+{
+  cursor: pointer;
+}
+
+.track-details {
+  display: flex;
+  align-items: center;
+}
+
+.track-image {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  border-radius: 4px;
+}
+
+.track-name {
+  font-size: 15px;
+  text-align: left;
+  margin: 0;
+}
+
+.track-list::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.track-list::-webkit-scrollbar-thumb {
+  background-color: #8f8f8f;
+  border-radius: 6px;
+}
+
+.track-list::-webkit-scrollbar-track {
+}
+
+app-tag {
+  float: right;
+}
+
+.track-details {
+  display: flex;
+  justify-content: space-between;
+}
+
+.track-name {
+  flex: 1;
+}
+
+.custom-multiselect {
+  float: right;
+}
+
+
+
+::ng-deep .custom-multiselect .p-multiselect-trigger,
+::ng-deep .custom-multiselect .p-placeholder,
+::ng-deep .custom-multiselect .p-multiselect-label-container,
+::ng-deep .custom-multiselect .p-multiselect,
+::ng-deep .custom-multiselect .p-multiselect-panel {
+  background-color: #d7d7d7;
+  border-radius: 6px;
+}
