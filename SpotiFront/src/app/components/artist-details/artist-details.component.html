@@ -1,0 +1,21 @@
+<div class="card-container">
+  <div class="p-card">
+    <img alt="Artist Image" class="card-image" src="{{artist.images[0].url}}" (click)="openArtistClick()"/>
+    <h2 class="name">{{ artist.name }}</h2>
+    <div class="detail-infos">
+      <div *ngFor="let genre of artist.genres">{{ genre }}</div>
+      <!--div>Followers: {{ artist.followers.total }}</div-->
+    </div>
+    <div class="track-list">
+      <div *ngFor="let track of tracks" class="p-card-track">
+        <div class="track-details">
+          <img (click)="openTrackClick(track.external_urls.spotify)" alt="Track Image" class="track-image" src="{{track.album.images[0].url}}"/>
+          <div (click)="openTrackClick(track.external_urls.spotify)" class="track-name">{{ track.name }}</div>
+          <p-multiSelect (onChange)="addTagToTrack(track)" [(ngModel)]="track.tags" [options]="allTags"
+                         [showClear]="true" class="custom-multiselect" optionLabel="name"
+                         placeholder="Select tags" appendTo="body"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

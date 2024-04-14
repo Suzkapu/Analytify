@@ -1,0 +1,23 @@
+<div class="card flex flex-wrap justify-content-center gap-3">
+  <p-button label="Home" icon="pi pi-home" (click)="home()"></p-button>
+  <p-dropdown placeholder="Select Tag" [options]="allTags" (onChange)="getTracksFromTag()" [(ngModel)]="selectedTag" optionLabel="name" [showClear]="true"/>
+  <p-button label="Manage Tags" icon="pi pi-tag" (click)="createNewTag()"></p-button>
+
+</div>
+
+<div class="grid" *ngFor="let track of tagsForSelectedTrack">
+  <div class="col-6 col-offset-1">
+    <p-card styleClass="custom-card">
+      <div class="card-content">
+        <div class="grid">
+          <div class="col-fixed" style="width:100px">
+            <img alt="Track Image" class="track-image" src="{{track.imageUrl}}"/>
+          </div>
+          <div class="col">
+            <h2>{{ track.name }}</h2>
+          </div>
+        </div>
+      </div>
+    </p-card>
+  </div>
+</div>

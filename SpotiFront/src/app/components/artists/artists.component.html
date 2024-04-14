@@ -1,0 +1,34 @@
+<h2 class="playlist-name">{{ playlistName }}</h2>
+
+<div *ngIf="artists.length !== 0" class="card flex flex-wrap justify-content-center gap-3">
+    <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input (input)="filterArtists()" [(ngModel)]="searchText" class="search-input" pInputText
+               placeholder="Suche nach einem Artist" type="text"/>
+    </span>
+  <button (click)="sortArtistsByTracks()" class="p-button p-button-secondary p-button-icon-only sort-button">
+    <i class="pi pi-sort-alpha-down"></i>
+  </button>
+  <button (click)="loadAll(50,totalTracks)" class="p-button">Load {{ totalTracks }} Songs</button>
+  <button class="p-button" onclick="window.location.href='/tag'">Tags</button>
+</div>
+
+<div *ngIf="artists.length === 0" class="no-artists">No artists found</div>
+
+<div class="card-container">
+  <ng-container *ngFor="let artist of filteredArtists">
+    <p-card styleClass="custom-card">
+      <div class="card-content">
+        <div class="artist-details">
+          <h2>{{ artist.name }}</h2>
+        </div>
+        <div class="group-left">
+          <h3 class="track-count">{{ "Songs: " + artist.tracks.length }}</h3>
+          <p-button (click)="artistDetails(artist.id)" class="view-artist-detail-button" label="Artist Details"/>
+        </div>
+      </div>
+    </p-card>
+  </ng-container>
+</div>
+
+
