@@ -14,11 +14,9 @@ import {InputTextModule} from "primeng/inputtext";
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ArtistDetailsComponent} from './components/artist-details/artist-details.component';
-import {TagComponent} from './components/tag/tag.component';
 import {DropdownModule} from "primeng/dropdown";
 import {TagModule} from "primeng/tag";
 import {MultiSelectModule} from "primeng/multiselect";
-import {TagManagerComponent} from './components/tag-manager/tag-manager.component';
 import {TableModule} from "primeng/table";
 
 
@@ -30,8 +28,6 @@ import {TableModule} from "primeng/table";
     PlaylistsComponent,
     ArtistsComponent,
     ArtistDetailsComponent,
-    TagComponent,
-    TagManagerComponent
   ],
   imports: [
     BrowserModule,
