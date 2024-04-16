@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {environment} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root',
@@ -7,8 +8,7 @@ export class SpotifyAuthService {
   private readonly storageKey = 'spotifyAccessToken';
 
   private clientId = 'REDACTED_SPOTIFY_CLIENT_ID';
-  private redirectUri = 'http://analytify.dynv6.net/callback';
-  private authEndpoint = 'https://accounts.spotify.com/authorize';
+  private redirectUri = environment.appUrl+'/callback';
 
   constructor() {
   }
@@ -20,7 +20,7 @@ export class SpotifyAuthService {
   getAuthorizationUrl(): string {
     const scopes = 'playlist-read-private user-library-read';
 
-    return `${this.authEndpoint}?client_id=${this.clientId}&redirect_uri=${this.redirectUri}&scope=${encodeURIComponent(
+    return `${environment.authorizeUrl}?client_id=${this.clientId}&redirect_uri=${this.redirectUri}&scope=${encodeURIComponent(
       scopes
     )}&response_type=token&show_dialog=true`;
   }
