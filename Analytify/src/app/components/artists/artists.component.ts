@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, NavigationExtras, Router} from "@angular/router";
 import {SpotifyDataService} from "../../services/spotify-data/spotify-data.service";
+import {SpotifyAuthService} from "../../services/auth/spotify-auth.service";
 
 @Component({
   selector: 'app-artists',
@@ -18,7 +19,12 @@ export class ArtistsComponent implements OnInit {
   playlistId: string = '';
   totalTracks: number = 0;
 
-  constructor(private route: ActivatedRoute, private spotifyDataService: SpotifyDataService, private router: Router) {
+  constructor(
+    private route: ActivatedRoute, 
+    private spotifyDataService: SpotifyDataService, 
+    private router: Router,
+    private authService: SpotifyAuthService
+  ) {
     this.route.params.subscribe((params) => {
       this.playlistId = params['id'];
       this.loadArtistsFromPlaylist();
@@ -30,12 +36,13 @@ export class ArtistsComponent implements OnInit {
   }
 
   loadArtistsFromPlaylist() {
-    const storedArtists = sessionStorage.getItem(this.playlistId);
+    const userId = this.authService.getUserId() || 'anonymous';
+    const storedArtists = localStorage.getItem(`${userId}_${this.playlistId}`);
     if (storedArtists) {
       console.log("from storage");
       this.artists = JSON.parse(storedArtists);
-      this.totalTracks = JSON.parse(sessionStorage.getItem(this.playlistId + 'Amount') || '0');
-      this.playlistName = JSON.parse(sessionStorage.getItem(this.playlistId + 'Name') || '');
+      this.totalTracks = JSON.parse(localStorage.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
+      this.playlistName = JSON.parse(localStorage.getItem(`${userId}_${this.playlistId}_Name`) || '""');
       this.filterArtists();
     } else {
       console.log("from api");
@@ -93,9 +100,10 @@ export class ArtistsComponent implements OnInit {
       });
       delete artist.type;
     });
-    sessionStorage.setItem(this.playlistId, JSON.stringify(artists));
-    sessionStorage.setItem(this.playlistId + 'Amount', JSON.stringify(this.totalTracks));
-    sessionStorage.setItem(this.playlistId + 'Name', JSON.stringify(this.playlistName));
+    const userId = this.authService.getUserId() || 'anonymous';
+    localStorage.setItem(`${userId}_${this.playlistId}`, JSON.stringify(artists));
+    localStorage.setItem(`${userId}_${this.playlistId}_Amount`, JSON.stringify(this.totalTracks));
+    localStorage.setItem(`${userId}_${this.playlistId}_Name`, JSON.stringify(this.playlistName));
   }
 
   loadAll(offset: number, totalAmount: number) {

@@ -10,7 +10,7 @@ export class LoginPageComponent {
   constructor(private authService: SpotifyAuthService) {
   }
 
-  login() {
-    window.location.href = this.authService.getAuthorizationUrl();
+  async login() {
+    window.location.href = await this.authService.getAuthorizationUrl();
   }
 }

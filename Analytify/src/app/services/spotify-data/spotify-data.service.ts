@@ -47,6 +47,11 @@ export class SpotifyDataService {
     );
   }
 
+  getCurrentUser(): Observable<any> {
+    const userEndpoint = `${environment.spotifyUrl}/me`;
+    return this.http.get(userEndpoint, { headers: this.getHeaders() });
+  }
+
   getUserPlaylists(): Observable<any> {
     const playlistsEndpoint = `${environment.spotifyUrl}/me/playlists?market=AT`;
     return this.makeRequest(() => this.http.get(playlistsEndpoint, { headers: this.getHeaders() }));
