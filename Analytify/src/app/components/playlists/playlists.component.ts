@@ -1,6 +1,7 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SpotifyDataService} from "../../services/spotify-data/spotify-data.service";
+import {SpotifyAuthService} from "../../services/auth/spotify-auth.service";
 
 @Component({
   selector: 'app-playlists', templateUrl: './playlists.component.html', styleUrls: ['./playlists.component.scss'],
@@ -11,24 +12,28 @@ export class PlaylistsComponent {
   filteredPlaylists: any[] = [];
   searchText: string = '';
 
-  constructor(private route: ActivatedRoute, private router: Router, private spotifyDataService: SpotifyDataService) {
+  constructor(
+    private route: ActivatedRoute, 
+    private router: Router, 
+    private spotifyDataService: SpotifyDataService,
+    private authService: SpotifyAuthService
+  ) {
     this.route.params.subscribe(() => {
       this.loadPlaylists();
     });
   }
 
   loadPlaylists() {
-    // Überprüfen, ob Daten bereits in der Session gespeichert sind
-    const storedPlaylists = sessionStorage.getItem('playlists');
+    const userId = this.authService.getUserId() || 'anonymous';
+    const storageKey = `${userId}_playlists`;
+    const storedPlaylists = localStorage.getItem(storageKey);
 
     if (storedPlaylists) {
       console.log("from storage")
-      // Wenn Daten vorhanden sind, sie verwenden
       this.playlists = JSON.parse(storedPlaylists);
       this.filterPlaylists();
     } else {
       console.log("from api")
-      // Andernfalls Daten von der API abrufen
       this.spotifyDataService.getUserPlaylists().subscribe((playlists: any) => {
         this.playlists = [...playlists.items];
         const favPlaylist = {
@@ -42,8 +47,7 @@ export class PlaylistsComponent {
         };
         this.playlists = [favPlaylist, ...this.playlists];
 
-        // Playlists in der Session speichern
-        sessionStorage.setItem('playlists', JSON.stringify(this.playlists));
+        localStorage.setItem(storageKey, JSON.stringify(this.playlists));
 
         this.filterPlaylists();
       });
