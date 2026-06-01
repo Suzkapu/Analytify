@@ -1,0 +1,47 @@
+/* Local SCSS stylesheet for PlaylistAnalysisComponent */
+.metric-card {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    transform: translateY(-2px);
+    background: #202020 !important;
+    border-color: rgba(29, 185, 84, 0.1) !important;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  }
+}
+
+.column-card {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  
+  &:hover {
+    border-color: rgba(29, 185, 84, 0.08) !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  }
+}
+
+.track-grid-card {
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: #2a2a2a !important;
+    border-color: rgba(29, 185, 84, 0.15) !important;
+  }
+}
+
+/* Animations for progress loader */
+@keyframes loading-pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.loading-container h2 {
+  animation: loading-pulse 1.5s infinite ease-in-out;
+}
+
+@media (max-width: 992px) {
+  .dashboard-columns {
+    grid-template-columns: 1fr !important;
+  }
+}

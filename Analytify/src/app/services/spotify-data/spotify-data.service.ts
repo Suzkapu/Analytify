@@ -17,12 +17,6 @@ export class SpotifyDataService {
     this.retryAfterSubject.next(storedRetryAfter);
   }
 
-  private getHeaders(): HttpHeaders {
-    return new HttpHeaders({
-      'Authorization': `Bearer ${this.authService.getAccessToken()}`,
-    });
-  }
-
   makeRequest(requestFunc: () => Observable<any>): Observable<any> {
     return this.retryAfterSubject.pipe(
       take(1),
@@ -49,36 +43,52 @@ export class SpotifyDataService {
 
   getCurrentUser(): Observable<any> {
     const userEndpoint = `${environment.spotifyUrl}/me`;
-    return this.http.get(userEndpoint, { headers: this.getHeaders() });
+    return this.makeRequest(() => this.http.get(userEndpoint));
   }
 
   getUserPlaylists(): Observable<any> {
     const playlistsEndpoint = `${environment.spotifyUrl}/me/playlists?market=AT`;
-    return this.makeRequest(() => this.http.get(playlistsEndpoint, { headers: this.getHeaders() }));
+    return this.makeRequest(() => this.http.get(playlistsEndpoint));
   }
 
   getSinglePlaylist(playlistId: string): Observable<any> {
     const playlistEndpoint = `${environment.spotifyUrl}/playlists/${playlistId}?market=AT`;
-    return this.http.get(playlistEndpoint, { headers: this.getHeaders() });
+    return this.http.get(playlistEndpoint);
   }
 
   getAllTracksFromPlaylist(playlistId: string, offset: number, limit: number): Observable<any> {
-    const playlistEndpoint = `${environment.spotifyUrl}/playlists/${playlistId}/tracks?offset=${offset}&limit=${limit}&market=AT`;
-    return this.makeRequest(() => this.http.get(playlistEndpoint, { headers: this.getHeaders() }));
+    const playlistEndpoint = `${environment.spotifyUrl}/playlists/${playlistId}/items?offset=${offset}&limit=${limit}&market=AT`;
+    return this.makeRequest(() => this.http.get(playlistEndpoint));
   }
 
   getFavTracks(offset: number, limit: number): Observable<any> {
     const trackEndpoint = `${environment.spotifyUrl}/me/tracks?offset=${offset}&limit=${limit}`;
-    return this.makeRequest(() => this.http.get(trackEndpoint, { headers: this.getHeaders() }));
+    return this.makeRequest(() => this.http.get(trackEndpoint));
   }
 
   getSingleArtist(artistId: string): Observable<any> {
     const artistEndpoint = `${environment.spotifyUrl}/artists/${artistId}`;
-    return this.makeRequest(() => this.http.get(artistEndpoint, { headers: this.getHeaders() }));
+    return this.makeRequest(() => this.http.get(artistEndpoint));
+  }
+
+  getSeveralArtists(artistIds: string[]): Observable<any> {
+    const ids = artistIds.join(',');
+    const artistsEndpoint = `${environment.spotifyUrl}/artists?ids=${ids}`;
+    return this.makeRequest(() => this.http.get(artistsEndpoint));
   }
 
   getSingleTrack(trackId: string): Observable<any> {
     const trackEndpoint = `${environment.spotifyUrl}/tracks/${trackId}`;
-    return this.makeRequest(() => this.http.get(trackEndpoint, { headers: this.getHeaders() }));
+    return this.makeRequest(() => this.http.get(trackEndpoint));
+  }
+
+  getUserTopArtists(timeRange: string, limit: number, offset: number): Observable<any> {
+    const endpoint = `${environment.spotifyUrl}/me/top/artists?time_range=${timeRange}&limit=${limit}&offset=${offset}`;
+    return this.makeRequest(() => this.http.get(endpoint));
+  }
+
+  getUserTopTracks(timeRange: string, limit: number, offset: number): Observable<any> {
+    const endpoint = `${environment.spotifyUrl}/me/top/tracks?time_range=${timeRange}&limit=${limit}&offset=${offset}`;
+    return this.makeRequest(() => this.http.get(endpoint));
   }
 }

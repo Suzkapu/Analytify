@@ -1,31 +1,123 @@
-<h2 class="playlist-name">{{ playlistName }}</h2>
+<header class="app-header">
+  <div class="header-left">
+    <div class="header-logo" routerLink="/playlists">
+      <img src="assets/Analytify.png" alt="Analytify Logo">
+      <span class="logo-text">Analytify</span>
+    </div>
 
-<div *ngIf="artists.length !== 0" class="card flex flex-wrap justify-content-center gap-3">
-    <span class="p-input-icon-left">
-        <i class="pi pi-search"></i>
-        <input (input)="filterArtists()" [(ngModel)]="searchText" class="search-input" pInputText
-               placeholder="Suche nach einem Artist" type="text"/>
+    <!-- Navigation Buttons -->
+    <nav class="header-nav" style="display: flex; gap: 8px; margin-left: 20px;">
+      <a routerLink="/playlists" class="nav-link" routerLinkActive="active-nav"
+        [routerLinkActiveOptions]="{exact: true}">Browse Playlists</a>
+      <a routerLink="/stats" class="nav-link" routerLinkActive="active-nav">Show Stats</a>
+    </nav>
+  </div>
+  <div class="header-center">
+    <span class="p-input-icon-left" *ngIf="artists.length !== 0 && !isLoading">
+      <i class="pi pi-search"></i>
+      <input (input)="filterArtists()" [(ngModel)]="searchText" class="search-input" pInputText
+        placeholder="Search artists..." type="text"
+        style="width: 300px; border-radius: 20px; font-size: 0.95rem; padding-left: 2.5rem;" />
     </span>
-  <button (click)="sortArtistsByTracks()" class="p-button p-button-secondary p-button-icon-only sort-button">
-    <i class="pi pi-sort-alpha-down"></i>
+  </div>
+  <div class="header-right">
+    <button (click)="logout()" class="p-button logout-button">
+      <i class="pi pi-sign-out"></i> Logout
+    </button>
+    <!-- User Profile Picture -->
+    <div class="user-profile-header" *ngIf="profilePicUrl" style="display: flex; align-items: center;"
+      title="Logged in">
+      <img [src]="profilePicUrl" alt="User Profile"
+        style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #1db954; box-shadow: 0 0 12px rgba(29, 185, 84, 0.35);">
+    </div>
+    <div class="user-profile-header" *ngIf="!profilePicUrl" style="display: flex; align-items: center;">
+      <div
+        style="width: 44px; height: 44px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center; border: 1.5px solid rgba(255, 255, 255, 0.2);">
+        <i class="pi pi-user" style="font-size: 1.1rem; color: #b3b3b3;"></i>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Under-Header Back Button -->
+<div class="back-bar-container">
+  <button (click)="goBack()" class="back-text-button" title="Back to Playlists">
+    <i class="pi pi-arrow-left"></i> Back
   </button>
-  <button (click)="loadAll(50,totalTracks)" class="p-button">Load {{ totalTracks }} Songs</button>
 </div>
 
-<div *ngIf="artists.length === 0" class="no-artists">No artists found</div>
+<!-- Cooldown Warning Banner -->
+<div *ngIf="cooldownMessage"
+  style="background: rgba(255, 152, 0, 0.15); border: 1px solid #ff9800; color: #ff9800; border-radius: 8px; padding: 10px 16px; margin: 15px auto 0 auto; max-width: 1000px; display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 0.9rem; box-sizing: border-box; width: calc(100% - 40px);">
+  <i class="pi pi-exclamation-triangle"></i>
+  <span>{{ cooldownMessage }}</span>
+</div>
 
-<div class="card-container">
-  <ng-container *ngFor="let artist of filteredArtists">
-    <p-card styleClass="custom-card">
-      <div class="card-content">
-        <div class="artist-details">
-          <h2>{{ artist.name }}</h2>
-        </div>
-        <div class="group-left">
-          <h3 class="track-count">{{ "Songs: " + artist.tracks.length }}</h3>
-          <p-button (click)="artistDetails(artist.id)" class="view-artist-detail-button" label="Artist Details"/>
-        </div>
+<!-- Animated Loading Progress Indicator -->
+<div *ngIf="isLoading" class="loading-container"
+  style="text-align: center; margin-top: 6rem; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+  <i class="pi pi-spin pi-spinner" style="font-size: 3.5rem; color: #1db954;"></i>
+  <h2 style="font-weight: 600; font-size: 1.4rem; color: #ffffff; margin: 0;">Analyzing playlist songs...</h2>
+  <div style="font-size: 1.1rem; font-weight: 700; color: #1db954;">{{ loadedTracksCount }} of {{ totalTracks }} Loaded
+  </div>
+  <div
+    style="width: 320px; background-color: #282828; height: 8px; border-radius: 4px; overflow: hidden; position: relative;">
+    <div [style.width.%]="totalTracks > 0 ? (loadedTracksCount / totalTracks) * 100 : 0"
+      style="background-color: #1db954; height: 100%; transition: width 0.15s ease-out; border-radius: 4px;"></div>
+  </div>
+</div>
+
+<div *ngIf="!isLoading && artists.length === 0" class="no-artists" style="margin-top: 4rem;">No artists found</div>
+
+<!-- Main Content -->
+<div *ngIf="!isLoading">
+  <div class="card-container" style="margin-top: 20px;">
+    <div style="width: 80vw; display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+      <h2 class="playlist-name" style="margin: 0; font-weight: 800; color: #ffffff; font-size: 1.8rem; text-align: left;">{{ playlistName }}
+      </h2>
+      <div style="display: flex; gap: 8px;">
+        <button (click)="sortArtistsByTracks()" class="p-button p-button-outlined p-button-secondary"
+          style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px;"
+          title="Sort artists by song count">
+          <i class="pi pi-sort-alt"></i> Sort By Count
+        </button>
+        <button (click)="refreshCache()" class="p-button p-button-outlined p-button-secondary"
+          style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px;"
+          title="Refresh playlist data from Spotify">
+          <i class="pi pi-refresh"></i> Refresh
+        </button>
       </div>
-    </p-card>
-  </ng-container>
+    </div>
+    <ng-container *ngFor="let artist of filteredArtists">
+      <p-card styleClass="custom-card">
+        <div class="card-content"
+          style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+          <div style="display: flex; align-items: center; gap: 16px; flex-grow: 1; min-width: 0;">
+            <img
+              [src]="artist.images && artist.images[2] ? artist.images[2].url : (artist.images && artist.images[0] ? artist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png')"
+              alt="Artist Image"
+              style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255, 255, 255, 0.08); flex-shrink: 0;">
+            <div class="artist-details" style="min-width: 0;">
+              <h2
+                style="margin: 0; font-size: 1.25rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{ artist.name }}</h2>
+              <div *ngIf="artist.genres && artist.genres.length"
+                style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px;">
+                <span *ngFor="let genre of artist.genres.slice(0, 3)"
+                  style="background: rgba(255, 255, 255, 0.08); padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; color: #b3b3b3; font-weight: 500;">{{
+                  genre }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="group-left"
+            style="display: flex; align-items: center; gap: 16px; margin-left: 20px; flex-shrink: 0;">
+            <h3 class="track-count" style="margin: 0; font-size: 1.15rem; color: #1ed760; font-weight: 700;">
+              {{ artist.tracks.length }} {{ artist.tracks.length === 1 ? 'song' : 'songs' }}
+            </h3>
+            <p-button (click)="artistDetails(artist.id)" label="Details" />
+          </div>
+        </div>
+      </p-card>
+    </ng-container>
+  </div>
 </div>

@@ -1,7 +1,354 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
 @import "https://unpkg.com/primeflex/primeflex.css";
 
 .no-scroll {
   overflow: hidden;
+}
+
+body {
+  margin: 0;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #121212;
+  color: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* Glassmorphism Header */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 2rem;
+  background: rgba(18, 18, 18, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1 1 0%;
+  }
+
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    cursor: pointer;
+
+    img {
+      height: 32px;
+      width: auto;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #1db954, #1ed760);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+  .nav-link {
+    color: #b3b3b3 !important;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 6px 14px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+
+    &:hover {
+      color: #ffffff !important;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    &.active-nav,
+    &.router-link-active {
+      color: #1ed760 !important;
+      background: rgba(30, 215, 96, 0.08);
+    }
+  }
+
+  .header-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 auto;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    flex: 1 1 0%;
+  }
+}
+
+/* Under-Header Back Button Bar — sits flush below logo on the left */
+.back-bar-container {
+  padding: 12px 2rem;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.back-text-button {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #c7c7c7 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  padding: 6px 14px !important;
+  font-size: 0.9rem !important;
+  cursor: pointer;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  transition: all 0.2s ease !important;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-color: rgba(255, 255, 255, 0.35) !important;
+    color: #ffffff !important;
+    transform: translateX(-3px) !important;
+  }
+}
+
+/* Floating Back to Top Button */
+.scroll-to-top-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1db954, #1ed760);
+  border: none;
+  color: #ffffff;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 10px rgba(29, 185, 84, 0.3);
+  z-index: 1001;
+  opacity: 0;
+  transform: translateY(20px) scale(0.8);
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  &:hover {
+    transform: scale(1.1) translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(29, 185, 84, 0.5);
+    background: #1ed760;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Sleek Back Circle Button */
+.back-circle-button {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+    transform: scale(1.08) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+  }
+
+  i {
+    font-size: 1.1rem !important;
+  }
+}
+
+/* Premium Button Styling overrides */
+.p-button {
+  background: linear-gradient(135deg, #1db954, #1ed760) !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  border-radius: 500px !important;
+  padding: 0.6rem 1.4rem !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 4px 12px rgba(29, 185, 84, 0.2) !important;
+
+  &:hover {
+    transform: translateY(-2px) scale(1.03) !important;
+    box-shadow: 0 6px 18px rgba(29, 185, 84, 0.35) !important;
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98) !important;
+  }
+}
+
+
+/* Secondary & Outlined Button Overrides */
+.p-button.logout-button {
+  background: transparent !important;
+  border: 1px solid rgba(255, 82, 82, 0.4) !important;
+  color: #ff5252 !important;
+  box-shadow: none !important;
+  padding: 0.5rem 1.2rem !important;
+  border-radius: 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+
+  &:hover {
+    background: rgba(255, 82, 82, 0.08) !important;
+    border-color: #ff5252 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(255, 82, 82, 0.15) !important;
+  }
+}
+
+/* Transparent Outline Button for Secondary actions */
+.p-button-outlined.p-button-secondary {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #e0e0e0 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    transform: translateY(-1px) !important;
+  }
+}
+
+/* Glassmorphic Search Input */
+.search-input {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  transition: all 0.3s ease !important;
+  font-family: inherit;
+
+  &:focus {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: #1ed760 !important;
+    box-shadow: 0 0 0 3px rgba(30, 215, 96, 0.2) !important;
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.4) !important;
+  }
+}
+
+/* Cards dark grid layout */
+.card-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Premium Glassmorphic Cards */
+.custom-card {
+  background: #181818 !important;
+  border: 1px solid rgba(255, 255, 255, 0.04) !important;
+  border-radius: 16px !important;
+  width: 100%;
+  margin-bottom: 16px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+  color: #ffffff !important;
+
+  &:hover {
+    transform: translateY(-4px);
+    background: #242424 !important;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4) !important;
+    border-color: rgba(29, 185, 84, 0.15) !important;
+  }
+
+  .p-card-body {
+    padding: 1.25rem !important;
+  }
+
+  h2 {
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  p.song-count {
+    color: #a7a7a7;
+    font-weight: 500;
+  }
+
+  p.description {
+    color: #b3b3b3;
+    font-size: 0.9rem;
+  }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #121212;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #282828;
+  border-radius: 4px;
+
+  &:hover {
+    background: #3e3e3e;
+  }
+}
+
+/* Clean text colors and general typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #ffffff;
+  margin-top: 0;
 }

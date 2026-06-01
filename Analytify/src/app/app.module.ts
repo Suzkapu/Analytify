@@ -14,10 +14,14 @@ import {InputTextModule} from "primeng/inputtext";
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ArtistDetailsComponent} from './components/artist-details/artist-details.component';
+import {PlaylistAnalysisComponent} from './components/playlist-analysis/playlist-analysis.component';
+import {UserStatsComponent} from './components/user-stats/user-stats.component';
 import {DropdownModule} from "primeng/dropdown";
 import {TagModule} from "primeng/tag";
 import {MultiSelectModule} from "primeng/multiselect";
 import {TableModule} from "primeng/table";
+import {HTTP_INTERCEPTORS} from "@angular/common/http";
+import {SpotifyAuthInterceptor} from "./services/auth/spotify-auth.interceptor";
 
 
 @NgModule({
@@ -28,6 +32,8 @@ import {TableModule} from "primeng/table";
     PlaylistsComponent,
     ArtistsComponent,
     ArtistDetailsComponent,
+    PlaylistAnalysisComponent,
+    UserStatsComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,7 +49,9 @@ import {TableModule} from "primeng/table";
     MultiSelectModule,
     TableModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: SpotifyAuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {
