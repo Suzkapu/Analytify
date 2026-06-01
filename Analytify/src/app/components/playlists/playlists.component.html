@@ -1,29 +1,70 @@
-<div *ngIf="playlists.length !== 0" class="card flex flex-wrap justify-content-center gap-3">
-    <span class="p-input-icon-left">
-        <i class="pi pi-search"></i>
-    <input (input)="filterPlaylists()" [(ngModel)]="searchText" class="search-input"
-           pInputText
-           placeholder="Suche nach deiner Playlist" type="text"/>
+<header class="app-header">
+  <div class="header-left">
+    <div class="header-logo" routerLink="/playlists">
+      <img src="assets/Analytify.png" alt="Analytify Logo">
+      <span class="logo-text">Analytify</span>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <nav class="header-nav" style="display: flex; gap: 8px; margin-left: 20px;">
+      <a routerLink="/playlists" class="nav-link" routerLinkActive="active-nav"
+        [routerLinkActiveOptions]="{exact: true}">Browse Playlists</a>
+      <a routerLink="/stats" class="nav-link" routerLinkActive="active-nav">Show Stats</a>
+    </nav>
+  </div>
+  <div class="header-center">
+    <span class="p-input-icon-left" *ngIf="playlists.length !== 0">
+      <i class="pi pi-search"></i>
+      <input (input)="filterPlaylists()" [(ngModel)]="searchText" class="search-input" pInputText
+        placeholder="Search playlists..." type="text"
+        style="width: 300px; border-radius: 20px; font-size: 0.95rem; padding-left: 2.5rem;" />
     </span>
-</div>
+  </div>
+  <div class="header-right">
+    <button (click)="logout()" class="p-button logout-button">
+      <i class="pi pi-sign-out"></i> Logout
+    </button>
+    <!-- User Profile Picture -->
+    <div class="user-profile-header" *ngIf="profilePicUrl" style="display: flex; align-items: center;"
+      title="Logged in">
+      <img [src]="profilePicUrl" alt="User Profile"
+        style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #1db954; box-shadow: 0 0 12px rgba(29, 185, 84, 0.35);">
+    </div>
+    <div class="user-profile-header" *ngIf="!profilePicUrl" style="display: flex; align-items: center;">
+      <div
+        style="width: 44px; height: 44px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center; border: 1.5px solid rgba(255, 255, 255, 0.2);">
+        <i class="pi pi-user" style="font-size: 1.1rem; color: #b3b3b3;"></i>
+      </div>
+    </div>
+  </div>
+</header>
 
-<div *ngIf="playlists.length === 0" class="no-playlists">No playlists found</div>
+<div *ngIf="playlists.length === 0" class="no-playlists" style="margin-top: 4rem;">No playlists found</div>
 
-<div class="card-container">
+<div class="card-container" style="margin-top: 2rem;">
   <ng-container *ngFor="let playlist of filteredPlaylists">
-
     <p-card styleClass="custom-card">
-      <div class="card-content">
-        <div class="image-box">
-          <img [src]="playlist.images[0].url" alt="Playlist Image">
+      <div class="card-content"
+        style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+        <div class="image-box" style="margin-right: 20px; display: flex; align-items: center;">
+          <img
+            [src]="playlist.images && playlist.images[0] ? playlist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
+            alt="Playlist Image" style="width: 80px; height: 80px; border-radius: 8px; object-fit: cover;">
         </div>
-        <div class="playlist-details">
-          <h2>{{ playlist.name }}</h2>
-          <p class="description">{{ playlist.description }}</p>
+        <div class="playlist-details" style="flex-grow: 1;">
+          <h2 style="margin: 0; font-size: 1.4rem; font-weight: 700;">{{ playlist.name }}</h2>
+          <p class="song-count" *ngIf="playlist.tracks" style="margin: 4px 0; font-weight: 600; font-size: 0.95rem;">
+            {{ playlist.tracks.total }} {{ playlist.tracks.total === 1 ? 'song' : 'songs' }}
+          </p>
+          <p class="description" style="margin: 4px 0 0 0; font-size: 0.85rem; line-height: 1.4;">{{
+            playlist.description }}</p>
         </div>
-        <p-button (click)="viewArtists(playlist.id)" class="view-artists-button" label="Artists"/>
+        <div class="card-actions" style="display: flex; gap: 10px; margin-left: 20px;">
+          <p-button (click)="viewArtists(playlist.id)" label="Artists" />
+          <button (click)="viewAnalysis(playlist.id)"
+            class="p-button p-button-outlined p-button-secondary">Analyze</button>
+        </div>
       </div>
     </p-card>
-    <br>
   </ng-container>
 </div>

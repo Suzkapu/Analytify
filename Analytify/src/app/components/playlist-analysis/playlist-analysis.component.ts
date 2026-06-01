@@ -1,37 +1,50 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {ActivatedRoute, NavigationExtras, Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {SpotifyDataService} from "../../services/spotify-data/spotify-data.service";
 import {SpotifyAuthService} from "../../services/auth/spotify-auth.service";
 import {forkJoin} from 'rxjs';
 
 @Component({
-  selector: 'app-artists',
-  templateUrl: './artists.component.html',
-  styleUrls: ['./artists.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  selector: 'app-playlist-analysis',
+  templateUrl: './playlist-analysis.component.html',
+  styleUrls: ['./playlist-analysis.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
-export class ArtistsComponent implements OnInit {
-  artists: any[] = [];
-  searchText: string = '';
-  playlistName: string = '';
-  filteredArtists: any[] = [];
-  sortAscending: boolean = false;
+export class PlaylistAnalysisComponent implements OnInit {
   playlistId: string = '';
-  totalTracks: number = 0;
+  playlistName: string = '';
+  artists: any[] = [];
   isLoading: boolean = false;
   loadedTracksCount: number = 0;
+  totalTracks: number = 0;
   cooldownMessage: string = '';
+
+  // Analysis results
+  uniqueTracksCount: number = 0;
+  totalDurationFormatted: string = '';
+  averageDurationFormatted: string = '';
+  averagePopularity: number = 0;
+  explicitCount: number = 0;
+  explicitPercentage: number = 0;
+  
+  topGenres: { name: string; count: number; percentage: number }[] = [];
+  longestTrack: any = null;
+  shortestTrack: any = null;
+  oldestTrack: any = null;
+  newestTrack: any = null;
   profilePicUrl: string | null = null;
 
   constructor(
-    private route: ActivatedRoute, 
-    private spotifyDataService: SpotifyDataService, 
-    private router: Router,
-    private authService: SpotifyAuthService
-  ) {
-    this.route.params.subscribe((params) => {
+    private route: ActivatedRoute,
+    private spotifyDataService: SpotifyDataService,
+    private authService: SpotifyAuthService,
+    private router: Router
+  ) {}
+
+  ngOnInit() {
+    this.route.params.subscribe(params => {
       this.playlistId = params['id'];
-      this.loadArtistsFromPlaylist();
+      this.loadPlaylistData();
       this.loadUserProfile();
     });
   }
@@ -52,31 +65,26 @@ export class ArtistsComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.filterArtists();
-  }
-
-  loadArtistsFromPlaylist(forceRefresh = false) {
+  loadPlaylistData(forceRefresh = false) {
     const userId = this.authService.getUserId() || 'anonymous';
     const storageKey = `${userId}_${this.playlistId}`;
     const storedArtists = localStorage.getItem(storageKey);
     const cookieKey = `cooldown_${userId}_${this.playlistId}`;
 
     if (storedArtists && !forceRefresh) {
-      console.log("Loading artists from storage cache");
+      console.log("Loading cache for analysis");
       const parsedArtists = JSON.parse(storedArtists);
       
       // Self-healing check: if cache lacks images or genres, upgrade cache
       const isOldCache = parsedArtists.length > 0 && (!parsedArtists[0].images || !parsedArtists[0].genres);
       if (isOldCache) {
-        console.log("Old cache detected. Upgrading in background.");
-        this.loadArtistsFromPlaylist(true);
+        console.log("Old cache detected on analysis. Reloading.");
+        this.loadPlaylistData(true);
       } else {
         this.artists = parsedArtists;
-        this.artists.sort((a, b) => b.tracks.length - a.tracks.length);
         this.totalTracks = JSON.parse(localStorage.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
         this.playlistName = JSON.parse(localStorage.getItem(`${userId}_${this.playlistId}_Name`) || '""');
-        this.filterArtists();
+        this.runAnalysis();
       }
     } else {
       // Check cooldown cookie if we are force-refreshing and have cache
@@ -91,17 +99,16 @@ export class ArtistsComponent implements OnInit {
 
             // Cooldown protection fallback: load existing cached data instead of showing an empty view
             this.artists = JSON.parse(storedArtists);
-            this.artists.sort((a, b) => b.tracks.length - a.tracks.length);
             this.totalTracks = JSON.parse(localStorage.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
             this.playlistName = JSON.parse(localStorage.getItem(`${userId}_${this.playlistId}_Name`) || '""');
-            this.filterArtists();
+            this.runAnalysis();
             this.isLoading = false;
             return;
           }
         }
       }
 
-      console.log("Loading artists from API");
+      console.log("Fetching API for analysis recursively");
       this.isLoading = true;
       this.loadedTracksCount = 0;
 
@@ -111,7 +118,7 @@ export class ArtistsComponent implements OnInit {
 
       // If we have cached data and this is fav, perform incremental load of new liked songs
       if (this.playlistId === 'fav' && storedArtists) {
-        console.log("Favourite Tracks detected. Starting incremental load.");
+        console.log("Favourite Tracks detected for analysis. Starting incremental load.");
         this.artists = [];
         this.loadNewerFavTracks(0, 50, JSON.parse(storedArtists));
       } else {
@@ -196,7 +203,6 @@ export class ArtistsComponent implements OnInit {
   }
 
   loadNewerFavTracks(offset: number, limit: number, cachedArtists: any[]) {
-    // Collect all cached track IDs
     const cachedTrackIds = new Set<string>();
     cachedArtists.forEach(artist => {
       artist.tracks.forEach((t: any) => cachedTrackIds.add(t.id));
@@ -226,15 +232,15 @@ export class ArtistsComponent implements OnInit {
         if (!foundExisting && offset + limit < this.totalTracks) {
           this.loadNewerFavTracks(offset + limit, limit, cachedArtists);
         } else {
-          // Merge cache, save and finish!
           this.mergeCachedArtists(cachedArtists);
           this.fetchArtistDetailsAndSave();
         }
       },
       error: (err) => {
-        console.error('Incremental loading failed:', err);
+        console.error('Incremental loading failed for analysis:', err);
         this.artists = cachedArtists;
         this.isLoading = false;
+        this.runAnalysis();
       }
     });
   }
@@ -272,6 +278,7 @@ export class ArtistsComponent implements OnInit {
     if (batches.length === 0) {
       this.isLoading = false;
       this.setSessionStorage();
+      this.runAnalysis();
       return;
     }
 
@@ -297,20 +304,21 @@ export class ArtistsComponent implements OnInit {
 
         this.isLoading = false;
         this.setSessionStorage();
+        this.runAnalysis();
       },
       error: (err) => {
         console.error('Error batch fetching artist details:', err);
         this.isLoading = false;
         this.setSessionStorage();
+        this.runAnalysis();
       }
     });
   }
 
   setSessionStorage() {
+    // Keep consistent caching structure
     this.artists.sort((a, b) => b.tracks.length - a.tracks.length);
-    this.filterArtists();
     
-    // We clone the array to clean it up for localStorage without mutating the active memory
     const cleanedArtists = JSON.parse(JSON.stringify(this.artists));
     cleanedArtists.forEach((artist: any) => {
       artist.tracks.forEach((track: any) => {
@@ -321,14 +329,12 @@ export class ArtistsComponent implements OnInit {
         delete track.album.href;
         delete track.album.is_playable;
         delete track.album.name;
-        // Keep track.album.release_date for release year analysis
         delete track.album.release_date_precision;
         delete track.album.total_tracks;
         delete track.album.type;
         delete track.album.uri;
         delete track.available_markets;
         delete track.disc_number;
-        // Keep track.duration_ms and track.explicit for length/duration/censorship stats
         delete track.external_ids;
         delete track.href;
         delete track.is_local;
@@ -372,14 +378,122 @@ export class ArtistsComponent implements OnInit {
     }
   }
 
-  filterArtists() {
-    if (this.searchText.trim() === '') {
-      this.filteredArtists = this.artists;
-    } else {
-      this.filteredArtists = this.artists.filter(artist =>
-        artist.name.toLowerCase().includes(this.searchText.toLowerCase())
-      );
+  runAnalysis() {
+    // Extract unique tracks
+    const tracksMap = new Map<string, any>();
+    this.artists.forEach(artist => {
+      artist.tracks.forEach((track: any) => {
+        if (track && track.id) {
+          // Restore artist name on the track dynamically if not present
+          if (!track.artist_name) {
+            track.artist_name = artist.name;
+          }
+          tracksMap.set(track.id, track);
+        }
+      });
+    });
+    
+    const uniqueTracks = Array.from(tracksMap.values());
+    this.uniqueTracksCount = uniqueTracks.length;
+
+    if (uniqueTracks.length === 0) {
+      this.totalDurationFormatted = '0 sec';
+      this.averageDurationFormatted = '0:00';
+      this.averagePopularity = 0;
+      this.explicitCount = 0;
+      this.explicitPercentage = 0;
+      this.topGenres = [];
+      this.longestTrack = null;
+      this.shortestTrack = null;
+      this.oldestTrack = null;
+      this.newestTrack = null;
+      return;
     }
+
+    // 1. Total & Avg Duration
+    let totalDurationMs = 0;
+    let totalPopularity = 0;
+    let explicitCount = 0;
+
+    uniqueTracks.forEach(track => {
+      totalDurationMs += track.duration_ms || 0;
+      totalPopularity += track.popularity || 0;
+      if (track.explicit) {
+        explicitCount++;
+      }
+    });
+
+    this.totalDurationFormatted = this.formatDuration(totalDurationMs);
+    this.averageDurationFormatted = this.formatDurationShort(totalDurationMs / uniqueTracks.length);
+    this.averagePopularity = Math.round(totalPopularity / uniqueTracks.length);
+    this.explicitCount = explicitCount;
+    this.explicitPercentage = Math.round((explicitCount / uniqueTracks.length) * 1000) / 10; // 1 decimal place
+
+    // 2. Shortest & Longest Track
+    const sortedByDuration = [...uniqueTracks].sort((a, b) => (a.duration_ms || 0) - (b.duration_ms || 0));
+    this.shortestTrack = sortedByDuration[0];
+    this.longestTrack = sortedByDuration[sortedByDuration.length - 1];
+
+    // 3. Oldest & Newest Track
+    const tracksWithDates = uniqueTracks.filter(t => t.album && t.album.release_date);
+    if (tracksWithDates.length > 0) {
+      const sortedByDate = [...tracksWithDates].sort((a, b) => {
+        return a.album.release_date.localeCompare(b.album.release_date);
+      });
+      this.oldestTrack = sortedByDate[0];
+      this.newestTrack = sortedByDate[sortedByDate.length - 1];
+    } else {
+      this.oldestTrack = null;
+      this.newestTrack = null;
+    }
+
+    // 4. Genre analysis
+    // Aggregate genres based on track occurrences (weighted by song count for each artist)
+    const genreCounts = new Map<string, number>();
+    this.artists.forEach(artist => {
+      const artistSongCount = artist.tracks.length;
+      if (artist.genres && artist.genres.length) {
+        artist.genres.forEach((genre: string) => {
+          const count = genreCounts.get(genre) || 0;
+          genreCounts.set(genre, count + artistSongCount);
+        });
+      }
+    });
+
+    // Sum total occurrences to calculate proportion
+    this.topGenres = Array.from(genreCounts.entries())
+      .map(([name, count]) => {
+        const percentage = uniqueTracks.length > 0 ? Math.min(100, Math.round((count / uniqueTracks.length) * 100)) : 0;
+        return { name, count, percentage };
+      })
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
+  }
+
+  // Format ms to 'X hr Y min' or 'Y min Z sec'
+  formatDuration(ms: number): string {
+    const totalSecs = Math.floor(ms / 1000);
+    const hrs = Math.floor(totalSecs / 3600);
+    const mins = Math.floor((totalSecs % 3600) / 60);
+    const secs = totalSecs % 60;
+    if (hrs > 0) {
+      return `${hrs} hr ${mins} min`;
+    } else {
+      return `${mins} min ${secs} sec`;
+    }
+  }
+
+  // Format ms to 'M:SS'
+  formatDurationShort(ms: number): string {
+    const totalSecs = Math.floor(ms / 1000);
+    const mins = Math.floor(totalSecs / 60);
+    const secs = totalSecs % 60;
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  }
+
+  getYearFromDate(dateStr: string): string {
+    if (!dateStr) return 'Unknown';
+    return dateStr.substring(0, 4);
   }
 
   goBack() {
@@ -392,29 +506,13 @@ export class ArtistsComponent implements OnInit {
   }
 
   refreshCache() {
-    this.loadArtistsFromPlaylist(true);
+    this.loadPlaylistData(true);
   }
 
-  artistDetails(id: string) {
-    const tracks = this.artists.find(artist => artist.id === id)?.tracks || [];
-
-    const navigationExtras: NavigationExtras = {
-      state: {
-        tracks: tracks,
-        playlistId: this.playlistId
-      }
-    };
-
-    this.router.navigate(['/artistDetails', id], navigationExtras);
-  }
-
-  sortArtistsByTracks() {
-    if (this.sortAscending) {
-      this.filteredArtists.sort((a, b) => b.tracks.length - a.tracks.length);
-    } else {
-      this.filteredArtists.sort((a, b) => a.tracks.length - b.tracks.length);
+  openTrackClick(url: string) {
+    if (url) {
+      window.location.href = url;
     }
-    this.sortAscending = !this.sortAscending;
   }
 
   getCookie(name: string): string | null {
