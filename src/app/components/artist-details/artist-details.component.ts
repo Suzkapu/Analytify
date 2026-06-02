@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, HostListener} from '@angular/core';
 import {SpotifyDataService} from "../../services/spotify-data/spotify-data.service";
 import {SpotifyAuthService} from "../../services/auth/spotify-auth.service";
 import {StorageService} from "../../services/storage/storage.service";
@@ -16,6 +16,7 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
   selectedTag: any;
   playlistId: string = '';
   profilePicUrl: string | null = null;
+  showSettingsDropdown: boolean = false;
 
   constructor(
     private route: ActivatedRoute, 
@@ -98,5 +99,20 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  toggleSettingsDropdown(event: Event) {
+    event.stopPropagation();
+    this.showSettingsDropdown = !this.showSettingsDropdown;
+  }
+
+  clearCacheAndLogout() {
+    this.authService.clearCacheAndLogout();
+    this.router.navigate(['/login']);
+  }
+
+  @HostListener('document:click')
+  onDocumentClick() {
+    this.showSettingsDropdown = false;
   }
 }

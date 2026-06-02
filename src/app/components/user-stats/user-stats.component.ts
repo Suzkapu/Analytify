@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { SpotifyDataService } from '../../services/spotify-data/spotify-data.service';
 import { SpotifyAuthService } from '../../services/auth/spotify-auth.service';
 import { StorageService } from '../../services/storage/storage.service';
@@ -15,6 +15,7 @@ export class UserStatsComponent implements OnInit {
   selectedCategory: string = 'tracks'; // 'tracks', 'artists', 'genres'
   isLoading: boolean = false;
   profilePicUrl: string | null = null;
+  showSettingsDropdown: boolean = false;
 
   topTracks: any[] = [];
   topArtists: any[] = [];
@@ -164,5 +165,20 @@ export class UserStatsComponent implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  toggleSettingsDropdown(event: Event) {
+    event.stopPropagation();
+    this.showSettingsDropdown = !this.showSettingsDropdown;
+  }
+
+  clearCacheAndLogout() {
+    this.authService.clearCacheAndLogout();
+    this.router.navigate(['/login']);
+  }
+
+  @HostListener('document:click')
+  onDocumentClick() {
+    this.showSettingsDropdown = false;
   }
 }

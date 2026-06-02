@@ -162,5 +162,9 @@ export class SpotifyAuthService {
     this.storageService.removeItem('spotifyRefreshToken');
     this.storageService.removeItem('spotifyTokenExpiresAt');
   }
+
+  clearCacheAndLogout(): void {
+    this.storageService.clear();
+  }
 }
 

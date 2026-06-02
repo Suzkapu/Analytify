@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, HostListener} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SpotifyDataService} from "../../services/spotify-data/spotify-data.service";
 import {SpotifyAuthService} from "../../services/auth/spotify-auth.service";
@@ -37,6 +37,7 @@ export class PlaylistAnalysisComponent implements OnInit {
   oldestTrack: any = null;
   newestTrack: any = null;
   profilePicUrl: string | null = null;
+  showSettingsDropdown: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -511,6 +512,21 @@ export class PlaylistAnalysisComponent implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  toggleSettingsDropdown(event: Event) {
+    event.stopPropagation();
+    this.showSettingsDropdown = !this.showSettingsDropdown;
+  }
+
+  clearCacheAndLogout() {
+    this.authService.clearCacheAndLogout();
+    this.router.navigate(['/login']);
+  }
+
+  @HostListener('document:click')
+  onDocumentClick() {
+    this.showSettingsDropdown = false;
   }
 
   openTrackClick(url: string) {

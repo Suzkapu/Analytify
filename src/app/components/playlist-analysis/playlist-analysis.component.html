@@ -1,6 +1,6 @@
 <header class="app-header">
   <div class="header-left">
-    <div class="header-logo" routerLink="/playlists">
+    <div class="header-logo" routerLink="/">
       <img src="assets/Analytify.png" alt="Analytify Logo">
       <span class="logo-text">Analytify</span>
     </div>
@@ -17,13 +17,27 @@
     <button (click)="logout()" class="p-button logout-button">
       <i class="pi pi-sign-out"></i> <span class="hide-mobile">Logout</span>
     </button>
-    <!-- User Profile Picture -->
-    <div class="user-profile-header" *ngIf="profilePicUrl" style="display: flex; align-items: center;" title="Logged in">
-      <img [src]="profilePicUrl" alt="User Profile" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #1db954; box-shadow: 0 0 12px rgba(29, 185, 84, 0.35);">
-    </div>
-    <div class="user-profile-header" *ngIf="!profilePicUrl" style="display: flex; align-items: center;">
-      <div style="width: 44px; height: 44px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center; border: 1.5px solid rgba(255, 255, 255, 0.2);">
-        <i class="pi pi-user" style="font-size: 1.1rem; color: #b3b3b3;"></i>
+    <!-- User Profile with Settings Dropdown -->
+    <div class="user-profile-container" style="position: relative; display: flex; align-items: center;">
+      <div class="user-profile-header" (click)="toggleSettingsDropdown($event)" style="display: flex; align-items: center; cursor: pointer;" title="Profile Settings">
+        <img *ngIf="profilePicUrl" [src]="profilePicUrl" alt="User Profile"
+          style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #1db954; box-shadow: 0 0 12px rgba(29, 185, 84, 0.35);">
+        <div *ngIf="!profilePicUrl"
+          style="width: 44px; height: 44px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center; border: 1.5px solid rgba(255, 255, 255, 0.2);">
+          <i class="pi pi-user" style="font-size: 1.1rem; color: #b3b3b3;"></i>
+        </div>
+      </div>
+
+      <!-- Settings Dropdown Overlay -->
+      <div class="profile-settings-dropdown" *ngIf="showSettingsDropdown">
+        <div class="dropdown-header">Profile &amp; Settings</div>
+        <div class="dropdown-divider"></div>
+        <a href="https://www.spotify.com/account/apps/" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+          <i class="pi pi-external-link"></i> Revoke App Access
+        </a>
+        <button (click)="clearCacheAndLogout()" class="dropdown-item danger">
+          <i class="pi pi-trash"></i> Clear Cache &amp; Logout
+        </button>
       </div>
     </div>
   </div>
@@ -247,3 +261,5 @@
   </div>
 
 </div>
+
+<app-footer></app-footer>
