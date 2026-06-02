@@ -55,15 +55,11 @@
 <!-- Main Analysis Dashboard -->
 <div *ngIf="!isLoading" class="analysis-dashboard-container">
   
-  <!-- Playlist Header -->
   <div class="analysis-header-row">
     <div>
       <span style="font-size: 0.85rem; font-weight: 700; color: #1db954; text-transform: uppercase; letter-spacing: 1px;">Playlist Analytics</span>
       <h2 style="margin: 4px 0 0 0; font-weight: 800; font-size: 2.2rem; color: #ffffff;">{{ playlistName }}</h2>
     </div>
-    <button (click)="refreshCache()" class="p-button p-button-outlined p-button-secondary" style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px;" [disabled]="isRefreshing" title="Refresh analysis data">
-      <i class="pi pi-refresh" [class.pi-spin]="isRefreshing"></i> {{ isRefreshing ? 'Recalculating...' : 'Recalculate' }}
-    </button>
   </div>
 
   <!-- Background Refresh Progress Bar -->

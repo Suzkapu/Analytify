@@ -4,6 +4,7 @@ import { SpotifyAuthService } from "../auth/spotify-auth.service";
 import { Observable, throwError, BehaviorSubject } from "rxjs";
 import { catchError, mergeMap, take } from 'rxjs/operators';
 import {environment} from "../../../environments/environment";
+import {StorageService} from "../storage/storage.service";
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,12 @@ export class SpotifyDataService {
   private localStorageKey = 'spotifyRetryAfter';
   private retryAfterSubject = new BehaviorSubject<number>(0);
 
-  constructor(private http: HttpClient, private authService: SpotifyAuthService) {
-    const storedRetryAfter = parseInt(localStorage.getItem(this.localStorageKey) || '0', 10);
+  constructor(
+    private http: HttpClient, 
+    private authService: SpotifyAuthService,
+    private storageService: StorageService
+  ) {
+    const storedRetryAfter = parseInt(this.storageService.getItem(this.localStorageKey) || '0', 10);
     this.retryAfterSubject.next(storedRetryAfter);
   }
 
@@ -31,7 +36,7 @@ export class SpotifyDataService {
               if (error.status === 429 && error.headers.get('Retry-After')) {
                 const retryAfter = now + parseInt(error.headers.get('Retry-After'), 10);
                 this.retryAfterSubject.next(retryAfter);
-                localStorage.setItem(this.localStorageKey, retryAfter.toString());
+                this.storageService.setItem(this.localStorageKey, retryAfter.toString());
               }
               return throwError(error);
             })
