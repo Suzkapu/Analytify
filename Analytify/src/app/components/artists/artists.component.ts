@@ -2,7 +2,9 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, NavigationExtras, Router} from "@angular/router";
 import {SpotifyDataService} from "../../services/spotify-data/spotify-data.service";
 import {SpotifyAuthService} from "../../services/auth/spotify-auth.service";
-import {forkJoin} from 'rxjs';
+import {forkJoin, of} from 'rxjs';
+import {catchError} from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-artists',
@@ -19,6 +21,8 @@ export class ArtistsComponent implements OnInit {
   playlistId: string = '';
   totalTracks: number = 0;
   isLoading: boolean = false;
+  isRefreshing: boolean = false;
+  refreshingArtists: any[] = [];
   loadedTracksCount: number = 0;
   cooldownMessage: string = '';
   profilePicUrl: string | null = null;
@@ -96,13 +100,28 @@ export class ArtistsComponent implements OnInit {
             this.playlistName = JSON.parse(localStorage.getItem(`${userId}_${this.playlistId}_Name`) || '""');
             this.filterArtists();
             this.isLoading = false;
+            this.isRefreshing = false;
             return;
           }
         }
       }
 
       console.log("Loading artists from API");
-      this.isLoading = true;
+      
+      let targetArray: any[];
+      if (storedArtists) {
+        this.isRefreshing = true;
+        this.isLoading = false;
+        this.refreshingArtists = [];
+        targetArray = this.refreshingArtists;
+        this.totalTracks = JSON.parse(localStorage.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
+        this.playlistName = JSON.parse(localStorage.getItem(`${userId}_${this.playlistId}_Name`) || '""');
+      } else {
+        this.isRefreshing = false;
+        this.isLoading = true;
+        this.artists = [];
+        targetArray = this.artists;
+      }
       this.loadedTracksCount = 0;
 
       // Set cooldown cookie (e.g. 180 seconds = 3 minutes)
@@ -112,27 +131,26 @@ export class ArtistsComponent implements OnInit {
       // If we have cached data and this is fav, perform incremental load of new liked songs
       if (this.playlistId === 'fav' && storedArtists) {
         console.log("Favourite Tracks detected. Starting incremental load.");
-        this.artists = [];
-        this.loadNewerFavTracks(0, 50, JSON.parse(storedArtists));
+        this.loadNewerFavTracks(0, 50, JSON.parse(storedArtists), targetArray);
       } else {
-        this.artists = [];
         if (this.playlistId === 'fav') {
           this.playlistName = 'Favourite Tracks';
           this.spotifyDataService.getFavTracks(0, 50).subscribe({
             next: (tracks: any) => {
               this.totalTracks = tracks.total;
-              this.getArtistsFromTracks(tracks.items);
+              this.getArtistsFromTracks(tracks.items, targetArray);
               this.loadedTracksCount = Math.min(50, this.totalTracks);
 
               if (this.loadedTracksCount < this.totalTracks) {
-                this.loadRemainingTracks(50, 50, this.totalTracks);
+                this.loadRemainingTracks(50, 50, this.totalTracks, targetArray);
               } else {
-                this.fetchArtistDetailsAndSave();
+                this.fetchArtistDetailsAndSave(targetArray);
               }
             },
             error: (err) => {
               console.error('Failed to load first page of favourite tracks:', err);
               this.isLoading = false;
+              this.isRefreshing = false;
             }
           });
         } else {
@@ -140,18 +158,19 @@ export class ArtistsComponent implements OnInit {
             next: (playlist: any) => {
               this.playlistName = playlist.name;
               this.totalTracks = playlist.tracks.total;
-              this.getArtistsFromTracks(playlist.tracks.items);
+              this.getArtistsFromTracks(playlist.tracks.items, targetArray);
               this.loadedTracksCount = Math.min(100, this.totalTracks);
 
               if (this.loadedTracksCount < this.totalTracks) {
-                this.loadRemainingTracks(100, 100, this.totalTracks);
+                this.loadRemainingTracks(100, 100, this.totalTracks, targetArray);
               } else {
-                this.fetchArtistDetailsAndSave();
+                this.fetchArtistDetailsAndSave(targetArray);
               }
             },
             error: (err) => {
               console.error('Failed to load first page of playlist:', err);
               this.isLoading = false;
+              this.isRefreshing = false;
             }
           });
         }
@@ -159,43 +178,43 @@ export class ArtistsComponent implements OnInit {
     }
   }
 
-  loadRemainingTracks(offset: number, limit: number, total: number) {
+  loadRemainingTracks(offset: number, limit: number, total: number, targetArray: any[] = this.artists) {
     if (this.playlistId === 'fav') {
       this.spotifyDataService.getFavTracks(offset, limit).subscribe({
         next: (tracks: any) => {
-          this.getArtistsFromTracks(tracks.items);
+          this.getArtistsFromTracks(tracks.items, targetArray);
           this.loadedTracksCount = Math.min(offset + limit, total);
           if (this.loadedTracksCount < total) {
-            this.loadRemainingTracks(offset + limit, limit, total);
+            this.loadRemainingTracks(offset + limit, limit, total, targetArray);
           } else {
-            this.fetchArtistDetailsAndSave();
+            this.fetchArtistDetailsAndSave(targetArray);
           }
         },
         error: (err) => {
           console.error('Error loading remaining fav tracks:', err);
-          this.fetchArtistDetailsAndSave();
+          this.fetchArtistDetailsAndSave(targetArray);
         }
       });
     } else {
       this.spotifyDataService.getAllTracksFromPlaylist(this.playlistId, offset, limit).subscribe({
         next: (tracks: any) => {
-          this.getArtistsFromTracks(tracks.items);
+          this.getArtistsFromTracks(tracks.items, targetArray);
           this.loadedTracksCount = Math.min(offset + limit, total);
           if (this.loadedTracksCount < total) {
-            this.loadRemainingTracks(offset + limit, limit, total);
+            this.loadRemainingTracks(offset + limit, limit, total, targetArray);
           } else {
-            this.fetchArtistDetailsAndSave();
+            this.fetchArtistDetailsAndSave(targetArray);
           }
         },
         error: (err) => {
           console.error('Error loading remaining playlist tracks:', err);
-          this.fetchArtistDetailsAndSave();
+          this.fetchArtistDetailsAndSave(targetArray);
         }
       });
     }
   }
 
-  loadNewerFavTracks(offset: number, limit: number, cachedArtists: any[]) {
+  loadNewerFavTracks(offset: number, limit: number, cachedArtists: any[], targetArray: any[] = this.artists) {
     // Collect all cached track IDs
     const cachedTrackIds = new Set<string>();
     cachedArtists.forEach(artist => {
@@ -220,30 +239,33 @@ export class ArtistsComponent implements OnInit {
           }
         }
         
-        this.getArtistsFromTracks(newItems);
+        this.getArtistsFromTracks(newItems, targetArray);
         this.loadedTracksCount += newItems.length;
 
         if (!foundExisting && offset + limit < this.totalTracks) {
-          this.loadNewerFavTracks(offset + limit, limit, cachedArtists);
+          this.loadNewerFavTracks(offset + limit, limit, cachedArtists, targetArray);
         } else {
           // Merge cache, save and finish!
-          this.mergeCachedArtists(cachedArtists);
-          this.fetchArtistDetailsAndSave();
+          this.mergeCachedArtists(cachedArtists, targetArray);
+          this.fetchArtistDetailsAndSave(targetArray);
         }
       },
       error: (err) => {
         console.error('Incremental loading failed:', err);
-        this.artists = cachedArtists;
+        if (targetArray === this.artists) {
+          this.artists = cachedArtists;
+        }
         this.isLoading = false;
+        this.isRefreshing = false;
       }
     });
   }
 
-  mergeCachedArtists(cachedArtists: any[]) {
+  mergeCachedArtists(cachedArtists: any[], targetArray: any[] = this.artists) {
     cachedArtists.forEach(cachedArtist => {
-      let existingArtist = this.artists.find(a => a.id === cachedArtist.id);
+      let existingArtist = targetArray.find(a => a.id === cachedArtist.id);
       if (!existingArtist) {
-        this.artists.push(cachedArtist);
+        targetArray.push(cachedArtist);
       } else {
         cachedArtist.tracks.forEach((track: any) => {
           let hasTrack = existingArtist.tracks.some((t: any) => t.id === track.id);
@@ -261,8 +283,8 @@ export class ArtistsComponent implements OnInit {
     });
   }
 
-  fetchArtistDetailsAndSave() {
-    const artistIds = this.artists.map(a => a.id);
+  fetchArtistDetailsAndSave(targetArray: any[] = this.artists) {
+    const artistIds = targetArray.map(a => a.id);
     const batches: string[][] = [];
     
     for (let i = 0; i < artistIds.length; i += 50) {
@@ -271,11 +293,21 @@ export class ArtistsComponent implements OnInit {
 
     if (batches.length === 0) {
       this.isLoading = false;
+      this.isRefreshing = false;
+      if (targetArray !== this.artists) {
+        this.artists = targetArray;
+      }
       this.setSessionStorage();
       return;
     }
 
-    const requests = batches.map(batch => this.spotifyDataService.getSeveralArtists(batch));
+    const requests = batches.map(batch => this.spotifyDataService.getSeveralArtists(batch).pipe(
+      catchError(err => {
+        console.error('Error fetching batch of artists:', err);
+        return of({ artists: [] });
+      })
+    ));
+
     forkJoin(requests).subscribe({
       next: (results: any[]) => {
         const allFullArtists = results.reduce((acc, current) => {
@@ -287,7 +319,7 @@ export class ArtistsComponent implements OnInit {
           if (a) artistMap.set(a.id, a);
         });
 
-        this.artists.forEach(artist => {
+        targetArray.forEach(artist => {
           const full = artistMap.get(artist.id);
           if (full) {
             artist.images = full.images;
@@ -296,11 +328,19 @@ export class ArtistsComponent implements OnInit {
         });
 
         this.isLoading = false;
+        this.isRefreshing = false;
+        if (targetArray !== this.artists) {
+          this.artists = targetArray;
+        }
         this.setSessionStorage();
       },
       error: (err) => {
         console.error('Error batch fetching artist details:', err);
         this.isLoading = false;
+        this.isRefreshing = false;
+        if (targetArray !== this.artists) {
+          this.artists = targetArray;
+        }
         this.setSessionStorage();
       }
     });
@@ -349,16 +389,16 @@ export class ArtistsComponent implements OnInit {
     localStorage.setItem(`${userId}_${this.playlistId}_Name`, JSON.stringify(this.playlistName));
   }
 
-  getArtistsFromTracks(items: any[]) {
+  getArtistsFromTracks(items: any[], targetArray: any[] = this.artists) {
     try {
       for (let item of items) {
         if (!item || !item.track) continue;
         let track = item.track;
         for (let artist of track.artists) {
-          let existingArtist = this.artists.find(a => a.id === artist.id);
+          let existingArtist = targetArray.find(a => a.id === artist.id);
           if (!existingArtist) {
             artist.tracks = [track];
-            this.artists.push(artist);
+            targetArray.push(artist);
           } else {
             let existingTrack = existingArtist.tracks.find((t: { id: any }) => t.id === track.id);
             if (!existingTrack) {
