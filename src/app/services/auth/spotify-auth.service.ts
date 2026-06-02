@@ -161,10 +161,24 @@ export class SpotifyAuthService {
     this.storageService.removeItem('spotifyUserId');
     this.storageService.removeItem('spotifyRefreshToken');
     this.storageService.removeItem('spotifyTokenExpiresAt');
+    this.clearAllCookies();
   }
 
   clearCacheAndLogout(): void {
     this.storageService.clear();
+    this.clearAllCookies();
+  }
+
+  private clearAllCookies(): void {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i];
+      const eqPos = cookie.indexOf('=');
+      const name = eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
+      document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+      document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=' + window.location.hostname;
+      document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.' + window.location.hostname.replace(/^www\./, '');
+    }
   }
 }
 

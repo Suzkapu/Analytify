@@ -101,10 +101,17 @@ body {
 }
 
 @media (max-width: 768px) {
+  body {
+    padding-bottom: 70px;
+  }
+
   .app-header {
     flex-wrap: wrap;
     padding: 0.6rem 1rem !important;
     gap: 12px;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: #121212 !important;
 
     .header-left {
       flex: 1 0 auto;
@@ -116,13 +123,50 @@ body {
     }
 
     .header-nav {
-      margin-left: 10px !important;
-      gap: 4px !important;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 62px;
+      background: rgba(18, 18, 18, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex !important;
+      justify-content: space-around;
+      align-items: center;
+      margin: 0 !important;
+      padding: 0 16px;
+      z-index: 1000;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6);
     }
 
     .nav-link {
-      font-size: 0.85rem;
-      padding: 4px 8px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px !important;
+      font-size: 0.75rem !important;
+      padding: 8px 0 !important;
+      color: #b3b3b3 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+
+      span.hide-mobile {
+        display: inline !important;
+      }
+
+      i {
+        font-size: 1.2rem !important;
+      }
+
+      &.active-nav,
+      &.router-link-active {
+        color: #1ed760 !important;
+        background: transparent !important;
+      }
     }
 
     .header-center {
@@ -500,5 +544,115 @@ h6 {
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+/* Glassmorphic Dual Progress Bars Panel */
+.progress-panel-container {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  margin: 20px auto 0 auto;
+  max-width: 1000px;
+  width: calc(100% - 40px);
+  box-sizing: border-box;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+
+  @media (max-width: 768px) {
+    width: 100%;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 15px;
+  }
+
+  .progress-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .progress-status-text {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .status-icon {
+        color: #1db954;
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .progress-bars-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .progress-bar-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      .progress-label-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.85rem;
+        font-weight: 600;
+
+        .progress-label {
+          color: rgba(255, 255, 255, 0.7);
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          
+          i {
+            color: #1db954;
+          }
+        }
+
+        .progress-value {
+          color: #ffffff;
+          font-weight: 700;
+        }
+      }
+
+      .progress-bar-track {
+        background-color: rgba(255, 255, 255, 0.06);
+        height: 8px;
+        border-radius: 4px;
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.03);
+
+        .progress-bar-fill {
+          height: 100%;
+          border-radius: 4px;
+          transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          
+          &.fill-tracks {
+            background: linear-gradient(90deg, #1db954, #1ed760);
+            box-shadow: 0 0 10px rgba(29, 185, 84, 0.4);
+          }
+
+          &.fill-artists {
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.4);
+          }
+        }
+      }
+    }
   }
 }

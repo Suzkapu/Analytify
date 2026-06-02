@@ -17,7 +17,7 @@ export class ArtistsComponent implements OnInit {
   searchText: string = '';
   playlistName: string = '';
   filteredArtists: any[] = [];
-  sortAscending: boolean = false;
+  sortOrder: 'asc' | 'desc' | 'none' = 'none';
   playlistId: string = '';
   totalTracks: number = 0;
   isLoading: boolean = false;
@@ -28,6 +28,13 @@ export class ArtistsComponent implements OnInit {
   profilePicUrl: string | null = null;
   showSettingsDropdown: boolean = false;
 
+  // Real-time progress properties
+  isLoadingTracks: boolean = false;
+  isLoadingArtists: boolean = false;
+  loadedArtistsDetailsCount: number = 0;
+  totalUniqueArtists: number = 0;
+  private requestedArtistIds = new Set<string>();
+
   constructor(
     private route: ActivatedRoute, 
     private spotifyDataService: SpotifyDataService, 
@@ -37,6 +44,8 @@ export class ArtistsComponent implements OnInit {
   ) {
     this.route.params.subscribe((params) => {
       this.playlistId = params['id'];
+      const userId = this.authService.getUserId() || 'anonymous';
+      this.sortOrder = (this.storageService.getItem(`${userId}_artists_sortOrder`) as 'asc' | 'desc' | 'none') || 'none';
       this.loadArtistsFromPlaylist();
       this.loadUserProfile();
     });
@@ -77,20 +86,26 @@ export class ArtistsComponent implements OnInit {
       console.log("Loading artists from storage cache");
       const parsedArtists = JSON.parse(storedArtists);
       
+      this.artists = parsedArtists;
+      this.artists.sort((a, b) => b.tracks.length - a.tracks.length);
+      this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
+      this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
+      this.filterArtists();
+
       // Self-healing check: if cache lacks images or genres, upgrade cache
       const isOldCache = parsedArtists.length > 0 && (!parsedArtists[0].images || !parsedArtists[0].genres);
       if (isOldCache) {
         console.log("Old cache detected. Upgrading in background.");
         this.triggerApiLoad(true);
-      } else {
-        this.artists = parsedArtists;
+      }
+    } else {
+      if (storedArtists) {
+        this.artists = JSON.parse(storedArtists);
         this.artists.sort((a, b) => b.tracks.length - a.tracks.length);
         this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
         this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
         this.filterArtists();
       }
-    } else {
-      // If we have cached data but it's expired, we do background refresh to maintain smooth UX
       this.triggerApiLoad(!!storedArtists);
     }
   }
@@ -98,6 +113,10 @@ export class ArtistsComponent implements OnInit {
   triggerApiLoad(isBackgroundRefresh: boolean) {
     console.log("Loading artists from API");
     const userId = this.authService.getUserId() || 'anonymous';
+    this.requestedArtistIds.clear();
+    this.loadedArtistsDetailsCount = 0;
+    this.totalUniqueArtists = 0;
+
     let targetArray: any[];
     
     if (isBackgroundRefresh) {
@@ -113,9 +132,11 @@ export class ArtistsComponent implements OnInit {
       this.artists = [];
       targetArray = this.artists;
     }
+    
+    this.isLoadingTracks = true;
+    this.isLoadingArtists = true;
     this.loadedTracksCount = 0;
 
-    // Check if we have cached data for incremental load of new liked songs
     const storedArtists = this.storageService.getItem(`${userId}_${this.playlistId}`);
     if (this.playlistId === 'fav' && storedArtists) {
       console.log("Favourite Tracks detected. Starting incremental load.");
@@ -128,17 +149,26 @@ export class ArtistsComponent implements OnInit {
             this.totalTracks = tracks.total;
             this.getArtistsFromTracks(tracks.items, targetArray);
             this.loadedTracksCount = Math.min(50, this.totalTracks);
+            
+            // First page is loaded, we can now display the screen
+            this.isLoading = false;
+            this.filterArtists();
+
+            // Fire off lazy loader for artist details in background
+            this.fetchArtistDetailsLazy(targetArray);
 
             if (this.loadedTracksCount < this.totalTracks) {
               this.loadRemainingTracks(50, 50, this.totalTracks, targetArray);
             } else {
-              this.fetchArtistDetailsAndSave(targetArray);
+              this.isLoadingTracks = false;
+              this.checkCompletion();
             }
           },
           error: (err) => {
             console.error('Failed to load first page of favourite tracks:', err);
             this.isLoading = false;
-            this.isRefreshing = false;
+            this.isLoadingTracks = false;
+            this.isLoadingArtists = false;
           }
         });
       } else {
@@ -148,17 +178,26 @@ export class ArtistsComponent implements OnInit {
             this.totalTracks = playlist.tracks.total;
             this.getArtistsFromTracks(playlist.tracks.items, targetArray);
             this.loadedTracksCount = Math.min(100, this.totalTracks);
+            
+            // First page is loaded, we can now display the screen
+            this.isLoading = false;
+            this.filterArtists();
+
+            // Fire off lazy loader for artist details in background
+            this.fetchArtistDetailsLazy(targetArray);
 
             if (this.loadedTracksCount < this.totalTracks) {
               this.loadRemainingTracks(100, 100, this.totalTracks, targetArray);
             } else {
-              this.fetchArtistDetailsAndSave(targetArray);
+              this.isLoadingTracks = false;
+              this.checkCompletion();
             }
           },
           error: (err) => {
             console.error('Failed to load first page of playlist:', err);
             this.isLoading = false;
-            this.isRefreshing = false;
+            this.isLoadingTracks = false;
+            this.isLoadingArtists = false;
           }
         });
       }
@@ -171,15 +210,21 @@ export class ArtistsComponent implements OnInit {
         next: (tracks: any) => {
           this.getArtistsFromTracks(tracks.items, targetArray);
           this.loadedTracksCount = Math.min(offset + limit, total);
+          
+          this.filterArtists();
+          this.fetchArtistDetailsLazy(targetArray);
+
           if (this.loadedTracksCount < total) {
             this.loadRemainingTracks(offset + limit, limit, total, targetArray);
           } else {
-            this.fetchArtistDetailsAndSave(targetArray);
+            this.isLoadingTracks = false;
+            this.checkCompletion();
           }
         },
         error: (err) => {
           console.error('Error loading remaining fav tracks:', err);
-          this.fetchArtistDetailsAndSave(targetArray);
+          this.isLoadingTracks = false;
+          this.checkCompletion();
         }
       });
     } else {
@@ -187,15 +232,21 @@ export class ArtistsComponent implements OnInit {
         next: (tracks: any) => {
           this.getArtistsFromTracks(tracks.items, targetArray);
           this.loadedTracksCount = Math.min(offset + limit, total);
+          
+          this.filterArtists();
+          this.fetchArtistDetailsLazy(targetArray);
+
           if (this.loadedTracksCount < total) {
             this.loadRemainingTracks(offset + limit, limit, total, targetArray);
           } else {
-            this.fetchArtistDetailsAndSave(targetArray);
+            this.isLoadingTracks = false;
+            this.checkCompletion();
           }
         },
         error: (err) => {
           console.error('Error loading remaining playlist tracks:', err);
-          this.fetchArtistDetailsAndSave(targetArray);
+          this.isLoadingTracks = false;
+          this.checkCompletion();
         }
       });
     }
@@ -228,11 +279,17 @@ export class ArtistsComponent implements OnInit {
         this.getArtistsFromTracks(newItems, targetArray);
         this.loadedTracksCount += newItems.length;
 
+        this.isLoading = false;
+        this.filterArtists();
+        this.fetchArtistDetailsLazy(targetArray);
+
         if (!foundExisting && offset + limit < this.totalTracks) {
           this.loadNewerFavTracks(offset + limit, limit, cachedArtists, targetArray);
         } else {
           this.mergeCachedArtists(cachedArtists, targetArray);
-          this.fetchArtistDetailsAndSave(targetArray);
+          this.isLoadingTracks = false;
+          this.fetchArtistDetailsLazy(targetArray);
+          this.checkCompletion();
         }
       },
       error: (err) => {
@@ -241,7 +298,8 @@ export class ArtistsComponent implements OnInit {
           this.artists = cachedArtists;
         }
         this.isLoading = false;
-        this.isRefreshing = false;
+        this.isLoadingTracks = false;
+        this.isLoadingArtists = false;
       }
     });
   }
@@ -268,67 +326,66 @@ export class ArtistsComponent implements OnInit {
     });
   }
 
-  fetchArtistDetailsAndSave(targetArray: any[] = this.artists) {
-    const artistIds = targetArray.map(a => a.id);
-    const batches: string[][] = [];
-    
-    for (let i = 0; i < artistIds.length; i += 50) {
-      batches.push(artistIds.slice(i, i + 50));
-    }
+  fetchArtistDetailsLazy(targetArray: any[]) {
+    // Collect unique artist IDs that are not yet requested
+    const pendingIds = targetArray
+      .map(a => a.id)
+      .filter(id => !this.requestedArtistIds.has(id));
 
-    if (batches.length === 0) {
-      this.isLoading = false;
-      this.isRefreshing = false;
-      if (targetArray !== this.artists) {
-        this.artists = targetArray;
-      }
-      this.setSessionStorage();
+    if (pendingIds.length === 0) {
+      this.checkCompletion();
       return;
     }
 
-    const requests = batches.map(batch => this.spotifyDataService.getSeveralArtists(batch).pipe(
-      catchError(err => {
-        console.error('Error fetching batch of artists:', err);
-        return of({ artists: [] });
-      })
-    ));
+    // Pull 50 artists at a time
+    const batch = pendingIds.slice(0, 50);
+    batch.forEach(id => this.requestedArtistIds.add(id));
 
-    forkJoin(requests).subscribe({
-      next: (results: any[]) => {
-        const allFullArtists = results.reduce((acc, current) => {
-          return acc.concat(current.artists || []);
-        }, []);
+    this.isLoadingArtists = true;
 
+    this.spotifyDataService.getSeveralArtists(batch).subscribe({
+      next: (res: any) => {
         const artistMap = new Map<string, any>();
-        allFullArtists.forEach((a: any) => {
+        (res.artists || []).forEach((a: any) => {
           if (a) artistMap.set(a.id, a);
         });
 
         targetArray.forEach(artist => {
-          const full = artistMap.get(artist.id);
-          if (full) {
-            artist.images = full.images;
-            artist.genres = full.genres;
+          if (artistMap.has(artist.id)) {
+            const full = artistMap.get(artist.id);
+            artist.images = full.images || [];
+            artist.genres = full.genres || [];
           }
         });
 
-        this.isLoading = false;
-        this.isRefreshing = false;
-        if (targetArray !== this.artists) {
-          this.artists = targetArray;
-        }
-        this.setSessionStorage();
+        // Calculate how many unique artists now have details loaded
+        this.loadedArtistsDetailsCount = targetArray.filter(a => a.images && a.images.length > 0).length;
+        
+        this.filterArtists();
+        
+        // Load next batch
+        this.fetchArtistDetailsLazy(targetArray);
       },
       error: (err) => {
-        console.error('Error batch fetching artist details:', err);
-        this.isLoading = false;
-        this.isRefreshing = false;
-        if (targetArray !== this.artists) {
-          this.artists = targetArray;
-        }
-        this.setSessionStorage();
+        console.error('Error batch loading artists lazy details:', err);
+        // Continue queue despite individual batch error
+        this.fetchArtistDetailsLazy(targetArray);
       }
     });
+  }
+
+  checkCompletion() {
+    if (!this.isLoadingTracks && this.requestedArtistIds.size >= this.totalUniqueArtists) {
+      this.isLoadingArtists = false;
+      
+      // Ensure target array is assigned correctly before saving
+      if (this.isRefreshing) {
+        this.artists = this.refreshingArtists;
+        this.isRefreshing = false;
+      }
+      
+      this.setSessionStorage();
+    }
   }
 
   setSessionStorage() {
@@ -380,6 +437,7 @@ export class ArtistsComponent implements OnInit {
           }
         }
       }
+      this.totalUniqueArtists = targetArray.length;
     } catch (error) {
       console.error('Error getting artists from tracks:', error);
     }
@@ -387,11 +445,20 @@ export class ArtistsComponent implements OnInit {
 
   filterArtists() {
     if (this.searchText.trim() === '') {
-      this.filteredArtists = this.artists;
+      this.filteredArtists = [...this.artists];
     } else {
       this.filteredArtists = this.artists.filter(artist =>
         artist.name.toLowerCase().includes(this.searchText.toLowerCase())
       );
+    }
+
+    if (this.sortOrder === 'desc') {
+      this.filteredArtists.sort((a, b) => b.tracks.length - a.tracks.length);
+    } else if (this.sortOrder === 'asc') {
+      this.filteredArtists.sort((a, b) => a.tracks.length - b.tracks.length);
+    } else {
+      // default: descending by count
+      this.filteredArtists.sort((a, b) => b.tracks.length - a.tracks.length);
     }
   }
 
@@ -433,11 +500,15 @@ export class ArtistsComponent implements OnInit {
   }
 
   sortArtistsByTracks() {
-    if (this.sortAscending) {
-      this.filteredArtists.sort((a, b) => b.tracks.length - a.tracks.length);
+    if (this.sortOrder === 'none') {
+      this.sortOrder = 'desc';
+    } else if (this.sortOrder === 'desc') {
+      this.sortOrder = 'asc';
     } else {
-      this.filteredArtists.sort((a, b) => a.tracks.length - b.tracks.length);
+      this.sortOrder = 'none';
     }
-    this.sortAscending = !this.sortAscending;
+    const userId = this.authService.getUserId() || 'anonymous';
+    this.storageService.setItem(`${userId}_artists_sortOrder`, this.sortOrder);
+    this.filterArtists();
   }
 }

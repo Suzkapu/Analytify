@@ -13,7 +13,7 @@ export class PlaylistsComponent {
   filteredPlaylists: any[] = [];
   searchText: string = '';
   profilePicUrl: string | null = null;
-  isSortedByCount: boolean = false;
+  sortOrder: 'asc' | 'desc' | 'none' = 'none';
   showSettingsDropdown: boolean = false;
 
   constructor(
@@ -24,6 +24,8 @@ export class PlaylistsComponent {
     private storageService: StorageService
   ) {
     this.route.params.subscribe(() => {
+      const userId = this.authService.getUserId() || 'anonymous';
+      this.sortOrder = (this.storageService.getItem(`${userId}_playlists_sortOrder`) as 'asc' | 'desc' | 'none') || 'none';
       this.loadPlaylists();
       this.loadUserProfile();
     });
@@ -142,6 +144,10 @@ export class PlaylistsComponent {
     this.router.navigate(['/analysis', playlistId]);
   }
 
+  get isSortedByCount(): boolean {
+    return this.sortOrder !== 'none';
+  }
+
   filterPlaylists() {
     if (this.searchText.trim() === '') {
       this.filteredPlaylists = [...this.playlists];
@@ -151,17 +157,31 @@ export class PlaylistsComponent {
       );
     }
 
-    if (this.isSortedByCount) {
+    if (this.sortOrder === 'desc') {
       this.filteredPlaylists.sort((a, b) => {
         const countA = a.tracks ? a.tracks.total : 0;
         const countB = b.tracks ? b.tracks.total : 0;
         return countB - countA;
       });
+    } else if (this.sortOrder === 'asc') {
+      this.filteredPlaylists.sort((a, b) => {
+        const countA = a.tracks ? a.tracks.total : 0;
+        const countB = b.tracks ? b.tracks.total : 0;
+        return countA - countB;
+      });
     }
   }
 
   sortPlaylistsByTracks() {
-    this.isSortedByCount = !this.isSortedByCount;
+    if (this.sortOrder === 'none') {
+      this.sortOrder = 'desc';
+    } else if (this.sortOrder === 'desc') {
+      this.sortOrder = 'asc';
+    } else {
+      this.sortOrder = 'none';
+    }
+    const userId = this.authService.getUserId() || 'anonymous';
+    this.storageService.setItem(`${userId}_playlists_sortOrder`, this.sortOrder);
     this.filterPlaylists();
   }
 

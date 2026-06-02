@@ -76,16 +76,37 @@
     </div>
   </div>
 
-  <!-- Background Refresh Progress Bar -->
-  <div *ngIf="isRefreshing" style="background: rgba(29, 185, 84, 0.08); border: 1px solid rgba(29, 185, 84, 0.2); border-radius: 12px; padding: 12px 20px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 8px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem;">
-      <span style="color: #e0e0e0; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-        <i class="pi pi-spin pi-spinner" style="color: #1db954;"></i> Updating playlist details in background...
+  <!-- Real-Time Dual Progress Bars Panel -->
+  <div *ngIf="!isLoading && (isLoadingTracks || isLoadingArtists)" class="progress-panel-container" style="margin-top: 0; margin-bottom: 24px; width: 100%; max-width: 100%;">
+    <div class="progress-panel-header">
+      <span class="progress-status-text">
+        <i class="pi pi-spin pi-spinner status-icon"></i>
+        <span *ngIf="isLoadingTracks && !isLoadingArtists">Loading playlist tracks...</span>
+        <span *ngIf="!isLoadingTracks && isLoadingArtists">Fetching artist profiles...</span>
+        <span *ngIf="isLoadingTracks && isLoadingArtists">Streaming music data...</span>
       </span>
-      <span style="color: #1db954; font-weight: 700;">{{ loadedTracksCount }} / {{ totalTracks }} songs loaded</span>
     </div>
-    <div style="background-color: rgba(255, 255, 255, 0.08); height: 6px; border-radius: 3px; overflow: hidden; position: relative; width: 100%;">
-      <div [style.width.%]="totalTracks > 0 ? (loadedTracksCount / totalTracks) * 100 : 0" style="background-color: #1db954; height: 100%; transition: width 0.25s ease-out; border-radius: 3px;"></div>
+    <div class="progress-bars-grid">
+      <!-- Songs Loaded Progress -->
+      <div class="progress-bar-wrapper">
+        <div class="progress-label-row">
+          <span class="progress-label"><i class="pi pi-music"></i> Songs Loaded</span>
+          <span class="progress-value">{{ loadedTracksCount }} / {{ totalTracks }}</span>
+        </div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill fill-tracks" [style.width.%]="totalTracks > 0 ? (loadedTracksCount / totalTracks) * 100 : 0"></div>
+        </div>
+      </div>
+      <!-- Artist Details Loaded Progress -->
+      <div class="progress-bar-wrapper">
+        <div class="progress-label-row">
+          <span class="progress-label"><i class="pi pi-user"></i> Artist Profiles Loaded</span>
+          <span class="progress-value">{{ loadedArtistsDetailsCount }} / {{ totalUniqueArtists }}</span>
+        </div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill fill-artists" [style.width.%]="totalUniqueArtists > 0 ? (loadedArtistsDetailsCount / totalUniqueArtists) * 100 : 0"></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -138,19 +159,6 @@
       </div>
     </div>
 
-    <!-- Explicit Count -->
-    <div class="metric-card" style="background: #181818; border: 1px solid rgba(255,255,255,0.03); border-radius: 16px; padding: 20px; text-align: left; display: flex; align-items: center; gap: 16px;">
-      <div style="background: rgba(255, 82, 82, 0.1); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-        <span style="color: #ff5252; font-weight: 900; font-size: 1.2rem; border: 2px solid #ff5252; padding: 0 4px; border-radius: 4px; line-height: 1;">E</span>
-      </div>
-      <div>
-        <div style="font-size: 0.85rem; color: #a7a7a7; font-weight: 600;">Explicit Content</div>
-        <div style="font-size: 1.8rem; font-weight: 800; color: #ffffff; margin-top: 4px; display: flex; align-items: baseline; gap: 4px;">
-          {{ explicitPercentage }}<span style="font-size: 1rem; color: #a7a7a7;">%</span>
-          <span style="font-size: 0.8rem; color: #666; font-weight: 600; margin-left: 2px;">({{ explicitCount }} songs)</span>
-        </div>
-      </div>
-    </div>
 
   </div>
 

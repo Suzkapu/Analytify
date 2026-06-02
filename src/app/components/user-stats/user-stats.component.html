@@ -130,6 +130,9 @@
             <span class="popularity-badge">
               <i class="pi pi-chart-bar"></i> {{ track.popularity }}%
             </span>
+            <i class="pi pi-external-link" (click)="openTrackClick(track.external_urls?.spotify)"
+              style="color: #666; cursor: pointer; font-size: 0.85rem; margin-left: 6px;"
+              onmouseover="this.style.color='#1db954'" onmouseout="this.style.color='#666'"></i>
           </div>
         </div>
       </div>

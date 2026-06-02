@@ -51,11 +51,9 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    document.body.classList.add('no-scroll');
   }
 
   ngOnDestroy() {
-    document.body.classList.remove('no-scroll');
   }
 
   loadArtistDetails(id: string) {

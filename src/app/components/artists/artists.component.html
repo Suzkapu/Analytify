@@ -75,26 +75,51 @@
     <div class="controls-right">
       <button (click)="sortArtistsByTracks()" class="p-button p-button-outlined p-button-secondary"
         style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px;"
-        [style.background]="sortAscending ? 'rgba(30, 215, 96, 0.12) !important' : 'transparent !important'"
-        [style.borderColor]="sortAscending ? '#1ed760 !important' : 'rgba(255, 255, 255, 0.2) !important'"
-        [style.color]="sortAscending ? '#1ed760 !important' : '#e0e0e0 !important'"
+        [style.background]="sortOrder !== 'none' ? 'rgba(30, 215, 96, 0.12) !important' : 'transparent !important'"
+        [style.borderColor]="sortOrder !== 'none' ? '#1ed760 !important' : 'rgba(255, 255, 255, 0.2) !important'"
+        [style.color]="sortOrder !== 'none' ? '#1ed760 !important' : '#e0e0e0 !important'"
         title="Sort artists by song count">
-        <i class="pi pi-sort-alt"></i> Sort By Count
+        <i class="pi" [ngClass]="{
+          'pi-sort-alt': sortOrder === 'none',
+          'pi-sort-amount-down': sortOrder === 'desc',
+          'pi-sort-amount-up': sortOrder === 'asc'
+        }"></i> Sort By Count
       </button>
     </div>
   </div>
 </div>
 
-<!-- Background Refresh Progress Bar -->
-<div *ngIf="isRefreshing" style="background: rgba(29, 185, 84, 0.08); border: 1px solid rgba(29, 185, 84, 0.2); border-radius: 12px; padding: 12px 20px; margin: 15px auto 0 auto; max-width: 1000px; display: flex; flex-direction: column; gap: 8px; box-sizing: border-box; width: calc(100% - 40px);">
-  <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem;">
-    <span style="color: #e0e0e0; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-      <i class="pi pi-spin pi-spinner" style="color: #1db954;"></i> Refreshing artist details in background...
+<!-- Real-Time Dual Progress Bars Panel -->
+<div *ngIf="!isLoading && (isLoadingTracks || isLoadingArtists)" class="progress-panel-container">
+  <div class="progress-panel-header">
+    <span class="progress-status-text">
+      <i class="pi pi-spin pi-spinner status-icon"></i>
+      <span *ngIf="isLoadingTracks && !isLoadingArtists">Loading playlist tracks...</span>
+      <span *ngIf="!isLoadingTracks && isLoadingArtists">Fetching artist profiles...</span>
+      <span *ngIf="isLoadingTracks && isLoadingArtists">Streaming music data...</span>
     </span>
-    <span style="color: #1db954; font-weight: 700;">{{ loadedTracksCount }} / {{ totalTracks }} songs loaded</span>
   </div>
-  <div style="background-color: rgba(255, 255, 255, 0.08); height: 6px; border-radius: 3px; overflow: hidden; position: relative; width: 100%;">
-    <div [style.width.%]="totalTracks > 0 ? (loadedTracksCount / totalTracks) * 100 : 0" style="background-color: #1db954; height: 100%; transition: width 0.25s ease-out; border-radius: 3px;"></div>
+  <div class="progress-bars-grid">
+    <!-- Songs Loaded Progress -->
+    <div class="progress-bar-wrapper">
+      <div class="progress-label-row">
+        <span class="progress-label"><i class="pi pi-music"></i> Songs Loaded</span>
+        <span class="progress-value">{{ loadedTracksCount }} / {{ totalTracks }}</span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill fill-tracks" [style.width.%]="totalTracks > 0 ? (loadedTracksCount / totalTracks) * 100 : 0"></div>
+      </div>
+    </div>
+    <!-- Artist Details Loaded Progress -->
+    <div class="progress-bar-wrapper">
+      <div class="progress-label-row">
+        <span class="progress-label"><i class="pi pi-user"></i> Artist Profiles Loaded</span>
+        <span class="progress-value">{{ loadedArtistsDetailsCount }} / {{ totalUniqueArtists }}</span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill fill-artists" [style.width.%]="totalUniqueArtists > 0 ? (loadedArtistsDetailsCount / totalUniqueArtists) * 100 : 0"></div>
+      </div>
+    </div>
   </div>
 </div>
 
