@@ -1,0 +1,112 @@
+<header class="app-header">
+  <div class="header-left">
+    <div class="header-logo" routerLink="/">
+      <img src="assets/Analytify.png" alt="Analytify Logo">
+      <span class="logo-text">Analytify</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <button (click)="goBack()" class="p-button back-circle-button" title="Go back">
+      <i class="pi pi-arrow-left"></i>
+    </button>
+  </div>
+</header>
+
+<div class="legal-wrapper">
+  <!-- Glowing background elements for aesthetic premium depth -->
+  <div class="glow-bg-orb orb-1"></div>
+  <div class="glow-bg-orb orb-2"></div>
+
+  <div class="legal-container">
+    <div class="back-link-container">
+      <button (click)="goBack()" class="back-text-button">
+        <i class="pi pi-chevron-left"></i> Back to Previous Page
+      </button>
+    </div>
+
+    <div class="legal-card">
+      <h1 class="legal-title">Legal &amp; Privacy Information</h1>
+      <p class="legal-subtitle">Important disclosures regarding Analytify</p>
+
+      <div class="legal-divider"></div>
+
+      <!-- Section 1: Impressum -->
+      <section class="legal-section">
+        <h2>
+          <i class="pi pi-info-circle"></i>
+          Impressum (Legal Notice)
+        </h2>
+        <p class="legal-meta-text">Information according to § 5 ECG:</p>
+        <div class="address-card">
+          <p class="name">Simon Praher</p>
+          <p class="street">Hartl 1</p>
+          <p class="city">4312 Ried in der Riedmark, Austria</p>
+        </div>
+
+        <div class="contact-info">
+          <h3>Contact</h3>
+          <p><strong>Email:</strong> <a href="mailto:analytify.taking893@aleeas.com"
+              class="legal-link">analytify.taking893@aleeas.com</a></p>
+        </div>
+
+        <p class="purpose">
+          <strong>Purpose of the website:</strong> Unofficial, non-commercial portfolio project showing personal Spotify
+          analytics.
+        </p>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Section 2: Privacy Policy -->
+      <section class="legal-section">
+        <h2>
+          <i class="pi pi-shield"></i>
+          Privacy Policy &amp; Data Handling
+        </h2>
+        <ul class="legal-list">
+          <li>
+            <i class="pi pi-server text-muted"></i>
+            <span>This application does not store your personal data on any server.</span>
+          </li>
+          <li>
+            <i class="pi pi-database text-muted"></i>
+            <span>All data retrieved from the Spotify API is stored exclusively in your local browser storage
+              (LocalStorage) to authenticate your session and render analytics dashboard metrics.</span>
+          </li>
+          <li>
+            <i class="pi pi-trash text-muted"></i>
+            <span>Logging out clears all local data. To fully remove this application's access from your account, please
+              visit the official <a href="https://www.spotify.com/account/apps/" target="_blank"
+                rel="noopener noreferrer" class="legal-link external">Spotify App Settings <i
+                  class="pi pi-external-link" style="font-size: 0.75rem;"></i></a>.</span>
+          </li>
+        </ul>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Section 3: Terms & Disclaimers -->
+      <section class="legal-section">
+        <h2>
+          <i class="pi pi-exclamation-triangle"></i>
+          Terms of Service &amp; Disclaimers
+        </h2>
+        <ol class="legal-ordered-list">
+          <li>
+            This is an unofficial application powered by the Spotify API. All album artwork, artist names, and song
+            metadata are copyrighted by their respective owners.
+          </li>
+          <li>
+            Under Section V, Clause 12 of the Spotify Developer Terms, the developer disclaims all implied warranties
+            regarding the reliability, suitability, or accuracy of the Spotify Platform, Service, and Content.
+          </li>
+          <li>
+            Spotify is a third-party beneficiary of these terms and is entitled to directly enforce them.
+          </li>
+        </ol>
+      </section>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

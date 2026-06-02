@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation, HostListener} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SpotifyDataService} from "../../services/spotify-data/spotify-data.service";
 import {SpotifyAuthService} from "../../services/auth/spotify-auth.service";
@@ -14,6 +14,7 @@ export class PlaylistsComponent {
   searchText: string = '';
   profilePicUrl: string | null = null;
   isSortedByCount: boolean = false;
+  showSettingsDropdown: boolean = false;
 
   constructor(
     private route: ActivatedRoute, 
@@ -120,6 +121,21 @@ export class PlaylistsComponent {
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  toggleSettingsDropdown(event: Event) {
+    event.stopPropagation();
+    this.showSettingsDropdown = !this.showSettingsDropdown;
+  }
+
+  clearCacheAndLogout() {
+    this.authService.clearCacheAndLogout();
+    this.router.navigate(['/login']);
+  }
+
+  @HostListener('document:click')
+  onDocumentClick() {
+    this.showSettingsDropdown = false;
   }
 
   viewAnalysis(playlistId: string) {

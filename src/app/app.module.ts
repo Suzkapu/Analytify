@@ -23,6 +23,8 @@ import {TableModule} from "primeng/table";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {SpotifyAuthInterceptor} from "./services/auth/spotify-auth.interceptor";
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { FooterComponent } from './components/footer/footer.component';
+import { LegalComponent } from './components/legal/legal.component';
 
 
 @NgModule({
@@ -35,6 +37,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     ArtistDetailsComponent,
     PlaylistAnalysisComponent,
     UserStatsComponent,
+    FooterComponent,
+    LegalComponent,
   ],
   imports: [
     BrowserModule,

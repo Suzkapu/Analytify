@@ -7,6 +7,7 @@ import {ArtistsComponent} from "./components/artists/artists.component";
 import {ArtistDetailsComponent} from "./components/artist-details/artist-details.component";
 import {PlaylistAnalysisComponent} from "./components/playlist-analysis/playlist-analysis.component";
 import {UserStatsComponent} from "./components/user-stats/user-stats.component";
+import {LegalComponent} from "./components/legal/legal.component";
 
 const routes: Routes = [
   {path: '', component: LoginPageComponent},
@@ -17,6 +18,7 @@ const routes: Routes = [
   {path: 'artistDetails/:id', component: ArtistDetailsComponent},
   {path: 'analysis/:id', component: PlaylistAnalysisComponent},
   {path: 'stats', component: UserStatsComponent},
+  {path: 'legal', component: LegalComponent},
 ];
 
 @NgModule({
