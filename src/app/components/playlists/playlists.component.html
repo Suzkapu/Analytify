@@ -71,7 +71,11 @@
       [style.borderColor]="isSortedByCount ? '#1ed760 !important' : 'rgba(255, 255, 255, 0.2) !important'"
       [style.color]="isSortedByCount ? '#1ed760 !important' : '#e0e0e0 !important'"
       title="Sort playlists by song count">
-      <i class="pi pi-sort-alt"></i> Sort By Count
+      <i class="pi" [ngClass]="{
+        'pi-sort-alt': sortOrder === 'none',
+        'pi-sort-amount-down': sortOrder === 'desc',
+        'pi-sort-amount-up': sortOrder === 'asc'
+      }"></i> Sort By Count
     </button>
   </div>
 </div>

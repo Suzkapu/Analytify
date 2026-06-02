@@ -23,6 +23,13 @@ export class PlaylistAnalysisComponent implements OnInit {
   totalTracks: number = 0;
   cooldownMessage: string = '';
 
+  // Real-time progress properties
+  isLoadingTracks: boolean = false;
+  isLoadingArtists: boolean = false;
+  loadedArtistsDetailsCount: number = 0;
+  totalUniqueArtists: number = 0;
+  private requestedArtistIds = new Set<string>();
+
   // Analysis results
   uniqueTracksCount: number = 0;
   totalDurationFormatted: string = '';
@@ -86,18 +93,24 @@ export class PlaylistAnalysisComponent implements OnInit {
       console.log("Loading cache for analysis");
       const parsedArtists = JSON.parse(storedArtists);
       
+      this.artists = parsedArtists;
+      this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
+      this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
+      this.runAnalysis();
+
       // Self-healing check: if cache lacks images or genres, upgrade cache
       const isOldCache = parsedArtists.length > 0 && (!parsedArtists[0].images || !parsedArtists[0].genres);
       if (isOldCache) {
         console.log("Old cache detected on analysis. Reloading.");
         this.triggerApiLoad(true);
-      } else {
-        this.artists = parsedArtists;
+      }
+    } else {
+      if (storedArtists) {
+        this.artists = JSON.parse(storedArtists);
         this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
         this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
         this.runAnalysis();
       }
-    } else {
       // If we have cached data but it's expired, we do background refresh to maintain smooth UX
       this.triggerApiLoad(!!storedArtists);
     }
@@ -106,6 +119,10 @@ export class PlaylistAnalysisComponent implements OnInit {
   triggerApiLoad(isBackgroundRefresh: boolean) {
     console.log("Fetching API for analysis recursively");
     const userId = this.authService.getUserId() || 'anonymous';
+    this.requestedArtistIds.clear();
+    this.loadedArtistsDetailsCount = 0;
+    this.totalUniqueArtists = 0;
+
     let targetArray: any[];
     
     if (isBackgroundRefresh) {
@@ -113,7 +130,6 @@ export class PlaylistAnalysisComponent implements OnInit {
       this.isLoading = false;
       this.refreshingArtists = [];
       targetArray = this.refreshingArtists;
-      // Pre-fill fields for UI
       this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
       this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
     } else {
@@ -122,9 +138,11 @@ export class PlaylistAnalysisComponent implements OnInit {
       this.artists = [];
       targetArray = this.artists;
     }
+    
+    this.isLoadingTracks = true;
+    this.isLoadingArtists = true;
     this.loadedTracksCount = 0;
 
-    // Check if we have cached data for incremental load of new liked songs
     const storedArtists = this.storageService.getItem(`${userId}_${this.playlistId}`);
     if (this.playlistId === 'fav' && storedArtists) {
       console.log("Favourite Tracks detected for analysis. Starting incremental load.");
@@ -137,17 +155,24 @@ export class PlaylistAnalysisComponent implements OnInit {
             this.totalTracks = tracks.total;
             this.getArtistsFromTracks(tracks.items, targetArray);
             this.loadedTracksCount = Math.min(50, this.totalTracks);
+            
+            this.isLoading = false;
+            this.runAnalysis();
+
+            this.fetchArtistDetailsLazy(targetArray);
 
             if (this.loadedTracksCount < this.totalTracks) {
               this.loadRemainingTracks(50, 50, this.totalTracks, targetArray);
             } else {
-              this.fetchArtistDetailsAndSave(targetArray);
+              this.isLoadingTracks = false;
+              this.checkCompletion();
             }
           },
           error: (err) => {
             console.error('Failed to load first page of favourite tracks:', err);
             this.isLoading = false;
-            this.isRefreshing = false;
+            this.isLoadingTracks = false;
+            this.isLoadingArtists = false;
           }
         });
       } else {
@@ -157,17 +182,24 @@ export class PlaylistAnalysisComponent implements OnInit {
             this.totalTracks = playlist.tracks.total;
             this.getArtistsFromTracks(playlist.tracks.items, targetArray);
             this.loadedTracksCount = Math.min(100, this.totalTracks);
+            
+            this.isLoading = false;
+            this.runAnalysis();
+
+            this.fetchArtistDetailsLazy(targetArray);
 
             if (this.loadedTracksCount < this.totalTracks) {
               this.loadRemainingTracks(100, 100, this.totalTracks, targetArray);
             } else {
-              this.fetchArtistDetailsAndSave(targetArray);
+              this.isLoadingTracks = false;
+              this.checkCompletion();
             }
           },
           error: (err) => {
             console.error('Failed to load first page of playlist:', err);
             this.isLoading = false;
-            this.isRefreshing = false;
+            this.isLoadingTracks = false;
+            this.isLoadingArtists = false;
           }
         });
       }
@@ -180,15 +212,21 @@ export class PlaylistAnalysisComponent implements OnInit {
         next: (tracks: any) => {
           this.getArtistsFromTracks(tracks.items, targetArray);
           this.loadedTracksCount = Math.min(offset + limit, total);
+          
+          this.runAnalysis();
+          this.fetchArtistDetailsLazy(targetArray);
+
           if (this.loadedTracksCount < total) {
             this.loadRemainingTracks(offset + limit, limit, total, targetArray);
           } else {
-            this.fetchArtistDetailsAndSave(targetArray);
+            this.isLoadingTracks = false;
+            this.checkCompletion();
           }
         },
         error: (err) => {
           console.error('Error loading remaining fav tracks:', err);
-          this.fetchArtistDetailsAndSave(targetArray);
+          this.isLoadingTracks = false;
+          this.checkCompletion();
         }
       });
     } else {
@@ -196,15 +234,21 @@ export class PlaylistAnalysisComponent implements OnInit {
         next: (tracks: any) => {
           this.getArtistsFromTracks(tracks.items, targetArray);
           this.loadedTracksCount = Math.min(offset + limit, total);
+          
+          this.runAnalysis();
+          this.fetchArtistDetailsLazy(targetArray);
+
           if (this.loadedTracksCount < total) {
             this.loadRemainingTracks(offset + limit, limit, total, targetArray);
           } else {
-            this.fetchArtistDetailsAndSave(targetArray);
+            this.isLoadingTracks = false;
+            this.checkCompletion();
           }
         },
         error: (err) => {
           console.error('Error loading remaining playlist tracks:', err);
-          this.fetchArtistDetailsAndSave(targetArray);
+          this.isLoadingTracks = false;
+          this.checkCompletion();
         }
       });
     }
@@ -237,11 +281,17 @@ export class PlaylistAnalysisComponent implements OnInit {
         this.getArtistsFromTracks(newItems, targetArray);
         this.loadedTracksCount += newItems.length;
 
+        this.isLoading = false;
+        this.runAnalysis();
+        this.fetchArtistDetailsLazy(targetArray);
+
         if (!foundExisting && offset + limit < this.totalTracks) {
           this.loadNewerFavTracks(offset + limit, limit, cachedArtists, targetArray);
         } else {
           this.mergeCachedArtists(cachedArtists, targetArray);
-          this.fetchArtistDetailsAndSave(targetArray);
+          this.isLoadingTracks = false;
+          this.fetchArtistDetailsLazy(targetArray);
+          this.checkCompletion();
         }
       },
       error: (err) => {
@@ -250,7 +300,8 @@ export class PlaylistAnalysisComponent implements OnInit {
           this.artists = cachedArtists;
         }
         this.isLoading = false;
-        this.isRefreshing = false;
+        this.isLoadingTracks = false;
+        this.isLoadingArtists = false;
         this.runAnalysis();
       }
     });
@@ -278,70 +329,67 @@ export class PlaylistAnalysisComponent implements OnInit {
     });
   }
 
-  fetchArtistDetailsAndSave(targetArray: any[] = this.artists) {
-    const artistIds = targetArray.map(a => a.id);
-    const batches: string[][] = [];
-    
-    for (let i = 0; i < artistIds.length; i += 50) {
-      batches.push(artistIds.slice(i, i + 50));
-    }
+  fetchArtistDetailsLazy(targetArray: any[]) {
+    // Collect unique artist IDs that are not yet requested
+    const pendingIds = targetArray
+      .map(a => a.id)
+      .filter(id => !this.requestedArtistIds.has(id));
 
-    if (batches.length === 0) {
-      this.isLoading = false;
-      this.isRefreshing = false;
-      if (targetArray !== this.artists) {
-        this.artists = targetArray;
-      }
-      this.setSessionStorage();
-      this.runAnalysis();
+    if (pendingIds.length === 0) {
+      this.checkCompletion();
       return;
     }
 
-    const requests = batches.map(batch => this.spotifyDataService.getSeveralArtists(batch).pipe(
-      catchError(err => {
-        console.error('Error fetching batch of artists:', err);
-        return of({ artists: [] });
-      })
-    ));
+    // Pull 50 artists at a time
+    const batch = pendingIds.slice(0, 50);
+    batch.forEach(id => this.requestedArtistIds.add(id));
 
-    forkJoin(requests).subscribe({
-      next: (results: any[]) => {
-        const allFullArtists = results.reduce((acc, current) => {
-          return acc.concat(current.artists || []);
-        }, []);
+    this.isLoadingArtists = true;
 
+    this.spotifyDataService.getSeveralArtists(batch).subscribe({
+      next: (res: any) => {
         const artistMap = new Map<string, any>();
-        allFullArtists.forEach((a: any) => {
+        (res.artists || []).forEach((a: any) => {
           if (a) artistMap.set(a.id, a);
         });
 
         targetArray.forEach(artist => {
-          const full = artistMap.get(artist.id);
-          if (full) {
-            artist.images = full.images;
-            artist.genres = full.genres;
+          if (artistMap.has(artist.id)) {
+            const full = artistMap.get(artist.id);
+            artist.images = full.images || [];
+            artist.genres = full.genres || [];
           }
         });
 
-        this.isLoading = false;
-        this.isRefreshing = false;
-        if (targetArray !== this.artists) {
-          this.artists = targetArray;
-        }
-        this.setSessionStorage();
+        // Calculate how many unique artists now have details loaded
+        this.loadedArtistsDetailsCount = targetArray.filter(a => a.images && a.images.length > 0).length;
+        
         this.runAnalysis();
+        
+        // Load next batch
+        this.fetchArtistDetailsLazy(targetArray);
       },
       error: (err) => {
-        console.error('Error batch fetching artist details:', err);
-        this.isLoading = false;
-        this.isRefreshing = false;
-        if (targetArray !== this.artists) {
-          this.artists = targetArray;
-        }
-        this.setSessionStorage();
-        this.runAnalysis();
+        console.error('Error batch loading artists lazy details:', err);
+        // Continue queue despite individual batch error
+        this.fetchArtistDetailsLazy(targetArray);
       }
     });
+  }
+
+  checkCompletion() {
+    if (!this.isLoadingTracks && this.requestedArtistIds.size >= this.totalUniqueArtists) {
+      this.isLoadingArtists = false;
+      
+      // Ensure target array is assigned correctly before saving
+      if (this.isRefreshing) {
+        this.artists = this.refreshingArtists;
+        this.isRefreshing = false;
+      }
+      
+      this.setSessionStorage();
+      this.runAnalysis();
+    }
   }
 
   setSessionStorage() {
@@ -392,6 +440,7 @@ export class PlaylistAnalysisComponent implements OnInit {
           }
         }
       }
+      this.totalUniqueArtists = targetArray.length;
     } catch (error) {
       console.error('Error getting artists from tracks:', error);
     }
@@ -445,11 +494,25 @@ export class PlaylistAnalysisComponent implements OnInit {
     this.explicitCount = explicitCount;
     this.explicitPercentage = Math.round((explicitCount / uniqueTracks.length) * 1000) / 10;
 
-    const sortedByDuration = [...uniqueTracks].sort((a, b) => (a.duration_ms || 0) - (b.duration_ms || 0));
-    this.shortestTrack = sortedByDuration[0];
-    this.longestTrack = sortedByDuration[sortedByDuration.length - 1];
+    // Filter tracks with valid duration (e.g. at least 5 seconds, and has a value)
+    const validDurationTracks = uniqueTracks.filter(t => t.duration_ms && t.duration_ms > 5000);
+    if (validDurationTracks.length > 0) {
+      const sortedByDuration = [...validDurationTracks].sort((a, b) => a.duration_ms - b.duration_ms);
+      this.shortestTrack = sortedByDuration[0];
+      this.longestTrack = sortedByDuration[sortedByDuration.length - 1];
+    } else {
+      this.shortestTrack = null;
+      this.longestTrack = null;
+    }
 
-    const tracksWithDates = uniqueTracks.filter(t => t.album && t.album.release_date);
+    // Filter tracks with valid release dates (at least 4 characters, doesn't start with 0000 or 1970-01-01)
+    const tracksWithDates = uniqueTracks.filter(t => 
+      t.album && 
+      t.album.release_date && 
+      t.album.release_date.length >= 4 && 
+      !t.album.release_date.startsWith('0000') &&
+      !t.album.release_date.startsWith('1970-01-01')
+    );
     if (tracksWithDates.length > 0) {
       const sortedByDate = [...tracksWithDates].sort((a, b) => {
         return a.album.release_date.localeCompare(b.album.release_date);
@@ -465,9 +528,11 @@ export class PlaylistAnalysisComponent implements OnInit {
     this.artists.forEach(artist => {
       const artistSongCount = artist.tracks.length;
       if (artist.genres && artist.genres.length) {
+        // Divide count equally among the genres of this artist
+        const weightPerGenre = artistSongCount / artist.genres.length;
         artist.genres.forEach((genre: string) => {
           const count = genreCounts.get(genre) || 0;
-          genreCounts.set(genre, count + artistSongCount);
+          genreCounts.set(genre, count + weightPerGenre);
         });
       }
     });
@@ -475,7 +540,7 @@ export class PlaylistAnalysisComponent implements OnInit {
     this.topGenres = Array.from(genreCounts.entries())
       .map(([name, count]) => {
         const percentage = uniqueTracks.length > 0 ? Math.min(100, Math.round((count / uniqueTracks.length) * 100)) : 0;
-        return { name, count, percentage };
+        return { name, count: Math.round(count), percentage };
       })
       .sort((a, b) => b.count - a.count)
       .slice(0, 10);
