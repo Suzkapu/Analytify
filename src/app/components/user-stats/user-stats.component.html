@@ -84,7 +84,7 @@
         [class.p-button-outlined]="selectedCategory !== 'tracks'"
         [class.p-button-secondary]="selectedCategory !== 'tracks'"
         style="border-radius: 8px !important; padding: 8px 16px !important; display: flex; align-items: center; gap: 8px; font-size: 0.9rem !important;">
-        <i class="pi pi-music"></i> Top 100 Songs
+        <i class="pi pi-star-fill"></i> Top 100 Songs
       </button>
       <button (click)="changeCategory('artists')" class="p-button"
         [class.p-button-outlined]="selectedCategory !== 'artists'"
@@ -162,16 +162,16 @@
         available.</div>
       <div *ngIf="topGenres.length > 0" class="genre-stats-card">
         <h3>
-          <i class="pi pi-tags" style="color: #1ed760;"></i> Genre Popularity Weight
+          Genre Popularity Weight
         </h3>
         <div class="genres-list-container">
           <div *ngFor="let genre of topGenres" class="genre-row">
             <div class="genre-row-header">
               <span class="genre-name">{{ genre.name }}</span>
-              <span class="genre-percentage">{{ genre.percentage }}%</span>
+              <span class="genre-percentage">{{ genre.percentage < 1 ? '<1' : genre.percentage }}%</span>
             </div>
             <div class="progress-bar-container">
-              <div [style.width.%]="genre.percentage" class="progress-bar-fill"></div>
+              <div [style.width.%]="genre.percentage_simple" class="progress-bar-fill"></div>
             </div>
           </div>
         </div>

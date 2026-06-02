@@ -1,10 +1,10 @@
-import {Component, OnInit, ViewEncapsulation, HostListener} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {SpotifyDataService} from "../../services/spotify-data/spotify-data.service";
-import {SpotifyAuthService} from "../../services/auth/spotify-auth.service";
-import {StorageService} from "../../services/storage/storage.service";
-import {forkJoin, of} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import { Component, OnInit, ViewEncapsulation, HostListener } from '@angular/core';
+import { ActivatedRoute, Router } from "@angular/router";
+import { SpotifyDataService } from "../../services/spotify-data/spotify-data.service";
+import { SpotifyAuthService } from "../../services/auth/spotify-auth.service";
+import { StorageService } from "../../services/storage/storage.service";
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-playlist-analysis',
@@ -37,8 +37,8 @@ export class PlaylistAnalysisComponent implements OnInit {
   averagePopularity: number = 0;
   explicitCount: number = 0;
   explicitPercentage: number = 0;
-  
-  topGenres: { name: string; count: number; percentage: number }[] = [];
+
+  topGenres: { name: string; count: number; percentage: number, percentage_simple: number, visualWidth?: number }[] = [];
   longestTrack: any = null;
   shortestTrack: any = null;
   oldestTrack: any = null;
@@ -52,7 +52,7 @@ export class PlaylistAnalysisComponent implements OnInit {
     private authService: SpotifyAuthService,
     private router: Router,
     private storageService: StorageService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -92,7 +92,7 @@ export class PlaylistAnalysisComponent implements OnInit {
     if (storedArtists && !isExpired) {
       console.log("Loading cache for analysis");
       const parsedArtists = JSON.parse(storedArtists);
-      
+
       this.artists = parsedArtists;
       this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
       this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
@@ -124,7 +124,7 @@ export class PlaylistAnalysisComponent implements OnInit {
     this.totalUniqueArtists = 0;
 
     let targetArray: any[];
-    
+
     if (isBackgroundRefresh) {
       this.isRefreshing = true;
       this.isLoading = false;
@@ -138,7 +138,7 @@ export class PlaylistAnalysisComponent implements OnInit {
       this.artists = [];
       targetArray = this.artists;
     }
-    
+
     this.isLoadingTracks = true;
     this.isLoadingArtists = true;
     this.loadedTracksCount = 0;
@@ -155,7 +155,7 @@ export class PlaylistAnalysisComponent implements OnInit {
             this.totalTracks = tracks.total;
             this.getArtistsFromTracks(tracks.items, targetArray);
             this.loadedTracksCount = Math.min(50, this.totalTracks);
-            
+
             this.isLoading = false;
             this.runAnalysis();
 
@@ -182,7 +182,7 @@ export class PlaylistAnalysisComponent implements OnInit {
             this.totalTracks = playlist.tracks.total;
             this.getArtistsFromTracks(playlist.tracks.items, targetArray);
             this.loadedTracksCount = Math.min(100, this.totalTracks);
-            
+
             this.isLoading = false;
             this.runAnalysis();
 
@@ -212,7 +212,7 @@ export class PlaylistAnalysisComponent implements OnInit {
         next: (tracks: any) => {
           this.getArtistsFromTracks(tracks.items, targetArray);
           this.loadedTracksCount = Math.min(offset + limit, total);
-          
+
           this.runAnalysis();
           this.fetchArtistDetailsLazy(targetArray);
 
@@ -234,7 +234,7 @@ export class PlaylistAnalysisComponent implements OnInit {
         next: (tracks: any) => {
           this.getArtistsFromTracks(tracks.items, targetArray);
           this.loadedTracksCount = Math.min(offset + limit, total);
-          
+
           this.runAnalysis();
           this.fetchArtistDetailsLazy(targetArray);
 
@@ -263,10 +263,10 @@ export class PlaylistAnalysisComponent implements OnInit {
     this.spotifyDataService.getFavTracks(offset, limit).subscribe({
       next: (tracks: any) => {
         this.totalTracks = tracks.total;
-        
+
         let foundExisting = false;
         const newItems: any[] = [];
-        
+
         for (let item of tracks.items) {
           if (item && item.track) {
             if (cachedTrackIds.has(item.track.id)) {
@@ -277,7 +277,7 @@ export class PlaylistAnalysisComponent implements OnInit {
             }
           }
         }
-        
+
         this.getArtistsFromTracks(newItems, targetArray);
         this.loadedTracksCount += newItems.length;
 
@@ -363,9 +363,9 @@ export class PlaylistAnalysisComponent implements OnInit {
 
         // Calculate how many unique artists now have details loaded
         this.loadedArtistsDetailsCount = targetArray.filter(a => a.images && a.images.length > 0).length;
-        
+
         this.runAnalysis();
-        
+
         // Load next batch
         this.fetchArtistDetailsLazy(targetArray);
       },
@@ -380,13 +380,13 @@ export class PlaylistAnalysisComponent implements OnInit {
   checkCompletion() {
     if (!this.isLoadingTracks && this.requestedArtistIds.size >= this.totalUniqueArtists) {
       this.isLoadingArtists = false;
-      
+
       // Ensure target array is assigned correctly before saving
       if (this.isRefreshing) {
         this.artists = this.refreshingArtists;
         this.isRefreshing = false;
       }
-      
+
       this.setSessionStorage();
       this.runAnalysis();
     }
@@ -394,7 +394,7 @@ export class PlaylistAnalysisComponent implements OnInit {
 
   setSessionStorage() {
     this.artists.sort((a, b) => b.tracks.length - a.tracks.length);
-    
+
     // Explicitly map only the required fields to drastically reduce the storage payload size
     const cleanedArtists = this.artists.map((artist: any) => ({
       id: artist.id,
@@ -458,7 +458,7 @@ export class PlaylistAnalysisComponent implements OnInit {
         }
       });
     });
-    
+
     const uniqueTracks = Array.from(tracksMap.values());
     this.uniqueTracksCount = uniqueTracks.length;
 
@@ -506,10 +506,10 @@ export class PlaylistAnalysisComponent implements OnInit {
     }
 
     // Filter tracks with valid release dates (at least 4 characters, doesn't start with 0000 or 1970-01-01)
-    const tracksWithDates = uniqueTracks.filter(t => 
-      t.album && 
-      t.album.release_date && 
-      t.album.release_date.length >= 4 && 
+    const tracksWithDates = uniqueTracks.filter(t =>
+      t.album &&
+      t.album.release_date &&
+      t.album.release_date.length >= 4 &&
       !t.album.release_date.startsWith('0000') &&
       !t.album.release_date.startsWith('1970-01-01')
     );
@@ -537,13 +537,23 @@ export class PlaylistAnalysisComponent implements OnInit {
       }
     });
 
-    this.topGenres = Array.from(genreCounts.entries())
+    const totalGenresWeight = Array.from(genreCounts.values()).reduce((sum, val) => sum + val, 0);
+
+    const sorted = Array.from(genreCounts.entries())
       .map(([name, count]) => {
-        const percentage = uniqueTracks.length > 0 ? Math.min(100, Math.round((count / uniqueTracks.length) * 100)) : 0;
-        return { name, count: Math.round(count), percentage };
+        const percentage = totalGenresWeight > 0 ? Math.min(100, Math.round((count / totalGenresWeight) * 100)) : 0;
+        const percentage_simple = uniqueTracks.length > 0 ? Math.min(100, Math.round((count / uniqueTracks.length) * 100)) : 0;
+
+        return { name, count: Math.round(count), percentage, percentage_simple };
       })
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 10);
+      .sort((a, b) => b.count - a.count);
+
+    const maxCount = sorted.length > 0 ? sorted[0].count : 1;
+
+    this.topGenres = sorted.map(g => ({
+      ...g,
+      visualWidth: g.count > 0 ? Math.max(2, Math.min(100, Math.round((g.count / maxCount) * 100))) : 0
+    })).slice(0, 10);
   }
 
   formatDuration(ms: number): string {

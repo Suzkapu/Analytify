@@ -19,14 +19,14 @@ export class UserStatsComponent implements OnInit {
 
   topTracks: any[] = [];
   topArtists: any[] = [];
-  topGenres: { name: string; count: number; percentage: number }[] = [];
+  topGenres: { name: string; count: number; percentage: number; percentage_simple?: number }[] = [];
 
   constructor(
     private spotifyDataService: SpotifyDataService,
     private authService: SpotifyAuthService,
     private router: Router,
     private storageService: StorageService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadStats();
@@ -76,7 +76,7 @@ export class UserStatsComponent implements OnInit {
       console.log(`Loading stats for ${range} from cache`);
       this.topTracks = JSON.parse(cachedTracks);
       this.topArtists = JSON.parse(cachedArtists);
-      this.topGenres = JSON.parse(cachedGenres);
+      this.calculateGenres();
       this.isLoading = false;
     } else {
       console.log(`Loading stats for ${range} from API`);
@@ -142,11 +142,14 @@ export class UserStatsComponent implements OnInit {
     const sortedGenres = Array.from(genreCounts.entries())
       .sort((a, b) => b[1] - a[1]);
 
+    const totalGenresWeight = sortedGenres.reduce((sum, entry) => sum + entry[1], 0);
     const maxWeight = sortedGenres.length > 0 ? sortedGenres[0][1] : 1;
 
     this.topGenres = sortedGenres.map(([name, weight]) => {
-      const percentage = Math.min(100, Math.round((weight / maxWeight) * 100));
-      return { name, count: weight, percentage };
+      const percentage = totalGenresWeight > 0 ? Math.min(100, Math.round((weight / totalGenresWeight) * 100)) : 0;
+      const percentage_simple = weight > 0 ? Math.max(2, Math.min(100, Math.round((weight / maxWeight) * 100))) : 0;
+      return { name, count: Math.round(weight), percentage, percentage_simple };
+
     }).slice(0, 15); // Top 15 genres
   }
 
