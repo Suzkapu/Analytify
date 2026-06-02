@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {environment} from "../../../environments/environment";
 import {Observable, throwError} from 'rxjs';
 import {tap, catchError, shareReplay} from 'rxjs/operators';
+import {StorageService} from '../storage/storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,11 +15,11 @@ export class SpotifyAuthService {
   private clientId = '9b03c8eb85dd4df483c3ae097e6c39f0';
   private redirectUri = environment.appUrl + '/callback';
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private storageService: StorageService) {
   }
 
   private get accessToken(): string | null {
-    return localStorage.getItem(this.storageKey);
+    return this.storageService.getItem(this.storageKey);
   }
 
   private generateCodeVerifier(length = 64): string {
@@ -51,7 +52,7 @@ export class SpotifyAuthService {
 
   async getAuthorizationUrl(): Promise<string> {
     const verifier = this.generateCodeVerifier();
-    localStorage.setItem('spotifyCodeVerifier', verifier);
+    this.storageService.setItem('spotifyCodeVerifier', verifier);
 
     const challenge = await this.generateCodeChallenge(verifier);
     const scopes = 'playlist-read-private user-library-read user-top-read';
@@ -62,7 +63,7 @@ export class SpotifyAuthService {
   }
 
   exchangeCodeForToken(code: string): Observable<any> {
-    const verifier = localStorage.getItem('spotifyCodeVerifier') || '';
+    const verifier = this.storageService.getItem('spotifyCodeVerifier') || '';
     const body = new HttpParams()
       .set('client_id', this.clientId)
       .set('grant_type', 'authorization_code')
@@ -77,12 +78,12 @@ export class SpotifyAuthService {
     return this.http.post('https://accounts.spotify.com/api/token', body.toString(), { headers }).pipe(
       tap((response: any) => {
         if (response && response.access_token) {
-          localStorage.setItem(this.storageKey, response.access_token);
+          this.storageService.setItem(this.storageKey, response.access_token);
           if (response.refresh_token) {
-            localStorage.setItem('spotifyRefreshToken', response.refresh_token);
+            this.storageService.setItem('spotifyRefreshToken', response.refresh_token);
           }
           const expiresAt = Date.now() + (response.expires_in || 3600) * 1000;
-          localStorage.setItem('spotifyTokenExpiresAt', expiresAt.toString());
+          this.storageService.setItem('spotifyTokenExpiresAt', expiresAt.toString());
         }
       })
     );
@@ -93,7 +94,7 @@ export class SpotifyAuthService {
       return this.refreshObservable;
     }
 
-    const refreshToken = localStorage.getItem('spotifyRefreshToken') || '';
+    const refreshToken = this.storageService.getItem('spotifyRefreshToken') || '';
     if (!refreshToken) {
       return throwError(() => new Error('No refresh token found'));
     }
@@ -110,12 +111,12 @@ export class SpotifyAuthService {
     this.refreshObservable = this.http.post('https://accounts.spotify.com/api/token', body.toString(), { headers }).pipe(
       tap((response: any) => {
         if (response && response.access_token) {
-          localStorage.setItem(this.storageKey, response.access_token);
+          this.storageService.setItem(this.storageKey, response.access_token);
           if (response.refresh_token) {
-            localStorage.setItem('spotifyRefreshToken', response.refresh_token);
+            this.storageService.setItem('spotifyRefreshToken', response.refresh_token);
           }
           const expiresAt = Date.now() + (response.expires_in || 3600) * 1000;
-          localStorage.setItem('spotifyTokenExpiresAt', expiresAt.toString());
+          this.storageService.setItem('spotifyTokenExpiresAt', expiresAt.toString());
         }
         this.refreshObservable = null;
       }),
@@ -130,7 +131,7 @@ export class SpotifyAuthService {
   }
 
   isTokenExpired(): boolean {
-    const expiresAtStr = localStorage.getItem('spotifyTokenExpiresAt');
+    const expiresAtStr = this.storageService.getItem('spotifyTokenExpiresAt');
     if (!expiresAtStr) {
       return true;
     }
@@ -144,11 +145,11 @@ export class SpotifyAuthService {
   }
 
   getUserId(): string | null {
-    return localStorage.getItem('spotifyUserId');
+    return this.storageService.getItem('spotifyUserId');
   }
 
   setUserId(userId: string): void {
-    localStorage.setItem('spotifyUserId', userId);
+    this.storageService.setItem('spotifyUserId', userId);
   }
 
   isAuthenticated(): boolean {
@@ -156,10 +157,10 @@ export class SpotifyAuthService {
   }
 
   logout(): void {
-    localStorage.removeItem(this.storageKey);
-    localStorage.removeItem('spotifyUserId');
-    localStorage.removeItem('spotifyRefreshToken');
-    localStorage.removeItem('spotifyTokenExpiresAt');
+    this.storageService.removeItem(this.storageKey);
+    this.storageService.removeItem('spotifyUserId');
+    this.storageService.removeItem('spotifyRefreshToken');
+    this.storageService.removeItem('spotifyTokenExpiresAt');
   }
 }
 

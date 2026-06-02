@@ -2,6 +2,7 @@ import {Component, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SpotifyDataService} from "../../services/spotify-data/spotify-data.service";
 import {SpotifyAuthService} from "../../services/auth/spotify-auth.service";
+import {StorageService} from "../../services/storage/storage.service";
 
 @Component({
   selector: 'app-playlists', templateUrl: './playlists.component.html', styleUrls: ['./playlists.component.scss'],
@@ -18,7 +19,8 @@ export class PlaylistsComponent {
     private route: ActivatedRoute, 
     private router: Router, 
     private spotifyDataService: SpotifyDataService,
-    private authService: SpotifyAuthService
+    private authService: SpotifyAuthService,
+    private storageService: StorageService
   ) {
     this.route.params.subscribe(() => {
       this.loadPlaylists();
@@ -27,14 +29,15 @@ export class PlaylistsComponent {
   }
 
   loadUserProfile() {
-    const cached = sessionStorage.getItem('spotify_profile_pic');
+    const userId = this.authService.getUserId() || 'anonymous';
+    const cached = this.storageService.getItem(`${userId}_profile_pic`);
     if (cached !== null) {
       this.profilePicUrl = cached || null;
     } else {
       this.spotifyDataService.getCurrentUser().subscribe({
         next: (user: any) => {
           const pic = user.images && user.images[0] ? user.images[0].url : '';
-          sessionStorage.setItem('spotify_profile_pic', pic);
+          this.storageService.setItem(`${userId}_profile_pic`, pic);
           this.profilePicUrl = pic || null;
         },
         error: (err) => console.error('Failed to load user profile:', err)
@@ -45,70 +48,71 @@ export class PlaylistsComponent {
   loadPlaylists() {
     const userId = this.authService.getUserId() || 'anonymous';
     const storageKey = `${userId}_playlists`;
-    const storedPlaylists = localStorage.getItem(storageKey);
+    const lastUpdatedKey = `${storageKey}_lastUpdated`;
+    const storedPlaylists = this.storageService.getItem(storageKey);
+    const lastUpdated = this.storageService.getItem(lastUpdatedKey);
 
-    if (storedPlaylists) {
-      console.log("from storage")
+    const oneDay = 24 * 60 * 60 * 1000;
+    const isExpired = !lastUpdated || (Date.now() - parseInt(lastUpdated, 10) > oneDay);
+
+    if (storedPlaylists && !isExpired) {
+      console.log("from storage");
       this.playlists = JSON.parse(storedPlaylists);
       this.filterPlaylists();
+    } else {
+      console.log("from api");
+      this.spotifyDataService.getUserPlaylists().subscribe({
+        next: (playlists: any) => {
+          this.playlists = [...playlists.items];
 
-      // Refresh Favourite Tracks count dynamically in the background
-      this.spotifyDataService.getFavTracks(0, 1).subscribe({
-        next: (favTracks: any) => {
-          const fav = this.playlists.find(p => p.id === 'fav');
-          if (fav) {
-            fav.tracks = { total: favTracks.total };
-            localStorage.setItem(storageKey, JSON.stringify(this.playlists));
-            this.filterPlaylists();
-          }
+          // Get total amount of favourite tracks
+          this.spotifyDataService.getFavTracks(0, 1).subscribe({
+            next: (favTracks: any) => {
+              const favPlaylist = {
+                name: 'Favourite Tracks',
+                id: 'fav',
+                images: {
+                  0: {
+                    url: 'https://misc.scdn.co/liked-songs/liked-songs-300.png',
+                  },
+                },
+                tracks: {
+                  total: favTracks.total
+                }
+              };
+              this.playlists = [favPlaylist, ...this.playlists];
+              this.storageService.setItem(storageKey, JSON.stringify(this.playlists));
+              this.storageService.setItem(lastUpdatedKey, Date.now().toString());
+              this.filterPlaylists();
+            },
+            error: (err) => {
+              console.error('Failed to load favourite tracks count', err);
+              const favPlaylist = {
+                name: 'Favourite Tracks',
+                id: 'fav',
+                images: {
+                  0: {
+                    url: 'https://misc.scdn.co/liked-songs/liked-songs-300.png',
+                  },
+                },
+                tracks: {
+                  total: 0
+                }
+              };
+              this.playlists = [favPlaylist, ...this.playlists];
+              this.storageService.setItem(storageKey, JSON.stringify(this.playlists));
+              this.storageService.setItem(lastUpdatedKey, Date.now().toString());
+              this.filterPlaylists();
+            }
+          });
         },
         error: (err) => {
-          console.error('Failed to update favourite tracks count dynamically', err);
-        }
-      });
-    } else {
-      console.log("from api")
-      this.spotifyDataService.getUserPlaylists().subscribe((playlists: any) => {
-        this.playlists = [...playlists.items];
-
-        // Get total amount of favourite tracks
-        this.spotifyDataService.getFavTracks(0, 1).subscribe({
-          next: (favTracks: any) => {
-            const favPlaylist = {
-              name: 'Favourite Tracks',
-              id: 'fav',
-              images: {
-                0: {
-                  url: 'https://misc.scdn.co/liked-songs/liked-songs-300.png',
-                },
-              },
-              tracks: {
-                total: favTracks.total
-              }
-            };
-            this.playlists = [favPlaylist, ...this.playlists];
-            localStorage.setItem(storageKey, JSON.stringify(this.playlists));
-            this.filterPlaylists();
-          },
-          error: (err) => {
-            console.error('Failed to load favourite tracks count', err);
-            const favPlaylist = {
-              name: 'Favourite Tracks',
-              id: 'fav',
-              images: {
-                0: {
-                  url: 'https://misc.scdn.co/liked-songs/liked-songs-300.png',
-                },
-              },
-              tracks: {
-                total: 0
-              }
-            };
-            this.playlists = [favPlaylist, ...this.playlists];
-            localStorage.setItem(storageKey, JSON.stringify(this.playlists));
+          console.error('Failed to load playlists from API:', err);
+          if (storedPlaylists) {
+            this.playlists = JSON.parse(storedPlaylists);
             this.filterPlaylists();
           }
-        });
+        }
       });
     }
   }

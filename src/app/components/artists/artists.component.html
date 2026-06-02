@@ -70,12 +70,6 @@
         title="Sort artists by song count">
         <i class="pi pi-sort-alt"></i> Sort By Count
       </button>
-      <button (click)="refreshCache()" class="p-button p-button-outlined p-button-secondary"
-        style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px;"
-        [disabled]="isRefreshing"
-        title="Refresh playlist data from Spotify">
-        <i class="pi pi-refresh" [class.pi-spin]="isRefreshing"></i> {{ isRefreshing ? 'Refreshing...' : 'Refresh' }}
-      </button>
     </div>
   </div>
 </div>

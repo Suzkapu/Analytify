@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SpotifyDataService } from '../../services/spotify-data/spotify-data.service';
 import { SpotifyAuthService } from '../../services/auth/spotify-auth.service';
+import { StorageService } from '../../services/storage/storage.service';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 
@@ -22,7 +23,8 @@ export class UserStatsComponent implements OnInit {
   constructor(
     private spotifyDataService: SpotifyDataService,
     private authService: SpotifyAuthService,
-    private router: Router
+    private router: Router,
+    private storageService: StorageService
   ) {}
 
   ngOnInit() {
@@ -31,14 +33,15 @@ export class UserStatsComponent implements OnInit {
   }
 
   loadUserProfile() {
-    const cached = sessionStorage.getItem('spotify_profile_pic');
+    const userId = this.authService.getUserId() || 'anonymous';
+    const cached = this.storageService.getItem(`${userId}_profile_pic`);
     if (cached !== null) {
       this.profilePicUrl = cached || null;
     } else {
       this.spotifyDataService.getCurrentUser().subscribe({
         next: (user: any) => {
           const pic = user.images && user.images[0] ? user.images[0].url : '';
-          sessionStorage.setItem('spotify_profile_pic', pic);
+          this.storageService.setItem(`${userId}_profile_pic`, pic);
           this.profilePicUrl = pic || null;
         },
         error: (err) => console.error('Failed to load user profile:', err)
@@ -56,39 +59,69 @@ export class UserStatsComponent implements OnInit {
   }
 
   loadStats() {
-    this.isLoading = true;
-    this.topTracks = [];
-    this.topArtists = [];
-    this.topGenres = [];
+    const userId = this.authService.getUserId() || 'anonymous';
+    const range = this.selectedRange;
+    const lastUpdatedKey = `${userId}_stats_${range}_lastUpdated`;
+    const lastUpdated = this.storageService.getItem(lastUpdatedKey);
 
-    // Parallel fetch top artists (50) and top tracks (offset 0, limit 50; offset 50, limit 50)
-    const artistsReq = this.spotifyDataService.getUserTopArtists(this.selectedRange, 50, 0);
-    const tracksReq = this.spotifyDataService.getUserTopTracks(this.selectedRange, 50, 0);
-    const tracksReq2 = this.spotifyDataService.getUserTopTracks(this.selectedRange, 50, 50);
+    const oneDay = 24 * 60 * 60 * 1000;
+    const isExpired = !lastUpdated || (Date.now() - parseInt(lastUpdated, 10) > oneDay);
 
-    forkJoin({
-      artists: artistsReq,
-      tracks: tracksReq,
-      tracksPage2: tracksReq2
-    }).subscribe({
-      next: (res: any) => {
-        this.topArtists = res.artists.items || [];
+    const cachedTracks = this.storageService.getItem(`${userId}_stats_${range}_tracks`);
+    const cachedArtists = this.storageService.getItem(`${userId}_stats_${range}_artists`);
+    const cachedGenres = this.storageService.getItem(`${userId}_stats_${range}_genres`);
 
-        // Compile Top 100 directly into topTracks
-        const page1 = res.tracks.items || [];
-        const page2 = res.tracksPage2.items || [];
-        this.topTracks = [...page1, ...page2];
+    if (cachedTracks && cachedArtists && cachedGenres && !isExpired) {
+      console.log(`Loading stats for ${range} from cache`);
+      this.topTracks = JSON.parse(cachedTracks);
+      this.topArtists = JSON.parse(cachedArtists);
+      this.topGenres = JSON.parse(cachedGenres);
+      this.isLoading = false;
+    } else {
+      console.log(`Loading stats for ${range} from API`);
+      this.isLoading = true;
+      this.topTracks = [];
+      this.topArtists = [];
+      this.topGenres = [];
 
-        // Calculate Genres from top artists
-        this.calculateGenres();
+      const artistsReq = this.spotifyDataService.getUserTopArtists(range, 50, 0);
+      const tracksReq = this.spotifyDataService.getUserTopTracks(range, 50, 0);
+      const tracksReq2 = this.spotifyDataService.getUserTopTracks(range, 50, 50);
 
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Failed to load user stats:', err);
-        this.isLoading = false;
-      }
-    });
+      forkJoin({
+        artists: artistsReq,
+        tracks: tracksReq,
+        tracksPage2: tracksReq2
+      }).subscribe({
+        next: (res: any) => {
+          this.topArtists = res.artists.items || [];
+
+          const page1 = res.tracks.items || [];
+          const page2 = res.tracksPage2.items || [];
+          this.topTracks = [...page1, ...page2];
+
+          this.calculateGenres();
+
+          // Cache the results
+          this.storageService.setItem(`${userId}_stats_${range}_tracks`, JSON.stringify(this.topTracks));
+          this.storageService.setItem(`${userId}_stats_${range}_artists`, JSON.stringify(this.topArtists));
+          this.storageService.setItem(`${userId}_stats_${range}_genres`, JSON.stringify(this.topGenres));
+          this.storageService.setItem(lastUpdatedKey, Date.now().toString());
+
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Failed to load user stats:', err);
+          this.isLoading = false;
+          // Fallback if API fails but we have stale cache
+          if (cachedTracks && cachedArtists && cachedGenres) {
+            this.topTracks = JSON.parse(cachedTracks);
+            this.topArtists = JSON.parse(cachedArtists);
+            this.topGenres = JSON.parse(cachedGenres);
+          }
+        }
+      });
+    }
   }
 
   calculateGenres() {
