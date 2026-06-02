@@ -11,14 +11,13 @@ import { forkJoin } from 'rxjs';
 })
 export class UserStatsComponent implements OnInit {
   selectedRange: string = 'short_term'; // 'short_term', 'medium_term', 'long_term'
-  selectedCategory: string = 'tracks'; // 'tracks', 'artists', 'genres', 'top100'
+  selectedCategory: string = 'tracks'; // 'tracks', 'artists', 'genres'
   isLoading: boolean = false;
   profilePicUrl: string | null = null;
 
   topTracks: any[] = [];
   topArtists: any[] = [];
   topGenres: { name: string; count: number; percentage: number }[] = [];
-  top100Tracks: any[] = [];
 
   constructor(
     private spotifyDataService: SpotifyDataService,
@@ -61,7 +60,6 @@ export class UserStatsComponent implements OnInit {
     this.topTracks = [];
     this.topArtists = [];
     this.topGenres = [];
-    this.top100Tracks = [];
 
     // Parallel fetch top artists (50) and top tracks (offset 0, limit 50; offset 50, limit 50)
     const artistsReq = this.spotifyDataService.getUserTopArtists(this.selectedRange, 50, 0);
@@ -75,12 +73,11 @@ export class UserStatsComponent implements OnInit {
     }).subscribe({
       next: (res: any) => {
         this.topArtists = res.artists.items || [];
-        this.topTracks = res.tracks.items || [];
 
-        // Compile Top 100
+        // Compile Top 100 directly into topTracks
         const page1 = res.tracks.items || [];
         const page2 = res.tracksPage2.items || [];
-        this.top100Tracks = [...page1, ...page2];
+        this.topTracks = [...page1, ...page2];
 
         // Calculate Genres from top artists
         this.calculateGenres();

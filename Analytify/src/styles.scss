@@ -70,6 +70,7 @@ body {
     transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
+    gap: 6px;
 
     &:hover {
       color: #ffffff !important;
@@ -96,6 +97,56 @@ body {
     justify-content: flex-end;
     gap: 12px;
     flex: 1 1 0%;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    flex-wrap: wrap;
+    padding: 0.6rem 1rem !important;
+    gap: 12px;
+
+    .header-left {
+      flex: 1 0 auto;
+      gap: 8px;
+    }
+
+    .header-logo .logo-text {
+      font-size: 1.25rem;
+    }
+
+    .header-nav {
+      margin-left: 10px !important;
+      gap: 4px !important;
+    }
+
+    .nav-link {
+      font-size: 0.85rem;
+      padding: 4px 8px;
+    }
+
+    .header-center {
+      width: 100%;
+      order: 3;
+      margin-top: 4px;
+      
+      .p-input-icon-left, .search-input {
+        width: 100% !important;
+      }
+    }
+
+    .header-right {
+      flex: 0 0 auto;
+      gap: 8px;
+    }
+  }
+
+  .back-bar-container {
+    padding: 8px 1rem !important;
+  }
+  
+  .hide-mobile {
+    display: none !important;
   }
 }
 
@@ -278,31 +329,39 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: 80vw;
   max-width: 1000px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Premium Glassmorphic Cards */
-.custom-card {
-  background: #181818 !important;
-  border: 1px solid rgba(255, 255, 255, 0.04) !important;
-  border-radius: 16px !important;
+@media (max-width: 768px) {
+  .card-container {
+    width: 100% !important;
+    padding: 0 1rem !important;
+  }
+}
+
+/* Custom Premium Glassmorphic Cards (Replaces p-card) */
+.item-card {
+  background: #181818;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
   width: 100%;
   margin-bottom: 16px;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-  color: #ffffff !important;
+  padding: 1.25rem;
+  box-sizing: border-box;
+  color: #ffffff;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  flex-direction: column;
 
   &:hover {
     transform: translateY(-4px);
-    background: #242424 !important;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4) !important;
-    border-color: rgba(29, 185, 84, 0.15) !important;
-  }
-
-  .p-card-body {
-    padding: 1.25rem !important;
+    background: #242424;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4), 0 0 15px rgba(29, 185, 84, 0.1);
+    border-color: rgba(29, 185, 84, 0.25);
   }
 
   h2 {

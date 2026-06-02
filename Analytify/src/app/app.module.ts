@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {NgModule, isDevMode} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -22,6 +22,7 @@ import {MultiSelectModule} from "primeng/multiselect";
 import {TableModule} from "primeng/table";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {SpotifyAuthInterceptor} from "./services/auth/spotify-auth.interceptor";
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 
 @NgModule({
@@ -47,7 +48,13 @@ import {SpotifyAuthInterceptor} from "./services/auth/spotify-auth.interceptor";
     DropdownModule,
     TagModule,
     MultiSelectModule,
-    TableModule
+    TableModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: SpotifyAuthInterceptor, multi: true }

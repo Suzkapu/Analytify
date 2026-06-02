@@ -5,46 +5,226 @@
   margin-bottom: 1rem;
 }
 
-.search-input {
-  font-size: 20px;
-  padding-left: 30px;
-  width: 40vw;
-  border-radius: 15px;
+.artists-top-bar {
+  @media (max-width: 768px) {
+    width: 100% !important;
+    padding: 0 1rem !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+    .back-text-button {
+      position: static !important;
+      align-self: flex-start;
+    }
+
+    h2 {
+      font-size: 1.6rem !important;
+    }
+  }
 }
 
-.search-input::placeholder {
-  font-size: 16px;
-  padding-left: 10px;
-  color: rgb(0, 0, 0, 0.3);
+.artists-header-container {
+  width: 80vw;
+  max-width: 1000px;
+  margin: 14px auto 0 auto;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 }
 
-.card-container {
+.artists-controls-bar {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin: 0 auto;
+  margin-top: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 14px;
+
+  .controls-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .search-container {
+      display: inline-flex;
+      position: relative;
+      
+      .search-input {
+        width: 280px;
+        font-size: 0.95rem;
+        border-radius: 20px;
+        padding-left: 2.5rem;
+      }
+    }
+  }
+
+  .controls-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    padding-bottom: 12px;
+
+    .controls-left {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+
+      .search-container {
+        width: 100%;
+        display: flex;
+        
+        .search-input {
+          width: 100%;
+        }
+      }
+    }
+
+    .controls-right {
+      width: 100%;
+      gap: 8px;
+
+      button, ::ng-deep .p-button {
+        flex: 1;
+        justify-content: center;
+        text-align: center;
+      }
+    }
+  }
 }
 
-.custom-card {
-  background-color: #d7d7d7;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  width: 80vw;
-
+.item-card {
   .card-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
+    width: 100%;
+    min-height: 110px;
 
-  .group-left {
-    display: flex;
-    align-items: center;
+    .card-info {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-grow: 1;
+      min-width: 0;
 
-    .track-count {
-      font-size: 20px;
-      margin-right: 20px;
+      .artist-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid rgba(255, 255, 255, 0.08);
+        flex-shrink: 0;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+      }
+
+      .artist-details {
+        min-width: 0;
+
+        .artist-name-text {
+          margin: 0;
+          font-size: 1.5rem;
+          font-weight: 800;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          color: #ffffff;
+        }
+
+        .genres-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin-top: 8px;
+
+          .genre-tag {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            color: #b3b3b3;
+            font-weight: 600;
+            text-transform: capitalize;
+          }
+        }
+      }
+    }
+
+    .group-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-left: 24px;
+      flex-shrink: 0;
+
+      .track-count {
+        margin: 0;
+        font-size: 1.3rem;
+        color: #1ed760;
+        font-weight: 800;
+      }
+
+      button, ::ng-deep .p-button {
+        font-size: 0.95rem !important;
+        padding: 0.6rem 1.4rem !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 16px;
+      min-height: auto;
+
+      .card-info {
+        width: 100%;
+        gap: 16px;
+
+        .artist-image {
+          width: 80px;
+          height: 80px;
+        }
+
+        .artist-details {
+          .artist-name-text {
+            font-size: 1.25rem;
+          }
+          .genres-tags {
+            margin-top: 6px;
+            gap: 4px;
+            .genre-tag {
+              font-size: 0.75rem;
+              padding: 2px 8px;
+            }
+          }
+        }
+      }
+
+      .group-left {
+        margin-left: 0;
+        width: 100%;
+        justify-content: space-between;
+
+        .track-count {
+          font-size: 1.1rem;
+        }
+
+        button, ::ng-deep .p-button {
+          flex-grow: 0;
+          font-size: 0.85rem !important;
+          padding: 0.5rem 1.2rem !important;
+        }
+      }
     }
   }
 }
@@ -52,10 +232,6 @@
 .sort-button {
   background-color: #d7d7d7;
   color: #000;
-}
-
-.playlist-name {
-  text-align: center;
 }
 
 .no-artists {

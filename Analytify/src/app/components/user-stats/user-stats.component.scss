@@ -1,1 +1,452 @@
-/* Local SCSS stylesheet for UserStatsComponent */
+.stats-dashboard-container {
+  width: 80vw;
+  max-width: 1000px;
+  margin: 30px auto;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin: 16px auto;
+    padding: 0 12px;
+  }
+}
+
+.stats-selectors-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stats-selectors-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 16px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    
+    div:first-child {
+      text-align: center;
+      h2 {
+        font-size: 1.6rem !important;
+      }
+    }
+  }
+}
+
+.time-range-toggles {
+  display: flex;
+  background: #181818;
+  padding: 4px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  @media (max-width: 768px) {
+    width: 100%;
+    
+    button {
+      flex: 1;
+      text-align: center;
+      font-size: 0.8rem !important;
+      padding: 6px 8px !important;
+    }
+  }
+}
+
+.category-tabs {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+
+  button, ::ng-deep .p-button {
+    font-size: 1.05rem !important;
+    padding: 10px 22px !important;
+    border-radius: 12px !important;
+
+    i {
+      font-size: 1.1rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    gap: 8px;
+
+    button, ::ng-deep .p-button {
+      flex: 1 1 calc(50% - 4px);
+      justify-content: center;
+      font-size: 0.9rem !important;
+      padding: 10px 8px !important;
+      
+      i {
+        font-size: 0.95rem;
+      }
+    }
+  }
+}
+
+.stats-tracks-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+}
+
+.track-row-card {
+  background: #181818;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #222 !important;
+    border-color: rgba(29, 185, 84, 0.15) !important;
+  }
+
+  .track-index {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #a7a7a7;
+    width: 28px;
+    text-align: center;
+  }
+
+  .track-cover {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    cursor: pointer;
+    object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.04);
+    }
+  }
+
+  .track-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex-grow: 1;
+
+    .track-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+      display: block;
+      transition: color 0.2s;
+
+      &:hover {
+        color: #1ed760;
+      }
+    }
+
+    .track-artist {
+      font-size: 0.9rem;
+      color: #b3b3b3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+      margin-top: 4px;
+    }
+  }
+
+  .track-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+
+    .explicit-badge {
+      background: rgba(255, 50, 50, 0.15);
+      color: #ff5252;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 2px 5px;
+      border-radius: 3px;
+      text-transform: uppercase;
+    }
+
+    .popularity-badge {
+      font-size: 0.85rem;
+      color: #888;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+
+      i {
+        color: #1db954;
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 12px;
+    gap: 12px;
+    border-radius: 12px;
+
+    .track-index {
+      font-size: 1rem;
+      width: 24px;
+    }
+
+    .track-cover {
+      width: 52px;
+      height: 52px;
+    }
+
+    .track-info {
+      .track-title {
+        font-size: 0.95rem;
+      }
+      .track-artist {
+        font-size: 0.82rem;
+      }
+    }
+
+    .track-meta {
+      gap: 6px;
+      .popularity-badge {
+        font-size: 0.78rem;
+      }
+    }
+  }
+}
+
+.stats-artists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+}
+
+.artist-grid-card {
+  background: #181818;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.25s ease;
+
+  &:hover {
+    background: #222 !important;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .artist-avatar-container {
+    position: relative;
+    display: inline-block;
+
+    .artist-avatar {
+      width: 135px;
+      height: 135px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255, 255, 255, 0.06);
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+      transition: border-color 0.25s, transform 0.25s;
+
+      &:hover {
+        border-color: #1ed760;
+        transform: scale(1.03);
+      }
+    }
+
+    .artist-rank-badge {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      background: #1ed760;
+      color: #ffffff;
+      font-size: 0.85rem;
+      font-weight: 800;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2.5px solid #181818;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  .artist-name {
+    margin: 14px 0 6px 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #1ed760;
+    }
+  }
+
+  .artist-genre {
+    font-size: 0.85rem;
+    color: #888;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    padding: 14px;
+    border-radius: 16px;
+
+    .artist-avatar-container {
+      .artist-avatar {
+        width: 105px;
+        height: 105px;
+      }
+      .artist-rank-badge {
+        width: 28px;
+        height: 28px;
+        font-size: 0.78rem;
+        border-width: 2px;
+      }
+    }
+
+    .artist-name {
+      font-size: 0.98rem;
+      margin: 10px 0 4px 0;
+    }
+
+    .artist-genre {
+      font-size: 0.78rem;
+    }
+  }
+}
+
+.genre-stats-card {
+  background: #181818;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 24px;
+  padding: 32px;
+  width: 100%;
+  box-sizing: border-box;
+
+  h3 {
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: #ffffff;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .genres-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .genre-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .genre-row-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 1.15rem;
+
+      .genre-name {
+        font-weight: 700;
+        color: #ffffff;
+        text-transform: capitalize;
+      }
+
+      .genre-percentage {
+        font-weight: 700;
+        color: #1ed760;
+      }
+    }
+
+    .progress-bar-container {
+      background: #282828;
+      height: 12px;
+      border-radius: 6px;
+      overflow: hidden;
+      width: 100%;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+
+      .progress-bar-fill {
+        background: linear-gradient(90deg, #1db954, #1ed760);
+        height: 100%;
+        border-radius: 6px;
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 20px;
+    border-radius: 16px;
+
+    h3 {
+      font-size: 1.25rem;
+      margin-bottom: 20px;
+    }
+
+    .genres-list-container {
+      gap: 18px;
+    }
+
+    .genre-row {
+      gap: 6px;
+
+      .genre-row-header {
+        font-size: 0.95rem;
+      }
+
+      .progress-bar-container {
+        height: 10px;
+        border-radius: 5px;
+        .progress-bar-fill {
+          border-radius: 5px;
+        }
+      }
+    }
+  }
+}
+

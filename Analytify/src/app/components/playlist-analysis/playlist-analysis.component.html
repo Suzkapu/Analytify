@@ -7,16 +7,15 @@
     
     <!-- Navigation Buttons -->
     <nav class="header-nav" style="display: flex; gap: 8px; margin-left: 20px;">
-      <a routerLink="/playlists" class="nav-link" routerLinkActive="active-nav" [routerLinkActiveOptions]="{exact: true}">Browse Playlists</a>
-      <a routerLink="/stats" class="nav-link" routerLinkActive="active-nav">Show Stats</a>
+      <a routerLink="/playlists" class="nav-link" routerLinkActive="active-nav" [routerLinkActiveOptions]="{exact: true}"><i class="pi pi-compass" style="font-size: 0.95rem;"></i> <span class="hide-mobile">Browse Playlists</span></a>
+      <a routerLink="/stats" class="nav-link" routerLinkActive="active-nav"><i class="pi pi-chart-bar" style="font-size: 0.95rem;"></i> <span class="hide-mobile">Personal Stats</span></a>
     </nav>
   </div>
   <div class="header-center">
-    <h3 style="margin: 0; font-weight: 700; color: #ffffff; font-size: 1.25rem;">Playlist Analysis</h3>
   </div>
   <div class="header-right">
     <button (click)="logout()" class="p-button logout-button">
-      <i class="pi pi-sign-out"></i> Logout
+      <i class="pi pi-sign-out"></i> <span class="hide-mobile">Logout</span>
     </button>
     <!-- User Profile Picture -->
     <div class="user-profile-header" *ngIf="profilePicUrl" style="display: flex; align-items: center;" title="Logged in">
@@ -54,21 +53,34 @@
 </div>
 
 <!-- Main Analysis Dashboard -->
-<div *ngIf="!isLoading" class="analysis-dashboard-container" style="max-width: 1100px; margin: 24px auto; padding: 0 20px; box-sizing: border-box;">
+<div *ngIf="!isLoading" class="analysis-dashboard-container">
   
   <!-- Playlist Header -->
-  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+  <div class="analysis-header-row">
     <div>
       <span style="font-size: 0.85rem; font-weight: 700; color: #1db954; text-transform: uppercase; letter-spacing: 1px;">Playlist Analytics</span>
       <h2 style="margin: 4px 0 0 0; font-weight: 800; font-size: 2.2rem; color: #ffffff;">{{ playlistName }}</h2>
     </div>
-    <button (click)="refreshCache()" class="p-button p-button-outlined p-button-secondary" style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px;" title="Refresh analysis data">
-      <i class="pi pi-refresh"></i> Recalculate
+    <button (click)="refreshCache()" class="p-button p-button-outlined p-button-secondary" style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px;" [disabled]="isRefreshing" title="Refresh analysis data">
+      <i class="pi pi-refresh" [class.pi-spin]="isRefreshing"></i> {{ isRefreshing ? 'Recalculating...' : 'Recalculate' }}
     </button>
   </div>
 
+  <!-- Background Refresh Progress Bar -->
+  <div *ngIf="isRefreshing" style="background: rgba(29, 185, 84, 0.08); border: 1px solid rgba(29, 185, 84, 0.2); border-radius: 12px; padding: 12px 20px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 8px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem;">
+      <span style="color: #e0e0e0; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+        <i class="pi pi-spin pi-spinner" style="color: #1db954;"></i> Updating playlist details in background...
+      </span>
+      <span style="color: #1db954; font-weight: 700;">{{ loadedTracksCount }} / {{ totalTracks }} songs loaded</span>
+    </div>
+    <div style="background-color: rgba(255, 255, 255, 0.08); height: 6px; border-radius: 3px; overflow: hidden; position: relative; width: 100%;">
+      <div [style.width.%]="totalTracks > 0 ? (loadedTracksCount / totalTracks) * 100 : 0" style="background-color: #1db954; height: 100%; transition: width 0.25s ease-out; border-radius: 3px;"></div>
+    </div>
+  </div>
+
   <!-- Summary Metrics Grid -->
-  <div class="metrics-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 30px;">
+  <div class="metrics-grid">
     
     <!-- Total Tracks -->
     <div class="metric-card" style="background: #181818; border: 1px solid rgba(255,255,255,0.03); border-radius: 16px; padding: 20px; text-align: left; display: flex; align-items: center; gap: 16px;">
@@ -133,25 +145,25 @@
   </div>
 
   <!-- Two-Column Layout -->
-  <div class="dashboard-columns" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 24px;">
+  <div class="dashboard-columns">
     
     <!-- Left Column: Genres -->
-    <div class="column-card" style="background: #181818; border: 1px solid rgba(255,255,255,0.03); border-radius: 20px; padding: 24px;">
-      <h3 style="font-weight: 800; font-size: 1.3rem; color: #ffffff; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-        <i class="pi pi-tags" style="color: #1db954; font-size: 1.2rem;"></i> Top Genres in Playlist
+    <div class="column-card genre-analysis-card" style="background: #181818; border: 1px solid rgba(255,255,255,0.03); border-radius: 20px; padding: 24px;">
+      <h3>
+        <i class="pi pi-tags" style="color: #1db954;"></i> Top Genres in Playlist
       </h3>
       
       <div *ngIf="topGenres.length === 0" style="color: #666; padding: 20px 0; text-align: center;">No genres found for these artists.</div>
       
-      <div *ngIf="topGenres.length > 0" style="display: flex; flex-direction: column; gap: 16px;">
-        <div *ngFor="let genre of topGenres" style="display: flex; flex-direction: column; gap: 6px;">
-          <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem;">
-            <span style="font-weight: 700; color: #ffffff; text-transform: capitalize;">{{ genre.name }}</span>
-            <span style="font-weight: 600; color: #a7a7a7;">{{ genre.percentage }}% <span style="font-size: 0.8rem; color: #666;">({{ genre.count }} matches)</span></span>
+      <div *ngIf="topGenres.length > 0" class="genres-list-container">
+        <div *ngFor="let genre of topGenres" class="genre-row">
+          <div class="genre-row-header">
+            <span class="genre-name">{{ genre.name }}</span>
+            <span class="genre-percentage">{{ genre.percentage }}% <span class="genre-matches">({{ genre.count }} matches)</span></span>
           </div>
           <!-- Custom ProgressBar -->
-          <div style="background: #282828; height: 8px; border-radius: 4px; overflow: hidden; width: 100%;">
-            <div [style.width.%]="genre.percentage" style="background: linear-gradient(90deg, #1db954, #1ed760); height: 100%; border-radius: 4px; transition: width 0.3s ease;"></div>
+          <div class="progress-bar-container">
+            <div [style.width.%]="genre.percentage" class="progress-bar-fill"></div>
           </div>
         </div>
       </div>
@@ -162,34 +174,34 @@
       
       <!-- Timeline Highlights -->
       <div class="column-card" style="background: #181818; border: 1px solid rgba(255,255,255,0.03); border-radius: 20px; padding: 24px;">
-        <h3 style="font-weight: 800; font-size: 1.3rem; color: #ffffff; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+        <h3 style="font-weight: 800; font-size: 1.35rem; color: #ffffff; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
           <i class="pi pi-calendar" style="color: #1db954; font-size: 1.2rem;"></i> Release Highlights
         </h3>
 
         <div style="display: flex; flex-direction: column; gap: 16px;">
           
           <!-- Oldest Song -->
-          <div *ngIf="oldestTrack" style="display: flex; align-items: center; gap: 16px; background: #242424; padding: 12px; border-radius: 12px; cursor: pointer;" (click)="openTrackClick(oldestTrack.external_urls?.spotify)">
-            <img [src]="oldestTrack.album?.images && oldestTrack.album?.images[0] ? oldestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="Album Art" style="width: 50px; height: 50px; border-radius: 6px; object-fit: cover;">
-            <div style="flex-grow: 1; min-width: 0;">
-              <span style="font-size: 0.7rem; font-weight: 800; color: #1db954; text-transform: uppercase; letter-spacing: 0.5px;">Oldest Release</span>
-              <h4 style="margin: 2px 0 0 0; font-size: 0.95rem; font-weight: 700; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ oldestTrack.name }}</h4>
-              <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: #b3b3b3;">{{ oldestTrack.artist_name }}</p>
+          <div *ngIf="oldestTrack" class="highlight-track-card" (click)="openTrackClick(oldestTrack.external_urls?.spotify)">
+            <img [src]="oldestTrack.album?.images && oldestTrack.album?.images[0] ? oldestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="Album Art" class="highlight-track-art">
+            <div class="highlight-track-info">
+              <span class="highlight-track-tag tag-green">Oldest Release</span>
+              <h4 class="highlight-track-title">{{ oldestTrack.name }}</h4>
+              <p class="highlight-track-artist">{{ oldestTrack.artist_name }}</p>
             </div>
-            <div style="text-align: right; flex-shrink: 0; background: rgba(29, 185, 84, 0.1); padding: 4px 10px; border-radius: 8px; font-weight: 800; color: #1ed760; font-size: 0.95rem;">
+            <div class="highlight-track-badge">
               {{ getYearFromDate(oldestTrack.album?.release_date) }}
             </div>
           </div>
 
           <!-- Newest Song -->
-          <div *ngIf="newestTrack" style="display: flex; align-items: center; gap: 16px; background: #242424; padding: 12px; border-radius: 12px; cursor: pointer;" (click)="openTrackClick(newestTrack.external_urls?.spotify)">
-            <img [src]="newestTrack.album?.images && newestTrack.album?.images[0] ? newestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="Album Art" style="width: 50px; height: 50px; border-radius: 6px; object-fit: cover;">
-            <div style="flex-grow: 1; min-width: 0;">
-              <span style="font-size: 0.7rem; font-weight: 800; color: #1db954; text-transform: uppercase; letter-spacing: 0.5px;">Newest Release</span>
-              <h4 style="margin: 2px 0 0 0; font-size: 0.95rem; font-weight: 700; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ newestTrack.name }}</h4>
-              <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: #b3b3b3;">{{ newestTrack.artist_name }}</p>
+          <div *ngIf="newestTrack" class="highlight-track-card" (click)="openTrackClick(newestTrack.external_urls?.spotify)">
+            <img [src]="newestTrack.album?.images && newestTrack.album?.images[0] ? newestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="Album Art" class="highlight-track-art">
+            <div class="highlight-track-info">
+              <span class="highlight-track-tag tag-green">Newest Release</span>
+              <h4 class="highlight-track-title">{{ newestTrack.name }}</h4>
+              <p class="highlight-track-artist">{{ newestTrack.artist_name }}</p>
             </div>
-            <div style="text-align: right; flex-shrink: 0; background: rgba(29, 185, 84, 0.1); padding: 4px 10px; border-radius: 8px; font-weight: 800; color: #1ed760; font-size: 0.95rem;">
+            <div class="highlight-track-badge">
               {{ getYearFromDate(newestTrack.album?.release_date) }}
             </div>
           </div>
@@ -199,34 +211,34 @@
 
       <!-- Length Extremes -->
       <div class="column-card" style="background: #181818; border: 1px solid rgba(255,255,255,0.03); border-radius: 20px; padding: 24px;">
-        <h3 style="font-weight: 800; font-size: 1.3rem; color: #ffffff; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+        <h3 style="font-weight: 800; font-size: 1.35rem; color: #ffffff; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
           <i class="pi pi-arrows-h" style="color: #1db954; font-size: 1.2rem;"></i> Song Length Extremes
         </h3>
 
         <div style="display: flex; flex-direction: column; gap: 16px;">
           
           <!-- Shortest Song -->
-          <div *ngIf="shortestTrack" style="display: flex; align-items: center; gap: 16px; background: #242424; padding: 12px; border-radius: 12px; cursor: pointer;" (click)="openTrackClick(shortestTrack.external_urls?.spotify)">
-            <img [src]="shortestTrack.album?.images && shortestTrack.album?.images[0] ? shortestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="Album Art" style="width: 50px; height: 50px; border-radius: 6px; object-fit: cover;">
-            <div style="flex-grow: 1; min-width: 0;">
-              <span style="font-size: 0.7rem; font-weight: 800; color: #1db954; text-transform: uppercase; letter-spacing: 0.5px;">Shortest Song</span>
-              <h4 style="margin: 2px 0 0 0; font-size: 0.95rem; font-weight: 700; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ shortestTrack.name }}</h4>
-              <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: #b3b3b3;">{{ shortestTrack.artist_name }}</p>
+          <div *ngIf="shortestTrack" class="highlight-track-card" (click)="openTrackClick(shortestTrack.external_urls?.spotify)">
+            <img [src]="shortestTrack.album?.images && shortestTrack.album?.images[0] ? shortestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="Album Art" class="highlight-track-art">
+            <div class="highlight-track-info">
+              <span class="highlight-track-tag tag-grey">Shortest Song</span>
+              <h4 class="highlight-track-title">{{ shortestTrack.name }}</h4>
+              <p class="highlight-track-artist">{{ shortestTrack.artist_name }}</p>
             </div>
-            <div style="text-align: right; flex-shrink: 0; background: rgba(255, 255, 255, 0.05); padding: 4px 10px; border-radius: 8px; font-weight: 700; color: #ffffff; font-size: 0.95rem;">
+            <div class="highlight-track-badge-grey">
               {{ formatDurationShort(shortestTrack.duration_ms) }}
             </div>
           </div>
 
           <!-- Longest Song -->
-          <div *ngIf="longestTrack" style="display: flex; align-items: center; gap: 16px; background: #242424; padding: 12px; border-radius: 12px; cursor: pointer;" (click)="openTrackClick(longestTrack.external_urls?.spotify)">
-            <img [src]="longestTrack.album?.images && longestTrack.album?.images[0] ? longestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="Album Art" style="width: 50px; height: 50px; border-radius: 6px; object-fit: cover;">
-            <div style="flex-grow: 1; min-width: 0;">
-              <span style="font-size: 0.7rem; font-weight: 800; color: #1db954; text-transform: uppercase; letter-spacing: 0.5px;">Longest Song</span>
-              <h4 style="margin: 2px 0 0 0; font-size: 0.95rem; font-weight: 700; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ longestTrack.name }}</h4>
-              <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: #b3b3b3;">{{ longestTrack.artist_name }}</p>
+          <div *ngIf="longestTrack" class="highlight-track-card" (click)="openTrackClick(longestTrack.external_urls?.spotify)">
+            <img [src]="longestTrack.album?.images && longestTrack.album?.images[0] ? longestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="Album Art" class="highlight-track-art">
+            <div class="highlight-track-info">
+              <span class="highlight-track-tag tag-grey">Longest Song</span>
+              <h4 class="highlight-track-title">{{ longestTrack.name }}</h4>
+              <p class="highlight-track-artist">{{ longestTrack.artist_name }}</p>
             </div>
-            <div style="text-align: right; flex-shrink: 0; background: rgba(255, 255, 255, 0.05); padding: 4px 10px; border-radius: 8px; font-weight: 700; color: #ffffff; font-size: 0.95rem;">
+            <div class="highlight-track-badge-grey">
               {{ formatDurationShort(longestTrack.duration_ms) }}
             </div>
           </div>

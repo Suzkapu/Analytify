@@ -8,21 +8,15 @@
     <!-- Navigation Buttons -->
     <nav class="header-nav" style="display: flex; gap: 8px; margin-left: 20px;">
       <a routerLink="/playlists" class="nav-link" routerLinkActive="active-nav"
-        [routerLinkActiveOptions]="{exact: true}">Browse Playlists</a>
-      <a routerLink="/stats" class="nav-link" routerLinkActive="active-nav">Show Stats</a>
+        [routerLinkActiveOptions]="{exact: true}"><i class="pi pi-compass" style="font-size: 0.95rem;"></i> <span class="hide-mobile">Browse Playlists</span></a>
+      <a routerLink="/stats" class="nav-link" routerLinkActive="active-nav"><i class="pi pi-chart-bar" style="font-size: 0.95rem;"></i> <span class="hide-mobile">Personal Stats</span></a>
     </nav>
   </div>
   <div class="header-center">
-    <span class="p-input-icon-left" *ngIf="artists.length !== 0 && !isLoading">
-      <i class="pi pi-search"></i>
-      <input (input)="filterArtists()" [(ngModel)]="searchText" class="search-input" pInputText
-        placeholder="Search artists..." type="text"
-        style="width: 300px; border-radius: 20px; font-size: 0.95rem; padding-left: 2.5rem;" />
-    </span>
   </div>
   <div class="header-right">
     <button (click)="logout()" class="p-button logout-button">
-      <i class="pi pi-sign-out"></i> Logout
+      <i class="pi pi-sign-out"></i> <span class="hide-mobile">Logout</span>
     </button>
     <!-- User Profile Picture -->
     <div class="user-profile-header" *ngIf="profilePicUrl" style="display: flex; align-items: center;"
@@ -40,10 +34,63 @@
 </header>
 
 <!-- Under-Header Back Button -->
-<div class="back-bar-container">
+<div class="back-bar-container" style="position: absolute; z-index: 10;">
   <button (click)="goBack()" class="back-text-button" title="Back to Playlists">
     <i class="pi pi-arrow-left"></i> Back
   </button>
+</div>
+
+<!-- Artists Centered Title -->
+<div class="artists-top-bar" *ngIf="!isLoading && artists.length !== 0" style="display: flex; align-items: center; justify-content: center; min-height: 48px; width: 80vw; max-width: 1000px; margin: 20px auto 0 auto; box-sizing: border-box;">
+  <div style="text-align: center;">
+    <span
+      style="font-size: 0.8rem; font-weight: 800; color: #1db954; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px;">Spotify
+      Analytics</span>
+    <h2 style="margin: 0; font-weight: 800; color: #ffffff; font-size: 1.9rem;">Your Artists</h2>
+  </div>
+</div>
+
+<!-- Artists Header Section -->
+<div class="artists-header-container" *ngIf="!isLoading && artists.length !== 0">
+  <div class="artists-controls-bar">
+    <div class="controls-left">
+      <span class="p-input-icon-left search-container">
+        <i class="pi pi-search"></i>
+        <input (input)="filterArtists()" [(ngModel)]="searchText" class="search-input" pInputText
+          placeholder="Search artists..." type="text"
+          style="border-radius: 20px; font-size: 0.95rem; padding-left: 2.5rem;" />
+      </span>
+    </div>
+    <div class="controls-right">
+      <button (click)="sortArtistsByTracks()" class="p-button p-button-outlined p-button-secondary"
+        style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px;"
+        [style.background]="sortAscending ? 'rgba(30, 215, 96, 0.12) !important' : 'transparent !important'"
+        [style.borderColor]="sortAscending ? '#1ed760 !important' : 'rgba(255, 255, 255, 0.2) !important'"
+        [style.color]="sortAscending ? '#1ed760 !important' : '#e0e0e0 !important'"
+        title="Sort artists by song count">
+        <i class="pi pi-sort-alt"></i> Sort By Count
+      </button>
+      <button (click)="refreshCache()" class="p-button p-button-outlined p-button-secondary"
+        style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px;"
+        [disabled]="isRefreshing"
+        title="Refresh playlist data from Spotify">
+        <i class="pi pi-refresh" [class.pi-spin]="isRefreshing"></i> {{ isRefreshing ? 'Refreshing...' : 'Refresh' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Background Refresh Progress Bar -->
+<div *ngIf="isRefreshing" style="background: rgba(29, 185, 84, 0.08); border: 1px solid rgba(29, 185, 84, 0.2); border-radius: 12px; padding: 12px 20px; margin: 15px auto 0 auto; max-width: 1000px; display: flex; flex-direction: column; gap: 8px; box-sizing: border-box; width: calc(100% - 40px);">
+  <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem;">
+    <span style="color: #e0e0e0; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+      <i class="pi pi-spin pi-spinner" style="color: #1db954;"></i> Refreshing artist details in background...
+    </span>
+    <span style="color: #1db954; font-weight: 700;">{{ loadedTracksCount }} / {{ totalTracks }} songs loaded</span>
+  </div>
+  <div style="background-color: rgba(255, 255, 255, 0.08); height: 6px; border-radius: 3px; overflow: hidden; position: relative; width: 100%;">
+    <div [style.width.%]="totalTracks > 0 ? (loadedTracksCount / totalTracks) * 100 : 0" style="background-color: #1db954; height: 100%; transition: width 0.25s ease-out; border-radius: 3px;"></div>
+  </div>
 </div>
 
 <!-- Cooldown Warning Banner -->
@@ -72,52 +119,32 @@
 <!-- Main Content -->
 <div *ngIf="!isLoading">
   <div class="card-container" style="margin-top: 20px;">
-    <div style="width: 80vw; display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
-      <h2 class="playlist-name" style="margin: 0; font-weight: 800; color: #ffffff; font-size: 1.8rem; text-align: left;">{{ playlistName }}
-      </h2>
-      <div style="display: flex; gap: 8px;">
-        <button (click)="sortArtistsByTracks()" class="p-button p-button-outlined p-button-secondary"
-          style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px;"
-          title="Sort artists by song count">
-          <i class="pi pi-sort-alt"></i> Sort By Count
-        </button>
-        <button (click)="refreshCache()" class="p-button p-button-outlined p-button-secondary"
-          style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px;"
-          title="Refresh playlist data from Spotify">
-          <i class="pi pi-refresh"></i> Refresh
-        </button>
-      </div>
-    </div>
     <ng-container *ngFor="let artist of filteredArtists">
-      <p-card styleClass="custom-card">
-        <div class="card-content"
-          style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-          <div style="display: flex; align-items: center; gap: 16px; flex-grow: 1; min-width: 0;">
-            <img
-              [src]="artist.images && artist.images[2] ? artist.images[2].url : (artist.images && artist.images[0] ? artist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png')"
-              alt="Artist Image"
-              style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255, 255, 255, 0.08); flex-shrink: 0;">
-            <div class="artist-details" style="min-width: 0;">
-              <h2
-                style="margin: 0; font-size: 1.25rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                {{ artist.name }}</h2>
-              <div *ngIf="artist.genres && artist.genres.length"
-                style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px;">
-                <span *ngFor="let genre of artist.genres.slice(0, 3)"
-                  style="background: rgba(255, 255, 255, 0.08); padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; color: #b3b3b3; font-weight: 500;">{{
-                  genre }}</span>
-              </div>
+    <div class="item-card">
+      <div class="card-content">
+        <div class="card-info">
+          <img
+            [src]="artist.images && artist.images[2] ? artist.images[2].url : (artist.images && artist.images[0] ? artist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png')"
+            alt="Artist Image"
+            class="artist-image">
+          <div class="artist-details">
+            <h2 class="artist-name-text">
+              {{ artist.name }}</h2>
+            <div *ngIf="artist.genres && artist.genres.length"
+              class="genres-tags">
+              <span *ngFor="let genre of artist.genres.slice(0, 3)"
+                class="genre-tag">{{ genre }}</span>
             </div>
           </div>
-          <div class="group-left"
-            style="display: flex; align-items: center; gap: 16px; margin-left: 20px; flex-shrink: 0;">
-            <h3 class="track-count" style="margin: 0; font-size: 1.15rem; color: #1ed760; font-weight: 700;">
-              {{ artist.tracks.length }} {{ artist.tracks.length === 1 ? 'song' : 'songs' }}
-            </h3>
-            <p-button (click)="artistDetails(artist.id)" label="Details" />
-          </div>
         </div>
-      </p-card>
+        <div class="group-left">
+          <h3 class="track-count">
+            {{ artist.tracks.length }} {{ artist.tracks.length === 1 ? 'song' : 'songs' }}
+          </h3>
+          <p-button (click)="artistDetails(artist.id)" label="Details" />
+        </div>
+      </div>
+    </div>
     </ng-container>
   </div>
 </div>

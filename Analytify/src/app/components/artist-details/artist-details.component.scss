@@ -16,3 +16,70 @@
 .track-grid::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.25);
 }
+
+.details-container {
+  height: calc(100vh - 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.artist-profile-card {
+  border-radius: 20px;
+  background-color: #181818;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  width: 100%;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 24px;
+}
+
+.track-grid {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .details-container {
+    height: auto;
+    min-height: calc(100vh - 120px);
+    align-items: flex-start;
+    padding: 12px;
+  }
+
+  .artist-profile-card {
+    max-height: none;
+    overflow: visible;
+    padding: 16px;
+
+    .profile-header {
+      margin-bottom: 16px;
+      
+      .profile-image {
+        width: 100px !important;
+        height: 100px !important;
+      }
+      
+      .name {
+        font-size: 1.6rem !important;
+      }
+    }
+  }
+
+  .track-grid {
+    overflow-y: visible;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 8px;
+  }
+}

@@ -12,6 +12,7 @@ export class PlaylistsComponent {
   filteredPlaylists: any[] = [];
   searchText: string = '';
   profilePicUrl: string | null = null;
+  isSortedByCount: boolean = false;
 
   constructor(
     private route: ActivatedRoute, 
@@ -123,12 +124,25 @@ export class PlaylistsComponent {
 
   filterPlaylists() {
     if (this.searchText.trim() === '') {
-      this.filteredPlaylists = this.playlists;
+      this.filteredPlaylists = [...this.playlists];
     } else {
       this.filteredPlaylists = this.playlists.filter(playlist =>
         playlist.name.toLowerCase().includes(this.searchText.toLowerCase())
       );
     }
+
+    if (this.isSortedByCount) {
+      this.filteredPlaylists.sort((a, b) => {
+        const countA = a.tracks ? a.tracks.total : 0;
+        const countB = b.tracks ? b.tracks.total : 0;
+        return countB - countA;
+      });
+    }
+  }
+
+  sortPlaylistsByTracks() {
+    this.isSortedByCount = !this.isSortedByCount;
+    this.filterPlaylists();
   }
 
   viewArtists(playlistId: string) {
