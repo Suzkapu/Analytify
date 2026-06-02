@@ -177,11 +177,11 @@
         <div *ngFor="let genre of topGenres" class="genre-row">
           <div class="genre-row-header">
             <span class="genre-name">{{ genre.name }}</span>
-            <span class="genre-percentage">{{ genre.percentage }}% <span class="genre-matches">({{ genre.count }} matches)</span></span>
+            <span class="genre-percentage">{{ genre.percentage < 1 ? '<1' : genre.percentage }}% <span class="genre-matches">({{ genre.count }} matches)</span></span>
           </div>
           <!-- Custom ProgressBar -->
           <div class="progress-bar-container">
-            <div [style.width.%]="genre.percentage" class="progress-bar-fill"></div>
+            <div [style.width.%]="genre.visualWidth || genre.percentage" class="progress-bar-fill"></div>
           </div>
         </div>
       </div>
