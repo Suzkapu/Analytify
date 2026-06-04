@@ -46,6 +46,8 @@ export class PlaylistAnalysisComponent implements OnInit {
   profilePicUrl: string | null = null;
   showSettingsDropdown: boolean = false;
 
+
+
   constructor(
     private route: ActivatedRoute,
     private spotifyDataService: SpotifyDataService,
@@ -79,6 +81,21 @@ export class PlaylistAnalysisComponent implements OnInit {
     }
   }
 
+  isCacheExpired(lastUpdatedStr: string | null): boolean {
+    if (!lastUpdatedStr) return true;
+    const lastUpdated = parseInt(lastUpdatedStr, 10);
+    if (isNaN(lastUpdated)) return true;
+
+    const now = new Date();
+    const cutoff = new Date(now);
+    cutoff.setHours(1, 0, 0, 0); // 1:00 AM today
+    if (now.getTime() < cutoff.getTime()) {
+      // If we haven't reached 1 AM today yet, the most recent cutoff was 1 AM yesterday
+      cutoff.setDate(cutoff.getDate() - 1);
+    }
+    return lastUpdated < cutoff.getTime();
+  }
+
   loadPlaylistData() {
     const userId = this.authService.getUserId() || 'anonymous';
     const storageKey = `${userId}_${this.playlistId}`;
@@ -86,8 +103,7 @@ export class PlaylistAnalysisComponent implements OnInit {
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
     const lastUpdated = this.storageService.getItem(lastUpdatedKey);
 
-    const oneDay = 24 * 60 * 60 * 1000;
-    const isExpired = !lastUpdated || (Date.now() - parseInt(lastUpdated, 10) > oneDay);
+    const isExpired = this.isCacheExpired(lastUpdated);
 
     if (storedArtists && !isExpired) {
       console.log("Loading cache for analysis");
@@ -554,6 +570,7 @@ export class PlaylistAnalysisComponent implements OnInit {
       ...g,
       visualWidth: g.count > 0 ? Math.max(2, Math.min(100, Math.round((g.count / maxCount) * 100))) : 0
     })).slice(0, 10);
+
   }
 
   formatDuration(ms: number): string {
@@ -609,4 +626,5 @@ export class PlaylistAnalysisComponent implements OnInit {
       window.location.href = url;
     }
   }
-}
+
+  }

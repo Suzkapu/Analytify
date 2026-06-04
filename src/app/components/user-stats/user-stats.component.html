@@ -8,8 +8,10 @@
     <!-- Navigation Buttons -->
     <nav class="header-nav" style="display: flex; gap: 8px; margin-left: 20px;">
       <a routerLink="/playlists" class="nav-link" routerLinkActive="active-nav"
-        [routerLinkActiveOptions]="{exact: true}"><i class="pi pi-compass" style="font-size: 0.95rem;"></i> <span class="hide-mobile">Browse Playlists</span></a>
-      <a routerLink="/stats" class="nav-link" routerLinkActive="active-nav"><i class="pi pi-chart-bar" style="font-size: 0.95rem;"></i> <span class="hide-mobile">Personal Stats</span></a>
+        [routerLinkActiveOptions]="{exact: true}"><i class="pi pi-compass" style="font-size: 0.95rem;"></i> <span
+          class="hide-mobile">Browse Playlists</span></a>
+      <a routerLink="/stats" class="nav-link" routerLinkActive="active-nav"><i class="pi pi-chart-bar"
+          style="font-size: 0.95rem;"></i> <span class="hide-mobile">Personal Stats</span></a>
     </nav>
   </div>
   <div class="header-center">
@@ -20,7 +22,8 @@
     </button>
     <!-- User Profile with Settings Dropdown -->
     <div class="user-profile-container" style="position: relative; display: flex; align-items: center;">
-      <div class="user-profile-header" (click)="toggleSettingsDropdown($event)" style="display: flex; align-items: center; cursor: pointer;" title="Profile Settings">
+      <div class="user-profile-header" (click)="toggleSettingsDropdown($event)"
+        style="display: flex; align-items: center; cursor: pointer;" title="Profile Settings">
         <img *ngIf="profilePicUrl" [src]="profilePicUrl" alt="User Profile"
           style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #1db954; box-shadow: 0 0 12px rgba(29, 185, 84, 0.35);">
         <div *ngIf="!profilePicUrl"
@@ -58,23 +61,52 @@
         <h2 style="margin: 2px 0 0 0; font-weight: 800; font-size: 2rem; color: #ffffff;">Your Top Listening</h2>
       </div>
 
-      <!-- Time Range Toggles -->
-      <div class="time-range-toggles">
-        <button (click)="changeRange('short_term')"
-          [style.background]="selectedRange === 'short_term' ? '#282828' : 'transparent'"
-          [style.color]="selectedRange === 'short_term' ? '#1ed760' : '#b3b3b3'"
-          style="border: none; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;">Last
-          4 Weeks</button>
-        <button (click)="changeRange('medium_term')"
-          [style.background]="selectedRange === 'medium_term' ? '#282828' : 'transparent'"
-          [style.color]="selectedRange === 'medium_term' ? '#1ed760' : '#b3b3b3'"
-          style="border: none; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;">Last
-          6 Months</button>
-        <button (click)="changeRange('long_term')"
-          [style.background]="selectedRange === 'long_term' ? '#282828' : 'transparent'"
-          [style.color]="selectedRange === 'long_term' ? '#1ed760' : '#b3b3b3'"
-          style="border: none; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;">Last
-          Year</button>
+      <!-- Time Range Toggles and History Selector -->
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <!-- Time Range Toggles -->
+        <div class="time-range-toggles">
+          <button (click)="changeRange('short_term')"
+            [style.background]="selectedRange === 'short_term' ? '#282828' : 'transparent'"
+            [style.color]="selectedRange === 'short_term' ? '#1ed760' : '#b3b3b3'"
+            style="border: none; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;">Last
+            4 Weeks</button>
+          <button (click)="changeRange('medium_term')"
+            [style.background]="selectedRange === 'medium_term' ? '#282828' : 'transparent'"
+            [style.color]="selectedRange === 'medium_term' ? '#1ed760' : '#b3b3b3'"
+            style="border: none; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;">Last
+            6 Months</button>
+          <button (click)="changeRange('long_term')"
+            [style.background]="selectedRange === 'long_term' ? '#282828' : 'transparent'"
+            [style.color]="selectedRange === 'long_term' ? '#1ed760' : '#b3b3b3'"
+            style="border: none; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;">Last
+            Year</button>
+        </div>
+
+        <!-- Custom History Dropdown Overlay -->
+        <div class="history-select-container" *ngIf="snapshotOptions.length > 0">
+          <div class="spotify-custom-dropdown" [class.open]="showHistoryMenu" [class.active]="selectedSnapshotId !== 'current'">
+            <button class="dropdown-trigger-btn" (click)="toggleHistoryMenu($event)">
+              <span>{{ getSelectedSnapshotLabel() }}</span>
+              <i class="pi pi-chevron-down icon-right"></i>
+            </button>
+            <div class="dropdown-menu-overlay" *ngIf="showHistoryMenu">
+              <div class="menu-section-header">Select Snapshot</div>
+              <div class="menu-item" 
+                   [class.active]="selectedSnapshotId === 'current'"
+                   (click)="selectHistorySnapshot('current', $event)">
+                <span>Current Stats (Live)</span>
+                <i *ngIf="selectedSnapshotId === 'current'" class="pi pi-check"></i>
+              </div>
+              <div *ngFor="let opt of snapshotOptions" 
+                   class="menu-item" 
+                   [class.active]="selectedSnapshotId === opt.id"
+                   (click)="selectHistorySnapshot(opt.id, $event)">
+                <span>{{ opt.label }}</span>
+                <i *ngIf="selectedSnapshotId === opt.id" class="pi pi-check"></i>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -113,26 +145,34 @@
 
     <!-- Category 1: Top 100 Songs -->
     <div *ngIf="selectedCategory === 'tracks'">
-      <div *ngIf="topTracks.length === 0" style="color: #666; text-align: center; padding: 40px 0;">No top tracks found
+      <div *ngIf="displayedTracks.length === 0" style="color: #666; text-align: center; padding: 40px 0;">No top tracks found
         for this period.</div>
-      <div *ngIf="topTracks.length > 0" class="stats-tracks-grid">
-        <div *ngFor="let track of topTracks; let idx = index" class="track-row-card">
-          <div class="track-index">{{ idx + 1 }}</div>
-          <img (click)="openTrackClick(track.external_urls?.spotify)"
-            [src]="track.album?.images && track.album.images[0] ? track.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
+      <div *ngIf="displayedTracks.length > 0" class="stats-tracks-grid">
+        <div *ngFor="let track of displayedTracks; let idx = index" class="track-row-card" (click)="openTrendPopup(track, 'tracks')">
+          <div class="track-index">
+            {{ idx + 1 }}
+            <ng-container *ngIf="getTrend(track, idx, 'tracks') as trend">
+              <span *ngIf="trend.type === 'up'" class="rank-trend-inline trend-up-color" title="Moved up by {{ trend.diff }} places">
+                <i class="pi pi-caret-up"></i>
+              </span>
+              <span *ngIf="trend.type === 'down'" class="rank-trend-inline trend-down-color" title="Moved down by {{ trend.diff }} places">
+                <i class="pi pi-caret-down"></i>
+              </span>
+              <span *ngIf="trend.type === 'new'" class="new-entry-dot" title="New entry since last snapshot"></span>
+            </ng-container>
+          </div>
+          <img (click)="openTrackClick(getTrackUrl(track)); $event.stopPropagation()"
+            [src]="getTrackCover(track)"
             alt="Track Cover" class="track-cover">
           <div class="track-info">
-            <span (click)="openTrackClick(track.external_urls?.spotify)" class="track-title">{{ track.name }}</span>
-            <span class="track-artist">{{ track.artists[0]?.name }}</span>
+            <span class="track-title">{{ track.name }}</span>
+            <span class="track-artist">{{ getTrackArtist(track) }}</span>
           </div>
           <div class="track-meta">
             <span *ngIf="track.explicit" class="explicit-badge">E</span>
             <span class="popularity-badge">
               <i class="pi pi-chart-bar"></i> {{ track.popularity }}%
             </span>
-            <i class="pi pi-external-link" (click)="openTrackClick(track.external_urls?.spotify)"
-              style="color: #666; cursor: pointer; font-size: 0.85rem; margin-left: 6px;"
-              onmouseover="this.style.color='#1db954'" onmouseout="this.style.color='#666'"></i>
           </div>
         </div>
       </div>
@@ -140,18 +180,30 @@
 
     <!-- Category 2: Top Artists -->
     <div *ngIf="selectedCategory === 'artists'">
-      <div *ngIf="topArtists.length === 0" style="color: #666; text-align: center; padding: 40px 0;">No top artists
+      <div *ngIf="displayedArtists.length === 0" style="color: #666; text-align: center; padding: 40px 0;">No top artists
         found for this period.</div>
-      <div *ngIf="topArtists.length > 0" class="stats-artists-grid">
-        <div *ngFor="let artist of topArtists; let idx = index" class="artist-grid-card">
-          <div class="artist-avatar-container">
-            <img (click)="openArtistClick(artist.external_urls?.spotify)"
-              [src]="artist.images && artist.images[0] ? artist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
+      <div *ngIf="displayedArtists.length > 0" class="stats-artists-grid">
+        <div *ngFor="let artist of displayedArtists; let idx = index" class="artist-grid-card" (click)="openTrendPopup(artist, 'artists')">
+          <div class="artist-avatar-container" (click)="$event.stopPropagation()">
+            <img (click)="openArtistClick(getArtistUrl(artist))"
+              [src]="getArtistImage(artist)"
               alt="Artist Photo" class="artist-avatar">
-            <div class="artist-rank-badge">{{ idx + 1 }}</div>
+            <div class="artist-rank-badge"
+                 [class.is-new]="getTrend(artist, idx, 'artists').type === 'new'"
+                 [class.has-trend]="getTrend(artist, idx, 'artists').type === 'up' || getTrend(artist, idx, 'artists').type === 'down'">
+              {{ idx + 1 }}
+              <ng-container *ngIf="getTrend(artist, idx, 'artists') as trend">
+                <span *ngIf="trend.type === 'up'" class="rank-trend-inline trend-up-color" title="Moved up by {{ trend.diff }} places">
+                  <i class="pi pi-caret-up"></i>
+                </span>
+                <span *ngIf="trend.type === 'down'" class="rank-trend-inline trend-down-color" title="Moved down by {{ trend.diff }} places">
+                  <i class="pi pi-caret-down"></i>
+                </span>
+              </ng-container>
+            </div>
           </div>
-          <h4 (click)="openArtistClick(artist.external_urls?.spotify)" class="artist-name">{{ artist.name }}</h4>
-          <span class="artist-genre">{{ artist.genres && artist.genres[0] ? artist.genres[0] : 'Artist' }}</span>
+          <h4 class="artist-name">{{ artist.name }}</h4>
+          <span class="artist-genre">{{ getArtistGenre(artist) }}</span>
         </div>
       </div>
     </div>
@@ -182,6 +234,103 @@
 
   </div>
 
+</div>
+
+<!-- Trend Graph Popup Modal -->
+<div class="trend-modal-overlay" *ngIf="showTrendPopup" (click)="closeTrendPopup()">
+  <div class="trend-modal-card" (click)="$event.stopPropagation()">
+    <button class="trend-modal-close-btn" (click)="closeTrendPopup($event)">&times;</button>
+    
+    <div class="trend-modal-header">
+      <img [src]="trendPopupCategory === 'tracks' ? getTrackCover(trendPopupItem) : getArtistImage(trendPopupItem)"
+           [class.artist-round]="trendPopupCategory === 'artists'"
+           alt="Cover Image" class="trend-modal-cover">
+      <div class="trend-modal-info">
+        <h3>{{ trendPopupItem.name }}</h3>
+        <p>{{ trendPopupCategory === 'tracks' ? getTrackArtist(trendPopupItem) : getArtistGenre(trendPopupItem) }}</p>
+      </div>
+    </div>
+    
+    <div class="trend-modal-divider"></div>
+    
+    <div class="trend-modal-content">
+      <h4 style="margin: 0 0 16px 0; font-size: 1.1rem; color: #ffffff; display: flex; align-items: center; gap: 8px;">
+        <i class="pi pi-chart-line" style="color: #1db954;"></i> Rank Position History
+      </h4>
+      
+      <div class="popup-chart-container">
+        <!-- If not enough history data -->
+        <div *ngIf="trendPopupPoints.length < 2" style="text-align: center; padding: 30px 10px; color: #b3b3b3;">
+          <i class="pi pi-info-circle" style="font-size: 2rem; color: #1db954; margin-bottom: 12px; display: block;"></i>
+          <span>Not enough historical data to generate a chart yet. History data is recorded once daily when you visit your personal stats.</span>
+        </div>
+        
+        <!-- If we have at least 2 data points -->
+        <div *ngIf="trendPopupPoints.length >= 2">
+          <div class="svg-container" style="position: relative; width: 100%; height: 200px;">
+            <svg viewBox="0 0 500 200" style="width: 100%; height: 100%; display: block; overflow: visible;">
+              <defs>
+                <linearGradient id="popupGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#1db954" stop-opacity="0.25" />
+                  <stop offset="100%" stop-color="#1db954" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+              
+              <!-- Chart grid lines -->
+              <line x1="30" y1="30" x2="470" y2="30" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3,3" />
+              <line x1="30" y1="100" x2="470" y2="100" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3,3" />
+              <line x1="30" y1="170" x2="470" y2="170" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3,3" />
+              
+              <!-- Y-axis labels (Rank 1 at top, Max Rank at bottom) -->
+              <text x="15" y="34" fill="#888" font-size="10" text-anchor="end">#1</text>
+              <text x="15" y="104" fill="#888" font-size="10" text-anchor="end">
+                {{ trendPopupCategory === 'tracks' ? '#50' : '#25' }}
+              </text>
+              <text x="15" y="174" fill="#888" font-size="10" text-anchor="end">
+                {{ trendPopupCategory === 'tracks' ? '#100' : '#50' }}
+              </text>
+              
+              <!-- Chart Area Path Fill -->
+              <path [attr.d]="getPopupSvgFillPath()" fill="url(#popupGrad)" />
+              
+              <!-- Chart Line Path -->
+              <path [attr.d]="getPopupSvgPath()" fill="none" stroke="#1ed760" stroke-width="3" stroke-linecap="round" />
+              
+              <!-- Dots & Rank Text over dots -->
+              <g *ngFor="let pt of trendPopupPoints; let idx = index">
+                <circle 
+                  [attr.cx]="30 + (idx / (trendPopupPoints.length - 1)) * 440" 
+                  [attr.cy]="30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : 50) - 1)) * 140" 
+                  r="5" 
+                  fill="#ffffff" 
+                  stroke="#1db954" 
+                  stroke-width="2">
+                </circle>
+                <text 
+                  [attr.x]="30 + (idx / (trendPopupPoints.length - 1)) * 440" 
+                  [attr.y]="(30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : 50) - 1)) * 140) - 10" 
+                  fill="#ffffff" 
+                  font-size="10" 
+                  font-weight="700" 
+                  text-anchor="middle">
+                  #{{ pt.rank }}
+                </text>
+                <!-- Date label below the graph -->
+                <text 
+                  [attr.x]="30 + (idx / (trendPopupPoints.length - 1)) * 440" 
+                  y="192" 
+                  fill="#888" 
+                  font-size="9" 
+                  text-anchor="middle">
+                  {{ pt.date }}
+                </text>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <app-footer></app-footer>

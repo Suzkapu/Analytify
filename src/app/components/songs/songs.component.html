@@ -57,7 +57,9 @@
     <span
       style="font-size: 0.8rem; font-weight: 800; color: #1db954; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px;">Spotify
       Analytics</span>
-    <h2 style="margin: 0; font-weight: 800; color: #ffffff; font-size: 1.9rem;">Your Artists</h2>
+    <h2 style="margin: 0; font-weight: 800; color: #ffffff; font-size: 1.9rem;">
+      {{ viewStyle === 'artists' ? 'Your Artists' : 'Playlist Songs' }}
+    </h2>
   </div>
 </div>
 
@@ -65,16 +67,44 @@
 <div class="artists-header-container" *ngIf="!isLoading && artists.length !== 0">
   <div class="artists-controls-bar">
     <div class="controls-left">
-      <span class="p-input-icon-left search-container">
+      <!-- Search Input (Artists View) -->
+      <span class="p-input-icon-left search-container" *ngIf="viewStyle === 'artists'">
         <i class="pi pi-search"></i>
         <input (input)="filterArtists()" [(ngModel)]="searchText" class="search-input" pInputText
           placeholder="Search artists..." type="text"
           style="border-radius: 20px; font-size: 0.95rem; padding-left: 2.5rem;" />
       </span>
+      <!-- Search Input (Songs View) -->
+      <span class="p-input-icon-left search-container" *ngIf="viewStyle === 'songs'">
+        <i class="pi pi-search"></i>
+        <input (input)="filterAndSortTracks()" [(ngModel)]="trackSearchText" class="search-input" pInputText
+          placeholder="Search songs or artists..." type="text"
+          style="border-radius: 20px; font-size: 0.95rem; padding-left: 2.5rem;" />
+      </span>
     </div>
-    <div class="controls-right">
-      <button (click)="sortArtistsByTracks()" class="p-button p-button-outlined p-button-secondary"
+    
+    <div class="controls-right" style="display: flex; align-items: center; gap: 12px;">
+      <!-- View Switcher Buttons (same outline style as Sort) -->
+      <button (click)="viewStyle = 'artists'" class="p-button p-button-outlined p-button-secondary"
+        [style.background]="viewStyle === 'artists' ? 'rgba(30, 215, 96, 0.12) !important' : 'transparent !important'"
+        [style.borderColor]="viewStyle === 'artists' ? '#1ed760 !important' : 'rgba(255, 255, 255, 0.2) !important'"
+        [style.color]="viewStyle === 'artists' ? '#1ed760 !important' : '#e0e0e0 !important'"
         style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px;"
+        title="View Artists">
+        <i class="pi pi-user"></i> Artists
+      </button>
+      <button (click)="viewStyle = 'songs'" class="p-button p-button-outlined p-button-secondary"
+        [style.background]="viewStyle === 'songs' ? 'rgba(30, 215, 96, 0.12) !important' : 'transparent !important'"
+        [style.borderColor]="viewStyle === 'songs' ? '#1ed760 !important' : 'rgba(255, 255, 255, 0.2) !important'"
+        [style.color]="viewStyle === 'songs' ? '#1ed760 !important' : '#e0e0e0 !important'"
+        style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px;"
+        title="View Songs">
+        <i class="pi pi-music"></i> Songs
+      </button>
+
+      <!-- Sort Toggle Button (Artists View) -->
+      <button *ngIf="viewStyle === 'artists'" (click)="sortArtistsByTracks()" class="p-button p-button-outlined p-button-secondary"
+        style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px; height: 38px;"
         [style.background]="sortOrder !== 'none' ? 'rgba(30, 215, 96, 0.12) !important' : 'transparent !important'"
         [style.borderColor]="sortOrder !== 'none' ? '#1ed760 !important' : 'rgba(255, 255, 255, 0.2) !important'"
         [style.color]="sortOrder !== 'none' ? '#1ed760 !important' : '#e0e0e0 !important'"
@@ -85,6 +115,26 @@
           'pi-sort-amount-up': sortOrder === 'asc'
         }"></i> Sort By Count
       </button>
+
+      <!-- Custom Togglable Sort Row (Songs View) -->
+      <div *ngIf="viewStyle === 'songs'" class="history-select-container">
+        <div class="spotify-custom-dropdown" [class.open]="showSortMenu">
+          <button class="dropdown-trigger-btn" (click)="toggleSortMenu($event)">
+            <span>Sort by: {{ getSortLabel() }}</span>
+            <i class="pi pi-list icon-right"></i>
+          </button>
+          <div class="dropdown-menu-overlay" *ngIf="showSortMenu">
+            <div class="menu-section-header">Sort by</div>
+            <div *ngFor="let opt of sortOptions" 
+                 class="menu-item" 
+                 [class.active]="trackSortKey === opt.value"
+                 (click)="selectSortCategory(opt.value, $event)">
+              <span>{{ opt.label }}</span>
+              <i *ngIf="trackSortKey === opt.value" class="pi" [ngClass]="sortAscending ? 'pi-arrow-up' : 'pi-arrow-down'"></i>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -148,34 +198,80 @@
 
 <!-- Main Content -->
 <div *ngIf="!isLoading">
-  <div class="card-container" style="margin-top: 20px;">
-    <ng-container *ngFor="let artist of filteredArtists">
-    <div class="item-card">
-      <div class="card-content">
-        <div class="card-info">
-          <img
-            [src]="artist.images && artist.images[2] ? artist.images[2].url : (artist.images && artist.images[0] ? artist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png')"
-            alt="Artist Image"
-            class="artist-image">
-          <div class="artist-details">
-            <h2 class="artist-name-text">
-              {{ artist.name }}</h2>
-            <div *ngIf="artist.genres && artist.genres.length"
-              class="genres-tags">
-              <span *ngFor="let genre of artist.genres.slice(0, 3)"
-                class="genre-tag">{{ genre }}</span>
+  <!-- Artists View Grid -->
+  <div *ngIf="viewStyle === 'artists'" class="card-container" style="margin-top: 20px;">
+    <ng-container *ngFor="let artist of filteredArtists.slice(0, displayedArtistsCount)">
+      <div class="item-card">
+        <div class="card-content">
+          <div class="card-info">
+            <img
+              [src]="artist.images && artist.images[2] ? artist.images[2].url : (artist.images && artist.images[0] ? artist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png')"
+              alt="Artist Image"
+              class="artist-image">
+            <div class="artist-details">
+              <h2 class="artist-name-text">
+                {{ artist.name }}</h2>
+              <div *ngIf="artist.genres && artist.genres.length"
+                class="genres-tags">
+                <span *ngFor="let genre of artist.genres.slice(0, 3)"
+                  class="genre-tag">{{ genre }}</span>
+              </div>
             </div>
           </div>
+          <div class="group-left">
+            <h3 class="track-count">
+              {{ artist.tracks.length }} {{ artist.tracks.length === 1 ? 'song' : 'songs' }}
+            </h3>
+            <p-button (click)="artistDetails(artist.id)" label="Details" />
+          </div>
         </div>
-        <div class="group-left">
-          <h3 class="track-count">
-            {{ artist.tracks.length }} {{ artist.tracks.length === 1 ? 'song' : 'songs' }}
-          </h3>
-          <p-button (click)="artistDetails(artist.id)" label="Details" />
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Songs View Listing -->
+  <div *ngIf="viewStyle === 'songs'" class="card-container songs-list-view" style="margin-top: 20px;">
+
+
+    <!-- Songs List Grid -->
+    <div *ngIf="filteredTracks.length === 0" class="no-songs-found" style="width: 100%;">
+      <i class="pi pi-info-circle"></i> No songs found matching your search.
+    </div>
+
+    <div *ngIf="filteredTracks.length > 0" class="analysis-tracks-grid" style="width: 100%;">
+      <div *ngFor="let track of filteredTracks.slice(0, displayedTracksCount); let idx = index" class="track-row-card">
+        
+        <div class="track-index">{{ idx + 1 }}</div>
+        
+        <img [src]="track.album?.images && track.album.images[0] ? track.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
+          alt="Track Cover" class="track-cover" (click)="openTrackClick(track.external_urls?.spotify); $event.stopPropagation()">
+        
+        <div class="track-info">
+          <span class="track-title">{{ track.name }}</span>
+          <span class="track-artist">
+            <span *ngFor="let a of track.artists; let last = last">
+              {{ a.name }}{{ !last ? ', ' : '' }}
+            </span>
+          </span>
+        </div>
+        
+        <div class="track-meta">
+          <span *ngIf="track.explicit" class="explicit-badge">E</span>
+          
+          <span class="release-year" title="Release Date">
+            <i class="pi pi-calendar"></i> {{ getYearFromDate(track.album?.release_date) }}
+          </span>
+          
+          <span class="popularity-badge" title="Popularity">
+            <i class="pi pi-chart-bar"></i> {{ track.popularity }}%
+          </span>
+          
+          <span class="track-duration">
+            <i class="pi pi-clock"></i> {{ formatDurationShort(track.duration_ms) }}
+          </span>
         </div>
       </div>
     </div>
-    </ng-container>
   </div>
 </div>
 

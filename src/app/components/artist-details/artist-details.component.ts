@@ -88,7 +88,7 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
 
   goBack() {
     if (this.playlistId) {
-      this.router.navigate(['/artists', this.playlistId]);
+      this.router.navigate(['/songs', this.playlistId]);
     } else {
       this.router.navigate(['/playlists']);
     }
