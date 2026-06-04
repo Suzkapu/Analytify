@@ -1,4 +1,4 @@
-import {NgModule, isDevMode} from '@angular/core';
+import {APP_INITIALIZER, NgModule, isDevMode} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -26,7 +26,11 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { FooterComponent } from './components/footer/footer.component';
 import { LegalComponent } from './components/legal/legal.component';
 import { ListeningHistoryComponent } from './components/listening-history/listening-history.component';
+import { StorageService } from './services/storage/storage.service';
 
+export function initializeStorage(storageService: StorageService) {
+  return () => storageService.initFromDB();
+}
 
 @NgModule({
   declarations: [
@@ -57,13 +61,17 @@ import { ListeningHistoryComponent } from './components/listening-history/listen
     TableModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     })
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: SpotifyAuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: SpotifyAuthInterceptor, multi: true },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeStorage,
+      deps: [StorageService],
+      multi: true
+    }
   ],
   bootstrap: [AppComponent],
 })

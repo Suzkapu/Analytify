@@ -128,11 +128,11 @@ export class PlaylistAnalysisComponent implements OnInit {
         this.runAnalysis();
       }
       // If we have cached data but it's expired, we do background refresh to maintain smooth UX
-      this.triggerApiLoad(!!storedArtists);
+      this.triggerApiLoad(!!storedArtists, true);
     }
   }
 
-  triggerApiLoad(isBackgroundRefresh: boolean) {
+  triggerApiLoad(isBackgroundRefresh: boolean, forceFullReload: boolean = false) {
     console.log("Fetching API for analysis recursively");
     const userId = this.authService.getUserId() || 'anonymous';
     this.requestedArtistIds.clear();
@@ -160,7 +160,7 @@ export class PlaylistAnalysisComponent implements OnInit {
     this.loadedTracksCount = 0;
 
     const storedArtists = this.storageService.getItem(`${userId}_${this.playlistId}`);
-    if (this.playlistId === 'fav' && storedArtists) {
+    if (this.playlistId === 'fav' && storedArtists && !forceFullReload) {
       console.log("Favourite Tracks detected for analysis. Starting incremental load.");
       this.loadNewerFavTracks(0, 50, JSON.parse(storedArtists), targetArray);
     } else {
@@ -436,6 +436,7 @@ export class PlaylistAnalysisComponent implements OnInit {
     this.storageService.setItem(`${userId}_${this.playlistId}_Amount`, JSON.stringify(this.totalTracks));
     this.storageService.setItem(`${userId}_${this.playlistId}_Name`, JSON.stringify(this.playlistName));
     this.storageService.setItem(`${userId}_${this.playlistId}_lastUpdated`, Date.now().toString());
+    this.storageService.setItem(`${userId}_${this.playlistId}_cacheVersion`, 'v3');
   }
 
   getArtistsFromTracks(items: any[], targetArray: any[] = this.artists) {

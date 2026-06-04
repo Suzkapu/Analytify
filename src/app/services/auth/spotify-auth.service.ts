@@ -167,8 +167,7 @@ export class SpotifyAuthService {
   }
 
   clearCacheAndLogout(): void {
-    this.storageService.clear();
-    this.storageService.clearAllHistory(); // also wipe IndexedDB stats history
+    this.storageService.clear(); // wipes appData + statsHistory in IndexedDB + in-memory cache
     this.clearAllCookies();
     this.logout$.next();
   }
