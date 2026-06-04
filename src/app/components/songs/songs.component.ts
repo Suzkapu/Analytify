@@ -134,7 +134,7 @@ export class SongsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (storedArtists && !isExpired && version === 'v3') {
+    if (storedArtists && !isExpired && version === 'v4') {
       console.log("Loading artists from storage cache");
       const parsedArtists = JSON.parse(storedArtists);
       this.artists = parsedArtists;
@@ -150,7 +150,7 @@ export class SongsComponent implements OnInit, OnDestroy {
         this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
         this.filterArtists();
       }
-      const task = this.playlistLoaderService.startLoadingTask(userId, this.playlistId, isRefresh);
+      const task = this.playlistLoaderService.startLoadingTask(userId, this.playlistId, isRefresh, isExpired);
       this.subscribeToLoaderTask(task);
     }
   }

@@ -4,90 +4,12 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class StorageService {
+  /** Primary synchronous read layer – always in sync with IndexedDB */
   private inMemoryCache = new Map<string, string>();
-  private isLocalStorageAvailable: boolean;
-
-  constructor() {
-    this.isLocalStorageAvailable = this.checkLocalStorage();
-  }
-
-  private checkLocalStorage(): boolean {
-    try {
-      const testKey = '__storage_test__';
-      localStorage.setItem(testKey, testKey);
-      localStorage.removeItem(testKey);
-      return true;
-    } catch (e) {
-      console.warn('localStorage is not available (blocked by privacy setting or adblocker). Using in-memory fallback.');
-      return false;
-    }
-  }
-
-  getItem(key: string): string | null {
-    if (this.isLocalStorageAvailable) {
-      try {
-        const val = localStorage.getItem(key);
-        if (val !== null) {
-          return val;
-        }
-      } catch (e) {
-        // Fallback to inMemoryCache
-      }
-    }
-    return this.inMemoryCache.get(key) || null;
-  }
-
-  setItem(key: string, value: string): void {
-    if (this.isLocalStorageAvailable) {
-      try {
-        localStorage.setItem(key, value);
-        return;
-      } catch (e) {
-        console.warn('Failed to write to localStorage. Writing to in-memory fallback.', e);
-      }
-    }
-    this.inMemoryCache.set(key, value);
-  }
-
-  removeItem(key: string): void {
-    if (this.isLocalStorageAvailable) {
-      try {
-        localStorage.removeItem(key);
-        return;
-      } catch (e) {
-        // Fallback
-      }
-    }
-    this.inMemoryCache.delete(key);
-  }
-
-  clear(): void {
-    if (this.isLocalStorageAvailable) {
-      try {
-        localStorage.clear();
-      } catch (e) {
-        // Fallback
-      }
-    }
-    this.inMemoryCache.clear();
-  }
-
-  clearAllHistory(): Promise<void> {
-    return this.getDB().then(db => {
-      return new Promise<void>((resolve, reject) => {
-        const transaction = db.transaction('statsHistory', 'readwrite');
-        const store = transaction.objectStore('statsHistory');
-        const request = store.clear();
-        request.onsuccess = () => resolve();
-        request.onerror = (e: any) => reject(e.target.error);
-      });
-    }).catch(err => {
-      console.warn('IndexedDB clearAll failed:', err);
-      return Promise.resolve();
-    });
-  }
 
   private dbPromise: Promise<IDBDatabase> | null = null;
+
+  // ─── IndexedDB bootstrap ───────────────────────────────────────────────────
 
   private getDB(): Promise<IDBDatabase> {
     if (this.dbPromise) {
@@ -100,89 +22,168 @@ export class StorageService {
         return;
       }
 
-      const request = indexedDB.open('AnalytifyDB', 1);
+      // Version 2: adds the generic 'appData' key-value store
+      const request = indexedDB.open('AnalytifyDB', 2);
 
       request.onupgradeneeded = (event: any) => {
-        const db = event.target.result;
+        const db: IDBDatabase = event.target.result;
+
         if (!db.objectStoreNames.contains('statsHistory')) {
           db.createObjectStore('statsHistory', { keyPath: 'id', autoIncrement: true });
         }
+        if (!db.objectStoreNames.contains('appData')) {
+          // Generic key-value store – replaces localStorage
+          db.createObjectStore('appData', { keyPath: 'key' });
+        }
       };
 
-      request.onsuccess = (event: any) => {
-        resolve(event.target.result);
-      };
-
-      request.onerror = (event: any) => {
-        reject(event.target.error);
-      };
+      request.onsuccess = (event: any) => resolve(event.target.result);
+      request.onerror  = (event: any) => reject(event.target.error);
     });
 
     return this.dbPromise;
   }
 
-  saveStatsHistory(historyEntry: any): Promise<void> {
-    return this.getDB().then(db => {
-      return new Promise<void>((resolve, reject) => {
-        const transaction = db.transaction('statsHistory', 'readwrite');
-        const store = transaction.objectStore('statsHistory');
-        const request = store.add(historyEntry);
+  /**
+   * Called once at app startup (via APP_INITIALIZER).
+   * Loads every 'appData' entry from IndexedDB into inMemoryCache so all
+   * subsequent getItem() calls are synchronous.
+   */
+  initFromDB(): Promise<void> {
+    return this.getDB().then(db => new Promise<void>((resolve) => {
+      try {
+        const tx    = db.transaction('appData', 'readonly');
+        const store = tx.objectStore('appData');
+        const req   = store.getAll();
 
-        request.onsuccess = () => resolve();
-        request.onerror = (e: any) => reject(e.target.error);
-      });
-    }).catch(err => {
-      console.warn('IndexedDB failed to write, falling back silently:', err);
-      return Promise.resolve();
+        req.onsuccess = (event: any) => {
+          const entries: { key: string; value: string }[] = event.target.result || [];
+          entries.forEach(entry => this.inMemoryCache.set(entry.key, entry.value));
+          resolve();
+        };
+        req.onerror = () => resolve(); // graceful degradation
+      } catch {
+        resolve();
+      }
+    })).catch(() => {
+      // IndexedDB unavailable – app still works, just without cross-session persistence
+    });
+  }
+
+  // ─── Sync API (reads from in-memory cache) ─────────────────────────────────
+
+  getItem(key: string): string | null {
+    return this.inMemoryCache.get(key) ?? null;
+  }
+
+  setItem(key: string, value: string): void {
+    this.inMemoryCache.set(key, value);
+    this.persistKV(key, value);
+  }
+
+  removeItem(key: string): void {
+    this.inMemoryCache.delete(key);
+    this.deleteKV(key);
+  }
+
+  /** Clears ALL app data (appData + statsHistory) and the in-memory cache. */
+  clear(): void {
+    this.inMemoryCache.clear();
+    this.clearKV();
+    this.clearAllHistory().catch(() => {});
+  }
+
+  // ─── IndexedDB appData helpers (fire-and-forget async) ───────────────────
+
+  private persistKV(key: string, value: string): void {
+    this.getDB().then(db => {
+      const tx    = db.transaction('appData', 'readwrite');
+      const store = tx.objectStore('appData');
+      store.put({ key, value });
+    }).catch(err => console.warn('[StorageService] IndexedDB write failed:', err));
+  }
+
+  private deleteKV(key: string): void {
+    this.getDB().then(db => {
+      const tx    = db.transaction('appData', 'readwrite');
+      const store = tx.objectStore('appData');
+      store.delete(key);
+    }).catch(err => console.warn('[StorageService] IndexedDB delete failed:', err));
+  }
+
+  private clearKV(): void {
+    this.getDB().then(db => {
+      const tx    = db.transaction('appData', 'readwrite');
+      const store = tx.objectStore('appData');
+      store.clear();
+    }).catch(err => console.warn('[StorageService] IndexedDB clearKV failed:', err));
+  }
+
+  // ─── Stats history (IndexedDB statsHistory store) ─────────────────────────
+
+  saveStatsHistory(historyEntry: any): Promise<void> {
+    return this.getDB().then(db => new Promise<void>((resolve, reject) => {
+      const tx      = db.transaction('statsHistory', 'readwrite');
+      const store   = tx.objectStore('statsHistory');
+      const request = store.add(historyEntry);
+      request.onsuccess = () => resolve();
+      request.onerror   = (e: any) => reject(e.target.error);
+    })).catch(err => {
+      console.warn('IndexedDB failed to write stats history, falling back silently:', err);
     });
   }
 
   getStatsHistory(userId: string, range: string): Promise<any[]> {
-    return this.getDB().then(db => {
-      return new Promise<any[]>((resolve, reject) => {
-        const transaction = db.transaction('statsHistory', 'readonly');
-        const store = transaction.objectStore('statsHistory');
-        const request = store.getAll();
+    return this.getDB().then(db => new Promise<any[]>((resolve, reject) => {
+      const tx      = db.transaction('statsHistory', 'readonly');
+      const store   = tx.objectStore('statsHistory');
+      const request = store.getAll();
 
-        request.onsuccess = (event: any) => {
-          const allResults = event.target.result || [];
-          const filtered = allResults.filter((item: any) => item.userId === userId && item.range === range);
-          filtered.sort((a: any, b: any) => a.timestamp - b.timestamp);
-          resolve(filtered);
-        };
-
-        request.onerror = (e: any) => reject(e.target.error);
-      });
-    }).catch(err => {
-      console.warn('IndexedDB failed to read, returning empty history fallback:', err);
+      request.onsuccess = (event: any) => {
+        const all      = event.target.result || [];
+        const filtered = all.filter((item: any) => item.userId === userId && item.range === range);
+        filtered.sort((a: any, b: any) => a.timestamp - b.timestamp);
+        resolve(filtered);
+      };
+      request.onerror = (e: any) => reject(e.target.error);
+    })).catch(err => {
+      console.warn('IndexedDB failed to read stats history, returning empty:', err);
       return [];
     });
   }
 
   clearStatsHistory(userId: string): Promise<void> {
-    return this.getDB().then(db => {
-      return new Promise<void>((resolve, reject) => {
-        const transaction = db.transaction('statsHistory', 'readwrite');
-        const store = transaction.objectStore('statsHistory');
-        const request = store.openCursor();
+    return this.getDB().then(db => new Promise<void>((resolve, reject) => {
+      const tx      = db.transaction('statsHistory', 'readwrite');
+      const store   = tx.objectStore('statsHistory');
+      const request = store.openCursor();
 
-        request.onsuccess = (event: any) => {
-          const cursor = event.target.result;
-          if (cursor) {
-            if (cursor.value.userId === userId) {
-              cursor.delete();
-            }
-            cursor.continue();
-          } else {
-            resolve();
+      request.onsuccess = (event: any) => {
+        const cursor = event.target.result;
+        if (cursor) {
+          if (cursor.value.userId === userId) {
+            cursor.delete();
           }
-        };
+          cursor.continue();
+        } else {
+          resolve();
+        }
+      };
+      request.onerror = (e: any) => reject(e.target.error);
+    })).catch(err => {
+      console.warn('IndexedDB clear stats history failed:', err);
+    });
+  }
 
-        request.onerror = (e: any) => reject(e.target.error);
-      });
-    }).catch(err => {
-      console.warn('IndexedDB clear failed:', err);
-      return Promise.resolve();
+  clearAllHistory(): Promise<void> {
+    return this.getDB().then(db => new Promise<void>((resolve, reject) => {
+      const tx      = db.transaction('statsHistory', 'readwrite');
+      const store   = tx.objectStore('statsHistory');
+      const request = store.clear();
+      request.onsuccess = () => resolve();
+      request.onerror   = (e: any) => reject(e.target.error);
+    })).catch(err => {
+      console.warn('IndexedDB clearAllHistory failed:', err);
     });
   }
 }

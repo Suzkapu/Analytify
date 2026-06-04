@@ -97,7 +97,7 @@ export class PlaylistLoaderService {
     return this.tasks.get(playlistId);
   }
 
-  startLoadingTask(userId: string, playlistId: string, isBackgroundRefresh: boolean = false): PlaylistLoadTask {
+  startLoadingTask(userId: string, playlistId: string, isBackgroundRefresh: boolean = false, forceFullReload: boolean = false): PlaylistLoadTask {
     let task = this.tasks.get(playlistId);
     if (task) {
       return task;
@@ -105,7 +105,7 @@ export class PlaylistLoaderService {
 
     task = new PlaylistLoadTask(playlistId);
     this.tasks.set(playlistId, task);
-    this.triggerApiLoad(task, userId, isBackgroundRefresh);
+    this.triggerApiLoad(task, userId, isBackgroundRefresh, forceFullReload);
     return task;
   }
 
@@ -122,7 +122,7 @@ export class PlaylistLoaderService {
     this.tasks.clear();
   }
 
-  private triggerApiLoad(task: PlaylistLoadTask, userId: string, isBackgroundRefresh: boolean) {
+  private triggerApiLoad(task: PlaylistLoadTask, userId: string, isBackgroundRefresh: boolean, forceFullReload: boolean = false) {
     console.log(`[PlaylistLoaderService] Loading playlist ${task.playlistId} from API`);
     task.requestedArtistIds.clear();
     task.loadedArtistsDetailsCount = 0;
@@ -174,9 +174,9 @@ export class PlaylistLoaderService {
 
     const storedArtists = this.storageService.getItem(`${userId}_${task.playlistId}`);
     const version = this.storageService.getItem(`${userId}_${task.playlistId}_cacheVersion`);
-    const isOldCache = storedArtists && version !== 'v3';
+    const isOldCache = storedArtists && version !== 'v4';
 
-    if (task.playlistId === 'fav' && storedArtists && !isOldCache) {
+    if (task.playlistId === 'fav' && storedArtists && !isOldCache && !forceFullReload) {
       console.log("Favourite Tracks detected. Starting incremental load.");
       this.loadNewerFavTracks(task, userId, 0, 50, JSON.parse(storedArtists), targetArray);
     } else {
@@ -492,7 +492,7 @@ export class PlaylistLoaderService {
     const cleanedArtists = task.artists.map((artist: any) => ({
       id: artist.id,
       name: artist.name,
-      images: artist.images ? artist.images.map((img: any) => ({ url: img.url })) : [],
+      images: artist.images && artist.images.length > 0 ? [{ url: artist.images[0].url }] : [],
       genres: artist.genres || [],
       tracks: artist.tracks ? artist.tracks.map((track: any) => ({
         id: track.id,
@@ -505,7 +505,7 @@ export class PlaylistLoaderService {
         added_at: track.added_at,
         playlist_index: track.playlist_index,
         album: track.album ? {
-          images: track.album.images ? track.album.images.map((img: any) => ({ url: img.url })) : [],
+          images: track.album.images && track.album.images.length > 0 ? [{ url: track.album.images[0].url }] : [],
           release_date: track.album.release_date
         } : undefined
       })) : []
@@ -515,6 +515,6 @@ export class PlaylistLoaderService {
     this.storageService.setItem(`${userId}_${task.playlistId}_Amount`, JSON.stringify(task.totalTracks));
     this.storageService.setItem(`${userId}_${task.playlistId}_Name`, JSON.stringify(task.playlistName));
     this.storageService.setItem(`${userId}_${task.playlistId}_lastUpdated`, Date.now().toString());
-    this.storageService.setItem(`${userId}_${task.playlistId}_cacheVersion`, 'v3');
+    this.storageService.setItem(`${userId}_${task.playlistId}_cacheVersion`, 'v4');
   }
 }
