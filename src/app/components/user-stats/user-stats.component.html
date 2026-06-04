@@ -225,14 +225,14 @@
 
     <!-- Category 3: Top Genres -->
     <div *ngIf="selectedCategory === 'genres'">
-      <div *ngIf="topGenres.length === 0" style="color: #666; text-align: center; padding: 40px 0;">No genre data
+      <div *ngIf="displayedGenres.length === 0" style="color: #666; text-align: center; padding: 40px 0;">No genre data
         available.</div>
-      <div *ngIf="topGenres.length > 0" class="genre-stats-card">
+      <div *ngIf="displayedGenres.length > 0" class="genre-stats-card">
         <h3>
           Genre Popularity Weight
         </h3>
         <div class="genres-list-container">
-          <div *ngFor="let genre of topGenres" class="genre-row">
+          <div *ngFor="let genre of displayedGenres" class="genre-row">
             <div class="genre-row-header">
               <span class="genre-name">{{ genre.name }}</span>
               <span class="genre-percentage">{{ genre.percentage < 1 ? '<1' : genre.percentage }}%</span>

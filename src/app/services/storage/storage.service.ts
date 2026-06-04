@@ -99,7 +99,8 @@ export class StorageService {
     this.getDB().then(db => {
       const tx    = db.transaction('appData', 'readwrite');
       const store = tx.objectStore('appData');
-      store.put({ key, value });
+      const req   = store.put({ key, value });
+      req.onerror = (e: any) => console.warn('[StorageService] IndexedDB put request failed:', e.target.error);
     }).catch(err => console.warn('[StorageService] IndexedDB write failed:', err));
   }
 
@@ -107,7 +108,8 @@ export class StorageService {
     this.getDB().then(db => {
       const tx    = db.transaction('appData', 'readwrite');
       const store = tx.objectStore('appData');
-      store.delete(key);
+      const req   = store.delete(key);
+      req.onerror = (e: any) => console.warn('[StorageService] IndexedDB delete request failed:', e.target.error);
     }).catch(err => console.warn('[StorageService] IndexedDB delete failed:', err));
   }
 
@@ -115,7 +117,8 @@ export class StorageService {
     this.getDB().then(db => {
       const tx    = db.transaction('appData', 'readwrite');
       const store = tx.objectStore('appData');
-      store.clear();
+      const req   = store.clear();
+      req.onerror = (e: any) => console.warn('[StorageService] IndexedDB clear request failed:', e.target.error);
     }).catch(err => console.warn('[StorageService] IndexedDB clearKV failed:', err));
   }
 

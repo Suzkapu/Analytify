@@ -114,7 +114,7 @@ export class UserStatsComponent implements OnInit {
       this.topTracks = JSON.parse(cachedTracks);
       this.topArtists = JSON.parse(cachedArtists);
       this.calculateGenres();
-      this.loadHistoryData();
+      this.saveHistorySnapshot(userId, range);
       this.isLoading = false;
     } else {
       console.log(`Loading stats for ${range} from API`);
@@ -384,13 +384,26 @@ export class UserStatsComponent implements OnInit {
   }
 
   getTrend(item: any, currentIdx: number, category: string): { type: 'up' | 'down' | 'same' | 'new', diff?: number } {
-    if (!this.historyData || this.historyData.length < 2) {
+    if (!this.historyData || this.historyData.length === 0) {
       return { type: 'same' };
     }
 
     let prevSnapshot: any = null;
     if (this.selectedSnapshotId === 'current') {
-      prevSnapshot = this.historyData[this.historyData.length - 2];
+      const now = new Date();
+      const cutoff = new Date(now);
+      cutoff.setHours(1, 0, 0, 0); // 1:00 AM today
+      if (now.getTime() < cutoff.getTime()) {
+        cutoff.setDate(cutoff.getDate() - 1);
+      }
+
+      // Find the most recent snapshot older than today's 1 AM cutoff
+      for (let i = this.historyData.length - 1; i >= 0; i--) {
+        if (this.historyData[i].timestamp < cutoff.getTime()) {
+          prevSnapshot = this.historyData[i];
+          break;
+        }
+      }
     } else {
       const currentSnapIdx = this.historyData.findIndex(d => d.timestamp.toString() === this.selectedSnapshotId);
       if (currentSnapIdx > 0) {
@@ -469,6 +482,22 @@ export class UserStatsComponent implements OnInit {
     return snap ? snap.topArtists : this.topArtists;
   }
 
+  get displayedGenres(): any[] {
+    if (this.selectedSnapshotId === 'current') {
+      return this.topGenres;
+    }
+    const snap = this.historyData.find(d => d.timestamp.toString() === this.selectedSnapshotId);
+    if (snap && snap.topGenres) {
+      const maxPercentage = snap.topGenres.length > 0 ? snap.topGenres[0].percentage : 1;
+      return snap.topGenres.map((g: any) => ({
+        name: g.name,
+        percentage: g.percentage,
+        percentage_simple: g.percentage > 0 ? Math.max(2, Math.min(100, Math.round((g.percentage / (maxPercentage || 1)) * 100))) : 0
+      }));
+    }
+    return this.topGenres;
+  }
+
   onSnapshotChange(event: Event) {
     this.selectedSnapshotId = (event.target as HTMLSelectElement).value;
   }
@@ -483,7 +512,14 @@ export class UserStatsComponent implements OnInit {
     
     this.historyData.forEach(snap => {
       const list = category === 'tracks' ? (snap.topTracks || []) : (snap.topArtists || []);
-      const rankIdx = list.findIndex((x: any) => (x.id && id && x.id === id) || (x.name === name));
+      const rankIdx = list.findIndex((x: any) => {
+        if (x.id && id && x.id === id) return true;
+        if (category === 'tracks') {
+          return x.name === name && x.artist === this.getTrackArtist(item);
+        } else {
+          return x.name === name;
+        }
+      });
       if (rankIdx !== -1) {
         points.push({
           date: new Date(snap.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
@@ -494,8 +530,26 @@ export class UserStatsComponent implements OnInit {
     });
 
     const currentList = category === 'tracks' ? this.topTracks : this.topArtists;
-    const currentRankIdx = currentList.findIndex((x: any) => (x.id && id && x.id === id) || (x.name === name));
-    if (currentRankIdx !== -1) {
+    const currentRankIdx = currentList.findIndex((x: any) => {
+      if (x.id && id && x.id === id) return true;
+      if (category === 'tracks') {
+        return x.name === name && this.getTrackArtist(x) === this.getTrackArtist(item);
+      } else {
+        return x.name === name;
+      }
+    });
+
+    // Only append "Now" if we haven't already saved a snapshot today
+    const now = new Date();
+    const cutoff = new Date(now);
+    cutoff.setHours(1, 0, 0, 0); // 1:00 AM today
+    if (now.getTime() < cutoff.getTime()) {
+      cutoff.setDate(cutoff.getDate() - 1);
+    }
+    const lastSnap = this.historyData[this.historyData.length - 1];
+    const hasTodaySnapshot = lastSnap && lastSnap.timestamp >= cutoff.getTime();
+
+    if (!hasTodaySnapshot && currentRankIdx !== -1) {
       points.push({
         date: 'Now',
         rank: currentRankIdx + 1,

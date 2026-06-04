@@ -291,10 +291,18 @@ export class SongsComponent implements OnInit, OnDestroy {
       if (artist.tracks) {
         artist.tracks.forEach((track: any) => {
           if (track && track.id) {
+            const trackName = track.name;
+            const trackArtists = track.artists || [];
+            const hasValidArtists = trackArtists.length > 0 && trackArtists.some((a: any) => a && a.name && a.name.trim() !== '');
+            
+            if (!trackName || trackName.trim() === '' || !hasValidArtists) {
+              return; // skip this track
+            }
+
             if (!tracksMap.has(track.id)) {
-              let trackArtists = track.artists;
-              if (!trackArtists || trackArtists.length === 0) {
-                trackArtists = [{ id: artist.id, name: artist.name }];
+              let finalArtists = track.artists;
+              if (!finalArtists || finalArtists.length === 0) {
+                finalArtists = [{ id: artist.id, name: artist.name }];
               }
               
               // Pre-calculate timestamp to avoid parsing in sort comparator
@@ -308,7 +316,7 @@ export class SongsComponent implements OnInit, OnDestroy {
 
               tracksMap.set(track.id, {
                 ...track,
-                artists: trackArtists,
+                artists: finalArtists,
                 added_at_time: addedAtTime
               });
             } else {
