@@ -8,7 +8,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {CallbackComponent} from './components/callback/callback.component';
 import {PlaylistsComponent} from './components/playlists/playlists.component';
 import {CardModule} from "primeng/card";
-import {ArtistsComponent} from './components/artists/artists.component';
+import {SongsComponent} from './components/songs/songs.component';
 import {FormsModule} from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
 import {BrowserModule} from '@angular/platform-browser';
@@ -33,7 +33,7 @@ import { LegalComponent } from './components/legal/legal.component';
     LoginPageComponent,
     CallbackComponent,
     PlaylistsComponent,
-    ArtistsComponent,
+    SongsComponent,
     ArtistDetailsComponent,
     PlaylistAnalysisComponent,
     UserStatsComponent,

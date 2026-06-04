@@ -48,6 +48,21 @@ export class PlaylistsComponent {
     }
   }
 
+  isCacheExpired(lastUpdatedStr: string | null): boolean {
+    if (!lastUpdatedStr) return true;
+    const lastUpdated = parseInt(lastUpdatedStr, 10);
+    if (isNaN(lastUpdated)) return true;
+
+    const now = new Date();
+    const cutoff = new Date(now);
+    cutoff.setHours(1, 0, 0, 0); // 1:00 AM today
+    if (now.getTime() < cutoff.getTime()) {
+      // If we haven't reached 1 AM today yet, the most recent cutoff was 1 AM yesterday
+      cutoff.setDate(cutoff.getDate() - 1);
+    }
+    return lastUpdated < cutoff.getTime();
+  }
+
   loadPlaylists() {
     const userId = this.authService.getUserId() || 'anonymous';
     const storageKey = `${userId}_playlists`;
@@ -55,8 +70,7 @@ export class PlaylistsComponent {
     const storedPlaylists = this.storageService.getItem(storageKey);
     const lastUpdated = this.storageService.getItem(lastUpdatedKey);
 
-    const oneDay = 24 * 60 * 60 * 1000;
-    const isExpired = !lastUpdated || (Date.now() - parseInt(lastUpdated, 10) > oneDay);
+    const isExpired = this.isCacheExpired(lastUpdated);
 
     if (storedPlaylists && !isExpired) {
       console.log("from storage");
@@ -185,7 +199,7 @@ export class PlaylistsComponent {
     this.filterPlaylists();
   }
 
-  viewArtists(playlistId: string) {
-    this.router.navigate(['/artists', playlistId]);
+  viewSongs(playlistId: string) {
+    this.router.navigate(['/songs', playlistId]);
   }
 }

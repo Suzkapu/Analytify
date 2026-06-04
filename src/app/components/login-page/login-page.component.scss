@@ -36,6 +36,7 @@
   text-align: center;
   z-index: 2;
   transition: all 0.3s ease;
+  margin: auto;
 
   &:hover {
     transform: translateY(-2px);
@@ -140,3 +141,10 @@
     font-weight: 700;
   }
 }
+
+@media (max-width: 768px) {
+  .login-wrapper {
+    padding-bottom: 3rem;
+  }
+}
+

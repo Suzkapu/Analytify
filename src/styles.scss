@@ -101,7 +101,7 @@ body {
 }
 
 @media (max-width: 768px) {
-  body {
+  body:has(.header-nav) {
     padding-bottom: 70px;
   }
 
@@ -659,5 +659,123 @@ h6 {
         }
       }
     }
+  }
+}
+
+/* Spotify Custom Dropdown Styles (shared by sorting and history select) */
+.spotify-custom-dropdown {
+  position: relative;
+  display: inline-block;
+
+  .dropdown-trigger-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    outline: none;
+    height: 38px;
+    box-sizing: border-box;
+
+    .icon-right {
+      font-size: 0.85rem;
+      color: inherit;
+      transition: transform 0.2s ease;
+    }
+
+    &:hover {
+      color: #1ed760;
+      border-color: #1ed760;
+      background: rgba(30, 215, 96, 0.08);
+      .icon-right {
+        color: #1ed760;
+      }
+    }
+  }
+
+  &.open .dropdown-trigger-btn {
+    color: #1ed760;
+    border-color: #1ed760;
+    background: rgba(30, 215, 96, 0.12);
+    .icon-right {
+      transform: rotate(180deg);
+    }
+  }
+
+  &.active .dropdown-trigger-btn {
+    color: #1ed760;
+    border-color: #1ed760;
+    background: rgba(30, 215, 96, 0.12);
+  }
+
+  .dropdown-menu-overlay {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    background: #282828;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    min-width: 180px;
+    padding: 4px 0;
+    animation: fadeInDropdown 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    .menu-section-header {
+      padding: 8px 16px 4px 16px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #7f7f7f;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: left;
+    }
+
+    .menu-item {
+      padding: 10px 16px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #ffffff;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.15s ease;
+
+      i {
+        font-size: 0.82rem;
+        color: #b3b3b3;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      &.active {
+        color: #1ed760;
+        i {
+          color: #1ed760;
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeInDropdown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
