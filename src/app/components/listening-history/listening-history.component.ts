@@ -49,10 +49,10 @@ export class ListeningHistoryComponent implements OnInit {
     const userId = this.authService.getUserId() || 'anonymous';
     const storageKey = `${userId}_recently_played`;
     
-    // Load existing cache from sessionStorage
+    // Load existing cache from StorageService
     let cachedTracks: any[] = [];
     try {
-      const cached = sessionStorage.getItem(storageKey);
+      const cached = this.storageService.getItem(storageKey);
       if (cached) {
         cachedTracks = JSON.parse(cached);
       }
@@ -90,11 +90,11 @@ export class ListeningHistoryComponent implements OnInit {
         
         this.recentlyPlayedTracks = finalTracks;
         
-        // Save back to sessionStorage
+        // Save back to StorageService
         try {
-          sessionStorage.setItem(storageKey, JSON.stringify(finalTracks));
+          this.storageService.setItem(storageKey, JSON.stringify(finalTracks));
         } catch (e) {
-          console.warn('Failed to write to sessionStorage:', e);
+          console.warn('Failed to write to storage:', e);
         }
         
         this.isLoadingRecentlyPlayed = false;

@@ -435,6 +435,16 @@ export class PlaylistLoaderService {
       for (let item of items) {
         if (!item || !item.track) continue;
         
+        // Filter out empty/unknown/deleted tracks with missing metadata
+        const trackName = item.track.name;
+        const trackArtists = item.track.artists || [];
+        const hasValidArtists = trackArtists.length > 0 && trackArtists.some((a: any) => a && a.name && a.name.trim() !== '');
+        
+        if (!trackName || trackName.trim() === '' || !hasValidArtists) {
+          console.warn('Skipping unknown/deleted/local track with missing details:', item.track);
+          continue;
+        }
+
         // Create a new track copy to avoid mutating frozen response objects
         const trackCopy = {
           ...item.track,
