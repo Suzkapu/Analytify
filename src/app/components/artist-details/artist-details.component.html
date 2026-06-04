@@ -14,23 +14,25 @@
   <div class="header-center">
   </div>
   <div class="header-right">
-    <button (click)="logout()" class="p-button logout-button">
-      <i class="pi pi-sign-out"></i> <span class="hide-mobile">Logout</span>
+    <!-- Listening History Button -->
+    <button (click)="viewListeningHistory()" class="p-button history-button">
+      <i class="pi pi-history"></i> <span class="hide-mobile">Listening History</span>
     </button>
+
     <!-- User Profile with Settings Dropdown -->
     <div class="user-profile-container" style="position: relative; display: flex; align-items: center;">
-      <div class="user-profile-header" (click)="toggleSettingsDropdown($event)" style="display: flex; align-items: center; cursor: pointer;" title="Profile Settings">
-        <img *ngIf="profilePicUrl" [src]="profilePicUrl" alt="User Profile"
-          style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #1db954; box-shadow: 0 0 12px rgba(29, 185, 84, 0.35);">
-        <div *ngIf="!profilePicUrl"
-          style="width: 44px; height: 44px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center; border: 1.5px solid rgba(255, 255, 255, 0.2);">
-          <i class="pi pi-user" style="font-size: 1.1rem; color: #b3b3b3;"></i>
+      <div class="user-profile-header" (click)="toggleSettingsDropdown($event)" title="Profile Settings">
+        <img *ngIf="profilePicUrl" [src]="profilePicUrl" alt="User Profile" class="profile-img">
+        <div *ngIf="!profilePicUrl" class="profile-placeholder">
+          <i class="pi pi-user"></i>
         </div>
       </div>
 
       <!-- Settings Dropdown Overlay -->
       <div class="profile-settings-dropdown" *ngIf="showSettingsDropdown">
-        <div class="dropdown-header">Profile &amp; Settings</div>
+        <button (click)="logout()" class="dropdown-item">
+          <i class="pi pi-sign-out"></i> Logout
+        </button>
         <div class="dropdown-divider"></div>
         <a href="https://www.spotify.com/account/apps/" target="_blank" rel="noopener noreferrer" class="dropdown-item">
           <i class="pi pi-external-link"></i> Revoke App Access
@@ -86,5 +88,22 @@
 
   </div>
 </div>
+
+  <!-- Custom Confirmation Modal -->
+  <div class="confirm-modal-overlay" *ngIf="showClearCacheModal" (click)="cancelClearCache()">
+    <div class="confirm-modal-card" (click)="$event.stopPropagation()">
+      <div class="confirm-modal-icon">
+        <i class="pi pi-exclamation-triangle"></i>
+      </div>
+      <h3 class="confirm-modal-title">Clear Cache &amp; Logout</h3>
+      <p class="confirm-modal-text">
+        This action will delete all local caches and stored listening history snapshots. This process is irreversible and all accumulated stats history will be permanently lost.
+      </p>
+      <div class="confirm-modal-actions">
+        <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="cancelClearCache()">Cancel</button>
+        <button class="confirm-modal-btn confirm-modal-btn-confirm" (click)="confirmClearCache()">Proceed</button>
+      </div>
+    </div>
+  </div>
 
 <app-footer></app-footer>

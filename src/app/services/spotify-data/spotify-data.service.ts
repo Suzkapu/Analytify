@@ -96,4 +96,19 @@ export class SpotifyDataService {
     const endpoint = `${environment.spotifyUrl}/me/top/tracks?time_range=${timeRange}&limit=${limit}&offset=${offset}`;
     return this.makeRequest(() => this.http.get(endpoint));
   }
+
+  getRecentlyPlayed(limit: number = 50): Observable<any> {
+    const endpoint = `${environment.spotifyUrl}/me/player/recently-played?limit=${limit}`;
+    return this.makeRequest(() => this.http.get(endpoint));
+  }
+
+  createPlaylist(userId: string, name: string, description: string = ''): Observable<any> {
+    const endpoint = `${environment.spotifyUrl}/users/${userId}/playlists`;
+    return this.makeRequest(() => this.http.post(endpoint, { name, description, public: true }));
+  }
+
+  addTracksToPlaylist(playlistId: string, trackUris: string[]): Observable<any> {
+    const endpoint = `${environment.spotifyUrl}/playlists/${playlistId}/tracks`;
+    return this.makeRequest(() => this.http.post(endpoint, { uris: trackUris }));
+  }
 }

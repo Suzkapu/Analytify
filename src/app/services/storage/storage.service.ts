@@ -65,12 +65,26 @@ export class StorageService {
     if (this.isLocalStorageAvailable) {
       try {
         localStorage.clear();
-        return;
       } catch (e) {
         // Fallback
       }
     }
     this.inMemoryCache.clear();
+  }
+
+  clearAllHistory(): Promise<void> {
+    return this.getDB().then(db => {
+      return new Promise<void>((resolve, reject) => {
+        const transaction = db.transaction('statsHistory', 'readwrite');
+        const store = transaction.objectStore('statsHistory');
+        const request = store.clear();
+        request.onsuccess = () => resolve();
+        request.onerror = (e: any) => reject(e.target.error);
+      });
+    }).catch(err => {
+      console.warn('IndexedDB clearAll failed:', err);
+      return Promise.resolve();
+    });
   }
 
   private dbPromise: Promise<IDBDatabase> | null = null;

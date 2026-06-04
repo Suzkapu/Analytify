@@ -17,24 +17,25 @@
   <div class="header-center">
   </div>
   <div class="header-right">
-    <button (click)="logout()" class="p-button logout-button">
-      <i class="pi pi-sign-out"></i> <span class="hide-mobile">Logout</span>
+    <!-- Listening History Button -->
+    <button (click)="viewListeningHistory()" class="p-button history-button">
+      <i class="pi pi-history"></i> <span class="hide-mobile">Listening History</span>
     </button>
+
     <!-- User Profile with Settings Dropdown -->
     <div class="user-profile-container" style="position: relative; display: flex; align-items: center;">
-      <div class="user-profile-header" (click)="toggleSettingsDropdown($event)"
-        style="display: flex; align-items: center; cursor: pointer;" title="Profile Settings">
-        <img *ngIf="profilePicUrl" [src]="profilePicUrl" alt="User Profile"
-          style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #1db954; box-shadow: 0 0 12px rgba(29, 185, 84, 0.35);">
-        <div *ngIf="!profilePicUrl"
-          style="width: 44px; height: 44px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center; border: 1.5px solid rgba(255, 255, 255, 0.2);">
-          <i class="pi pi-user" style="font-size: 1.1rem; color: #b3b3b3;"></i>
+      <div class="user-profile-header" (click)="toggleSettingsDropdown($event)" title="Profile Settings">
+        <img *ngIf="profilePicUrl" [src]="profilePicUrl" alt="User Profile" class="profile-img">
+        <div *ngIf="!profilePicUrl" class="profile-placeholder">
+          <i class="pi pi-user"></i>
         </div>
       </div>
 
       <!-- Settings Dropdown Overlay -->
       <div class="profile-settings-dropdown" *ngIf="showSettingsDropdown">
-        <div class="dropdown-header">Profile &amp; Settings</div>
+        <button (click)="logout()" class="dropdown-item">
+          <i class="pi pi-sign-out"></i> Logout
+        </button>
         <div class="dropdown-divider"></div>
         <a href="https://www.spotify.com/account/apps/" target="_blank" rel="noopener noreferrer" class="dropdown-item">
           <i class="pi pi-external-link"></i> Revoke App Access
@@ -145,10 +146,12 @@
 
     <!-- Category 1: Top 100 Songs -->
     <div *ngIf="selectedCategory === 'tracks'">
-      <div *ngIf="displayedTracks.length === 0" style="color: #666; text-align: center; padding: 40px 0;">No top tracks found
-        for this period.</div>
-      <div *ngIf="displayedTracks.length > 0" class="stats-tracks-grid">
-        <div *ngFor="let track of displayedTracks; let idx = index" class="track-row-card" (click)="openTrendPopup(track, 'tracks')">
+      <div *ngIf="displayedTracks.length === 0" style="color: #666; text-align: center; padding: 40px 0;">
+        No top tracks found for this period.
+      </div>
+      <div class="stats-tracks-grid" *ngIf="displayedTracks.length > 0">
+
+      <div *ngFor="let track of displayedTracks; let idx = index" class="track-row-card" (click)="openTrendPopup(track, 'tracks')">
           <div class="track-index">
             {{ idx + 1 }}
             <ng-container *ngIf="getTrend(track, idx, 'tracks') as trend">
@@ -174,6 +177,18 @@
               <i class="pi pi-chart-bar"></i> {{ track.popularity }}%
             </span>
           </div>
+        </div>
+
+        <!-- Create Playlist Action Button -->
+        <div style="margin-top: 30px; display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; grid-column: 1 / -1;">
+          <span *ngIf="playlistCreationSuccessMessage" style="font-size: 0.85rem; color: #1db954; font-weight: 600;">
+            <i class="pi pi-check-circle"></i> {{ playlistCreationSuccessMessage }}
+          </span>
+          <button (click)="createTopPlaylist()" class="p-button" [disabled]="isCreatingPlaylist"
+            style="border-radius: 8px !important; padding: 8px 18px !important; display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem !important; background: #1db954; border-color: #1db954; font-weight: 700; color: #ffffff; cursor: pointer; border: none; transition: all 0.2s;" onmouseover="this.style.background='#1ed760'" onmouseout="this.style.background='#1db954'">
+            <i class="pi" [class.pi-spin]="isCreatingPlaylist" [class.pi-spinner]="isCreatingPlaylist" [class.pi-plus-circle]="!isCreatingPlaylist"></i>
+            {{ isCreatingPlaylist ? 'Creating...' : 'Create Playlist' }}
+          </button>
         </div>
       </div>
     </div>
@@ -230,8 +245,23 @@
       </div>
     </div>
 
+  </div>
 
-
+  <!-- Custom Confirmation Modal -->
+  <div class="confirm-modal-overlay" *ngIf="showClearCacheModal" (click)="cancelClearCache()">
+    <div class="confirm-modal-card" (click)="$event.stopPropagation()">
+      <div class="confirm-modal-icon">
+        <i class="pi pi-exclamation-triangle"></i>
+      </div>
+      <h3 class="confirm-modal-title">Clear Cache &amp; Logout</h3>
+      <p class="confirm-modal-text">
+        This action will delete all local caches and stored listening history snapshots. This process is irreversible and all accumulated stats history will be permanently lost.
+      </p>
+      <div class="confirm-modal-actions">
+        <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="cancelClearCache()">Cancel</button>
+        <button class="confirm-modal-btn confirm-modal-btn-confirm" (click)="confirmClearCache()">Proceed</button>
+      </div>
+    </div>
   </div>
 
 </div>
