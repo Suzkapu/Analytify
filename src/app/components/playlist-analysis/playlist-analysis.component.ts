@@ -606,14 +606,29 @@ export class PlaylistAnalysisComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  showClearCacheModal = false;
+
   toggleSettingsDropdown(event: Event) {
     event.stopPropagation();
     this.showSettingsDropdown = !this.showSettingsDropdown;
   }
 
   clearCacheAndLogout() {
+    this.showClearCacheModal = true;
+  }
+
+  cancelClearCache() {
+    this.showClearCacheModal = false;
+  }
+
+  confirmClearCache() {
+    this.showClearCacheModal = false;
     this.authService.clearCacheAndLogout();
     this.router.navigate(['/login']);
+  }
+
+  viewListeningHistory() {
+    this.router.navigate(['/history']);
   }
 
   @HostListener('document:click')

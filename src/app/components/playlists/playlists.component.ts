@@ -134,6 +134,8 @@ export class PlaylistsComponent {
     }
   }
 
+  showClearCacheModal = false;
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
@@ -145,8 +147,21 @@ export class PlaylistsComponent {
   }
 
   clearCacheAndLogout() {
+    this.showClearCacheModal = true;
+  }
+
+  cancelClearCache() {
+    this.showClearCacheModal = false;
+  }
+
+  confirmClearCache() {
+    this.showClearCacheModal = false;
     this.authService.clearCacheAndLogout();
     this.router.navigate(['/login']);
+  }
+
+  viewListeningHistory() {
+    this.router.navigate(['/history']);
   }
 
   @HostListener('document:click')

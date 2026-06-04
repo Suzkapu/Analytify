@@ -1,0 +1,113 @@
+<header class="app-header">
+  <div class="header-left">
+    <div class="header-logo" routerLink="/">
+      <img src="assets/Analytify.png" alt="Analytify Logo">
+      <span class="logo-text">Analytify</span>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <nav class="header-nav" style="display: flex; gap: 8px; margin-left: 20px;">
+      <a routerLink="/playlists" class="nav-link" routerLinkActive="active-nav"
+        [routerLinkActiveOptions]="{exact: true}"><i class="pi pi-compass" style="font-size: 0.95rem;"></i> <span
+          class="hide-mobile">Browse Playlists</span></a>
+      <a routerLink="/stats" class="nav-link" routerLinkActive="active-nav"><i class="pi pi-chart-bar"
+          style="font-size: 0.95rem;"></i> <span class="hide-mobile">Personal Stats</span></a>
+    </nav>
+  </div>
+  <div class="header-center">
+  </div>
+  <div class="header-right">
+    <!-- User Profile with Settings Dropdown -->
+    <div class="user-profile-container" style="position: relative; display: flex; align-items: center;">
+      <div class="user-profile-header" (click)="toggleSettingsDropdown($event)" title="Profile Settings">
+        <img *ngIf="profilePicUrl" [src]="profilePicUrl" alt="User Profile" class="profile-img">
+        <div *ngIf="!profilePicUrl" class="profile-placeholder">
+          <i class="pi pi-user"></i>
+        </div>
+      </div>
+
+      <!-- Settings Dropdown Overlay -->
+      <div class="profile-settings-dropdown" *ngIf="showSettingsDropdown">
+        <button (click)="logout()" class="dropdown-item">
+          <i class="pi pi-sign-out"></i> Logout
+        </button>
+        <div class="dropdown-divider"></div>
+        <a href="https://www.spotify.com/account/apps/" target="_blank" rel="noopener noreferrer" class="dropdown-item">
+          <i class="pi pi-external-link"></i> Revoke App Access
+        </a>
+        <button (click)="clearCacheAndLogout()" class="dropdown-item danger">
+          <i class="pi pi-trash"></i> Clear Cache &amp; Logout
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Under-Header Back Button -->
+<div class="back-bar-container" style="position: absolute; z-index: 10;">
+  <button (click)="goBack()" class="back-text-button" title="Back">
+    <i class="pi pi-arrow-left"></i> Back
+  </button>
+</div>
+
+<div class="stats-dashboard-container">
+  <!-- Centered Title Bar like Playlists -->
+  <div style="display: flex; align-items: center; justify-content: center; min-height: 48px; width: 100%; margin: 20px auto 0 auto; box-sizing: border-box; text-align: center;">
+    <div style="text-align: center;">
+      <span style="font-size: 0.8rem; font-weight: 800; color: #1db954; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px;">Spotify Player</span>
+      <h2 style="margin: 0; font-weight: 800; color: #ffffff; font-size: 1.9rem;">Recently Played Songs</h2>
+    </div>
+  </div>
+
+  <div class="stats-content-wrapper" style="margin-top: 30px;">
+    <div *ngIf="isLoadingRecentlyPlayed" style="text-align: center; padding: 60px 0; width: 100%;">
+      <i class="pi pi-spin pi-spinner" style="font-size: 2.5rem; color: #1db954;"></i>
+      <h3 style="font-weight: 500; color: #b3b3b3; margin-top: 15px;">Loading listening history...</h3>
+    </div>
+    
+    <div *ngIf="!isLoadingRecentlyPlayed && recentlyPlayedTracks.length === 0" style="color: #666; text-align: center; padding: 60px 0; width: 100%; font-size: 1.1rem;">
+      No recently played tracks found.
+    </div>
+
+    <div *ngIf="!isLoadingRecentlyPlayed && recentlyPlayedTracks.length > 0" class="listening-history-list" style="width: 100%;">
+      <div *ngFor="let item of recentlyPlayedTracks; let idx = index" class="track-row-card no-trend-pointer">
+        <div class="track-index" style="width: 75px; display: flex; flex-direction: column; align-items: center; font-size: 0.8rem; color: #888; gap: 4px;">
+          <span>#{{ idx + 1 }}</span>
+          <span style="font-size: 0.65rem; color: #888; text-align: center; white-space: nowrap;">{{ formatPlayedAt(item.played_at) }}</span>
+        </div>
+        <img (click)="openTrackClick(item.track.external_urls?.spotify); $event.stopPropagation()"
+          [src]="item.track.album?.images && item.track.album.images[0] ? item.track.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
+          alt="Track Cover" class="track-cover" style="cursor: pointer;">
+        <div class="track-info">
+          <span class="track-title">{{ item.track.name }}</span>
+          <span class="track-artist">{{ getTrackArtist(item.track) }}</span>
+        </div>
+        <div class="track-meta">
+          <span *ngIf="item.track.explicit" class="explicit-badge">E</span>
+          <span class="popularity-badge">
+            <i class="pi pi-chart-bar"></i> {{ item.track.popularity }}%
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Confirmation Modal -->
+<div class="confirm-modal-overlay" *ngIf="showClearCacheModal" (click)="cancelClearCache()">
+  <div class="confirm-modal-card" (click)="$event.stopPropagation()">
+    <div class="confirm-modal-icon">
+      <i class="pi pi-exclamation-triangle"></i>
+    </div>
+    <h3 class="confirm-modal-title">Clear Cache &amp; Logout</h3>
+    <p class="confirm-modal-text">
+      This action will delete all local caches and stored listening history snapshots. This process is irreversible and all accumulated stats history will be permanently lost.
+    </p>
+    <div class="confirm-modal-actions">
+      <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="cancelClearCache()">Cancel</button>
+      <button class="confirm-modal-btn confirm-modal-btn-confirm" (click)="confirmClearCache()">Proceed</button>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

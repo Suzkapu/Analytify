@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {environment} from "../../../environments/environment";
-import {Observable, throwError} from 'rxjs';
+import {Observable, throwError, Subject} from 'rxjs';
 import {tap, catchError, shareReplay} from 'rxjs/operators';
 import {StorageService} from '../storage/storage.service';
 
@@ -11,6 +11,7 @@ import {StorageService} from '../storage/storage.service';
 export class SpotifyAuthService {
   private readonly storageKey = 'spotifyAccessToken';
   private refreshObservable: Observable<any> | null = null;
+  logout$ = new Subject<void>();
 
   private clientId = 'REDACTED_SPOTIFY_CLIENT_ID';
   private redirectUri = environment.appUrl + '/callback';
@@ -55,7 +56,7 @@ export class SpotifyAuthService {
     this.storageService.setItem('spotifyCodeVerifier', verifier);
 
     const challenge = await this.generateCodeChallenge(verifier);
-    const scopes = 'playlist-read-private user-library-read user-top-read';
+    const scopes = 'playlist-read-private user-library-read user-top-read user-read-recently-played playlist-modify-public playlist-modify-private';
 
     return `${environment.authorizeUrl}?client_id=${this.clientId}&redirect_uri=${this.redirectUri}&scope=${encodeURIComponent(
       scopes
@@ -162,11 +163,14 @@ export class SpotifyAuthService {
     this.storageService.removeItem('spotifyRefreshToken');
     this.storageService.removeItem('spotifyTokenExpiresAt');
     this.clearAllCookies();
+    this.logout$.next();
   }
 
   clearCacheAndLogout(): void {
     this.storageService.clear();
+    this.storageService.clearAllHistory(); // also wipe IndexedDB stats history
     this.clearAllCookies();
+    this.logout$.next();
   }
 
   private clearAllCookies(): void {

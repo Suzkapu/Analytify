@@ -8,6 +8,7 @@ import {ArtistDetailsComponent} from "./components/artist-details/artist-details
 import {PlaylistAnalysisComponent} from "./components/playlist-analysis/playlist-analysis.component";
 import {UserStatsComponent} from "./components/user-stats/user-stats.component";
 import {LegalComponent} from "./components/legal/legal.component";
+import {ListeningHistoryComponent} from "./components/listening-history/listening-history.component";
 
 const routes: Routes = [
   {path: '', component: LoginPageComponent},
@@ -19,6 +20,7 @@ const routes: Routes = [
   {path: 'analysis/:id', component: PlaylistAnalysisComponent},
   {path: 'stats', component: UserStatsComponent},
   {path: 'legal', component: LegalComponent},
+  {path: 'history', component: ListeningHistoryComponent},
 ];
 
 @NgModule({

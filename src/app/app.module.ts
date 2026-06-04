@@ -25,6 +25,7 @@ import {SpotifyAuthInterceptor} from "./services/auth/spotify-auth.interceptor";
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { FooterComponent } from './components/footer/footer.component';
 import { LegalComponent } from './components/legal/legal.component';
+import { ListeningHistoryComponent } from './components/listening-history/listening-history.component';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { LegalComponent } from './components/legal/legal.component';
     UserStatsComponent,
     FooterComponent,
     LegalComponent,
+    ListeningHistoryComponent,
   ],
   imports: [
     BrowserModule,
