@@ -58,4 +58,4 @@ Start the development server:
 ```bash
 npm start
 ```
-The application will be available at `http://localhost:4200/`.
+The application will be available at `http://127.0.0.1:4200/`.
