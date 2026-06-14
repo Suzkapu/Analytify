@@ -3,6 +3,7 @@ import { SpotifyDataService } from '../../services/spotify-data/spotify-data.ser
 import { SpotifyAuthService } from '../../services/auth/spotify-auth.service';
 import { StorageService } from '../../services/storage/storage.service';
 import { Router } from '@angular/router';
+import { SupabaseService } from '../../services/supabase/supabase.service';
 
 @Component({
   selector: 'app-listening-history',
@@ -18,9 +19,10 @@ export class ListeningHistoryComponent implements OnInit {
 
   constructor(
     private spotifyDataService: SpotifyDataService,
-    private authService: SpotifyAuthService,
+    public authService: SpotifyAuthService,
     private router: Router,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private supabaseService: SupabaseService
   ) { }
 
   ngOnInit() {
@@ -45,8 +47,9 @@ export class ListeningHistoryComponent implements OnInit {
     }
   }
 
-  loadRecentlyPlayed() {
+  async loadRecentlyPlayed() {
     const userId = this.authService.getUserId() || 'anonymous';
+    const supabaseUserId = this.authService.getSupabaseUserId();
     const storageKey = `${userId}_recently_played`;
     
     // Load existing cache from StorageService
@@ -62,11 +65,27 @@ export class ListeningHistoryComponent implements OnInit {
     
     this.recentlyPlayedTracks = cachedTracks;
     
-    // If no cache, show spinner. Otherwise, update in the background silently
+    // Prioritize DB data if backup is active and we have data for today in Supabase
+    if (this.authService.isBackupActive() && supabaseUserId) {
+      this.isLoadingRecentlyPlayed = true;
+      const hasDataForToday = await this.supabaseService.hasHistoryForToday(supabaseUserId);
+      if (hasDataForToday) {
+        console.log('[History] Loading listening history directly from Supabase Cloud Database...');
+        const dbTracks = await this.supabaseService.loadListeningHistoryFromDB(supabaseUserId);
+        if (dbTracks && dbTracks.length > 0) {
+          this.recentlyPlayedTracks = dbTracks;
+          this.storageService.setItem(storageKey, JSON.stringify(dbTracks));
+          this.isLoadingRecentlyPlayed = false;
+          return; // Skip Spotify API call entirely!
+        }
+      }
+    }
+
     if (this.recentlyPlayedTracks.length === 0) {
       this.isLoadingRecentlyPlayed = true;
     }
 
+    console.log('[History] Cache or Supabase database has no today\'s history. Fetching recently played tracks from Spotify API...');
     this.spotifyDataService.getRecentlyPlayed(50).subscribe({
       next: (res: any) => {
         const newItems = res.items || [];
@@ -95,6 +114,11 @@ export class ListeningHistoryComponent implements OnInit {
           this.storageService.setItem(storageKey, JSON.stringify(finalTracks));
         } catch (e) {
           console.warn('Failed to write to storage:', e);
+        }
+        
+        // If backup is active, sync to Supabase
+        if (this.authService.isBackupActive() && supabaseUserId) {
+          this.supabaseService.syncListeningHistory(supabaseUserId, finalTracks);
         }
         
         this.isLoadingRecentlyPlayed = false;
@@ -156,6 +180,33 @@ export class ListeningHistoryComponent implements OnInit {
     this.showClearCacheModal = false;
     this.authService.clearCacheAndLogout();
     this.router.navigate(['/login']);
+  }
+
+  showBackupConfirmModal = false;
+
+  onBackupToggle(event: Event) {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      this.showBackupConfirmModal = true;
+    } else {
+      this.authService.disableBackup().catch(err => {
+        console.error('Failed to disable backup:', err);
+      });
+    }
+  }
+
+  cancelBackupToggle() {
+    this.showBackupConfirmModal = false;
+  }
+
+  async confirmBackupToggle() {
+    this.showBackupConfirmModal = false;
+    try {
+      await this.authService.enableBackup();
+    } catch (err) {
+      console.error('Failed to enable backup:', err);
+      alert('Failed to enable database backup. Please try again.');
+    }
   }
 
   @HostListener('document:click')

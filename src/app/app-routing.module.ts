@@ -10,17 +10,19 @@ import {UserStatsComponent} from "./components/user-stats/user-stats.component";
 import {LegalComponent} from "./components/legal/legal.component";
 import {ListeningHistoryComponent} from "./components/listening-history/listening-history.component";
 
+import {spotifyAuthGuard} from "./services/auth/spotify-auth.guard";
+
 const routes: Routes = [
   {path: '', component: LoginPageComponent},
   {path: 'login', component: LoginPageComponent},
   {path: 'callback', component: CallbackComponent},
-  {path: 'playlists', component: PlaylistsComponent},
-  {path: 'songs/:id', component: SongsComponent},
-  {path: 'artistDetails/:id', component: ArtistDetailsComponent},
-  {path: 'analysis/:id', component: PlaylistAnalysisComponent},
-  {path: 'stats', component: UserStatsComponent},
+  {path: 'playlists', component: PlaylistsComponent, canActivate: [spotifyAuthGuard]},
+  {path: 'songs/:id', component: SongsComponent, canActivate: [spotifyAuthGuard]},
+  {path: 'artistDetails/:id', component: ArtistDetailsComponent, canActivate: [spotifyAuthGuard]},
+  {path: 'analysis/:id', component: PlaylistAnalysisComponent, canActivate: [spotifyAuthGuard]},
+  {path: 'stats', component: UserStatsComponent, canActivate: [spotifyAuthGuard]},
   {path: 'legal', component: LegalComponent},
-  {path: 'history', component: ListeningHistoryComponent},
+  {path: 'history', component: ListeningHistoryComponent, canActivate: [spotifyAuthGuard]},
 ];
 
 @NgModule({

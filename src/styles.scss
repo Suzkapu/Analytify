@@ -964,3 +964,86 @@ h6 {
   from { transform: scale(0.9); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
+
+/* Profile Settings Toggle Item styling */
+.profile-settings-dropdown {
+  .toggle-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px;
+    cursor: default;
+    
+    i {
+      font-size: 1rem;
+      color: #b3b3b3;
+    }
+    
+    span {
+      flex-grow: 1;
+      font-size: 0.85rem;
+      color: #e0e0e0;
+      font-weight: 600;
+    }
+  }
+}
+
+/* Switch slider styling */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 20px;
+  margin-bottom: 0;
+  
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    
+    &:checked + .slider {
+      background-color: #1db954;
+      
+      &:before {
+        transform: translateX(18px);
+      }
+    }
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #535353;
+    transition: .3s;
+    border-radius: 20px;
+    
+    &:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+  }
+}
+
+/* Glowing Top-Bar Header Sync Progress Bar */
+.app-header-sync-progressbar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #1db954, #1ed760);
+  box-shadow: 0 0 8px #1ed760;
+  transition: width 0.3s ease-in-out;
+  z-index: 1001;
+}

@@ -1,4 +1,5 @@
 <header class="app-header">
+  <div class="app-header-sync-progressbar" *ngIf="authService.isSyncing" [style.width.%]="authService.syncProgress"></div>
   <div class="header-left">
     <div class="header-logo" routerLink="/">
       <img src="assets/Analytify.png" alt="Analytify Logo">
@@ -31,6 +32,15 @@
 
       <!-- Settings Dropdown Overlay -->
       <div class="profile-settings-dropdown" *ngIf="showSettingsDropdown">
+        <div class="dropdown-item toggle-item" (click)="$event.stopPropagation()">
+          <i class="pi pi-database"></i>
+          <span>Cloud Backup</span>
+          <label class="switch">
+            <input type="checkbox" [checked]="authService.isBackupActive()" (change)="onBackupToggle($event)">
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="dropdown-divider"></div>
         <button (click)="logout()" class="dropdown-item">
           <i class="pi pi-sign-out"></i> Logout
         </button>
@@ -125,6 +135,23 @@
       <div class="confirm-modal-actions">
         <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="cancelClearCache()">Cancel</button>
         <button class="confirm-modal-btn confirm-modal-btn-confirm" (click)="confirmClearCache()">Proceed</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Backup Confirmation Modal -->
+  <div class="confirm-modal-overlay" *ngIf="showBackupConfirmModal" (click)="cancelBackupToggle()">
+    <div class="confirm-modal-card" (click)="$event.stopPropagation()">
+      <div class="confirm-modal-icon">
+        <i class="pi pi-database"></i>
+      </div>
+      <h3 class="confirm-modal-title">Enable Cloud Backup</h3>
+      <p class="confirm-modal-text">
+        This action will upload your Spotify listening history and stats snapshots to a cloud server to synchronize them across multiple devices. Your data will no longer be stored solely on your local device.
+      </p>
+      <div class="confirm-modal-actions">
+        <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="cancelBackupToggle()">Cancel</button>
+        <button class="confirm-modal-btn confirm-modal-btn-confirm" (click)="confirmBackupToggle()">Proceed</button>
       </div>
     </div>
   </div>

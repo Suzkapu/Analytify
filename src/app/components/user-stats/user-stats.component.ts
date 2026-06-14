@@ -4,6 +4,7 @@ import { SpotifyAuthService } from '../../services/auth/spotify-auth.service';
 import { StorageService } from '../../services/storage/storage.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { SupabaseService } from '../../services/supabase/supabase.service';
 
 @Component({
   selector: 'app-user-stats',
@@ -41,9 +42,10 @@ export class UserStatsComponent implements OnInit {
 
   constructor(
     private spotifyDataService: SpotifyDataService,
-    private authService: SpotifyAuthService,
+    public authService: SpotifyAuthService,
     private router: Router,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private supabaseService: SupabaseService
   ) { }
 
   ngOnInit() {
@@ -97,8 +99,9 @@ export class UserStatsComponent implements OnInit {
     return lastUpdated < cutoff.getTime();
   }
 
-  loadStats() {
+  async loadStats() {
     const userId = this.authService.getUserId() || 'anonymous';
+    const supabaseUserId = this.authService.getSupabaseUserId();
     const range = this.selectedRange;
     const lastUpdatedKey = `${userId}_stats_${range}_lastUpdated`;
     const lastUpdated = this.storageService.getItem(lastUpdatedKey);
@@ -110,14 +113,39 @@ export class UserStatsComponent implements OnInit {
     const cachedGenres = this.storageService.getItem(`${userId}_stats_${range}_genres`);
 
     if (cachedTracks && cachedArtists && cachedGenres && !isExpired) {
-      console.log(`Loading stats for ${range} from cache`);
+      console.log(this.authService.isBackupActive() ? `[Stats] Loading stats for ${range} from Supabase Cloud Backup (Local Cache)` : `[Stats] Loading stats for ${range} from Local Storage Cache (Cloud Backup disabled)`);
       this.topTracks = JSON.parse(cachedTracks);
       this.topArtists = JSON.parse(cachedArtists);
       this.calculateGenres();
       this.saveHistorySnapshot(userId, range);
       this.isLoading = false;
     } else {
-      console.log(`Loading stats for ${range} from API`);
+      // Prioritize Supabase data if backup is active
+      if (this.authService.isBackupActive() && supabaseUserId) {
+        this.isLoading = true;
+        const hasSnapshot = await this.supabaseService.hasStatsSnapshotForToday(supabaseUserId, range);
+        if (hasSnapshot) {
+          console.log(`[Stats] Cache missing/expired. Fetching today's stats snapshot for ${range} directly from Supabase Cloud...`);
+          const dbSnapshot = await this.supabaseService.loadTodayStatsSnapshot(supabaseUserId, range);
+          if (dbSnapshot) {
+            this.topTracks = dbSnapshot.topTracks;
+            this.topArtists = dbSnapshot.topArtists;
+            this.calculateGenres();
+            
+            // Cache locally
+            this.storageService.setItem(`${userId}_stats_${range}_tracks`, JSON.stringify(this.topTracks));
+            this.storageService.setItem(`${userId}_stats_${range}_artists`, JSON.stringify(this.topArtists));
+            this.storageService.setItem(`${userId}_stats_${range}_genres`, JSON.stringify(this.topGenres));
+            this.storageService.setItem(lastUpdatedKey, Date.now().toString());
+
+            this.saveHistorySnapshot(userId, range);
+            this.isLoading = false;
+            return; // Skip Spotify API call entirely!
+          }
+        }
+      }
+
+      console.log(`[Stats] Cache and database snapshot missing/expired. Loading stats for ${range} from Spotify API...`);
       this.isLoading = true;
       this.topTracks = [];
       this.topArtists = [];
@@ -146,6 +174,30 @@ export class UserStatsComponent implements OnInit {
           this.storageService.setItem(`${userId}_stats_${range}_artists`, JSON.stringify(this.topArtists));
           this.storageService.setItem(`${userId}_stats_${range}_genres`, JSON.stringify(this.topGenres));
           this.storageService.setItem(lastUpdatedKey, Date.now().toString());
+
+          // If backup is active, sync to Supabase
+          if (this.authService.isBackupActive() && supabaseUserId) {
+            let totalPopularity = 0;
+            let explicitCount = 0;
+            this.topTracks.forEach(track => {
+              totalPopularity += track.popularity || 0;
+              if (track.explicit) explicitCount++;
+            });
+            const avgPopularity = this.topTracks.length > 0 ? Math.round(totalPopularity / this.topTracks.length) : 0;
+            const explicitPercentage = this.topTracks.length > 0 ? Math.round((explicitCount / this.topTracks.length) * 100) : 0;
+            const genreDiversity = this.topGenres.length;
+
+            this.supabaseService.saveStatsSnapshot(
+              supabaseUserId,
+              range,
+              avgPopularity,
+              explicitPercentage,
+              genreDiversity,
+              this.topTracks,
+              this.topArtists,
+              this.topGenres
+            );
+          }
 
           this.saveHistorySnapshot(userId, range);
           this.isLoading = false;
@@ -274,6 +326,33 @@ export class UserStatsComponent implements OnInit {
     }
     const found = this.snapshotOptions.find(opt => opt.id === this.selectedSnapshotId);
     return found ? found.label : 'Current Stats (Live)';
+  }
+
+  showBackupConfirmModal = false;
+
+  onBackupToggle(event: Event) {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      this.showBackupConfirmModal = true;
+    } else {
+      this.authService.disableBackup().catch(err => {
+        console.error('Failed to disable backup:', err);
+      });
+    }
+  }
+
+  cancelBackupToggle() {
+    this.showBackupConfirmModal = false;
+  }
+
+  async confirmBackupToggle() {
+    this.showBackupConfirmModal = false;
+    try {
+      await this.authService.enableBackup();
+    } catch (err) {
+      console.error('Failed to enable backup:', err);
+      alert('Failed to enable database backup. Please try again.');
+    }
   }
 
   clearCacheAndLogout() {
@@ -605,6 +684,8 @@ export class UserStatsComponent implements OnInit {
   getTrackCover(track: any): string {
     if (track.albumCover) return track.albumCover;
     if (track.album?.images && track.album.images[0]) return track.album.images[0].url;
+    if (track.album?.image_url) return track.album.image_url;
+    if (track.image_url) return track.image_url;
     return 'https://misc.scdn.co/liked-songs/liked-songs-300.png';
   }
 

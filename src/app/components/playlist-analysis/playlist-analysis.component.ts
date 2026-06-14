@@ -51,7 +51,7 @@ export class PlaylistAnalysisComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private spotifyDataService: SpotifyDataService,
-    private authService: SpotifyAuthService,
+    public authService: SpotifyAuthService,
     private router: Router,
     private storageService: StorageService
   ) { }
@@ -103,10 +103,11 @@ export class PlaylistAnalysisComponent implements OnInit {
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
     const lastUpdated = this.storageService.getItem(lastUpdatedKey);
 
-    const isExpired = this.isCacheExpired(lastUpdated);
+    const isBackupActive = this.authService.isBackupActive();
+    const isExpired = isBackupActive ? false : this.isCacheExpired(lastUpdated);
 
     if (storedArtists && !isExpired) {
-      console.log("Loading cache for analysis");
+      console.log(isBackupActive ? `[Analysis] Loading playlist ${this.playlistId} data from Supabase Cloud Backup (Local Cache)` : `[Analysis] Loading playlist ${this.playlistId} data from Local Storage Cache (Cloud Backup disabled)`);
       const parsedArtists = JSON.parse(storedArtists);
 
       this.artists = parsedArtists;
@@ -133,7 +134,7 @@ export class PlaylistAnalysisComponent implements OnInit {
   }
 
   triggerApiLoad(isBackgroundRefresh: boolean, forceFullReload: boolean = false) {
-    console.log("Fetching API for analysis recursively");
+    console.log(`[Analysis] Cache missing or expired. Fetching playlist ${this.playlistId} tracks from Spotify API recursively...`);
     const userId = this.authService.getUserId() || 'anonymous';
     this.requestedArtistIds.clear();
     this.loadedArtistsDetailsCount = 0;
@@ -608,6 +609,32 @@ export class PlaylistAnalysisComponent implements OnInit {
   }
 
   showClearCacheModal = false;
+  showBackupConfirmModal = false;
+
+  onBackupToggle(event: Event) {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      this.showBackupConfirmModal = true;
+    } else {
+      this.authService.disableBackup().catch(err => {
+        console.error('Failed to disable backup:', err);
+      });
+    }
+  }
+
+  cancelBackupToggle() {
+    this.showBackupConfirmModal = false;
+  }
+
+  async confirmBackupToggle() {
+    this.showBackupConfirmModal = false;
+    try {
+      await this.authService.enableBackup();
+    } catch (err) {
+      console.error('Failed to enable backup:', err);
+      alert('Failed to enable database backup. Please try again.');
+    }
+  }
 
   toggleSettingsDropdown(event: Event) {
     event.stopPropagation();

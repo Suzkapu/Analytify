@@ -23,36 +23,39 @@ export class CallbackComponent implements OnInit {
       const error = params['error'];
       
       if (code) {
-        this.authService.exchangeCodeForToken(code).subscribe({
+        this.authService.exchangeSupabaseCodeForSession(code).subscribe({
           next: () => {
             if (this.authService.isAuthenticated()) {
-              this.spotifyDataService.getCurrentUser().subscribe({
-                next: (user: any) => {
-                  if (user && user.id) {
-                    this.authService.setUserId(user.id);
-                  }
-                  this.router.navigate(['/playlists']);
-                },
-                error: (userErr) => {
-                  console.error('Failed to fetch Spotify user profile', userErr);
-                  // Navigate anyway as fallback
-                  this.router.navigate(['/playlists']);
-                }
-              });
+              this.router.navigate(['/playlists']);
             } else {
-              this.errorMessage = 'Authentication failed: Access token was not saved.';
+              this.errorMessage = 'Authentication failed: Spotify token was not saved.';
             }
           },
           error: (err) => {
-            console.error('Failed to exchange auth code for token', err);
-            this.errorMessage = `Failed to exchange authorization code: ${err.error?.error_description || err.message || JSON.stringify(err)}`;
+            console.error('Failed to exchange auth code for session', err);
+            this.errorMessage = `Failed to exchange authorization code: ${err.message || JSON.stringify(err)}`;
           }
         });
       } else if (error) {
         console.error('Spotify login error', error);
         this.errorMessage = `Spotify login error: ${error}`;
       } else {
-        this.errorMessage = 'No authorization code or state found in URL query parameters.';
+        // In case of hash fragment flow, wait a bit for Supabase client to parse URL hash
+        setTimeout(() => {
+          this.authService.handleCallbackSession().subscribe({
+            next: () => {
+              if (this.authService.isAuthenticated()) {
+                this.router.navigate(['/playlists']);
+              } else {
+                this.errorMessage = 'Authentication failed: Spotify token was not saved.';
+              }
+            },
+            error: (err) => {
+              console.error('No active session found', err);
+              this.errorMessage = 'No authorization code or active session found.';
+            }
+          });
+        }, 800);
       }
     });
   }

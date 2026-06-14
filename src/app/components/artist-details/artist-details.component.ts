@@ -22,7 +22,7 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute, 
     private spotifyDataService: SpotifyDataService, 
     private router: Router,
-    private authService: SpotifyAuthService,
+    public authService: SpotifyAuthService,
     private storageService: StorageService
   ) {
     this.route.params.subscribe((params) => {
@@ -65,14 +65,14 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
         const parsed = JSON.parse(storedArtists);
         const found = parsed.find((a: any) => a.id === id);
         if (found) {
-          console.log("Loading artist details from playlist cache");
+          console.log(this.authService.isBackupActive() ? "[ArtistDetails] Loading artist details from Supabase Cloud Backup (Local Cache)" : "[ArtistDetails] Loading artist details from Local Storage Cache (Cloud Backup disabled)");
           this.artist = found;
           return;
         }
       }
     }
 
-    console.log("Loading artist details from API");
+    console.log("[ArtistDetails] Cache missing. Loading artist details from Spotify API...");
     this.spotifyDataService.getSingleArtist(id).subscribe((artist: any) => {
       this.artist = artist;
     });
@@ -100,6 +100,32 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
   }
 
   showClearCacheModal = false;
+  showBackupConfirmModal = false;
+
+  onBackupToggle(event: Event) {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      this.showBackupConfirmModal = true;
+    } else {
+      this.authService.disableBackup().catch(err => {
+        console.error('Failed to disable backup:', err);
+      });
+    }
+  }
+
+  cancelBackupToggle() {
+    this.showBackupConfirmModal = false;
+  }
+
+  async confirmBackupToggle() {
+    this.showBackupConfirmModal = false;
+    try {
+      await this.authService.enableBackup();
+    } catch (err) {
+      console.error('Failed to enable backup:', err);
+      alert('Failed to enable database backup. Please try again.');
+    }
+  }
 
   toggleSettingsDropdown(event: Event) {
     event.stopPropagation();

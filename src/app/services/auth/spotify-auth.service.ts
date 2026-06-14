@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {environment} from "../../../environments/environment";
-import {Observable, throwError, Subject} from 'rxjs';
+import {Observable, throwError, Subject, from} from 'rxjs';
 import {tap, catchError, shareReplay} from 'rxjs/operators';
 import {StorageService} from '../storage/storage.service';
+import {SupabaseService} from '../supabase/supabase.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,79 +14,144 @@ export class SpotifyAuthService {
   private refreshObservable: Observable<any> | null = null;
   logout$ = new Subject<void>();
 
-  private clientId = 'REDACTED_SPOTIFY_CLIENT_ID';
-  private redirectUri = environment.appUrl + '/callback';
+  isSyncing = false;
+  syncProgress = 0;
+  initialSyncPromise: Promise<void> | null = null;
 
-  constructor(private http: HttpClient, private storageService: StorageService) {
+  private clientId = environment.spotifyClientId;
+
+  constructor(
+    private http: HttpClient,
+    private storageService: StorageService,
+    private supabaseService: SupabaseService
+  ) {
+    if (this.isAuthenticated()) {
+      this.initialSyncPromise = this.syncBackupActiveStatus().catch(err => console.warn('Failed to sync backup status on startup:', err));
+    }
   }
 
   private get accessToken(): string | null {
     return this.storageService.getItem(this.storageKey);
   }
 
-  private generateCodeVerifier(length = 64): string {
-    const array = new Uint8Array(length);
-    window.crypto.getRandomValues(array);
-    let binary = '';
-    for (let i = 0; i < array.length; i++) {
-      binary += String.fromCharCode(array[i]);
-    }
-    return btoa(binary)
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '');
-  }
-
-  private async generateCodeChallenge(codeVerifier: string): Promise<string> {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(codeVerifier);
-    const digest = await window.crypto.subtle.digest('SHA-256', data);
-    const bytes = new Uint8Array(digest);
-    let binary = '';
-    for (let i = 0; i < bytes.length; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return btoa(binary)
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '');
-  }
-
-  async getAuthorizationUrl(): Promise<string> {
-    const verifier = this.generateCodeVerifier();
-    this.storageService.setItem('spotifyCodeVerifier', verifier);
-
-    const challenge = await this.generateCodeChallenge(verifier);
-    const scopes = 'playlist-read-private user-library-read user-top-read user-read-recently-played playlist-modify-public playlist-modify-private';
-
-    return `${environment.authorizeUrl}?client_id=${this.clientId}&redirect_uri=${this.redirectUri}&scope=${encodeURIComponent(
-      scopes
-    )}&response_type=code&code_challenge_method=S256&code_challenge=${challenge}&show_dialog=true`;
-  }
-
-  exchangeCodeForToken(code: string): Observable<any> {
-    const verifier = this.storageService.getItem('spotifyCodeVerifier') || '';
-    const body = new HttpParams()
-      .set('client_id', this.clientId)
-      .set('grant_type', 'authorization_code')
-      .set('code', code)
-      .set('redirect_uri', this.redirectUri)
-      .set('code_verifier', verifier);
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded'
-    });
-
-    return this.http.post('https://accounts.spotify.com/api/token', body.toString(), { headers }).pipe(
-      tap((response: any) => {
-        if (response && response.access_token) {
-          this.storageService.setItem(this.storageKey, response.access_token);
-          if (response.refresh_token) {
-            this.storageService.setItem('spotifyRefreshToken', response.refresh_token);
-          }
-          const expiresAt = Date.now() + (response.expires_in || 3600) * 1000;
-          this.storageService.setItem('spotifyTokenExpiresAt', expiresAt.toString());
+  async loginWithSupabase(): Promise<any> {
+    return this.supabaseService.client.auth.signInWithOAuth({
+      provider: 'spotify',
+      options: {
+        redirectTo: environment.spotifyRedirectUri,
+        scopes: environment.spotifyScopes,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent'
         }
+      }
+    });
+  }
+
+  exchangeSupabaseCodeForSession(code: string): Observable<any> {
+    return from(this.supabaseService.client.auth.exchangeCodeForSession(code)).pipe(
+      tap(({ data, error }: any) => {
+        if (error) throw error;
+        const session = data?.session;
+        if (session) {
+          if (session.provider_token) {
+            this.storageService.setItem(this.storageKey, session.provider_token);
+          }
+          if (session.provider_refresh_token) {
+            this.storageService.setItem('spotifyRefreshToken', session.provider_refresh_token);
+          }
+          const expiresAt = Date.now() + 3600 * 1000; // Spotify access token expires in 1 hour
+          this.storageService.setItem('spotifyTokenExpiresAt', expiresAt.toString());
+
+          if (session.user) {
+            let spotifyId = session.user.user_metadata?.provider_id || session.user.id;
+            if (!environment.production) {
+              spotifyId = `${spotifyId}_dev`;
+            }
+            this.storageService.setItem('spotifyUserId', spotifyId);
+            this.storageService.setItem('supabaseUserId', session.user.id);
+
+            const displayName = session.user.user_metadata?.full_name || session.user.user_metadata?.name || null;
+            const profilePicUrl = session.user.user_metadata?.avatar_url || null;
+            const effectiveUserId = this.getSupabaseUserId() || session.user.id;
+
+            this.initialSyncPromise = (async () => {
+              try {
+                if (session.provider_refresh_token) {
+                  await this.saveRefreshTokenToDatabase(effectiveUserId, session.provider_refresh_token);
+                }
+                await this.syncBackupActiveStatus();
+              } catch (err) {
+                console.warn('Failed during login synchronization setup:', err);
+              }
+            })();
+          }
+        }
+      }),
+      catchError(err => {
+        console.error('Error exchanging code for session:', err);
+        return throwError(() => err);
+      })
+    );
+  }
+
+  private async saveRefreshTokenToDatabase(userId: string, refreshToken: string) {
+    try {
+      const { error } = await this.supabaseService.client
+        .from('users')
+        .update({ spotify_refresh_token: refreshToken })
+        .eq('id', userId);
+      if (error) {
+        console.warn('Could not save Spotify refresh token to database. Make sure public.users has spotify_refresh_token column:', error);
+      }
+    } catch (e) {
+      console.error('Error saving Spotify refresh token to database:', e);
+    }
+  }
+
+  handleCallbackSession(): Observable<any> {
+    return from(this.supabaseService.client.auth.getSession()).pipe(
+      tap(({ data: { session } }: any) => {
+        if (session) {
+          if (session.provider_token) {
+            this.storageService.setItem(this.storageKey, session.provider_token);
+          }
+          if (session.provider_refresh_token) {
+            this.storageService.setItem('spotifyRefreshToken', session.provider_refresh_token);
+          }
+          const expiresAt = Date.now() + 3600 * 1000; // Spotify access token expires in 1 hour
+          this.storageService.setItem('spotifyTokenExpiresAt', expiresAt.toString());
+
+          if (session.user) {
+            let spotifyId = session.user.user_metadata?.provider_id || session.user.id;
+            if (!environment.production) {
+              spotifyId = `${spotifyId}_dev`;
+            }
+            this.storageService.setItem('spotifyUserId', spotifyId);
+            this.storageService.setItem('supabaseUserId', session.user.id);
+
+            const displayName = session.user.user_metadata?.full_name || session.user.user_metadata?.name || null;
+            const profilePicUrl = session.user.user_metadata?.avatar_url || null;
+            const effectiveUserId = this.getSupabaseUserId() || session.user.id;
+
+            this.initialSyncPromise = (async () => {
+              try {
+                if (session.provider_refresh_token) {
+                  await this.saveRefreshTokenToDatabase(effectiveUserId, session.provider_refresh_token);
+                }
+                await this.syncBackupActiveStatus();
+              } catch (err) {
+                console.warn('Failed during callback login synchronization setup:', err);
+              }
+            })();
+          }
+        } else {
+          throw new Error('No active session found.');
+        }
+      }),
+      catchError(err => {
+        console.error('Error handling callback session:', err);
+        return throwError(() => err);
       })
     );
   }
@@ -115,6 +181,10 @@ export class SpotifyAuthService {
           this.storageService.setItem(this.storageKey, response.access_token);
           if (response.refresh_token) {
             this.storageService.setItem('spotifyRefreshToken', response.refresh_token);
+            const supabaseUserId = this.getSupabaseUserId();
+            if (supabaseUserId) {
+              this.saveRefreshTokenToDatabase(supabaseUserId, response.refresh_token);
+            }
           }
           const expiresAt = Date.now() + (response.expires_in || 3600) * 1000;
           this.storageService.setItem('spotifyTokenExpiresAt', expiresAt.toString());
@@ -137,7 +207,6 @@ export class SpotifyAuthService {
       return true;
     }
     const expiresAt = parseInt(expiresAtStr, 10);
-    // Refresh 1 minute before expiry
     return Date.now() > (expiresAt - 60 * 1000);
   }
 
@@ -146,11 +215,26 @@ export class SpotifyAuthService {
   }
 
   getUserId(): string | null {
-    return this.storageService.getItem('spotifyUserId');
+    const rawId = this.storageService.getItem('spotifyUserId');
+    if (!rawId) return null;
+    const hasDevSuffix = rawId.endsWith('_dev');
+    if (!environment.production && !hasDevSuffix) {
+      return `${rawId}_dev`;
+    } else if (environment.production && hasDevSuffix) {
+      return rawId.slice(0, -4);
+    }
+    return rawId;
   }
 
   setUserId(userId: string): void {
-    this.storageService.setItem('spotifyUserId', userId);
+    let finalId = userId;
+    const hasDevSuffix = userId.endsWith('_dev');
+    if (!environment.production && !hasDevSuffix) {
+      finalId = `${userId}_dev`;
+    } else if (environment.production && hasDevSuffix) {
+      finalId = userId.slice(0, -4);
+    }
+    this.storageService.setItem('spotifyUserId', finalId);
   }
 
   isAuthenticated(): boolean {
@@ -160,16 +244,186 @@ export class SpotifyAuthService {
   logout(): void {
     this.storageService.removeItem(this.storageKey);
     this.storageService.removeItem('spotifyUserId');
+    this.storageService.removeItem('supabaseUserId');
     this.storageService.removeItem('spotifyRefreshToken');
     this.storageService.removeItem('spotifyTokenExpiresAt');
+    this.supabaseService.client.auth.signOut().catch(err => console.error('Supabase signout failed', err));
     this.clearAllCookies();
     this.logout$.next();
   }
 
   clearCacheAndLogout(): void {
-    this.storageService.clear(); // wipes appData + statsHistory in IndexedDB + in-memory cache
+    this.storageService.clear();
+    this.supabaseService.client.auth.signOut().catch(err => console.error('Supabase signout failed', err));
     this.clearAllCookies();
     this.logout$.next();
+  }
+
+  isBackupActive(): boolean {
+    const userId = this.getSupabaseUserId() || 'anonymous';
+    return this.storageService.getItem(`${userId}_backup_active`) === 'true';
+  }
+
+  async syncBackupActiveStatus(): Promise<void> {
+    const supabaseUserId = this.getSupabaseUserId();
+    if (supabaseUserId) {
+      // Ensure the public.users row exists — recreates it if deleted manually.
+      // Read user metadata from the live Supabase session.
+      const spotifyId = this.getUserId();
+      let displayName: string | null = null;
+      let profilePicUrl: string | null = null;
+      try {
+        const { data: { session } } = await this.supabaseService.client.auth.getSession();
+        if (session?.user?.user_metadata) {
+          displayName = session.user.user_metadata['full_name'] || session.user.user_metadata['name'] || null;
+          profilePicUrl = session.user.user_metadata['avatar_url'] || null;
+        }
+      } catch { /* non-fatal */ }
+      await this.supabaseService.ensureUserProfile(supabaseUserId, spotifyId, displayName, profilePicUrl);
+
+      const active = await this.supabaseService.checkBackupActive(supabaseUserId);
+      if (active !== null) {
+        this.storageService.setItem(`${supabaseUserId}_backup_active`, active ? 'true' : 'false');
+        if (active) {
+          await this.pullCacheFromDatabase(supabaseUserId);
+        }
+      }
+    }
+  }
+
+  private async pullCacheFromDatabase(supabaseUserId: string): Promise<void> {
+    try {
+      console.log('[Auth] Pulling user cache from Supabase...');
+      const dbCache = await this.supabaseService.loadUserCache(supabaseUserId);
+      if (dbCache && dbCache.length > 0) {
+        dbCache.forEach(item => {
+          this.storageService.setItem(item.key, item.value);
+        });
+        console.log(`[Auth] Loaded ${dbCache.length} cache keys from database.`);
+      }
+    } catch (e) {
+      console.error('[Auth] Failed to pull user cache from database:', e);
+    }
+  }
+
+  async enableBackup(): Promise<void> {
+    const supabaseUserId = this.getSupabaseUserId();
+    if (!supabaseUserId) {
+      throw new Error('User not logged in');
+    }
+    // Update local cache immediately
+    this.storageService.setItem(`${supabaseUserId}_backup_active`, 'true');
+
+    // Update database and sync in background/safely
+    try {
+      await this.supabaseService.updateBackupActive(supabaseUserId, true);
+      await this.pushLocalCacheToDatabase(supabaseUserId);
+    } catch (e) {
+      console.warn('[SpotifyAuthService] Database not enabled/configured yet. Backup state stored in local cache only.', e);
+    }
+  }
+
+  async disableBackup(): Promise<void> {
+    const supabaseUserId = this.getSupabaseUserId();
+    if (!supabaseUserId) {
+      throw new Error('User not logged in');
+    }
+    // Update local cache immediately
+    this.storageService.setItem(`${supabaseUserId}_backup_active`, 'false');
+
+    try {
+      await this.supabaseService.updateBackupActive(supabaseUserId, false);
+    } catch (e) {
+      console.warn('[SpotifyAuthService] Database not enabled/configured yet. Backup state stored in local cache only.', e);
+    }
+  }
+
+  private async pushLocalCacheToDatabase(supabaseUserId: string): Promise<void> {
+    const spotifyUserId = this.getUserId() || 'anonymous';
+    this.isSyncing = true;
+    this.syncProgress = 0;
+
+    try {
+      // 1. Gather all items to count total steps
+      const historyKey = `${spotifyUserId}_recently_played`;
+      const cachedHistoryStr = this.storageService.getItem(historyKey);
+      const cachedHistory = cachedHistoryStr ? JSON.parse(cachedHistoryStr) : [];
+      
+      const ranges = ['short_term', 'medium_term', 'long_term'];
+      const statsToSync: { range: string; snap: any }[] = [];
+      for (const range of ranges) {
+        const history = await this.storageService.getStatsHistory(spotifyUserId, range);
+        if (history && history.length > 0) {
+          history.forEach(snap => statsToSync.push({ range, snap }));
+        }
+      }
+
+      // Collect generic cache keys to sync
+      const cacheKeys = this.storageService.getCacheKeys().filter(key => {
+        const isUserKey = key.startsWith(`${spotifyUserId}_`) || key.startsWith(`${supabaseUserId}_`);
+        const isBackupActiveKey = key === `${supabaseUserId}_backup_active`;
+        return isUserKey && !isBackupActiveKey;
+      });
+
+      const totalSteps = 1 + statsToSync.length + cacheKeys.length;
+      let completedSteps = 0;
+
+      // Step 1: Listening History Sync
+      if (cachedHistory && cachedHistory.length > 0) {
+        try {
+          await this.supabaseService.syncListeningHistory(supabaseUserId, cachedHistory);
+        } catch (e) {
+          console.warn('Failed to push listening history cache to DB:', e);
+        }
+      }
+      completedSteps++;
+      this.syncProgress = Math.round((completedSteps / totalSteps) * 100);
+
+      // Steps 2 to N: Stats Snapshots Sync
+      for (const item of statsToSync) {
+        try {
+          await this.supabaseService.saveStatsSnapshot(
+            supabaseUserId,
+            item.range,
+            item.snap.avgPopularity || 0,
+            item.snap.explicitPercentage || 0,
+            item.snap.genreDiversity || 0,
+            item.snap.topTracks || [],
+            item.snap.topArtists || [],
+            item.snap.topGenres || []
+          );
+        } catch (e) {
+          console.warn('Failed to push stats snapshot cache to DB:', e);
+        }
+        completedSteps++;
+        this.syncProgress = Math.round((completedSteps / totalSteps) * 100);
+      }
+
+      // Steps N+1 to M: Generic User Cache keys sync
+      for (const key of cacheKeys) {
+        try {
+          const val = this.storageService.getItem(key);
+          if (val !== null) {
+            await this.supabaseService.saveUserCache(supabaseUserId, key, val);
+          }
+        } catch (e) {
+          console.warn(`Failed to push user cache key ${key} to DB:`, e);
+        }
+        completedSteps++;
+        this.syncProgress = Math.round((completedSteps / totalSteps) * 100);
+      }
+
+      this.syncProgress = 100;
+      setTimeout(() => {
+        this.isSyncing = false;
+        this.syncProgress = 0;
+      }, 1000);
+
+    } catch (e) {
+      console.error('Failed to run cache push to DB:', e);
+      this.isSyncing = false;
+      this.syncProgress = 0;
+    }
   }
 
   private clearAllCookies(): void {
@@ -183,5 +437,12 @@ export class SpotifyAuthService {
       document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.' + window.location.hostname.replace(/^www\./, '');
     }
   }
+
+  getSupabaseUserId(): string | null {
+    return this.storageService.getItem('supabaseUserId') || null;
+  }
+
+
 }
+
 

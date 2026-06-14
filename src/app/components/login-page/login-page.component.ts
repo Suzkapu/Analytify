@@ -18,6 +18,10 @@ export class LoginPageComponent implements OnInit {
   }
 
   async login() {
-    window.location.href = await this.authService.getAuthorizationUrl();
+    try {
+      await this.authService.loginWithSupabase();
+    } catch (err) {
+      console.error('Login failed', err);
+    }
   }
 }

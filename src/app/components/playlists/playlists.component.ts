@@ -20,7 +20,7 @@ export class PlaylistsComponent {
     private route: ActivatedRoute, 
     private router: Router, 
     private spotifyDataService: SpotifyDataService,
-    private authService: SpotifyAuthService,
+    public authService: SpotifyAuthService,
     private storageService: StorageService
   ) {
     this.route.params.subscribe(() => {
@@ -70,14 +70,49 @@ export class PlaylistsComponent {
     const storedPlaylists = this.storageService.getItem(storageKey);
     const lastUpdated = this.storageService.getItem(lastUpdatedKey);
 
-    const isExpired = this.isCacheExpired(lastUpdated);
+    const isBackupActive = this.authService.isBackupActive();
+    const isExpired = isBackupActive ? false : this.isCacheExpired(lastUpdated);
 
     if (storedPlaylists && !isExpired) {
-      console.log("from storage");
+      console.log(isBackupActive ? "[Playlists] Loading playlists from Supabase Cloud Backup (Local Cache)" : "[Playlists] Loading playlists from Local Storage Cache (Cloud Backup disabled)");
       this.playlists = JSON.parse(storedPlaylists);
+
+      // Sync Favourite Tracks total with the latest loaded amount if available
+      const favPlaylist = this.playlists.find(p => p.id === 'fav');
+      if (favPlaylist) {
+        const storedAmountStr = this.storageService.getItem(`${userId}_fav_Amount`);
+        let updated = false;
+        if (storedAmountStr) {
+          try {
+            const storedAmount = JSON.parse(storedAmountStr);
+            if (storedAmount !== favPlaylist.tracks.total) {
+              favPlaylist.tracks.total = storedAmount;
+              updated = true;
+            }
+          } catch (e) {}
+        }
+
+        // If it's still 0, try to update it in the background from the API
+        if (favPlaylist.tracks.total === 0) {
+          this.spotifyDataService.getFavTracks(0, 1).subscribe({
+            next: (favTracks: any) => {
+              if (favTracks && favTracks.total !== favPlaylist.tracks.total) {
+                favPlaylist.tracks.total = favTracks.total;
+                this.storageService.setItem(storageKey, JSON.stringify(this.playlists));
+                this.filterPlaylists();
+              }
+            },
+            error: (err) => console.log('Background update of fav tracks count failed:', err)
+          });
+        } else if (updated) {
+          this.storageService.setItem(storageKey, JSON.stringify(this.playlists));
+        }
+      }
+
       this.filterPlaylists();
     } else {
-      console.log("from api");
+      const reason = !storedPlaylists ? 'no local cache' : (isExpired ? 'cache expired' : 'unknown');
+      console.log(`[Playlists] Cache missing or expired (reason: ${reason}, backup active: ${isBackupActive}). Loading playlists from Spotify API`);
       this.spotifyDataService.getUserPlaylists().subscribe({
         next: (playlists: any) => {
           this.playlists = [...playlists.items];
@@ -216,5 +251,32 @@ export class PlaylistsComponent {
 
   viewSongs(playlistId: string) {
     this.router.navigate(['/songs', playlistId]);
+  }
+
+  showBackupConfirmModal = false;
+
+  onBackupToggle(event: Event) {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      this.showBackupConfirmModal = true;
+    } else {
+      this.authService.disableBackup().catch(err => {
+        console.error('Failed to disable backup:', err);
+      });
+    }
+  }
+
+  cancelBackupToggle() {
+    this.showBackupConfirmModal = false;
+  }
+
+  async confirmBackupToggle() {
+    this.showBackupConfirmModal = false;
+    try {
+      await this.authService.enableBackup();
+    } catch (err) {
+      console.error('Failed to enable backup:', err);
+      alert('Failed to enable database backup. Please try again.');
+    }
   }
 }

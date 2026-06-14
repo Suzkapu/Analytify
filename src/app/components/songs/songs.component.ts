@@ -60,7 +60,7 @@ export class SongsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute, 
     private spotifyDataService: SpotifyDataService, 
     private router: Router,
-    private authService: SpotifyAuthService,
+    public authService: SpotifyAuthService,
     private storageService: StorageService,
     private playlistLoaderService: PlaylistLoaderService
   ) {
@@ -117,7 +117,8 @@ export class SongsComponent implements OnInit, OnDestroy {
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
     const lastUpdated = this.storageService.getItem(lastUpdatedKey);
 
-    const isExpired = this.isCacheExpired(lastUpdated);
+    const isBackupActive = this.authService.isBackupActive();
+    const isExpired = isBackupActive ? false : this.isCacheExpired(lastUpdated);
     const version = this.storageService.getItem(`${userId}_${this.playlistId}_cacheVersion`);
 
     // Unsubscribe from any previous loader task
@@ -135,7 +136,7 @@ export class SongsComponent implements OnInit, OnDestroy {
     }
 
     if (storedArtists && !isExpired && version === 'v4') {
-      console.log("Loading artists from storage cache");
+      console.log(isBackupActive ? `[Songs] Loading playlist ${this.playlistId} contents from Supabase Cloud Backup (Local Cache)` : `[Songs] Loading playlist ${this.playlistId} contents from Local Storage Cache (Cloud Backup disabled)`);
       const parsedArtists = JSON.parse(storedArtists);
       this.artists = parsedArtists;
       this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
@@ -144,6 +145,8 @@ export class SongsComponent implements OnInit, OnDestroy {
     } else {
       // Start a new loading task
       const isRefresh = !!storedArtists;
+      const reason = !storedArtists ? 'no local cache' : (version !== 'v4' ? `old cache version (${version})` : (isExpired ? 'cache expired' : 'unknown'));
+      console.log(`[Songs] Cache missing or stale for playlist ${this.playlistId} (reason: ${reason}, backup active: ${isBackupActive}). Loading from API.`);
       if (isRefresh) {
         this.artists = JSON.parse(storedArtists!);
         this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
@@ -223,6 +226,32 @@ export class SongsComponent implements OnInit, OnDestroy {
   }
 
   showClearCacheModal = false;
+  showBackupConfirmModal = false;
+
+  onBackupToggle(event: Event) {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      this.showBackupConfirmModal = true;
+    } else {
+      this.authService.disableBackup().catch(err => {
+        console.error('Failed to disable backup:', err);
+      });
+    }
+  }
+
+  cancelBackupToggle() {
+    this.showBackupConfirmModal = false;
+  }
+
+  async confirmBackupToggle() {
+    this.showBackupConfirmModal = false;
+    try {
+      await this.authService.enableBackup();
+    } catch (err) {
+      console.error('Failed to enable backup:', err);
+      alert('Failed to enable database backup. Please try again.');
+    }
+  }
 
   toggleSettingsDropdown(event: Event) {
     event.stopPropagation();
