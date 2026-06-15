@@ -14,16 +14,23 @@
 
 const { createClient } = require('@supabase/supabase-js');
 
-// Configuration with env variables and fallback defaults
 const CONFIG = {
   supabaseUrl: process.env.SUPABASE_URL || 'https://tmmhylpexbubyznlizfs.supabase.co',
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
-  spotifyClientId: process.env.SPOTIFY_CLIENT_ID || 'REDACTED_SPOTIFY_CLIENT_ID',
-  spotifyClientSecret: process.env.SPOTIFY_CLIENT_SECRET || 'REDACTED_SPOTIFY_CLIENT_SECRET'
+  spotifyClientId: process.env.SPOTIFY_CLIENT_ID,
+  spotifyClientSecret: process.env.SPOTIFY_CLIENT_SECRET
 };
 
 if (!CONFIG.supabaseServiceRoleKey) {
-  console.error('CRITICAL: SUPABASE_SERVICE_ROLE_KEY env variable is required to run the daily sync script.');
+  console.error('CRITICAL: SUPABASE_SERVICE_ROLE_KEY env variable is required.');
+  process.exit(1);
+}
+if (!CONFIG.spotifyClientId) {
+  console.error('CRITICAL: SPOTIFY_CLIENT_ID env variable is required.');
+  process.exit(1);
+}
+if (!CONFIG.spotifyClientSecret) {
+  console.error('CRITICAL: SPOTIFY_CLIENT_SECRET env variable is required.');
   process.exit(1);
 }
 
