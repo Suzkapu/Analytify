@@ -577,9 +577,7 @@ export class UserStatsComponent implements OnInit {
 
   saveHistorySnapshot(userId: string, range: string) {
     if (this.topTracks.length === 0 && this.topArtists.length === 0) {
-      // Wait for backup status sync before loading history, so cloud snapshots are included
-      const ready = this.authService.initialSyncPromise || Promise.resolve();
-      ready.then(() => this.loadHistoryData()).catch(() => this.loadHistoryData());
+      this.loadHistoryData();
       return;
     }
 
@@ -643,9 +641,7 @@ export class UserStatsComponent implements OnInit {
 
       this.storageService.saveStatsHistory(snapshot).then(() => {
         console.log('Saved history snapshot to IndexedDB');
-        // Wait for backup status to be resolved before loading history
-        const ready = this.authService.initialSyncPromise || Promise.resolve();
-        ready.then(() => this.loadHistoryData()).catch(() => this.loadHistoryData());
+        this.loadHistoryData();
       });
     });
   }
@@ -654,7 +650,6 @@ export class UserStatsComponent implements OnInit {
     const userId = this.authService.getUserId() || 'anonymous';
     const supabaseUserId = this.authService.getSupabaseUserId();
     const range = this.selectedRange;
-    const isBackupActive = this.authService.isBackupActive();
 
     const loadLocal = () => {
       this.storageService.getStatsHistory(userId, range).then(history => {
@@ -682,78 +677,84 @@ export class UserStatsComponent implements OnInit {
       });
     };
 
-    if (isBackupActive && supabaseUserId) {
-      this.supabaseService.loadAllStatsSnapshots(supabaseUserId, range).then(async (dbSnapshots) => {
-        const localHistory = await this.storageService.getStatsHistory(userId, range).catch(() => [] as any[]);
+    const ready = this.authService.initialSyncPromise || Promise.resolve();
+    ready.then(() => {
+      const isBackupActive = this.authService.isBackupActive();
+      if (isBackupActive && supabaseUserId) {
+        this.supabaseService.loadAllStatsSnapshots(supabaseUserId, range).then(async (dbSnapshots) => {
+          const localHistory = await this.storageService.getStatsHistory(userId, range).catch(() => [] as any[]);
 
-        // Use YYYY-MM-DD strings for all comparisons — immune to created_at vs snapshot_date ambiguity
-        const toDateKey = (ts: number) => new Date(ts).toISOString().split('T')[0];
+          // Use YYYY-MM-DD strings for all comparisons — immune to created_at vs snapshot_date ambiguity
+          const toDateKey = (ts: number) => new Date(ts).toISOString().split('T')[0];
 
-        // Cloud snapshot keys: prefer explicit snapshotDate field, fall back to deriving from timestamp
-        const cloudDateKeys = new Set((dbSnapshots || []).map((s: any) =>
-          s.snapshotDate || toDateKey(s.timestamp)
-        ));
+          // Cloud snapshot keys: prefer explicit snapshotDate field, fall back to deriving from timestamp
+          const cloudDateKeys = new Set((dbSnapshots || []).map((s: any) =>
+            s.snapshotDate || toDateKey(s.timestamp)
+          ));
 
-        // Step 1: Download cloud snapshots missing from local IndexedDB
-        if (dbSnapshots && dbSnapshots.length > 0) {
-          try {
-            const localDateKeys = new Set(localHistory.map((h: any) => toDateKey(h.timestamp)));
-            for (const snap of dbSnapshots) {
-              const key = snap.snapshotDate || toDateKey(snap.timestamp);
-              if (!localDateKeys.has(key)) {
-                await this.storageService.saveStatsHistory({ ...snap, userId });
-                localDateKeys.add(key); // prevent duplicates within this loop
+          // Step 1: Download cloud snapshots missing from local IndexedDB
+          if (dbSnapshots && dbSnapshots.length > 0) {
+            try {
+              const localDateKeys = new Set(localHistory.map((h: any) => toDateKey(h.timestamp)));
+              for (const snap of dbSnapshots) {
+                const key = snap.snapshotDate || toDateKey(snap.timestamp);
+                if (!localDateKeys.has(key)) {
+                  await this.storageService.saveStatsHistory({ ...snap, userId });
+                  localDateKeys.add(key); // prevent duplicates within this loop
+                }
               }
+            } catch (e) {
+              console.warn('[Stats] Failed to restore DB history snapshots locally:', e);
+            }
+          }
+
+          // Step 2: Upload local-only snapshots to cloud (runs every page load, not just first enable)
+          try {
+            const localOnlySnapshots = localHistory.filter((h: any) =>
+              !cloudDateKeys.has(toDateKey(h.timestamp))
+            );
+
+            for (const localSnap of localOnlySnapshots) {
+              const dateStr = toDateKey(localSnap.timestamp);
+              let totalPop = 0; let explicitCount = 0;
+              (localSnap.topTracks || []).forEach((t: any) => {
+                totalPop += t.popularity || 0;
+                if (t.explicit) explicitCount++;
+              });
+              const trackCount = (localSnap.topTracks || []).length;
+              const avgPop = trackCount > 0 ? Math.round(totalPop / trackCount) : 0;
+              const explPct = trackCount > 0 ? Math.round((explicitCount / trackCount) * 100) : 0;
+              const genreDiversity = (localSnap.topGenres || []).length;
+
+              console.log(`[Stats] Uploading local-only snapshot to cloud: ${dateStr} (${range})`);
+              await this.supabaseService.saveStatsSnapshot(
+                supabaseUserId,
+                range,
+                avgPop,
+                explPct,
+                genreDiversity,
+                localSnap.topTracks || [],
+                localSnap.topArtists || [],
+                localSnap.topGenres || [],
+                true,    // onlyInsertMissing — don't overwrite existing metadata objects
+                dateStr  // customDateStr — use the real historical date, not today
+              );
             }
           } catch (e) {
-            console.warn('[Stats] Failed to restore DB history snapshots locally:', e);
+            console.warn('[Stats] Failed to upload local-only snapshots to cloud:', e);
           }
-        }
 
-        // Step 2: Upload local-only snapshots to cloud (runs every page load, not just first enable)
-        try {
-          const localOnlySnapshots = localHistory.filter((h: any) =>
-            !cloudDateKeys.has(toDateKey(h.timestamp))
-          );
-
-          for (const localSnap of localOnlySnapshots) {
-            const dateStr = toDateKey(localSnap.timestamp);
-            let totalPop = 0; let explicitCount = 0;
-            (localSnap.topTracks || []).forEach((t: any) => {
-              totalPop += t.popularity || 0;
-              if (t.explicit) explicitCount++;
-            });
-            const trackCount = (localSnap.topTracks || []).length;
-            const avgPop = trackCount > 0 ? Math.round(totalPop / trackCount) : 0;
-            const explPct = trackCount > 0 ? Math.round((explicitCount / trackCount) * 100) : 0;
-            const genreDiversity = (localSnap.topGenres || []).length;
-
-            console.log(`[Stats] Uploading local-only snapshot to cloud: ${dateStr} (${range})`);
-            await this.supabaseService.saveStatsSnapshot(
-              supabaseUserId,
-              range,
-              avgPop,
-              explPct,
-              genreDiversity,
-              localSnap.topTracks || [],
-              localSnap.topArtists || [],
-              localSnap.topGenres || [],
-              true,    // onlyInsertMissing — don't overwrite existing metadata objects
-              dateStr  // customDateStr — use the real historical date, not today
-            );
-          }
-        } catch (e) {
-          console.warn('[Stats] Failed to upload local-only snapshots to cloud:', e);
-        }
-
+          loadLocal();
+        }).catch(err => {
+          console.warn('[Stats] Failed to load history snapshots from Supabase:', err);
+          loadLocal();
+        });
+      } else {
         loadLocal();
-      }).catch(err => {
-        console.warn('[Stats] Failed to load history snapshots from Supabase:', err);
-        loadLocal();
-      });
-    } else {
+      }
+    }).catch(() => {
       loadLocal();
-    }
+    });
   }
 
 
