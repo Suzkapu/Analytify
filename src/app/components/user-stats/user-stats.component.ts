@@ -686,15 +686,23 @@ export class UserStatsComponent implements OnInit {
       this.supabaseService.loadAllStatsSnapshots(supabaseUserId, range).then(async (dbSnapshots) => {
         const localHistory = await this.storageService.getStatsHistory(userId, range).catch(() => [] as any[]);
 
+        // Use YYYY-MM-DD strings for all comparisons — immune to created_at vs snapshot_date ambiguity
+        const toDateKey = (ts: number) => new Date(ts).toISOString().split('T')[0];
+
+        // Cloud snapshot keys: prefer explicit snapshotDate field, fall back to deriving from timestamp
+        const cloudDateKeys = new Set((dbSnapshots || []).map((s: any) =>
+          s.snapshotDate || toDateKey(s.timestamp)
+        ));
+
         // Step 1: Download cloud snapshots missing from local IndexedDB
         if (dbSnapshots && dbSnapshots.length > 0) {
           try {
-            const localTimestamps = new Set(localHistory.map((h: any) => new Date(h.timestamp).toDateString()));
+            const localDateKeys = new Set(localHistory.map((h: any) => toDateKey(h.timestamp)));
             for (const snap of dbSnapshots) {
-              const dateStr = new Date(snap.timestamp).toDateString();
-              if (!localTimestamps.has(dateStr)) {
-                const entry = { ...snap, userId: userId };
-                await this.storageService.saveStatsHistory(entry);
+              const key = snap.snapshotDate || toDateKey(snap.timestamp);
+              if (!localDateKeys.has(key)) {
+                await this.storageService.saveStatsHistory({ ...snap, userId });
+                localDateKeys.add(key); // prevent duplicates within this loop
               }
             }
           } catch (e) {
@@ -702,17 +710,14 @@ export class UserStatsComponent implements OnInit {
           }
         }
 
-        // Step 2: Upload local-only snapshots that are missing in the cloud (bidirectional sync)
+        // Step 2: Upload local-only snapshots to cloud (runs every page load, not just first enable)
         try {
-          const cloudDateStrs = new Set((dbSnapshots || []).map((s: any) =>
-            new Date(s.timestamp).toDateString()
-          ));
           const localOnlySnapshots = localHistory.filter((h: any) =>
-            !cloudDateStrs.has(new Date(h.timestamp).toDateString())
+            !cloudDateKeys.has(toDateKey(h.timestamp))
           );
 
           for (const localSnap of localOnlySnapshots) {
-            const dateStr = new Date(localSnap.timestamp).toISOString().split('T')[0];
+            const dateStr = toDateKey(localSnap.timestamp);
             let totalPop = 0; let explicitCount = 0;
             (localSnap.topTracks || []).forEach((t: any) => {
               totalPop += t.popularity || 0;
@@ -733,8 +738,8 @@ export class UserStatsComponent implements OnInit {
               localSnap.topTracks || [],
               localSnap.topArtists || [],
               localSnap.topGenres || [],
-              true,   // onlyInsertMissing — don't overwrite existing metadata
-              dateStr // customDateStr — use the historical date
+              true,    // onlyInsertMissing — don't overwrite existing metadata objects
+              dateStr  // customDateStr — use the real historical date, not today
             );
           }
         } catch (e) {
@@ -750,6 +755,7 @@ export class UserStatsComponent implements OnInit {
       loadLocal();
     }
   }
+
 
   getTrend(item: any, currentIdx: number, category: string): { type: 'up' | 'down' | 'same' | 'new', diff?: number } {
     if (!this.historyData || this.historyData.length === 0) {

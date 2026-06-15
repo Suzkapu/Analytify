@@ -962,7 +962,9 @@ export class SupabaseService {
         return {
           userId: supabaseUserId,
           range: range,
-          timestamp: new Date(row.created_at || row.snapshot_date).getTime(),
+          // snapshot_date is the real historical date; created_at is only the DB insert time (may differ for backfilled uploads)
+          timestamp: new Date(row.snapshot_date || row.created_at).getTime(),
+          snapshotDate: row.snapshot_date, // expose YYYY-MM-DD for precise date comparisons
           avgPopularity: Number(row.avg_popularity),
           explicitPercentage: Number(row.explicit_percentage),
           genreDiversity: row.genre_diversity,
