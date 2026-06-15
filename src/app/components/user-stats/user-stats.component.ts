@@ -577,7 +577,9 @@ export class UserStatsComponent implements OnInit {
 
   saveHistorySnapshot(userId: string, range: string) {
     if (this.topTracks.length === 0 && this.topArtists.length === 0) {
-      this.loadHistoryData();
+      // Wait for backup status sync before loading history, so cloud snapshots are included
+      const ready = this.authService.initialSyncPromise || Promise.resolve();
+      ready.then(() => this.loadHistoryData()).catch(() => this.loadHistoryData());
       return;
     }
 
@@ -641,7 +643,9 @@ export class UserStatsComponent implements OnInit {
 
       this.storageService.saveStatsHistory(snapshot).then(() => {
         console.log('Saved history snapshot to IndexedDB');
-        this.loadHistoryData();
+        // Wait for backup status to be resolved before loading history
+        const ready = this.authService.initialSyncPromise || Promise.resolve();
+        ready.then(() => this.loadHistoryData()).catch(() => this.loadHistoryData());
       });
     });
   }
@@ -945,12 +949,51 @@ export class UserStatsComponent implements OnInit {
     return `${linePath} L ${lastX},${bottomY} L ${firstX},${bottomY} Z`;
   }
 
+  private readonly PLACEHOLDER_URL = 'https://misc.scdn.co/liked-songs/liked-songs-300.png';
+
+  private isPlaceholderImage(url: string | null | undefined): boolean {
+    return !url || url === this.PLACEHOLDER_URL;
+  }
+
+  /** Search historical snapshots for a real image for this track by id/name */
+  private findHistoricalTrackCover(track: any): string {
+    if (!this.historyData || this.historyData.length === 0) return '';
+    for (let i = this.historyData.length - 1; i >= 0; i--) {
+      const snap = this.historyData[i];
+      const found = (snap.topTracks || []).find((t: any) =>
+        (track.id && t.id && t.id === track.id) ||
+        (t.name === track.name && t.artist === this.getTrackArtist(track))
+      );
+      if (found && !this.isPlaceholderImage(found.albumCover)) return found.albumCover;
+    }
+    return '';
+  }
+
+  /** Search historical snapshots for a real image for this artist by id/name */
+  private findHistoricalArtistImage(artist: any): string {
+    if (!this.historyData || this.historyData.length === 0) return '';
+    for (let i = this.historyData.length - 1; i >= 0; i--) {
+      const snap = this.historyData[i];
+      const found = (snap.topArtists || []).find((a: any) =>
+        (artist.id && a.id && a.id === artist.id) || (a.name === artist.name)
+      );
+      if (found && !this.isPlaceholderImage(found.imageUrl)) return found.imageUrl;
+    }
+    return '';
+  }
+
   getTrackCover(track: any): string {
-    if (track.albumCover) return track.albumCover;
-    if (track.album?.images && track.album.images[0]) return track.album.images[0].url;
-    if (track.album?.image_url) return track.album.image_url;
-    if (track.image_url) return track.image_url;
-    return 'https://misc.scdn.co/liked-songs/liked-songs-300.png';
+    const candidates = [
+      track.albumCover,
+      track.album?.images?.[0]?.url,
+      track.album?.image_url,
+      track.image_url
+    ];
+    for (const url of candidates) {
+      if (!this.isPlaceholderImage(url)) return url;
+    }
+    // Fall back to a historically-known good image
+    return this.findHistoricalTrackCover(track);
   }
 
   getTrackUrl(track: any): string {
@@ -962,9 +1005,12 @@ export class UserStatsComponent implements OnInit {
   }
 
   getArtistImage(artist: any): string {
-    if (artist.imageUrl) return artist.imageUrl;
-    if (artist.images && artist.images[0]) return artist.images[0].url;
-    return 'https://misc.scdn.co/liked-songs/liked-songs-300.png';
+    const candidates = [artist.imageUrl, artist.images?.[0]?.url];
+    for (const url of candidates) {
+      if (!this.isPlaceholderImage(url)) return url;
+    }
+    // Fall back to a historically-known good image
+    return this.findHistoricalArtistImage(artist);
   }
 
   getArtistUrl(artist: any): string {

@@ -12,6 +12,7 @@ export class CallbackComponent implements OnInit {
   playlists: any[] = [];
   errorMessage: string | null = null;
   loadingMessage: string = 'Logging in with Spotify...';
+  isAutoRedirecting: boolean = false;
 
   constructor(private router: Router, private route: ActivatedRoute, private authService: SpotifyAuthService, private spotifyDataService: SpotifyDataService) {
   }
@@ -33,12 +34,23 @@ export class CallbackComponent implements OnInit {
           },
           error: (err) => {
             console.error('Failed to exchange auth code for session', err);
-            this.errorMessage = `Failed to exchange authorization code: ${err.message || JSON.stringify(err)}`;
+            // server_error often means stale PKCE state — auto retry login
+            const errMsg = err.message || JSON.stringify(err);
+            if (errMsg.includes('server_error') || errMsg.includes('expired') || errMsg.includes('invalid')) {
+              this.autoRedirectToLogin('Session expired. Redirecting back to login...');
+            } else {
+              this.errorMessage = `Failed to exchange authorization code: ${errMsg}`;
+            }
           }
         });
       } else if (error) {
         console.error('Spotify login error', error);
-        this.errorMessage = `Spotify login error: ${error}`;
+        // server_error = stale PKCE state or expired OAuth flow — auto retry
+        if (error === 'server_error' || error === 'access_denied') {
+          this.autoRedirectToLogin('Session expired. Redirecting back to login...');
+        } else {
+          this.errorMessage = `Spotify login error: ${error}`;
+        }
       } else {
         // In case of hash fragment flow, wait a bit for Supabase client to parse URL hash
         setTimeout(() => {
@@ -57,6 +69,15 @@ export class CallbackComponent implements OnInit {
           });
         }, 800);
       }
+    });
+  }
+
+  private autoRedirectToLogin(message: string) {
+    this.isAutoRedirecting = true;
+    this.loadingMessage = message;
+    // Clear any stale Supabase auth state before redirecting
+    this.authService.clearSupabaseSession().then(() => {
+      setTimeout(() => this.router.navigate(['/login']), 2000);
     });
   }
 }

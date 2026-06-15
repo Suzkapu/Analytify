@@ -58,6 +58,16 @@ export class SpotifyAuthService {
     });
   }
 
+  /** Clears stale Supabase session state — call before re-initiating login after a server_error */
+  async clearSupabaseSession(): Promise<void> {
+    try {
+      await this.supabaseService.client.auth.signOut({ scope: 'local' });
+    } catch (e) {
+      // Ignore errors — we just want to clear local state
+    }
+  }
+
+
   exchangeSupabaseCodeForSession(code: string): Observable<any> {
     return from(this.supabaseService.client.auth.exchangeCodeForSession(code)).pipe(
       tap(({ data, error }: any) => {

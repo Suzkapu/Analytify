@@ -98,6 +98,11 @@ export class SupabaseService {
     }
   }
 
+  /** Returns true if the URL is the Spotify liked-songs placeholder (not a real album/artist image) */
+  private isPlaceholderImage(url: string | null | undefined): boolean {
+    return !url || url === 'https://misc.scdn.co/liked-songs/liked-songs-300.png';
+  }
+
   /** Syncs Spotify artists metadata into the database */
   async syncArtists(artists: any[], onlyInsertMissing = false): Promise<void> {
     if (!artists || artists.length === 0) return;
@@ -121,10 +126,29 @@ export class SupabaseService {
         if (uniqueArtists.length === 0) return;
       }
 
+      const rawImageUrls = new Map<string, string | null>(uniqueArtists.map(a => [
+        a.id,
+        a.images?.[0]?.url || a.imageUrl || a.image_url || null
+      ]));
+
+      // For artists whose incoming image is a placeholder, fetch existing DB image to preserve it
+      const placeholderIds = uniqueArtists.filter(a => this.isPlaceholderImage(rawImageUrls.get(a.id))).map(a => a.id);
+      if (placeholderIds.length > 0) {
+        const { data: existingImages } = await this.client
+          .from('artists')
+          .select('id, image_url')
+          .in('id', placeholderIds);
+        (existingImages || []).forEach((row: any) => {
+          if (!this.isPlaceholderImage(row.image_url)) {
+            rawImageUrls.set(row.id, row.image_url); // restore the good DB image
+          }
+        });
+      }
+
       const artistsToInsert = uniqueArtists.map(a => ({
         id: a.id,
         name: a.name,
-        image_url: a.images?.[0]?.url || a.imageUrl || a.image_url || null,
+        image_url: rawImageUrls.get(a.id) ?? null,
         spotify_url: a.external_urls?.spotify || a.spotifyUrl || a.spotify_url || null,
         popularity: a.popularity || 0,
         followers_count: a.followers?.total || a.followersCount || a.followers_count || 0,
@@ -208,6 +232,25 @@ export class SupabaseService {
         if (uniqueAlbums.length === 0) return;
       }
 
+      const rawAlbumImages = new Map<string, string | null>(uniqueAlbums.map(a => [
+        a.id,
+        a.images?.[0]?.url || a.imageUrl || a.image_url || null
+      ]));
+
+      // For albums whose incoming image is a placeholder, fetch existing DB image to preserve it
+      const placeholderAlbumIds = uniqueAlbums.filter(a => this.isPlaceholderImage(rawAlbumImages.get(a.id))).map(a => a.id);
+      if (placeholderAlbumIds.length > 0) {
+        const { data: existingAlbumImages } = await this.client
+          .from('albums')
+          .select('id, image_url')
+          .in('id', placeholderAlbumIds);
+        (existingAlbumImages || []).forEach((row: any) => {
+          if (!this.isPlaceholderImage(row.image_url)) {
+            rawAlbumImages.set(row.id, row.image_url); // restore the good DB image
+          }
+        });
+      }
+
       const albumsToInsert = uniqueAlbums.map(a => ({
         id: a.id,
         name: a.name,
@@ -215,7 +258,7 @@ export class SupabaseService {
         total_tracks: a.total_tracks || a.totalTracks || 1,
         release_date: (a.release_date && a.release_date.trim()) ? (a.release_date.length === 4 ? `${a.release_date}-01-01` : (a.release_date.length === 7 ? `${a.release_date}-01` : a.release_date)) : null,
         release_date_precision: a.release_date_precision || a.releaseDatePrecision || 'year',
-        image_url: a.images?.[0]?.url || a.imageUrl || a.image_url || null,
+        image_url: rawAlbumImages.get(a.id) ?? null,
         spotify_url: a.external_urls?.spotify || a.spotifyUrl || a.spotify_url || null,
         available_markets: a.available_markets || [],
         restriction_reason: a.restrictions?.reason || null,
