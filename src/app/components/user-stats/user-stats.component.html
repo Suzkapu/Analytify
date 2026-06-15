@@ -175,8 +175,9 @@
 
     <!-- Category 1: Top 100 Songs -->
     <div *ngIf="selectedCategory === 'tracks'">
-      <div *ngIf="displayedTracks.length === 0" style="color: #666; text-align: center; padding: 40px 0;">
-        No top tracks found for this period.
+      <div *ngIf="displayedTracks.length === 0" style="color: #999; text-align: center; padding: 40px 0;">
+        <span *ngIf="isSnapshotLoading()"><i class="pi pi-spin pi-spinner" style="margin-right: 8px;"></i>Loading snapshot details...</span>
+        <span *ngIf="!isSnapshotLoading()">No top tracks found for this period.</span>
       </div>
       <div class="stats-tracks-grid" *ngIf="displayedTracks.length > 0">
 
@@ -241,8 +242,10 @@
 
     <!-- Category 2: Top Artists -->
     <div *ngIf="selectedCategory === 'artists'">
-      <div *ngIf="displayedArtists.length === 0" style="color: #666; text-align: center; padding: 40px 0;">No top artists
-        found for this period.</div>
+      <div *ngIf="displayedArtists.length === 0" style="color: #999; text-align: center; padding: 40px 0;">
+        <span *ngIf="isSnapshotLoading()"><i class="pi pi-spin pi-spinner" style="margin-right: 8px;"></i>Loading snapshot details...</span>
+        <span *ngIf="!isSnapshotLoading()">No top artists found for this period.</span>
+      </div>
       <div *ngIf="displayedArtists.length > 0" class="stats-artists-grid">
         <div *ngFor="let artist of displayedArtists; let idx = index" class="artist-grid-card" (click)="openTrendPopup(artist, 'artists')">
           <div class="artist-avatar-container" (click)="$event.stopPropagation()">
@@ -289,8 +292,10 @@
 
     <!-- Category 3: Top Genres -->
     <div *ngIf="selectedCategory === 'genres'">
-      <div *ngIf="displayedGenres.length === 0" style="color: #666; text-align: center; padding: 40px 0;">No genre data
-        available.</div>
+      <div *ngIf="displayedGenres.length === 0" style="color: #999; text-align: center; padding: 40px 0;">
+        <span *ngIf="isSnapshotLoading()"><i class="pi pi-spin pi-spinner" style="margin-right: 8px;"></i>Loading snapshot details...</span>
+        <span *ngIf="!isSnapshotLoading()">No genre data available.</span>
+      </div>
       <div *ngIf="displayedGenres.length > 0" class="genre-stats-card">
         <h3>
           Genre Popularity Weight

@@ -369,6 +369,8 @@ export class UserStatsComponent implements OnInit {
     this.compareSnapshotId = 'previous';
     this.showHistoryMenu = false;
     this.calculateHotMovers();
+    this.ensureSnapshotLoaded(snapshotId);
+    this.ensureSnapshotLoaded('previous');
   }
 
   toggleCompareMenu(event: Event) {
@@ -382,6 +384,7 @@ export class UserStatsComponent implements OnInit {
     this.compareSnapshotId = snapshotId;
     this.showCompareMenu = false;
     this.calculateHotMovers();
+    this.ensureSnapshotLoaded(snapshotId);
   }
 
   getCompareOptions(): any[] {
@@ -411,13 +414,12 @@ export class UserStatsComponent implements OnInit {
     return found ? found.label : 'Select Snapshot';
   }
 
-  getComparisonSnapshot(): any {
+  private getComparisonSnapshotObjectWithoutLazyLoading(): any {
     if (!this.historyData || this.historyData.length === 0) {
       return null;
     }
 
     if (this.compareSnapshotId === 'previous') {
-      // Find the snapshot immediately preceding the currently selected one
       if (this.selectedSnapshotId === 'current') {
         const now = new Date();
         const cutoff = new Date(now);
@@ -442,7 +444,6 @@ export class UserStatsComponent implements OnInit {
     }
 
     if (this.compareSnapshotId === 'current') {
-      // Mock-serialize today's live/cached data
       return {
         topTracks: this.topTracks.map(t => ({
           id: t.id,
@@ -464,8 +465,21 @@ export class UserStatsComponent implements OnInit {
       };
     }
 
-    // Otherwise, it is a specific timestamp
     return this.historyData.find(d => d.timestamp.toString() === this.compareSnapshotId) || null;
+  }
+
+  getComparisonSnapshot(): any {
+    const snap = this.getComparisonSnapshotObjectWithoutLazyLoading();
+    if (!snap) return null;
+
+    if (this.compareSnapshotId === 'current') {
+      return snap;
+    }
+
+    if (snap.isLoaded === false) {
+      this.lazyLoadSnapshotDetails(snap.timestamp.toString());
+    }
+    return snap.isLoaded === true ? snap : null;
   }
 
   calculateHotMovers() {
@@ -652,8 +666,12 @@ export class UserStatsComponent implements OnInit {
     const range = this.selectedRange;
 
     const loadLocal = () => {
-      this.storageService.getStatsHistory(userId, range).then(history => {
-        this.historyData = history;
+      return this.storageService.getStatsHistory(userId, range).then(history => {
+        // Mark snapshots that already have topTracks array as fully loaded
+        this.historyData = (history || []).map(h => ({
+          ...h,
+          isLoaded: (h.topTracks && h.topTracks.length > 0) ? true : (h.isLoaded || false)
+        }));
         
         // Define today's 1:00 AM cutoff to identify today's snapshots
         const now = new Date();
@@ -664,7 +682,7 @@ export class UserStatsComponent implements OnInit {
         }
 
         // Only include historical entries before today's 1 AM cutoff
-        const historicalOnly = history.filter(d => d.timestamp < cutoff.getTime());
+        const historicalOnly = this.historyData.filter(d => d.timestamp < cutoff.getTime());
 
         // Populate snapshot options with clean date format (no timestamp)
         this.snapshotOptions = historicalOnly.slice().reverse().map(d => ({
@@ -672,88 +690,95 @@ export class UserStatsComponent implements OnInit {
           label: new Date(d.timestamp).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
         }));
         this.calculateHotMovers();
+
+        // Trigger lazy loading for startup selected snapshots
+        this.ensureSnapshotLoaded(this.selectedSnapshotId);
+        this.ensureSnapshotLoaded(this.compareSnapshotId);
       }).catch(err => {
         console.error('Failed to load stats history:', err);
       });
     };
 
-    const ready = this.authService.initialSyncPromise || Promise.resolve();
-    ready.then(() => {
-      const isBackupActive = this.authService.isBackupActive();
-      if (isBackupActive && supabaseUserId) {
-        this.supabaseService.loadAllStatsSnapshots(supabaseUserId, range).then(async (dbSnapshots) => {
-          const localHistory = await this.storageService.getStatsHistory(userId, range).catch(() => [] as any[]);
+    // 1. Load local history IMMEDIATELY so comparison dropdown is responsive instantly
+    loadLocal().then(() => {
+      // 2. Perform sync in background
+      const ready = this.authService.initialSyncPromise || Promise.resolve();
+      ready.then(() => {
+        const isBackupActive = this.authService.isBackupActive();
+        if (isBackupActive && supabaseUserId) {
+          // Fetch only the lightweight metadata from Supabase
+          this.supabaseService.loadAllStatsSnapshotsMetadata(supabaseUserId, range).then(async (dbSnapshots) => {
+            const localHistory = await this.storageService.getStatsHistory(userId, range).catch(() => [] as any[]);
 
-          // Use YYYY-MM-DD strings for all comparisons — immune to created_at vs snapshot_date ambiguity
-          const toDateKey = (ts: number) => new Date(ts).toISOString().split('T')[0];
+            const toDateKey = (ts: number) => new Date(ts).toISOString().split('T')[0];
 
-          // Cloud snapshot keys: prefer explicit snapshotDate field, fall back to deriving from timestamp
-          const cloudDateKeys = new Set((dbSnapshots || []).map((s: any) =>
-            s.snapshotDate || toDateKey(s.timestamp)
-          ));
+            const cloudDateKeys = new Set((dbSnapshots || []).map((s: any) =>
+              s.snapshotDate || toDateKey(s.timestamp)
+            ));
 
-          // Step 1: Download cloud snapshots missing from local IndexedDB
-          if (dbSnapshots && dbSnapshots.length > 0) {
-            try {
-              const localDateKeys = new Set(localHistory.map((h: any) => toDateKey(h.timestamp)));
-              for (const snap of dbSnapshots) {
-                const key = snap.snapshotDate || toDateKey(snap.timestamp);
-                if (!localDateKeys.has(key)) {
-                  await this.storageService.saveStatsHistory({ ...snap, userId });
-                  localDateKeys.add(key); // prevent duplicates within this loop
+            let localUpdated = false;
+
+            // Step 1: Download cloud snapshots missing from local IndexedDB (as metadata-only placeholder)
+            if (dbSnapshots && dbSnapshots.length > 0) {
+              try {
+                const localDateKeys = new Set(localHistory.map((h: any) => toDateKey(h.timestamp)));
+                for (const snap of dbSnapshots) {
+                  const key = snap.snapshotDate || toDateKey(snap.timestamp);
+                  if (!localDateKeys.has(key)) {
+                    await this.storageService.saveStatsHistory({ ...snap, userId, isLoaded: false });
+                    localDateKeys.add(key);
+                    localUpdated = true;
+                  }
                 }
+              } catch (e) {
+                console.warn('[Stats] Failed to restore DB history snapshots locally:', e);
+              }
+            }
+
+            // Step 2: Upload local-only snapshots to cloud
+            try {
+              const localOnlySnapshots = localHistory.filter((h: any) =>
+                !cloudDateKeys.has(toDateKey(h.timestamp))
+              );
+
+              for (const localSnap of localOnlySnapshots) {
+                const dateStr = toDateKey(localSnap.timestamp);
+                let totalPop = 0; let explicitCount = 0;
+                (localSnap.topTracks || []).forEach((t: any) => {
+                  totalPop += t.popularity || 0;
+                  if (t.explicit) explicitCount++;
+                });
+                const trackCount = (localSnap.topTracks || []).length;
+                const avgPop = trackCount > 0 ? Math.round(totalPop / trackCount) : 0;
+                const explPct = trackCount > 0 ? Math.round((explicitCount / trackCount) * 100) : 0;
+                const genreDiversity = (localSnap.topGenres || []).length;
+
+                console.log(`[Stats] Uploading local-only snapshot to cloud: ${dateStr} (${range})`);
+                await this.supabaseService.saveStatsSnapshot(
+                  supabaseUserId,
+                  range,
+                  avgPop,
+                  explPct,
+                  genreDiversity,
+                  localSnap.topTracks || [],
+                  localSnap.topArtists || [],
+                  localSnap.topGenres || [],
+                  true,    // onlyInsertMissing — don't overwrite existing metadata objects
+                  dateStr  // customDateStr — use the real historical date, not today
+                );
               }
             } catch (e) {
-              console.warn('[Stats] Failed to restore DB history snapshots locally:', e);
+              console.warn('[Stats] Failed to upload local-only snapshots to cloud:', e);
             }
-          }
 
-          // Step 2: Upload local-only snapshots to cloud (runs every page load, not just first enable)
-          try {
-            const localOnlySnapshots = localHistory.filter((h: any) =>
-              !cloudDateKeys.has(toDateKey(h.timestamp))
-            );
-
-            for (const localSnap of localOnlySnapshots) {
-              const dateStr = toDateKey(localSnap.timestamp);
-              let totalPop = 0; let explicitCount = 0;
-              (localSnap.topTracks || []).forEach((t: any) => {
-                totalPop += t.popularity || 0;
-                if (t.explicit) explicitCount++;
-              });
-              const trackCount = (localSnap.topTracks || []).length;
-              const avgPop = trackCount > 0 ? Math.round(totalPop / trackCount) : 0;
-              const explPct = trackCount > 0 ? Math.round((explicitCount / trackCount) * 100) : 0;
-              const genreDiversity = (localSnap.topGenres || []).length;
-
-              console.log(`[Stats] Uploading local-only snapshot to cloud: ${dateStr} (${range})`);
-              await this.supabaseService.saveStatsSnapshot(
-                supabaseUserId,
-                range,
-                avgPop,
-                explPct,
-                genreDiversity,
-                localSnap.topTracks || [],
-                localSnap.topArtists || [],
-                localSnap.topGenres || [],
-                true,    // onlyInsertMissing — don't overwrite existing metadata objects
-                dateStr  // customDateStr — use the real historical date, not today
-              );
+            if (localUpdated) {
+              loadLocal();
             }
-          } catch (e) {
-            console.warn('[Stats] Failed to upload local-only snapshots to cloud:', e);
-          }
-
-          loadLocal();
-        }).catch(err => {
-          console.warn('[Stats] Failed to load history snapshots from Supabase:', err);
-          loadLocal();
-        });
-      } else {
-        loadLocal();
-      }
-    }).catch(() => {
-      loadLocal();
+          }).catch(err => {
+            console.warn('[Stats] Failed to load history snapshots from Supabase:', err);
+          });
+        }
+      });
     });
   }
 
@@ -825,7 +850,13 @@ export class UserStatsComponent implements OnInit {
       return this.topTracks;
     }
     const snap = this.historyData.find(d => d.timestamp.toString() === this.selectedSnapshotId);
-    return snap ? snap.topTracks : this.topTracks;
+    if (snap) {
+      if (snap.isLoaded === false) {
+        this.lazyLoadSnapshotDetails(snap.timestamp.toString());
+      }
+      return snap.isLoaded === true ? (snap.topTracks || []) : [];
+    }
+    return this.topTracks;
   }
 
   get displayedArtists(): any[] {
@@ -833,7 +864,13 @@ export class UserStatsComponent implements OnInit {
       return this.topArtists;
     }
     const snap = this.historyData.find(d => d.timestamp.toString() === this.selectedSnapshotId);
-    return snap ? snap.topArtists : this.topArtists;
+    if (snap) {
+      if (snap.isLoaded === false) {
+        this.lazyLoadSnapshotDetails(snap.timestamp.toString());
+      }
+      return snap.isLoaded === true ? (snap.topArtists || []) : [];
+    }
+    return this.topArtists;
   }
 
   get displayedGenres(): any[] {
@@ -841,13 +878,19 @@ export class UserStatsComponent implements OnInit {
       return this.topGenres;
     }
     const snap = this.historyData.find(d => d.timestamp.toString() === this.selectedSnapshotId);
-    if (snap && snap.topGenres) {
-      const maxPercentage = snap.topGenres.length > 0 ? snap.topGenres[0].percentage : 1;
-      return snap.topGenres.map((g: any) => ({
-        name: g.name,
-        percentage: g.percentage,
-        percentage_simple: g.percentage > 0 ? Math.max(2, Math.min(100, Math.round((g.percentage / (maxPercentage || 1)) * 100))) : 0
-      }));
+    if (snap) {
+      if (snap.isLoaded === false) {
+        this.lazyLoadSnapshotDetails(snap.timestamp.toString());
+      }
+      if (snap.isLoaded === true && snap.topGenres) {
+        const maxPercentage = snap.topGenres.length > 0 ? snap.topGenres[0].percentage : 1;
+        return snap.topGenres.map((g: any) => ({
+          name: g.name,
+          percentage: g.percentage,
+          percentage_simple: g.percentage > 0 ? Math.max(2, Math.min(100, Math.round((g.percentage / (maxPercentage || 1)) * 100))) : 0
+        }));
+      }
+      return [];
     }
     return this.topGenres;
   }
@@ -1027,6 +1070,58 @@ export class UserStatsComponent implements OnInit {
   getArtistGenre(artist: any): string {
     if (artist.genre) return artist.genre;
     return artist.genres && artist.genres[0] ? artist.genres[0] : 'Artist';
+  }
+
+  isSnapshotLoading(): boolean {
+    if (this.selectedSnapshotId === 'current') return false;
+    const snap = this.historyData.find(d => d.timestamp.toString() === this.selectedSnapshotId);
+    return snap ? snap.isLoaded === 'loading' : false;
+  }
+
+  ensureSnapshotLoaded(snapshotId: string | 'current' | 'previous') {
+    if (!snapshotId || snapshotId === 'current') return;
+
+    let targetId = snapshotId;
+    if (snapshotId === 'previous') {
+      const prev = this.getComparisonSnapshotObjectWithoutLazyLoading();
+      if (!prev || prev.isLoaded) return;
+      targetId = prev.timestamp.toString();
+    }
+
+    const snap = this.historyData.find(d => d.timestamp.toString() === targetId);
+    if (!snap || snap.isLoaded) return;
+
+    this.lazyLoadSnapshotDetails(targetId);
+  }
+
+  lazyLoadSnapshotDetails(snapshotIdStr: string) {
+    const snap = this.historyData.find(d => d.timestamp.toString() === snapshotIdStr);
+    if (!snap || snap.isLoaded === 'loading' || snap.isLoaded === true) return;
+
+    snap.isLoaded = 'loading';
+    const supabaseUserId = this.authService.getSupabaseUserId();
+    if (supabaseUserId && snap.id) {
+      console.log(`[Stats] Lazy-loading snapshot details on demand: ${snap.snapshotDate || snapshotIdStr}`);
+      this.supabaseService.loadStatsSnapshotById(supabaseUserId, snap.id).then(fullSnap => {
+        if (fullSnap) {
+          const idx = this.historyData.findIndex(d => d.timestamp.toString() === snapshotIdStr);
+          if (idx !== -1) {
+            this.historyData[idx] = { ...this.historyData[idx], ...fullSnap, isLoaded: true };
+            // Save to local IndexedDB for future offline usage
+            const userId = this.authService.getUserId() || 'anonymous';
+            this.storageService.saveStatsHistory({ ...this.historyData[idx], userId }).catch(() => {});
+            this.calculateHotMovers();
+          }
+        } else {
+          snap.isLoaded = false;
+        }
+      }).catch(err => {
+        console.error('Failed to lazy load snapshot details:', err);
+        snap.isLoaded = false;
+      });
+    } else {
+      snap.isLoaded = true;
+    }
   }
 
   @HostListener('document:click')

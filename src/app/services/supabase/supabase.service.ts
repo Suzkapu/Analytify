@@ -962,9 +962,8 @@ export class SupabaseService {
         return {
           userId: supabaseUserId,
           range: range,
-          // snapshot_date is the real historical date; created_at is only the DB insert time (may differ for backfilled uploads)
           timestamp: new Date(row.snapshot_date || row.created_at).getTime(),
-          snapshotDate: row.snapshot_date, // expose YYYY-MM-DD for precise date comparisons
+          snapshotDate: row.snapshot_date,
           avgPopularity: Number(row.avg_popularity),
           explicitPercentage: Number(row.explicit_percentage),
           genreDiversity: row.genre_diversity,
@@ -978,6 +977,151 @@ export class SupabaseService {
       return [];
     }
   }
+
+  /** Loads all stats snapshots metadata (without tracks/artists/genres joins) for performance */
+  async loadAllStatsSnapshotsMetadata(supabaseUserId: string, range: string): Promise<any[]> {
+    try {
+      const { data, error } = await this.client
+        .from('stats_snapshots')
+        .select('id, avg_popularity, explicit_percentage, genre_diversity, created_at, snapshot_date')
+        .eq('user_id', supabaseUserId)
+        .eq('range', range)
+        .order('snapshot_date', { ascending: true });
+
+      if (error) throw error;
+      if (!data) return [];
+
+      return data.map((row: any) => ({
+        id: row.id,
+        userId: supabaseUserId,
+        range: range,
+        timestamp: new Date(row.snapshot_date || row.created_at).getTime(),
+        snapshotDate: row.snapshot_date,
+        avgPopularity: Number(row.avg_popularity),
+        explicitPercentage: Number(row.explicit_percentage),
+        genreDiversity: row.genre_diversity,
+        topTracks: [],
+        topArtists: [],
+        topGenres: [],
+        isLoaded: false
+      }));
+    } catch (e) {
+      console.error('[SupabaseService] Error loading stats snapshots metadata:', e);
+      return [];
+    }
+  }
+
+  /** Loads full details for a single stats snapshot by ID */
+  async loadStatsSnapshotById(supabaseUserId: string, snapshotId: string): Promise<any | null> {
+    try {
+      const { data, error } = await this.client
+        .from('stats_snapshots')
+        .select(`
+          id, avg_popularity, explicit_percentage, genre_diversity, created_at, snapshot_date, range,
+          stats_snapshot_tracks (
+            rank,
+            tracks (
+              id, name, duration_ms, explicit, spotify_url, popularity, preview_url,
+              albums ( id, name, image_url ),
+              track_artists (
+                artists ( id, name )
+              )
+            )
+          ),
+          stats_snapshot_artists (
+            rank,
+            artists (
+              id, name, image_url, spotify_url, popularity, followers_count,
+              artist_genres ( genre_name )
+            )
+          ),
+          stats_snapshot_genres (
+            rank,
+            genre_name,
+            weight
+          )
+        `)
+        .eq('id', snapshotId)
+        .eq('user_id', supabaseUserId)
+        .maybeSingle();
+
+      if (error) throw error;
+      if (!data) return null;
+
+      // Map tracks back to Spotify-compatible structures
+      const topTracks = (data.stats_snapshot_tracks || [])
+        .sort((a: any, b: any) => a.rank - b.rank)
+        .map((row: any) => {
+          const t = row.tracks;
+          if (!t) return null;
+          const albumImageUrl = t.albums?.image_url || null;
+          return {
+            id: t.id,
+            name: t.name,
+            duration_ms: t.duration_ms,
+            explicit: t.explicit,
+            popularity: t.popularity,
+            preview_url: t.preview_url,
+            external_urls: { spotify: t.spotify_url },
+            spotifyUrl: t.spotify_url,
+            albumCover: albumImageUrl,
+            album: {
+              id: t.albums?.id,
+              name: t.albums?.name,
+              images: albumImageUrl ? [{ url: albumImageUrl }] : []
+            },
+            artists: t.track_artists 
+              ? t.track_artists.map((ta: any) => ({ id: ta.artists?.id, name: ta.artists?.name }))
+              : []
+          };
+        }).filter((t: any) => !!t);
+
+      // Map artists back to Spotify-compatible structures
+      const topArtists = (data.stats_snapshot_artists || [])
+        .sort((a: any, b: any) => a.rank - b.rank)
+        .map((row: any) => {
+          const art = row.artists;
+          if (!art) return null;
+          return {
+            id: art.id,
+            name: art.name,
+            popularity: art.popularity,
+            external_urls: { spotify: art.spotify_url },
+            images: art.image_url ? [{ url: art.image_url }] : [],
+            followers: { total: art.followers_count },
+            genres: art.artist_genres ? art.artist_genres.map((ag: any) => ag.genre_name) : []
+          };
+        }).filter((a: any) => !!a);
+
+      // Map genres
+      const topGenres = (data.stats_snapshot_genres || [])
+        .sort((a: any, b: any) => a.rank - b.rank)
+        .map((row: any) => ({
+          name: row.genre_name,
+          count: row.weight,
+          percentage: 0 // Will be calculated by UI
+        }));
+
+      return {
+        id: data.id,
+        userId: supabaseUserId,
+        range: data.range,
+        timestamp: new Date(data.snapshot_date || data.created_at).getTime(),
+        snapshotDate: data.snapshot_date,
+        avgPopularity: Number(data.avg_popularity),
+        explicitPercentage: Number(data.explicit_percentage),
+        genreDiversity: data.genre_diversity,
+        topTracks,
+        topArtists,
+        topGenres,
+        isLoaded: true
+      };
+    } catch (e) {
+      console.error('[SupabaseService] Error loading stats snapshot details:', e);
+      return null;
+    }
+  }
+
 
   /** Saves a user stats snapshot to database */
   async saveStatsSnapshot(
