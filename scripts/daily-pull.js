@@ -13,6 +13,7 @@
  */
 
 const { createClient } = require('@supabase/supabase-js');
+const ws = require('ws');
 
 const CONFIG = {
   supabaseUrl: process.env.SUPABASE_URL || 'https://tmmhylpexbubyznlizfs.supabase.co',
@@ -34,11 +35,14 @@ if (!CONFIG.spotifyClientSecret) {
   process.exit(1);
 }
 
-// Initialize Supabase Admin client
+// Initialize Supabase Admin client (ws transport required for Node.js < 22)
 const supabase = createClient(CONFIG.supabaseUrl, CONFIG.supabaseServiceRoleKey, {
   auth: {
     persistSession: false,
     autoRefreshToken: false
+  },
+  realtime: {
+    transport: ws
   }
 });
 
@@ -438,7 +442,8 @@ async function syncUserHistory(user) {
     await syncArtists(spotifyAccessToken, artistIds);
     await syncAlbums(spotifyAccessToken, albumIds);
     await syncTracks(spotifyAccessToken, trackIds);
-    await syncAudioFeatures(spotifyAccessToken, trackIds);
+    // NOTE: Spotify deprecated the audio-features endpoint for new apps (May 2024), skip it
+    // await syncAudioFeatures(spotifyAccessToken, trackIds);
 
     // D. Insert Listening History events
     const historyToInsert = items.map(item => ({
