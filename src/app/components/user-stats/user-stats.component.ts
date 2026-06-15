@@ -999,8 +999,8 @@ export class UserStatsComponent implements OnInit {
     for (const url of candidates) {
       if (!this.isPlaceholderImage(url)) return url;
     }
-    // Fall back to a historically-known good image
-    return this.findHistoricalTrackCover(track);
+    // Fall back to a historically-known good image, or a generic music note SVG
+    return this.findHistoricalTrackCover(track) || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23555555"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>';
   }
 
   getTrackUrl(track: any): string {
@@ -1016,8 +1016,8 @@ export class UserStatsComponent implements OnInit {
     for (const url of candidates) {
       if (!this.isPlaceholderImage(url)) return url;
     }
-    // Fall back to a historically-known good image
-    return this.findHistoricalArtistImage(artist);
+    // Fall back to a historically-known good image, or a generic user profile silhouette SVG
+    return this.findHistoricalArtistImage(artist) || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23555555"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
   }
 
   getArtistUrl(artist: any): string {
