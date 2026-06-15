@@ -1,10 +1,11 @@
-import {Injectable} from '@angular/core';
+import {Injectable, Injector} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {environment} from "../../../environments/environment";
-import {Observable, throwError, Subject, from} from 'rxjs';
+import {Observable, throwError, Subject, from, firstValueFrom} from 'rxjs';
 import {tap, catchError, shareReplay} from 'rxjs/operators';
 import {StorageService} from '../storage/storage.service';
 import {SupabaseService} from '../supabase/supabase.service';
+import {SpotifyDataService} from '../spotify-data/spotify-data.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,15 +20,24 @@ export class SpotifyAuthService {
   initialSyncPromise: Promise<void> | null = null;
 
   private clientId = environment.spotifyClientId;
+  private spotifyDataService: SpotifyDataService | null = null;
 
   constructor(
     private http: HttpClient,
     private storageService: StorageService,
-    private supabaseService: SupabaseService
+    private supabaseService: SupabaseService,
+    private injector: Injector
   ) {
     if (this.isAuthenticated()) {
       this.initialSyncPromise = this.syncBackupActiveStatus().catch(err => console.warn('Failed to sync backup status on startup:', err));
     }
+  }
+
+  private getSpotifyDataService(): SpotifyDataService {
+    if (!this.spotifyDataService) {
+      this.spotifyDataService = this.injector.get(SpotifyDataService);
+    }
+    return this.spotifyDataService;
   }
 
   private get accessToken(): string | null {
@@ -297,7 +307,7 @@ export class SpotifyAuthService {
       const dbCache = await this.supabaseService.loadUserCache(supabaseUserId);
       if (dbCache && dbCache.length > 0) {
         dbCache.forEach(item => {
-          this.storageService.setItem(item.key, item.value);
+          this.storageService.setItem(item.key, item.value, false);
         });
         console.log(`[Auth] Loaded ${dbCache.length} cache keys from database.`);
       }
@@ -338,6 +348,23 @@ export class SpotifyAuthService {
     }
   }
 
+  private async fetchAndSyncAudioFeatures(trackIds: string[]): Promise<void> {
+    if (trackIds.length === 0) return;
+    try {
+      const spotifyDataService = this.getSpotifyDataService();
+      // Chunk in groups of 100 as supported by Spotify API
+      for (let i = 0; i < trackIds.length; i += 100) {
+        const chunk = trackIds.slice(i, i + 100);
+        const res = await firstValueFrom(spotifyDataService.getSeveralAudioFeatures(chunk));
+        if (res && res.audio_features) {
+          await this.supabaseService.syncTrackAudioFeatures(res.audio_features);
+        }
+      }
+    } catch (e) {
+      console.warn('[SpotifyAuthService] Failed to fetch/sync audio features during backup push:', e);
+    }
+  }
+
   private async pushLocalCacheToDatabase(supabaseUserId: string): Promise<void> {
     const spotifyUserId = this.getUserId() || 'anonymous';
     this.isSyncing = true;
@@ -365,7 +392,22 @@ export class SpotifyAuthService {
         return isUserKey && !isBackupActiveKey;
       });
 
-      const totalSteps = 1 + statsToSync.length + cacheKeys.length;
+      // Track IDs to fetch audio features for
+      const trackIdsToSync = new Set<string>();
+      if (cachedHistory && cachedHistory.length > 0) {
+        cachedHistory.forEach((item: any) => {
+          if (item.track?.id) trackIdsToSync.add(item.track.id);
+        });
+      }
+      statsToSync.forEach(item => {
+        if (item.snap.topTracks) {
+          item.snap.topTracks.forEach((t: any) => {
+            if (t.id) trackIdsToSync.add(t.id);
+          });
+        }
+      });
+
+      const totalSteps = 1 + statsToSync.length + cacheKeys.length + 1; // + 1 for Audio Features sync
       let completedSteps = 0;
 
       // Step 1: Listening History Sync
@@ -382,6 +424,7 @@ export class SpotifyAuthService {
       // Steps 2 to N: Stats Snapshots Sync
       for (const item of statsToSync) {
         try {
+          const customDateStr = new Date(item.snap.timestamp).toISOString().split('T')[0];
           await this.supabaseService.saveStatsSnapshot(
             supabaseUserId,
             item.range,
@@ -390,7 +433,9 @@ export class SpotifyAuthService {
             item.snap.genreDiversity || 0,
             item.snap.topTracks || [],
             item.snap.topArtists || [],
-            item.snap.topGenres || []
+            item.snap.topGenres || [],
+            true, // onlyInsertMissing = true
+            customDateStr
           );
         } catch (e) {
           console.warn('Failed to push stats snapshot cache to DB:', e);
@@ -412,6 +457,17 @@ export class SpotifyAuthService {
         completedSteps++;
         this.syncProgress = Math.round((completedSteps / totalSteps) * 100);
       }
+
+      // Step M+1: Sync Track Audio Features
+      if (trackIdsToSync.size > 0) {
+        try {
+          await this.fetchAndSyncAudioFeatures(Array.from(trackIdsToSync));
+        } catch (e) {
+          console.warn('Failed to sync audio features during cache push:', e);
+        }
+      }
+      completedSteps++;
+      this.syncProgress = Math.round((completedSteps / totalSteps) * 100);
 
       this.syncProgress = 100;
       setTimeout(() => {

@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewEncapsulation, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { SpotifyDataService } from "../../services/spotify-data/spotify-data.service";
 import { SpotifyAuthService } from "../../services/auth/spotify-auth.service";
 import { StorageService } from "../../services/storage/storage.service";
-import { forkJoin, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { PlaylistLoaderService } from "../../services/playlist-loader/playlist-loader.service";
 
 @Component({
   selector: 'app-playlist-analysis',
@@ -12,7 +12,7 @@ import { catchError } from 'rxjs/operators';
   styleUrls: ['./playlist-analysis.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class PlaylistAnalysisComponent implements OnInit {
+export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
   playlistId: string = '';
   playlistName: string = '';
   artists: any[] = [];
@@ -46,14 +46,15 @@ export class PlaylistAnalysisComponent implements OnInit {
   profilePicUrl: string | null = null;
   showSettingsDropdown: boolean = false;
 
-
+  private loaderSubscription: Subscription | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private spotifyDataService: SpotifyDataService,
     public authService: SpotifyAuthService,
     private router: Router,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private playlistLoaderService: PlaylistLoaderService
   ) { }
 
   ngOnInit() {
@@ -62,6 +63,13 @@ export class PlaylistAnalysisComponent implements OnInit {
       this.loadPlaylistData();
       this.loadUserProfile();
     });
+  }
+
+  ngOnDestroy() {
+    if (this.loaderSubscription) {
+      this.loaderSubscription.unsubscribe();
+      this.loaderSubscription = null;
+    }
   }
 
   loadUserProfile() {
@@ -98,370 +106,115 @@ export class PlaylistAnalysisComponent implements OnInit {
 
   loadPlaylistData() {
     const userId = this.authService.getUserId() || 'anonymous';
+
+    // Check if there is an active background task running for this playlist
+    const activeTask = this.playlistLoaderService.getLoadingTask(this.playlistId);
+    if (activeTask) {
+      this.subscribeToLoaderTask(activeTask);
+      return;
+    }
+
     const storageKey = `${userId}_${this.playlistId}`;
     const storedArtists = this.storageService.getItem(storageKey);
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
     const lastUpdated = this.storageService.getItem(lastUpdatedKey);
 
     const isBackupActive = this.authService.isBackupActive();
-    const isExpired = isBackupActive ? false : this.isCacheExpired(lastUpdated);
+    const isExpired = this.isCacheExpired(lastUpdated);
 
-    if (storedArtists && !isExpired) {
-      console.log(isBackupActive ? `[Analysis] Loading playlist ${this.playlistId} data from Supabase Cloud Backup (Local Cache)` : `[Analysis] Loading playlist ${this.playlistId} data from Local Storage Cache (Cloud Backup disabled)`);
-      const parsedArtists = JSON.parse(storedArtists);
-
-      this.artists = parsedArtists;
-      this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
-      this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
-      this.runAnalysis();
-
-      // Self-healing check: if cache lacks images or genres, upgrade cache
-      const isOldCache = parsedArtists.length > 0 && (!parsedArtists[0].images || !parsedArtists[0].genres);
-      if (isOldCache) {
-        console.log("Old cache detected on analysis. Reloading.");
-        this.triggerApiLoad(true);
+    let parsedArtists: any[] = [];
+    let isParseError = false;
+    if (storedArtists) {
+      try {
+        parsedArtists = JSON.parse(storedArtists);
+      } catch (e) {
+        console.warn('Failed to parse stored artists for analysis:', e);
+        isParseError = true;
       }
-    } else {
-      if (storedArtists) {
-        this.artists = JSON.parse(storedArtists);
+    }
+
+    if (storedArtists && !isExpired && !isParseError) {
+      console.log(isBackupActive ? `[Analysis] Loading playlist ${this.playlistId} data from Supabase Cloud Backup (Local Cache)` : `[Analysis] Loading playlist ${this.playlistId} data from Local Storage Cache (Cloud Backup disabled)`);
+      try {
+        this.artists = parsedArtists;
         this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
         this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
         this.runAnalysis();
+
+        // Self-healing check: if cache lacks images or genres, upgrade cache
+        const isOldCache = parsedArtists.length > 0 && (!parsedArtists[0].images || !parsedArtists[0].genres);
+        if (isOldCache) {
+          console.log("Old cache detected on analysis. Reloading.");
+          this.triggerApiLoad(true);
+        }
+      } catch (e) {
+        console.warn('Failed to load playlist analysis data from cache:', e);
+      }
+    } else {
+      if (storedArtists && !isParseError) {
+        try {
+          this.artists = parsedArtists;
+          this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
+          this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
+          this.runAnalysis();
+        } catch (e) {
+          console.warn('Failed to load temporary stale analysis data:', e);
+        }
       }
       // If we have cached data but it's expired, we do background refresh to maintain smooth UX
-      this.triggerApiLoad(!!storedArtists, true);
+      this.triggerApiLoad(!!storedArtists && !isParseError, true);
     }
   }
 
   triggerApiLoad(isBackgroundRefresh: boolean, forceFullReload: boolean = false) {
-    console.log(`[Analysis] Cache missing or expired. Fetching playlist ${this.playlistId} tracks from Spotify API recursively...`);
     const userId = this.authService.getUserId() || 'anonymous';
-    this.requestedArtistIds.clear();
-    this.loadedArtistsDetailsCount = 0;
-    this.totalUniqueArtists = 0;
-
-    let targetArray: any[];
-
-    if (isBackgroundRefresh) {
-      this.isRefreshing = true;
-      this.isLoading = false;
-      this.refreshingArtists = [];
-      targetArray = this.refreshingArtists;
-      this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
-      this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
-    } else {
-      this.isRefreshing = false;
-      this.isLoading = true;
-      this.artists = [];
-      targetArray = this.artists;
+    
+    // Cancel previous loader task subscription if any
+    if (this.loaderSubscription) {
+      this.loaderSubscription.unsubscribe();
+      this.loaderSubscription = null;
     }
 
-    this.isLoadingTracks = true;
-    this.isLoadingArtists = true;
-    this.loadedTracksCount = 0;
-
-    const storedArtists = this.storageService.getItem(`${userId}_${this.playlistId}`);
-    if (this.playlistId === 'fav' && storedArtists && !forceFullReload) {
-      console.log("Favourite Tracks detected for analysis. Starting incremental load.");
-      this.loadNewerFavTracks(0, 50, JSON.parse(storedArtists), targetArray);
-    } else {
-      if (this.playlistId === 'fav') {
-        this.playlistName = 'Favourite Tracks';
-        this.spotifyDataService.getFavTracks(0, 50).subscribe({
-          next: (tracks: any) => {
-            this.totalTracks = tracks.total;
-            this.getArtistsFromTracks(tracks.items, targetArray);
-            this.loadedTracksCount = Math.min(50, this.totalTracks);
-
-            this.isLoading = false;
-            this.runAnalysis();
-
-            this.fetchArtistDetailsLazy(targetArray);
-
-            if (this.loadedTracksCount < this.totalTracks) {
-              this.loadRemainingTracks(50, 50, this.totalTracks, targetArray);
-            } else {
-              this.isLoadingTracks = false;
-              this.checkCompletion();
-            }
-          },
-          error: (err) => {
-            console.error('Failed to load first page of favourite tracks:', err);
-            this.isLoading = false;
-            this.isLoadingTracks = false;
-            this.isLoadingArtists = false;
-          }
-        });
-      } else {
-        this.spotifyDataService.getSinglePlaylist(this.playlistId).subscribe({
-          next: (playlist: any) => {
-            this.playlistName = playlist.name;
-            this.totalTracks = playlist.tracks.total;
-            this.getArtistsFromTracks(playlist.tracks.items, targetArray);
-            this.loadedTracksCount = Math.min(100, this.totalTracks);
-
-            this.isLoading = false;
-            this.runAnalysis();
-
-            this.fetchArtistDetailsLazy(targetArray);
-
-            if (this.loadedTracksCount < this.totalTracks) {
-              this.loadRemainingTracks(100, 100, this.totalTracks, targetArray);
-            } else {
-              this.isLoadingTracks = false;
-              this.checkCompletion();
-            }
-          },
-          error: (err) => {
-            console.error('Failed to load first page of playlist:', err);
-            this.isLoading = false;
-            this.isLoadingTracks = false;
-            this.isLoadingArtists = false;
-          }
-        });
-      }
-    }
+    const task = this.playlistLoaderService.startLoadingTask(userId, this.playlistId, isBackgroundRefresh, forceFullReload);
+    this.subscribeToLoaderTask(task);
   }
 
-  loadRemainingTracks(offset: number, limit: number, total: number, targetArray: any[] = this.artists) {
-    if (this.playlistId === 'fav') {
-      this.spotifyDataService.getFavTracks(offset, limit).subscribe({
-        next: (tracks: any) => {
-          this.getArtistsFromTracks(tracks.items, targetArray);
-          this.loadedTracksCount = Math.min(offset + limit, total);
-
-          this.runAnalysis();
-          this.fetchArtistDetailsLazy(targetArray);
-
-          if (this.loadedTracksCount < total) {
-            this.loadRemainingTracks(offset + limit, limit, total, targetArray);
-          } else {
-            this.isLoadingTracks = false;
-            this.checkCompletion();
-          }
-        },
-        error: (err) => {
-          console.error('Error loading remaining fav tracks:', err);
-          this.isLoadingTracks = false;
-          this.checkCompletion();
-        }
-      });
-    } else {
-      this.spotifyDataService.getAllTracksFromPlaylist(this.playlistId, offset, limit).subscribe({
-        next: (tracks: any) => {
-          this.getArtistsFromTracks(tracks.items, targetArray);
-          this.loadedTracksCount = Math.min(offset + limit, total);
-
-          this.runAnalysis();
-          this.fetchArtistDetailsLazy(targetArray);
-
-          if (this.loadedTracksCount < total) {
-            this.loadRemainingTracks(offset + limit, limit, total, targetArray);
-          } else {
-            this.isLoadingTracks = false;
-            this.checkCompletion();
-          }
-        },
-        error: (err) => {
-          console.error('Error loading remaining playlist tracks:', err);
-          this.isLoadingTracks = false;
-          this.checkCompletion();
-        }
-      });
-    }
-  }
-
-  loadNewerFavTracks(offset: number, limit: number, cachedArtists: any[], targetArray: any[] = this.artists) {
-    const cachedTrackIds = new Set<string>();
-    cachedArtists.forEach(artist => {
-      artist.tracks.forEach((t: any) => cachedTrackIds.add(t.id));
-    });
-
-    this.spotifyDataService.getFavTracks(offset, limit).subscribe({
-      next: (tracks: any) => {
-        this.totalTracks = tracks.total;
-
-        let foundExisting = false;
-        const newItems: any[] = [];
-
-        for (let item of tracks.items) {
-          if (item && item.track) {
-            if (cachedTrackIds.has(item.track.id)) {
-              foundExisting = true;
-              break;
-            } else {
-              newItems.push(item);
-            }
-          }
-        }
-
-        this.getArtistsFromTracks(newItems, targetArray);
-        this.loadedTracksCount += newItems.length;
-
-        this.isLoading = false;
-        this.runAnalysis();
-        this.fetchArtistDetailsLazy(targetArray);
-
-        if (!foundExisting && offset + limit < this.totalTracks) {
-          this.loadNewerFavTracks(offset + limit, limit, cachedArtists, targetArray);
-        } else {
-          this.mergeCachedArtists(cachedArtists, targetArray);
-          this.isLoadingTracks = false;
-          this.fetchArtistDetailsLazy(targetArray);
-          this.checkCompletion();
-        }
-      },
-      error: (err) => {
-        console.error('Incremental loading failed for analysis:', err);
-        if (targetArray === this.artists) {
-          this.artists = cachedArtists;
-        }
-        this.isLoading = false;
-        this.isLoadingTracks = false;
-        this.isLoadingArtists = false;
-        this.runAnalysis();
-      }
-    });
-  }
-
-  mergeCachedArtists(cachedArtists: any[], targetArray: any[] = this.artists) {
-    cachedArtists.forEach(cachedArtist => {
-      let existingArtist = targetArray.find(a => a.id === cachedArtist.id);
-      if (!existingArtist) {
-        targetArray.push(cachedArtist);
-      } else {
-        cachedArtist.tracks.forEach((track: any) => {
-          let hasTrack = existingArtist.tracks.some((t: any) => t.id === track.id);
-          if (!hasTrack) {
-            existingArtist.tracks.push(track);
-          }
-        });
-        if (!existingArtist.images && cachedArtist.images) {
-          existingArtist.images = cachedArtist.images;
-        }
-        if (!existingArtist.genres && cachedArtist.genres) {
-          existingArtist.genres = cachedArtist.genres;
-        }
-      }
-    });
-  }
-
-  fetchArtistDetailsLazy(targetArray: any[]) {
-    // Collect unique artist IDs that are not yet requested
-    const pendingIds = targetArray
-      .map(a => a.id)
-      .filter(id => !this.requestedArtistIds.has(id));
-
-    if (pendingIds.length === 0) {
-      this.checkCompletion();
-      return;
-    }
-
-    // Pull 50 artists at a time
-    const batch = pendingIds.slice(0, 50);
-    batch.forEach(id => this.requestedArtistIds.add(id));
-
-    this.isLoadingArtists = true;
-
-    this.spotifyDataService.getSeveralArtists(batch).subscribe({
-      next: (res: any) => {
-        const artistMap = new Map<string, any>();
-        (res.artists || []).forEach((a: any) => {
-          if (a) artistMap.set(a.id, a);
-        });
-
-        targetArray.forEach(artist => {
-          if (artistMap.has(artist.id)) {
-            const full = artistMap.get(artist.id);
-            artist.images = full.images || [];
-            artist.genres = full.genres || [];
-          }
-        });
-
-        // Calculate how many unique artists now have details loaded
-        this.loadedArtistsDetailsCount = targetArray.filter(a => a.images && a.images.length > 0).length;
-
-        this.runAnalysis();
-
-        // Load next batch
-        this.fetchArtistDetailsLazy(targetArray);
-      },
-      error: (err) => {
-        console.error('Error batch loading artists lazy details:', err);
-        // Continue queue despite individual batch error
-        this.fetchArtistDetailsLazy(targetArray);
-      }
-    });
-  }
-
-  checkCompletion() {
-    if (!this.isLoadingTracks && this.requestedArtistIds.size >= this.totalUniqueArtists) {
-      this.isLoadingArtists = false;
-
-      // Ensure target array is assigned correctly before saving
-      if (this.isRefreshing) {
-        this.artists = this.refreshingArtists;
-        this.isRefreshing = false;
-      }
-
-      this.setSessionStorage();
-      this.runAnalysis();
-    }
-  }
-
-  setSessionStorage() {
-    this.artists.sort((a, b) => b.tracks.length - a.tracks.length);
-
-    // Explicitly map only the required fields to drastically reduce the storage payload size
-    const cleanedArtists = this.artists.map((artist: any) => ({
-      id: artist.id,
-      name: artist.name,
-      images: artist.images ? artist.images.map((img: any) => ({ url: img.url })) : [],
-      genres: artist.genres || [],
-      tracks: artist.tracks ? artist.tracks.map((track: any) => ({
-        id: track.id,
-        name: track.name,
-        popularity: track.popularity,
-        explicit: track.explicit,
-        duration_ms: track.duration_ms,
-        external_urls: track.external_urls ? { spotify: track.external_urls.spotify } : undefined,
-        album: track.album ? {
-          images: track.album.images ? track.album.images.map((img: any) => ({ url: img.url })) : [],
-          release_date: track.album.release_date
-        } : undefined
-      })) : []
-    }));
-
+  private subscribeToLoaderTask(task: any) {
     const userId = this.authService.getUserId() || 'anonymous';
-    this.storageService.setItem(`${userId}_${this.playlistId}`, JSON.stringify(cleanedArtists));
-    this.storageService.setItem(`${userId}_${this.playlistId}_Amount`, JSON.stringify(this.totalTracks));
-    this.storageService.setItem(`${userId}_${this.playlistId}_Name`, JSON.stringify(this.playlistName));
-    this.storageService.setItem(`${userId}_${this.playlistId}_lastUpdated`, Date.now().toString());
-    this.storageService.setItem(`${userId}_${this.playlistId}_cacheVersion`, 'v3');
-  }
+    this.loaderSubscription = task.progress$.subscribe((progress: any) => {
+      this.isLoading = (progress.isLoadingTracks || progress.isLoadingArtists) && !progress.isRefreshing && progress.artists.length === 0;
+      this.isLoadingTracks = progress.isLoadingTracks;
+      this.isLoadingArtists = progress.isLoadingArtists;
+      this.isRefreshing = progress.isRefreshing;
+      this.loadedTracksCount = progress.loadedTracksCount;
+      this.totalTracks = progress.totalTracks;
+      this.loadedArtistsDetailsCount = progress.loadedArtistsDetailsCount;
+      this.totalUniqueArtists = progress.totalUniqueArtists;
+      this.playlistName = progress.playlistName;
+      this.cooldownMessage = progress.cooldownMessage;
 
-  getArtistsFromTracks(items: any[], targetArray: any[] = this.artists) {
-    try {
-      for (let item of items) {
-        if (!item || !item.track) continue;
-        let track = item.track;
-        for (let artist of track.artists) {
-          let existingArtist = targetArray.find(a => a.id === artist.id);
-          if (!existingArtist) {
-            artist.tracks = [track];
-            targetArray.push(artist);
-          } else {
-            let existingTrack = existingArtist.tracks.find((t: { id: any }) => t.id === track.id);
-            if (!existingTrack) {
-              existingArtist.tracks.push(track);
-            }
+      if (progress.isComplete) {
+        const storedArtists = this.storageService.getItem(`${userId}_${this.playlistId}`);
+        if (storedArtists) {
+          try {
+            this.artists = JSON.parse(storedArtists);
+            this.runAnalysis();
+          } catch (e) {
+            console.warn('Failed to parse artists on completion:', e);
           }
         }
+        this.playlistLoaderService.clearLoadingTask(this.playlistId);
+        if (this.loaderSubscription) {
+          this.loaderSubscription.unsubscribe();
+          this.loaderSubscription = null;
+        }
+      } else {
+        this.artists = progress.isRefreshing ? this.artists : progress.artists;
+        if (this.artists && this.artists.length > 0) {
+          this.runAnalysis();
+        }
       }
-      this.totalUniqueArtists = targetArray.length;
-    } catch (error) {
-      console.error('Error getting artists from tracks:', error);
-    }
+    });
   }
 
   runAnalysis() {

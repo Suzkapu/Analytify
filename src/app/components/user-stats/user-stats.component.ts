@@ -28,6 +28,8 @@ export class UserStatsComponent implements OnInit {
   selectedSnapshotId: string = 'current';
   snapshotOptions: any[] = [];
   showHistoryMenu: boolean = false;
+  hotMoverTracks = new Set<string>();
+  hotMoverArtists = new Set<string>();
 
   // Trend modal variables
   showTrendPopup: boolean = false;
@@ -112,14 +114,45 @@ export class UserStatsComponent implements OnInit {
     const cachedArtists = this.storageService.getItem(`${userId}_stats_${range}_artists`);
     const cachedGenres = this.storageService.getItem(`${userId}_stats_${range}_genres`);
 
-    if (cachedTracks && cachedArtists && cachedGenres && !isExpired) {
-      console.log(this.authService.isBackupActive() ? `[Stats] Loading stats for ${range} from Supabase Cloud Backup (Local Cache)` : `[Stats] Loading stats for ${range} from Local Storage Cache (Cloud Backup disabled)`);
-      this.topTracks = JSON.parse(cachedTracks);
-      this.topArtists = JSON.parse(cachedArtists);
-      this.calculateGenres();
-      this.saveHistorySnapshot(userId, range);
-      this.isLoading = false;
+    let isCacheIncomplete = false;
+    let parsedTracks: any[] = [];
+    let parsedArtists: any[] = [];
+    let parsedGenres: any[] = [];
+
+    if (cachedTracks && cachedArtists && cachedGenres) {
+      try {
+        parsedTracks = JSON.parse(cachedTracks);
+        parsedArtists = JSON.parse(cachedArtists);
+        parsedGenres = JSON.parse(cachedGenres);
+
+        if (!Array.isArray(parsedTracks) || !Array.isArray(parsedArtists) || !Array.isArray(parsedGenres)) {
+          isCacheIncomplete = true;
+        } else if (parsedArtists.length > 0 && !parsedArtists.every(a => 'genres' in a)) {
+          isCacheIncomplete = true;
+          console.log('[Stats] Local cache is incomplete (artists missing genres). Forcing reload from cloud database or Spotify API.');
+        }
+      } catch (e) {
+        isCacheIncomplete = true;
+      }
     } else {
+      isCacheIncomplete = true;
+    }
+
+    if (!isExpired && !isCacheIncomplete) {
+      console.log(this.authService.isBackupActive() ? `[Stats] Loading stats for ${range} from Supabase Cloud Backup (Local Cache)` : `[Stats] Loading stats for ${range} from Local Storage Cache (Cloud Backup disabled)`);
+      try {
+        this.topTracks = parsedTracks;
+        this.topArtists = parsedArtists;
+        this.calculateGenres();
+        this.saveHistorySnapshot(userId, range);
+        this.isLoading = false;
+      } catch (e) {
+        console.warn('Failed to parse validated user stats cache:', e);
+        isCacheIncomplete = true;
+      }
+    }
+    
+    if (isExpired || isCacheIncomplete) {
       // Prioritize Supabase data if backup is active
       if (this.authService.isBackupActive() && supabaseUserId) {
         this.isLoading = true;
@@ -197,6 +230,18 @@ export class UserStatsComponent implements OnInit {
               this.topArtists,
               this.topGenres
             );
+
+            const trackIds = this.topTracks.map(t => t.id).filter(id => !!id);
+            if (trackIds.length > 0) {
+              this.spotifyDataService.getSeveralAudioFeatures(trackIds).subscribe({
+                next: (res: any) => {
+                  if (res && res.audio_features) {
+                    this.supabaseService.syncTrackAudioFeatures(res.audio_features);
+                  }
+                },
+                error: (err) => console.warn('Failed to fetch audio features for top tracks:', err)
+              });
+            }
           }
 
           this.saveHistorySnapshot(userId, range);
@@ -318,14 +363,66 @@ export class UserStatsComponent implements OnInit {
     event.stopPropagation();
     this.selectedSnapshotId = snapshotId;
     this.showHistoryMenu = false;
+    this.calculateHotMovers();
+  }
+
+  calculateHotMovers() {
+    this.hotMoverTracks.clear();
+    this.hotMoverArtists.clear();
+
+    const tracks = this.displayedTracks;
+    const artists = this.displayedArtists;
+
+    if (!this.historyData || this.historyData.length === 0) {
+      return;
+    }
+
+    // Calculate trends for all tracks
+    const trackMovers = tracks.map((track, idx) => {
+      const trend = this.getTrend(track, idx, 'tracks');
+      return { track, trend };
+    })
+    .filter(item => item.trend.type === 'up' && item.trend.diff !== undefined && item.trend.diff >= 15) // spike of 15+ places
+    .sort((a, b) => (b.trend.diff || 0) - (a.trend.diff || 0))
+    .slice(0, 3);
+
+    trackMovers.forEach(item => {
+      const key = item.track.id || `${item.track.name}_${this.getTrackArtist(item.track)}`;
+      this.hotMoverTracks.add(key);
+    });
+
+    // Calculate trends for all artists
+    const artistMovers = artists.map((artist, idx) => {
+      const trend = this.getTrend(artist, idx, 'artists');
+      return { artist, trend };
+    })
+    .filter(item => item.trend.type === 'up' && item.trend.diff !== undefined && item.trend.diff >= 15) // spike of 15+ places
+    .sort((a, b) => (b.trend.diff || 0) - (a.trend.diff || 0))
+    .slice(0, 3);
+
+    artistMovers.forEach(item => {
+      const key = item.artist.id || item.artist.name;
+      this.hotMoverArtists.add(key);
+    });
+  }
+
+  isHotMover(item: any, category: string): boolean {
+    if (category === 'tracks') {
+      const key = item.id || `${item.name}_${this.getTrackArtist(item)}`;
+      return this.hotMoverTracks.has(key);
+    } else if (category === 'artists') {
+      const key = item.id || item.name;
+      return this.hotMoverArtists.has(key);
+    }
+    return false;
   }
 
   getSelectedSnapshotLabel(): string {
     if (this.selectedSnapshotId === 'current') {
-      return 'Current Stats (Live)';
+      return 'Today';
     }
     const found = this.snapshotOptions.find(opt => opt.id === this.selectedSnapshotId);
-    return found ? found.label : 'Current Stats (Live)';
+    return found ? found.label : 'Today';
   }
 
   showBackupConfirmModal = false;
@@ -449,17 +546,62 @@ export class UserStatsComponent implements OnInit {
 
   loadHistoryData() {
     const userId = this.authService.getUserId() || 'anonymous';
+    const supabaseUserId = this.authService.getSupabaseUserId();
     const range = this.selectedRange;
-    this.storageService.getStatsHistory(userId, range).then(history => {
-      this.historyData = history;
-      // Populate snapshot options with clean date format (no timestamp)
-      this.snapshotOptions = history.slice().reverse().map(d => ({
-        id: d.timestamp.toString(),
-        label: new Date(d.timestamp).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
-      }));
-    }).catch(err => {
-      console.error('Failed to load stats history:', err);
-    });
+    const isBackupActive = this.authService.isBackupActive();
+
+    const loadLocal = () => {
+      this.storageService.getStatsHistory(userId, range).then(history => {
+        this.historyData = history;
+        
+        // Define today's 1:00 AM cutoff to identify today's snapshots
+        const now = new Date();
+        const cutoff = new Date(now);
+        cutoff.setHours(1, 0, 0, 0); // 1:00 AM today
+        if (now.getTime() < cutoff.getTime()) {
+          cutoff.setDate(cutoff.getDate() - 1);
+        }
+
+        // Only include historical entries before today's 1 AM cutoff
+        const historicalOnly = history.filter(d => d.timestamp < cutoff.getTime());
+
+        // Populate snapshot options with clean date format (no timestamp)
+        this.snapshotOptions = historicalOnly.slice().reverse().map(d => ({
+          id: d.timestamp.toString(),
+          label: new Date(d.timestamp).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
+        }));
+        this.calculateHotMovers();
+      }).catch(err => {
+        console.error('Failed to load stats history:', err);
+      });
+    };
+
+    if (isBackupActive && supabaseUserId) {
+      this.supabaseService.loadAllStatsSnapshots(supabaseUserId, range).then(async (dbSnapshots) => {
+        if (dbSnapshots && dbSnapshots.length > 0) {
+          try {
+            const localHistory = await this.storageService.getStatsHistory(userId, range);
+            const localTimestamps = new Set(localHistory.map(h => new Date(h.timestamp).toDateString()));
+
+            for (const snap of dbSnapshots) {
+              const dateStr = new Date(snap.timestamp).toDateString();
+              if (!localTimestamps.has(dateStr)) {
+                const entry = { ...snap, userId: userId };
+                await this.storageService.saveStatsHistory(entry);
+              }
+            }
+          } catch (e) {
+            console.warn('[Stats] Failed to restore DB history snapshots locally:', e);
+          }
+        }
+        loadLocal();
+      }).catch(err => {
+        console.warn('[Stats] Failed to load history snapshots from Supabase:', err);
+        loadLocal();
+      });
+    } else {
+      loadLocal();
+    }
   }
 
   getTrend(item: any, currentIdx: number, category: string): { type: 'up' | 'down' | 'same' | 'new', diff?: number } {

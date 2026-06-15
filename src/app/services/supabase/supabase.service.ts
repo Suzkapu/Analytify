@@ -99,16 +99,27 @@ export class SupabaseService {
   }
 
   /** Syncs Spotify artists metadata into the database */
-  async syncArtists(artists: any[]): Promise<void> {
+  async syncArtists(artists: any[], onlyInsertMissing = false): Promise<void> {
     if (!artists || artists.length === 0) return;
     
     try {
       // Deduplicate by id to prevent PG 21000 "ON CONFLICT DO UPDATE cannot affect row a second time"
       const artistsMap = new Map<string, any>();
       artists.forEach(a => { if (a && a.id) artistsMap.set(a.id, a); });
-      const uniqueArtists = Array.from(artistsMap.values());
+      let uniqueArtists = Array.from(artistsMap.values());
 
       if (uniqueArtists.length === 0) return;
+
+      if (onlyInsertMissing) {
+        const artistIds = uniqueArtists.map(a => a.id);
+        const { data: existing } = await this.client
+          .from('artists')
+          .select('id')
+          .in('id', artistIds);
+        const existingIds = new Set(existing ? existing.map(e => e.id) : []);
+        uniqueArtists = uniqueArtists.filter(a => !existingIds.has(a.id));
+        if (uniqueArtists.length === 0) return;
+      }
 
       const artistsToInsert = uniqueArtists.map(a => ({
         id: a.id,
@@ -153,22 +164,49 @@ export class SupabaseService {
           .upsert(artistGenresToInsert, { onConflict: 'artist_id,genre_name' });
         if (error) throw error;
       }
+
+      if (artistsToInsert.length > 0) {
+        const recordedAt = new Date().toISOString();
+        const popHistory = artistsToInsert.map(a => ({
+          artist_id: a.id,
+          recorded_at: recordedAt,
+          popularity: a.popularity,
+          followers_count: a.followers_count
+        }));
+        const { error: popErr } = await this.client
+          .from('artist_popularity_history')
+          .upsert(popHistory, { onConflict: 'artist_id,recorded_at' });
+        if (popErr) {
+          console.warn('[SupabaseService] Error saving artist popularity history:', popErr);
+        }
+      }
     } catch (e) {
       console.error('[SupabaseService] Error syncing artists:', e);
     }
   }
 
   /** Syncs Spotify albums metadata into the database */
-  async syncAlbums(albums: any[]): Promise<void> {
+  async syncAlbums(albums: any[], onlyInsertMissing = false): Promise<void> {
     if (!albums || albums.length === 0) return;
 
     try {
       // Deduplicate by id to prevent PG 21000 "ON CONFLICT DO UPDATE cannot affect row a second time"
       const albumsMap = new Map<string, any>();
       albums.forEach(a => { if (a && a.id) albumsMap.set(a.id, a); });
-      const uniqueAlbums = Array.from(albumsMap.values());
+      let uniqueAlbums = Array.from(albumsMap.values());
 
       if (uniqueAlbums.length === 0) return;
+
+      if (onlyInsertMissing) {
+        const albumIds = uniqueAlbums.map(a => a.id);
+        const { data: existing } = await this.client
+          .from('albums')
+          .select('id')
+          .in('id', albumIds);
+        const existingIds = new Set(existing ? existing.map(e => e.id) : []);
+        uniqueAlbums = uniqueAlbums.filter(a => !existingIds.has(a.id));
+        if (uniqueAlbums.length === 0) return;
+      }
 
       const albumsToInsert = uniqueAlbums.map(a => ({
         id: a.id,
@@ -181,6 +219,10 @@ export class SupabaseService {
         spotify_url: a.external_urls?.spotify || a.spotifyUrl || a.spotify_url || null,
         available_markets: a.available_markets || [],
         restriction_reason: a.restrictions?.reason || null,
+        label: a.label || null,
+        popularity: a.popularity || 0,
+        upc: a.external_ids?.upc || a.upc || null,
+        ean: a.external_ids?.ean || a.ean || null,
         last_updated: new Date().toISOString()
       }));
 
@@ -189,17 +231,103 @@ export class SupabaseService {
         if (a.id && a.artists) {
           a.artists.forEach((art: any) => {
             if (art.id) {
-              albumArtistsToInsert.push({ album_id: a.id, artist_id: art.id });
+               albumArtistsToInsert.push({ album_id: a.id, artist_id: art.id });
             }
           });
         }
       });
+
+      // Extract all unique artist ids from albums to protect foreign keys in album_artists
+      const artistIds = new Set<string>();
+      uniqueAlbums.forEach(a => {
+        if (a.artists) {
+          a.artists.forEach((art: any) => {
+            if (art.id) artistIds.add(art.id);
+          });
+        }
+      });
+
+      if (artistIds.size > 0) {
+        const { data: existingArtists } = await this.client
+          .from('artists')
+          .select('id')
+          .in('id', Array.from(artistIds));
+        const existingArtistIds = new Set(existingArtists ? existingArtists.map(e => e.id) : []);
+        const missingArtistIds = Array.from(artistIds).filter(id => !existingArtistIds.has(id));
+
+        if (missingArtistIds.length > 0) {
+          const artistPlaceholders = missingArtistIds.map(id => {
+            const albumWithArtist = uniqueAlbums.find(a => a.artists?.some((art: any) => art.id === id));
+            const artistObj = albumWithArtist?.artists?.find((art: any) => art.id === id);
+            return {
+              id: id,
+              name: artistObj?.name || 'Unknown Artist',
+              popularity: 0,
+              followers_count: 0,
+              last_updated: new Date().toISOString()
+            };
+          });
+
+          const { error: artErr } = await this.client
+            .from('artists')
+            .upsert(artistPlaceholders, { onConflict: 'id' });
+          if (artErr) {
+            console.warn('[SupabaseService] Failed to insert album artist placeholders:', artErr);
+          }
+        }
+      }
 
       if (albumsToInsert.length > 0) {
         const { error } = await this.client
           .from('albums')
           .upsert(albumsToInsert, { onConflict: 'id' });
         if (error) throw error;
+      }
+
+      // Sync Album Copyrights
+      const albumCopyrightsToInsert: any[] = [];
+      uniqueAlbums.forEach(a => {
+        if (a.id && a.copyrights) {
+          a.copyrights.forEach((copy: any) => {
+            if (copy.text && (copy.type === 'C' || copy.type === 'P')) {
+              albumCopyrightsToInsert.push({
+                album_id: a.id,
+                text: copy.text,
+                type: copy.type
+              });
+            }
+          });
+        }
+      });
+
+      if (albumCopyrightsToInsert.length > 0) {
+        const albumIdsToClear = Array.from(new Set(albumCopyrightsToInsert.map(c => c.album_id)));
+        const { error: deleteErr } = await this.client
+          .from('album_copyrights')
+          .delete()
+          .in('album_id', albumIdsToClear);
+        if (deleteErr) throw deleteErr;
+
+        const { error: copyrightErr } = await this.client
+          .from('album_copyrights')
+          .insert(albumCopyrightsToInsert);
+        if (copyrightErr) throw copyrightErr;
+      }
+
+      // Sync Album Popularity History
+      if (albumsToInsert.length > 0) {
+        const recordedAt = new Date().toISOString();
+        const popHistory = albumsToInsert.map(a => ({
+          album_id: a.id,
+          recorded_at: recordedAt,
+          popularity: a.popularity
+        }));
+        const { error: popErr } = await this.client
+          .from('album_popularity_history')
+          .upsert(popHistory, { onConflict: 'album_id,recorded_at' });
+        if (popErr) {
+          console.warn('[SupabaseService] Error saving album popularity history:', popErr);
+        }
       }
 
       if (albumArtistsToInsert.length > 0) {
@@ -214,16 +342,147 @@ export class SupabaseService {
   }
 
   /** Syncs Spotify tracks metadata into the database */
-  async syncTracks(tracks: any[]): Promise<void> {
+  async syncTracks(tracks: any[], onlyInsertMissing = false): Promise<void> {
     if (!tracks || tracks.length === 0) return;
 
     try {
       // Deduplicate by id to prevent PG 21000 "ON CONFLICT DO UPDATE cannot affect row a second time"
       const tracksMap = new Map<string, any>();
       tracks.forEach(t => { if (t && t.id) tracksMap.set(t.id, t); });
-      const uniqueTracks = Array.from(tracksMap.values());
+      let uniqueTracks = Array.from(tracksMap.values());
 
       if (uniqueTracks.length === 0) return;
+
+      if (onlyInsertMissing) {
+        const trackIds = uniqueTracks.map(t => t.id);
+        const { data: existing } = await this.client
+          .from('tracks')
+          .select('id')
+          .in('id', trackIds);
+        const existingIds = new Set(existing ? existing.map(e => e.id) : []);
+        uniqueTracks = uniqueTracks.filter(t => !existingIds.has(t.id));
+        if (uniqueTracks.length === 0) return;
+      }
+
+      // Extract all unique album ids from tracks to protect foreign keys
+      const albumIds = new Set<string>();
+      uniqueTracks.forEach(t => {
+        const albId = t.album?.id || t.albumId;
+        if (albId) albumIds.add(albId);
+      });
+
+      if (albumIds.size > 0) {
+        const { data: existingAlbums } = await this.client
+          .from('albums')
+          .select('id')
+          .in('id', Array.from(albumIds));
+        const existingAlbumIds = new Set(existingAlbums ? existingAlbums.map(e => e.id) : []);
+        const missingAlbumIds = Array.from(albumIds).filter(id => !existingAlbumIds.has(id));
+
+        if (missingAlbumIds.length > 0) {
+          const albumPlaceholderToInsert = missingAlbumIds.map(id => {
+            const trackWithAlbum = uniqueTracks.find(t => (t.album?.id || t.albumId) === id);
+            const name = trackWithAlbum?.album?.name || 'Unknown Album';
+            const imageUrl = trackWithAlbum?.album?.images?.[0]?.url || trackWithAlbum?.album?.imageUrl || null;
+            return {
+              id: id,
+              name: name,
+              album_type: 'album',
+              total_tracks: 1,
+              release_date: null,
+              release_date_precision: 'year',
+              image_url: imageUrl,
+              last_updated: new Date().toISOString()
+            };
+          });
+
+          const { error: albErr } = await this.client
+            .from('albums')
+            .upsert(albumPlaceholderToInsert, { onConflict: 'id' });
+          if (albErr) {
+            console.warn('[SupabaseService] Failed to insert album placeholders:', albErr);
+          }
+        }
+      }
+
+      // Extract all unique artist ids from tracks to protect foreign keys in track_artists
+      const artistIds = new Set<string>();
+      uniqueTracks.forEach(t => {
+        if (t.artists) {
+          t.artists.forEach((art: any) => {
+            if (art.id) artistIds.add(art.id);
+          });
+        }
+      });
+
+      if (artistIds.size > 0) {
+        const { data: existingArtists } = await this.client
+          .from('artists')
+          .select('id')
+          .in('id', Array.from(artistIds));
+        const existingArtistIds = new Set(existingArtists ? existingArtists.map(e => e.id) : []);
+        const missingArtistIds = Array.from(artistIds).filter(id => !existingArtistIds.has(id));
+
+        if (missingArtistIds.length > 0) {
+          const artistPlaceholders = missingArtistIds.map(id => {
+            const trackWithArtist = uniqueTracks.find(t => t.artists?.some((a: any) => a.id === id));
+            const artistObj = trackWithArtist?.artists?.find((a: any) => a.id === id);
+            return {
+              id: id,
+              name: artistObj?.name || 'Unknown Artist',
+              popularity: 0,
+              followers_count: 0,
+              last_updated: new Date().toISOString()
+            };
+          });
+
+          const { error: artErr } = await this.client
+            .from('artists')
+            .upsert(artistPlaceholders, { onConflict: 'id' });
+          if (artErr) {
+            console.warn('[SupabaseService] Failed to insert artist placeholders:', artErr);
+          }
+        }
+      }
+
+      // Extract all unique linked_from ids to protect self-referential track FKs
+      const linkedFromTrackIds = new Set<string>();
+      uniqueTracks.forEach(t => {
+        const linkedId = t.linked_from?.id || t.linkedFromTrackId;
+        if (linkedId) {
+          linkedFromTrackIds.add(linkedId);
+        }
+      });
+
+      if (linkedFromTrackIds.size > 0) {
+        const { data: existingLinked } = await this.client
+          .from('tracks')
+          .select('id')
+          .in('id', Array.from(linkedFromTrackIds));
+        const existingLinkedIds = new Set(existingLinked ? existingLinked.map(e => e.id) : []);
+        const missingLinkedIds = Array.from(linkedFromTrackIds).filter(id => !existingLinkedIds.has(id));
+
+        if (missingLinkedIds.length > 0) {
+          const stubs = missingLinkedIds.map(id => ({
+            id: id,
+            name: 'Linked Track Placeholder',
+            duration_ms: 0,
+            explicit: false,
+            popularity: 0,
+            track_number: 1,
+            disc_number: 1,
+            is_playable: true,
+            is_local: false,
+            last_updated: new Date().toISOString()
+          }));
+          const { error: stubErr } = await this.client
+            .from('tracks')
+            .upsert(stubs, { onConflict: 'id' });
+          if (stubErr) {
+            console.warn('[SupabaseService] Failed to insert linked track stubs:', stubErr);
+          }
+        }
+      }
 
       const tracksToInsert = uniqueTracks.map(t => ({
         id: t.id,
@@ -241,6 +500,7 @@ export class SupabaseService {
         isrc: t.external_ids?.isrc || null,
         available_markets: t.available_markets || [],
         restriction_reason: t.restrictions?.reason || null,
+        linked_from_track_id: t.linked_from?.id || t.linkedFromTrackId || null,
         last_updated: new Date().toISOString()
       }));
 
@@ -260,6 +520,22 @@ export class SupabaseService {
           .from('tracks')
           .upsert(tracksToInsert, { onConflict: 'id' });
         if (error) throw error;
+      }
+
+      // Sync Track Popularity History
+      if (tracksToInsert.length > 0) {
+        const recordedAt = new Date().toISOString();
+        const popHistory = tracksToInsert.map(t => ({
+          track_id: t.id,
+          recorded_at: recordedAt,
+          popularity: t.popularity
+        }));
+        const { error: popErr } = await this.client
+          .from('track_popularity_history')
+          .upsert(popHistory, { onConflict: 'track_id,recorded_at' });
+        if (popErr) {
+          console.warn('[SupabaseService] Error saving track popularity history:', popErr);
+        }
       }
 
       if (trackArtistsToInsert.length > 0) {
@@ -333,6 +609,9 @@ export class SupabaseService {
 
       if (error) throw error;
       console.log(`[SupabaseService] Synced ${historyRows.length} history records to database.`);
+
+      // 5. Update last_synced_at timestamp
+      await this.updateUserLastSynced(supabaseUserId);
     } catch (e) {
       console.error('[SupabaseService] Error syncing listening history:', e);
     }
@@ -457,7 +736,8 @@ export class SupabaseService {
           stats_snapshot_artists (
             rank,
             artists (
-              id, name, image_url, spotify_url, popularity, followers_count
+              id, name, image_url, spotify_url, popularity, followers_count,
+              artist_genres ( genre_name )
             )
           ),
           stats_snapshot_genres (
@@ -515,7 +795,8 @@ export class SupabaseService {
             popularity: art.popularity,
             external_urls: { spotify: art.spotify_url },
             images: art.image_url ? [{ url: art.image_url }] : [],
-            followers: { total: art.followers_count }
+            followers: { total: art.followers_count },
+            genres: art.artist_genres ? art.artist_genres.map((ag: any) => ag.genre_name) : []
           };
         }).filter((a: any) => !!a);
 
@@ -543,6 +824,116 @@ export class SupabaseService {
     }
   }
 
+  /** Loads all stats snapshots for a user from database for a specific range */
+  async loadAllStatsSnapshots(supabaseUserId: string, range: string): Promise<any[]> {
+    try {
+      const { data, error } = await this.client
+        .from('stats_snapshots')
+        .select(`
+          id, avg_popularity, explicit_percentage, genre_diversity, created_at, snapshot_date,
+          stats_snapshot_tracks (
+            rank,
+            tracks (
+              id, name, duration_ms, explicit, spotify_url, popularity, preview_url,
+              albums ( id, name, image_url ),
+              track_artists (
+                artists ( id, name )
+              )
+            )
+          ),
+          stats_snapshot_artists (
+            rank,
+            artists (
+              id, name, image_url, spotify_url, popularity, followers_count,
+              artist_genres ( genre_name )
+            )
+          ),
+          stats_snapshot_genres (
+            rank,
+            genre_name,
+            weight
+          )
+        `)
+        .eq('user_id', supabaseUserId)
+        .eq('range', range)
+        .order('snapshot_date', { ascending: true });
+
+      if (error) throw error;
+      if (!data) return [];
+
+      return data.map((row: any) => {
+        // Map tracks back to Spotify-compatible structures
+        const topTracks = (row.stats_snapshot_tracks || [])
+          .sort((a: any, b: any) => a.rank - b.rank)
+          .map((subRow: any) => {
+            const t = subRow.tracks;
+            if (!t) return null;
+            const albumImageUrl = t.albums?.image_url || null;
+            return {
+              id: t.id,
+              name: t.name,
+              duration_ms: t.duration_ms,
+              explicit: t.explicit,
+              popularity: t.popularity,
+              preview_url: t.preview_url,
+              external_urls: { spotify: t.spotify_url },
+              spotifyUrl: t.spotify_url,
+              albumCover: albumImageUrl,
+              album: {
+                id: t.albums?.id,
+                name: t.albums?.name,
+                images: albumImageUrl ? [{ url: albumImageUrl }] : []
+              },
+              artists: t.track_artists 
+                ? t.track_artists.map((ta: any) => ({ id: ta.artists?.id, name: ta.artists?.name }))
+                : []
+            };
+          }).filter((t: any) => !!t);
+
+        // Map artists back to Spotify-compatible structures
+        const topArtists = (row.stats_snapshot_artists || [])
+          .sort((a: any, b: any) => a.rank - b.rank)
+          .map((subRow: any) => {
+            const art = subRow.artists;
+            if (!art) return null;
+            return {
+              id: art.id,
+              name: art.name,
+              popularity: art.popularity,
+              external_urls: { spotify: art.spotify_url },
+              images: art.image_url ? [{ url: art.image_url }] : [],
+              followers: { total: art.followers_count },
+              genres: art.artist_genres ? art.artist_genres.map((ag: any) => ag.genre_name) : []
+            };
+          }).filter((a: any) => !!a);
+
+        // Map genres
+        const topGenres = (row.stats_snapshot_genres || [])
+          .sort((a: any, b: any) => a.rank - b.rank)
+          .map((subRow: any) => ({
+            name: subRow.genre_name,
+            count: subRow.weight,
+            percentage: 0 // Will be calculated by UI
+          }));
+
+        return {
+          userId: supabaseUserId,
+          range: range,
+          timestamp: new Date(row.created_at || row.snapshot_date).getTime(),
+          avgPopularity: Number(row.avg_popularity),
+          explicitPercentage: Number(row.explicit_percentage),
+          genreDiversity: row.genre_diversity,
+          topTracks,
+          topArtists,
+          topGenres
+        };
+      });
+    } catch (e) {
+      console.error('[SupabaseService] Error loading all stats snapshots from DB:', e);
+      return [];
+    }
+  }
+
   /** Saves a user stats snapshot to database */
   async saveStatsSnapshot(
     supabaseUserId: string,
@@ -552,12 +943,14 @@ export class SupabaseService {
     genreDiversity: number,
     topTracks: any[],
     topArtists: any[],
-    topGenres: any[]
+    topGenres: any[],
+    onlyInsertMissing = false,
+    customDateStr?: string
   ): Promise<void> {
     try {
       await this.ensureSession();
 
-      const todayStr = new Date().toISOString().split('T')[0];
+      const todayStr = customDateStr || new Date().toISOString().split('T')[0];
 
       // 1. Sync metadata objects (artists -> albums -> tracks) — deduplicated by id
       const tracksMap2 = new Map<string, any>();
@@ -591,9 +984,9 @@ export class SupabaseService {
       });
       const allArtists = Array.from(artistsMap.values());
 
-      await this.syncArtists(allArtists);
-      await this.syncAlbums(rawAlbums);
-      await this.syncTracks(rawTracks);
+      await this.syncArtists(allArtists, onlyInsertMissing);
+      await this.syncAlbums(rawAlbums, onlyInsertMissing);
+      await this.syncTracks(rawTracks, onlyInsertMissing);
 
       // 2. Create the snapshot row
       const { data: snapshot, error: snapshotErr } = await this.client
@@ -661,6 +1054,51 @@ export class SupabaseService {
         if (linkErr) throw linkErr;
       }
 
+      // 6. Save raw top items history to user_top_tracks_history
+      if (topTracks.length > 0) {
+        const fetchedAt = new Date().toISOString();
+        const topTracksHistory = topTracks.map((t, idx) => ({
+          user_id: supabaseUserId,
+          time_range: range,
+          rank: idx + 1,
+          track_id: t.id,
+          fetched_at: fetchedAt
+        })).filter(row => !!row.track_id);
+
+        if (topTracksHistory.length > 0) {
+          const { error } = await this.client
+            .from('user_top_tracks_history')
+            .upsert(topTracksHistory, { onConflict: 'user_id,time_range,fetched_at,rank' });
+          if (error) {
+            console.warn('[SupabaseService] Error saving user top tracks history:', error);
+          }
+        }
+      }
+
+      // 7. Save raw top items history to user_top_artists_history
+      if (topArtists.length > 0) {
+        const fetchedAt = new Date().toISOString();
+        const topArtistsHistory = topArtists.map((a, idx) => ({
+          user_id: supabaseUserId,
+          time_range: range,
+          rank: idx + 1,
+          artist_id: a.id,
+          fetched_at: fetchedAt
+        })).filter(row => !!row.artist_id);
+
+        if (topArtistsHistory.length > 0) {
+          const { error } = await this.client
+            .from('user_top_artists_history')
+            .upsert(topArtistsHistory, { onConflict: 'user_id,time_range,fetched_at,rank' });
+          if (error) {
+            console.warn('[SupabaseService] Error saving user top artists history:', error);
+          }
+        }
+      }
+
+      // 8. Update last_synced_at timestamp
+      await this.updateUserLastSynced(supabaseUserId);
+
       console.log(`[SupabaseService] Saved stats snapshot for today (${todayStr}, ${range}) to database.`);
     } catch (e) {
       console.error('[SupabaseService] Error saving stats snapshot to DB:', e);
@@ -696,6 +1134,86 @@ export class SupabaseService {
     } catch (e) {
       console.error('[SupabaseService] Failed to load user cache from database:', e);
       return [];
+    }
+  }
+
+  /** Syncs track audio features into the database */
+  async syncTrackAudioFeatures(features: any[]): Promise<void> {
+    if (!features || features.length === 0) return;
+    try {
+      // Filter out null/invalid features
+      const validFeatures = features.filter(f => f && f.id);
+      if (validFeatures.length === 0) return;
+
+      // Ensure all referenced track IDs exist in the tracks table to avoid FK violations.
+      // If any tracks are missing, they should have placeholder rows created.
+      const trackIds = Array.from(new Set(validFeatures.map(f => f.id)));
+      const { data: existingTracks } = await this.client
+        .from('tracks')
+        .select('id')
+        .in('id', trackIds);
+      const existingTrackIds = new Set(existingTracks ? existingTracks.map(t => t.id) : []);
+      const missingTrackIds = trackIds.filter(id => !existingTrackIds.has(id));
+
+      if (missingTrackIds.length > 0) {
+        const trackPlaceholders = missingTrackIds.map(id => ({
+          id: id,
+          name: 'Track Placeholder (Audio Features)',
+          duration_ms: 0,
+          explicit: false,
+          popularity: 0,
+          track_number: 1,
+          disc_number: 1,
+          is_playable: true,
+          is_local: false,
+          last_updated: new Date().toISOString()
+        }));
+        const { error: stubErr } = await this.client
+          .from('tracks')
+          .upsert(trackPlaceholders, { onConflict: 'id' });
+        if (stubErr) {
+          console.warn('[SupabaseService] Failed to insert placeholders for audio features tracks:', stubErr);
+        }
+      }
+
+      const rows = validFeatures.map(f => ({
+        track_id: f.id,
+        danceability: f.danceability || 0,
+        energy: f.energy || 0,
+        key: f.key || 0,
+        loudness: f.loudness || 0,
+        mode: f.mode || 0,
+        speechiness: f.speechiness || 0,
+        acousticness: f.acousticness || 0,
+        instrumentalness: f.instrumentalness || 0,
+        liveness: f.liveness || 0,
+        valence: f.valence || 0,
+        tempo: f.tempo || 0,
+        time_signature: f.time_signature || 0,
+        last_updated: new Date().toISOString()
+      }));
+
+      const { error } = await this.client
+        .from('track_audio_features')
+        .upsert(rows, { onConflict: 'track_id' });
+      if (error) throw error;
+      console.log(`[SupabaseService] Synced ${rows.length} track audio features.`);
+    } catch (e) {
+      console.error('[SupabaseService] Error syncing track audio features:', e);
+    }
+  }
+
+  /** Updates the user's last_synced_at timestamp to now */
+  async updateUserLastSynced(supabaseUserId: string): Promise<void> {
+    try {
+      const { error } = await this.client
+        .from('users')
+        .update({ last_synced_at: new Date().toISOString() })
+        .eq('id', supabaseUserId);
+      if (error) throw error;
+      console.log(`[SupabaseService] Updated last_synced_at for user ${supabaseUserId}`);
+    } catch (e) {
+      console.warn('[SupabaseService] Failed to update user last_synced_at:', e);
     }
   }
 }

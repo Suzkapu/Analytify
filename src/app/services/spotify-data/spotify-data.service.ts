@@ -87,6 +87,12 @@ export class SpotifyDataService {
     return this.makeRequest(() => this.http.get(trackEndpoint));
   }
 
+  getSeveralAudioFeatures(trackIds: string[]): Observable<any> {
+    const ids = trackIds.join(',');
+    const endpoint = `${environment.spotifyUrl}/audio-features?ids=${ids}`;
+    return this.makeRequest(() => this.http.get(endpoint));
+  }
+
   getUserTopArtists(timeRange: string, limit: number, offset: number): Observable<any> {
     const endpoint = `${environment.spotifyUrl}/me/top/artists?time_range=${timeRange}&limit=${limit}&offset=${offset}`;
     return this.makeRequest(() => this.http.get(endpoint));

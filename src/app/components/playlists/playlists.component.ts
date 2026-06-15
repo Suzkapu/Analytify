@@ -73,9 +73,20 @@ export class PlaylistsComponent {
     const isBackupActive = this.authService.isBackupActive();
     const isExpired = isBackupActive ? false : this.isCacheExpired(lastUpdated);
 
-    if (storedPlaylists && !isExpired) {
+    let parsedPlaylists: any[] = [];
+    let isParseError = false;
+    if (storedPlaylists) {
+      try {
+        parsedPlaylists = JSON.parse(storedPlaylists);
+      } catch (e) {
+        console.warn('Failed to parse cached playlists:', e);
+        isParseError = true;
+      }
+    }
+
+    if (storedPlaylists && !isExpired && !isParseError) {
       console.log(isBackupActive ? "[Playlists] Loading playlists from Supabase Cloud Backup (Local Cache)" : "[Playlists] Loading playlists from Local Storage Cache (Cloud Backup disabled)");
-      this.playlists = JSON.parse(storedPlaylists);
+      this.playlists = parsedPlaylists;
 
       // Sync Favourite Tracks total with the latest loaded amount if available
       const favPlaylist = this.playlists.find(p => p.id === 'fav');

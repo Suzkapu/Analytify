@@ -63,6 +63,20 @@ export class ListeningHistoryComponent implements OnInit {
       console.warn('Failed to parse cached recently played tracks:', e);
     }
     
+    // Seeding: if local cache is empty and backup is active, restore from Supabase
+    if (cachedTracks.length === 0 && this.authService.isBackupActive() && supabaseUserId) {
+      try {
+        console.log('[History] Local history cache is empty. Restoring history from Supabase Cloud...');
+        const dbTracks = await this.supabaseService.loadListeningHistoryFromDB(supabaseUserId);
+        if (dbTracks && dbTracks.length > 0) {
+          cachedTracks = dbTracks;
+          this.storageService.setItem(storageKey, JSON.stringify(dbTracks));
+        }
+      } catch (err) {
+        console.warn('[History] Failed to seed history from Supabase:', err);
+      }
+    }
+
     this.recentlyPlayedTracks = cachedTracks;
     
     // Prioritize DB data if backup is active and we have data for today in Supabase
@@ -119,6 +133,18 @@ export class ListeningHistoryComponent implements OnInit {
         // If backup is active, sync to Supabase
         if (this.authService.isBackupActive() && supabaseUserId) {
           this.supabaseService.syncListeningHistory(supabaseUserId, finalTracks);
+
+          const trackIds = finalTracks.map(item => item.track?.id).filter(id => !!id);
+          if (trackIds.length > 0) {
+            this.spotifyDataService.getSeveralAudioFeatures(trackIds).subscribe({
+              next: (res: any) => {
+                if (res && res.audio_features) {
+                  this.supabaseService.syncTrackAudioFeatures(res.audio_features);
+                }
+              },
+              error: (err) => console.warn('Failed to fetch audio features for recently played:', err)
+            });
+          }
         }
         
         this.isLoadingRecentlyPlayed = false;

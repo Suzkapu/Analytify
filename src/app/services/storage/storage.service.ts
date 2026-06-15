@@ -164,11 +164,15 @@ export class StorageService {
     return this.inMemoryCache.get(key) ?? null;
   }
 
-  setItem(key: string, value: string): void {
+  setItem(key: string, value: string, syncToCloud = true): void {
     this.inMemoryCache.set(key, value);
     this.persistKV(key, value);
     if (key === 'spotifyUserId' || key === 'supabaseUserId') {
       this.getDB().then(db => this.migrateDevData(db)).catch(() => {});
+    }
+
+    if (!syncToCloud) {
+      return;
     }
 
     // Proactively sync user cache key to Supabase if backup is enabled

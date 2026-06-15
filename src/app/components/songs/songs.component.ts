@@ -118,7 +118,7 @@ export class SongsComponent implements OnInit, OnDestroy {
     const lastUpdated = this.storageService.getItem(lastUpdatedKey);
 
     const isBackupActive = this.authService.isBackupActive();
-    const isExpired = isBackupActive ? false : this.isCacheExpired(lastUpdated);
+    const isExpired = this.isCacheExpired(lastUpdated);
     const version = this.storageService.getItem(`${userId}_${this.playlistId}_cacheVersion`);
 
     // Unsubscribe from any previous loader task
@@ -135,27 +135,51 @@ export class SongsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (storedArtists && !isExpired && version === 'v4') {
+    let parsedArtists: any[] = [];
+    let isParseError = false;
+    if (storedArtists) {
+      try {
+        parsedArtists = JSON.parse(storedArtists);
+      } catch (e) {
+        console.warn('Failed to parse stored artists:', e);
+        isParseError = true;
+      }
+    }
+
+    if (storedArtists && !isExpired && version === 'v4' && !isParseError) {
       console.log(isBackupActive ? `[Songs] Loading playlist ${this.playlistId} contents from Supabase Cloud Backup (Local Cache)` : `[Songs] Loading playlist ${this.playlistId} contents from Local Storage Cache (Cloud Backup disabled)`);
-      const parsedArtists = JSON.parse(storedArtists);
-      this.artists = parsedArtists;
-      this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
-      this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
-      this.filterArtists();
-    } else {
-      // Start a new loading task
-      const isRefresh = !!storedArtists;
-      const reason = !storedArtists ? 'no local cache' : (version !== 'v4' ? `old cache version (${version})` : (isExpired ? 'cache expired' : 'unknown'));
-      console.log(`[Songs] Cache missing or stale for playlist ${this.playlistId} (reason: ${reason}, backup active: ${isBackupActive}). Loading from API.`);
-      if (isRefresh) {
-        this.artists = JSON.parse(storedArtists!);
+      try {
+        this.artists = parsedArtists;
         this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
         this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
         this.filterArtists();
+      } catch (e) {
+        console.warn('Failed to parse some cached playlist keys:', e);
+        this.loadPlaylistFromAPI(userId, isBackupActive, isExpired);
       }
-      const task = this.playlistLoaderService.startLoadingTask(userId, this.playlistId, isRefresh, isExpired);
-      this.subscribeToLoaderTask(task);
+    } else {
+      this.loadPlaylistFromAPI(userId, isBackupActive, isExpired, storedArtists, parsedArtists);
     }
+  }
+
+  private loadPlaylistFromAPI(userId: string, isBackupActive: boolean, isExpired: boolean, storedArtists?: string | null, parsedArtists?: any[]) {
+    // Start a new loading task
+    const isRefresh = !!storedArtists && parsedArtists && parsedArtists.length > 0;
+    const version = this.storageService.getItem(`${userId}_${this.playlistId}_cacheVersion`);
+    const reason = !storedArtists ? 'no local cache' : (version !== 'v4' ? `old cache version (${version})` : (isExpired ? 'cache expired' : 'unknown'));
+    console.log(`[Songs] Cache missing or stale for playlist ${this.playlistId} (reason: ${reason}, backup active: ${isBackupActive}). Loading from API.`);
+    if (isRefresh && parsedArtists) {
+      try {
+        this.artists = parsedArtists;
+        this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
+        this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
+        this.filterArtists();
+      } catch (e) {
+        console.warn('Failed to load temporary data from cache:', e);
+      }
+    }
+    const task = this.playlistLoaderService.startLoadingTask(userId, this.playlistId, isRefresh, isExpired);
+    this.subscribeToLoaderTask(task);
   }
 
   private subscribeToLoaderTask(task: any) {
