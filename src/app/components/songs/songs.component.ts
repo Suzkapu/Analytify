@@ -137,20 +137,43 @@ export class SongsComponent implements OnInit, OnDestroy {
 
     let parsedArtists: any[] = [];
     let isParseError = false;
+    let cachedTotalTracks = 0;
+    let actualUniqueCount = 0;
     if (storedArtists) {
       try {
         parsedArtists = JSON.parse(storedArtists);
+        const amountStr = this.storageService.getItem(`${userId}_${this.playlistId}_Amount`);
+        if (amountStr) {
+          cachedTotalTracks = JSON.parse(amountStr);
+        }
+
+        // Collect unique track IDs from the cache
+        const uniqueTrackIds = new Set<string>();
+        parsedArtists.forEach(a => {
+          if (a.tracks) {
+            a.tracks.forEach((t: any) => {
+              if (t && t.id) {
+                uniqueTrackIds.add(t.id);
+              }
+            });
+          }
+        });
+        actualUniqueCount = uniqueTrackIds.size;
       } catch (e) {
         console.warn('Failed to parse stored artists:', e);
         isParseError = true;
       }
     }
 
-    if (storedArtists && !isExpired && version === 'v4' && !isParseError) {
+    // Check for cache corruption: if we expected tracks but parsedArtists is empty or doesn't roughly match totalTracks, it's corrupt/incomplete.
+    const isRoughlyMatch = actualUniqueCount >= Math.floor(cachedTotalTracks * 0.85) || (cachedTotalTracks - actualUniqueCount <= 3);
+    const isCacheCorrupt = !isParseError && storedArtists && cachedTotalTracks > 0 && !isRoughlyMatch;
+
+    if (storedArtists && !isExpired && version === 'v4' && !isParseError && !isCacheCorrupt) {
       console.log(isBackupActive ? `[Songs] Loading playlist ${this.playlistId} contents from Supabase Cloud Backup (Local Cache)` : `[Songs] Loading playlist ${this.playlistId} contents from Local Storage Cache (Cloud Backup disabled)`);
       try {
         this.artists = parsedArtists;
-        this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
+        this.totalTracks = cachedTotalTracks;
         this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
         this.filterArtists();
       } catch (e) {

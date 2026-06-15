@@ -117,6 +117,25 @@
               </div>
             </div>
           </div>
+
+          <span class="compare-vs-text">vs</span>
+
+          <div class="spotify-custom-dropdown" [class.open]="showCompareMenu" [class.active]="compareSnapshotId !== 'previous'">
+            <button class="dropdown-trigger-btn" (click)="toggleCompareMenu($event)">
+              <span>{{ getCompareSnapshotLabel() }}</span>
+              <i class="pi pi-chevron-down icon-right"></i>
+            </button>
+            <div class="dropdown-menu-overlay" *ngIf="showCompareMenu">
+              <div class="menu-section-header">Compare Against</div>
+              <div *ngFor="let opt of getCompareOptions()" 
+                   class="menu-item" 
+                   [class.active]="compareSnapshotId === opt.id"
+                   (click)="selectCompareSnapshot(opt.id, $event)">
+                <span>{{ opt.label }}</span>
+                <i *ngIf="compareSnapshotId === opt.id" class="pi pi-check"></i>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -162,23 +181,25 @@
       <div class="stats-tracks-grid" *ngIf="displayedTracks.length > 0">
 
       <div *ngFor="let track of displayedTracks; let idx = index" class="track-row-card" (click)="openTrendPopup(track, 'tracks')">
-          <div class="track-index" style="position: relative;">
-            <svg *ngIf="isHotMover(track, 'tracks')" class="hot-mover-flame" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2C12 2 17 6.5 17 10.5C17 14 15 17 12 17C9 17 7 14 7 10.5C7 8 8 6.5 9 5C10 3.5 12 2 12 2Z" fill="url(#flameGradientTrack)"/>
-              <path d="M12 6C12 6 14 8.5 14 11C14 13 13 14.5 12 14.5C11 14.5 10 13 10 11C10 9.5 11 8 11.5 7.5C12 7 12 6 12 6Z" fill="url(#flameInnerGradientTrack)"/>
-              <defs>
-                <linearGradient id="flameGradientTrack" x1="12" y1="2" x2="12" y2="17" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#ff3d00"/>
-                  <stop offset="50%" stop-color="#ff9100"/>
-                  <stop offset="100%" stop-color="#ffea00" stop-opacity="0"/>
-                </linearGradient>
-                <linearGradient id="flameInnerGradientTrack" x1="12" y1="6" x2="12" y2="14.5" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#ffea00"/>
-                  <stop offset="100%" stop-color="#ff9100" stop-opacity="0.3"/>
-                </linearGradient>
-              </defs>
-            </svg>
-            {{ idx + 1 }}
+          <div class="track-index" [class.is-hot-mover]="isHotMover(track, 'tracks')" style="position: relative;">
+            <span class="number-wrapper">
+              <svg *ngIf="isHotMover(track, 'tracks')" class="hot-mover-flame" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" fill="url(#flameGradientTrack)"/>
+                <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" transform="matrix(0.65 0 0 0.65 4.2 5.5)" fill="url(#flameInnerGradientTrack)"/>
+                <defs>
+                  <linearGradient id="flameGradientTrack" x1="12" y1="3" x2="12" y2="21" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#ff3d00"/>
+                    <stop offset="50%" stop-color="#ff9100"/>
+                    <stop offset="100%" stop-color="#ffea00" stop-opacity="0.1"/>
+                  </linearGradient>
+                  <linearGradient id="flameInnerGradientTrack" x1="12" y1="3" x2="12" y2="21" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#ffea00"/>
+                    <stop offset="100%" stop-color="#ff5500" stop-opacity="0.4"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <span class="index-number-text">{{ idx + 1 }}</span>
+            </span>
             <ng-container *ngIf="getTrend(track, idx, 'tracks') as trend">
               <span *ngIf="trend.type === 'up'" class="rank-trend-inline trend-up-color" title="Moved up by {{ trend.diff }} places">
                 <i class="pi pi-caret-up"></i>
@@ -229,24 +250,27 @@
               [src]="getArtistImage(artist)"
               alt="Artist Photo" class="artist-avatar">
             <div class="artist-rank-badge"
+                 [class.is-hot-mover]="isHotMover(artist, 'artists')"
                  [class.is-new]="getTrend(artist, idx, 'artists').type === 'new'"
                  [class.has-trend]="getTrend(artist, idx, 'artists').type === 'up' || getTrend(artist, idx, 'artists').type === 'down'">
-              <svg *ngIf="isHotMover(artist, 'artists')" class="hot-mover-flame" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C12 2 17 6.5 17 10.5C17 14 15 17 12 17C9 17 7 14 7 10.5C7 8 8 6.5 9 5C10 3.5 12 2 12 2Z" fill="url(#flameGradientArtist)"/>
-                <path d="M12 6C12 6 14 8.5 14 11C14 13 13 14.5 12 14.5C11 14.5 10 13 10 11C10 9.5 11 8 11.5 7.5C12 7 12 6 12 6Z" fill="url(#flameInnerGradientArtist)"/>
-                <defs>
-                  <linearGradient id="flameGradientArtist" x1="12" y1="2" x2="12" y2="17" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="#ff3d00"/>
-                    <stop offset="50%" stop-color="#ff9100"/>
-                    <stop offset="100%" stop-color="#ffea00" stop-opacity="0"/>
-                  </linearGradient>
-                  <linearGradient id="flameInnerGradientArtist" x1="12" y1="6" x2="12" y2="14.5" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="#ffea00"/>
-                    <stop offset="100%" stop-color="#ff9100" stop-opacity="0.3"/>
-                  </linearGradient>
-                </defs>
-              </svg>
-              {{ idx + 1 }}
+              <span class="number-wrapper">
+                <svg *ngIf="isHotMover(artist, 'artists')" class="hot-mover-flame" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" fill="url(#flameGradientArtist)"/>
+                  <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" transform="matrix(0.65 0 0 0.65 4.2 5.5)" fill="url(#flameInnerGradientArtist)"/>
+                  <defs>
+                    <linearGradient id="flameGradientArtist" x1="12" y1="3" x2="12" y2="21" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#ff3d00"/>
+                      <stop offset="50%" stop-color="#ff9100"/>
+                      <stop offset="100%" stop-color="#ffea00" stop-opacity="0.1"/>
+                    </linearGradient>
+                    <linearGradient id="flameInnerGradientArtist" x1="12" y1="3" x2="12" y2="21" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#ffea00"/>
+                      <stop offset="100%" stop-color="#ff5500" stop-opacity="0.4"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <span class="index-number-text">{{ idx + 1 }}</span>
+              </span>
               <ng-container *ngIf="getTrend(artist, idx, 'artists') as trend">
                 <span *ngIf="trend.type === 'up'" class="rank-trend-inline trend-up-color" title="Moved up by {{ trend.diff }} places">
                   <i class="pi pi-caret-up"></i>

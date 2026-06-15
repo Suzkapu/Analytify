@@ -26,8 +26,10 @@ export class UserStatsComponent implements OnInit {
   historyData: any[] = [];
   selectedHistoryPoint: any = null;
   selectedSnapshotId: string = 'current';
+  compareSnapshotId: string = 'previous';
   snapshotOptions: any[] = [];
   showHistoryMenu: boolean = false;
+  showCompareMenu: boolean = false;
   hotMoverTracks = new Set<string>();
   hotMoverArtists = new Set<string>();
 
@@ -78,6 +80,7 @@ export class UserStatsComponent implements OnInit {
 
   changeRange(range: string) {
     this.selectedSnapshotId = 'current';
+    this.compareSnapshotId = 'previous';
     this.selectedRange = range;
     this.loadStats();
   }
@@ -356,14 +359,113 @@ export class UserStatsComponent implements OnInit {
 
   toggleHistoryMenu(event: Event) {
     event.stopPropagation();
+    this.showCompareMenu = false;
     this.showHistoryMenu = !this.showHistoryMenu;
   }
 
   selectHistorySnapshot(snapshotId: string, event: Event) {
     event.stopPropagation();
     this.selectedSnapshotId = snapshotId;
+    this.compareSnapshotId = 'previous';
     this.showHistoryMenu = false;
     this.calculateHotMovers();
+  }
+
+  toggleCompareMenu(event: Event) {
+    event.stopPropagation();
+    this.showHistoryMenu = false;
+    this.showCompareMenu = !this.showCompareMenu;
+  }
+
+  selectCompareSnapshot(snapshotId: string, event: Event) {
+    event.stopPropagation();
+    this.compareSnapshotId = snapshotId;
+    this.showCompareMenu = false;
+    this.calculateHotMovers();
+  }
+
+  getCompareOptions(): any[] {
+    const options = [
+      { id: 'previous', label: 'Previous Snapshot' }
+    ];
+
+    if (this.selectedSnapshotId !== 'current') {
+      options.push({ id: 'current', label: 'Today' });
+    }
+
+    // Add historical options, filtering out the currently selected one
+    const historicalOptions = this.snapshotOptions.filter(opt => opt.id !== this.selectedSnapshotId);
+    options.push(...historicalOptions);
+
+    return options;
+  }
+
+  getCompareSnapshotLabel(): string {
+    if (this.compareSnapshotId === 'previous') {
+      return 'Previous Snapshot';
+    }
+    if (this.compareSnapshotId === 'current') {
+      return 'Today';
+    }
+    const found = this.snapshotOptions.find(opt => opt.id === this.compareSnapshotId);
+    return found ? found.label : 'Select Snapshot';
+  }
+
+  getComparisonSnapshot(): any {
+    if (!this.historyData || this.historyData.length === 0) {
+      return null;
+    }
+
+    if (this.compareSnapshotId === 'previous') {
+      // Find the snapshot immediately preceding the currently selected one
+      if (this.selectedSnapshotId === 'current') {
+        const now = new Date();
+        const cutoff = new Date(now);
+        cutoff.setHours(1, 0, 0, 0); // 1:00 AM today
+        if (now.getTime() < cutoff.getTime()) {
+          cutoff.setDate(cutoff.getDate() - 1);
+        }
+
+        // Find the most recent snapshot older than today's 1 AM cutoff
+        for (let i = this.historyData.length - 1; i >= 0; i--) {
+          if (this.historyData[i].timestamp < cutoff.getTime()) {
+            return this.historyData[i];
+          }
+        }
+      } else {
+        const currentSnapIdx = this.historyData.findIndex(d => d.timestamp.toString() === this.selectedSnapshotId);
+        if (currentSnapIdx > 0) {
+          return this.historyData[currentSnapIdx - 1];
+        }
+      }
+      return null;
+    }
+
+    if (this.compareSnapshotId === 'current') {
+      // Mock-serialize today's live/cached data
+      return {
+        topTracks: this.topTracks.map(t => ({
+          id: t.id,
+          name: t.name,
+          artist: this.getTrackArtist(t),
+          albumCover: this.getTrackCover(t),
+          explicit: t.explicit || false,
+          popularity: t.popularity || 0,
+          spotifyUrl: this.getTrackUrl(t)
+        })),
+        topArtists: this.topArtists.map(a => ({
+          id: a.id,
+          name: a.name,
+          imageUrl: this.getArtistImage(a),
+          spotifyUrl: this.getArtistUrl(a),
+          genre: this.getArtistGenre(a)
+        })),
+        topGenres: this.topGenres.map(g => ({ name: g.name, percentage: g.percentage }))
+      };
+    }
+
+    // Otherwise, it is a specific timestamp
+    return this.historyData.find(d => d.timestamp.toString() === this.compareSnapshotId) || null;
   }
 
   calculateHotMovers() {
@@ -609,28 +711,7 @@ export class UserStatsComponent implements OnInit {
       return { type: 'same' };
     }
 
-    let prevSnapshot: any = null;
-    if (this.selectedSnapshotId === 'current') {
-      const now = new Date();
-      const cutoff = new Date(now);
-      cutoff.setHours(1, 0, 0, 0); // 1:00 AM today
-      if (now.getTime() < cutoff.getTime()) {
-        cutoff.setDate(cutoff.getDate() - 1);
-      }
-
-      // Find the most recent snapshot older than today's 1 AM cutoff
-      for (let i = this.historyData.length - 1; i >= 0; i--) {
-        if (this.historyData[i].timestamp < cutoff.getTime()) {
-          prevSnapshot = this.historyData[i];
-          break;
-        }
-      }
-    } else {
-      const currentSnapIdx = this.historyData.findIndex(d => d.timestamp.toString() === this.selectedSnapshotId);
-      if (currentSnapIdx > 0) {
-        prevSnapshot = this.historyData[currentSnapIdx - 1];
-      }
-    }
+    const prevSnapshot = this.getComparisonSnapshot();
 
     if (!prevSnapshot) {
       return { type: 'same' };
@@ -858,5 +939,6 @@ export class UserStatsComponent implements OnInit {
   onDocumentClick() {
     this.showSettingsDropdown = false;
     this.showHistoryMenu = false;
+    this.showCompareMenu = false;
   }
 }

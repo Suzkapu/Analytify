@@ -263,6 +263,7 @@ export class PlaylistLoaderService {
         error: (err) => {
           console.error('Error loading remaining fav tracks:', err);
           task.isLoadingTracks = false;
+          task.error = err;
           task.emitUpdate();
           this.checkCompletion(task, userId);
         }
@@ -288,6 +289,7 @@ export class PlaylistLoaderService {
         error: (err) => {
           console.error('Error loading remaining playlist tracks:', err);
           task.isLoadingTracks = false;
+          task.error = err;
           task.emitUpdate();
           this.checkCompletion(task, userId);
         }
@@ -424,6 +426,7 @@ export class PlaylistLoaderService {
       },
       error: (err) => {
         console.error('Error batch loading artists lazy details:', err);
+        task.error = err;
         this.fetchArtistDetailsLazy(task, targetArray, userId);
       }
     });
@@ -489,8 +492,29 @@ export class PlaylistLoaderService {
         task.isRefreshing = false;
       }
       
-      if (userId) {
-        this.setSessionStorage(task, userId);
+      if (userId && !task.error) {
+        // Collect all loaded unique track IDs
+        const uniqueTrackIds = new Set<string>();
+        task.artists.forEach(a => {
+          if (a.tracks) {
+            a.tracks.forEach((t: any) => {
+              if (t && t.id) {
+                uniqueTrackIds.add(t.id);
+              }
+            });
+          }
+        });
+        const actualUniqueCount = uniqueTrackIds.size;
+        
+        // Validation: The loaded unique tracks count should roughly match totalTracks.
+        // We allow up to 15% missing tracks (for local/skipped tracks), or a flat tolerance of 3 tracks for small playlists.
+        const isRoughlyMatch = actualUniqueCount >= Math.floor(task.totalTracks * 0.85) || (task.totalTracks - actualUniqueCount <= 3);
+
+        if (task.totalTracks > 0 && !isRoughlyMatch) {
+          console.warn(`[PlaylistLoaderService] Refusing to cache incomplete playlist data for ${task.playlistId} (expected ${task.totalTracks} tracks, got ${actualUniqueCount} unique tracks).`);
+        } else {
+          this.setSessionStorage(task, userId);
+        }
       }
 
       task.isComplete = true;
