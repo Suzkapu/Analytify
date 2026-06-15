@@ -680,11 +680,12 @@ export class UserStatsComponent implements OnInit {
 
     if (isBackupActive && supabaseUserId) {
       this.supabaseService.loadAllStatsSnapshots(supabaseUserId, range).then(async (dbSnapshots) => {
+        const localHistory = await this.storageService.getStatsHistory(userId, range).catch(() => [] as any[]);
+
+        // Step 1: Download cloud snapshots missing from local IndexedDB
         if (dbSnapshots && dbSnapshots.length > 0) {
           try {
-            const localHistory = await this.storageService.getStatsHistory(userId, range);
-            const localTimestamps = new Set(localHistory.map(h => new Date(h.timestamp).toDateString()));
-
+            const localTimestamps = new Set(localHistory.map((h: any) => new Date(h.timestamp).toDateString()));
             for (const snap of dbSnapshots) {
               const dateStr = new Date(snap.timestamp).toDateString();
               if (!localTimestamps.has(dateStr)) {
@@ -696,6 +697,46 @@ export class UserStatsComponent implements OnInit {
             console.warn('[Stats] Failed to restore DB history snapshots locally:', e);
           }
         }
+
+        // Step 2: Upload local-only snapshots that are missing in the cloud (bidirectional sync)
+        try {
+          const cloudDateStrs = new Set((dbSnapshots || []).map((s: any) =>
+            new Date(s.timestamp).toDateString()
+          ));
+          const localOnlySnapshots = localHistory.filter((h: any) =>
+            !cloudDateStrs.has(new Date(h.timestamp).toDateString())
+          );
+
+          for (const localSnap of localOnlySnapshots) {
+            const dateStr = new Date(localSnap.timestamp).toISOString().split('T')[0];
+            let totalPop = 0; let explicitCount = 0;
+            (localSnap.topTracks || []).forEach((t: any) => {
+              totalPop += t.popularity || 0;
+              if (t.explicit) explicitCount++;
+            });
+            const trackCount = (localSnap.topTracks || []).length;
+            const avgPop = trackCount > 0 ? Math.round(totalPop / trackCount) : 0;
+            const explPct = trackCount > 0 ? Math.round((explicitCount / trackCount) * 100) : 0;
+            const genreDiversity = (localSnap.topGenres || []).length;
+
+            console.log(`[Stats] Uploading local-only snapshot to cloud: ${dateStr} (${range})`);
+            await this.supabaseService.saveStatsSnapshot(
+              supabaseUserId,
+              range,
+              avgPop,
+              explPct,
+              genreDiversity,
+              localSnap.topTracks || [],
+              localSnap.topArtists || [],
+              localSnap.topGenres || [],
+              true,   // onlyInsertMissing — don't overwrite existing metadata
+              dateStr // customDateStr — use the historical date
+            );
+          }
+        } catch (e) {
+          console.warn('[Stats] Failed to upload local-only snapshots to cloud:', e);
+        }
+
         loadLocal();
       }).catch(err => {
         console.warn('[Stats] Failed to load history snapshots from Supabase:', err);
