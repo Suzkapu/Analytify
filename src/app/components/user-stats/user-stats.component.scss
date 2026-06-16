@@ -388,13 +388,28 @@
   .genres-list-container {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 16px;
   }
 
   .genre-row {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.02);
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.03) !important;
+      border-color: rgba(29, 185, 84, 0.15) !important;
+
+      .genre-name {
+        color: #1ed760 !important;
+      }
+    }
 
     .genre-row-header {
       display: flex;
@@ -406,11 +421,23 @@
         font-weight: 700;
         color: #ffffff;
         text-transform: capitalize;
+        display: flex;
+        align-items: center;
+        transition: color 0.2s ease;
+
+        .genre-rank {
+          color: #777;
+          margin-right: 6px;
+          font-weight: 600;
+        }
       }
 
       .genre-percentage {
         font-weight: 700;
         color: #1ed760;
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
     }
 
@@ -421,12 +448,47 @@
       overflow: hidden;
       width: 100%;
       box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+      position: relative;
 
       .progress-bar-fill {
         background: linear-gradient(90deg, #1db954, #1ed760);
         height: 100%;
         border-radius: 6px;
         transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 2;
+
+        &.is-increased {
+          box-shadow: 0 0 8px rgba(30, 215, 96, 0.4);
+        }
+      }
+
+      .progress-bar-fill-lost {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        background: rgba(255, 82, 82, 0.25);
+        border-radius: 6px;
+        z-index: 1;
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border-right: 2px dashed #ff5252;
+      }
+
+      .progress-bar-fill-previous {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 6px;
+        z-index: 3;
+        pointer-events: none;
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border-right: 2px solid rgba(255, 255, 255, 0.7);
       }
     }
   }
@@ -441,10 +503,11 @@
     }
 
     .genres-list-container {
-      gap: 18px;
+      gap: 12px;
     }
 
     .genre-row {
+      padding: 10px 12px;
       gap: 6px;
 
       .genre-row-header {
@@ -456,6 +519,14 @@
         border-radius: 5px;
 
         .progress-bar-fill {
+          border-radius: 5px;
+        }
+
+        .progress-bar-fill-lost {
+          border-radius: 5px;
+        }
+
+        .progress-bar-fill-previous {
           border-radius: 5px;
         }
       }
@@ -734,5 +805,56 @@
   .index-number-text {
     color: #ffffff !important;
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+  }
+}
+
+// Custom badges & styling for genre comparison deltas
+.percentage-diff-badge {
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+
+  &.positive {
+    background: rgba(30, 215, 96, 0.12);
+    color: #1ed760;
+  }
+
+  &.negative {
+    background: rgba(255, 82, 82, 0.12);
+    color: #ff5252;
+  }
+}
+
+.new-genre-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  background: #00d2ff;
+  color: #121212;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 0 8px rgba(0, 210, 255, 0.35);
+  letter-spacing: 0.5px;
+  vertical-align: middle;
+}
+
+.genre-trend-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  background: rgba(29, 185, 84, 0.1);
+  border: 2px solid rgba(29, 185, 84, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+
+  i {
+    font-size: 2.2rem;
+    color: #1db954;
   }
 }

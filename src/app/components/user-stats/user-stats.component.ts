@@ -36,7 +36,7 @@ export class UserStatsComponent implements OnInit {
   // Trend modal variables
   showTrendPopup: boolean = false;
   trendPopupItem: any = null;
-  trendPopupCategory: 'tracks' | 'artists' = 'tracks';
+  trendPopupCategory: 'tracks' | 'artists' | 'genres' = 'tracks';
   trendPopupPoints: any[] = [];
 
   // Listening History & Modal Variables
@@ -878,32 +878,79 @@ export class UserStatsComponent implements OnInit {
   }
 
   get displayedGenres(): any[] {
+    let rawGenres: any[] = [];
     if (this.selectedSnapshotId === 'current') {
-      return this.topGenres;
-    }
-    const snap = this.historyData.find(d => d.timestamp.toString() === this.selectedSnapshotId);
-    if (snap) {
-      if (snap.isLoaded === false) {
-        this.lazyLoadSnapshotDetails(snap.timestamp.toString());
+      rawGenres = this.topGenres;
+    } else {
+      const snap = this.historyData.find(d => d.timestamp.toString() === this.selectedSnapshotId);
+      if (snap) {
+        if (snap.isLoaded === false) {
+          this.lazyLoadSnapshotDetails(snap.timestamp.toString());
+        }
+        rawGenres = snap.isLoaded === true && snap.topGenres ? snap.topGenres : [];
       }
-      if (snap.isLoaded === true && snap.topGenres) {
-        const maxPercentage = snap.topGenres.length > 0 ? snap.topGenres[0].percentage : 1;
-        return snap.topGenres.map((g: any) => ({
-          name: g.name,
-          percentage: g.percentage,
-          percentage_simple: g.percentage > 0 ? Math.max(2, Math.min(100, Math.round((g.percentage / (maxPercentage || 1)) * 100))) : 0
-        }));
-      }
-      return [];
     }
-    return this.topGenres;
+
+    if (rawGenres.length === 0) return [];
+
+    const maxPercentage = rawGenres.length > 0 ? (rawGenres[0].percentage || 1) : 1;
+    const prevSnapshot = this.getComparisonSnapshot();
+    const prevGenres = prevSnapshot ? (prevSnapshot.topGenres || []) : [];
+
+    return rawGenres.map((g: any, idx: number) => {
+      const currentRank = idx + 1;
+      const currentPercentage = g.percentage;
+
+      const prevIdx = prevGenres.findIndex((pg: any) => {
+        const pgName = typeof pg === 'string' ? pg : pg.name;
+        return pgName === g.name;
+      });
+
+      let trendType: 'up' | 'down' | 'same' | 'new' = 'same';
+      let rankDiff = 0;
+      let percentageDiff = 0;
+      let prevPercentage = 0;
+
+      if (prevIdx === -1) {
+        trendType = prevSnapshot ? 'new' : 'same';
+        percentageDiff = currentPercentage;
+      } else {
+        const prevGenre = prevGenres[prevIdx];
+        prevPercentage = typeof prevGenre === 'string' ? 0 : (prevGenre.percentage || 0);
+        percentageDiff = currentPercentage - prevPercentage;
+
+        const prevRank = prevIdx + 1;
+        if (prevRank > currentRank) {
+          trendType = 'up';
+          rankDiff = prevRank - currentRank;
+        } else if (prevRank < currentRank) {
+          trendType = 'down';
+          rankDiff = currentRank - prevRank;
+        } else {
+          trendType = 'same';
+        }
+      }
+
+      return {
+        name: g.name,
+        percentage: currentPercentage,
+        percentage_simple: currentPercentage > 0 ? Math.max(2, Math.min(100, Math.round((currentPercentage / (maxPercentage || 1)) * 100))) : 0,
+        prevPercentageSimple: prevPercentage > 0 ? Math.max(2, Math.min(100, Math.round((prevPercentage / (maxPercentage || 1)) * 100))) : 0,
+        rank: currentRank,
+        trendType,
+        rankDiff,
+        percentageDiff,
+        prevPercentage,
+        hasCompare: !!prevSnapshot
+      };
+    });
   }
 
   onSnapshotChange(event: Event) {
     this.selectedSnapshotId = (event.target as HTMLSelectElement).value;
   }
 
-  openTrendPopup(item: any, category: 'tracks' | 'artists') {
+  openTrendPopup(item: any, category: 'tracks' | 'artists' | 'genres') {
     this.trendPopupItem = item;
     this.trendPopupCategory = category;
     
@@ -912,13 +959,16 @@ export class UserStatsComponent implements OnInit {
     const points: any[] = [];
     
     this.historyData.forEach(snap => {
-      const list = category === 'tracks' ? (snap.topTracks || []) : (snap.topArtists || []);
+      const list = category === 'tracks' ? (snap.topTracks || []) :
+                   category === 'artists' ? (snap.topArtists || []) :
+                   (snap.topGenres || []);
       const rankIdx = list.findIndex((x: any) => {
-        if (x.id && id && x.id === id) return true;
         if (category === 'tracks') {
-          return x.name === name && x.artist === this.getTrackArtist(item);
+          return (x.id && id && x.id === id) || (x.name === name && x.artist === this.getTrackArtist(item));
+        } else if (category === 'artists') {
+          return (x.id && id && x.id === id) || (x.name === name);
         } else {
-          return x.name === name;
+          return (typeof x === 'string' ? x : x.name) === name;
         }
       });
       if (rankIdx !== -1) {
@@ -930,11 +980,14 @@ export class UserStatsComponent implements OnInit {
       }
     });
 
-    const currentList = category === 'tracks' ? this.topTracks : this.topArtists;
+    const currentList = category === 'tracks' ? this.topTracks :
+                        category === 'artists' ? this.topArtists :
+                        this.topGenres;
     const currentRankIdx = currentList.findIndex((x: any) => {
-      if (x.id && id && x.id === id) return true;
       if (category === 'tracks') {
-        return x.name === name && this.getTrackArtist(x) === this.getTrackArtist(item);
+        return (x.id && id && x.id === id) || (x.name === name && this.getTrackArtist(x) === this.getTrackArtist(item));
+      } else if (category === 'artists') {
+        return (x.id && id && x.id === id) || (x.name === name);
       } else {
         return x.name === name;
       }
@@ -976,7 +1029,8 @@ export class UserStatsComponent implements OnInit {
     const width = 500;
     const height = 200;
     const padding = 30;
-    const maxRank = this.trendPopupCategory === 'tracks' ? 100 : 50;
+    const maxRank = this.trendPopupCategory === 'tracks' ? 100 :
+                    this.trendPopupCategory === 'artists' ? 50 : 15;
     
     const pts = points.map((pt, idx) => {
       const x = padding + (idx / (points.length - 1)) * (width - 2 * padding);

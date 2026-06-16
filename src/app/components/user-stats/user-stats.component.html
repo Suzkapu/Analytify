@@ -301,13 +301,50 @@
           Genre Popularity Weight
         </h3>
         <div class="genres-list-container">
-          <div *ngFor="let genre of displayedGenres" class="genre-row">
+          <div *ngFor="let genre of displayedGenres" class="genre-row card-clickable" (click)="openTrendPopup(genre, 'genres')">
             <div class="genre-row-header">
-              <span class="genre-name">{{ genre.name }}</span>
-              <span class="genre-percentage">{{ genre.percentage < 1 ? '<1' : genre.percentage }}%</span>
+              <span class="genre-name">
+                <span class="genre-rank">{{ genre.rank }}.</span> {{ genre.name }}
+                
+                <!-- Rank Trend Caret/Badge -->
+                <ng-container *ngIf="genre.hasCompare">
+                  <span *ngIf="genre.trendType === 'up'" class="rank-trend-inline trend-up-color" title="Rank moved up by {{ genre.rankDiff }} places" style="margin-left: 8px;">
+                    <i class="pi pi-caret-up"></i> <span class="trend-diff-num" style="font-size: 0.75rem; font-weight: 700;">{{ genre.rankDiff }}</span>
+                  </span>
+                  <span *ngIf="genre.trendType === 'down'" class="rank-trend-inline trend-down-color" title="Rank moved down by {{ genre.rankDiff }} places" style="margin-left: 8px;">
+                    <i class="pi pi-caret-down"></i> <span class="trend-diff-num" style="font-size: 0.75rem; font-weight: 700;">{{ genre.rankDiff }}</span>
+                  </span>
+                  <span *ngIf="genre.trendType === 'new'" class="new-genre-badge" title="New genre since comparison snapshot" style="margin-left: 8px;">
+                    NEW
+                  </span>
+                </ng-container>
+              </span>
+              <span class="genre-percentage">
+                {{ genre.percentage < 1 ? '<1' : genre.percentage }}%
+                
+                <!-- Percentage Diff Badge -->
+                <ng-container *ngIf="genre.hasCompare && genre.percentageDiff !== 0">
+                  <span class="percentage-diff-badge" [class.positive]="genre.percentageDiff > 0" [class.negative]="genre.percentageDiff < 0">
+                    {{ genre.percentageDiff > 0 ? '+' : '' }}{{ genre.percentageDiff }}%
+                  </span>
+                </ng-container>
+              </span>
             </div>
             <div class="progress-bar-container">
-              <div [style.width.%]="genre.percentage_simple" class="progress-bar-fill"></div>
+              <!-- If comparison is active and genre shrunk, show the previous size as a red background bar -->
+              <div *ngIf="genre.hasCompare && genre.percentageDiff < 0" 
+                   [style.width.%]="genre.prevPercentageSimple" 
+                   class="progress-bar-fill-lost"></div>
+
+              <!-- Main current fill -->
+              <div [style.width.%]="genre.percentage_simple" 
+                   class="progress-bar-fill"
+                   [class.is-increased]="genre.hasCompare && genre.percentageDiff > 0"></div>
+
+              <!-- If comparison is active and genre increased, highlight the previous start point -->
+              <div *ngIf="genre.hasCompare && genre.percentageDiff > 0" 
+                   [style.width.%]="genre.prevPercentageSimple" 
+                   class="progress-bar-fill-previous"></div>
             </div>
           </div>
         </div>
@@ -358,12 +395,20 @@
     <button class="trend-modal-close-btn" (click)="closeTrendPopup($event)">&times;</button>
     
     <div class="trend-modal-header">
-      <img [src]="trendPopupCategory === 'tracks' ? getTrackCover(trendPopupItem) : getArtistImage(trendPopupItem)"
+      <img *ngIf="trendPopupCategory !== 'genres'"
+           [src]="trendPopupCategory === 'tracks' ? getTrackCover(trendPopupItem) : getArtistImage(trendPopupItem)"
            [class.artist-round]="trendPopupCategory === 'artists'"
            alt="Cover Image" class="trend-modal-cover">
+      
+      <!-- Genre Icon/Badge instead of cover image -->
+      <div *ngIf="trendPopupCategory === 'genres'" class="genre-trend-avatar">
+        <i class="pi pi-tags"></i>
+      </div>
+
       <div class="trend-modal-info">
         <h3>{{ trendPopupItem.name }}</h3>
-        <p>{{ trendPopupCategory === 'tracks' ? getTrackArtist(trendPopupItem) : getArtistGenre(trendPopupItem) }}</p>
+        <p>{{ trendPopupCategory === 'tracks' ? getTrackArtist(trendPopupItem) : 
+              trendPopupCategory === 'artists' ? getArtistGenre(trendPopupItem) : 'Top Genre' }}</p>
       </div>
     </div>
     
@@ -400,10 +445,10 @@
               <!-- Y-axis labels (Rank 1 at top, Max Rank at bottom) -->
               <text x="15" y="34" fill="#888" font-size="10" text-anchor="end">#1</text>
               <text x="15" y="104" fill="#888" font-size="10" text-anchor="end">
-                {{ trendPopupCategory === 'tracks' ? '#50' : '#25' }}
+                {{ trendPopupCategory === 'tracks' ? '#50' : trendPopupCategory === 'artists' ? '#25' : '#8' }}
               </text>
               <text x="15" y="174" fill="#888" font-size="10" text-anchor="end">
-                {{ trendPopupCategory === 'tracks' ? '#100' : '#50' }}
+                {{ trendPopupCategory === 'tracks' ? '#100' : trendPopupCategory === 'artists' ? '#50' : '#15' }}
               </text>
               
               <!-- Chart Area Path Fill -->
@@ -416,7 +461,7 @@
               <g *ngFor="let pt of trendPopupPoints; let idx = index">
                 <circle 
                   [attr.cx]="30 + (idx / (trendPopupPoints.length - 1)) * 440" 
-                  [attr.cy]="30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : 50) - 1)) * 140" 
+                  [attr.cy]="30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : trendPopupCategory === 'artists' ? 50 : 15) - 1)) * 140" 
                   r="5" 
                   fill="#ffffff" 
                   stroke="#1db954" 
@@ -424,9 +469,8 @@
                 </circle>
                 <text 
                   [attr.x]="30 + (idx / (trendPopupPoints.length - 1)) * 440" 
-                  [attr.y]="(30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : 50) - 1)) * 140) - 10" 
+                  [attr.y]="(30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : trendPopupCategory === 'artists' ? 50 : 15) - 1)) * 140) - 10" 
                   fill="#ffffff" 
-                  font-size="10" 
                   font-weight="700" 
                   text-anchor="middle">
                   #{{ pt.rank }}
