@@ -3,6 +3,7 @@ import { SpotifyDataService } from '../spotify-data/spotify-data.service';
 import { StorageService } from '../storage/storage.service';
 import { SpotifyAuthService } from '../auth/spotify-auth.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { SupabaseService } from '../supabase/supabase.service';
 
 export interface PlaylistLoadProgress {
   playlistId: string;
@@ -86,7 +87,8 @@ export class PlaylistLoaderService {
   constructor(
     private spotifyDataService: SpotifyDataService,
     private storageService: StorageService,
-    private authService: SpotifyAuthService
+    private authService: SpotifyAuthService,
+    private supabaseService: SupabaseService
   ) {
     this.authService.logout$.subscribe(() => {
       this.clearAllTasks();
@@ -550,5 +552,11 @@ export class PlaylistLoaderService {
     this.storageService.setItem(`${userId}_${task.playlistId}_Name`, JSON.stringify(task.playlistName));
     this.storageService.setItem(`${userId}_${task.playlistId}_lastUpdated`, Date.now().toString());
     this.storageService.setItem(`${userId}_${task.playlistId}_cacheVersion`, 'v4');
+
+    const supabaseUserId = this.authService.getSupabaseUserId();
+    if (this.authService.isBackupActive() && supabaseUserId) {
+      this.supabaseService.updateUserLastSynced(supabaseUserId);
+      this.storageService.setItem(`${supabaseUserId}_last_synced_at`, new Date().toISOString());
+    }
   }
 }

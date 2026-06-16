@@ -52,7 +52,10 @@ export class UserStatsComponent implements OnInit {
     private supabaseService: SupabaseService
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    if (this.authService.isAuthenticated()) {
+      await this.authService.ensureInitialSync();
+    }
     this.loadStats();
     this.loadUserProfile();
   }
@@ -233,6 +236,7 @@ export class UserStatsComponent implements OnInit {
               this.topArtists,
               this.topGenres
             );
+            this.storageService.setItem(`${supabaseUserId}_last_synced_at`, new Date().toISOString());
 
             const trackIds = this.topTracks.map(t => t.id).filter(id => !!id);
             if (trackIds.length > 0) {

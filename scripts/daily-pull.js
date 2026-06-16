@@ -485,6 +485,22 @@ async function syncUserHistory(user) {
   }
 }
 
+// Helper to check if a sync has already run today (since the 1:00 AM cutoff)
+function isSyncExpired(lastSyncedStr) {
+  if (!lastSyncedStr) return true;
+  const lastSynced = new Date(lastSyncedStr).getTime();
+  if (isNaN(lastSynced)) return true;
+
+  const now = new Date();
+  const cutoff = new Date(now);
+  cutoff.setHours(1, 0, 0, 0); // 1:00 AM today
+  if (now.getTime() < cutoff.getTime()) {
+    // If we haven't reached 1 AM today yet, the most recent cutoff was 1 AM yesterday
+    cutoff.setDate(cutoff.getDate() - 1);
+  }
+  return lastSynced < cutoff.getTime();
+}
+
 // Main entry point
 async function main() {
   console.log(`--- Analytify Spotify Sync started at ${new Date().toISOString()} ---`);
@@ -493,7 +509,7 @@ async function main() {
     // Get all users who have backup enabled and have a refresh token
     const { data: users, error } = await supabase
       .from('users')
-      .select('id, display_name, spotify_refresh_token')
+      .select('id, display_name, spotify_refresh_token, last_synced_at')
       .eq('backup_active', true)
       .not('spotify_refresh_token', 'is', null);
 
@@ -510,6 +526,10 @@ async function main() {
 
     // Sync users sequentially to prevent rate limits
     for (const user of users) {
+      if (user.last_synced_at && !isSyncExpired(user.last_synced_at)) {
+        console.log(`Skipping user ${user.display_name} (${user.id}) - already synced today at ${user.last_synced_at}`);
+        continue;
+      }
       await syncUserHistory(user);
     }
 

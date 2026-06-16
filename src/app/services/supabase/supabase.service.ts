@@ -57,10 +57,15 @@ export class SupabaseService {
     try {
       const { data, error } = await this.client
         .from('users')
-        .select('id')
+        .select('id, spotify_id, display_name, profile_pic_url')
         .eq('id', supabaseUserId)
         .maybeSingle();
       if (error) throw error;
+
+      const isDev = !environment.production;
+      const finalDisplayName = isDev && displayName && !displayName.startsWith('DEV ')
+        ? `DEV ${displayName}`
+        : (displayName || 'Spotify User');
 
       if (!data) {
         console.log('[SupabaseService] User profile missing — recreating row for:', supabaseUserId);
@@ -69,14 +74,99 @@ export class SupabaseService {
           .insert({
             id: supabaseUserId,
             spotify_id: spotifyId,
-            display_name: displayName || 'Spotify User',
+            display_name: finalDisplayName,
             profile_pic_url: profilePicUrl,
             backup_active: false
           });
         if (insertErr) {
-          console.error('[SupabaseService] Failed to recreate user profile:', insertErr);
+          // Check for unique constraint violation on spotify_id (e.g. 23505)
+          if (insertErr.code === '23505' && spotifyId && spotifyId.endsWith('_dev')) {
+            console.log('[SupabaseService] Unique constraint violation on spotify_id in dev mode. Attempting recovery...');
+            const { data: conflictRow } = await this.client
+              .from('users')
+              .select('id')
+              .eq('spotify_id', spotifyId)
+              .maybeSingle();
+            
+            if (conflictRow && conflictRow.id !== supabaseUserId) {
+              console.log(`[SupabaseService] Found contaminating row: ${conflictRow.id} with spotify_id: ${spotifyId}. Clearing it...`);
+              await this.client
+                .from('users')
+                .update({ spotify_id: `${spotifyId}_old_${conflictRow.id}` })
+                .eq('id', conflictRow.id);
+              
+              console.log('[SupabaseService] Retrying insert of dev user profile...');
+              const { error: retryErr } = await this.client
+                .from('users')
+                .insert({
+                  id: supabaseUserId,
+                  spotify_id: spotifyId,
+                  display_name: finalDisplayName,
+                  profile_pic_url: profilePicUrl,
+                  backup_active: false
+                });
+              if (retryErr) {
+                console.error('[SupabaseService] Retry insert failed:', retryErr);
+              }
+            }
+          } else {
+            console.error('[SupabaseService] Failed to recreate user profile:', insertErr);
+          }
         } else {
           console.log('[SupabaseService] User profile recreated successfully.');
+        }
+      } else {
+        // If data exists, check if spotify_id, display_name, or profile_pic_url needs update
+        const needsUpdate = 
+          (spotifyId && data.spotify_id !== spotifyId) ||
+          (finalDisplayName && data.display_name !== finalDisplayName) ||
+          (profilePicUrl && data.profile_pic_url !== profilePicUrl);
+        
+        if (needsUpdate) {
+          console.log('[SupabaseService] Updating existing user profile info for:', supabaseUserId);
+          const { error: updateErr } = await this.client
+            .from('users')
+            .update({
+              spotify_id: spotifyId || data.spotify_id,
+              display_name: finalDisplayName || data.display_name,
+              profile_pic_url: profilePicUrl || data.profile_pic_url
+            })
+            .eq('id', supabaseUserId);
+          if (updateErr) {
+            // Check for unique constraint violation on update
+            if (updateErr.code === '23505' && spotifyId && spotifyId.endsWith('_dev')) {
+              console.log('[SupabaseService] Unique constraint violation on spotify_id update in dev mode. Attempting recovery...');
+              const { data: conflictRow } = await this.client
+                .from('users')
+                .select('id')
+                .eq('spotify_id', spotifyId)
+                .maybeSingle();
+              
+              if (conflictRow && conflictRow.id !== supabaseUserId) {
+                console.log(`[SupabaseService] Found contaminating row: ${conflictRow.id} with spotify_id: ${spotifyId}. Clearing it...`);
+                await this.client
+                  .from('users')
+                  .update({ spotify_id: `${spotifyId}_old_${conflictRow.id}` })
+                  .eq('id', conflictRow.id);
+                
+                console.log('[SupabaseService] Retrying update of dev user profile...');
+                const { error: retryErr } = await this.client
+                  .from('users')
+                  .update({
+                    spotify_id: spotifyId,
+                    display_name: finalDisplayName
+                  })
+                  .eq('id', supabaseUserId);
+                if (retryErr) {
+                  console.error('[SupabaseService] Retry update failed:', retryErr);
+                }
+              }
+            } else {
+              console.error('[SupabaseService] Failed to update user profile:', updateErr);
+            }
+          } else {
+            console.log('[SupabaseService] User profile updated successfully.');
+          }
         }
       }
     } catch (e) {

@@ -10,6 +10,7 @@ export class StorageService {
   private inMemoryCache = new Map<string, string>();
 
   private dbPromise: Promise<IDBDatabase> | null = null;
+  private initPromise: Promise<void> | null = null;
 
   constructor(private supabaseService: SupabaseService) {}
 
@@ -54,7 +55,11 @@ export class StorageService {
    * subsequent getItem() calls are synchronous.
    */
   initFromDB(): Promise<void> {
-    return this.getDB().then(db => new Promise<void>((resolve) => {
+    if (this.initPromise) {
+      return this.initPromise;
+    }
+
+    this.initPromise = this.getDB().then(db => new Promise<void>((resolve) => {
       try {
         const tx    = db.transaction('appData', 'readonly');
         const store = tx.objectStore('appData');
@@ -72,6 +77,8 @@ export class StorageService {
     })).catch(() => {
       // IndexedDB unavailable – app still works, just without cross-session persistence
     });
+
+    return this.initPromise;
   }
 
   private async migrateDevData(db: IDBDatabase): Promise<void> {
@@ -160,6 +167,15 @@ export class StorageService {
 
   // ─── Sync API (reads from in-memory cache) ─────────────────────────────────
 
+  private getEffectiveSupabaseUserId(): string | null {
+    const rawId = this.inMemoryCache.get('supabaseUserId') ?? null;
+    if (!rawId) return null;
+    if (!environment.production && rawId.length >= 36 && !rawId.startsWith('de11')) {
+      return 'de11' + rawId.substring(4);
+    }
+    return rawId;
+  }
+
   getItem(key: string): string | null {
     return this.inMemoryCache.get(key) ?? null;
   }
@@ -176,7 +192,7 @@ export class StorageService {
     }
 
     // Proactively sync user cache key to Supabase if backup is enabled
-    const supabaseUserId = this.inMemoryCache.get('supabaseUserId');
+    const supabaseUserId = this.getEffectiveSupabaseUserId();
     const spotifyUserId = this.inMemoryCache.get('spotifyUserId');
     if (supabaseUserId && spotifyUserId) {
       const isBackupActive = this.inMemoryCache.get(`${supabaseUserId}_backup_active`) === 'true';

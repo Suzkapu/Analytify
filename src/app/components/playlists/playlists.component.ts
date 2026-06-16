@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {SpotifyDataService} from "../../services/spotify-data/spotify-data.service";
 import {SpotifyAuthService} from "../../services/auth/spotify-auth.service";
 import {StorageService} from "../../services/storage/storage.service";
+import {SupabaseService} from "../../services/supabase/supabase.service";
 
 @Component({
   selector: 'app-playlists', templateUrl: './playlists.component.html', styleUrls: ['./playlists.component.scss'],
@@ -21,11 +22,15 @@ export class PlaylistsComponent {
     private router: Router, 
     private spotifyDataService: SpotifyDataService,
     public authService: SpotifyAuthService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private supabaseService: SupabaseService
   ) {
-    this.route.params.subscribe(() => {
+    this.route.params.subscribe(async () => {
       const userId = this.authService.getUserId() || 'anonymous';
       this.sortOrder = (this.storageService.getItem(`${userId}_playlists_sortOrder`) as 'asc' | 'desc' | 'none') || 'none';
+      if (this.authService.isAuthenticated()) {
+        await this.authService.ensureInitialSync();
+      }
       this.loadPlaylists();
       this.loadUserProfile();
     });
@@ -65,13 +70,17 @@ export class PlaylistsComponent {
 
   loadPlaylists() {
     const userId = this.authService.getUserId() || 'anonymous';
+    const supabaseUserId = this.authService.getSupabaseUserId();
     const storageKey = `${userId}_playlists`;
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
     const storedPlaylists = this.storageService.getItem(storageKey);
     const lastUpdated = this.storageService.getItem(lastUpdatedKey);
 
     const isBackupActive = this.authService.isBackupActive();
-    const isExpired = isBackupActive ? false : this.isCacheExpired(lastUpdated);
+    const dbLastSynced = supabaseUserId ? this.storageService.getItem(`${supabaseUserId}_last_synced_at`) : null;
+    const isExpired = isBackupActive && dbLastSynced && !this.isCacheExpired(dbLastSynced)
+      ? false 
+      : this.isCacheExpired(lastUpdated);
 
     let parsedPlaylists: any[] = [];
     let isParseError = false;
@@ -146,6 +155,10 @@ export class PlaylistsComponent {
               this.playlists = [favPlaylist, ...this.playlists];
               this.storageService.setItem(storageKey, JSON.stringify(this.playlists));
               this.storageService.setItem(lastUpdatedKey, Date.now().toString());
+              if (isBackupActive && supabaseUserId) {
+                this.supabaseService.updateUserLastSynced(supabaseUserId);
+                this.storageService.setItem(`${supabaseUserId}_last_synced_at`, new Date().toISOString());
+              }
               this.filterPlaylists();
             },
             error: (err) => {
@@ -165,6 +178,10 @@ export class PlaylistsComponent {
               this.playlists = [favPlaylist, ...this.playlists];
               this.storageService.setItem(storageKey, JSON.stringify(this.playlists));
               this.storageService.setItem(lastUpdatedKey, Date.now().toString());
+              if (isBackupActive && supabaseUserId) {
+                this.supabaseService.updateUserLastSynced(supabaseUserId);
+                this.storageService.setItem(`${supabaseUserId}_last_synced_at`, new Date().toISOString());
+              }
               this.filterPlaylists();
             }
           });

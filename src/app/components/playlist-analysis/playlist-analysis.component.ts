@@ -58,8 +58,11 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe(async params => {
       this.playlistId = params['id'];
+      if (this.authService.isAuthenticated()) {
+        await this.authService.ensureInitialSync();
+      }
       this.loadPlaylistData();
       this.loadUserProfile();
     });
@@ -106,6 +109,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
 
   loadPlaylistData() {
     const userId = this.authService.getUserId() || 'anonymous';
+    const supabaseUserId = this.authService.getSupabaseUserId();
 
     // Check if there is an active background task running for this playlist
     const activeTask = this.playlistLoaderService.getLoadingTask(this.playlistId);
@@ -120,7 +124,10 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     const lastUpdated = this.storageService.getItem(lastUpdatedKey);
 
     const isBackupActive = this.authService.isBackupActive();
-    const isExpired = this.isCacheExpired(lastUpdated);
+    const dbLastSynced = supabaseUserId ? this.storageService.getItem(`${supabaseUserId}_last_synced_at`) : null;
+    const isExpired = isBackupActive && dbLastSynced && !this.isCacheExpired(dbLastSynced)
+      ? false 
+      : this.isCacheExpired(lastUpdated);
 
     let parsedArtists: any[] = [];
     let isParseError = false;

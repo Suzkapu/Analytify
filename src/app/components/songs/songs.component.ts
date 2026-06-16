@@ -64,11 +64,14 @@ export class SongsComponent implements OnInit, OnDestroy {
     private storageService: StorageService,
     private playlistLoaderService: PlaylistLoaderService
   ) {
-    this.route.params.subscribe((params) => {
+    this.route.params.subscribe(async (params) => {
       this.playlistId = params['id'];
       this.sortAscending = this.getDefaultSortDirection(this.trackSortKey);
       const userId = this.authService.getUserId() || 'anonymous';
       this.sortOrder = (this.storageService.getItem(`${userId}_artists_sortOrder`) as 'asc' | 'desc' | 'none') || 'none';
+      if (this.authService.isAuthenticated()) {
+        await this.authService.ensureInitialSync();
+      }
       this.loadArtistsFromPlaylist();
       this.loadUserProfile();
     });
@@ -112,13 +115,17 @@ export class SongsComponent implements OnInit, OnDestroy {
 
   loadArtistsFromPlaylist() {
     const userId = this.authService.getUserId() || 'anonymous';
+    const supabaseUserId = this.authService.getSupabaseUserId();
     const storageKey = `${userId}_${this.playlistId}`;
     const storedArtists = this.storageService.getItem(storageKey);
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
     const lastUpdated = this.storageService.getItem(lastUpdatedKey);
 
     const isBackupActive = this.authService.isBackupActive();
-    const isExpired = this.isCacheExpired(lastUpdated);
+    const dbLastSynced = supabaseUserId ? this.storageService.getItem(`${supabaseUserId}_last_synced_at`) : null;
+    const isExpired = isBackupActive && dbLastSynced && !this.isCacheExpired(dbLastSynced)
+      ? false 
+      : this.isCacheExpired(lastUpdated);
     const version = this.storageService.getItem(`${userId}_${this.playlistId}_cacheVersion`);
 
     // Unsubscribe from any previous loader task

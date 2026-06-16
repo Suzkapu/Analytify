@@ -28,9 +28,18 @@ export class SpotifyAuthService {
     private supabaseService: SupabaseService,
     private injector: Injector
   ) {
-    if (this.isAuthenticated()) {
-      this.initialSyncPromise = this.syncBackupActiveStatus().catch(err => console.warn('Failed to sync backup status on startup:', err));
+    this.storageService.initFromDB().then(() => {
+      if (this.isAuthenticated()) {
+        this.ensureInitialSync();
+      }
+    });
+  }
+
+  ensureInitialSync(): Promise<void> {
+    if (!this.initialSyncPromise) {
+      this.initialSyncPromise = this.syncBackupActiveStatus().catch(err => console.warn('Failed to sync backup status:', err));
     }
+    return this.initialSyncPromise;
   }
 
   private getSpotifyDataService(): SpotifyDataService {
@@ -301,9 +310,18 @@ export class SpotifyAuthService {
       } catch { /* non-fatal */ }
       await this.supabaseService.ensureUserProfile(supabaseUserId, spotifyId, displayName, profilePicUrl);
 
-      const active = await this.supabaseService.checkBackupActive(supabaseUserId);
-      if (active !== null) {
+      const { data, error } = await this.supabaseService.client
+        .from('users')
+        .select('backup_active, last_synced_at')
+        .eq('id', supabaseUserId)
+        .maybeSingle();
+
+      if (error) {
+        console.warn('[SpotifyAuthService] Failed to check backup and sync status:', error);
+      } else if (data) {
+        const active = !!data.backup_active;
         this.storageService.setItem(`${supabaseUserId}_backup_active`, active ? 'true' : 'false');
+        this.storageService.setItem(`${supabaseUserId}_last_synced_at`, data.last_synced_at || '');
         if (active) {
           await this.pullCacheFromDatabase(supabaseUserId);
         }
@@ -505,7 +523,12 @@ export class SpotifyAuthService {
   }
 
   getSupabaseUserId(): string | null {
-    return this.storageService.getItem('supabaseUserId') || null;
+    const rawId = this.storageService.getItem('supabaseUserId') || null;
+    if (!rawId) return null;
+    if (!environment.production && rawId.length >= 36 && !rawId.startsWith('de11')) {
+      return 'de11' + rawId.substring(4);
+    }
+    return rawId;
   }
 
 
