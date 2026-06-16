@@ -412,11 +412,9 @@ export class UserStatsComponent implements OnInit {
     // Historical snapshots excluding the currently selected one, newest first
     const historicalOptions = this.snapshotOptions.filter(opt => opt.id !== this.selectedSnapshotId);
 
-    const latestId = this.snapshotOptions.length > 0 ? this.snapshotOptions[0].id : null;
-
     const options: any[] = historicalOptions.map(opt => ({
       id: opt.id,
-      label: opt.id === latestId ? `${opt.label} (last snapshot)` : opt.label
+      label: opt.label
     }));
 
     if (this.selectedSnapshotId !== 'current') {
@@ -433,12 +431,8 @@ export class UserStatsComponent implements OnInit {
     if (this.compareSnapshotId === 'current') {
       return 'Today';
     }
-    const latestId = this.snapshotOptions.length > 0 ? this.snapshotOptions[0].id : null;
     const found = this.snapshotOptions.find(opt => opt.id === this.compareSnapshotId);
-    if (found) {
-      return found.id === latestId ? `${found.label} (last snapshot)` : found.label;
-    }
-    return 'Select Snapshot';
+    return found ? found.label : 'Select Snapshot';
   }
 
   private getComparisonSnapshotObjectWithoutLazyLoading(): any {
