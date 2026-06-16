@@ -11,10 +11,11 @@ import {LegalComponent} from "./components/legal/legal.component";
 import {ListeningHistoryComponent} from "./components/listening-history/listening-history.component";
 
 import {spotifyAuthGuard} from "./services/auth/spotify-auth.guard";
+import {redirectLoggedInGuard} from "./services/auth/redirect-logged-in.guard";
 
 const routes: Routes = [
-  {path: '', component: LoginPageComponent},
-  {path: 'login', component: LoginPageComponent},
+  {path: '', component: LoginPageComponent, canActivate: [redirectLoggedInGuard]},
+  {path: 'login', component: LoginPageComponent, canActivate: [redirectLoggedInGuard]},
   {path: 'callback', component: CallbackComponent},
   {path: 'playlists', component: PlaylistsComponent, canActivate: [spotifyAuthGuard]},
   {path: 'songs/:id', component: SongsComponent, canActivate: [spotifyAuthGuard]},

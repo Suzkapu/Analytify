@@ -68,7 +68,8 @@ export class StorageService {
         req.onsuccess = (event: any) => {
           const entries: { key: string; value: string }[] = event.target.result || [];
           entries.forEach(entry => this.inMemoryCache.set(entry.key, entry.value));
-          this.migrateDevData(db).then(() => resolve()).catch(() => resolve());
+          this.migrateDevData(db).catch(err => console.warn('[StorageService] Dev migration error:', err));
+          resolve();
         };
         req.onerror = () => resolve(); // graceful degradation
       } catch {

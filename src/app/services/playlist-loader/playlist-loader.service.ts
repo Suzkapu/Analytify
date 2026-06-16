@@ -394,9 +394,17 @@ export class PlaylistLoaderService {
   }
 
   private fetchArtistDetailsLazy(task: PlaylistLoadTask, targetArray: any[], userId: string) {
+    // Automatically mark invalid/empty/local IDs as requested so they do not block completion
+    targetArray.forEach(a => {
+      const idKey = a.id || '';
+      if (!idKey || typeof idKey !== 'string' || idKey.trim() === '') {
+        task.requestedArtistIds.add(idKey);
+      }
+    });
+
     const pendingIds = targetArray
       .map(a => a.id)
-      .filter(id => !task.requestedArtistIds.has(id));
+      .filter(id => id && typeof id === 'string' && id.trim() !== '' && !task.requestedArtistIds.has(id));
 
     if (pendingIds.length === 0) {
       this.checkCompletion(task, userId);
@@ -408,6 +416,7 @@ export class PlaylistLoaderService {
 
     const sub = this.spotifyDataService.getSeveralArtists(batch).subscribe({
       next: (res: any) => {
+        task.error = null;
         const artistMap = new Map<string, any>();
         (res.artists || []).forEach((a: any) => {
           if (a) artistMap.set(a.id, a);
@@ -429,7 +438,12 @@ export class PlaylistLoaderService {
       error: (err) => {
         console.error('Error batch loading artists lazy details:', err);
         task.error = err;
-        this.fetchArtistDetailsLazy(task, targetArray, userId);
+        // Remove from requestedArtistIds to allow retrying these failed IDs
+        batch.forEach(id => task.requestedArtistIds.delete(id));
+        // Retry after a 3-second delay to handle temporary connection dropouts or rate-limits
+        setTimeout(() => {
+          this.fetchArtistDetailsLazy(task, targetArray, userId);
+        }, 3000);
       }
     });
     task.addSub(sub);
@@ -495,28 +509,7 @@ export class PlaylistLoaderService {
       }
       
       if (userId && !task.error) {
-        // Collect all loaded unique track IDs
-        const uniqueTrackIds = new Set<string>();
-        task.artists.forEach(a => {
-          if (a.tracks) {
-            a.tracks.forEach((t: any) => {
-              if (t && t.id) {
-                uniqueTrackIds.add(t.id);
-              }
-            });
-          }
-        });
-        const actualUniqueCount = uniqueTrackIds.size;
-        
-        // Validation: The loaded unique tracks count should roughly match totalTracks.
-        // We allow up to 15% missing tracks (for local/skipped tracks), or a flat tolerance of 3 tracks for small playlists.
-        const isRoughlyMatch = actualUniqueCount >= Math.floor(task.totalTracks * 0.85) || (task.totalTracks - actualUniqueCount <= 3);
-
-        if (task.totalTracks > 0 && !isRoughlyMatch) {
-          console.warn(`[PlaylistLoaderService] Refusing to cache incomplete playlist data for ${task.playlistId} (expected ${task.totalTracks} tracks, got ${actualUniqueCount} unique tracks).`);
-        } else {
-          this.setSessionStorage(task, userId);
-        }
+        this.setSessionStorage(task, userId);
       }
 
       task.isComplete = true;

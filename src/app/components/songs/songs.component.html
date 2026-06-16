@@ -128,6 +128,13 @@
         }"></i> Sort By Count
       </button>
 
+      <!-- Refresh Button -->
+      <button (click)="refreshPlaylist()" class="p-button p-button-outlined p-button-secondary"
+        style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px; height: 38px;"
+        title="Force refresh playlist from Spotify API">
+        <i class="pi pi-sync"></i> Refresh
+      </button>
+
       <!-- Custom Togglable Sort Row (Songs View) -->
       <div *ngIf="viewStyle === 'songs'" class="history-select-container">
         <div class="spotify-custom-dropdown" [class.open]="showSortMenu">

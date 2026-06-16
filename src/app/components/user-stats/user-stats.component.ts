@@ -5,6 +5,7 @@ import { StorageService } from '../../services/storage/storage.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { SupabaseService } from '../../services/supabase/supabase.service';
+import { ImageHealingService } from '../../services/image-healing/image-healing.service';
 
 @Component({
   selector: 'app-user-stats',
@@ -52,7 +53,8 @@ export class UserStatsComponent implements OnInit {
     public authService: SpotifyAuthService,
     private router: Router,
     private storageService: StorageService,
-    private supabaseService: SupabaseService
+    private supabaseService: SupabaseService,
+    private imageHealingService: ImageHealingService
   ) { }
 
   async ngOnInit() {
@@ -86,8 +88,9 @@ export class UserStatsComponent implements OnInit {
 
   changeRange(range: string) {
     this.selectedSnapshotId = 'current';
-    this.compareSnapshotId = '';
     this.selectedRange = range;
+    // Reset compare to the first available option without going through '' (avoids flicker)
+    this.compareSnapshotId = this.snapshotOptions.length > 0 ? this.snapshotOptions[0].id : '';
     this.loadStats();
   }
 
@@ -155,6 +158,9 @@ export class UserStatsComponent implements OnInit {
         this.calculateGenres();
         this.saveHistorySnapshot(userId, range);
         this.isLoading = false;
+        // Heal any missing images silently in the background
+        this.imageHealingService.healArtistImages(this.topArtists, `${userId}_stats_${range}_artists`);
+        this.imageHealingService.healTrackImages(this.topTracks, `${userId}_stats_${range}_tracks`);
       } catch (e) {
         console.warn('Failed to parse validated user stats cache:', e);
         isCacheIncomplete = true;
@@ -182,6 +188,9 @@ export class UserStatsComponent implements OnInit {
 
             this.saveHistorySnapshot(userId, range);
             this.isLoading = false;
+            // Heal any missing images that may be null in the DB
+            this.imageHealingService.healArtistImages(this.topArtists, `${userId}_stats_${range}_artists`);
+            this.imageHealingService.healTrackImages(this.topTracks, `${userId}_stats_${range}_tracks`);
             return; // Skip Spotify API call entirely!
           }
         }
@@ -256,6 +265,10 @@ export class UserStatsComponent implements OnInit {
 
           this.saveHistorySnapshot(userId, range);
           this.isLoading = false;
+          // Heal any missing images — shouldn't happen with fresh API data
+          // but guards against Spotify returning nulls
+          this.imageHealingService.healArtistImages(this.topArtists, `${userId}_stats_${range}_artists`);
+          this.imageHealingService.healTrackImages(this.topTracks, `${userId}_stats_${range}_tracks`);
         },
         error: (err) => {
           console.error('Failed to load user stats:', err);
@@ -373,11 +386,13 @@ export class UserStatsComponent implements OnInit {
   selectHistorySnapshot(snapshotId: string, event: Event) {
     event.stopPropagation();
     this.selectedSnapshotId = snapshotId;
-    this.compareSnapshotId = '';
-    this.autoSetDefaultCompare();
+    // Pick best compare directly, skipping '' to avoid flicker
+    const bestCompare = this.snapshotOptions.find(opt => opt.id !== snapshotId);
+    this.compareSnapshotId = bestCompare ? bestCompare.id : (snapshotId !== 'current' ? 'current' : '');
     this.showHistoryMenu = false;
     this.calculateHotMovers();
     this.ensureSnapshotLoaded(snapshotId);
+    if (this.compareSnapshotId) this.ensureSnapshotLoaded(this.compareSnapshotId);
   }
 
   toggleCompareMenu(event: Event) {
@@ -400,8 +415,9 @@ export class UserStatsComponent implements OnInit {
     return opts.length > 0 ? opts[0].id : '';
   }
 
-  /** Auto-selects the most appropriate comparison snapshot (most recent historical before selected). */
+  /** Auto-selects the most appropriate comparison snapshot if none is currently set. */
   autoSetDefaultCompare() {
+    if (this.compareSnapshotId) return; // already set, don't overwrite
     this.compareSnapshotId = this.getDefaultCompareId();
     if (this.compareSnapshotId) {
       this.ensureSnapshotLoaded(this.compareSnapshotId);

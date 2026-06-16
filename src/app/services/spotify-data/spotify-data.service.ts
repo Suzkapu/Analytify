@@ -82,6 +82,12 @@ export class SpotifyDataService {
     return this.makeRequest(() => this.http.get(artistsEndpoint));
   }
 
+  getSeveralTracks(trackIds: string[]): Observable<any> {
+    const ids = trackIds.join(',');
+    const endpoint = `${environment.spotifyUrl}/tracks?ids=${ids}`;
+    return this.makeRequest(() => this.http.get(endpoint));
+  }
+
   getSingleTrack(trackId: string): Observable<any> {
     const trackEndpoint = `${environment.spotifyUrl}/tracks/${trackId}`;
     return this.makeRequest(() => this.http.get(trackEndpoint));

@@ -6,6 +6,7 @@ import {StorageService} from "../../services/storage/storage.service";
 import {PlaylistLoaderService} from "../../services/playlist-loader/playlist-loader.service";
 import {forkJoin, of, Subscription} from 'rxjs';
 import {catchError} from 'rxjs/operators';
+import {SupabaseService} from "../../services/supabase/supabase.service";
 
 @Component({
   selector: 'app-songs',
@@ -62,7 +63,8 @@ export class SongsComponent implements OnInit, OnDestroy {
     private router: Router,
     public authService: SpotifyAuthService,
     private storageService: StorageService,
-    private playlistLoaderService: PlaylistLoaderService
+    private playlistLoaderService: PlaylistLoaderService,
+    private supabaseService: SupabaseService
   ) {
     this.route.params.subscribe(async (params) => {
       this.playlistId = params['id'];
@@ -183,6 +185,7 @@ export class SongsComponent implements OnInit, OnDestroy {
         this.totalTracks = cachedTotalTracks;
         this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
         this.filterArtists();
+        this.checkForMissingArtistImages();
       } catch (e) {
         console.warn('Failed to parse some cached playlist keys:', e);
         this.loadPlaylistFromAPI(userId, isBackupActive, isExpired);
@@ -212,6 +215,22 @@ export class SongsComponent implements OnInit, OnDestroy {
     this.subscribeToLoaderTask(task);
   }
 
+  refreshPlaylist() {
+    const userId = this.authService.getUserId() || 'anonymous';
+    const isBackupActive = this.authService.isBackupActive();
+    const storageKey = `${userId}_${this.playlistId}`;
+    const storedArtists = this.storageService.getItem(storageKey);
+    let parsedArtists: any[] = [];
+    if (storedArtists) {
+      try {
+        parsedArtists = JSON.parse(storedArtists);
+      } catch (e) {}
+    }
+    // Force reload by clearing the loader task and starting a new API load with isExpired = true
+    this.playlistLoaderService.clearLoadingTask(this.playlistId);
+    this.loadPlaylistFromAPI(userId, isBackupActive, true, storedArtists, parsedArtists);
+  }
+
   private subscribeToLoaderTask(task: any) {
     this.loaderSubscription = task.progress$.subscribe((progress: any) => {
       this.isLoading = (progress.isLoadingTracks || progress.isLoadingArtists) && !progress.isRefreshing && progress.artists.length === 0;
@@ -231,6 +250,7 @@ export class SongsComponent implements OnInit, OnDestroy {
         if (storedArtists) {
           this.artists = JSON.parse(storedArtists);
           this.filterArtists();
+          this.checkForMissingArtistImages();
         }
         this.playlistLoaderService.clearLoadingTask(this.playlistId);
         if (this.loaderSubscription) {
@@ -238,7 +258,7 @@ export class SongsComponent implements OnInit, OnDestroy {
           this.loaderSubscription = null;
         }
       } else {
-        this.artists = progress.isRefreshing ? this.artists : progress.artists;
+        this.artists = (this.artists.length === 0 || !progress.isRefreshing) ? progress.artists : this.artists;
         this.filterArtists();
       }
     });
@@ -249,6 +269,90 @@ export class SongsComponent implements OnInit, OnDestroy {
       this.loaderSubscription.unsubscribe();
       this.loaderSubscription = null;
     }
+  }
+
+  checkForMissingArtistImages() {
+    // Only check if we are not currently loading
+    if (this.isLoading || this.isLoadingArtists || this.isLoadingTracks) {
+      return;
+    }
+
+    // Filter artists that have a valid id, but no images, or empty images, or images containing the default placeholder
+    const missing = this.artists.filter(artist => {
+      if (!artist.id || typeof artist.id !== 'string' || artist.id.trim() === '' || artist.id === 'undefined') {
+        return false;
+      }
+      if (!artist.images || artist.images.length === 0) {
+        return true;
+      }
+      return artist.images.some((img: any) => 
+        !img || !img.url || img.url === 'https://misc.scdn.co/liked-songs/liked-songs-300.png'
+      );
+    });
+
+    if (missing.length === 0) {
+      return;
+    }
+
+    console.log(`[Songs] Detected ${missing.length} artists with missing/placeholder images. Fetching from API...`);
+
+    const missingIds = missing.map(a => a.id);
+
+    // Batch requests to Spotify API (max 50 per request)
+    const batches: string[][] = [];
+    for (let i = 0; i < missingIds.length; i += 50) {
+      batches.push(missingIds.slice(i, i + 50));
+    }
+
+    batches.forEach(batch => {
+      this.spotifyDataService.getSeveralArtists(batch).subscribe({
+        next: (res: any) => {
+          const artistMap = new Map<string, any>();
+          (res.artists || []).forEach((a: any) => {
+            if (a) artistMap.set(a.id, a);
+          });
+
+          let updated = false;
+          this.artists.forEach(artist => {
+            if (artistMap.has(artist.id)) {
+              const fullArtist = artistMap.get(artist.id);
+              if (fullArtist) {
+                const hasRealImage = fullArtist.images && fullArtist.images.length > 0 && 
+                  fullArtist.images[0].url && fullArtist.images[0].url !== 'https://misc.scdn.co/liked-songs/liked-songs-300.png';
+                if (hasRealImage) {
+                  artist.images = [{ url: fullArtist.images[0].url }];
+                  updated = true;
+                }
+                if (fullArtist.genres && fullArtist.genres.length > 0 && (!artist.genres || artist.genres.length === 0)) {
+                  artist.genres = fullArtist.genres;
+                  updated = true;
+                }
+              }
+            }
+          });
+
+          if (updated) {
+            this.filterArtists();
+            const userId = this.authService.getUserId() || 'anonymous';
+            this.storageService.setItem(`${userId}_${this.playlistId}`, JSON.stringify(this.artists));
+            console.log(`[Songs] Pushed updated artist details to cache & database for batch of size ${batch.length}`);
+
+            const supabaseUserId = this.authService.getSupabaseUserId();
+            if (this.authService.isBackupActive() && supabaseUserId) {
+              const artistsForSync = batch.map(id => artistMap.get(id)).filter(a => !!a);
+              if (artistsForSync.length > 0) {
+                this.supabaseService.syncArtists(artistsForSync).catch(err => {
+                  console.warn('[Songs] Failed to sync updated artists to Supabase artists table:', err);
+                });
+              }
+            }
+          }
+        },
+        error: (err) => {
+          console.error('[Songs] Fallback artist details fetch failed:', err);
+        }
+      });
+    });
   }
 
 

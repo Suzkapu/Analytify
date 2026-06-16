@@ -3,6 +3,7 @@ import {SpotifyDataService} from "../../services/spotify-data/spotify-data.servi
 import {SpotifyAuthService} from "../../services/auth/spotify-auth.service";
 import {StorageService} from "../../services/storage/storage.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {ImageHealingService} from "../../services/image-healing/image-healing.service";
 
 @Component({
   selector: 'app-artist-details',
@@ -23,7 +24,8 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
     private spotifyDataService: SpotifyDataService, 
     private router: Router,
     public authService: SpotifyAuthService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private imageHealingService: ImageHealingService
   ) {
     this.route.params.subscribe((params) => {
       this.tracks = history.state.tracks;
@@ -67,6 +69,9 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
         if (found) {
           console.log(this.authService.isBackupActive() ? "[ArtistDetails] Loading artist details from Supabase Cloud Backup (Local Cache)" : "[ArtistDetails] Loading artist details from Local Storage Cache (Cloud Backup disabled)");
           this.artist = found;
+          // Heal missing image silently; wraps the single artist in an array
+          // and passes the storageKey so the cache is updated if a real image is found
+          this.imageHealingService.healArtistImages([this.artist], storageKey);
           return;
         }
       }

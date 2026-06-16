@@ -216,7 +216,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
           this.loaderSubscription = null;
         }
       } else {
-        this.artists = progress.isRefreshing ? this.artists : progress.artists;
+        this.artists = (this.artists.length === 0 || !progress.isRefreshing) ? progress.artists : this.artists;
         if (this.artists && this.artists.length > 0) {
           this.runAnalysis();
         }

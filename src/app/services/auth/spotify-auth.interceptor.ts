@@ -33,9 +33,11 @@ export class SpotifyAuthInterceptor implements HttpInterceptor {
             }),
             catchError((refreshErr) => {
               console.error('Auto token refresh failed', refreshErr);
-              // Clear auth so user is forced to re-login if refresh fails
-              this.authService.logout();
-              this.router.navigate(['/login']);
+              if (refreshErr instanceof HttpErrorResponse && (refreshErr.status === 400 || refreshErr.status === 401)) {
+                console.warn('Refresh token is invalid or expired. Logging out.');
+                this.authService.logout();
+                this.router.navigate(['/login']);
+              }
               return throwError(() => refreshErr);
             })
           );
