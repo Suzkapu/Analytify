@@ -26,7 +26,7 @@ export class UserStatsComponent implements OnInit {
   historyData: any[] = [];
   selectedHistoryPoint: any = null;
   selectedSnapshotId: string = 'current';
-  compareSnapshotId: string = 'previous';
+  compareSnapshotId: string = '';
   snapshotOptions: any[] = [];
   showHistoryMenu: boolean = false;
   showCompareMenu: boolean = false;
@@ -86,7 +86,7 @@ export class UserStatsComponent implements OnInit {
 
   changeRange(range: string) {
     this.selectedSnapshotId = 'current';
-    this.compareSnapshotId = 'previous';
+    this.compareSnapshotId = '';
     this.selectedRange = range;
     this.loadStats();
   }
@@ -373,11 +373,11 @@ export class UserStatsComponent implements OnInit {
   selectHistorySnapshot(snapshotId: string, event: Event) {
     event.stopPropagation();
     this.selectedSnapshotId = snapshotId;
-    this.compareSnapshotId = 'previous';
+    this.compareSnapshotId = '';
+    this.autoSetDefaultCompare();
     this.showHistoryMenu = false;
     this.calculateHotMovers();
     this.ensureSnapshotLoaded(snapshotId);
-    this.ensureSnapshotLoaded('previous');
   }
 
   toggleCompareMenu(event: Event) {
@@ -394,31 +394,51 @@ export class UserStatsComponent implements OnInit {
     this.ensureSnapshotLoaded(snapshotId);
   }
 
+  /** Returns the most recent historical snapshot id that is NOT the currently selected snapshot. */
+  private getDefaultCompareId(): string {
+    const opts = this.getCompareOptions();
+    return opts.length > 0 ? opts[0].id : '';
+  }
+
+  /** Auto-selects the most appropriate comparison snapshot (most recent historical before selected). */
+  autoSetDefaultCompare() {
+    this.compareSnapshotId = this.getDefaultCompareId();
+    if (this.compareSnapshotId) {
+      this.ensureSnapshotLoaded(this.compareSnapshotId);
+    }
+  }
+
   getCompareOptions(): any[] {
-    const options = [
-      { id: 'previous', label: 'Previous Snapshot' }
-    ];
+    // Historical snapshots excluding the currently selected one, newest first
+    const historicalOptions = this.snapshotOptions.filter(opt => opt.id !== this.selectedSnapshotId);
+
+    const latestId = this.snapshotOptions.length > 0 ? this.snapshotOptions[0].id : null;
+
+    const options: any[] = historicalOptions.map(opt => ({
+      id: opt.id,
+      label: opt.id === latestId ? `${opt.label} (last snapshot)` : opt.label
+    }));
 
     if (this.selectedSnapshotId !== 'current') {
       options.push({ id: 'current', label: 'Today' });
     }
 
-    // Add historical options, filtering out the currently selected one
-    const historicalOptions = this.snapshotOptions.filter(opt => opt.id !== this.selectedSnapshotId);
-    options.push(...historicalOptions);
-
     return options;
   }
 
   getCompareSnapshotLabel(): string {
-    if (this.compareSnapshotId === 'previous') {
-      return 'Previous Snapshot';
+    if (!this.compareSnapshotId) {
+      return 'None';
     }
     if (this.compareSnapshotId === 'current') {
       return 'Today';
     }
+    const latestId = this.snapshotOptions.length > 0 ? this.snapshotOptions[0].id : null;
     const found = this.snapshotOptions.find(opt => opt.id === this.compareSnapshotId);
-    return found ? found.label : 'Select Snapshot';
+    if (found) {
+      return found.id === latestId ? `${found.label} (last snapshot)` : found.label;
+    }
+    return 'Select Snapshot';
   }
 
   private getComparisonSnapshotObjectWithoutLazyLoading(): any {
@@ -426,27 +446,8 @@ export class UserStatsComponent implements OnInit {
       return null;
     }
 
-    if (this.compareSnapshotId === 'previous') {
-      if (this.selectedSnapshotId === 'current') {
-        const now = new Date();
-        const cutoff = new Date(now);
-        cutoff.setHours(1, 0, 0, 0); // 1:00 AM today
-        if (now.getTime() < cutoff.getTime()) {
-          cutoff.setDate(cutoff.getDate() - 1);
-        }
-
-        // Find the most recent snapshot older than today's 1 AM cutoff
-        for (let i = this.historyData.length - 1; i >= 0; i--) {
-          if (this.historyData[i].timestamp < cutoff.getTime()) {
-            return this.historyData[i];
-          }
-        }
-      } else {
-        const currentSnapIdx = this.historyData.findIndex(d => d.timestamp.toString() === this.selectedSnapshotId);
-        if (currentSnapIdx > 0) {
-          return this.historyData[currentSnapIdx - 1];
-        }
-      }
+    // Empty string means no comparison snapshot selected
+    if (!this.compareSnapshotId) {
       return null;
     }
 
@@ -740,11 +741,19 @@ export class UserStatsComponent implements OnInit {
           id: d.timestamp.toString(),
           label: new Date(d.timestamp).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
         }));
+
+        // Auto-select the best default compare snapshot if not already set
+        if (!this.compareSnapshotId) {
+          this.autoSetDefaultCompare();
+        }
+
         this.calculateHotMovers();
 
         // Trigger lazy loading for startup selected snapshots
         this.ensureSnapshotLoaded(this.selectedSnapshotId);
-        this.ensureSnapshotLoaded(this.compareSnapshotId);
+        if (this.compareSnapshotId) {
+          this.ensureSnapshotLoaded(this.compareSnapshotId);
+        }
       }).catch(err => {
         console.error('Failed to load stats history:', err);
       });
@@ -1183,20 +1192,13 @@ export class UserStatsComponent implements OnInit {
     return snap ? snap.isLoaded === 'loading' : false;
   }
 
-  ensureSnapshotLoaded(snapshotId: string | 'current' | 'previous') {
+  ensureSnapshotLoaded(snapshotId: string | 'current') {
     if (!snapshotId || snapshotId === 'current') return;
 
-    let targetId = snapshotId;
-    if (snapshotId === 'previous') {
-      const prev = this.getComparisonSnapshotObjectWithoutLazyLoading();
-      if (!prev || prev.isLoaded) return;
-      targetId = prev.timestamp.toString();
-    }
-
-    const snap = this.historyData.find(d => d.timestamp.toString() === targetId);
+    const snap = this.historyData.find(d => d.timestamp.toString() === snapshotId);
     if (!snap || snap.isLoaded) return;
 
-    this.lazyLoadSnapshotDetails(targetId);
+    this.lazyLoadSnapshotDetails(snapshotId);
   }
 
   lazyLoadSnapshotDetails(snapshotIdStr: string) {

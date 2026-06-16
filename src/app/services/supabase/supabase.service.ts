@@ -951,12 +951,14 @@ export class SupabaseService {
         }).filter((a: any) => !!a);
 
       // Map genres
-      const topGenres = (data.stats_snapshot_genres || [])
+      const rawGenres = data.stats_snapshot_genres || [];
+      const totalGenresWeight = rawGenres.reduce((sum: number, r: any) => sum + (r.weight || 0), 0);
+      const topGenres = rawGenres
         .sort((a: any, b: any) => a.rank - b.rank)
         .map((row: any) => ({
           name: row.genre_name,
           count: row.weight,
-          percentage: 0 // Will be calculated by UI
+          percentage: totalGenresWeight > 0 ? Math.min(100, Math.round((row.weight / totalGenresWeight) * 100)) : 0
         }));
 
       return {
@@ -1058,12 +1060,14 @@ export class SupabaseService {
           }).filter((a: any) => !!a);
 
         // Map genres
-        const topGenres = (row.stats_snapshot_genres || [])
+        const rawGenres = row.stats_snapshot_genres || [];
+        const totalGenresWeight = rawGenres.reduce((sum: number, r: any) => sum + (r.weight || 0), 0);
+        const topGenres = rawGenres
           .sort((a: any, b: any) => a.rank - b.rank)
           .map((subRow: any) => ({
             name: subRow.genre_name,
             count: subRow.weight,
-            percentage: 0 // Will be calculated by UI
+            percentage: totalGenresWeight > 0 ? Math.min(100, Math.round((subRow.weight / totalGenresWeight) * 100)) : 0
           }));
 
         return {
@@ -1201,12 +1205,14 @@ export class SupabaseService {
         }).filter((a: any) => !!a);
 
       // Map genres
-      const topGenres = (data.stats_snapshot_genres || [])
+      const rawGenres = data.stats_snapshot_genres || [];
+      const totalGenresWeight = rawGenres.reduce((sum: number, r: any) => sum + (r.weight || 0), 0);
+      const topGenres = rawGenres
         .sort((a: any, b: any) => a.rank - b.rank)
         .map((row: any) => ({
           name: row.genre_name,
           count: row.weight,
-          percentage: 0 // Will be calculated by UI
+          percentage: totalGenresWeight > 0 ? Math.min(100, Math.round((row.weight / totalGenresWeight) * 100)) : 0
         }));
 
       return {

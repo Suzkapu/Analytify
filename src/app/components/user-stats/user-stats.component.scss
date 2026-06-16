@@ -453,7 +453,6 @@
       .progress-bar-fill {
         background: linear-gradient(90deg, #1db954, #1ed760);
         height: 100%;
-        border-radius: 6px;
         transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         position: absolute;
         left: 0;
@@ -472,7 +471,6 @@
         top: 0;
         bottom: 0;
         background: rgba(255, 82, 82, 0.25);
-        border-radius: 6px;
         z-index: 1;
         transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         border-right: 2px dashed #ff5252;
@@ -484,7 +482,6 @@
         top: 0;
         bottom: 0;
         background: rgba(255, 255, 255, 0.15);
-        border-radius: 6px;
         z-index: 3;
         pointer-events: none;
         transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -518,17 +515,6 @@
         height: 10px;
         border-radius: 5px;
 
-        .progress-bar-fill {
-          border-radius: 5px;
-        }
-
-        .progress-bar-fill-lost {
-          border-radius: 5px;
-        }
-
-        .progress-bar-fill-previous {
-          border-radius: 5px;
-        }
       }
     }
   }

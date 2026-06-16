@@ -120,7 +120,7 @@
 
           <span class="compare-vs-text">vs</span>
 
-          <div class="spotify-custom-dropdown" [class.open]="showCompareMenu" [class.active]="compareSnapshotId !== 'previous'">
+          <div class="spotify-custom-dropdown" [class.open]="showCompareMenu" [class.active]="compareSnapshotId !== ''">
             <button class="dropdown-trigger-btn" (click)="toggleCompareMenu($event)">
               <span>{{ getCompareSnapshotLabel() }}</span>
               <i class="pi pi-chevron-down icon-right"></i>
