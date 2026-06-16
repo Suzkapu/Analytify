@@ -828,6 +828,7 @@ export class SupabaseService {
             name: t.name,
             duration_ms: t.duration_ms,
             explicit: t.explicit,
+            popularity: t.popularity,
             preview_url: t.preview_url,
             external_urls: { spotify: t.spotify_url },
             album: {

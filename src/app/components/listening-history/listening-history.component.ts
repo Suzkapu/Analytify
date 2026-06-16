@@ -50,34 +50,12 @@ export class ListeningHistoryComponent implements OnInit {
     }
   }
 
-  isCacheExpired(lastUpdatedStr: string | null): boolean {
-    if (!lastUpdatedStr) return true;
-    let lastUpdated: number;
-    if (lastUpdatedStr.includes('-') || lastUpdatedStr.includes('T')) {
-      lastUpdated = new Date(lastUpdatedStr).getTime();
-    } else {
-      lastUpdated = parseInt(lastUpdatedStr, 10);
-    }
-    if (isNaN(lastUpdated)) return true;
-
-    const now = new Date();
-    const cutoff = new Date(now);
-    cutoff.setHours(1, 0, 0, 0); // 1:00 AM today
-    if (now.getTime() < cutoff.getTime()) {
-      cutoff.setDate(cutoff.getDate() - 1);
-    }
-    return lastUpdated < cutoff.getTime();
-  }
 
   async loadRecentlyPlayed() {
     const userId = this.authService.getUserId() || 'anonymous';
     const supabaseUserId = this.authService.getSupabaseUserId();
     const storageKey = `${userId}_recently_played`;
 
-    // Check if we already did a sync today
-    const dbLastSynced = supabaseUserId ? this.storageService.getItem(`${supabaseUserId}_last_synced_at`) : null;
-    const isSyncedToday = this.authService.isBackupActive() && dbLastSynced && !this.isCacheExpired(dbLastSynced);
-    
     // Load existing cache from StorageService
     let cachedTracks: any[] = [];
     try {
@@ -88,28 +66,8 @@ export class ListeningHistoryComponent implements OnInit {
     } catch (e) {
       console.warn('Failed to parse cached recently played tracks:', e);
     }
-    
-    if (isSyncedToday) {
-      // Seeding check: if local cache is empty, restore from Supabase, otherwise use cache
-      if (cachedTracks.length === 0 && supabaseUserId) {
-        try {
-          console.log('[History] Local history cache is empty but synced today. Restoring history from Supabase Cloud...');
-          const dbTracks = await this.supabaseService.loadListeningHistoryFromDB(supabaseUserId);
-          if (dbTracks && dbTracks.length > 0) {
-            cachedTracks = dbTracks;
-            this.storageService.setItem(storageKey, JSON.stringify(dbTracks));
-          }
-        } catch (err) {
-          console.warn('[History] Failed to seed history from Supabase:', err);
-        }
-      }
-      console.log('[History] Already synced today. Loading listening history from local cache...');
-      this.recentlyPlayedTracks = cachedTracks;
-      this.isLoadingRecentlyPlayed = false;
-      return;
-    }
 
-    // Seeding: if local cache is empty and backup is active, restore from Supabase
+    // Seeding: if local cache is empty and backup is active, restore from Supabase first
     if (cachedTracks.length === 0 && this.authService.isBackupActive() && supabaseUserId) {
       try {
         console.log('[History] Local history cache is empty. Restoring history from Supabase Cloud...');
@@ -124,22 +82,6 @@ export class ListeningHistoryComponent implements OnInit {
     }
 
     this.recentlyPlayedTracks = cachedTracks;
-    
-    // Prioritize DB data if backup is active and we have data for today in Supabase
-    if (this.authService.isBackupActive() && supabaseUserId) {
-      this.isLoadingRecentlyPlayed = true;
-      const hasDataForToday = await this.supabaseService.hasHistoryForToday(supabaseUserId);
-      if (hasDataForToday) {
-        console.log('[History] Loading listening history directly from Supabase Cloud Database...');
-        const dbTracks = await this.supabaseService.loadListeningHistoryFromDB(supabaseUserId);
-        if (dbTracks && dbTracks.length > 0) {
-          this.recentlyPlayedTracks = dbTracks;
-          this.storageService.setItem(storageKey, JSON.stringify(dbTracks));
-          this.isLoadingRecentlyPlayed = false;
-          return; // Skip Spotify API call entirely!
-        }
-      }
-    }
 
     if (this.recentlyPlayedTracks.length === 0) {
       this.isLoadingRecentlyPlayed = true;

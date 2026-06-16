@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" style="background-color:#121212;">
 <head>
   <meta charset="utf-8">
   <title>Analytify</title>
@@ -7,14 +7,52 @@
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <link href="assets/Analytify.png" rel="icon" type="image/png">
   <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#1db954">
+  <meta name="theme-color" content="#121212">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Analytify">
   <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #121212;
+      min-height: 100vh;
+    }
+    #app-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #121212;
+      gap: 20px;
+    }
+    #app-loading img {
+      width: 64px;
+      height: 64px;
+      border-radius: 14px;
+    }
+    #app-loading-spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid rgba(29, 185, 84, 0.2);
+      border-top-color: #1db954;
+      border-radius: 50%;
+      animation: app-spin 0.8s linear infinite;
+    }
+    @keyframes app-spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
 </head>
-<body>
-<app-root></app-root>
+<body style="background-color:#121212; margin:0;">
+<app-root>
+  <div id="app-loading">
+    <img src="assets/Analytify.png" alt="Analytify">
+    <div id="app-loading-spinner"></div>
+  </div>
+</app-root>
   <noscript>Please enable JavaScript to continue using this application.</noscript>
 </body>
 </html>
