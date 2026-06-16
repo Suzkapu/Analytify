@@ -40,7 +40,10 @@ export class UserStatsComponent implements OnInit {
   trendPopupPoints: any[] = [];
 
   // Listening History & Modal Variables
-  showClearCacheModal: boolean = false;
+  showClearDataModal: boolean = false;
+  showConfirmLocalDeleteModal: boolean = false;
+  showConfirmDbDeleteModal: boolean = false;
+  isDeletingDbData: boolean = false;
   isCreatingPlaylist: boolean = false;
   playlistCreationSuccessMessage: string = '';
 
@@ -572,16 +575,35 @@ export class UserStatsComponent implements OnInit {
     }
   }
 
-  clearCacheAndLogout() {
-    this.showClearCacheModal = true;
+  openClearDataModal() {
+    this.showSettingsDropdown = false;
+    this.showClearDataModal = true;
   }
 
-  cancelClearCache() {
-    this.showClearCacheModal = false;
+  closeClearDataModal() {
+    this.showClearDataModal = false;
   }
 
-  confirmClearCache() {
-    this.showClearCacheModal = false;
+  selectClearLocalData() {
+    this.showClearDataModal = false;
+    this.showConfirmLocalDeleteModal = true;
+  }
+
+  selectClearDbData() {
+    this.showClearDataModal = false;
+    this.showConfirmDbDeleteModal = true;
+  }
+
+  cancelLocalDelete() {
+    this.showConfirmLocalDeleteModal = false;
+  }
+
+  cancelDbDelete() {
+    this.showConfirmDbDeleteModal = false;
+  }
+
+  confirmLocalDelete() {
+    this.showConfirmLocalDeleteModal = false;
     const userId = this.authService.getUserId() || 'anonymous';
     this.storageService.clearStatsHistory(userId).then(() => {
       this.authService.clearCacheAndLogout();
@@ -591,6 +613,31 @@ export class UserStatsComponent implements OnInit {
       this.authService.clearCacheAndLogout();
       this.router.navigate(['/login']);
     });
+  }
+
+  async confirmDbDelete() {
+    const supabaseUserId = this.authService.getSupabaseUserId();
+    if (!supabaseUserId) {
+      alert('You must be logged in to delete database data.');
+      this.showConfirmDbDeleteModal = false;
+      return;
+    }
+
+    this.isDeletingDbData = true;
+    try {
+      await this.supabaseService.deleteUserProfileData(supabaseUserId);
+      this.storageService.setItem(`${supabaseUserId}_backup_active`, 'false');
+      this.storageService.removeItem(`${supabaseUserId}_last_synced_at`);
+      this.isDeletingDbData = false;
+      this.showConfirmDbDeleteModal = false;
+      alert('All cloud backup data connected to your profile has been permanently deleted from the database.');
+      this.loadStats();
+    } catch (err) {
+      console.error('Failed to delete cloud backup data:', err);
+      this.isDeletingDbData = false;
+      this.showConfirmDbDeleteModal = false;
+      alert('Failed to delete cloud backup data. Please try again.');
+    }
   }
 
   saveHistorySnapshot(userId: string, range: string) {

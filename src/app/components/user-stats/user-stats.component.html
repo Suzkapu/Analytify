@@ -50,8 +50,8 @@
         <a href="https://www.spotify.com/account/apps/" target="_blank" rel="noopener noreferrer" class="dropdown-item">
           <i class="pi pi-external-link"></i> Revoke App Access
         </a>
-        <button (click)="clearCacheAndLogout()" class="dropdown-item danger">
-          <i class="pi pi-trash"></i> Clear Cache &amp; Logout
+        <button (click)="openClearDataModal()" class="dropdown-item danger">
+          <i class="pi pi-trash"></i> Clear Data
         </button>
       </div>
     </div>
@@ -353,19 +353,75 @@
 
   </div>
 
-  <!-- Custom Confirmation Modal -->
-  <div class="confirm-modal-overlay" *ngIf="showClearCacheModal" (click)="cancelClearCache()">
+  <!-- Clear Data Selection Modal -->
+  <div class="confirm-modal-overlay" *ngIf="showClearDataModal" (click)="closeClearDataModal()">
+    <div class="confirm-modal-card selection-card" (click)="$event.stopPropagation()">
+      <button class="trend-modal-close-btn" (click)="closeClearDataModal()" style="top: 15px; right: 20px;">&times;</button>
+      <div class="confirm-modal-icon">
+        <i class="pi pi-trash"></i>
+      </div>
+      <h3 class="confirm-modal-title">Clear Profile Data</h3>
+      <p class="confirm-modal-text" style="margin-bottom: 24px; font-size: 0.95rem;">
+        Choose what data you would like to clear. Deleting cloud data compliance conforms to GDPR and Spotify Developer Policy.
+      </p>
+      
+      <div class="data-option-cards">
+        <div class="data-option-card" (click)="selectClearLocalData()">
+          <div class="option-header">
+            <i class="pi pi-desktop option-icon"></i>
+            <h4>Clear Local Cache &amp; Logout</h4>
+          </div>
+          <p>Removes all temporary Spotify data, local snapshots, and stored preferences from this browser session, then logs you out.</p>
+        </div>
+        
+        <div class="data-option-card danger-option" (click)="selectClearDbData()">
+          <div class="option-header">
+            <i class="pi pi-cloud option-icon" style="color: #ff5252;"></i>
+            <h4 style="color: #ff5252;">Delete Cloud Backup</h4>
+          </div>
+          <p>Permanently deletes all synced history, saved snapshots, and cached profile data from our cloud database. (Local browser cache is kept).</p>
+        </div>
+      </div>
+      
+      <div class="confirm-modal-actions" style="margin-top: 24px; justify-content: center;">
+        <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="closeClearDataModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Local Reset Confirmation Modal -->
+  <div class="confirm-modal-overlay" *ngIf="showConfirmLocalDeleteModal" (click)="cancelLocalDelete()">
     <div class="confirm-modal-card" (click)="$event.stopPropagation()">
       <div class="confirm-modal-icon">
         <i class="pi pi-exclamation-triangle"></i>
       </div>
-      <h3 class="confirm-modal-title">Clear Cache &amp; Logout</h3>
+      <h3 class="confirm-modal-title">Confirm Local Reset</h3>
       <p class="confirm-modal-text">
-        This action will delete all local caches and stored listening history snapshots. This process is irreversible and all accumulated stats history will be permanently lost.
+        Are you absolutely sure? This will delete all local history caches and snapshots in this browser, and log you out. This action is irreversible.
       </p>
       <div class="confirm-modal-actions">
-        <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="cancelClearCache()">Cancel</button>
-        <button class="confirm-modal-btn confirm-modal-btn-confirm" (click)="confirmClearCache()">Proceed</button>
+        <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="cancelLocalDelete()">Cancel</button>
+        <button class="confirm-modal-btn confirm-modal-btn-confirm" (click)="confirmLocalDelete()">Clear and Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cloud Permanent Erasure Confirmation Modal -->
+  <div class="confirm-modal-overlay" *ngIf="showConfirmDbDeleteModal" (click)="cancelDbDelete()">
+    <div class="confirm-modal-card" (click)="$event.stopPropagation()">
+      <div class="confirm-modal-icon danger-icon">
+        <i class="pi pi-cloud" style="color: #ff5252;"></i>
+      </div>
+      <h3 class="confirm-modal-title" style="color: #ff5252;">Confirm Database Erasure</h3>
+      <p class="confirm-modal-text">
+        Are you absolutely sure? This will permanently delete all your cloud backup data (synced histories, custom snapshots, cached database settings) from our servers. Shared music tracks/artists will not be deleted, but all your personal linkages to them will be erased forever. This action is irreversible.
+      </p>
+      <div class="confirm-modal-actions">
+        <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="cancelDbDelete()">Cancel</button>
+        <button class="confirm-modal-btn confirm-modal-btn-confirm danger-btn" (click)="confirmDbDelete()" [disabled]="isDeletingDbData">
+          <i class="pi pi-spin pi-spinner" *ngIf="isDeletingDbData" style="margin-right: 8px;"></i>
+          {{ isDeletingDbData ? 'Erasing...' : 'Delete Cloud Data' }}
+        </button>
       </div>
     </div>
   </div>

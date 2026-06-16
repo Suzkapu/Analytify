@@ -188,6 +188,23 @@ export class SupabaseService {
     }
   }
 
+  /** Deletes all synced data connected to this profile from the database.
+   *  Because of ON DELETE CASCADE constraints, deleting the row in the
+   *  'users' table automatically erases user_cache, listening_history,
+   *  stats_snapshots, and top items history, while keeping shared tracks/artists. */
+  async deleteUserProfileData(supabaseUserId: string): Promise<void> {
+    try {
+      const { error } = await this.client
+        .from('users')
+        .delete()
+        .eq('id', supabaseUserId);
+      if (error) throw error;
+    } catch (e) {
+      console.error('[SupabaseService] Failed to delete user profile data:', e);
+      throw e;
+    }
+  }
+
   /** Returns true if the URL is the Spotify liked-songs placeholder (not a real album/artist image) */
   private isPlaceholderImage(url: string | null | undefined): boolean {
     return !url || url === 'https://misc.scdn.co/liked-songs/liked-songs-300.png';
