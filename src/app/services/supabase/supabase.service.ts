@@ -953,13 +953,16 @@ export class SupabaseService {
 
       // Map genres
       const rawGenres = data.stats_snapshot_genres || [];
-      const totalGenresWeight = rawGenres.reduce((sum: number, r: any) => sum + (r.weight || 0), 0);
+      const sumOfWeights = rawGenres.reduce((sum: number, r: any) => sum + (r.weight || 0), 0);
+      const useWeightAsPercentage = sumOfWeights <= 100 && rawGenres.every((r: any) => (r.weight || 0) <= 100);
       const topGenres = rawGenres
         .sort((a: any, b: any) => a.rank - b.rank)
         .map((row: any) => ({
           name: row.genre_name,
           count: row.weight,
-          percentage: totalGenresWeight > 0 ? Math.min(100, Math.round((row.weight / totalGenresWeight) * 100)) : 0
+          percentage: useWeightAsPercentage 
+            ? row.weight 
+            : (sumOfWeights > 0 ? Math.min(100, Math.round((row.weight / sumOfWeights) * 100)) : 0)
         }));
 
       return {
@@ -1062,13 +1065,16 @@ export class SupabaseService {
 
         // Map genres
         const rawGenres = row.stats_snapshot_genres || [];
-        const totalGenresWeight = rawGenres.reduce((sum: number, r: any) => sum + (r.weight || 0), 0);
+        const sumOfWeights = rawGenres.reduce((sum: number, r: any) => sum + (r.weight || 0), 0);
+        const useWeightAsPercentage = sumOfWeights <= 100 && rawGenres.every((r: any) => (r.weight || 0) <= 100);
         const topGenres = rawGenres
           .sort((a: any, b: any) => a.rank - b.rank)
           .map((subRow: any) => ({
             name: subRow.genre_name,
             count: subRow.weight,
-            percentage: totalGenresWeight > 0 ? Math.min(100, Math.round((subRow.weight / totalGenresWeight) * 100)) : 0
+            percentage: useWeightAsPercentage 
+              ? subRow.weight 
+              : (sumOfWeights > 0 ? Math.min(100, Math.round((subRow.weight / sumOfWeights) * 100)) : 0)
           }));
 
         return {
@@ -1207,13 +1213,16 @@ export class SupabaseService {
 
       // Map genres
       const rawGenres = data.stats_snapshot_genres || [];
-      const totalGenresWeight = rawGenres.reduce((sum: number, r: any) => sum + (r.weight || 0), 0);
+      const sumOfWeights = rawGenres.reduce((sum: number, r: any) => sum + (r.weight || 0), 0);
+      const useWeightAsPercentage = sumOfWeights <= 100 && rawGenres.every((r: any) => (r.weight || 0) <= 100);
       const topGenres = rawGenres
         .sort((a: any, b: any) => a.rank - b.rank)
         .map((row: any) => ({
           name: row.genre_name,
           count: row.weight,
-          percentage: totalGenresWeight > 0 ? Math.min(100, Math.round((row.weight / totalGenresWeight) * 100)) : 0
+          percentage: useWeightAsPercentage 
+            ? row.weight 
+            : (sumOfWeights > 0 ? Math.min(100, Math.round((row.weight / sumOfWeights) * 100)) : 0)
         }));
 
       return {
@@ -1341,7 +1350,7 @@ export class SupabaseService {
         snapshot_id: snapshotId,
         genre_name: g.name,
         rank: idx + 1,
-        weight: g.count || 0
+        weight: typeof g.percentage === 'number' ? g.percentage : (g.count || 0)
       })).filter(row => !!row.genre_name);
 
       if (genreLinks.length > 0) {

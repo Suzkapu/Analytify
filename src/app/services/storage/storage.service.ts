@@ -260,7 +260,7 @@ export class StorageService {
     return this.getDB().then(db => new Promise<void>((resolve, reject) => {
       const tx      = db.transaction('statsHistory', 'readwrite');
       const store   = tx.objectStore('statsHistory');
-      const request = store.add(historyEntry);
+      const request = store.put(historyEntry);
       request.onsuccess = () => resolve();
       request.onerror   = (e: any) => reject(e.target.error);
     })).catch(err => {

@@ -39,6 +39,7 @@ export class UserStatsComponent implements OnInit {
   trendPopupItem: any = null;
   trendPopupCategory: 'tracks' | 'artists' | 'genres' = 'tracks';
   trendPopupPoints: any[] = [];
+  isLoadingTrendData: boolean = false;
 
   // Listening History & Modal Variables
   showClearDataModal: boolean = false;
@@ -479,7 +480,7 @@ export class UserStatsComponent implements OnInit {
           spotifyUrl: this.getArtistUrl(a),
           genre: this.getArtistGenre(a)
         })),
-        topGenres: this.topGenres.map(g => ({ name: g.name, percentage: g.percentage }))
+        topGenres: this.topGenres.map(g => ({ name: g.name, percentage: g.percentage, count: g.count }))
       };
     }
 
@@ -696,7 +697,7 @@ export class UserStatsComponent implements OnInit {
         avgPopularity: avgPopularity,
         explicitPercentage: explicitPercentage,
         genreDiversity: genreDiversity,
-        topGenres: this.topGenres.map(g => ({ name: g.name, percentage: g.percentage })),
+        topGenres: this.topGenres.map(g => ({ name: g.name, percentage: g.percentage, count: g.count })),
         topTracks: this.topTracks.map(t => ({
           id: t.id,
           name: t.name,
@@ -842,7 +843,32 @@ export class UserStatsComponent implements OnInit {
             }
 
             if (localUpdated) {
-              loadLocal();
+              await loadLocal();
+            }
+
+            // Background load of all detailed snapshots to populate local database fully
+            const hasUnloaded = this.historyData.some(d => d.isLoaded !== true);
+            if (hasUnloaded) {
+              console.log('[Stats] Background loading all detailed snapshots from cloud...');
+              this.supabaseService.loadAllStatsSnapshots(supabaseUserId, range).then(async (fullSnapshots) => {
+                let anyUpdated = false;
+                for (const fullSnap of fullSnapshots) {
+                  const idx = this.historyData.findIndex(d => 
+                    (d.snapshotDate || toDateKey(d.timestamp)) === (fullSnap.snapshotDate || toDateKey(fullSnap.timestamp))
+                  );
+                  if (idx !== -1 && this.historyData[idx].isLoaded !== true) {
+                    this.historyData[idx] = { ...this.historyData[idx], ...fullSnap, isLoaded: true };
+                    await this.storageService.saveStatsHistory({ ...this.historyData[idx], userId }).catch(() => {});
+                    anyUpdated = true;
+                  }
+                }
+                if (anyUpdated) {
+                  console.log('[Stats] Background loaded detailed snapshots successfully.');
+                  this.calculateHotMovers();
+                }
+              }).catch(err => {
+                console.warn('[Stats] Failed to background load detailed snapshots:', err);
+              });
             }
           }).catch(err => {
             console.warn('[Stats] Failed to load history snapshots from Supabase:', err);
@@ -963,6 +989,8 @@ export class UserStatsComponent implements OnInit {
     const prevSnapshot = this.getComparisonSnapshot();
     const prevGenres = prevSnapshot ? (prevSnapshot.topGenres || []) : [];
 
+
+
     return rawGenres.map((g: any, idx: number) => {
       const currentRank = idx + 1;
       const currentPercentage = g.percentage;
@@ -1016,10 +1044,49 @@ export class UserStatsComponent implements OnInit {
     this.selectedSnapshotId = (event.target as HTMLSelectElement).value;
   }
 
-  openTrendPopup(item: any, category: 'tracks' | 'artists' | 'genres') {
+  async openTrendPopup(item: any, category: 'tracks' | 'artists' | 'genres') {
     this.trendPopupItem = item;
     this.trendPopupCategory = category;
-    
+    this.showTrendPopup = true;
+    this.trendPopupPoints = [];
+
+    const hasUnloaded = this.historyData.some(d => d.isLoaded !== true);
+    const supabaseUserId = this.authService.getSupabaseUserId();
+
+    if (hasUnloaded && this.authService.isBackupActive() && supabaseUserId) {
+      this.isLoadingTrendData = true;
+      try {
+        const userId = this.authService.getUserId() || 'anonymous';
+        const range = this.selectedRange;
+        console.log(`[Stats] Trend popup clicked, but some snapshots are not loaded. Fetching all snapshot details from cloud...`);
+        const fullSnapshots = await this.supabaseService.loadAllStatsSnapshots(supabaseUserId, range);
+        
+        const toDateKey = (ts: number) => new Date(ts).toISOString().split('T')[0];
+        // Update historyData in-place and save to IndexedDB
+        for (const fullSnap of fullSnapshots) {
+          const idx = this.historyData.findIndex(d => 
+            (d.snapshotDate || toDateKey(d.timestamp)) === (fullSnap.snapshotDate || toDateKey(fullSnap.timestamp))
+          );
+          if (idx !== -1) {
+            this.historyData[idx] = { ...this.historyData[idx], ...fullSnap, isLoaded: true };
+            await this.storageService.saveStatsHistory({ ...this.historyData[idx], userId }).catch(() => {});
+          }
+        }
+        this.calculateHotMovers();
+      } catch (err) {
+        console.error('Failed to load all stats snapshots for trend popup:', err);
+      } finally {
+        this.isLoadingTrendData = false;
+      }
+    }
+
+    this.calculateTrendPoints();
+  }
+
+  calculateTrendPoints() {
+    if (!this.trendPopupItem) return;
+    const item = this.trendPopupItem;
+    const category = this.trendPopupCategory;
     const name = item.name;
     const id = item.id;
     const points: any[] = [];
@@ -1078,7 +1145,6 @@ export class UserStatsComponent implements OnInit {
     }
 
     this.trendPopupPoints = points;
-    this.showTrendPopup = true;
   }
 
   closeTrendPopup(event?: Event) {

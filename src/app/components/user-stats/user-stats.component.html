@@ -476,74 +476,82 @@
       </h4>
       
       <div class="popup-chart-container">
-        <!-- If not enough history data -->
-        <div *ngIf="trendPopupPoints.length < 2" style="text-align: center; padding: 30px 10px; color: #b3b3b3;">
-          <i class="pi pi-info-circle" style="font-size: 2rem; color: #1db954; margin-bottom: 12px; display: block;"></i>
-          <span>Not enough historical data to generate a chart yet. History data is recorded once daily when you visit your personal stats.</span>
+        <!-- Loading spinner -->
+        <div *ngIf="isLoadingTrendData" style="text-align: center; padding: 40px 10px; color: #b3b3b3; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+          <i class="pi pi-spin pi-spinner" style="font-size: 2.5rem; color: #1db954;"></i>
+          <span>Loading historical data...</span>
         </div>
-        
-        <!-- If we have at least 2 data points -->
-        <div *ngIf="trendPopupPoints.length >= 2">
-          <div class="svg-container" style="position: relative; width: 100%; height: 200px;">
-            <svg viewBox="0 0 500 200" style="width: 100%; height: 100%; display: block; overflow: visible;">
-              <defs>
-                <linearGradient id="popupGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#1db954" stop-opacity="0.25" />
-                  <stop offset="100%" stop-color="#1db954" stop-opacity="0" />
-                </linearGradient>
-              </defs>
-              
-              <!-- Chart grid lines -->
-              <line x1="30" y1="30" x2="470" y2="30" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3,3" />
-              <line x1="30" y1="100" x2="470" y2="100" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3,3" />
-              <line x1="30" y1="170" x2="470" y2="170" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3,3" />
-              
-              <!-- Y-axis labels (Rank 1 at top, Max Rank at bottom) -->
-              <text x="15" y="34" fill="#888" font-size="10" text-anchor="end">#1</text>
-              <text x="15" y="104" fill="#888" font-size="10" text-anchor="end">
-                {{ trendPopupCategory === 'tracks' ? '#50' : trendPopupCategory === 'artists' ? '#25' : '#8' }}
-              </text>
-              <text x="15" y="174" fill="#888" font-size="10" text-anchor="end">
-                {{ trendPopupCategory === 'tracks' ? '#100' : trendPopupCategory === 'artists' ? '#50' : '#15' }}
-              </text>
-              
-              <!-- Chart Area Path Fill -->
-              <path [attr.d]="getPopupSvgFillPath()" fill="url(#popupGrad)" />
-              
-              <!-- Chart Line Path -->
-              <path [attr.d]="getPopupSvgPath()" fill="none" stroke="#1ed760" stroke-width="3" stroke-linecap="round" />
-              
-              <!-- Dots & Rank Text over dots -->
-              <g *ngFor="let pt of trendPopupPoints; let idx = index">
-                <circle 
-                  [attr.cx]="30 + (idx / (trendPopupPoints.length - 1)) * 440" 
-                  [attr.cy]="30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : trendPopupCategory === 'artists' ? 50 : 15) - 1)) * 140" 
-                  r="5" 
-                  fill="#ffffff" 
-                  stroke="#1db954" 
-                  stroke-width="2">
-                </circle>
-                <text 
-                  [attr.x]="30 + (idx / (trendPopupPoints.length - 1)) * 440" 
-                  [attr.y]="(30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : trendPopupCategory === 'artists' ? 50 : 15) - 1)) * 140) - 10" 
-                  fill="#ffffff" 
-                  font-weight="700" 
-                  text-anchor="middle">
-                  #{{ pt.rank }}
-                </text>
-                <!-- Date label below the graph -->
-                <text 
-                  [attr.x]="30 + (idx / (trendPopupPoints.length - 1)) * 440" 
-                  y="192" 
-                  fill="#888" 
-                  font-size="9" 
-                  text-anchor="middle">
-                  {{ pt.date }}
-                </text>
-              </g>
-            </svg>
+
+        <ng-container *ngIf="!isLoadingTrendData">
+          <!-- If not enough history data -->
+          <div *ngIf="trendPopupPoints.length < 2" style="text-align: center; padding: 30px 10px; color: #b3b3b3;">
+            <i class="pi pi-info-circle" style="font-size: 2rem; color: #1db954; margin-bottom: 12px; display: block;"></i>
+            <span>Not enough historical data to generate a chart yet. History data is recorded once daily when you visit your personal stats.</span>
           </div>
-        </div>
+          
+          <!-- If we have at least 2 data points -->
+          <div *ngIf="trendPopupPoints.length >= 2">
+            <div class="svg-container" style="position: relative; width: 100%; height: 200px;">
+              <svg viewBox="0 0 500 200" style="width: 100%; height: 100%; display: block; overflow: visible;">
+                <defs>
+                  <linearGradient id="popupGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#1db954" stop-opacity="0.25" />
+                    <stop offset="100%" stop-color="#1db954" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                
+                <!-- Chart grid lines -->
+                <line x1="30" y1="30" x2="470" y2="30" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3,3" />
+                <line x1="30" y1="100" x2="470" y2="100" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3,3" />
+                <line x1="30" y1="170" x2="470" y2="170" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3,3" />
+                
+                <!-- Y-axis labels (Rank 1 at top, Max Rank at bottom) -->
+                <text x="15" y="34" fill="#888" font-size="10" text-anchor="end">#1</text>
+                <text x="15" y="104" fill="#888" font-size="10" text-anchor="end">
+                  {{ trendPopupCategory === 'tracks' ? '#50' : trendPopupCategory === 'artists' ? '#25' : '#8' }}
+                </text>
+                <text x="15" y="174" fill="#888" font-size="10" text-anchor="end">
+                  {{ trendPopupCategory === 'tracks' ? '#100' : trendPopupCategory === 'artists' ? '#50' : '#15' }}
+                </text>
+                
+                <!-- Chart Area Path Fill -->
+                <path [attr.d]="getPopupSvgFillPath()" fill="url(#popupGrad)" />
+                
+                <!-- Chart Line Path -->
+                <path [attr.d]="getPopupSvgPath()" fill="none" stroke="#1ed760" stroke-width="3" stroke-linecap="round" />
+                
+                <!-- Dots & Rank Text over dots -->
+                <g *ngFor="let pt of trendPopupPoints; let idx = index">
+                  <circle 
+                    [attr.cx]="30 + (idx / (trendPopupPoints.length - 1)) * 440" 
+                    [attr.cy]="30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : trendPopupCategory === 'artists' ? 50 : 15) - 1)) * 140" 
+                    r="5" 
+                    fill="#ffffff" 
+                    stroke="#1db954" 
+                    stroke-width="2">
+                  </circle>
+                  <text 
+                    [attr.x]="30 + (idx / (trendPopupPoints.length - 1)) * 440" 
+                    [attr.y]="(30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : trendPopupCategory === 'artists' ? 50 : 15) - 1)) * 140) - 10" 
+                    fill="#ffffff" 
+                    font-weight="700" 
+                    text-anchor="middle">
+                    #{{ pt.rank }}
+                  </text>
+                  <!-- Date label below the graph -->
+                  <text 
+                    [attr.x]="30 + (idx / (trendPopupPoints.length - 1)) * 440" 
+                    y="192" 
+                    fill="#888" 
+                    font-size="9" 
+                    text-anchor="middle">
+                    {{ pt.date }}
+                  </text>
+                </g>
+              </svg>
+            </div>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>
