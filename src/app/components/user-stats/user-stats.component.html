@@ -376,31 +376,51 @@
                 
                 <!-- Dots & Rank Text over dots -->
                 <g *ngFor="let pt of trendPopupPoints; let idx = index">
+                  <!-- Visible Circle Dot (scaled or highlighted on hover) -->
                   <circle 
+                    *ngIf="visibleLabelIndices.has(idx) || trendPopupPoints.length <= 25 || idx === hoveredPointIndex"
                     [attr.cx]="30 + (idx / (trendPopupPoints.length - 1)) * 440" 
                     [attr.cy]="30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : trendPopupCategory === 'artists' ? 50 : 15) - 1)) * 140" 
-                    r="5" 
+                    [attr.r]="(trendPopupPoints.length > 25 && idx !== hoveredPointIndex) ? 3.5 : 5" 
                     fill="#ffffff" 
-                    stroke="#1db954" 
+                    [attr.stroke]="idx === hoveredPointIndex ? '#1ed760' : '#1db954'" 
                     stroke-width="2">
                   </circle>
+
+                  <!-- Rank text (shown if milestone or hovered) -->
                   <text 
+                    *ngIf="visibleLabelIndices.has(idx) || idx === hoveredPointIndex"
                     [attr.x]="30 + (idx / (trendPopupPoints.length - 1)) * 440" 
                     [attr.y]="(30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : trendPopupCategory === 'artists' ? 50 : 15) - 1)) * 140) - 10" 
                     fill="#ffffff" 
-                    font-weight="700" 
+                    [style.font-weight]="idx === hoveredPointIndex ? '800' : '700'"
+                    [style.font-size]="idx === hoveredPointIndex ? '11px' : '10px'"
                     text-anchor="middle">
                     #{{ pt.rank }}
                   </text>
-                  <!-- Date label below the graph -->
+
+                  <!-- Date label below the graph (shown if milestone or hovered) -->
                   <text 
+                    *ngIf="visibleLabelIndices.has(idx) || idx === hoveredPointIndex"
                     [attr.x]="30 + (idx / (trendPopupPoints.length - 1)) * 440" 
                     y="192" 
-                    fill="#888" 
+                    [attr.fill]="idx === hoveredPointIndex ? '#1ed760' : '#888'" 
                     font-size="9" 
+                    [style.font-weight]="idx === hoveredPointIndex ? '700' : 'normal'"
                     text-anchor="middle">
                     {{ pt.date }}
                   </text>
+
+                  <!-- Invisible larger hover target circle for easy trigger -->
+                  <circle
+                    [attr.cx]="30 + (idx / (trendPopupPoints.length - 1)) * 440" 
+                    [attr.cy]="30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : trendPopupCategory === 'artists' ? 50 : 15) - 1)) * 140" 
+                    r="15"
+                    fill="transparent"
+                    style="cursor: pointer;"
+                    (mouseenter)="hoveredPointIndex = idx"
+                    (mouseleave)="hoveredPointIndex = null">
+                  </circle>
                 </g>
               </svg>
             </div>

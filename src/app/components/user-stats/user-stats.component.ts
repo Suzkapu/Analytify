@@ -39,6 +39,8 @@ export class UserStatsComponent implements OnInit {
   trendPopupCategory: 'tracks' | 'artists' | 'genres' = 'tracks';
   trendPopupPoints: any[] = [];
   isLoadingTrendData: boolean = false;
+  visibleLabelIndices = new Set<number>();
+  hoveredPointIndex: number | null = null;
 
   // Listening History & Modal Variables
 
@@ -1023,6 +1025,7 @@ export class UserStatsComponent implements OnInit {
     }
 
     this.trendPopupPoints = points;
+    this.calculateVisibleLabels();
   }
 
   closeTrendPopup(event?: Event) {
@@ -1030,6 +1033,111 @@ export class UserStatsComponent implements OnInit {
     this.showTrendPopup = false;
     this.trendPopupItem = null;
     this.trendPopupPoints = [];
+    this.hoveredPointIndex = null;
+  }
+
+  calculateVisibleLabels() {
+    this.visibleLabelIndices.clear();
+    const points = this.trendPopupPoints;
+    const total = points.length;
+    if (total === 0) return;
+
+    this.visibleLabelIndices.add(0);
+    this.visibleLabelIndices.add(total - 1);
+
+    if (total <= 10) {
+      for (let i = 0; i < total; i++) {
+        this.visibleLabelIndices.add(i);
+      }
+      return;
+    }
+
+    const minStep = Math.max(2, Math.ceil(total / 8));
+
+    interface Candidate {
+      index: number;
+      score: number;
+    }
+    const candidates: Candidate[] = [];
+    for (let i = 1; i < total - 1; i++) {
+      let score = 0;
+      const currentRank = points[i].rank;
+      const prevRank = points[i - 1].rank;
+      const nextRank = points[i + 1].rank;
+
+      const isRiseOrDropLeft = currentRank !== prevRank;
+      const isRiseOrDropRight = currentRank !== nextRank;
+
+      if (isRiseOrDropLeft || isRiseOrDropRight) {
+        score = 1;
+        if ((currentRank > prevRank && currentRank > nextRank) || (currentRank < prevRank && currentRank < nextRank)) {
+          score = 2;
+        }
+      } else {
+        score = 0;
+      }
+      candidates.push({ index: i, score });
+    }
+
+    candidates.sort((a, b) => {
+      if (b.score !== a.score) {
+        return b.score - a.score;
+      }
+      return a.index - b.index;
+    });
+
+    const selected: number[] = [0, total - 1];
+    
+    for (const cand of candidates) {
+      let ok = true;
+      for (const sel of selected) {
+        if (Math.abs(cand.index - sel) < minStep) {
+          ok = false;
+          break;
+        }
+      }
+      if (ok) {
+        selected.push(cand.index);
+        this.visibleLabelIndices.add(cand.index);
+      }
+    }
+
+    selected.sort((a, b) => a - b);
+    for (let i = 0; i < selected.length - 1; i++) {
+      const left = selected[i];
+      const right = selected[i + 1];
+      let gap = right - left;
+      
+      while (gap >= 2 * minStep) {
+        const mid = Math.round(left + gap / 2);
+        let bestInsert = -1;
+        
+        for (let idx = mid - 1; idx <= mid + 1; idx++) {
+          if (idx > left && idx < right) {
+            let safe = true;
+            for (const sel of selected) {
+              if (Math.abs(idx - sel) < minStep) {
+                safe = false;
+                break;
+              }
+            }
+            if (safe) {
+              bestInsert = idx;
+              break;
+            }
+          }
+        }
+
+        if (bestInsert !== -1) {
+          selected.push(bestInsert);
+          selected.sort((a, b) => a - b);
+          this.visibleLabelIndices.add(bestInsert);
+          gap = bestInsert - left;
+        } else {
+          break;
+        }
+      }
+    }
   }
 
   getPopupSvgPath(): string {
