@@ -414,6 +414,237 @@ async function recordPopularityHistory(tracks, albums, artists) {
   }
 }
 
+
+// Save stats snapshot into Supabase
+async function saveStatsSnapshot(
+  userId,
+  range,
+  avgPopularity,
+  explicitPercentage,
+  genreDiversity,
+  topTracks,
+  topArtists,
+  topGenres
+) {
+  const todayStr = new Date().toISOString().split('T')[0];
+
+  // 1. Create the snapshot row
+  const { data: snapshot, error: snapshotErr } = await supabase
+    .from('stats_snapshots')
+    .upsert({
+      user_id: userId,
+      range: range,
+      snapshot_date: todayStr,
+      avg_popularity: avgPopularity,
+      explicit_percentage: explicitPercentage,
+      genre_diversity: genreDiversity
+    }, { onConflict: 'user_id,range,snapshot_date' })
+    .select('id')
+    .single();
+
+  if (snapshotErr) throw snapshotErr;
+  const snapshotId = snapshot.id;
+
+  // 2. Link tracks
+  const trackLinks = topTracks.map((t, idx) => ({
+    snapshot_id: snapshotId,
+    track_id: t.id,
+    rank: idx + 1
+  })).filter(row => !!row.track_id);
+
+  if (trackLinks.length > 0) {
+    const { error: trackLinkErr } = await supabase
+      .from('stats_snapshot_tracks')
+      .upsert(trackLinks, { onConflict: 'snapshot_id,rank' });
+    if (trackLinkErr) throw trackLinkErr;
+  }
+
+  // 3. Link artists
+  const artistLinks = topArtists.map((a, idx) => ({
+    snapshot_id: snapshotId,
+    artist_id: a.id,
+    rank: idx + 1
+  })).filter(row => !!row.artist_id);
+
+  if (artistLinks.length > 0) {
+    const { error: artistLinkErr } = await supabase
+      .from('stats_snapshot_artists')
+      .upsert(artistLinks, { onConflict: 'snapshot_id,rank' });
+    if (artistLinkErr) throw artistLinkErr;
+  }
+
+  // 4. Link genres
+  const genreLinks = topGenres.map((g, idx) => ({
+    snapshot_id: snapshotId,
+    genre_name: g.name,
+    rank: idx + 1,
+    weight: typeof g.percentage === 'number' ? g.percentage : (g.count || 0)
+  })).filter(row => !!row.genre_name);
+
+  if (genreLinks.length > 0) {
+    // Upsert genres master table first
+    const { error: genreErr } = await supabase
+      .from('genres')
+      .upsert(genreLinks.map(gl => ({ name: gl.genre_name })), { onConflict: 'name' });
+    if (genreErr) throw genreErr;
+
+    const { error: linkErr } = await supabase
+      .from('stats_snapshot_genres')
+      .upsert(genreLinks, { onConflict: 'snapshot_id,rank' });
+    if (linkErr) throw linkErr;
+  }
+
+  // 5. Save raw top tracks history
+  if (topTracks.length > 0) {
+    const fetchedAt = new Date().toISOString();
+    const topTracksHistory = topTracks.map((t, idx) => ({
+      user_id: userId,
+      time_range: range,
+      rank: idx + 1,
+      track_id: t.id,
+      fetched_at: fetchedAt
+    })).filter(row => !!row.track_id);
+
+    if (topTracksHistory.length > 0) {
+      const { error: trackHistErr } = await supabase
+        .from('user_top_tracks_history')
+        .upsert(topTracksHistory, { onConflict: 'user_id,time_range,fetched_at,rank' });
+      if (trackHistErr) {
+        console.warn(`[Sync] Error saving user top tracks history: ${trackHistErr.message}`);
+      }
+    }
+  }
+
+  // 6. Save raw top artists history
+  if (topArtists.length > 0) {
+    const fetchedAt = new Date().toISOString();
+    const topArtistsHistory = topArtists.map((a, idx) => ({
+      user_id: userId,
+      time_range: range,
+      rank: idx + 1,
+      artist_id: a.id,
+      fetched_at: fetchedAt
+    })).filter(row => !!row.artist_id);
+
+    if (topArtistsHistory.length > 0) {
+      const { error: artistHistErr } = await supabase
+        .from('user_top_artists_history')
+        .upsert(topArtistsHistory, { onConflict: 'user_id,time_range,fetched_at,rank' });
+      if (artistHistErr) {
+        console.warn(`[Sync] Error saving user top artists history: ${artistHistErr.message}`);
+      }
+    }
+  }
+}
+
+// Sync user's top stats (top 100 songs, artists, and genres)
+async function syncUserStats(user, spotifyAccessToken) {
+  console.log(`[Sync] Starting stats snapshot sync for user: ${user.display_name} (${user.id})`);
+  const ranges = ['short_term', 'medium_term', 'long_term'];
+
+  for (const range of ranges) {
+    try {
+      console.log(`[Sync] Fetching top items for ${user.display_name} (${range})...`);
+
+      // Fetch top artists
+      const artistsRes = await apiRequest(`https://api.spotify.com/v1/me/top/artists?time_range=${range}&limit=50&offset=0`, {
+        headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
+      });
+      const topArtists = artistsRes.items || [];
+
+      // Fetch top tracks page 1 (limit 50, offset 0)
+      const tracksRes = await apiRequest(`https://api.spotify.com/v1/me/top/tracks?time_range=${range}&limit=50&offset=0`, {
+        headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
+      });
+      const topTracksPage1 = tracksRes.items || [];
+
+      // Fetch top tracks page 2 (limit 50, offset 50)
+      let topTracksPage2 = [];
+      try {
+        const tracksRes2 = await apiRequest(`https://api.spotify.com/v1/me/top/tracks?time_range=${range}&limit=50&offset=50`, {
+          headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
+        });
+        topTracksPage2 = tracksRes2.items || [];
+      } catch (e) {
+        console.warn(`[Sync] Failed to fetch top tracks page 2 for range ${range}:`, e.message);
+      }
+
+      const topTracks = [...topTracksPage1, ...topTracksPage2];
+
+      if (topArtists.length === 0 && topTracks.length === 0) {
+        console.log(`[Sync] No top artists or tracks for user ${user.id} (${range}), skipping snapshot.`);
+        continue;
+      }
+
+      // Calculate genres
+      const genreCounts = new Map();
+      topArtists.forEach((artist, index) => {
+        const rankWeight = 50 - index;
+        if (artist.genres) {
+          artist.genres.forEach(genre => {
+            const current = genreCounts.get(genre) || 0;
+            genreCounts.set(genre, current + rankWeight);
+          });
+        }
+      });
+      const sortedGenres = Array.from(genreCounts.entries()).sort((a, b) => b[1] - a[1]);
+      const totalGenresWeight = sortedGenres.reduce((sum, entry) => sum + entry[1], 0);
+      const maxWeight = sortedGenres.length > 0 ? sortedGenres[0][1] : 1;
+      const topGenres = sortedGenres.map(([name, weight]) => {
+        const percentage = totalGenresWeight > 0 ? Math.min(100, Math.round((weight / totalGenresWeight) * 100)) : 0;
+        const percentage_simple = weight > 0 ? Math.max(2, Math.min(100, Math.round((weight / maxWeight) * 100))) : 0;
+        return { name, count: Math.round(weight), percentage, percentage_simple };
+      }).slice(0, 15);
+
+      // Collect IDs for metadata syncing
+      const trackIds = Array.from(new Set(topTracks.map(t => t.id).filter(id => !!id)));
+      const artistIds = Array.from(new Set([
+        ...topArtists.map(a => a.id).filter(id => !!id),
+        ...topTracks.flatMap(t => (t.artists || []).map(a => a.id)).filter(id => !!id)
+      ]));
+      const albumIds = Array.from(new Set(topTracks.map(t => t.album?.id).filter(id => !!id)));
+
+      // Sync metadata models
+      console.log(`[Sync] Syncing metadata for ${trackIds.length} tracks, ${artistIds.length} artists, ${albumIds.length} albums...`);
+      await syncArtists(spotifyAccessToken, artistIds);
+      await syncAlbums(spotifyAccessToken, albumIds);
+      await syncTracks(spotifyAccessToken, trackIds);
+      try {
+        await syncAudioFeatures(spotifyAccessToken, trackIds);
+      } catch (audioErr) {
+        console.warn(`[Sync] Failed to sync audio features:`, audioErr.message);
+      }
+
+      // Compute statistics
+      let totalPopularity = 0;
+      let explicitCount = 0;
+      topTracks.forEach(track => {
+        totalPopularity += track.popularity || 0;
+        if (track.explicit) explicitCount++;
+      });
+      const avgPopularity = topTracks.length > 0 ? Math.round(totalPopularity / topTracks.length) : 0;
+      const explicitPercentage = topTracks.length > 0 ? Math.round((explicitCount / topTracks.length) * 100) : 0;
+      const genreDiversity = topGenres.length;
+
+      // Save stats snapshot
+      await saveStatsSnapshot(
+        user.id,
+        range,
+        avgPopularity,
+        explicitPercentage,
+        genreDiversity,
+        topTracks,
+        topArtists,
+        topGenres
+      );
+      console.log(`[Sync] Successfully saved stats snapshot for user ${user.id} (${range})`);
+
+    } catch (err) {
+      console.error(`[Sync] Error syncing user stats for range ${range}:`, err);
+    }
+  }
+}
+
 // Main User Sync process
 async function syncUserHistory(user) {
   console.log(`Starting sync for user: ${user.display_name} (${user.id})`);
@@ -472,7 +703,10 @@ async function syncUserHistory(user) {
 
     await recordPopularityHistory(dbTracks || [], dbAlbums || [], dbArtists || []);
 
-    // F. Update user last synced timestamp
+    // F. Sync Stats Snapshots (top tracks, top artists, top genres)
+    await syncUserStats(user, spotifyAccessToken);
+
+    // G. Update user last synced timestamp
     await supabase
       .from('users')
       .update({ last_synced_at: new Date().toISOString() })
@@ -504,6 +738,10 @@ function isSyncExpired(lastSyncedStr) {
 // Main entry point
 async function main() {
   console.log(`--- Analytify Spotify Sync started at ${new Date().toISOString()} ---`);
+  const force = process.argv.includes('--force');
+  if (force) {
+    console.log('[Sync] Force sync enabled. Ignoring daily limit.');
+  }
   
   try {
     // Get all users who have backup enabled and have a refresh token
@@ -526,7 +764,7 @@ async function main() {
 
     // Sync users sequentially to prevent rate limits
     for (const user of users) {
-      if (user.last_synced_at && !isSyncExpired(user.last_synced_at)) {
+      if (!force && user.last_synced_at && !isSyncExpired(user.last_synced_at)) {
         console.log(`Skipping user ${user.display_name} (${user.id}) - already synced today at ${user.last_synced_at}`);
         continue;
       }
