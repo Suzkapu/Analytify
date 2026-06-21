@@ -219,10 +219,12 @@ export class StorageService {
   }
 
   /** Clears ALL app data (appData + statsHistory) and the in-memory cache. */
-  clear(): void {
+  clear(): Promise<void> {
     this.inMemoryCache.clear();
-    this.clearKV();
-    this.clearAllHistory().catch(() => {});
+    return Promise.all([
+      this.clearKV(),
+      this.clearAllHistory()
+    ]).then(() => {});
   }
 
   // ─── IndexedDB appData helpers (fire-and-forget async) ───────────────────
@@ -245,13 +247,19 @@ export class StorageService {
     }).catch(err => console.warn('[StorageService] IndexedDB delete failed:', err));
   }
 
-  private clearKV(): void {
-    this.getDB().then(db => {
+  private clearKV(): Promise<void> {
+    return this.getDB().then(db => new Promise<void>((resolve, reject) => {
       const tx    = db.transaction('appData', 'readwrite');
       const store = tx.objectStore('appData');
       const req   = store.clear();
-      req.onerror = (e: any) => console.warn('[StorageService] IndexedDB clear request failed:', e.target.error);
-    }).catch(err => console.warn('[StorageService] IndexedDB clearKV failed:', err));
+      req.onsuccess = () => resolve();
+      req.onerror = (e: any) => {
+        console.warn('[StorageService] IndexedDB clear request failed:', e.target.error);
+        reject(e.target.error);
+      };
+    })).catch(err => {
+      console.warn('[StorageService] IndexedDB clearKV failed:', err);
+    });
   }
 
   // ─── Stats history (IndexedDB statsHistory store) ─────────────────────────

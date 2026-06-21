@@ -120,17 +120,14 @@ export class HeaderComponent implements OnInit {
     this.showConfirmDbDeleteModal = false;
   }
 
-  confirmLocalDelete() {
+  async confirmLocalDelete() {
     this.showConfirmLocalDeleteModal = false;
-    const userId = this.authService.getUserId() || 'anonymous';
-    this.storageService.clearStatsHistory(userId).then(() => {
-      this.authService.clearCacheAndLogout();
-      this.router.navigate(['/login']);
-    }).catch(err => {
-      console.error('Failed to clear stats history:', err);
-      this.authService.clearCacheAndLogout();
-      this.router.navigate(['/login']);
-    });
+    try {
+      await this.authService.clearCacheAndLogout();
+    } catch (err) {
+      console.error('Failed to clear cache and logout:', err);
+    }
+    this.router.navigate(['/login']);
   }
 
   async confirmDbDelete() {

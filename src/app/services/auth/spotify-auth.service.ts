@@ -334,20 +334,32 @@ export class SpotifyAuthService {
     return !!this.accessToken;
   }
 
-  logout(): void {
+  async logout(): Promise<void> {
     this.storageService.removeItem(this.storageKey);
     this.storageService.removeItem('spotifyUserId');
     this.storageService.removeItem('supabaseUserId');
     this.storageService.removeItem('spotifyRefreshToken');
     this.storageService.removeItem('spotifyTokenExpiresAt');
-    this.supabaseService.client.auth.signOut().catch(err => console.error('Supabase signout failed', err));
+    try {
+      await this.supabaseService.client.auth.signOut();
+    } catch (err) {
+      console.error('Supabase signout failed', err);
+    }
+    localStorage.clear();
+    sessionStorage.clear();
     this.clearAllCookies();
     this.logout$.next();
   }
 
-  clearCacheAndLogout(): void {
-    this.storageService.clear();
-    this.supabaseService.client.auth.signOut().catch(err => console.error('Supabase signout failed', err));
+  async clearCacheAndLogout(): Promise<void> {
+    await this.storageService.clear();
+    try {
+      await this.supabaseService.client.auth.signOut();
+    } catch (err) {
+      console.error('Supabase signout failed', err);
+    }
+    localStorage.clear();
+    sessionStorage.clear();
     this.clearAllCookies();
     this.logout$.next();
   }
