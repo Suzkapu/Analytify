@@ -49,7 +49,8 @@ body {
     display: flex;
     align-items: center;
     gap: 16px;
-    flex: 1 1 0%;
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   .header-logo {
@@ -58,6 +59,7 @@ body {
     gap: 10px;
     text-decoration: none;
     cursor: pointer;
+    flex-shrink: 0;
 
     img {
       height: 32px;
@@ -86,6 +88,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    white-space: nowrap;
 
     &:hover {
       color: #ffffff !important;
@@ -111,7 +114,24 @@ body {
     align-items: center;
     justify-content: flex-end;
     gap: 12px;
-    flex: 1 1 0%;
+    flex: 0 0 auto;
+  }
+}
+
+/* Tablet / Laptop small screens header adjustments to prevent cropping */
+@media (min-width: 769px) and (max-width: 950px) {
+  .app-header {
+    padding: 0.8rem 1rem !important;
+
+    .header-logo .logo-text {
+      font-size: 1.25rem !important;
+    }
+
+    .nav-link {
+      padding: 6px 8px !important;
+      font-size: 0.85rem !important;
+      gap: 4px !important;
+    }
   }
 }
 

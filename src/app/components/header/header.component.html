@@ -13,15 +13,13 @@
           class="hide-mobile">Browse Playlists</span></a>
       <a routerLink="/stats" class="nav-link" routerLinkActive="active-nav"><i class="pi pi-chart-bar"
           style="font-size: 0.95rem;"></i> <span class="hide-mobile">Personal Stats</span></a>
+      <a routerLink="/history" class="nav-link" routerLinkActive="active-nav"><i class="pi pi-history"
+          style="font-size: 0.95rem;"></i> <span class="hide-mobile">Listening History</span></a>
     </nav>
   </div>
   <div class="header-center">
   </div>
   <div class="header-right">
-    <!-- Listening History Button -->
-    <button *ngIf="isStatsPage" (click)="viewListeningHistory()" class="p-button history-button">
-      <i class="pi pi-history"></i> <span class="hide-mobile">Listening History</span>
-    </button>
 
     <!-- User Profile with Settings Dropdown -->
     <div class="user-profile-container" style="position: relative; display: flex; align-items: center;">

@@ -33,13 +33,6 @@ export class HeaderComponent implements OnInit {
     this.loadUserProfile();
   }
 
-  get isStatsPage(): boolean {
-    return this.router.url.includes('/stats');
-  }
-
-  viewListeningHistory() {
-    this.router.navigate(['/history']);
-  }
 
   loadUserProfile() {
     const userId = this.authService.getUserId() || 'anonymous';

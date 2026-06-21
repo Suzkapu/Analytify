@@ -151,9 +151,5 @@ export class ListeningHistoryComponent implements OnInit {
     }
   }
 
-  goBack() {
-    this.router.navigate(['/playlists']);
-  }
-
 
 }
