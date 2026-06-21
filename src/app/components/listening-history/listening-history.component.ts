@@ -11,9 +11,7 @@ import { SupabaseService } from '../../services/supabase/supabase.service';
   styleUrls: ['./listening-history.component.scss']
 })
 export class ListeningHistoryComponent implements OnInit {
-  profilePicUrl: string | null = null;
-  showSettingsDropdown: boolean = false;
-  showClearCacheModal: boolean = false;
+
   recentlyPlayedTracks: any[] = [];
   isLoadingRecentlyPlayed: boolean = false;
 
@@ -26,29 +24,13 @@ export class ListeningHistoryComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.loadUserProfile();
     if (this.authService.isAuthenticated()) {
       await this.authService.ensureInitialSync();
     }
     this.loadRecentlyPlayed();
   }
 
-  loadUserProfile() {
-    const userId = this.authService.getUserId() || 'anonymous';
-    const cached = this.storageService.getItem(`${userId}_profile_pic`);
-    if (cached !== null) {
-      this.profilePicUrl = cached || null;
-    } else {
-      this.spotifyDataService.getCurrentUser().subscribe({
-        next: (user: any) => {
-          const pic = user.images && user.images[0] ? user.images[0].url : '';
-          this.storageService.setItem(`${userId}_profile_pic`, pic);
-          this.profilePicUrl = pic || null;
-        },
-        error: (err) => console.error('Failed to load user profile:', err)
-      });
-    }
-  }
+
 
 
   async loadRecentlyPlayed() {
@@ -173,59 +155,5 @@ export class ListeningHistoryComponent implements OnInit {
     this.router.navigate(['/playlists']);
   }
 
-  toggleSettingsDropdown(event: Event) {
-    event.stopPropagation();
-    this.showSettingsDropdown = !this.showSettingsDropdown;
-  }
 
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
-
-  clearCacheAndLogout() {
-    this.showClearCacheModal = true;
-  }
-
-  cancelClearCache() {
-    this.showClearCacheModal = false;
-  }
-
-  confirmClearCache() {
-    this.showClearCacheModal = false;
-    this.authService.clearCacheAndLogout();
-    this.router.navigate(['/login']);
-  }
-
-  showBackupConfirmModal = false;
-
-  onBackupToggle(event: Event) {
-    const checkbox = event.target as HTMLInputElement;
-    if (checkbox.checked) {
-      this.showBackupConfirmModal = true;
-    } else {
-      this.authService.disableBackup().catch(err => {
-        console.error('Failed to disable backup:', err);
-      });
-    }
-  }
-
-  cancelBackupToggle() {
-    this.showBackupConfirmModal = false;
-  }
-
-  async confirmBackupToggle() {
-    this.showBackupConfirmModal = false;
-    try {
-      await this.authService.enableBackup();
-    } catch (err) {
-      console.error('Failed to enable backup:', err);
-      alert('Failed to enable database backup. Please try again.');
-    }
-  }
-
-  @HostListener('document:click')
-  onDocumentClick() {
-    this.showSettingsDropdown = false;
-  }
 }

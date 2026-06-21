@@ -2,7 +2,7 @@ import {Injectable, Injector} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {environment} from "../../../environments/environment";
 import {Observable, throwError, Subject, from, firstValueFrom} from 'rxjs';
-import {tap, catchError, shareReplay} from 'rxjs/operators';
+import {tap, catchError, shareReplay, switchMap} from 'rxjs/operators';
 import {StorageService} from '../storage/storage.service';
 import {SupabaseService} from '../supabase/supabase.service';
 import {SpotifyDataService} from '../spotify-data/spotify-data.service';
@@ -28,7 +28,10 @@ export class SpotifyAuthService {
     private supabaseService: SupabaseService,
     private injector: Injector
   ) {
-    this.storageService.initFromDB().then(() => {
+    this.storageService.initFromDB().then(async () => {
+      if (!this.isAuthenticated()) {
+        await this.restoreSessionFromSupabase().catch(() => {});
+      }
       if (this.isAuthenticated()) {
         this.ensureInitialSync();
       }
@@ -93,15 +96,15 @@ export class SpotifyAuthService {
           this.storageService.setItem('spotifyTokenExpiresAt', expiresAt.toString());
 
           if (session.user) {
-            let spotifyId = session.user.user_metadata?.provider_id || session.user.id;
+            let spotifyId = session.user.user_metadata?.['provider_id'] || session.user.id;
             if (!environment.production) {
               spotifyId = `${spotifyId}_dev`;
             }
             this.storageService.setItem('spotifyUserId', spotifyId);
             this.storageService.setItem('supabaseUserId', session.user.id);
 
-            const displayName = session.user.user_metadata?.full_name || session.user.user_metadata?.name || null;
-            const profilePicUrl = session.user.user_metadata?.avatar_url || null;
+            const displayName = session.user.user_metadata?.['full_name'] || session.user.user_metadata?.['name'] || null;
+            const profilePicUrl = session.user.user_metadata?.['avatar_url'] || null;
             const effectiveUserId = this.getSupabaseUserId() || session.user.id;
 
             this.initialSyncPromise = (async () => {
@@ -152,15 +155,15 @@ export class SpotifyAuthService {
           this.storageService.setItem('spotifyTokenExpiresAt', expiresAt.toString());
 
           if (session.user) {
-            let spotifyId = session.user.user_metadata?.provider_id || session.user.id;
+            let spotifyId = session.user.user_metadata?.['provider_id'] || session.user.id;
             if (!environment.production) {
               spotifyId = `${spotifyId}_dev`;
             }
             this.storageService.setItem('spotifyUserId', spotifyId);
             this.storageService.setItem('supabaseUserId', session.user.id);
 
-            const displayName = session.user.user_metadata?.full_name || session.user.user_metadata?.name || null;
-            const profilePicUrl = session.user.user_metadata?.avatar_url || null;
+            const displayName = session.user.user_metadata?.['full_name'] || session.user.user_metadata?.['name'] || null;
+            const profilePicUrl = session.user.user_metadata?.['avatar_url'] || null;
             const effectiveUserId = this.getSupabaseUserId() || session.user.id;
 
             this.initialSyncPromise = (async () => {
@@ -185,39 +188,100 @@ export class SpotifyAuthService {
     );
   }
 
+  async restoreSessionFromSupabase(): Promise<boolean> {
+    try {
+      const { data: { session }, error } = await this.supabaseService.client.auth.getSession();
+      if (error) throw error;
+      
+      if (session) {
+        console.log('[Auth] Restoring session from Supabase client...');
+        if (session.provider_token) {
+          this.storageService.setItem(this.storageKey, session.provider_token);
+        }
+        if (session.provider_refresh_token) {
+          this.storageService.setItem('spotifyRefreshToken', session.provider_refresh_token);
+        }
+        
+        // Save expiration time
+        const expiresAt = Date.now() + 3600 * 1000;
+        this.storageService.setItem('spotifyTokenExpiresAt', expiresAt.toString());
+
+        if (session.user) {
+          let spotifyId = session.user.user_metadata?.['provider_id'] || session.user.id;
+          if (!environment.production) {
+            spotifyId = `${spotifyId}_dev`;
+          }
+          this.storageService.setItem('spotifyUserId', spotifyId);
+          this.storageService.setItem('supabaseUserId', session.user.id);
+        }
+        
+        return true;
+      }
+    } catch (e) {
+      console.warn('[Auth] Failed to restore Supabase session:', e);
+    }
+    return false;
+  }
+
   refreshToken(): Observable<any> {
     if (this.refreshObservable) {
       return this.refreshObservable;
     }
 
-    const refreshToken = this.storageService.getItem('spotifyRefreshToken') || '';
-    if (!refreshToken) {
-      return throwError(() => new Error('No refresh token found'));
-    }
-
-    const body = new HttpParams()
-      .set('grant_type', 'refresh_token')
-      .set('refresh_token', refreshToken)
-      .set('client_id', this.clientId);
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded'
-    });
-
-    this.refreshObservable = this.http.post('https://accounts.spotify.com/api/token', body.toString(), { headers }).pipe(
-      tap((response: any) => {
-        if (response && response.access_token) {
-          this.storageService.setItem(this.storageKey, response.access_token);
-          if (response.refresh_token) {
-            this.storageService.setItem('spotifyRefreshToken', response.refresh_token);
-            const supabaseUserId = this.getSupabaseUserId();
-            if (supabaseUserId) {
-              this.saveRefreshTokenToDatabase(supabaseUserId, response.refresh_token);
-            }
+    // Try refreshing via Supabase first, as it is the auth manager
+    const supabaseRefresh$ = from(this.supabaseService.client.auth.getSession()).pipe(
+      switchMap(({ data: { session }, error }: any) => {
+        if (error) throw error;
+        if (session && session.provider_token) {
+          console.log('[Auth] Refreshed Spotify token via Supabase session');
+          this.storageService.setItem(this.storageKey, session.provider_token);
+          if (session.provider_refresh_token) {
+            this.storageService.setItem('spotifyRefreshToken', session.provider_refresh_token);
           }
-          const expiresAt = Date.now() + (response.expires_in || 3600) * 1000;
+          const expiresAt = Date.now() + 3600 * 1000;
           this.storageService.setItem('spotifyTokenExpiresAt', expiresAt.toString());
+          return from(Promise.resolve({ access_token: session.provider_token }));
         }
+        throw new Error('No provider token in Supabase session');
+      }),
+      catchError(err => {
+        console.warn('[Auth] Supabase token refresh failed, falling back to direct Spotify refresh:', err);
+        // Fallback to direct Spotify accounts refresh
+        const refreshToken = this.storageService.getItem('spotifyRefreshToken') || '';
+        if (!refreshToken) {
+          return throwError(() => new Error('No refresh token found'));
+        }
+
+        const body = new HttpParams()
+          .set('grant_type', 'refresh_token')
+          .set('refresh_token', refreshToken)
+          .set('client_id', this.clientId);
+
+        const headers = new HttpHeaders({
+          'Content-Type': 'application/x-www-form-urlencoded'
+        });
+
+        return this.http.post('https://accounts.spotify.com/api/token', body.toString(), { headers }).pipe(
+          tap((response: any) => {
+            if (response && response.access_token) {
+              this.storageService.setItem(this.storageKey, response.access_token);
+              if (response.refresh_token) {
+                this.storageService.setItem('spotifyRefreshToken', response.refresh_token);
+                const supabaseUserId = this.getSupabaseUserId();
+                if (supabaseUserId) {
+                  this.saveRefreshTokenToDatabase(supabaseUserId, response.refresh_token);
+                }
+              }
+              const expiresAt = Date.now() + (response.expires_in || 3600) * 1000;
+              this.storageService.setItem('spotifyTokenExpiresAt', expiresAt.toString());
+            }
+          })
+        );
+      })
+    );
+
+    this.refreshObservable = supabaseRefresh$.pipe(
+      tap(() => {
         this.refreshObservable = null;
       }),
       catchError(err => {

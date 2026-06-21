@@ -1,60 +1,4 @@
-<header class="app-header">
-  <div class="app-header-sync-progressbar" *ngIf="authService.isSyncing" [style.width.%]="authService.syncProgress"></div>
-  <div class="header-left">
-    <div class="header-logo" routerLink="/">
-      <img src="assets/Analytify.png" alt="Analytify Logo">
-      <span class="logo-text">Analytify</span>
-    </div>
-
-    <!-- Navigation Buttons -->
-    <nav class="header-nav" style="display: flex; gap: 8px; margin-left: 20px;">
-      <a routerLink="/playlists" class="nav-link" routerLinkActive="active-nav"
-        [routerLinkActiveOptions]="{exact: true}"><i class="pi pi-compass" style="font-size: 0.95rem;"></i> <span class="hide-mobile">Browse Playlists</span></a>
-      <a routerLink="/stats" class="nav-link" routerLinkActive="active-nav"><i class="pi pi-chart-bar" style="font-size: 0.95rem;"></i> <span class="hide-mobile">Personal Stats</span></a>
-    </nav>
-  </div>
-  <div class="header-center">
-  </div>
-  <div class="header-right">
-    <!-- Listening History Button -->
-    <button (click)="viewListeningHistory()" class="p-button history-button">
-      <i class="pi pi-history"></i> <span class="hide-mobile">Listening History</span>
-    </button>
-
-    <!-- User Profile with Settings Dropdown -->
-    <div class="user-profile-container" style="position: relative; display: flex; align-items: center;">
-      <div class="user-profile-header" (click)="toggleSettingsDropdown($event)" title="Profile Settings">
-        <img *ngIf="profilePicUrl" [src]="profilePicUrl" alt="User Profile" class="profile-img">
-        <div *ngIf="!profilePicUrl" class="profile-placeholder">
-          <i class="pi pi-user"></i>
-        </div>
-      </div>
-
-      <!-- Settings Dropdown Overlay -->
-      <div class="profile-settings-dropdown" *ngIf="showSettingsDropdown">
-        <div class="dropdown-item toggle-item" (click)="$event.stopPropagation()">
-          <i class="pi pi-database"></i>
-          <span>Cloud Backup</span>
-          <label class="switch">
-            <input type="checkbox" [checked]="authService.isBackupActive()" (change)="onBackupToggle($event)">
-            <span class="slider round"></span>
-          </label>
-        </div>
-        <div class="dropdown-divider"></div>
-        <button (click)="logout()" class="dropdown-item">
-          <i class="pi pi-sign-out"></i> Logout
-        </button>
-        <div class="dropdown-divider"></div>
-        <a href="https://www.spotify.com/account/apps/" target="_blank" rel="noopener noreferrer" class="dropdown-item">
-          <i class="pi pi-external-link"></i> Revoke App Access
-        </a>
-        <button (click)="clearCacheAndLogout()" class="dropdown-item danger">
-          <i class="pi pi-trash"></i> Clear Cache &amp; Logout
-        </button>
-      </div>
-    </div>
-  </div>
-</header>
+<app-header></app-header>
 
 <!-- Under-Header Back Button -->
 <div class="back-bar-container" style="position: absolute; z-index: 10;">
@@ -294,38 +238,5 @@
   </div>
 </div>
 
-  <!-- Custom Confirmation Modal -->
-  <div class="confirm-modal-overlay" *ngIf="showClearCacheModal" (click)="cancelClearCache()">
-    <div class="confirm-modal-card" (click)="$event.stopPropagation()">
-      <div class="confirm-modal-icon">
-        <i class="pi pi-exclamation-triangle"></i>
-      </div>
-      <h3 class="confirm-modal-title">Clear Cache &amp; Logout</h3>
-      <p class="confirm-modal-text">
-        This action will delete all local caches and stored listening history snapshots. This process is irreversible and all accumulated stats history will be permanently lost.
-      </p>
-      <div class="confirm-modal-actions">
-        <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="cancelClearCache()">Cancel</button>
-        <button class="confirm-modal-btn confirm-modal-btn-confirm" (click)="confirmClearCache()">Proceed</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Custom Backup Confirmation Modal -->
-  <div class="confirm-modal-overlay" *ngIf="showBackupConfirmModal" (click)="cancelBackupToggle()">
-    <div class="confirm-modal-card" (click)="$event.stopPropagation()">
-      <div class="confirm-modal-icon">
-        <i class="pi pi-database"></i>
-      </div>
-      <h3 class="confirm-modal-title">Enable Cloud Backup</h3>
-      <p class="confirm-modal-text">
-        This action will upload your Spotify listening history and stats snapshots to a cloud server to synchronize them across multiple devices. Your data will no longer be stored solely on your local device.
-      </p>
-      <div class="confirm-modal-actions">
-        <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="cancelBackupToggle()">Cancel</button>
-        <button class="confirm-modal-btn confirm-modal-btn-confirm" (click)="confirmBackupToggle()">Proceed</button>
-      </div>
-    </div>
-  </div>
 
 <app-footer></app-footer>

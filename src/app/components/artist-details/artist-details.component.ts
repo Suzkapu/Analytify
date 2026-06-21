@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, HostListener} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {SpotifyDataService} from "../../services/spotify-data/spotify-data.service";
 import {SpotifyAuthService} from "../../services/auth/spotify-auth.service";
 import {StorageService} from "../../services/storage/storage.service";
@@ -16,8 +16,7 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
   allTags: any;
   selectedTag: any;
   playlistId: string = '';
-  profilePicUrl: string | null = null;
-  showSettingsDropdown: boolean = false;
+
 
   constructor(
     private route: ActivatedRoute, 
@@ -31,26 +30,10 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
       this.tracks = history.state.tracks;
       this.playlistId = history.state.playlistId || '';
       this.loadArtistDetails(params['id']);
-      this.loadUserProfile();
     });
   }
 
-  loadUserProfile() {
-    const userId = this.authService.getUserId() || 'anonymous';
-    const cached = this.storageService.getItem(`${userId}_profile_pic`);
-    if (cached !== null) {
-      this.profilePicUrl = cached || null;
-    } else {
-      this.spotifyDataService.getCurrentUser().subscribe({
-        next: (user: any) => {
-          const pic = user.images && user.images[0] ? user.images[0].url : '';
-          this.storageService.setItem(`${userId}_profile_pic`, pic);
-          this.profilePicUrl = pic || null;
-        },
-        error: (err) => console.error('Failed to load user profile:', err)
-      });
-    }
-  }
+
 
   ngOnInit() {
   }
@@ -99,64 +82,5 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
 
-  showClearCacheModal = false;
-  showBackupConfirmModal = false;
-
-  onBackupToggle(event: Event) {
-    const checkbox = event.target as HTMLInputElement;
-    if (checkbox.checked) {
-      this.showBackupConfirmModal = true;
-    } else {
-      this.authService.disableBackup().catch(err => {
-        console.error('Failed to disable backup:', err);
-      });
-    }
-  }
-
-  cancelBackupToggle() {
-    this.showBackupConfirmModal = false;
-  }
-
-  async confirmBackupToggle() {
-    this.showBackupConfirmModal = false;
-    try {
-      await this.authService.enableBackup();
-    } catch (err) {
-      console.error('Failed to enable backup:', err);
-      alert('Failed to enable database backup. Please try again.');
-    }
-  }
-
-  toggleSettingsDropdown(event: Event) {
-    event.stopPropagation();
-    this.showSettingsDropdown = !this.showSettingsDropdown;
-  }
-
-  clearCacheAndLogout() {
-    this.showClearCacheModal = true;
-  }
-
-  cancelClearCache() {
-    this.showClearCacheModal = false;
-  }
-
-  confirmClearCache() {
-    this.showClearCacheModal = false;
-    this.authService.clearCacheAndLogout();
-    this.router.navigate(['/login']);
-  }
-
-  viewListeningHistory() {
-    this.router.navigate(['/history']);
-  }
-
-  @HostListener('document:click')
-  onDocumentClick() {
-    this.showSettingsDropdown = false;
-  }
 }

@@ -1,4 +1,6 @@
 import {Component, HostListener} from '@angular/core';
+import {SwUpdate, VersionReadyEvent} from '@angular/service-worker';
+import {filter} from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +10,18 @@ import {Component, HostListener} from '@angular/core';
 export class AppComponent {
   title = 'Spotify Artists Stats';
   showScrollBtn = false;
+
+  constructor(private swUpdate: SwUpdate) {
+    if (this.swUpdate.isEnabled) {
+      this.swUpdate.versionUpdates.pipe(
+        filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY')
+      ).subscribe(() => {
+        if (confirm('A new version of the app is available. Reload the page to load it?')) {
+          window.location.reload();
+        }
+      });
+    }
+  }
 
   @HostListener('window:scroll', [])
   onWindowScroll() {

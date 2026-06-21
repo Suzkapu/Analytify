@@ -16,8 +16,7 @@ export class UserStatsComponent implements OnInit {
   selectedRange: string = 'short_term'; // 'short_term', 'medium_term', 'long_term'
   selectedCategory: string = 'tracks'; // 'tracks', 'artists', 'genres'
   isLoading: boolean = false;
-  profilePicUrl: string | null = null;
-  showSettingsDropdown: boolean = false;
+
 
   topTracks: any[] = [];
   topArtists: any[] = [];
@@ -42,10 +41,7 @@ export class UserStatsComponent implements OnInit {
   isLoadingTrendData: boolean = false;
 
   // Listening History & Modal Variables
-  showClearDataModal: boolean = false;
-  showConfirmLocalDeleteModal: boolean = false;
-  showConfirmDbDeleteModal: boolean = false;
-  isDeletingDbData: boolean = false;
+
   isCreatingPlaylist: boolean = false;
   playlistCreationSuccessMessage: string = '';
 
@@ -63,35 +59,14 @@ export class UserStatsComponent implements OnInit {
       await this.authService.ensureInitialSync();
     }
     this.loadStats();
-    this.loadUserProfile();
   }
 
-  viewListeningHistory() {
-    this.router.navigate(['/history']);
-  }
 
-  loadUserProfile() {
-    const userId = this.authService.getUserId() || 'anonymous';
-    const cached = this.storageService.getItem(`${userId}_profile_pic`);
-    if (cached !== null) {
-      this.profilePicUrl = cached || null;
-    } else {
-      this.spotifyDataService.getCurrentUser().subscribe({
-        next: (user: any) => {
-          const pic = user.images && user.images[0] ? user.images[0].url : '';
-          this.storageService.setItem(`${userId}_profile_pic`, pic);
-          this.profilePicUrl = pic || null;
-        },
-        error: (err) => console.error('Failed to load user profile:', err)
-      });
-    }
-  }
 
   changeRange(range: string) {
     this.selectedSnapshotId = 'current';
     this.selectedRange = range;
-    // Reset compare to the first available option without going through '' (avoids flicker)
-    this.compareSnapshotId = this.snapshotOptions.length > 0 ? this.snapshotOptions[0].id : '';
+    this.compareSnapshotId = '';
     this.loadStats();
   }
 
@@ -325,15 +300,6 @@ export class UserStatsComponent implements OnInit {
     }
   }
 
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
-
-  toggleSettingsDropdown(event: Event) {
-    event.stopPropagation();
-    this.showSettingsDropdown = !this.showSettingsDropdown;
-  }
 
   createTopPlaylist() {
     if (this.topTracks.length === 0) return;
@@ -562,95 +528,7 @@ export class UserStatsComponent implements OnInit {
 
   showBackupConfirmModal = false;
 
-  onBackupToggle(event: Event) {
-    const checkbox = event.target as HTMLInputElement;
-    if (checkbox.checked) {
-      this.showBackupConfirmModal = true;
-    } else {
-      this.authService.disableBackup().catch(err => {
-        console.error('Failed to disable backup:', err);
-      });
-    }
-  }
 
-  cancelBackupToggle() {
-    this.showBackupConfirmModal = false;
-  }
-
-  async confirmBackupToggle() {
-    this.showBackupConfirmModal = false;
-    try {
-      await this.authService.enableBackup();
-    } catch (err) {
-      console.error('Failed to enable backup:', err);
-      alert('Failed to enable database backup. Please try again.');
-    }
-  }
-
-  openClearDataModal() {
-    this.showSettingsDropdown = false;
-    this.showClearDataModal = true;
-  }
-
-  closeClearDataModal() {
-    this.showClearDataModal = false;
-  }
-
-  selectClearLocalData() {
-    this.showClearDataModal = false;
-    this.showConfirmLocalDeleteModal = true;
-  }
-
-  selectClearDbData() {
-    this.showClearDataModal = false;
-    this.showConfirmDbDeleteModal = true;
-  }
-
-  cancelLocalDelete() {
-    this.showConfirmLocalDeleteModal = false;
-  }
-
-  cancelDbDelete() {
-    this.showConfirmDbDeleteModal = false;
-  }
-
-  confirmLocalDelete() {
-    this.showConfirmLocalDeleteModal = false;
-    const userId = this.authService.getUserId() || 'anonymous';
-    this.storageService.clearStatsHistory(userId).then(() => {
-      this.authService.clearCacheAndLogout();
-      this.router.navigate(['/login']);
-    }).catch(err => {
-      console.error('Failed to clear stats history:', err);
-      this.authService.clearCacheAndLogout();
-      this.router.navigate(['/login']);
-    });
-  }
-
-  async confirmDbDelete() {
-    const supabaseUserId = this.authService.getSupabaseUserId();
-    if (!supabaseUserId) {
-      alert('You must be logged in to delete database data.');
-      this.showConfirmDbDeleteModal = false;
-      return;
-    }
-
-    this.isDeletingDbData = true;
-    try {
-      await this.supabaseService.deleteUserProfileData(supabaseUserId);
-      this.storageService.setItem(`${supabaseUserId}_backup_active`, 'false');
-      this.storageService.removeItem(`${supabaseUserId}_last_synced_at`);
-      this.isDeletingDbData = false;
-      this.showConfirmDbDeleteModal = false;
-      alert('All cloud backup data connected to your profile has been permanently deleted from the database.');
-      this.loadStats();
-    } catch (err) {
-      console.error('Failed to delete cloud backup data:', err);
-      this.isDeletingDbData = false;
-      this.showConfirmDbDeleteModal = false;
-      alert('Failed to delete cloud backup data. Please try again.');
-    }
-  }
 
   saveHistorySnapshot(userId: string, range: string) {
     if (this.topTracks.length === 0 && this.topArtists.length === 0) {
@@ -1309,7 +1187,6 @@ export class UserStatsComponent implements OnInit {
 
   @HostListener('document:click')
   onDocumentClick() {
-    this.showSettingsDropdown = false;
     this.showHistoryMenu = false;
     this.showCompareMenu = false;
   }

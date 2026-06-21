@@ -27,6 +27,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { LegalComponent } from './components/legal/legal.component';
 import { ListeningHistoryComponent } from './components/listening-history/listening-history.component';
 import { StorageService } from './services/storage/storage.service';
+import { HeaderComponent } from './components/header/header.component';
 
 export function initializeStorage(storageService: StorageService) {
   return () => storageService.initFromDB();
@@ -45,6 +46,7 @@ export function initializeStorage(storageService: StorageService) {
     FooterComponent,
     LegalComponent,
     ListeningHistoryComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,
