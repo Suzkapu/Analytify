@@ -129,11 +129,13 @@ async function syncArtists(spotifyAccessToken, artistIds) {
       // Collect genres
       if (artist.genres) {
         for (const genre of artist.genres) {
-          genresToInsert.add(genre);
-          artistGenresToInsert.push({
-            artist_id: artist.id,
-            genre_name: genre
-          });
+          if (genre && genre.trim().toLowerCase() !== 'artist') {
+            genresToInsert.add(genre);
+            artistGenresToInsert.push({
+              artist_id: artist.id,
+              genre_name: genre
+            });
+          }
         }
       }
     }
@@ -582,8 +584,10 @@ async function syncUserStats(user, spotifyAccessToken) {
         const rankWeight = 50 - index;
         if (artist.genres) {
           artist.genres.forEach(genre => {
-            const current = genreCounts.get(genre) || 0;
-            genreCounts.set(genre, current + rankWeight);
+            if (genre && genre.trim().toLowerCase() !== 'artist') {
+              const current = genreCounts.get(genre) || 0;
+              genreCounts.set(genre, current + rankWeight);
+            }
           });
         }
       });

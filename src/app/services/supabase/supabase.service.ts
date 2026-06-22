@@ -266,7 +266,9 @@ export class SupabaseService {
       const artistGenresToInsert: any[] = [];
 
       uniqueArtists.forEach(a => {
-        const genresList = a.genres || (a.genre ? [a.genre] : []);
+        const genresList = (a.genres || (a.genre ? [a.genre] : [])).filter(
+          (g: string) => g && g.trim().toLowerCase() !== 'artist'
+        );
         genresList.forEach((g: string) => {
           if (g) {
             genresToInsert.add(g);

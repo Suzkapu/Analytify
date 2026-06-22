@@ -270,8 +270,10 @@ export class UserStatsComponent implements OnInit {
       const rankWeight = 50 - index;
       if (artist.genres) {
         artist.genres.forEach((genre: string) => {
-          const current = genreCounts.get(genre) || 0;
-          genreCounts.set(genre, current + rankWeight);
+          if (genre && genre.trim().toLowerCase() !== 'artist') {
+            const current = genreCounts.get(genre) || 0;
+            genreCounts.set(genre, current + rankWeight);
+          }
         });
       }
     });
