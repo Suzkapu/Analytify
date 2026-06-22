@@ -56,8 +56,8 @@ export class HeaderComponent implements OnInit {
     this.showSettingsDropdown = !this.showSettingsDropdown;
   }
 
-  logout() {
-    this.authService.logout();
+  async logout() {
+    await this.authService.logout();
     this.router.navigate(['/login']);
   }
 

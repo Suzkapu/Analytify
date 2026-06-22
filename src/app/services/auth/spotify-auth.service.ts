@@ -13,6 +13,7 @@ import {SpotifyDataService} from '../spotify-data/spotify-data.service';
 export class SpotifyAuthService {
   private readonly storageKey = 'spotifyAccessToken';
   private refreshObservable: Observable<any> | null = null;
+  private restoreSessionPromise: Promise<boolean> | null = null;
   logout$ = new Subject<void>();
 
   isSyncing = false;
@@ -189,6 +190,19 @@ export class SpotifyAuthService {
   }
 
   async restoreSessionFromSupabase(): Promise<boolean> {
+    if (this.restoreSessionPromise) {
+      return this.restoreSessionPromise;
+    }
+    this.restoreSessionPromise = this._restoreSessionFromSupabase();
+    try {
+      const result = await this.restoreSessionPromise;
+      return result;
+    } finally {
+      this.restoreSessionPromise = null;
+    }
+  }
+
+  private async _restoreSessionFromSupabase(): Promise<boolean> {
     try {
       const { data: { session }, error } = await this.supabaseService.client.auth.getSession();
       if (error) throw error;
@@ -213,6 +227,45 @@ export class SpotifyAuthService {
           }
           this.storageService.setItem('spotifyUserId', spotifyId);
           this.storageService.setItem('supabaseUserId', session.user.id);
+        }
+
+        // Query DB for refresh token if it is missing locally
+        const supabaseUserId = session.user.id;
+        let effectiveUserId = supabaseUserId;
+        if (!environment.production && effectiveUserId.length >= 36 && !effectiveUserId.startsWith('de11')) {
+          effectiveUserId = 'de11' + effectiveUserId.substring(4);
+        }
+
+        let localRefreshToken = this.storageService.getItem('spotifyRefreshToken');
+        if (!localRefreshToken || !this.storageService.getItem(this.storageKey)) {
+          console.log('[Auth] Spotify token or refresh token missing from cache. Querying DB...');
+          const { data: userData, error: userError } = await this.supabaseService.client
+            .from('users')
+            .select('spotify_refresh_token, spotify_id')
+            .eq('id', effectiveUserId)
+            .maybeSingle();
+
+          if (!userError && userData) {
+            if (userData.spotify_refresh_token) {
+              console.log('[Auth] Found Spotify refresh token in database.');
+              this.storageService.setItem('spotifyRefreshToken', userData.spotify_refresh_token);
+              localRefreshToken = userData.spotify_refresh_token;
+            }
+            if (userData.spotify_id) {
+              this.storageService.setItem('spotifyUserId', userData.spotify_id);
+            }
+          }
+        }
+
+        // If we have a refresh token and no access token or it's expired, proactively refresh it
+        if (localRefreshToken && (!this.storageService.getItem(this.storageKey) || this.isTokenExpired())) {
+          try {
+            console.log('[Auth] Spotify access token missing or expired. Proactively refreshing...');
+            await firstValueFrom(this.refreshToken());
+            console.log('[Auth] Spotify token refreshed successfully during session restoration.');
+          } catch (refreshErr) {
+            console.warn('[Auth] Failed to refresh Spotify token during session restoration:', refreshErr);
+          }
         }
         
         return true;

@@ -121,6 +121,19 @@ export class SongsComponent implements OnInit, OnDestroy {
     const activeTask = this.playlistLoaderService.getLoadingTask(this.playlistId);
 
     if (activeTask) {
+      if (storedArtists) {
+        try {
+          this.artists = JSON.parse(storedArtists);
+          const amountStr = this.storageService.getItem(`${userId}_${this.playlistId}_Amount`);
+          if (amountStr) {
+            this.totalTracks = JSON.parse(amountStr);
+          }
+          this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
+          this.filterArtists();
+        } catch (e) {
+          console.warn('Failed to parse stored artists for active task:', e);
+        }
+      }
       this.subscribeToLoaderTask(activeTask);
       return;
     }

@@ -94,17 +94,27 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     const userId = this.authService.getUserId() || 'anonymous';
     const supabaseUserId = this.authService.getSupabaseUserId();
 
-    // Check if there is an active background task running for this playlist
-    const activeTask = this.playlistLoaderService.getLoadingTask(this.playlistId);
-    if (activeTask) {
-      this.subscribeToLoaderTask(activeTask);
-      return;
-    }
-
     const storageKey = `${userId}_${this.playlistId}`;
     const storedArtists = this.storageService.getItem(storageKey);
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
     const lastUpdated = this.storageService.getItem(lastUpdatedKey);
+
+    // Check if there is an active background task running for this playlist
+    const activeTask = this.playlistLoaderService.getLoadingTask(this.playlistId);
+    if (activeTask) {
+      if (storedArtists) {
+        try {
+          this.artists = JSON.parse(storedArtists);
+          this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
+          this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
+          this.runAnalysis();
+        } catch (e) {
+          console.warn('Failed to parse stored artists for active task:', e);
+        }
+      }
+      this.subscribeToLoaderTask(activeTask);
+      return;
+    }
 
     const isBackupActive = this.authService.isBackupActive();
     const dbLastSynced = supabaseUserId ? this.storageService.getItem(`${supabaseUserId}_last_synced_at`) : null;
