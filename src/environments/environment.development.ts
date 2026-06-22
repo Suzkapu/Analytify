@@ -4,11 +4,11 @@ export const environment = {
   appUrl: 'http://127.0.0.1:4200/',
   authorizeUrl: 'https://accounts.spotify.com/authorize',
 
-  // ─── NEU: HINZUGEFÜGT FÜR SUPABASE & AUTH ───────────────────────────
+  // ─── NEW: ADDED FOR SUPABASE & AUTH ───────────────────────────
   supabaseUrl: 'https://tmmhylpexbubyznlizfs.supabase.co',
   supabaseKey: 'sb_publishable_hMg6wOlMTQai9ipA4ZlxzQ_rawnrTD-',
   spotifyClientId: 'REDACTED_SPOTIFY_CLIENT_ID',
-  // [ASSUMED] Der Callback-Pfad wird an deine lokale appUrl angehängt
+  // [ASSUMED] The callback path will be appended to your local appUrl
   spotifyRedirectUri: 'http://127.0.0.1:4200/callback',
   spotifyScopes: [
     'user-read-private',

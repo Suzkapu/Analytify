@@ -106,7 +106,7 @@ async function syncArtists(spotifyAccessToken, artistIds) {
   // Fetch missing artists from Spotify (max 50 per request)
   const chunks = chunkArray(missingIds, 50);
   for (const chunk of chunks) {
-    const data = await apiRequest(`https://api.spotify.com/v1/artists?ids=${chunk.join(',')}`, {
+    const data = await apiRequest(`https://api.spotify.com/v1/artists?ids=${chunk.join(',')}&locale=en_GB`, {
       headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
     });
 
@@ -181,7 +181,7 @@ async function syncAlbums(spotifyAccessToken, albumIds) {
 
   const chunks = chunkArray(missingIds, 20); // Spotify albums endpoint allows max 20 ids
   for (const chunk of chunks) {
-    const data = await apiRequest(`https://api.spotify.com/v1/albums?ids=${chunk.join(',')}`, {
+    const data = await apiRequest(`https://api.spotify.com/v1/albums?ids=${chunk.join(',')}&market=GB&locale=en_GB`, {
       headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
     });
 
@@ -270,7 +270,7 @@ async function syncTracks(spotifyAccessToken, trackIds) {
 
   const chunks = chunkArray(missingIds, 50);
   for (const chunk of chunks) {
-    const data = await apiRequest(`https://api.spotify.com/v1/tracks?ids=${chunk.join(',')}`, {
+    const data = await apiRequest(`https://api.spotify.com/v1/tracks?ids=${chunk.join(',')}&market=GB&locale=en_GB`, {
       headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
     });
 
@@ -549,13 +549,13 @@ async function syncUserStats(user, spotifyAccessToken) {
       console.log(`[Sync] Fetching top items for ${user.display_name} (${range})...`);
 
       // Fetch top artists
-      const artistsRes = await apiRequest(`https://api.spotify.com/v1/me/top/artists?time_range=${range}&limit=50&offset=0`, {
+      const artistsRes = await apiRequest(`https://api.spotify.com/v1/me/top/artists?time_range=${range}&limit=50&offset=0&locale=en_GB`, {
         headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
       });
       const topArtists = artistsRes.items || [];
 
       // Fetch top tracks page 1 (limit 50, offset 0)
-      const tracksRes = await apiRequest(`https://api.spotify.com/v1/me/top/tracks?time_range=${range}&limit=50&offset=0`, {
+      const tracksRes = await apiRequest(`https://api.spotify.com/v1/me/top/tracks?time_range=${range}&limit=50&offset=0&market=GB&locale=en_GB`, {
         headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
       });
       const topTracksPage1 = tracksRes.items || [];
@@ -563,7 +563,7 @@ async function syncUserStats(user, spotifyAccessToken) {
       // Fetch top tracks page 2 (limit 50, offset 50)
       let topTracksPage2 = [];
       try {
-        const tracksRes2 = await apiRequest(`https://api.spotify.com/v1/me/top/tracks?time_range=${range}&limit=50&offset=50`, {
+        const tracksRes2 = await apiRequest(`https://api.spotify.com/v1/me/top/tracks?time_range=${range}&limit=50&offset=50&market=GB&locale=en_GB`, {
           headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
         });
         topTracksPage2 = tracksRes2.items || [];
@@ -658,7 +658,7 @@ async function syncUserHistory(user) {
     const spotifyAccessToken = await getSpotifyAccessToken(user.spotify_refresh_token);
     
     // B. Fetch Recently Played Tracks from Spotify
-    const recentlyPlayed = await apiRequest('https://api.spotify.com/v1/me/player/recently-played?limit=50', {
+    const recentlyPlayed = await apiRequest('https://api.spotify.com/v1/me/player/recently-played?limit=50&locale=en_GB', {
       headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
     });
 
