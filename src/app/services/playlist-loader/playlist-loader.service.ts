@@ -382,10 +382,24 @@ export class PlaylistLoaderService {
 
         this.fetchArtistDetailsLazy(task, targetArray, userId);
 
-        if (!foundExisting && offset + limit < task.totalTracks) {
+        const totalMergedTracksCount = task.loadedTracksCount + cachedTrackIds.size;
+        const countMatches = totalMergedTracksCount === task.totalTracks;
+
+        if (foundExisting && countMatches) {
+          console.log(`[PlaylistLoaderService] Fav tracks incremental match: merged count (${totalMergedTracksCount}) matches total (${task.totalTracks}). Merging remaining cached tracks.`);
+          this.mergeCachedArtists(task, cachedArtists, targetArray, true);
+          task.isLoadingTracks = false;
+          task.emitUpdate();
+          this.fetchArtistDetailsLazy(task, targetArray, userId);
+          this.checkCompletion(task, userId);
+        } else if (offset + limit < task.totalTracks) {
+          if (foundExisting && !countMatches) {
+            console.log(`[PlaylistLoaderService] Fav tracks count mismatch: merged count (${totalMergedTracksCount}) vs total (${task.totalTracks}). Continuing full pull.`);
+          }
           this.loadNewerFavTracks(task, userId, offset + limit, limit, cachedArtists, targetArray);
         } else {
-          this.mergeCachedArtists(task, cachedArtists, targetArray);
+          console.log(`[PlaylistLoaderService] Fav tracks full pull complete. Merging cached artist metadata only.`);
+          this.mergeCachedArtists(task, cachedArtists, targetArray, false);
           task.isLoadingTracks = false;
           task.emitUpdate();
           this.fetchArtistDetailsLazy(task, targetArray, userId);
@@ -403,33 +417,46 @@ export class PlaylistLoaderService {
     task.addSub(sub);
   }
 
-  private mergeCachedArtists(task: PlaylistLoadTask, cachedArtists: any[], targetArray: any[]) {
+  private mergeCachedArtists(task: PlaylistLoadTask, cachedArtists: any[], targetArray: any[], mergeTracks: boolean = true) {
     const shift = task.playlistId === 'fav' ? task.loadedTracksCount : 0;
 
     cachedArtists.forEach(cachedArtist => {
-      const mappedTracks = (cachedArtist.tracks || []).map((t: any) => ({
-        ...t,
-        playlist_index: t.playlist_index ? t.playlist_index + shift : t.playlist_index
-      }));
-
       let existingArtist = targetArray.find(a => a.id === cachedArtist.id);
-      if (!existingArtist) {
-        targetArray.push({
-          ...cachedArtist,
-          tracks: mappedTracks
-        });
-      } else {
-        mappedTracks.forEach((track: any) => {
-          let hasTrack = existingArtist.tracks.some((t: any) => t.id === track.id);
-          if (!hasTrack) {
-            existingArtist.tracks.push(track);
+      
+      if (mergeTracks) {
+        const mappedTracks = (cachedArtist.tracks || []).map((t: any) => ({
+          ...t,
+          playlist_index: t.playlist_index ? t.playlist_index + shift : t.playlist_index
+        }));
+
+        if (!existingArtist) {
+          targetArray.push({
+            ...cachedArtist,
+            tracks: mappedTracks
+          });
+        } else {
+          mappedTracks.forEach((track: any) => {
+            let hasTrack = existingArtist.tracks.some((t: any) => t.id === track.id);
+            if (!hasTrack) {
+              existingArtist.tracks.push(track);
+            }
+          });
+          if (!existingArtist.images && cachedArtist.images) {
+            existingArtist.images = cachedArtist.images;
           }
-        });
-        if (!existingArtist.images && cachedArtist.images) {
-          existingArtist.images = cachedArtist.images;
+          if (!existingArtist.genres && cachedArtist.genres) {
+            existingArtist.genres = cachedArtist.genres;
+          }
         }
-        if (!existingArtist.genres && cachedArtist.genres) {
-          existingArtist.genres = cachedArtist.genres;
+      } else {
+        // Only merge metadata (images and genres) if the artist is already in targetArray
+        if (existingArtist) {
+          if (!existingArtist.images && cachedArtist.images) {
+            existingArtist.images = cachedArtist.images;
+          }
+          if (!existingArtist.genres && cachedArtist.genres) {
+            existingArtist.genres = cachedArtist.genres;
+          }
         }
       }
 

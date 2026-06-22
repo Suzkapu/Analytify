@@ -57,16 +57,19 @@ export class SpotifyAuthService {
     return this.storageService.getItem(this.storageKey);
   }
 
-  async loginWithSupabase(): Promise<any> {
+  async loginWithSupabase(promptConsent: boolean = true): Promise<any> {
+    const queryParams: any = {
+      access_type: 'offline'
+    };
+    if (promptConsent) {
+      queryParams.prompt = 'consent';
+    }
     return this.supabaseService.client.auth.signInWithOAuth({
       provider: 'spotify',
       options: {
         redirectTo: environment.spotifyRedirectUri,
         scopes: environment.spotifyScopes,
-        queryParams: {
-          access_type: 'offline',
-          prompt: 'consent'
-        }
+        queryParams
       }
     });
   }

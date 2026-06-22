@@ -23,9 +23,8 @@ export class SpotifyAuthInterceptor implements HttpInterceptor {
               return next.handle(clonedReq).pipe(
                 catchError((err) => {
                   if (err instanceof HttpErrorResponse && err.status === 401) {
-                    console.warn('Received 401 from Spotify API. Invalid token. Logging out.');
-                    this.authService.logout();
-                    this.router.navigate(['/login']);
+                    console.warn('Received 401 from Spotify API. Invalid token. Redirecting to Spotify OAuth.');
+                    this.authService.loginWithSupabase(false);
                   }
                   return throwError(() => err);
                 })
@@ -33,11 +32,8 @@ export class SpotifyAuthInterceptor implements HttpInterceptor {
             }),
             catchError((refreshErr) => {
               console.error('Auto token refresh failed', refreshErr);
-              if (refreshErr instanceof HttpErrorResponse && (refreshErr.status === 400 || refreshErr.status === 401)) {
-                console.warn('Refresh token is invalid or expired. Logging out.');
-                this.authService.logout();
-                this.router.navigate(['/login']);
-              }
+              console.warn('Refresh token is invalid or expired. Redirecting to Spotify OAuth for renewal.');
+              this.authService.loginWithSupabase(false);
               return throwError(() => refreshErr);
             })
           );
@@ -49,9 +45,8 @@ export class SpotifyAuthInterceptor implements HttpInterceptor {
           return next.handle(clonedReq).pipe(
             catchError((err) => {
               if (err instanceof HttpErrorResponse && err.status === 401) {
-                console.warn('Received 401 from Spotify API. Invalid token. Logging out.');
-                this.authService.logout();
-                this.router.navigate(['/login']);
+                console.warn('Received 401 from Spotify API. Invalid token. Redirecting to Spotify OAuth.');
+                this.authService.loginWithSupabase(false);
               }
               return throwError(() => err);
             })

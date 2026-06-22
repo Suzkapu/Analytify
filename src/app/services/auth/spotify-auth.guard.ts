@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { SpotifyAuthService } from './spotify-auth.service';
 import { StorageService } from '../storage/storage.service';
+import { firstValueFrom } from 'rxjs';
 
 export const spotifyAuthGuard = async () => {
   const authService = inject(SpotifyAuthService);
@@ -21,6 +22,18 @@ export const spotifyAuthGuard = async () => {
   }
 
   if (authService.isAuthenticated()) {
+    if (authService.isTokenExpired()) {
+      console.log('[Guard] Spotify token is expired. Attempting refresh...');
+      try {
+        await firstValueFrom(authService.refreshToken());
+        console.log('[Guard] Spotify token refreshed successfully.');
+      } catch (err) {
+        console.warn('[Guard] Spotify token refresh failed, redirecting to Spotify OAuth for renewal:', err);
+        // Automatically redirect to Spotify OAuth without prompt: 'consent' for immediate login renewal
+        await authService.loginWithSupabase(false);
+        return false;
+      }
+    }
     await authService.ensureInitialSync();
     return true;
   }
