@@ -175,7 +175,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
       this.loaderSubscription = null;
     }
 
-    const task = this.playlistLoaderService.startLoadingTask(userId, this.playlistId, isBackgroundRefresh, forceFullReload);
+    const task = this.playlistLoaderService.startLoadingTask(userId, this.playlistId, isBackgroundRefresh, false);
     this.subscribeToLoaderTask(task);
   }
 

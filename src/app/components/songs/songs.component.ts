@@ -205,7 +205,7 @@ export class SongsComponent implements OnInit, OnDestroy {
         console.warn('Failed to load temporary data from cache:', e);
       }
     }
-    const task = this.playlistLoaderService.startLoadingTask(userId, this.playlistId, isRefresh, isExpired);
+    const task = this.playlistLoaderService.startLoadingTask(userId, this.playlistId, isRefresh, false);
     this.subscribeToLoaderTask(task);
   }
 
