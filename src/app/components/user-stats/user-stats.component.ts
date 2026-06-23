@@ -7,6 +7,14 @@ import { forkJoin } from 'rxjs';
 import { SupabaseService } from '../../services/supabase/supabase.service';
 import { ImageHealingService } from '../../services/image-healing/image-healing.service';
 
+function toLocalDateKey(ts: number): string {
+  const d = new Date(ts);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const r = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${r}`;
+}
+
 @Component({
   selector: 'app-user-stats',
   templateUrl: './user-stats.component.html',
@@ -663,7 +671,7 @@ export class UserStatsComponent implements OnInit {
           this.supabaseService.loadAllStatsSnapshotsMetadata(supabaseUserId, range).then(async (dbSnapshots) => {
             const localHistory = await this.storageService.getStatsHistory(userId, range).catch(() => [] as any[]);
 
-            const toDateKey = (ts: number) => new Date(ts).toISOString().split('T')[0];
+            const toDateKey = toLocalDateKey;
 
             const cloudDateKeys = new Set((dbSnapshots || []).map((s: any) =>
               s.snapshotDate || toDateKey(s.timestamp)
@@ -943,7 +951,7 @@ export class UserStatsComponent implements OnInit {
         console.log(`[Stats] Trend popup clicked, but some snapshots are not loaded. Fetching all snapshot details from cloud...`);
         const fullSnapshots = await this.supabaseService.loadAllStatsSnapshots(supabaseUserId, range);
         
-        const toDateKey = (ts: number) => new Date(ts).toISOString().split('T')[0];
+        const toDateKey = toLocalDateKey;
         // Update historyData in-place and save to IndexedDB
         for (const fullSnap of fullSnapshots) {
           const idx = this.historyData.findIndex(d => 

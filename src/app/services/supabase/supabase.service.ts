@@ -2,6 +2,19 @@ import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
 
+function parseSnapshotTimestamp(snapshotDate?: string, createdAt?: string): number {
+  if (snapshotDate) {
+    const parts = snapshotDate.split('-');
+    if (parts.length === 3) {
+      const year = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1;
+      const day = parseInt(parts[2], 10);
+      return new Date(year, month, day).getTime();
+    }
+  }
+  return new Date(createdAt || '').getTime();
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -1082,7 +1095,7 @@ export class SupabaseService {
         return {
           userId: supabaseUserId,
           range: range,
-          timestamp: new Date(row.snapshot_date || row.created_at).getTime(),
+          timestamp: parseSnapshotTimestamp(row.snapshot_date, row.created_at),
           snapshotDate: row.snapshot_date,
           avgPopularity: Number(row.avg_popularity),
           explicitPercentage: Number(row.explicit_percentage),
@@ -1115,7 +1128,7 @@ export class SupabaseService {
         id: row.id,
         userId: supabaseUserId,
         range: range,
-        timestamp: new Date(row.snapshot_date || row.created_at).getTime(),
+        timestamp: parseSnapshotTimestamp(row.snapshot_date, row.created_at),
         snapshotDate: row.snapshot_date,
         avgPopularity: Number(row.avg_popularity),
         explicitPercentage: Number(row.explicit_percentage),
@@ -1231,7 +1244,7 @@ export class SupabaseService {
         id: data.id,
         userId: supabaseUserId,
         range: data.range,
-        timestamp: new Date(data.snapshot_date || data.created_at).getTime(),
+        timestamp: parseSnapshotTimestamp(data.snapshot_date, data.created_at),
         snapshotDate: data.snapshot_date,
         avgPopularity: Number(data.avg_popularity),
         explicitPercentage: Number(data.explicit_percentage),
