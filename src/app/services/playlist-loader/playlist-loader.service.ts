@@ -99,7 +99,7 @@ export class PlaylistLoaderService {
     return this.tasks.get(playlistId);
   }
 
-  startLoadingTask(userId: string, playlistId: string, isBackgroundRefresh: boolean = false, forceFullReload: boolean = false): PlaylistLoadTask {
+  startLoadingTask(userId: string, playlistId: string, isBackgroundRefresh: boolean = false, allowFullFallback: boolean = false): PlaylistLoadTask {
     let task = this.tasks.get(playlistId);
     if (task) {
       return task;
@@ -107,7 +107,7 @@ export class PlaylistLoaderService {
 
     task = new PlaylistLoadTask(playlistId);
     this.tasks.set(playlistId, task);
-    this.triggerApiLoad(task, userId, isBackgroundRefresh, forceFullReload);
+    this.triggerApiLoad(task, userId, isBackgroundRefresh, allowFullFallback);
     return task;
   }
 
@@ -124,7 +124,48 @@ export class PlaylistLoaderService {
     this.tasks.clear();
   }
 
-  private triggerApiLoad(task: PlaylistLoadTask, userId: string, isBackgroundRefresh: boolean, forceFullReload: boolean = false) {
+  private tryIncrementalMatch(
+    task: PlaylistLoadTask,
+    items: any[],
+    offset: number,
+    cachedArtists: any[],
+    allowFullFallback: boolean
+  ): { match: boolean; minPlaylistIndex?: number; shift?: number } {
+    const cachedTrackIndices = new Map<string, number>();
+    let cachedTotalTracks = 0;
+    cachedArtists.forEach(artist => {
+      if (artist.tracks) {
+        artist.tracks.forEach((t: any) => {
+          if (t && t.id) {
+            cachedTrackIndices.set(t.id, t.playlist_index);
+            cachedTotalTracks = Math.max(cachedTotalTracks, t.playlist_index);
+          }
+        });
+      }
+    });
+
+    for (let j = 0; j < items.length; j++) {
+      const item = items[j];
+      if (item && item.track && item.track.id) {
+        const trackId = item.track.id;
+        if (cachedTrackIndices.has(trackId)) {
+          const idx = cachedTrackIndices.get(trackId)!;
+          const newTracksCount = offset + j;
+          const remainingCachedTracksCount = cachedTotalTracks - idx + 1;
+          const totalMergedTracks = newTracksCount + remainingCachedTracksCount;
+
+          if (totalMergedTracks === task.totalTracks) {
+            const shift = (offset + j + 1) - idx;
+            return { match: true, minPlaylistIndex: idx, shift };
+          }
+        }
+      }
+    }
+
+    return { match: false };
+  }
+
+  private triggerApiLoad(task: PlaylistLoadTask, userId: string, isBackgroundRefresh: boolean, allowFullFallback: boolean = false) {
     console.log(`[PlaylistLoaderService] Loading playlist ${task.playlistId} from API`);
     task.requestedArtistIds.clear();
     task.loadedArtistsDetailsCount = 0;
@@ -191,9 +232,9 @@ export class PlaylistLoaderService {
     task.loadedTracksCount = 0;
     task.emitUpdate();
 
-    if (task.playlistId === 'fav' && storedArtists && !isOldCache && !forceFullReload) {
+    if (task.playlistId === 'fav' && storedArtists && !isOldCache) {
       console.log("Favourite Tracks detected. Starting incremental load.");
-      this.loadNewerFavTracks(task, userId, 0, 50, JSON.parse(storedArtists), targetArray);
+      this.loadNewerFavTracks(task, userId, 0, 50, cachedArtists, targetArray, allowFullFallback);
     } else {
       if (task.playlistId === 'fav') {
         task.playlistName = 'Favourite Tracks';
@@ -231,9 +272,11 @@ export class PlaylistLoaderService {
             task.totalTracks = playlist.tracks.total;
             task.emitUpdate();
 
-            // Try to use fast path if cache is available and total tracks count matches
+            // Try to use fast path or incremental end path if cache is available
             let canUseFastPath = false;
-            if (cachedArtists.length > 0 && cachedTracksCount === task.totalTracks && task.totalTracks > 100) {
+            let canUseIncrementalEndPath = false;
+
+            if (cachedArtists.length > 0 && task.totalTracks > 100) {
               const cachedFirst100Ids = new Set<string>();
               cachedArtists.forEach(artist => {
                 if (artist.tracks) {
@@ -251,31 +294,56 @@ export class PlaylistLoaderService {
               );
 
               if (allFirstPageMatch) {
-                canUseFastPath = true;
+                if (cachedTracksCount === task.totalTracks) {
+                  canUseFastPath = true;
+                } else if (task.totalTracks > cachedTracksCount) {
+                  canUseIncrementalEndPath = true;
+                }
               }
             }
 
-            this.getArtistsFromTracks(task, playlist.tracks.items, targetArray);
+            this.getArtistsFromTracks(task, playlist.tracks.items, targetArray, 0);
 
             if (canUseFastPath) {
               console.log(`[PlaylistLoaderService] Fast path matches for playlist ${task.playlistId}. Merging remaining cached data.`);
-              this.mergeCachedArtists(task, cachedArtists, targetArray);
+              this.mergeCachedArtists(task, cachedArtists, targetArray, 101, 0, true);
               task.loadedTracksCount = task.totalTracks;
               task.isLoadingTracks = false;
               task.emitUpdate();
               this.fetchArtistDetailsLazy(task, targetArray, userId);
               this.checkCompletion(task, userId);
-            } else {
-              task.loadedTracksCount = Math.min(100, task.totalTracks);
+            } else if (canUseIncrementalEndPath) {
+              console.log(`[PlaylistLoaderService] Incremental end path matches for playlist ${task.playlistId}. Merging cached tracks up to ${cachedTracksCount} and pulling new ones from offset ${cachedTracksCount}.`);
+              this.mergeCachedArtists(task, cachedArtists, targetArray, 101, 0, true);
+              task.loadedTracksCount = cachedTracksCount;
               task.emitUpdate();
               this.fetchArtistDetailsLazy(task, targetArray, userId);
-
-              if (task.loadedTracksCount < task.totalTracks) {
-                this.loadRemainingTracks(task, userId, 100, 100, task.totalTracks, targetArray);
-              } else {
+              
+              this.loadRemainingTracks(task, userId, cachedTracksCount, 100, task.totalTracks, targetArray, cachedArtists, allowFullFallback);
+            } else {
+              // Mismatch/no-cache on first page
+              if (cachedArtists.length > 0 && !allowFullFallback && task.totalTracks > 100) {
+                console.log(`[PlaylistLoaderService] Playlist mismatch detected under daily restriction. Stopping API load and using full cache.`);
+                targetArray.length = 0; // Clear the first page tracks we got
+                this.mergeCachedArtists(task, cachedArtists, targetArray, undefined, 0, true);
+                task.loadedTracksCount = cachedTracksCount;
                 task.isLoadingTracks = false;
                 task.emitUpdate();
+                this.fetchArtistDetailsLazy(task, targetArray, userId);
                 this.checkCompletion(task, userId);
+              } else {
+                task.loadedTracksCount = Math.min(100, task.totalTracks);
+                task.emitUpdate();
+                this.fetchArtistDetailsLazy(task, targetArray, userId);
+
+                if (task.loadedTracksCount < task.totalTracks) {
+                  this.loadRemainingTracks(task, userId, 100, 100, task.totalTracks, targetArray, cachedArtists, allowFullFallback);
+                } else {
+                  this.mergeCachedArtists(task, cachedArtists, targetArray, undefined, 0, false);
+                  task.isLoadingTracks = false;
+                  task.emitUpdate();
+                  this.checkCompletion(task, userId);
+                }
               }
             }
           },
@@ -292,19 +360,29 @@ export class PlaylistLoaderService {
     }
   }
 
-  private loadRemainingTracks(task: PlaylistLoadTask, userId: string, offset: number, limit: number, total: number, targetArray: any[]) {
+  private loadRemainingTracks(
+    task: PlaylistLoadTask,
+    userId: string,
+    offset: number,
+    limit: number,
+    total: number,
+    targetArray: any[],
+    cachedArtists: any[] = [],
+    allowFullFallback: boolean = false
+  ) {
     if (task.playlistId === 'fav') {
       const sub = this.spotifyDataService.getFavTracks(offset, limit).subscribe({
         next: (tracks: any) => {
-          this.getArtistsFromTracks(task, tracks.items, targetArray);
+          this.getArtistsFromTracks(task, tracks.items, targetArray, offset);
           task.loadedTracksCount = Math.min(offset + limit, total);
           task.emitUpdate();
           
           this.fetchArtistDetailsLazy(task, targetArray, userId);
 
           if (task.loadedTracksCount < total) {
-            this.loadRemainingTracks(task, userId, offset + limit, limit, total, targetArray);
+            this.loadRemainingTracks(task, userId, offset + limit, limit, total, targetArray, cachedArtists, allowFullFallback);
           } else {
+            this.mergeCachedArtists(task, cachedArtists, targetArray, undefined, 0, false);
             task.isLoadingTracks = false;
             task.emitUpdate();
             this.checkCompletion(task, userId);
@@ -322,15 +400,16 @@ export class PlaylistLoaderService {
     } else {
       const sub = this.spotifyDataService.getAllTracksFromPlaylist(task.playlistId, offset, limit).subscribe({
         next: (tracks: any) => {
-          this.getArtistsFromTracks(task, tracks.items, targetArray);
+          this.getArtistsFromTracks(task, tracks.items, targetArray, offset);
           task.loadedTracksCount = Math.min(offset + limit, total);
           task.emitUpdate();
           
           this.fetchArtistDetailsLazy(task, targetArray, userId);
 
           if (task.loadedTracksCount < total) {
-            this.loadRemainingTracks(task, userId, offset + limit, limit, total, targetArray);
+            this.loadRemainingTracks(task, userId, offset + limit, limit, total, targetArray, cachedArtists, allowFullFallback);
           } else {
+            this.mergeCachedArtists(task, cachedArtists, targetArray, undefined, 0, false);
             task.isLoadingTracks = false;
             task.emitUpdate();
             this.checkCompletion(task, userId);
@@ -348,10 +427,28 @@ export class PlaylistLoaderService {
     }
   }
 
-  private loadNewerFavTracks(task: PlaylistLoadTask, userId: string, offset: number, limit: number, cachedArtists: any[], targetArray: any[]) {
+  private loadNewerFavTracks(
+    task: PlaylistLoadTask,
+    userId: string,
+    offset: number,
+    limit: number,
+    cachedArtists: any[],
+    targetArray: any[],
+    allowFullFallback: boolean
+  ) {
     const cachedTrackIds = new Set<string>();
+    const cachedTrackIndices = new Map<string, number>();
+    let cachedTotalTracks = 0;
     cachedArtists.forEach(artist => {
-      artist.tracks.forEach((t: any) => cachedTrackIds.add(t.id));
+      if (artist.tracks) {
+        artist.tracks.forEach((t: any) => {
+          if (t && t.id) {
+            cachedTrackIds.add(t.id);
+            cachedTrackIndices.set(t.id, t.playlist_index);
+            cachedTotalTracks = Math.max(cachedTotalTracks, t.playlist_index);
+          }
+        });
+      }
       if (artist.images && artist.images.length > 0) {
         task.requestedArtistIds.add(artist.id);
       }
@@ -361,49 +458,88 @@ export class PlaylistLoaderService {
       next: (tracks: any) => {
         task.totalTracks = tracks.total;
         task.emitUpdate();
-        
-        let foundExisting = false;
-        const newItems: any[] = [];
-        
-        for (let item of tracks.items) {
-          if (item && item.track) {
-            if (cachedTrackIds.has(item.track.id)) {
-              foundExisting = true;
-              break;
-            } else {
-              newItems.push(item);
+
+        const incremental = this.tryIncrementalMatch(task, tracks.items, offset, cachedArtists, allowFullFallback);
+
+        if (incremental.match) {
+          // Gather only the new items before the match in the current page
+          const newItems: any[] = [];
+          for (let item of tracks.items) {
+            if (item && item.track) {
+              if (cachedTrackIds.has(item.track.id)) {
+                break;
+              } else {
+                newItems.push(item);
+              }
             }
           }
-        }
-        
-        this.getArtistsFromTracks(task, newItems, targetArray);
-        task.loadedTracksCount += newItems.length;
-        task.emitUpdate();
 
-        this.fetchArtistDetailsLazy(task, targetArray, userId);
-
-        const totalMergedTracksCount = task.loadedTracksCount + cachedTrackIds.size;
-        const countMatches = totalMergedTracksCount === task.totalTracks;
-
-        if (foundExisting && countMatches) {
-          console.log(`[PlaylistLoaderService] Fav tracks incremental match: merged count (${totalMergedTracksCount}) matches total (${task.totalTracks}). Merging remaining cached tracks.`);
-          this.mergeCachedArtists(task, cachedArtists, targetArray, true);
+          this.getArtistsFromTracks(task, newItems, targetArray, offset);
+          task.loadedTracksCount = task.totalTracks;
+          
+          console.log(`[PlaylistLoaderService] Fav tracks incremental match: merged count (${task.totalTracks}) matches total. Merging remaining cached tracks.`);
+          this.mergeCachedArtists(task, cachedArtists, targetArray, incremental.minPlaylistIndex, incremental.shift, true);
+          
           task.isLoadingTracks = false;
           task.emitUpdate();
           this.fetchArtistDetailsLazy(task, targetArray, userId);
           this.checkCompletion(task, userId);
-        } else if (offset + limit < task.totalTracks) {
-          if (foundExisting && !countMatches) {
-            console.log(`[PlaylistLoaderService] Fav tracks count mismatch: merged count (${totalMergedTracksCount}) vs total (${task.totalTracks}). Continuing full pull.`);
-          }
-          this.loadNewerFavTracks(task, userId, offset + limit, limit, cachedArtists, targetArray);
         } else {
-          console.log(`[PlaylistLoaderService] Fav tracks full pull complete. Merging cached artist metadata only.`);
-          this.mergeCachedArtists(task, cachedArtists, targetArray, false);
-          task.isLoadingTracks = false;
-          task.emitUpdate();
-          this.fetchArtistDetailsLazy(task, targetArray, userId);
-          this.checkCompletion(task, userId);
+          // No exact match. Let's see if we hit any cached track (meaning there's a count mismatch)
+          let foundAnyExisting = false;
+          let firstMatchIdx = -1;
+          let firstMatchPageJ = -1;
+          for (let j = 0; j < tracks.items.length; j++) {
+            const item = tracks.items[j];
+            if (item && item.track && item.track.id && cachedTrackIndices.has(item.track.id)) {
+              foundAnyExisting = true;
+              firstMatchIdx = cachedTrackIndices.get(item.track.id)!;
+              firstMatchPageJ = j;
+              break;
+            }
+          }
+
+          if (foundAnyExisting && !allowFullFallback) {
+            const newItems: any[] = [];
+            for (let item of tracks.items) {
+              if (item && item.track) {
+                if (cachedTrackIds.has(item.track.id)) {
+                  break;
+                } else {
+                  newItems.push(item);
+                }
+              }
+            }
+            this.getArtistsFromTracks(task, newItems, targetArray, offset);
+            task.loadedTracksCount += newItems.length;
+
+            console.log(`[PlaylistLoaderService] Fav tracks mismatch detected under daily restriction. Stopping pull and merging cache.`);
+            const shift = (offset + firstMatchPageJ + 1) - firstMatchIdx;
+            this.mergeCachedArtists(task, cachedArtists, targetArray, firstMatchIdx, shift, true);
+            
+            task.isLoadingTracks = false;
+            task.emitUpdate();
+            this.fetchArtistDetailsLazy(task, targetArray, userId);
+            this.checkCompletion(task, userId);
+          } else if (offset + limit < task.totalTracks) {
+            this.getArtistsFromTracks(task, tracks.items, targetArray, offset);
+            task.loadedTracksCount = Math.min(offset + limit, task.totalTracks);
+            task.emitUpdate();
+            this.fetchArtistDetailsLazy(task, targetArray, userId);
+
+            this.loadNewerFavTracks(task, userId, offset + limit, limit, cachedArtists, targetArray, allowFullFallback);
+          } else {
+            this.getArtistsFromTracks(task, tracks.items, targetArray, offset);
+            task.loadedTracksCount = task.totalTracks;
+            
+            console.log(`[PlaylistLoaderService] Fav tracks full pull complete. Merging cached artist metadata only.`);
+            this.mergeCachedArtists(task, cachedArtists, targetArray, undefined, 0, false);
+            
+            task.isLoadingTracks = false;
+            task.emitUpdate();
+            this.fetchArtistDetailsLazy(task, targetArray, userId);
+            this.checkCompletion(task, userId);
+          }
         }
       },
       error: (err) => {
@@ -417,39 +553,53 @@ export class PlaylistLoaderService {
     task.addSub(sub);
   }
 
-  private mergeCachedArtists(task: PlaylistLoadTask, cachedArtists: any[], targetArray: any[], mergeTracks: boolean = true) {
-    const shift = task.playlistId === 'fav' ? task.loadedTracksCount : 0;
-
+  private mergeCachedArtists(
+    task: PlaylistLoadTask,
+    cachedArtists: any[],
+    targetArray: any[],
+    minPlaylistIndex?: number,
+    shift: number = 0,
+    mergeTracks: boolean = true
+  ) {
     cachedArtists.forEach(cachedArtist => {
       let existingArtist = targetArray.find(a => a.id === cachedArtist.id);
       
       if (mergeTracks) {
-        const mappedTracks = (cachedArtist.tracks || []).map((t: any) => ({
+        const tracksToMerge = cachedArtist.tracks || [];
+        const filteredTracks = minPlaylistIndex !== undefined
+          ? tracksToMerge.filter((t: any) => t.playlist_index >= minPlaylistIndex)
+          : tracksToMerge;
+
+        const mappedTracks = filteredTracks.map((t: any) => ({
           ...t,
           playlist_index: t.playlist_index ? t.playlist_index + shift : t.playlist_index
         }));
 
-        if (!existingArtist) {
-          targetArray.push({
-            ...cachedArtist,
-            tracks: mappedTracks
-          });
-        } else {
-          mappedTracks.forEach((track: any) => {
-            let hasTrack = existingArtist.tracks.some((t: any) => t.id === track.id);
-            if (!hasTrack) {
-              existingArtist.tracks.push(track);
+        if (mappedTracks.length > 0) {
+          if (!existingArtist) {
+            targetArray.push({
+              ...cachedArtist,
+              tracks: [...mappedTracks]
+            });
+          } else {
+            if (!existingArtist.tracks) {
+              existingArtist.tracks = [];
             }
-          });
-          if (!existingArtist.images && cachedArtist.images) {
-            existingArtist.images = cachedArtist.images;
-          }
-          if (!existingArtist.genres && cachedArtist.genres) {
-            existingArtist.genres = cachedArtist.genres;
+            mappedTracks.forEach((track: any) => {
+              let hasTrack = existingArtist.tracks.some((t: any) => t.id === track.id);
+              if (!hasTrack) {
+                existingArtist.tracks.push(track);
+              }
+            });
+            if (!existingArtist.images && cachedArtist.images) {
+              existingArtist.images = cachedArtist.images;
+            }
+            if (!existingArtist.genres && cachedArtist.genres) {
+              existingArtist.genres = cachedArtist.genres;
+            }
           }
         }
       } else {
-        // Only merge metadata (images and genres) if the artist is already in targetArray
         if (existingArtist) {
           if (!existingArtist.images && cachedArtist.images) {
             existingArtist.images = cachedArtist.images;
@@ -524,8 +674,9 @@ export class PlaylistLoaderService {
     task.addSub(sub);
   }
 
-  private getArtistsFromTracks(task: PlaylistLoadTask, items: any[], targetArray: any[]) {
+  private getArtistsFromTracks(task: PlaylistLoadTask, items: any[], targetArray: any[], offset: number = 0) {
     try {
+      let idx = offset;
       for (let item of items) {
         if (!item || !item.track) continue;
         
@@ -543,7 +694,7 @@ export class PlaylistLoaderService {
         const trackCopy = {
           ...item.track,
           added_at: item.added_at || '',
-          playlist_index: item.track.playlist_index || ++task.trackIndexCounter
+          playlist_index: item.track.playlist_index || ++idx
         };
         
         for (let artist of item.track.artists || []) {
@@ -565,6 +716,9 @@ export class PlaylistLoaderService {
             }
           }
         }
+      }
+      if (idx > task.trackIndexCounter) {
+        task.trackIndexCounter = idx;
       }
       task.totalUniqueArtists = targetArray.length;
       task.emitUpdate();

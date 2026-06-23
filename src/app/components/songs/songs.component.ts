@@ -180,6 +180,8 @@ export class SongsComponent implements OnInit, OnDestroy {
         this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
         this.filterArtists();
         this.checkForMissingArtistImages();
+        // Trigger background mismatch check and incremental API load
+        this.loadPlaylistFromAPI(userId, isBackupActive, isExpired, storedArtists, parsedArtists);
       } catch (e) {
         console.warn('Failed to parse some cached playlist keys:', e);
         this.loadPlaylistFromAPI(userId, isBackupActive, isExpired);
@@ -205,7 +207,7 @@ export class SongsComponent implements OnInit, OnDestroy {
         console.warn('Failed to load temporary data from cache:', e);
       }
     }
-    const task = this.playlistLoaderService.startLoadingTask(userId, this.playlistId, isRefresh, false);
+    const task = this.playlistLoaderService.startLoadingTask(userId, this.playlistId, isRefresh, isExpired);
     this.subscribeToLoaderTask(task);
   }
 

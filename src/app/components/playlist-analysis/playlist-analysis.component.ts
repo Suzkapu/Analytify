@@ -145,10 +145,14 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
         const isOldCache = parsedArtists.length > 0 && (!parsedArtists[0].images || !parsedArtists[0].genres);
         if (isOldCache) {
           console.log("Old cache detected on analysis. Reloading.");
-          this.triggerApiLoad(true);
+          this.triggerApiLoad(true, true);
+        } else {
+          // Always trigger background mismatch check and incremental API load
+          this.triggerApiLoad(true, isExpired);
         }
       } catch (e) {
         console.warn('Failed to load playlist analysis data from cache:', e);
+        this.triggerApiLoad(false, isExpired);
       }
     } else {
       if (storedArtists && !isParseError) {
@@ -162,11 +166,11 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
         }
       }
       // If we have cached data but it's expired, we do background refresh to maintain smooth UX
-      this.triggerApiLoad(!!storedArtists && !isParseError, true);
+      this.triggerApiLoad(!!storedArtists && !isParseError, isExpired);
     }
   }
 
-  triggerApiLoad(isBackgroundRefresh: boolean, forceFullReload: boolean = false) {
+  triggerApiLoad(isBackgroundRefresh: boolean, allowFullFallback: boolean = false) {
     const userId = this.authService.getUserId() || 'anonymous';
     
     // Cancel previous loader task subscription if any
@@ -175,7 +179,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
       this.loaderSubscription = null;
     }
 
-    const task = this.playlistLoaderService.startLoadingTask(userId, this.playlistId, isBackgroundRefresh, false);
+    const task = this.playlistLoaderService.startLoadingTask(userId, this.playlistId, isBackgroundRefresh, allowFullFallback);
     this.subscribeToLoaderTask(task);
   }
 
