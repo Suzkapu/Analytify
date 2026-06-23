@@ -18,7 +18,9 @@ export class SpotifyAuthInterceptor implements HttpInterceptor {
           return this.authService.refreshToken().pipe(
             switchMap((response: any) => {
               const clonedReq = req.clone({
-                headers: req.headers.set('Authorization', `Bearer ${response.access_token}`)
+                headers: req.headers
+                  .set('Authorization', `Bearer ${response.access_token}`)
+                  .set('Accept-Language', 'en-GB,en-US;q=0.9,en;q=0.8')
               });
               return next.handle(clonedReq).pipe(
                 catchError((err) => {
@@ -40,7 +42,9 @@ export class SpotifyAuthInterceptor implements HttpInterceptor {
         } else {
           // Token is valid, attach it to headers
           const clonedReq = req.clone({
-            headers: req.headers.set('Authorization', `Bearer ${this.authService.getAccessToken()}`)
+            headers: req.headers
+              .set('Authorization', `Bearer ${this.authService.getAccessToken()}`)
+              .set('Accept-Language', 'en-GB,en-US;q=0.9,en;q=0.8')
           });
           return next.handle(clonedReq).pipe(
             catchError((err) => {
