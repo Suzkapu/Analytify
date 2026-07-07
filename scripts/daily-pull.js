@@ -466,11 +466,18 @@ async function saveStatsSnapshot(
     }
   }
 
-  const trackLinks = topTracks.map((t, idx) => ({
-    snapshot_id: snapshotId,
-    track_id: t.id,
-    rank: idx + 1
-  })).filter(row => !!row.track_id && existingTrackIds.has(row.track_id));
+  const seenTrackIds = new Set();
+  const trackLinks = [];
+  topTracks.forEach((t, idx) => {
+    if (t.id && existingTrackIds.has(t.id) && !seenTrackIds.has(t.id)) {
+      seenTrackIds.add(t.id);
+      trackLinks.push({
+        snapshot_id: snapshotId,
+        track_id: t.id,
+        rank: idx + 1
+      });
+    }
+  });
 
   if (trackLinks.length > 0) {
     const { error: trackLinkErr } = await supabase
@@ -492,11 +499,18 @@ async function saveStatsSnapshot(
     }
   }
 
-  const artistLinks = topArtists.map((a, idx) => ({
-    snapshot_id: snapshotId,
-    artist_id: a.id,
-    rank: idx + 1
-  })).filter(row => !!row.artist_id && existingArtistIds.has(row.artist_id));
+  const seenArtistIds = new Set();
+  const artistLinks = [];
+  topArtists.forEach((a, idx) => {
+    if (a.id && existingArtistIds.has(a.id) && !seenArtistIds.has(a.id)) {
+      seenArtistIds.add(a.id);
+      artistLinks.push({
+        snapshot_id: snapshotId,
+        artist_id: a.id,
+        rank: idx + 1
+      });
+    }
+  });
 
   if (artistLinks.length > 0) {
     const { error: artistLinkErr } = await supabase
