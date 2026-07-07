@@ -112,7 +112,7 @@ async function syncArtists(spotifyAccessToken, artistIds) {
   // Fetch missing artists from Spotify (max 50 per request)
   const chunks = chunkArray(missingIds, 50);
   for (const chunk of chunks) {
-    const data = await apiRequest(`https://api.spotify.com/v1/artists?ids=${chunk.join(',')}`, {
+    const data = await apiRequest(`https://api.spotify.com/v1/artists?ids=${chunk.join(',')}&locale=en_US`, {
       headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
     });
 
@@ -593,7 +593,7 @@ async function syncUserStats(user, spotifyAccessToken) {
       console.log(`[Sync] Fetching top items for ${user.display_name} (${range})...`);
 
       // Fetch top artists
-      const artistsRes = await apiRequest(`https://api.spotify.com/v1/me/top/artists?time_range=${range}&limit=50&offset=0`, {
+      const artistsRes = await apiRequest(`https://api.spotify.com/v1/me/top/artists?time_range=${range}&limit=50&offset=0&locale=en_US`, {
         headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
       });
       const topArtists = artistsRes.items || [];

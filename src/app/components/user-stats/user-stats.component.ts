@@ -125,9 +125,24 @@ export class UserStatsComponent implements OnInit {
         parsedArtists = JSON.parse(cachedArtists);
         parsedGenres = JSON.parse(cachedGenres);
 
-        if (!Array.isArray(parsedTracks) || !Array.isArray(parsedArtists) || !Array.isArray(parsedGenres)) {
+        // Self-heal: If cache has German genres, discard it to fetch fresh English data!
+        const hasGermanGenres = parsedGenres.some((g: any) => 
+          g.name && (
+            g.name.toLowerCase().startsWith('deutsch') || 
+            g.name.toLowerCase().startsWith('argentinisch') ||
+            g.name.toLowerCase().startsWith('schwedisch') ||
+            g.name.toLowerCase().startsWith('finnisch') ||
+            g.name.toLowerCase().startsWith('keltisch')
+          )
+        );
+        if (hasGermanGenres) {
+          console.log('[Stats] German genres detected in local cache. Invalidating cache to reload English data.');
           isCacheIncomplete = true;
-        } else if (parsedArtists.length > 0 && !parsedArtists.every(a => 'genres' in a)) {
+        }
+
+        if (!isCacheIncomplete && (!Array.isArray(parsedTracks) || !Array.isArray(parsedArtists) || !Array.isArray(parsedGenres))) {
+          isCacheIncomplete = true;
+        } else if (!isCacheIncomplete && parsedArtists.length > 0 && !parsedArtists.every(a => 'genres' in a)) {
           isCacheIncomplete = true;
           console.log('[Stats] Local cache is incomplete (artists missing genres). Forcing reload from cloud database or Spotify API.');
         }

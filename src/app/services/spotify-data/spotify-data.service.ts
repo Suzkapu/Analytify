@@ -72,13 +72,13 @@ export class SpotifyDataService {
   }
 
   getSingleArtist(artistId: string): Observable<any> {
-    const artistEndpoint = `${environment.spotifyUrl}/artists/${artistId}`;
+    const artistEndpoint = `${environment.spotifyUrl}/artists/${artistId}?locale=en_US`;
     return this.makeRequest(() => this.http.get(artistEndpoint));
   }
 
   getSeveralArtists(artistIds: string[]): Observable<any> {
     const ids = artistIds.join(',');
-    const artistsEndpoint = `${environment.spotifyUrl}/artists?ids=${ids}`;
+    const artistsEndpoint = `${environment.spotifyUrl}/artists?ids=${ids}&locale=en_US`;
     return this.makeRequest(() => this.http.get(artistsEndpoint));
   }
 
@@ -100,7 +100,7 @@ export class SpotifyDataService {
   }
 
   getUserTopArtists(timeRange: string, limit: number, offset: number): Observable<any> {
-    const endpoint = `${environment.spotifyUrl}/me/top/artists?time_range=${timeRange}&limit=${limit}&offset=${offset}`;
+    const endpoint = `${environment.spotifyUrl}/me/top/artists?time_range=${timeRange}&limit=${limit}&offset=${offset}&locale=en_US`;
     return this.makeRequest(() => this.http.get(endpoint));
   }
 
