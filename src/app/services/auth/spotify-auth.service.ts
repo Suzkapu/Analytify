@@ -41,9 +41,36 @@ export class SpotifyAuthService {
 
   ensureInitialSync(): Promise<void> {
     if (!this.initialSyncPromise) {
-      this.initialSyncPromise = this.syncBackupActiveStatus().catch(err => console.warn('Failed to sync backup status:', err));
+      this.initialSyncPromise = this._ensureInitialSync();
     }
     return this.initialSyncPromise;
+  }
+
+  private async _ensureInitialSync(): Promise<void> {
+    const supabaseUserId = this.getSupabaseUserId();
+    if (!supabaseUserId) return;
+
+    const cachePulledKey = `${supabaseUserId}_cache_pulled`;
+    const isCachePulled = this.storageService.getItem(cachePulledKey) === 'true';
+
+    if (isCachePulled) {
+      // Resolve immediately to keep app load/navigation instant
+      this.syncBackupActiveStatusInBackground(supabaseUserId);
+      return;
+    }
+
+    // First load on this device, block and pull initial state
+    await this.syncBackupActiveStatus().catch(err => {
+      console.warn('[Auth] Initial sync failed:', err);
+    });
+  }
+
+  private async syncBackupActiveStatusInBackground(supabaseUserId: string): Promise<void> {
+    try {
+      await this.syncBackupActiveStatus();
+    } catch (err) {
+      console.warn('[Auth] Background sync failed:', err);
+    }
   }
 
   private getSpotifyDataService(): SpotifyDataService {
@@ -391,6 +418,12 @@ export class SpotifyAuthService {
   }
 
   async logout(): Promise<void> {
+    const supabaseUserId = this.getSupabaseUserId();
+    if (supabaseUserId) {
+      this.storageService.removeItem(`${supabaseUserId}_cache_pulled`);
+      this.storageService.removeItem(`${supabaseUserId}_backup_active`);
+      this.storageService.removeItem(`${supabaseUserId}_last_synced_at`);
+    }
     this.storageService.removeItem(this.storageKey);
     this.storageService.removeItem('spotifyUserId');
     this.storageService.removeItem('supabaseUserId');
@@ -457,6 +490,8 @@ export class SpotifyAuthService {
         if (active) {
           await this.pullCacheFromDatabase(supabaseUserId);
         }
+        // Set the cache_pulled flag to true so we don't block on next load
+        this.storageService.setItem(`${supabaseUserId}_cache_pulled`, 'true');
       }
     }
   }

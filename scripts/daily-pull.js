@@ -187,7 +187,7 @@ async function syncAlbums(spotifyAccessToken, albumIds) {
 
   const chunks = chunkArray(missingIds, 20); // Spotify albums endpoint allows max 20 ids
   for (const chunk of chunks) {
-    const data = await apiRequest(`https://api.spotify.com/v1/albums?ids=${chunk.join(',')}&market=GB`, {
+    const data = await apiRequest(`https://api.spotify.com/v1/albums?ids=${chunk.join(',')}`, {
       headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
     });
 
@@ -276,7 +276,7 @@ async function syncTracks(spotifyAccessToken, trackIds) {
 
   const chunks = chunkArray(missingIds, 50);
   for (const chunk of chunks) {
-    const data = await apiRequest(`https://api.spotify.com/v1/tracks?ids=${chunk.join(',')}&market=GB`, {
+    const data = await apiRequest(`https://api.spotify.com/v1/tracks?ids=${chunk.join(',')}`, {
       headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
     });
 
@@ -454,11 +454,23 @@ async function saveStatsSnapshot(
   const snapshotId = snapshot.id;
 
   // 2. Link tracks
+  const trackIdsToLink = Array.from(new Set(topTracks.map(t => t.id).filter(id => !!id)));
+  let existingTrackIds = new Set();
+  if (trackIdsToLink.length > 0) {
+    const { data: dbTracks } = await supabase
+      .from('tracks')
+      .select('id')
+      .in('id', trackIdsToLink);
+    if (dbTracks) {
+      dbTracks.forEach(t => existingTrackIds.add(t.id));
+    }
+  }
+
   const trackLinks = topTracks.map((t, idx) => ({
     snapshot_id: snapshotId,
     track_id: t.id,
     rank: idx + 1
-  })).filter(row => !!row.track_id);
+  })).filter(row => !!row.track_id && existingTrackIds.has(row.track_id));
 
   if (trackLinks.length > 0) {
     const { error: trackLinkErr } = await supabase
@@ -468,11 +480,23 @@ async function saveStatsSnapshot(
   }
 
   // 3. Link artists
+  const artistIdsToLink = Array.from(new Set(topArtists.map(a => a.id).filter(id => !!id)));
+  let existingArtistIds = new Set();
+  if (artistIdsToLink.length > 0) {
+    const { data: dbArtists } = await supabase
+      .from('artists')
+      .select('id')
+      .in('id', artistIdsToLink);
+    if (dbArtists) {
+      dbArtists.forEach(a => existingArtistIds.add(a.id));
+    }
+  }
+
   const artistLinks = topArtists.map((a, idx) => ({
     snapshot_id: snapshotId,
     artist_id: a.id,
     rank: idx + 1
-  })).filter(row => !!row.artist_id);
+  })).filter(row => !!row.artist_id && existingArtistIds.has(row.artist_id));
 
   if (artistLinks.length > 0) {
     const { error: artistLinkErr } = await supabase
@@ -561,7 +585,7 @@ async function syncUserStats(user, spotifyAccessToken) {
       const topArtists = artistsRes.items || [];
 
       // Fetch top tracks page 1 (limit 50, offset 0)
-      const tracksRes = await apiRequest(`https://api.spotify.com/v1/me/top/tracks?time_range=${range}&limit=50&offset=0&market=GB`, {
+      const tracksRes = await apiRequest(`https://api.spotify.com/v1/me/top/tracks?time_range=${range}&limit=50&offset=0`, {
         headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
       });
       const topTracksPage1 = tracksRes.items || [];
@@ -569,7 +593,7 @@ async function syncUserStats(user, spotifyAccessToken) {
       // Fetch top tracks page 2 (limit 50, offset 50)
       let topTracksPage2 = [];
       try {
-        const tracksRes2 = await apiRequest(`https://api.spotify.com/v1/me/top/tracks?time_range=${range}&limit=50&offset=50&market=GB`, {
+        const tracksRes2 = await apiRequest(`https://api.spotify.com/v1/me/top/tracks?time_range=${range}&limit=50&offset=50`, {
           headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
         });
         topTracksPage2 = tracksRes2.items || [];

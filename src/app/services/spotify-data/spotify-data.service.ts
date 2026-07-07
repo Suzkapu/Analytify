@@ -52,22 +52,22 @@ export class SpotifyDataService {
   }
 
   getUserPlaylists(): Observable<any> {
-    const playlistsEndpoint = `${environment.spotifyUrl}/me/playlists?market=GB`;
+    const playlistsEndpoint = `${environment.spotifyUrl}/me/playlists`;
     return this.makeRequest(() => this.http.get(playlistsEndpoint));
   }
 
   getSinglePlaylist(playlistId: string): Observable<any> {
-    const playlistEndpoint = `${environment.spotifyUrl}/playlists/${playlistId}?market=GB`;
+    const playlistEndpoint = `${environment.spotifyUrl}/playlists/${playlistId}`;
     return this.http.get(playlistEndpoint);
   }
 
   getAllTracksFromPlaylist(playlistId: string, offset: number, limit: number): Observable<any> {
-    const playlistEndpoint = `${environment.spotifyUrl}/playlists/${playlistId}/items?offset=${offset}&limit=${limit}&market=GB`;
+    const playlistEndpoint = `${environment.spotifyUrl}/playlists/${playlistId}/items?offset=${offset}&limit=${limit}`;
     return this.makeRequest(() => this.http.get(playlistEndpoint));
   }
 
   getFavTracks(offset: number, limit: number): Observable<any> {
-    const trackEndpoint = `${environment.spotifyUrl}/me/tracks?offset=${offset}&limit=${limit}&market=GB`;
+    const trackEndpoint = `${environment.spotifyUrl}/me/tracks?offset=${offset}&limit=${limit}`;
     return this.makeRequest(() => this.http.get(trackEndpoint));
   }
 
@@ -84,12 +84,12 @@ export class SpotifyDataService {
 
   getSeveralTracks(trackIds: string[]): Observable<any> {
     const ids = trackIds.join(',');
-    const endpoint = `${environment.spotifyUrl}/tracks?ids=${ids}&market=GB`;
+    const endpoint = `${environment.spotifyUrl}/tracks?ids=${ids}`;
     return this.makeRequest(() => this.http.get(endpoint));
   }
 
   getSingleTrack(trackId: string): Observable<any> {
-    const trackEndpoint = `${environment.spotifyUrl}/tracks/${trackId}?market=GB`;
+    const trackEndpoint = `${environment.spotifyUrl}/tracks/${trackId}`;
     return this.makeRequest(() => this.http.get(trackEndpoint));
   }
 
@@ -105,7 +105,7 @@ export class SpotifyDataService {
   }
 
   getUserTopTracks(timeRange: string, limit: number, offset: number): Observable<any> {
-    const endpoint = `${environment.spotifyUrl}/me/top/tracks?time_range=${timeRange}&limit=${limit}&offset=${offset}&market=GB`;
+    const endpoint = `${environment.spotifyUrl}/me/top/tracks?time_range=${timeRange}&limit=${limit}&offset=${offset}`;
     return this.makeRequest(() => this.http.get(endpoint));
   }
 
