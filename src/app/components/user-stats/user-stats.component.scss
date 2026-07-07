@@ -844,3 +844,79 @@
     color: #1db954;
   }
 }
+
+/* Collapsible Dropdown Snapshot Groups styling */
+::ng-deep .spotify-custom-dropdown {
+  .dropdown-menu-overlay {
+    max-height: 380px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.15);
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 3px;
+      &:hover {
+        background: rgba(255, 255, 255, 0.25);
+      }
+    }
+  }
+}
+
+.menu-group-container {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.menu-group-header {
+  padding: 8px 16px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #a7a7a7;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+  }
+
+  i {
+    font-size: 0.72rem;
+    color: inherit;
+  }
+
+  .group-title {
+    flex-grow: 1;
+    text-align: left;
+  }
+
+  .group-count {
+    font-size: 0.75rem;
+    color: #777;
+    font-weight: 600;
+  }
+}
+
+.menu-group-items {
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.nested-item {
+  padding-left: 28px !important;
+}

@@ -50,10 +50,22 @@
                 <span>Today</span>
                 <i *ngIf="selectedSnapshotId === 'current'" class="pi pi-check"></i>
               </div>
-              <div *ngFor="let opt of snapshotOptions" class="menu-item" [class.active]="selectedSnapshotId === opt.id"
-                (click)="selectHistorySnapshot(opt.id, $event)">
-                <span>{{ opt.label }}</span>
-                <i *ngIf="selectedSnapshotId === opt.id" class="pi pi-check"></i>
+              
+              <!-- Grouped Historical Snapshots -->
+              <div *ngFor="let group of historyGroups" class="menu-group-container">
+                <div class="menu-group-header" (click)="toggleHistoryGroup(group, $event)">
+                  <i class="pi" [class.pi-chevron-right]="!group.isOpen" [class.pi-chevron-down]="group.isOpen"></i>
+                  <span class="group-title">{{ group.label }}</span>
+                  <span class="group-count">({{ group.options.length }})</span>
+                </div>
+                <div class="menu-group-items" *ngIf="group.isOpen">
+                  <div *ngFor="let opt of group.options" class="menu-item nested-item" 
+                    [class.active]="selectedSnapshotId === opt.id"
+                    (click)="selectHistorySnapshot(opt.id, $event)">
+                    <span>{{ opt.label }}</span>
+                    <i *ngIf="selectedSnapshotId === opt.id" class="pi pi-check"></i>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -67,10 +79,22 @@
             </button>
             <div class="dropdown-menu-overlay" *ngIf="showCompareMenu">
               <div class="menu-section-header">Compare Against</div>
-              <div *ngFor="let opt of getCompareOptions()" class="menu-item"
-                [class.active]="compareSnapshotId === opt.id" (click)="selectCompareSnapshot(opt.id, $event)">
-                <span>{{ opt.label }}</span>
-                <i *ngIf="compareSnapshotId === opt.id" class="pi pi-check"></i>
+              
+              <!-- Grouped Compare Snapshots -->
+              <div *ngFor="let group of compareGroups" class="menu-group-container">
+                <div class="menu-group-header" (click)="toggleCompareGroup(group, $event)">
+                  <i class="pi" [class.pi-chevron-right]="!group.isOpen" [class.pi-chevron-down]="group.isOpen"></i>
+                  <span class="group-title">{{ group.label }}</span>
+                  <span class="group-count">({{ group.options.length }})</span>
+                </div>
+                <div class="menu-group-items" *ngIf="group.isOpen">
+                  <div *ngFor="let opt of group.options" class="menu-item nested-item"
+                    [class.active]="compareSnapshotId === opt.id" 
+                    (click)="selectCompareSnapshot(opt.id, $event)">
+                    <span>{{ opt.label }}</span>
+                    <i *ngIf="compareSnapshotId === opt.id" class="pi pi-check"></i>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

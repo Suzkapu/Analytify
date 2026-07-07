@@ -36,6 +36,8 @@ export class UserStatsComponent implements OnInit {
   selectedSnapshotId: string = 'current';
   compareSnapshotId: string = '';
   snapshotOptions: any[] = [];
+  historyGroups: any[] = [];
+  compareGroups: any[] = [];
   showHistoryMenu: boolean = false;
   showCompareMenu: boolean = false;
   hotMoverTracks = new Set<string>();
@@ -372,6 +374,7 @@ export class UserStatsComponent implements OnInit {
     this.calculateHotMovers();
     this.ensureSnapshotLoaded(snapshotId);
     if (this.compareSnapshotId) this.ensureSnapshotLoaded(this.compareSnapshotId);
+    this.updateSnapshotGroups();
   }
 
   toggleCompareMenu(event: Event) {
@@ -386,6 +389,57 @@ export class UserStatsComponent implements OnInit {
     this.showCompareMenu = false;
     this.calculateHotMovers();
     this.ensureSnapshotLoaded(snapshotId);
+    this.updateSnapshotGroups();
+  }
+
+  updateSnapshotGroups() {
+    this.historyGroups = this.groupSnapshots(this.snapshotOptions, this.selectedSnapshotId);
+    this.compareGroups = this.groupSnapshots(this.getCompareOptions(), this.compareSnapshotId);
+  }
+
+  groupSnapshots(options: any[], selectedId: string): any[] {
+    const groupsMap = new Map<string, any>();
+    
+    options.forEach(opt => {
+      const date = new Date(parseInt(opt.id, 10));
+      if (isNaN(date.getTime())) return;
+      const year = date.getFullYear();
+      const monthLabel = date.toLocaleDateString(undefined, { month: 'long' });
+      const groupKey = `${monthLabel} ${year}`;
+      
+      if (!groupsMap.has(groupKey)) {
+        groupsMap.set(groupKey, {
+          key: groupKey,
+          label: groupKey,
+          isOpen: false,
+          options: []
+        });
+      }
+      
+      const group = groupsMap.get(groupKey);
+      group.options.push(opt);
+      
+      if (opt.id === selectedId) {
+        group.isOpen = true;
+      }
+    });
+
+    const groups = Array.from(groupsMap.values());
+    if (groups.length > 0 && !groups.some(g => g.isOpen)) {
+      groups[0].isOpen = true;
+    }
+    
+    return groups;
+  }
+
+  toggleHistoryGroup(group: any, event: Event) {
+    event.stopPropagation();
+    group.isOpen = !group.isOpen;
+  }
+
+  toggleCompareGroup(group: any, event: Event) {
+    event.stopPropagation();
+    group.isOpen = !group.isOpen;
   }
 
   /** Returns the most recent historical snapshot id that is NOT the currently selected snapshot. */
@@ -642,6 +696,8 @@ export class UserStatsComponent implements OnInit {
           id: d.timestamp.toString(),
           label: new Date(d.timestamp).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
         }));
+
+        this.updateSnapshotGroups();
 
         // Auto-select the best default compare snapshot if not already set
         if (!this.compareSnapshotId) {
