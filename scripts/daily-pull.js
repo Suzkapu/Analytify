@@ -96,13 +96,22 @@ async function getSpotifyAccessToken(refreshToken) {
 async function syncArtists(spotifyAccessToken, artistIds) {
   if (artistIds.length === 0) return;
 
-  // Find which artists already exist in our DB
+  // Find which artists already exist in our DB and are fully synced
   const { data: existingArtists } = await supabase
     .from('artists')
-    .select('id')
+    .select('id, popularity, followers_count')
     .in('id', artistIds);
 
-  const existingIds = new Set(existingArtists ? existingArtists.map(a => a.id) : []);
+  const existingIds = new Set();
+  if (existingArtists) {
+    existingArtists.forEach(a => {
+      // Only skip if the artist is fully synced (has popularity > 0 or followers_count > 0)
+      if (a.popularity > 0 || a.followers_count > 0) {
+        existingIds.add(a.id);
+      }
+    });
+  }
+
   const missingIds = artistIds.filter(id => !existingIds.has(id));
 
   if (missingIds.length === 0) return;

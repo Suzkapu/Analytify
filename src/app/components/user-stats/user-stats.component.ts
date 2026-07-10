@@ -671,7 +671,7 @@ export class UserStatsComponent implements OnInit {
           name: a.name,
           imageUrl: a.images && a.images[0] ? a.images[0].url : '',
           spotifyUrl: a.external_urls?.spotify || '',
-          genre: a.genres && a.genres[0] ? a.genres[0] : 'Artist'
+          genre: a.genres && a.genres[0] ? a.genres[0] : ''
         }))
       };
 
@@ -1325,8 +1325,8 @@ export class UserStatsComponent implements OnInit {
   }
 
   getArtistGenre(artist: any): string {
-    if (artist.genre) return artist.genre;
-    return artist.genres && artist.genres[0] ? artist.genres[0] : 'Artist';
+    const genre = artist.genre || (artist.genres && artist.genres[0]);
+    return (genre && genre !== 'Artist') ? genre : '';
   }
 
   isSnapshotLoading(): boolean {

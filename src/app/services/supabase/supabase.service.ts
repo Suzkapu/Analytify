@@ -239,9 +239,16 @@ export class SupabaseService {
         const artistIds = uniqueArtists.map(a => a.id);
         const { data: existing } = await this.client
           .from('artists')
-          .select('id')
+          .select('id, popularity, followers_count')
           .in('id', artistIds);
-        const existingIds = new Set(existing ? existing.map(e => e.id) : []);
+        const existingIds = new Set<string>();
+        if (existing) {
+          existing.forEach(e => {
+            if (e.popularity > 0 || e.followers_count > 0) {
+              existingIds.add(e.id);
+            }
+          });
+        }
         uniqueArtists = uniqueArtists.filter(a => !existingIds.has(a.id));
         if (uniqueArtists.length === 0) return;
       }
