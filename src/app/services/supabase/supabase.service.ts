@@ -338,6 +338,31 @@ export class SupabaseService {
     }
   }
 
+  /** Looks up genres for a list of artist IDs from the artist_genres table */
+  async lookupArtistGenres(artistIds: string[]): Promise<Map<string, string[]>> {
+    const result = new Map<string, string[]>();
+    if (!artistIds || artistIds.length === 0) return result;
+
+    try {
+      const { data, error } = await this.client
+        .from('artist_genres')
+        .select('artist_id, genre_name')
+        .in('artist_id', artistIds);
+
+      if (error) throw error;
+      if (data) {
+        data.forEach((row: any) => {
+          const existing = result.get(row.artist_id) || [];
+          existing.push(row.genre_name);
+          result.set(row.artist_id, existing);
+        });
+      }
+    } catch (e) {
+      console.warn('[SupabaseService] Error looking up artist genres:', e);
+    }
+    return result;
+  }
+
   /** Syncs Spotify albums metadata into the database */
   async syncAlbums(albums: any[], onlyInsertMissing = false): Promise<void> {
     if (!albums || albums.length === 0) return;

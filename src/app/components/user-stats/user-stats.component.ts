@@ -164,6 +164,8 @@ export class UserStatsComponent implements OnInit {
         // Heal any missing images silently in the background
         this.imageHealingService.healArtistImages(this.topArtists, `${userId}_stats_${range}_artists`);
         this.imageHealingService.healTrackImages(this.topTracks, `${userId}_stats_${range}_tracks`);
+        // Backfill empty genres from DB in background
+        this.enrichArtistGenresFromDb(userId, range);
       } catch (e) {
         console.warn('Failed to parse validated user stats cache:', e);
         isCacheIncomplete = true;
@@ -194,6 +196,8 @@ export class UserStatsComponent implements OnInit {
             // Heal any missing images that may be null in the DB
             this.imageHealingService.healArtistImages(this.topArtists, `${userId}_stats_${range}_artists`);
             this.imageHealingService.healTrackImages(this.topTracks, `${userId}_stats_${range}_tracks`);
+            // Backfill empty genres from DB in background
+            this.enrichArtistGenresFromDb(userId, range);
             return; // Skip Spotify API call entirely!
           }
         }
@@ -272,6 +276,8 @@ export class UserStatsComponent implements OnInit {
           // but guards against Spotify returning nulls
           this.imageHealingService.healArtistImages(this.topArtists, `${userId}_stats_${range}_artists`);
           this.imageHealingService.healTrackImages(this.topTracks, `${userId}_stats_${range}_tracks`);
+          // Backfill empty genres from DB in background
+          this.enrichArtistGenresFromDb(userId, range);
         },
         error: (err) => {
           console.error('Failed to load user stats:', err);
@@ -315,6 +321,82 @@ export class UserStatsComponent implements OnInit {
       return { name, count: Math.round(weight), percentage, percentage_simple };
 
     }).slice(0, 15); // Top 15 genres
+  }
+
+  private async enrichArtistGenresFromDb(userId: string, range: string) {
+    const missingIds = this.topArtists
+      .filter(a => a.id && (!a.genres || a.genres.length === 0))
+      .map(a => a.id);
+
+    if (missingIds.length === 0) return;
+
+    try {
+      // 1. First, check the local database backup
+      const genreMap = await this.supabaseService.lookupArtistGenres(missingIds);
+      
+      let enriched = false;
+      this.topArtists.forEach(a => {
+        if (a.id && (!a.genres || a.genres.length === 0) && genreMap.has(a.id)) {
+          a.genres = genreMap.get(a.id)!;
+          enriched = true;
+        }
+      });
+
+      if (enriched) {
+        console.log(`[Stats] Enriched ${genreMap.size} artists with genres from database`);
+        this.calculateGenres();
+        this.storageService.setItem(`${userId}_stats_${range}_artists`, JSON.stringify(this.topArtists));
+        this.storageService.setItem(`${userId}_stats_${range}_genres`, JSON.stringify(this.topGenres));
+      }
+
+      // 2. Second, for any artists still missing genres, fetch them directly from Spotify's catalog endpoint
+      const stillMissingIds = this.topArtists
+        .filter(a => a.id && (!a.genres || a.genres.length === 0))
+        .map(a => a.id);
+
+      if (stillMissingIds.length > 0) {
+        console.log(`[Stats] Querying Spotify catalog API directly for genres of ${stillMissingIds.length} artists...`);
+        this.spotifyDataService.getSeveralArtists(stillMissingIds).subscribe({
+          next: (res: any) => {
+            const apiArtistMap = new Map<string, any>();
+            (res.artists || []).forEach((art: any) => {
+              if (art && art.genres && art.genres.length > 0) {
+                apiArtistMap.set(art.id, art);
+              }
+            });
+
+            if (apiArtistMap.size > 0) {
+              let apiEnriched = false;
+              this.topArtists.forEach(a => {
+                if (a.id && (!a.genres || a.genres.length === 0) && apiArtistMap.has(a.id)) {
+                  a.genres = apiArtistMap.get(a.id).genres;
+                  apiEnriched = true;
+                }
+              });
+
+              if (apiEnriched) {
+                console.log(`[Stats] Successfully enriched ${apiArtistMap.size} artists with genres from Spotify catalog`);
+                this.calculateGenres();
+                this.storageService.setItem(`${userId}_stats_${range}_artists`, JSON.stringify(this.topArtists));
+                this.storageService.setItem(`${userId}_stats_${range}_genres`, JSON.stringify(this.topGenres));
+
+                // Sync these full artist profiles to Supabase so they are saved in the shared DB
+                const artistsToSync = Array.from(apiArtistMap.values());
+                const supabaseUserId = this.authService.getSupabaseUserId();
+                if (this.authService.isBackupActive() && supabaseUserId) {
+                  this.supabaseService.syncArtists(artistsToSync).catch(err => {
+                    console.warn('[Stats] Failed to sync enriched artists to Supabase:', err);
+                  });
+                }
+              }
+            }
+          },
+          error: (err) => console.warn('[Stats] Failed to fetch artist catalog details from Spotify:', err)
+        });
+      }
+    } catch (e) {
+      console.warn('[Stats] Failed to enrich artist genres:', e);
+    }
   }
 
   openTrackClick(url: string) {
