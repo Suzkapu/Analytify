@@ -154,7 +154,7 @@ export class UserStatsComponent implements OnInit {
           } else if (parsedArtists.length > 0 && !parsedArtists.every(artist => 'genres' in artist)) {
             isCacheIncomplete = true;
             console.log('[Stats] Cache is incomplete (artists missing genres). Forcing cloud or Spotify fallback.');
-          } else if (this.storageService.getItem(artistDetailsVersionKey) !== 'v1') {
+          } else if (this.storageService.getItem(artistDetailsVersionKey) !== 'v2') {
             isCacheIncomplete = true;
             console.log('[Stats] Artist details cache is outdated. Refreshing it from Spotify.');
           }
@@ -205,7 +205,9 @@ export class UserStatsComponent implements OnInit {
       if (this.authService.isBackupActive() && supabaseUserId) {
         this.isLoading = true;
         const hasSnapshot = await this.supabaseService.hasStatsSnapshotForToday(supabaseUserId, range);
-        if (hasSnapshot) {
+        const hasCurrentArtistDetails =
+          this.storageService.getItem(artistDetailsVersionKey) === 'v2';
+        if (hasSnapshot && hasCurrentArtistDetails) {
           console.log(`[Stats] Cache missing/expired. Fetching today's stats snapshot for ${range} directly from Supabase Cloud...`);
           const dbSnapshot = await this.supabaseService.loadTodayStatsSnapshot(supabaseUserId, range);
           if (dbSnapshot) {
@@ -221,13 +223,11 @@ export class UserStatsComponent implements OnInit {
 
             this.saveHistorySnapshot(userId, range);
             this.isLoading = false;
-            // Existing snapshots may still contain genre links from the old,
-            // append-only persistence. Refresh them once from artist profiles.
-            const refreshArtistDetails =
-              this.storageService.getItem(artistDetailsVersionKey) !== 'v1';
-            this.enrichArtistGenresFromDb(userId, range, refreshArtistDetails);
+            this.enrichArtistGenresFromDb(userId, range, false);
             return; // Skip Spotify API call entirely!
           }
+        } else if (hasSnapshot) {
+          console.log('[Stats] Today\'s snapshot contains outdated artist genres. Refreshing top artists from Spotify once.');
         }
       }
 
@@ -260,6 +260,7 @@ export class UserStatsComponent implements OnInit {
           this.storageService.setItem(artistsKey, JSON.stringify(this.topArtists));
           this.storageService.setItem(genresKey, JSON.stringify(this.topGenres));
           this.storageService.setItem(lastUpdatedKey, Date.now().toString());
+          this.storageService.setItem(artistDetailsVersionKey, 'v2');
 
           // If backup is active, sync to Supabase
           if (this.authService.isBackupActive() && supabaseUserId) {
@@ -484,22 +485,22 @@ export class UserStatsComponent implements OnInit {
 
     if (!allowSpotifyFallback) return;
 
-    // A fresh Spotify artist lookup is authoritative for every returned artist,
-    // including an empty genres array. This also replaces previously wrong data.
+    // Only artists that are still missing genre data need the catalog fallback.
+    // Empty Spotify arrays must not overwrite genres supplied by top-artists,
+    // local cache, or Supabase.
     const spotifyArtistIds = Array.from(new Set(
-      artists.map(a => a.id).filter(id => !!id)
+      artists
+        .filter(a => a.id && (!a.genres || a.genres.length === 0))
+        .map(a => a.id)
     ));
-    if (spotifyArtistIds.length === 0) {
-      this.storageService.setItem(`${userId}_stats_${range}_artistDetailsVersion`, 'v1');
-      return;
-    }
+    if (spotifyArtistIds.length === 0) return;
 
     console.log(`[Stats] Refreshing genres from Spotify artist profiles for ${spotifyArtistIds.length} artists...`);
     this.spotifyDataService.getSeveralArtists(spotifyArtistIds).subscribe({
       next: (res: any) => {
         const apiArtistMap = new Map<string, any>();
         (res.artists || []).forEach((art: any) => {
-          if (art?.id) {
+          if (art?.id && Array.isArray(art.genres) && art.genres.length > 0) {
             apiArtistMap.set(art.id, art);
           }
         });
@@ -511,17 +512,14 @@ export class UserStatsComponent implements OnInit {
         let replaced = 0;
         artists.forEach(artist => {
           const spotifyArtist = artist.id ? apiArtistMap.get(artist.id) : null;
-          if (!spotifyArtist) return;
+          if (!spotifyArtist || (artist.genres && artist.genres.length > 0)) return;
 
-          artist.genres = Array.isArray(spotifyArtist.genres)
-            ? [...spotifyArtist.genres]
-            : [];
+          artist.genres = [...spotifyArtist.genres];
           replaced++;
         });
 
-        this.storageService.setItem(`${userId}_stats_${range}_artistDetailsVersion`, 'v1');
         if (replaced > 0) {
-          console.log(`[Stats] Replaced genres for ${replaced} artists from Spotify artist profiles`);
+          console.log(`[Stats] Filled genres for ${replaced} artists from Spotify artist profiles`);
           persistEnrichedArtists();
         }
       },
@@ -1544,7 +1542,7 @@ export class UserStatsComponent implements OnInit {
 
   getArtistGenre(artist: any): string {
     const genre = artist.genre || (artist.genres && artist.genres[0]);
-    return (genre && genre !== 'Artist') ? genre : '';
+    return (genre && genre !== 'Artist') ? genre : 'No genres available';
   }
 
   isSnapshotLoading(): boolean {

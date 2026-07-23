@@ -146,7 +146,7 @@ export class SongsComponent implements OnInit, OnDestroy {
       isCacheCorrupt,
       isUsable: !!storedArtists &&
         !this.isCacheExpired(lastUpdated) &&
-        version === 'v5' &&
+        version === 'v6' &&
         !isParseError &&
         !isCacheCorrupt
     };
@@ -220,7 +220,7 @@ export class SongsComponent implements OnInit, OnDestroy {
     // Start a new loading task
     const isRefresh = !!storedArtists && parsedArtists && parsedArtists.length > 0;
     const version = this.storageService.getItem(`${userId}_${this.playlistId}_cacheVersion`);
-    const reason = !storedArtists ? 'no local cache' : (version !== 'v5' ? `old cache version (${version})` : (isExpired ? 'cache expired' : 'unknown'));
+    const reason = !storedArtists ? 'no local cache' : (version !== 'v6' ? `old cache version (${version})` : (isExpired ? 'cache expired' : 'unknown'));
     console.log(`[Songs] Cache missing or stale for playlist ${this.playlistId} (reason: ${reason}, backup active: ${isBackupActive}). Loading from API.`);
     if (isRefresh && parsedArtists) {
       try {

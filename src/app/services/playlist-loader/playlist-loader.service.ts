@@ -173,7 +173,7 @@ export class PlaylistLoaderService {
 
     const storedArtists = this.storageService.getItem(`${userId}_${task.playlistId}`);
     const version = this.storageService.getItem(`${userId}_${task.playlistId}_cacheVersion`);
-    const isOldCache = storedArtists && version !== 'v5';
+    const isOldCache = storedArtists && version !== 'v6';
 
     let cachedArtists: any[] = [];
     let cachedTracksCount = 0;
@@ -645,7 +645,11 @@ export class PlaylistLoaderService {
           if (artistMap.has(artist.id)) {
             const full = artistMap.get(artist.id);
             artist.images = full.images || [];
-            artist.genres = full.genres || [];
+            if (Array.isArray(full.genres) && full.genres.length > 0) {
+              artist.genres = [...full.genres];
+            } else if (!Array.isArray(artist.genres)) {
+              artist.genres = [];
+            }
           }
         });
 
@@ -773,7 +777,7 @@ export class PlaylistLoaderService {
     this.storageService.setItem(`${userId}_${task.playlistId}_Amount`, JSON.stringify(task.totalTracks));
     this.storageService.setItem(`${userId}_${task.playlistId}_Name`, JSON.stringify(task.playlistName));
     this.storageService.setItem(`${userId}_${task.playlistId}_lastUpdated`, Date.now().toString());
-    this.storageService.setItem(`${userId}_${task.playlistId}_cacheVersion`, 'v5');
+    this.storageService.setItem(`${userId}_${task.playlistId}_cacheVersion`, 'v6');
 
   }
 }

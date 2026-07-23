@@ -189,11 +189,11 @@ async function syncArtists(spotifyAccessToken, artistIds, pulledArtists = []) {
 
   const genresToInsert = new Set();
   const artistGenresToInsert = [];
-  const artistsWithAuthoritativeGenres = [];
+  const artistsWithSpotifyGenres = [];
   const artistsToInsert = Array.from(deduplicated.values()).map(artist => {
     const existing = existingMap.get(artist.id);
-    if (Array.isArray(artist.genres)) {
-      artistsWithAuthoritativeGenres.push(artist.id);
+    if (Array.isArray(artist.genres) && artist.genres.length > 0) {
+      artistsWithSpotifyGenres.push(artist.id);
     }
     (Array.isArray(artist.genres) ? artist.genres : []).forEach(genre => {
       if (genre && genre.trim().toLowerCase() !== 'artist') {
@@ -227,11 +227,11 @@ async function syncArtists(spotifyAccessToken, artistIds, pulledArtists = []) {
     .upsert(artistsToInsert, { onConflict: 'id' });
   if (artistError) throw artistError;
 
-  if (artistsWithAuthoritativeGenres.length > 0) {
+  if (artistsWithSpotifyGenres.length > 0) {
     const { error } = await supabase
       .from('artist_genres')
       .delete()
-      .in('artist_id', artistsWithAuthoritativeGenres);
+      .in('artist_id', artistsWithSpotifyGenres);
     if (error) throw error;
   }
 
@@ -508,7 +508,7 @@ async function syncTracks(spotifyAccessToken, trackIds, pulledTracks = []) {
   if (trackArtistsToInsert.length > 0) {
     const { error } = await supabase
       .from('track_artists')
-      .upsert(trackArtistsToInsert, { onConflict: 'track_id,artist_id' });
+      .upsert(trackArtistsToInsert, { onConflict: 'track_id,artist_rank' });
     if (error) throw error;
   }
 }
@@ -809,7 +809,6 @@ async function saveStatsSnapshot(
 async function syncUserStats(user, spotifyAccessToken, rangesToSync = ['short_term', 'medium_term', 'long_term']) {
   console.log(`[Sync] Starting stats snapshot sync for user: ${user.display_name} (${user.id})`);
   let completedRanges = 0;
-  const artistProfileCache = new Map();
 
   for (const range of rangesToSync) {
     try {
@@ -847,46 +846,84 @@ async function syncUserStats(user, spotifyAccessToken, rangesToSync = ['short_te
         continue;
       }
 
-      // Fetch each full artist profile at most once during this daily run.
-      // Its genres array is authoritative and replaces cached/database genres.
-      const topArtistIds = Array.from(new Set(topArtists.map(a => a.id).filter(Boolean)));
-      const uncachedArtistIds = topArtistIds.filter(id => !artistProfileCache.has(id));
-      for (const chunk of chunkArray(uncachedArtistIds, 50)) {
-        try {
-          let catalogArtists = [];
+      // Keep non-empty genres from the top-artists response. For artists where
+      // Spotify returned none, use persisted genres first and only then query
+      // the artist catalog endpoint.
+      const artistsWithEmptyGenres = topArtists.filter(a => a.id && (!a.genres || a.genres.length === 0));
+      if (artistsWithEmptyGenres.length > 0) {
+        const emptyIds = artistsWithEmptyGenres.map(a => a.id);
+        const { data: dbGenres, error: dbGenresError } = await supabase
+          .from('artist_genres')
+          .select('artist_id, genre_name')
+          .in('artist_id', emptyIds);
+        if (dbGenresError) {
+          console.warn(`[Sync] Failed to load cached artist genres: ${dbGenresError.message}`);
+        }
+
+        const genreMap = new Map();
+        if (dbGenres && dbGenres.length > 0) {
+          dbGenres.forEach(row => {
+            const existing = genreMap.get(row.artist_id) || [];
+            existing.push(row.genre_name);
+            genreMap.set(row.artist_id, existing);
+          });
+
+          topArtists.forEach(artist => {
+            if (artist.id && (!artist.genres || artist.genres.length === 0) && genreMap.has(artist.id)) {
+              artist.genres = genreMap.get(artist.id);
+            }
+          });
+          console.log(`[Sync] Enriched ${genreMap.size} artists with genres from database`);
+        }
+
+        const stillEmptyIds = topArtists
+          .filter(a => a.id && (!a.genres || a.genres.length === 0))
+          .map(a => a.id);
+
+        for (const chunk of chunkArray(stillEmptyIds, 50)) {
           try {
-            const res = await apiRequest(`https://api.spotify.com/v1/artists?ids=${chunk.join(',')}&locale=en_US`, {
-              headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
-            });
-            catalogArtists = (res.artists || []).filter(Boolean);
-          } catch (batchError) {
-            if (![400, 403, 404].includes(batchError.status)) throw batchError;
-            for (const id of chunk) {
-              try {
-                const artist = await apiRequest(`https://api.spotify.com/v1/artists/${id}?locale=en_US`, {
-                  headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
-                });
-                if (artist) catalogArtists.push(artist);
-              } catch (individualError) {
-                console.warn(`[Sync] Failed to fetch artist ${id}: ${individualError.message}`);
+            let catalogArtists = [];
+            try {
+              const res = await apiRequest(`https://api.spotify.com/v1/artists?ids=${chunk.join(',')}&locale=en_US`, {
+                headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
+              });
+              catalogArtists = (res.artists || []).filter(Boolean);
+            } catch (batchError) {
+              if (![400, 403, 404].includes(batchError.status)) throw batchError;
+              for (const id of chunk) {
+                try {
+                  const artist = await apiRequest(`https://api.spotify.com/v1/artists/${id}?locale=en_US`, {
+                    headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
+                  });
+                  if (artist) catalogArtists.push(artist);
+                } catch (individualError) {
+                  console.warn(`[Sync] Failed to fetch artist ${id} for genres: ${individualError.message}`);
+                }
               }
             }
-          }
 
-          catalogArtists.forEach(artist => {
-            if (artist?.id) artistProfileCache.set(artist.id, artist);
-          });
-        } catch (err) {
-          console.warn('[Sync] Failed to fetch Spotify artist profiles:', err.message);
+            const artistsWithGenres = catalogArtists.filter(
+              artist => artist?.id && Array.isArray(artist.genres) && artist.genres.length > 0
+            );
+            artistsWithGenres.forEach(spotifyArtist => {
+              const topArtist = topArtists.find(artist => artist.id === spotifyArtist.id);
+              if (topArtist && (!topArtist.genres || topArtist.genres.length === 0)) {
+                topArtist.genres = [...spotifyArtist.genres];
+              }
+            });
+
+            if (artistsWithGenres.length > 0) {
+              await syncArtists(
+                spotifyAccessToken,
+                artistsWithGenres.map(artist => artist.id),
+                artistsWithGenres
+              );
+            }
+          } catch (error) {
+            console.warn('[Sync] Failed to fetch artist catalog genres:', error.message);
+          }
         }
       }
-
-      topArtists.forEach(artist => {
-        const profile = artistProfileCache.get(artist.id);
-        if (profile) {
-          artist.genres = Array.isArray(profile.genres) ? [...profile.genres] : [];
-        }
-      });
 
       // Calculate genres
       const genreCounts = new Map();

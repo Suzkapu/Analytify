@@ -316,15 +316,15 @@ export class SupabaseService {
 
       const genresToInsert = new Set<string>();
       const artistGenresToInsert: any[] = [];
-      const artistsWithAuthoritativeGenres: string[] = [];
+      const artistsWithSpotifyGenres: string[] = [];
 
       uniqueArtists.forEach(a => {
-        const hasSpotifyGenres = Array.isArray(a.genres);
-        const genresList = (hasSpotifyGenres ? a.genres : (a.genre ? [a.genre] : [])).filter(
+        const hasSpotifyGenres = Array.isArray(a.genres) && a.genres.length > 0;
+        const genresList = (Array.isArray(a.genres) ? a.genres : (a.genre ? [a.genre] : [])).filter(
           (g: string) => g && g.trim().toLowerCase() !== 'artist'
         );
         if (hasSpotifyGenres) {
-          artistsWithAuthoritativeGenres.push(a.id);
+          artistsWithSpotifyGenres.push(a.id);
         }
         genresList.forEach((g: string) => {
           if (g) {
@@ -348,14 +348,13 @@ export class SupabaseService {
         if (error) throw error;
       }
 
-      // A full Spotify artist response contains an authoritative genres array.
-      // Replace that artist's links so genres removed or corrected by Spotify
-      // cannot remain attached forever.
-      if (artistsWithAuthoritativeGenres.length > 0) {
+      // Replace links only when Spotify actually supplied genres. An empty
+      // array means no genre data was returned and must not erase good data.
+      if (artistsWithSpotifyGenres.length > 0) {
         const { error } = await this.client
           .from('artist_genres')
           .delete()
-          .in('artist_id', artistsWithAuthoritativeGenres);
+          .in('artist_id', artistsWithSpotifyGenres);
         if (error) throw error;
       }
 
@@ -868,7 +867,7 @@ export class SupabaseService {
       if (trackArtistsToInsert.length > 0) {
         const { error } = await this.client
           .from('track_artists')
-          .upsert(trackArtistsToInsert, { onConflict: 'track_id,artist_id' });
+          .upsert(trackArtistsToInsert, { onConflict: 'track_id,artist_rank' });
         if (error) throw error;
       }
     } catch (e) {

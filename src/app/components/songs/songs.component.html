@@ -173,6 +173,10 @@
                 <span *ngFor="let genre of artist.genres.slice(0, 3)"
                   class="genre-tag">{{ genre }}</span>
               </div>
+              <div *ngIf="!artist.genres || !artist.genres.length"
+                class="genres-tags">
+                <span class="genre-tag">No genres available</span>
+              </div>
             </div>
           </div>
           <div class="group-left">
