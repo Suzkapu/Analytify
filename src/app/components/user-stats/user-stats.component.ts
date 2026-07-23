@@ -323,34 +323,104 @@ export class UserStatsComponent implements OnInit {
     }).slice(0, 15); // Top 15 genres
   }
 
+  private getCachedArtistGenres(userId: string, artistIds: string[]): Map<string, string[]> {
+    const result = new Map<string, string[]>();
+    const unresolvedIds = new Set(artistIds);
+    if (unresolvedIds.size === 0) return result;
+
+    const favoriteArtistsKey = `${userId}_fav`;
+    const cacheKeys = this.storageService.getCacheKeys();
+    const artistCacheKeys = [
+      favoriteArtistsKey,
+      ...cacheKeys.filter(key => key.startsWith(`${userId}_`) && key !== favoriteArtistsKey)
+    ];
+
+    for (const key of artistCacheKeys) {
+      if (unresolvedIds.size === 0) break;
+
+      const cachedValue = this.storageService.getItem(key);
+      if (!cachedValue || !cachedValue.trimStart().startsWith('[')) continue;
+
+      try {
+        const cachedItems = JSON.parse(cachedValue);
+        if (!Array.isArray(cachedItems)) continue;
+
+        cachedItems.forEach((artist: any) => {
+          if (!artist?.id || !unresolvedIds.has(artist.id)) return;
+
+          const genres = (Array.isArray(artist.genres)
+            ? artist.genres
+            : (artist.genre ? [artist.genre] : [])
+          ).filter((genre: unknown): genre is string =>
+            typeof genre === 'string' &&
+            genre.trim().length > 0 &&
+            genre.trim().toLowerCase() !== 'artist'
+          );
+
+          if (genres.length > 0) {
+            result.set(artist.id, genres);
+            unresolvedIds.delete(artist.id);
+          }
+        });
+      } catch {
+        // This cache entry is not an artist collection.
+      }
+    }
+
+    return result;
+  }
+
   private async enrichArtistGenresFromDb(userId: string, range: string) {
-    const missingIds = this.topArtists
+    const artists = this.topArtists;
+    const persistEnrichedArtists = () => {
+      // A range change may have replaced topArtists while an async lookup was running.
+      if (this.topArtists !== artists || this.selectedRange !== range) return;
+
+      this.calculateGenres();
+      this.storageService.setItem(`${userId}_stats_${range}_artists`, JSON.stringify(artists));
+      this.storageService.setItem(`${userId}_stats_${range}_genres`, JSON.stringify(this.topGenres));
+    };
+    const applyGenres = (genreMap: Map<string, string[]>): boolean => {
+      let enriched = false;
+      artists.forEach(artist => {
+        if (artist.id && (!artist.genres || artist.genres.length === 0) && genreMap.has(artist.id)) {
+          artist.genres = genreMap.get(artist.id)!;
+          enriched = true;
+        }
+      });
+      return enriched;
+    };
+
+    let missingIds = artists
+      .filter(a => a.id && (!a.genres || a.genres.length === 0))
+      .map(a => a.id);
+
+    if (missingIds.length === 0) return;
+
+    // Playlist artist caches (especially Favourite Tracks) may already contain
+    // the full Spotify artist profile even when a stats response omits genres.
+    const cachedGenreMap = this.getCachedArtistGenres(userId, missingIds);
+    if (applyGenres(cachedGenreMap)) {
+      console.log(`[Stats] Enriched ${cachedGenreMap.size} artists with genres from local artist cache`);
+      persistEnrichedArtists();
+    }
+
+    missingIds = artists
       .filter(a => a.id && (!a.genres || a.genres.length === 0))
       .map(a => a.id);
 
     if (missingIds.length === 0) return;
 
     try {
-      // 1. First, check the local database backup
+      // 2. Check the shared database backup
       const genreMap = await this.supabaseService.lookupArtistGenres(missingIds);
-      
-      let enriched = false;
-      this.topArtists.forEach(a => {
-        if (a.id && (!a.genres || a.genres.length === 0) && genreMap.has(a.id)) {
-          a.genres = genreMap.get(a.id)!;
-          enriched = true;
-        }
-      });
-
-      if (enriched) {
+      if (applyGenres(genreMap)) {
         console.log(`[Stats] Enriched ${genreMap.size} artists with genres from database`);
-        this.calculateGenres();
-        this.storageService.setItem(`${userId}_stats_${range}_artists`, JSON.stringify(this.topArtists));
-        this.storageService.setItem(`${userId}_stats_${range}_genres`, JSON.stringify(this.topGenres));
+        persistEnrichedArtists();
       }
 
-      // 2. Second, for any artists still missing genres, fetch them directly from Spotify's catalog endpoint
-      const stillMissingIds = this.topArtists
+      // 3. For any artists still missing genres, query Spotify's catalog endpoint
+      const stillMissingIds = artists
         .filter(a => a.id && (!a.genres || a.genres.length === 0))
         .map(a => a.id);
 
@@ -367,7 +437,7 @@ export class UserStatsComponent implements OnInit {
 
             if (apiArtistMap.size > 0) {
               let apiEnriched = false;
-              this.topArtists.forEach(a => {
+              artists.forEach(a => {
                 if (a.id && (!a.genres || a.genres.length === 0) && apiArtistMap.has(a.id)) {
                   a.genres = apiArtistMap.get(a.id).genres;
                   apiEnriched = true;
@@ -376,9 +446,7 @@ export class UserStatsComponent implements OnInit {
 
               if (apiEnriched) {
                 console.log(`[Stats] Successfully enriched ${apiArtistMap.size} artists with genres from Spotify catalog`);
-                this.calculateGenres();
-                this.storageService.setItem(`${userId}_stats_${range}_artists`, JSON.stringify(this.topArtists));
-                this.storageService.setItem(`${userId}_stats_${range}_genres`, JSON.stringify(this.topGenres));
+                persistEnrichedArtists();
 
                 // Sync these full artist profiles to Supabase so they are saved in the shared DB
                 const artistsToSync = Array.from(apiArtistMap.values());
