@@ -131,6 +131,9 @@ export class SongsComponent implements OnInit, OnDestroy {
     const isRoughlyMatch = actualUniqueCount >= Math.floor(cachedTotalTracks * 0.85) ||
       (cachedTotalTracks - actualUniqueCount <= 3);
     const isCacheCorrupt = !!storedArtists && !isParseError && cachedTotalTracks > 0 && !isRoughlyMatch;
+    const isAlbumMetadataIncomplete = !!storedArtists &&
+      !isParseError &&
+      !this.playlistLoaderService.hasCompleteAlbumMetadata(parsedArtists);
 
     return {
       storedArtists,
@@ -139,10 +142,12 @@ export class SongsComponent implements OnInit, OnDestroy {
       isExpired: this.isCacheExpired(lastUpdated),
       isParseError,
       isCacheCorrupt,
+      isAlbumMetadataIncomplete,
       isUsable: !!storedArtists &&
         !this.isCacheExpired(lastUpdated) &&
         !isParseError &&
-        !isCacheCorrupt
+        !isCacheCorrupt &&
+        !isAlbumMetadataIncomplete
     };
   }
 

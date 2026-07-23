@@ -124,6 +124,25 @@ export class PlaylistLoaderService {
     this.tasks.clear();
   }
 
+  hasCompleteAlbumMetadata(artists: any[]): boolean {
+    if (!Array.isArray(artists)) {
+      return false;
+    }
+
+    return artists.every(artist =>
+      Array.isArray(artist?.tracks) &&
+      artist.tracks.every((track: any) =>
+        !track?.id ||
+        (
+          typeof track.album?.id === 'string' &&
+          track.album.id.trim() !== '' &&
+          typeof track.album?.name === 'string' &&
+          track.album.name.trim() !== ''
+        )
+      )
+    );
+  }
+
   private tryIncrementalMatch(
     task: PlaylistLoadTask,
     items: any[],
@@ -180,6 +199,16 @@ export class PlaylistLoaderService {
         cachedTracksCount = JSON.parse(this.storageService.getItem(`${userId}_${task.playlistId}_Amount`) || '0');
       } catch (e) {}
     }
+    const reusableCachedArtists = this.hasCompleteAlbumMetadata(cachedArtists)
+      ? cachedArtists
+      : [];
+
+    if (cachedArtists.length > 0 && reusableCachedArtists.length === 0) {
+      console.log(
+        `[PlaylistLoaderService] Playlist ${task.playlistId} cache is missing album metadata. ` +
+        'Refreshing all tracks once instead of reusing incomplete track data.'
+      );
+    }
 
     let targetArray: any[];
     
@@ -229,9 +258,9 @@ export class PlaylistLoaderService {
     task.loadedTracksCount = 0;
     task.emitUpdate();
 
-    if (task.playlistId === 'fav' && storedArtists) {
+    if (task.playlistId === 'fav' && reusableCachedArtists.length > 0) {
       console.log("Favourite Tracks detected. Starting incremental load.");
-      this.loadNewerFavTracks(task, userId, 0, 50, cachedArtists, targetArray, allowFullFallback);
+      this.loadNewerFavTracks(task, userId, 0, 50, reusableCachedArtists, targetArray, allowFullFallback);
     } else {
       if (task.playlistId === 'fav') {
         task.playlistName = 'Favourite Tracks';
@@ -273,9 +302,9 @@ export class PlaylistLoaderService {
             let canUseFastPath = false;
             let canUseIncrementalEndPath = false;
 
-            if (cachedArtists.length > 0 && task.totalTracks > 100) {
+            if (reusableCachedArtists.length > 0 && task.totalTracks > 100) {
               const cachedFirst100Ids = new Set<string>();
-              cachedArtists.forEach(artist => {
+              reusableCachedArtists.forEach(artist => {
                 if (artist.tracks) {
                   artist.tracks.forEach((t: any) => {
                     if (t.playlist_index >= 1 && t.playlist_index <= 100) {
@@ -303,7 +332,7 @@ export class PlaylistLoaderService {
 
             if (canUseFastPath) {
               console.log(`[PlaylistLoaderService] Fast path matches for playlist ${task.playlistId}. Merging remaining cached data.`);
-              this.mergeCachedArtists(task, cachedArtists, targetArray, 101, 0, true);
+              this.mergeCachedArtists(task, reusableCachedArtists, targetArray, 101, 0, true);
               task.loadedTracksCount = task.totalTracks;
               task.isLoadingTracks = false;
               task.emitUpdate();
@@ -311,18 +340,18 @@ export class PlaylistLoaderService {
               this.checkCompletion(task, userId);
             } else if (canUseIncrementalEndPath) {
               console.log(`[PlaylistLoaderService] Incremental end path matches for playlist ${task.playlistId}. Merging cached tracks up to ${cachedTracksCount} and pulling new ones from offset ${cachedTracksCount}.`);
-              this.mergeCachedArtists(task, cachedArtists, targetArray, 101, 0, true);
+              this.mergeCachedArtists(task, reusableCachedArtists, targetArray, 101, 0, true);
               task.loadedTracksCount = cachedTracksCount;
               task.emitUpdate();
               this.fetchArtistDetailsLazy(task, targetArray, userId);
               
-              this.loadRemainingTracks(task, userId, cachedTracksCount, 100, task.totalTracks, targetArray, cachedArtists, allowFullFallback);
+              this.loadRemainingTracks(task, userId, cachedTracksCount, 100, task.totalTracks, targetArray, reusableCachedArtists, allowFullFallback);
             } else {
               // Mismatch/no-cache on first page
-              if (cachedArtists.length > 0 && !allowFullFallback && task.totalTracks > 100) {
+              if (reusableCachedArtists.length > 0 && !allowFullFallback && task.totalTracks > 100) {
                 console.log(`[PlaylistLoaderService] Playlist mismatch detected under daily restriction. Stopping API load and using full cache.`);
                 targetArray.length = 0; // Clear the first page tracks we got
-                this.mergeCachedArtists(task, cachedArtists, targetArray, undefined, 0, true);
+                this.mergeCachedArtists(task, reusableCachedArtists, targetArray, undefined, 0, true);
                 task.loadedTracksCount = cachedTracksCount;
                 task.isLoadingTracks = false;
                 task.emitUpdate();
@@ -334,9 +363,9 @@ export class PlaylistLoaderService {
                 this.fetchArtistDetailsLazy(task, targetArray, userId);
 
                 if (task.loadedTracksCount < task.totalTracks) {
-                  this.loadRemainingTracks(task, userId, 100, 100, task.totalTracks, targetArray, cachedArtists, allowFullFallback);
+                  this.loadRemainingTracks(task, userId, 100, 100, task.totalTracks, targetArray, reusableCachedArtists, allowFullFallback);
                 } else {
-                  this.mergeCachedArtists(task, cachedArtists, targetArray, undefined, 0, false);
+                  this.mergeCachedArtists(task, reusableCachedArtists, targetArray, undefined, 0, false);
                   task.isLoadingTracks = false;
                   task.emitUpdate();
                   this.checkCompletion(task, userId);

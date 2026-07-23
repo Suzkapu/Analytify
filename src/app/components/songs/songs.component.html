@@ -260,7 +260,9 @@
       <span class="album-name">{{ album.name }}</span>
       <span class="album-artists">{{ album.artists.join(', ') || 'Unknown artist' }}</span>
       <span class="album-meta">
-        {{ album.trackCount }} {{ album.trackCount === 1 ? 'song' : 'songs' }}
+        {{ album.trackCount }} {{ playlistId === 'fav'
+          ? (album.trackCount === 1 ? 'liked song' : 'liked songs')
+          : (album.trackCount === 1 ? 'song' : 'songs') }}
         <ng-container *ngIf="album.releaseDate"> · {{ getYearFromDate(album.releaseDate) }}</ng-container>
         · {{ formatDurationShort(album.durationMs) }}
       </span>
