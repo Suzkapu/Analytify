@@ -316,11 +316,16 @@ export class SupabaseService {
 
       const genresToInsert = new Set<string>();
       const artistGenresToInsert: any[] = [];
+      const artistsWithAuthoritativeGenres: string[] = [];
 
       uniqueArtists.forEach(a => {
-        const genresList = (a.genres || (a.genre ? [a.genre] : [])).filter(
+        const hasSpotifyGenres = Array.isArray(a.genres);
+        const genresList = (hasSpotifyGenres ? a.genres : (a.genre ? [a.genre] : [])).filter(
           (g: string) => g && g.trim().toLowerCase() !== 'artist'
         );
+        if (hasSpotifyGenres) {
+          artistsWithAuthoritativeGenres.push(a.id);
+        }
         genresList.forEach((g: string) => {
           if (g) {
             genresToInsert.add(g);
@@ -340,6 +345,17 @@ export class SupabaseService {
         const { error } = await this.client
           .from('artists')
           .upsert(artistsToInsert, { onConflict: 'id' });
+        if (error) throw error;
+      }
+
+      // A full Spotify artist response contains an authoritative genres array.
+      // Replace that artist's links so genres removed or corrected by Spotify
+      // cannot remain attached forever.
+      if (artistsWithAuthoritativeGenres.length > 0) {
+        const { error } = await this.client
+          .from('artist_genres')
+          .delete()
+          .in('artist_id', artistsWithAuthoritativeGenres);
         if (error) throw error;
       }
 

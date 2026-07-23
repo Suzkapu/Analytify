@@ -173,7 +173,7 @@ export class PlaylistLoaderService {
 
     const storedArtists = this.storageService.getItem(`${userId}_${task.playlistId}`);
     const version = this.storageService.getItem(`${userId}_${task.playlistId}_cacheVersion`);
-    const isOldCache = storedArtists && version !== 'v4';
+    const isOldCache = storedArtists && version !== 'v5';
 
     let cachedArtists: any[] = [];
     let cachedTracksCount = 0;
@@ -449,9 +449,6 @@ export class PlaylistLoaderService {
           }
         });
       }
-      if (artist.images && artist.images.length > 0) {
-        task.requestedArtistIds.add(artist.id);
-      }
     });
 
     const sub = this.spotifyDataService.getFavTracks(offset, limit).subscribe({
@@ -610,9 +607,6 @@ export class PlaylistLoaderService {
         }
       }
 
-      if (cachedArtist.images && cachedArtist.images.length > 0) {
-        task.requestedArtistIds.add(cachedArtist.id);
-      }
     });
     task.totalUniqueArtists = targetArray.length;
     task.emitUpdate();
@@ -654,6 +648,12 @@ export class PlaylistLoaderService {
             artist.genres = full.genres || [];
           }
         });
+
+        if (this.authService.isBackupActive() && artistMap.size > 0) {
+          this.supabaseService.syncArtists(Array.from(artistMap.values())).catch(err => {
+            console.warn('[PlaylistLoaderService] Failed to sync Spotify artist details:', err);
+          });
+        }
 
         task.loadedArtistsDetailsCount = targetArray.filter(a => a.images && a.images.length > 0).length;
         task.emitUpdate();
@@ -773,7 +773,7 @@ export class PlaylistLoaderService {
     this.storageService.setItem(`${userId}_${task.playlistId}_Amount`, JSON.stringify(task.totalTracks));
     this.storageService.setItem(`${userId}_${task.playlistId}_Name`, JSON.stringify(task.playlistName));
     this.storageService.setItem(`${userId}_${task.playlistId}_lastUpdated`, Date.now().toString());
-    this.storageService.setItem(`${userId}_${task.playlistId}_cacheVersion`, 'v4');
+    this.storageService.setItem(`${userId}_${task.playlistId}_cacheVersion`, 'v5');
 
   }
 }
