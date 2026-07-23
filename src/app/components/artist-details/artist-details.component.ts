@@ -55,20 +55,6 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
     return lastUpdated < cutoff.getTime();
   }
 
-  private async restoreMissingGenres(artist: any): Promise<any> {
-    if (
-      !artist?.id ||
-      (Array.isArray(artist.genres) && artist.genres.length > 0) ||
-      !this.authService.isBackupActive()
-    ) {
-      return artist;
-    }
-
-    const genreMap = await this.supabaseService.lookupArtistGenres([artist.id]);
-    const genres = genreMap.get(artist.id);
-    return genres?.length ? { ...artist, genres: [...genres] } : artist;
-  }
-
   async loadArtistDetails(id: string) {
     const userId = this.authService.getUserId() || 'anonymous';
     const artistCacheKey = `${userId}_artist_${id}`;
@@ -89,7 +75,7 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
 
     let cachedArtist = readArtistCache();
     if (cachedArtist) {
-      this.artist = await this.restoreMissingGenres(cachedArtist);
+      this.artist = cachedArtist;
       return;
     }
 
@@ -101,7 +87,7 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
         const found = parsed.find((a: any) => a.id === id);
         if (found) {
           console.log(this.authService.isBackupActive() ? "[ArtistDetails] Loading artist details from Supabase Cloud Backup (Local Cache)" : "[ArtistDetails] Loading artist details from Local Storage Cache (Cloud Backup disabled)");
-          this.artist = await this.restoreMissingGenres(found);
+          this.artist = found;
           return;
         }
       }
@@ -141,12 +127,26 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  openTrackClick(url: string) {
-    window.location.href = url;
+  openTrackClick(url?: string) {
+    if (url) {
+      window.location.href = url;
+    }
   }
 
   openArtistClick() {
-    window.location.href = this.artist.external_urls?.spotify;
+    const url = this.getArtistSpotifyUrl();
+    if (url) {
+      window.location.href = url;
+    }
+  }
+
+  getArtistSpotifyUrl(): string {
+    if (this.artist?.external_urls?.spotify) {
+      return this.artist.external_urls.spotify;
+    }
+    return this.artist?.id
+      ? `https://open.spotify.com/artist/${encodeURIComponent(this.artist.id)}`
+      : '';
   }
 
   goBack() {

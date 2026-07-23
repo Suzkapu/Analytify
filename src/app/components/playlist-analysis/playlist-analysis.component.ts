@@ -36,7 +36,6 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
   explicitCount: number = 0;
   explicitPercentage: number = 0;
 
-  topGenres: { name: string; count: number; percentage: number, percentage_simple: number, visualWidth?: number }[] = [];
   longestTrack: any = null;
   shortestTrack: any = null;
   oldestTrack: any = null;
@@ -137,7 +136,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
 
     parseCachedArtists();
     let isOldCache = parsedArtists.length > 0 &&
-      parsedArtists.some(artist => !Array.isArray(artist.images) || !Array.isArray(artist.genres));
+      parsedArtists.some(artist => !Array.isArray(artist.images));
 
     if ((!storedArtists || isExpired || isParseError || isOldCache) && isBackupActive) {
       await this.storageService.restoreItemsFromCloud([
@@ -151,7 +150,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
       isExpired = this.isCacheExpired(lastUpdated);
       parseCachedArtists();
       isOldCache = parsedArtists.length > 0 &&
-        parsedArtists.some(artist => !Array.isArray(artist.images) || !Array.isArray(artist.genres));
+        parsedArtists.some(artist => !Array.isArray(artist.images));
     }
 
     if (storedArtists && !isExpired && !isParseError && !isOldCache) {
@@ -253,7 +252,6 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
       this.averageDurationFormatted = '0:00';
       this.explicitCount = 0;
       this.explicitPercentage = 0;
-      this.topGenres = [];
       this.longestTrack = null;
       this.shortestTrack = null;
       this.oldestTrack = null;
@@ -305,37 +303,6 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
       this.oldestTrack = null;
       this.newestTrack = null;
     }
-
-    const genreCounts = new Map<string, number>();
-    this.artists.forEach(artist => {
-      const artistSongCount = artist.tracks.length;
-      if (artist.genres && artist.genres.length) {
-        // Divide count equally among the genres of this artist
-        const weightPerGenre = artistSongCount / artist.genres.length;
-        artist.genres.forEach((genre: string) => {
-          const count = genreCounts.get(genre) || 0;
-          genreCounts.set(genre, count + weightPerGenre);
-        });
-      }
-    });
-
-    const totalGenresWeight = Array.from(genreCounts.values()).reduce((sum, val) => sum + val, 0);
-
-    const sorted = Array.from(genreCounts.entries())
-      .map(([name, count]) => {
-        const percentage = totalGenresWeight > 0 ? Math.min(100, Math.round((count / totalGenresWeight) * 100)) : 0;
-        const percentage_simple = uniqueTracks.length > 0 ? Math.min(100, Math.round((count / uniqueTracks.length) * 100)) : 0;
-
-        return { name, count: Math.round(count), percentage, percentage_simple };
-      })
-      .sort((a, b) => b.count - a.count);
-
-    const maxCount = sorted.length > 0 ? sorted[0].count : 1;
-
-    this.topGenres = sorted.map(g => ({
-      ...g,
-      visualWidth: g.count > 0 ? Math.max(2, Math.min(100, Math.round((g.count / maxCount) * 100))) : 0
-    })).slice(0, 10);
 
   }
 

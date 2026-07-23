@@ -87,7 +87,6 @@ export class ImageHealingService {
               .filter(a => !!a)
               .map(artist => {
                 const imageMetadata = { ...artist };
-                delete imageMetadata.genres;
                 return imageMetadata;
               });
             if (forSync.length > 0) {

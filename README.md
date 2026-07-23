@@ -13,8 +13,7 @@ Analytify is a modern, high-fidelity Angular web application that integrates wit
 
 ### 2. Personal Listening Analytics
 - **Top 100 Songs**: Displays your most listened to songs in customizable time periods (Last 4 Weeks, Last 6 Months, Last Year).
-- **Top Artists**: Lists your top artists along with their main genres and profile cards.
-- **Top Genres**: Visualizes your top genres via a clean percentage weight progress layout.
+- **Top Artists**: Lists your top artists with profile cards and historical rank comparisons.
 
 ### 3. Historical Tracking & Trend Visualizations
 - **Rank Snapshot Snapshots**: Save, browse, and compare historical rank snapshots. The app automatically computes rank indicators relative to the preceding snapshot.

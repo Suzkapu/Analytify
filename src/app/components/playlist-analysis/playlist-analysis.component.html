@@ -110,30 +110,7 @@
 
   <!-- Two-Column Layout -->
   <div class="dashboard-columns">
-    
-    <!-- Left Column: Genres -->
-    <div class="column-card genre-analysis-card" style="background: #181818; border: 1px solid rgba(255,255,255,0.03); border-radius: 20px; padding: 24px;">
-      <h3>
-        <i class="pi pi-tags" style="color: #1db954;"></i> Top Genres in Playlist
-      </h3>
-      
-      <div *ngIf="topGenres.length === 0" style="color: #666; padding: 20px 0; text-align: center;">No genres found for these artists.</div>
-      
-      <div *ngIf="topGenres.length > 0" class="genres-list-container">
-        <div *ngFor="let genre of topGenres" class="genre-row">
-          <div class="genre-row-header">
-            <span class="genre-name">{{ genre.name }}</span>
-            <span class="genre-percentage">{{ genre.percentage < 1 ? '<1' : genre.percentage }}% <span class="genre-matches">({{ genre.count }} matches)</span></span>
-          </div>
-          <!-- Custom ProgressBar -->
-          <div class="progress-bar-container">
-            <div [style.width.%]="genre.visualWidth || genre.percentage" class="progress-bar-fill"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Right Column: Extremes & Highlights -->
+    <!-- Extremes & Highlights -->
     <div style="display: flex; flex-direction: column; gap: 24px;">
       
       <!-- Timeline Highlights -->

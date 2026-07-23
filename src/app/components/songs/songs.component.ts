@@ -407,7 +407,8 @@ export class SongsComponent implements OnInit, OnDestroy {
         id: album.id,
         name: album.name || 'Unknown Album',
         imageUrl: album.images?.[0]?.url || null,
-        spotifyUrl: album.external_urls?.spotify || null,
+        spotifyUrl: album.external_urls?.spotify ||
+          `https://open.spotify.com/album/${encodeURIComponent(album.id)}`,
         releaseDate: album.release_date || '',
         artists: artists.map((artist: any) => artist.name).filter(Boolean),
         trackCount: 1,

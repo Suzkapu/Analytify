@@ -182,15 +182,6 @@
             <div class="artist-details">
               <h2 class="artist-name-text">
                 {{ artist.name }}</h2>
-              <div *ngIf="artist.genres && artist.genres.length"
-                class="genres-tags">
-                <span *ngFor="let genre of artist.genres.slice(0, 3)"
-                  class="genre-tag">{{ genre }}</span>
-              </div>
-              <div *ngIf="!artist.genres || !artist.genres.length"
-                class="genres-tags">
-                <span class="genre-tag">No genres available</span>
-              </div>
             </div>
           </div>
           <div class="group-left">
@@ -249,8 +240,14 @@
 
   <!-- Albums View -->
   <div *ngIf="viewStyle === 'albums'" class="card-container album-grid" style="margin-top: 20px;">
-    <div *ngIf="filteredAlbums.length === 0" class="no-songs-found">
-      <i class="pi pi-info-circle"></i> No albums found matching your search.
+    <div *ngIf="filteredAlbums.length === 0" class="no-songs-found album-empty-state">
+      <i class="pi pi-info-circle"></i>
+      <ng-container *ngIf="playlistAlbums.length > 0; else unavailableAlbumMetadata">
+        No albums found matching your search.
+      </ng-container>
+      <ng-template #unavailableAlbumMetadata>
+        Album details are not available in the current playlist cache yet.
+      </ng-template>
     </div>
 
     <button *ngFor="let album of filteredAlbums.slice(0, displayedAlbumsCount)"

@@ -141,22 +141,6 @@
           color: #ffffff;
         }
 
-        .genres-tags {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 6px;
-          margin-top: 8px;
-
-          .genre-tag {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 0.82rem;
-            color: #b3b3b3;
-            font-weight: 600;
-            text-transform: capitalize;
-          }
-        }
       }
     }
 
@@ -198,14 +182,6 @@
         .artist-details {
           .artist-name-text {
             font-size: 1.25rem;
-          }
-          .genres-tags {
-            margin-top: 6px;
-            gap: 4px;
-            .genre-tag {
-              font-size: 0.75rem;
-              padding: 2px 8px;
-            }
           }
         }
       }
@@ -526,6 +502,13 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 18px;
+}
+
+.album-empty-state {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-height: 220px;
+  justify-content: center;
 }
 
 .album-card {

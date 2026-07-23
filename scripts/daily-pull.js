@@ -184,21 +184,8 @@ async function syncArtists(spotifyAccessToken, artistIds, pulledArtists = []) {
   });
   if (deduplicated.size === 0) return;
 
-  const genresToInsert = new Set();
-  const artistGenresToInsert = [];
-  const artistsWithSpotifyGenres = [];
   const artistsToInsert = Array.from(deduplicated.values()).map(artist => {
     const existing = existingMap.get(artist.id);
-    if (Array.isArray(artist.genres) && artist.genres.length > 0) {
-      artistsWithSpotifyGenres.push(artist.id);
-    }
-    (Array.isArray(artist.genres) ? artist.genres : []).forEach(genre => {
-      if (genre && genre.trim().toLowerCase() !== 'artist') {
-        genresToInsert.add(genre);
-        artistGenresToInsert.push({ artist_id: artist.id, genre_name: genre });
-      }
-    });
-
     return {
       id: artist.id,
       name: artist.name || existing?.name || 'Unknown Artist',
@@ -208,32 +195,10 @@ async function syncArtists(spotifyAccessToken, artistIds, pulledArtists = []) {
     };
   });
 
-  if (genresToInsert.size > 0) {
-    const { error } = await supabase
-      .from('genres')
-      .upsert(Array.from(genresToInsert).map(name => ({ name })), { onConflict: 'name' });
-    if (error) throw error;
-  }
-
   const { error: artistError } = await supabase
     .from('artists')
     .upsert(artistsToInsert, { onConflict: 'id' });
   if (artistError) throw artistError;
-
-  if (artistsWithSpotifyGenres.length > 0) {
-    const { error } = await supabase
-      .from('artist_genres')
-      .delete()
-      .in('artist_id', artistsWithSpotifyGenres);
-    if (error) throw error;
-  }
-
-  if (artistGenresToInsert.length > 0) {
-    const { error } = await supabase
-      .from('artist_genres')
-      .upsert(artistGenresToInsert, { onConflict: 'artist_id,genre_name' });
-    if (error) throw error;
-  }
 }
 
 function normalizeReleaseDate(value) {
@@ -391,10 +356,8 @@ async function saveStatsSnapshot(
   userId,
   range,
   explicitPercentage,
-  genreDiversity,
   topTracks,
-  topArtists,
-  topGenres
+  topArtists
 ) {
   const todayStr = getDailySnapshotDate();
   const fetchedAt = getDailyCutoffTimestamp();
@@ -406,8 +369,7 @@ async function saveStatsSnapshot(
       user_id: userId,
       range: range,
       snapshot_date: todayStr,
-      explicit_percentage: explicitPercentage,
-      genre_diversity: genreDiversity
+      explicit_percentage: explicitPercentage
     }, { onConflict: 'user_id,range,snapshot_date' })
     .select('id')
     .single();
@@ -418,8 +380,7 @@ async function saveStatsSnapshot(
   // A forced/retried run replaces the complete rank lists for this day.
   for (const table of [
     'stats_snapshot_tracks',
-    'stats_snapshot_artists',
-    'stats_snapshot_genres'
+    'stats_snapshot_artists'
   ]) {
     const { error: clearErr } = await supabase
       .from(table)
@@ -496,27 +457,6 @@ async function saveStatsSnapshot(
     if (artistLinkErr) throw artistLinkErr;
   }
 
-  // 4. Link genres
-  const genreLinks = topGenres.map((g, idx) => ({
-    snapshot_id: snapshotId,
-    genre_name: g.name,
-    rank: idx + 1,
-    weight: typeof g.percentage === 'number' ? g.percentage : (g.count || 0)
-  })).filter(row => !!row.genre_name);
-
-  if (genreLinks.length > 0) {
-    // Upsert genres master table first
-    const { error: genreErr } = await supabase
-      .from('genres')
-      .upsert(genreLinks.map(gl => ({ name: gl.genre_name })), { onConflict: 'name' });
-    if (genreErr) throw genreErr;
-
-    const { error: linkErr } = await supabase
-      .from('stats_snapshot_genres')
-      .upsert(genreLinks, { onConflict: 'snapshot_id,rank' });
-    if (linkErr) throw linkErr;
-  }
-
   // Raw daily rank history is also a replaceable snapshot. Clear it first so
   // a shorter retry cannot leave stale ranks from an earlier run.
   for (const table of ['user_top_tracks_history', 'user_top_artists_history']) {
@@ -566,7 +506,7 @@ async function saveStatsSnapshot(
   }
 }
 
-// Sync user's top stats (top 100 songs, artists, and genres)
+// Sync user's top stats (top songs and artists)
 async function syncUserStats(user, spotifyAccessToken, rangesToSync = ['short_term', 'medium_term', 'long_term']) {
   console.log(`[Sync] Starting stats snapshot sync for user: ${user.display_name} (${user.id})`);
   let completedRanges = 0;
@@ -601,63 +541,11 @@ async function syncUserStats(user, spotifyAccessToken, rangesToSync = ['short_te
       const topTracks = [...topTracksPage1, ...topTracksPage2];
 
       if (topArtists.length === 0 && topTracks.length === 0) {
-        await saveStatsSnapshot(user.id, range, 0, 0, [], [], []);
+        await saveStatsSnapshot(user.id, range, 0, [], []);
         console.log(`[Sync] No top artists or tracks for user ${user.id} (${range}); saved an empty completion snapshot.`);
         completedRanges++;
         continue;
       }
-
-      // Spotify's genres field is deprecated and may be empty. Preserve genres
-      // already stored in Supabase instead of issuing another Spotify request.
-      const artistsWithEmptyGenres = topArtists.filter(a => a.id && (!a.genres || a.genres.length === 0));
-      if (artistsWithEmptyGenres.length > 0) {
-        const emptyIds = artistsWithEmptyGenres.map(a => a.id);
-        const { data: dbGenres, error: dbGenresError } = await supabase
-          .from('artist_genres')
-          .select('artist_id, genre_name')
-          .in('artist_id', emptyIds);
-        if (dbGenresError) {
-          console.warn(`[Sync] Failed to load cached artist genres: ${dbGenresError.message}`);
-        }
-
-        const genreMap = new Map();
-        if (dbGenres && dbGenres.length > 0) {
-          dbGenres.forEach(row => {
-            const existing = genreMap.get(row.artist_id) || [];
-            existing.push(row.genre_name);
-            genreMap.set(row.artist_id, existing);
-          });
-
-          topArtists.forEach(artist => {
-            if (artist.id && (!artist.genres || artist.genres.length === 0) && genreMap.has(artist.id)) {
-              artist.genres = genreMap.get(artist.id);
-            }
-          });
-          console.log(`[Sync] Enriched ${genreMap.size} artists with genres from database`);
-        }
-      }
-
-      // Calculate genres
-      const genreCounts = new Map();
-      topArtists.forEach((artist, index) => {
-        const rankWeight = 50 - index;
-        if (artist.genres) {
-          artist.genres.forEach(genre => {
-            if (genre && genre.trim().toLowerCase() !== 'artist') {
-              const current = genreCounts.get(genre) || 0;
-              genreCounts.set(genre, current + rankWeight);
-            }
-          });
-        }
-      });
-      const sortedGenres = Array.from(genreCounts.entries()).sort((a, b) => b[1] - a[1]);
-      const totalGenresWeight = sortedGenres.reduce((sum, entry) => sum + entry[1], 0);
-      const maxWeight = sortedGenres.length > 0 ? sortedGenres[0][1] : 1;
-      const topGenres = sortedGenres.map(([name, weight]) => {
-        const percentage = totalGenresWeight > 0 ? Math.min(100, Math.round((weight / totalGenresWeight) * 100)) : 0;
-        const percentage_simple = weight > 0 ? Math.max(2, Math.min(100, Math.round((weight / maxWeight) * 100))) : 0;
-        return { name, count: Math.round(weight), percentage, percentage_simple };
-      }).slice(0, 15);
 
       // Collect IDs for metadata syncing
       const trackIds = Array.from(new Set(topTracks.map(t => t.id).filter(id => !!id)));
@@ -686,17 +574,14 @@ async function syncUserStats(user, spotifyAccessToken, rangesToSync = ['short_te
         if (track.explicit) explicitCount++;
       });
       const explicitPercentage = topTracks.length > 0 ? Math.round((explicitCount / topTracks.length) * 100) : 0;
-      const genreDiversity = topGenres.length;
 
       // Save stats snapshot
       await saveStatsSnapshot(
         user.id,
         range,
         explicitPercentage,
-        genreDiversity,
         topTracks,
-        topArtists,
-        topGenres
+        topArtists
       );
       console.log(`[Sync] Successfully saved stats snapshot for user ${user.id} (${range})`);
       completedRanges++;

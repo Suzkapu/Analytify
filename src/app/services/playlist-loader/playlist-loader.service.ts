@@ -38,8 +38,6 @@ export class PlaylistLoadTask {
 
   trackIndexCounter: number = 0;
   requestedArtistIds = new Set<string>();
-  genreHydrationStarted = false;
-  genreHydrationComplete = false;
   refreshingArtists: any[] = [];
   private activeSub = new Subscription();
   
@@ -170,8 +168,6 @@ export class PlaylistLoaderService {
   private triggerApiLoad(task: PlaylistLoadTask, userId: string, isBackgroundRefresh: boolean, allowFullFallback: boolean = false) {
     console.log(`[PlaylistLoaderService] Loading playlist ${task.playlistId} from API`);
     task.requestedArtistIds.clear();
-    task.genreHydrationStarted = false;
-    task.genreHydrationComplete = false;
     task.loadedArtistsDetailsCount = 0;
     task.totalUniqueArtists = 0;
 
@@ -592,18 +588,12 @@ export class PlaylistLoaderService {
             if (!existingArtist.images && cachedArtist.images) {
               existingArtist.images = cachedArtist.images;
             }
-            if (!existingArtist.genres && cachedArtist.genres) {
-              existingArtist.genres = cachedArtist.genres;
-            }
           }
         }
       } else {
         if (existingArtist) {
           if (!existingArtist.images && cachedArtist.images) {
             existingArtist.images = cachedArtist.images;
-          }
-          if (!existingArtist.genres && cachedArtist.genres) {
-            existingArtist.genres = cachedArtist.genres;
           }
         }
       }
@@ -646,11 +636,7 @@ export class PlaylistLoaderService {
           if (artistMap.has(artist.id)) {
             const full = artistMap.get(artist.id);
             artist.images = full.images || [];
-            if (Array.isArray(full.genres) && full.genres.length > 0) {
-              artist.genres = [...full.genres];
-            } else if (!Array.isArray(artist.genres)) {
-              artist.genres = [];
-            }
+            artist.external_urls = full.external_urls;
           }
         });
 
@@ -733,24 +719,7 @@ export class PlaylistLoaderService {
   }
 
   private checkCompletion(task: PlaylistLoadTask, userId: string | null) {
-    const targetArray = task.isRefreshing ? task.refreshingArtists : task.artists;
     if (!task.isLoadingTracks && task.requestedArtistIds.size >= task.totalUniqueArtists) {
-      if (!task.genreHydrationComplete) {
-        if (!task.genreHydrationStarted) {
-          task.genreHydrationStarted = true;
-          this.restoreMissingGenresFromSupabase(targetArray)
-            .catch(error => {
-              console.warn('[PlaylistLoaderService] Failed to restore artist genres from Supabase:', error);
-            })
-            .finally(() => {
-              task.genreHydrationComplete = true;
-              task.emitUpdate();
-              this.checkCompletion(task, userId);
-            });
-        }
-        return;
-      }
-
       task.isLoadingArtists = false;
       
       if (task.isRefreshing) {
@@ -767,31 +736,12 @@ export class PlaylistLoaderService {
     }
   }
 
-  private async restoreMissingGenresFromSupabase(artists: any[]): Promise<void> {
-    if (!this.authService.isBackupActive()) return;
-
-    const missingIds = Array.from(new Set(
-      artists
-        .filter(artist => artist.id && (!artist.genres || artist.genres.length === 0))
-        .map(artist => artist.id)
-    ));
-    if (missingIds.length === 0) return;
-
-    const genreMap = await this.supabaseService.lookupArtistGenres(missingIds);
-    artists.forEach(artist => {
-      const genres = artist.id ? genreMap.get(artist.id) : null;
-      if ((!artist.genres || artist.genres.length === 0) && genres?.length) {
-        artist.genres = [...genres];
-      }
-    });
-  }
-
   private setSessionStorage(task: PlaylistLoadTask, userId: string) {
     const cleanedArtists = task.artists.map((artist: any) => ({
       id: artist.id,
       name: artist.name,
       images: artist.images && artist.images.length > 0 ? [{ url: artist.images[0].url }] : [],
-      genres: artist.genres || [],
+      external_urls: artist.external_urls?.spotify ? { spotify: artist.external_urls.spotify } : undefined,
       tracks: artist.tracks ? artist.tracks.map((track: any) => ({
         id: track.id,
         name: track.name,
@@ -802,8 +752,19 @@ export class PlaylistLoaderService {
         added_at: track.added_at,
         playlist_index: track.playlist_index,
         album: track.album ? {
+          id: track.album.id,
+          name: track.album.name,
           images: track.album.images && track.album.images.length > 0 ? [{ url: track.album.images[0].url }] : [],
-          release_date: track.album.release_date
+          release_date: track.album.release_date,
+          artists: track.album.artists
+            ? track.album.artists.map((albumArtist: any) => ({
+                id: albumArtist.id,
+                name: albumArtist.name
+              }))
+            : [],
+          external_urls: track.album.external_urls?.spotify
+            ? { spotify: track.album.external_urls.spotify }
+            : undefined
         } : undefined
       })) : []
     }));

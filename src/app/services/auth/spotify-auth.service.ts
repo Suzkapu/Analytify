@@ -471,7 +471,8 @@ export class SpotifyAuthService {
       console.log('[Auth] Pulling user cache from Supabase...');
       const dbCache = await this.supabaseService.loadUserCache(supabaseUserId);
       if (dbCache && dbCache.length > 0) {
-        dbCache.forEach(item => {
+        const activeCache = dbCache.filter(item => !item.key.endsWith('_genres'));
+        activeCache.forEach(item => {
           // Local data is the primary source. Cloud data only fills gaps during
           // the broad startup hydration; expired feature caches explicitly
           // request their cloud keys before falling back to Spotify.
@@ -479,7 +480,7 @@ export class SpotifyAuthService {
             this.storageService.setItem(item.key, item.value, false);
           }
         });
-        console.log(`[Auth] Loaded ${dbCache.length} cache keys from database.`);
+        console.log(`[Auth] Loaded ${activeCache.length} active cache keys from database.`);
       }
     } catch (e) {
       console.error('[Auth] Failed to pull user cache from database:', e);
@@ -542,7 +543,8 @@ export class SpotifyAuthService {
       const cacheKeys = this.storageService.getCacheKeys().filter(key => {
         const isUserKey = key.startsWith(`${spotifyUserId}_`) || key.startsWith(`${supabaseUserId}_`);
         const isBackupActiveKey = key === `${supabaseUserId}_backup_active`;
-        return isUserKey && !isBackupActiveKey;
+        const isObsoleteGenreCache = key.endsWith('_genres');
+        return isUserKey && !isBackupActiveKey && !isObsoleteGenreCache;
       });
 
       const totalSteps = 1 + statsToSync.length + cacheKeys.length;
@@ -567,10 +569,8 @@ export class SpotifyAuthService {
             supabaseUserId,
             item.range,
             item.snap.explicitPercentage || 0,
-            item.snap.genreDiversity || 0,
             item.snap.topTracks || [],
             item.snap.topArtists || [],
-            item.snap.topGenres || [],
             true, // onlyInsertMissing = true
             customDateStr
           );
