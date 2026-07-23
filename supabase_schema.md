@@ -38,6 +38,11 @@ CREATE TABLE IF NOT EXISTS artists (
     last_updated TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
+-- Genre names are stored only for ranked stats snapshots, not as artist metadata.
+CREATE TABLE IF NOT EXISTS genres (
+    name VARCHAR(255) PRIMARY KEY
+);
+
 -- ─── 3. ALBUMS ────────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS albums (
     id VARCHAR(255) PRIMARY KEY, -- Spotify Album ID
@@ -134,6 +139,7 @@ CREATE TABLE IF NOT EXISTS stats_snapshots (
     range VARCHAR(50) CONSTRAINT chk_snapshot_range CHECK (range IN ('short_term', 'medium_term', 'long_term')), -- Data validation constraint
     snapshot_date DATE DEFAULT CURRENT_DATE NOT NULL,
     explicit_percentage NUMERIC(5,2) DEFAULT 0.00 NOT NULL,
+    genre_diversity INTEGER DEFAULT 0 NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     CONSTRAINT uq_stats_snapshots_user_range_date UNIQUE (user_id, range, snapshot_date)
 );
@@ -163,6 +169,18 @@ CREATE TABLE IF NOT EXISTS stats_snapshot_artists (
 
 -- Optimization: Index foreign key for faster analytical joins
 CREATE INDEX IF NOT EXISTS idx_stats_snapshot_artists_artist_id ON stats_snapshot_artists(artist_id);
+
+-- Maps the ranked genres computed from the genres supplied with top artists.
+CREATE TABLE IF NOT EXISTS stats_snapshot_genres (
+    snapshot_id UUID REFERENCES stats_snapshots(id) ON DELETE CASCADE NOT NULL,
+    genre_name VARCHAR(255) REFERENCES genres(name) ON DELETE CASCADE NOT NULL,
+    rank INTEGER NOT NULL CONSTRAINT chk_genre_rank CHECK (rank BETWEEN 1 AND 15),
+    weight INTEGER NOT NULL,
+    PRIMARY KEY (snapshot_id, rank),
+    CONSTRAINT uq_stats_snapshot_genres_genre_name UNIQUE (snapshot_id, genre_name)
+);
+
+CREATE INDEX IF NOT EXISTS idx_stats_snapshot_genres_genre ON stats_snapshot_genres(genre_name);
 
 -- ─── 8. RAW TOP ITEMS LOGS (AUDIT & RE-COMPUTATION LOGS) ──────────────────────
 -- Stores raw results of Spotify's top items query directly, allowing you to 
@@ -249,12 +267,14 @@ ALTER TABLE listening_history ENABLE ROW LEVEL SECURITY;
 ALTER TABLE stats_snapshots ENABLE ROW LEVEL SECURITY;
 ALTER TABLE stats_snapshot_tracks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE stats_snapshot_artists ENABLE ROW LEVEL SECURITY;
+ALTER TABLE stats_snapshot_genres ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_top_tracks_history ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_top_artists_history ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_cache ENABLE ROW LEVEL SECURITY;
 
 -- Enable RLS on Shared Metadata Tables (to prevent unauthorized client-side modifications)
 ALTER TABLE artists ENABLE ROW LEVEL SECURITY;
+ALTER TABLE genres ENABLE ROW LEVEL SECURITY;
 ALTER TABLE albums ENABLE ROW LEVEL SECURITY;
 ALTER TABLE album_artists ENABLE ROW LEVEL SECURITY;
 ALTER TABLE tracks ENABLE ROW LEVEL SECURITY;
@@ -337,9 +357,22 @@ USING (
     )
 );
 
+DROP POLICY IF EXISTS "Users can manage own snapshot genres" ON stats_snapshot_genres;
+CREATE POLICY "Users can manage own snapshot genres"
+ON stats_snapshot_genres FOR ALL
+USING (
+    snapshot_id IN (
+        SELECT s.id FROM stats_snapshots s
+        WHERE s.user_id = (SELECT auth.uid()) OR s.user_id = public.get_dev_uuid((SELECT auth.uid()))
+    )
+);
+
 -- E. Shared Metadata Tables Access Policies (For authenticated clients to select/insert/upsert metadata)
 DROP POLICY IF EXISTS "Allow read access to all authenticated users" ON artists;
 CREATE POLICY "Allow all access to authenticated users" ON artists FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow read access to all authenticated users" ON genres;
+CREATE POLICY "Allow all access to authenticated users" ON genres FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
 DROP POLICY IF EXISTS "Allow read access to all authenticated users" ON albums;
 CREATE POLICY "Allow all access to authenticated users" ON albums FOR ALL TO authenticated USING (true) WITH CHECK (true);

@@ -356,8 +356,10 @@ async function saveStatsSnapshot(
   userId,
   range,
   explicitPercentage,
+  genreDiversity,
   topTracks,
-  topArtists
+  topArtists,
+  topGenres
 ) {
   const todayStr = getDailySnapshotDate();
   const fetchedAt = getDailyCutoffTimestamp();
@@ -369,7 +371,8 @@ async function saveStatsSnapshot(
       user_id: userId,
       range: range,
       snapshot_date: todayStr,
-      explicit_percentage: explicitPercentage
+      explicit_percentage: explicitPercentage,
+      genre_diversity: genreDiversity
     }, { onConflict: 'user_id,range,snapshot_date' })
     .select('id')
     .single();
@@ -380,7 +383,8 @@ async function saveStatsSnapshot(
   // A forced/retried run replaces the complete rank lists for this day.
   for (const table of [
     'stats_snapshot_tracks',
-    'stats_snapshot_artists'
+    'stats_snapshot_artists',
+    'stats_snapshot_genres'
   ]) {
     const { error: clearErr } = await supabase
       .from(table)
@@ -457,6 +461,28 @@ async function saveStatsSnapshot(
     if (artistLinkErr) throw artistLinkErr;
   }
 
+  // 4. Persist genres returned with the top-artist response.
+  const genreLinks = topGenres
+    .map((genre, index) => ({
+      snapshot_id: snapshotId,
+      genre_name: genre.name,
+      rank: index + 1,
+      weight: typeof genre.percentage === 'number' ? genre.percentage : (genre.count || 0)
+    }))
+    .filter(row => !!row.genre_name);
+
+  if (genreLinks.length > 0) {
+    const { error: genreError } = await supabase
+      .from('genres')
+      .upsert(genreLinks.map(link => ({ name: link.genre_name })), { onConflict: 'name' });
+    if (genreError) throw genreError;
+
+    const { error: genreLinkError } = await supabase
+      .from('stats_snapshot_genres')
+      .upsert(genreLinks, { onConflict: 'snapshot_id,rank' });
+    if (genreLinkError) throw genreLinkError;
+  }
+
   // Raw daily rank history is also a replaceable snapshot. Clear it first so
   // a shorter retry cannot leave stale ranks from an earlier run.
   for (const table of ['user_top_tracks_history', 'user_top_artists_history']) {
@@ -506,7 +532,7 @@ async function saveStatsSnapshot(
   }
 }
 
-// Sync user's top stats (top songs and artists)
+// Sync user's top stats (top songs, artists, and supplied artist genres)
 async function syncUserStats(user, spotifyAccessToken, rangesToSync = ['short_term', 'medium_term', 'long_term']) {
   console.log(`[Sync] Starting stats snapshot sync for user: ${user.display_name} (${user.id})`);
   let completedRanges = 0;
@@ -541,11 +567,34 @@ async function syncUserStats(user, spotifyAccessToken, rangesToSync = ['short_te
       const topTracks = [...topTracksPage1, ...topTracksPage2];
 
       if (topArtists.length === 0 && topTracks.length === 0) {
-        await saveStatsSnapshot(user.id, range, 0, [], []);
+        await saveStatsSnapshot(user.id, range, 0, 0, [], [], []);
         console.log(`[Sync] No top artists or tracks for user ${user.id} (${range}); saved an empty completion snapshot.`);
         completedRanges++;
         continue;
       }
+
+      const genreCounts = new Map();
+      topArtists.forEach((artist, index) => {
+        const rankWeight = 50 - index;
+        (Array.isArray(artist.genres) ? artist.genres : []).forEach(genre => {
+          if (genre && genre.trim().toLowerCase() !== 'artist') {
+            genreCounts.set(genre, (genreCounts.get(genre) || 0) + rankWeight);
+          }
+        });
+      });
+      const sortedGenres = Array.from(genreCounts.entries()).sort((a, b) => b[1] - a[1]);
+      const totalGenreWeight = sortedGenres.reduce((sum, entry) => sum + entry[1], 0);
+      const maxGenreWeight = sortedGenres.length > 0 ? sortedGenres[0][1] : 1;
+      const topGenres = sortedGenres.slice(0, 15).map(([name, weight]) => ({
+        name,
+        count: Math.round(weight),
+        percentage: totalGenreWeight > 0
+          ? Math.min(100, Math.round((weight / totalGenreWeight) * 100))
+          : 0,
+        percentage_simple: weight > 0
+          ? Math.max(2, Math.min(100, Math.round((weight / maxGenreWeight) * 100)))
+          : 0
+      }));
 
       // Collect IDs for metadata syncing
       const trackIds = Array.from(new Set(topTracks.map(t => t.id).filter(id => !!id)));
@@ -574,14 +623,17 @@ async function syncUserStats(user, spotifyAccessToken, rangesToSync = ['short_te
         if (track.explicit) explicitCount++;
       });
       const explicitPercentage = topTracks.length > 0 ? Math.round((explicitCount / topTracks.length) * 100) : 0;
+      const genreDiversity = topGenres.length;
 
       // Save stats snapshot
       await saveStatsSnapshot(
         user.id,
         range,
         explicitPercentage,
+        genreDiversity,
         topTracks,
-        topArtists
+        topArtists,
+        topGenres
       );
       console.log(`[Sync] Successfully saved stats snapshot for user ${user.id} (${range})`);
       completedRanges++;

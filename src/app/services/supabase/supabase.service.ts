@@ -260,6 +260,21 @@ export class SupabaseService {
     return !url || url === 'https://misc.scdn.co/liked-songs/liked-songs-300.png';
   }
 
+  private mapSnapshotGenres(rows: any[]): any[] {
+    const rawGenres = [...(rows || [])].sort((a: any, b: any) => a.rank - b.rank);
+    const totalWeight = rawGenres.reduce((sum: number, row: any) => sum + (row.weight || 0), 0);
+    const weightsArePercentages = totalWeight <= 100 &&
+      rawGenres.every((row: any) => (row.weight || 0) <= 100);
+
+    return rawGenres.map((row: any) => ({
+      name: row.genre_name,
+      count: row.weight,
+      percentage: weightsArePercentages
+        ? row.weight
+        : (totalWeight > 0 ? Math.min(100, Math.round((row.weight / totalWeight) * 100)) : 0)
+    }));
+  }
+
   /** Syncs Spotify artists metadata into the database */
   async syncArtists(artists: any[], onlyInsertMissing = false): Promise<void> {
     if (!artists || artists.length === 0) return;
@@ -811,7 +826,7 @@ export class SupabaseService {
       const { data, error } = await this.client
         .from('stats_snapshots')
         .select(`
-          id, explicit_percentage,
+          id, explicit_percentage, genre_diversity,
           stats_snapshot_tracks (
             rank,
             tracks (
@@ -827,6 +842,11 @@ export class SupabaseService {
             artists (
               id, name, image_url, spotify_url
             )
+          ),
+          stats_snapshot_genres (
+            rank,
+            genre_name,
+            weight
           )
         `)
         .eq('user_id', supabaseUserId)
@@ -880,8 +900,10 @@ export class SupabaseService {
 
       return {
         explicitPercentage: data.explicit_percentage,
+        genreDiversity: data.genre_diversity,
         topTracks,
-        topArtists
+        topArtists,
+        topGenres: this.mapSnapshotGenres(data.stats_snapshot_genres || [])
       };
 
     } catch (e) {
@@ -896,7 +918,7 @@ export class SupabaseService {
       const { data, error } = await this.client
         .from('stats_snapshots')
         .select(`
-          id, explicit_percentage, created_at, snapshot_date,
+          id, explicit_percentage, genre_diversity, created_at, snapshot_date,
           stats_snapshot_tracks (
             rank,
             tracks (
@@ -912,6 +934,11 @@ export class SupabaseService {
             artists (
               id, name, image_url, spotify_url
             )
+          ),
+          stats_snapshot_genres (
+            rank,
+            genre_name,
+            weight
           )
         `)
         .eq('user_id', supabaseUserId)
@@ -968,8 +995,10 @@ export class SupabaseService {
           timestamp: parseSnapshotTimestamp(row.snapshot_date, row.created_at),
           snapshotDate: row.snapshot_date,
           explicitPercentage: Number(row.explicit_percentage),
+          genreDiversity: row.genre_diversity,
           topTracks,
-          topArtists
+          topArtists,
+          topGenres: this.mapSnapshotGenres(row.stats_snapshot_genres || [])
         };
       });
     } catch (e) {
@@ -983,7 +1012,7 @@ export class SupabaseService {
     try {
       const { data, error } = await this.client
         .from('stats_snapshots')
-        .select('id, explicit_percentage, created_at, snapshot_date')
+        .select('id, explicit_percentage, genre_diversity, created_at, snapshot_date')
         .eq('user_id', supabaseUserId)
         .eq('range', range)
         .order('snapshot_date', { ascending: true });
@@ -998,8 +1027,10 @@ export class SupabaseService {
         timestamp: parseSnapshotTimestamp(row.snapshot_date, row.created_at),
         snapshotDate: row.snapshot_date,
         explicitPercentage: Number(row.explicit_percentage),
+        genreDiversity: row.genre_diversity,
         topTracks: [],
         topArtists: [],
+        topGenres: [],
         isLoaded: false
       }));
     } catch (e) {
@@ -1014,7 +1045,7 @@ export class SupabaseService {
       const { data, error } = await this.client
         .from('stats_snapshots')
         .select(`
-          id, explicit_percentage, created_at, snapshot_date, range,
+          id, explicit_percentage, genre_diversity, created_at, snapshot_date, range,
           stats_snapshot_tracks (
             rank,
             tracks (
@@ -1030,6 +1061,11 @@ export class SupabaseService {
             artists (
               id, name, image_url, spotify_url
             )
+          ),
+          stats_snapshot_genres (
+            rank,
+            genre_name,
+            weight
           )
         `)
         .eq('id', snapshotId)
@@ -1086,8 +1122,10 @@ export class SupabaseService {
         timestamp: parseSnapshotTimestamp(data.snapshot_date, data.created_at),
         snapshotDate: data.snapshot_date,
         explicitPercentage: Number(data.explicit_percentage),
+        genreDiversity: data.genre_diversity,
         topTracks,
         topArtists,
+        topGenres: this.mapSnapshotGenres(data.stats_snapshot_genres || []),
         isLoaded: true
       };
     } catch (e) {
@@ -1102,8 +1140,10 @@ export class SupabaseService {
     supabaseUserId: string,
     range: string,
     explicitPercentage: number,
+    genreDiversity: number,
     topTracks: any[],
     topArtists: any[],
+    topGenres: any[],
     onlyInsertMissing = false,
     customDateStr?: string
   ): Promise<void> {
@@ -1158,7 +1198,8 @@ export class SupabaseService {
           user_id: supabaseUserId,
           range: range,
           snapshot_date: todayStr,
-          explicit_percentage: explicitPercentage
+          explicit_percentage: explicitPercentage,
+          genre_diversity: genreDiversity
         }, { onConflict: 'user_id,range,snapshot_date' })
         .select('id')
         .single();
@@ -1171,7 +1212,8 @@ export class SupabaseService {
       // per-snapshot unique constraints.
       for (const table of [
         'stats_snapshot_tracks',
-        'stats_snapshot_artists'
+        'stats_snapshot_artists',
+        'stats_snapshot_genres'
       ]) {
         const { error } = await this.client
           .from(table)
@@ -1220,6 +1262,33 @@ export class SupabaseService {
           .from('stats_snapshot_artists')
           .upsert(artistLinks, { onConflict: 'snapshot_id,rank' });
         if (error) throw error;
+      }
+
+      // 5. Persist the ranked genre snapshot independently of artist metadata.
+      const seenGenres = new Set<string>();
+      const genreLinks: any[] = [];
+      topGenres.forEach(genre => {
+        if (genre?.name && !seenGenres.has(genre.name)) {
+          seenGenres.add(genre.name);
+          genreLinks.push({
+            snapshot_id: snapshotId,
+            genre_name: genre.name,
+            rank: genreLinks.length + 1,
+            weight: typeof genre.percentage === 'number' ? genre.percentage : (genre.count || 0)
+          });
+        }
+      });
+
+      if (genreLinks.length > 0) {
+        const { error: genreError } = await this.client
+          .from('genres')
+          .upsert(genreLinks.map(link => ({ name: link.genre_name })), { onConflict: 'name' });
+        if (genreError) throw genreError;
+
+        const { error: genreLinkError } = await this.client
+          .from('stats_snapshot_genres')
+          .upsert(genreLinks, { onConflict: 'snapshot_id,rank' });
+        if (genreLinkError) throw genreLinkError;
       }
 
       // Raw top-item history represents one replaceable daily rank list too.

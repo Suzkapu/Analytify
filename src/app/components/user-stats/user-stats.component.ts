@@ -21,12 +21,13 @@ function toLocalDateKey(ts: number): string {
 })
 export class UserStatsComponent implements OnInit {
   selectedRange: string = 'short_term'; // 'short_term', 'medium_term', 'long_term'
-  selectedCategory: string = 'tracks'; // 'tracks', 'artists'
+  selectedCategory: string = 'tracks'; // 'tracks', 'artists', 'genres'
   isLoading: boolean = false;
 
 
   topTracks: any[] = [];
   topArtists: any[] = [];
+  topGenres: { name: string; count: number; percentage: number; percentage_simple?: number }[] = [];
   
   // Stats History variables
   historyData: any[] = [];
@@ -45,7 +46,7 @@ export class UserStatsComponent implements OnInit {
   // Trend modal variables
   showTrendPopup: boolean = false;
   trendPopupItem: any = null;
-  trendPopupCategory: 'tracks' | 'artists' = 'tracks';
+  trendPopupCategory: 'tracks' | 'artists' | 'genres' = 'tracks';
   trendPopupPoints: any[] = [];
   isLoadingTrendData: boolean = false;
   visibleLabelIndices = new Set<number>();
@@ -106,25 +107,30 @@ export class UserStatsComponent implements OnInit {
     const lastUpdatedKey = `${userId}_stats_${range}_lastUpdated`;
     const tracksKey = `${userId}_stats_${range}_tracks`;
     const artistsKey = `${userId}_stats_${range}_artists`;
+    const genresKey = `${userId}_stats_${range}_genres`;
     let lastUpdated = this.storageService.getItem(lastUpdatedKey);
     let isExpired = this.isCacheExpired(lastUpdated);
     let cachedTracks = this.storageService.getItem(tracksKey);
     let cachedArtists = this.storageService.getItem(artistsKey);
+    let cachedGenres = this.storageService.getItem(genresKey);
     let isCacheIncomplete = false;
     let parsedTracks: any[] = [];
     let parsedArtists: any[] = [];
+    let parsedGenres: any[] = [];
 
     const parseCachedStats = () => {
       isCacheIncomplete = false;
       parsedTracks = [];
       parsedArtists = [];
+      parsedGenres = [];
 
-      if (cachedTracks && cachedArtists) {
+      if (cachedTracks && cachedArtists && cachedGenres) {
         try {
           parsedTracks = JSON.parse(cachedTracks);
           parsedArtists = JSON.parse(cachedArtists);
+          parsedGenres = JSON.parse(cachedGenres);
 
-          if (!Array.isArray(parsedTracks) || !Array.isArray(parsedArtists)) {
+          if (!Array.isArray(parsedTracks) || !Array.isArray(parsedArtists) || !Array.isArray(parsedGenres)) {
             isCacheIncomplete = true;
             return;
           }
@@ -142,12 +148,14 @@ export class UserStatsComponent implements OnInit {
       await this.storageService.restoreItemsFromCloud([
         tracksKey,
         artistsKey,
+        genresKey,
         lastUpdatedKey
       ]);
       lastUpdated = this.storageService.getItem(lastUpdatedKey);
       isExpired = this.isCacheExpired(lastUpdated);
       cachedTracks = this.storageService.getItem(tracksKey);
       cachedArtists = this.storageService.getItem(artistsKey);
+      cachedGenres = this.storageService.getItem(genresKey);
       parseCachedStats();
     }
 
@@ -156,6 +164,7 @@ export class UserStatsComponent implements OnInit {
       try {
         this.topTracks = parsedTracks;
         this.topArtists = parsedArtists;
+        this.topGenres = parsedGenres;
         this.saveHistorySnapshot(userId, range);
         this.isLoading = false;
       } catch (e) {
@@ -175,10 +184,12 @@ export class UserStatsComponent implements OnInit {
           if (dbSnapshot) {
             this.topTracks = dbSnapshot.topTracks;
             this.topArtists = dbSnapshot.topArtists;
+            this.topGenres = dbSnapshot.topGenres || [];
             
             // Cache locally
             this.storageService.setItem(tracksKey, JSON.stringify(this.topTracks));
             this.storageService.setItem(artistsKey, JSON.stringify(this.topArtists));
+            this.storageService.setItem(genresKey, JSON.stringify(this.topGenres));
             this.storageService.setItem(lastUpdatedKey, Date.now().toString());
 
             this.saveHistorySnapshot(userId, range);
@@ -192,6 +203,7 @@ export class UserStatsComponent implements OnInit {
       this.isLoading = true;
       this.topTracks = [];
       this.topArtists = [];
+      this.topGenres = [];
 
       const artistsReq = this.spotifyDataService.getUserTopArtists(range, 50, 0);
       const tracksReq = this.spotifyDataService.getUserTopTracks(range, 50, 0);
@@ -208,10 +220,12 @@ export class UserStatsComponent implements OnInit {
           const page1 = res.tracks.items || [];
           const page2 = res.tracksPage2.items || [];
           this.topTracks = [...page1, ...page2];
+          this.calculateGenres();
 
           // Cache the results
           this.storageService.setItem(tracksKey, JSON.stringify(this.topTracks));
           this.storageService.setItem(artistsKey, JSON.stringify(this.topArtists));
+          this.storageService.setItem(genresKey, JSON.stringify(this.topGenres));
           this.storageService.setItem(lastUpdatedKey, Date.now().toString());
 
           // If backup is active, sync to Supabase
@@ -221,14 +235,17 @@ export class UserStatsComponent implements OnInit {
               if (track.explicit) explicitCount++;
             });
             const explicitPercentage = this.topTracks.length > 0 ? Math.round((explicitCount / this.topTracks.length) * 100) : 0;
+            const genreDiversity = this.topGenres.length;
 
             try {
               await this.supabaseService.saveStatsSnapshot(
                 supabaseUserId,
                 range,
                 explicitPercentage,
+                genreDiversity,
                 this.topTracks,
-                this.topArtists
+                this.topArtists,
+                this.topGenres
               );
             } catch (error) {
               console.warn('[Stats] Failed to persist fresh stats snapshot:', error);
@@ -247,13 +264,43 @@ export class UserStatsComponent implements OnInit {
           console.error('Failed to load user stats:', err);
           this.isLoading = false;
           // Fallback if API fails but we have stale cache
-          if (cachedTracks && cachedArtists) {
+          if (cachedTracks && cachedArtists && cachedGenres) {
             this.topTracks = JSON.parse(cachedTracks);
             this.topArtists = JSON.parse(cachedArtists);
+            this.topGenres = JSON.parse(cachedGenres);
           }
         }
       });
     }
+  }
+
+  calculateGenres() {
+    const genreCounts = new Map<string, number>();
+
+    // Spotify supplies genres on the top-artist objects. Weight them by rank.
+    this.topArtists.forEach((artist, index) => {
+      const rankWeight = 50 - index;
+      if (Array.isArray(artist.genres)) {
+        artist.genres.forEach((genre: string) => {
+          if (genre && genre.trim().toLowerCase() !== 'artist') {
+            genreCounts.set(genre, (genreCounts.get(genre) || 0) + rankWeight);
+          }
+        });
+      }
+    });
+
+    const sortedGenres = Array.from(genreCounts.entries()).sort((a, b) => b[1] - a[1]);
+    const totalWeight = sortedGenres.reduce((sum, entry) => sum + entry[1], 0);
+    const maxWeight = sortedGenres.length > 0 ? sortedGenres[0][1] : 1;
+
+    this.topGenres = sortedGenres.slice(0, 15).map(([name, weight]) => ({
+      name,
+      count: Math.round(weight),
+      percentage: totalWeight > 0 ? Math.min(100, Math.round((weight / totalWeight) * 100)) : 0,
+      percentage_simple: weight > 0
+        ? Math.max(2, Math.min(100, Math.round((weight / maxWeight) * 100)))
+        : 0
+    }));
   }
 
   openTrackClick(url: string) {
@@ -462,6 +509,11 @@ export class UserStatsComponent implements OnInit {
           name: a.name,
           imageUrl: this.getArtistImage(a),
           spotifyUrl: this.getArtistUrl(a)
+        })),
+        topGenres: this.topGenres.map(g => ({
+          name: g.name,
+          percentage: g.percentage,
+          count: g.count
         }))
       };
     }
@@ -557,11 +609,12 @@ export class UserStatsComponent implements OnInit {
       if (track.explicit) explicitCount++;
     });
     const explicitPercentage = this.topTracks.length > 0 ? Math.round((explicitCount / this.topTracks.length) * 100) : 0;
+    const genreDiversity = this.topGenres.length;
 
-    this.writeRealSnapshot(userId, range, explicitPercentage);
+    this.writeRealSnapshot(userId, range, explicitPercentage, genreDiversity);
   }
 
-  private writeRealSnapshot(userId: string, range: string, explicitPercentage: number) {
+  private writeRealSnapshot(userId: string, range: string, explicitPercentage: number, genreDiversity: number) {
     this.historyWriteQueue = this.historyWriteQueue.then(() =>
       this.storageService.getStatsHistory(userId, range).then(history => {
       const lastEntry = history.length > 0 ? history[history.length - 1] : null;
@@ -582,6 +635,12 @@ export class UserStatsComponent implements OnInit {
         range: range,
         timestamp: existingToday?.timestamp || Date.now(),
         explicitPercentage: explicitPercentage,
+        genreDiversity: genreDiversity,
+        topGenres: this.topGenres.map(g => ({
+          name: g.name,
+          percentage: g.percentage,
+          count: g.count
+        })),
         topTracks: this.topTracks.map(t => ({
           id: t.id,
           name: t.name,
@@ -712,14 +771,17 @@ export class UserStatsComponent implements OnInit {
                 });
                 const trackCount = (localSnap.topTracks || []).length;
                 const explPct = trackCount > 0 ? Math.round((explicitCount / trackCount) * 100) : 0;
+                const genreDiversity = (localSnap.topGenres || []).length;
 
                 console.log(`[Stats] Uploading local-only snapshot to cloud: ${dateStr} (${range})`);
                 await this.supabaseService.saveStatsSnapshot(
                   supabaseUserId,
                   range,
                   explPct,
+                  genreDiversity,
                   localSnap.topTracks || [],
                   localSnap.topArtists || [],
+                  localSnap.topGenres || [],
                   true,    // onlyInsertMissing — don't overwrite existing metadata objects
                   dateStr  // customDateStr — use the real historical date, not today
                 );
@@ -806,6 +868,23 @@ export class UserStatsComponent implements OnInit {
       return { type: 'same' };
     }
 
+    if (category === 'genres') {
+      const prevGenres = prevSnapshot.topGenres || [];
+      const prevIdx = prevGenres.findIndex((genre: any) =>
+        (typeof genre === 'string' ? genre : genre.name) === item.name
+      );
+      if (prevIdx === -1) {
+        return { type: 'new' };
+      }
+      if (prevIdx > currentIdx) {
+        return { type: 'up', diff: prevIdx - currentIdx };
+      }
+      if (prevIdx < currentIdx) {
+        return { type: 'down', diff: currentIdx - prevIdx };
+      }
+      return { type: 'same' };
+    }
+
     return { type: 'same' };
   }
 
@@ -837,11 +916,77 @@ export class UserStatsComponent implements OnInit {
     return this.topArtists;
   }
 
+  get displayedGenres(): any[] {
+    let rawGenres: any[] = [];
+    if (this.selectedSnapshotId === 'current') {
+      rawGenres = this.topGenres;
+    } else {
+      const snapshot = this.historyData.find(d => d.timestamp.toString() === this.selectedSnapshotId);
+      if (snapshot) {
+        if (snapshot.isLoaded === false) {
+          this.lazyLoadSnapshotDetails(snapshot.timestamp.toString());
+        }
+        rawGenres = snapshot.isLoaded === true ? (snapshot.topGenres || []) : [];
+      }
+    }
+
+    if (rawGenres.length === 0) return [];
+
+    const maxPercentage = rawGenres[0].percentage || 1;
+    const previousSnapshot = this.getComparisonSnapshot();
+    const previousGenres = previousSnapshot ? (previousSnapshot.topGenres || []) : [];
+
+    return rawGenres.map((genre: any, index: number) => {
+      const currentRank = index + 1;
+      const currentPercentage = genre.percentage || 0;
+      const previousIndex = previousGenres.findIndex((previousGenre: any) =>
+        (typeof previousGenre === 'string' ? previousGenre : previousGenre.name) === genre.name
+      );
+
+      let trendType: 'up' | 'down' | 'same' | 'new' = 'same';
+      let rankDiff = 0;
+      let previousPercentage = 0;
+
+      if (previousIndex === -1) {
+        trendType = previousSnapshot ? 'new' : 'same';
+      } else {
+        const previousGenre = previousGenres[previousIndex];
+        previousPercentage = typeof previousGenre === 'string' ? 0 : (previousGenre.percentage || 0);
+        const previousRank = previousIndex + 1;
+        if (previousRank > currentRank) {
+          trendType = 'up';
+          rankDiff = previousRank - currentRank;
+        } else if (previousRank < currentRank) {
+          trendType = 'down';
+          rankDiff = currentRank - previousRank;
+        }
+      }
+
+      const percentageDiff = currentPercentage - previousPercentage;
+      return {
+        name: genre.name,
+        percentage: currentPercentage,
+        percentage_simple: currentPercentage > 0
+          ? Math.max(2, Math.min(100, Math.round((currentPercentage / maxPercentage) * 100)))
+          : 0,
+        prevPercentageSimple: previousPercentage > 0
+          ? Math.max(2, Math.min(100, Math.round((previousPercentage / maxPercentage) * 100)))
+          : 0,
+        rank: currentRank,
+        trendType,
+        rankDiff,
+        percentageDiff,
+        prevPercentage: previousPercentage,
+        hasCompare: !!previousSnapshot
+      };
+    });
+  }
+
   onSnapshotChange(event: Event) {
     this.selectedSnapshotId = (event.target as HTMLSelectElement).value;
   }
 
-  async openTrendPopup(item: any, category: 'tracks' | 'artists') {
+  async openTrendPopup(item: any, category: 'tracks' | 'artists' | 'genres') {
     this.trendPopupItem = item;
     this.trendPopupCategory = category;
     this.showTrendPopup = true;
@@ -889,12 +1034,19 @@ export class UserStatsComponent implements OnInit {
     const points: any[] = [];
     
     this.historyData.forEach(snap => {
-      const list = category === 'tracks' ? (snap.topTracks || []) : (snap.topArtists || []);
+      const list = category === 'tracks'
+        ? (snap.topTracks || [])
+        : category === 'artists'
+          ? (snap.topArtists || [])
+          : (snap.topGenres || []);
       const rankIdx = list.findIndex((x: any) => {
         if (category === 'tracks') {
           return (x.id && id && x.id === id) || (x.name === name && x.artist === this.getTrackArtist(item));
         }
-        return (x.id && id && x.id === id) || (x.name === name);
+        if (category === 'artists') {
+          return (x.id && id && x.id === id) || (x.name === name);
+        }
+        return (typeof x === 'string' ? x : x.name) === name;
       });
       if (rankIdx !== -1) {
         points.push({
@@ -905,12 +1057,19 @@ export class UserStatsComponent implements OnInit {
       }
     });
 
-    const currentList = category === 'tracks' ? this.topTracks : this.topArtists;
+    const currentList = category === 'tracks'
+      ? this.topTracks
+      : category === 'artists'
+        ? this.topArtists
+        : this.topGenres;
     const currentRankIdx = currentList.findIndex((x: any) => {
       if (category === 'tracks') {
         return (x.id && id && x.id === id) || (x.name === name && this.getTrackArtist(x) === this.getTrackArtist(item));
       }
-      return (x.id && id && x.id === id) || (x.name === name);
+      if (category === 'artists') {
+        return (x.id && id && x.id === id) || (x.name === name);
+      }
+      return x.name === name;
     });
 
     // Only append "Now" if we haven't already saved a snapshot today

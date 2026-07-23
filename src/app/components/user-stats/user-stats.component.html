@@ -116,6 +116,12 @@
         style="border-radius: 8px !important; padding: 8px 16px !important; display: flex; align-items: center; gap: 8px; font-size: 0.9rem !important;">
         <i class="pi pi-users"></i> Top Artists
       </button>
+      <button (click)="changeCategory('genres')" class="p-button"
+        [class.p-button-outlined]="selectedCategory !== 'genres'"
+        [class.p-button-secondary]="selectedCategory !== 'genres'"
+        style="border-radius: 8px !important; padding: 8px 16px !important; display: flex; align-items: center; gap: 8px; font-size: 0.9rem !important;">
+        <i class="pi pi-tags"></i> Top Genres
+      </button>
     </div>
   </div>
 
@@ -267,6 +273,61 @@
       </div>
     </div>
 
+    <!-- Category 3: Top Genres -->
+    <div *ngIf="selectedCategory === 'genres'">
+      <div *ngIf="displayedGenres.length === 0" style="color: #999; text-align: center; padding: 40px 0;">
+        <span *ngIf="isSnapshotLoading()"><i class="pi pi-spin pi-spinner" style="margin-right: 8px;"></i>Loading
+          snapshot details...</span>
+        <span *ngIf="!isSnapshotLoading()">No genre data available for this period.</span>
+      </div>
+      <div *ngIf="displayedGenres.length > 0" class="genre-stats-card">
+        <h3>Genres</h3>
+        <div class="genres-list-container">
+          <div *ngFor="let genre of displayedGenres" class="genre-row card-clickable"
+            (click)="openTrendPopup(genre, 'genres')">
+            <div class="genre-row-header">
+              <span class="genre-name">
+                <span class="genre-rank">{{ genre.rank }}.</span> {{ genre.name }}
+                <ng-container *ngIf="genre.hasCompare">
+                  <span *ngIf="genre.trendType === 'up'" class="rank-trend-inline trend-up-color"
+                    title="Rank moved up by {{ genre.rankDiff }} places" style="margin-left: 8px;">
+                    <i class="pi pi-caret-up"></i>
+                    <span class="trend-diff-num">{{ genre.rankDiff }}</span>
+                  </span>
+                  <span *ngIf="genre.trendType === 'down'" class="rank-trend-inline trend-down-color"
+                    title="Rank moved down by {{ genre.rankDiff }} places" style="margin-left: 8px;">
+                    <i class="pi pi-caret-down"></i>
+                    <span class="trend-diff-num">{{ genre.rankDiff }}</span>
+                  </span>
+                  <span *ngIf="genre.trendType === 'new'" class="new-genre-badge"
+                    title="New genre since comparison snapshot" style="margin-left: 8px;">
+                    NEW
+                  </span>
+                </ng-container>
+              </span>
+              <span class="genre-percentage">
+                {{ genre.percentage < 1 ? '<1' : genre.percentage }}%
+                <ng-container *ngIf="genre.hasCompare && genre.percentageDiff !== 0">
+                  <span class="percentage-diff-badge" [class.positive]="genre.percentageDiff > 0"
+                    [class.negative]="genre.percentageDiff < 0">
+                    {{ genre.percentageDiff > 0 ? '+' : '' }}{{ genre.percentageDiff }}%
+                  </span>
+                </ng-container>
+              </span>
+            </div>
+            <div class="progress-bar-container">
+              <div *ngIf="genre.hasCompare && genre.percentageDiff < 0"
+                [style.width.%]="genre.prevPercentageSimple" class="progress-bar-fill-lost"></div>
+              <div [style.width.%]="genre.percentage_simple" class="progress-bar-fill"
+                [class.is-increased]="genre.hasCompare && genre.percentageDiff > 0"></div>
+              <div *ngIf="genre.hasCompare && genre.percentageDiff > 0"
+                [style.width.%]="genre.prevPercentageSimple" class="progress-bar-fill-previous"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 
@@ -279,12 +340,18 @@
     <button class="trend-modal-close-btn" (click)="closeTrendPopup($event)">&times;</button>
 
     <div class="trend-modal-header">
-      <img [src]="trendPopupCategory === 'tracks' ? getTrackCover(trendPopupItem) : getArtistImage(trendPopupItem)"
+      <img *ngIf="trendPopupCategory !== 'genres'"
+        [src]="trendPopupCategory === 'tracks' ? getTrackCover(trendPopupItem) : getArtistImage(trendPopupItem)"
         [class.artist-round]="trendPopupCategory === 'artists'" alt="Cover Image" class="trend-modal-cover">
+
+      <div *ngIf="trendPopupCategory === 'genres'" class="genre-trend-avatar">
+        <i class="pi pi-tags"></i>
+      </div>
 
       <div class="trend-modal-info">
         <h3>{{ trendPopupItem.name }}</h3>
-        <p>{{ trendPopupCategory === 'tracks' ? getTrackArtist(trendPopupItem) : 'Artist' }}</p>
+        <p>{{ trendPopupCategory === 'tracks' ? getTrackArtist(trendPopupItem) :
+          trendPopupCategory === 'artists' ? 'Artist' : 'Top Genre' }}</p>
       </div>
     </div>
 
