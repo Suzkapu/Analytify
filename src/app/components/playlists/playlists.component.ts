@@ -3,7 +3,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {SpotifyDataService} from "../../services/spotify-data/spotify-data.service";
 import {SpotifyAuthService} from "../../services/auth/spotify-auth.service";
 import {StorageService} from "../../services/storage/storage.service";
-import {SupabaseService} from "../../services/supabase/supabase.service";
 
 @Component({
   selector: 'app-playlists', templateUrl: './playlists.component.html', styleUrls: ['./playlists.component.scss'],
@@ -20,8 +19,7 @@ export class PlaylistsComponent {
     private router: Router, 
     private spotifyDataService: SpotifyDataService,
     public authService: SpotifyAuthService,
-    private storageService: StorageService,
-    private supabaseService: SupabaseService
+    private storageService: StorageService
   ) {
     this.route.params.subscribe(async () => {
       const userId = this.authService.getUserId() || 'anonymous';
@@ -53,6 +51,7 @@ export class PlaylistsComponent {
     const supabaseUserId = this.authService.getSupabaseUserId();
     const storageKey = `${userId}_playlists`;
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
+    const profileIdKey = `${userId}_spotify_profile_id`;
     const isBackupActive = this.authService.isBackupActive();
     let storedPlaylists = this.storageService.getItem(storageKey);
     let lastUpdated = this.storageService.getItem(lastUpdatedKey);
@@ -70,6 +69,14 @@ export class PlaylistsComponent {
             isParseError = true;
           } else {
             parsedPlaylists = parsed;
+            const profileId = this.storageService.getItem(profileIdKey);
+            if (profileId) {
+              parsedPlaylists = parsedPlaylists.filter(playlist =>
+                playlist.id === 'fav' ||
+                playlist.owner?.id === profileId ||
+                playlist.collaborative === true
+              );
+            }
           }
         } catch (e) {
           console.warn('Failed to parse cached playlists:', e);
@@ -118,13 +125,14 @@ export class PlaylistsComponent {
     } else {
       const reason = !storedPlaylists ? 'no local cache' : (isExpired ? 'cache expired' : 'unknown');
       console.log(`[Playlists] Cache missing or expired (reason: ${reason}, backup active: ${isBackupActive}). Loading playlists from Spotify API`);
-      this.spotifyDataService.getAllUserPlaylists().subscribe({
+      this.spotifyDataService.getAccessibleUserPlaylists().subscribe({
         next: (playlists: any) => {
+          if (playlists.currentUserId) {
+            this.storageService.setItem(profileIdKey, playlists.currentUserId);
+          }
           this.playlists = (playlists.items || []).map((playlist: any) => ({
             ...playlist,
-            // Spotify's 2026 response calls this collection "items"; retain
-            // the internal "tracks" shape for existing templates.
-            tracks: playlist.tracks || playlist.items || { total: 0 }
+            tracks: playlist.items || { total: 0 }
           }));
 
           // Get total amount of favourite tracks

@@ -275,7 +275,7 @@ export class SupabaseService {
       const artistIds = uniqueArtists.map(a => a.id);
       const { data: existingArtists, error: existingArtistsError } = await this.client
         .from('artists')
-        .select('id, name, image_url, spotify_url, popularity, followers_count')
+        .select('id, name, image_url, spotify_url')
         .in('id', artistIds);
       if (existingArtistsError) throw existingArtistsError;
       const existingArtistMap = new Map<string, any>(
@@ -283,10 +283,7 @@ export class SupabaseService {
       );
 
       if (onlyInsertMissing) {
-        uniqueArtists = uniqueArtists.filter(a => {
-          const existing = existingArtistMap.get(a.id);
-          return !existing || (existing.popularity === 0 && existing.followers_count === 0);
-        });
+        uniqueArtists = uniqueArtists.filter(a => !existingArtistMap.has(a.id));
         if (uniqueArtists.length === 0) return;
       }
 
@@ -298,7 +295,6 @@ export class SupabaseService {
       const artistsToInsert = uniqueArtists.map(a => {
         const existing = existingArtistMap.get(a.id);
         const incomingImage = rawImageUrls.get(a.id);
-        const incomingFollowers = a.followers?.total ?? a.followersCount ?? a.followers_count;
         return {
           id: a.id,
           name: a.name || existing?.name || 'Unknown Artist',
@@ -306,10 +302,6 @@ export class SupabaseService {
             ? (existing?.image_url || null)
             : incomingImage,
           spotify_url: a.external_urls?.spotify || a.spotifyUrl || a.spotify_url || existing?.spotify_url || null,
-          popularity: Number.isFinite(a.popularity) ? a.popularity : (existing?.popularity ?? 0),
-          followers_count: Number.isFinite(incomingFollowers)
-            ? incomingFollowers
-            : (existing?.followers_count ?? 0),
           last_updated: new Date().toISOString()
         };
       });
@@ -320,7 +312,7 @@ export class SupabaseService {
 
       uniqueArtists.forEach(a => {
         const hasSpotifyGenres = Array.isArray(a.genres) && a.genres.length > 0;
-        const genresList = (Array.isArray(a.genres) ? a.genres : (a.genre ? [a.genre] : [])).filter(
+        const genresList = (Array.isArray(a.genres) ? a.genres : []).filter(
           (g: string) => g && g.trim().toLowerCase() !== 'artist'
         );
         if (hasSpotifyGenres) {
@@ -364,29 +356,6 @@ export class SupabaseService {
           .upsert(artistGenresToInsert, { onConflict: 'artist_id,genre_name' });
         if (error) throw error;
       }
-
-      if (artistsToInsert.length > 0) {
-        const recordedAt = getDailyCutoffTimestamp();
-        const currentArtistIds = new Set(
-          uniqueArtists
-            .filter(a => Number.isFinite(a.popularity) && Number.isFinite(a.followers?.total ?? a.followersCount ?? a.followers_count))
-            .map(a => a.id)
-        );
-        const popHistory = artistsToInsert
-          .filter(a => currentArtistIds.has(a.id))
-          .map(a => ({
-            artist_id: a.id,
-            recorded_at: recordedAt,
-            popularity: a.popularity,
-            followers_count: a.followers_count
-          }));
-        if (popHistory.length > 0) {
-          const { error: popErr } = await this.client
-            .from('artist_popularity_history')
-            .upsert(popHistory, { onConflict: 'artist_id,recorded_at' });
-          if (popErr) throw popErr;
-        }
-      }
     } catch (e) {
       console.error('[SupabaseService] Error syncing artists:', e);
       throw e;
@@ -425,7 +394,7 @@ export class SupabaseService {
       const { data, error } = await this.client
         .from('artists')
         .select(`
-          id, name, image_url, spotify_url, popularity, followers_count,
+          id, name, image_url, spotify_url,
           artist_genres ( genre_name )
         `)
         .eq('id', artistId)
@@ -438,8 +407,6 @@ export class SupabaseService {
         name: data.name,
         images: data.image_url ? [{ url: data.image_url }] : [],
         external_urls: { spotify: data.spotify_url },
-        popularity: data.popularity,
-        followers: { total: data.followers_count },
         genres: data.artist_genres
           ? data.artist_genres.map((row: any) => row.genre_name)
           : []
@@ -465,7 +432,7 @@ export class SupabaseService {
       const albumIds = uniqueAlbums.map(a => a.id);
       const { data: existingAlbums, error: existingAlbumsError } = await this.client
         .from('albums')
-        .select('*')
+        .select('id, name, album_type, total_tracks, release_date, release_date_precision, image_url, spotify_url, restriction_reason, upc, ean')
         .in('id', albumIds);
       if (existingAlbumsError) throw existingAlbumsError;
       const existingAlbumMap = new Map<string, any>(
@@ -498,12 +465,7 @@ export class SupabaseService {
             ? (existing?.image_url || null)
             : incomingImage,
           spotify_url: a.external_urls?.spotify || a.spotifyUrl || a.spotify_url || existing?.spotify_url || null,
-          available_markets: Array.isArray(a.available_markets)
-            ? a.available_markets
-            : (existing?.available_markets || []),
           restriction_reason: a.restrictions?.reason || existing?.restriction_reason || null,
-          label: a.label ?? existing?.label ?? null,
-          popularity: Number.isFinite(a.popularity) ? a.popularity : (existing?.popularity ?? 0),
           upc: a.external_ids?.upc || a.upc || existing?.upc || null,
           ean: a.external_ids?.ean || a.ean || existing?.ean || null,
           last_updated: new Date().toISOString()
@@ -549,8 +511,6 @@ export class SupabaseService {
             return {
               id: id,
               name: artistObj?.name || 'Unknown Artist',
-              popularity: 0,
-              followers_count: 0,
               last_updated: new Date().toISOString()
             };
           });
@@ -567,60 +527,6 @@ export class SupabaseService {
           .from('albums')
           .upsert(albumsToInsert, { onConflict: 'id' });
         if (error) throw error;
-      }
-
-      // Sync Album Copyrights
-      const albumCopyrightsToInsert: any[] = [];
-      const copyrightAlbumIds: string[] = [];
-      uniqueAlbums.forEach(a => {
-        if (a.id && Array.isArray(a.copyrights)) {
-          copyrightAlbumIds.push(a.id);
-          a.copyrights.forEach((copy: any) => {
-            if (copy.text && (copy.type === 'C' || copy.type === 'P')) {
-              albumCopyrightsToInsert.push({
-                album_id: a.id,
-                text: copy.text,
-                type: copy.type
-              });
-            }
-          });
-        }
-      });
-
-      if (copyrightAlbumIds.length > 0) {
-        const { error: deleteErr } = await this.client
-          .from('album_copyrights')
-          .delete()
-          .in('album_id', Array.from(new Set(copyrightAlbumIds)));
-        if (deleteErr) throw deleteErr;
-      }
-
-      if (albumCopyrightsToInsert.length > 0) {
-        const { error: copyrightErr } = await this.client
-          .from('album_copyrights')
-          .insert(albumCopyrightsToInsert);
-        if (copyrightErr) throw copyrightErr;
-      }
-
-      // Sync Album Popularity History
-      if (albumsToInsert.length > 0) {
-        const recordedAt = getDailyCutoffTimestamp();
-        const currentAlbumIds = new Set(
-          uniqueAlbums.filter(a => Number.isFinite(a.popularity)).map(a => a.id)
-        );
-        const popHistory = albumsToInsert
-          .filter(a => currentAlbumIds.has(a.id))
-          .map(a => ({
-            album_id: a.id,
-            recorded_at: recordedAt,
-            popularity: a.popularity
-          }));
-        if (popHistory.length > 0) {
-          const { error: popErr } = await this.client
-            .from('album_popularity_history')
-            .upsert(popHistory, { onConflict: 'album_id,recorded_at' });
-          if (popErr) throw popErr;
-        }
       }
 
       if (relationshipAlbumIds.length > 0) {
@@ -658,7 +564,7 @@ export class SupabaseService {
       const trackIds = uniqueTracks.map(t => t.id);
       const { data: existingTracks, error: existingTracksError } = await this.client
         .from('tracks')
-        .select('*')
+        .select('id, name, album_id, duration_ms, explicit, spotify_url, track_number, disc_number, is_playable, is_local, isrc, restriction_reason')
         .in('id', trackIds);
       if (existingTracksError) throw existingTracksError;
       const existingTrackMap = new Map<string, any>(
@@ -736,8 +642,6 @@ export class SupabaseService {
             return {
               id: id,
               name: artistObj?.name || 'Unknown Artist',
-              popularity: 0,
-              followers_count: 0,
               last_updated: new Date().toISOString()
             };
           });
@@ -746,44 +650,6 @@ export class SupabaseService {
             .from('artists')
             .upsert(artistPlaceholders, { onConflict: 'id' });
           if (artErr) throw artErr;
-        }
-      }
-
-      // Extract all unique linked_from ids to protect self-referential track FKs
-      const linkedFromTrackIds = new Set<string>();
-      uniqueTracks.forEach(t => {
-        const linkedId = t.linked_from?.id || t.linkedFromTrackId;
-        if (linkedId) {
-          linkedFromTrackIds.add(linkedId);
-        }
-      });
-
-      if (linkedFromTrackIds.size > 0) {
-        const { data: existingLinked, error: existingLinkedError } = await this.client
-          .from('tracks')
-          .select('id')
-          .in('id', Array.from(linkedFromTrackIds));
-        if (existingLinkedError) throw existingLinkedError;
-        const existingLinkedIds = new Set(existingLinked ? existingLinked.map(e => e.id) : []);
-        const missingLinkedIds = Array.from(linkedFromTrackIds).filter(id => !existingLinkedIds.has(id));
-
-        if (missingLinkedIds.length > 0) {
-          const stubs = missingLinkedIds.map(id => ({
-            id: id,
-            name: 'Linked Track Placeholder',
-            duration_ms: 0,
-            explicit: false,
-            popularity: 0,
-            track_number: 1,
-            disc_number: 1,
-            is_playable: true,
-            is_local: false,
-            last_updated: new Date().toISOString()
-          }));
-          const { error: stubErr } = await this.client
-            .from('tracks')
-            .upsert(stubs, { onConflict: 'id' });
-          if (stubErr) throw stubErr;
         }
       }
 
@@ -799,18 +665,12 @@ export class SupabaseService {
           duration_ms: Number.isFinite(durationMs) ? durationMs : (existing?.duration_ms ?? 0),
           explicit: typeof t.explicit === 'boolean' ? t.explicit : (existing?.explicit ?? false),
           spotify_url: t.external_urls?.spotify || t.spotifyUrl || t.spotify_url || existing?.spotify_url || null,
-          popularity: Number.isFinite(t.popularity) ? t.popularity : (existing?.popularity ?? 0),
           track_number: Number.isFinite(trackNumber) ? trackNumber : (existing?.track_number ?? 1),
           disc_number: Number.isFinite(discNumber) ? discNumber : (existing?.disc_number ?? 1),
-          preview_url: t.preview_url ?? t.previewUrl ?? existing?.preview_url ?? null,
           is_playable: typeof t.is_playable === 'boolean' ? t.is_playable : (existing?.is_playable ?? true),
           is_local: typeof t.is_local === 'boolean' ? t.is_local : (existing?.is_local ?? false),
           isrc: t.external_ids?.isrc || existing?.isrc || null,
-          available_markets: Array.isArray(t.available_markets)
-            ? t.available_markets
-            : (existing?.available_markets || []),
           restriction_reason: t.restrictions?.reason || existing?.restriction_reason || null,
-          linked_from_track_id: t.linked_from?.id || t.linkedFromTrackId || existing?.linked_from_track_id || null,
           last_updated: new Date().toISOString()
         };
       });
@@ -833,27 +693,6 @@ export class SupabaseService {
           .from('tracks')
           .upsert(tracksToInsert, { onConflict: 'id' });
         if (error) throw error;
-      }
-
-      // Sync Track Popularity History
-      if (tracksToInsert.length > 0) {
-        const recordedAt = getDailyCutoffTimestamp();
-        const currentTrackIds = new Set(
-          uniqueTracks.filter(t => Number.isFinite(t.popularity)).map(t => t.id)
-        );
-        const popHistory = tracksToInsert
-          .filter(t => currentTrackIds.has(t.id))
-          .map(t => ({
-            track_id: t.id,
-            recorded_at: recordedAt,
-            popularity: t.popularity
-          }));
-        if (popHistory.length > 0) {
-          const { error: popErr } = await this.client
-            .from('track_popularity_history')
-            .upsert(popHistory, { onConflict: 'track_id,recorded_at' });
-          if (popErr) throw popErr;
-        }
       }
 
       if (relationshipTrackIds.length > 0) {
@@ -973,7 +812,7 @@ export class SupabaseService {
           played_at,
           track_id,
           tracks (
-            id, name, duration_ms, explicit, spotify_url, popularity, preview_url,
+            id, name, duration_ms, explicit, spotify_url,
             albums ( id, name, image_url ),
             track_artists (
               artists ( id, name )
@@ -1004,8 +843,6 @@ export class SupabaseService {
             name: t.name,
             duration_ms: t.duration_ms,
             explicit: t.explicit,
-            popularity: t.popularity,
-            preview_url: t.preview_url,
             external_urls: { spotify: t.spotify_url },
             album: {
               id: t.albums?.id,
@@ -1049,11 +886,11 @@ export class SupabaseService {
       const { data, error } = await this.client
         .from('stats_snapshots')
         .select(`
-          id, avg_popularity, explicit_percentage, genre_diversity,
+          id, explicit_percentage, genre_diversity,
           stats_snapshot_tracks (
             rank,
             tracks (
-              id, name, duration_ms, explicit, spotify_url, popularity, preview_url,
+              id, name, duration_ms, explicit, spotify_url,
               albums ( id, name, image_url ),
               track_artists (
                 artists ( id, name )
@@ -1063,7 +900,7 @@ export class SupabaseService {
           stats_snapshot_artists (
             rank,
             artists (
-              id, name, image_url, spotify_url, popularity, followers_count,
+              id, name, image_url, spotify_url,
               artist_genres ( genre_name )
             )
           ),
@@ -1093,8 +930,6 @@ export class SupabaseService {
             name: t.name,
             duration_ms: t.duration_ms,
             explicit: t.explicit,
-            popularity: t.popularity,
-            preview_url: t.preview_url,
             external_urls: { spotify: t.spotify_url },
             spotifyUrl: t.spotify_url,
             // albumCover is the shortcut checked first by getTrackCover()
@@ -1119,10 +954,8 @@ export class SupabaseService {
           return {
             id: art.id,
             name: art.name,
-            popularity: art.popularity,
             external_urls: { spotify: art.spotify_url },
             images: art.image_url ? [{ url: art.image_url }] : [],
-            followers: { total: art.followers_count },
             genres: art.artist_genres ? art.artist_genres.map((ag: any) => ag.genre_name) : []
           };
         }).filter((a: any) => !!a);
@@ -1142,7 +975,6 @@ export class SupabaseService {
         }));
 
       return {
-        avgPopularity: data.avg_popularity,
         explicitPercentage: data.explicit_percentage,
         genreDiversity: data.genre_diversity,
         topTracks,
@@ -1162,11 +994,11 @@ export class SupabaseService {
       const { data, error } = await this.client
         .from('stats_snapshots')
         .select(`
-          id, avg_popularity, explicit_percentage, genre_diversity, created_at, snapshot_date,
+          id, explicit_percentage, genre_diversity, created_at, snapshot_date,
           stats_snapshot_tracks (
             rank,
             tracks (
-              id, name, duration_ms, explicit, spotify_url, popularity, preview_url,
+              id, name, duration_ms, explicit, spotify_url,
               albums ( id, name, image_url ),
               track_artists (
                 artists ( id, name )
@@ -1176,7 +1008,7 @@ export class SupabaseService {
           stats_snapshot_artists (
             rank,
             artists (
-              id, name, image_url, spotify_url, popularity, followers_count,
+              id, name, image_url, spotify_url,
               artist_genres ( genre_name )
             )
           ),
@@ -1206,8 +1038,6 @@ export class SupabaseService {
               name: t.name,
               duration_ms: t.duration_ms,
               explicit: t.explicit,
-              popularity: t.popularity,
-              preview_url: t.preview_url,
               external_urls: { spotify: t.spotify_url },
               spotifyUrl: t.spotify_url,
               albumCover: albumImageUrl,
@@ -1231,10 +1061,8 @@ export class SupabaseService {
             return {
               id: art.id,
               name: art.name,
-              popularity: art.popularity,
               external_urls: { spotify: art.spotify_url },
               images: art.image_url ? [{ url: art.image_url }] : [],
-              followers: { total: art.followers_count },
               genres: art.artist_genres ? art.artist_genres.map((ag: any) => ag.genre_name) : []
             };
           }).filter((a: any) => !!a);
@@ -1258,7 +1086,6 @@ export class SupabaseService {
           range: range,
           timestamp: parseSnapshotTimestamp(row.snapshot_date, row.created_at),
           snapshotDate: row.snapshot_date,
-          avgPopularity: Number(row.avg_popularity),
           explicitPercentage: Number(row.explicit_percentage),
           genreDiversity: row.genre_diversity,
           topTracks,
@@ -1277,7 +1104,7 @@ export class SupabaseService {
     try {
       const { data, error } = await this.client
         .from('stats_snapshots')
-        .select('id, avg_popularity, explicit_percentage, genre_diversity, created_at, snapshot_date')
+        .select('id, explicit_percentage, genre_diversity, created_at, snapshot_date')
         .eq('user_id', supabaseUserId)
         .eq('range', range)
         .order('snapshot_date', { ascending: true });
@@ -1291,7 +1118,6 @@ export class SupabaseService {
         range: range,
         timestamp: parseSnapshotTimestamp(row.snapshot_date, row.created_at),
         snapshotDate: row.snapshot_date,
-        avgPopularity: Number(row.avg_popularity),
         explicitPercentage: Number(row.explicit_percentage),
         genreDiversity: row.genre_diversity,
         topTracks: [],
@@ -1311,11 +1137,11 @@ export class SupabaseService {
       const { data, error } = await this.client
         .from('stats_snapshots')
         .select(`
-          id, avg_popularity, explicit_percentage, genre_diversity, created_at, snapshot_date, range,
+          id, explicit_percentage, genre_diversity, created_at, snapshot_date, range,
           stats_snapshot_tracks (
             rank,
             tracks (
-              id, name, duration_ms, explicit, spotify_url, popularity, preview_url,
+              id, name, duration_ms, explicit, spotify_url,
               albums ( id, name, image_url ),
               track_artists (
                 artists ( id, name )
@@ -1325,7 +1151,7 @@ export class SupabaseService {
           stats_snapshot_artists (
             rank,
             artists (
-              id, name, image_url, spotify_url, popularity, followers_count,
+              id, name, image_url, spotify_url,
               artist_genres ( genre_name )
             )
           ),
@@ -1354,8 +1180,6 @@ export class SupabaseService {
             name: t.name,
             duration_ms: t.duration_ms,
             explicit: t.explicit,
-            popularity: t.popularity,
-            preview_url: t.preview_url,
             external_urls: { spotify: t.spotify_url },
             spotifyUrl: t.spotify_url,
             albumCover: albumImageUrl,
@@ -1379,10 +1203,8 @@ export class SupabaseService {
           return {
             id: art.id,
             name: art.name,
-            popularity: art.popularity,
             external_urls: { spotify: art.spotify_url },
             images: art.image_url ? [{ url: art.image_url }] : [],
-            followers: { total: art.followers_count },
             genres: art.artist_genres ? art.artist_genres.map((ag: any) => ag.genre_name) : []
           };
         }).filter((a: any) => !!a);
@@ -1407,7 +1229,6 @@ export class SupabaseService {
         range: data.range,
         timestamp: parseSnapshotTimestamp(data.snapshot_date, data.created_at),
         snapshotDate: data.snapshot_date,
-        avgPopularity: Number(data.avg_popularity),
         explicitPercentage: Number(data.explicit_percentage),
         genreDiversity: data.genre_diversity,
         topTracks,
@@ -1426,7 +1247,6 @@ export class SupabaseService {
   async saveStatsSnapshot(
     supabaseUserId: string,
     range: string,
-    avgPopularity: number,
     explicitPercentage: number,
     genreDiversity: number,
     topTracks: any[],
@@ -1486,7 +1306,6 @@ export class SupabaseService {
           user_id: supabaseUserId,
           range: range,
           snapshot_date: todayStr,
-          avg_popularity: avgPopularity,
           explicit_percentage: explicitPercentage,
           genre_diversity: genreDiversity
         }, { onConflict: 'user_id,range,snapshot_date' })
@@ -1682,72 +1501,6 @@ export class SupabaseService {
     } catch (e) {
       console.error('[SupabaseService] Failed to load user cache from database:', e);
       return [];
-    }
-  }
-
-  /** Syncs track audio features into the database */
-  async syncTrackAudioFeatures(features: any[]): Promise<void> {
-    if (!features || features.length === 0) return;
-    try {
-      // Filter out null/invalid features
-      const validFeatures = features.filter(f => f && f.id);
-      if (validFeatures.length === 0) return;
-
-      // Ensure all referenced track IDs exist in the tracks table to avoid FK violations.
-      // If any tracks are missing, they should have placeholder rows created.
-      const trackIds = Array.from(new Set(validFeatures.map(f => f.id)));
-      const { data: existingTracks, error: existingTracksError } = await this.client
-        .from('tracks')
-        .select('id')
-        .in('id', trackIds);
-      if (existingTracksError) throw existingTracksError;
-      const existingTrackIds = new Set(existingTracks ? existingTracks.map(t => t.id) : []);
-      const missingTrackIds = trackIds.filter(id => !existingTrackIds.has(id));
-
-      if (missingTrackIds.length > 0) {
-        const trackPlaceholders = missingTrackIds.map(id => ({
-          id: id,
-          name: 'Track Placeholder (Audio Features)',
-          duration_ms: 0,
-          explicit: false,
-          popularity: 0,
-          track_number: 1,
-          disc_number: 1,
-          is_playable: true,
-          is_local: false,
-          last_updated: new Date().toISOString()
-        }));
-        const { error: stubErr } = await this.client
-          .from('tracks')
-          .upsert(trackPlaceholders, { onConflict: 'id' });
-        if (stubErr) throw stubErr;
-      }
-
-      const rows = validFeatures.map(f => ({
-        track_id: f.id,
-        danceability: f.danceability || 0,
-        energy: f.energy || 0,
-        key: f.key || 0,
-        loudness: f.loudness || 0,
-        mode: f.mode || 0,
-        speechiness: f.speechiness || 0,
-        acousticness: f.acousticness || 0,
-        instrumentalness: f.instrumentalness || 0,
-        liveness: f.liveness || 0,
-        valence: f.valence || 0,
-        tempo: f.tempo || 0,
-        time_signature: f.time_signature || 0,
-        last_updated: new Date().toISOString()
-      }));
-
-      const { error } = await this.client
-        .from('track_audio_features')
-        .upsert(rows, { onConflict: 'track_id' });
-      if (error) throw error;
-      console.log(`[SupabaseService] Synced ${rows.length} track audio features.`);
-    } catch (e) {
-      console.error('[SupabaseService] Error syncing track audio features:', e);
-      throw e;
     }
   }
 

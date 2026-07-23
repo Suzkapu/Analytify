@@ -276,11 +276,15 @@
   background: #242424;
   padding: 16px;
   border-radius: 14px;
-  cursor: pointer;
+  cursor: default;
   border: 1px solid rgba(255, 255, 255, 0.02);
   transition: all 0.25s ease;
 
-  &:hover {
+  &.is-clickable {
+    cursor: pointer;
+  }
+
+  &.is-clickable:hover {
     background: #2c2c2c;
     border-color: rgba(29, 185, 84, 0.15);
     transform: translateY(-2px);
@@ -516,7 +520,6 @@
   padding: 12px 24px;
   border-radius: 12px;
   gap: 20px;
-  cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
@@ -606,23 +609,6 @@
       }
     }
 
-    .popularity-badge {
-      font-size: 0.85rem;
-      color: #1ed760;
-      background: rgba(29, 185, 84, 0.08);
-      border: 1px solid rgba(29, 185, 84, 0.15);
-      padding: 4px 10px;
-      border-radius: 500px;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-
-      i {
-        font-size: 0.85rem;
-      }
-    }
-
     .track-duration {
       font-size: 0.9rem;
       color: #a7a7a7;
@@ -674,14 +660,6 @@
 
       .release-year {
         display: none;
-      }
-
-      .popularity-badge {
-        padding: 2px 8px;
-        font-size: 0.78rem;
-        i {
-          font-size: 0.75rem;
-        }
       }
 
       .track-duration {

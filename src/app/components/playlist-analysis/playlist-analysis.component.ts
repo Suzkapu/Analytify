@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
-import { SpotifyDataService } from "../../services/spotify-data/spotify-data.service";
 import { SpotifyAuthService } from "../../services/auth/spotify-auth.service";
 import { StorageService } from "../../services/storage/storage.service";
 import { Subscription } from 'rxjs';
@@ -34,7 +33,6 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
   uniqueTracksCount: number = 0;
   totalDurationFormatted: string = '';
   averageDurationFormatted: string = '';
-  averagePopularity: number = 0;
   explicitCount: number = 0;
   explicitPercentage: number = 0;
 
@@ -49,7 +47,6 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private spotifyDataService: SpotifyDataService,
     public authService: SpotifyAuthService,
     private router: Router,
     private storageService: StorageService,
@@ -147,8 +144,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
         storageKey,
         `${storageKey}_Amount`,
         `${storageKey}_Name`,
-        lastUpdatedKey,
-        `${storageKey}_cacheVersion`
+        lastUpdatedKey
       ]);
       storedArtists = this.storageService.getItem(storageKey);
       lastUpdated = this.storageService.getItem(lastUpdatedKey);
@@ -255,7 +251,6 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     if (uniqueTracks.length === 0) {
       this.totalDurationFormatted = '0 sec';
       this.averageDurationFormatted = '0:00';
-      this.averagePopularity = 0;
       this.explicitCount = 0;
       this.explicitPercentage = 0;
       this.topGenres = [];
@@ -267,12 +262,10 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     }
 
     let totalDurationMs = 0;
-    let totalPopularity = 0;
     let explicitCount = 0;
 
     uniqueTracks.forEach(track => {
       totalDurationMs += track.duration_ms || 0;
-      totalPopularity += track.popularity || 0;
       if (track.explicit) {
         explicitCount++;
       }
@@ -280,7 +273,6 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
 
     this.totalDurationFormatted = this.formatDuration(totalDurationMs);
     this.averageDurationFormatted = this.formatDurationShort(totalDurationMs / uniqueTracks.length);
-    this.averagePopularity = Math.round(totalPopularity / uniqueTracks.length);
     this.explicitCount = explicitCount;
     this.explicitPercentage = Math.round((explicitCount / uniqueTracks.length) * 1000) / 10;
 

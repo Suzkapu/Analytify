@@ -5,10 +5,11 @@ Analytify is a modern, high-fidelity Angular web application that integrates wit
 ## Features 🚀
 
 ### 1. Browse & Analyze Playlists
-- **Centralized Playlist Management**: Browse all your personal and saved playlists in a capsule grid card structure.
+- **Current playlist access**: Browse playlists owned by the current user or shared through collaboration, matching Spotify's current playlist-item access rules.
 - **Background Stats Loader**: A singleton background loader service (`PlaylistLoaderService`) fetches, parses, and caches playlist tracks and artist profiles concurrently. Going back or navigating away doesn't stop or delay loading.
 - **Lazy Details Fetcher**: Fetches and aggregates track and artist profiles in background batches, ensuring metadata integrity and preventing concurrent request collisions.
-- **Session Cache versioning**: Uses a versioned, self-healing storage cache (`v2`) with a **01:00 AM daily cutoff boundary expiration** to keep your data fresh.
+- **Persistent data flow**: Uses local IndexedDB first, restores missing data from Supabase, and contacts Spotify only after the daily cutoff when neither persistent source has current data.
+- **Album View**: Groups the real songs in any loaded playlist by album, including cover, artists, release year, song count, and combined duration.
 
 ### 2. Personal Listening Analytics
 - **Top 100 Songs**: Displays your most listened to songs in customizable time periods (Last 4 Weeks, Last 6 Months, Last Year).

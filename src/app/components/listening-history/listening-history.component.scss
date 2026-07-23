@@ -8,3 +8,15 @@
   max-width: 800px;
   margin: 0 auto;
 }
+
+.track-row-card.no-trend-pointer {
+  cursor: default;
+
+  .track-cover {
+    cursor: default;
+
+    &.is-clickable {
+      cursor: pointer;
+    }
+  }
+}

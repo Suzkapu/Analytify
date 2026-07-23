@@ -14,7 +14,7 @@
       style="font-size: 0.8rem; font-weight: 800; color: #1db954; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px;">Spotify
       Analytics</span>
     <h2 style="margin: 0; font-weight: 800; color: #ffffff; font-size: 1.9rem;">
-      {{ viewStyle === 'artists' ? 'Your Artists' : 'Playlist Songs' }}
+      {{ viewStyle === 'artists' ? 'Your Artists' : (viewStyle === 'songs' ? 'Playlist Songs' : 'Playlist Albums') }}
     </h2>
   </div>
 </div>
@@ -37,6 +37,12 @@
           placeholder="Search songs or artists..." type="text"
           style="border-radius: 20px; font-size: 0.95rem; padding-left: 2.5rem;" />
       </span>
+      <span class="p-input-icon-left search-container" *ngIf="viewStyle === 'albums'">
+        <i class="pi pi-search"></i>
+        <input (input)="filterAlbums()" [(ngModel)]="albumSearchText" class="search-input" pInputText
+          placeholder="Search albums or artists..." type="text"
+          style="border-radius: 20px; font-size: 0.95rem; padding-left: 2.5rem;" />
+      </span>
     </div>
     
     <div class="controls-right" style="display: flex; align-items: center; gap: 12px;">
@@ -56,6 +62,14 @@
         style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px;"
         title="View Songs">
         <i class="pi pi-music"></i> Songs
+      </button>
+      <button (click)="viewStyle = 'albums'" class="p-button p-button-outlined p-button-secondary"
+        [style.background]="viewStyle === 'albums' ? 'rgba(30, 215, 96, 0.12) !important' : 'transparent !important'"
+        [style.borderColor]="viewStyle === 'albums' ? '#1ed760 !important' : 'rgba(255, 255, 255, 0.2) !important'"
+        [style.color]="viewStyle === 'albums' ? '#1ed760 !important' : '#e0e0e0 !important'"
+        style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px;"
+        title="View Albums">
+        <i class="pi pi-clone"></i> Albums
       </button>
 
       <!-- Sort Toggle Button (Artists View) -->
@@ -205,7 +219,9 @@
         <div class="track-index">{{ idx + 1 }}</div>
         
         <img [src]="track.album?.images && track.album.images[0] ? track.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
-          alt="Track Cover" class="track-cover" (click)="openTrackClick(track.external_urls?.spotify); $event.stopPropagation()">
+          alt="Track Cover" class="track-cover"
+          [class.is-clickable]="!!track.external_urls?.spotify"
+          (click)="openTrackClick(track.external_urls?.spotify); $event.stopPropagation()">
         
         <div class="track-info">
           <span class="track-title">{{ track.name }}</span>
@@ -223,16 +239,35 @@
             <i class="pi pi-calendar"></i> {{ getYearFromDate(track.album?.release_date) }}
           </span>
           
-          <span class="popularity-badge" title="Popularity">
-            <i class="pi pi-chart-bar"></i> {{ track.popularity }}%
-          </span>
-          
           <span class="track-duration">
             <i class="pi pi-clock"></i> {{ formatDurationShort(track.duration_ms) }}
           </span>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Albums View -->
+  <div *ngIf="viewStyle === 'albums'" class="card-container album-grid" style="margin-top: 20px;">
+    <div *ngIf="filteredAlbums.length === 0" class="no-songs-found">
+      <i class="pi pi-info-circle"></i> No albums found matching your search.
+    </div>
+
+    <button *ngFor="let album of filteredAlbums.slice(0, displayedAlbumsCount)"
+      class="album-card"
+      type="button"
+      [disabled]="!album.spotifyUrl"
+      (click)="openTrackClick(album.spotifyUrl)">
+      <img [src]="album.imageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
+        [alt]="album.name + ' cover'" class="album-cover">
+      <span class="album-name">{{ album.name }}</span>
+      <span class="album-artists">{{ album.artists.join(', ') || 'Unknown artist' }}</span>
+      <span class="album-meta">
+        {{ album.trackCount }} {{ album.trackCount === 1 ? 'song' : 'songs' }}
+        <ng-container *ngIf="album.releaseDate"> · {{ getYearFromDate(album.releaseDate) }}</ng-container>
+        · {{ formatDurationShort(album.durationMs) }}
+      </span>
+    </button>
   </div>
 </div>
 

@@ -183,7 +183,9 @@
               <span *ngIf="trend.type === 'new'" class="new-entry-dot" title="New entry since last snapshot"></span>
             </ng-container>
           </div>
-          <img (click)="openTrackClick(getTrackUrl(track)); $event.stopPropagation()" [src]="getTrackCover(track)"
+          <img
+            (click)="getTrackUrl(track) && $event.stopPropagation(); openTrackClick(getTrackUrl(track))"
+            [src]="getTrackCover(track)"
             alt="Track Cover" class="track-cover">
           <div class="track-info">
             <span class="track-title">{{ track.name }}</span>
@@ -191,9 +193,6 @@
           </div>
           <div class="track-meta">
             <span *ngIf="track.explicit" class="explicit-badge">E</span>
-            <span class="popularity-badge">
-              <i class="pi pi-chart-bar"></i> {{ track.popularity }}%
-            </span>
           </div>
         </div>
 
@@ -204,7 +203,7 @@
             <i class="pi pi-check-circle"></i> {{ playlistCreationSuccessMessage }}
           </span>
           <button (click)="createTopPlaylist()" class="p-button" [disabled]="isCreatingPlaylist"
-            style="border-radius: 8px !important; padding: 8px 18px !important; display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem !important; background: #1db954; border-color: #1db954; font-weight: 700; color: #ffffff; cursor: pointer; border: none; transition: all 0.2s;"
+            style="border-radius: 8px !important; padding: 8px 18px !important; display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem !important; background: #1db954; border-color: #1db954; font-weight: 700; color: #ffffff; border: none; transition: all 0.2s;"
             onmouseover="this.style.background='#1ed760'" onmouseout="this.style.background='#1db954'">
             <i class="pi" [class.pi-spin]="isCreatingPlaylist" [class.pi-spinner]="isCreatingPlaylist"
               [class.pi-plus-circle]="!isCreatingPlaylist"></i>
@@ -224,8 +223,10 @@
       <div *ngIf="displayedArtists.length > 0" class="stats-artists-grid">
         <div *ngFor="let artist of displayedArtists; let idx = index" class="artist-grid-card"
           (click)="openTrendPopup(artist, 'artists')">
-          <div class="artist-avatar-container" (click)="$event.stopPropagation()">
-            <img (click)="openArtistClick(getArtistUrl(artist))" [src]="getArtistImage(artist)" alt="Artist Photo"
+          <div class="artist-avatar-container">
+            <img
+              (click)="getArtistUrl(artist) && $event.stopPropagation(); openArtistClick(getArtistUrl(artist))"
+              [src]="getArtistImage(artist)" alt="Artist Photo"
               class="artist-avatar">
             <div class="artist-rank-badge" [class.is-hot-mover]="isHotMover(artist, 'artists')"
               [class.is-new]="getTrend(artist, idx, 'artists').type === 'new'"
@@ -452,7 +453,7 @@
                   <!-- Invisible larger hover target circle for easy trigger -->
                   <circle [attr.cx]="30 + (idx / (trendPopupPoints.length - 1)) * 440"
                     [attr.cy]="30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : trendPopupCategory === 'artists' ? 50 : 15) - 1)) * 140"
-                    r="15" fill="transparent" style="cursor: pointer;" (mouseenter)="hoveredPointIndex = idx"
+                    r="15" fill="transparent" (mouseenter)="hoveredPointIndex = idx"
                     (mouseleave)="hoveredPointIndex = null">
                   </circle>
                 </g>

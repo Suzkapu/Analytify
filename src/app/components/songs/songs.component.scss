@@ -348,7 +348,6 @@
   padding: 12px 24px;
   border-radius: 12px;
   gap: 20px;
-  cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   box-sizing: border-box;
 
@@ -384,12 +383,16 @@
     object-fit: cover;
     flex-shrink: 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
+    cursor: default;
     transition: transform 0.2s ease, border-color 0.2s ease;
     border: 1.5px solid transparent;
     box-sizing: border-box;
 
-    &:hover {
+    &.is-clickable {
+      cursor: pointer;
+    }
+
+    &.is-clickable:hover {
       transform: scale(1.05);
       border-color: #1ed760;
     }
@@ -441,23 +444,6 @@
     .release-year {
       font-size: 0.9rem;
       color: #a7a7a7;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-
-      i {
-        font-size: 0.85rem;
-      }
-    }
-
-    .popularity-badge {
-      font-size: 0.85rem;
-      color: #1ed760;
-      background: rgba(29, 185, 84, 0.08);
-      border: 1px solid rgba(29, 185, 84, 0.15);
-      padding: 4px 10px;
-      border-radius: 500px;
-      font-weight: 700;
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -520,14 +506,6 @@
         display: none;
       }
 
-      .popularity-badge {
-        padding: 2px 8px;
-        font-size: 0.78rem;
-        i {
-          font-size: 0.75rem;
-        }
-      }
-
       .track-duration {
         width: auto;
         font-size: 0.8rem;
@@ -541,6 +519,85 @@
         font-size: 0.85rem;
       }
     }
+  }
+}
+
+.album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 18px;
+}
+
+.album-card {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: #181818;
+  border-radius: 14px;
+  padding: 14px;
+  color: #ffffff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  min-width: 0;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-3px);
+    background: #202020;
+    border-color: rgba(30, 215, 96, 0.25);
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+
+  .album-cover {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 9px;
+    margin-bottom: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  .album-name,
+  .album-artists,
+  .album-meta {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .album-name {
+    font-size: 1rem;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .album-artists {
+    margin-top: 4px;
+    color: #b3b3b3;
+    font-size: 0.88rem;
+    white-space: nowrap;
+  }
+
+  .album-meta {
+    margin-top: 10px;
+    color: #1ed760;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+}
+
+@media (max-width: 768px) {
+  .album-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .album-card {
+    padding: 10px;
   }
 }
 

@@ -9,11 +9,8 @@ export const environment = {
   spotifyRedirectUri: 'https://analytify.dynv6.net/callback',
   spotifyScopes: [
     'user-read-private',
-    'user-read-email',
     'user-top-read',
     'user-read-recently-played',
-    'user-read-currently-playing',
-    'user-read-playback-state',
     'playlist-read-private',
     'playlist-read-collaborative',
     'playlist-modify-public',

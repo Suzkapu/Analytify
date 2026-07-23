@@ -53,7 +53,7 @@ export class ImageHealingService {
     const missingIds = missing.map(a => a.id);
     for (let i = 0; i < missingIds.length; i += 50) {
       const batch = missingIds.slice(i, i + 50);
-      this.spotifyDataService.getSeveralArtists(batch).subscribe({
+      this.spotifyDataService.getArtistsByIds(batch).subscribe({
         next: (res: any) => {
           const map = new Map<string, any>();
           (res.artists || []).forEach((a: any) => { if (a) map.set(a.id, a); });
@@ -69,11 +69,6 @@ export class ImageHealingService {
               artist.images = [{ url: realImg }];
               changed = true;
             }
-            // Also heal genres while we're here
-            if (full.genres?.length && (!artist.genres || artist.genres.length === 0)) {
-              artist.genres = full.genres;
-              changed = true;
-            }
           });
 
           if (!changed) return;
@@ -87,7 +82,14 @@ export class ImageHealingService {
           //    and the artist-details page also get the real image
           const supabaseUserId = this.authService.getSupabaseUserId();
           if (this.authService.isBackupActive() && supabaseUserId) {
-            const forSync = batch.map(id => map.get(id)).filter(a => !!a);
+            const forSync = batch
+              .map(id => map.get(id))
+              .filter(a => !!a)
+              .map(artist => {
+                const imageMetadata = { ...artist };
+                delete imageMetadata.genres;
+                return imageMetadata;
+              });
             if (forSync.length > 0) {
               this.supabaseService.syncArtists(forSync).catch(err =>
                 console.warn('[ImageHealingService] syncArtists failed:', err)
@@ -129,7 +131,7 @@ export class ImageHealingService {
     const missingIds = missing.map(t => t.id);
     for (let i = 0; i < missingIds.length; i += 50) {
       const batch = missingIds.slice(i, i + 50);
-      this.spotifyDataService.getSeveralTracks(batch).subscribe({
+      this.spotifyDataService.getTracksByIds(batch).subscribe({
         next: (res: any) => {
           const map = new Map<string, any>();
           (res.tracks || []).forEach((t: any) => { if (t) map.set(t.id, t); });

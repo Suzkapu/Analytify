@@ -1,12 +1,9 @@
 import {Component, OnInit, OnDestroy, ViewEncapsulation, HostListener} from '@angular/core';
 import {ActivatedRoute, NavigationExtras, Router} from "@angular/router";
-import {SpotifyDataService} from "../../services/spotify-data/spotify-data.service";
 import {SpotifyAuthService} from "../../services/auth/spotify-auth.service";
 import {StorageService} from "../../services/storage/storage.service";
 import {PlaylistLoaderService} from "../../services/playlist-loader/playlist-loader.service";
-import {forkJoin, of, Subscription} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {SupabaseService} from "../../services/supabase/supabase.service";
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-songs',
@@ -29,16 +26,18 @@ export class SongsComponent implements OnInit, OnDestroy {
   cooldownMessage: string = '';
 
   // View switcher and tracks listing properties
-  viewStyle: 'artists' | 'songs' = 'artists';
+  viewStyle: 'artists' | 'songs' | 'albums' = 'artists';
   playlistTracks: any[] = [];
   filteredTracks: any[] = [];
+  playlistAlbums: any[] = [];
+  filteredAlbums: any[] = [];
   trackSearchText: string = '';
+  albumSearchText: string = '';
   trackSortKey: string = 'recently_added';
   sortAscending: boolean = false;
   showSortMenu: boolean = false;
   sortOptions = [
     { value: 'recently_added', label: 'Recently added' },
-    { value: 'popularity', label: 'Popularity' },
     { value: 'duration', label: 'Duration' },
     { value: 'release', label: 'Release Date' },
     { value: 'name', label: 'Alphabetical' }
@@ -46,23 +45,21 @@ export class SongsComponent implements OnInit, OnDestroy {
   trackIndexCounter: number = 0;
   displayedArtistsCount: number = 50;
   displayedTracksCount: number = 50;
+  displayedAlbumsCount: number = 50;
 
   // Real-time progress properties
   isLoadingTracks: boolean = false;
   isLoadingArtists: boolean = false;
   loadedArtistsDetailsCount: number = 0;
   totalUniqueArtists: number = 0;
-  private requestedArtistIds = new Set<string>();
   private loaderSubscription: Subscription | null = null;
 
   constructor(
     private route: ActivatedRoute, 
-    private spotifyDataService: SpotifyDataService, 
     private router: Router,
     public authService: SpotifyAuthService,
     private storageService: StorageService,
-    private playlistLoaderService: PlaylistLoaderService,
-    private supabaseService: SupabaseService
+    private playlistLoaderService: PlaylistLoaderService
   ) {
     this.route.params.subscribe(async (params) => {
       this.playlistId = params['id'];
@@ -99,7 +96,6 @@ export class SongsComponent implements OnInit, OnDestroy {
   private readPlaylistCache(userId: string, storageKey: string) {
     const storedArtists = this.storageService.getItem(storageKey);
     const lastUpdated = this.storageService.getItem(`${storageKey}_lastUpdated`);
-    const version = this.storageService.getItem(`${storageKey}_cacheVersion`);
     let parsedArtists: any[] = [];
     let isParseError = false;
     let cachedTotalTracks = 0;
@@ -140,13 +136,11 @@ export class SongsComponent implements OnInit, OnDestroy {
       storedArtists,
       parsedArtists,
       cachedTotalTracks,
-      version,
       isExpired: this.isCacheExpired(lastUpdated),
       isParseError,
       isCacheCorrupt,
       isUsable: !!storedArtists &&
         !this.isCacheExpired(lastUpdated) &&
-        version === 'v6' &&
         !isParseError &&
         !isCacheCorrupt
     };
@@ -188,8 +182,7 @@ export class SongsComponent implements OnInit, OnDestroy {
         storageKey,
         `${storageKey}_Amount`,
         `${storageKey}_Name`,
-        `${storageKey}_lastUpdated`,
-        `${storageKey}_cacheVersion`
+        `${storageKey}_lastUpdated`
       ]);
       cache = this.readPlaylistCache(userId, storageKey);
     }
@@ -219,8 +212,7 @@ export class SongsComponent implements OnInit, OnDestroy {
   private loadPlaylistFromAPI(userId: string, isBackupActive: boolean, isExpired: boolean, storedArtists?: string | null, parsedArtists?: any[]) {
     // Start a new loading task
     const isRefresh = !!storedArtists && parsedArtists && parsedArtists.length > 0;
-    const version = this.storageService.getItem(`${userId}_${this.playlistId}_cacheVersion`);
-    const reason = !storedArtists ? 'no local cache' : (version !== 'v6' ? `old cache version (${version})` : (isExpired ? 'cache expired' : 'unknown'));
+    const reason = !storedArtists ? 'no local cache' : (isExpired ? 'cache expired' : 'invalid cache');
     console.log(`[Songs] Cache missing or stale for playlist ${this.playlistId} (reason: ${reason}, backup active: ${isBackupActive}). Loading from API.`);
     if (isRefresh && parsedArtists) {
       try {
@@ -281,91 +273,6 @@ export class SongsComponent implements OnInit, OnDestroy {
       this.loaderSubscription = null;
     }
   }
-
-  checkForMissingArtistImages() {
-    // Only check if we are not currently loading
-    if (this.isLoading || this.isLoadingArtists || this.isLoadingTracks) {
-      return;
-    }
-
-    // Filter artists that have a valid id, but no images, or empty images, or images containing the default placeholder
-    const missing = this.artists.filter(artist => {
-      if (!artist.id || typeof artist.id !== 'string' || artist.id.trim() === '' || artist.id === 'undefined') {
-        return false;
-      }
-      if (!artist.images || artist.images.length === 0) {
-        return true;
-      }
-      return artist.images.some((img: any) => 
-        !img || !img.url || img.url === 'https://misc.scdn.co/liked-songs/liked-songs-300.png'
-      );
-    });
-
-    if (missing.length === 0) {
-      return;
-    }
-
-    console.log(`[Songs] Detected ${missing.length} artists with missing/placeholder images. Fetching from API...`);
-
-    const missingIds = missing.map(a => a.id);
-
-    // Batch requests to Spotify API (max 50 per request)
-    const batches: string[][] = [];
-    for (let i = 0; i < missingIds.length; i += 50) {
-      batches.push(missingIds.slice(i, i + 50));
-    }
-
-    batches.forEach(batch => {
-      this.spotifyDataService.getSeveralArtists(batch).subscribe({
-        next: (res: any) => {
-          const artistMap = new Map<string, any>();
-          (res.artists || []).forEach((a: any) => {
-            if (a) artistMap.set(a.id, a);
-          });
-
-          let updated = false;
-          this.artists.forEach(artist => {
-            if (artistMap.has(artist.id)) {
-              const fullArtist = artistMap.get(artist.id);
-              if (fullArtist) {
-                const hasRealImage = fullArtist.images && fullArtist.images.length > 0 && 
-                  fullArtist.images[0].url && fullArtist.images[0].url !== 'https://misc.scdn.co/liked-songs/liked-songs-300.png';
-                if (hasRealImage) {
-                  artist.images = [{ url: fullArtist.images[0].url }];
-                  updated = true;
-                }
-                if (fullArtist.genres && fullArtist.genres.length > 0 && (!artist.genres || artist.genres.length === 0)) {
-                  artist.genres = fullArtist.genres;
-                  updated = true;
-                }
-              }
-            }
-          });
-
-          if (updated) {
-            this.filterArtists();
-            const userId = this.authService.getUserId() || 'anonymous';
-            this.storageService.setItem(`${userId}_${this.playlistId}`, JSON.stringify(this.artists));
-            console.log(`[Songs] Pushed updated artist details to cache & database for batch of size ${batch.length}`);
-
-            const supabaseUserId = this.authService.getSupabaseUserId();
-            if (this.authService.isBackupActive() && supabaseUserId) {
-              const artistsForSync = batch.map(id => artistMap.get(id)).filter(a => !!a);
-              if (artistsForSync.length > 0) {
-                this.supabaseService.syncArtists(artistsForSync).catch(err => {
-                  console.warn('[Songs] Failed to sync updated artists to Supabase artists table:', err);
-                });
-              }
-            }
-          }
-        },
-        error: (err) => {
-          console.error('[Songs] Fallback artist details fetch failed:', err);
-        }
-      });
-    });
-  }
-
 
   filterArtists() {
     this.displayedArtistsCount = 50;
@@ -475,6 +382,53 @@ export class SongsComponent implements OnInit, OnDestroy {
     });
     this.playlistTracks = Array.from(tracksMap.values());
     this.filterAndSortTracks();
+    this.updatePlaylistAlbums();
+  }
+
+  updatePlaylistAlbums() {
+    const albums = new Map<string, any>();
+
+    this.playlistTracks.forEach(track => {
+      const album = track.album;
+      if (!album?.id) return;
+
+      const existing = albums.get(album.id);
+      if (existing) {
+        existing.trackCount++;
+        existing.durationMs += track.duration_ms || 0;
+        return;
+      }
+
+      const artists = Array.isArray(album.artists) && album.artists.length
+        ? album.artists
+        : (track.artists || []);
+
+      albums.set(album.id, {
+        id: album.id,
+        name: album.name || 'Unknown Album',
+        imageUrl: album.images?.[0]?.url || null,
+        spotifyUrl: album.external_urls?.spotify || null,
+        releaseDate: album.release_date || '',
+        artists: artists.map((artist: any) => artist.name).filter(Boolean),
+        trackCount: 1,
+        durationMs: track.duration_ms || 0
+      });
+    });
+
+    this.playlistAlbums = Array.from(albums.values())
+      .sort((a, b) => b.trackCount - a.trackCount || a.name.localeCompare(b.name));
+    this.filterAlbums();
+  }
+
+  filterAlbums() {
+    this.displayedAlbumsCount = 50;
+    const query = this.albumSearchText.trim().toLowerCase();
+    this.filteredAlbums = query
+      ? this.playlistAlbums.filter(album =>
+          album.name.toLowerCase().includes(query) ||
+          album.artists.some((artist: string) => artist.toLowerCase().includes(query))
+        )
+      : [...this.playlistAlbums];
   }
 
   filterAndSortTracks() {
@@ -512,9 +466,6 @@ export class SongsComponent implements OnInit, OnDestroy {
           }
           break;
         }
-        case 'popularity':
-          comparison = (a.popularity || 0) - (b.popularity || 0);
-          break;
         case 'duration':
           comparison = (a.duration_ms || 0) - (b.duration_ms || 0);
           break;
@@ -552,9 +503,6 @@ export class SongsComponent implements OnInit, OnDestroy {
   getDefaultSortDirection(category: string): boolean {
     if (category === 'recently_added') {
       return this.playlistId !== 'fav';
-    }
-    if (category === 'popularity') {
-      return false; // highest popularity first by default
     }
     return true; // ascending A-Z / oldest release / shortest duration
   }
@@ -600,10 +548,12 @@ export class SongsComponent implements OnInit, OnDestroy {
         if (this.displayedArtistsCount < this.filteredArtists.length) {
           this.displayedArtistsCount += 50;
         }
-      } else {
+      } else if (this.viewStyle === 'songs') {
         if (this.displayedTracksCount < this.filteredTracks.length) {
           this.displayedTracksCount += 50;
         }
+      } else if (this.displayedAlbumsCount < this.filteredAlbums.length) {
+        this.displayedAlbumsCount += 50;
       }
     }
   }

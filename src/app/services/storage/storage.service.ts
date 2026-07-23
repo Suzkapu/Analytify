@@ -27,8 +27,7 @@ export class StorageService {
         return;
       }
 
-      // Version 2: adds the generic 'appData' key-value store
-      const request = indexedDB.open('AnalytifyDB', 2);
+      const request = indexedDB.open('AnalytifyDB');
 
       request.onupgradeneeded = (event: any) => {
         const db: IDBDatabase = event.target.result;

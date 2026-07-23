@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { SpotifyAuthService } from "../auth/spotify-auth.service";
-import { Observable, throwError, BehaviorSubject, EMPTY, from, of } from "rxjs";
+import { Observable, throwError, BehaviorSubject, EMPTY, from, of, forkJoin } from "rxjs";
 import { catchError, expand, map, mergeMap, reduce, take, toArray } from 'rxjs/operators';
 import {environment} from "../../../environments/environment";
 import {StorageService} from "../storage/storage.service";
@@ -71,11 +71,26 @@ export class SpotifyDataService {
     );
   }
 
+  getAccessibleUserPlaylists(): Observable<any> {
+    return forkJoin({
+      user: this.getCurrentUser(),
+      playlists: this.getAllUserPlaylists()
+    }).pipe(
+      map(({ user, playlists }) => ({
+        ...playlists,
+        currentUserId: user?.id || null,
+        items: (playlists.items || []).filter((playlist: any) =>
+          playlist?.owner?.id === user?.id || playlist?.collaborative === true
+        )
+      }))
+    );
+  }
+
   getSinglePlaylist(playlistId: string): Observable<any> {
     const playlistEndpoint = `${environment.spotifyUrl}/playlists/${playlistId}`;
     return this.makeRequest(() => this.http.get(playlistEndpoint)).pipe(
       map((playlist: any) => {
-        const collection = playlist.items || playlist.tracks || { items: [], total: 0 };
+        const collection = playlist.items || { items: [], total: 0 };
         return {
           ...playlist,
           tracks: {
@@ -103,49 +118,29 @@ export class SpotifyDataService {
   }
 
   getSingleArtist(artistId: string): Observable<any> {
-    const artistEndpoint = `${environment.spotifyUrl}/artists/${artistId}?locale=en_US`;
+    const artistEndpoint = `${environment.spotifyUrl}/artists/${artistId}`;
     return this.makeRequest(() => this.http.get(artistEndpoint));
   }
 
-  getSeveralArtists(artistIds: string[]): Observable<any> {
+  getArtistsByIds(artistIds: string[]): Observable<any> {
     const uniqueIds = Array.from(new Set(artistIds.filter(Boolean)));
     if (uniqueIds.length === 0) return of({ artists: [] });
 
-    const ids = uniqueIds.join(',');
-    const artistsEndpoint = `${environment.spotifyUrl}/artists?ids=${ids}&locale=en_US`;
-    return this.makeRequest(() => this.http.get(artistsEndpoint)).pipe(
-      catchError(batchError => {
-        if (![400, 403, 404].includes(batchError?.status)) {
-          return throwError(() => batchError);
-        }
-        console.warn('[SpotifyDataService] Artist batch endpoint unavailable; using individual requests.', batchError);
-        return from(uniqueIds).pipe(
-          mergeMap(id => this.getSingleArtist(id).pipe(catchError(() => of(null))), 4),
-          toArray(),
-          map(artists => ({ artists: artists.filter(Boolean) }))
-        );
-      })
+    return from(uniqueIds).pipe(
+      mergeMap(id => this.getSingleArtist(id).pipe(catchError(() => of(null))), 4),
+      toArray(),
+      map(artists => ({ artists: artists.filter(Boolean) }))
     );
   }
 
-  getSeveralTracks(trackIds: string[]): Observable<any> {
+  getTracksByIds(trackIds: string[]): Observable<any> {
     const uniqueIds = Array.from(new Set(trackIds.filter(Boolean)));
     if (uniqueIds.length === 0) return of({ tracks: [] });
 
-    const ids = uniqueIds.join(',');
-    const endpoint = `${environment.spotifyUrl}/tracks?ids=${ids}`;
-    return this.makeRequest(() => this.http.get(endpoint)).pipe(
-      catchError(batchError => {
-        if (![400, 403, 404].includes(batchError?.status)) {
-          return throwError(() => batchError);
-        }
-        console.warn('[SpotifyDataService] Track batch endpoint unavailable; using individual requests.', batchError);
-        return from(uniqueIds).pipe(
-          mergeMap(id => this.getSingleTrack(id).pipe(catchError(() => of(null))), 4),
-          toArray(),
-          map(tracks => ({ tracks: tracks.filter(Boolean) }))
-        );
-      })
+    return from(uniqueIds).pipe(
+      mergeMap(id => this.getSingleTrack(id).pipe(catchError(() => of(null))), 4),
+      toArray(),
+      map(tracks => ({ tracks: tracks.filter(Boolean) }))
     );
   }
 
@@ -154,14 +149,8 @@ export class SpotifyDataService {
     return this.makeRequest(() => this.http.get(trackEndpoint));
   }
 
-  getSeveralAudioFeatures(trackIds: string[]): Observable<any> {
-    const ids = trackIds.join(',');
-    const endpoint = `${environment.spotifyUrl}/audio-features?ids=${ids}`;
-    return this.makeRequest(() => this.http.get(endpoint));
-  }
-
   getUserTopArtists(timeRange: string, limit: number, offset: number): Observable<any> {
-    const endpoint = `${environment.spotifyUrl}/me/top/artists?time_range=${timeRange}&limit=${limit}&offset=${offset}&locale=en_US`;
+    const endpoint = `${environment.spotifyUrl}/me/top/artists?time_range=${timeRange}&limit=${limit}&offset=${offset}`;
     return this.makeRequest(() => this.http.get(endpoint));
   }
 
@@ -175,9 +164,7 @@ export class SpotifyDataService {
     return this.makeRequest(() => this.http.get(endpoint));
   }
 
-  createPlaylist(userId: string, name: string, description: string = ''): Observable<any> {
-    // POST /users/{id}/playlists was removed for 2026 Development Mode apps.
-    // The current-user endpoint also avoids synthetic development user IDs.
+  createPlaylist(name: string, description: string = ''): Observable<any> {
     const endpoint = `${environment.spotifyUrl}/me/playlists`;
     return this.makeRequest(() => this.http.post(endpoint, { name, description, public: true }));
   }
@@ -188,12 +175,9 @@ export class SpotifyDataService {
   }
 
   private normalizePlaylistEntries(entries: any[]): any[] {
-    return entries.map(entry => {
-      if (!entry || entry.track) return entry;
-      return {
-        ...entry,
-        track: entry.item || null
-      };
-    });
+    return entries.map(entry => ({
+      ...entry,
+      track: entry?.item || null
+    }));
   }
 }

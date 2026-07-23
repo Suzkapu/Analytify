@@ -12,8 +12,8 @@
     
     <!-- Profile Info -->
     <div class="profile-header" style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 20px; flex-shrink: 0;">
-      <img alt="Artist Image" class="profile-image" [src]="artist.images && artist.images[0] ? artist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" (click)="openArtistClick()" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; cursor: pointer; border: 3px solid #1db954; transition: transform 0.2s ease; box-shadow: 0 8px 24px rgba(29, 185, 84, 0.15);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"/>
-      <h2 class="name" style="margin: 12px 0 6px 0; font-size: 2.2rem; font-weight: 800; color: #ffffff; cursor: pointer;" (click)="openArtistClick()">{{ artist.name }}</h2>
+      <img alt="Artist Image" class="profile-image" [src]="artist.images && artist.images[0] ? artist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" (click)="openArtistClick()" [style.cursor]="artist.external_urls?.spotify ? 'pointer' : 'default'" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #1db954; transition: transform 0.2s ease; box-shadow: 0 8px 24px rgba(29, 185, 84, 0.15);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"/>
+      <h2 class="name" style="margin: 12px 0 6px 0; font-size: 2.2rem; font-weight: 800; color: #ffffff;" [style.cursor]="artist.external_urls?.spotify ? 'pointer' : 'default'" (click)="openArtistClick()">{{ artist.name }}</h2>
       <div class="genres-list" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 500px;">
         <span *ngFor="let genre of artist.genres" style="display: inline-block; background: rgba(255, 255, 255, 0.08); padding: 4px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 600; color: #b3b3b3; text-transform: capitalize;">{{ genre }}</span>
         <span *ngIf="!artist.genres || !artist.genres.length" style="color: #666; font-size: 0.85rem;">No genres available</span>
@@ -27,17 +27,14 @@
     
     <div class="track-grid">
       <div *ngFor="let track of tracks" class="track-row-card" style="background: #242424; border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 12px; transition: all 0.2s ease;" onmouseover="this.style.background='#2a2a2a'; this.style.borderColor='rgba(29, 185, 84, 0.1)';" onmouseout="this.style.background='#242424'; this.style.borderColor='rgba(255, 255, 255, 0.03)';">
-        <img (click)="openTrackClick(track.external_urls?.spotify)" alt="Track Image" class="track-image" [src]="track.album?.images && track.album?.images[0] ? track.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" style="width: 46px; height: 46px; border-radius: 6px; cursor: pointer; object-fit: cover; border: 1px solid rgba(255,255,255,0.05); flex-shrink: 0;"/>
+        <img (click)="openTrackClick(track.external_urls?.spotify)" alt="Track Image" class="track-image" [src]="track.album?.images && track.album?.images[0] ? track.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" [style.cursor]="track.external_urls?.spotify ? 'pointer' : 'default'" style="width: 46px; height: 46px; border-radius: 6px; object-fit: cover; border: 1px solid rgba(255,255,255,0.05); flex-shrink: 0;"/>
         <div style="display: flex; flex-direction: column; min-width: 0; flex-grow: 1;">
-          <span (click)="openTrackClick(track.external_urls?.spotify)" class="track-name" style="font-size: 0.95rem; font-weight: 700; cursor: pointer; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;" onmouseover="this.style.color='#1db954'" onmouseout="this.style.color='#ffffff'">{{ track.name }}</span>
+          <span (click)="openTrackClick(track.external_urls?.spotify)" class="track-name" [style.cursor]="track.external_urls?.spotify ? 'pointer' : 'default'" style="font-size: 0.95rem; font-weight: 700; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;" onmouseover="this.style.color='#1db954'" onmouseout="this.style.color='#ffffff'">{{ track.name }}</span>
           <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
-            <span *ngIf="track.popularity !== undefined" style="font-size: 0.75rem; color: #b3b3b3; font-weight: 500; display: flex; align-items: center; gap: 4px;">
-              <i class="pi pi-chart-bar" style="font-size: 0.7rem; color: #1db954;"></i> Popularity: {{ track.popularity }}%
-            </span>
             <span *ngIf="track.explicit" style="background: rgba(255, 50, 50, 0.15); color: #ff5252; font-size: 0.65rem; font-weight: 800; padding: 1px 4px; border-radius: 4px; letter-spacing: 0.5px; text-transform: uppercase;">E</span>
           </div>
         </div>
-        <i class="pi pi-external-link" (click)="openTrackClick(track.external_urls?.spotify)" style="color: #666; cursor: pointer; font-size: 0.85rem;" onmouseover="this.style.color='#1db954'" onmouseout="this.style.color='#666'"></i>
+        <i class="pi pi-external-link" (click)="openTrackClick(track.external_urls?.spotify)" [style.cursor]="track.external_urls?.spotify ? 'pointer' : 'default'" style="color: #666; font-size: 0.85rem;" onmouseover="this.style.color='#1db954'" onmouseout="this.style.color='#666'"></i>
       </div>
     </div>
 

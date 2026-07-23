@@ -28,16 +28,14 @@
         </div>
         <img (click)="openTrackClick(item.track.external_urls?.spotify); $event.stopPropagation()"
           [src]="item.track.album?.images && item.track.album.images[0] ? item.track.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
-          alt="Track Cover" class="track-cover" style="cursor: pointer;">
+          alt="Track Cover" class="track-cover"
+          [class.is-clickable]="!!item.track.external_urls?.spotify">
         <div class="track-info">
           <span class="track-title">{{ item.track.name }}</span>
           <span class="track-artist">{{ getTrackArtist(item.track) }}</span>
         </div>
         <div class="track-meta">
           <span *ngIf="item.track.explicit" class="explicit-badge">E</span>
-          <span class="popularity-badge">
-            <i class="pi pi-chart-bar"></i> {{ item.track.popularity }}%
-          </span>
         </div>
       </div>
     </div>

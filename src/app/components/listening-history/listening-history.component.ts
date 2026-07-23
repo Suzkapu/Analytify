@@ -2,7 +2,6 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { SpotifyDataService } from '../../services/spotify-data/spotify-data.service';
 import { SpotifyAuthService } from '../../services/auth/spotify-auth.service';
 import { StorageService } from '../../services/storage/storage.service';
-import { Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase/supabase.service';
 
 @Component({
@@ -18,7 +17,6 @@ export class ListeningHistoryComponent implements OnInit {
   constructor(
     private spotifyDataService: SpotifyDataService,
     public authService: SpotifyAuthService,
-    private router: Router,
     private storageService: StorageService,
     private supabaseService: SupabaseService
   ) { }
@@ -105,20 +103,6 @@ export class ListeningHistoryComponent implements OnInit {
           this.supabaseService.syncListeningHistory(supabaseUserId, finalTracks).catch(error => {
             console.warn('[History] Failed to persist listening history:', error);
           });
-
-          const trackIds = finalTracks.map(item => item.track?.id).filter(id => !!id);
-          if (trackIds.length > 0) {
-            this.spotifyDataService.getSeveralAudioFeatures(trackIds).subscribe({
-              next: (res: any) => {
-                if (res && res.audio_features) {
-                  this.supabaseService.syncTrackAudioFeatures(res.audio_features).catch(error => {
-                    console.warn('[History] Failed to persist audio features:', error);
-                  });
-                }
-              },
-              error: (err) => console.warn('Failed to fetch audio features for recently played:', err)
-            });
-          }
         }
         
         this.isLoadingRecentlyPlayed = false;

@@ -2,7 +2,6 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { SpotifyDataService } from '../../services/spotify-data/spotify-data.service';
 import { SpotifyAuthService } from '../../services/auth/spotify-auth.service';
 import { StorageService } from '../../services/storage/storage.service';
-import { Router, ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { SupabaseService } from '../../services/supabase/supabase.service';
 import { ImageHealingService } from '../../services/image-healing/image-healing.service';
@@ -61,7 +60,6 @@ export class UserStatsComponent implements OnInit {
   constructor(
     private spotifyDataService: SpotifyDataService,
     public authService: SpotifyAuthService,
-    private router: Router,
     private storageService: StorageService,
     private supabaseService: SupabaseService,
     private imageHealingService: ImageHealingService
@@ -110,7 +108,6 @@ export class UserStatsComponent implements OnInit {
     const tracksKey = `${userId}_stats_${range}_tracks`;
     const artistsKey = `${userId}_stats_${range}_artists`;
     const genresKey = `${userId}_stats_${range}_genres`;
-    const artistDetailsVersionKey = `${userId}_stats_${range}_artistDetailsVersion`;
     let lastUpdated = this.storageService.getItem(lastUpdatedKey);
     let isExpired = this.isCacheExpired(lastUpdated);
     let cachedTracks = this.storageService.getItem(tracksKey);
@@ -138,26 +135,11 @@ export class UserStatsComponent implements OnInit {
             return;
           }
 
-          // Self-heal: If cache has German genres, discard it to fetch fresh English data.
-          const hasGermanGenres = parsedGenres.some((genre: any) =>
-            genre.name && (
-              genre.name.toLowerCase().startsWith('deutsch') ||
-              genre.name.toLowerCase().startsWith('argentinisch') ||
-              genre.name.toLowerCase().startsWith('schwedisch') ||
-              genre.name.toLowerCase().startsWith('finnisch') ||
-              genre.name.toLowerCase().startsWith('keltisch')
-            )
-          );
-          if (hasGermanGenres) {
-            console.log('[Stats] German genres detected in cache. Invalidating cache to reload English data.');
-            isCacheIncomplete = true;
-          } else if (parsedArtists.length > 0 && !parsedArtists.every(artist => 'genres' in artist)) {
-            isCacheIncomplete = true;
-            console.log('[Stats] Cache is incomplete (artists missing genres). Forcing cloud or Spotify fallback.');
-          } else if (this.storageService.getItem(artistDetailsVersionKey) !== 'v2') {
-            isCacheIncomplete = true;
-            console.log('[Stats] Artist details cache is outdated. Refreshing it from Spotify.');
-          }
+          parsedArtists.forEach(artist => {
+            if (!Array.isArray(artist.genres)) {
+              artist.genres = [];
+            }
+          });
         } catch (e) {
           isCacheIncomplete = true;
         }
@@ -173,8 +155,7 @@ export class UserStatsComponent implements OnInit {
         tracksKey,
         artistsKey,
         genresKey,
-        lastUpdatedKey,
-        artistDetailsVersionKey
+        lastUpdatedKey
       ]);
       lastUpdated = this.storageService.getItem(lastUpdatedKey);
       isExpired = this.isCacheExpired(lastUpdated);
@@ -192,8 +173,7 @@ export class UserStatsComponent implements OnInit {
         this.calculateGenres();
         this.saveHistorySnapshot(userId, range);
         this.isLoading = false;
-        // A valid daily cache must not trigger another Spotify metadata pull.
-        this.enrichArtistGenresFromDb(userId, range, false);
+        this.enrichMissingArtistGenresFromDb(userId, range);
       } catch (e) {
         console.warn('Failed to parse validated user stats cache:', e);
         isCacheIncomplete = true;
@@ -205,9 +185,7 @@ export class UserStatsComponent implements OnInit {
       if (this.authService.isBackupActive() && supabaseUserId) {
         this.isLoading = true;
         const hasSnapshot = await this.supabaseService.hasStatsSnapshotForToday(supabaseUserId, range);
-        const hasCurrentArtistDetails =
-          this.storageService.getItem(artistDetailsVersionKey) === 'v2';
-        if (hasSnapshot && hasCurrentArtistDetails) {
+        if (hasSnapshot) {
           console.log(`[Stats] Cache missing/expired. Fetching today's stats snapshot for ${range} directly from Supabase Cloud...`);
           const dbSnapshot = await this.supabaseService.loadTodayStatsSnapshot(supabaseUserId, range);
           if (dbSnapshot) {
@@ -223,11 +201,9 @@ export class UserStatsComponent implements OnInit {
 
             this.saveHistorySnapshot(userId, range);
             this.isLoading = false;
-            this.enrichArtistGenresFromDb(userId, range, false);
+            this.enrichMissingArtistGenresFromDb(userId, range);
             return; // Skip Spotify API call entirely!
           }
-        } else if (hasSnapshot) {
-          console.log('[Stats] Today\'s snapshot contains outdated artist genres. Refreshing top artists from Spotify once.');
         }
       }
 
@@ -260,17 +236,13 @@ export class UserStatsComponent implements OnInit {
           this.storageService.setItem(artistsKey, JSON.stringify(this.topArtists));
           this.storageService.setItem(genresKey, JSON.stringify(this.topGenres));
           this.storageService.setItem(lastUpdatedKey, Date.now().toString());
-          this.storageService.setItem(artistDetailsVersionKey, 'v2');
 
           // If backup is active, sync to Supabase
           if (this.authService.isBackupActive() && supabaseUserId) {
-            let totalPopularity = 0;
             let explicitCount = 0;
             this.topTracks.forEach(track => {
-              totalPopularity += track.popularity || 0;
               if (track.explicit) explicitCount++;
             });
-            const avgPopularity = this.topTracks.length > 0 ? Math.round(totalPopularity / this.topTracks.length) : 0;
             const explicitPercentage = this.topTracks.length > 0 ? Math.round((explicitCount / this.topTracks.length) * 100) : 0;
             const genreDiversity = this.topGenres.length;
 
@@ -278,7 +250,6 @@ export class UserStatsComponent implements OnInit {
               await this.supabaseService.saveStatsSnapshot(
                 supabaseUserId,
                 range,
-                avgPopularity,
                 explicitPercentage,
                 genreDiversity,
                 this.topTracks,
@@ -289,19 +260,6 @@ export class UserStatsComponent implements OnInit {
               console.warn('[Stats] Failed to persist fresh stats snapshot:', error);
             }
 
-            const trackIds = this.topTracks.map(t => t.id).filter(id => !!id);
-            if (trackIds.length > 0) {
-              this.spotifyDataService.getSeveralAudioFeatures(trackIds).subscribe({
-                next: (res: any) => {
-                  if (res && res.audio_features) {
-                    this.supabaseService.syncTrackAudioFeatures(res.audio_features).catch(error => {
-                      console.warn('[Stats] Failed to persist audio features:', error);
-                    });
-                  }
-                },
-                error: (err) => console.warn('Failed to fetch audio features for top tracks:', err)
-              });
-            }
           }
 
           this.saveHistorySnapshot(userId, range);
@@ -310,8 +268,7 @@ export class UserStatsComponent implements OnInit {
           // but guards against Spotify returning nulls
           this.imageHealingService.healArtistImages(this.topArtists, `${userId}_stats_${range}_artists`);
           this.imageHealingService.healTrackImages(this.topTracks, `${userId}_stats_${range}_tracks`);
-          // Backfill empty genres from DB in background
-          await this.enrichArtistGenresFromDb(userId, range, true);
+          await this.enrichMissingArtistGenresFromDb(userId, range);
         },
         error: (err) => {
           console.error('Failed to load user stats:', err);
@@ -357,55 +314,17 @@ export class UserStatsComponent implements OnInit {
     }).slice(0, 15); // Top 15 genres
   }
 
-  private getCachedArtistGenres(userId: string, artistIds: string[]): Map<string, string[]> {
-    const result = new Map<string, string[]>();
-    const unresolvedIds = new Set(artistIds);
-    if (unresolvedIds.size === 0) return result;
-
-    const favoriteArtistsKey = `${userId}_fav`;
-    const cacheKeys = this.storageService.getCacheKeys();
-    const artistCacheKeys = [
-      favoriteArtistsKey,
-      ...cacheKeys.filter(key => key.startsWith(`${userId}_`) && key !== favoriteArtistsKey)
-    ];
-
-    for (const key of artistCacheKeys) {
-      if (unresolvedIds.size === 0) break;
-
-      const cachedValue = this.storageService.getItem(key);
-      if (!cachedValue || !cachedValue.trimStart().startsWith('[')) continue;
-
-      try {
-        const cachedItems = JSON.parse(cachedValue);
-        if (!Array.isArray(cachedItems)) continue;
-
-        cachedItems.forEach((artist: any) => {
-          if (!artist?.id || !unresolvedIds.has(artist.id)) return;
-
-          const genres = (Array.isArray(artist.genres)
-            ? artist.genres
-            : (artist.genre ? [artist.genre] : [])
-          ).filter((genre: unknown): genre is string =>
-            typeof genre === 'string' &&
-            genre.trim().length > 0 &&
-            genre.trim().toLowerCase() !== 'artist'
-          );
-
-          if (genres.length > 0) {
-            result.set(artist.id, genres);
-            unresolvedIds.delete(artist.id);
-          }
-        });
-      } catch {
-        // This cache entry is not an artist collection.
-      }
-    }
-
-    return result;
-  }
-
-  private async enrichArtistGenresFromDb(userId: string, range: string, allowSpotifyFallback: boolean) {
+  private async enrichMissingArtistGenresFromDb(userId: string, range: string) {
     const artists = this.topArtists;
+    if (!this.authService.isBackupActive()) return;
+
+    const missingIds = Array.from(new Set(
+      artists
+        .filter(artist => artist.id && (!artist.genres || artist.genres.length === 0))
+        .map(artist => artist.id)
+    ));
+    if (missingIds.length === 0) return;
+
     const persistEnrichedArtists = () => {
       // A range change may have replaced topArtists while an async lookup was running.
       if (this.topArtists !== artists || this.selectedRange !== range) return;
@@ -417,16 +336,12 @@ export class UserStatsComponent implements OnInit {
 
       const supabaseUserId = this.authService.getSupabaseUserId();
       if (this.authService.isBackupActive() && supabaseUserId) {
-        const avgPopularity = this.topTracks.length > 0
-          ? Math.round(this.topTracks.reduce((sum, track) => sum + (track.popularity || 0), 0) / this.topTracks.length)
-          : 0;
         const explicitPercentage = this.topTracks.length > 0
           ? Math.round((this.topTracks.filter(track => track.explicit).length / this.topTracks.length) * 100)
           : 0;
         this.supabaseService.saveStatsSnapshot(
           supabaseUserId,
           range,
-          avgPopularity,
           explicitPercentage,
           this.topGenres.length,
           this.topTracks,
@@ -437,94 +352,25 @@ export class UserStatsComponent implements OnInit {
         });
       }
     };
-    const applyGenres = (genreMap: Map<string, string[]>): boolean => {
-      let enriched = false;
+
+    try {
+      const genreMap = await this.supabaseService.lookupArtistGenres(missingIds);
+      let enriched = 0;
       artists.forEach(artist => {
-        if (artist.id && (!artist.genres || artist.genres.length === 0) && genreMap.has(artist.id)) {
-          artist.genres = genreMap.get(artist.id)!;
-          enriched = true;
+        const genres = artist.id ? genreMap.get(artist.id) : null;
+        if ((!artist.genres || artist.genres.length === 0) && genres?.length) {
+          artist.genres = [...genres];
+          enriched++;
         }
       });
-      return enriched;
-    };
 
-    let missingIds = artists
-      .filter(a => a.id && (!a.genres || a.genres.length === 0))
-      .map(a => a.id);
-
-    if (missingIds.length > 0) {
-      // Playlist artist caches (especially Favourite Tracks) may already contain
-      // the full Spotify artist profile even when a stats response omits genres.
-      const cachedGenreMap = this.getCachedArtistGenres(userId, missingIds);
-      if (applyGenres(cachedGenreMap)) {
-        console.log(`[Stats] Enriched ${cachedGenreMap.size} artists with genres from local artist cache`);
-        if (!allowSpotifyFallback) {
-          persistEnrichedArtists();
-        }
+      if (enriched > 0) {
+        console.log(`[Stats] Restored genres for ${enriched} artists from Supabase`);
+        persistEnrichedArtists();
       }
-
-      missingIds = artists
-        .filter(a => a.id && (!a.genres || a.genres.length === 0))
-        .map(a => a.id);
-
-      if (missingIds.length > 0) {
-        try {
-          // 2. Check the shared database backup
-          const genreMap = await this.supabaseService.lookupArtistGenres(missingIds);
-          if (applyGenres(genreMap)) {
-            console.log(`[Stats] Enriched ${genreMap.size} artists with genres from database`);
-            if (!allowSpotifyFallback) {
-              persistEnrichedArtists();
-            }
-          }
-        } catch (e) {
-          console.warn('[Stats] Failed to enrich artist genres from database:', e);
-        }
-      }
+    } catch (error) {
+      console.warn('[Stats] Failed to restore artist genres from Supabase:', error);
     }
-
-    if (!allowSpotifyFallback) return;
-
-    // Only artists that are still missing genre data need the catalog fallback.
-    // Empty Spotify arrays must not overwrite genres supplied by top-artists,
-    // local cache, or Supabase.
-    const spotifyArtistIds = Array.from(new Set(
-      artists
-        .filter(a => a.id && (!a.genres || a.genres.length === 0))
-        .map(a => a.id)
-    ));
-    if (spotifyArtistIds.length === 0) return;
-
-    console.log(`[Stats] Refreshing genres from Spotify artist profiles for ${spotifyArtistIds.length} artists...`);
-    this.spotifyDataService.getSeveralArtists(spotifyArtistIds).subscribe({
-      next: (res: any) => {
-        const apiArtistMap = new Map<string, any>();
-        (res.artists || []).forEach((art: any) => {
-          if (art?.id && Array.isArray(art.genres) && art.genres.length > 0) {
-            apiArtistMap.set(art.id, art);
-          }
-        });
-
-        // Do not write a completed cache marker for a range that the user
-        // navigated away from while the request was running.
-        if (this.topArtists !== artists || this.selectedRange !== range) return;
-
-        let replaced = 0;
-        artists.forEach(artist => {
-          const spotifyArtist = artist.id ? apiArtistMap.get(artist.id) : null;
-          if (!spotifyArtist || (artist.genres && artist.genres.length > 0)) return;
-
-          artist.genres = [...spotifyArtist.genres];
-          replaced++;
-        });
-
-        if (replaced > 0) {
-          console.log(`[Stats] Filled genres for ${replaced} artists from Spotify artist profiles`);
-          persistEnrichedArtists();
-        }
-      },
-      error: (err) => console.warn('[Stats] Failed to fetch artist catalog details from Spotify:', err)
-    });
   }
 
   openTrackClick(url: string) {
@@ -545,13 +391,12 @@ export class UserStatsComponent implements OnInit {
     this.isCreatingPlaylist = true;
     this.playlistCreationSuccessMessage = '';
     
-    const userId = this.authService.getUserId() || 'anonymous';
     const rangeLabel = this.selectedRange === 'short_term' ? 'Last 4 Weeks' : 
                        this.selectedRange === 'medium_term' ? 'Last 6 Months' : 'Last Year';
     const playlistName = `Top Tracks - ${rangeLabel}`;
     const description = `My top tracks on Spotify for ${rangeLabel}, generated by Analytify.`;
 
-    this.spotifyDataService.createPlaylist(userId, playlistName, description).subscribe({
+    this.spotifyDataService.createPlaylist(playlistName, description).subscribe({
       next: (playlist: any) => {
         const trackUris = this.topTracks.map(t => t.uri || (t.external_urls?.spotify ? `spotify:track:${t.external_urls.spotify.split('/').pop()?.split('?')[0]}` : ''))
                                         .filter(uri => !!uri);
@@ -727,7 +572,6 @@ export class UserStatsComponent implements OnInit {
           artist: this.getTrackArtist(t),
           albumCover: this.getTrackCover(t),
           explicit: t.explicit || false,
-          popularity: t.popularity || 0,
           spotifyUrl: this.getTrackUrl(t)
         })),
         topArtists: this.topArtists.map(a => ({
@@ -827,21 +671,17 @@ export class UserStatsComponent implements OnInit {
       return;
     }
 
-    // Calculate current metrics
-    let totalPopularity = 0;
     let explicitCount = 0;
     this.topTracks.forEach(track => {
-      totalPopularity += track.popularity || 0;
       if (track.explicit) explicitCount++;
     });
-    const avgPopularity = this.topTracks.length > 0 ? Math.round(totalPopularity / this.topTracks.length) : 0;
     const explicitPercentage = this.topTracks.length > 0 ? Math.round((explicitCount / this.topTracks.length) * 100) : 0;
     const genreDiversity = this.topGenres.length;
 
-    this.writeRealSnapshot(userId, range, avgPopularity, explicitPercentage, genreDiversity);
+    this.writeRealSnapshot(userId, range, explicitPercentage, genreDiversity);
   }
 
-  private writeRealSnapshot(userId: string, range: string, avgPopularity: number, explicitPercentage: number, genreDiversity: number) {
+  private writeRealSnapshot(userId: string, range: string, explicitPercentage: number, genreDiversity: number) {
     this.historyWriteQueue = this.historyWriteQueue.then(() =>
       this.storageService.getStatsHistory(userId, range).then(history => {
       const lastEntry = history.length > 0 ? history[history.length - 1] : null;
@@ -861,7 +701,6 @@ export class UserStatsComponent implements OnInit {
         userId: userId,
         range: range,
         timestamp: existingToday?.timestamp || Date.now(),
-        avgPopularity: avgPopularity,
         explicitPercentage: explicitPercentage,
         genreDiversity: genreDiversity,
         topGenres: this.topGenres.map(g => ({ name: g.name, percentage: g.percentage, count: g.count })),
@@ -871,7 +710,6 @@ export class UserStatsComponent implements OnInit {
           artist: t.artists && t.artists[0] ? t.artists[0].name : '',
           albumCover: t.album?.images && t.album.images[0] ? t.album.images[0].url : '',
           explicit: t.explicit || false,
-          popularity: t.popularity || 0,
           spotifyUrl: t.external_urls?.spotify || ''
         })),
         topArtists: this.topArtists.map(a => ({
@@ -879,7 +717,7 @@ export class UserStatsComponent implements OnInit {
           name: a.name,
           imageUrl: a.images && a.images[0] ? a.images[0].url : '',
           spotifyUrl: a.external_urls?.spotify || '',
-          genre: a.genres && a.genres[0] ? a.genres[0] : ''
+          genres: Array.isArray(a.genres) ? [...a.genres] : []
         }))
       };
       if (existingToday?.id !== undefined) {
@@ -991,13 +829,11 @@ export class UserStatsComponent implements OnInit {
 
               for (const localSnap of localOnlySnapshots) {
                 const dateStr = toDateKey(localSnap.timestamp);
-                let totalPop = 0; let explicitCount = 0;
+                let explicitCount = 0;
                 (localSnap.topTracks || []).forEach((t: any) => {
-                  totalPop += t.popularity || 0;
                   if (t.explicit) explicitCount++;
                 });
                 const trackCount = (localSnap.topTracks || []).length;
-                const avgPop = trackCount > 0 ? Math.round(totalPop / trackCount) : 0;
                 const explPct = trackCount > 0 ? Math.round((explicitCount / trackCount) * 100) : 0;
                 const genreDiversity = (localSnap.topGenres || []).length;
 
@@ -1005,7 +841,6 @@ export class UserStatsComponent implements OnInit {
                 await this.supabaseService.saveStatsSnapshot(
                   supabaseUserId,
                   range,
-                  avgPop,
                   explPct,
                   genreDiversity,
                   localSnap.topTracks || [],

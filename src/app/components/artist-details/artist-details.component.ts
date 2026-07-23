@@ -55,6 +55,20 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
     return lastUpdated < cutoff.getTime();
   }
 
+  private async restoreMissingGenres(artist: any): Promise<any> {
+    if (
+      !artist?.id ||
+      (Array.isArray(artist.genres) && artist.genres.length > 0) ||
+      !this.authService.isBackupActive()
+    ) {
+      return artist;
+    }
+
+    const genreMap = await this.supabaseService.lookupArtistGenres([artist.id]);
+    const genres = genreMap.get(artist.id);
+    return genres?.length ? { ...artist, genres: [...genres] } : artist;
+  }
+
   async loadArtistDetails(id: string) {
     const userId = this.authService.getUserId() || 'anonymous';
     const artistCacheKey = `${userId}_artist_${id}`;
@@ -75,7 +89,7 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
 
     let cachedArtist = readArtistCache();
     if (cachedArtist) {
-      this.artist = cachedArtist;
+      this.artist = await this.restoreMissingGenres(cachedArtist);
       return;
     }
 
@@ -87,7 +101,7 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
         const found = parsed.find((a: any) => a.id === id);
         if (found) {
           console.log(this.authService.isBackupActive() ? "[ArtistDetails] Loading artist details from Supabase Cloud Backup (Local Cache)" : "[ArtistDetails] Loading artist details from Local Storage Cache (Cloud Backup disabled)");
-          this.artist = found;
+          this.artist = await this.restoreMissingGenres(found);
           return;
         }
       }

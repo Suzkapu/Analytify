@@ -38,6 +38,8 @@ export class PlaylistLoadTask {
 
   trackIndexCounter: number = 0;
   requestedArtistIds = new Set<string>();
+  genreHydrationStarted = false;
+  genreHydrationComplete = false;
   refreshingArtists: any[] = [];
   private activeSub = new Subscription();
   
@@ -168,13 +170,12 @@ export class PlaylistLoaderService {
   private triggerApiLoad(task: PlaylistLoadTask, userId: string, isBackgroundRefresh: boolean, allowFullFallback: boolean = false) {
     console.log(`[PlaylistLoaderService] Loading playlist ${task.playlistId} from API`);
     task.requestedArtistIds.clear();
+    task.genreHydrationStarted = false;
+    task.genreHydrationComplete = false;
     task.loadedArtistsDetailsCount = 0;
     task.totalUniqueArtists = 0;
 
     const storedArtists = this.storageService.getItem(`${userId}_${task.playlistId}`);
-    const version = this.storageService.getItem(`${userId}_${task.playlistId}_cacheVersion`);
-    const isOldCache = storedArtists && version !== 'v6';
-
     let cachedArtists: any[] = [];
     let cachedTracksCount = 0;
     if (storedArtists) {
@@ -232,7 +233,7 @@ export class PlaylistLoaderService {
     task.loadedTracksCount = 0;
     task.emitUpdate();
 
-    if (task.playlistId === 'fav' && storedArtists && !isOldCache) {
+    if (task.playlistId === 'fav' && storedArtists) {
       console.log("Favourite Tracks detected. Starting incremental load.");
       this.loadNewerFavTracks(task, userId, 0, 50, cachedArtists, targetArray, allowFullFallback);
     } else {
@@ -633,7 +634,7 @@ export class PlaylistLoaderService {
     const batch = pendingIds.slice(0, 50);
     batch.forEach(id => task.requestedArtistIds.add(id));
 
-    const sub = this.spotifyDataService.getSeveralArtists(batch).subscribe({
+    const sub = this.spotifyDataService.getArtistsByIds(batch).subscribe({
       next: (res: any) => {
         task.error = null;
         const artistMap = new Map<string, any>();
@@ -734,6 +735,22 @@ export class PlaylistLoaderService {
   private checkCompletion(task: PlaylistLoadTask, userId: string | null) {
     const targetArray = task.isRefreshing ? task.refreshingArtists : task.artists;
     if (!task.isLoadingTracks && task.requestedArtistIds.size >= task.totalUniqueArtists) {
+      if (!task.genreHydrationComplete) {
+        if (!task.genreHydrationStarted) {
+          task.genreHydrationStarted = true;
+          this.restoreMissingGenresFromSupabase(targetArray)
+            .catch(error => {
+              console.warn('[PlaylistLoaderService] Failed to restore artist genres from Supabase:', error);
+            })
+            .finally(() => {
+              task.genreHydrationComplete = true;
+              task.emitUpdate();
+              this.checkCompletion(task, userId);
+            });
+        }
+        return;
+      }
+
       task.isLoadingArtists = false;
       
       if (task.isRefreshing) {
@@ -750,6 +767,25 @@ export class PlaylistLoaderService {
     }
   }
 
+  private async restoreMissingGenresFromSupabase(artists: any[]): Promise<void> {
+    if (!this.authService.isBackupActive()) return;
+
+    const missingIds = Array.from(new Set(
+      artists
+        .filter(artist => artist.id && (!artist.genres || artist.genres.length === 0))
+        .map(artist => artist.id)
+    ));
+    if (missingIds.length === 0) return;
+
+    const genreMap = await this.supabaseService.lookupArtistGenres(missingIds);
+    artists.forEach(artist => {
+      const genres = artist.id ? genreMap.get(artist.id) : null;
+      if ((!artist.genres || artist.genres.length === 0) && genres?.length) {
+        artist.genres = [...genres];
+      }
+    });
+  }
+
   private setSessionStorage(task: PlaylistLoadTask, userId: string) {
     const cleanedArtists = task.artists.map((artist: any) => ({
       id: artist.id,
@@ -760,7 +796,6 @@ export class PlaylistLoaderService {
         id: track.id,
         name: track.name,
         artists: track.artists ? track.artists.map((a: any) => ({ id: a.id, name: a.name })) : [],
-        popularity: track.popularity,
         explicit: track.explicit,
         duration_ms: track.duration_ms,
         external_urls: track.external_urls ? { spotify: track.external_urls.spotify } : undefined,
@@ -777,7 +812,6 @@ export class PlaylistLoaderService {
     this.storageService.setItem(`${userId}_${task.playlistId}_Amount`, JSON.stringify(task.totalTracks));
     this.storageService.setItem(`${userId}_${task.playlistId}_Name`, JSON.stringify(task.playlistName));
     this.storageService.setItem(`${userId}_${task.playlistId}_lastUpdated`, Date.now().toString());
-    this.storageService.setItem(`${userId}_${task.playlistId}_cacheVersion`, 'v6');
 
   }
 }

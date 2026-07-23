@@ -106,20 +106,6 @@
       </div>
     </div>
 
-    <!-- Average Popularity -->
-    <div class="metric-card" style="background: #181818; border: 1px solid rgba(255,255,255,0.03); border-radius: 16px; padding: 20px; text-align: left; display: flex; align-items: center; gap: 16px;">
-      <div style="background: rgba(29, 185, 84, 0.1); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-        <i class="pi pi-chart-line" style="color: #1db954; font-size: 1.4rem;"></i>
-      </div>
-      <div style="flex-grow: 1;">
-        <div style="font-size: 0.85rem; color: #a7a7a7; font-weight: 600;">Avg Popularity</div>
-        <div style="font-size: 1.8rem; font-weight: 800; color: #ffffff; margin-top: 4px; display: flex; align-items: baseline; gap: 4px;">
-          {{ averagePopularity }}<span style="font-size: 1rem; color: #a7a7a7;">%</span>
-        </div>
-      </div>
-    </div>
-
-
   </div>
 
   <!-- Two-Column Layout -->
@@ -159,7 +145,9 @@
         <div style="display: flex; flex-direction: column; gap: 16px;">
           
           <!-- Oldest Song -->
-          <div *ngIf="oldestTrack" class="highlight-track-card" (click)="openTrackClick(oldestTrack.external_urls?.spotify)">
+          <div *ngIf="oldestTrack" class="highlight-track-card"
+            [class.is-clickable]="!!oldestTrack.external_urls?.spotify"
+            (click)="openTrackClick(oldestTrack.external_urls?.spotify)">
             <img [src]="oldestTrack.album?.images && oldestTrack.album?.images[0] ? oldestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="Album Art" class="highlight-track-art">
             <div class="highlight-track-info">
               <span class="highlight-track-tag tag-green">Oldest Release</span>
@@ -172,7 +160,9 @@
           </div>
 
           <!-- Newest Song -->
-          <div *ngIf="newestTrack" class="highlight-track-card" (click)="openTrackClick(newestTrack.external_urls?.spotify)">
+          <div *ngIf="newestTrack" class="highlight-track-card"
+            [class.is-clickable]="!!newestTrack.external_urls?.spotify"
+            (click)="openTrackClick(newestTrack.external_urls?.spotify)">
             <img [src]="newestTrack.album?.images && newestTrack.album?.images[0] ? newestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="Album Art" class="highlight-track-art">
             <div class="highlight-track-info">
               <span class="highlight-track-tag tag-green">Newest Release</span>
@@ -196,7 +186,9 @@
         <div style="display: flex; flex-direction: column; gap: 16px;">
           
           <!-- Shortest Song -->
-          <div *ngIf="shortestTrack" class="highlight-track-card" (click)="openTrackClick(shortestTrack.external_urls?.spotify)">
+          <div *ngIf="shortestTrack" class="highlight-track-card"
+            [class.is-clickable]="!!shortestTrack.external_urls?.spotify"
+            (click)="openTrackClick(shortestTrack.external_urls?.spotify)">
             <img [src]="shortestTrack.album?.images && shortestTrack.album?.images[0] ? shortestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="Album Art" class="highlight-track-art">
             <div class="highlight-track-info">
               <span class="highlight-track-tag tag-grey">Shortest Song</span>
@@ -209,7 +201,9 @@
           </div>
 
           <!-- Longest Song -->
-          <div *ngIf="longestTrack" class="highlight-track-card" (click)="openTrackClick(longestTrack.external_urls?.spotify)">
+          <div *ngIf="longestTrack" class="highlight-track-card"
+            [class.is-clickable]="!!longestTrack.external_urls?.spotify"
+            (click)="openTrackClick(longestTrack.external_urls?.spotify)">
             <img [src]="longestTrack.album?.images && longestTrack.album?.images[0] ? longestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="Album Art" class="highlight-track-art">
             <div class="highlight-track-info">
               <span class="highlight-track-tag tag-grey">Longest Song</span>
