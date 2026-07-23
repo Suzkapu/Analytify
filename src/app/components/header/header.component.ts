@@ -29,26 +29,37 @@ export class HeaderComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit() {
-    this.loadUserProfile();
+  async ngOnInit() {
+    await this.loadUserProfile();
   }
 
 
-  loadUserProfile() {
+  async loadUserProfile() {
     const userId = this.authService.getUserId() || 'anonymous';
     const cached = this.storageService.getItem(`${userId}_profile_pic`);
     if (cached !== null) {
       this.profilePicUrl = cached || null;
-    } else {
-      this.spotifyDataService.getCurrentUser().subscribe({
-        next: (user: any) => {
-          const pic = user.images && user.images[0] ? user.images[0].url : '';
-          this.storageService.setItem(`${userId}_profile_pic`, pic);
-          this.profilePicUrl = pic || null;
-        },
-        error: (err) => console.error('Failed to load user profile:', err)
-      });
+      return;
     }
+
+    const supabaseUserId = this.authService.getSupabaseUserId();
+    if (supabaseUserId) {
+      const dbProfile = await this.supabaseService.loadUserProfile(supabaseUserId);
+      if (dbProfile?.profile_pic_url) {
+        this.storageService.setItem(`${userId}_profile_pic`, dbProfile.profile_pic_url);
+        this.profilePicUrl = dbProfile.profile_pic_url;
+        return;
+      }
+    }
+
+    this.spotifyDataService.getCurrentUser().subscribe({
+      next: (user: any) => {
+        const pic = user.images && user.images[0] ? user.images[0].url : '';
+        this.storageService.setItem(`${userId}_profile_pic`, pic);
+        this.profilePicUrl = pic || null;
+      },
+      error: (err) => console.error('Failed to load user profile:', err)
+    });
   }
 
   toggleSettingsDropdown(event: Event) {

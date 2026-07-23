@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS users (
     display_name VARCHAR(255),
     profile_pic_url TEXT,
     spotify_refresh_token TEXT,
-    last_synced_at TIMESTAMPTZ, -- Optimization: Tracks last successful sync to avoid API rate limits
+    last_synced_at TIMESTAMPTZ, -- Coarse daily stats completion marker; per-range snapshots remain authoritative
     backup_active BOOLEAN DEFAULT false NOT NULL, -- Setting: Controls if automated database backup is enabled for the user
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );

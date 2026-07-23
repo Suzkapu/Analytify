@@ -218,6 +218,26 @@ export class StorageService {
     return Array.from(this.inMemoryCache.keys());
   }
 
+  /**
+   * Restores a feature-specific set of cache entries from Supabase.
+   * Callers invoke this only after the local dataset is missing, corrupt, or
+   * expired, preserving the source priority: local -> Supabase -> Spotify.
+   */
+  async restoreItemsFromCloud(keys: string[]): Promise<number> {
+    const uniqueKeys = Array.from(new Set(keys.filter(key => !!key)));
+    if (uniqueKeys.length === 0) return 0;
+
+    const supabaseUserId = this.getEffectiveSupabaseUserId();
+    if (!supabaseUserId) return 0;
+
+    const backupActive = this.inMemoryCache.get(`${supabaseUserId}_backup_active`) === 'true';
+    if (!backupActive) return 0;
+
+    const entries = await this.supabaseService.loadUserCache(supabaseUserId, uniqueKeys);
+    entries.forEach(entry => this.setItem(entry.key, entry.value, false));
+    return entries.length;
+  }
+
   /** Clears ALL app data (appData + statsHistory) and the in-memory cache. */
   clear(): Promise<void> {
     this.inMemoryCache.clear();
@@ -272,7 +292,8 @@ export class StorageService {
       request.onsuccess = () => resolve();
       request.onerror   = (e: any) => reject(e.target.error);
     })).catch(err => {
-      console.warn('IndexedDB failed to write stats history, falling back silently:', err);
+      console.warn('IndexedDB failed to write stats history:', err);
+      throw err;
     });
   }
 

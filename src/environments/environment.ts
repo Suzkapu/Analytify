@@ -16,6 +16,8 @@ export const environment = {
     'user-read-playback-state',
     'playlist-read-private',
     'playlist-read-collaborative',
+    'playlist-modify-public',
+    'playlist-modify-private',
     'user-library-read'
   ].join(' ')
 };

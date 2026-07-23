@@ -502,7 +502,12 @@ export class SpotifyAuthService {
       const dbCache = await this.supabaseService.loadUserCache(supabaseUserId);
       if (dbCache && dbCache.length > 0) {
         dbCache.forEach(item => {
-          this.storageService.setItem(item.key, item.value, false);
+          // Local data is the primary source. Cloud data only fills gaps during
+          // the broad startup hydration; expired feature caches explicitly
+          // request their cloud keys before falling back to Spotify.
+          if (this.storageService.getItem(item.key) === null) {
+            this.storageService.setItem(item.key, item.value, false);
+          }
         });
         console.log(`[Auth] Loaded ${dbCache.length} cache keys from database.`);
       }

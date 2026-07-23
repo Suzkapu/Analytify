@@ -62,7 +62,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
       if (this.authService.isAuthenticated()) {
         await this.authService.ensureInitialSync();
       }
-      this.loadPlaylistData();
+      await this.loadPlaylistData();
     });
   }
 
@@ -90,18 +90,15 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     return lastUpdated < cutoff.getTime();
   }
 
-  loadPlaylistData() {
+  async loadPlaylistData() {
     const userId = this.authService.getUserId() || 'anonymous';
-    const supabaseUserId = this.authService.getSupabaseUserId();
-
     const storageKey = `${userId}_${this.playlistId}`;
-    const storedArtists = this.storageService.getItem(storageKey);
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
-    const lastUpdated = this.storageService.getItem(lastUpdatedKey);
 
     // Check if there is an active background task running for this playlist
     const activeTask = this.playlistLoaderService.getLoadingTask(this.playlistId);
     if (activeTask) {
+      const storedArtists = this.storageService.getItem(storageKey);
       if (storedArtists) {
         try {
           this.artists = JSON.parse(storedArtists);
@@ -117,39 +114,57 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     }
 
     const isBackupActive = this.authService.isBackupActive();
-    const dbLastSynced = supabaseUserId ? this.storageService.getItem(`${supabaseUserId}_last_synced_at`) : null;
-    const isExpired = isBackupActive && dbLastSynced && !this.isCacheExpired(dbLastSynced)
-      ? false 
-      : this.isCacheExpired(lastUpdated);
-
+    let storedArtists = this.storageService.getItem(storageKey);
+    let lastUpdated = this.storageService.getItem(lastUpdatedKey);
+    let isExpired = this.isCacheExpired(lastUpdated);
     let parsedArtists: any[] = [];
     let isParseError = false;
-    if (storedArtists) {
-      try {
-        parsedArtists = JSON.parse(storedArtists);
-      } catch (e) {
-        console.warn('Failed to parse stored artists for analysis:', e);
-        isParseError = true;
+
+    const parseCachedArtists = () => {
+      parsedArtists = [];
+      isParseError = false;
+      if (storedArtists) {
+        try {
+          const parsed = JSON.parse(storedArtists);
+          if (!Array.isArray(parsed)) {
+            isParseError = true;
+          } else {
+            parsedArtists = parsed;
+          }
+        } catch (e) {
+          console.warn('Failed to parse stored artists for analysis:', e);
+          isParseError = true;
+        }
       }
+    };
+
+    parseCachedArtists();
+    let isOldCache = parsedArtists.length > 0 &&
+      parsedArtists.some(artist => !Array.isArray(artist.images) || !Array.isArray(artist.genres));
+
+    if ((!storedArtists || isExpired || isParseError || isOldCache) && isBackupActive) {
+      await this.storageService.restoreItemsFromCloud([
+        storageKey,
+        `${storageKey}_Amount`,
+        `${storageKey}_Name`,
+        lastUpdatedKey,
+        `${storageKey}_cacheVersion`
+      ]);
+      storedArtists = this.storageService.getItem(storageKey);
+      lastUpdated = this.storageService.getItem(lastUpdatedKey);
+      isExpired = this.isCacheExpired(lastUpdated);
+      parseCachedArtists();
+      isOldCache = parsedArtists.length > 0 &&
+        parsedArtists.some(artist => !Array.isArray(artist.images) || !Array.isArray(artist.genres));
     }
 
-    if (storedArtists && !isExpired && !isParseError) {
+    if (storedArtists && !isExpired && !isParseError && !isOldCache) {
       console.log(isBackupActive ? `[Analysis] Loading playlist ${this.playlistId} data from Supabase Cloud Backup (Local Cache)` : `[Analysis] Loading playlist ${this.playlistId} data from Local Storage Cache (Cloud Backup disabled)`);
       try {
         this.artists = parsedArtists;
         this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
         this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
         this.runAnalysis();
-
-        // Self-healing check: if cache lacks images or genres, upgrade cache
-        const isOldCache = parsedArtists.length > 0 && (!parsedArtists[0].images || !parsedArtists[0].genres);
-        if (isOldCache) {
-          console.log("Old cache detected on analysis. Reloading.");
-          this.triggerApiLoad(true, true);
-        } else {
-          // Always trigger background mismatch check and incremental API load
-          this.triggerApiLoad(true, isExpired);
-        }
       } catch (e) {
         console.warn('Failed to load playlist analysis data from cache:', e);
         this.triggerApiLoad(false, isExpired);

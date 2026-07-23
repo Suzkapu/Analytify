@@ -775,10 +775,5 @@ export class PlaylistLoaderService {
     this.storageService.setItem(`${userId}_${task.playlistId}_lastUpdated`, Date.now().toString());
     this.storageService.setItem(`${userId}_${task.playlistId}_cacheVersion`, 'v4');
 
-    const supabaseUserId = this.authService.getSupabaseUserId();
-    if (this.authService.isBackupActive() && supabaseUserId) {
-      this.supabaseService.updateUserLastSynced(supabaseUserId);
-      this.storageService.setItem(`${supabaseUserId}_last_synced_at`, new Date().toISOString());
-    }
   }
 }

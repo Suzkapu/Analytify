@@ -3,7 +3,7 @@ import {SpotifyDataService} from "../../services/spotify-data/spotify-data.servi
 import {SpotifyAuthService} from "../../services/auth/spotify-auth.service";
 import {StorageService} from "../../services/storage/storage.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {ImageHealingService} from "../../services/image-healing/image-healing.service";
+import {SupabaseService} from "../../services/supabase/supabase.service";
 
 @Component({
   selector: 'app-artist-details',
@@ -24,12 +24,12 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
     private router: Router,
     public authService: SpotifyAuthService,
     private storageService: StorageService,
-    private imageHealingService: ImageHealingService
+    private supabaseService: SupabaseService
   ) {
-    this.route.params.subscribe((params) => {
+    this.route.params.subscribe(async (params) => {
       this.tracks = history.state.tracks;
       this.playlistId = history.state.playlistId || '';
-      this.loadArtistDetails(params['id']);
+      await this.loadArtistDetails(params['id']);
     });
   }
 
@@ -41,8 +41,44 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  loadArtistDetails(id: string) {
+  private isCacheExpired(lastUpdatedStr: string | null): boolean {
+    if (!lastUpdatedStr) return true;
+    const lastUpdated = Number(lastUpdatedStr);
+    if (!Number.isFinite(lastUpdated)) return true;
+
+    const now = new Date();
+    const cutoff = new Date(now);
+    cutoff.setHours(1, 0, 0, 0);
+    if (now.getTime() < cutoff.getTime()) {
+      cutoff.setDate(cutoff.getDate() - 1);
+    }
+    return lastUpdated < cutoff.getTime();
+  }
+
+  async loadArtistDetails(id: string) {
     const userId = this.authService.getUserId() || 'anonymous';
+    const artistCacheKey = `${userId}_artist_${id}`;
+    const artistUpdatedKey = `${artistCacheKey}_lastUpdated`;
+
+    const readArtistCache = (): any | null => {
+      const cachedArtist = this.storageService.getItem(artistCacheKey);
+      if (!cachedArtist || this.isCacheExpired(this.storageService.getItem(artistUpdatedKey))) {
+        return null;
+      }
+      try {
+        const parsed = JSON.parse(cachedArtist);
+        return parsed?.id === id ? parsed : null;
+      } catch {
+        return null;
+      }
+    };
+
+    let cachedArtist = readArtistCache();
+    if (cachedArtist) {
+      this.artist = cachedArtist;
+      return;
+    }
+
     if (this.playlistId) {
       const storageKey = `${userId}_${this.playlistId}`;
       const storedArtists = this.storageService.getItem(storageKey);
@@ -52,17 +88,42 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
         if (found) {
           console.log(this.authService.isBackupActive() ? "[ArtistDetails] Loading artist details from Supabase Cloud Backup (Local Cache)" : "[ArtistDetails] Loading artist details from Local Storage Cache (Cloud Backup disabled)");
           this.artist = found;
-          // Heal missing image silently; wraps the single artist in an array
-          // and passes the storageKey so the cache is updated if a real image is found
-          this.imageHealingService.healArtistImages([this.artist], storageKey);
           return;
         }
       }
     }
 
+    if (this.authService.isBackupActive()) {
+      await this.storageService.restoreItemsFromCloud([artistCacheKey, artistUpdatedKey]);
+      cachedArtist = readArtistCache();
+      if (cachedArtist) {
+        this.artist = cachedArtist;
+        return;
+      }
+    }
+
+    const dbArtist = await this.supabaseService.loadArtistById(id);
+    if (dbArtist) {
+      console.log('[ArtistDetails] Loading artist details from Supabase.');
+      this.artist = dbArtist;
+      this.storageService.setItem(artistCacheKey, JSON.stringify(dbArtist));
+      this.storageService.setItem(artistUpdatedKey, Date.now().toString());
+      return;
+    }
+
     console.log("[ArtistDetails] Cache missing. Loading artist details from Spotify API...");
-    this.spotifyDataService.getSingleArtist(id).subscribe((artist: any) => {
-      this.artist = artist;
+    this.spotifyDataService.getSingleArtist(id).subscribe({
+      next: (artist: any) => {
+        this.artist = artist;
+        this.storageService.setItem(artistCacheKey, JSON.stringify(artist));
+        this.storageService.setItem(artistUpdatedKey, Date.now().toString());
+        if (this.authService.isBackupActive()) {
+          this.supabaseService.syncArtists([artist]).catch(err => {
+            console.warn('[ArtistDetails] Failed to persist artist metadata:', err);
+          });
+        }
+      },
+      error: (err) => console.error('[ArtistDetails] Failed to load artist from Spotify:', err)
     });
   }
 

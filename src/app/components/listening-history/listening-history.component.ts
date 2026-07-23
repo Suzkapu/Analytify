@@ -102,15 +102,18 @@ export class ListeningHistoryComponent implements OnInit {
         
         // If backup is active, sync to Supabase
         if (this.authService.isBackupActive() && supabaseUserId) {
-          this.supabaseService.syncListeningHistory(supabaseUserId, finalTracks);
-          this.storageService.setItem(`${supabaseUserId}_last_synced_at`, new Date().toISOString());
+          this.supabaseService.syncListeningHistory(supabaseUserId, finalTracks).catch(error => {
+            console.warn('[History] Failed to persist listening history:', error);
+          });
 
           const trackIds = finalTracks.map(item => item.track?.id).filter(id => !!id);
           if (trackIds.length > 0) {
             this.spotifyDataService.getSeveralAudioFeatures(trackIds).subscribe({
               next: (res: any) => {
                 if (res && res.audio_features) {
-                  this.supabaseService.syncTrackAudioFeatures(res.audio_features);
+                  this.supabaseService.syncTrackAudioFeatures(res.audio_features).catch(error => {
+                    console.warn('[History] Failed to persist audio features:', error);
+                  });
                 }
               },
               error: (err) => console.warn('Failed to fetch audio features for recently played:', err)

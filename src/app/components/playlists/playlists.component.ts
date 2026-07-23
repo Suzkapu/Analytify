@@ -29,7 +29,7 @@ export class PlaylistsComponent {
       if (this.authService.isAuthenticated()) {
         await this.authService.ensureInitialSync();
       }
-      this.loadPlaylists();
+      await this.loadPlaylists();
     });
   }
 
@@ -48,29 +48,46 @@ export class PlaylistsComponent {
     return lastUpdated < cutoff.getTime();
   }
 
-  loadPlaylists() {
+  async loadPlaylists() {
     const userId = this.authService.getUserId() || 'anonymous';
     const supabaseUserId = this.authService.getSupabaseUserId();
     const storageKey = `${userId}_playlists`;
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
-    const storedPlaylists = this.storageService.getItem(storageKey);
-    const lastUpdated = this.storageService.getItem(lastUpdatedKey);
-
     const isBackupActive = this.authService.isBackupActive();
-    const dbLastSynced = supabaseUserId ? this.storageService.getItem(`${supabaseUserId}_last_synced_at`) : null;
-    const isExpired = isBackupActive && dbLastSynced && !this.isCacheExpired(dbLastSynced)
-      ? false 
-      : this.isCacheExpired(lastUpdated);
-
+    let storedPlaylists = this.storageService.getItem(storageKey);
+    let lastUpdated = this.storageService.getItem(lastUpdatedKey);
+    let isExpired = this.isCacheExpired(lastUpdated);
     let parsedPlaylists: any[] = [];
     let isParseError = false;
-    if (storedPlaylists) {
-      try {
-        parsedPlaylists = JSON.parse(storedPlaylists);
-      } catch (e) {
-        console.warn('Failed to parse cached playlists:', e);
-        isParseError = true;
+
+    const parseCachedPlaylists = () => {
+      parsedPlaylists = [];
+      isParseError = false;
+      if (storedPlaylists) {
+        try {
+          const parsed = JSON.parse(storedPlaylists);
+          if (!Array.isArray(parsed)) {
+            isParseError = true;
+          } else {
+            parsedPlaylists = parsed;
+          }
+        } catch (e) {
+          console.warn('Failed to parse cached playlists:', e);
+          isParseError = true;
+        }
       }
+    };
+
+    parseCachedPlaylists();
+
+    // A stale/missing local dataset gets one feature-scoped Supabase lookup
+    // before Spotify is contacted.
+    if ((!storedPlaylists || isExpired || isParseError) && isBackupActive) {
+      await this.storageService.restoreItemsFromCloud([storageKey, lastUpdatedKey]);
+      storedPlaylists = this.storageService.getItem(storageKey);
+      lastUpdated = this.storageService.getItem(lastUpdatedKey);
+      isExpired = this.isCacheExpired(lastUpdated);
+      parseCachedPlaylists();
     }
 
     if (storedPlaylists && !isExpired && !isParseError) {
@@ -92,19 +109,7 @@ export class PlaylistsComponent {
           } catch (e) {}
         }
 
-        // If it's still 0, try to update it in the background from the API
-        if (favPlaylist.tracks.total === 0) {
-          this.spotifyDataService.getFavTracks(0, 1).subscribe({
-            next: (favTracks: any) => {
-              if (favTracks && favTracks.total !== favPlaylist.tracks.total) {
-                favPlaylist.tracks.total = favTracks.total;
-                this.storageService.setItem(storageKey, JSON.stringify(this.playlists));
-                this.filterPlaylists();
-              }
-            },
-            error: (err) => console.log('Background update of fav tracks count failed:', err)
-          });
-        } else if (updated) {
+        if (updated) {
           this.storageService.setItem(storageKey, JSON.stringify(this.playlists));
         }
       }
@@ -113,9 +118,14 @@ export class PlaylistsComponent {
     } else {
       const reason = !storedPlaylists ? 'no local cache' : (isExpired ? 'cache expired' : 'unknown');
       console.log(`[Playlists] Cache missing or expired (reason: ${reason}, backup active: ${isBackupActive}). Loading playlists from Spotify API`);
-      this.spotifyDataService.getUserPlaylists().subscribe({
+      this.spotifyDataService.getAllUserPlaylists().subscribe({
         next: (playlists: any) => {
-          this.playlists = [...playlists.items];
+          this.playlists = (playlists.items || []).map((playlist: any) => ({
+            ...playlist,
+            // Spotify's 2026 response calls this collection "items"; retain
+            // the internal "tracks" shape for existing templates.
+            tracks: playlist.tracks || playlist.items || { total: 0 }
+          }));
 
           // Get total amount of favourite tracks
           this.spotifyDataService.getFavTracks(0, 1).subscribe({
@@ -135,10 +145,6 @@ export class PlaylistsComponent {
               this.playlists = [favPlaylist, ...this.playlists];
               this.storageService.setItem(storageKey, JSON.stringify(this.playlists));
               this.storageService.setItem(lastUpdatedKey, Date.now().toString());
-              if (isBackupActive && supabaseUserId) {
-                this.supabaseService.updateUserLastSynced(supabaseUserId);
-                this.storageService.setItem(`${supabaseUserId}_last_synced_at`, new Date().toISOString());
-              }
               this.filterPlaylists();
             },
             error: (err) => {
@@ -158,10 +164,6 @@ export class PlaylistsComponent {
               this.playlists = [favPlaylist, ...this.playlists];
               this.storageService.setItem(storageKey, JSON.stringify(this.playlists));
               this.storageService.setItem(lastUpdatedKey, Date.now().toString());
-              if (isBackupActive && supabaseUserId) {
-                this.supabaseService.updateUserLastSynced(supabaseUserId);
-                this.storageService.setItem(`${supabaseUserId}_last_synced_at`, new Date().toISOString());
-              }
               this.filterPlaylists();
             }
           });

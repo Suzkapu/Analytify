@@ -72,7 +72,7 @@ export class SongsComponent implements OnInit, OnDestroy {
       if (this.authService.isAuthenticated()) {
         await this.authService.ensureInitialSync();
       }
-      this.loadArtistsFromPlaylist();
+      await this.loadArtistsFromPlaylist();
     });
   }
 
@@ -96,20 +96,66 @@ export class SongsComponent implements OnInit, OnDestroy {
     this.filterArtists();
   }
 
-  loadArtistsFromPlaylist() {
-    const userId = this.authService.getUserId() || 'anonymous';
-    const supabaseUserId = this.authService.getSupabaseUserId();
-    const storageKey = `${userId}_${this.playlistId}`;
+  private readPlaylistCache(userId: string, storageKey: string) {
     const storedArtists = this.storageService.getItem(storageKey);
-    const lastUpdatedKey = `${storageKey}_lastUpdated`;
-    const lastUpdated = this.storageService.getItem(lastUpdatedKey);
+    const lastUpdated = this.storageService.getItem(`${storageKey}_lastUpdated`);
+    const version = this.storageService.getItem(`${storageKey}_cacheVersion`);
+    let parsedArtists: any[] = [];
+    let isParseError = false;
+    let cachedTotalTracks = 0;
+    let actualUniqueCount = 0;
 
+    if (storedArtists) {
+      try {
+        const parsed = JSON.parse(storedArtists);
+        if (!Array.isArray(parsed)) {
+          isParseError = true;
+        } else {
+          parsedArtists = parsed;
+        }
+
+        const amountStr = this.storageService.getItem(`${storageKey}_Amount`);
+        if (amountStr) {
+          cachedTotalTracks = JSON.parse(amountStr);
+        }
+
+        const uniqueTrackIds = new Set<string>();
+        parsedArtists.forEach(artist => {
+          (artist.tracks || []).forEach((track: any) => {
+            if (track?.id) uniqueTrackIds.add(track.id);
+          });
+        });
+        actualUniqueCount = uniqueTrackIds.size;
+      } catch (e) {
+        console.warn('Failed to parse stored artists:', e);
+        isParseError = true;
+      }
+    }
+
+    const isRoughlyMatch = actualUniqueCount >= Math.floor(cachedTotalTracks * 0.85) ||
+      (cachedTotalTracks - actualUniqueCount <= 3);
+    const isCacheCorrupt = !!storedArtists && !isParseError && cachedTotalTracks > 0 && !isRoughlyMatch;
+
+    return {
+      storedArtists,
+      parsedArtists,
+      cachedTotalTracks,
+      version,
+      isExpired: this.isCacheExpired(lastUpdated),
+      isParseError,
+      isCacheCorrupt,
+      isUsable: !!storedArtists &&
+        !this.isCacheExpired(lastUpdated) &&
+        version === 'v4' &&
+        !isParseError &&
+        !isCacheCorrupt
+    };
+  }
+
+  async loadArtistsFromPlaylist() {
+    const userId = this.authService.getUserId() || 'anonymous';
+    const storageKey = `${userId}_${this.playlistId}`;
     const isBackupActive = this.authService.isBackupActive();
-    const dbLastSynced = supabaseUserId ? this.storageService.getItem(`${supabaseUserId}_last_synced_at`) : null;
-    const isExpired = isBackupActive && dbLastSynced && !this.isCacheExpired(dbLastSynced)
-      ? false 
-      : this.isCacheExpired(lastUpdated);
-    const version = this.storageService.getItem(`${userId}_${this.playlistId}_cacheVersion`);
 
     // Unsubscribe from any previous loader task
     if (this.loaderSubscription) {
@@ -121,13 +167,11 @@ export class SongsComponent implements OnInit, OnDestroy {
     const activeTask = this.playlistLoaderService.getLoadingTask(this.playlistId);
 
     if (activeTask) {
-      if (storedArtists) {
+      const activeCache = this.readPlaylistCache(userId, storageKey);
+      if (activeCache.storedArtists) {
         try {
-          this.artists = JSON.parse(storedArtists);
-          const amountStr = this.storageService.getItem(`${userId}_${this.playlistId}_Amount`);
-          if (amountStr) {
-            this.totalTracks = JSON.parse(amountStr);
-          }
+          this.artists = activeCache.parsedArtists;
+          this.totalTracks = activeCache.cachedTotalTracks;
           this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
           this.filterArtists();
         } catch (e) {
@@ -138,56 +182,37 @@ export class SongsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let parsedArtists: any[] = [];
-    let isParseError = false;
-    let cachedTotalTracks = 0;
-    let actualUniqueCount = 0;
-    if (storedArtists) {
-      try {
-        parsedArtists = JSON.parse(storedArtists);
-        const amountStr = this.storageService.getItem(`${userId}_${this.playlistId}_Amount`);
-        if (amountStr) {
-          cachedTotalTracks = JSON.parse(amountStr);
-        }
-
-        // Collect unique track IDs from the cache
-        const uniqueTrackIds = new Set<string>();
-        parsedArtists.forEach(a => {
-          if (a.tracks) {
-            a.tracks.forEach((t: any) => {
-              if (t && t.id) {
-                uniqueTrackIds.add(t.id);
-              }
-            });
-          }
-        });
-        actualUniqueCount = uniqueTrackIds.size;
-      } catch (e) {
-        console.warn('Failed to parse stored artists:', e);
-        isParseError = true;
-      }
+    let cache = this.readPlaylistCache(userId, storageKey);
+    if (!cache.isUsable && isBackupActive) {
+      await this.storageService.restoreItemsFromCloud([
+        storageKey,
+        `${storageKey}_Amount`,
+        `${storageKey}_Name`,
+        `${storageKey}_lastUpdated`,
+        `${storageKey}_cacheVersion`
+      ]);
+      cache = this.readPlaylistCache(userId, storageKey);
     }
 
-    // Check for cache corruption: if we expected tracks but parsedArtists is empty or doesn't roughly match totalTracks, it's corrupt/incomplete.
-    const isRoughlyMatch = actualUniqueCount >= Math.floor(cachedTotalTracks * 0.85) || (cachedTotalTracks - actualUniqueCount <= 3);
-    const isCacheCorrupt = !isParseError && storedArtists && cachedTotalTracks > 0 && !isRoughlyMatch;
-
-    if (storedArtists && !isExpired && version === 'v4' && !isParseError && !isCacheCorrupt) {
+    if (cache.isUsable) {
       console.log(isBackupActive ? `[Songs] Loading playlist ${this.playlistId} contents from Supabase Cloud Backup (Local Cache)` : `[Songs] Loading playlist ${this.playlistId} contents from Local Storage Cache (Cloud Backup disabled)`);
       try {
-        this.artists = parsedArtists;
-        this.totalTracks = cachedTotalTracks;
+        this.artists = cache.parsedArtists;
+        this.totalTracks = cache.cachedTotalTracks;
         this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
         this.filterArtists();
-        this.checkForMissingArtistImages();
-        // Trigger background mismatch check and incremental API load
-        this.loadPlaylistFromAPI(userId, isBackupActive, isExpired, storedArtists, parsedArtists);
       } catch (e) {
         console.warn('Failed to parse some cached playlist keys:', e);
-        this.loadPlaylistFromAPI(userId, isBackupActive, isExpired);
+        this.loadPlaylistFromAPI(userId, isBackupActive, cache.isExpired);
       }
     } else {
-      this.loadPlaylistFromAPI(userId, isBackupActive, isExpired, storedArtists, parsedArtists);
+      this.loadPlaylistFromAPI(
+        userId,
+        isBackupActive,
+        cache.isExpired,
+        cache.storedArtists,
+        cache.parsedArtists
+      );
     }
   }
 
@@ -211,20 +236,11 @@ export class SongsComponent implements OnInit, OnDestroy {
     this.subscribeToLoaderTask(task);
   }
 
-  refreshPlaylist() {
-    const userId = this.authService.getUserId() || 'anonymous';
-    const isBackupActive = this.authService.isBackupActive();
-    const storageKey = `${userId}_${this.playlistId}`;
-    const storedArtists = this.storageService.getItem(storageKey);
-    let parsedArtists: any[] = [];
-    if (storedArtists) {
-      try {
-        parsedArtists = JSON.parse(storedArtists);
-      } catch (e) {}
-    }
-    // Force reload by clearing the loader task and starting a new API load with isExpired = true
+  async refreshPlaylist() {
+    // A manual refresh re-evaluates local and cloud timestamps but does not
+    // bypass the one-Spotify-pull-per-day rule.
     this.playlistLoaderService.clearLoadingTask(this.playlistId);
-    this.loadPlaylistFromAPI(userId, isBackupActive, true, storedArtists, parsedArtists);
+    await this.loadArtistsFromPlaylist();
   }
 
   private subscribeToLoaderTask(task: any) {
@@ -246,7 +262,6 @@ export class SongsComponent implements OnInit, OnDestroy {
         if (storedArtists) {
           this.artists = JSON.parse(storedArtists);
           this.filterArtists();
-          this.checkForMissingArtistImages();
         }
         this.playlistLoaderService.clearLoadingTask(this.playlistId);
         if (this.loaderSubscription) {
