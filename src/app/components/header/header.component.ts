@@ -79,6 +79,7 @@ export class HeaderComponent implements OnInit {
     } else {
       this.authService.disableBackup().catch(err => {
         console.error('Failed to disable backup:', err);
+        alert('Failed to disable database backup. Please try again.');
       });
     }
   }

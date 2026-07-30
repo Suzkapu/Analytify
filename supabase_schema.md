@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS user_cache (
 CREATE TABLE IF NOT EXISTS stats_snapshots (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
-    range VARCHAR(50) CONSTRAINT chk_snapshot_range CHECK (range IN ('short_term', 'medium_term', 'long_term')), -- Data validation constraint
+    range VARCHAR(50) NOT NULL CONSTRAINT chk_snapshot_range CHECK (range IN ('short_term', 'medium_term', 'long_term')), -- Data validation constraint
     snapshot_date DATE DEFAULT CURRENT_DATE NOT NULL,
     explicit_percentage NUMERIC(5,2) DEFAULT 0.00 NOT NULL,
     genre_diversity INTEGER DEFAULT 0 NOT NULL,

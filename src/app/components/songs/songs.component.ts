@@ -99,7 +99,6 @@ export class SongsComponent implements OnInit, OnDestroy {
     let parsedArtists: any[] = [];
     let isParseError = false;
     let cachedTotalTracks = 0;
-    let actualUniqueCount = 0;
 
     if (storedArtists) {
       try {
@@ -115,25 +114,11 @@ export class SongsComponent implements OnInit, OnDestroy {
           cachedTotalTracks = JSON.parse(amountStr);
         }
 
-        const uniqueTrackIds = new Set<string>();
-        parsedArtists.forEach(artist => {
-          (artist.tracks || []).forEach((track: any) => {
-            if (track?.id) uniqueTrackIds.add(track.id);
-          });
-        });
-        actualUniqueCount = uniqueTrackIds.size;
       } catch (e) {
         console.warn('Failed to parse stored artists:', e);
         isParseError = true;
       }
     }
-
-    const isRoughlyMatch = actualUniqueCount >= Math.floor(cachedTotalTracks * 0.85) ||
-      (cachedTotalTracks - actualUniqueCount <= 3);
-    const isCacheCorrupt = !!storedArtists && !isParseError && cachedTotalTracks > 0 && !isRoughlyMatch;
-    const isAlbumMetadataIncomplete = !!storedArtists &&
-      !isParseError &&
-      !this.playlistLoaderService.hasCompleteAlbumMetadata(parsedArtists);
 
     return {
       storedArtists,
@@ -141,13 +126,9 @@ export class SongsComponent implements OnInit, OnDestroy {
       cachedTotalTracks,
       isExpired: this.isCacheExpired(lastUpdated),
       isParseError,
-      isCacheCorrupt,
-      isAlbumMetadataIncomplete,
       isUsable: !!storedArtists &&
         !this.isCacheExpired(lastUpdated) &&
-        !isParseError &&
-        !isCacheCorrupt &&
-        !isAlbumMetadataIncomplete
+        !isParseError
     };
   }
 
@@ -177,7 +158,10 @@ export class SongsComponent implements OnInit, OnDestroy {
           console.warn('Failed to parse stored artists for active task:', e);
         }
       }
-      this.subscribeToLoaderTask(activeTask);
+      this.subscribeToLoaderTask(
+        activeTask,
+        activeTask.mode === 'incremental-new-only'
+      );
       return;
     }
 
@@ -193,12 +177,19 @@ export class SongsComponent implements OnInit, OnDestroy {
     }
 
     if (cache.isUsable) {
-      console.log(isBackupActive ? `[Songs] Loading playlist ${this.playlistId} contents from Supabase Cloud Backup (Local Cache)` : `[Songs] Loading playlist ${this.playlistId} contents from Local Storage Cache (Cloud Backup disabled)`);
+      console.log(`[Songs] Loading playlist ${this.playlistId} contents from the local IndexedDB cache.`);
       try {
         this.artists = cache.parsedArtists;
         this.totalTracks = cache.cachedTotalTracks;
         this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
         this.filterArtists();
+
+        if (this.playlistId === 'fav') {
+          const incrementalTask = this.playlistLoaderService.startNewFavouriteTracksCheck(userId);
+          if (incrementalTask) {
+            this.subscribeToLoaderTask(incrementalTask, true);
+          }
+        }
       } catch (e) {
         console.warn('Failed to parse some cached playlist keys:', e);
         this.loadPlaylistFromAPI(userId, isBackupActive, cache.isExpired);
@@ -240,18 +231,20 @@ export class SongsComponent implements OnInit, OnDestroy {
     await this.loadArtistsFromPlaylist();
   }
 
-  private subscribeToLoaderTask(task: any) {
+  private subscribeToLoaderTask(task: any, silent: boolean = false) {
     this.loaderSubscription = task.progress$.subscribe((progress: any) => {
-      this.isLoading = (progress.isLoadingTracks || progress.isLoadingArtists) && !progress.isRefreshing && progress.artists.length === 0;
-      this.isLoadingTracks = progress.isLoadingTracks;
-      this.isLoadingArtists = progress.isLoadingArtists;
-      this.isRefreshing = progress.isRefreshing;
-      this.loadedTracksCount = progress.loadedTracksCount;
-      this.totalTracks = progress.totalTracks;
-      this.loadedArtistsDetailsCount = progress.loadedArtistsDetailsCount;
-      this.totalUniqueArtists = progress.totalUniqueArtists;
-      this.playlistName = progress.playlistName;
-      this.cooldownMessage = progress.cooldownMessage;
+      if (!silent) {
+        this.isLoading = (progress.isLoadingTracks || progress.isLoadingArtists) && !progress.isRefreshing && progress.artists.length === 0;
+        this.isLoadingTracks = progress.isLoadingTracks;
+        this.isLoadingArtists = progress.isLoadingArtists;
+        this.isRefreshing = progress.isRefreshing;
+        this.loadedTracksCount = progress.loadedTracksCount;
+        this.totalTracks = progress.totalTracks;
+        this.loadedArtistsDetailsCount = progress.loadedArtistsDetailsCount;
+        this.totalUniqueArtists = progress.totalUniqueArtists;
+        this.playlistName = progress.playlistName;
+        this.cooldownMessage = progress.cooldownMessage;
+      }
 
       if (progress.isComplete) {
         const userId = this.authService.getUserId() || 'anonymous';
@@ -265,7 +258,7 @@ export class SongsComponent implements OnInit, OnDestroy {
           this.loaderSubscription.unsubscribe();
           this.loaderSubscription = null;
         }
-      } else {
+      } else if (!silent) {
         this.artists = (this.artists.length === 0 || !progress.isRefreshing) ? progress.artists : this.artists;
         this.filterArtists();
       }

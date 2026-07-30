@@ -3,11 +3,10 @@ import {HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse}
 import {Observable, throwError} from 'rxjs';
 import {switchMap, catchError} from 'rxjs/operators';
 import {SpotifyAuthService} from './spotify-auth.service';
-import {Router} from '@angular/router';
 
 @Injectable()
 export class SpotifyAuthInterceptor implements HttpInterceptor {
-  constructor(private authService: SpotifyAuthService, private router: Router) {}
+  constructor(private authService: SpotifyAuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Check if the request is targeting the Spotify API
@@ -17,20 +16,7 @@ export class SpotifyAuthInterceptor implements HttpInterceptor {
           // Token is expired, trigger refresh before sending the request
           return this.authService.refreshToken().pipe(
             switchMap((response: any) => {
-              const clonedReq = req.clone({
-                headers: req.headers
-                  .set('Authorization', `Bearer ${response.access_token}`)
-                  .set('Accept-Language', 'en-GB,en-US;q=0.9,en;q=0.8')
-              });
-              return next.handle(clonedReq).pipe(
-                catchError((err) => {
-                  if (err instanceof HttpErrorResponse && err.status === 401) {
-                    console.warn('Received 401 from Spotify API. Invalid token. Redirecting to Spotify OAuth.');
-                    this.authService.loginWithSupabase(false);
-                  }
-                  return throwError(() => err);
-                })
-              );
+              return this.sendSpotifyRequest(req, next, response.access_token, false);
             }),
             catchError((refreshErr) => {
               console.error('Auto token refresh failed', refreshErr);
@@ -40,26 +26,49 @@ export class SpotifyAuthInterceptor implements HttpInterceptor {
             })
           );
         } else {
-          // Token is valid, attach it to headers
-          const clonedReq = req.clone({
-            headers: req.headers
-              .set('Authorization', `Bearer ${this.authService.getAccessToken()}`)
-              .set('Accept-Language', 'en-GB,en-US;q=0.9,en;q=0.8')
-          });
-          return next.handle(clonedReq).pipe(
-            catchError((err) => {
-              if (err instanceof HttpErrorResponse && err.status === 401) {
-                console.warn('Received 401 from Spotify API. Invalid token. Redirecting to Spotify OAuth.');
-                this.authService.loginWithSupabase(false);
-              }
-              return throwError(() => err);
-            })
-          );
+          return this.sendSpotifyRequest(req, next, this.authService.getAccessToken() || '', true);
         }
       }
     }
 
     // Pass through non-Spotify or token endpoint requests normally
     return next.handle(req);
+  }
+
+  private sendSpotifyRequest(
+    req: HttpRequest<any>,
+    next: HttpHandler,
+    accessToken: string,
+    retryUnauthorized: boolean
+  ): Observable<HttpEvent<any>> {
+    const clonedReq = req.clone({
+      headers: req.headers
+        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Accept-Language', 'en-GB,en-US;q=0.9,en;q=0.8')
+    });
+
+    return next.handle(clonedReq).pipe(
+      catchError((err) => {
+        if (!(err instanceof HttpErrorResponse) || err.status !== 401) {
+          return throwError(() => err);
+        }
+
+        if (!retryUnauthorized) {
+          return throwError(() => err);
+        }
+
+        console.warn('Spotify rejected the cached token. Refreshing it once before re-authentication.');
+        return this.authService.refreshToken().pipe(
+          switchMap((response: any) =>
+            this.sendSpotifyRequest(req, next, response.access_token, false)
+          ),
+          catchError(refreshErr => {
+            console.warn('Spotify token refresh failed after a 401. Redirecting to Spotify OAuth.', refreshErr);
+            this.authService.loginWithSupabase(false);
+            return throwError(() => refreshErr);
+          })
+        );
+      })
+    );
   }
 }

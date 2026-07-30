@@ -21,6 +21,8 @@ export interface PlaylistLoadProgress {
   cooldownMessage: string;
 }
 
+export type PlaylistLoadMode = 'full' | 'incremental-new-only';
+
 export class PlaylistLoadTask {
   playlistId: string;
   playlistName: string = '';
@@ -35,6 +37,8 @@ export class PlaylistLoadTask {
   isComplete: boolean = false;
   error: any = null;
   cooldownMessage: string = '';
+  mode: PlaylistLoadMode;
+  hasDataChanges: boolean = false;
 
   trackIndexCounter: number = 0;
   requestedArtistIds = new Set<string>();
@@ -43,8 +47,9 @@ export class PlaylistLoadTask {
   
   progress$ = new BehaviorSubject<PlaylistLoadProgress>(this.getProgress());
 
-  constructor(playlistId: string) {
+  constructor(playlistId: string, mode: PlaylistLoadMode = 'full') {
     this.playlistId = playlistId;
+    this.mode = mode;
   }
 
   addSub(sub: Subscription) {
@@ -83,6 +88,7 @@ export class PlaylistLoadTask {
 })
 export class PlaylistLoaderService {
   private tasks = new Map<string, PlaylistLoadTask>();
+  private incrementalChecksThisSession = new Set<string>();
 
   constructor(
     private spotifyDataService: SpotifyDataService,
@@ -99,7 +105,7 @@ export class PlaylistLoaderService {
     return this.tasks.get(playlistId);
   }
 
-  startLoadingTask(userId: string, playlistId: string, isBackgroundRefresh: boolean = false, allowFullFallback: boolean = false): PlaylistLoadTask {
+  startLoadingTask(userId: string, playlistId: string, isBackgroundRefresh: boolean = false, isDailyFullSync: boolean = false): PlaylistLoadTask {
     let task = this.tasks.get(playlistId);
     if (task) {
       return task;
@@ -107,7 +113,43 @@ export class PlaylistLoaderService {
 
     task = new PlaylistLoadTask(playlistId);
     this.tasks.set(playlistId, task);
-    this.triggerApiLoad(task, userId, isBackgroundRefresh, allowFullFallback);
+    if (playlistId === 'fav') {
+      this.incrementalChecksThisSession.add(`${userId}_${playlistId}`);
+    }
+    this.triggerApiLoad(task, userId, isBackgroundRefresh, isDailyFullSync);
+    return task;
+  }
+
+  startNewFavouriteTracksCheck(userId: string): PlaylistLoadTask | null {
+    const playlistId = 'fav';
+    const existingTask = this.tasks.get(playlistId);
+    if (existingTask) {
+      return existingTask;
+    }
+
+    const sessionKey = `${userId}_${playlistId}`;
+    if (this.incrementalChecksThisSession.has(sessionKey)) {
+      return null;
+    }
+
+    const storedArtists = this.storageService.getItem(sessionKey);
+    if (!storedArtists) {
+      return null;
+    }
+
+    try {
+      const parsedArtists = JSON.parse(storedArtists);
+      if (!Array.isArray(parsedArtists) || parsedArtists.length === 0) {
+        return null;
+      }
+    } catch {
+      return null;
+    }
+
+    this.incrementalChecksThisSession.add(sessionKey);
+    const task = new PlaylistLoadTask(playlistId, 'incremental-new-only');
+    this.tasks.set(playlistId, task);
+    this.triggerApiLoad(task, userId, true, false);
     return task;
   }
 
@@ -122,92 +164,41 @@ export class PlaylistLoaderService {
   clearAllTasks() {
     this.tasks.forEach(task => task.cancel());
     this.tasks.clear();
+    this.incrementalChecksThisSession.clear();
   }
 
-  hasCompleteAlbumMetadata(artists: any[]): boolean {
-    if (!Array.isArray(artists)) {
-      return false;
-    }
-
-    return artists.every(artist =>
-      Array.isArray(artist?.tracks) &&
-      artist.tracks.every((track: any) =>
-        !track?.id ||
-        (
-          typeof track.album?.id === 'string' &&
-          track.album.id.trim() !== '' &&
-          typeof track.album?.name === 'string' &&
-          track.album.name.trim() !== ''
-        )
-      )
+  private triggerApiLoad(task: PlaylistLoadTask, userId: string, isBackgroundRefresh: boolean, isDailyFullSync: boolean = false) {
+    console.log(
+      task.mode === 'incremental-new-only'
+        ? `[PlaylistLoaderService] Starting incremental Spotify check for playlist ${task.playlistId}.`
+        : `[PlaylistLoaderService] Starting full Spotify sync for playlist ${task.playlistId}.`
     );
-  }
-
-  private tryIncrementalMatch(
-    task: PlaylistLoadTask,
-    items: any[],
-    offset: number,
-    cachedArtists: any[],
-    allowFullFallback: boolean
-  ): { match: boolean; minPlaylistIndex?: number; shift?: number } {
-    const cachedTrackIndices = new Map<string, number>();
-    let cachedTotalTracks = 0;
-    cachedArtists.forEach(artist => {
-      if (artist.tracks) {
-        artist.tracks.forEach((t: any) => {
-          if (t && t.id) {
-            cachedTrackIndices.set(t.id, t.playlist_index);
-            cachedTotalTracks = Math.max(cachedTotalTracks, t.playlist_index);
-          }
-        });
-      }
-    });
-
-    for (let j = 0; j < items.length; j++) {
-      const item = items[j];
-      if (item && item.track && item.track.id) {
-        const trackId = item.track.id;
-        if (cachedTrackIndices.has(trackId)) {
-          const idx = cachedTrackIndices.get(trackId)!;
-          const newTracksCount = offset + j;
-          const remainingCachedTracksCount = cachedTotalTracks - idx + 1;
-          const totalMergedTracks = newTracksCount + remainingCachedTracksCount;
-
-          if (totalMergedTracks === task.totalTracks) {
-            const shift = (offset + j + 1) - idx;
-            return { match: true, minPlaylistIndex: idx, shift };
-          }
-        }
-      }
-    }
-
-    return { match: false };
-  }
-
-  private triggerApiLoad(task: PlaylistLoadTask, userId: string, isBackgroundRefresh: boolean, allowFullFallback: boolean = false) {
-    console.log(`[PlaylistLoaderService] Loading playlist ${task.playlistId} from API`);
     task.requestedArtistIds.clear();
     task.loadedArtistsDetailsCount = 0;
     task.totalUniqueArtists = 0;
 
     const storedArtists = this.storageService.getItem(`${userId}_${task.playlistId}`);
     let cachedArtists: any[] = [];
-    let cachedTracksCount = 0;
     if (storedArtists) {
       try {
-        cachedArtists = JSON.parse(storedArtists);
-        cachedTracksCount = JSON.parse(this.storageService.getItem(`${userId}_${task.playlistId}_Amount`) || '0');
+        const parsedArtists = JSON.parse(storedArtists);
+        cachedArtists = Array.isArray(parsedArtists) ? parsedArtists : [];
       } catch (e) {}
     }
-    const reusableCachedArtists = this.hasCompleteAlbumMetadata(cachedArtists)
-      ? cachedArtists
-      : [];
 
-    if (cachedArtists.length > 0 && reusableCachedArtists.length === 0) {
+    if (task.mode === 'full' && isDailyFullSync) {
       console.log(
-        `[PlaylistLoaderService] Playlist ${task.playlistId} cache is missing album metadata. ` +
-        'Refreshing all tracks once instead of reusing incomplete track data.'
+        `[PlaylistLoaderService] Running the daily full sync for playlist ${task.playlistId}; ` +
+        'cached tracks will not be reused so removals are reconciled.'
       );
+    }
+
+    if (task.mode === 'incremental-new-only') {
+      cachedArtists.forEach(artist => {
+        if (artist?.id) {
+          task.requestedArtistIds.add(artist.id);
+        }
+      });
     }
 
     let targetArray: any[];
@@ -218,34 +209,15 @@ export class PlaylistLoaderService {
       task.isLoadingArtists = true;
       task.refreshingArtists = [];
       targetArray = task.refreshingArtists;
-      task.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${task.playlistId}_Amount`) || '0');
-      task.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${task.playlistId}_Name`) || '""');
+      task.totalTracks = this.readStoredNumber(`${userId}_${task.playlistId}_Amount`);
+      task.playlistName = this.readStoredString(`${userId}_${task.playlistId}_Name`);
       if (storedArtists) {
         try {
-          task.artists = JSON.parse(storedArtists);
+          const parsedArtists = JSON.parse(storedArtists);
+          task.artists = Array.isArray(parsedArtists) ? parsedArtists : [];
         } catch (e) {}
       }
-      
-      let maxIdx = 0;
-      if (task.playlistId !== 'fav') {
-        if (storedArtists) {
-          try {
-            const parsed = JSON.parse(storedArtists);
-            parsed.forEach((artist: any) => {
-              if (artist.tracks) {
-                artist.tracks.forEach((t: any) => {
-                  if (t.playlist_index > maxIdx) {
-                    maxIdx = t.playlist_index;
-                  }
-                });
-              }
-            });
-          } catch (e) {
-            console.error('Failed to parse stored artists for index tracking', e);
-          }
-        }
-      }
-      task.trackIndexCounter = maxIdx;
+      task.trackIndexCounter = 0;
     } else {
       task.isRefreshing = false;
       task.isLoadingTracks = true;
@@ -258,9 +230,9 @@ export class PlaylistLoaderService {
     task.loadedTracksCount = 0;
     task.emitUpdate();
 
-    if (task.playlistId === 'fav' && reusableCachedArtists.length > 0) {
-      console.log("Favourite Tracks detected. Starting incremental load.");
-      this.loadNewerFavTracks(task, userId, 0, 50, reusableCachedArtists, targetArray, allowFullFallback);
+    if (task.mode === 'incremental-new-only') {
+      console.log('[PlaylistLoaderService] Checking Spotify only for newly saved tracks until the first cached track.');
+      this.loadNewFavouriteTracksOnly(task, userId, 0, 50, cachedArtists, targetArray, []);
     } else {
       if (task.playlistId === 'fav') {
         task.playlistName = 'Favourite Tracks';
@@ -268,14 +240,22 @@ export class PlaylistLoaderService {
         const sub = this.spotifyDataService.getFavTracks(0, 50).subscribe({
           next: (tracks: any) => {
             task.totalTracks = tracks.total;
-            this.getArtistsFromTracks(task, tracks.items, targetArray);
-            task.loadedTracksCount = Math.min(50, task.totalTracks);
+            const firstPageItems = tracks.items || [];
+            this.getArtistsFromTracks(task, firstPageItems, targetArray);
+            task.loadedTracksCount = Math.min(firstPageItems.length, task.totalTracks);
             task.emitUpdate();
 
             this.fetchArtistDetailsLazy(task, targetArray, userId);
 
             if (task.loadedTracksCount < task.totalTracks) {
-              this.loadRemainingTracks(task, userId, 50, 50, task.totalTracks, targetArray);
+              this.loadRemainingTracks(
+                task,
+                userId,
+                task.loadedTracksCount,
+                50,
+                task.totalTracks,
+                targetArray
+              );
             } else {
               task.isLoadingTracks = false;
               task.emitUpdate();
@@ -284,10 +264,7 @@ export class PlaylistLoaderService {
           },
           error: (err) => {
             console.error('Failed to load first page of favourite tracks:', err);
-            task.isLoadingTracks = false;
-            task.isLoadingArtists = false;
-            task.error = err;
-            task.emitUpdate();
+            this.failTask(task, err);
           }
         });
         task.addSub(sub);
@@ -298,87 +275,30 @@ export class PlaylistLoaderService {
             task.totalTracks = playlist.tracks.total;
             task.emitUpdate();
 
-            // Try to use fast path or incremental end path if cache is available
-            let canUseFastPath = false;
-            let canUseIncrementalEndPath = false;
+            const firstPageItems = playlist.tracks.items || [];
+            this.getArtistsFromTracks(task, firstPageItems, targetArray, 0);
+            task.loadedTracksCount = Math.min(firstPageItems.length, task.totalTracks);
+            task.emitUpdate();
+            this.fetchArtistDetailsLazy(task, targetArray, userId);
 
-            if (reusableCachedArtists.length > 0 && task.totalTracks > 100) {
-              const cachedFirst100Ids = new Set<string>();
-              reusableCachedArtists.forEach(artist => {
-                if (artist.tracks) {
-                  artist.tracks.forEach((t: any) => {
-                    if (t.playlist_index >= 1 && t.playlist_index <= 100) {
-                      cachedFirst100Ids.add(t.id);
-                    }
-                  });
-                }
-              });
-
-              const apiTracks = playlist.tracks.items || [];
-              const allFirstPageMatch = apiTracks.every((item: any) => 
-                item && item.track && cachedFirst100Ids.has(item.track.id)
+            if (task.loadedTracksCount < task.totalTracks) {
+              this.loadRemainingTracks(
+                task,
+                userId,
+                task.loadedTracksCount,
+                100,
+                task.totalTracks,
+                targetArray
               );
-
-              if (allFirstPageMatch) {
-                if (cachedTracksCount === task.totalTracks) {
-                  canUseFastPath = true;
-                } else if (task.totalTracks > cachedTracksCount) {
-                  canUseIncrementalEndPath = true;
-                }
-              }
-            }
-
-            this.getArtistsFromTracks(task, playlist.tracks.items, targetArray, 0);
-
-            if (canUseFastPath) {
-              console.log(`[PlaylistLoaderService] Fast path matches for playlist ${task.playlistId}. Merging remaining cached data.`);
-              this.mergeCachedArtists(task, reusableCachedArtists, targetArray, 101, 0, true);
-              task.loadedTracksCount = task.totalTracks;
+            } else {
               task.isLoadingTracks = false;
               task.emitUpdate();
-              this.fetchArtistDetailsLazy(task, targetArray, userId);
               this.checkCompletion(task, userId);
-            } else if (canUseIncrementalEndPath) {
-              console.log(`[PlaylistLoaderService] Incremental end path matches for playlist ${task.playlistId}. Merging cached tracks up to ${cachedTracksCount} and pulling new ones from offset ${cachedTracksCount}.`);
-              this.mergeCachedArtists(task, reusableCachedArtists, targetArray, 101, 0, true);
-              task.loadedTracksCount = cachedTracksCount;
-              task.emitUpdate();
-              this.fetchArtistDetailsLazy(task, targetArray, userId);
-              
-              this.loadRemainingTracks(task, userId, cachedTracksCount, 100, task.totalTracks, targetArray, reusableCachedArtists, allowFullFallback);
-            } else {
-              // Mismatch/no-cache on first page
-              if (reusableCachedArtists.length > 0 && !allowFullFallback && task.totalTracks > 100) {
-                console.log(`[PlaylistLoaderService] Playlist mismatch detected under daily restriction. Stopping API load and using full cache.`);
-                targetArray.length = 0; // Clear the first page tracks we got
-                this.mergeCachedArtists(task, reusableCachedArtists, targetArray, undefined, 0, true);
-                task.loadedTracksCount = cachedTracksCount;
-                task.isLoadingTracks = false;
-                task.emitUpdate();
-                this.fetchArtistDetailsLazy(task, targetArray, userId);
-                this.checkCompletion(task, userId);
-              } else {
-                task.loadedTracksCount = Math.min(100, task.totalTracks);
-                task.emitUpdate();
-                this.fetchArtistDetailsLazy(task, targetArray, userId);
-
-                if (task.loadedTracksCount < task.totalTracks) {
-                  this.loadRemainingTracks(task, userId, 100, 100, task.totalTracks, targetArray, reusableCachedArtists, allowFullFallback);
-                } else {
-                  this.mergeCachedArtists(task, reusableCachedArtists, targetArray, undefined, 0, false);
-                  task.isLoadingTracks = false;
-                  task.emitUpdate();
-                  this.checkCompletion(task, userId);
-                }
-              }
             }
           },
           error: (err) => {
             console.error('Failed to load first page of playlist:', err);
-            task.isLoadingTracks = false;
-            task.isLoadingArtists = false;
-            task.error = err;
-            task.emitUpdate();
+            this.failTask(task, err);
           }
         });
         task.addSub(sub);
@@ -392,23 +312,25 @@ export class PlaylistLoaderService {
     offset: number,
     limit: number,
     total: number,
-    targetArray: any[],
-    cachedArtists: any[] = [],
-    allowFullFallback: boolean = false
+    targetArray: any[]
   ) {
     if (task.playlistId === 'fav') {
       const sub = this.spotifyDataService.getFavTracks(offset, limit).subscribe({
         next: (tracks: any) => {
-          this.getArtistsFromTracks(task, tracks.items, targetArray, offset);
-          task.loadedTracksCount = Math.min(offset + limit, total);
+          const pageItems = tracks.items || [];
+          if (pageItems.length === 0 && offset < total) {
+            this.failTask(task, new Error(`Spotify returned an empty favourite-tracks page at offset ${offset}.`));
+            return;
+          }
+          this.getArtistsFromTracks(task, pageItems, targetArray, offset);
+          task.loadedTracksCount = Math.min(offset + pageItems.length, total);
           task.emitUpdate();
           
           this.fetchArtistDetailsLazy(task, targetArray, userId);
 
           if (task.loadedTracksCount < total) {
-            this.loadRemainingTracks(task, userId, offset + limit, limit, total, targetArray, cachedArtists, allowFullFallback);
+            this.loadRemainingTracks(task, userId, task.loadedTracksCount, limit, total, targetArray);
           } else {
-            this.mergeCachedArtists(task, cachedArtists, targetArray, undefined, 0, false);
             task.isLoadingTracks = false;
             task.emitUpdate();
             this.checkCompletion(task, userId);
@@ -416,26 +338,27 @@ export class PlaylistLoaderService {
         },
         error: (err) => {
           console.error('Error loading remaining fav tracks:', err);
-          task.isLoadingTracks = false;
-          task.error = err;
-          task.emitUpdate();
-          this.checkCompletion(task, userId);
+          this.failTask(task, err);
         }
       });
       task.addSub(sub);
     } else {
       const sub = this.spotifyDataService.getAllTracksFromPlaylist(task.playlistId, offset, limit).subscribe({
         next: (tracks: any) => {
-          this.getArtistsFromTracks(task, tracks.items, targetArray, offset);
-          task.loadedTracksCount = Math.min(offset + limit, total);
+          const pageItems = tracks.items || [];
+          if (pageItems.length === 0 && offset < total) {
+            this.failTask(task, new Error(`Spotify returned an empty playlist page at offset ${offset}.`));
+            return;
+          }
+          this.getArtistsFromTracks(task, pageItems, targetArray, offset);
+          task.loadedTracksCount = Math.min(offset + pageItems.length, total);
           task.emitUpdate();
           
           this.fetchArtistDetailsLazy(task, targetArray, userId);
 
           if (task.loadedTracksCount < total) {
-            this.loadRemainingTracks(task, userId, offset + limit, limit, total, targetArray, cachedArtists, allowFullFallback);
+            this.loadRemainingTracks(task, userId, task.loadedTracksCount, limit, total, targetArray);
           } else {
-            this.mergeCachedArtists(task, cachedArtists, targetArray, undefined, 0, false);
             task.isLoadingTracks = false;
             task.emitUpdate();
             this.checkCompletion(task, userId);
@@ -443,134 +366,105 @@ export class PlaylistLoaderService {
         },
         error: (err) => {
           console.error('Error loading remaining playlist tracks:', err);
-          task.isLoadingTracks = false;
-          task.error = err;
-          task.emitUpdate();
-          this.checkCompletion(task, userId);
+          this.failTask(task, err);
         }
       });
       task.addSub(sub);
     }
   }
 
-  private loadNewerFavTracks(
+  private loadNewFavouriteTracksOnly(
     task: PlaylistLoadTask,
     userId: string,
     offset: number,
     limit: number,
     cachedArtists: any[],
     targetArray: any[],
-    allowFullFallback: boolean
+    newItems: any[]
   ) {
     const cachedTrackIds = new Set<string>();
-    const cachedTrackIndices = new Map<string, number>();
-    let cachedTotalTracks = 0;
     cachedArtists.forEach(artist => {
-      if (artist.tracks) {
-        artist.tracks.forEach((t: any) => {
-          if (t && t.id) {
-            cachedTrackIds.add(t.id);
-            cachedTrackIndices.set(t.id, t.playlist_index);
-            cachedTotalTracks = Math.max(cachedTotalTracks, t.playlist_index);
-          }
-        });
-      }
+      (artist?.tracks || []).forEach((track: any) => {
+        if (track?.id) {
+          cachedTrackIds.add(track.id);
+        }
+      });
     });
+
+    const collectedTrackIds = new Set<string>(
+      newItems
+        .map(item => item?.track?.id)
+        .filter((id: string | undefined): id is string => !!id)
+    );
 
     const sub = this.spotifyDataService.getFavTracks(offset, limit).subscribe({
       next: (tracks: any) => {
-        task.totalTracks = tracks.total;
-        task.emitUpdate();
+        const items = tracks?.items || [];
+        const firstCachedIndex = items.findIndex((item: any) =>
+          !!item?.track?.id && cachedTrackIds.has(item.track.id)
+        );
+        const candidates = firstCachedIndex >= 0
+          ? items.slice(0, firstCachedIndex)
+          : items;
 
-        const incremental = this.tryIncrementalMatch(task, tracks.items, offset, cachedArtists, allowFullFallback);
-
-        if (incremental.match) {
-          // Gather only the new items before the match in the current page
-          const newItems: any[] = [];
-          for (let item of tracks.items) {
-            if (item && item.track) {
-              if (cachedTrackIds.has(item.track.id)) {
-                break;
-              } else {
-                newItems.push(item);
-              }
-            }
+        candidates.forEach((item: any) => {
+          const track = item?.track;
+          const hasValidArtist = (track?.artists || []).some((artist: any) =>
+            typeof artist?.name === 'string' && artist.name.trim() !== ''
+          );
+          if (
+            track?.id &&
+            typeof track.name === 'string' &&
+            track.name.trim() !== '' &&
+            hasValidArtist &&
+            !cachedTrackIds.has(track.id) &&
+            !collectedTrackIds.has(track.id)
+          ) {
+            collectedTrackIds.add(track.id);
+            newItems.push(item);
           }
+        });
 
-          this.getArtistsFromTracks(task, newItems, targetArray, offset);
-          task.loadedTracksCount = task.totalTracks;
-          
-          console.log(`[PlaylistLoaderService] Fav tracks incremental match: merged count (${task.totalTracks}) matches total. Merging remaining cached tracks.`);
-          this.mergeCachedArtists(task, cachedArtists, targetArray, incremental.minPlaylistIndex, incremental.shift, true);
-          
-          task.isLoadingTracks = false;
-          task.emitUpdate();
-          this.fetchArtistDetailsLazy(task, targetArray, userId);
-          this.checkCompletion(task, userId);
-        } else {
-          // No exact match. Let's see if we hit any cached track (meaning there's a count mismatch)
-          let foundAnyExisting = false;
-          let firstMatchIdx = -1;
-          let firstMatchPageJ = -1;
-          for (let j = 0; j < tracks.items.length; j++) {
-            const item = tracks.items[j];
-            if (item && item.track && item.track.id && cachedTrackIndices.has(item.track.id)) {
-              foundAnyExisting = true;
-              firstMatchIdx = cachedTrackIndices.get(item.track.id)!;
-              firstMatchPageJ = j;
-              break;
-            }
-          }
+        const reachedKnownTrack = firstCachedIndex >= 0;
+        const reachedEnd = offset + items.length >= (tracks?.total || 0) || items.length === 0;
 
-          if (foundAnyExisting && !allowFullFallback) {
-            const newItems: any[] = [];
-            for (let item of tracks.items) {
-              if (item && item.track) {
-                if (cachedTrackIds.has(item.track.id)) {
-                  break;
-                } else {
-                  newItems.push(item);
-                }
-              }
-            }
-            this.getArtistsFromTracks(task, newItems, targetArray, offset);
-            task.loadedTracksCount += newItems.length;
-
-            console.log(`[PlaylistLoaderService] Fav tracks mismatch detected under daily restriction. Stopping pull and merging cache.`);
-            const shift = (offset + firstMatchPageJ + 1) - firstMatchIdx;
-            this.mergeCachedArtists(task, cachedArtists, targetArray, firstMatchIdx, shift, true);
-            
-            task.isLoadingTracks = false;
-            task.emitUpdate();
-            this.fetchArtistDetailsLazy(task, targetArray, userId);
-            this.checkCompletion(task, userId);
-          } else if (offset + limit < task.totalTracks) {
-            this.getArtistsFromTracks(task, tracks.items, targetArray, offset);
-            task.loadedTracksCount = Math.min(offset + limit, task.totalTracks);
-            task.emitUpdate();
-            this.fetchArtistDetailsLazy(task, targetArray, userId);
-
-            this.loadNewerFavTracks(task, userId, offset + limit, limit, cachedArtists, targetArray, allowFullFallback);
-          } else {
-            this.getArtistsFromTracks(task, tracks.items, targetArray, offset);
-            task.loadedTracksCount = task.totalTracks;
-            
-            console.log(`[PlaylistLoaderService] Fav tracks full pull complete. Merging cached artist metadata only.`);
-            this.mergeCachedArtists(task, cachedArtists, targetArray, undefined, 0, false);
-            
-            task.isLoadingTracks = false;
-            task.emitUpdate();
-            this.fetchArtistDetailsLazy(task, targetArray, userId);
-            this.checkCompletion(task, userId);
-          }
+        if (!reachedKnownTrack && !reachedEnd) {
+          this.loadNewFavouriteTracksOnly(
+            task,
+            userId,
+            offset + items.length,
+            limit,
+            cachedArtists,
+            targetArray,
+            newItems
+          );
+          return;
         }
+
+        this.getArtistsFromTracks(task, newItems, targetArray, 0);
+        task.hasDataChanges = newItems.length > 0;
+
+        // Incremental checks only add. Cached tracks are deliberately kept even
+        // when Spotify no longer returns them; the daily full sync owns removals.
+        this.mergeCachedArtists(
+          task,
+          cachedArtists,
+          targetArray,
+          undefined,
+          newItems.length,
+          true
+        );
+
+        task.totalTracks = this.countUniqueTracks(targetArray);
+        task.loadedTracksCount = task.totalTracks;
+        task.isLoadingTracks = false;
+        task.emitUpdate();
+        this.fetchArtistDetailsLazy(task, targetArray, userId);
+        this.checkCompletion(task, userId);
       },
       error: (err) => {
-        console.error('Incremental loading failed:', err);
-        task.isLoadingTracks = false;
-        task.isLoadingArtists = false;
-        task.error = err;
-        task.emitUpdate();
+        console.warn('[PlaylistLoaderService] New favourite tracks check failed; keeping the cached playlist unchanged.', err);
+        this.failTask(task, err);
       }
     });
     task.addSub(sub);
@@ -629,6 +523,45 @@ export class PlaylistLoaderService {
 
     });
     task.totalUniqueArtists = targetArray.length;
+    task.emitUpdate();
+  }
+
+  private countUniqueTracks(artists: any[]): number {
+    const trackIds = new Set<string>();
+    artists.forEach(artist => {
+      (artist?.tracks || []).forEach((track: any) => {
+        if (track?.id) {
+          trackIds.add(track.id);
+        }
+      });
+    });
+    return trackIds.size;
+  }
+
+  private readStoredNumber(key: string): number {
+    try {
+      const parsed = JSON.parse(this.storageService.getItem(key) || '0');
+      return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
+    } catch {
+      return 0;
+    }
+  }
+
+  private readStoredString(key: string): string {
+    try {
+      const parsed = JSON.parse(this.storageService.getItem(key) || '""');
+      return typeof parsed === 'string' ? parsed : '';
+    } catch {
+      return '';
+    }
+  }
+
+  private failTask(task: PlaylistLoadTask, error: any) {
+    task.error = error;
+    task.isLoadingTracks = false;
+    task.isLoadingArtists = false;
+    task.isRefreshing = false;
+    task.isComplete = true;
     task.emitUpdate();
   }
 
@@ -755,9 +688,18 @@ export class PlaylistLoaderService {
         task.artists = task.refreshingArtists;
         task.isRefreshing = false;
       }
+
+      if (task.mode === 'incremental-new-only') {
+        task.totalTracks = this.countUniqueTracks(task.artists);
+        task.loadedTracksCount = task.totalTracks;
+      }
       
-      if (userId && !task.error) {
-        this.setSessionStorage(task, userId);
+      if (
+        userId &&
+        !task.error &&
+        (task.mode === 'full' || task.hasDataChanges)
+      ) {
+        this.setSessionStorage(task, userId, task.mode === 'full');
       }
 
       task.isComplete = true;
@@ -765,7 +707,11 @@ export class PlaylistLoaderService {
     }
   }
 
-  private setSessionStorage(task: PlaylistLoadTask, userId: string) {
+  private setSessionStorage(
+    task: PlaylistLoadTask,
+    userId: string,
+    updateDailyFullSyncTimestamp: boolean
+  ) {
     const cleanedArtists = task.artists.map((artist: any) => ({
       id: artist.id,
       name: artist.name,
@@ -801,7 +747,9 @@ export class PlaylistLoaderService {
     this.storageService.setItem(`${userId}_${task.playlistId}`, JSON.stringify(cleanedArtists));
     this.storageService.setItem(`${userId}_${task.playlistId}_Amount`, JSON.stringify(task.totalTracks));
     this.storageService.setItem(`${userId}_${task.playlistId}_Name`, JSON.stringify(task.playlistName));
-    this.storageService.setItem(`${userId}_${task.playlistId}_lastUpdated`, Date.now().toString());
+    if (updateDailyFullSyncTimestamp) {
+      this.storageService.setItem(`${userId}_${task.playlistId}_lastUpdated`, Date.now().toString());
+    }
 
   }
 }

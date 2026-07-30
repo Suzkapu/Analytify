@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SpotifyAuthService} from "../../services/auth/spotify-auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {SpotifyDataService} from "../../services/spotify-data/spotify-data.service";
 
 @Component({
   selector: 'app-callback',
@@ -9,12 +8,15 @@ import {SpotifyDataService} from "../../services/spotify-data/spotify-data.servi
   styleUrls: ['./callback.component.scss']
 })
 export class CallbackComponent implements OnInit {
-  playlists: any[] = [];
   errorMessage: string | null = null;
   loadingMessage: string = 'Logging in with Spotify...';
   isAutoRedirecting: boolean = false;
 
-  constructor(private router: Router, private route: ActivatedRoute, private authService: SpotifyAuthService, private spotifyDataService: SpotifyDataService) {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: SpotifyAuthService
+  ) {
   }
 
   //Sets the access token

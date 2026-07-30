@@ -24,6 +24,7 @@ const routes: Routes = [
   {path: 'stats', component: UserStatsComponent, canActivate: [spotifyAuthGuard]},
   {path: 'legal', component: LegalComponent},
   {path: 'history', component: ListeningHistoryComponent, canActivate: [spotifyAuthGuard]},
+  {path: '**', redirectTo: ''},
 ];
 
 @NgModule({

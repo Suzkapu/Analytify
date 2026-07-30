@@ -275,6 +275,16 @@ export class SupabaseService {
     }));
   }
 
+  private mapTrackArtists(rows: any[]): any[] {
+    return [...(rows || [])]
+      .sort((a: any, b: any) => (a.artist_rank || 0) - (b.artist_rank || 0))
+      .map((row: any) => ({
+        id: row.artists?.id,
+        name: row.artists?.name
+      }))
+      .filter((artist: any) => !!artist.id);
+  }
+
   /** Syncs Spotify artists metadata into the database */
   async syncArtists(artists: any[], onlyInsertMissing = false): Promise<void> {
     if (!artists || artists.length === 0) return;
@@ -700,18 +710,29 @@ export class SupabaseService {
       await this.syncTracks(rawTracks);
 
       // 3. Format history records
-      const historyRows = items.map(item => ({
+      const historyRowsByKey = new Map<string, any>();
+      items.map(item => ({
         user_id: supabaseUserId,
         track_id: item.track?.id || item.trackId,
         played_at: item.played_at
-      })).filter(row => !!row.user_id && !!row.track_id && !!row.played_at);
+      })).filter(row => !!row.user_id && !!row.track_id && !!row.played_at)
+        .forEach(row => {
+          historyRowsByKey.set(
+            `${row.user_id}:${row.played_at}:${row.track_id}`,
+            row
+          );
+        });
+      const historyRows = Array.from(historyRowsByKey.values());
 
       if (historyRows.length === 0) return;
 
       // 4. Insert listening history
       const { error } = await this.client
         .from('listening_history')
-        .upsert(historyRows, { onConflict: 'user_id,played_at,track_id' });
+        .upsert(historyRows, {
+          onConflict: 'user_id,played_at,track_id',
+          ignoreDuplicates: true
+        });
 
       if (error) throw error;
       console.log(`[SupabaseService] Synced ${historyRows.length} history records to database.`);
@@ -755,6 +776,7 @@ export class SupabaseService {
             id, name, duration_ms, explicit, spotify_url,
             albums ( id, name, image_url ),
             track_artists (
+              artist_rank,
               artists ( id, name )
             )
           )
@@ -772,9 +794,7 @@ export class SupabaseService {
         if (!t) return null;
         
         // Extract artists list
-        const artists = t.track_artists 
-          ? t.track_artists.map((ta: any) => ({ id: ta.artists?.id, name: ta.artists?.name }))
-          : [];
+        const artists = this.mapTrackArtists(t.track_artists);
 
         return {
           played_at: row.played_at,
@@ -833,6 +853,7 @@ export class SupabaseService {
               id, name, duration_ms, explicit, spotify_url,
               albums ( id, name, image_url ),
               track_artists (
+                artist_rank,
                 artists ( id, name )
               )
             )
@@ -878,9 +899,7 @@ export class SupabaseService {
               name: t.albums?.name,
               images: albumImageUrl ? [{ url: albumImageUrl }] : []
             },
-            artists: t.track_artists 
-              ? t.track_artists.map((ta: any) => ({ id: ta.artists?.id, name: ta.artists?.name }))
-              : []
+            artists: this.mapTrackArtists(t.track_artists)
           };
         }).filter((t: any) => !!t);
 
@@ -925,6 +944,7 @@ export class SupabaseService {
               id, name, duration_ms, explicit, spotify_url,
               albums ( id, name, image_url ),
               track_artists (
+                artist_rank,
                 artists ( id, name )
               )
             )
@@ -969,9 +989,7 @@ export class SupabaseService {
                 name: t.albums?.name,
                 images: albumImageUrl ? [{ url: albumImageUrl }] : []
               },
-              artists: t.track_artists 
-                ? t.track_artists.map((ta: any) => ({ id: ta.artists?.id, name: ta.artists?.name }))
-                : []
+              artists: this.mapTrackArtists(t.track_artists)
             };
           }).filter((t: any) => !!t);
 
@@ -1052,6 +1070,7 @@ export class SupabaseService {
               id, name, duration_ms, explicit, spotify_url,
               albums ( id, name, image_url ),
               track_artists (
+                artist_rank,
                 artists ( id, name )
               )
             )
@@ -1095,9 +1114,7 @@ export class SupabaseService {
               name: t.albums?.name,
               images: albumImageUrl ? [{ url: albumImageUrl }] : []
             },
-            artists: t.track_artists 
-              ? t.track_artists.map((ta: any) => ({ id: ta.artists?.id, name: ta.artists?.name }))
-              : []
+            artists: this.mapTrackArtists(t.track_artists)
           };
         }).filter((t: any) => !!t);
 
@@ -1147,6 +1164,8 @@ export class SupabaseService {
     onlyInsertMissing = false,
     customDateStr?: string
   ): Promise<void> {
+    let incompleteSnapshotId: string | null = null;
+
     try {
       await this.ensureSession();
 
@@ -1206,6 +1225,7 @@ export class SupabaseService {
 
       if (snapshotErr) throw snapshotErr;
       const snapshotId = snapshot.id;
+      incompleteSnapshotId = snapshotId;
 
       // Rewriting the same daily snapshot must replace its ranks. Otherwise
       // shorter lists leave stale rows and moved items can violate the
@@ -1341,12 +1361,23 @@ export class SupabaseService {
 
       // last_synced_at is deliberately not a generic activity timestamp.
       // It advances only when all three current daily stats snapshots exist.
+      incompleteSnapshotId = null;
       if (!customDateStr) {
         await this.markDailyStatsCompleteIfReady(supabaseUserId);
       }
 
       console.log(`[SupabaseService] Saved stats snapshot for today (${todayStr}, ${range}) to database.`);
     } catch (e) {
+      if (incompleteSnapshotId) {
+        const { error: cleanupError } = await this.client
+          .from('stats_snapshots')
+          .delete()
+          .eq('id', incompleteSnapshotId)
+          .eq('user_id', supabaseUserId);
+        if (cleanupError) {
+          console.warn('[SupabaseService] Failed to remove an incomplete stats snapshot:', cleanupError);
+        }
+      }
       console.error('[SupabaseService] Error saving stats snapshot to DB:', e);
       throw e;
     }
@@ -1393,6 +1424,18 @@ export class SupabaseService {
       console.error('[SupabaseService] Failed to load user cache from database:', e);
       return [];
     }
+  }
+
+  async deleteUserCacheEntries(supabaseUserId: string, keys: string[]): Promise<void> {
+    const uniqueKeys = Array.from(new Set(keys.filter(Boolean)));
+    if (uniqueKeys.length === 0) return;
+
+    const { error } = await this.client
+      .from('user_cache')
+      .delete()
+      .eq('user_id', supabaseUserId)
+      .in('key', uniqueKeys);
+    if (error) throw error;
   }
 
   private async markDailyStatsCompleteIfReady(supabaseUserId: string): Promise<void> {

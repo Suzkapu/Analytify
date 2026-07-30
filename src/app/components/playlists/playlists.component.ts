@@ -98,7 +98,7 @@ export class PlaylistsComponent {
     }
 
     if (storedPlaylists && !isExpired && !isParseError) {
-      console.log(isBackupActive ? "[Playlists] Loading playlists from Supabase Cloud Backup (Local Cache)" : "[Playlists] Loading playlists from Local Storage Cache (Cloud Backup disabled)");
+      console.log('[Playlists] Loading the playlist list from the local IndexedDB cache.');
       this.playlists = parsedPlaylists;
 
       // Sync Favourite Tracks total with the latest loaded amount if available
@@ -138,39 +138,24 @@ export class PlaylistsComponent {
           // Get total amount of favourite tracks
           this.spotifyDataService.getFavTracks(0, 1).subscribe({
             next: (favTracks: any) => {
-              const favPlaylist = {
-                name: 'Favourite Tracks',
-                id: 'fav',
-                images: {
-                  0: {
-                    url: 'https://misc.scdn.co/liked-songs/liked-songs-300.png',
-                  },
-                },
-                tracks: {
-                  total: favTracks.total
-                }
-              };
+              const favouriteTotal = Number.isFinite(favTracks?.total)
+                ? favTracks.total
+                : this.getCachedFavouriteTotal(userId, parsedPlaylists);
+              const favPlaylist = this.createFavouritePlaylist(favouriteTotal);
               this.playlists = [favPlaylist, ...this.playlists];
+              this.storageService.setItem(`${userId}_fav_Amount`, JSON.stringify(favouriteTotal));
               this.storageService.setItem(storageKey, JSON.stringify(this.playlists));
               this.storageService.setItem(lastUpdatedKey, Date.now().toString());
               this.filterPlaylists();
             },
             error: (err) => {
               console.error('Failed to load favourite tracks count', err);
-              const favPlaylist = {
-                name: 'Favourite Tracks',
-                id: 'fav',
-                images: {
-                  0: {
-                    url: 'https://misc.scdn.co/liked-songs/liked-songs-300.png',
-                  },
-                },
-                tracks: {
-                  total: 0
-                }
-              };
+              const favouriteTotal = this.getCachedFavouriteTotal(userId, parsedPlaylists);
+              const favPlaylist = this.createFavouritePlaylist(favouriteTotal);
               this.playlists = [favPlaylist, ...this.playlists];
               this.storageService.setItem(storageKey, JSON.stringify(this.playlists));
+              // The playlist list is current, but the failed liked-songs count
+              // must not overwrite a previously known total with zero.
               this.storageService.setItem(lastUpdatedKey, Date.now().toString());
               this.filterPlaylists();
             }
@@ -178,8 +163,8 @@ export class PlaylistsComponent {
         },
         error: (err) => {
           console.error('Failed to load playlists from API:', err);
-          if (storedPlaylists) {
-            this.playlists = JSON.parse(storedPlaylists);
+          if (parsedPlaylists.length > 0) {
+            this.playlists = parsedPlaylists;
             this.filterPlaylists();
           }
         }
@@ -236,6 +221,37 @@ export class PlaylistsComponent {
 
   viewSongs(playlistId: string) {
     this.router.navigate(['/songs', playlistId]);
+  }
+
+  private getCachedFavouriteTotal(userId: string, cachedPlaylists: any[]): number {
+    const storedAmount = this.storageService.getItem(`${userId}_fav_Amount`);
+    if (storedAmount) {
+      try {
+        const parsedAmount = JSON.parse(storedAmount);
+        if (Number.isFinite(parsedAmount) && parsedAmount >= 0) {
+          return parsedAmount;
+        }
+      } catch {
+        // Fall through to the cached playlist-list value.
+      }
+    }
+
+    const cachedFavourite = cachedPlaylists.find(playlist => playlist?.id === 'fav');
+    const cachedTotal = cachedFavourite?.tracks?.total;
+    return Number.isFinite(cachedTotal) && cachedTotal >= 0 ? cachedTotal : 0;
+  }
+
+  private createFavouritePlaylist(total: number): any {
+    return {
+      name: 'Favourite Tracks',
+      id: 'fav',
+      images: {
+        0: {
+          url: 'https://misc.scdn.co/liked-songs/liked-songs-300.png',
+        },
+      },
+      tracks: { total }
+    };
   }
 
 }

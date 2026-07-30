@@ -29,7 +29,7 @@ export class SpotifyDataService {
         const now = Date.now() / 1000;
         if (retryAfter > now) {
           console.log('API calls are currently in cooldown.')
-          return throwError('API calls are currently in cooldown.');
+          return throwError(() => new Error('API calls are currently in cooldown.'));
         } else {
           return requestFunc().pipe(
             catchError(error => {
@@ -38,7 +38,7 @@ export class SpotifyDataService {
                 this.retryAfterSubject.next(retryAfter);
                 this.storageService.setItem(this.localStorageKey, retryAfter.toString());
               }
-              return throwError(error);
+              return throwError(() => error);
             })
           );
         }

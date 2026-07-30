@@ -1,10 +1,21 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {environment} from "../../../environments/environment";
-import {Observable, throwError, Subject, from, firstValueFrom} from 'rxjs';
+import {Observable, throwError, Subject, from, firstValueFrom, defer} from 'rxjs';
 import {tap, catchError, shareReplay, switchMap} from 'rxjs/operators';
 import {StorageService} from '../storage/storage.service';
 import {SupabaseService} from '../supabase/supabase.service';
+
+function toDailySnapshotDateKey(timestamp: number): string {
+  const date = new Date(timestamp);
+  if (date.getHours() < 1) {
+    date.setDate(date.getDate() - 1);
+  }
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -212,16 +223,12 @@ export class SpotifyAuthService {
       
       if (session) {
         console.log('[Auth] Restoring session from Supabase client...');
-        if (session.provider_token) {
-          this.storageService.setItem(this.storageKey, session.provider_token);
-        }
+        const hadUsableSpotifyAccessToken =
+          !!this.storageService.getItem(this.storageKey) && !this.isTokenExpired();
+
         if (session.provider_refresh_token) {
           this.storageService.setItem('spotifyRefreshToken', session.provider_refresh_token);
         }
-        
-        // Save expiration time
-        const expiresAt = Date.now() + 3600 * 1000;
-        this.storageService.setItem('spotifyTokenExpiresAt', expiresAt.toString());
 
         if (session.user) {
           let spotifyId = session.user.user_metadata?.['provider_id'] || session.user.id;
@@ -260,8 +267,10 @@ export class SpotifyAuthService {
           }
         }
 
-        // If we have a refresh token and no access token or it's expired, proactively refresh it
-        if (localRefreshToken && (!this.storageService.getItem(this.storageKey) || this.isTokenExpired())) {
+        // A provider token returned by getSession() is not proof that Spotify
+        // refreshed it. Prefer the Spotify refresh token whenever the locally
+        // timestamped access token is missing or expired.
+        if (localRefreshToken && !hadUsableSpotifyAccessToken) {
           try {
             console.log('[Auth] Spotify access token missing or expired. Proactively refreshing...');
             await firstValueFrom(this.refreshToken());
@@ -269,9 +278,18 @@ export class SpotifyAuthService {
           } catch (refreshErr) {
             console.warn('[Auth] Failed to refresh Spotify token during session restoration:', refreshErr);
           }
+        } else if (!hadUsableSpotifyAccessToken && session.provider_token) {
+          // Last-resort compatibility path for sessions that do not expose a
+          // provider refresh token. The normal OAuth callback stores a real
+          // refresh token, so this branch should be rare.
+          this.storeSpotifyTokenResponse({
+            access_token: session.provider_token,
+            refresh_token: session.provider_refresh_token,
+            expires_in: 3600
+          });
         }
         
-        return true;
+        return this.isAuthenticated();
       }
     } catch (e) {
       console.warn('[Auth] Failed to restore Supabase session:', e);
@@ -284,59 +302,53 @@ export class SpotifyAuthService {
       return this.refreshObservable;
     }
 
-    // Try refreshing via Supabase first, as it is the auth manager
-    const supabaseRefresh$ = from(this.supabaseService.client.auth.getSession()).pipe(
+    const refreshViaSupabase$ = defer(
+      () => from(this.supabaseService.client.auth.refreshSession())
+    ).pipe(
       switchMap(({ data: { session }, error }: any) => {
         if (error) throw error;
         if (session && session.provider_token) {
-          console.log('[Auth] Refreshed Spotify token via Supabase session');
-          this.storageService.setItem(this.storageKey, session.provider_token);
-          if (session.provider_refresh_token) {
-            this.storageService.setItem('spotifyRefreshToken', session.provider_refresh_token);
-          }
-          const expiresAt = Date.now() + 3600 * 1000;
-          this.storageService.setItem('spotifyTokenExpiresAt', expiresAt.toString());
+          console.log('[Auth] Using the provider token from a refreshed Supabase session.');
+          this.storeSpotifyTokenResponse({
+            access_token: session.provider_token,
+            refresh_token: session.provider_refresh_token,
+            expires_in: 3600
+          });
           return from(Promise.resolve({ access_token: session.provider_token }));
         }
-        throw new Error('No provider token in Supabase session');
-      }),
-      catchError(err => {
-        console.warn('[Auth] Supabase token refresh failed, falling back to direct Spotify refresh:', err);
-        // Fallback to direct Spotify accounts refresh
-        const refreshToken = this.storageService.getItem('spotifyRefreshToken') || '';
-        if (!refreshToken) {
-          return throwError(() => new Error('No refresh token found'));
-        }
-
-        const body = new HttpParams()
-          .set('grant_type', 'refresh_token')
-          .set('refresh_token', refreshToken)
-          .set('client_id', this.clientId);
-
-        const headers = new HttpHeaders({
-          'Content-Type': 'application/x-www-form-urlencoded'
-        });
-
-        return this.http.post('https://accounts.spotify.com/api/token', body.toString(), { headers }).pipe(
-          tap((response: any) => {
-            if (response && response.access_token) {
-              this.storageService.setItem(this.storageKey, response.access_token);
-              if (response.refresh_token) {
-                this.storageService.setItem('spotifyRefreshToken', response.refresh_token);
-                const supabaseUserId = this.getSupabaseUserId();
-                if (supabaseUserId) {
-                  this.saveRefreshTokenToDatabase(supabaseUserId, response.refresh_token);
-                }
-              }
-              const expiresAt = Date.now() + (response.expires_in || 3600) * 1000;
-              this.storageService.setItem('spotifyTokenExpiresAt', expiresAt.toString());
-            }
-          })
-        );
+        throw new Error('No Spotify provider token in refreshed Supabase session');
       })
     );
 
-    this.refreshObservable = supabaseRefresh$.pipe(
+    const refreshToken = this.storageService.getItem('spotifyRefreshToken') || '';
+    let refreshSource$: Observable<any>;
+
+    if (refreshToken) {
+      const body = new HttpParams()
+        .set('grant_type', 'refresh_token')
+        .set('refresh_token', refreshToken)
+        .set('client_id', this.clientId);
+
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded'
+      });
+
+      refreshSource$ = this.http.post(
+        'https://accounts.spotify.com/api/token',
+        body.toString(),
+        { headers }
+      ).pipe(
+        tap((response: any) => this.storeSpotifyTokenResponse(response)),
+        catchError(err => {
+          console.warn('[Auth] Direct Spotify refresh failed. Trying the refreshed Supabase session once:', err);
+          return refreshViaSupabase$;
+        })
+      );
+    } else {
+      refreshSource$ = refreshViaSupabase$;
+    }
+
+    this.refreshObservable = refreshSource$.pipe(
       tap(() => {
         this.refreshObservable = null;
       }),
@@ -348,6 +360,22 @@ export class SpotifyAuthService {
     );
 
     return this.refreshObservable;
+  }
+
+  private storeSpotifyTokenResponse(response: any): void {
+    if (!response?.access_token) return;
+
+    this.storageService.setItem(this.storageKey, response.access_token);
+    if (response.refresh_token) {
+      this.storageService.setItem('spotifyRefreshToken', response.refresh_token);
+      const supabaseUserId = this.getSupabaseUserId();
+      if (supabaseUserId) {
+        this.saveRefreshTokenToDatabase(supabaseUserId, response.refresh_token);
+      }
+    }
+
+    const expiresAt = Date.now() + (response.expires_in || 3600) * 1000;
+    this.storageService.setItem('spotifyTokenExpiresAt', expiresAt.toString());
   }
 
   isTokenExpired(): boolean {
@@ -459,6 +487,28 @@ export class SpotifyAuthService {
         const active = !!data.backup_active;
         this.storageService.setItem(`${supabaseUserId}_backup_active`, active ? 'true' : 'false');
         this.storageService.setItem(`${supabaseUserId}_last_synced_at`, data.last_synced_at || '');
+        const redundantCacheKeys = [
+          `${supabaseUserId}_backup_active`,
+          `${supabaseUserId}_last_synced_at`
+        ];
+        if (spotifyId) {
+          redundantCacheKeys.push(
+            `${spotifyId}_recently_played`,
+            `${spotifyId}_profile_pic`,
+            ...['short_term', 'medium_term', 'long_term'].flatMap(range => [
+              `${spotifyId}_stats_${range}_tracks`,
+              `${spotifyId}_stats_${range}_artists`,
+              `${spotifyId}_stats_${range}_genres`,
+              `${spotifyId}_stats_${range}_lastUpdated`
+            ])
+          );
+        }
+        await this.supabaseService.deleteUserCacheEntries(
+          supabaseUserId,
+          redundantCacheKeys
+        ).catch(err => {
+          console.warn('[SpotifyAuthService] Failed to clean redundant normalized cache keys:', err);
+        });
         if (active) {
           await this.pullCacheFromDatabase(supabaseUserId);
         }
@@ -491,16 +541,12 @@ export class SpotifyAuthService {
     if (!supabaseUserId) {
       throw new Error('User not logged in');
     }
-    // Update local cache immediately
-    this.storageService.setItem(`${supabaseUserId}_backup_active`, 'true');
 
-    // Update database and sync in background/safely
-    try {
-      await this.supabaseService.updateBackupActive(supabaseUserId, true);
-      await this.pushLocalCacheToDatabase(supabaseUserId);
-    } catch (e) {
-      console.warn('[SpotifyAuthService] Database not enabled/configured yet. Backup state stored in local cache only.', e);
-    }
+    // The cloud flag is authoritative. Only expose backup as enabled locally
+    // after Supabase accepted the setting.
+    await this.supabaseService.updateBackupActive(supabaseUserId, true);
+    this.storageService.setItem(`${supabaseUserId}_backup_active`, 'true');
+    await this.pushLocalCacheToDatabase(supabaseUserId);
   }
 
   async disableBackup(): Promise<void> {
@@ -508,14 +554,8 @@ export class SpotifyAuthService {
     if (!supabaseUserId) {
       throw new Error('User not logged in');
     }
-    // Update local cache immediately
+    await this.supabaseService.updateBackupActive(supabaseUserId, false);
     this.storageService.setItem(`${supabaseUserId}_backup_active`, 'false');
-
-    try {
-      await this.supabaseService.updateBackupActive(supabaseUserId, false);
-    } catch (e) {
-      console.warn('[SpotifyAuthService] Database not enabled/configured yet. Backup state stored in local cache only.', e);
-    }
   }
 
   private async pushLocalCacheToDatabase(supabaseUserId: string): Promise<void> {
@@ -527,23 +567,42 @@ export class SpotifyAuthService {
       // 1. Gather all items to count total steps
       const historyKey = `${spotifyUserId}_recently_played`;
       const cachedHistoryStr = this.storageService.getItem(historyKey);
-      const cachedHistory = cachedHistoryStr ? JSON.parse(cachedHistoryStr) : [];
+      let cachedHistory: any[] = [];
+      if (cachedHistoryStr) {
+        try {
+          const parsedHistory = JSON.parse(cachedHistoryStr);
+          cachedHistory = Array.isArray(parsedHistory) ? parsedHistory : [];
+        } catch (error) {
+          console.warn('[Auth] Ignoring invalid local listening-history cache during backup activation:', error);
+        }
+      }
       
       const ranges = ['short_term', 'medium_term', 'long_term'];
-      const statsToSync: { range: string; snap: any }[] = [];
+      const statsToSyncByDate = new Map<string, { range: string; snap: any }>();
       for (const range of ranges) {
         const history = await this.storageService.getStatsHistory(spotifyUserId, range);
         if (history && history.length > 0) {
-          history.forEach(snap => statsToSync.push({ range, snap }));
+          history.forEach(snap => {
+            const dateKey = snap.snapshotDate || toDailySnapshotDateKey(snap.timestamp);
+            const mapKey = `${range}:${dateKey}`;
+            const existing = statsToSyncByDate.get(mapKey);
+            const snapHasDetails = Array.isArray(snap.topTracks) && snap.topTracks.length > 0;
+            const existingHasDetails =
+              Array.isArray(existing?.snap?.topTracks) && (existing?.snap?.topTracks?.length || 0) > 0;
+            if (!existing || snapHasDetails || !existingHasDetails) {
+              statsToSyncByDate.set(mapKey, {
+                range,
+                snap: { ...snap, snapshotDate: dateKey }
+              });
+            }
+          });
         }
       }
+      const statsToSync = Array.from(statsToSyncByDate.values());
 
       // Collect generic cache keys to sync
-      const cacheKeys = this.storageService.getCacheKeys().filter(key => {
-        const isUserKey = key.startsWith(`${spotifyUserId}_`) || key.startsWith(`${supabaseUserId}_`);
-        const isBackupActiveKey = key === `${supabaseUserId}_backup_active`;
-        return isUserKey && !isBackupActiveKey;
-      });
+      const cacheKeys = this.storageService.getCacheKeys()
+        .filter(key => this.storageService.shouldSyncUserCacheKey(key));
 
       const totalSteps = 1 + statsToSync.length + cacheKeys.length;
       let completedSteps = 0;
@@ -562,7 +621,8 @@ export class SpotifyAuthService {
       // Steps 2 to N: Stats Snapshots Sync
       for (const item of statsToSync) {
         try {
-          const customDateStr = new Date(item.snap.timestamp).toISOString().split('T')[0];
+          const customDateStr =
+            item.snap.snapshotDate || toDailySnapshotDateKey(item.snap.timestamp);
           await this.supabaseService.saveStatsSnapshot(
             supabaseUserId,
             item.range,

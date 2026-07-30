@@ -363,22 +363,25 @@ async function saveStatsSnapshot(
 ) {
   const todayStr = getDailySnapshotDate();
   const fetchedAt = getDailyCutoffTimestamp();
+  let incompleteSnapshotId = null;
 
-  // 1. Create the snapshot row
-  const { data: snapshot, error: snapshotErr } = await supabase
-    .from('stats_snapshots')
-    .upsert({
-      user_id: userId,
-      range: range,
-      snapshot_date: todayStr,
-      explicit_percentage: explicitPercentage,
-      genre_diversity: genreDiversity
-    }, { onConflict: 'user_id,range,snapshot_date' })
-    .select('id')
-    .single();
+  try {
+    // 1. Create the snapshot row
+    const { data: snapshot, error: snapshotErr } = await supabase
+      .from('stats_snapshots')
+      .upsert({
+        user_id: userId,
+        range: range,
+        snapshot_date: todayStr,
+        explicit_percentage: explicitPercentage,
+        genre_diversity: genreDiversity
+      }, { onConflict: 'user_id,range,snapshot_date' })
+      .select('id')
+      .single();
 
-  if (snapshotErr) throw snapshotErr;
-  const snapshotId = snapshot.id;
+    if (snapshotErr) throw snapshotErr;
+    const snapshotId = snapshot.id;
+    incompleteSnapshotId = snapshotId;
 
   // A forced/retried run replaces the complete rank lists for this day.
   for (const table of [
@@ -514,21 +517,36 @@ async function saveStatsSnapshot(
   }
 
   // 6. Save raw top artists history
-  if (artistLinks.length > 0) {
-    const topArtistsHistory = artistLinks.map(link => ({
-      user_id: userId,
-      time_range: range,
-      rank: link.rank,
-      artist_id: link.artist_id,
-      fetched_at: fetchedAt
-    }));
+    if (artistLinks.length > 0) {
+      const topArtistsHistory = artistLinks.map(link => ({
+        user_id: userId,
+        time_range: range,
+        rank: link.rank,
+        artist_id: link.artist_id,
+        fetched_at: fetchedAt
+      }));
 
-    if (topArtistsHistory.length > 0) {
-      const { error: artistHistErr } = await supabase
-        .from('user_top_artists_history')
-        .upsert(topArtistsHistory, { onConflict: 'user_id,time_range,fetched_at,rank' });
-      if (artistHistErr) throw artistHistErr;
+      if (topArtistsHistory.length > 0) {
+        const { error: artistHistErr } = await supabase
+          .from('user_top_artists_history')
+          .upsert(topArtistsHistory, { onConflict: 'user_id,time_range,fetched_at,rank' });
+        if (artistHistErr) throw artistHistErr;
+      }
     }
+
+    incompleteSnapshotId = null;
+  } catch (error) {
+    if (incompleteSnapshotId) {
+      const { error: cleanupError } = await supabase
+        .from('stats_snapshots')
+        .delete()
+        .eq('id', incompleteSnapshotId)
+        .eq('user_id', userId);
+      if (cleanupError) {
+        console.warn(`Failed to remove incomplete stats snapshot ${incompleteSnapshotId}:`, cleanupError);
+      }
+    }
+    throw error;
   }
 }
 
@@ -690,18 +708,27 @@ async function syncUserHistory(user, rangesToSync = []) {
         await syncAlbums(albumIds, pulledAlbums);
         await syncTracks(trackIds, pulledTracks);
 
-        const historyToInsert = items
+        const historyRows = items
           .filter(item => item.track?.id && item.played_at)
           .map(item => ({
             user_id: user.id,
             track_id: item.track.id,
             played_at: item.played_at
           }));
+        const historyToInsert = Array.from(new Map(
+          historyRows.map(row => [
+            `${row.user_id}:${row.played_at}:${row.track_id}`,
+            row
+          ])
+        ).values());
 
         if (historyToInsert.length > 0) {
           const { error: histErr } = await supabase
             .from('listening_history')
-            .upsert(historyToInsert, { onConflict: 'user_id,played_at,track_id' });
+            .upsert(historyToInsert, {
+              onConflict: 'user_id,played_at,track_id',
+              ignoreDuplicates: true
+            });
 
           if (histErr) throw histErr;
           console.log(`Synced ${historyToInsert.length} history entries for user ${user.id}`);

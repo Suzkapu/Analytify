@@ -1,13 +1,16 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { SpotifyDataService } from '../../services/spotify-data/spotify-data.service';
 import { SpotifyAuthService } from '../../services/auth/spotify-auth.service';
 import { StorageService } from '../../services/storage/storage.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { SupabaseService } from '../../services/supabase/supabase.service';
 import { ImageHealingService } from '../../services/image-healing/image-healing.service';
 
-function toLocalDateKey(ts: number): string {
+function toDailySnapshotDateKey(ts: number): string {
   const d = new Date(ts);
+  if (d.getHours() < 1) {
+    d.setDate(d.getDate() - 1);
+  }
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const r = String(d.getDate()).padStart(2, '0');
@@ -19,7 +22,7 @@ function toLocalDateKey(ts: number): string {
   templateUrl: './user-stats.component.html',
   styleUrls: ['./user-stats.component.scss']
 })
-export class UserStatsComponent implements OnInit {
+export class UserStatsComponent implements OnInit, OnDestroy {
   selectedRange: string = 'short_term'; // 'short_term', 'medium_term', 'long_term'
   selectedCategory: string = 'tracks'; // 'tracks', 'artists', 'genres'
   isLoading: boolean = false;
@@ -42,6 +45,9 @@ export class UserStatsComponent implements OnInit {
   hotMoverTracks = new Set<string>();
   hotMoverArtists = new Set<string>();
   private historyWriteQueue: Promise<void> = Promise.resolve();
+  private statsLoadSequence = 0;
+  private historyLoadSequence = 0;
+  private statsSubscription: Subscription | null = null;
 
   // Trend modal variables
   showTrendPopup: boolean = false;
@@ -72,12 +78,28 @@ export class UserStatsComponent implements OnInit {
     this.loadStats();
   }
 
-
+  ngOnDestroy() {
+    this.statsLoadSequence++;
+    this.historyLoadSequence++;
+    this.statsSubscription?.unsubscribe();
+    this.statsSubscription = null;
+  }
 
   changeRange(range: string) {
+    if (range === this.selectedRange) return;
+
+    this.statsLoadSequence++;
+    this.historyLoadSequence++;
+    this.statsSubscription?.unsubscribe();
+    this.statsSubscription = null;
     this.selectedSnapshotId = 'current';
     this.selectedRange = range;
     this.compareSnapshotId = '';
+    this.historyData = [];
+    this.snapshotOptions = [];
+    this.historyGroups = [];
+    this.compareGroups = [];
+    this.loadHistoryData();
     this.loadStats();
   }
 
@@ -101,9 +123,15 @@ export class UserStatsComponent implements OnInit {
   }
 
   async loadStats() {
+    const loadSequence = ++this.statsLoadSequence;
+    this.statsSubscription?.unsubscribe();
+    this.statsSubscription = null;
+
     const userId = this.authService.getUserId() || 'anonymous';
     const supabaseUserId = this.authService.getSupabaseUserId();
     const range = this.selectedRange;
+    const isCurrentLoad = () =>
+      loadSequence === this.statsLoadSequence && range === this.selectedRange;
     const lastUpdatedKey = `${userId}_stats_${range}_lastUpdated`;
     const tracksKey = `${userId}_stats_${range}_tracks`;
     const artistsKey = `${userId}_stats_${range}_artists`;
@@ -151,6 +179,8 @@ export class UserStatsComponent implements OnInit {
         genresKey,
         lastUpdatedKey
       ]);
+      if (!isCurrentLoad()) return;
+
       lastUpdated = this.storageService.getItem(lastUpdatedKey);
       isExpired = this.isCacheExpired(lastUpdated);
       cachedTracks = this.storageService.getItem(tracksKey);
@@ -160,7 +190,8 @@ export class UserStatsComponent implements OnInit {
     }
 
     if (!isExpired && !isCacheIncomplete) {
-      console.log(this.authService.isBackupActive() ? `[Stats] Loading stats for ${range} from Supabase Cloud Backup (Local Cache)` : `[Stats] Loading stats for ${range} from Local Storage Cache (Cloud Backup disabled)`);
+      if (!isCurrentLoad()) return;
+      console.log(`[Stats] Loading stats for ${range} from the local IndexedDB cache.`);
       try {
         this.topTracks = parsedTracks;
         this.topArtists = parsedArtists;
@@ -171,6 +202,7 @@ export class UserStatsComponent implements OnInit {
         console.warn('Failed to parse validated user stats cache:', e);
         isCacheIncomplete = true;
       }
+      if (!isCacheIncomplete) return;
     }
     
     if (isExpired || isCacheIncomplete) {
@@ -178,9 +210,13 @@ export class UserStatsComponent implements OnInit {
       if (this.authService.isBackupActive() && supabaseUserId) {
         this.isLoading = true;
         const hasSnapshot = await this.supabaseService.hasStatsSnapshotForToday(supabaseUserId, range);
+        if (!isCurrentLoad()) return;
+
         if (hasSnapshot) {
           console.log(`[Stats] Cache missing/expired. Fetching today's stats snapshot for ${range} directly from Supabase Cloud...`);
           const dbSnapshot = await this.supabaseService.loadTodayStatsSnapshot(supabaseUserId, range);
+          if (!isCurrentLoad()) return;
+
           if (dbSnapshot) {
             this.topTracks = dbSnapshot.topTracks;
             this.topArtists = dbSnapshot.topArtists;
@@ -209,33 +245,43 @@ export class UserStatsComponent implements OnInit {
       const tracksReq = this.spotifyDataService.getUserTopTracks(range, 50, 0);
       const tracksReq2 = this.spotifyDataService.getUserTopTracks(range, 50, 50);
 
-      forkJoin({
+      this.statsSubscription = forkJoin({
         artists: artistsReq,
         tracks: tracksReq,
         tracksPage2: tracksReq2
       }).subscribe({
         next: async (res: any) => {
-          this.topArtists = res.artists.items || [];
+          if (!isCurrentLoad()) return;
 
+          const loadedArtists = res.artists.items || [];
           const page1 = res.tracks.items || [];
           const page2 = res.tracksPage2.items || [];
-          this.topTracks = [...page1, ...page2];
-          this.calculateGenres();
+          const loadedTracks = [...page1, ...page2];
+          const loadedGenres = this.buildGenres(loadedArtists);
+
+          this.topArtists = loadedArtists;
+          this.topTracks = loadedTracks;
+          this.topGenres = loadedGenres;
 
           // Cache the results
-          this.storageService.setItem(tracksKey, JSON.stringify(this.topTracks));
-          this.storageService.setItem(artistsKey, JSON.stringify(this.topArtists));
-          this.storageService.setItem(genresKey, JSON.stringify(this.topGenres));
+          this.storageService.setItem(tracksKey, JSON.stringify(loadedTracks));
+          this.storageService.setItem(artistsKey, JSON.stringify(loadedArtists));
+          this.storageService.setItem(genresKey, JSON.stringify(loadedGenres));
           this.storageService.setItem(lastUpdatedKey, Date.now().toString());
+
+          this.saveHistorySnapshot(userId, range);
+          this.isLoading = false;
+          this.imageHealingService.healArtistImages(loadedArtists, `${userId}_stats_${range}_artists`);
+          this.imageHealingService.healTrackImages(loadedTracks, `${userId}_stats_${range}_tracks`);
 
           // If backup is active, sync to Supabase
           if (this.authService.isBackupActive() && supabaseUserId) {
             let explicitCount = 0;
-            this.topTracks.forEach(track => {
+            loadedTracks.forEach(track => {
               if (track.explicit) explicitCount++;
             });
-            const explicitPercentage = this.topTracks.length > 0 ? Math.round((explicitCount / this.topTracks.length) * 100) : 0;
-            const genreDiversity = this.topGenres.length;
+            const explicitPercentage = loadedTracks.length > 0 ? Math.round((explicitCount / loadedTracks.length) * 100) : 0;
+            const genreDiversity = loadedGenres.length;
 
             try {
               await this.supabaseService.saveStatsSnapshot(
@@ -243,31 +289,30 @@ export class UserStatsComponent implements OnInit {
                 range,
                 explicitPercentage,
                 genreDiversity,
-                this.topTracks,
-                this.topArtists,
-                this.topGenres
+                loadedTracks,
+                loadedArtists,
+                loadedGenres
               );
             } catch (error) {
               console.warn('[Stats] Failed to persist fresh stats snapshot:', error);
             }
-
           }
-
-          this.saveHistorySnapshot(userId, range);
-          this.isLoading = false;
-          // Heal any missing images — shouldn't happen with fresh API data
-          // but guards against Spotify returning nulls
-          this.imageHealingService.healArtistImages(this.topArtists, `${userId}_stats_${range}_artists`);
-          this.imageHealingService.healTrackImages(this.topTracks, `${userId}_stats_${range}_tracks`);
         },
         error: (err) => {
+          if (!isCurrentLoad()) return;
+
           console.error('Failed to load user stats:', err);
           this.isLoading = false;
           // Fallback if API fails but we have stale cache
-          if (cachedTracks && cachedArtists && cachedGenres) {
-            this.topTracks = JSON.parse(cachedTracks);
-            this.topArtists = JSON.parse(cachedArtists);
-            this.topGenres = JSON.parse(cachedGenres);
+          if (
+            Array.isArray(parsedTracks) &&
+            Array.isArray(parsedArtists) &&
+            Array.isArray(parsedGenres) &&
+            (parsedTracks.length > 0 || parsedArtists.length > 0 || parsedGenres.length > 0)
+          ) {
+            this.topTracks = parsedTracks;
+            this.topArtists = parsedArtists;
+            this.topGenres = parsedGenres;
           }
         }
       });
@@ -275,10 +320,14 @@ export class UserStatsComponent implements OnInit {
   }
 
   calculateGenres() {
+    this.topGenres = this.buildGenres(this.topArtists);
+  }
+
+  private buildGenres(artists: any[]): { name: string; count: number; percentage: number; percentage_simple: number }[] {
     const genreCounts = new Map<string, number>();
 
     // Spotify supplies genres on the top-artist objects. Weight them by rank.
-    this.topArtists.forEach((artist, index) => {
+    artists.forEach((artist, index) => {
       const rankWeight = 50 - index;
       if (Array.isArray(artist.genres)) {
         artist.genres.forEach((genre: string) => {
@@ -293,7 +342,7 @@ export class UserStatsComponent implements OnInit {
     const totalWeight = sortedGenres.reduce((sum, entry) => sum + entry[1], 0);
     const maxWeight = sortedGenres.length > 0 ? sortedGenres[0][1] : 1;
 
-    this.topGenres = sortedGenres.slice(0, 15).map(([name, weight]) => ({
+    return sortedGenres.slice(0, 15).map(([name, weight]) => ({
       name,
       count: Math.round(weight),
       percentage: totalWeight > 0 ? Math.min(100, Math.round((weight / totalWeight) * 100)) : 0,
@@ -610,51 +659,55 @@ export class UserStatsComponent implements OnInit {
     });
     const explicitPercentage = this.topTracks.length > 0 ? Math.round((explicitCount / this.topTracks.length) * 100) : 0;
     const genreDiversity = this.topGenres.length;
+    const snapshotItems = {
+      topGenres: this.topGenres.map(g => ({
+        name: g.name,
+        percentage: g.percentage,
+        count: g.count
+      })),
+      topTracks: this.topTracks.map(t => ({
+        id: t.id,
+        name: t.name,
+        artist: t.artists && t.artists[0] ? t.artists[0].name : '',
+        albumCover: t.album?.images && t.album.images[0] ? t.album.images[0].url : '',
+        explicit: t.explicit || false,
+        spotifyUrl: t.external_urls?.spotify || ''
+      })),
+      topArtists: this.topArtists.map(a => ({
+        id: a.id,
+        name: a.name,
+        imageUrl: a.images && a.images[0] ? a.images[0].url : '',
+        spotifyUrl: a.external_urls?.spotify || ''
+      }))
+    };
 
-    this.writeRealSnapshot(userId, range, explicitPercentage, genreDiversity);
+    this.writeRealSnapshot(userId, range, explicitPercentage, genreDiversity, snapshotItems);
   }
 
-  private writeRealSnapshot(userId: string, range: string, explicitPercentage: number, genreDiversity: number) {
+  private writeRealSnapshot(
+    userId: string,
+    range: string,
+    explicitPercentage: number,
+    genreDiversity: number,
+    snapshotItems: { topGenres: any[]; topTracks: any[]; topArtists: any[] }
+  ) {
     this.historyWriteQueue = this.historyWriteQueue.then(() =>
       this.storageService.getStatsHistory(userId, range).then(history => {
-      const lastEntry = history.length > 0 ? history[history.length - 1] : null;
-      
-      const now = new Date();
-      const cutoff = new Date(now);
-      cutoff.setHours(1, 0, 0, 0); // 1:00 AM today
-      if (now.getTime() < cutoff.getTime()) {
-        cutoff.setDate(cutoff.getDate() - 1);
-      }
-
-      const existingToday = lastEntry && lastEntry.timestamp >= cutoff.getTime()
-        ? lastEntry
-        : null;
+      const targetSnapshotDate = toDailySnapshotDateKey(Date.now());
+      const existingToday = history.slice().reverse().find(entry =>
+        (entry.snapshotDate || toDailySnapshotDateKey(entry.timestamp)) === targetSnapshotDate
+      ) || null;
 
       const snapshot: any = {
         userId: userId,
         range: range,
         timestamp: existingToday?.timestamp || Date.now(),
+        snapshotDate: targetSnapshotDate,
         explicitPercentage: explicitPercentage,
         genreDiversity: genreDiversity,
-        topGenres: this.topGenres.map(g => ({
-          name: g.name,
-          percentage: g.percentage,
-          count: g.count
-        })),
-        topTracks: this.topTracks.map(t => ({
-          id: t.id,
-          name: t.name,
-          artist: t.artists && t.artists[0] ? t.artists[0].name : '',
-          albumCover: t.album?.images && t.album.images[0] ? t.album.images[0].url : '',
-          explicit: t.explicit || false,
-          spotifyUrl: t.external_urls?.spotify || ''
-        })),
-        topArtists: this.topArtists.map(a => ({
-          id: a.id,
-          name: a.name,
-          imageUrl: a.images && a.images[0] ? a.images[0].url : '',
-          spotifyUrl: a.external_urls?.spotify || ''
-        }))
+        topGenres: snapshotItems.topGenres,
+        topTracks: snapshotItems.topTracks,
+        topArtists: snapshotItems.topArtists
       };
       if (existingToday?.id !== undefined) {
         snapshot.id = existingToday.id;
@@ -673,28 +726,57 @@ export class UserStatsComponent implements OnInit {
   }
 
   loadHistoryData() {
+    const loadSequence = ++this.historyLoadSequence;
     const userId = this.authService.getUserId() || 'anonymous';
     const supabaseUserId = this.authService.getSupabaseUserId();
     const range = this.selectedRange;
+    const isCurrentLoad = () =>
+      loadSequence === this.historyLoadSequence && range === this.selectedRange;
 
     const loadLocal = () => {
-      return this.storageService.getStatsHistory(userId, range).then(history => {
+      return this.storageService.getStatsHistory(userId, range).then(async history => {
+        if (!isCurrentLoad()) return;
+
+        const snapshotsByDate = new Map<string, any>();
+        (history || []).forEach((snapshot: any) => {
+          const dateKey = snapshot.snapshotDate || toDailySnapshotDateKey(snapshot.timestamp);
+          const existing = snapshotsByDate.get(dateKey);
+          const snapshotHasDetails = Array.isArray(snapshot.topTracks) && snapshot.topTracks.length > 0;
+          const existingHasDetails = Array.isArray(existing?.topTracks) && existing.topTracks.length > 0;
+          if (!existing || snapshotHasDetails || !existingHasDetails) {
+            snapshotsByDate.set(dateKey, { ...snapshot, snapshotDate: dateKey });
+          }
+        });
+        const retainedIds = new Set(
+          Array.from(snapshotsByDate.values())
+            .map(snapshot => snapshot.id)
+            .filter(id => id !== undefined)
+        );
+        const duplicateIds = (history || [])
+          .map((snapshot: any) => snapshot.id)
+          .filter((id: IDBValidKey | undefined): id is IDBValidKey =>
+            id !== undefined && !retainedIds.has(id)
+          );
+        if (duplicateIds.length > 0) {
+          await this.storageService.deleteStatsHistoryEntries(duplicateIds);
+        }
+        if (!isCurrentLoad()) return;
+
         // Mark snapshots that already have topTracks array as fully loaded
-        this.historyData = (history || []).map(h => ({
+        this.historyData = Array.from(snapshotsByDate.values())
+          .sort((a, b) => a.timestamp - b.timestamp)
+          .map(h => ({
           ...h,
           isLoaded: (h.topTracks && h.topTracks.length > 0) ? true : (h.isLoaded || false)
         }));
         
-        // Define today's 1:00 AM cutoff to identify today's snapshots
-        const now = new Date();
-        const cutoff = new Date(now);
-        cutoff.setHours(1, 0, 0, 0); // 1:00 AM today
-        if (now.getTime() < cutoff.getTime()) {
-          cutoff.setDate(cutoff.getDate() - 1);
-        }
-
-        // Only include historical entries before today's 1 AM cutoff
-        const historicalOnly = this.historyData.filter(d => d.timestamp < cutoff.getTime());
+        // Compare logical 01:00-day keys rather than midnight timestamps.
+        // Cloud snapshots are normalized to local midnight and would otherwise
+        // be misclassified as historical during the current day.
+        const currentSnapshotDate = toDailySnapshotDateKey(Date.now());
+        const historicalOnly = this.historyData.filter(d =>
+          (d.snapshotDate || toDailySnapshotDateKey(d.timestamp)) < currentSnapshotDate
+        );
 
         // Populate snapshot options with clean date format (no timestamp)
         this.snapshotOptions = historicalOnly.slice().reverse().map(d => ({
@@ -723,16 +805,23 @@ export class UserStatsComponent implements OnInit {
 
     // 1. Load local history IMMEDIATELY so comparison dropdown is responsive instantly
     loadLocal().then(() => {
+      if (!isCurrentLoad()) return;
+
       // 2. Perform sync in background
       const ready = this.authService.initialSyncPromise || Promise.resolve();
       ready.then(() => {
+        if (!isCurrentLoad()) return;
+
         const isBackupActive = this.authService.isBackupActive();
         if (isBackupActive && supabaseUserId) {
           // Fetch only the lightweight metadata from Supabase
           this.supabaseService.loadAllStatsSnapshotsMetadata(supabaseUserId, range).then(async (dbSnapshots) => {
-            const localHistory = await this.storageService.getStatsHistory(userId, range).catch(() => [] as any[]);
+            if (!isCurrentLoad()) return;
 
-            const toDateKey = toLocalDateKey;
+            const localHistory = await this.storageService.getStatsHistory(userId, range).catch(() => [] as any[]);
+            if (!isCurrentLoad()) return;
+
+            const toDateKey = toDailySnapshotDateKey;
 
             const cloudDateKeys = new Set((dbSnapshots || []).map((s: any) =>
               s.snapshotDate || toDateKey(s.timestamp)
@@ -743,7 +832,9 @@ export class UserStatsComponent implements OnInit {
             // Step 1: Download cloud snapshots missing from local IndexedDB (as metadata-only placeholder)
             if (dbSnapshots && dbSnapshots.length > 0) {
               try {
-                const localDateKeys = new Set(localHistory.map((h: any) => toDateKey(h.timestamp)));
+                const localDateKeys = new Set(localHistory.map((h: any) =>
+                  h.snapshotDate || toDateKey(h.timestamp)
+                ));
                 for (const snap of dbSnapshots) {
                   const key = snap.snapshotDate || toDateKey(snap.timestamp);
                   if (!localDateKeys.has(key)) {
@@ -760,11 +851,11 @@ export class UserStatsComponent implements OnInit {
             // Step 2: Upload local-only snapshots to cloud
             try {
               const localOnlySnapshots = localHistory.filter((h: any) =>
-                !cloudDateKeys.has(toDateKey(h.timestamp))
+                !cloudDateKeys.has(h.snapshotDate || toDateKey(h.timestamp))
               );
 
               for (const localSnap of localOnlySnapshots) {
-                const dateStr = toDateKey(localSnap.timestamp);
+                const dateStr = localSnap.snapshotDate || toDateKey(localSnap.timestamp);
                 let explicitCount = 0;
                 (localSnap.topTracks || []).forEach((t: any) => {
                   if (t.explicit) explicitCount++;
@@ -792,6 +883,7 @@ export class UserStatsComponent implements OnInit {
 
             if (localUpdated) {
               await loadLocal();
+              if (!isCurrentLoad()) return;
             }
 
             // Background load of all detailed snapshots to populate local database fully
@@ -799,8 +891,12 @@ export class UserStatsComponent implements OnInit {
             if (hasUnloaded) {
               console.log('[Stats] Background loading all detailed snapshots from cloud...');
               this.supabaseService.loadAllStatsSnapshots(supabaseUserId, range).then(async (fullSnapshots) => {
+                if (!isCurrentLoad()) return;
+
                 let anyUpdated = false;
                 for (const fullSnap of fullSnapshots) {
+                  if (!isCurrentLoad()) return;
+
                   const idx = this.historyData.findIndex(d => 
                     (d.snapshotDate || toDateKey(d.timestamp)) === (fullSnap.snapshotDate || toDateKey(fullSnap.timestamp))
                   );
@@ -987,6 +1083,7 @@ export class UserStatsComponent implements OnInit {
   }
 
   async openTrendPopup(item: any, category: 'tracks' | 'artists' | 'genres') {
+    const range = this.selectedRange;
     this.trendPopupItem = item;
     this.trendPopupCategory = category;
     this.showTrendPopup = true;
@@ -999,11 +1096,11 @@ export class UserStatsComponent implements OnInit {
       this.isLoadingTrendData = true;
       try {
         const userId = this.authService.getUserId() || 'anonymous';
-        const range = this.selectedRange;
         console.log(`[Stats] Trend popup clicked, but some snapshots are not loaded. Fetching all snapshot details from cloud...`);
         const fullSnapshots = await this.supabaseService.loadAllStatsSnapshots(supabaseUserId, range);
+        if (range !== this.selectedRange || !this.showTrendPopup) return;
         
-        const toDateKey = toLocalDateKey;
+        const toDateKey = toDailySnapshotDateKey;
         // Update historyData in-place and save to IndexedDB
         for (const fullSnap of fullSnapshots) {
           const idx = this.historyData.findIndex(d => 
@@ -1328,11 +1425,14 @@ export class UserStatsComponent implements OnInit {
     const snap = this.historyData.find(d => d.timestamp.toString() === snapshotIdStr);
     if (!snap || snap.isLoaded === 'loading' || snap.isLoaded === true) return;
 
+    const range = this.selectedRange;
     snap.isLoaded = 'loading';
     const supabaseUserId = this.authService.getSupabaseUserId();
     if (supabaseUserId && snap.id) {
       console.log(`[Stats] Lazy-loading snapshot details on demand: ${snap.snapshotDate || snapshotIdStr}`);
       this.supabaseService.loadStatsSnapshotById(supabaseUserId, snap.id).then(fullSnap => {
+        if (range !== this.selectedRange) return;
+
         if (fullSnap) {
           const idx = this.historyData.findIndex(d => d.timestamp.toString() === snapshotIdStr);
           if (idx !== -1) {

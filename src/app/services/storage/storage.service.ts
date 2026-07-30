@@ -11,6 +11,7 @@ export class StorageService {
 
   private dbPromise: Promise<IDBDatabase> | null = null;
   private initPromise: Promise<void> | null = null;
+  private cloudWriteQueues = new Map<string, Promise<void>>();
 
   constructor(private supabaseService: SupabaseService) {}
 
@@ -64,10 +65,14 @@ export class StorageService {
         const store = tx.objectStore('appData');
         const req   = store.getAll();
 
-        req.onsuccess = (event: any) => {
+        req.onsuccess = async (event: any) => {
           const entries: { key: string; value: string }[] = event.target.result || [];
           entries.forEach(entry => this.inMemoryCache.set(entry.key, entry.value));
-          this.migrateDevData(db).catch(err => console.warn('[StorageService] Dev migration error:', err));
+          try {
+            await this.migrateDevData(db);
+          } catch (err) {
+            console.warn('[StorageService] Dev migration error:', err);
+          }
           resolve();
         };
         req.onerror = () => resolve(); // graceful degradation
@@ -197,12 +202,8 @@ export class StorageService {
     if (supabaseUserId && spotifyUserId) {
       const isBackupActive = this.inMemoryCache.get(`${supabaseUserId}_backup_active`) === 'true';
       if (isBackupActive) {
-        const isUserKey = key.startsWith(`${spotifyUserId}_`) || key.startsWith(`${supabaseUserId}_`);
-        const isBackupActiveKey = key === `${supabaseUserId}_backup_active`;
-        if (isUserKey && !isBackupActiveKey) {
-          this.supabaseService.saveUserCache(supabaseUserId, key, value).catch(err => {
-            console.warn('[StorageService] Failed to sync cache key to Supabase:', key, err);
-          });
+        if (this.shouldSyncUserCacheKey(key)) {
+          this.enqueueCloudWrite(supabaseUserId, key, value);
         }
       }
     }
@@ -215,6 +216,25 @@ export class StorageService {
 
   getCacheKeys(): string[] {
     return Array.from(this.inMemoryCache.keys());
+  }
+
+  shouldSyncUserCacheKey(key: string): boolean {
+    const supabaseUserId = this.getEffectiveSupabaseUserId();
+    const spotifyUserId = this.inMemoryCache.get('spotifyUserId');
+    if (!supabaseUserId || !spotifyUserId) return false;
+
+    const isUserKey = key.startsWith(`${spotifyUserId}_`) || key.startsWith(`${supabaseUserId}_`);
+    if (!isUserKey) return false;
+
+    const isCloudControlKey =
+      key === `${supabaseUserId}_backup_active` ||
+      key === `${supabaseUserId}_last_synced_at`;
+    const hasNormalizedPersistence =
+      key === `${spotifyUserId}_recently_played` ||
+      key === `${spotifyUserId}_profile_pic` ||
+      key.startsWith(`${spotifyUserId}_stats_`);
+
+    return !isCloudControlKey && !hasNormalizedPersistence;
   }
 
   /**
@@ -234,6 +254,9 @@ export class StorageService {
 
     const entries = await this.supabaseService.loadUserCache(supabaseUserId, uniqueKeys);
     entries.forEach(entry => this.setItem(entry.key, entry.value, false));
+    if (entries.length > 0) {
+      console.log(`[StorageService] Restored ${entries.length} requested cache keys from Supabase.`);
+    }
     return entries.length;
   }
 
@@ -296,6 +319,26 @@ export class StorageService {
     });
   }
 
+  private enqueueCloudWrite(supabaseUserId: string, key: string, value: string): void {
+    const queueKey = `${supabaseUserId}:${key}`;
+    const previousWrite = this.cloudWriteQueues.get(queueKey) || Promise.resolve();
+    const nextWrite = previousWrite
+      .catch(() => {
+        // A failed older write must not block the newest value.
+      })
+      .then(() => this.supabaseService.saveUserCache(supabaseUserId, key, value))
+      .catch(err => {
+        console.warn('[StorageService] Failed to sync cache key to Supabase:', key, err);
+      })
+      .finally(() => {
+        if (this.cloudWriteQueues.get(queueKey) === nextWrite) {
+          this.cloudWriteQueues.delete(queueKey);
+        }
+      });
+
+    this.cloudWriteQueues.set(queueKey, nextWrite);
+  }
+
   getStatsHistory(userId: string, range: string): Promise<any[]> {
     return this.getDB().then(db => new Promise<any[]>((resolve, reject) => {
       const tx      = db.transaction('statsHistory', 'readonly');
@@ -312,6 +355,22 @@ export class StorageService {
     })).catch(err => {
       console.warn('IndexedDB failed to read stats history, returning empty:', err);
       return [];
+    });
+  }
+
+  deleteStatsHistoryEntries(ids: IDBValidKey[]): Promise<void> {
+    const uniqueIds = Array.from(new Set(ids));
+    if (uniqueIds.length === 0) return Promise.resolve();
+
+    return this.getDB().then(db => new Promise<void>((resolve, reject) => {
+      const tx = db.transaction('statsHistory', 'readwrite');
+      const store = tx.objectStore('statsHistory');
+      uniqueIds.forEach(id => store.delete(id));
+      tx.oncomplete = () => resolve();
+      tx.onerror = (event: any) => reject(event.target.error);
+      tx.onabort = (event: any) => reject(event.target.error);
+    })).catch(err => {
+      console.warn('IndexedDB failed to delete duplicate stats history entries:', err);
     });
   }
 

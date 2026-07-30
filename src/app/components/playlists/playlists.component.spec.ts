@@ -1,6 +1,11 @@
+import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-
+import {ActivatedRoute, Router} from '@angular/router';
+import {EMPTY} from 'rxjs';
 import {PlaylistsComponent} from './playlists.component';
+import {SpotifyDataService} from '../../services/spotify-data/spotify-data.service';
+import {SpotifyAuthService} from '../../services/auth/spotify-auth.service';
+import {StorageService} from '../../services/storage/storage.service';
 
 describe('PlaylistsComponent', () => {
   let component: PlaylistsComponent;
@@ -8,7 +13,15 @@ describe('PlaylistsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PlaylistsComponent]
+      declarations: [PlaylistsComponent],
+      providers: [
+        { provide: ActivatedRoute, useValue: { params: EMPTY } },
+        { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } },
+        { provide: SpotifyDataService, useValue: {} },
+        { provide: SpotifyAuthService, useValue: {} },
+        { provide: StorageService, useValue: {} }
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     });
     fixture = TestBed.createComponent(PlaylistsComponent);
     component = fixture.componentInstance;

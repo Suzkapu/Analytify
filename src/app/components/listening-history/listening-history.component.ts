@@ -41,7 +41,8 @@ export class ListeningHistoryComponent implements OnInit {
     try {
       const cached = this.storageService.getItem(storageKey);
       if (cached) {
-        cachedTracks = JSON.parse(cached);
+        const parsed = JSON.parse(cached);
+        cachedTracks = Array.isArray(parsed) ? parsed : [];
       }
     } catch (e) {
       console.warn('Failed to parse cached recently played tracks:', e);
@@ -67,24 +68,33 @@ export class ListeningHistoryComponent implements OnInit {
       this.isLoadingRecentlyPlayed = true;
     }
 
-    console.log('[History] Cache or Supabase database has no today\'s history. Fetching recently played tracks from Spotify API...');
+    console.log(
+      cachedTracks.length > 0
+        ? '[History] Checking Spotify for listening-history entries newer than the local/Supabase cache.'
+        : '[History] No cached listening history found. Fetching the latest entries from Spotify.'
+    );
     this.spotifyDataService.getRecentlyPlayed(50).subscribe({
       next: (res: any) => {
         const newItems = res.items || [];
         
         // Find if there is an overlap
         const filteredNewItems: any[] = [];
-        const existingTimestamps = new Set(cachedTracks.map(item => item.played_at));
+        const historyKey = (item: any) =>
+          `${item?.played_at || ''}:${item?.track?.id || ''}`;
+        const existingEntries = new Set(cachedTracks.map(historyKey));
         
         for (const item of newItems) {
-          if (existingTimestamps.has(item.played_at)) {
+          if (existingEntries.has(historyKey(item))) {
             break; // Stop pulling/processing the rest of the items on overlap!
           }
           filteredNewItems.push(item);
         }
         
         // Merge new non-overlapping items to the beginning of the cached list
-        const mergedTracks = [...filteredNewItems, ...cachedTracks];
+        const mergedTracks = [...filteredNewItems, ...cachedTracks]
+          .filter((item, index, allItems) =>
+            allItems.findIndex(candidate => historyKey(candidate) === historyKey(item)) === index
+          );
         
         // Truncate to the most recent 50 tracks
         const finalTracks = mergedTracks.slice(0, 50);

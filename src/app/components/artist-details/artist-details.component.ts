@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {SpotifyDataService} from "../../services/spotify-data/spotify-data.service";
 import {SpotifyAuthService} from "../../services/auth/spotify-auth.service";
 import {StorageService} from "../../services/storage/storage.service";
@@ -10,11 +10,9 @@ import {SupabaseService} from "../../services/supabase/supabase.service";
   templateUrl: './artist-details.component.html',
   styleUrls: ['./artist-details.component.scss'],
 })
-export class ArtistDetailsComponent implements OnInit, OnDestroy {
+export class ArtistDetailsComponent {
   artist: any = {};
   tracks: any[] = [];
-  allTags: any;
-  selectedTag: any;
   playlistId: string = '';
 
 
@@ -27,18 +25,10 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
     private supabaseService: SupabaseService
   ) {
     this.route.params.subscribe(async (params) => {
-      this.tracks = history.state.tracks;
-      this.playlistId = history.state.playlistId || '';
+      this.tracks = Array.isArray(history.state?.tracks) ? history.state.tracks : [];
+      this.playlistId = history.state?.playlistId || '';
       await this.loadArtistDetails(params['id']);
     });
-  }
-
-
-
-  ngOnInit() {
-  }
-
-  ngOnDestroy() {
   }
 
   private isCacheExpired(lastUpdatedStr: string | null): boolean {
@@ -83,12 +73,18 @@ export class ArtistDetailsComponent implements OnInit, OnDestroy {
       const storageKey = `${userId}_${this.playlistId}`;
       const storedArtists = this.storageService.getItem(storageKey);
       if (storedArtists) {
-        const parsed = JSON.parse(storedArtists);
-        const found = parsed.find((a: any) => a.id === id);
-        if (found) {
-          console.log(this.authService.isBackupActive() ? "[ArtistDetails] Loading artist details from Supabase Cloud Backup (Local Cache)" : "[ArtistDetails] Loading artist details from Local Storage Cache (Cloud Backup disabled)");
-          this.artist = found;
-          return;
+        try {
+          const parsed = JSON.parse(storedArtists);
+          const found = Array.isArray(parsed)
+            ? parsed.find((a: any) => a.id === id)
+            : null;
+          if (found) {
+            console.log('[ArtistDetails] Loading artist details from the local IndexedDB playlist cache.');
+            this.artist = found;
+            return;
+          }
+        } catch (error) {
+          console.warn('[ArtistDetails] Ignoring an invalid playlist cache entry:', error);
         }
       }
     }

@@ -105,7 +105,10 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
           console.warn('Failed to parse stored artists for active task:', e);
         }
       }
-      this.subscribeToLoaderTask(activeTask);
+      this.subscribeToLoaderTask(
+        activeTask,
+        activeTask.mode === 'incremental-new-only'
+      );
       return;
     }
 
@@ -154,7 +157,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     }
 
     if (storedArtists && !isExpired && !isParseError && !isOldCache) {
-      console.log(isBackupActive ? `[Analysis] Loading playlist ${this.playlistId} data from Supabase Cloud Backup (Local Cache)` : `[Analysis] Loading playlist ${this.playlistId} data from Local Storage Cache (Cloud Backup disabled)`);
+      console.log(`[Analysis] Loading playlist ${this.playlistId} data from the local IndexedDB cache.`);
       try {
         this.artists = parsedArtists;
         this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
@@ -180,7 +183,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     }
   }
 
-  triggerApiLoad(isBackgroundRefresh: boolean, allowFullFallback: boolean = false) {
+  triggerApiLoad(isBackgroundRefresh: boolean, isDailyFullSync: boolean = false) {
     const userId = this.authService.getUserId() || 'anonymous';
     
     // Cancel previous loader task subscription if any
@@ -189,23 +192,25 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
       this.loaderSubscription = null;
     }
 
-    const task = this.playlistLoaderService.startLoadingTask(userId, this.playlistId, isBackgroundRefresh, allowFullFallback);
+    const task = this.playlistLoaderService.startLoadingTask(userId, this.playlistId, isBackgroundRefresh, isDailyFullSync);
     this.subscribeToLoaderTask(task);
   }
 
-  private subscribeToLoaderTask(task: any) {
+  private subscribeToLoaderTask(task: any, silent: boolean = false) {
     const userId = this.authService.getUserId() || 'anonymous';
     this.loaderSubscription = task.progress$.subscribe((progress: any) => {
-      this.isLoading = (progress.isLoadingTracks || progress.isLoadingArtists) && !progress.isRefreshing && progress.artists.length === 0;
-      this.isLoadingTracks = progress.isLoadingTracks;
-      this.isLoadingArtists = progress.isLoadingArtists;
-      this.isRefreshing = progress.isRefreshing;
-      this.loadedTracksCount = progress.loadedTracksCount;
-      this.totalTracks = progress.totalTracks;
-      this.loadedArtistsDetailsCount = progress.loadedArtistsDetailsCount;
-      this.totalUniqueArtists = progress.totalUniqueArtists;
-      this.playlistName = progress.playlistName;
-      this.cooldownMessage = progress.cooldownMessage;
+      if (!silent) {
+        this.isLoading = (progress.isLoadingTracks || progress.isLoadingArtists) && !progress.isRefreshing && progress.artists.length === 0;
+        this.isLoadingTracks = progress.isLoadingTracks;
+        this.isLoadingArtists = progress.isLoadingArtists;
+        this.isRefreshing = progress.isRefreshing;
+        this.loadedTracksCount = progress.loadedTracksCount;
+        this.totalTracks = progress.totalTracks;
+        this.loadedArtistsDetailsCount = progress.loadedArtistsDetailsCount;
+        this.totalUniqueArtists = progress.totalUniqueArtists;
+        this.playlistName = progress.playlistName;
+        this.cooldownMessage = progress.cooldownMessage;
+      }
 
       if (progress.isComplete) {
         const storedArtists = this.storageService.getItem(`${userId}_${this.playlistId}`);
@@ -222,7 +227,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
           this.loaderSubscription.unsubscribe();
           this.loaderSubscription = null;
         }
-      } else {
+      } else if (!silent) {
         this.artists = (this.artists.length === 0 || !progress.isRefreshing) ? progress.artists : this.artists;
         if (this.artists && this.artists.length > 0) {
           this.runAnalysis();
