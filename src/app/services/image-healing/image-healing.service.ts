@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { SpotifyDataService } from '../spotify-data/spotify-data.service';
 import { SpotifyAuthService } from '../auth/spotify-auth.service';
 import { StorageService } from '../storage/storage.service';
@@ -10,6 +11,9 @@ const PLACEHOLDER_URL = 'https://misc.scdn.co/liked-songs/liked-songs-300.png';
   providedIn: 'root'
 })
 export class ImageHealingService {
+  private artistHealingInFlight = new Set<string>();
+  private artistHealingAttempted = new Set<string>();
+  private failedArtistImageUrls = new Map<string, Set<string>>();
 
   constructor(
     private spotifyDataService: SpotifyDataService,
@@ -22,155 +26,201 @@ export class ImageHealingService {
     return !url || url === PLACEHOLDER_URL;
   }
 
+  markArtistImageFailed(artistId: string, imageUrl: string | null | undefined): void {
+    if (!artistId || !imageUrl || imageUrl === PLACEHOLDER_URL) return;
+    const failedUrls = this.failedArtistImageUrls.get(artistId) || new Set<string>();
+    failedUrls.add(imageUrl);
+    this.failedArtistImageUrls.set(artistId, failedUrls);
+    this.artistHealingAttempted.delete(artistId);
+  }
+
+  private isKnownFailedArtistImage(
+    artistId: string,
+    imageUrl: string | null | undefined
+  ): boolean {
+    return !!imageUrl && !!this.failedArtistImageUrls.get(artistId)?.has(imageUrl);
+  }
+
   /**
-   * Scans a list of artist objects and re-fetches any that are missing real
-   * profile images from the Spotify API.  After healing, the changes are:
-   *   1. Applied in-place on the array (component bindings update automatically).
-   *   2. Written back to the given cacheKey in local storage (+ auto-synced to
-   *      the user_cache Supabase table if backup is enabled).
-   *   3. Written to the global `artists` Supabase table so every view that
-   *      queries the DB (stats snapshots, artist-details, etc.) gets the fix.
-   *
-   * Artists whose id is falsy, or whose id is 'fav', are skipped.
-   *
-   * @param artists     Array of artist objects (mutated in place).
-   * @param cacheKey    localStorage key to persist the patched array to (optional).
+   * Repairs missing artist images in source order: normalized Supabase
+   * metadata first, then Spotify for profiles that are still incomplete.
+   * Each artist is attempted at most once per app session.
    */
   healArtistImages(artists: any[], cacheKey?: string): void {
-    if (!artists || artists.length === 0) return;
+    if (!Array.isArray(artists) || artists.length === 0) return;
 
-    const missing = artists.filter(a => {
-      if (!a.id || typeof a.id !== 'string' || a.id.trim() === '' || a.id === 'fav') return false;
-      if (!a.images || a.images.length === 0) return true;
-      const firstUrl = a.images[0]?.url;
-      return this.isPlaceholder(firstUrl);
+    const missingIds = Array.from(new Set<string>(
+      artists
+        .filter(artist => {
+          if (
+            !artist?.id ||
+            typeof artist.id !== 'string' ||
+            artist.id.trim() === '' ||
+            artist.id === 'fav'
+          ) {
+            return false;
+          }
+          if (
+            this.artistHealingInFlight.has(artist.id) ||
+            this.artistHealingAttempted.has(artist.id)
+          ) {
+            return false;
+          }
+          return this.isPlaceholder(artist.images?.[0]?.url);
+        })
+        .map(artist => artist.id)
+    ));
+
+    if (missingIds.length === 0) return;
+
+    missingIds.forEach(id => {
+      this.artistHealingInFlight.add(id);
+      this.artistHealingAttempted.add(id);
     });
 
-    if (missing.length === 0) return;
-
-    console.log(`[ImageHealingService] ${missing.length} artist(s) with missing images. Re-fetching…`);
-
-    const missingIds = missing.map(a => a.id);
-    for (let i = 0; i < missingIds.length; i += 50) {
-      const batch = missingIds.slice(i, i + 50);
-      this.spotifyDataService.getArtistsByIds(batch).subscribe({
-        next: (res: any) => {
-          const map = new Map<string, any>();
-          (res.artists || []).forEach((a: any) => { if (a) map.set(a.id, a); });
-
-          let changed = false;
-          artists.forEach(artist => {
-            if (!map.has(artist.id)) return;
-            const full = map.get(artist.id);
-            if (!full) return;
-
-            const realImg = full.images?.[0]?.url;
-            if (!this.isPlaceholder(realImg)) {
-              artist.images = [{ url: realImg }];
-              changed = true;
-            }
-          });
-
-          if (!changed) return;
-
-          // 1. Persist to local cache + auto-sync to user_cache table
-          if (cacheKey) {
-            this.storageService.setItem(cacheKey, JSON.stringify(artists));
-          }
-
-          // 2. Push to the global `artists` DB table so historical snapshots
-          //    and the artist-details page also get the real image
-          const supabaseUserId = this.authService.getSupabaseUserId();
-          if (this.authService.isBackupActive() && supabaseUserId) {
-            const forSync = batch
-              .map(id => map.get(id))
-              .filter(a => !!a)
-              .map(artist => {
-                const imageMetadata = { ...artist };
-                return imageMetadata;
-              });
-            if (forSync.length > 0) {
-              this.supabaseService.syncArtists(forSync).catch(err =>
-                console.warn('[ImageHealingService] syncArtists failed:', err)
-              );
-            }
-          }
-
-          console.log(`[ImageHealingService] Healed ${batch.length} artist(s); cache & DB updated.`);
-        },
-        error: (err: any) => console.warn('[ImageHealingService] Artist heal batch failed:', err)
+    void this.healArtistImagesFromSources(artists, missingIds, cacheKey)
+      .catch(error => {
+        console.warn('[ImageHealingService] Artist image recovery failed:', error);
+      })
+      .finally(() => {
+        missingIds.forEach(id => this.artistHealingInFlight.delete(id));
       });
+  }
+
+  private async healArtistImagesFromSources(
+    artists: any[],
+    missingIds: string[],
+    cacheKey?: string
+  ): Promise<void> {
+    console.log(
+      `[ImageHealingService] Recovering ${missingIds.length} missing artist image(s) from Supabase, then Spotify.`
+    );
+
+    const applyProfiles = (profiles: any[]): boolean => {
+      const profileMap = new Map<string, any>();
+      profiles.forEach(profile => {
+        if (profile?.id) profileMap.set(profile.id, profile);
+      });
+
+      let changed = false;
+      artists.forEach(artist => {
+        const profile = profileMap.get(artist.id);
+        const imageUrl = profile?.images?.[0]?.url;
+        if (
+          !profile ||
+          this.isPlaceholder(imageUrl) ||
+          this.isKnownFailedArtistImage(artist.id, imageUrl)
+        ) {
+          return;
+        }
+
+        artist.images = [{ url: imageUrl }];
+        if (profile.external_urls?.spotify) {
+          artist.external_urls = { spotify: profile.external_urls.spotify };
+        }
+        changed = true;
+      });
+      return changed;
+    };
+
+    const databaseArtists = await this.supabaseService.loadArtistsByIds(missingIds);
+    let changed = applyProfiles(databaseArtists);
+    if (changed && cacheKey) {
+      this.storageService.setItem(cacheKey, JSON.stringify(artists));
+    }
+
+    const unresolvedIds = missingIds.filter(id => {
+      const artist = artists.find(candidate => candidate.id === id);
+      return this.isPlaceholder(artist?.images?.[0]?.url);
+    });
+
+    const spotifyArtists: any[] = [];
+    for (let offset = 0; offset < unresolvedIds.length; offset += 50) {
+      const batch = unresolvedIds.slice(offset, offset + 50);
+      const response = await firstValueFrom(
+        this.spotifyDataService.getArtistsByIds(batch)
+      );
+      const profiles = response?.artists || [];
+      spotifyArtists.push(...profiles);
+      changed = applyProfiles(profiles) || changed;
+    }
+
+    if (changed && cacheKey) {
+      this.storageService.setItem(cacheKey, JSON.stringify(artists));
+    }
+
+    const supabaseUserId = this.authService.getSupabaseUserId();
+    if (
+      spotifyArtists.length > 0 &&
+      this.authService.isBackupActive() &&
+      supabaseUserId
+    ) {
+      await this.supabaseService.syncArtists(spotifyArtists);
     }
   }
 
   /**
-   * Scans a list of track objects and re-fetches any that are missing a real
-   * album cover image from the Spotify API.  After healing:
-   *   1. `track.albumCover` and `track.album.images[0].url` are patched.
-   *   2. The patched array is persisted to cacheKey (optional).
-   *   3. The album image is pushed to the global `albums` Supabase table via
-   *      syncTracks so all historical views also get the fix.
-   *
-   * @param tracks    Array of track objects (mutated in place).
-   * @param cacheKey  localStorage key to persist the patched array to (optional).
+   * Repairs missing album covers from Spotify and persists the recovered
+   * metadata locally and, when enabled, in Supabase.
    */
   healTrackImages(tracks: any[], cacheKey?: string): void {
-    if (!tracks || tracks.length === 0) return;
+    if (!Array.isArray(tracks) || tracks.length === 0) return;
 
-    const missing = tracks.filter(t => {
-      if (!t.id) return false;
-      const cover = t.albumCover || t.album?.images?.[0]?.url;
+    const missing = tracks.filter(track => {
+      if (!track?.id) return false;
+      const cover = track.albumCover || track.album?.images?.[0]?.url;
       return this.isPlaceholder(cover);
     });
 
     if (missing.length === 0) return;
 
-    console.log(`[ImageHealingService] ${missing.length} track(s) with missing album covers. Re-fetching…`);
+    console.log(
+      `[ImageHealingService] ${missing.length} track(s) with missing album covers. Re-fetching.`
+    );
 
-    const missingIds = missing.map(t => t.id);
-    for (let i = 0; i < missingIds.length; i += 50) {
-      const batch = missingIds.slice(i, i + 50);
+    const missingIds = missing.map(track => track.id);
+    for (let offset = 0; offset < missingIds.length; offset += 50) {
+      const batch = missingIds.slice(offset, offset + 50);
       this.spotifyDataService.getTracksByIds(batch).subscribe({
-        next: (res: any) => {
-          const map = new Map<string, any>();
-          (res.tracks || []).forEach((t: any) => { if (t) map.set(t.id, t); });
+        next: (response: any) => {
+          const trackMap = new Map<string, any>();
+          (response.tracks || []).forEach((track: any) => {
+            if (track) trackMap.set(track.id, track);
+          });
 
           let changed = false;
           tracks.forEach(track => {
-            if (!map.has(track.id)) return;
-            const full = map.get(track.id);
-            if (!full) return;
+            const fullTrack = trackMap.get(track.id);
+            const imageUrl = fullTrack?.album?.images?.[0]?.url;
+            if (!fullTrack || this.isPlaceholder(imageUrl)) return;
 
-            const realImg = full.album?.images?.[0]?.url;
-            if (!this.isPlaceholder(realImg)) {
-              track.albumCover = realImg;
-              if (!track.album) track.album = {};
-              track.album.images = [{ url: realImg }];
-              changed = true;
-            }
+            track.albumCover = imageUrl;
+            if (!track.album) track.album = {};
+            track.album.images = [{ url: imageUrl }];
+            changed = true;
           });
 
           if (!changed) return;
 
-          // 1. Persist to local cache + auto-sync to user_cache table
           if (cacheKey) {
             this.storageService.setItem(cacheKey, JSON.stringify(tracks));
           }
 
-          // 2. Push to the global `albums` DB table via syncTracks
           const supabaseUserId = this.authService.getSupabaseUserId();
           if (this.authService.isBackupActive() && supabaseUserId) {
-            const forSync = batch.map(id => map.get(id)).filter(t => !!t);
-            if (forSync.length > 0) {
-              this.supabaseService.syncTracks(forSync).catch(err =>
-                console.warn('[ImageHealingService] syncTracks failed:', err)
-              );
+            const tracksForSync = batch
+              .map(id => trackMap.get(id))
+              .filter(track => !!track);
+            if (tracksForSync.length > 0) {
+              this.supabaseService.syncTracks(tracksForSync).catch(error => {
+                console.warn('[ImageHealingService] syncTracks failed:', error);
+              });
             }
           }
-
-          console.log(`[ImageHealingService] Healed ${batch.length} track(s); cache & DB updated.`);
         },
-        error: (err: any) => console.warn('[ImageHealingService] Track heal batch failed:', err)
+        error: (error: any) => {
+          console.warn('[ImageHealingService] Track image recovery failed:', error);
+        }
       });
     }
   }

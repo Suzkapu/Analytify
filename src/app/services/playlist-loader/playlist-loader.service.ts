@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SpotifyDataService } from '../spotify-data/spotify-data.service';
 import { StorageService } from '../storage/storage.service';
 import { SpotifyAuthService } from '../auth/spotify-auth.service';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription, timer } from 'rxjs';
 import { SupabaseService } from '../supabase/supabase.service';
 
 export interface PlaylistLoadProgress {
@@ -42,6 +42,8 @@ export class PlaylistLoadTask {
 
   trackIndexCounter: number = 0;
   requestedArtistIds = new Set<string>();
+  completedArtistIds = new Set<string>();
+  artistFetchAttempts = new Map<string, number>();
   refreshingArtists: any[] = [];
   private activeSub = new Subscription();
   
@@ -174,6 +176,8 @@ export class PlaylistLoaderService {
         : `[PlaylistLoaderService] Starting full Spotify sync for playlist ${task.playlistId}.`
     );
     task.requestedArtistIds.clear();
+    task.completedArtistIds.clear();
+    task.artistFetchAttempts.clear();
     task.loadedArtistsDetailsCount = 0;
     task.totalUniqueArtists = 0;
 
@@ -195,8 +199,9 @@ export class PlaylistLoaderService {
 
     if (task.mode === 'incremental-new-only') {
       cachedArtists.forEach(artist => {
-        if (artist?.id) {
+        if (artist?.id && Array.isArray(artist.images) && artist.images.length > 0) {
           task.requestedArtistIds.add(artist.id);
+          task.completedArtistIds.add(artist.id);
         }
       });
     }
@@ -455,8 +460,12 @@ export class PlaylistLoaderService {
           true
         );
 
-        task.totalTracks = this.countUniqueTracks(targetArray);
-        task.loadedTracksCount = task.totalTracks;
+        const cachedTrackCount = this.countUniqueTracks(targetArray);
+        task.totalTracks =
+          Number.isFinite(tracks?.total) && tracks.total >= 0
+            ? tracks.total
+            : cachedTrackCount;
+        task.loadedTracksCount = cachedTrackCount;
         task.isLoadingTracks = false;
         task.emitUpdate();
         this.fetchArtistDetailsLazy(task, targetArray, userId);
@@ -508,14 +517,22 @@ export class PlaylistLoaderService {
                 existingArtist.tracks.push(track);
               }
             });
-            if (!existingArtist.images && cachedArtist.images) {
+            if (
+              (!Array.isArray(existingArtist.images) || existingArtist.images.length === 0) &&
+              Array.isArray(cachedArtist.images) &&
+              cachedArtist.images.length > 0
+            ) {
               existingArtist.images = cachedArtist.images;
             }
           }
         }
       } else {
         if (existingArtist) {
-          if (!existingArtist.images && cachedArtist.images) {
+          if (
+            (!Array.isArray(existingArtist.images) || existingArtist.images.length === 0) &&
+            Array.isArray(cachedArtist.images) &&
+            cachedArtist.images.length > 0
+          ) {
             existingArtist.images = cachedArtist.images;
           }
         }
@@ -526,7 +543,7 @@ export class PlaylistLoaderService {
     task.emitUpdate();
   }
 
-  private countUniqueTracks(artists: any[]): number {
+  countUniqueTracks(artists: any[]): number {
     const trackIds = new Set<string>();
     artists.forEach(artist => {
       (artist?.tracks || []).forEach((track: any) => {
@@ -536,6 +553,73 @@ export class PlaylistLoaderService {
       });
     });
     return trackIds.size;
+  }
+
+  /**
+   * Validates that a serialized playlist cache was written as one complete
+   * dataset. New caches carry their exact unique-track count. Legacy caches
+   * fall back to a tolerant comparison because Spotify's source total can
+   * include local, unavailable, or duplicate entries that are not represented
+   * separately by the artist aggregation.
+   */
+  isCachedPlaylistComplete(
+    artists: any[],
+    expectedTotal: number,
+    storedCachedTrackCount: number | null
+  ): boolean {
+    if (!Array.isArray(artists)) return false;
+
+    const actualCachedTrackCount = this.countUniqueTracks(artists);
+    if (
+      storedCachedTrackCount !== null &&
+      actualCachedTrackCount !== storedCachedTrackCount
+    ) {
+      return false;
+    }
+
+    if (!Number.isFinite(expectedTotal) || expectedTotal < 0) return false;
+    if (expectedTotal === 0) return actualCachedTrackCount === 0;
+
+    const toleratedMissingEntries = Math.max(5, Math.ceil(expectedTotal * 0.02));
+    return actualCachedTrackCount + toleratedMissingEntries >= expectedTotal;
+  }
+
+  /**
+   * Uses the largest known source total. This lets an independently refreshed
+   * playlist-list cache expose an old partial detail cache whose own amount
+   * was incorrectly saved as the number loaded so far.
+   */
+  resolveExpectedPlaylistTotal(
+    userId: string,
+    playlistId: string,
+    cachedDetailTotal: number
+  ): number {
+    const totals = [
+      Number.isFinite(cachedDetailTotal) && cachedDetailTotal >= 0
+        ? cachedDetailTotal
+        : 0
+    ];
+
+    if (playlistId === 'fav') {
+      totals.push(this.readStoredNumber(`${userId}_fav_Amount`));
+    }
+
+    try {
+      const playlistCache = JSON.parse(
+        this.storageService.getItem(`${userId}_playlists`) || '[]'
+      );
+      if (Array.isArray(playlistCache)) {
+        const playlist = playlistCache.find(item => item?.id === playlistId);
+        const playlistTotal = playlist?.tracks?.total;
+        if (Number.isFinite(playlistTotal) && playlistTotal >= 0) {
+          totals.push(playlistTotal);
+        }
+      }
+    } catch {
+      // A malformed list cache must not make an otherwise valid detail cache unusable.
+    }
+
+    return Math.max(...totals);
   }
 
   private readStoredNumber(key: string): number {
@@ -566,17 +650,16 @@ export class PlaylistLoaderService {
   }
 
   private fetchArtistDetailsLazy(task: PlaylistLoadTask, targetArray: any[], userId: string) {
-    // Automatically mark invalid/empty/local IDs as requested so they do not block completion
-    targetArray.forEach(a => {
-      const idKey = a.id || '';
-      if (!idKey || typeof idKey !== 'string' || idKey.trim() === '') {
-        task.requestedArtistIds.add(idKey);
-      }
-    });
-
-    const pendingIds = targetArray
+    const validArtistIds = Array.from(new Set<string>(targetArray
       .map(a => a.id)
-      .filter(id => id && typeof id === 'string' && id.trim() !== '' && !task.requestedArtistIds.has(id));
+      .filter(id => id && typeof id === 'string' && id.trim() !== '')));
+    task.totalUniqueArtists = validArtistIds.length;
+
+    const pendingIds = validArtistIds.filter(id =>
+      !task.requestedArtistIds.has(id) &&
+      !task.completedArtistIds.has(id) &&
+      (task.artistFetchAttempts.get(id) || 0) < 3
+    );
 
     if (pendingIds.length === 0) {
       this.checkCompletion(task, userId);
@@ -584,7 +667,10 @@ export class PlaylistLoaderService {
     }
 
     const batch = pendingIds.slice(0, 50);
-    batch.forEach(id => task.requestedArtistIds.add(id));
+    batch.forEach(id => {
+      task.requestedArtistIds.add(id);
+      task.artistFetchAttempts.set(id, (task.artistFetchAttempts.get(id) || 0) + 1);
+    });
 
     const sub = this.spotifyDataService.getArtistsByIds(batch).subscribe({
       next: (res: any) => {
@@ -599,6 +685,19 @@ export class PlaylistLoaderService {
             const full = artistMap.get(artist.id);
             artist.images = full.images || [];
             artist.external_urls = full.external_urls;
+            task.completedArtistIds.add(artist.id);
+          }
+        });
+
+        const retryIds: string[] = [];
+        batch.forEach(id => {
+          if (artistMap.has(id)) return;
+          task.requestedArtistIds.delete(id);
+          if ((task.artistFetchAttempts.get(id) || 0) >= 3) {
+            // Deleted or unavailable artists must not block the whole playlist.
+            task.completedArtistIds.add(id);
+          } else {
+            retryIds.push(id);
           }
         });
 
@@ -608,20 +707,31 @@ export class PlaylistLoaderService {
           });
         }
 
-        task.loadedArtistsDetailsCount = targetArray.filter(a => a.images && a.images.length > 0).length;
+        task.loadedArtistsDetailsCount = task.completedArtistIds.size;
         task.emitUpdate();
-        
-        this.fetchArtistDetailsLazy(task, targetArray, userId);
+
+        if (retryIds.length > 0) {
+          const retrySub = timer(1000).subscribe(() =>
+            this.fetchArtistDetailsLazy(task, targetArray, userId)
+          );
+          task.addSub(retrySub);
+        } else {
+          this.fetchArtistDetailsLazy(task, targetArray, userId);
+        }
       },
       error: (err) => {
         console.error('Error batch loading artists lazy details:', err);
         task.error = err;
-        // Remove from requestedArtistIds to allow retrying these failed IDs
-        batch.forEach(id => task.requestedArtistIds.delete(id));
-        // Retry after a 3-second delay to handle temporary connection dropouts or rate-limits
-        setTimeout(() => {
-          this.fetchArtistDetailsLazy(task, targetArray, userId);
-        }, 3000);
+        batch.forEach(id => {
+          task.requestedArtistIds.delete(id);
+          if ((task.artistFetchAttempts.get(id) || 0) >= 3) {
+            task.completedArtistIds.add(id);
+          }
+        });
+        const retrySub = timer(3000).subscribe(() =>
+          this.fetchArtistDetailsLazy(task, targetArray, userId)
+        );
+        task.addSub(retrySub);
       }
     });
     task.addSub(sub);
@@ -681,7 +791,7 @@ export class PlaylistLoaderService {
   }
 
   private checkCompletion(task: PlaylistLoadTask, userId: string | null) {
-    if (!task.isLoadingTracks && task.requestedArtistIds.size >= task.totalUniqueArtists) {
+    if (!task.isLoadingTracks && task.completedArtistIds.size >= task.totalUniqueArtists) {
       task.isLoadingArtists = false;
       
       if (task.isRefreshing) {
@@ -690,8 +800,7 @@ export class PlaylistLoaderService {
       }
 
       if (task.mode === 'incremental-new-only') {
-        task.totalTracks = this.countUniqueTracks(task.artists);
-        task.loadedTracksCount = task.totalTracks;
+        task.loadedTracksCount = this.countUniqueTracks(task.artists);
       }
       
       if (
@@ -747,6 +856,10 @@ export class PlaylistLoaderService {
     this.storageService.setItem(`${userId}_${task.playlistId}`, JSON.stringify(cleanedArtists));
     this.storageService.setItem(`${userId}_${task.playlistId}_Amount`, JSON.stringify(task.totalTracks));
     this.storageService.setItem(`${userId}_${task.playlistId}_Name`, JSON.stringify(task.playlistName));
+    this.storageService.setItem(
+      `${userId}_${task.playlistId}_CachedTrackCount`,
+      JSON.stringify(this.countUniqueTracks(cleanedArtists))
+    );
     if (updateDailyFullSyncTimestamp) {
       this.storageService.setItem(`${userId}_${task.playlistId}_lastUpdated`, Date.now().toString());
     }

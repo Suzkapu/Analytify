@@ -118,10 +118,16 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     let isExpired = this.isCacheExpired(lastUpdated);
     let parsedArtists: any[] = [];
     let isParseError = false;
+    let cachedTotalTracks = 0;
+    let cachedTrackCount: number | null = null;
+    let isComplete = false;
+    let isOldCache = false;
 
     const parseCachedArtists = () => {
       parsedArtists = [];
       isParseError = false;
+      cachedTotalTracks = 0;
+      cachedTrackCount = null;
       if (storedArtists) {
         try {
           const parsed = JSON.parse(storedArtists);
@@ -130,37 +136,66 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
           } else {
             parsedArtists = parsed;
           }
+
+          const parsedAmount = JSON.parse(
+            this.storageService.getItem(`${storageKey}_Amount`) || '0'
+          );
+          cachedTotalTracks =
+            Number.isFinite(parsedAmount) && parsedAmount >= 0 ? parsedAmount : 0;
+          cachedTotalTracks = this.playlistLoaderService.resolveExpectedPlaylistTotal(
+            userId,
+            this.playlistId,
+            cachedTotalTracks
+          );
+
+          const cachedTrackCountString =
+            this.storageService.getItem(`${storageKey}_CachedTrackCount`);
+          if (cachedTrackCountString !== null) {
+            const parsedCachedTrackCount = JSON.parse(cachedTrackCountString);
+            if (Number.isFinite(parsedCachedTrackCount) && parsedCachedTrackCount >= 0) {
+              cachedTrackCount = parsedCachedTrackCount;
+            }
+          }
         } catch (e) {
           console.warn('Failed to parse stored artists for analysis:', e);
           isParseError = true;
         }
       }
+
+      isOldCache = parsedArtists.length > 0 &&
+        parsedArtists.some(artist => !Array.isArray(artist.images));
+      isComplete = !isParseError && this.playlistLoaderService.isCachedPlaylistComplete(
+        parsedArtists,
+        cachedTotalTracks,
+        cachedTrackCount
+      );
     };
 
     parseCachedArtists();
-    let isOldCache = parsedArtists.length > 0 &&
-      parsedArtists.some(artist => !Array.isArray(artist.images));
 
-    if ((!storedArtists || isExpired || isParseError || isOldCache) && isBackupActive) {
+    if (
+      (!storedArtists || isExpired || isParseError || isOldCache || !isComplete) &&
+      isBackupActive
+    ) {
+      this.storageService.removeItem(`${storageKey}_CachedTrackCount`);
       await this.storageService.restoreItemsFromCloud([
         storageKey,
         `${storageKey}_Amount`,
         `${storageKey}_Name`,
+        `${storageKey}_CachedTrackCount`,
         lastUpdatedKey
       ]);
       storedArtists = this.storageService.getItem(storageKey);
       lastUpdated = this.storageService.getItem(lastUpdatedKey);
       isExpired = this.isCacheExpired(lastUpdated);
       parseCachedArtists();
-      isOldCache = parsedArtists.length > 0 &&
-        parsedArtists.some(artist => !Array.isArray(artist.images));
     }
 
-    if (storedArtists && !isExpired && !isParseError && !isOldCache) {
+    if (storedArtists && !isExpired && !isParseError && !isOldCache && isComplete) {
       console.log(`[Analysis] Loading playlist ${this.playlistId} data from the local IndexedDB cache.`);
       try {
         this.artists = parsedArtists;
-        this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
+        this.totalTracks = cachedTotalTracks;
         this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
         this.runAnalysis();
       } catch (e) {
@@ -179,7 +214,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
         }
       }
       // If we have cached data but it's expired, we do background refresh to maintain smooth UX
-      this.triggerApiLoad(!!storedArtists && !isParseError, isExpired);
+      this.triggerApiLoad(!!storedArtists && !isParseError, isExpired || !isComplete);
     }
   }
 

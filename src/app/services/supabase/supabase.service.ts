@@ -367,6 +367,35 @@ export class SupabaseService {
     }
   }
 
+  /** Loads normalized artist profiles in batches for cache/image recovery. */
+  async loadArtistsByIds(artistIds: string[]): Promise<any[]> {
+    const uniqueIds = Array.from(new Set(artistIds.filter(Boolean)));
+    if (uniqueIds.length === 0) return [];
+
+    try {
+      const artists: any[] = [];
+      for (let offset = 0; offset < uniqueIds.length; offset += 100) {
+        const batch = uniqueIds.slice(offset, offset + 100);
+        const { data, error } = await this.client
+          .from('artists')
+          .select('id, name, image_url, spotify_url')
+          .in('id', batch);
+        if (error) throw error;
+        artists.push(...(data || []));
+      }
+
+      return artists.map(artist => ({
+        id: artist.id,
+        name: artist.name,
+        images: artist.image_url ? [{ url: artist.image_url }] : [],
+        external_urls: artist.spotify_url ? { spotify: artist.spotify_url } : undefined
+      }));
+    } catch (e) {
+      console.warn('[SupabaseService] Failed to load artist profiles:', e);
+      return [];
+    }
+  }
+
   /** Syncs Spotify albums metadata into the database */
   async syncAlbums(albums: any[], onlyInsertMissing = false): Promise<void> {
     if (!albums || albums.length === 0) return;

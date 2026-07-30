@@ -86,6 +86,18 @@
         }"></i> Sort By Count
       </button>
 
+      <button *ngIf="viewStyle === 'albums'" (click)="sortAlbumsByTracks()" class="p-button p-button-outlined p-button-secondary"
+        style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px; height: 38px;"
+        [style.background]="'rgba(30, 215, 96, 0.12) !important'"
+        [style.borderColor]="'#1ed760 !important'"
+        [style.color]="'#1ed760 !important'"
+        title="Sort albums by playlist song count">
+        <i class="pi" [ngClass]="{
+          'pi-sort-amount-down': albumSortOrder === 'desc',
+          'pi-sort-amount-up': albumSortOrder === 'asc'
+        }"></i> Sort By Count
+      </button>
+
 
       <!-- Custom Togglable Sort Row (Songs View) -->
       <div *ngIf="viewStyle === 'songs'" class="history-select-container">
@@ -177,6 +189,7 @@
           <div class="card-info">
             <img
               [src]="artist.images && artist.images[2] ? artist.images[2].url : (artist.images && artist.images[0] ? artist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png')"
+              (error)="onArtistImageError(artist, $event)"
               alt="Artist Image"
               class="artist-image">
             <div class="artist-details">

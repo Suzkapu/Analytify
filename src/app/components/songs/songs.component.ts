@@ -3,6 +3,7 @@ import {ActivatedRoute, NavigationExtras, Router} from "@angular/router";
 import {SpotifyAuthService} from "../../services/auth/spotify-auth.service";
 import {StorageService} from "../../services/storage/storage.service";
 import {PlaylistLoaderService} from "../../services/playlist-loader/playlist-loader.service";
+import {ImageHealingService} from "../../services/image-healing/image-healing.service";
 import {Subscription} from 'rxjs';
 
 @Component({
@@ -33,6 +34,7 @@ export class SongsComponent implements OnInit, OnDestroy {
   filteredAlbums: any[] = [];
   trackSearchText: string = '';
   albumSearchText: string = '';
+  albumSortOrder: 'asc' | 'desc' = 'desc';
   trackSortKey: string = 'recently_added';
   sortAscending: boolean = false;
   showSortMenu: boolean = false;
@@ -59,13 +61,16 @@ export class SongsComponent implements OnInit, OnDestroy {
     private router: Router,
     public authService: SpotifyAuthService,
     private storageService: StorageService,
-    private playlistLoaderService: PlaylistLoaderService
+    private playlistLoaderService: PlaylistLoaderService,
+    private imageHealingService: ImageHealingService
   ) {
     this.route.params.subscribe(async (params) => {
       this.playlistId = params['id'];
       this.sortAscending = this.getDefaultSortDirection(this.trackSortKey);
       const userId = this.authService.getUserId() || 'anonymous';
       this.sortOrder = (this.storageService.getItem(`${userId}_artists_sortOrder`) as 'asc' | 'desc' | 'none') || 'none';
+      this.albumSortOrder =
+        this.storageService.getItem(`${userId}_albums_sortOrder`) === 'asc' ? 'asc' : 'desc';
       if (this.authService.isAuthenticated()) {
         await this.authService.ensureInitialSync();
       }
@@ -99,6 +104,7 @@ export class SongsComponent implements OnInit, OnDestroy {
     let parsedArtists: any[] = [];
     let isParseError = false;
     let cachedTotalTracks = 0;
+    let cachedTrackCount: number | null = null;
 
     if (storedArtists) {
       try {
@@ -111,7 +117,23 @@ export class SongsComponent implements OnInit, OnDestroy {
 
         const amountStr = this.storageService.getItem(`${storageKey}_Amount`);
         if (amountStr) {
-          cachedTotalTracks = JSON.parse(amountStr);
+          const parsedAmount = JSON.parse(amountStr);
+          cachedTotalTracks =
+            Number.isFinite(parsedAmount) && parsedAmount >= 0 ? parsedAmount : 0;
+        }
+        cachedTotalTracks = this.playlistLoaderService.resolveExpectedPlaylistTotal(
+          userId,
+          this.playlistId,
+          cachedTotalTracks
+        );
+
+        const cachedTrackCountStr =
+          this.storageService.getItem(`${storageKey}_CachedTrackCount`);
+        if (cachedTrackCountStr !== null) {
+          const parsedCachedTrackCount = JSON.parse(cachedTrackCountStr);
+          if (Number.isFinite(parsedCachedTrackCount) && parsedCachedTrackCount >= 0) {
+            cachedTrackCount = parsedCachedTrackCount;
+          }
         }
 
       } catch (e) {
@@ -120,15 +142,24 @@ export class SongsComponent implements OnInit, OnDestroy {
       }
     }
 
+    const isComplete = !isParseError && this.playlistLoaderService.isCachedPlaylistComplete(
+      parsedArtists,
+      cachedTotalTracks,
+      cachedTrackCount
+    );
+
     return {
       storedArtists,
       parsedArtists,
       cachedTotalTracks,
+      cachedTrackCount,
       isExpired: this.isCacheExpired(lastUpdated),
       isParseError,
+      isComplete,
       isUsable: !!storedArtists &&
         !this.isCacheExpired(lastUpdated) &&
-        !isParseError
+        !isParseError &&
+        isComplete
     };
   }
 
@@ -167,10 +198,14 @@ export class SongsComponent implements OnInit, OnDestroy {
 
     let cache = this.readPlaylistCache(userId, storageKey);
     if (!cache.isUsable && isBackupActive) {
+      // The cloud cache owns its own consistency marker. Do not retain a local
+      // marker when replacing the serialized dataset from Supabase.
+      this.storageService.removeItem(`${storageKey}_CachedTrackCount`);
       await this.storageService.restoreItemsFromCloud([
         storageKey,
         `${storageKey}_Amount`,
         `${storageKey}_Name`,
+        `${storageKey}_CachedTrackCount`,
         `${storageKey}_lastUpdated`
       ]);
       cache = this.readPlaylistCache(userId, storageKey);
@@ -183,6 +218,7 @@ export class SongsComponent implements OnInit, OnDestroy {
         this.totalTracks = cache.cachedTotalTracks;
         this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
         this.filterArtists();
+        this.healCachedArtistImages();
 
         if (this.playlistId === 'fav') {
           const incrementalTask = this.playlistLoaderService.startNewFavouriteTracksCheck(userId);
@@ -200,15 +236,25 @@ export class SongsComponent implements OnInit, OnDestroy {
         isBackupActive,
         cache.isExpired,
         cache.storedArtists,
-        cache.parsedArtists
+        cache.parsedArtists,
+        !cache.isComplete
       );
     }
   }
 
-  private loadPlaylistFromAPI(userId: string, isBackupActive: boolean, isExpired: boolean, storedArtists?: string | null, parsedArtists?: any[]) {
+  private loadPlaylistFromAPI(
+    userId: string,
+    isBackupActive: boolean,
+    isExpired: boolean,
+    storedArtists?: string | null,
+    parsedArtists?: any[],
+    isIncomplete: boolean = false
+  ) {
     // Start a new loading task
     const isRefresh = !!storedArtists && parsedArtists && parsedArtists.length > 0;
-    const reason = !storedArtists ? 'no local cache' : (isExpired ? 'cache expired' : 'invalid cache');
+    const reason = !storedArtists
+      ? 'no local cache'
+      : (isIncomplete ? 'incomplete cache' : (isExpired ? 'cache expired' : 'invalid cache'));
     console.log(`[Songs] Cache missing or stale for playlist ${this.playlistId} (reason: ${reason}, backup active: ${isBackupActive}). Loading from API.`);
     if (isRefresh && parsedArtists) {
       try {
@@ -331,6 +377,13 @@ export class SongsComponent implements OnInit, OnDestroy {
     this.filterArtists();
   }
 
+  sortAlbumsByTracks() {
+    this.albumSortOrder = this.albumSortOrder === 'desc' ? 'asc' : 'desc';
+    const userId = this.authService.getUserId() || 'anonymous';
+    this.storageService.setItem(`${userId}_albums_sortOrder`, this.albumSortOrder);
+    this.filterAlbums();
+  }
+
   updatePlaylistTracks() {
     const tracksMap = new Map<string, any>();
     this.artists.forEach(artist => {
@@ -422,12 +475,41 @@ export class SongsComponent implements OnInit, OnDestroy {
   filterAlbums() {
     this.displayedAlbumsCount = 50;
     const query = this.albumSearchText.trim().toLowerCase();
-    this.filteredAlbums = query
+    const filtered = query
       ? this.playlistAlbums.filter(album =>
           album.name.toLowerCase().includes(query) ||
           album.artists.some((artist: string) => artist.toLowerCase().includes(query))
         )
       : [...this.playlistAlbums];
+
+    this.filteredAlbums = filtered.sort((a, b) => {
+      const countComparison = a.trackCount - b.trackCount;
+      if (countComparison !== 0) {
+        return this.albumSortOrder === 'asc' ? countComparison : -countComparison;
+      }
+      return a.name.localeCompare(b.name);
+    });
+  }
+
+  onArtistImageError(artist: any, event: Event) {
+    const image = event.target as HTMLImageElement | null;
+    const placeholderUrl = 'https://misc.scdn.co/liked-songs/liked-songs-300.png';
+    if (!image || image.src === placeholderUrl) return;
+
+    const failedImageUrl = artist.images?.[0]?.url || image.currentSrc || image.src;
+    this.imageHealingService.markArtistImageFailed(artist.id, failedImageUrl);
+    artist.images = [];
+    image.src = placeholderUrl;
+    this.healCachedArtistImages();
+  }
+
+  private healCachedArtistImages() {
+    if (!Array.isArray(this.artists) || this.artists.length === 0) return;
+    const userId = this.authService.getUserId() || 'anonymous';
+    this.imageHealingService.healArtistImages(
+      this.artists,
+      `${userId}_${this.playlistId}`
+    );
   }
 
   filterAndSortTracks() {
