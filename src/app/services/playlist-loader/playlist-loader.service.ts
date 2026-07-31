@@ -257,13 +257,11 @@ export class PlaylistLoaderService {
                 task.loadedTracksCount,
                 50,
                 task.totalTracks,
-                targetArray
+                targetArray,
+                cachedArtists
               );
             } else {
-              task.isLoadingTracks = false;
-              task.emitUpdate();
-              this.fetchArtistDetailsLazy(task, targetArray, userId);
-              this.checkCompletion(task, userId);
+              this.finishTrackLoading(task, targetArray, cachedArtists, userId);
             }
           },
           error: (err) => {
@@ -290,13 +288,11 @@ export class PlaylistLoaderService {
                 task.loadedTracksCount,
                 100,
                 task.totalTracks,
-                targetArray
+                targetArray,
+                cachedArtists
               );
             } else {
-              task.isLoadingTracks = false;
-              task.emitUpdate();
-              this.fetchArtistDetailsLazy(task, targetArray, userId);
-              this.checkCompletion(task, userId);
+              this.finishTrackLoading(task, targetArray, cachedArtists, userId);
             }
           },
           error: (err) => {
@@ -315,7 +311,8 @@ export class PlaylistLoaderService {
     offset: number,
     limit: number,
     total: number,
-    targetArray: any[]
+    targetArray: any[],
+    cachedArtists: any[]
   ) {
     if (task.playlistId === 'fav') {
       const sub = this.spotifyDataService.getFavTracks(offset, limit).subscribe({
@@ -330,12 +327,9 @@ export class PlaylistLoaderService {
           task.emitUpdate();
           
           if (task.loadedTracksCount < total) {
-            this.loadRemainingTracks(task, userId, task.loadedTracksCount, limit, total, targetArray);
+            this.loadRemainingTracks(task, userId, task.loadedTracksCount, limit, total, targetArray, cachedArtists);
           } else {
-            task.isLoadingTracks = false;
-            task.emitUpdate();
-            this.fetchArtistDetailsLazy(task, targetArray, userId);
-            this.checkCompletion(task, userId);
+            this.finishTrackLoading(task, targetArray, cachedArtists, userId);
           }
         },
         error: (err) => {
@@ -357,12 +351,9 @@ export class PlaylistLoaderService {
           task.emitUpdate();
           
           if (task.loadedTracksCount < total) {
-            this.loadRemainingTracks(task, userId, task.loadedTracksCount, limit, total, targetArray);
+            this.loadRemainingTracks(task, userId, task.loadedTracksCount, limit, total, targetArray, cachedArtists);
           } else {
-            task.isLoadingTracks = false;
-            task.emitUpdate();
-            this.fetchArtistDetailsLazy(task, targetArray, userId);
-            this.checkCompletion(task, userId);
+            this.finishTrackLoading(task, targetArray, cachedArtists, userId);
           }
         },
         error: (err) => {
@@ -634,6 +625,76 @@ export class PlaylistLoaderService {
     } catch {
       return '';
     }
+  }
+
+  /**
+   * Track data is the primary playlist payload. Publish and persist it as soon
+   * as pagination finishes; artist images are optional enrichment and must not
+   * keep a complete refresh hidden behind the old cache.
+   */
+  private finishTrackLoading(
+    task: PlaylistLoadTask,
+    targetArray: any[],
+    cachedArtists: any[],
+    userId: string
+  ) {
+    this.mergeCachedArtists(task, cachedArtists, targetArray, undefined, 0, false);
+
+    task.artists = targetArray;
+    task.isRefreshing = false;
+    task.isLoadingTracks = false;
+    task.hasDataChanges = true;
+
+    targetArray.forEach(artist => {
+      if (artist?.id && Array.isArray(artist.images) && artist.images.length > 0) {
+        task.completedArtistIds.add(artist.id);
+      }
+    });
+    task.loadedArtistsDetailsCount = task.completedArtistIds.size;
+
+    // A full track set is already a valid cache even while optional artist
+    // profiles continue to fill in. This also repairs an incomplete cloud copy.
+    this.setSessionStorage(task, userId, task.mode === 'full');
+    task.emitUpdate();
+
+    void this.hydrateArtistDetailsFromSupabase(task, targetArray, userId);
+  }
+
+  private async hydrateArtistDetailsFromSupabase(
+    task: PlaylistLoadTask,
+    targetArray: any[],
+    userId: string
+  ) {
+    const missingIds = targetArray
+      .filter(artist =>
+        artist?.id &&
+        (!Array.isArray(artist.images) || artist.images.length === 0)
+      )
+      .map(artist => artist.id);
+
+    if (missingIds.length > 0) {
+      const profiles = await this.supabaseService.loadArtistsByIds(missingIds);
+      const profileMap = new Map<string, any>(
+        profiles.filter(profile => profile?.id).map(profile => [profile.id, profile])
+      );
+
+      targetArray.forEach(artist => {
+        const profile = profileMap.get(artist.id);
+        if (!profile) return;
+        if (Array.isArray(profile.images) && profile.images.length > 0) {
+          artist.images = profile.images;
+          task.completedArtistIds.add(artist.id);
+        }
+        if (profile.external_urls?.spotify) {
+          artist.external_urls = profile.external_urls;
+        }
+      });
+      task.loadedArtistsDetailsCount = task.completedArtistIds.size;
+      task.emitUpdate();
+    }
+
+    this.fetchArtistDetailsLazy(task, targetArray, userId);
+    this.checkCompletion(task, userId);
   }
 
   private failTask(task: PlaylistLoadTask, error: any) {
