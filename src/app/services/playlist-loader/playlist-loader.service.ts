@@ -250,8 +250,6 @@ export class PlaylistLoaderService {
             task.loadedTracksCount = Math.min(firstPageItems.length, task.totalTracks);
             task.emitUpdate();
 
-            this.fetchArtistDetailsLazy(task, targetArray, userId);
-
             if (task.loadedTracksCount < task.totalTracks) {
               this.loadRemainingTracks(
                 task,
@@ -264,6 +262,7 @@ export class PlaylistLoaderService {
             } else {
               task.isLoadingTracks = false;
               task.emitUpdate();
+              this.fetchArtistDetailsLazy(task, targetArray, userId);
               this.checkCompletion(task, userId);
             }
           },
@@ -284,8 +283,6 @@ export class PlaylistLoaderService {
             this.getArtistsFromTracks(task, firstPageItems, targetArray, 0);
             task.loadedTracksCount = Math.min(firstPageItems.length, task.totalTracks);
             task.emitUpdate();
-            this.fetchArtistDetailsLazy(task, targetArray, userId);
-
             if (task.loadedTracksCount < task.totalTracks) {
               this.loadRemainingTracks(
                 task,
@@ -298,6 +295,7 @@ export class PlaylistLoaderService {
             } else {
               task.isLoadingTracks = false;
               task.emitUpdate();
+              this.fetchArtistDetailsLazy(task, targetArray, userId);
               this.checkCompletion(task, userId);
             }
           },
@@ -331,13 +329,12 @@ export class PlaylistLoaderService {
           task.loadedTracksCount = Math.min(offset + pageItems.length, total);
           task.emitUpdate();
           
-          this.fetchArtistDetailsLazy(task, targetArray, userId);
-
           if (task.loadedTracksCount < total) {
             this.loadRemainingTracks(task, userId, task.loadedTracksCount, limit, total, targetArray);
           } else {
             task.isLoadingTracks = false;
             task.emitUpdate();
+            this.fetchArtistDetailsLazy(task, targetArray, userId);
             this.checkCompletion(task, userId);
           }
         },
@@ -359,13 +356,12 @@ export class PlaylistLoaderService {
           task.loadedTracksCount = Math.min(offset + pageItems.length, total);
           task.emitUpdate();
           
-          this.fetchArtistDetailsLazy(task, targetArray, userId);
-
           if (task.loadedTracksCount < total) {
             this.loadRemainingTracks(task, userId, task.loadedTracksCount, limit, total, targetArray);
           } else {
             task.isLoadingTracks = false;
             task.emitUpdate();
+            this.fetchArtistDetailsLazy(task, targetArray, userId);
             this.checkCompletion(task, userId);
           }
         },

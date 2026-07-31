@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { SpotifyAuthService } from "../auth/spotify-auth.service";
-import { Observable, throwError, BehaviorSubject, EMPTY, from, of, forkJoin } from "rxjs";
-import { catchError, expand, map, mergeMap, reduce, take, toArray } from 'rxjs/operators';
+import { Observable, throwError, BehaviorSubject, EMPTY, from, of, forkJoin, defer, timer } from "rxjs";
+import { catchError, concatMap, expand, map, mergeMap, reduce, take, toArray } from 'rxjs/operators';
 import {environment} from "../../../environments/environment";
 import {StorageService} from "../storage/storage.service";
 
@@ -23,25 +23,46 @@ export class SpotifyDataService {
   }
 
   makeRequest(requestFunc: () => Observable<any>): Observable<any> {
+    return defer(() => this.waitForCooldown().pipe(
+      mergeMap(() => this.executeRequest(requestFunc, 0))
+    ));
+  }
+
+  private waitForCooldown(): Observable<number> {
     return this.retryAfterSubject.pipe(
       take(1),
       mergeMap(retryAfter => {
-        const now = Date.now() / 1000;
-        if (retryAfter > now) {
-          console.log('API calls are currently in cooldown.')
-          return throwError(() => new Error('API calls are currently in cooldown.'));
-        } else {
-          return requestFunc().pipe(
-            catchError(error => {
-              if (error.status === 429 && error.headers.get('Retry-After')) {
-                const retryAfter = now + parseInt(error.headers.get('Retry-After'), 10);
-                this.retryAfterSubject.next(retryAfter);
-                this.storageService.setItem(this.localStorageKey, retryAfter.toString());
-              }
-              return throwError(() => error);
-            })
-          );
+        const waitMs = Math.max(0, retryAfter * 1000 - Date.now());
+        if (waitMs > 0) {
+          console.log(`[SpotifyDataService] Rate-limit cooldown active; retrying in ${Math.ceil(waitMs / 1000)}s.`);
         }
+        return timer(waitMs);
+      })
+    );
+  }
+
+  private executeRequest(requestFunc: () => Observable<any>, retryCount: number): Observable<any> {
+    return requestFunc().pipe(
+      catchError(error => {
+        const isQuotaExceeded = error?.error?.reason === 'QUOTA_EXCEEDED'
+          || error?.error?.error?.reason === 'QUOTA_EXCEEDED';
+        if (error.status !== 429 || isQuotaExceeded || retryCount >= 3) {
+          return throwError(() => error);
+        }
+
+        const retryAfterSeconds = Math.max(
+          1,
+          parseInt(error.headers?.get('Retry-After') || '5', 10) || 5
+        );
+        const retryAfter = Math.ceil(Date.now() / 1000 + retryAfterSeconds);
+        this.retryAfterSubject.next(retryAfter);
+        this.storageService.setItem(this.localStorageKey, retryAfter.toString());
+
+        console.warn(`[SpotifyDataService] Spotify returned 429; retrying in ${retryAfterSeconds}s.`);
+        return timer(retryAfterSeconds * 1000).pipe(
+          mergeMap(() => this.waitForCooldown()),
+          mergeMap(() => this.executeRequest(requestFunc, retryCount + 1))
+        );
       })
     );
   }
@@ -127,7 +148,10 @@ export class SpotifyDataService {
     if (uniqueIds.length === 0) return of({ artists: [] });
 
     return from(uniqueIds).pipe(
-      mergeMap(id => this.getSingleArtist(id).pipe(catchError(() => of(null))), 4),
+      concatMap((id, index) => timer(index === 0 ? 0 : 500).pipe(
+        mergeMap(() => this.getSingleArtist(id)),
+        catchError(() => of(null))
+      )),
       toArray(),
       map(artists => ({ artists: artists.filter(Boolean) }))
     );
