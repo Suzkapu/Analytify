@@ -37,6 +37,7 @@
   z-index: 2;
   transition: all 0.3s ease;
   margin: auto;
+  box-sizing: border-box;
 
   &:hover {
     transform: translateY(-2px);
@@ -144,7 +145,51 @@
 
 @media (max-width: 768px) {
   .login-wrapper {
-    padding-bottom: 3rem;
+    min-height: 100dvh;
+    justify-content: flex-start;
+    padding: max(24px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  }
+
+  .login-card-container {
+    width: 100%;
+    margin: auto 0;
+    padding: 2.25rem 1.25rem;
+    border-radius: 20px;
+
+    &:hover {
+      transform: none;
+    }
+  }
+
+  .login-card-body {
+    margin: 24px 0;
+  }
+
+  .login-description {
+    margin-bottom: 24px;
+  }
+
+  .login-spotify-button {
+    min-height: 50px;
   }
 }
 
+@media (max-width: 360px) {
+  .brand-title {
+    font-size: 1.9rem;
+  }
+
+  .brand-subtitle {
+    font-size: 0.74rem;
+    letter-spacing: 1px;
+  }
+
+  .brand-logo-container {
+    padding: 12px;
+
+    .brand-logo {
+      width: 54px;
+      height: 54px;
+    }
+  }
+}

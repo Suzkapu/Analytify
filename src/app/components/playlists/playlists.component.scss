@@ -93,8 +93,57 @@
       width: 100%;
       button, ::ng-deep .p-button {
         flex: 1;
+        min-height: 44px;
         justify-content: center;
         text-align: center;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .playlists-top-bar {
+    margin-top: 14px !important;
+  }
+
+  .playlists-controls-bar {
+    padding: 10px 12px 14px;
+  }
+
+  .item-card .card-content {
+    gap: 14px;
+
+    .image-box {
+      margin-right: 12px;
+
+      img {
+        width: 72px;
+        height: 72px;
+      }
+    }
+
+    .playlist-details {
+      h2 {
+        font-size: 1.15rem;
+      }
+
+      .song-count {
+        font-size: 0.92rem;
+      }
+
+      .description {
+        font-size: 0.84rem;
+        -webkit-line-clamp: 2;
+      }
+    }
+
+    .card-actions {
+      gap: 8px;
+
+      button,
+      ::ng-deep .p-button {
+        min-height: 44px;
+        padding: 0.55rem 0.65rem !important;
       }
     }
   }

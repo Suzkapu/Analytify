@@ -798,3 +798,103 @@
     font-size: 1.25rem;
   }
 }
+
+@media (max-width: 480px) {
+  .artists-top-bar {
+    margin-top: 14px !important;
+    padding: 0 12px !important;
+
+    h2 {
+      font-size: 1.4rem !important;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  .artists-header-container {
+    padding: 0 12px;
+  }
+
+  .artists-controls-bar {
+    margin-top: 10px;
+
+    .controls-right .view-switcher > button {
+      gap: 4px;
+      font-size: 0.78rem;
+    }
+  }
+
+  .item-card .card-content {
+    gap: 12px;
+
+    .card-info {
+      gap: 12px;
+
+      .artist-image {
+        width: 64px;
+        height: 64px;
+      }
+
+      .artist-details .artist-name-text {
+        font-size: 1.08rem;
+      }
+    }
+  }
+
+  .track-row-card {
+    padding: 9px;
+    gap: 9px;
+
+    .track-index {
+      display: none;
+    }
+
+    .track-cover {
+      width: 46px;
+      height: 46px;
+    }
+
+    .track-meta {
+      gap: 6px;
+    }
+  }
+
+  .album-card {
+    padding: 9px;
+
+    .album-name {
+      font-size: 0.92rem;
+    }
+
+    .album-artists {
+      font-size: 0.8rem;
+    }
+  }
+
+  .album-detail-back {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  .album-detail-header {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .album-detail-cover-link {
+    flex-basis: 72px;
+    width: 72px;
+    height: 72px;
+  }
+
+  .album-detail-title {
+    h2 {
+      font-size: 1.1rem;
+      overflow-wrap: anywhere;
+    }
+
+    p {
+      font-size: 0.85rem;
+    }
+  }
+}

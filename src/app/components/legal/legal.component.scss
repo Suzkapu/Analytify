@@ -1,11 +1,18 @@
 .legal-wrapper {
   min-height: 100vh;
+  min-height: 100dvh;
   background-color: #0b0b0b;
   position: relative;
   overflow: hidden;
   padding: 2rem 0;
   display: flex;
   justify-content: center;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    padding: 1rem max(12px, env(safe-area-inset-right)) 2rem max(12px, env(safe-area-inset-left));
+    overflow: clip;
+  }
 }
 
 .glow-bg-orb {
@@ -28,6 +35,12 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  min-width: 0;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    gap: 1rem;
+  }
 }
 
 .back-link-container {
@@ -219,5 +232,60 @@
       color: #1ed760;
       font-weight: 700;
     }
+  }
+}
+
+@media (max-width: 480px) {
+  .glow-bg-orb {
+    width: 240px;
+    height: 240px;
+  }
+
+  .back-link-container .back-text-button {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .legal-card {
+    padding: 1.5rem 1rem;
+    border-radius: 16px;
+  }
+
+  .legal-title {
+    font-size: 1.55rem;
+    line-height: 1.15;
+  }
+
+  .legal-divider {
+    margin: 1.5rem 0;
+  }
+
+  .section-divider {
+    margin: 2rem 0;
+  }
+
+  .legal-section {
+    gap: 1rem;
+
+    h2 {
+      align-items: flex-start;
+      font-size: 1.15rem;
+      line-height: 1.3;
+    }
+  }
+
+  .address-card {
+    padding: 1rem;
+  }
+
+  .contact-info,
+  .legal-list span,
+  .legal-link {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .legal-list li {
+    gap: 9px;
   }
 }

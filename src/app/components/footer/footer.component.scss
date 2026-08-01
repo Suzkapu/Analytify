@@ -9,7 +9,7 @@
 
   @media (max-width: 768px) {
     margin-top: 3rem;
-    padding-bottom: 4rem;
+    padding: 0 max(12px, env(safe-area-inset-right)) calc(5rem + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
   }
 }
 
@@ -32,9 +32,10 @@
 
   @media (max-width: 768px) {
     width: 100%;
-    padding: 0 1.5rem;
+    padding: 0;
     flex-direction: column;
     text-align: center;
+    gap: 1rem;
   }
 }
 
@@ -114,5 +115,25 @@
     &::after {
       width: 100%;
     }
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-divider {
+    width: 100%;
+    margin-bottom: 1.25rem;
+  }
+
+  .spotify-attribution,
+  .footer-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .copyright-text {
+    max-width: 34ch;
+    line-height: 1.5;
   }
 }

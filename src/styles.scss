@@ -28,6 +28,15 @@ body {
   background-color: #121212;
   color: #f8f9fa;
   min-height: 100vh;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+button,
+a,
+input,
+select {
+  touch-action: manipulation;
 }
 
 /* Glassmorphism Header */
@@ -137,7 +146,7 @@ body {
 
 @media (max-width: 768px) {
   body:has(.header-nav) {
-    padding-bottom: 70px;
+    padding-bottom: calc(72px + env(safe-area-inset-bottom));
   }
 
   .app-header {
@@ -162,7 +171,7 @@ body {
       bottom: 0;
       left: 0;
       right: 0;
-      height: 62px;
+      height: calc(62px + env(safe-area-inset-bottom));
       background: rgba(18, 18, 18, 0.95);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
@@ -171,7 +180,8 @@ body {
       justify-content: space-around;
       align-items: center;
       margin: 0 !important;
-      padding: 0 16px;
+      padding: 0 max(10px, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(10px, env(safe-area-inset-left));
+      box-sizing: border-box;
       z-index: 1000;
       box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6);
     }
@@ -185,6 +195,8 @@ body {
       gap: 4px !important;
       font-size: 0.75rem !important;
       padding: 8px 0 !important;
+      min-width: 0;
+      min-height: 52px;
       color: #b3b3b3 !important;
       border-radius: 0 !important;
       background: transparent !important;
@@ -221,7 +233,10 @@ body {
   }
 
   .back-bar-container {
-    padding: 8px 1rem !important;
+    padding-top: 8px !important;
+    padding-right: max(12px, env(safe-area-inset-right)) !important;
+    padding-bottom: 8px !important;
+    padding-left: max(12px, env(safe-area-inset-left)) !important;
   }
   
   .hide-mobile {
@@ -229,8 +244,8 @@ body {
   }
 
   .scroll-to-top-btn {
-    bottom: 82px !important;
-    right: 16px !important;
+    bottom: calc(78px + env(safe-area-inset-bottom)) !important;
+    right: max(14px, env(safe-area-inset-right)) !important;
   }
 }
 
@@ -429,7 +444,8 @@ button:disabled,
 @media (max-width: 768px) {
   .card-container {
     width: 100% !important;
-    padding: 0 1rem !important;
+    padding-left: max(12px, env(safe-area-inset-left)) !important;
+    padding-right: max(12px, env(safe-area-inset-right)) !important;
   }
 }
 
@@ -1196,4 +1212,315 @@ h6 {
 .confirm-modal-btn:disabled {
   opacity: 0.5 !important;
   cursor: not-allowed !important;
+}
+
+/* Shared mobile ergonomics */
+@media (max-width: 768px) {
+  html {
+    overflow-x: hidden;
+  }
+
+  body {
+    min-height: 100dvh;
+  }
+
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+    min-height: 44px;
+    box-sizing: border-box;
+    font-size: 16px !important; // Prevent iOS focus zoom.
+  }
+
+  button,
+  [role='button'],
+  .p-button,
+  .dropdown-trigger-btn,
+  .back-text-button {
+    min-height: 44px;
+  }
+
+  .app-header {
+    min-height: 60px;
+    padding-left: max(12px, env(safe-area-inset-left)) !important;
+    padding-right: max(12px, env(safe-area-inset-right)) !important;
+
+    .header-logo img {
+      width: 30px;
+      height: 30px;
+    }
+
+    .user-profile-header img.profile-img,
+    .user-profile-header .profile-placeholder {
+      width: 42px !important;
+      height: 42px !important;
+    }
+  }
+
+  .profile-settings-dropdown {
+    position: fixed;
+    top: 64px;
+    right: max(12px, env(safe-area-inset-right));
+    width: min(280px, calc(100vw - 24px));
+
+    .dropdown-item,
+    .toggle-item {
+      min-height: 46px;
+      box-sizing: border-box;
+    }
+  }
+
+  .item-card {
+    padding: 1rem;
+    margin-bottom: 12px;
+    border-radius: 14px;
+
+    &:hover {
+      transform: none;
+    }
+  }
+
+  .progress-panel-container {
+    width: auto;
+    margin-left: max(12px, env(safe-area-inset-left));
+    margin-right: max(12px, env(safe-area-inset-right));
+  }
+
+  .spotify-custom-dropdown {
+    width: 100%;
+
+    .dropdown-trigger-btn {
+      width: 100%;
+      height: auto;
+    }
+
+    .dropdown-menu-overlay {
+      left: 0;
+      right: 0;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+
+      .menu-item {
+        min-height: 44px;
+        box-sizing: border-box;
+      }
+    }
+  }
+
+  .confirm-modal-overlay {
+    align-items: flex-end;
+    padding-top: max(16px, env(safe-area-inset-top));
+  }
+
+  .confirm-modal-card {
+    width: 100%;
+    max-width: none;
+    max-height: calc(92dvh - env(safe-area-inset-top));
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 24px 18px calc(18px + env(safe-area-inset-bottom));
+    border-radius: 20px 20px 0 0;
+  }
+
+  .confirm-modal-actions {
+    flex-wrap: wrap;
+
+    .confirm-modal-btn {
+      min-height: 44px;
+    }
+  }
+
+  .loading-container {
+    max-width: 100%;
+    padding: 0 16px;
+    box-sizing: border-box;
+
+    > div {
+      max-width: 100%;
+    }
+  }
+}
+
+@media (max-width: 420px) {
+  .app-header .header-logo .logo-text {
+    font-size: 1.1rem;
+  }
+
+  .confirm-modal-actions {
+    flex-direction: column-reverse;
+
+    .confirm-modal-btn {
+      width: 100%;
+    }
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .item-card:hover,
+  .p-button:hover,
+  .data-option-card:hover {
+    transform: none !important;
+  }
+}
+
+// Stats and history share a large component stylesheet. Keeping their phone
+// overrides global avoids duplicating the same responsive CSS in both bundles.
+@media (max-width: 768px) {
+  :is(app-user-stats, app-listening-history) .stats-dashboard-container {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+
+  app-user-stats {
+    .stats-range-controls {
+      width: 100%;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+
+    .time-range-toggles button {
+      min-width: 0;
+      min-height: 44px;
+      line-height: 1.15;
+    }
+
+    .history-select-container {
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      flex-wrap: nowrap;
+      gap: 8px;
+
+      .spotify-custom-dropdown,
+      .dropdown-trigger-btn {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .dropdown-trigger-btn span {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .trend-modal-overlay {
+      align-items: flex-end;
+      padding-top: max(16px, env(safe-area-inset-top));
+    }
+
+    .trend-modal-card {
+      width: 100%;
+      max-width: none;
+      max-height: calc(92dvh - env(safe-area-inset-top));
+      overflow-y: auto;
+      box-sizing: border-box;
+      padding: 24px 18px calc(18px + env(safe-area-inset-bottom));
+      border-radius: 20px 20px 0 0;
+    }
+
+    .trend-modal-close-btn {
+      top: 12px;
+      right: 14px;
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  app-listening-history {
+    .listening-history-list {
+      gap: 8px;
+    }
+
+    .listening-history-list .track-row-card {
+      min-width: 0;
+      padding: 10px;
+      gap: 10px;
+
+      .track-index {
+        width: 62px !important;
+        flex: 0 0 62px;
+      }
+
+      .track-cover {
+        width: 46px;
+        height: 46px;
+      }
+    }
+  }
+}
+
+@media (max-width: 420px) {
+  app-user-stats {
+    .stats-selectors-row h2 {
+      font-size: 1.45rem !important;
+    }
+
+    .category-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+
+      button,
+      .p-button {
+        min-width: 0;
+        min-height: 46px;
+
+        &:last-child {
+          grid-column: 1 / -1;
+        }
+      }
+    }
+
+    .track-row-card {
+      padding: 10px;
+      gap: 9px;
+
+      .track-cover {
+        width: 46px;
+        height: 46px;
+      }
+    }
+
+    .artist-grid-card {
+      padding: 12px;
+    }
+
+    .trend-modal-header {
+      gap: 12px;
+
+      .trend-modal-cover,
+      .genre-trend-avatar {
+        width: 58px;
+        height: 58px;
+        flex: 0 0 58px;
+      }
+
+      .trend-modal-info h3 {
+        font-size: 1.15rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 380px) {
+  app-listening-history .listening-history-list .track-row-card {
+    gap: 8px;
+
+    .track-index {
+      width: 52px !important;
+      flex-basis: 52px;
+    }
+
+    .track-cover {
+      width: 42px;
+      height: 42px;
+    }
+
+    .track-meta {
+      display: none;
+    }
+  }
 }
