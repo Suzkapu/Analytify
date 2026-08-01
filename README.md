@@ -39,6 +39,29 @@ Analytify turns your Spotify library and listening data into a clear, visual ove
 
 Analytify stores data locally in your browser so previously loaded views remain quickly available. Optional Cloud Backup keeps your history and snapshots available across sessions and enables automated daily collection. You can delete either the local cache or your personal cloud data from the profile menu.
 
+## Development
+
+```bash
+npm ci
+npm start
+```
+
+Run the complete compile and production-build verification before committing:
+
+```bash
+npm run verify
+```
+
+Run the same headless unit-test gate used by GitHub Actions when Chrome is available:
+
+```bash
+npm run verify:ci
+```
+
+Every push runs this gate. Deployment steps run only for a successful `main` push or a manually dispatched workflow.
+
+The application uses lazy-loaded vertical feature slices, shared layout/UI modules, and a root-only core infrastructure layer. See [Architecture](docs/architecture.md) for the directory map, dependency rules, and instructions for adding a page or service.
+
 
 ## License
 

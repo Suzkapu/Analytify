@@ -1,35 +1,74 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {LoginPageComponent} from "./components/login-page/login-page.component";
-import {CallbackComponent} from "./components/callback/callback.component";
-import {PlaylistsComponent} from "./components/playlists/playlists.component";
-import {SongsComponent} from "./components/songs/songs.component";
-import {ArtistDetailsComponent} from "./components/artist-details/artist-details.component";
-import {PlaylistAnalysisComponent} from "./components/playlist-analysis/playlist-analysis.component";
-import {UserStatsComponent} from "./components/user-stats/user-stats.component";
-import {LegalComponent} from "./components/legal/legal.component";
-import {ListeningHistoryComponent} from "./components/listening-history/listening-history.component";
 
-import {spotifyAuthGuard} from "./services/auth/spotify-auth.guard";
-import {redirectLoggedInGuard} from "./services/auth/redirect-logged-in.guard";
+import {redirectLoggedInGuard} from '@core/auth/redirect-logged-in.guard';
+import {spotifyAuthGuard} from '@core/auth/spotify-auth.guard';
 
-const routes: Routes = [
-  {path: '', component: LoginPageComponent, canActivate: [redirectLoggedInGuard]},
-  {path: 'login', component: LoginPageComponent, canActivate: [redirectLoggedInGuard]},
-  {path: 'callback', component: CallbackComponent},
-  {path: 'playlists', component: PlaylistsComponent, canActivate: [spotifyAuthGuard]},
-  {path: 'songs/:id', component: SongsComponent, canActivate: [spotifyAuthGuard]},
-  {path: 'artistDetails/:id', component: ArtistDetailsComponent, canActivate: [spotifyAuthGuard]},
-  {path: 'analysis/:id', component: PlaylistAnalysisComponent, canActivate: [spotifyAuthGuard]},
-  {path: 'stats', component: UserStatsComponent, canActivate: [spotifyAuthGuard]},
-  {path: 'legal', component: LegalComponent},
-  {path: 'history', component: ListeningHistoryComponent, canActivate: [spotifyAuthGuard]},
-  {path: '**', redirectTo: ''},
+export const APP_ROUTES: Routes = [
+  {
+    path: '',
+    pathMatch: 'full',
+    canActivate: [redirectLoggedInGuard],
+    loadChildren: () =>
+      import('@features/auth/login-page/login-page.module').then(module => module.LoginPageModule)
+  },
+  {
+    path: 'login',
+    canActivate: [redirectLoggedInGuard],
+    loadChildren: () =>
+      import('@features/auth/login-page/login-page.module').then(module => module.LoginPageModule)
+  },
+  {
+    path: 'callback',
+    loadChildren: () =>
+      import('@features/auth/callback/callback.module').then(module => module.CallbackModule)
+  },
+  {
+    path: 'playlists',
+    canActivate: [spotifyAuthGuard],
+    loadChildren: () =>
+      import('@features/library/playlists/playlists.module').then(module => module.PlaylistsModule)
+  },
+  {
+    path: 'songs',
+    canActivate: [spotifyAuthGuard],
+    loadChildren: () =>
+      import('@features/library/songs/songs.module').then(module => module.SongsModule)
+  },
+  {
+    path: 'artistDetails',
+    canActivate: [spotifyAuthGuard],
+    loadChildren: () =>
+      import('@features/library/artist-details/artist-details.module').then(module => module.ArtistDetailsModule)
+  },
+  {
+    path: 'analysis',
+    canActivate: [spotifyAuthGuard],
+    loadChildren: () =>
+      import('@features/library/playlist-analysis/playlist-analysis.module').then(module => module.PlaylistAnalysisModule)
+  },
+  {
+    path: 'stats',
+    canActivate: [spotifyAuthGuard],
+    loadChildren: () =>
+      import('@features/insights/user-stats/user-stats.module').then(module => module.UserStatsModule)
+  },
+  {
+    path: 'history',
+    canActivate: [spotifyAuthGuard],
+    loadChildren: () =>
+      import('@features/insights/listening-history/listening-history.module').then(module => module.ListeningHistoryModule)
+  },
+  {
+    path: 'legal',
+    loadChildren: () =>
+      import('@features/legal/legal/legal.module').then(module => module.LegalModule)
+  },
+  {path: '**', redirectTo: ''}
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled' })],
+  imports: [RouterModule.forRoot(APP_ROUTES, {scrollPositionRestoration: 'enabled'})],
   exports: [RouterModule]
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

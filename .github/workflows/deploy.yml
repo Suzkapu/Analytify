@@ -1,13 +1,17 @@
-name: Deploy to Oracle Server
+name: Verify and deploy
 
 on:
   push:
+  pull_request:
     branches:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  build-and-deploy:
+  verify-and-deploy:
     runs-on: ubuntu-latest
     env:
       # This hostname is public and should not be hidden in a repository secret.
@@ -28,10 +32,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Angular app for production
-        run: npm run build
+      - name: Verify tests and production build
+        run: npm run verify:ci
 
       - name: Deploy to Oracle Server via SSH/rsync
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
         uses: easingthemes/ssh-deploy@main
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -43,6 +48,7 @@ jobs:
           EXCLUDE: "/node_modules/"
 
       - name: Deploy daily pull script to Oracle Server via SSH/rsync
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
         uses: easingthemes/ssh-deploy@main
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
