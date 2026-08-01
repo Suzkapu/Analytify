@@ -24,6 +24,14 @@
     </span>
   </div>
   <div class="controls-right">
+    <button (click)="toggleMergeSelectionMode()" class="p-button merge-toggle-button"
+      [class.p-button-outlined]="!isMergeSelectionMode"
+      [class.p-button-secondary]="!isMergeSelectionMode"
+      [disabled]="isCreatingMergedPlaylist"
+      title="Select multiple playlists and combine all unique songs">
+      <i class="pi" [ngClass]="isMergeSelectionMode ? 'pi-times' : 'pi-clone'"></i>
+      <span>{{ isMergeSelectionMode ? 'Cancel merge' : 'Merge playlists' }}</span>
+    </button>
     <button (click)="sortPlaylistsByTracks()" class="p-button p-button-outlined p-button-secondary"
       style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px;"
       [style.background]="isSortedByCount ? 'rgba(30, 215, 96, 0.12) !important' : 'transparent !important'"
@@ -41,12 +49,58 @@
   </div>
 </div>
 
+<section *ngIf="isMergeSelectionMode" class="merge-composer" aria-live="polite">
+  <div class="merge-composer-copy">
+    <span class="merge-eyebrow">Combine without duplicates</span>
+    <h3>Select at least two playlists</h3>
+    <p>{{ selectedPlaylistIds.size }} selected · every unique song will be added once</p>
+    <div *ngIf="selectedPlaylists.length" class="selected-playlist-chips">
+      <button *ngFor="let playlist of selectedPlaylists" type="button" (click)="togglePlaylistSelection(playlist)"
+        [disabled]="isCreatingMergedPlaylist" title="Remove from selection">
+        {{ playlist.name }} <span>×</span>
+      </button>
+    </div>
+  </div>
+  <label class="merge-name-field">
+    <span>New playlist name</span>
+    <input type="text" maxlength="100" [ngModel]="mergedPlaylistName"
+      (ngModelChange)="onMergedPlaylistNameChange($event)" placeholder="Merged Playlist">
+  </label>
+  <div class="merge-composer-actions">
+    <button type="button" class="merge-create-button" (click)="createMergedPlaylist()"
+      [disabled]="selectedPlaylistIds.size < 2 || !mergedPlaylistName.trim() || isCreatingMergedPlaylist">
+      <i class="pi" [ngClass]="isCreatingMergedPlaylist ? 'pi-spin pi-spinner' : 'pi-spotify'"></i>
+      {{ isCreatingMergedPlaylist ? 'Creating…' : 'Create on Spotify' }}
+    </button>
+    <small *ngIf="mergeProgress">{{ mergeProgress }}</small>
+    <small *ngIf="mergeError" class="merge-error">{{ mergeError }}</small>
+  </div>
+</section>
+
+<section *ngIf="mergeResult" class="merge-success" [class.merge-failure]="!mergeResult.success" role="status">
+  <i class="pi" [ngClass]="mergeResult.success ? 'pi-check-circle' : 'pi-exclamation-circle'"></i>
+  <div>
+    <strong *ngIf="mergeResult.success">“{{ mergeResult.playlistName }}” is ready</strong>
+    <strong *ngIf="!mergeResult.success">Spotify could not finish “{{ mergeResult.playlistName }}”</strong>
+    <span *ngIf="mergeResult.success">{{ mergeResult.addedTracks }} unique songs were added to your private Spotify playlist.</span>
+    <span *ngIf="!mergeResult.success">{{ mergeResult.addedTracks }} songs were added before the error. {{ mergeResult.error }}</span>
+  </div>
+  <a *ngIf="mergeResult.playlistUrl" [href]="mergeResult.playlistUrl" target="_blank" rel="noopener noreferrer">Inspect in Spotify</a>
+  <button type="button" (click)="dismissMergeResult()" aria-label="Dismiss success message">×</button>
+</section>
+
 <div *ngIf="playlists.length === 0" class="no-playlists" style="margin-top: 4rem;">No playlists found</div>
 
 <div class="card-container" style="margin-top: 2rem;">
   <ng-container *ngFor="let playlist of filteredPlaylists">
-    <div class="item-card">
+    <div class="item-card" [class.merge-mode]="isMergeSelectionMode" [class.merge-selected]="isPlaylistSelected(playlist.id)">
       <div class="card-content">
+        <button *ngIf="isMergeSelectionMode" type="button" class="playlist-select-button"
+          (click)="togglePlaylistSelection(playlist)" [disabled]="isCreatingMergedPlaylist"
+          [attr.aria-pressed]="isPlaylistSelected(playlist.id)"
+          [attr.aria-label]="(isPlaylistSelected(playlist.id) ? 'Remove ' : 'Select ') + playlist.name">
+          <i class="pi" [ngClass]="isPlaylistSelected(playlist.id) ? 'pi-check' : 'pi-plus'"></i>
+        </button>
         <div class="card-info">
           <div class="image-box">
             <img
@@ -61,7 +115,7 @@
             <p class="description">{{ playlist.description }}</p>
           </div>
         </div>
-        <div class="card-actions">
+        <div class="card-actions" *ngIf="!isMergeSelectionMode">
           <button (click)="viewSongs(playlist.id)" class="p-button" style="border-radius: 8px !important;">Explore</button>
           <button (click)="viewAnalysis(playlist.id)"
             class="p-button p-button-outlined p-button-secondary">Analyze</button>

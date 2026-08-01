@@ -4,6 +4,9 @@ import {SpotifyDataService} from "@core/data-access/spotify/spotify-data.service
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {StorageService} from "@core/data-access/storage/storage.service";
 import {firstValueFrom} from 'rxjs';
+import {ComparePlaylist, CompareSaveResult, CompareTrack} from '@core/compare-room/compare-room.models';
+import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-source.service';
+import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.service';
 
 @Component({
   selector: 'app-playlists', templateUrl: './playlists.component.html', styleUrls: ['./playlists.component.scss'],
@@ -15,13 +18,23 @@ export class PlaylistsComponent {
   searchText: string = '';
   sortOrder: 'asc' | 'desc' | 'none' = 'none';
   isRefreshingPlaylists = false;
+  isMergeSelectionMode = false;
+  selectedPlaylistIds = new Set<string>();
+  mergedPlaylistName = '';
+  isMergedPlaylistNameEdited = false;
+  isCreatingMergedPlaylist = false;
+  mergeProgress = '';
+  mergeError = '';
+  mergeResult: CompareSaveResult | null = null;
 
   constructor(
     private route: ActivatedRoute, 
     private router: Router, 
     private spotifyDataService: SpotifyDataService,
     public authService: SpotifyAuthService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private comparePlaylistSource: ComparePlaylistSourceService,
+    private participantSpotify: ParticipantSpotifyService
   ) {
     this.route.params.subscribe(async () => {
       const userId = this.authService.getUserId() || 'anonymous';
@@ -209,6 +222,113 @@ export class PlaylistsComponent {
     this.filterPlaylists();
   }
 
+  toggleMergeSelectionMode(): void {
+    if (this.isCreatingMergedPlaylist) return;
+    this.isMergeSelectionMode = !this.isMergeSelectionMode;
+    this.selectedPlaylistIds.clear();
+    this.mergedPlaylistName = '';
+    this.isMergedPlaylistNameEdited = false;
+    this.mergeError = '';
+    this.mergeProgress = '';
+    if (this.isMergeSelectionMode) this.mergeResult = null;
+  }
+
+  togglePlaylistSelection(playlist: any): void {
+    if (!this.isMergeSelectionMode || this.isCreatingMergedPlaylist || !playlist?.id) return;
+    if (this.selectedPlaylistIds.has(playlist.id)) {
+      this.selectedPlaylistIds.delete(playlist.id);
+    } else {
+      this.selectedPlaylistIds.add(playlist.id);
+    }
+    this.updateDefaultMergedPlaylistName();
+    this.mergeError = '';
+  }
+
+  isPlaylistSelected(playlistId: string): boolean {
+    return this.selectedPlaylistIds.has(playlistId);
+  }
+
+  get selectedPlaylists(): any[] {
+    return Array.from(this.selectedPlaylistIds)
+      .map(playlistId => this.playlists.find(playlist => playlist.id === playlistId))
+      .filter(Boolean);
+  }
+
+  onMergedPlaylistNameChange(value: string): void {
+    this.mergedPlaylistName = value;
+    this.isMergedPlaylistNameEdited = true;
+  }
+
+  async createMergedPlaylist(): Promise<void> {
+    const selectedPlaylists = this.selectedPlaylists;
+    const playlistName = this.mergedPlaylistName.trim();
+    if (selectedPlaylists.length < 2 || !playlistName || this.isCreatingMergedPlaylist) return;
+
+    this.isCreatingMergedPlaylist = true;
+    this.mergeError = '';
+    this.mergeResult = null;
+    try {
+      const accessToken = await this.getUsableAccessToken();
+      const spotifyUserId = this.authService.getUserId();
+      if (!spotifyUserId) throw new Error('Your Spotify profile is unavailable. Please log in again.');
+
+      const mergedTracks: CompareTrack[] = [];
+      const seenTrackIds = new Set<string>();
+      for (let index = 0; index < selectedPlaylists.length; index++) {
+        const playlist = this.toComparePlaylist(selectedPlaylists[index]);
+        this.mergeProgress = `Loading ${playlist.name} (${index + 1}/${selectedPlaylists.length})…`;
+        const result = await this.comparePlaylistSource.loadMainTracks(
+          playlist,
+          accessToken,
+          spotifyUserId
+        );
+        result.tracks.forEach(track => {
+          if (!seenTrackIds.has(track.id)) {
+            seenTrackIds.add(track.id);
+            mergedTracks.push(track);
+          }
+        });
+      }
+
+      if (mergedTracks.length === 0) {
+        throw new Error('The selected playlists do not contain any usable Spotify tracks.');
+      }
+
+      this.mergeProgress = `Creating “${playlistName}” with ${mergedTracks.length} unique songs…`;
+      const description = this.createMergedPlaylistDescription(selectedPlaylists);
+      const saveResult = await this.participantSpotify.createPlaylist(
+        accessToken,
+        playlistName,
+        description,
+        mergedTracks
+      );
+      if (!saveResult.success) {
+        // Spotify may have created the playlist before one of the 100-track
+        // batches failed. Preserve that result so the user can inspect it.
+        this.mergeResult = saveResult;
+        throw new Error(saveResult.error || 'Spotify could not create the merged playlist.');
+      }
+
+      this.mergeResult = saveResult;
+      this.addMergedPlaylistToView(saveResult, playlistName, description, spotifyUserId);
+      this.isMergeSelectionMode = false;
+      this.selectedPlaylistIds.clear();
+      this.mergedPlaylistName = '';
+      this.isMergedPlaylistNameEdited = false;
+    } catch (error) {
+      this.mergeError = error instanceof Error
+        ? error.message
+        : 'The merged playlist could not be created.';
+    } finally {
+      this.isCreatingMergedPlaylist = false;
+      this.mergeProgress = '';
+    }
+  }
+
+  dismissMergeResult(): void {
+    this.mergeResult = null;
+  }
+
   viewSongs(playlistId: string) {
     this.router.navigate(['/songs', playlistId]);
   }
@@ -242,6 +362,66 @@ export class PlaylistsComponent {
       },
       tracks: { total }
     };
+  }
+
+  private updateDefaultMergedPlaylistName(): void {
+    if (this.isMergedPlaylistNameEdited) return;
+    const names = this.selectedPlaylists.map(playlist => playlist.name).filter(Boolean);
+    this.mergedPlaylistName = names.length > 0
+      ? `Merged — ${names.join(' + ')}`.slice(0, 100)
+      : '';
+  }
+
+  private toComparePlaylist(playlist: any): ComparePlaylist {
+    return {
+      id: playlist.id,
+      name: playlist.name || 'Untitled playlist',
+      imageUrl: playlist.images?.[0]?.url || '',
+      total: Number(playlist.tracks?.total ?? playlist.items?.total ?? 0),
+      ownerName: playlist.owner?.display_name || playlist.owner?.id || '',
+      isLikedSongs: playlist.id === 'fav'
+    };
+  }
+
+  private createMergedPlaylistDescription(playlists: any[]): string {
+    const names = playlists.map(playlist => playlist.name).filter(Boolean).join(', ');
+    return `Merged from ${names} by Analytify. Duplicates removed.`.slice(0, 300);
+  }
+
+  private async getUsableAccessToken(): Promise<string> {
+    let accessToken = this.authService.getAccessToken();
+    if (this.authService.isTokenExpired()) {
+      const refreshResult = await firstValueFrom(this.authService.refreshToken());
+      accessToken = refreshResult?.access_token || this.authService.getAccessToken();
+    }
+    if (!accessToken) throw new Error('Your Spotify session is unavailable. Please log in again.');
+    return accessToken;
+  }
+
+  private addMergedPlaylistToView(
+    result: CompareSaveResult,
+    name: string,
+    description: string,
+    spotifyUserId: string
+  ): void {
+    if (!result.playlistId) return;
+    const userId = this.authService.getUserId() || spotifyUserId;
+    const mergedPlaylist = {
+      id: result.playlistId,
+      name,
+      description,
+      images: [],
+      owner: {id: this.stripDevSuffix(spotifyUserId)},
+      collaborative: false,
+      tracks: {total: result.addedTracks}
+    };
+    const favourite = this.playlists.find(playlist => playlist.id === 'fav');
+    const remaining = this.playlists.filter(playlist => playlist.id !== 'fav' && playlist.id !== result.playlistId);
+    this.playlists = favourite
+      ? [favourite, mergedPlaylist, ...remaining]
+      : [mergedPlaylist, ...remaining];
+    this.storageService.setItem(`${userId}_playlists`, JSON.stringify(this.playlists));
+    this.filterPlaylists();
   }
 
   private stripDevSuffix(userId: string): string {

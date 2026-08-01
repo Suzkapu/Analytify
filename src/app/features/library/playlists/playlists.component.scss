@@ -69,6 +69,7 @@
   .controls-right {
     display: flex;
     align-items: center;
+    gap: 8px;
   }
 
   @media (max-width: 768px) {
@@ -101,28 +102,155 @@
   }
 }
 
+.merge-toggle-button {
+  border-radius: 8px !important;
+  padding: 0.5rem 1rem !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.merge-composer,
+.merge-success {
+  width: 80vw;
+  max-width: 1000px;
+  margin: 14px auto 0;
+  box-sizing: border-box;
+  border: 1px solid rgba(30, 215, 96, 0.24);
+  background: linear-gradient(135deg, rgba(30, 215, 96, 0.1), rgba(20, 23, 21, 0.94));
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+}
+
+.merge-composer {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(240px, 0.85fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 18px;
+  border-radius: 18px;
+
+  h3 { margin: 3px 0 4px; color: #fff; }
+  p { margin: 0; color: #a7afa9; font-size: 0.88rem; }
+}
+
+.merge-eyebrow {
+  color: #1ed760;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.selected-playlist-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 11px;
+
+  button {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.07);
+    color: #eef2ef;
+    padding: 5px 9px;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.75rem;
+  }
+}
+
+.merge-name-field {
+  display: grid;
+  gap: 6px;
+
+  span { color: #b5bcb7; font-size: 0.76rem; font-weight: 700; }
+  input {
+    width: 100%;
+    min-height: 44px;
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 11px;
+    background: #111412;
+    color: #fff;
+    padding: 0 12px;
+    font: inherit;
+  }
+  input:focus { outline: 2px solid rgba(30, 215, 96, 0.34); border-color: #1ed760; }
+}
+
+.merge-composer-actions {
+  display: grid;
+  gap: 6px;
+  justify-items: stretch;
+
+  small { max-width: 220px; color: #aab2ac; line-height: 1.35; }
+  .merge-error { color: #ff8989; }
+}
+
+.merge-create-button {
+  min-height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: #1ed760;
+  color: #071109;
+  padding: 0 18px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:disabled { cursor: not-allowed; opacity: 0.42; }
+}
+
+.merge-success {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 13px;
+  padding: 14px 18px;
+  border-radius: 15px;
+
+  > i { color: #1ed760; font-size: 1.5rem; }
+  strong, span { display: block; }
+  strong { color: #fff; }
+  span { margin-top: 2px; color: #aab2ac; font-size: 0.8rem; }
+  a { color: #1ed760; font-weight: 800; text-decoration: none; white-space: nowrap; }
+  button { border: 0; background: transparent; color: #aab2ac; font-size: 1.4rem; cursor: pointer; }
+
+  &.merge-failure {
+    border-color: rgba(255, 112, 112, 0.38);
+    background: linear-gradient(135deg, rgba(185, 45, 45, 0.12), rgba(20, 23, 21, 0.94));
+
+    > i,
+    a { color: #ff8989; }
+  }
+}
+
 @media (max-width: 480px) {
   .playlists-top-bar {
     margin-top: 14px !important;
   }
 
   .playlists-controls-bar {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     gap: 8px;
     padding: 10px 12px 14px;
 
     .controls-left,
     .controls-right {
-      width: auto;
+      width: 100%;
       min-width: 0;
     }
 
     .controls-right {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+
       button,
       ::ng-deep .p-button {
-        flex: none;
+        width: 100%;
         padding: 0 12px !important;
       }
     }
@@ -176,6 +304,34 @@
 }
 
 .item-card {
+  position: relative;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+
+  &.merge-mode { border-color: rgba(255, 255, 255, 0.12); }
+  &.merge-selected {
+    border-color: rgba(30, 215, 96, 0.72);
+    background: rgba(30, 215, 96, 0.075);
+    transform: translateY(-1px);
+  }
+
+  .playlist-select-button {
+    width: 38px;
+    height: 38px;
+    margin-right: 16px;
+    flex: 0 0 auto;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    cursor: pointer;
+  }
+
+  &.merge-selected .playlist-select-button {
+    border-color: #1ed760;
+    background: #1ed760;
+    color: #071109;
+  }
+
   .card-content {
     display: flex;
     align-items: center;
@@ -296,6 +452,35 @@
       }
     }
   }
+}
+
+@media (max-width: 900px) {
+  .merge-composer {
+    grid-template-columns: 1fr;
+  }
+
+  .merge-composer-actions small { max-width: none; }
+}
+
+@media (max-width: 768px) {
+  .merge-composer,
+  .merge-success { width: calc(100% - 2rem); }
+
+  .merge-success {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    a { grid-column: 2; justify-self: start; }
+    button { grid-column: 3; grid-row: 1; }
+  }
+
+  .item-card .playlist-select-button {
+    position: absolute;
+    z-index: 2;
+    top: 14px;
+    right: 14px;
+    margin: 0;
+  }
+
+  .item-card.merge-mode .card-info { padding-right: 48px; }
 }
 
 .no-playlists {
