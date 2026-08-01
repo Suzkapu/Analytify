@@ -31,7 +31,7 @@ export class TransientParticipantAuthService {
     const body = new HttpParams()
       .set('grant_type', 'refresh_token')
       .set('refresh_token', this.session.refreshToken)
-      .set('client_id', environment.spotifyClientId);
+      .set('client_id', this.spotifyClientId());
     const response = await firstValueFrom(this.http.post<any>(
       'https://accounts.spotify.com/api/token',
       body.toString(),
@@ -47,6 +47,7 @@ export class TransientParticipantAuthService {
   }
 
   async startAuthorization(returnUrl: string): Promise<void> {
+    const clientId = this.spotifyClientId();
     const verifier = this.randomUrlSafeString(64);
     const challenge = await this.createChallenge(verifier);
     const request: CompareRoomAuthRequest = {
@@ -66,7 +67,7 @@ export class TransientParticipantAuthService {
     ].join(' ');
     const params = new URLSearchParams({
       response_type: 'code',
-      client_id: environment.spotifyClientId,
+      client_id: clientId,
       redirect_uri: environment.compareRoomRedirectUri,
       scope: scopes,
       state: request.state,
@@ -93,7 +94,7 @@ export class TransientParticipantAuthService {
     }
 
     const body = new HttpParams()
-      .set('client_id', environment.spotifyClientId)
+      .set('client_id', this.spotifyClientId())
       .set('grant_type', 'authorization_code')
       .set('code', code)
       .set('redirect_uri', environment.compareRoomRedirectUri)
@@ -118,6 +119,14 @@ export class TransientParticipantAuthService {
   clear(): void {
     this.session = null;
     sessionStorage.removeItem(this.requestKey);
+  }
+
+  private spotifyClientId(): string {
+    const clientId = environment.spotifyClientId.trim();
+    if (!/^[a-zA-Z0-9]{32}$/.test(clientId)) {
+      throw new Error('Compare Room Spotify login is not configured. Please contact the host.');
+    }
+    return clientId;
   }
 
   private randomUrlSafeString(byteCount: number): string {
