@@ -32,6 +32,7 @@ export class SongsComponent implements OnInit, OnDestroy {
   filteredTracks: any[] = [];
   playlistAlbums: any[] = [];
   filteredAlbums: any[] = [];
+  selectedAlbum: any | null = null;
   trackSearchText: string = '';
   albumSearchText: string = '';
   albumSortOrder: 'asc' | 'desc' = 'desc';
@@ -447,6 +448,7 @@ export class SongsComponent implements OnInit, OnDestroy {
       if (existing) {
         existing.trackCount++;
         existing.durationMs += track.duration_ms || 0;
+        existing.tracks.push(track);
         return;
       }
 
@@ -463,7 +465,8 @@ export class SongsComponent implements OnInit, OnDestroy {
         releaseDate: album.release_date || '',
         artists: artists.map((artist: any) => artist.name).filter(Boolean),
         trackCount: 1,
-        durationMs: track.duration_ms || 0
+        durationMs: track.duration_ms || 0,
+        tracks: [track]
       });
     });
 
@@ -612,9 +615,40 @@ export class SongsComponent implements OnInit, OnDestroy {
     return dateStr.substring(0, 4);
   }
 
+  openAlbumDetails(album: any) {
+    this.selectedAlbum = {
+      ...album,
+      tracks: [...(album.tracks || [])].sort((a: any, b: any) =>
+        (a.playlist_index || 0) - (b.playlist_index || 0)
+      )
+    };
+    setTimeout(() => {
+      document.querySelector('.album-detail-view')?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    });
+  }
+
+  closeAlbumDetails() {
+    this.selectedAlbum = null;
+  }
+
+  onAlbumCardKeydown(event: KeyboardEvent, album: any) {
+    if (event.target !== event.currentTarget) return;
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    this.openAlbumDetails(album);
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey() {
+    this.closeAlbumDetails();
+  }
+
   openTrackClick(url: string) {
     if (url) {
-      window.open(url, '_blank');
+      window.open(url, '_blank', 'noopener,noreferrer');
     }
   }
 

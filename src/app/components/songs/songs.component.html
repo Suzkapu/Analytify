@@ -37,7 +37,7 @@
           placeholder="Search songs or artists..." type="text"
           style="border-radius: 20px; font-size: 0.95rem; padding-left: 2.5rem;" />
       </span>
-      <span class="p-input-icon-left search-container" *ngIf="viewStyle === 'albums'">
+      <span class="p-input-icon-left search-container" *ngIf="viewStyle === 'albums' && !selectedAlbum">
         <i class="pi pi-search"></i>
         <input (input)="filterAlbums()" [(ngModel)]="albumSearchText" class="search-input" pInputText
           placeholder="Search albums or artists..." type="text"
@@ -45,8 +45,9 @@
       </span>
     </div>
     
-    <div class="controls-right" style="display: flex; align-items: center; gap: 12px;">
+    <div class="controls-right">
       <!-- View Switcher Buttons (same outline style as Sort) -->
+      <div class="view-switcher">
       <button (click)="viewStyle = 'artists'" class="p-button p-button-outlined p-button-secondary"
         [style.background]="viewStyle === 'artists' ? 'rgba(30, 215, 96, 0.12) !important' : 'transparent !important'"
         [style.borderColor]="viewStyle === 'artists' ? '#1ed760 !important' : 'rgba(255, 255, 255, 0.2) !important'"
@@ -63,7 +64,7 @@
         title="View Songs">
         <i class="pi pi-music"></i> Songs
       </button>
-      <button (click)="viewStyle = 'albums'" class="p-button p-button-outlined p-button-secondary"
+      <button (click)="viewStyle = 'albums'; closeAlbumDetails()" class="p-button p-button-outlined p-button-secondary"
         [style.background]="viewStyle === 'albums' ? 'rgba(30, 215, 96, 0.12) !important' : 'transparent !important'"
         [style.borderColor]="viewStyle === 'albums' ? '#1ed760 !important' : 'rgba(255, 255, 255, 0.2) !important'"
         [style.color]="viewStyle === 'albums' ? '#1ed760 !important' : '#e0e0e0 !important'"
@@ -71,8 +72,10 @@
         title="View Albums">
         <i class="pi pi-clone"></i> Albums
       </button>
+      </div>
 
       <!-- Sort Toggle Button (Artists View) -->
+      <div class="sort-control">
       <button *ngIf="viewStyle === 'artists'" (click)="sortArtistsByTracks()" class="p-button p-button-outlined p-button-secondary"
         style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px; height: 38px;"
         [style.background]="sortOrder !== 'none' ? 'rgba(30, 215, 96, 0.12) !important' : 'transparent !important'"
@@ -86,7 +89,7 @@
         }"></i> Sort By Count
       </button>
 
-      <button *ngIf="viewStyle === 'albums'" (click)="sortAlbumsByTracks()" class="p-button p-button-outlined p-button-secondary"
+        <button *ngIf="viewStyle === 'albums' && !selectedAlbum" (click)="sortAlbumsByTracks()" class="p-button p-button-outlined p-button-secondary"
         style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px; height: 38px;"
         [style.background]="'rgba(30, 215, 96, 0.12) !important'"
         [style.borderColor]="'#1ed760 !important'"
@@ -117,6 +120,7 @@
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   </div>
@@ -252,7 +256,52 @@
   </div>
 
   <!-- Albums View -->
-  <div *ngIf="viewStyle === 'albums'" class="card-container album-grid" style="margin-top: 20px;">
+  <section *ngIf="viewStyle === 'albums' && selectedAlbum" class="card-container album-detail-view">
+    <button class="album-detail-back" type="button" (click)="closeAlbumDetails()">
+      <i class="pi pi-arrow-left"></i> Back to albums
+    </button>
+
+    <header class="album-detail-header">
+      <button class="album-detail-cover-link" type="button"
+        [disabled]="!selectedAlbum.spotifyUrl"
+        [attr.aria-label]="'Open ' + selectedAlbum.name + ' on Spotify'"
+        title="Open album on Spotify"
+        (click)="openTrackClick(selectedAlbum.spotifyUrl)">
+        <img [src]="selectedAlbum.imageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
+          [alt]="selectedAlbum.name + ' cover'">
+      </button>
+      <div class="album-detail-title">
+        <span class="album-detail-eyebrow">Songs in this playlist</span>
+        <h2>{{ selectedAlbum.name }}</h2>
+        <p>{{ selectedAlbum.artists.join(', ') || 'Unknown artist' }}</p>
+        <span>{{ selectedAlbum.trackCount }} {{ selectedAlbum.trackCount === 1 ? 'song' : 'songs' }}</span>
+      </div>
+    </header>
+
+    <div class="analysis-tracks-grid album-detail-tracks">
+      <div *ngFor="let track of selectedAlbum.tracks; let idx = index" class="track-row-card">
+        <div class="track-index">{{ idx + 1 }}</div>
+        <img [src]="track.album?.images?.[0]?.url || selectedAlbum.imageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
+          [alt]="track.name + ' cover'" class="track-cover"
+          [class.is-clickable]="!!track.external_urls?.spotify"
+          (click)="openTrackClick(track.external_urls?.spotify); $event.stopPropagation()">
+        <div class="track-info">
+          <span class="track-title">{{ track.name }}</span>
+          <span class="track-artist">
+            <ng-container *ngFor="let artist of track.artists; let last = last">
+              {{ artist.name }}{{ last ? '' : ', ' }}
+            </ng-container>
+          </span>
+        </div>
+        <div class="track-meta">
+          <span *ngIf="track.explicit" class="explicit-badge">E</span>
+          <span class="track-duration"><i class="pi pi-clock"></i> {{ formatDurationShort(track.duration_ms) }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div *ngIf="viewStyle === 'albums' && !selectedAlbum" class="card-container album-grid" style="margin-top: 20px;">
     <div *ngIf="filteredAlbums.length === 0" class="no-songs-found album-empty-state">
       <i class="pi pi-info-circle"></i>
       <ng-container *ngIf="playlistAlbums.length > 0; else unavailableAlbumMetadata">
@@ -263,13 +312,22 @@
       </ng-template>
     </div>
 
-    <button *ngFor="let album of filteredAlbums.slice(0, displayedAlbumsCount)"
+    <article *ngFor="let album of filteredAlbums.slice(0, displayedAlbumsCount)"
       class="album-card"
-      type="button"
-      [disabled]="!album.spotifyUrl"
-      (click)="openTrackClick(album.spotifyUrl)">
-      <img [src]="album.imageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
-        [alt]="album.name + ' cover'" class="album-cover">
+      role="button"
+      tabindex="0"
+      [attr.aria-label]="'Show songs from ' + album.name"
+      (keydown)="onAlbumCardKeydown($event, album)"
+      (click)="openAlbumDetails(album)">
+      <button class="album-cover-link" type="button"
+        [disabled]="!album.spotifyUrl"
+        [attr.aria-label]="'Open ' + album.name + ' on Spotify'"
+        title="Open album on Spotify"
+        (click)="openTrackClick(album.spotifyUrl); $event.stopPropagation()">
+        <img [src]="album.imageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
+          [alt]="album.name + ' cover'" class="album-cover">
+        <span class="spotify-cover-hint"><i class="pi pi-external-link"></i></span>
+      </button>
       <span class="album-name">{{ album.name }}</span>
       <span class="album-artists">{{ album.artists.join(', ') || 'Unknown artist' }}</span>
       <span class="album-meta">
@@ -279,7 +337,7 @@
         <ng-container *ngIf="album.releaseDate"> · {{ getYearFromDate(album.releaseDate) }}</ng-container>
         · {{ formatDurationShort(album.durationMs) }}
       </span>
-    </button>
+    </article>
   </div>
 </div>
 
