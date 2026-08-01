@@ -60,6 +60,24 @@ describe('ParticipantSpotifyService', () => {
     expect(result.playlistUrl).toContain('/new');
   }));
 
+  it('reconstructs Spotify URIs for tracks from the persistent Analytify cache', () => {
+    const result = service.normalizeCachedTracks([{
+      id: 'artist',
+      tracks: [{
+        id: 'cached-track',
+        name: 'Cached track',
+        artists: [{id: 'artist', name: 'Artist'}],
+        playlist_index: 7,
+        external_urls: {spotify: 'https://open.spotify.com/track/cached-track'},
+        album: {name: 'Cached album', images: [{url: 'cover.jpg'}]}
+      }]
+    }]);
+
+    expect(result.length).toBe(1);
+    expect(result[0].uri).toBe('spotify:track:cached-track');
+    expect(result[0].playlistIndex).toBe(7);
+  });
+
   function track(id: string): CompareTrack {
     return {
       id,

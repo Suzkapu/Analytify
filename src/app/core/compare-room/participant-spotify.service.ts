@@ -139,7 +139,10 @@ export class ParticipantSpotifyService {
 
   private normalizeTrack(entry: any, index: number): CompareTrack | null {
     const track = entry?.item || entry?.track;
-    if (!track?.id || !track?.uri || track?.type === 'episode') return null;
+    // Analytify's persistent playlist cache stores the Spotify ID but omits
+    // the redundant URI. Reconstructing the canonical URI lets the main
+    // participant reuse large cached playlists without downloading them again.
+    if (!track?.id || track?.type === 'episode') return null;
     const artists = (track.artists || [])
       .filter((artist: any) => artist?.id && artist?.name)
       .map((artist: any) => ({id: artist.id, name: artist.name}));
