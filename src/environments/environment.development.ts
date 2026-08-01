@@ -10,6 +10,7 @@ export const environment = {
   spotifyClientId: 'REDACTED_SPOTIFY_CLIENT_ID',
   // [ASSUMED] The callback path will be appended to your local appUrl
   spotifyRedirectUri: 'http://127.0.0.1:4200/callback',
+  compareRoomRedirectUri: 'http://127.0.0.1:4200/compare-room/callback',
   spotifyScopes: [
     'user-read-private',
     'user-top-read',

@@ -1,0 +1,78 @@
+<main class="join-page">
+  <div class="join-brand">
+    <img src="assets/Analytify.png" alt="Analytify">
+    <span>Analytify Compare Room</span>
+  </div>
+
+  <section class="join-card">
+    <ng-container *ngIf="stage === 'invited'">
+      <div class="join-icon"><i class="pi pi-users"></i></div>
+      <span class="eyebrow">You have been invited</span>
+      <h1>Bring one of your playlists</h1>
+      <p>Connect Spotify, choose a playlist, and Analytify will find the songs everyone has in common.</p>
+      <button type="button" class="spotify-button" (click)="connectSpotify()"><i class="pi pi-spotify"></i> Continue with Spotify</button>
+      <small>Your temporary login is cleared when this room ends.</small>
+    </ng-container>
+
+    <ng-container *ngIf="stage === 'joining'">
+      <i class="pi pi-spin pi-spinner big-spinner"></i>
+      <h1>Joining the room…</h1>
+      <p>Keep this page open while the host accepts your invitation.</p>
+    </ng-container>
+
+    <ng-container *ngIf="stage === 'selecting' || stage === 'loading' || stage === 'ready' || stage === 'review'">
+      <div class="profile-row" *ngIf="participant">
+        <img *ngIf="participant.imageUrl" [src]="participant.imageUrl" alt="">
+        <div *ngIf="!participant.imageUrl" class="profile-placeholder"><i class="pi pi-user"></i></div>
+        <div><span>Joining as</span><strong>{{ participant.displayName }}</strong></div>
+      </div>
+
+      <ng-container *ngIf="stage === 'selecting' || stage === 'loading' || stage === 'ready'">
+        <span class="eyebrow">Your contribution</span>
+        <h1>Choose one playlist</h1>
+        <label class="playlist-select">
+          <span>Playlist or Liked Songs</span>
+          <select [value]="participant?.playlist?.id || ''" [disabled]="stage === 'loading'" (change)="selectPlaylist($any($event.target).value)">
+            <option value="" disabled>Select a playlist…</option>
+            <option *ngFor="let playlist of playlists" [value]="playlist.id">{{ playlist.name }} ({{ playlist.total }})</option>
+          </select>
+        </label>
+        <div *ngIf="stage === 'loading'" class="loading-note"><i class="pi pi-spin pi-spinner"></i> Loading your playlist…</div>
+        <div *ngIf="stage === 'ready'" class="ready-note"><i class="pi pi-check-circle"></i> {{ participant?.tracks?.length }} tracks ready. Waiting for the host.</div>
+      </ng-container>
+
+      <ng-container *ngIf="stage === 'review' && proposal">
+        <span class="eyebrow">Host proposal</span>
+        <h1>{{ proposal.trackCount }} shared songs</h1>
+        <p>The private playlist <strong>“{{ proposal.name }}”</strong> will be created on your Spotify account.</p>
+        <button type="button" class="spotify-button" (click)="approve()" [disabled]="hasApproved">
+          <i class="pi" [ngClass]="hasApproved ? 'pi-check' : 'pi-thumbs-up'"></i>
+          {{ hasApproved ? 'Approved — waiting for host' : 'Approve playlist creation' }}
+        </button>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="stage === 'saving'">
+      <i class="pi pi-spin pi-spinner big-spinner"></i>
+      <h1>Creating your playlist…</h1>
+      <p>Keep this page open until all tracks have been added.</p>
+    </ng-container>
+
+    <ng-container *ngIf="stage === 'complete' && saveResult">
+      <div class="success-icon"><i class="pi pi-check"></i></div>
+      <span class="eyebrow">All done</span>
+      <h1>Your playlist is ready</h1>
+      <p>{{ saveResult.addedTracks }} shared songs were added to your private Spotify playlist.</p>
+      <a *ngIf="saveResult.playlistUrl" class="spotify-button" [href]="saveResult.playlistUrl" target="_blank" rel="noopener noreferrer"><i class="pi pi-spotify"></i> Open in Spotify</a>
+      <button type="button" class="leave-button" (click)="leave()">Leave room</button>
+    </ng-container>
+
+    <ng-container *ngIf="stage === 'error'">
+      <div class="error-icon"><i class="pi pi-exclamation-triangle"></i></div>
+      <h1>Could not continue</h1>
+      <p>{{ errorMessage }}</p>
+      <a *ngIf="saveResult?.playlistUrl" class="spotify-button" [href]="saveResult?.playlistUrl" target="_blank" rel="noopener noreferrer">Open partial playlist</a>
+      <button type="button" class="leave-button" (click)="leave()">Leave room</button>
+    </ng-container>
+  </section>
+</main>

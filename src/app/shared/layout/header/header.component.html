@@ -44,6 +44,11 @@
 
       <!-- Settings Dropdown Overlay -->
       <div class="profile-settings-dropdown" *ngIf="showSettingsDropdown">
+        <a routerLink="/compare-room" class="dropdown-item compare-room-dropdown-item">
+          <i class="pi pi-users"></i>
+          <span>Compare with other accounts</span>
+        </a>
+        <div class="dropdown-divider compare-room-dropdown-item"></div>
         <div class="dropdown-item toggle-item" (click)="$event.stopPropagation()">
           <i class="pi pi-database"></i>
           <span>Cloud Backup</span>

@@ -7,6 +7,7 @@ export const environment = {
   supabaseKey: 'sb_publishable_hMg6wOlMTQai9ipA4ZlxzQ_rawnrTD-',
   spotifyClientId: 'REDACTED_SPOTIFY_CLIENT_ID',
   spotifyRedirectUri: 'https://analytify.dynv6.net/callback',
+  compareRoomRedirectUri: 'https://analytify.dynv6.net/compare-room/callback',
   spotifyScopes: [
     'user-read-private',
     'user-top-read',
@@ -18,4 +19,3 @@ export const environment = {
     'user-library-read'
   ].join(' ')
 };
-

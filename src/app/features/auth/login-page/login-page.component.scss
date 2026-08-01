@@ -129,6 +129,50 @@
   padding-top: 20px;
 }
 
+.compare-entry {
+  display: grid;
+  gap: 10px;
+  margin-top: 22px;
+  color: #696f6b;
+  font-size: 0.76rem;
+
+  > span {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    &::before,
+    &::after {
+      content: '';
+      height: 1px;
+      background: rgba(255, 255, 255, 0.07);
+      flex: 1;
+    }
+  }
+
+  small { color: #717873; }
+}
+
+.compare-room-button {
+  min-height: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #eef2ef;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.9rem;
+  transition: background 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(30, 215, 96, 0.35);
+  }
+}
+
 .made-by-tag {
   display: inline-flex;
   align-items: center;
@@ -172,6 +216,8 @@
   .login-spotify-button {
     min-height: 50px;
   }
+
+  .compare-entry { display: none; }
 }
 
 @media (max-width: 360px) {

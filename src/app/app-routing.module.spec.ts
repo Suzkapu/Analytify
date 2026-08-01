@@ -15,6 +15,7 @@ describe('application routes', () => {
       'stats',
       'history',
       'legal',
+      'compare-room',
       '**'
     ]);
   });
@@ -37,8 +38,8 @@ describe('application routes', () => {
     });
   });
 
-  it('keeps callback and legal routes public', () => {
-    ['callback', 'legal'].forEach(path => {
+  it('keeps callback, legal, and Compare Room routes public', () => {
+    ['callback', 'legal', 'compare-room'].forEach(path => {
       const route = APP_ROUTES.find(candidate => candidate.path === path);
       expect(route?.canActivate).toBeUndefined();
       expect(route?.loadChildren).toEqual(jasmine.any(Function));
