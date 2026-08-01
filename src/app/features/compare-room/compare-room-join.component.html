@@ -37,8 +37,15 @@
             <option *ngFor="let playlist of playlists" [value]="playlist.id">{{ playlist.name }} ({{ playlist.total }})</option>
           </select>
         </label>
+        <div *ngIf="playlistDataSource === 'local' || playlistDataSource === 'cloud'" class="cache-note">
+          <i class="pi pi-bolt"></i>
+          Using your up-to-date Analytify {{ playlistDataSource === 'cloud' ? 'Supabase backup' : 'device cache' }}.
+        </div>
         <div *ngIf="stage === 'loading'" class="loading-note"><i class="pi pi-spin pi-spinner"></i> Loading your playlist…</div>
-        <div *ngIf="stage === 'ready'" class="ready-note"><i class="pi pi-check-circle"></i> {{ participant?.tracks?.length }} tracks ready. Waiting for the host.</div>
+        <div *ngIf="stage === 'ready'" class="ready-note">
+          <i class="pi pi-check-circle"></i>
+          {{ participant?.tracks?.length }} tracks ready<span *ngIf="participant?.dataSource !== 'spotify'"> from your Analytify cache</span>. Waiting for the host.
+        </div>
       </ng-container>
 
       <ng-container *ngIf="stage === 'review' && proposal">

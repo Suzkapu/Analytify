@@ -1,5 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+import {CompareGuestPlaylistSourceService} from '@core/compare-room/compare-guest-playlist-source.service';
 import {CompareRoomGuestService} from '@core/compare-room/compare-room-guest.service';
 import {
   CompareMergeProposal,
@@ -24,6 +25,7 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
   saveResult: CompareSaveResult | null = null;
   errorMessage = '';
   hasApproved = false;
+  playlistDataSource: 'local' | 'cloud' | 'spotify' | null = null;
 
   private roomId = '';
   private invitationId = '';
@@ -37,7 +39,8 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
     private router: Router,
     private transientAuth: TransientParticipantAuthService,
     private guest: CompareRoomGuestService,
-    private spotify: ParticipantSpotifyService
+    private spotify: ParticipantSpotifyService,
+    private source: CompareGuestPlaylistSourceService
   ) {}
 
   ngOnInit(): void {
@@ -94,12 +97,16 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
     await this.guest.publishParticipant(this.participant);
     try {
       const token = await this.transientAuth.getAccessToken();
-      const tracks = await this.spotify.getPlaylistTracks(playlist, token);
+      const result = await this.source.loadTracks(
+        playlist,
+        token,
+        this.participant.spotifyUserId
+      );
       this.participant = {
         ...this.participant,
-        tracks,
+        tracks: result.tracks,
         status: 'ready',
-        dataSource: 'spotify'
+        dataSource: result.source
       };
       await this.guest.publishParticipant(this.participant);
       this.proposal = null;
@@ -165,7 +172,9 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
         tracks: []
       };
       await this.guest.publishParticipant(this.participant);
-      this.playlists = await this.spotify.getPlaylists(token, profile.id);
+      const playlistResult = await this.source.loadPlaylists(token, profile.id);
+      this.playlists = playlistResult.playlists;
+      this.playlistDataSource = playlistResult.source;
       this.stage = 'selecting';
     } catch (error) {
       this.fail(this.describeError(error));
