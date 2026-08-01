@@ -1,7 +1,11 @@
-<app-header [mobileTitle]="viewStyle === 'artists' ? 'Your Artists' : (viewStyle === 'songs' ? 'Playlist Songs' : 'Playlist Albums')"></app-header>
+<app-header
+  [mobileTitle]="viewStyle === 'artists' ? 'Your Artists' : (viewStyle === 'songs' ? 'Playlist Songs' : 'Playlist Albums')"
+  [showMobileBackButton]="true"
+  (mobileBack)="goBack()">
+</app-header>
 
 <!-- Under-Header Back Button -->
-<div class="back-bar-container" style="position: absolute; z-index: 10;">
+<div class="back-bar-container songs-back-bar">
   <button (click)="goBack()" class="back-text-button" title="Back to Playlists">
     <i class="pi pi-arrow-left"></i> Back
   </button>

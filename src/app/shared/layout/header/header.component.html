@@ -1,6 +1,15 @@
-<header class="app-header">
+<header class="app-header" [class.has-mobile-back]="showMobileBackButton">
   <div class="app-header-sync-progressbar" *ngIf="authService.isSyncing" [style.width.%]="authService.syncProgress"></div>
   <div class="header-left">
+    <button
+      *ngIf="showMobileBackButton"
+      type="button"
+      class="mobile-header-back"
+      title="Go back"
+      aria-label="Go back"
+      (click)="mobileBack.emit()">
+      <i class="pi pi-arrow-left" aria-hidden="true"></i>
+    </button>
     <div class="header-logo" routerLink="/">
       <img src="assets/Analytify.png" alt="Analytify Logo">
       <span class="logo-text">Analytify</span>

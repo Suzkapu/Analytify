@@ -322,7 +322,7 @@ select {
 }
 
 /* Sleek Back Circle Button */
-.back-circle-button {
+.back-circle-button.p-button {
   background: rgba(255, 255, 255, 0.06) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   color: #ffffff !important;
@@ -336,6 +336,7 @@ select {
   box-shadow: none !important;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-sizing: border-box !important;
 
   &:hover {
     background: rgba(255, 255, 255, 0.12) !important;
@@ -346,6 +347,10 @@ select {
   i {
     font-size: 1.1rem !important;
   }
+}
+
+.mobile-header-back {
+  display: none;
 }
 
 /* Premium Button Styling overrides */
@@ -1259,6 +1264,42 @@ h6 {
       flex: none;
     }
 
+    &.has-mobile-back {
+      .header-logo {
+        display: none;
+      }
+
+      .mobile-header-back {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: transparent;
+        color: #ffffff;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-tap-highlight-color: transparent;
+
+        i {
+          font-size: 1.1rem;
+        }
+
+        &:active {
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        &:focus-visible {
+          outline: 2px solid #1ed760;
+          outline-offset: 1px;
+        }
+      }
+    }
+
     .header-logo {
       width: 44px;
       min-height: 44px;
@@ -1305,6 +1346,13 @@ h6 {
       width: 42px !important;
       height: 42px !important;
     }
+  }
+
+  // Detail-page back navigation lives in the existing topbar on mobile. This
+  // avoids a second 60px row and prevents page controls from sliding beneath
+  // absolutely positioned back buttons.
+  .back-bar-container {
+    display: none !important;
   }
 
   .profile-settings-dropdown {

@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, Input } from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 import { Router } from '@angular/router';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
@@ -12,6 +12,8 @@ import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.servi
 })
 export class HeaderComponent implements OnInit {
   @Input() mobileTitle = '';
+  @Input() showMobileBackButton = false;
+  @Output() mobileBack = new EventEmitter<void>();
 
   profilePicUrl: string | null = null;
   showSettingsDropdown = false;

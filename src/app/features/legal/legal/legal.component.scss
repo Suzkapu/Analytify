@@ -46,6 +46,11 @@
 .back-link-container {
   display: flex;
   justify-content: flex-start;
+
+  @media (max-width: 768px) {
+    // Mobile already has the compact circular back action in the topbar.
+    display: none;
+  }
 }
 
 .legal-card {

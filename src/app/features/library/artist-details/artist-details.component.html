@@ -1,4 +1,8 @@
-<app-header [mobileTitle]="artist.name || 'Artist Details'"></app-header>
+<app-header
+  [mobileTitle]="artist.name || 'Artist Details'"
+  [showMobileBackButton]="true"
+  (mobileBack)="goBack()">
+</app-header>
 
 <!-- Under-Header Back Button -->
 <div class="back-bar-container">
