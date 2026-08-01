@@ -10,19 +10,12 @@
     <div class="room-security"><i class="pi pi-shield"></i> Guest logins are not saved</div>
   </header>
 
-  <section *ngIf="!isDesktop" class="state-card mobile-blocked">
-    <i class="pi pi-desktop"></i>
-    <h2>Open the room on a desktop</h2>
-    <p>The host workspace needs a screen at least 900px wide. Phones can still join a desktop room by scanning its QR code.</p>
-    <button type="button" class="secondary-button" (click)="leaveRoom()">Go back</button>
-  </section>
-
-  <section *ngIf="isDesktop && isStarting" class="state-card">
+  <section *ngIf="isStarting" class="state-card">
     <i class="pi pi-spin pi-spinner"></i>
     <h2>Preparing your private room…</h2>
   </section>
 
-  <ng-container *ngIf="isDesktop && !isStarting">
+  <ng-container *ngIf="!isStarting">
     <div *ngIf="errorMessage" class="room-alert" role="alert">
       <i class="pi pi-exclamation-circle"></i>
       <span>{{ errorMessage }}</span>
@@ -84,8 +77,16 @@
             <span class="eyebrow">Waiting for participant</span>
             <img class="qr-code" [src]="invitation.qrDataUrl" alt="QR code to join this Compare Room">
             <strong>Scan to join</strong>
-            <p>Open the camera on another phone and authorize that person's Spotify account.</p>
-            <button type="button" class="copy-button" (click)="copyInvitation(invitation)"><i class="pi pi-copy"></i> Copy join link</button>
+            <p>Scan from another device, or share the private link when hosting from your phone.</p>
+            <div class="invitation-actions">
+              <button *ngIf="canShareInvitations" type="button" class="share-button" (click)="shareInvitation(invitation)">
+                <i class="pi pi-share-alt"></i> Share invite
+              </button>
+              <button type="button" class="copy-button" (click)="copyInvitation(invitation)">
+                <i class="pi" [ngClass]="copiedInvitationId === invitation.id ? 'pi-check' : 'pi-copy'"></i>
+                {{ copiedInvitationId === invitation.id ? 'Link copied' : 'Copy link' }}
+              </button>
+            </div>
           </ng-container>
           <ng-template #claimedInvitation>
             <i class="pi pi-spin pi-spinner invitation-spinner"></i>

@@ -100,11 +100,13 @@
 .primary-button,
 .add-participant-button { background: #1ed760; color: #071109; }
 .secondary-button,
-.copy-button { background: rgba(255, 255, 255, 0.09); color: #fff; }
+.copy-button,
+.share-button { background: rgba(255, 255, 255, 0.09); color: #fff; }
 .primary-button:hover:not(:disabled),
 .secondary-button:hover:not(:disabled),
 .add-participant-button:hover:not(:disabled),
-.copy-button:hover:not(:disabled) { transform: translateY(-1px); }
+.copy-button:hover:not(:disabled),
+.share-button:hover:not(:disabled) { transform: translateY(-1px); }
 button:disabled { cursor: not-allowed; opacity: 0.42; }
 
 .participant-grid {
@@ -218,7 +220,24 @@ button:disabled { cursor: not-allowed; opacity: 0.42; }
 
 .qr-code { width: 168px; height: 168px; margin: 0.7rem 0; border-radius: 12px; }
 .invitation-spinner { color: #1ed760; font-size: 2.4rem; margin-bottom: 1rem; }
-.copy-button { min-height: 36px; padding: 0.5rem 0.85rem; font-size: 0.76rem; }
+.invitation-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
+.copy-button,
+.share-button {
+  border: 0;
+  border-radius: 999px;
+  min-height: 40px;
+  padding: 0.5rem 0.85rem;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  transition: transform 160ms ease, opacity 160ms ease, background 160ms ease;
+}
+.share-button { background: #1ed760; color: #071109; }
 
 .merge-panel {
   display: grid;
@@ -350,7 +369,89 @@ button:disabled { cursor: not-allowed; opacity: 0.42; }
 .success-actions { display: flex; justify-content: center; gap: 0.75rem; }
 
 @media (max-width: 899px) {
-  .room-topbar { padding: 0 1rem; grid-template-columns: auto 1fr; gap: 1rem; }
+  .room-topbar {
+    min-height: 66px;
+    padding: 0 max(1rem, env(safe-area-inset-right)) 0 max(1rem, env(safe-area-inset-left));
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.8rem;
+  }
   .room-topbar > div:nth-child(2) { text-align: left; }
+  .room-topbar h1 { font-size: 1rem; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
   .room-security { display: none; }
+
+  .room-workspace,
+  .success-panel {
+    width: min(620px, calc(100% - 1.5rem));
+    padding: 1.5rem 0 calc(5rem + env(safe-area-inset-bottom));
+  }
+
+  .room-alert { width: min(620px, calc(100% - 1.5rem)); }
+
+  .room-heading {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    h2 { font-size: clamp(1.65rem, 8vw, 2.3rem); }
+  }
+
+  .add-participant-button { width: 100%; }
+  .participant-grid { grid-template-columns: minmax(0, 1fr); }
+  .participant-card,
+  .invitation-card { min-height: auto; border-radius: 18px; padding: 1rem; }
+  .invitation-card { min-height: 390px; }
+  .qr-code { width: min(190px, 58vw); height: min(190px, 58vw); }
+  .invitation-actions { width: 100%; }
+  .copy-button,
+  .share-button { flex: 1 1 130px; min-height: 44px; }
+
+  .playlist-field select { min-height: 48px; font-size: 16px; }
+  .selected-playlist > div:last-child { min-width: 0; }
+  .selected-playlist strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .merge-panel {
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: 1rem;
+    .primary-button { grid-column: 1 / -1; width: 100%; }
+  }
+
+  .result-panel { padding: 1rem; border-radius: 18px; }
+  .result-summary {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    label { width: 100%; }
+    input { min-height: 48px; box-sizing: border-box; font-size: 16px; }
+  }
+  .track-preview { grid-template-columns: minmax(0, 1fr); }
+  .approval-bar {
+    flex-direction: column;
+    align-items: stretch;
+    .primary-button { width: 100%; }
+  }
+
+  .success-panel { margin-top: 1.5rem; padding: 2rem 1rem calc(2rem + env(safe-area-inset-bottom)); }
+  .success-panel h2 { font-size: 1.9rem; }
+  .result-cards article {
+    grid-template-columns: auto minmax(0, 1fr);
+    a { grid-column: 2; justify-self: start; }
+  }
+  .success-actions {
+    flex-direction: column;
+    button { width: 100%; }
+  }
+}
+
+@media (max-width: 420px) {
+  .room-topbar .eyebrow { font-size: 0.58rem; }
+  .room-workspace,
+  .success-panel,
+  .room-alert { width: calc(100% - 1rem); }
+  .participant-header {
+    grid-template-columns: 44px minmax(0, 1fr);
+    img,
+    .participant-avatar { width: 44px; height: 44px; }
+    .status-pill { grid-column: 2; justify-self: start; }
+  }
+  .selected-playlist { padding: 0.7rem; }
+  .merge-icon { width: 44px; height: 44px; }
 }

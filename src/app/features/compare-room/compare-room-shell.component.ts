@@ -1,4 +1,4 @@
-import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-source.service';
@@ -31,7 +31,7 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
   isAddingParticipant = false;
   isPreparing = false;
   isExecuting = false;
-  isDesktop = window.innerWidth >= 900;
+  copiedInvitationId = '';
   readonly enteredAuthenticated = this.auth.isAuthenticated();
 
   private subscriptions = new Subscription();
@@ -56,11 +56,6 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     this.subscriptions.add(this.coordinator.error$.subscribe(value => {
       if (value) this.errorMessage = value;
     }));
-
-    if (!this.isDesktop) {
-      this.isStarting = false;
-      return;
-    }
 
     try {
       let mainParticipant: CompareParticipant | undefined;
@@ -92,11 +87,6 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     } finally {
       this.isStarting = false;
     }
-  }
-
-  @HostListener('window:resize')
-  onResize(): void {
-    this.isDesktop = window.innerWidth >= 900;
   }
 
   async selectMainPlaylist(playlistId: string): Promise<void> {
@@ -202,8 +192,38 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     await this.router.navigate([this.enteredAuthenticated ? '/playlists' : '/login']);
   }
 
-  copyInvitation(invitation: CompareInvitation): void {
-    navigator.clipboard?.writeText(invitation.joinUrl).catch(() => {});
+  async copyInvitation(invitation: CompareInvitation): Promise<void> {
+    try {
+      if (!navigator.clipboard) throw new Error('Clipboard access is unavailable.');
+      await navigator.clipboard.writeText(invitation.joinUrl);
+      this.copiedInvitationId = invitation.id;
+      window.setTimeout(() => {
+        if (this.copiedInvitationId === invitation.id) this.copiedInvitationId = '';
+      }, 2_000);
+    } catch {
+      this.errorMessage = 'Could not copy the invitation. Use Share invite instead.';
+    }
+  }
+
+  async shareInvitation(invitation: CompareInvitation): Promise<void> {
+    if (!this.canShareInvitations) {
+      await this.copyInvitation(invitation);
+      return;
+    }
+    try {
+      await navigator.share({
+        title: 'Join my Analytify Compare Room',
+        text: 'Choose a Spotify playlist and find the songs we both have.',
+        url: invitation.joinUrl
+      });
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return;
+      this.errorMessage = 'Could not share the invitation. Copy the link instead.';
+    }
+  }
+
+  get canShareInvitations(): boolean {
+    return typeof navigator !== 'undefined' && typeof navigator.share === 'function';
   }
 
   participantForInvitation(invitation: CompareInvitation): CompareParticipant | undefined {
