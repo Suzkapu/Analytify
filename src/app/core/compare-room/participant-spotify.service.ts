@@ -99,6 +99,63 @@ export class ParticipantSpotifyService {
     }
   }
 
+  async syncPlaylist(
+    accessToken: string,
+    existingPlaylistId: string | null,
+    existingPlaylistUrl: string | null,
+    name: string,
+    description: string,
+    tracks: CompareTrack[]
+  ): Promise<CompareSaveResult> {
+    let playlistId = existingPlaylistId;
+    let playlistUrl = existingPlaylistUrl || undefined;
+    let addedTracks = 0;
+    try {
+      if (playlistId) {
+        await this.put(`/playlists/${encodeURIComponent(playlistId)}`, accessToken, {
+          name,
+          description,
+          public: false
+        });
+      } else {
+        const playlist = await this.post<any>('/me/playlists', accessToken, {
+          name,
+          description,
+          public: false
+        });
+        playlistId = playlist.id;
+        playlistUrl = playlist.external_urls?.spotify;
+      }
+
+      if (!playlistId) throw new Error('Spotify did not return a playlist ID.');
+      const uris = tracks.map(track => track.uri).filter(Boolean);
+      const firstBatch = uris.slice(0, 100);
+      await this.put(`/playlists/${encodeURIComponent(playlistId)}/items`, accessToken, {uris: firstBatch});
+      addedTracks = firstBatch.length;
+      for (let index = 100; index < uris.length; index += 100) {
+        const batch = uris.slice(index, index + 100);
+        await this.post(`/playlists/${encodeURIComponent(playlistId)}/items`, accessToken, {uris: batch});
+        addedTracks += batch.length;
+      }
+      return {
+        success: true,
+        playlistName: name,
+        playlistId,
+        playlistUrl,
+        addedTracks
+      };
+    } catch (error) {
+      return {
+        success: false,
+        playlistName: name,
+        playlistId: playlistId || undefined,
+        playlistUrl,
+        addedTracks,
+        error: this.describeError(error)
+      };
+    }
+  }
+
   normalizeCachedTracks(artists: any[]): CompareTrack[] {
     const tracks: CompareTrack[] = [];
     artists.forEach(artist => {
@@ -155,7 +212,10 @@ export class ParticipantSpotifyService {
       albumName: track.album?.name || '',
       imageUrl: track.album?.images?.[0]?.url || '',
       spotifyUrl: track.external_urls?.spotify || '',
-      playlistIndex: Number(track.playlist_index || index + 1)
+      playlistIndex: Number(track.playlist_index || index + 1),
+      durationMs: Number(track.duration_ms || 0),
+      explicit: !!track.explicit,
+      releaseDate: track.album?.release_date || ''
     };
   }
 
@@ -181,6 +241,14 @@ export class ParticipantSpotifyService {
       return await firstValueFrom(this.http.post<T>(`${environment.spotifyUrl}${path}`, body, this.options(accessToken)));
     } catch (error) {
       return this.retry<T>(() => this.post<T>(path, accessToken, body, attempt + 1), error, attempt);
+    }
+  }
+
+  private async put<T>(path: string, accessToken: string, body: any, attempt = 0): Promise<T> {
+    try {
+      return await firstValueFrom(this.http.put<T>(`${environment.spotifyUrl}${path}`, body, this.options(accessToken)));
+    } catch (error) {
+      return this.retry<T>(() => this.put<T>(path, accessToken, body, attempt + 1), error, attempt);
     }
   }
 

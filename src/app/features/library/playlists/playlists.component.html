@@ -119,10 +119,41 @@
           <button (click)="viewSongs(playlist.id)" class="p-button" style="border-radius: 8px !important;">Explore</button>
           <button (click)="viewAnalysis(playlist.id)"
             class="p-button p-button-outlined p-button-secondary">Analyze</button>
+          <button (click)="openShareDialog(playlist)" class="p-button p-button-outlined p-button-secondary" title="Share through Supabase">
+            <i class="pi pi-share-alt"></i> Share
+          </button>
         </div>
       </div>
     </div>
   </ng-container>
+</div>
+
+<div *ngIf="sharingPlaylist" class="share-modal-overlay" (click)="closeShareDialog()">
+  <section class="share-modal" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="share-dialog-title">
+    <button type="button" class="share-modal-close" (click)="closeShareDialog()" [disabled]="isCreatingShare" aria-label="Close">×</button>
+    <div class="share-modal-icon"><i class="pi pi-share-alt"></i></div>
+    <span class="merge-eyebrow">Revocable Supabase access</span>
+    <h2 id="share-dialog-title">Share “{{ sharingPlaylist.name }}”</h2>
+    <p *ngIf="!shareLink">This creates a private snapshot of the songs and stats. The first logged-in person opening the link becomes the only recipient. Cloud Backup is not required.</p>
+
+    <ng-container *ngIf="shareLink">
+      <p class="share-ready-copy">Copy this link now. For security, Analytify stores only its hash and cannot show the same link again.</p>
+      <div class="share-link-field">
+        <input [value]="shareLink" readonly aria-label="Private playlist share link">
+        <button type="button" (click)="copyShareLink()"><i class="pi" [ngClass]="shareLinkCopied ? 'pi-check' : 'pi-copy'"></i>{{ shareLinkCopied ? 'Copied' : 'Copy' }}</button>
+      </div>
+    </ng-container>
+
+    <div *ngIf="shareError" class="share-modal-error" role="alert">{{ shareError }}</div>
+    <div class="share-modal-actions">
+      <button *ngIf="!shareLink" type="button" class="share-primary" (click)="createShareLink()" [disabled]="isCreatingShare">
+        <i class="pi" [ngClass]="isCreatingShare ? 'pi-spin pi-spinner' : 'pi-link'"></i>
+        {{ isCreatingShare ? 'Publishing snapshot…' : 'Create private link' }}
+      </button>
+      <a *ngIf="shareLink" routerLink="/shared-playlists">Manage shared playlists</a>
+      <button type="button" class="share-secondary" (click)="closeShareDialog()" [disabled]="isCreatingShare">{{ shareLink ? 'Done' : 'Cancel' }}</button>
+    </div>
+  </section>
 </div>
 
 

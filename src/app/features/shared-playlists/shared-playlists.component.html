@@ -1,0 +1,79 @@
+<app-header mobileTitle="Shared Playlists"></app-header>
+
+<main class="sharing-page">
+  <header class="sharing-hero">
+    <span class="eyebrow">Private Supabase grants</span>
+    <h1>Shared Playlists</h1>
+    <p>Browse playlists shared with you and control access to playlists you shared.</p>
+  </header>
+
+  <div *ngIf="errorMessage" class="share-alert error" role="alert">
+    <i class="pi pi-exclamation-circle"></i>{{ errorMessage }}
+  </div>
+  <div *ngIf="successMessage" class="share-alert success" role="status">
+    <i class="pi pi-check-circle"></i>{{ successMessage }}
+  </div>
+
+  <section *ngIf="isLoading" class="sharing-state">
+    <i class="pi pi-spin pi-spinner"></i>
+    <p>Loading your private shares…</p>
+  </section>
+
+  <ng-container *ngIf="!isLoading">
+    <section class="share-section">
+      <div class="section-heading">
+        <div><span class="eyebrow">Your library</span><h2>Shared with you</h2></div>
+        <span>{{ receivedShares.length }}</span>
+      </div>
+      <div *ngIf="receivedShares.length === 0" class="empty-share-card">
+        <i class="pi pi-inbox"></i>
+        <strong>No shared playlists yet</strong>
+        <p>Open a private claim link from a friend to add it here. Cloud Backup is not required.</p>
+      </div>
+      <div class="share-grid" *ngIf="receivedShares.length">
+        <a *ngFor="let share of receivedShares; trackBy: trackShare" [routerLink]="['/shared-playlists', share.id]" class="share-card">
+          <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="">
+          <div>
+            <span class="card-label">From {{ share.ownerDisplayName }}</span>
+            <h3>{{ share.playlistName }}</h3>
+            <p>{{ share.trackCount }} songs · revision {{ share.revision }}</p>
+          </div>
+          <i class="pi pi-chevron-right"></i>
+        </a>
+      </div>
+    </section>
+
+    <section class="share-section owner-section">
+      <div class="section-heading">
+        <div><span class="eyebrow">Access control</span><h2>Shared by you</h2></div>
+        <span>{{ ownedShares.length }}</span>
+      </div>
+      <div *ngIf="ownedShares.length === 0" class="empty-share-card">
+        <i class="pi pi-share-alt"></i>
+        <strong>You have not shared a playlist</strong>
+        <p>Use the Share button on Your Playlists to create a revocable private link.</p>
+        <a routerLink="/playlists">Browse your playlists</a>
+      </div>
+      <article *ngFor="let share of ownedShares; trackBy: trackShare" class="owner-share-row" [class.revoked]="share.revokedAt">
+        <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="">
+        <div class="owner-share-copy">
+          <span class="status-pill" [class.revoked]="share.revokedAt">
+            {{ share.revokedAt ? 'Revoked' : (share.recipientUserId ? 'Claimed' : 'Waiting for recipient') }}
+          </span>
+          <h3>{{ share.playlistName }}</h3>
+          <p>{{ share.trackCount }} songs · revision {{ share.revision }}<span *ngIf="share.recipientDisplayName"> · {{ share.recipientDisplayName }}</span></p>
+        </div>
+        <div class="owner-share-actions" *ngIf="!share.revokedAt">
+          <button type="button" (click)="refreshShare(share)" [disabled]="!!busyShareId">
+            <i class="pi" [ngClass]="busyShareId === share.id ? 'pi-spin pi-spinner' : 'pi-refresh'"></i> Refresh snapshot
+          </button>
+          <button type="button" class="danger" (click)="revokeShare(share)" [disabled]="!!busyShareId">
+            <i class="pi pi-ban"></i> Revoke access
+          </button>
+        </div>
+      </article>
+    </section>
+  </ng-container>
+</main>
+
+<app-footer></app-footer>

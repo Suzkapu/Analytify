@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {AuthReturnUrlService} from '@core/auth/auth-return-url.service';
 
 @Component({
   selector: 'app-callback',
@@ -15,7 +16,8 @@ export class CallbackComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private authService: SpotifyAuthService
+    private authService: SpotifyAuthService,
+    private returnUrl: AuthReturnUrlService
   ) {
   }
 
@@ -29,7 +31,7 @@ export class CallbackComponent implements OnInit {
         this.authService.exchangeSupabaseCodeForSession(code).subscribe({
           next: () => {
             if (this.authService.isAuthenticated()) {
-              this.router.navigate(['/playlists']);
+              this.router.navigateByUrl(this.returnUrl.consume());
             } else {
               this.errorMessage = 'Authentication failed: Spotify token was not saved.';
             }
@@ -65,7 +67,7 @@ export class CallbackComponent implements OnInit {
           this.authService.handleCallbackSession().subscribe({
             next: () => {
               if (this.authService.isAuthenticated()) {
-                this.router.navigate(['/playlists']);
+                this.router.navigateByUrl(this.returnUrl.consume());
               } else {
                 this.errorMessage = 'Authentication failed: Spotify token was not saved.';
               }

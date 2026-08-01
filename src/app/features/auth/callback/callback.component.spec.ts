@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {of} from 'rxjs';
 import {CallbackComponent} from './callback.component';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
+import {AuthReturnUrlService} from '@core/auth/auth-return-url.service';
 
 describe('CallbackComponent', () => {
   let component: CallbackComponent;
@@ -17,7 +18,11 @@ describe('CallbackComponent', () => {
           provide: ActivatedRoute,
           useValue: { queryParams: of({ error: 'oauth_error' }) }
         },
-        { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } },
+        {
+          provide: Router,
+          useValue: {navigate: jasmine.createSpy('navigate'), navigateByUrl: jasmine.createSpy('navigateByUrl')}
+        },
+        {provide: AuthReturnUrlService, useValue: {consume: () => '/playlists'}},
         {
           provide: SpotifyAuthService,
           useValue: {

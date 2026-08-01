@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {LoginPageComponent} from './login-page.component';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
+import {AuthReturnUrlService} from '@core/auth/auth-return-url.service';
 
 describe('LoginPageComponent', () => {
   let component: LoginPageComponent;
@@ -21,7 +22,11 @@ describe('LoginPageComponent', () => {
           provide: StorageService,
           useValue: { initFromDB: () => Promise.resolve() }
         },
-        { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } }
+        {
+          provide: Router,
+          useValue: {navigate: jasmine.createSpy('navigate'), navigateByUrl: jasmine.createSpy('navigateByUrl')}
+        },
+        {provide: AuthReturnUrlService, useValue: {consume: () => '/playlists'}}
       ],
       schemas: [NO_ERRORS_SCHEMA]
     });

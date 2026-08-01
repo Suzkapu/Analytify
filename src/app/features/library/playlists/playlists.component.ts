@@ -7,6 +7,7 @@ import {firstValueFrom} from 'rxjs';
 import {ComparePlaylist, CompareSaveResult, CompareTrack} from '@core/compare-room/compare-room.models';
 import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-source.service';
 import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.service';
+import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
 
 @Component({
   selector: 'app-playlists', templateUrl: './playlists.component.html', styleUrls: ['./playlists.component.scss'],
@@ -26,6 +27,11 @@ export class PlaylistsComponent {
   mergeProgress = '';
   mergeError = '';
   mergeResult: CompareSaveResult | null = null;
+  sharingPlaylist: any | null = null;
+  isCreatingShare = false;
+  shareLink = '';
+  shareError = '';
+  shareLinkCopied = false;
 
   constructor(
     private route: ActivatedRoute, 
@@ -34,7 +40,8 @@ export class PlaylistsComponent {
     public authService: SpotifyAuthService,
     private storageService: StorageService,
     private comparePlaylistSource: ComparePlaylistSourceService,
-    private participantSpotify: ParticipantSpotifyService
+    private participantSpotify: ParticipantSpotifyService,
+    private playlistSharing: PlaylistSharingService
   ) {
     this.route.params.subscribe(async () => {
       const userId = this.authService.getUserId() || 'anonymous';
@@ -327,6 +334,60 @@ export class PlaylistsComponent {
 
   dismissMergeResult(): void {
     this.mergeResult = null;
+  }
+
+  openShareDialog(playlist: any): void {
+    this.sharingPlaylist = playlist;
+    this.shareLink = '';
+    this.shareError = '';
+    this.shareLinkCopied = false;
+  }
+
+  closeShareDialog(): void {
+    if (this.isCreatingShare) return;
+    this.sharingPlaylist = null;
+    this.shareLink = '';
+    this.shareError = '';
+    this.shareLinkCopied = false;
+  }
+
+  async createShareLink(): Promise<void> {
+    if (!this.sharingPlaylist || this.isCreatingShare) return;
+    this.isCreatingShare = true;
+    this.shareError = '';
+    try {
+      const accessToken = await this.getUsableAccessToken();
+      const spotifyUserId = this.authService.getUserId();
+      if (!spotifyUserId) throw new Error('Your Spotify profile is unavailable.');
+      const playlist = this.toComparePlaylist(this.sharingPlaylist);
+      const result = await this.comparePlaylistSource.loadMainTracks(
+        playlist,
+        accessToken,
+        spotifyUserId
+      );
+      const created = await this.playlistSharing.createShare({
+        sourcePlaylistId: playlist.id,
+        playlistName: playlist.name,
+        playlistDescription: this.sharingPlaylist.description || '',
+        playlistImageUrl: playlist.imageUrl,
+        tracks: result.tracks
+      });
+      this.shareLink = created.claimUrl;
+    } catch (error) {
+      this.shareError = (error as any)?.message || 'The private share link could not be created.';
+    } finally {
+      this.isCreatingShare = false;
+    }
+  }
+
+  async copyShareLink(): Promise<void> {
+    if (!this.shareLink) return;
+    try {
+      await navigator.clipboard.writeText(this.shareLink);
+      this.shareLinkCopied = true;
+    } catch {
+      this.shareError = 'Clipboard access is unavailable. Select and copy the link manually.';
+    }
   }
 
   viewSongs(playlistId: string) {

@@ -4,6 +4,7 @@ import { StorageService } from '@core/data-access/storage/storage.service';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { BehaviorSubject, Subscription, timer } from 'rxjs';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
+import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
 
 export interface PlaylistLoadProgress {
   playlistId: string;
@@ -96,7 +97,8 @@ export class PlaylistLoaderService {
     private spotifyDataService: SpotifyDataService,
     private storageService: StorageService,
     private authService: SpotifyAuthService,
-    private supabaseService: SupabaseService
+    private supabaseService: SupabaseService,
+    private playlistSharingService: PlaylistSharingService
   ) {
     this.authService.logout$.subscribe(() => {
       this.clearAllTasks();
@@ -920,6 +922,12 @@ export class PlaylistLoaderService {
     if (updateDailyFullSyncTimestamp) {
       this.storageService.setItem(`${userId}_${task.playlistId}_lastUpdated`, Date.now().toString());
     }
+
+    // Sharing is an explicit Supabase grant and intentionally does not depend
+    // on the user's optional Cloud Backup setting.
+    void this.playlistSharingService
+      .refreshActiveSharesFromCache(task.playlistId, task.playlistName, cleanedArtists)
+      .catch(error => console.warn('[PlaylistLoaderService] Could not refresh active playlist shares.', error));
 
   }
 }

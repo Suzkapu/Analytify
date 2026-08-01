@@ -78,6 +78,41 @@ describe('ParticipantSpotifyService', () => {
     expect(result[0].playlistIndex).toBe(7);
   });
 
+  it('updates an existing downloaded playlist in place and replaces its first batch', fakeAsync(() => {
+    const tracks = Array.from({length: 105}, (_, index) => track(`${index}`));
+    let result: any;
+    void service.syncPlaylist(
+      'recipient-token',
+      'existing-playlist',
+      'https://open.spotify.com/playlist/existing-playlist',
+      'Updated share',
+      'Analytify Share ID: share-id',
+      tracks
+    ).then(value => result = value);
+
+    const details = http.expectOne(`${environment.spotifyUrl}/playlists/existing-playlist`);
+    expect(details.request.method).toBe('PUT');
+    expect(details.request.body.name).toBe('Updated share');
+    details.flush(null);
+    flushMicrotasks();
+
+    const replace = http.expectOne(`${environment.spotifyUrl}/playlists/existing-playlist/items`);
+    expect(replace.request.method).toBe('PUT');
+    expect(replace.request.body.uris.length).toBe(100);
+    replace.flush({snapshot_id: 'replacement'});
+    flushMicrotasks();
+
+    const append = http.expectOne(`${environment.spotifyUrl}/playlists/existing-playlist/items`);
+    expect(append.request.method).toBe('POST');
+    expect(append.request.body.uris.length).toBe(5);
+    append.flush({snapshot_id: 'append'});
+    flushMicrotasks();
+
+    expect(result.success).toBeTrue();
+    expect(result.playlistId).toBe('existing-playlist');
+    expect(result.addedTracks).toBe(105);
+  }));
+
   function track(id: string): CompareTrack {
     return {
       id,

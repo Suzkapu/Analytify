@@ -2,11 +2,13 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { SpotifyAuthService } from './spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
+import {AuthReturnUrlService} from './auth-return-url.service';
 
 export const redirectLoggedInGuard = async () => {
   const authService = inject(SpotifyAuthService);
   const storageService = inject(StorageService);
   const router = inject(Router);
+  const returnUrl = inject(AuthReturnUrlService);
 
   // Wait for StorageService to finish loading from IndexedDB
   await storageService.initFromDB();
@@ -21,7 +23,7 @@ export const redirectLoggedInGuard = async () => {
   }
 
   if (authService.isAuthenticated()) {
-    router.navigate(['/playlists']);
+    router.navigateByUrl(returnUrl.consume());
     return false;
   }
 

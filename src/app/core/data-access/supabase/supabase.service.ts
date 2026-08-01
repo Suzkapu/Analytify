@@ -249,8 +249,9 @@ export class SupabaseService {
 
   /** Deletes all synced data connected to this profile from the database.
    *  Because of ON DELETE CASCADE constraints, deleting the row in the
-   *  'users' table automatically erases user_cache, listening_history,
-   *  stats_snapshots, and top items history, while keeping shared tracks/artists. */
+   *  'users' table automatically erases user_cache, listening history,
+   *  stats snapshots, playlist-sharing grants, and top-items history while
+   *  keeping non-personal catalog metadata such as tracks and artists. */
   async deleteUserProfileData(supabaseUserId: string): Promise<void> {
     try {
       const { error } = await this.client
