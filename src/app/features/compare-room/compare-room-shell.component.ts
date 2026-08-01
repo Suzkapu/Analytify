@@ -141,7 +141,9 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
   }
 
   cancelInvitation(invitationId: string): void {
-    this.coordinator.cancelInvitation(invitationId);
+    void this.coordinator.cancelInvitation(invitationId).catch(error => {
+      this.errorMessage = this.describeError(error);
+    });
   }
 
   prepareResult(): void {

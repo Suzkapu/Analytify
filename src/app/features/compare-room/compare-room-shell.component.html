@@ -92,6 +92,7 @@
             <i class="pi pi-spin pi-spinner invitation-spinner"></i>
             <strong>{{ participantForInvitation(invitation)?.displayName || 'Participant joining…' }}</strong>
             <p>The QR invitation has been claimed.</p>
+            <button type="button" class="remove-link" (click)="cancelInvitation(invitation.id)">Cancel joining</button>
           </ng-template>
         </article>
       </div>

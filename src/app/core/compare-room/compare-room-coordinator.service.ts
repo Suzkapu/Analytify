@@ -64,13 +64,18 @@ export class CompareRoomCoordinatorService {
     return invitation;
   }
 
-  cancelInvitation(invitationId: string): void {
+  async cancelInvitation(invitationId: string): Promise<void> {
     const invitation = this.invitations$.value.find(item => item.id === invitationId);
-    if (invitation?.claimedBy) {
-      void this.removeParticipant(invitation.claimedBy);
-    }
+    if (!invitation) return;
+
+    // Remove the slot immediately so a claimed-but-stalled join cannot keep the
+    // host UI locked while the best-effort notification is sent to the guest.
     this.invitations$.next(this.invitations$.value.filter(item => item.id !== invitationId));
-    this.invalidateProposal();
+    if (invitation?.claimedBy) {
+      await this.removeParticipant(invitation.claimedBy);
+    } else {
+      this.invalidateProposal();
+    }
   }
 
   updateLocalParticipant(participant: CompareParticipant): void {
@@ -167,6 +172,7 @@ export class CompareRoomCoordinatorService {
 
   async removeParticipant(participantId: string): Promise<void> {
     this.acceptedParticipantIds.delete(participantId);
+    this.participantTrackBuffers.delete(participantId);
     this.participants$.next(this.participants$.value.filter(item => item.id !== participantId));
     this.invitations$.next(this.invitations$.value.map(invitation =>
       invitation.claimedBy === participantId ? {...invitation, claimedBy: undefined} : invitation
