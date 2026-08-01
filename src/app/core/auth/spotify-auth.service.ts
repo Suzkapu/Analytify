@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {environment} from "@env/environment";
-import {Observable, throwError, Subject, from, firstValueFrom, defer} from 'rxjs';
+import {Observable, throwError, Subject, from, defer} from 'rxjs';
 import {tap, catchError, shareReplay, switchMap} from 'rxjs/operators';
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
@@ -30,13 +29,16 @@ export class SpotifyAuthService {
   syncProgress = 0;
   initialSyncPromise: Promise<void> | null = null;
 
-  private clientId = environment.spotifyClientId;
   constructor(
-    private http: HttpClient,
     private storageService: StorageService,
     private supabaseService: SupabaseService
   ) {
     this.storageService.initFromDB().then(async () => {
+      // The callback owns the one-time PKCE code exchange. Starting session
+      // restoration here would race Supabase's callback processing.
+      if (this.isOAuthCallbackInProgress()) {
+        return;
+      }
       if (!this.isAuthenticated()) {
         await this.restoreSessionFromSupabase().catch(() => {});
       }
@@ -69,6 +71,12 @@ export class SpotifyAuthService {
   }
 
   async loginWithSupabase(promptConsent: boolean = true): Promise<any> {
+    if (promptConsent) {
+      // A user-initiated login must not inherit a Supabase session whose
+      // Spotify provider token has expired or was never persisted.
+      await this.clearSupabaseSession();
+      this.clearSpotifyCredentials();
+    }
     const queryParams: any = {
       access_type: 'offline'
     };
@@ -101,9 +109,10 @@ export class SpotifyAuthService {
         if (error) throw error;
         const session = data?.session;
         if (session) {
-          if (session.provider_token) {
-            this.storageService.setItem(this.storageKey, session.provider_token);
+          if (!session.provider_token) {
+            throw new Error('Spotify provider token missing from OAuth callback. Please restart login.');
           }
+          this.storageService.setItem(this.storageKey, session.provider_token);
           if (session.provider_refresh_token) {
             this.storageService.setItem('spotifyRefreshToken', session.provider_refresh_token);
           }
@@ -160,9 +169,10 @@ export class SpotifyAuthService {
     return from(this.supabaseService.client.auth.getSession()).pipe(
       tap(({ data: { session } }: any) => {
         if (session) {
-          if (session.provider_token) {
-            this.storageService.setItem(this.storageKey, session.provider_token);
+          if (!session.provider_token) {
+            throw new Error('Spotify provider token missing from OAuth callback. Please restart login.');
           }
+          this.storageService.setItem(this.storageKey, session.provider_token);
           if (session.provider_refresh_token) {
             this.storageService.setItem('spotifyRefreshToken', session.provider_refresh_token);
           }
@@ -226,10 +236,6 @@ export class SpotifyAuthService {
         const hadUsableSpotifyAccessToken =
           !!this.storageService.getItem(this.storageKey) && !this.isTokenExpired();
 
-        if (session.provider_refresh_token) {
-          this.storageService.setItem('spotifyRefreshToken', session.provider_refresh_token);
-        }
-
         if (session.user) {
           let spotifyId = session.user.user_metadata?.['provider_id'] || session.user.id;
           if (!environment.production) {
@@ -239,49 +245,7 @@ export class SpotifyAuthService {
           this.storageService.setItem('supabaseUserId', session.user.id);
         }
 
-        // Query DB for refresh token if it is missing locally
-        const supabaseUserId = session.user.id;
-        let effectiveUserId = supabaseUserId;
-        if (!environment.production && effectiveUserId.length >= 36 && !effectiveUserId.startsWith('de11')) {
-          effectiveUserId = 'de11' + effectiveUserId.substring(4);
-        }
-
-        let localRefreshToken = this.storageService.getItem('spotifyRefreshToken');
-        if (!localRefreshToken || !this.storageService.getItem(this.storageKey)) {
-          console.log('[Auth] Spotify token or refresh token missing from cache. Querying DB...');
-          const { data: userData, error: userError } = await this.supabaseService.client
-            .from('users')
-            .select('spotify_refresh_token, spotify_id')
-            .eq('id', effectiveUserId)
-            .maybeSingle();
-
-          if (!userError && userData) {
-            if (userData.spotify_refresh_token) {
-              console.log('[Auth] Found Spotify refresh token in database.');
-              this.storageService.setItem('spotifyRefreshToken', userData.spotify_refresh_token);
-              localRefreshToken = userData.spotify_refresh_token;
-            }
-            if (userData.spotify_id) {
-              this.storageService.setItem('spotifyUserId', userData.spotify_id);
-            }
-          }
-        }
-
-        // A provider token returned by getSession() is not proof that Spotify
-        // refreshed it. Prefer the Spotify refresh token whenever the locally
-        // timestamped access token is missing or expired.
-        if (localRefreshToken && !hadUsableSpotifyAccessToken) {
-          try {
-            console.log('[Auth] Spotify access token missing or expired. Proactively refreshing...');
-            await firstValueFrom(this.refreshToken());
-            console.log('[Auth] Spotify token refreshed successfully during session restoration.');
-          } catch (refreshErr) {
-            console.warn('[Auth] Failed to refresh Spotify token during session restoration:', refreshErr);
-          }
-        } else if (!hadUsableSpotifyAccessToken && session.provider_token) {
-          // Last-resort compatibility path for sessions that do not expose a
-          // provider refresh token. The normal OAuth callback stores a real
-          // refresh token, so this branch should be rare.
+        if (!hadUsableSpotifyAccessToken && session.provider_token) {
           this.storeSpotifyTokenResponse({
             access_token: session.provider_token,
             refresh_token: session.provider_refresh_token,
@@ -320,35 +284,12 @@ export class SpotifyAuthService {
       })
     );
 
-    const refreshToken = this.storageService.getItem('spotifyRefreshToken') || '';
-    let refreshSource$: Observable<any>;
-
-    if (refreshToken) {
-      const body = new HttpParams()
-        .set('grant_type', 'refresh_token')
-        .set('refresh_token', refreshToken)
-        .set('client_id', this.clientId);
-
-      const headers = new HttpHeaders({
-        'Content-Type': 'application/x-www-form-urlencoded'
-      });
-
-      refreshSource$ = this.http.post(
-        'https://accounts.spotify.com/api/token',
-        body.toString(),
-        { headers }
-      ).pipe(
-        tap((response: any) => this.storeSpotifyTokenResponse(response)),
-        catchError(err => {
-          console.warn('[Auth] Direct Spotify refresh failed. Trying the refreshed Supabase session once:', err);
-          return refreshViaSupabase$;
-        })
-      );
-    } else {
-      refreshSource$ = refreshViaSupabase$;
-    }
-
-    this.refreshObservable = refreshSource$.pipe(
+    // Supabase does not refresh OAuth provider tokens. Its Spotify refresh
+    // token was issued to the confidential Supabase provider and cannot be
+    // exchanged safely by this browser without the app secret. If the current
+    // Supabase session has no provider token, callers fall back to a silent
+    // signInWithOAuth redirect.
+    this.refreshObservable = refreshViaSupabase$.pipe(
       tap(() => {
         this.refreshObservable = null;
       }),
@@ -376,6 +317,21 @@ export class SpotifyAuthService {
 
     const expiresAt = Date.now() + (response.expires_in || 3600) * 1000;
     this.storageService.setItem('spotifyTokenExpiresAt', expiresAt.toString());
+  }
+
+  private clearSpotifyCredentials(): void {
+    this.storageService.removeItem(this.storageKey);
+    this.storageService.removeItem('spotifyRefreshToken');
+    this.storageService.removeItem('spotifyTokenExpiresAt');
+    this.storageService.removeItem('spotifyUserId');
+    this.storageService.removeItem('supabaseUserId');
+    this.initialSyncPromise = null;
+  }
+
+  private isOAuthCallbackInProgress(): boolean {
+    if (typeof window === 'undefined') return false;
+    return window.location.pathname.endsWith('/callback') &&
+      new URLSearchParams(window.location.search).has('code');
   }
 
   isTokenExpired(): boolean {
@@ -691,5 +647,3 @@ export class SpotifyAuthService {
 
 
 }
-
-

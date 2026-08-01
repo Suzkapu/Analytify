@@ -43,7 +43,16 @@ export class SupabaseService {
   public client: SupabaseClient;
 
   constructor() {
-    this.client = createClient(environment.supabaseUrl, environment.supabaseKey);
+    this.client = createClient(environment.supabaseUrl, environment.supabaseKey, {
+      auth: {
+        flowType: 'pkce',
+        // The Angular callback component performs the exchange explicitly so
+        // the one-time code cannot be consumed by two competing flows.
+        detectSessionInUrl: false,
+        persistSession: true,
+        autoRefreshToken: true
+      }
+    });
   }
 
   /** Ensures the Supabase session is still valid, refreshing if needed.

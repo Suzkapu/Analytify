@@ -38,7 +38,13 @@ export class CallbackComponent implements OnInit {
             console.error('Failed to exchange auth code for session', err);
             // server_error often means stale PKCE state — auto retry login
             const errMsg = err.message || JSON.stringify(err);
-            if (errMsg.includes('server_error') || errMsg.includes('expired') || errMsg.includes('invalid')) {
+            if (
+              errMsg.includes('server_error') ||
+              errMsg.includes('expired') ||
+              errMsg.includes('invalid') ||
+              errMsg.includes('provider token') ||
+              errMsg.includes('missing')
+            ) {
               this.autoRedirectToLogin('Session expired. Redirecting back to login...');
             } else {
               this.errorMessage = `Failed to exchange authorization code: ${errMsg}`;
