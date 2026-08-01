@@ -1,0 +1,166 @@
+<main class="compare-room-page">
+  <header class="room-topbar">
+    <button type="button" class="icon-button" (click)="leaveRoom()" aria-label="Leave Compare Room">
+      <i class="pi pi-arrow-left"></i>
+    </button>
+    <div>
+      <span class="eyebrow">Private temporary session</span>
+      <h1>Playlist Compare Room</h1>
+    </div>
+    <div class="room-security"><i class="pi pi-shield"></i> Guest logins are not saved</div>
+  </header>
+
+  <section *ngIf="isStarting" class="state-card">
+    <i class="pi pi-spin pi-spinner"></i>
+    <h2>Preparing your private room…</h2>
+  </section>
+
+  <ng-container *ngIf="!isStarting">
+    <div *ngIf="errorMessage" class="room-alert" role="alert">
+      <i class="pi pi-exclamation-circle"></i>
+      <span>{{ errorMessage }}</span>
+      <button type="button" (click)="errorMessage = ''" aria-label="Dismiss">×</button>
+    </div>
+
+    <section *ngIf="!allFinished" class="room-workspace">
+      <div class="room-heading">
+        <div>
+          <span class="eyebrow">Room {{ coordinator.currentRoomId | slice:0:8 }}</span>
+          <h2>Choose one playlist per person</h2>
+          <p>Only songs found in every selected playlist will be included.</p>
+        </div>
+        <button type="button" class="add-participant-button" (click)="addParticipant()" [disabled]="isAddingParticipant">
+          <i class="pi" [ngClass]="isAddingParticipant ? 'pi-spin pi-spinner' : 'pi-user-plus'"></i>
+          Add participant
+        </button>
+      </div>
+
+      <div class="participant-grid">
+        <article *ngFor="let participant of participants; trackBy: trackParticipant" class="participant-card" [class.ready]="participant.status === 'ready'">
+          <div class="participant-header">
+            <img *ngIf="participant.imageUrl" [src]="participant.imageUrl" alt="">
+            <div *ngIf="!participant.imageUrl" class="participant-avatar"><i class="pi pi-user"></i></div>
+            <div>
+              <strong>{{ participant.displayName }}</strong>
+              <span>{{ participant.isMainProfile ? 'Main profile' : 'Joined by QR' }}</span>
+            </div>
+            <span class="status-pill" [attr.data-status]="participant.status">{{ participant.status }}</span>
+          </div>
+
+          <label *ngIf="participant.isMainProfile" class="playlist-field">
+            <span>Select playlist</span>
+            <select [value]="participant.playlist?.id || ''" (change)="selectMainPlaylist($any($event.target).value)">
+              <option value="" disabled>Choose a playlist…</option>
+              <option *ngFor="let playlist of mainPlaylists" [value]="playlist.id">
+                {{ playlist.name }} ({{ playlist.total }})
+              </option>
+            </select>
+          </label>
+
+          <div *ngIf="participant.playlist" class="selected-playlist">
+            <img *ngIf="participant.playlist.imageUrl" [src]="participant.playlist.imageUrl" alt="">
+            <div class="playlist-placeholder" *ngIf="!participant.playlist.imageUrl"><i class="pi pi-list"></i></div>
+            <div>
+              <strong>{{ participant.playlist.name }}</strong>
+              <span>{{ participant.tracks.length }} usable tracks<span *ngIf="participant.dataSource"> · {{ participant.dataSource }}</span></span>
+            </div>
+          </div>
+
+          <p *ngIf="participant.status === 'loading'" class="participant-note"><i class="pi pi-spin pi-spinner"></i> Loading playlist…</p>
+          <p *ngIf="participant.error" class="participant-error">{{ participant.error }}</p>
+          <button *ngIf="!participant.isMainProfile" type="button" class="remove-link" (click)="removeParticipant(participant.id)">Remove participant</button>
+        </article>
+
+        <article *ngFor="let invitation of visibleInvitations; trackBy: trackInvitation" class="invitation-card" [class.claimed]="invitation.claimedBy">
+          <ng-container *ngIf="!invitation.claimedBy; else claimedInvitation">
+            <button type="button" class="close-invitation" (click)="cancelInvitation(invitation.id)" aria-label="Cancel invitation">×</button>
+            <span class="eyebrow">Waiting for participant</span>
+            <img class="qr-code" [src]="invitation.qrDataUrl" alt="QR code to join this Compare Room">
+            <strong>Scan to join</strong>
+            <p>Scan from another device, or share the private link when hosting from your phone.</p>
+            <div class="invitation-actions">
+              <button *ngIf="canShareInvitations" type="button" class="share-button" (click)="shareInvitation(invitation)">
+                <i class="pi pi-share-alt"></i> Share invite
+              </button>
+              <button type="button" class="copy-button" (click)="copyInvitation(invitation)">
+                <i class="pi" [ngClass]="copiedInvitationId === invitation.id ? 'pi-check' : 'pi-copy'"></i>
+                {{ copiedInvitationId === invitation.id ? 'Link copied' : 'Copy link' }}
+              </button>
+            </div>
+          </ng-container>
+          <ng-template #claimedInvitation>
+            <i class="pi pi-spin pi-spinner invitation-spinner"></i>
+            <strong>{{ participantForInvitation(invitation)?.displayName || 'Participant joining…' }}</strong>
+            <p>The QR invitation has been claimed.</p>
+          </ng-template>
+        </article>
+      </div>
+
+      <section class="merge-panel">
+        <div class="merge-icon"><i class="pi pi-clone"></i></div>
+        <div class="merge-copy">
+          <span class="eyebrow">Exact matches</span>
+          <h2>Songs everyone has</h2>
+          <p>{{ readyCount }} of {{ participantSlotCount }} participant slots ready</p>
+        </div>
+        <button type="button" class="primary-button" (click)="prepareResult()" [disabled]="!coordinator.canPrepareResult() || isPreparing">
+          Compare shared songs
+        </button>
+      </section>
+
+      <section *ngIf="proposal" class="result-panel">
+        <div class="result-summary">
+          <div>
+            <span class="result-count">{{ sharedTracks.length }}</span>
+            <span>songs shared by everyone</span>
+          </div>
+          <label>
+            <span>Playlist name</span>
+            <input type="text" [(ngModel)]="playlistName" maxlength="100" (change)="updateProposalName()">
+          </label>
+        </div>
+
+        <div class="track-preview">
+          <a *ngFor="let track of sharedTracks | slice:0:12; trackBy: trackTrack" [href]="track.spotifyUrl" target="_blank" rel="noopener noreferrer" class="track-row">
+            <img *ngIf="track.imageUrl" [src]="track.imageUrl" alt="">
+            <div class="track-placeholder" *ngIf="!track.imageUrl"><i class="pi pi-music"></i></div>
+            <span><strong>{{ track.name }}</strong><small>{{ track.artists[0].name }}</small></span>
+            <i class="pi pi-external-link"></i>
+          </a>
+        </div>
+        <p *ngIf="sharedTracks.length > 12" class="more-tracks">+ {{ sharedTracks.length - 12 }} more shared songs</p>
+
+        <div class="approval-bar">
+          <span *ngIf="awaitingApprovals.length"><i class="pi pi-clock"></i> Waiting for {{ awaitingApprovals.join(', ') }}</span>
+          <span *ngIf="!awaitingApprovals.length" class="approved"><i class="pi pi-check-circle"></i> Everyone approved</span>
+          <button type="button" class="primary-button" (click)="execute()" [disabled]="!coordinator.allParticipantsApproved() || isExecuting">
+            <i class="pi" [ngClass]="isExecuting ? 'pi-spin pi-spinner' : 'pi-spotify'"></i>
+            Create for everyone
+          </button>
+        </div>
+      </section>
+    </section>
+
+    <section *ngIf="allFinished" class="success-panel">
+      <div class="success-mark"><i class="pi pi-check"></i></div>
+      <span class="eyebrow">Compare Room complete</span>
+      <h2>Your shared playlist is ready</h2>
+      <p>Each Spotify account received its own private copy.</p>
+      <div class="result-cards">
+        <article *ngFor="let participant of participants" [class.failed]="!participant.result?.success">
+          <i class="pi" [ngClass]="participant.result?.success ? 'pi-check-circle' : 'pi-exclamation-circle'"></i>
+          <div>
+            <strong>{{ participant.displayName }}</strong>
+            <span *ngIf="participant.result?.success">{{ participant.result?.addedTracks }} tracks added</span>
+            <span *ngIf="!participant.result?.success">{{ participant.result?.error || 'Playlist creation failed' }}</span>
+          </div>
+          <a *ngIf="participant.result?.playlistUrl" [href]="participant.result?.playlistUrl" target="_blank" rel="noopener noreferrer">Open in Spotify</a>
+        </article>
+      </div>
+      <div class="success-actions">
+        <button type="button" class="secondary-button" (click)="startAnother()">Start another comparison</button>
+        <button type="button" class="primary-button" (click)="leaveRoom()">{{ enteredAuthenticated ? 'Back to Analytify' : 'Back to login' }}</button>
+      </div>
+    </section>
+  </ng-container>
+</main>

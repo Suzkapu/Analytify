@@ -1,7 +1,8 @@
-import {HttpErrorResponse, HttpHandler, HttpRequest, HttpResponse} from '@angular/common/http';
+import {HttpContext, HttpErrorResponse, HttpHandler, HttpRequest, HttpResponse} from '@angular/common/http';
 import {firstValueFrom, of, throwError} from 'rxjs';
 import {SpotifyAuthInterceptor} from './spotify-auth.interceptor';
 import {SpotifyAuthService} from './spotify-auth.service';
+import {TRANSIENT_SPOTIFY_REQUEST} from '@core/compare-room/spotify-request-context';
 
 describe('SpotifyAuthInterceptor', () => {
   let auth: jasmine.SpyObj<SpotifyAuthService>;
@@ -49,6 +50,24 @@ describe('SpotifyAuthInterceptor', () => {
 
     expect(received?.headers.get('Authorization')).toBe('Bearer cached-token');
     expect(received?.headers.get('Accept-Language')).toContain('en-GB');
+  });
+
+  it('preserves an isolated Compare Room participant token', async () => {
+    const request = new HttpRequest('GET', 'https://api.spotify.com/v1/me', {
+      headers: undefined,
+      context: new HttpContext().set(TRANSIENT_SPOTIFY_REQUEST, true)
+    }).clone({setHeaders: {Authorization: 'Bearer guest-token'}});
+    let received: HttpRequest<any> | undefined;
+    const next = handlerFor(req => {
+      received = req;
+      return of(new HttpResponse({status: 200}));
+    });
+
+    await firstValueFrom(interceptor.intercept(request, next));
+
+    expect(received?.headers.get('Authorization')).toBe('Bearer guest-token');
+    expect(received?.context.get(TRANSIENT_SPOTIFY_REQUEST)).toBeFalse();
+    expect(auth.getAccessToken).not.toHaveBeenCalled();
   });
 
   it('refreshes once after a 401 and retries with the new token', async () => {

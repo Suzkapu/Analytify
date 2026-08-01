@@ -5,8 +5,11 @@ export const environment = {
   authorizeUrl: 'https://accounts.spotify.com/authorize',
   supabaseUrl: 'https://tmmhylpexbubyznlizfs.supabase.co',
   supabaseKey: 'sb_publishable_hMg6wOlMTQai9ipA4ZlxzQ_rawnrTD-',
-  spotifyClientId: 'REDACTED_SPOTIFY_CLIENT_ID',
+  // Spotify client IDs are public OAuth identifiers. Never place the client
+  // secret in this browser configuration.
+  spotifyClientId: '9b03c8eb85dd4df483c3ae097e6c39f0',
   spotifyRedirectUri: 'https://analytify.dynv6.net/callback',
+  compareRoomRedirectUri: 'https://analytify.dynv6.net/compare-room/callback',
   spotifyScopes: [
     'user-read-private',
     'user-top-read',
@@ -18,4 +21,3 @@ export const environment = {
     'user-library-read'
   ].join(' ')
 };
-

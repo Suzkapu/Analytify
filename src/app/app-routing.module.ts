@@ -64,6 +64,11 @@ export const APP_ROUTES: Routes = [
     loadChildren: () =>
       import('@features/legal/legal/legal.module').then(module => module.LegalModule)
   },
+  {
+    path: 'compare-room',
+    loadChildren: () =>
+      import('@features/compare-room/compare-room.module').then(module => module.CompareRoomModule)
+  },
   {path: '**', redirectTo: ''}
 ];
 

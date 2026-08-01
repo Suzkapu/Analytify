@@ -1,0 +1,29 @@
+:host { display: block; min-height: 100vh; background: radial-gradient(circle at 50% 0, rgba(29, 185, 84, 0.2), transparent 28rem), #090b0a; color: #fff; }
+.join-page { min-height: 100vh; padding: 1.5rem; box-sizing: border-box; display: flex; flex-direction: column; }
+.join-brand { display: flex; align-items: center; justify-content: center; gap: 0.65rem; font-weight: 800; color: #d9dfdb; }
+.join-brand img { width: 34px; height: 34px; border-radius: 8px; }
+.join-card { width: min(460px, 100%); margin: auto; padding: 2rem; box-sizing: border-box; text-align: center; background: rgba(24, 28, 25, 0.84); border: 1px solid rgba(255,255,255,.09); border-radius: 25px; box-shadow: 0 25px 70px rgba(0,0,0,.38); }
+.join-card h1 { margin: .45rem 0 .8rem; letter-spacing: -.035em; font-size: clamp(1.8rem, 8vw, 2.35rem); }
+.join-card p { color: #a1aaa4; line-height: 1.55; }
+.join-card small { display: block; color: #737c76; margin-top: 1rem; }
+.eyebrow { color: #1ed760; font-size: .67rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.join-icon, .success-icon, .error-icon { width: 62px; height: 62px; display: grid; place-items: center; margin: 0 auto 1.2rem; border-radius: 18px; font-size: 1.55rem; background: rgba(30,215,96,.12); color: #1ed760; }
+.success-icon { border-radius: 50%; background: #1ed760; color: #071109; }
+.error-icon { background: rgba(255,82,82,.12); color: #ff7474; }
+.spotify-button, .leave-button { width: 100%; min-height: 50px; border: 0; border-radius: 999px; font: inherit; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: .6rem; box-sizing: border-box; text-decoration: none; }
+.spotify-button { color: #071109; background: #1ed760; margin-top: 1.5rem; }
+.leave-button { color: #fff; background: rgba(255,255,255,.08); margin-top: .7rem; }
+.spotify-button:disabled { opacity: .55; cursor: wait; }
+.big-spinner { color: #1ed760; font-size: 3rem; }
+.profile-row { display: flex; align-items: center; text-align: left; gap: .8rem; padding-bottom: 1.1rem; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,.08); }
+.profile-row img, .profile-placeholder { width: 48px; height: 48px; object-fit: cover; border-radius: 50%; }
+.profile-placeholder { display: grid; place-items: center; background: #282d29; }
+.profile-row span, .profile-row strong { display: block; }
+.profile-row span { color: #89928c; font-size: .72rem; }
+.playlist-select { display: grid; gap: .5rem; text-align: left; margin-top: 1.4rem; }
+.playlist-select span { color: #9da69f; font-size: .78rem; font-weight: 700; }
+.playlist-select select { width: 100%; padding: .9rem; color: #fff; background: #111412; border: 1px solid rgba(255,255,255,.12); border-radius: 12px; font: inherit; }
+.loading-note, .ready-note { margin-top: 1rem; padding: .9rem; border-radius: 12px; font-size: .82rem; }
+.loading-note { background: rgba(255,255,255,.05); color: #bec5c0; }
+.ready-note { background: rgba(30,215,96,.1); color: #1ed760; }
+@media (max-width: 520px) { .join-page { padding: 1rem; } .join-card { padding: 1.5rem 1.15rem; } }

@@ -3,12 +3,17 @@ import {HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse}
 import {Observable, throwError} from 'rxjs';
 import {switchMap, catchError} from 'rxjs/operators';
 import {SpotifyAuthService} from './spotify-auth.service';
+import {TRANSIENT_SPOTIFY_REQUEST} from '@core/compare-room/spotify-request-context';
 
 @Injectable()
 export class SpotifyAuthInterceptor implements HttpInterceptor {
   constructor(private authService: SpotifyAuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (req.context.get(TRANSIENT_SPOTIFY_REQUEST)) {
+      return next.handle(req.clone({context: req.context.delete(TRANSIENT_SPOTIFY_REQUEST)}));
+    }
+
     // Check if the request is targeting the Spotify API
     if (req.url.startsWith('https://api.spotify.com/v1')) {
       if (this.authService.isAuthenticated()) {

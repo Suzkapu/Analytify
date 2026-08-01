@@ -20,6 +20,14 @@ Analytify turns your Spotify library and listening data into a clear, visual ove
 - Group playlist songs by album and open music directly in Spotify.
 - View every song by a selected artist within the current playlist.
 
+### Compare together
+
+- Host a temporary desktop Compare Room without replacing your main Analytify login.
+- Invite other Spotify accounts with participant-specific QR codes or short links.
+- Select one playlist or Liked Songs per participant and find the exact tracks everyone has.
+- Review and approve the shared result before creating a private copy on every participant's Spotify account.
+- Keep guest Spotify credentials in memory only; room messages never contain access or refresh tokens.
+
 ### Analyze your music
 
 - See the total and average duration of a playlist.
@@ -45,6 +53,15 @@ Analytify stores data locally in your browser so previously loaded views remain 
 npm ci
 npm start
 ```
+
+The Compare Room's direct Spotify PKCE flow requires both callback URLs to be registered in the Spotify developer dashboard:
+
+```text
+http://127.0.0.1:4200/compare-room/callback
+https://analytify.dynv6.net/compare-room/callback
+```
+
+The existing `/callback` URLs remain required for the normal Supabase-backed login.
 
 Run the complete compile and production-build verification before committing:
 
