@@ -1,5 +1,5 @@
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {TestBed} from '@angular/core/testing';
+import {fakeAsync, flushMicrotasks, TestBed} from '@angular/core/testing';
 import {environment} from '@env/environment';
 import {CompareTrack} from './compare-room.models';
 import {ParticipantSpotifyService} from './participant-spotify.service';
@@ -16,8 +16,9 @@ describe('ParticipantSpotifyService', () => {
 
   afterEach(() => http.verify());
 
-  it('lists Liked Songs plus owned and collaborative playlists only', async () => {
-    const resultPromise = service.getPlaylists('guest-token', 'me');
+  it('lists Liked Songs plus owned and collaborative playlists only', fakeAsync(() => {
+    let result: any[] | undefined;
+    void service.getPlaylists('guest-token', 'me').then(value => result = value);
     const request = http.expectOne(`${environment.spotifyUrl}/me/playlists?limit=50&offset=0`);
     expect(request.request.headers.get('Authorization')).toBe('Bearer guest-token');
     request.flush({
@@ -28,35 +29,36 @@ describe('ParticipantSpotifyService', () => {
         {id: 'followed', name: 'Followed', owner: {id: 'friend'}, collaborative: false, items: {total: 4}}
       ]
     });
+    flushMicrotasks();
     const liked = http.expectOne(`${environment.spotifyUrl}/me/tracks?limit=1&offset=0`);
     liked.flush({total: 42, items: []});
+    flushMicrotasks();
 
-    const result = await resultPromise;
-    expect(result.map(item => item.id)).toEqual(['fav', 'owned', 'collab']);
-    expect(result[0].total).toBe(42);
-  });
+    expect(result?.map(item => item.id)).toEqual(['fav', 'owned', 'collab']);
+    expect(result?.[0].total).toBe(42);
+  }));
 
-  it('creates a private playlist and adds tracks in batches of one hundred', async () => {
+  it('creates a private playlist and adds tracks in batches of one hundred', fakeAsync(() => {
     const tracks = Array.from({length: 205}, (_, index) => track(`${index}`));
-    const resultPromise = service.createPlaylist('guest-token', 'Shared songs', 'Description', tracks);
+    let result: any;
+    void service.createPlaylist('guest-token', 'Shared songs', 'Description', tracks).then(value => result = value);
 
     const create = http.expectOne(`${environment.spotifyUrl}/me/playlists`);
     expect(create.request.body.public).toBeFalse();
     create.flush({id: 'new-playlist', external_urls: {spotify: 'https://open.spotify.com/playlist/new'}});
-    await Promise.resolve();
+    flushMicrotasks();
 
     for (const expectedSize of [100, 100, 5]) {
       const add = http.expectOne(`${environment.spotifyUrl}/playlists/new-playlist/items`);
       expect(add.request.body.uris.length).toBe(expectedSize);
       add.flush({snapshot_id: 'snapshot'});
-      await Promise.resolve();
+      flushMicrotasks();
     }
 
-    const result = await resultPromise;
     expect(result.success).toBeTrue();
     expect(result.addedTracks).toBe(205);
     expect(result.playlistUrl).toContain('/new');
-  });
+  }));
 
   function track(id: string): CompareTrack {
     return {
