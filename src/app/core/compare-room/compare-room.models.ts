@@ -37,12 +37,23 @@ export interface CompareParticipant {
   imageUrl: string;
   status: CompareParticipantStatus;
   playlist?: ComparePlaylist;
+  playlists?: ComparePlaylist[];
   tracks: CompareTrack[];
   dataSource?: 'local' | 'cloud' | 'spotify';
   approvedProposalId?: string;
   result?: CompareSaveResult;
   isMainProfile?: boolean;
   error?: string;
+}
+
+export type CompareMergeMode = 'intersection' | 'union';
+
+export interface CompareParticipantMergeStats {
+  participantId: string;
+  selectedPlaylistCount: number;
+  selectedTrackCount: number;
+  includedTrackCount: number;
+  includedPercentage: number;
 }
 
 export interface CompareInvitation {
@@ -66,9 +77,12 @@ export interface CompareMergeProposal {
   id: string;
   name: string;
   description: string;
+  descriptionsByParticipant?: Record<string, string>;
+  mode?: CompareMergeMode;
   tracks: CompareTrack[];
   trackCount: number;
   participantNames: string[];
+  participantStats?: CompareParticipantMergeStats[];
 }
 
 export type CompareRoomMessage =

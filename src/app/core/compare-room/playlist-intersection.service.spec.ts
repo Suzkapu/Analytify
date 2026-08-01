@@ -30,6 +30,14 @@ describe('PlaylistIntersectionService', () => {
     expect(service.intersect([[track('a')]])).toEqual([]);
   });
 
+  it('combines all tracks without duplicates while preserving participant and playlist order', () => {
+    expect(service.union([
+      [track('a'), track('b'), track('a')],
+      [track('b'), track('c')],
+      [track('d')]
+    ]).map(item => item.id)).toEqual(['a', 'b', 'c', 'd']);
+  });
+
   function track(id: string): CompareTrack {
     return {
       id,

@@ -3,8 +3,11 @@ import {BehaviorSubject} from 'rxjs';
 import * as QRCode from 'qrcode';
 import {
   CompareInvitation,
+  CompareMergeMode,
   CompareMergeProposal,
   CompareParticipant,
+  CompareParticipantMergeStats,
+  ComparePlaylist,
   CompareRoomMessage,
   CompareSaveResult,
   CompareTrack
@@ -84,7 +87,9 @@ export class CompareRoomCoordinatorService {
   }
 
   getReadyParticipants(): CompareParticipant[] {
-    return this.participants$.value.filter(participant => participant.status === 'ready' && !!participant.playlist);
+    return this.participants$.value.filter(participant =>
+      participant.status === 'ready' && this.selectedPlaylists(participant).length > 0
+    );
   }
 
   canPrepareResult(): boolean {
@@ -93,28 +98,39 @@ export class CompareRoomCoordinatorService {
       !!invitation.claimedBy && participants.some(participant => participant.id === invitation.claimedBy)
     );
     return participants.length >= 2 && allInvitationSlotsReady && participants.every(participant =>
-      participant.status === 'ready' && !!participant.playlist
+      participant.status === 'ready' && this.selectedPlaylists(participant).length > 0
     );
   }
 
-  prepareProposal(name?: string): CompareMergeProposal | null {
+  prepareProposal(name?: string, mode: CompareMergeMode = 'intersection'): CompareMergeProposal | null {
     if (!this.canPrepareResult()) return null;
     const participants = this.participants$.value;
-    const tracks = this.intersection.intersect(participants.map(participant => participant.tracks));
+    const participantTracks = participants.map(participant => participant.tracks);
+    const tracks = mode === 'union'
+      ? this.intersection.union(participantTracks)
+      : this.intersection.intersect(participantTracks);
     this.sharedTracks$.next(tracks);
     if (tracks.length === 0) {
       this.proposal$.next(null);
       return null;
     }
     const participantNames = participants.map(participant => participant.displayName);
-    const defaultName = `Shared songs — ${participantNames.join(', ')}`;
+    const defaultName = `${mode === 'union' ? 'Merged playlists' : 'Shared songs'} — ${participantNames.join(', ')}`;
+    const participantStats = this.buildParticipantStats(participants, tracks);
+    const descriptionsByParticipant = Object.fromEntries(participants.map(participant => [
+      participant.id,
+      this.buildParticipantDescription(participant, participantStats, tracks.length, mode)
+    ]));
     const proposal: CompareMergeProposal = {
       id: this.randomToken(12),
       name: (name?.trim() || defaultName).slice(0, 100),
-      description: `Songs shared by ${participantNames.join(', ')}. Created with Analytify.`.slice(0, 300),
+      description: this.buildGenericDescription(participantNames, tracks.length, mode),
+      descriptionsByParticipant,
+      mode,
       tracks,
       trackCount: tracks.length,
-      participantNames
+      participantNames,
+      participantStats
     };
     this.proposal$.next(proposal);
     this.participants$.next(participants.map(participant => ({
@@ -270,6 +286,56 @@ export class CompareRoomCoordinatorService {
     if (index >= 0) participants[index] = participant;
     else participants.push(participant);
     this.participants$.next(participants);
+  }
+
+  private selectedPlaylists(participant: CompareParticipant): ComparePlaylist[] {
+    if (participant.playlists?.length) return participant.playlists;
+    return participant.playlist ? [participant.playlist] : [];
+  }
+
+  private buildParticipantStats(
+    participants: CompareParticipant[],
+    resultTracks: CompareTrack[]
+  ): CompareParticipantMergeStats[] {
+    const resultIds = new Set(resultTracks.map(track => track.id));
+    return participants.map(participant => {
+      const selectedTrackIds = new Set(participant.tracks.map(track => track.id));
+      const includedTrackCount = [...selectedTrackIds].filter(id => resultIds.has(id)).length;
+      const selectedTrackCount = selectedTrackIds.size;
+      return {
+        participantId: participant.id,
+        selectedPlaylistCount: this.selectedPlaylists(participant).length,
+        selectedTrackCount,
+        includedTrackCount,
+        includedPercentage: selectedTrackCount === 0 ? 0 : Math.round(includedTrackCount / selectedTrackCount * 100)
+      };
+    });
+  }
+
+  private buildParticipantDescription(
+    participant: CompareParticipant,
+    stats: CompareParticipantMergeStats[],
+    resultTrackCount: number,
+    mode: CompareMergeMode
+  ): string {
+    const participantStats = stats.find(item => item.participantId === participant.id);
+    if (!participantStats) return '';
+    const playlistLabel = participantStats.selectedPlaylistCount === 1 ? 'playlist' : 'playlists';
+    const modeLabel = mode === 'union' ? 'All-songs merge' : 'Shared-songs merge';
+    return [
+      `${modeLabel} with ${stats.length} participants.`,
+      `${participantStats.includedTrackCount} of ${participantStats.selectedTrackCount} unique usable tracks from your ${participantStats.selectedPlaylistCount} selected ${playlistLabel} included (${participantStats.includedPercentage}%).`,
+      `${resultTrackCount} unique tracks in the result. Created with Analytify.`
+    ].join(' ').slice(0, 300);
+  }
+
+  private buildGenericDescription(
+    participantNames: string[],
+    resultTrackCount: number,
+    mode: CompareMergeMode
+  ): string {
+    const modeLabel = mode === 'union' ? 'All-songs merge' : 'Shared-songs merge';
+    return `${modeLabel} for ${participantNames.join(', ')} · ${resultTrackCount} unique tracks · Created with Analytify.`.slice(0, 300);
   }
 
   private invalidateProposal(): void {

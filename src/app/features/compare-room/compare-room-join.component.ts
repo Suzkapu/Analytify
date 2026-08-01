@@ -5,6 +5,7 @@ import {CompareRoomGuestService} from '@core/compare-room/compare-room-guest.ser
 import {
   CompareMergeProposal,
   CompareParticipant,
+  CompareParticipantMergeStats,
   ComparePlaylist,
   CompareSaveResult
 } from '@core/compare-room/compare-room.models';
@@ -20,6 +21,8 @@ import {filter, Subscription, take} from 'rxjs';
 export class CompareRoomJoinComponent implements OnInit, OnDestroy {
   stage: 'invited' | 'joining' | 'selecting' | 'loading' | 'ready' | 'review' | 'saving' | 'complete' | 'error' = 'invited';
   playlists: ComparePlaylist[] = [];
+  selectedPlaylistIds: string[] = [];
+  playlistQuery = '';
   participant: CompareParticipant | null = null;
   proposal: CompareMergeProposal | null = null;
   saveResult: CompareSaveResult | null = null;
@@ -89,16 +92,35 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
     }
   }
 
-  async selectPlaylist(playlistId: string): Promise<void> {
-    const playlist = this.playlists.find(item => item.id === playlistId);
-    if (!playlist || !this.participant) return;
+  togglePlaylist(playlistId: string, checked: boolean): void {
+    this.selectedPlaylistIds = checked
+      ? [...this.selectedPlaylistIds, playlistId]
+      : this.selectedPlaylistIds.filter(id => id !== playlistId);
+  }
+
+  isPlaylistSelected(playlistId: string): boolean {
+    return this.selectedPlaylistIds.includes(playlistId);
+  }
+
+  async applyPlaylistSelection(): Promise<void> {
+    const selectedPlaylists = this.selectedPlaylistIds
+      .map(id => this.playlists.find(item => item.id === id))
+      .filter((playlist): playlist is ComparePlaylist => !!playlist);
+    if (selectedPlaylists.length === 0 || !this.participant) return;
     this.stage = 'loading';
-    this.participant = {...this.participant, playlist, tracks: [], status: 'loading', error: undefined};
+    this.participant = {
+      ...this.participant,
+      playlist: selectedPlaylists[0],
+      playlists: selectedPlaylists,
+      tracks: [],
+      status: 'loading',
+      error: undefined
+    };
     await this.guest.publishParticipant(this.participant);
     try {
       const token = await this.transientAuth.getAccessToken();
-      const result = await this.source.loadTracks(
-        playlist,
+      const result = await this.source.loadSelection(
+        selectedPlaylists,
         token,
         this.participant.spotifyUserId
       );
@@ -117,6 +139,21 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
       await this.guest.publishParticipant(this.participant).catch(() => {});
       this.fail(this.participant.error || 'Could not load that playlist.');
     }
+  }
+
+  get filteredPlaylists(): ComparePlaylist[] {
+    const query = this.playlistQuery.trim().toLocaleLowerCase();
+    if (!query) return this.playlists;
+    return this.playlists.filter(playlist => playlist.name.toLocaleLowerCase().includes(query));
+  }
+
+  get selectedPlaylistCount(): number {
+    return this.participant?.playlists?.length || (this.participant?.playlist ? 1 : 0);
+  }
+
+  get participantProposalStats(): CompareParticipantMergeStats | undefined {
+    if (!this.participant || !this.proposal) return undefined;
+    return this.proposal.participantStats?.find(stats => stats.participantId === this.participant?.id);
   }
 
   async approve(): Promise<void> {
@@ -187,7 +224,8 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
     this.participant = {...this.participant, status: 'saving'};
     try {
       const token = await this.transientAuth.getAccessToken();
-      this.saveResult = await this.spotify.createPlaylist(token, proposal.name, proposal.description, proposal.tracks);
+      const description = proposal.descriptionsByParticipant?.[this.participant.id] || proposal.description;
+      this.saveResult = await this.spotify.createPlaylist(token, proposal.name, description, proposal.tracks);
     } catch (error) {
       this.saveResult = {
         success: false,

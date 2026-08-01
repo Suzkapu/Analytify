@@ -82,7 +82,8 @@
 .primary-button,
 .secondary-button,
 .add-participant-button,
-.copy-button {
+.copy-button,
+.selection-button {
   border: 0;
   border-radius: 999px;
   min-height: 44px;
@@ -101,11 +102,13 @@
 .add-participant-button { background: #1ed760; color: #071109; }
 .secondary-button,
 .copy-button,
+.selection-button,
 .share-button { background: rgba(255, 255, 255, 0.09); color: #fff; }
 .primary-button:hover:not(:disabled),
 .secondary-button:hover:not(:disabled),
 .add-participant-button:hover:not(:disabled),
 .copy-button:hover:not(:disabled),
+.selection-button:hover:not(:disabled),
 .share-button:hover:not(:disabled) { transform: translateY(-1px); }
 button:disabled { cursor: not-allowed; opacity: 0.42; }
 
@@ -163,9 +166,10 @@ button:disabled { cursor: not-allowed; opacity: 0.42; }
   display: grid;
   gap: 0.5rem;
   margin-top: 1.25rem;
-  span { color: #aeb7b1; font-size: 0.8rem; font-weight: 700; }
-  select {
+  > span { color: #aeb7b1; font-size: 0.8rem; font-weight: 700; }
+  .playlist-search {
     width: 100%;
+    box-sizing: border-box;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     background: #151816;
@@ -174,6 +178,30 @@ button:disabled { cursor: not-allowed; opacity: 0.42; }
     font: inherit;
   }
 }
+
+.playlist-options {
+  max-height: 210px;
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: #111412;
+  label {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.65rem 0.75rem;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    &:last-child { border-bottom: 0; }
+    &:hover { background: rgba(255, 255, 255, 0.04); }
+  }
+  input { accent-color: #1ed760; }
+  span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #eef2ef; font-size: 0.8rem; }
+  small { color: #78817b; font-size: 0.68rem; }
+}
+
+.selection-button { min-height: 40px; font-size: 0.76rem; }
 
 .selected-playlist {
   display: flex;
@@ -241,12 +269,34 @@ button:disabled { cursor: not-allowed; opacity: 0.42; }
 
 .merge-panel {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto minmax(170px, 1fr) minmax(290px, auto) auto;
   gap: 1rem;
   align-items: center;
   padding: 1.2rem;
   border-radius: 20px;
   margin-top: 1rem;
+}
+
+.merge-mode-picker {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(130px, 1fr));
+  gap: 0.45rem;
+  label {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.03);
+    &.active { border-color: rgba(30, 215, 96, 0.55); background: rgba(30, 215, 96, 0.08); }
+  }
+  input { accent-color: #1ed760; }
+  strong,
+  small { display: block; }
+  strong { color: #fff; font-size: 0.76rem; }
+  small { margin-top: 0.15rem; color: #89928c; font-size: 0.64rem; }
 }
 
 .merge-icon {
@@ -266,6 +316,8 @@ button:disabled { cursor: not-allowed; opacity: 0.42; }
 }
 
 .result-panel { margin-top: 1rem; padding: 1.5rem; border-radius: 22px; }
+.result-stat { margin: 0 0 1.2rem; padding: 0.8rem 1rem; border-radius: 12px; color: #b8dfc5; background: rgba(30, 215, 96, 0.08); font-size: 0.82rem; }
+.result-stat i { color: #1ed760; margin-right: 0.4rem; }
 .result-summary {
   display: flex;
   align-items: flex-end;
@@ -404,13 +456,14 @@ button:disabled { cursor: not-allowed; opacity: 0.42; }
   .copy-button,
   .share-button { flex: 1 1 130px; min-height: 44px; }
 
-  .playlist-field select { min-height: 48px; font-size: 16px; }
+  .playlist-field .playlist-search { min-height: 48px; font-size: 16px; }
   .selected-playlist > div:last-child { min-width: 0; }
   .selected-playlist strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   .merge-panel {
     grid-template-columns: auto minmax(0, 1fr);
     padding: 1rem;
+    .merge-mode-picker,
     .primary-button { grid-column: 1 / -1; width: 100%; }
   }
 

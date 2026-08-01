@@ -108,6 +108,26 @@ export class CompareGuestPlaylistSourceService {
     }
   }
 
+  async loadSelection(
+    playlists: ComparePlaylist[],
+    accessToken: string,
+    spotifyProfileId: string
+  ): Promise<{tracks: CompareTrack[]; source: GuestDataSource}> {
+    const tracks: CompareTrack[] = [];
+    const seen = new Set<string>();
+    const sources = new Set<GuestDataSource>();
+    for (const playlist of playlists) {
+      const result = await this.loadTracks(playlist, accessToken, spotifyProfileId);
+      sources.add(result.source);
+      result.tracks.forEach(track => {
+        if (seen.has(track.id)) return;
+        seen.add(track.id);
+        tracks.push(track);
+      });
+    }
+    return {tracks, source: this.combinedSource(sources)};
+  }
+
   private async resolveContext(spotifyProfileId: string): Promise<GuestCacheContext | null> {
     if (this.contextProfileId !== spotifyProfileId) {
       this.contextProfileId = spotifyProfileId;
@@ -226,5 +246,11 @@ export class CompareGuestPlaylistSourceService {
 
   private stripDevSuffix(userId: string): string {
     return userId.endsWith('_dev') ? userId.slice(0, -4) : userId;
+  }
+
+  private combinedSource(sources: Set<GuestDataSource>): GuestDataSource {
+    if (sources.has('spotify')) return 'spotify';
+    if (sources.has('cloud')) return 'cloud';
+    return 'local';
   }
 }

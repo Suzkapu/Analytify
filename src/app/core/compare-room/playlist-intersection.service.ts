@@ -13,4 +13,13 @@ export class PlaylistIntersectionService {
       return remainingIds.every(ids => ids.has(track.id));
     });
   }
+
+  union(playlists: CompareTrack[][]): CompareTrack[] {
+    const seen = new Set<string>();
+    return playlists.flatMap(tracks => tracks).filter(track => {
+      if (seen.has(track.id)) return false;
+      seen.add(track.id);
+      return true;
+    });
+  }
 }

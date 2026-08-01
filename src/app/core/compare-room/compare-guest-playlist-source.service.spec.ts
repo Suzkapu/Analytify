@@ -119,4 +119,32 @@ describe('CompareGuestPlaylistSourceService', () => {
     expect(supabase.checkBackupActive).not.toHaveBeenCalled();
     expect(supabase.loadUserCache).not.toHaveBeenCalled();
   });
+
+  it('combines multiple guest playlists without sending duplicate tracks', async () => {
+    spotify.getPlaylistTracks.and.callFake(async (playlist: ComparePlaylist) => playlist.id === 'first'
+      ? [track('a'), track('shared')]
+      : [track('shared'), track('b')]
+    );
+
+    const result = await service.loadSelection([
+      {id: 'first', name: 'First', imageUrl: '', total: 2, ownerName: ''},
+      {id: 'second', name: 'Second', imageUrl: '', total: 2, ownerName: ''}
+    ], 'guest-token', 'guest-user');
+
+    expect(result.source).toBe('spotify');
+    expect(result.tracks.map(item => item.id)).toEqual(['a', 'shared', 'b']);
+  });
+
+  function track(id: string): CompareTrack {
+    return {
+      id,
+      uri: `spotify:track:${id}`,
+      name: id,
+      artists: [{id: 'artist', name: 'Artist'}],
+      albumName: '',
+      imageUrl: '',
+      spotifyUrl: '',
+      playlistIndex: 1
+    };
+  }
 });

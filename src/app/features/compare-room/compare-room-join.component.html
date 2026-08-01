@@ -8,8 +8,8 @@
     <ng-container *ngIf="stage === 'invited'">
       <div class="join-icon"><i class="pi pi-users"></i></div>
       <span class="eyebrow">You have been invited</span>
-      <h1>Bring one of your playlists</h1>
-      <p>Connect Spotify, choose a playlist, and Analytify will find the songs everyone has in common.</p>
+      <h1>Bring your playlists</h1>
+      <p>Connect Spotify and choose one or more playlists. The host can find shared songs or combine everything without duplicates.</p>
       <button type="button" class="spotify-button" (click)="connectSpotify()"><i class="pi pi-spotify"></i> Continue with Spotify</button>
       <small>Your temporary login is cleared when this room ends.</small>
     </ng-container>
@@ -29,14 +29,22 @@
 
       <ng-container *ngIf="stage === 'selecting' || stage === 'loading' || stage === 'ready'">
         <span class="eyebrow">Your contribution</span>
-        <h1>Choose one playlist</h1>
-        <label class="playlist-select">
-          <span>Playlist or Liked Songs</span>
-          <select [value]="participant?.playlist?.id || ''" [disabled]="stage === 'loading'" (change)="selectPlaylist($any($event.target).value)">
-            <option value="" disabled>Select a playlist…</option>
-            <option *ngFor="let playlist of playlists" [value]="playlist.id">{{ playlist.name }} ({{ playlist.total }})</option>
-          </select>
-        </label>
+        <h1>Choose your playlists</h1>
+        <div class="playlist-select">
+          <span>Playlists or Liked Songs</span>
+          <input class="playlist-search" type="search" [(ngModel)]="playlistQuery" placeholder="Search your playlists…" [disabled]="stage === 'loading'">
+          <div class="playlist-options" role="group" aria-label="Select playlists to contribute">
+            <label *ngFor="let playlist of filteredPlaylists">
+              <input type="checkbox" [checked]="isPlaylistSelected(playlist.id)" [disabled]="stage === 'loading'" (change)="togglePlaylist(playlist.id, $any($event.target).checked)">
+              <span>{{ playlist.name }}</span>
+              <small>{{ playlist.total }} songs</small>
+            </label>
+          </div>
+          <button type="button" class="spotify-button selection-button" (click)="applyPlaylistSelection()" [disabled]="selectedPlaylistIds.length === 0 || stage === 'loading'">
+            <i class="pi" [ngClass]="stage === 'loading' ? 'pi-spin pi-spinner' : 'pi-check'"></i>
+            Use {{ selectedPlaylistIds.length }} selected {{ selectedPlaylistIds.length === 1 ? 'playlist' : 'playlists' }}
+          </button>
+        </div>
         <div *ngIf="playlistDataSource === 'local' || playlistDataSource === 'cloud'" class="cache-note">
           <i class="pi pi-bolt"></i>
           Using your up-to-date Analytify {{ playlistDataSource === 'cloud' ? 'Supabase backup' : 'device cache' }}.
@@ -44,14 +52,17 @@
         <div *ngIf="stage === 'loading'" class="loading-note"><i class="pi pi-spin pi-spinner"></i> Loading your playlist…</div>
         <div *ngIf="stage === 'ready'" class="ready-note">
           <i class="pi pi-check-circle"></i>
-          {{ participant?.tracks?.length }} tracks ready<span *ngIf="participant?.dataSource !== 'spotify'"> from your Analytify cache</span>. Waiting for the host.
+          {{ participant?.tracks?.length }} unique tracks from {{ selectedPlaylistCount }} {{ selectedPlaylistCount === 1 ? 'playlist' : 'playlists' }} ready<span *ngIf="participant?.dataSource !== 'spotify'"> from your Analytify cache</span>. Waiting for the host.
         </div>
       </ng-container>
 
       <ng-container *ngIf="stage === 'review' && proposal">
         <span class="eyebrow">Host proposal</span>
-        <h1>{{ proposal.trackCount }} shared songs</h1>
+        <h1>{{ proposal.trackCount }} {{ proposal.mode === 'intersection' ? 'shared songs' : 'unique merged songs' }}</h1>
         <p>The private playlist <strong>“{{ proposal.name }}”</strong> will be created on your Spotify account.</p>
+        <p *ngIf="participantProposalStats as stats" class="proposal-stat">
+          {{ stats.includedTrackCount }} of your {{ stats.selectedTrackCount }} unique selected tracks are included ({{ stats.includedPercentage }}%).
+        </p>
         <button type="button" class="spotify-button" (click)="approve()" [disabled]="hasApproved">
           <i class="pi" [ngClass]="hasApproved ? 'pi-check' : 'pi-thumbs-up'"></i>
           {{ hasApproved ? 'Approved — waiting for host' : 'Approve playlist creation' }}
@@ -69,7 +80,7 @@
       <div class="success-icon"><i class="pi pi-check"></i></div>
       <span class="eyebrow">All done</span>
       <h1>Your playlist is ready</h1>
-      <p>{{ saveResult.addedTracks }} shared songs were added to your private Spotify playlist.</p>
+      <p>{{ saveResult.addedTracks }} songs were added to your private Spotify playlist.</p>
       <a *ngIf="saveResult.playlistUrl" class="spotify-button" [href]="saveResult.playlistUrl" target="_blank" rel="noopener noreferrer"><i class="pi pi-spotify"></i> Open in Spotify</a>
       <button type="button" class="leave-button" (click)="leave()">Leave room</button>
     </ng-container>

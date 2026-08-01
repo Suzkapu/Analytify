@@ -110,4 +110,24 @@ describe('ComparePlaylistSourceService', () => {
     expect(result.tracks.map(track => track.id)).toEqual(['cloud-track']);
     http.expectNone(() => true);
   });
+
+  it('combines multiple cached playlists and removes duplicate tracks', async () => {
+    values['main-user_first'] = JSON.stringify([{tracks: [
+      {id: 'a', name: 'A', artists: [{id: 'artist', name: 'Artist'}]},
+      {id: 'shared', name: 'Shared', artists: [{id: 'artist', name: 'Artist'}]}
+    ]}]);
+    values['main-user_second'] = JSON.stringify([{tracks: [
+      {id: 'shared', name: 'Shared', artists: [{id: 'artist', name: 'Artist'}]},
+      {id: 'b', name: 'B', artists: [{id: 'artist', name: 'Artist'}]}
+    ]}]);
+
+    const result = await service.loadMainSelection([
+      {id: 'first', name: 'First', imageUrl: '', total: 2, ownerName: ''},
+      {id: 'second', name: 'Second', imageUrl: '', total: 2, ownerName: ''}
+    ], 'host-token', 'main-user');
+
+    expect(result.source).toBe('local');
+    expect(result.tracks.map(track => track.id)).toEqual(['a', 'shared', 'b']);
+    http.expectNone(() => true);
+  });
 });

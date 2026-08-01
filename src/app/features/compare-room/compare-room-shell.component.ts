@@ -5,8 +5,10 @@ import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-
 import {CompareRoomCoordinatorService} from '@core/compare-room/compare-room-coordinator.service';
 import {
   CompareInvitation,
+  CompareMergeMode,
   CompareMergeProposal,
   CompareParticipant,
+  CompareParticipantMergeStats,
   ComparePlaylist,
   CompareTrack
 } from '@core/compare-room/compare-room.models';
@@ -24,7 +26,10 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
   sharedTracks: CompareTrack[] = [];
   proposal: CompareMergeProposal | null = null;
   mainPlaylists: ComparePlaylist[] = [];
+  mainSelectedPlaylistIds: string[] = [];
+  mainPlaylistQuery = '';
   mainParticipantId = '';
+  mergeMode: CompareMergeMode = 'intersection';
   playlistName = '';
   errorMessage = '';
   isStarting = true;
@@ -89,13 +94,26 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     }
   }
 
-  async selectMainPlaylist(playlistId: string): Promise<void> {
+  toggleMainPlaylist(playlistId: string, checked: boolean): void {
+    this.mainSelectedPlaylistIds = checked
+      ? [...this.mainSelectedPlaylistIds, playlistId]
+      : this.mainSelectedPlaylistIds.filter(id => id !== playlistId);
+  }
+
+  isMainPlaylistSelected(playlistId: string): boolean {
+    return this.mainSelectedPlaylistIds.includes(playlistId);
+  }
+
+  async applyMainPlaylistSelection(): Promise<void> {
     const participant = this.participants.find(item => item.id === this.mainParticipantId);
-    const playlist = this.mainPlaylists.find(item => item.id === playlistId);
-    if (!participant || !playlist) return;
+    const playlists = this.mainSelectedPlaylistIds
+      .map(id => this.mainPlaylists.find(item => item.id === id))
+      .filter((playlist): playlist is ComparePlaylist => !!playlist);
+    if (!participant || playlists.length === 0) return;
     const loadingParticipant: CompareParticipant = {
       ...participant,
-      playlist,
+      playlist: playlists[0],
+      playlists,
       tracks: [],
       status: 'loading',
       error: undefined,
@@ -103,8 +121,8 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     };
     this.coordinator.updateLocalParticipant(loadingParticipant);
     try {
-      const result = await this.source.loadMainTracks(
-        playlist,
+      const result = await this.source.loadMainSelection(
+        playlists,
         await this.getMainAccessToken(),
         this.auth.getUserId() || participant.spotifyUserId
       );
@@ -121,6 +139,12 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
         error: this.describeError(error)
       });
     }
+  }
+
+  setMergeMode(mode: CompareMergeMode): void {
+    if (this.mergeMode === mode) return;
+    this.mergeMode = mode;
+    if (this.proposal) this.coordinator.prepareProposal(this.playlistName, this.mergeMode);
   }
 
   async addParticipant(): Promise<void> {
@@ -149,16 +173,18 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
   prepareResult(): void {
     this.isPreparing = true;
     this.errorMessage = '';
-    const proposal = this.coordinator.prepareProposal(this.playlistName);
+    const proposal = this.coordinator.prepareProposal(this.playlistName, this.mergeMode);
     if (!proposal && this.coordinator.canPrepareResult()) {
-      this.errorMessage = 'No songs are shared by everyone. Remove a participant or select different playlists.';
+      this.errorMessage = this.mergeMode === 'intersection'
+        ? 'No songs are shared by everyone. Remove a participant or select different playlists.'
+        : 'The selected playlists do not contain any usable Spotify tracks.';
     }
     this.isPreparing = false;
   }
 
   updateProposalName(): void {
     if (!this.proposal) return;
-    this.coordinator.prepareProposal(this.playlistName);
+    this.coordinator.prepareProposal(this.playlistName, this.mergeMode);
   }
 
   async execute(): Promise<void> {
@@ -172,7 +198,7 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
         const result = await this.spotify.createPlaylist(
           await this.getMainAccessToken(),
           this.proposal.name,
-          this.proposal.description,
+          this.proposal.descriptionsByParticipant?.[mainParticipant.id] || this.proposal.description,
           this.proposal.tracks
         );
         this.coordinator.setLocalSaveResult(mainParticipant.id, result);
@@ -230,6 +256,26 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
 
   participantForInvitation(invitation: CompareInvitation): CompareParticipant | undefined {
     return this.participants.find(participant => participant.id === invitation.claimedBy);
+  }
+
+  participantPlaylists(participant: CompareParticipant): ComparePlaylist[] {
+    if (participant.playlists?.length) return participant.playlists;
+    return participant.playlist ? [participant.playlist] : [];
+  }
+
+  participantPlaylistLabel(participant: CompareParticipant): string {
+    const playlists = this.participantPlaylists(participant);
+    return playlists.length === 1 ? playlists[0].name : `${playlists.length} playlists selected`;
+  }
+
+  proposalStatsFor(participantId: string): CompareParticipantMergeStats | undefined {
+    return this.proposal?.participantStats?.find(stats => stats.participantId === participantId);
+  }
+
+  get filteredMainPlaylists(): ComparePlaylist[] {
+    const query = this.mainPlaylistQuery.trim().toLocaleLowerCase();
+    if (!query) return this.mainPlaylists;
+    return this.mainPlaylists.filter(playlist => playlist.name.toLocaleLowerCase().includes(query));
   }
 
   get readyCount(): number {

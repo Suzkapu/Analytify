@@ -26,8 +26,8 @@
       <div class="room-heading">
         <div>
           <span class="eyebrow">Room {{ coordinator.currentRoomId | slice:0:8 }}</span>
-          <h2>Choose one playlist per person</h2>
-          <p>Only songs found in every selected playlist will be included.</p>
+          <h2>Choose playlists for each person</h2>
+          <p>Each participant can contribute one or more playlists, including Liked Songs.</p>
         </div>
         <button type="button" class="add-participant-button" (click)="addParticipant()" [disabled]="isAddingParticipant">
           <i class="pi" [ngClass]="isAddingParticipant ? 'pi-spin pi-spinner' : 'pi-user-plus'"></i>
@@ -47,22 +47,28 @@
             <span class="status-pill" [attr.data-status]="participant.status">{{ participant.status }}</span>
           </div>
 
-          <label *ngIf="participant.isMainProfile" class="playlist-field">
-            <span>Select playlist</span>
-            <select [value]="participant.playlist?.id || ''" (change)="selectMainPlaylist($any($event.target).value)">
-              <option value="" disabled>Choose a playlist…</option>
-              <option *ngFor="let playlist of mainPlaylists" [value]="playlist.id">
-                {{ playlist.name }} ({{ playlist.total }})
-              </option>
-            </select>
-          </label>
+          <div *ngIf="participant.isMainProfile" class="playlist-field">
+            <span>Select one or more playlists</span>
+            <input class="playlist-search" type="search" [(ngModel)]="mainPlaylistQuery" placeholder="Search your playlists…" [disabled]="participant.status === 'loading'">
+            <div class="playlist-options" role="group" aria-label="Select playlists to contribute">
+              <label *ngFor="let playlist of filteredMainPlaylists">
+                <input type="checkbox" [checked]="isMainPlaylistSelected(playlist.id)" [disabled]="participant.status === 'loading'" (change)="toggleMainPlaylist(playlist.id, $any($event.target).checked)">
+                <span>{{ playlist.name }}</span>
+                <small>{{ playlist.total }} songs</small>
+              </label>
+            </div>
+            <button type="button" class="selection-button" (click)="applyMainPlaylistSelection()" [disabled]="mainSelectedPlaylistIds.length === 0 || participant.status === 'loading'">
+              <i class="pi" [ngClass]="participant.status === 'loading' ? 'pi-spin pi-spinner' : 'pi-check'"></i>
+              Use {{ mainSelectedPlaylistIds.length }} selected {{ mainSelectedPlaylistIds.length === 1 ? 'playlist' : 'playlists' }}
+            </button>
+          </div>
 
-          <div *ngIf="participant.playlist" class="selected-playlist">
-            <img *ngIf="participant.playlist.imageUrl" [src]="participant.playlist.imageUrl" alt="">
-            <div class="playlist-placeholder" *ngIf="!participant.playlist.imageUrl"><i class="pi pi-list"></i></div>
+          <div *ngIf="participantPlaylists(participant).length" class="selected-playlist">
+            <img *ngIf="participantPlaylists(participant)[0].imageUrl" [src]="participantPlaylists(participant)[0].imageUrl" alt="">
+            <div class="playlist-placeholder" *ngIf="!participantPlaylists(participant)[0].imageUrl"><i class="pi pi-list"></i></div>
             <div>
-              <strong>{{ participant.playlist.name }}</strong>
-              <span>{{ participant.tracks.length }} usable tracks<span *ngIf="participant.dataSource"> · {{ participant.dataSource }}</span></span>
+              <strong>{{ participantPlaylistLabel(participant) }}</strong>
+              <span>{{ participant.tracks.length }} unique usable tracks from {{ participantPlaylists(participant).length }} {{ participantPlaylists(participant).length === 1 ? 'playlist' : 'playlists' }}<span *ngIf="participant.dataSource"> · {{ participant.dataSource }}</span></span>
             </div>
           </div>
 
@@ -100,12 +106,22 @@
       <section class="merge-panel">
         <div class="merge-icon"><i class="pi pi-clone"></i></div>
         <div class="merge-copy">
-          <span class="eyebrow">Exact matches</span>
-          <h2>Songs everyone has</h2>
+          <span class="eyebrow">{{ mergeMode === 'intersection' ? 'Exact matches' : 'Complete collection' }}</span>
+          <h2>{{ mergeMode === 'intersection' ? 'Songs everyone has' : 'All songs from everyone' }}</h2>
           <p>{{ readyCount }} of {{ participantSlotCount }} participant slots ready</p>
         </div>
+        <div class="merge-mode-picker" role="radiogroup" aria-label="Merge mode">
+          <label [class.active]="mergeMode === 'intersection'">
+            <input type="radio" name="merge-mode" [checked]="mergeMode === 'intersection'" (change)="setMergeMode('intersection')">
+            <span><strong>Shared only</strong><small>Default · in every selection</small></span>
+          </label>
+          <label [class.active]="mergeMode === 'union'">
+            <input type="radio" name="merge-mode" [checked]="mergeMode === 'union'" (change)="setMergeMode('union')">
+            <span><strong>All songs</strong><small>Combine and remove duplicates</small></span>
+          </label>
+        </div>
         <button type="button" class="primary-button" (click)="prepareResult()" [disabled]="!coordinator.canPrepareResult() || isPreparing">
-          Compare shared songs
+          {{ mergeMode === 'intersection' ? 'Compare shared songs' : 'Merge all songs' }}
         </button>
       </section>
 
@@ -113,13 +129,18 @@
         <div class="result-summary">
           <div>
             <span class="result-count">{{ sharedTracks.length }}</span>
-            <span>songs shared by everyone</span>
+            <span>{{ proposal.mode === 'intersection' ? 'songs shared by everyone' : 'unique songs combined' }}</span>
           </div>
           <label>
             <span>Playlist name</span>
             <input type="text" [(ngModel)]="playlistName" maxlength="100" (change)="updateProposalName()">
           </label>
         </div>
+
+        <p *ngIf="proposalStatsFor(mainParticipantId) as mainStats" class="result-stat">
+          <i class="pi pi-chart-pie"></i>
+          {{ mainStats.includedTrackCount }} of your {{ mainStats.selectedTrackCount }} unique selected tracks are included ({{ mainStats.includedPercentage }}%) from {{ mainStats.selectedPlaylistCount }} {{ mainStats.selectedPlaylistCount === 1 ? 'playlist' : 'playlists' }}.
+        </p>
 
         <div class="track-preview">
           <a *ngFor="let track of sharedTracks | slice:0:12; trackBy: trackTrack" [href]="track.spotifyUrl" target="_blank" rel="noopener noreferrer" class="track-row">
@@ -129,7 +150,7 @@
             <i class="pi pi-external-link"></i>
           </a>
         </div>
-        <p *ngIf="sharedTracks.length > 12" class="more-tracks">+ {{ sharedTracks.length - 12 }} more shared songs</p>
+        <p *ngIf="sharedTracks.length > 12" class="more-tracks">+ {{ sharedTracks.length - 12 }} more {{ proposal.mode === 'intersection' ? 'shared' : 'merged' }} songs</p>
 
         <div class="approval-bar">
           <span *ngIf="awaitingApprovals.length"><i class="pi pi-clock"></i> Waiting for {{ awaitingApprovals.join(', ') }}</span>

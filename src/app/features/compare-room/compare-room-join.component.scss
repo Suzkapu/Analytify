@@ -21,8 +21,17 @@
 .profile-row span, .profile-row strong { display: block; }
 .profile-row span { color: #89928c; font-size: .72rem; }
 .playlist-select { display: grid; gap: .5rem; text-align: left; margin-top: 1.4rem; }
-.playlist-select span { color: #9da69f; font-size: .78rem; font-weight: 700; }
-.playlist-select select { width: 100%; padding: .9rem; color: #fff; background: #111412; border: 1px solid rgba(255,255,255,.12); border-radius: 12px; font: inherit; }
+.playlist-select > span { color: #9da69f; font-size: .78rem; font-weight: 700; }
+.playlist-search { width: 100%; box-sizing: border-box; padding: .9rem; color: #fff; background: #111412; border: 1px solid rgba(255,255,255,.12); border-radius: 12px; font: inherit; }
+.playlist-options { max-height: 230px; overflow: auto; border: 1px solid rgba(255,255,255,.1); border-radius: 12px; background: #111412; }
+.playlist-options label { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: .65rem; padding: .7rem; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,.05); }
+.playlist-options label:last-child { border-bottom: 0; }
+.playlist-options label:hover { background: rgba(255,255,255,.04); }
+.playlist-options input { accent-color: #1ed760; }
+.playlist-options span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #eef2ef; font-size: .78rem; }
+.playlist-options small { margin: 0; color: #78817b; font-size: .66rem; white-space: nowrap; }
+.selection-button { margin-top: .25rem; min-height: 46px; }
+.proposal-stat { padding: .8rem; border-radius: 12px; color: #b8dfc5 !important; background: rgba(30,215,96,.08); font-size: .82rem; }
 .cache-note, .loading-note, .ready-note { margin-top: 1rem; padding: .9rem; border-radius: 12px; font-size: .82rem; }
 .cache-note { background: rgba(74,144,245,.1); color: #9bc3ff; }
 .loading-note { background: rgba(255,255,255,.05); color: #bec5c0; }

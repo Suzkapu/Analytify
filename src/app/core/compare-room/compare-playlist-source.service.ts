@@ -71,6 +71,26 @@ export class ComparePlaylistSourceService {
     return {tracks: await this.spotify.getPlaylistTracks(playlist, accessToken), source: 'spotify'};
   }
 
+  async loadMainSelection(
+    playlists: ComparePlaylist[],
+    accessToken: string,
+    spotifyUserId: string
+  ): Promise<{tracks: CompareTrack[]; source: 'local' | 'cloud' | 'spotify'}> {
+    const tracks: CompareTrack[] = [];
+    const seen = new Set<string>();
+    const sources = new Set<'local' | 'cloud' | 'spotify'>();
+    for (const playlist of playlists) {
+      const result = await this.loadMainTracks(playlist, accessToken, spotifyUserId);
+      sources.add(result.source);
+      result.tracks.forEach(track => {
+        if (seen.has(track.id)) return;
+        seen.add(track.id);
+        tracks.push(track);
+      });
+    }
+    return {tracks, source: this.combinedSource(sources)};
+  }
+
   private parsePlaylists(raw: string | null): ComparePlaylist[] | null {
     if (!raw) return null;
     try {
@@ -97,5 +117,11 @@ export class ComparePlaylistSourceService {
 
   private stripDevSuffix(userId: string): string {
     return userId.endsWith('_dev') ? userId.slice(0, -4) : userId;
+  }
+
+  private combinedSource(sources: Set<'local' | 'cloud' | 'spotify'>): 'local' | 'cloud' | 'spotify' {
+    if (sources.has('spotify')) return 'spotify';
+    if (sources.has('cloud')) return 'cloud';
+    return 'local';
   }
 }
