@@ -21,10 +21,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '20'
           cache: 'npm'
@@ -35,25 +35,13 @@ jobs:
       - name: Verify tests and production build
         run: npm run verify:ci
 
-      - name: Deploy to Oracle Server via SSH/rsync
-        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
-        uses: easingthemes/ssh-deploy@main
-        with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          ARGS: "-rlgoDzvc -i --delete"
-          SOURCE: "dist/spoti-front/"
-          REMOTE_HOST: ${{ env.DEPLOY_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: ${{ secrets.TARGET_DIR }}
-          EXCLUDE: "/node_modules/"
+      - name: Validate deployment script
+        run: bash -n scripts/deploy.sh
 
-      - name: Deploy daily pull script to Oracle Server via SSH/rsync
+      - name: Deploy verified build to Oracle Server
         if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
-        uses: easingthemes/ssh-deploy@main
-        with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          ARGS: "-rlgoDzvc -i"
-          SOURCE: "scripts/daily-pull.js"
-          REMOTE_HOST: ${{ env.DEPLOY_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: "${{ secrets.TARGET_DIR }}/../analytify-sync/"
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          DEPLOY_USER: ${{ secrets.REMOTE_USER }}
+          DEPLOY_TARGET: ${{ secrets.TARGET_DIR }}
+        run: bash scripts/deploy.sh
