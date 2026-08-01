@@ -9,6 +9,11 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      # This hostname is public and should not be hidden in a repository secret.
+      # Keeping it here also prevents a malformed REMOTE_HOST secret from making
+      # ssh interpret a URL or other value as a DNS name.
+      DEPLOY_HOST: analytify.dynv6.net
 
     steps:
       - name: Checkout repository
@@ -32,7 +37,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           ARGS: "-rlgoDzvc -i --delete"
           SOURCE: "dist/spoti-front/"
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_HOST: ${{ env.DEPLOY_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.TARGET_DIR }}
           EXCLUDE: "/node_modules/"
@@ -43,6 +48,6 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           ARGS: "-rlgoDzvc -i"
           SOURCE: "scripts/daily-pull.js"
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_HOST: ${{ env.DEPLOY_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: "${{ secrets.TARGET_DIR }}/../analytify-sync/"
