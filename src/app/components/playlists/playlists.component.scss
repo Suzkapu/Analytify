@@ -107,7 +107,33 @@
   }
 
   .playlists-controls-bar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
     padding: 10px 12px 14px;
+
+    .controls-left,
+    .controls-right {
+      width: auto;
+      min-width: 0;
+    }
+
+    .controls-right {
+      button,
+      ::ng-deep .p-button {
+        flex: none;
+        padding: 0 12px !important;
+      }
+    }
+
+    .sort-label-desktop {
+      display: none;
+    }
+
+    .sort-label-mobile {
+      display: inline !important;
+    }
   }
 
   .item-card .card-content {
@@ -278,4 +304,8 @@
   text-align: center;
   margin-top: 20px;
   font-weight: bold;
+}
+
+.sort-label-mobile {
+  display: none;
 }

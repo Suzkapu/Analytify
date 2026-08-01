@@ -116,6 +116,10 @@ select {
     justify-content: center;
     align-items: center;
     flex: 0 0 auto;
+
+    .mobile-page-title {
+      display: none;
+    }
   }
 
   .header-right {
@@ -1243,12 +1247,60 @@ h6 {
 
   .app-header {
     min-height: 60px;
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    flex-wrap: nowrap;
+    gap: 8px;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
     padding-left: max(12px, env(safe-area-inset-left)) !important;
     padding-right: max(12px, env(safe-area-inset-right)) !important;
+
+    .header-left {
+      width: 44px;
+      min-width: 0;
+      flex: none;
+    }
+
+    .header-logo {
+      width: 44px;
+      min-height: 44px;
+      justify-content: flex-start;
+
+      .logo-text {
+        display: none;
+      }
+    }
 
     .header-logo img {
       width: 30px;
       height: 30px;
+    }
+
+    .header-center {
+      width: auto;
+      min-width: 0;
+      order: initial;
+      margin-top: 0;
+
+      .mobile-page-title {
+        display: block;
+        max-width: 100%;
+        overflow: hidden;
+        color: #ffffff;
+        font-size: 1.05rem;
+        font-weight: 800;
+        line-height: 1.2;
+        text-align: center;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    .header-right {
+      width: 44px;
+      min-width: 0;
+      justify-content: flex-end;
     }
 
     .user-profile-header img.profile-img,
@@ -1341,6 +1393,23 @@ h6 {
       max-width: 100%;
     }
   }
+
+  // Desktop headings repeat the sticky title and consume valuable phone space.
+  .playlists-top-bar,
+  .artists-top-bar,
+  .analysis-top-bar,
+  .stats-page-heading,
+  .history-page-heading {
+    display: none !important;
+  }
+
+  app-artist-details .profile-header {
+    margin-bottom: 8px !important;
+
+    .name {
+      display: none !important;
+    }
+  }
 }
 
 @media (max-width: 420px) {
@@ -1374,11 +1443,25 @@ h6 {
   }
 
   app-user-stats {
+    .stats-dashboard-container {
+      margin-top: 10px;
+    }
+
+    .stats-selectors-container {
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .stats-selectors-row {
+      gap: 10px;
+      padding-bottom: 12px;
+    }
+
     .stats-range-controls {
       width: 100%;
       flex-direction: column;
       align-items: stretch;
-      gap: 10px;
+      gap: 8px;
     }
 
     .time-range-toggles button {
@@ -1389,21 +1472,73 @@ h6 {
 
     .history-select-container {
       width: 100%;
-      display: grid;
+      display: grid !important;
       grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-      flex-wrap: nowrap;
-      gap: 8px;
+      flex-wrap: nowrap !important;
+      gap: 6px;
 
       .spotify-custom-dropdown,
       .dropdown-trigger-btn {
-        width: 100%;
-        min-width: 0;
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: 100%;
+      }
+
+      .dropdown-trigger-btn {
+        width: 100% !important;
+        padding: 0 8px;
+        gap: 4px;
+        font-size: 0.78rem;
       }
 
       .dropdown-trigger-btn span {
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+      }
+
+      .compare-vs-text {
+        font-size: 0.7rem;
+        text-align: center;
+      }
+
+      .dropdown-menu-overlay {
+        width: min(240px, calc(100vw - 24px));
+        min-width: 180px;
+      }
+
+      > .spotify-custom-dropdown:first-child .dropdown-menu-overlay {
+        right: auto;
+        left: 0;
+      }
+
+      > .spotify-custom-dropdown:last-child .dropdown-menu-overlay {
+        right: 0;
+        left: auto;
+      }
+    }
+
+    .category-tabs {
+      display: grid !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 0;
+
+      button,
+      .p-button {
+        min-width: 0;
+        min-height: 44px;
+        padding: 6px 4px !important;
+        gap: 5px !important;
+        font-size: 0.78rem !important;
+      }
+
+      .tab-label-desktop {
+        display: none;
+      }
+
+      .tab-label-mobile {
+        display: inline;
       }
     }
 
@@ -1431,6 +1566,14 @@ h6 {
   }
 
   app-listening-history {
+    .stats-dashboard-container {
+      margin-top: 8px;
+    }
+
+    .stats-content-wrapper {
+      margin-top: 8px !important;
+    }
+
     .listening-history-list {
       gap: 8px;
     }
@@ -1455,22 +1598,10 @@ h6 {
 
 @media (max-width: 420px) {
   app-user-stats {
-    .stats-selectors-row h2 {
-      font-size: 1.45rem !important;
-    }
-
     .category-tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-
       button,
       .p-button {
-        min-width: 0;
-        min-height: 46px;
-
-        &:last-child {
-          grid-column: 1 / -1;
-        }
+        font-size: 0.75rem !important;
       }
     }
 

@@ -18,6 +18,9 @@
     </nav>
   </div>
   <div class="header-center">
+    <span *ngIf="mobileTitle" class="mobile-page-title" role="heading" aria-level="1" [title]="mobileTitle">
+      {{ mobileTitle }}
+    </span>
   </div>
   <div class="header-right">
 

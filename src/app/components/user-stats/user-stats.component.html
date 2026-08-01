@@ -1,4 +1,4 @@
-<app-header></app-header>
+<app-header mobileTitle="Your Top Listening"></app-header>
 
 <div class="stats-dashboard-container">
 
@@ -7,7 +7,7 @@
 
     <!-- Time Range Selector Row -->
     <div class="stats-selectors-row">
-      <div>
+      <div class="stats-page-heading">
         <span
           style="font-size: 0.8rem; font-weight: 800; color: #1db954; text-transform: uppercase; letter-spacing: 1px;">Spotify
           Analytics</span>
@@ -108,19 +108,25 @@
         [class.p-button-outlined]="selectedCategory !== 'tracks'"
         [class.p-button-secondary]="selectedCategory !== 'tracks'"
         style="border-radius: 8px !important; padding: 8px 16px !important; display: flex; align-items: center; gap: 8px; font-size: 0.9rem !important;">
-        <i class="pi pi-star-fill"></i> Top 100 Songs
+        <i class="pi pi-star-fill"></i>
+        <span class="tab-label-desktop">Top 100 Songs</span>
+        <span class="tab-label-mobile">Songs</span>
       </button>
       <button (click)="changeCategory('artists')" class="p-button"
         [class.p-button-outlined]="selectedCategory !== 'artists'"
         [class.p-button-secondary]="selectedCategory !== 'artists'"
         style="border-radius: 8px !important; padding: 8px 16px !important; display: flex; align-items: center; gap: 8px; font-size: 0.9rem !important;">
-        <i class="pi pi-users"></i> Top Artists
+        <i class="pi pi-users"></i>
+        <span class="tab-label-desktop">Top Artists</span>
+        <span class="tab-label-mobile">Artists</span>
       </button>
       <button (click)="changeCategory('genres')" class="p-button"
         [class.p-button-outlined]="selectedCategory !== 'genres'"
         [class.p-button-secondary]="selectedCategory !== 'genres'"
         style="border-radius: 8px !important; padding: 8px 16px !important; display: flex; align-items: center; gap: 8px; font-size: 0.9rem !important;">
-        <i class="pi pi-tags"></i> Top Genres
+        <i class="pi pi-tags"></i>
+        <span class="tab-label-desktop">Top Genres</span>
+        <span class="tab-label-mobile">Genres</span>
       </button>
     </div>
   </div>
