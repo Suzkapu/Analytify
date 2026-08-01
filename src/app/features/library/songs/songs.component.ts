@@ -33,6 +33,7 @@ export class SongsComponent implements OnInit, OnDestroy {
   playlistAlbums: any[] = [];
   filteredAlbums: any[] = [];
   selectedAlbum: any | null = null;
+  private albumListScrollPosition = 0;
   trackSearchText: string = '';
   albumSearchText: string = '';
   albumSortOrder: 'asc' | 'desc' = 'desc';
@@ -616,22 +617,24 @@ export class SongsComponent implements OnInit, OnDestroy {
   }
 
   openAlbumDetails(album: any) {
+    this.albumListScrollPosition = window.scrollY;
     this.selectedAlbum = {
       ...album,
       tracks: [...(album.tracks || [])].sort((a: any, b: any) =>
         (a.playlist_index || 0) - (b.playlist_index || 0)
       )
     };
-    setTimeout(() => {
-      document.querySelector('.album-detail-view')?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    });
+    // The grid item can be far down the page. Reset immediately so the sticky
+    // app header cannot cover a partially completed smooth scroll transition.
+    window.scrollTo({top: 0, behavior: 'auto'});
   }
 
   closeAlbumDetails() {
     this.selectedAlbum = null;
+    const previousPosition = this.albumListScrollPosition;
+    requestAnimationFrame(() => {
+      window.scrollTo({top: previousPosition, behavior: 'auto'});
+    });
   }
 
   onAlbumCardKeydown(event: KeyboardEvent, album: any) {

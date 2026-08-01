@@ -68,6 +68,11 @@ describe('SongsComponent', () => {
   });
 
   it('opens and closes the in-app album songs view', () => {
+    const scrollTo = spyOn(window, 'scrollTo') as jasmine.Spy;
+    spyOn(window, 'requestAnimationFrame').and.callFake(callback => {
+      callback(0);
+      return 1;
+    });
     const album = {
       id: 'album-a',
       tracks: [
@@ -78,6 +83,7 @@ describe('SongsComponent', () => {
 
     component.openAlbumDetails(album);
     expect(component.selectedAlbum.tracks.map((track: any) => track.id)).toEqual(['first', 'later']);
+    expect(scrollTo).toHaveBeenCalledWith({top: 0, behavior: 'auto'});
 
     component.closeAlbumDetails();
     expect(component.selectedAlbum).toBeNull();

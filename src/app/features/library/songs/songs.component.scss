@@ -688,11 +688,14 @@
 }
 
 .album-detail-view {
+  align-items: stretch;
+  max-width: 800px;
   margin-top: 20px;
   animation: fadeIn 0.25s ease-out;
 }
 
 .album-detail-back {
+  align-self: flex-start;
   min-height: 40px;
   display: inline-flex;
   align-items: center;
@@ -788,6 +791,15 @@
     padding: 10px;
   }
 
+  .album-detail-view {
+    margin-top: 14px;
+  }
+
+  .album-detail-back {
+    min-height: 44px;
+    padding: 0 12px;
+  }
+
   .album-detail-header {
     gap: 14px;
     margin-bottom: 18px;
@@ -876,9 +888,9 @@
   }
 
   .album-detail-back {
-    width: 100%;
+    width: auto;
     min-height: 44px;
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .album-detail-header {
