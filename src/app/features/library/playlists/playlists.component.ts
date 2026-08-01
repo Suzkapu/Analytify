@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {SpotifyDataService} from "@core/data-access/spotify/spotify-data.service";
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {StorageService} from "@core/data-access/storage/storage.service";
+import {firstValueFrom} from 'rxjs';
 
 @Component({
   selector: 'app-playlists', templateUrl: './playlists.component.html', styleUrls: ['./playlists.component.scss'],
@@ -13,6 +14,7 @@ export class PlaylistsComponent {
   filteredPlaylists: any[] = [];
   searchText: string = '';
   sortOrder: 'asc' | 'desc' | 'none' = 'none';
+  isRefreshingPlaylists = false;
 
   constructor(
     private route: ActivatedRoute, 
@@ -31,31 +33,13 @@ export class PlaylistsComponent {
     });
   }
 
-  isCacheExpired(lastUpdatedStr: string | null): boolean {
-    if (!lastUpdatedStr) return true;
-    const lastUpdated = parseInt(lastUpdatedStr, 10);
-    if (isNaN(lastUpdated)) return true;
-
-    const now = new Date();
-    const cutoff = new Date(now);
-    cutoff.setHours(1, 0, 0, 0); // 1:00 AM today
-    if (now.getTime() < cutoff.getTime()) {
-      // If we haven't reached 1 AM today yet, the most recent cutoff was 1 AM yesterday
-      cutoff.setDate(cutoff.getDate() - 1);
-    }
-    return lastUpdated < cutoff.getTime();
-  }
-
   async loadPlaylists() {
     const userId = this.authService.getUserId() || 'anonymous';
-    const supabaseUserId = this.authService.getSupabaseUserId();
     const storageKey = `${userId}_playlists`;
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
     const profileIdKey = `${userId}_spotify_profile_id`;
     const isBackupActive = this.authService.isBackupActive();
     let storedPlaylists = this.storageService.getItem(storageKey);
-    let lastUpdated = this.storageService.getItem(lastUpdatedKey);
-    let isExpired = this.isCacheExpired(lastUpdated);
     let parsedPlaylists: any[] = [];
     let isParseError = false;
 
@@ -87,18 +71,16 @@ export class PlaylistsComponent {
 
     parseCachedPlaylists();
 
-    // A stale/missing local dataset gets one feature-scoped Supabase lookup
-    // before Spotify is contacted.
-    if ((!storedPlaylists || isExpired || isParseError) && isBackupActive) {
+    // The cached list paints immediately. If it is absent or corrupt, make one
+    // feature-scoped Supabase read before the unconditional Spotify refresh.
+    if ((!storedPlaylists || isParseError) && isBackupActive) {
       await this.storageService.restoreItemsFromCloud([storageKey, lastUpdatedKey]);
       storedPlaylists = this.storageService.getItem(storageKey);
-      lastUpdated = this.storageService.getItem(lastUpdatedKey);
-      isExpired = this.isCacheExpired(lastUpdated);
       parseCachedPlaylists();
     }
 
-    if (storedPlaylists && !isExpired && !isParseError) {
-      console.log('[Playlists] Loading the playlist list from the local IndexedDB cache.');
+    if (storedPlaylists && !isParseError) {
+      console.log('[Playlists] Painting the playlist list from cache before refreshing Spotify.');
       this.playlists = parsedPlaylists;
 
       // Sync Favourite Tracks total with the latest loaded amount if available
@@ -122,53 +104,61 @@ export class PlaylistsComponent {
       }
 
       this.filterPlaylists();
-    } else {
-      const reason = !storedPlaylists ? 'no local cache' : (isExpired ? 'cache expired' : 'unknown');
-      console.log(`[Playlists] Cache missing or expired (reason: ${reason}, backup active: ${isBackupActive}). Loading playlists from Spotify API`);
-      this.spotifyDataService.getAccessibleUserPlaylists().subscribe({
-        next: (playlists: any) => {
-          if (playlists.currentUserId) {
-            this.storageService.setItem(profileIdKey, playlists.currentUserId);
-          }
-          this.playlists = (playlists.items || []).map((playlist: any) => ({
-            ...playlist,
-            tracks: playlist.items || { total: 0 }
-          }));
+    }
 
-          // Get total amount of favourite tracks
-          this.spotifyDataService.getFavTracks(0, 1).subscribe({
-            next: (favTracks: any) => {
-              const favouriteTotal = Number.isFinite(favTracks?.total)
-                ? favTracks.total
-                : this.getCachedFavouriteTotal(userId, parsedPlaylists);
-              const favPlaylist = this.createFavouritePlaylist(favouriteTotal);
-              this.playlists = [favPlaylist, ...this.playlists];
-              this.storageService.setItem(`${userId}_fav_Amount`, JSON.stringify(favouriteTotal));
-              this.storageService.setItem(storageKey, JSON.stringify(this.playlists));
-              this.storageService.setItem(lastUpdatedKey, Date.now().toString());
-              this.filterPlaylists();
-            },
-            error: (err) => {
-              console.error('Failed to load favourite tracks count', err);
-              const favouriteTotal = this.getCachedFavouriteTotal(userId, parsedPlaylists);
-              const favPlaylist = this.createFavouritePlaylist(favouriteTotal);
-              this.playlists = [favPlaylist, ...this.playlists];
-              this.storageService.setItem(storageKey, JSON.stringify(this.playlists));
-              // The playlist list is current, but the failed liked-songs count
-              // must not overwrite a previously known total with zero.
-              this.storageService.setItem(lastUpdatedKey, Date.now().toString());
-              this.filterPlaylists();
-            }
-          });
-        },
-        error: (err) => {
-          console.error('Failed to load playlists from API:', err);
-          if (parsedPlaylists.length > 0) {
-            this.playlists = parsedPlaylists;
-            this.filterPlaylists();
-          }
-        }
-      });
+    await this.refreshPlaylistsFromSpotify(
+      userId,
+      storageKey,
+      lastUpdatedKey,
+      profileIdKey,
+      parsedPlaylists
+    );
+  }
+
+  private async refreshPlaylistsFromSpotify(
+    userId: string,
+    storageKey: string,
+    lastUpdatedKey: string,
+    profileIdKey: string,
+    cachedPlaylists: any[]
+  ): Promise<void> {
+    this.isRefreshingPlaylists = true;
+    const cachedProfileId = this.storageService.getItem(profileIdKey);
+    const authProfileId = userId !== 'anonymous' ? this.stripDevSuffix(userId) : undefined;
+    const knownProfileId = cachedProfileId || authProfileId;
+    try {
+      const response = await firstValueFrom(
+        this.spotifyDataService.getAccessibleUserPlaylists(knownProfileId)
+      );
+      if (response.currentUserId) {
+        this.storageService.setItem(profileIdKey, response.currentUserId);
+      }
+      const refreshedPlaylists = (response.items || []).map((playlist: any) => ({
+        ...playlist,
+        tracks: playlist.items || {total: 0}
+      }));
+
+      let favouriteTotal = this.getCachedFavouriteTotal(userId, cachedPlaylists);
+      try {
+        const favouriteTracks = await firstValueFrom(this.spotifyDataService.getFavTracks(0, 1));
+        if (Number.isFinite(favouriteTracks?.total)) favouriteTotal = favouriteTracks.total;
+      } catch (error) {
+        console.warn('[Playlists] Could not refresh Liked Songs count; keeping the cached count.', error);
+      }
+
+      this.playlists = [this.createFavouritePlaylist(favouriteTotal), ...refreshedPlaylists];
+      this.storageService.setItem(`${userId}_fav_Amount`, JSON.stringify(favouriteTotal));
+      this.storageService.setItem(storageKey, JSON.stringify(this.playlists));
+      this.storageService.setItem(lastUpdatedKey, Date.now().toString());
+      this.filterPlaylists();
+    } catch (error) {
+      console.error('[Playlists] Spotify refresh failed; keeping the cached playlist list.', error);
+      if (cachedPlaylists.length > 0 && this.playlists.length === 0) {
+        this.playlists = cachedPlaylists;
+        this.filterPlaylists();
+      }
+    } finally {
+      this.isRefreshingPlaylists = false;
     }
   }
 
@@ -252,6 +242,10 @@ export class PlaylistsComponent {
       },
       tracks: { total }
     };
+  }
+
+  private stripDevSuffix(userId: string): string {
+    return userId.endsWith('_dev') ? userId.slice(0, -4) : userId;
   }
 
 }

@@ -40,6 +40,20 @@ describe('SpotifyDataService', () => {
     expect(result.items.map((playlist: any) => playlist.id)).toEqual(['owned', 'shared']);
   });
 
+  it('skips the profile request when the Spotify user ID is already known', async () => {
+    const profileRequest = spyOn(service, 'getCurrentUser');
+    spyOn(service, 'getAllUserPlaylists').and.returnValue(of({
+      total: 1,
+      items: [{id: 'owned', owner: {id: 'current-user'}, collaborative: false}]
+    }));
+
+    const result = await firstValueFrom(service.getAccessibleUserPlaylists('current-user'));
+
+    expect(profileRequest).not.toHaveBeenCalled();
+    expect(result.currentUserId).toBe('current-user');
+    expect(result.items.map((playlist: any) => playlist.id)).toEqual(['owned']);
+  });
+
   it('normalizes playlist item payloads into the track shape used by the UI', async () => {
     spyOn(service, 'makeRequest').and.returnValue(of({
       id: 'playlist',

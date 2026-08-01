@@ -92,9 +92,11 @@ export class SpotifyDataService {
     );
   }
 
-  getAccessibleUserPlaylists(): Observable<any> {
+  getAccessibleUserPlaylists(knownUserId?: string): Observable<any> {
     return forkJoin({
-      user: this.getCurrentUser(),
+      // The app already persists the Spotify profile ID. Reusing it removes
+      // one /me request from every playlist-page refresh after first login.
+      user: knownUserId ? of({id: knownUserId}) : this.getCurrentUser(),
       playlists: this.getAllUserPlaylists()
     }).pipe(
       map(({ user, playlists }) => ({

@@ -7,6 +7,9 @@
       style="font-size: 0.8rem; font-weight: 800; color: #1db954; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px;">Spotify
       Analytics</span>
     <h2 style="margin: 0; font-weight: 800; color: #ffffff; font-size: 1.9rem;">Your Playlists</h2>
+    <small *ngIf="isRefreshingPlaylists" style="display: block; margin-top: 4px; color: #8d9690;">
+      <i class="pi pi-spin pi-spinner"></i> Checking Spotify for updates…
+    </small>
   </div>
 </div>
 
