@@ -142,6 +142,7 @@ describe('PlaylistsComponent', () => {
   });
 
   it('publishes a cache-first playlist snapshot and exposes its private claim link', async () => {
+    authService.isBackupActive.and.returnValue(true);
     const playlist = {id: 'party', name: 'Party', description: 'Songs', images: [{url: 'cover'}], tracks: {total: 1}};
     comparePlaylistSource.loadMainTracks.and.resolveTo({source: 'local', tracks: [compareTrack('track', 1)]});
     playlistSharing.createShare.and.resolveTo({
@@ -159,6 +160,28 @@ describe('PlaylistsComponent', () => {
       playlistName: 'Party'
     }));
     expect(component.shareLink).toContain('/shared-playlists/claim/secret-token');
+  });
+
+  it('does not open playlist sharing while Cloud Backup is disabled', async () => {
+    const playlist = {id: 'private', name: 'Private', tracks: {total: 1}};
+
+    component.openShareDialog(playlist);
+    await component.createShareLink();
+
+    expect(component.canSharePlaylists).toBeFalse();
+    expect(component.sharingPlaylist).toBeNull();
+    expect(playlistSharing.createShare).not.toHaveBeenCalled();
+  });
+
+  it('renders the playlist Share button only while Cloud Backup is enabled', () => {
+    component.filteredPlaylists = [{id: 'party', name: 'Party', tracks: {total: 1}}];
+
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.playlist-share-button')).toBeNull();
+
+    authService.isBackupActive.and.returnValue(true);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.playlist-share-button')).not.toBeNull();
   });
 
   function compareTrack(id: string, playlistIndex: number) {

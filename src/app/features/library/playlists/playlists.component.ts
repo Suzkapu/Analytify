@@ -336,7 +336,12 @@ export class PlaylistsComponent {
     this.mergeResult = null;
   }
 
+  get canSharePlaylists(): boolean {
+    return this.authService.isBackupActive();
+  }
+
   openShareDialog(playlist: any): void {
+    if (!this.canSharePlaylists) return;
     this.sharingPlaylist = playlist;
     this.shareLink = '';
     this.shareError = '';
@@ -353,6 +358,10 @@ export class PlaylistsComponent {
 
   async createShareLink(): Promise<void> {
     if (!this.sharingPlaylist || this.isCreatingShare) return;
+    if (!this.canSharePlaylists) {
+      this.shareError = 'Enable Cloud Backup before sharing a playlist.';
+      return;
+    }
     this.isCreatingShare = true;
     this.shareError = '';
     try {
