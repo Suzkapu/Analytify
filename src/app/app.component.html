@@ -1,7 +1,17 @@
+<div
+  *ngIf="isInitialNavigationLoading"
+  class="app-loading"
+  role="status"
+  aria-live="polite"
+  aria-label="Loading Analytify"
+>
+  <img src="assets/Analytify.png" alt="">
+  <div class="app-loading-spinner" aria-hidden="true"></div>
+</div>
+
 <router-outlet/>
 
 <!-- Floating Back to Top Button -->
 <button class="scroll-to-top-btn" (click)="scrollToTop()" [class.visible]="showScrollBtn" title="Back to Top">
   <i class="pi pi-arrow-up"></i>
 </button>
-

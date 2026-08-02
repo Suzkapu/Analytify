@@ -1,6 +1,8 @@
 import {Component, HostListener} from '@angular/core';
 import {SwUpdate, VersionReadyEvent} from '@angular/service-worker';
+import {NavigationEnd, NavigationError, Router} from '@angular/router';
 import {filter} from 'rxjs/operators';
+import {take} from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +12,20 @@ import {filter} from 'rxjs/operators';
 export class AppComponent {
   title = 'Spotify Artists Stats';
   showScrollBtn = false;
+  isInitialNavigationLoading: boolean;
 
-  constructor(private swUpdate: SwUpdate) {
+  constructor(private swUpdate: SwUpdate, private router: Router) {
+    this.isInitialNavigationLoading = !this.router.navigated;
+
+    if (this.isInitialNavigationLoading) {
+      this.router.events.pipe(
+        filter(event => event instanceof NavigationEnd || event instanceof NavigationError),
+        take(1)
+      ).subscribe(() => {
+        this.isInitialNavigationLoading = false;
+      });
+    }
+
     if (this.swUpdate.isEnabled) {
       this.swUpdate.versionUpdates.pipe(
         filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY')

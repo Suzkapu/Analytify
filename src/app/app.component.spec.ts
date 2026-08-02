@@ -1,9 +1,13 @@
 import {TestBed} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {SwUpdate} from '@angular/service-worker';
+import {NavigationEnd, Router} from '@angular/router';
+import {Subject} from 'rxjs';
 import {AppComponent} from './app.component';
 
 describe('AppComponent', () => {
+  const routerEvents = new Subject<NavigationEnd>();
+
   beforeEach(() => TestBed.configureTestingModule({
     imports: [RouterTestingModule],
     declarations: [AppComponent],
@@ -11,6 +15,13 @@ describe('AppComponent', () => {
       {
         provide: SwUpdate,
         useValue: { isEnabled: false }
+      },
+      {
+        provide: Router,
+        useValue: {
+          navigated: false,
+          events: routerEvents.asObservable()
+        }
       }
     ]
   }));
@@ -33,5 +44,17 @@ describe('AppComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('router-outlet')).not.toBeNull();
     expect(compiled.querySelector('.scroll-to-top-btn')).not.toBeNull();
+  });
+
+  it('should show a loading screen until the initial navigation finishes', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.app-loading')).not.toBeNull();
+
+    routerEvents.next(new NavigationEnd(1, '/', '/login'));
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.app-loading')).toBeNull();
   });
 });
