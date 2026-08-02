@@ -17,6 +17,9 @@ function toDailySnapshotDateKey(ts: number): string {
   return `${y}-${m}-${r}`;
 }
 
+type StatsCategory = 'tracks' | 'artists' | 'genres';
+type StatsTrend = { type: 'up' | 'down' | 'same' | 'new'; diff?: number };
+
 @Component({
   selector: 'app-user-stats',
   templateUrl: './user-stats.component.html',
@@ -547,6 +550,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       return {
         topTracks: this.topTracks.map(t => ({
           id: t.id,
+          linkedFromId: t.linked_from?.id || t.linkedFromId || '',
           name: t.name,
           artist: this.getTrackArtist(t),
           albumCover: this.getTrackCover(t),
@@ -667,8 +671,9 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       })),
       topTracks: this.topTracks.map(t => ({
         id: t.id,
+        linkedFromId: t.linked_from?.id || t.linkedFromId || '',
         name: t.name,
-        artist: t.artists && t.artists[0] ? t.artists[0].name : '',
+        artist: this.getTrackArtist(t),
         albumCover: t.album?.images && t.album.images[0] ? t.album.images[0].url : '',
         explicit: t.explicit || false,
         spotifyUrl: t.external_urls?.spotify || ''
@@ -923,7 +928,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   }
 
 
-  getTrend(item: any, currentIdx: number, category: string): { type: 'up' | 'down' | 'same' | 'new', diff?: number } {
+  getTrend(item: any, currentIdx: number, category: StatsCategory): StatsTrend {
     if (!this.historyData || this.historyData.length === 0) {
       return { type: 'same' };
     }
@@ -934,54 +939,126 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       return { type: 'same' };
     }
 
-    if (category === 'tracks') {
-      const prevTracks = prevSnapshot.topTracks || [];
-      const prevIdx = prevTracks.findIndex((t: any) => (t.id && item.id && t.id === item.id) || (t.name === item.name && t.artist === this.getTrackArtist(item)));
-      if (prevIdx === -1) {
-        return { type: 'new' };
+    const comparisonItems = this.getSnapshotItems(prevSnapshot, category);
+    const comparisonIdx = this.findStatsItemIndex(comparisonItems, item, category);
+    const selectedDateKey = this.getSnapshotDateKey(this.selectedSnapshotId);
+    const comparisonDateKey = this.getSnapshotDateKey(this.compareSnapshotId);
+
+    if (comparisonIdx === -1) {
+      // "New" is chronological, not just "missing from the chosen comparison".
+      // A returning item, an item from an older selected snapshot, or an item
+      // whose earlier snapshots are still loading must not get a false blue dot.
+      if (!selectedDateKey || !comparisonDateKey || selectedDateKey <= comparisonDateKey) {
+        return { type: 'same' };
       }
-      if (prevIdx > currentIdx) {
-        return { type: 'up', diff: prevIdx - currentIdx };
-      }
-      if (prevIdx < currentIdx) {
-        return { type: 'down', diff: currentIdx - prevIdx };
-      }
-      return { type: 'same' };
+      return this.getPriorAppearance(item, category, selectedDateKey) === 'absent'
+        ? { type: 'new' }
+        : { type: 'same' };
     }
 
-    if (category === 'artists') {
-      const prevArtists = prevSnapshot.topArtists || [];
-      const prevIdx = prevArtists.findIndex((a: any) => (a.id && item.id && a.id === item.id) || (a.name === item.name));
-      if (prevIdx === -1) {
-        return { type: 'new' };
-      }
-      if (prevIdx > currentIdx) {
-        return { type: 'up', diff: prevIdx - currentIdx };
-      }
-      if (prevIdx < currentIdx) {
-        return { type: 'down', diff: currentIdx - prevIdx };
-      }
-      return { type: 'same' };
-    }
+    // Always describe movement from the older snapshot to the newer one, even
+    // when the user selected the snapshots in reverse chronological order.
+    const selectedIsNewer = !selectedDateKey || !comparisonDateKey || selectedDateKey >= comparisonDateKey;
+    const olderIdx = selectedIsNewer ? comparisonIdx : currentIdx;
+    const newerIdx = selectedIsNewer ? currentIdx : comparisonIdx;
 
-    if (category === 'genres') {
-      const prevGenres = prevSnapshot.topGenres || [];
-      const prevIdx = prevGenres.findIndex((genre: any) =>
-        (typeof genre === 'string' ? genre : genre.name) === item.name
-      );
-      if (prevIdx === -1) {
-        return { type: 'new' };
-      }
-      if (prevIdx > currentIdx) {
-        return { type: 'up', diff: prevIdx - currentIdx };
-      }
-      if (prevIdx < currentIdx) {
-        return { type: 'down', diff: currentIdx - prevIdx };
-      }
-      return { type: 'same' };
+    if (newerIdx < olderIdx) {
+      return { type: 'up', diff: olderIdx - newerIdx };
     }
-
+    if (newerIdx > olderIdx) {
+      return { type: 'down', diff: newerIdx - olderIdx };
+    }
     return { type: 'same' };
+  }
+
+  private getSnapshotItems(snapshot: any, category: StatsCategory): any[] {
+    if (!snapshot) return [];
+    if (category === 'tracks') return snapshot.topTracks || [];
+    if (category === 'artists') return snapshot.topArtists || [];
+    return snapshot.topGenres || [];
+  }
+
+  private normalizeStatsIdentity(value: unknown): string {
+    return typeof value === 'string'
+      ? value.normalize('NFKC').trim().replace(/\s+/g, ' ').toLocaleLowerCase()
+      : '';
+  }
+
+  private getStatsItemName(item: any, category: StatsCategory): string {
+    if (category === 'genres' && typeof item === 'string') {
+      return this.normalizeStatsIdentity(item);
+    }
+    return this.normalizeStatsIdentity(item?.name);
+  }
+
+  private getTrackIdentityIds(track: any): string[] {
+    return [track?.id, track?.linked_from?.id, track?.linkedFromId]
+      .filter((id): id is string => typeof id === 'string' && id.length > 0);
+  }
+
+  private statsItemsMatch(left: any, right: any, category: StatsCategory): boolean {
+    if (!left || !right) return false;
+
+    if (category === 'tracks') {
+      const leftIds = this.getTrackIdentityIds(left);
+      const rightIds = new Set(this.getTrackIdentityIds(right));
+      if (leftIds.some(id => rightIds.has(id))) return true;
+
+      const leftName = this.getStatsItemName(left, category);
+      const rightName = this.getStatsItemName(right, category);
+      const leftArtist = this.normalizeStatsIdentity(this.getTrackArtist(left));
+      const rightArtist = this.normalizeStatsIdentity(this.getTrackArtist(right));
+      return !!leftName && !!leftArtist && leftName === rightName && leftArtist === rightArtist;
+    }
+
+    if (category === 'artists' && left.id && right.id && left.id === right.id) {
+      return true;
+    }
+
+    const leftName = this.getStatsItemName(left, category);
+    return !!leftName && leftName === this.getStatsItemName(right, category);
+  }
+
+  private findStatsItemIndex(items: any[], item: any, category: StatsCategory): number {
+    return items.findIndex(candidate => this.statsItemsMatch(candidate, item, category));
+  }
+
+  private getSnapshotDateKey(snapshotId: string): string | null {
+    if (snapshotId === 'current') {
+      return toDailySnapshotDateKey(Date.now());
+    }
+
+    const snapshot = this.historyData.find(d => d.timestamp.toString() === snapshotId);
+    if (snapshot) {
+      return snapshot.snapshotDate || toDailySnapshotDateKey(snapshot.timestamp);
+    }
+
+    const timestamp = Number(snapshotId);
+    return Number.isFinite(timestamp) ? toDailySnapshotDateKey(timestamp) : null;
+  }
+
+  private getPriorAppearance(
+    item: any,
+    category: StatsCategory,
+    selectedDateKey: string
+  ): 'present' | 'absent' | 'unknown' {
+    let hasUnloadedSnapshot = false;
+
+    for (const snapshot of this.historyData) {
+      const snapshotDateKey = snapshot.snapshotDate || toDailySnapshotDateKey(snapshot.timestamp);
+      if (snapshotDateKey >= selectedDateKey) continue;
+
+      if (snapshot.isLoaded !== true) {
+        hasUnloadedSnapshot = true;
+        continue;
+      }
+
+      if (this.findStatsItemIndex(this.getSnapshotItems(snapshot, category), item, category) !== -1) {
+        return 'present';
+      }
+    }
+
+    return hasUnloadedSnapshot ? 'unknown' : 'absent';
   }
 
   get displayedTracks(): any[] {
@@ -1035,27 +1112,14 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     return rawGenres.map((genre: any, index: number) => {
       const currentRank = index + 1;
       const currentPercentage = genre.percentage || 0;
-      const previousIndex = previousGenres.findIndex((previousGenre: any) =>
-        (typeof previousGenre === 'string' ? previousGenre : previousGenre.name) === genre.name
-      );
+      const previousIndex = this.findStatsItemIndex(previousGenres, genre, 'genres');
+      const trend = this.getTrend(genre, index, 'genres');
 
-      let trendType: 'up' | 'down' | 'same' | 'new' = 'same';
-      let rankDiff = 0;
       let previousPercentage = 0;
 
-      if (previousIndex === -1) {
-        trendType = previousSnapshot ? 'new' : 'same';
-      } else {
+      if (previousIndex !== -1) {
         const previousGenre = previousGenres[previousIndex];
         previousPercentage = typeof previousGenre === 'string' ? 0 : (previousGenre.percentage || 0);
-        const previousRank = previousIndex + 1;
-        if (previousRank > currentRank) {
-          trendType = 'up';
-          rankDiff = previousRank - currentRank;
-        } else if (previousRank < currentRank) {
-          trendType = 'down';
-          rankDiff = currentRank - previousRank;
-        }
       }
 
       const percentageDiff = currentPercentage - previousPercentage;
@@ -1069,8 +1133,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
           ? Math.max(2, Math.min(100, Math.round((previousPercentage / maxPercentage) * 100)))
           : 0,
         rank: currentRank,
-        trendType,
-        rankDiff,
+        trendType: trend.type,
+        rankDiff: trend.diff || 0,
         percentageDiff,
         prevPercentage: previousPercentage,
         hasCompare: !!previousSnapshot
@@ -1126,8 +1190,6 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     if (!this.trendPopupItem) return;
     const item = this.trendPopupItem;
     const category = this.trendPopupCategory;
-    const name = item.name;
-    const id = item.id;
     const points: any[] = [];
     
     this.historyData.forEach(snap => {
@@ -1136,15 +1198,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
         : category === 'artists'
           ? (snap.topArtists || [])
           : (snap.topGenres || []);
-      const rankIdx = list.findIndex((x: any) => {
-        if (category === 'tracks') {
-          return (x.id && id && x.id === id) || (x.name === name && x.artist === this.getTrackArtist(item));
-        }
-        if (category === 'artists') {
-          return (x.id && id && x.id === id) || (x.name === name);
-        }
-        return (typeof x === 'string' ? x : x.name) === name;
-      });
+      const rankIdx = this.findStatsItemIndex(list, item, category);
       if (rankIdx !== -1) {
         points.push({
           date: new Date(snap.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
@@ -1159,15 +1213,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       : category === 'artists'
         ? this.topArtists
         : this.topGenres;
-    const currentRankIdx = currentList.findIndex((x: any) => {
-      if (category === 'tracks') {
-        return (x.id && id && x.id === id) || (x.name === name && this.getTrackArtist(x) === this.getTrackArtist(item));
-      }
-      if (category === 'artists') {
-        return (x.id && id && x.id === id) || (x.name === name);
-      }
-      return x.name === name;
-    });
+    const currentRankIdx = this.findStatsItemIndex(currentList, item, category);
 
     // Only append "Now" if we haven't already saved a snapshot today
     const now = new Date();
@@ -1350,8 +1396,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     for (let i = this.historyData.length - 1; i >= 0; i--) {
       const snap = this.historyData[i];
       const found = (snap.topTracks || []).find((t: any) =>
-        (track.id && t.id && t.id === track.id) ||
-        (t.name === track.name && t.artist === this.getTrackArtist(track))
+        this.statsItemsMatch(t, track, 'tracks')
       );
       if (found && !this.isPlaceholderImage(found.albumCover)) return found.albumCover;
     }
@@ -1390,7 +1435,10 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   }
 
   getTrackArtist(track: any): string {
-    return track.artist || (track.artists && track.artists[0] ? track.artists[0].name : '');
+    if (typeof track?.artist === 'string') return track.artist;
+    if (typeof track?.artist?.name === 'string') return track.artist.name;
+    if (typeof track?.artist_name === 'string') return track.artist_name;
+    return track?.artists?.[0]?.name || '';
   }
 
   getArtistImage(artist: any): string {

@@ -186,7 +186,7 @@
                 title="Moved down by {{ trend.diff }} places">
                 <i class="pi pi-caret-down"></i>
               </span>
-              <span *ngIf="trend.type === 'new'" class="new-entry-dot" title="New entry since last snapshot"></span>
+              <span *ngIf="trend.type === 'new'" class="new-entry-dot" title="First appearance in saved stats"></span>
             </ng-container>
           </div>
           <img
@@ -236,7 +236,8 @@
               class="artist-avatar">
             <div class="artist-rank-badge" [class.is-hot-mover]="isHotMover(artist, 'artists')"
               [class.is-new]="getTrend(artist, idx, 'artists').type === 'new'"
-              [class.has-trend]="getTrend(artist, idx, 'artists').type === 'up' || getTrend(artist, idx, 'artists').type === 'down'">
+              [class.has-trend]="getTrend(artist, idx, 'artists').type === 'up' || getTrend(artist, idx, 'artists').type === 'down'"
+              [attr.title]="getTrend(artist, idx, 'artists').type === 'new' ? 'First appearance in saved stats' : null">
               <span class="number-wrapper">
                 <svg *ngIf="isHotMover(artist, 'artists')" class="hot-mover-flame" viewBox="0 0 24 24" fill="none"
                   xmlns="http://www.w3.org/2000/svg">
@@ -306,7 +307,7 @@
                     <span class="trend-diff-num">{{ genre.rankDiff }}</span>
                   </span>
                   <span *ngIf="genre.trendType === 'new'" class="new-genre-badge"
-                    title="New genre since comparison snapshot" style="margin-left: 8px;">
+                    title="First appearance in saved stats" style="margin-left: 8px;">
                     NEW
                   </span>
                 </ng-container>
