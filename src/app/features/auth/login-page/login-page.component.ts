@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {StorageService} from "@core/data-access/storage/storage.service";
+import {AuthReturnUrlService} from '@core/auth/auth-return-url.service';
 
 @Component({
   selector: 'app-login-page',
@@ -12,14 +13,15 @@ export class LoginPageComponent implements OnInit {
   constructor(
     private authService: SpotifyAuthService,
     private storageService: StorageService,
-    private router: Router
+    private router: Router,
+    private returnUrl: AuthReturnUrlService
   ) {
   }
 
   async ngOnInit() {
     await this.storageService.initFromDB();
     if (this.authService.isAuthenticated()) {
-      this.router.navigate(['/playlists']);
+      this.router.navigateByUrl(this.returnUrl.consume());
     }
   }
 

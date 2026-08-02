@@ -1,0 +1,10 @@
+<main class="claim-page">
+  <section class="claim-card">
+    <i class="pi" [ngClass]="isClaiming ? 'pi-spin pi-spinner' : 'pi-link'"></i>
+    <span>Private playlist invitation</span>
+    <h1>{{ isClaiming ? 'Adding the shared playlist…' : 'This invitation is unavailable' }}</h1>
+    <p *ngIf="isClaiming">The invitation is being bound to your Analytify profile. Cloud Backup is not required.</p>
+    <p *ngIf="!isClaiming">{{ errorMessage }}</p>
+    <a *ngIf="!isClaiming" routerLink="/shared-playlists">Go to Shared Playlists</a>
+  </section>
+</main>

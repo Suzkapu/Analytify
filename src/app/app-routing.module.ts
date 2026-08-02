@@ -60,6 +60,12 @@ export const APP_ROUTES: Routes = [
       import('@features/insights/listening-history/listening-history.module').then(module => module.ListeningHistoryModule)
   },
   {
+    path: 'shared-playlists',
+    canActivate: [spotifyAuthGuard],
+    loadChildren: () =>
+      import('@features/shared-playlists/shared-playlists.module').then(module => module.SharedPlaylistsModule)
+  },
+  {
     path: 'legal',
     loadChildren: () =>
       import('@features/legal/legal/legal.module').then(module => module.LegalModule)

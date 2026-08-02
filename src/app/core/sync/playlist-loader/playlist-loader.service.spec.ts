@@ -5,6 +5,7 @@ import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.servi
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
+import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
 
 describe('PlaylistLoaderService', () => {
   let service: PlaylistLoaderService;
@@ -21,7 +22,11 @@ describe('PlaylistLoaderService', () => {
           useValue: { getItem: (key: string) => storageValues[key] ?? null }
         },
         { provide: SpotifyAuthService, useValue: { logout$: EMPTY } },
-        { provide: SupabaseService, useValue: {} }
+        { provide: SupabaseService, useValue: {} },
+        {
+          provide: PlaylistSharingService,
+          useValue: {refreshActiveSharesFromCache: jasmine.createSpy().and.resolveTo(0)}
+        }
       ]
     });
     service = TestBed.inject(PlaylistLoaderService);

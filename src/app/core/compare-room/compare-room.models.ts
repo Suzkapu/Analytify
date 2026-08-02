@@ -18,6 +18,9 @@ export interface CompareTrack {
   imageUrl: string;
   spotifyUrl: string;
   playlistIndex: number;
+  durationMs?: number;
+  explicit?: boolean;
+  releaseDate?: string;
 }
 
 export interface ComparePlaylist {

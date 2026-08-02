@@ -24,6 +24,8 @@
           style="font-size: 0.95rem;"></i> <span class="hide-mobile">Personal Stats</span></a>
       <a routerLink="/history" class="nav-link" routerLinkActive="active-nav"><i class="pi pi-history"
           style="font-size: 0.95rem;"></i> <span class="hide-mobile">Listening History</span></a>
+      <a routerLink="/shared-playlists" class="nav-link" routerLinkActive="active-nav"><i class="pi pi-share-alt"
+          style="font-size: 0.95rem;"></i> <span class="hide-mobile">Shared Playlists</span></a>
     </nav>
   </div>
   <div class="header-center">
@@ -47,6 +49,10 @@
         <a routerLink="/compare-room" class="dropdown-item compare-room-dropdown-item">
           <i class="pi pi-users"></i>
           <span>Compare with other accounts</span>
+        </a>
+        <a routerLink="/shared-playlists" class="dropdown-item">
+          <i class="pi pi-share-alt"></i>
+          <span>Shared playlists</span>
         </a>
         <div class="dropdown-divider compare-room-dropdown-item"></div>
         <div class="dropdown-item toggle-item" (click)="$event.stopPropagation()">
@@ -133,7 +139,7 @@
     </div>
     <h3 class="confirm-modal-title" style="color: #ff5252;">Confirm Database Erasure</h3>
     <p class="confirm-modal-text">
-      Are you absolutely sure? This will permanently delete all your cloud backup data (synced histories, custom snapshots, cached database settings) from our servers. Shared music tracks/artists will not be deleted, but all your personal linkages to them will be erased forever. This action is irreversible.
+      Are you absolutely sure? This will permanently delete all your cloud backup data, listening snapshots, and playlist-sharing grants from our servers. Shared catalog metadata such as artist names is retained, but your personal links to it are erased forever. This action is irreversible.
     </p>
     <div class="confirm-modal-actions">
       <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="cancelDbDelete()">Cancel</button>

@@ -1,0 +1,63 @@
+<app-header [mobileTitle]="share?.playlistName || 'Shared Playlist'" [showMobileBackButton]="true" (mobileBack)="back()"></app-header>
+
+<main class="shared-detail-page">
+  <section *ngIf="isLoading" class="detail-state"><i class="pi pi-spin pi-spinner"></i><p>Loading from Supabase…</p></section>
+  <section *ngIf="!isLoading && !share" class="detail-state error-state">
+    <i class="pi pi-lock"></i><h1>Access unavailable</h1><p>{{ errorMessage }}</p><button (click)="back()">Back to Shared Playlists</button>
+  </section>
+
+  <ng-container *ngIf="!isLoading && share">
+    <header class="playlist-hero">
+      <button type="button" class="back-button" (click)="back()" aria-label="Back"><i class="pi pi-arrow-left"></i></button>
+      <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="">
+      <div class="hero-copy">
+        <span class="eyebrow">Shared by {{ share.ownerDisplayName }}</span>
+        <h1>{{ share.playlistName }}</h1>
+        <p>{{ share.playlistDescription || 'A private playlist shared through Analytify.' }}</p>
+        <small>{{ tracks.length }} songs · revision {{ share.revision }} · streamed from Supabase</small>
+      </div>
+      <div class="download-block" *ngIf="isRecipient">
+        <button type="button" (click)="downloadOrUpdate()" [disabled]="isDownloading || (!!download && !hasUpdate)">
+          <i class="pi" [ngClass]="isDownloading ? 'pi-spin pi-spinner' : (hasUpdate ? 'pi-refresh' : 'pi-download')"></i>
+          {{ isDownloading ? 'Updating…' : downloadButtonLabel }}
+        </button>
+        <a *ngIf="download?.spotifyPlaylistUrl" [href]="download?.spotifyPlaylistUrl" target="_blank" rel="noopener noreferrer">Open Spotify copy</a>
+      </div>
+    </header>
+
+    <div *ngIf="errorMessage" class="detail-alert error" role="alert"><i class="pi pi-exclamation-circle"></i>{{ errorMessage }}</div>
+    <div *ngIf="saveResult?.success" class="detail-alert success" role="status"><i class="pi pi-check-circle"></i>The same Spotify playlist now contains revision {{ share.revision }}.</div>
+
+    <nav class="detail-tabs" aria-label="Shared playlist views">
+      <button (click)="activeView = 'songs'" [class.active]="activeView === 'songs'"><i class="pi pi-list"></i> Songs</button>
+      <button (click)="activeView = 'stats'" [class.active]="activeView === 'stats'"><i class="pi pi-chart-bar"></i> Stats</button>
+    </nav>
+
+    <section *ngIf="activeView === 'songs'" class="songs-panel">
+      <label class="track-search"><i class="pi pi-search"></i><input type="search" [(ngModel)]="searchText" (input)="filterTracks()" placeholder="Search songs, artists, or albums"></label>
+      <div class="track-row header-row"><span>#</span><span>Title</span><span>Album</span><span>Time</span></div>
+      <a *ngFor="let track of filteredTracks; trackBy: trackTrack" class="track-row" [href]="track.spotifyUrl || null" [attr.target]="track.spotifyUrl ? '_blank' : null" rel="noopener noreferrer">
+        <span>{{ track.playlistIndex }}</span>
+        <span class="track-title"><img *ngIf="track.imageUrl" [src]="track.imageUrl" alt=""><i *ngIf="!track.imageUrl" class="pi pi-music"></i><span><strong>{{ track.name }}</strong><small>{{ track.artists[0].name }}</small></span></span>
+        <span class="album-name">{{ track.albumName || '—' }}</span>
+        <span>{{ formatDuration(track.durationMs || 0) }}</span>
+      </a>
+    </section>
+
+    <section *ngIf="activeView === 'stats' && stats" class="stats-panel">
+      <div class="stat-grid">
+        <article><span>{{ stats.tracks }}</span><small>Songs</small></article>
+        <article><span>{{ stats.artists }}</span><small>Artists</small></article>
+        <article><span>{{ stats.albums }}</span><small>Albums</small></article>
+        <article><span>{{ formatDuration(stats.durationMs) }}</span><small>Duration</small></article>
+        <article><span>{{ stats.explicitTracks }}</span><small>Explicit</small></article>
+      </div>
+      <div class="ranking-grid">
+        <article><h2>Top artists</h2><ol><li *ngFor="let artist of stats.topArtists"><span>{{ artist.name }}</span><strong>{{ artist.count }}</strong></li></ol></article>
+        <article><h2>Top albums</h2><ol><li *ngFor="let album of stats.topAlbums"><span>{{ album.name }}</span><strong>{{ album.count }}</strong></li></ol></article>
+      </div>
+    </section>
+  </ng-container>
+</main>
+
+<app-footer></app-footer>

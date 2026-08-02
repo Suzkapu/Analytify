@@ -5,11 +5,13 @@ import {redirectLoggedInGuard} from './redirect-logged-in.guard';
 import {spotifyAuthGuard} from './spotify-auth.guard';
 import {SpotifyAuthService} from './spotify-auth.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
+import {AuthReturnUrlService} from './auth-return-url.service';
 
 describe('authentication guards', () => {
   let auth: jasmine.SpyObj<SpotifyAuthService>;
   let storage: jasmine.SpyObj<StorageService>;
   let router: jasmine.SpyObj<Router>;
+  let returnUrl: jasmine.SpyObj<AuthReturnUrlService>;
 
   beforeEach(() => {
     auth = jasmine.createSpyObj<SpotifyAuthService>('SpotifyAuthService', [
@@ -21,7 +23,9 @@ describe('authentication guards', () => {
       'ensureInitialSync'
     ]);
     storage = jasmine.createSpyObj<StorageService>('StorageService', ['initFromDB']);
-    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
+    router = jasmine.createSpyObj<Router>('Router', ['navigate', 'navigateByUrl']);
+    returnUrl = jasmine.createSpyObj<AuthReturnUrlService>('AuthReturnUrlService', ['remember', 'consume']);
+    returnUrl.consume.and.returnValue('/playlists');
 
     storage.initFromDB.and.resolveTo();
     auth.restoreSessionFromSupabase.and.resolveTo(false);
@@ -35,7 +39,8 @@ describe('authentication guards', () => {
       providers: [
         {provide: SpotifyAuthService, useValue: auth},
         {provide: StorageService, useValue: storage},
-        {provide: Router, useValue: router}
+        {provide: Router, useValue: router},
+        {provide: AuthReturnUrlService, useValue: returnUrl}
       ]
     });
   });
@@ -47,6 +52,7 @@ describe('authentication guards', () => {
 
     expect(storage.initFromDB).toHaveBeenCalledBefore(auth.restoreSessionFromSupabase);
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
+    expect(returnUrl.remember).toHaveBeenCalledWith(undefined);
     expect(allowed).toBeFalse();
   });
 
@@ -78,7 +84,7 @@ describe('authentication guards', () => {
 
     const allowed = await TestBed.runInInjectionContext(() => redirectLoggedInGuard());
 
-    expect(router.navigate).toHaveBeenCalledWith(['/playlists']);
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/playlists');
     expect(allowed).toBeFalse();
   });
 
