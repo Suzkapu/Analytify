@@ -5,6 +5,9 @@ import {StorageService} from "@core/data-access/storage/storage.service";
 import {PlaylistLoaderService} from "@core/sync/playlist-loader/playlist-loader.service";
 import {ImageHealingService} from "@core/sync/image-healing/image-healing.service";
 import {Subscription} from 'rxjs';
+import {createScopedLogger} from '@core/diagnostics/app-logger';
+
+const console = createScopedLogger('Songs');
 
 @Component({
   selector: 'app-songs',

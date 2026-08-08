@@ -4,10 +4,6 @@
 
   <section class="login-shell" aria-labelledby="login-title">
     <header class="login-intro">
-      <a routerLink="/" class="login-brand" aria-label="Analytify home">
-        <img src="assets/Analytify.png" alt="">
-        <span>Analytify</span>
-      </a>
       <span class="page-eyebrow">Your listening, made visible</span>
       <h1 id="login-title">Understand the music that defines you.</h1>
       <p>Explore playlists, spot listening trends, and compare music with friends—all in one focused dashboard.</p>
@@ -21,7 +17,10 @@
 
     <article class="login-card-container">
       <div class="login-card-header">
-        <span class="login-card-icon"><i class="pi pi-spotify" aria-hidden="true"></i></span>
+        <a routerLink="/" class="login-brand" aria-label="Analytify home">
+          <img src="assets/Analytify.png" alt="">
+          <span>Analytify</span>
+        </a>
         <span class="page-eyebrow">Welcome to Analytify</span>
         <h2>Connect your Spotify account</h2>
         <p class="login-description">Sign in securely to load your library and personal listening insights.</p>

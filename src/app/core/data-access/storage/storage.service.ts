@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
+import {createScopedLogger} from '@core/diagnostics/app-logger';
+
+const console = createScopedLogger('Local Storage');
 
 @Injectable({
   providedIn: 'root'

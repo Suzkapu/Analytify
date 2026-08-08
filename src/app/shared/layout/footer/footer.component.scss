@@ -9,21 +9,9 @@
   width: min(var(--page-width), calc(100% - 48px));
   margin: 0 auto;
   display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 24px;
-}
-
-.footer-brand {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-
-  img { width: 30px; height: 30px; border-radius: 8px; }
-  strong,
-  span { display: block; }
-  strong { font-size: 0.86rem; }
-  span { color: var(--color-text-subtle); font-size: 0.66rem; }
 }
 
 .spotify-attribution {
@@ -43,16 +31,15 @@
 .footer-link { color: var(--color-text-muted); font-size: 0.78rem; font-weight: 700; text-decoration: none; &:hover { color: var(--color-accent); } }
 
 @media (max-width: 860px) {
-  .footer-content { grid-template-columns: 1fr auto; }
-  .footer-middle { display: none; }
-  .spotify-attribution { grid-column: 1; }
-  .footer-links { grid-column: 2; grid-row: 1 / span 2; }
+  .footer-content { gap: 14px; }
+  .copyright-text { max-width: 340px; }
 }
 
 @media (max-width: 520px) {
   .app-footer-container { margin-top: 42px; padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
   .footer-content { width: calc(100% - 24px); grid-template-columns: 1fr; justify-items: center; text-align: center; gap: 15px; }
+  .spotify-attribution,
+  .footer-middle,
   .footer-links { grid-column: auto; grid-row: auto; }
-  .footer-brand { text-align: left; }
   .footer-link { min-height: 44px; display: inline-flex; align-items: center; }
 }

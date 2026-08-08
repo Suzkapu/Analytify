@@ -2000,7 +2000,7 @@ button {
 .app-route-content::before {
   content: '';
   position: absolute;
-  inset: 0 0 auto;
+  inset: 0 -3% auto;
   z-index: -1;
   height: min(940px, calc(100dvh + 180px));
   pointer-events: none;
@@ -2010,7 +2010,7 @@ button {
     radial-gradient(ellipse 52rem 36rem at var(--ambient-green-x) var(--ambient-green-y), rgba(50, 223, 120, 0.105), transparent 69%),
     radial-gradient(ellipse 45rem 34rem at var(--ambient-blue-x) var(--ambient-blue-y), rgba(55, 120, 255, 0.075), transparent 71%);
   opacity: 0.82;
-  transform: translate3d(0, 0, 0);
+  transform: translate3d(-0.4%, 0, 0);
   animation: ambient-shimmer 16s ease-in-out infinite;
   will-change: transform, opacity;
 }
@@ -2081,8 +2081,8 @@ button {
 }
 
 @keyframes ambient-shimmer {
-  0%, 100% { opacity: 0.72; transform: translate3d(0, 0, 0); }
-  50% { opacity: 0.92; transform: translate3d(1.2%, -0.7%, 0); }
+  0%, 100% { opacity: 0.72; transform: translate3d(-0.4%, 0, 0); }
+  50% { opacity: 0.92; transform: translate3d(0.4%, -0.5%, 0); }
 }
 
 .page-eyebrow,
@@ -2104,6 +2104,13 @@ button {
 .page-shell {
   width: min(var(--page-width), calc(100% - 48px));
   margin: 0 auto;
+}
+
+.page-back-row {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  margin: 0 0 24px;
 }
 
 .page-hero {
@@ -2872,8 +2879,7 @@ app-listening-history {
 }
 
 app-songs {
-  .songs-back-bar { position: static; width: min(var(--page-width), calc(100% - 48px)); margin: 18px auto 0; padding: 0; }
-  .songs-page { padding-top: 24px; }
+  .songs-page { padding-top: 44px; }
   .artists-top-bar { width: 100%; max-width: none; margin: 0 0 24px; }
   .artists-header-container { width: 100%; max-width: none; margin: 0 0 18px; padding: 11px; }
 
@@ -2891,6 +2897,12 @@ app-songs {
     .controls-right .sort-control { gap: 6px; }
     .controls-right .view-switcher > button,
     .controls-right .sort-control > button { min-height: 42px; border-radius: var(--radius-pill) !important; padding: 0.5rem 0.9rem !important; }
+
+    &.context-view {
+      .controls-left,
+      .controls-right .sort-control { display: none; }
+      .controls-right { width: 100%; justify-content: flex-start; }
+    }
   }
 
   .inline-alert { width: 100%; display: flex; align-items: center; gap: 9px; margin: 0 0 18px; padding: 11px 14px; border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-text-muted); font-size: 0.86rem; }
@@ -2901,9 +2913,25 @@ app-songs {
   .loading-progress-fill { height: 100%; border-radius: inherit; background: var(--color-accent); transition: width 150ms ease; }
   .progress-panel-container { width: 100%; max-width: none; margin: 0 0 18px; }
   .card-container { margin-top: 0; }
-  .track-row-card { border-radius: var(--radius-md); padding: 11px 16px; box-shadow: none; &:hover { transform: none; box-shadow: none; } }
+  .track-row-card {
+    border-radius: var(--radius-md);
+    padding: 11px 16px;
+    border-color: var(--color-border) !important;
+    background: var(--color-surface) !important;
+    box-shadow: none;
+    &:hover { transform: none; border-color: var(--color-border-strong) !important; background: var(--color-surface-raised) !important; box-shadow: none; }
+  }
   .album-card,
   .album-detail-view { border-color: var(--color-border); background: var(--color-surface); }
+  .album-detail-view {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 20px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-sizing: border-box;
+  }
 }
 
 app-playlists .item-card .card-actions > button.playlist-card-action {
@@ -2949,11 +2977,14 @@ app-legal .back-bar-container { width: min(1040px, calc(100% - 48px)); }
   app-listening-history .history-index { width: 64px !important; flex-basis: 64px; }
 
   app-songs {
-    .songs-page { padding-top: 16px; }
+    .songs-page { padding-top: 18px; }
     .artists-header-container { width: 100%; padding: 9px; }
     .artists-controls-bar { gap: 9px; .controls-right { gap: 8px; } .controls-right .view-switcher { gap: 5px; } .controls-right .view-switcher > button { padding-inline: 4px !important; } }
+    .album-detail-view { padding: 14px; }
     .page-loading-state { min-height: 340px; }
   }
+
+  .page-back-row { min-height: 44px; margin-bottom: 16px; }
 
   app-playlist-analysis .back-bar-container,
   app-artist-details .back-bar-container,

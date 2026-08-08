@@ -4,6 +4,9 @@ import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { forkJoin, Subscription } from 'rxjs';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
+import {createScopedLogger} from '@core/diagnostics/app-logger';
+
+const console = createScopedLogger('Personal Stats');
 
 function toDailySnapshotDateKey(ts: number): string {
   const d = new Date(ts);

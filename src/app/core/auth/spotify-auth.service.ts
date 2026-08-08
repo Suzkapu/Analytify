@@ -4,6 +4,9 @@ import {Observable, throwError, Subject, from, defer} from 'rxjs';
 import {tap, catchError, shareReplay, switchMap} from 'rxjs/operators';
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
+import {createScopedLogger} from '@core/diagnostics/app-logger';
+
+const console = createScopedLogger('Authentication');
 
 function toDailySnapshotDateKey(timestamp: number): string {
   const date = new Date(timestamp);

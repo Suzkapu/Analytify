@@ -5,6 +5,9 @@ import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
+import {createScopedLogger} from '@core/diagnostics/app-logger';
+
+const console = createScopedLogger('Playlist Loading');
 
 export interface PlaylistLoadProgress {
   playlistId: string;

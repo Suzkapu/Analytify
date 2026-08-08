@@ -4,6 +4,9 @@ import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {StorageService} from "@core/data-access/storage/storage.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SupabaseService} from "@core/data-access/supabase/supabase.service";
+import {createScopedLogger} from '@core/diagnostics/app-logger';
+
+const console = createScopedLogger('Artist Details');
 
 @Component({
   selector: 'app-artist-details',

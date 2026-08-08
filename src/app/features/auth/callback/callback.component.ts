@@ -2,6 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AuthReturnUrlService} from '@core/auth/auth-return-url.service';
+import {createScopedLogger} from '@core/diagnostics/app-logger';
+
+const console = createScopedLogger('Login Callback');
 
 @Component({
   selector: 'app-callback',

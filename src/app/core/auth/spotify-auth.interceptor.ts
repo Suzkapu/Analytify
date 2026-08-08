@@ -4,6 +4,9 @@ import {Observable, throwError} from 'rxjs';
 import {switchMap, catchError} from 'rxjs/operators';
 import {SpotifyAuthService} from './spotify-auth.service';
 import {TRANSIENT_SPOTIFY_REQUEST} from '@core/compare-room/spotify-request-context';
+import {createScopedLogger} from '@core/diagnostics/app-logger';
+
+const console = createScopedLogger('Spotify HTTP');
 
 @Injectable()
 export class SpotifyAuthInterceptor implements HttpInterceptor {

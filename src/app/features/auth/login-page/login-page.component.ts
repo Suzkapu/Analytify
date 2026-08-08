@@ -3,6 +3,9 @@ import {Router} from '@angular/router';
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {StorageService} from "@core/data-access/storage/storage.service";
 import {AuthReturnUrlService} from '@core/auth/auth-return-url.service';
+import {createScopedLogger} from '@core/diagnostics/app-logger';
+
+const console = createScopedLogger('Login');
 
 @Component({
   selector: 'app-login-page',

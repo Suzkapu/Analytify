@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '@env/environment';
+import {createScopedLogger} from '@core/diagnostics/app-logger';
+
+const console = createScopedLogger('Supabase');
 
 function parseSnapshotTimestamp(snapshotDate?: string, createdAt?: string): number {
   if (snapshotDate) {

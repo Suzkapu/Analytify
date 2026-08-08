@@ -5,6 +5,9 @@ import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-
 import {ComparePlaylist} from '@core/compare-room/compare-room.models';
 import {PlaylistShare, PlaylistSharePublication} from '@core/sharing/playlist-sharing.models';
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
+import {createScopedLogger} from '@core/diagnostics/app-logger';
+
+const console = createScopedLogger('Shared Playlists');
 
 @Component({
   selector: 'app-shared-playlists',

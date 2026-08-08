@@ -5,6 +5,9 @@ import { StorageService } from '@core/data-access/storage/storage.service';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import {PlaylistShareAutoSyncService} from '@core/sharing/playlist-share-auto-sync.service';
+import {createScopedLogger} from '@core/diagnostics/app-logger';
+
+const console = createScopedLogger('Profile and Settings');
 
 @Component({
   selector: 'app-header',

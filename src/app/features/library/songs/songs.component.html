@@ -2,14 +2,14 @@
   [mobileTitle]="viewStyle === 'artists' ? 'Your Artists' : (viewStyle === 'songs' ? 'Playlist Songs' : 'Playlist Albums')">
 </app-header>
 
-<div class="back-bar-container songs-back-bar">
-  <button (click)="goBack()" class="back-text-button" title="Back to Playlists">
-    <i class="pi pi-arrow-left"></i> Back
-  </button>
-</div>
-
 <main class="app-page songs-page">
   <div class="page-shell">
+    <div class="page-back-row">
+      <button (click)="goBack()" class="back-text-button" title="Back to Playlists">
+        <i class="pi pi-arrow-left"></i> Back
+      </button>
+    </div>
+
     <header class="page-hero artists-top-bar" *ngIf="!isLoading && artists.length !== 0">
       <div>
         <span class="page-eyebrow">Playlist explorer</span>
@@ -20,7 +20,7 @@
 
     <section class="artists-header-container page-toolbar" *ngIf="!isLoading && artists.length !== 0"
       aria-label="Playlist view controls">
-      <div class="artists-controls-bar">
+      <div class="artists-controls-bar" [class.context-view]="viewStyle === 'albums' && !!selectedAlbum">
     <div class="controls-left">
       <!-- Search Input (Artists View) -->
       <label class="search-container" *ngIf="viewStyle === 'artists'">
@@ -165,7 +165,7 @@
     </section>
 
 <!-- Main Content -->
-<div *ngIf="!isLoading">
+<ng-container *ngIf="!isLoading">
   <!-- Artists View Grid -->
   <div *ngIf="viewStyle === 'artists'" class="card-container">
     <ng-container *ngFor="let artist of filteredArtists.slice(0, displayedArtistsCount); trackBy: trackArtistItem">
@@ -198,11 +198,11 @@
 
 
     <!-- Songs List Grid -->
-    <div *ngIf="filteredTracks.length === 0" class="no-songs-found" style="width: 100%;">
+    <div *ngIf="filteredTracks.length === 0" class="no-songs-found">
       <i class="pi pi-info-circle"></i> No songs found matching your search.
     </div>
 
-    <div *ngIf="filteredTracks.length > 0" class="analysis-tracks-grid" style="width: 100%;">
+    <div *ngIf="filteredTracks.length > 0" class="analysis-tracks-grid">
       <div *ngFor="let track of filteredTracks.slice(0, displayedTracksCount); let idx = index; trackBy: trackSongItem" class="track-row-card">
         
         <div class="track-index">{{ idx + 1 }}</div>
@@ -327,7 +327,7 @@
       </span>
     </article>
   </div>
-</div>
+</ng-container>
 
   </div>
 </main>

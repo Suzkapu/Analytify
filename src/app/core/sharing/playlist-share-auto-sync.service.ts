@@ -4,6 +4,9 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {PlaylistSharingService} from './playlist-sharing.service';
+import {createScopedLogger} from '@core/diagnostics/app-logger';
+
+const console = createScopedLogger('Playlist Share Sync');
 
 export interface PlaylistShareSpotifyUpdate {
   shareId: string;

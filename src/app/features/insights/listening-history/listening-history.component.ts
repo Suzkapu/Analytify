@@ -3,6 +3,9 @@ import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.servi
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
+import {createScopedLogger} from '@core/diagnostics/app-logger';
+
+const console = createScopedLogger('Listening History');
 
 @Component({
   selector: 'app-listening-history',

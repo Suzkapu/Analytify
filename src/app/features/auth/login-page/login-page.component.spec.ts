@@ -45,6 +45,9 @@ describe('LoginPageComponent', () => {
     expect(element.querySelector('main.login-wrapper')).not.toBeNull();
     expect(element.querySelector('.login-shell')).not.toBeNull();
     expect(element.querySelectorAll('.login-benefits li').length).toBe(3);
+    expect(element.querySelector('.login-card-header > .login-brand')).not.toBeNull();
+    expect(element.querySelector('.login-intro > .login-brand')).toBeNull();
+    expect(element.querySelector('.login-card-icon')).toBeNull();
     expect(element.querySelector('button.login-spotify-button')).not.toBeNull();
     expect(element.querySelector('a.compare-room-button')).not.toBeNull();
   });

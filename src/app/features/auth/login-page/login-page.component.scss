@@ -66,7 +66,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 72px;
+  margin-bottom: 24px;
   color: var(--color-text);
   text-decoration: none;
   font-size: 1.25rem;
@@ -119,18 +119,6 @@
     line-height: 1.08;
     letter-spacing: -0.035em;
   }
-}
-
-.login-card-icon {
-  width: 52px;
-  height: 52px;
-  display: grid;
-  place-items: center;
-  margin-bottom: 24px;
-  border-radius: 15px;
-  background: var(--color-accent);
-  color: var(--color-accent-contrast);
-  font-size: 1.35rem;
 }
 
 .login-description {
@@ -215,13 +203,11 @@
     padding-top: max(28px, env(safe-area-inset-top));
   }
 
-  .login-brand { margin-bottom: 48px; }
   .login-intro h1 { font-size: clamp(2.65rem, 10vw, 4.2rem); }
 }
 
 @media (max-width: 520px) {
   .login-shell { width: calc(100% - 24px); gap: 30px; padding-bottom: 32px; }
-  .login-brand { margin-bottom: 34px; }
   .login-intro h1 { font-size: clamp(2.35rem, 12vw, 3.2rem); }
   .login-benefits { margin-top: 30px; }
   .login-card-container { padding: 24px 18px; border-radius: 20px; }

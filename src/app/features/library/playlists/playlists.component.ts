@@ -7,6 +7,9 @@ import {firstValueFrom} from 'rxjs';
 import {ComparePlaylist, CompareSaveResult, CompareTrack} from '@core/compare-room/compare-room.models';
 import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-source.service';
 import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.service';
+import {createScopedLogger} from '@core/diagnostics/app-logger';
+
+const console = createScopedLogger('Playlists');
 
 @Component({
   selector: 'app-playlists', templateUrl: './playlists.component.html', styleUrls: ['./playlists.component.scss'],

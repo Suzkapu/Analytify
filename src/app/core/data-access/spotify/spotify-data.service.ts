@@ -5,6 +5,9 @@ import { Observable, throwError, BehaviorSubject, EMPTY, from, of, forkJoin, def
 import { catchError, concatMap, expand, map, mergeMap, reduce, take, toArray } from 'rxjs/operators';
 import {environment} from "@env/environment";
 import {StorageService} from "@core/data-access/storage/storage.service";
+import {createScopedLogger} from '@core/diagnostics/app-logger';
+
+const console = createScopedLogger('Spotify API');
 
 @Injectable({
   providedIn: 'root'

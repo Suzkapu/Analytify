@@ -88,4 +88,24 @@ describe('SongsComponent', () => {
     component.closeAlbumDetails();
     expect(component.selectedAlbum).toBeNull();
   });
+
+  it('keeps the album drill-down inside the shared page shell', () => {
+    component.artists = [{id: 'artist-a'}];
+    component.viewStyle = 'albums';
+    component.selectedAlbum = {
+      id: 'album-a',
+      name: 'Album A',
+      artists: ['Artist A'],
+      trackCount: 0,
+      tracks: [],
+      spotifyUrl: null,
+      imageUrl: null
+    };
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('.page-shell > .page-back-row')).not.toBeNull();
+    expect(element.querySelector('.artists-controls-bar.context-view')).not.toBeNull();
+    expect(element.querySelector('.page-shell > .album-detail-view')).not.toBeNull();
+  });
 });

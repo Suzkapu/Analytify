@@ -1,8 +1,11 @@
 import {AfterViewInit, Component, NgZone, OnDestroy} from '@angular/core';
 import {SwUpdate, VersionReadyEvent} from '@angular/service-worker';
-import {NavigationEnd, NavigationError, Router} from '@angular/router';
+import {NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router} from '@angular/router';
 import {filter} from 'rxjs/operators';
 import {take} from 'rxjs';
+import {createScopedLogger} from '@core/diagnostics/app-logger';
+
+const navigationLog = createScopedLogger('Navigation');
 
 @Component({
   selector: 'app-root',
@@ -15,6 +18,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   isInitialNavigationLoading: boolean;
 
   private readonly windowScrollHandler = () => this.onWindowScroll();
+  private navigationStartedAt = 0;
 
   constructor(
     private swUpdate: SwUpdate,
@@ -22,6 +26,22 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private ngZone: NgZone
   ) {
     this.isInitialNavigationLoading = !this.router.navigated;
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.navigationStartedAt = performance.now();
+        navigationLog.step('Opening page', {url: event.url});
+      } else if (event instanceof NavigationEnd) {
+        navigationLog.success('Page ready', {
+          url: event.urlAfterRedirects,
+          durationMs: Math.round(performance.now() - this.navigationStartedAt)
+        });
+      } else if (event instanceof NavigationCancel) {
+        navigationLog.warn('Navigation cancelled', {url: event.url, reason: event.reason});
+      } else if (event instanceof NavigationError) {
+        navigationLog.error('Navigation failed', {url: event.url, error: event.error});
+      }
+    });
 
     if (this.isInitialNavigationLoading) {
       this.router.events.pipe(

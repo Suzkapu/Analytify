@@ -26,9 +26,10 @@
 }
 
 .artists-header-container {
-  width: 80vw;
-  max-width: 1000px;
-  margin: 14px auto 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0 0 18px;
+  padding: 11px;
   box-sizing: border-box;
 
   @media (max-width: 768px) {
@@ -40,10 +41,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   width: 100%;
-  margin-top: 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  padding-bottom: 14px;
+  margin: 0;
+  border: 0;
+  padding: 0;
 
   .controls-left {
     display: flex;
@@ -374,8 +376,8 @@
 .track-row-card {
   display: flex;
   align-items: center;
-  background: #181818;
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   padding: 12px 24px;
   border-radius: 12px;
   gap: 20px;
@@ -383,17 +385,17 @@
   box-sizing: border-box;
 
   &:hover {
-    background: #202020;
-    border-color: rgba(29, 185, 84, 0.2);
+    background: var(--color-surface-raised);
+    border-color: var(--color-border-strong);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 
     .track-index {
-      color: #ffffff;
+      color: var(--color-text);
     }
 
     .spotify-link-icon {
-      color: #1ed760;
+      color: var(--color-accent);
       transform: scale(1.1);
     }
   }
@@ -401,7 +403,7 @@
   .track-index {
     font-size: 0.95rem;
     font-weight: 700;
-    color: #727272;
+    color: var(--color-text-subtle);
     width: 32px;
     text-align: center;
     transition: color 0.2s ease;
@@ -439,7 +441,7 @@
     .track-title {
       font-size: 1.05rem;
       font-weight: 700;
-      color: #ffffff;
+      color: var(--color-text);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -448,7 +450,7 @@
 
     .track-artist {
       font-size: 0.9rem;
-      color: #b3b3b3;
+      color: var(--color-text-muted);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -464,7 +466,7 @@
 
     .explicit-badge {
       background: rgba(255, 255, 255, 0.08);
-      color: #b3b3b3;
+      color: var(--color-text-muted);
       font-size: 0.65rem;
       font-weight: 800;
       padding: 2px 6px;
@@ -474,7 +476,7 @@
 
     .release-year {
       font-size: 0.9rem;
-      color: #a7a7a7;
+      color: var(--color-text-muted);
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -486,7 +488,7 @@
 
     .track-duration {
       font-size: 0.9rem;
-      color: #a7a7a7;
+      color: var(--color-text-muted);
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -499,7 +501,7 @@
     }
 
     .spotify-link-icon {
-      color: #727272;
+      color: var(--color-text-subtle);
       font-size: 0.95rem;
       transition: all 0.2s ease;
     }
@@ -569,11 +571,11 @@
 .album-card {
   appearance: none;
   display: block;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  background: #181818;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
   border-radius: 14px;
   padding: 14px;
-  color: #ffffff;
+  color: var(--color-text);
   font: inherit;
   text-align: left;
   cursor: pointer;
@@ -582,12 +584,12 @@
 
   &:hover {
     transform: translateY(-3px);
-    background: #202020;
-    border-color: rgba(30, 215, 96, 0.25);
+    background: var(--color-surface-raised);
+    border-color: var(--color-accent-border);
   }
 
   &:focus-visible {
-    outline: 2px solid #1ed760;
+    outline: 2px solid var(--color-accent);
     outline-offset: 3px;
   }
 
@@ -609,7 +611,7 @@
     }
 
     &:focus-visible {
-      outline: 2px solid #1ed760;
+      outline: 2px solid var(--color-accent);
       outline-offset: 2px;
     }
 
@@ -645,14 +647,14 @@
 
   .album-artists {
     margin-top: 4px;
-    color: #b3b3b3;
+    color: var(--color-text-muted);
     font-size: 0.88rem;
     white-space: nowrap;
   }
 
   .album-meta {
     margin-top: 10px;
-    color: #1ed760;
+    color: var(--color-accent);
     font-size: 0.78rem;
     font-weight: 700;
   }
@@ -660,8 +662,14 @@
 
 .album-detail-view {
   align-items: stretch;
-  max-width: 800px;
-  margin-top: 20px;
+  width: 100%;
+  max-width: none;
+  margin-top: 0;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-sizing: border-box;
   animation: fadeIn 0.25s ease-out;
 }
 
@@ -672,17 +680,17 @@
   align-items: center;
   gap: 8px;
   padding: 0 14px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid var(--color-border-strong);
   border-radius: 8px;
-  color: #e0e0e0;
+  color: var(--color-text-muted);
   background: transparent;
   cursor: pointer;
 
   &:hover,
   &:focus-visible {
-    color: #1ed760;
-    border-color: #1ed760;
-    background: rgba(30, 215, 96, 0.08);
+    color: var(--color-accent);
+    border-color: var(--color-accent-border);
+    background: var(--color-accent-soft);
   }
 }
 
@@ -713,7 +721,7 @@
 
   &:hover:not(:disabled),
   &:focus-visible {
-    outline: 2px solid #1ed760;
+    outline: 2px solid var(--color-accent);
     outline-offset: 3px;
   }
 }
@@ -725,7 +733,7 @@
 
   .album-detail-eyebrow {
     margin-bottom: 5px;
-    color: #1ed760;
+    color: var(--color-accent);
     font-size: 0.72rem;
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -735,7 +743,7 @@
   h2 {
     margin: 0;
     overflow: hidden;
-    color: #ffffff;
+    color: var(--color-text);
     font-size: 1.65rem;
     line-height: 1.15;
     text-overflow: ellipsis;
@@ -743,11 +751,11 @@
 
   p {
     margin: 7px 0 6px;
-    color: #b3b3b3;
+    color: var(--color-text-muted);
   }
 
   > span:last-child {
-    color: #8b8b8b;
+    color: var(--color-text-subtle);
     font-size: 0.85rem;
   }
 }
