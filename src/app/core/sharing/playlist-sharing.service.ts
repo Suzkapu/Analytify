@@ -133,6 +133,23 @@ export class PlaylistSharingService {
     return Number(data || 0);
   }
 
+  subscribeToShareChanges(onChange: () => void, shareId?: string): () => void {
+    const suffix = crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`;
+    const postgresFilter: any = {
+      event: '*',
+      schema: 'public',
+      table: 'playlist_shares'
+    };
+    if (shareId) postgresFilter.filter = `id=eq.${shareId}`;
+    const channel = this.supabase.client
+      .channel(`playlist-share-updates:${suffix}`)
+      .on('postgres_changes', postgresFilter, () => onChange())
+      .subscribe();
+    return () => {
+      void this.supabase.client.removeChannel(channel);
+    };
+  }
+
   async revokeShare(shareId: string): Promise<void> {
     const {error} = await this.supabase.client.rpc('revoke_playlist_share', {
       p_share_id: shareId

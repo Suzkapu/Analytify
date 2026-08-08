@@ -1,6 +1,7 @@
 :host { display: block; min-height: 100vh; color: #fff; }
 .sharing-page { width: min(1100px, calc(100% - 2rem)); margin: 0 auto; padding: 2.5rem 0 5rem; }
 .sharing-hero { text-align: center; margin-bottom: 2rem; h1 { margin: .25rem 0; font-size: clamp(2rem, 5vw, 3.5rem); } p { color: #9aa39d; margin: 0; } }
+.open-share-menu-button { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 44px; margin-top: 1.2rem; padding: 0 1.15rem; border: 0; border-radius: 999px; background: #1ed760; color: #071109; font: inherit; font-weight: 800; cursor: pointer; }
 .eyebrow { color: #1ed760; font-size: .7rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
 .share-alert { display: flex; align-items: center; gap: .6rem; padding: .85rem 1rem; border-radius: 12px; margin-bottom: 1rem; background: rgba(255,255,255,.07); &.error { color: #ff9191; } &.success { color: #1ed760; } }
 .sharing-state, .empty-share-card { display: grid; place-items: center; text-align: center; min-height: 180px; border: 1px dashed rgba(255,255,255,.13); border-radius: 18px; color: #9aa39d; padding: 1.5rem; box-sizing: border-box; i { font-size: 1.8rem; color: #1ed760; } strong { color: #fff; margin-top: .7rem; } p { max-width: 500px; margin: .4rem 0; } a { color: #1ed760; } }

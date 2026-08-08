@@ -5,6 +5,10 @@
     <span class="eyebrow">Private Supabase grants</span>
     <h1>Shared Playlists</h1>
     <p>Browse playlists shared with you and control access to playlists you shared.</p>
+    <button *ngIf="canCreateShares" type="button" class="open-share-menu-button" (click)="openShareDialog()">
+      <i class="pi pi-share-alt"></i>
+      <span>Share a playlist</span>
+    </button>
   </header>
 
   <div *ngIf="errorMessage" class="share-alert error" role="alert">
@@ -51,8 +55,8 @@
       <div *ngIf="ownedShares.length === 0" class="empty-share-card">
         <i class="pi pi-share-alt"></i>
         <strong>You have not shared a playlist</strong>
-        <p>Use the Share button on Your Playlists to create a revocable private link.</p>
-        <a routerLink="/playlists">Browse your playlists</a>
+        <p *ngIf="canCreateShares">Choose “Share a playlist” above to select a playlist and create a revocable private link.</p>
+        <p *ngIf="!canCreateShares">Enable Cloud Backup in your profile menu to share a playlist.</p>
       </div>
       <article *ngFor="let share of ownedShares; trackBy: trackShare" class="owner-share-row" [class.revoked]="share.revokedAt">
         <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="">
@@ -75,5 +79,65 @@
     </section>
   </ng-container>
 </main>
+
+<div *ngIf="isShareDialogOpen" class="share-modal-overlay" (click)="closeShareDialog()">
+  <section class="share-modal" (click)="$event.stopPropagation()" role="dialog" aria-modal="true"
+    aria-labelledby="share-dialog-title">
+    <button type="button" class="share-modal-close" (click)="closeShareDialog()"
+      [disabled]="isCreatingShare" aria-label="Close">×</button>
+    <div class="share-modal-icon"><i class="pi pi-share-alt"></i></div>
+    <span class="eyebrow">Revocable Supabase access</span>
+    <h2 id="share-dialog-title">Share a playlist</h2>
+    <p *ngIf="!shareLink">Select one of your playlists. Analytify loads its cached songs first and creates a private link for one recipient.</p>
+
+    <ng-container *ngIf="!shareLink">
+      <label class="share-playlist-picker">
+        <span>Playlist to share</span>
+        <select [(ngModel)]="selectedPlaylistId" [disabled]="isLoadingSharePlaylists || isCreatingShare">
+          <option value="" disabled>
+            {{ isLoadingSharePlaylists ? 'Loading your playlists…' : 'Select a playlist' }}
+          </option>
+          <option *ngFor="let playlist of availablePlaylists; trackBy: trackPlaylist" [value]="playlist.id">
+            {{ playlist.name }} · {{ playlist.total }} {{ playlist.total === 1 ? 'song' : 'songs' }}
+          </option>
+        </select>
+      </label>
+
+      <div *ngIf="selectedPlaylist as playlist" class="selected-share-playlist">
+        <img [src]="playlist.imageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="">
+        <div>
+          <strong>{{ playlist.name }}</strong>
+          <span>{{ playlist.total }} {{ playlist.total === 1 ? 'song' : 'songs' }}</span>
+        </div>
+      </div>
+
+      <p *ngIf="!isLoadingSharePlaylists && availablePlaylists.length === 0 && !shareError"
+        class="share-picker-empty">No playlists are available to share.</p>
+    </ng-container>
+
+    <ng-container *ngIf="shareLink">
+      <p class="share-ready-copy">Copy this link now. For security, Analytify stores only its hash and cannot show the same link again.</p>
+      <div class="share-link-field">
+        <input [value]="shareLink" readonly aria-label="Private playlist share link">
+        <button type="button" (click)="copyShareLink()">
+          <i class="pi" [ngClass]="shareLinkCopied ? 'pi-check' : 'pi-copy'"></i>
+          <span>{{ shareLinkCopied ? 'Copied' : 'Copy' }}</span>
+        </button>
+      </div>
+    </ng-container>
+
+    <div *ngIf="shareError" class="share-modal-error" role="alert">{{ shareError }}</div>
+    <div class="share-modal-actions">
+      <button *ngIf="!shareLink" type="button" class="share-primary" (click)="createShareLink()"
+        [disabled]="!selectedPlaylistId || isLoadingSharePlaylists || isCreatingShare">
+        <i class="pi" [ngClass]="isCreatingShare ? 'pi-spin pi-spinner' : 'pi-link'"></i>
+        <span>{{ isCreatingShare ? 'Publishing snapshot…' : 'Create private link' }}</span>
+      </button>
+      <button type="button" class="share-secondary" (click)="closeShareDialog()" [disabled]="isCreatingShare">
+        {{ shareLink ? 'Done' : 'Cancel' }}
+      </button>
+    </div>
+  </section>
+</div>
 
 <app-footer></app-footer>

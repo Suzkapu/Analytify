@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {firstValueFrom} from 'rxjs';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
@@ -12,7 +12,7 @@ import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
   templateUrl: './shared-playlist-detail.component.html',
   styleUrls: ['./shared-playlist-detail.component.scss']
 })
-export class SharedPlaylistDetailComponent implements OnInit {
+export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
   share: PlaylistShare | null = null;
   tracks: CompareTrack[] = [];
   filteredTracks: CompareTrack[] = [];
@@ -23,8 +23,14 @@ export class SharedPlaylistDetailComponent implements OnInit {
   isLoading = true;
   isDownloading = false;
   errorMessage = '';
+  liveUpdateMessage = '';
   saveResult: CompareSaveResult | null = null;
   viewerRole: 'owner' | 'recipient' = 'recipient';
+
+  private shareId = '';
+  private unsubscribeShareChanges: (() => void) | null = null;
+  private isLiveReloading = false;
+  private liveReloadPending = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,14 +41,26 @@ export class SharedPlaylistDetailComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.shareId = this.route.snapshot.paramMap.get('id') || '';
+    if (this.shareId) {
+      this.unsubscribeShareChanges = this.sharing.subscribeToShareChanges(
+        () => void this.reloadFromLiveUpdate(),
+        this.shareId
+      );
+    }
     await this.load();
   }
 
-  async load(): Promise<void> {
-    this.isLoading = true;
+  ngOnDestroy(): void {
+    this.unsubscribeShareChanges?.();
+    this.unsubscribeShareChanges = null;
+  }
+
+  async load(silent = false): Promise<void> {
+    if (!silent) this.isLoading = true;
     this.errorMessage = '';
     try {
-      const shareId = this.route.snapshot.paramMap.get('id') || '';
+      const shareId = this.shareId || this.route.snapshot.paramMap.get('id') || '';
       const details = await this.sharing.loadShare(shareId);
       this.share = details.share;
       this.tracks = details.tracks;
@@ -54,7 +72,7 @@ export class SharedPlaylistDetailComponent implements OnInit {
       this.share = null;
       this.errorMessage = (error as any)?.message || 'This shared playlist is unavailable or has been revoked.';
     } finally {
-      this.isLoading = false;
+      if (!silent) this.isLoading = false;
     }
   }
 
@@ -137,6 +155,29 @@ export class SharedPlaylistDetailComponent implements OnInit {
 
   trackTrack(_: number, track: CompareTrack): string {
     return track.id;
+  }
+
+  private async reloadFromLiveUpdate(): Promise<void> {
+    if (this.isLiveReloading) {
+      this.liveReloadPending = true;
+      return;
+    }
+
+    this.isLiveReloading = true;
+    try {
+      do {
+        this.liveReloadPending = false;
+        const previousRevision = this.share?.revision || 0;
+        await this.load(true);
+        const currentRevision = this.share?.revision || 0;
+        if (previousRevision > 0 && currentRevision > previousRevision) {
+          this.saveResult = null;
+          this.liveUpdateMessage = `Live update received: revision ${currentRevision} is now available.`;
+        }
+      } while (this.liveReloadPending);
+    } finally {
+      this.isLiveReloading = false;
+    }
   }
 
   private async getUsableAccessToken(): Promise<string> {

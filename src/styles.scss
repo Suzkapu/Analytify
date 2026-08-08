@@ -1701,8 +1701,8 @@ h6 {
   }
 }
 
-/* Playlist sharing modal is global because PlaylistsComponent deliberately
-   uses ViewEncapsulation.None and its component stylesheet is budgeted. */
+/* The creator lives on Shared Playlists now. Keeping its overlay global avoids
+   inflating the component stylesheet budget while retaining a single dialog. */
 .share-modal-overlay {
   position: fixed;
   z-index: 1200;
@@ -1718,6 +1718,8 @@ h6 {
 .share-modal {
   position: relative;
   width: min(560px, 100%);
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
   padding: 2rem;
   box-sizing: border-box;
   border-radius: 22px;
@@ -1757,6 +1759,32 @@ h6 {
   cursor: pointer;
 }
 
+.share-playlist-picker {
+  display: grid;
+  gap: .45rem;
+  margin: 1.2rem 0;
+  text-align: left;
+
+  > span { color: #cbd2cd; font-size: .8rem; font-weight: 800; }
+  select { width: 100%; min-height: 46px; border: 1px solid rgba(255,255,255,.13); border-radius: 11px; padding: 0 .8rem; background: #0f1210; color: #fff; font: inherit; }
+}
+
+.selected-share-playlist {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  padding: .75rem;
+  border-radius: 12px;
+  background: rgba(255,255,255,.06);
+  text-align: left;
+
+  img { width: 52px; height: 52px; border-radius: 8px; object-fit: cover; }
+  div { min-width: 0; display: grid; gap: .2rem; }
+  strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  span { color: #9aa39d; font-size: .78rem; }
+}
+
+.share-picker-empty { color: #9aa39d !important; }
 .share-ready-copy { color: #d1d7d3 !important; }
 .share-link-field {
   display: grid;
@@ -1765,7 +1793,7 @@ h6 {
   margin: 1rem 0;
 
   input { min-width: 0; min-height: 44px; border: 1px solid rgba(255,255,255,.12); border-radius: 10px; background: #0f1210; color: #cbd2cd; padding: 0 0.8rem; }
-  button { border: 0; border-radius: 10px; background: #1ed760; color: #071109; padding: 0 1rem; font: inherit; font-weight: 800; cursor: pointer; i { margin-right: 0.4rem; } }
+  button { display: inline-flex; align-items: center; gap: .4rem; border: 0; border-radius: 10px; background: #1ed760; color: #071109; padding: 0 1rem; font: inherit; font-weight: 800; cursor: pointer; }
 }
 
 .share-modal-error { margin: 0.8rem 0; color: #ff8989; font-size: 0.86rem; }
@@ -1773,6 +1801,6 @@ h6 {
 
 @media (max-width: 520px) {
   .share-modal { padding: 1.5rem 1rem; }
-  .share-link-field { grid-template-columns: 1fr; button { min-height: 44px; } }
+  .share-link-field { grid-template-columns: 1fr; button { min-height: 44px; justify-content: center; } }
   .share-modal-actions { display: grid; button, a { width: 100%; box-sizing: border-box; } }
 }

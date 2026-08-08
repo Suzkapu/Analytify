@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {firstValueFrom} from 'rxjs';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-source.service';
@@ -11,13 +11,24 @@ import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
   templateUrl: './shared-playlists.component.html',
   styleUrls: ['./shared-playlists.component.scss']
 })
-export class SharedPlaylistsComponent implements OnInit {
+export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   receivedShares: PlaylistShare[] = [];
   ownedShares: PlaylistShare[] = [];
+  availablePlaylists: ComparePlaylist[] = [];
   isLoading = true;
   busyShareId = '';
   errorMessage = '';
   successMessage = '';
+  isShareDialogOpen = false;
+  isLoadingSharePlaylists = false;
+  isCreatingShare = false;
+  selectedPlaylistId = '';
+  shareLink = '';
+  shareError = '';
+  shareLinkCopied = false;
+
+  private unsubscribeFromShareChanges: (() => void) | null = null;
+  private silentReloadPromise: Promise<void> | null = null;
 
   constructor(
     private sharing: PlaylistSharingService,
@@ -26,21 +37,119 @@ export class SharedPlaylistsComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.unsubscribeFromShareChanges = this.sharing.subscribeToShareChanges(() => {
+      this.reloadSilently();
+    });
     await this.reload();
   }
 
-  async reload(): Promise<void> {
-    this.isLoading = true;
-    this.errorMessage = '';
+  ngOnDestroy(): void {
+    this.unsubscribeFromShareChanges?.();
+    this.unsubscribeFromShareChanges = null;
+  }
+
+  async reload(silent = false): Promise<void> {
+    if (!silent) {
+      this.isLoading = true;
+      this.errorMessage = '';
+    }
     try {
       [this.receivedShares, this.ownedShares] = await Promise.all([
         this.sharing.listReceivedShares(),
         this.sharing.listOwnedShares()
       ]);
     } catch (error) {
-      this.errorMessage = this.describeError(error);
+      if (silent) {
+        console.warn('[SharedPlaylists] Could not apply a live share update.', error);
+      } else {
+        this.errorMessage = this.describeError(error);
+      }
     } finally {
-      this.isLoading = false;
+      if (!silent) this.isLoading = false;
+    }
+  }
+
+  get canCreateShares(): boolean {
+    return this.auth.isBackupActive();
+  }
+
+  get selectedPlaylist(): ComparePlaylist | null {
+    return this.availablePlaylists.find(playlist => playlist.id === this.selectedPlaylistId) || null;
+  }
+
+  async openShareDialog(): Promise<void> {
+    if (!this.canCreateShares) return;
+    this.isShareDialogOpen = true;
+    this.isLoadingSharePlaylists = true;
+    this.availablePlaylists = [];
+    this.selectedPlaylistId = '';
+    this.shareLink = '';
+    this.shareError = '';
+    this.shareLinkCopied = false;
+    try {
+      const accessToken = await this.getUsableAccessToken();
+      const spotifyUserId = this.auth.getUserId();
+      if (!spotifyUserId) throw new Error('Your Spotify profile is unavailable.');
+      this.availablePlaylists = await this.source.loadMainPlaylists(accessToken, spotifyUserId);
+    } catch (error) {
+      this.shareError = this.describeError(error);
+    } finally {
+      this.isLoadingSharePlaylists = false;
+    }
+  }
+
+  closeShareDialog(): void {
+    if (this.isCreatingShare) return;
+    this.isShareDialogOpen = false;
+    this.availablePlaylists = [];
+    this.selectedPlaylistId = '';
+    this.shareLink = '';
+    this.shareError = '';
+    this.shareLinkCopied = false;
+  }
+
+  async createShareLink(): Promise<void> {
+    if (this.isCreatingShare) return;
+    if (!this.canCreateShares) {
+      this.shareError = 'Enable Cloud Backup before sharing a playlist.';
+      return;
+    }
+    const playlist = this.selectedPlaylist;
+    if (!playlist) {
+      this.shareError = 'Select a playlist to share.';
+      return;
+    }
+
+    this.isCreatingShare = true;
+    this.shareError = '';
+    try {
+      const accessToken = await this.getUsableAccessToken();
+      const spotifyUserId = this.auth.getUserId();
+      if (!spotifyUserId) throw new Error('Your Spotify profile is unavailable.');
+      const result = await this.source.loadMainTracks(playlist, accessToken, spotifyUserId);
+      const created = await this.sharing.createShare({
+        sourcePlaylistId: playlist.id,
+        playlistName: playlist.name,
+        playlistDescription: playlist.description || '',
+        playlistImageUrl: playlist.imageUrl,
+        tracks: result.tracks
+      });
+      this.shareLink = created.claimUrl;
+      await this.reload(true);
+    } catch (error) {
+      this.shareError = this.describeError(error);
+    } finally {
+      this.isCreatingShare = false;
+    }
+  }
+
+  async copyShareLink(): Promise<void> {
+    if (!this.shareLink) return;
+    try {
+      await navigator.clipboard.writeText(this.shareLink);
+      this.shareLinkCopied = true;
+    } catch {
+      this.shareError = 'Clipboard access is unavailable. Select and copy the link manually.';
     }
   }
 
@@ -66,7 +175,7 @@ export class SharedPlaylistsComponent implements OnInit {
       };
       const revision = await this.sharing.refreshShare(share.id, publication);
       this.successMessage = `“${playlist.name}” is published at revision ${revision}.`;
-      await this.reload();
+      await this.reload(true);
     } catch (error) {
       this.errorMessage = this.describeError(error);
     } finally {
@@ -85,7 +194,7 @@ export class SharedPlaylistsComponent implements OnInit {
     try {
       await this.sharing.revokeShare(share.id);
       this.successMessage = `Access to “${share.playlistName}” was revoked.`;
-      await this.reload();
+      await this.reload(true);
     } catch (error) {
       this.errorMessage = this.describeError(error);
     } finally {
@@ -97,10 +206,22 @@ export class SharedPlaylistsComponent implements OnInit {
     return share.id;
   }
 
+  trackPlaylist(_: number, playlist: ComparePlaylist): string {
+    return playlist.id;
+  }
+
+  private reloadSilently(): void {
+    if (this.silentReloadPromise) return;
+    this.silentReloadPromise = this.reload(true).finally(() => {
+      this.silentReloadPromise = null;
+    });
+  }
+
   private playlistFromShare(share: PlaylistShare): ComparePlaylist {
     return {
       id: share.sourcePlaylistId,
       name: share.playlistName,
+      description: share.playlistDescription,
       imageUrl: share.playlistImageUrl,
       total: share.trackCount,
       ownerName: share.ownerDisplayName,

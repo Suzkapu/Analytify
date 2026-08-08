@@ -4,6 +4,7 @@ import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
+import {PlaylistShareAutoSyncService} from '@core/sharing/playlist-share-auto-sync.service';
 
 @Component({
   selector: 'app-header',
@@ -30,10 +31,12 @@ export class HeaderComponent implements OnInit {
     private storageService: StorageService,
     private supabaseService: SupabaseService,
     private spotifyDataService: SpotifyDataService,
+    private playlistShareAutoSync: PlaylistShareAutoSyncService,
     private router: Router
   ) {}
 
   async ngOnInit() {
+    this.playlistShareAutoSync.start();
     await this.loadUserProfile();
   }
 
@@ -96,6 +99,9 @@ export class HeaderComponent implements OnInit {
     this.showBackupConfirmModal = false;
     try {
       await this.authService.enableBackup();
+      void this.playlistShareAutoSync.syncNow().catch(error => {
+        console.warn('[HeaderComponent] Playlist shares could not be refreshed after enabling Cloud Backup.', error);
+      });
     } catch (err) {
       console.error('Failed to enable backup:', err);
       alert('Failed to enable database backup. Please try again.');

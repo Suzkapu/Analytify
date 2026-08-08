@@ -5,9 +5,28 @@ import {PlaylistSharingService} from './playlist-sharing.service';
 describe('PlaylistSharingService', () => {
   let service: PlaylistSharingService;
   let rpc: jasmine.Spy;
+  let channel: any;
+  let channelFactory: jasmine.Spy;
+  let channelOn: jasmine.Spy;
+  let channelSubscribe: jasmine.Spy;
+  let removeChannel: jasmine.Spy;
+  let postgresChangeHandler: (() => void) | null;
 
   beforeEach(() => {
     rpc = jasmine.createSpy('rpc').and.resolveTo({data: 'share-id', error: null});
+    postgresChangeHandler = null;
+    channel = {};
+    channelOn = jasmine.createSpy('on').and.callFake(
+      (_type: string, _filter: any, handler: () => void) => {
+        postgresChangeHandler = handler;
+        return channel;
+      }
+    );
+    channelSubscribe = jasmine.createSpy('subscribe').and.returnValue(channel);
+    channel.on = channelOn;
+    channel.subscribe = channelSubscribe;
+    channelFactory = jasmine.createSpy('channel').and.returnValue(channel);
+    removeChannel = jasmine.createSpy('removeChannel').and.resolveTo('ok');
     const profileQuery: any = {
       select: () => profileQuery,
       eq: () => profileQuery,
@@ -25,7 +44,9 @@ describe('PlaylistSharingService', () => {
             client: {
               rpc,
               auth: {getUser: () => Promise.resolve({data: {user: {id: 'owner-id'}}, error: null})},
-              from: () => profileQuery
+              from: () => profileQuery,
+              channel: channelFactory,
+              removeChannel
             }
           }
         }
@@ -62,6 +83,31 @@ describe('PlaylistSharingService', () => {
     expect(stats.artists).toBe(2);
     expect(stats.albums).toBe(1);
     expect(stats.durationMs).toBe(360000);
+  });
+
+  it('subscribes to a single share and removes the realtime channel during cleanup', () => {
+    const onChange = jasmine.createSpy('onChange');
+
+    const unsubscribe = service.subscribeToShareChanges(onChange, 'share-id');
+
+    expect(channelFactory).toHaveBeenCalled();
+    expect(channelOn).toHaveBeenCalledWith(
+      'postgres_changes',
+      jasmine.objectContaining({
+        event: '*',
+        schema: 'public',
+        table: 'playlist_shares',
+        filter: 'id=eq.share-id'
+      }),
+      jasmine.any(Function)
+    );
+    expect(channelSubscribe).toHaveBeenCalledTimes(1);
+
+    postgresChangeHandler?.();
+    expect(onChange).toHaveBeenCalledTimes(1);
+
+    unsubscribe();
+    expect(removeChannel).toHaveBeenCalledOnceWith(channel);
   });
 
   function cachedTrack(id: string, playlistIndex: number) {

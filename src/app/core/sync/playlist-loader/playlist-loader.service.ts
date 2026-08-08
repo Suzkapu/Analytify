@@ -923,11 +923,13 @@ export class PlaylistLoaderService {
       this.storageService.setItem(`${userId}_${task.playlistId}_lastUpdated`, Date.now().toString());
     }
 
-    // Sharing is an explicit Supabase grant and intentionally does not depend
-    // on the user's optional Cloud Backup setting.
-    void this.playlistSharingService
-      .refreshActiveSharesFromCache(task.playlistId, task.playlistName, cleanedArtists)
-      .catch(error => console.warn('[PlaylistLoaderService] Could not refresh active playlist shares.', error));
+    // Owners publish refreshed snapshots only while their Cloud Backup opt-in
+    // is active. Recipients never need to enable Cloud Backup to receive them.
+    if (this.authService.isBackupActive()) {
+      void this.playlistSharingService
+        .refreshActiveSharesFromCache(task.playlistId, task.playlistName, cleanedArtists)
+        .catch(error => console.warn('[PlaylistLoaderService] Could not refresh active playlist shares.', error));
+    }
 
   }
 }

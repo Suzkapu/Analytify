@@ -26,6 +26,7 @@ export interface CompareTrack {
 export interface ComparePlaylist {
   id: string;
   name: string;
+  description?: string;
   imageUrl: string;
   total: number;
   ownerName: string;

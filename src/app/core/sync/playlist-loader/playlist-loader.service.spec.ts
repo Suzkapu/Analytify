@@ -21,7 +21,7 @@ describe('PlaylistLoaderService', () => {
           provide: StorageService,
           useValue: { getItem: (key: string) => storageValues[key] ?? null }
         },
-        { provide: SpotifyAuthService, useValue: { logout$: EMPTY } },
+        { provide: SpotifyAuthService, useValue: { logout$: EMPTY, isBackupActive: () => true } },
         { provide: SupabaseService, useValue: {} },
         {
           provide: PlaylistSharingService,

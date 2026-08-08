@@ -177,6 +177,7 @@ export class ParticipantSpotifyService {
     return {
       id: playlist.id,
       name: playlist.name || 'Untitled playlist',
+      description: playlist.description || '',
       imageUrl: playlist.images?.[0]?.url || '',
       total: Number(playlist.items?.total ?? playlist.tracks?.total ?? 0),
       ownerName: playlist.owner?.display_name || playlist.owner?.id || ''
