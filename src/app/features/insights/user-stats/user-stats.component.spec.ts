@@ -155,4 +155,25 @@ describe('UserStatsComponent trends', () => {
     expect(component.isCacheExpired(String(sixDaysAgo), 'long_term')).toBeFalse();
     expect(component.isCacheExpired(String(eightDaysAgo), 'medium_term')).toBeTrue();
   });
+
+  it('treats a genuinely new Top 10 song as a blue-flame hot debut', () => {
+    const previous = makeSnapshot('2026-08-01', [
+      {id: 'older-track', name: 'Older Track', artists: [{name: 'Artist'}]}
+    ]);
+    component.historyData = [previous];
+    component.compareSnapshotId = previous.timestamp.toString();
+    component.topTracks = Array.from({length: 11}, (_, index) => ({
+      id: `new-${index}`,
+      name: `New Song ${index}`,
+      artists: [{name: 'Artist'}]
+    }));
+
+    component.calculateHotMovers();
+
+    expect(component.isHotMover(component.topTracks[0], 'tracks')).toBeTrue();
+    expect(component.isHighDebutHotSong(component.topTracks[0])).toBeTrue();
+    expect(component.isHighDebutHotSong(component.topTracks[9])).toBeTrue();
+    expect(component.isHotMover(component.topTracks[10], 'tracks')).toBeFalse();
+    expect(component.isHighDebutHotSong(component.topTracks[10])).toBeFalse();
+  });
 });

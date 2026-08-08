@@ -46,6 +46,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   showCompareMenu: boolean = false;
   hotMoverTracks = new Set<string>();
   hotMoverArtists = new Set<string>();
+  highDebutTracks = new Set<string>();
+  readonly highDebutRankLimit = 10;
   private historyWriteQueue: Promise<void> = Promise.resolve();
   private statsLoadSequence = 0;
   private historyLoadSequence = 0;
@@ -605,6 +607,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   calculateHotMovers() {
     this.hotMoverTracks.clear();
     this.hotMoverArtists.clear();
+    this.highDebutTracks.clear();
 
     const tracks = this.displayedTracks;
     const artists = this.displayedArtists;
@@ -624,6 +627,13 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
     trackMovers.forEach(item => {
       const key = item.track.id || `${item.track.name}_${this.getTrackArtist(item.track)}`;
+      this.hotMoverTracks.add(key);
+    });
+
+    tracks.slice(0, this.highDebutRankLimit).forEach((track, idx) => {
+      if (this.getTrend(track, idx, 'tracks').type !== 'new') return;
+      const key = track.id || `${track.name}_${this.getTrackArtist(track)}`;
+      this.highDebutTracks.add(key);
       this.hotMoverTracks.add(key);
     });
 
@@ -651,6 +661,11 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       return this.hotMoverArtists.has(key);
     }
     return false;
+  }
+
+  isHighDebutHotSong(track: any): boolean {
+    const key = track.id || `${track.name}_${this.getTrackArtist(track)}`;
+    return this.highDebutTracks.has(key);
   }
 
   getSelectedSnapshotLabel(): string {
