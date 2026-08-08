@@ -44,4 +44,5 @@ jobs:
           DEPLOY_SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           DEPLOY_USER: ${{ secrets.REMOTE_USER }}
           DEPLOY_TARGET: ${{ secrets.TARGET_DIR }}
+          DAILY_PULL_SPOTIFY_IDS: ${{ secrets.DAILY_PULL_SPOTIFY_IDS }}
         run: bash scripts/deploy.sh

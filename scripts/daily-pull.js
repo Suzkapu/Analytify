@@ -10,22 +10,45 @@
  * - SUPABASE_SERVICE_ROLE_KEY: Service role key to bypass RLS policies and sync data
  * - SPOTIFY_CLIENT_ID: Your Spotify Developer Client ID
  * - SPOTIFY_CLIENT_SECRET: Your Spotify Developer Client Secret
- * - DAILY_PULL_SPOTIFY_IDS: Comma-separated Spotify user IDs allowed to use this private job
+ * - DAILY_PULL_SPOTIFY_IDS: Comma-separated Spotify user IDs allowed to use this private job.
+ *   Deployment stores the GitHub secret in `.daily-pull-spotify-ids` when this env value is absent.
+ * - DAILY_PULL_SPOTIFY_IDS_FILE: Optional override for that protected allowlist file
  * - DAILY_TIME_ZONE: Optional IANA timezone for the 01:00 cutoff (default: Europe/Vienna)
  */
 
 const { createClient } = require('@supabase/supabase-js');
+const fs = require('fs');
+const path = require('path');
 const ws = require('ws');
 
 // Keep the daily 01:00 boundary deterministic even when cron runs on a UTC host.
 process.env.TZ = process.env.DAILY_TIME_ZONE || 'Europe/Vienna';
+
+function loadDailyPullSpotifyIds() {
+  const configuredValue = (process.env.DAILY_PULL_SPOTIFY_IDS || '').trim();
+  if (configuredValue) return configuredValue;
+
+  const allowlistPath = process.env.DAILY_PULL_SPOTIFY_IDS_FILE
+    || path.join(__dirname, '.daily-pull-spotify-ids');
+  try {
+    return fs.readFileSync(allowlistPath, 'utf8').trim();
+  } catch (error) {
+    if (error?.code !== 'ENOENT') {
+      console.error(`CRITICAL: Could not read the daily-pull Spotify ID allowlist: ${error.message}`);
+      process.exit(1);
+    }
+    return '';
+  }
+}
+
+const dailyPullSpotifyIds = loadDailyPullSpotifyIds();
 
 const CONFIG = {
   supabaseUrl: process.env.SUPABASE_URL || 'https://tmmhylpexbubyznlizfs.supabase.co',
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
   spotifyClientId: process.env.SPOTIFY_CLIENT_ID,
   spotifyClientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-  dailyPullSpotifyIds: (process.env.DAILY_PULL_SPOTIFY_IDS || '')
+  dailyPullSpotifyIds: dailyPullSpotifyIds
     .split(',')
     .map(id => id.trim())
     .filter(Boolean)
@@ -44,7 +67,7 @@ if (!CONFIG.spotifyClientSecret) {
   process.exit(1);
 }
 if (CONFIG.dailyPullSpotifyIds.length === 0) {
-  console.error('CRITICAL: DAILY_PULL_SPOTIFY_IDS must contain at least one explicitly allowed Spotify user ID.');
+  console.error('CRITICAL: DAILY_PULL_SPOTIFY_IDS or the deployed allowlist file must contain at least one Spotify user ID.');
   process.exit(1);
 }
 
