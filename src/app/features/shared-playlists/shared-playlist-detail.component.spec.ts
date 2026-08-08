@@ -107,7 +107,7 @@ describe('SharedPlaylistDetailComponent', () => {
     const onChange = sharing.subscribeToShareChanges.calls.mostRecent().args[0];
     onChange();
     expect(component.isLoading).toBeFalse();
-    await fixture.whenStable();
+    await flushAsyncWork();
 
     expect(component.share?.revision).toBe(3);
     expect(component.tracks.map(item => item.id)).toEqual(['new-song']);
@@ -128,7 +128,7 @@ describe('SharedPlaylistDetailComponent', () => {
     await component.ngOnInit();
 
     spotifyUpdates.next({shareId: 'share-id', revision: 3, success: true});
-    await fixture.whenStable();
+    await flushAsyncWork();
 
     expect(component.download?.appliedRevision).toBe(3);
     expect(component.liveUpdateMessage).toContain('automatically updated to revision 3');
@@ -163,5 +163,9 @@ describe('SharedPlaylistDetailComponent', () => {
       id, uri: `spotify:track:${id}`, name: id, artists: [{id: 'artist', name: 'Artist'}],
       albumName: '', imageUrl: '', spotifyUrl: '', playlistIndex: 1
     };
+  }
+
+  async function flushAsyncWork(): Promise<void> {
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
   }
 });
