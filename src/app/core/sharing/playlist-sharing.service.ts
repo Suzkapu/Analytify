@@ -73,6 +73,15 @@ export class PlaylistSharingService {
       .filter(share => share.recipientUserId === userId);
   }
 
+  async listReceivedDownloads(): Promise<PlaylistShareDownload[]> {
+    const {data, error} = await this.supabase.client
+      .from('playlist_share_downloads')
+      .select('*')
+      .order('updated_at', {ascending: false});
+    if (error) throw error;
+    return (data || []).map(row => this.mapDownload(row));
+  }
+
   async loadShare(shareId: string): Promise<PlaylistShareDetails> {
     const {data: shareRow, error: shareError} = await this.supabase.client
       .from('playlist_shares')
@@ -82,12 +91,7 @@ export class PlaylistSharingService {
     if (shareError) throw shareError;
     if (!shareRow) throw new Error('This shared playlist is unavailable or has been revoked.');
 
-    const {data: trackRows, error: tracksError} = await this.supabase.client
-      .from('playlist_share_tracks')
-      .select('position, track')
-      .eq('share_id', shareId)
-      .order('position', {ascending: true});
-    if (tracksError) throw tracksError;
+    const trackRows = await this.loadAllShareTracks(shareId);
 
     const {data: downloadRow, error: downloadError} = await this.supabase.client
       .from('playlist_share_downloads')
@@ -233,6 +237,23 @@ export class PlaylistSharingService {
     if (error) throw error;
     if (!data.user) throw new Error('A Supabase login is required for playlist sharing.');
     return data.user.id;
+  }
+
+  private async loadAllShareTracks(shareId: string): Promise<Array<{position: number; track: CompareTrack}>> {
+    const pageSize = 500;
+    const rows: Array<{position: number; track: CompareTrack}> = [];
+    for (let from = 0; ; from += pageSize) {
+      const {data, error} = await this.supabase.client
+        .from('playlist_share_tracks')
+        .select('position, track')
+        .eq('share_id', shareId)
+        .order('position', {ascending: true})
+        .range(from, from + pageSize - 1);
+      if (error) throw error;
+      const page = (data || []) as Array<{position: number; track: CompareTrack}>;
+      rows.push(...page);
+      if (page.length < pageSize) return rows;
+    }
   }
 
   private async loadCurrentProfile(): Promise<{displayName: string; imageUrl: string}> {

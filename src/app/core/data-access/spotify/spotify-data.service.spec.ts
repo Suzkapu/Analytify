@@ -54,6 +54,20 @@ describe('SpotifyDataService', () => {
     expect(result.items.map((playlist: any) => playlist.id)).toEqual(['owned']);
   });
 
+  it('can include followed playlists for the overview saved-playlist toggle', async () => {
+    spyOn(service, 'getAllUserPlaylists').and.returnValue(of({
+      total: 2,
+      items: [
+        {id: 'owned', owner: {id: 'current-user'}, collaborative: false},
+        {id: 'saved', owner: {id: 'other-user'}, collaborative: false}
+      ]
+    }));
+
+    const result = await firstValueFrom(service.getAccessibleUserPlaylists('current-user', true));
+
+    expect(result.items.map((playlist: any) => playlist.id)).toEqual(['owned', 'saved']);
+  });
+
   it('normalizes playlist item payloads into the track shape used by the UI', async () => {
     spyOn(service, 'makeRequest').and.returnValue(of({
       id: 'playlist',

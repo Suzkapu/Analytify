@@ -10,6 +10,7 @@ describe('PlaylistSharingService', () => {
   let channelOn: jasmine.Spy;
   let channelSubscribe: jasmine.Spy;
   let removeChannel: jasmine.Spy;
+  let from: jasmine.Spy;
   let postgresChangeHandler: (() => void) | null;
 
   beforeEach(() => {
@@ -35,6 +36,7 @@ describe('PlaylistSharingService', () => {
         error: null
       })
     };
+    from = jasmine.createSpy('from').and.returnValue(profileQuery);
     TestBed.configureTestingModule({
       providers: [
         PlaylistSharingService,
@@ -44,7 +46,7 @@ describe('PlaylistSharingService', () => {
             client: {
               rpc,
               auth: {getUser: () => Promise.resolve({data: {user: {id: 'owner-id'}}, error: null})},
-              from: () => profileQuery,
+              from,
               channel: channelFactory,
               removeChannel
             }
@@ -108,6 +110,57 @@ describe('PlaylistSharingService', () => {
 
     unsubscribe();
     expect(removeChannel).toHaveBeenCalledOnceWith(channel);
+  });
+
+  it('loads every shared track beyond the Supabase one-thousand-row response limit', async () => {
+    const rows = Array.from({length: 1_205}, (_, index) => ({
+      position: index,
+      track: track(`track-${index}`, index + 1)
+    }));
+    const range = jasmine.createSpy('range').and.callFake((start: number, end: number) =>
+      Promise.resolve({data: rows.slice(start, end + 1), error: null})
+    );
+    const shareQuery: any = {
+      select: () => shareQuery,
+      eq: () => shareQuery,
+      maybeSingle: () => Promise.resolve({
+        data: {
+          id: 'large-share', owner_user_id: 'owner-id', recipient_user_id: null,
+          source_playlist_id: 'source', playlist_name: 'Huge playlist', playlist_description: '',
+          playlist_image_url: '', owner_display_name: 'Owner', owner_image_url: '',
+          recipient_display_name: null, track_count: rows.length, revision: 1,
+          created_at: 'now', updated_at: 'now', accepted_at: null, revoked_at: null
+        },
+        error: null
+      })
+    };
+    const tracksQuery: any = {
+      select: () => tracksQuery,
+      eq: () => tracksQuery,
+      order: () => tracksQuery,
+      range
+    };
+    const downloadQuery: any = {
+      select: () => downloadQuery,
+      eq: () => downloadQuery,
+      maybeSingle: () => Promise.resolve({data: null, error: null})
+    };
+    from.and.callFake((table: string) => {
+      if (table === 'playlist_shares') return shareQuery;
+      if (table === 'playlist_share_tracks') return tracksQuery;
+      if (table === 'playlist_share_downloads') return downloadQuery;
+      throw new Error(`Unexpected table: ${table}`);
+    });
+
+    const details = await service.loadShare('large-share');
+
+    expect(details.tracks.length).toBe(1_205);
+    expect(details.tracks[1_204].id).toBe('track-1204');
+    expect(range.calls.allArgs()).toEqual([
+      [0, 499],
+      [500, 999],
+      [1000, 1499]
+    ]);
   });
 
   function cachedTrack(id: string, playlistIndex: number) {

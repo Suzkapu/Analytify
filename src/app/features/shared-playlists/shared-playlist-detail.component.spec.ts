@@ -1,10 +1,12 @@
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ActivatedRoute, Router} from '@angular/router';
+import {Subject} from 'rxjs';
 import {SharedPlaylistDetailComponent} from './shared-playlist-detail.component';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.service';
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
+import {PlaylistShareAutoSyncService, PlaylistShareSpotifyUpdate} from '@core/sharing/playlist-share-auto-sync.service';
 
 describe('SharedPlaylistDetailComponent', () => {
   let fixture: ComponentFixture<SharedPlaylistDetailComponent>;
@@ -12,6 +14,7 @@ describe('SharedPlaylistDetailComponent', () => {
   let sharing: jasmine.SpyObj<PlaylistSharingService>;
   let spotify: jasmine.SpyObj<ParticipantSpotifyService>;
   let unsubscribeShareChanges: jasmine.Spy;
+  let spotifyUpdates: Subject<PlaylistShareSpotifyUpdate>;
 
   beforeEach(() => {
     sharing = jasmine.createSpyObj<PlaylistSharingService>('PlaylistSharingService', [
@@ -21,6 +24,7 @@ describe('SharedPlaylistDetailComponent', () => {
       'subscribeToShareChanges'
     ]);
     unsubscribeShareChanges = jasmine.createSpy('unsubscribeShareChanges');
+    spotifyUpdates = new Subject<PlaylistShareSpotifyUpdate>();
     sharing.subscribeToShareChanges.and.returnValue(unsubscribeShareChanges);
     spotify = jasmine.createSpyObj<ParticipantSpotifyService>('ParticipantSpotifyService', ['syncPlaylist']);
     sharing.loadShare.and.resolveTo({
@@ -59,7 +63,8 @@ describe('SharedPlaylistDetailComponent', () => {
           useValue: {getAccessToken: () => 'token', isTokenExpired: () => false, refreshToken: jasmine.createSpy()}
         },
         {provide: ParticipantSpotifyService, useValue: spotify},
-        {provide: PlaylistSharingService, useValue: sharing}
+        {provide: PlaylistSharingService, useValue: sharing},
+        {provide: PlaylistShareAutoSyncService, useValue: {spotifyUpdates$: spotifyUpdates.asObservable()}}
       ],
       schemas: [NO_ERRORS_SCHEMA]
     });
@@ -80,7 +85,7 @@ describe('SharedPlaylistDetailComponent', () => {
     expect(component.download?.appliedRevision).toBe(2);
   });
 
-  it('silently reloads a matching live update and keeps Spotify synchronization manual', async () => {
+  it('silently reloads a matching live update while background synchronization handles Spotify', async () => {
     sharing.loadShare.and.returnValues(
       Promise.resolve({
         share: share(2),
@@ -109,6 +114,24 @@ describe('SharedPlaylistDetailComponent', () => {
     expect(component.liveUpdateMessage).toContain('revision 3');
     expect(component.hasUpdate).toBeTrue();
     expect(spotify.syncPlaylist).not.toHaveBeenCalled();
+  });
+
+  it('shows the applied revision after the background service updates the Spotify copy', async () => {
+    sharing.loadShare.and.returnValues(
+      Promise.resolve({
+        share: share(3), tracks: [track('new-song')], download: download(2), viewerRole: 'recipient'
+      }),
+      Promise.resolve({
+        share: share(3), tracks: [track('new-song')], download: download(3), viewerRole: 'recipient'
+      })
+    );
+    await component.ngOnInit();
+
+    spotifyUpdates.next({shareId: 'share-id', revision: 3, success: true});
+    await fixture.whenStable();
+
+    expect(component.download?.appliedRevision).toBe(3);
+    expect(component.liveUpdateMessage).toContain('automatically updated to revision 3');
   });
 
   it('unsubscribes from live updates when the detail page is destroyed', async () => {

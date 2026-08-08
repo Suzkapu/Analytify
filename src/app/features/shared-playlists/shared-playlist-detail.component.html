@@ -22,13 +22,13 @@
           {{ isDownloading ? 'Updating…' : downloadButtonLabel }}
         </button>
         <a *ngIf="download?.spotifyPlaylistUrl" [href]="download?.spotifyPlaylistUrl" target="_blank" rel="noopener noreferrer">Open Spotify copy</a>
+        <small *ngIf="download">Updates automatically while you are logged in to Analytify.</small>
       </div>
     </header>
 
     <div *ngIf="errorMessage" class="detail-alert error" role="alert"><i class="pi pi-exclamation-circle"></i>{{ errorMessage }}</div>
     <div *ngIf="liveUpdateMessage" class="detail-alert success" role="status">
       <i class="pi pi-bolt"></i>{{ liveUpdateMessage }}
-      <span *ngIf="hasUpdate"> You can update the same Spotify copy below.</span>
     </div>
     <div *ngIf="saveResult?.success" class="detail-alert success" role="status"><i class="pi pi-check-circle"></i>The same Spotify playlist now contains revision {{ share.revision }}.</div>
 

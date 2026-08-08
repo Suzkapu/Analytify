@@ -106,12 +106,29 @@ describe('PlaylistsComponent', () => {
 
     await component.loadPlaylists();
 
-    expect(spotifyDataService.getAccessibleUserPlaylists).toHaveBeenCalledOnceWith('current-user');
+    expect(spotifyDataService.getAccessibleUserPlaylists).toHaveBeenCalledOnceWith('current-user', true);
     expect(spotifyDataService.getFavTracks).toHaveBeenCalledOnceWith(0, 1);
     expect(component.playlists.map(playlist => playlist.id)).toEqual(['fav', 'updated']);
     expect(component.playlists[0].tracks.total).toBe(42);
     expect(JSON.parse(storage.get('current-user_playlists') || '[]').map((playlist: any) => playlist.id))
       .toEqual(['fav', 'updated']);
+  });
+
+  it('keeps followed playlists hidden by default and toggles them into the overview', () => {
+    component.playlists = [
+      {id: 'fav', name: 'Favourite Tracks', tracks: {total: 5}},
+      {id: 'owned', name: 'Owned', owner: {id: 'current-user'}, collaborative: false, tracks: {total: 2}},
+      {id: 'saved', name: 'Saved', owner: {id: 'friend', display_name: 'Friend'}, collaborative: false, tracks: {total: 3}}
+    ];
+    (component as any).currentSpotifyProfileId = 'current-user';
+
+    component.filterPlaylists();
+    expect(component.filteredPlaylists.map(playlist => playlist.id)).toEqual(['fav', 'owned']);
+    expect(component.savedPlaylistCount).toBe(1);
+
+    component.toggleSavedPlaylists();
+    expect(component.filteredPlaylists.map(playlist => playlist.id)).toEqual(['fav', 'owned', 'saved']);
+    expect(storage.get('current-user_playlists_showSaved')).toBe('true');
   });
 
   it('merges multiple selected playlists without duplicate tracks', async () => {

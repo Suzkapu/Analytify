@@ -1,10 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {firstValueFrom} from 'rxjs';
+import {firstValueFrom, Subscription} from 'rxjs';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {CompareSaveResult, CompareTrack} from '@core/compare-room/compare-room.models';
 import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.service';
 import {PlaylistShare, PlaylistShareDownload, SharedPlaylistStats} from '@core/sharing/playlist-sharing.models';
+import {PlaylistShareAutoSyncService, PlaylistShareSpotifyUpdate} from '@core/sharing/playlist-share-auto-sync.service';
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
 
 @Component({
@@ -29,6 +30,7 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
 
   private shareId = '';
   private unsubscribeShareChanges: (() => void) | null = null;
+  private spotifyUpdateSubscription = new Subscription();
   private isLiveReloading = false;
   private liveReloadPending = false;
 
@@ -37,11 +39,15 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
     private router: Router,
     private auth: SpotifyAuthService,
     private sharing: PlaylistSharingService,
-    private spotify: ParticipantSpotifyService
+    private spotify: ParticipantSpotifyService,
+    private shareAutoSync: PlaylistShareAutoSyncService
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.shareId = this.route.snapshot.paramMap.get('id') || '';
+    this.spotifyUpdateSubscription = this.shareAutoSync.spotifyUpdates$.subscribe(update => {
+      if (update.shareId === this.shareId) void this.applySpotifyAutoUpdate(update);
+    });
     if (this.shareId) {
       this.unsubscribeShareChanges = this.sharing.subscribeToShareChanges(
         () => void this.reloadFromLiveUpdate(),
@@ -54,6 +60,7 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribeShareChanges?.();
     this.unsubscribeShareChanges = null;
+    this.spotifyUpdateSubscription.unsubscribe();
   }
 
   async load(silent = false): Promise<void> {
@@ -64,7 +71,7 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
       const details = await this.sharing.loadShare(shareId);
       this.share = details.share;
       this.tracks = details.tracks;
-      this.download = details.download;
+      this.download = this.newerDownload(this.download, details.download);
       this.viewerRole = details.viewerRole;
       this.stats = this.sharing.calculateStats(this.tracks);
       this.filterTracks();
@@ -172,12 +179,34 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
         const currentRevision = this.share?.revision || 0;
         if (previousRevision > 0 && currentRevision > previousRevision) {
           this.saveResult = null;
-          this.liveUpdateMessage = `Live update received: revision ${currentRevision} is now available.`;
+          this.liveUpdateMessage = this.download?.appliedRevision === currentRevision
+            ? `Your Spotify copy was automatically updated to revision ${currentRevision}.`
+            : this.download
+              ? `Live update received: revision ${currentRevision} is being applied to your Spotify copy…`
+            : `Live update received: revision ${currentRevision} is now available.`;
         }
       } while (this.liveReloadPending);
     } finally {
       this.isLiveReloading = false;
     }
+  }
+
+  private async applySpotifyAutoUpdate(update: PlaylistShareSpotifyUpdate): Promise<void> {
+    if (update.success) {
+      await this.load(true);
+      this.liveUpdateMessage = `Your Spotify copy was automatically updated to revision ${update.revision}.`;
+      return;
+    }
+    this.errorMessage = `${update.error || 'The automatic Spotify update failed.'} You can retry it below.`;
+  }
+
+  private newerDownload(
+    current: PlaylistShareDownload | null,
+    incoming: PlaylistShareDownload | null
+  ): PlaylistShareDownload | null {
+    if (!incoming) return current;
+    if (!current || current.shareId !== incoming.shareId) return incoming;
+    return current.appliedRevision > incoming.appliedRevision ? current : incoming;
   }
 
   private async getUsableAccessToken(): Promise<string> {

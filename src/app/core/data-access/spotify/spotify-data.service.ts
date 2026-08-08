@@ -92,7 +92,7 @@ export class SpotifyDataService {
     );
   }
 
-  getAccessibleUserPlaylists(knownUserId?: string): Observable<any> {
+  getAccessibleUserPlaylists(knownUserId?: string, includeSaved: boolean = false): Observable<any> {
     return forkJoin({
       // The app already persists the Spotify profile ID. Reusing it removes
       // one /me request from every playlist-page refresh after first login.
@@ -102,9 +102,11 @@ export class SpotifyDataService {
       map(({ user, playlists }) => ({
         ...playlists,
         currentUserId: user?.id || null,
-        items: (playlists.items || []).filter((playlist: any) =>
-          playlist?.owner?.id === user?.id || playlist?.collaborative === true
-        )
+        items: includeSaved
+          ? (playlists.items || [])
+          : (playlists.items || []).filter((playlist: any) =>
+              playlist?.owner?.id === user?.id || playlist?.collaborative === true
+            )
       }))
     );
   }

@@ -110,6 +110,42 @@
   gap: 7px;
 }
 
+.saved-toggle-button {
+  border-radius: 8px !important;
+  padding: 0.5rem 0.85rem !important;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 7px;
+
+  small {
+    min-width: 20px;
+    height: 20px;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    color: inherit;
+    font-size: 0.68rem;
+  }
+
+  &.saved-visible {
+    border-color: #1ed760 !important;
+    background: rgba(30, 215, 96, 0.12) !important;
+    color: #1ed760 !important;
+  }
+}
+
+.saved-playlist-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 4px;
+  color: #1ed760;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
 .merge-composer,
 .merge-success {
   width: 80vw;
@@ -246,7 +282,11 @@
 
     .controls-right {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+
+      .merge-toggle-button {
+        grid-column: 1 / -1;
+      }
 
       button,
       ::ng-deep .p-button {

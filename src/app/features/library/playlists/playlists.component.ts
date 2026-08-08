@@ -17,6 +17,7 @@ export class PlaylistsComponent {
   filteredPlaylists: any[] = [];
   searchText: string = '';
   sortOrder: 'asc' | 'desc' | 'none' = 'none';
+  showSavedPlaylists = false;
   isRefreshingPlaylists = false;
   isMergeSelectionMode = false;
   selectedPlaylistIds = new Set<string>();
@@ -26,6 +27,7 @@ export class PlaylistsComponent {
   mergeProgress = '';
   mergeError = '';
   mergeResult: CompareSaveResult | null = null;
+  private currentSpotifyProfileId = '';
 
   constructor(
     private route: ActivatedRoute, 
@@ -39,6 +41,7 @@ export class PlaylistsComponent {
     this.route.params.subscribe(async () => {
       const userId = this.authService.getUserId() || 'anonymous';
       this.sortOrder = (this.storageService.getItem(`${userId}_playlists_sortOrder`) as 'asc' | 'desc' | 'none') || 'none';
+      this.showSavedPlaylists = this.storageService.getItem(`${userId}_playlists_showSaved`) === 'true';
       if (this.authService.isAuthenticated()) {
         await this.authService.ensureInitialSync();
       }
@@ -52,6 +55,8 @@ export class PlaylistsComponent {
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
     const profileIdKey = `${userId}_spotify_profile_id`;
     const isBackupActive = this.authService.isBackupActive();
+    this.currentSpotifyProfileId = this.storageService.getItem(profileIdKey)
+      || (userId !== 'anonymous' ? this.stripDevSuffix(userId) : '');
     let storedPlaylists = this.storageService.getItem(storageKey);
     let parsedPlaylists: any[] = [];
     let isParseError = false;
@@ -66,14 +71,6 @@ export class PlaylistsComponent {
             isParseError = true;
           } else {
             parsedPlaylists = parsed;
-            const profileId = this.storageService.getItem(profileIdKey);
-            if (profileId) {
-              parsedPlaylists = parsedPlaylists.filter(playlist =>
-                playlist.id === 'fav' ||
-                playlist.owner?.id === profileId ||
-                playlist.collaborative === true
-              );
-            }
           }
         } catch (e) {
           console.warn('Failed to parse cached playlists:', e);
@@ -141,9 +138,10 @@ export class PlaylistsComponent {
     const knownProfileId = cachedProfileId || authProfileId;
     try {
       const response = await firstValueFrom(
-        this.spotifyDataService.getAccessibleUserPlaylists(knownProfileId)
+        this.spotifyDataService.getAccessibleUserPlaylists(knownProfileId, true)
       );
       if (response.currentUserId) {
+        this.currentSpotifyProfileId = response.currentUserId;
         this.storageService.setItem(profileIdKey, response.currentUserId);
       }
       const refreshedPlaylists = (response.items || []).map((playlist: any) => ({
@@ -186,10 +184,13 @@ export class PlaylistsComponent {
   }
 
   filterPlaylists() {
+    const visiblePlaylists = this.showSavedPlaylists
+      ? this.playlists
+      : this.playlists.filter(playlist => !this.isSavedPlaylist(playlist));
     if (this.searchText.trim() === '') {
-      this.filteredPlaylists = [...this.playlists];
+      this.filteredPlaylists = [...visiblePlaylists];
     } else {
-      this.filteredPlaylists = this.playlists.filter(playlist =>
+      this.filteredPlaylists = visiblePlaylists.filter(playlist =>
         playlist.name.toLowerCase().includes(this.searchText.toLowerCase())
       );
     }
@@ -207,6 +208,31 @@ export class PlaylistsComponent {
         return countA - countB;
       });
     }
+  }
+
+  get savedPlaylistCount(): number {
+    return this.playlists.filter(playlist => this.isSavedPlaylist(playlist)).length;
+  }
+
+  toggleSavedPlaylists(): void {
+    this.showSavedPlaylists = !this.showSavedPlaylists;
+    const userId = this.authService.getUserId() || 'anonymous';
+    this.storageService.setItem(`${userId}_playlists_showSaved`, String(this.showSavedPlaylists));
+    this.filterPlaylists();
+    if (!this.showSavedPlaylists) {
+      const visibleIds = new Set(this.filteredPlaylists.map(playlist => playlist.id));
+      this.selectedPlaylistIds.forEach(playlistId => {
+        if (!visibleIds.has(playlistId)) this.selectedPlaylistIds.delete(playlistId);
+      });
+      this.updateDefaultMergedPlaylistName();
+    }
+  }
+
+  isSavedPlaylist(playlist: any): boolean {
+    if (!playlist || playlist.id === 'fav' || playlist.collaborative === true) return false;
+    const ownerId = playlist.owner?.id;
+    if (!ownerId || !this.currentSpotifyProfileId) return false;
+    return ownerId !== this.currentSpotifyProfileId;
   }
 
   sortPlaylistsByTracks() {
