@@ -1,4 +1,4 @@
-import {APP_ROUTES} from './app-routing.module';
+import {APP_ROUTES, ROUTER_OPTIONS} from './app-routing.module';
 import {redirectLoggedInGuard} from '@core/auth/redirect-logged-in.guard';
 import {spotifyAuthGuard} from '@core/auth/spotify-auth.guard';
 
@@ -45,5 +45,13 @@ describe('application routes', () => {
       expect(route?.canActivate).toBeUndefined();
       expect(route?.loadChildren).toEqual(jasmine.any(Function));
     });
+  });
+
+  it('restores positions and scrolls URL fragments below the sticky header', () => {
+    expect(ROUTER_OPTIONS).toEqual(jasmine.objectContaining({
+      scrollPositionRestoration: 'enabled',
+      anchorScrolling: 'enabled',
+      scrollOffset: [0, 96]
+    }));
   });
 });

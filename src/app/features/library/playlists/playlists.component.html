@@ -1,64 +1,67 @@
 <app-header mobileTitle="Your Playlists"></app-header>
 
-<!-- Playlists Centered Title Bar -->
-<div class="playlists-top-bar" *ngIf="playlists.length !== 0" style="display: flex; align-items: center; justify-content: center; min-height: 48px; width: 80vw; max-width: 1000px; margin: 20px auto 0 auto; box-sizing: border-box;">
-  <div style="text-align: center;">
-    <span
-      style="font-size: 0.8rem; font-weight: 800; color: #1db954; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px;">Spotify
-      Analytics</span>
-    <h2 style="margin: 0; font-weight: 800; color: #ffffff; font-size: 1.9rem;">Your Playlists</h2>
-    <small *ngIf="isRefreshingPlaylists" style="display: block; margin-top: 4px; color: #8d9690;">
-      <i class="pi pi-spin pi-spinner"></i> Checking Spotify for updates…
-    </small>
-  </div>
-</div>
+<main class="app-page playlists-page">
+  <div class="page-shell">
+    <header class="page-hero playlists-top-bar" *ngIf="playlists.length !== 0">
+      <div>
+        <span class="page-eyebrow">Your Spotify library</span>
+        <div class="playlists-heading-line">
+          <h1>Your playlists</h1>
+          <span class="playlist-count-chip"
+            [attr.aria-label]="playlists.length + ' ' + (playlists.length === 1 ? 'playlist' : 'playlists')">
+            <strong>{{ playlists.length }}</strong>
+            <span>{{ playlists.length === 1 ? 'playlist' : 'playlists' }}</span>
+          </span>
+        </div>
+        <p>Explore the songs inside a playlist, uncover its listening profile, or combine several into one.</p>
+        <small *ngIf="isRefreshingPlaylists" class="page-sync-state" role="status">
+          <i class="pi pi-spin pi-spinner"></i> Checking Spotify for updates…
+        </small>
+      </div>
+    </header>
 
-<!-- Playlists Controls Bar -->
-<div class="playlists-controls-bar" *ngIf="playlists.length !== 0">
-  <div class="controls-left">
-    <span class="p-input-icon-left search-container">
-      <i class="pi pi-search"></i>
-      <input (input)="filterPlaylists()" [(ngModel)]="searchText" class="search-input" pInputText
-        placeholder="Search playlists..." type="text"
-        style="border-radius: 20px; font-size: 0.95rem; padding-left: 2.5rem;" />
-    </span>
-  </div>
-  <div class="controls-right">
-    <button (click)="toggleMergeSelectionMode()" class="p-button merge-toggle-button"
-      [class.p-button-outlined]="!isMergeSelectionMode"
-      [class.p-button-secondary]="!isMergeSelectionMode"
-      [disabled]="isCreatingMergedPlaylist"
-      title="Select multiple playlists and combine all unique songs">
-      <i class="pi" [ngClass]="isMergeSelectionMode ? 'pi-times' : 'pi-clone'"></i>
-      <span>{{ isMergeSelectionMode ? 'Cancel merge' : 'Merge playlists' }}</span>
-    </button>
-    <button *ngIf="savedPlaylistCount > 0" type="button" (click)="toggleSavedPlaylists()"
-      class="p-button p-button-outlined p-button-secondary saved-toggle-button"
-      [class.saved-visible]="showSavedPlaylists"
-      [attr.aria-pressed]="showSavedPlaylists"
-      [title]="showSavedPlaylists ? 'Hide playlists you saved from other Spotify users' : 'Show playlists you saved from other Spotify users'">
-      <i class="pi pi-bookmark"></i>
-      <span>{{ showSavedPlaylists ? 'Hide saved' : 'Show saved' }}</span>
-      <small>{{ savedPlaylistCount }}</small>
-    </button>
-    <button (click)="sortPlaylistsByTracks()" class="p-button p-button-outlined p-button-secondary"
-      style="border-radius: 8px !important; padding: 0.5rem 1rem !important; display: flex; align-items: center; gap: 6px;"
-      [style.background]="isSortedByCount ? 'rgba(30, 215, 96, 0.12) !important' : 'transparent !important'"
-      [style.borderColor]="isSortedByCount ? '#1ed760 !important' : 'rgba(255, 255, 255, 0.2) !important'"
-      [style.color]="isSortedByCount ? '#1ed760 !important' : '#e0e0e0 !important'"
-      title="Sort playlists by song count">
-      <i class="pi" [ngClass]="{
-        'pi-sort-alt': sortOrder === 'none',
-        'pi-sort-amount-down': sortOrder === 'desc',
-        'pi-sort-amount-up': sortOrder === 'asc'
-      }"></i>
-      <span class="sort-label-desktop">Sort By Count</span>
-      <span class="sort-label-mobile">Sort</span>
-    </button>
-  </div>
-</div>
+    <section class="page-toolbar playlists-controls-bar" *ngIf="playlists.length !== 0" aria-label="Playlist controls">
+      <div class="controls-left">
+        <label class="search-container">
+          <span class="sr-only">Search playlists</span>
+          <i class="pi pi-search" aria-hidden="true"></i>
+          <input (input)="filterPlaylists()" [(ngModel)]="searchText" class="search-input" pInputText
+            placeholder="Search your playlists" type="search" />
+        </label>
+      </div>
+      <div class="controls-right">
+        <button (click)="toggleMergeSelectionMode()" class="p-button merge-toggle-button"
+          [class.p-button-outlined]="!isMergeSelectionMode"
+          [class.p-button-secondary]="!isMergeSelectionMode"
+          [disabled]="isCreatingMergedPlaylist"
+          title="Select multiple playlists and combine all unique songs">
+          <i class="pi" [ngClass]="isMergeSelectionMode ? 'pi-times' : 'pi-clone'"></i>
+          <span>{{ isMergeSelectionMode ? 'Cancel merge' : 'Merge' }}</span>
+        </button>
+        <button *ngIf="savedPlaylistCount > 0" type="button" (click)="toggleSavedPlaylists()"
+          class="p-button p-button-outlined p-button-secondary saved-toggle-button"
+          [class.saved-visible]="showSavedPlaylists"
+          [attr.aria-pressed]="showSavedPlaylists"
+          [title]="showSavedPlaylists ? 'Hide playlists you saved from other Spotify users' : 'Show playlists you saved from other Spotify users'">
+          <i class="pi pi-bookmark"></i>
+          <span>{{ showSavedPlaylists ? 'Hide saved' : 'Show saved' }}</span>
+          <small>{{ savedPlaylistCount }}</small>
+        </button>
+        <button (click)="sortPlaylistsByTracks()"
+          class="p-button p-button-outlined p-button-secondary sort-playlists-button"
+          [class.is-active]="isSortedByCount" title="Sort playlists by song count">
+          <i class="pi" [ngClass]="{
+            'pi-sort-alt': sortOrder === 'none',
+            'pi-sort-amount-down': sortOrder === 'desc',
+            'pi-sort-amount-up': sortOrder === 'asc'
+          }"></i>
+          <span class="sort-label-desktop">Song count</span>
+          <span class="sort-label-mobile">Sort</span>
+        </button>
+      </div>
+    </section>
 
-<section *ngIf="isMergeSelectionMode" class="merge-composer" aria-live="polite">
+    <section *ngIf="isMergeSelectionMode" class="merge-composer" aria-live="polite">
   <div class="merge-composer-copy">
     <span class="merge-eyebrow">Combine without duplicates</span>
     <h3>Select at least two playlists</h3>
@@ -84,9 +87,9 @@
     <small *ngIf="mergeProgress">{{ mergeProgress }}</small>
     <small *ngIf="mergeError" class="merge-error">{{ mergeError }}</small>
   </div>
-</section>
+    </section>
 
-<section *ngIf="mergeResult" class="merge-success" [class.merge-failure]="!mergeResult.success" role="status">
+    <section *ngIf="mergeResult" class="merge-success" [class.merge-failure]="!mergeResult.success" role="status">
   <i class="pi" [ngClass]="mergeResult.success ? 'pi-check-circle' : 'pi-exclamation-circle'"></i>
   <div>
     <strong *ngIf="mergeResult.success">“{{ mergeResult.playlistName }}” is ready</strong>
@@ -94,14 +97,19 @@
     <span *ngIf="mergeResult.success">{{ mergeResult.addedTracks }} unique songs were added to your private Spotify playlist.</span>
     <span *ngIf="!mergeResult.success">{{ mergeResult.addedTracks }} songs were added before the error. {{ mergeResult.error }}</span>
   </div>
-  <a *ngIf="mergeResult.playlistUrl" [href]="mergeResult.playlistUrl" target="_blank" rel="noopener noreferrer">Inspect in Spotify</a>
+  <a *ngIf="mergeResult.playlistUrl" class="spotify-text-link spotify-destination"
+    [href]="mergeResult.playlistUrl" target="_blank" rel="noopener noreferrer">Inspect in Spotify</a>
   <button type="button" (click)="dismissMergeResult()" aria-label="Dismiss success message">×</button>
-</section>
+    </section>
 
-<div *ngIf="playlists.length === 0" class="no-playlists" style="margin-top: 4rem;">No playlists found</div>
+    <section *ngIf="playlists.length === 0" class="empty-state no-playlists">
+      <span class="empty-state-icon"><i class="pi pi-list"></i></span>
+      <h1>No playlists found</h1>
+      <p>Your Spotify playlists will appear here once they are available.</p>
+    </section>
 
-<div class="card-container" style="margin-top: 2rem;">
-  <ng-container *ngFor="let playlist of filteredPlaylists">
+    <section class="card-container playlists-grid" aria-label="Your playlists">
+  <ng-container *ngFor="let playlist of filteredPlaylists; trackBy: trackPlaylist">
     <div class="item-card" [class.merge-mode]="isMergeSelectionMode" [class.merge-selected]="isPlaylistSelected(playlist.id)">
       <div class="card-content">
         <button *ngIf="isMergeSelectionMode" type="button" class="playlist-select-button"
@@ -114,6 +122,7 @@
           <div class="image-box">
             <img
               [src]="playlist.images && playlist.images[0] ? playlist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
+              loading="lazy" decoding="async"
               alt="Playlist Image">
           </div>
           <div class="playlist-details">
@@ -128,13 +137,19 @@
           </div>
         </div>
         <div class="card-actions" *ngIf="!isMergeSelectionMode">
-          <button (click)="viewSongs(playlist.id)" class="p-button" style="border-radius: 8px !important;">Explore</button>
+          <button (click)="viewSongs(playlist.id)" class="p-button playlist-card-action">
+            <i class="pi pi-list"></i><span>Explore</span>
+          </button>
           <button (click)="viewAnalysis(playlist.id)"
-            class="p-button p-button-outlined p-button-secondary">Analyze</button>
+            class="p-button p-button-outlined p-button-secondary playlist-card-action">
+            <i class="pi pi-chart-bar"></i><span>Analyze</span>
+          </button>
         </div>
       </div>
     </div>
   </ng-container>
-</div>
+    </section>
+  </div>
+</main>
 
 <app-footer></app-footer>

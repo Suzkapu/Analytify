@@ -176,4 +176,73 @@ describe('UserStatsComponent trends', () => {
     expect(component.isHotMover(component.topTracks[10], 'tracks')).toBeFalse();
     expect(component.isHighDebutHotSong(component.topTracks[10])).toBeFalse();
   });
+
+  it('treats a genuinely new Top 10 artist as a blue-flame hot debut', () => {
+    const previous = makeSnapshot(
+      '2026-08-01',
+      [],
+      [{id: 'older-artist', name: 'Older Artist'}]
+    );
+    component.historyData = [previous];
+    component.compareSnapshotId = previous.timestamp.toString();
+    component.topArtists = Array.from({length: 11}, (_, index) => ({
+      id: `new-artist-${index}`,
+      name: `New Artist ${index}`
+    }));
+
+    component.calculateHotMovers();
+
+    expect(component.isHotMover(component.topArtists[0], 'artists')).toBeTrue();
+    expect(component.isHighDebutHotArtist(component.topArtists[0])).toBeTrue();
+    expect(component.isHighDebutHotArtist(component.topArtists[9])).toBeTrue();
+    expect(component.isHotMover(component.topArtists[10], 'artists')).toBeFalse();
+    expect(component.isHighDebutHotArtist(component.topArtists[10])).toBeFalse();
+  });
+
+  it('shares one ten-entry flame pool between high debuts and rising movers', () => {
+    component.topTracks = Array.from({length: 12}, (_, index) => ({
+      id: `candidate-${index}`,
+      name: `Candidate ${index}`,
+      artists: [{name: 'Artist'}],
+      testTrend: index < 6
+        ? {type: 'new' as const}
+        : {type: 'up' as const, diff: 100 - index}
+    }));
+    spyOn(component, 'getTrend').and.callFake((item: any) => item.testTrend);
+    component.historyData = [makeSnapshot('2026-08-01')];
+
+    component.calculateHotMovers();
+
+    expect(component.hotMoverTracks.size).toBe(10);
+    expect(component.highDebutTracks.size).toBe(4);
+    expect(component.isHotMover(component.topTracks[11], 'tracks')).toBeTrue();
+    expect(component.isHighDebutHotSong(component.topTracks[4])).toBeFalse();
+  });
+
+  it('opens item history with both keyboard activation keys', () => {
+    const item = {id: 'keyboard-track', name: 'Keyboard Track'};
+    const openTrendPopup = spyOn(component, 'openTrendPopup').and.resolveTo();
+    const enterEvent = new KeyboardEvent('keydown', {key: 'Enter', cancelable: true});
+    const spaceEvent = new KeyboardEvent('keydown', {key: ' ', cancelable: true});
+
+    component.onTrendCardKeydown(enterEvent, item, 'tracks');
+    component.onTrendCardKeydown(spaceEvent, item, 'tracks');
+
+    expect(openTrendPopup).toHaveBeenCalledTimes(2);
+    expect(openTrendPopup).toHaveBeenCalledWith(item, 'tracks');
+    expect(enterEvent.defaultPrevented).toBeTrue();
+    expect(spaceEvent.defaultPrevented).toBeTrue();
+  });
+
+  it('ignores unrelated keys on history cards', () => {
+    const openTrendPopup = spyOn(component, 'openTrendPopup').and.resolveTo();
+
+    component.onTrendCardKeydown(
+      new KeyboardEvent('keydown', {key: 'ArrowDown'}),
+      {name: 'Track'},
+      'tracks'
+    );
+
+    expect(openTrendPopup).not.toHaveBeenCalled();
+  });
 });

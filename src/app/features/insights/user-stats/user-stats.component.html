@@ -1,38 +1,29 @@
 <app-header mobileTitle="Your Top Listening"></app-header>
 
 <div class="stats-dashboard-container">
+  <header class="page-hero stats-page-heading">
+    <div>
+      <span class="page-eyebrow">Personal listening</span>
+      <h1>Your top listening</h1>
+      <p>See the songs, artists, and genres shaping your Spotify profile—and how they change over time.</p>
+    </div>
+  </header>
 
   <!-- Time Range & Category Selectors -->
-  <div class="stats-selectors-container">
+  <div class="stats-selectors-container page-toolbar">
 
     <!-- Time Range Selector Row -->
     <div class="stats-selectors-row">
-      <div class="stats-page-heading">
-        <span
-          style="font-size: 0.8rem; font-weight: 800; color: #1db954; text-transform: uppercase; letter-spacing: 1px;">Spotify
-          Analytics</span>
-        <h2 style="margin: 2px 0 0 0; font-weight: 800; font-size: 2rem; color: #ffffff;">Your Top Listening</h2>
-      </div>
-
       <!-- Time Range Toggles and History Selector -->
       <div class="stats-range-controls">
         <!-- Time Range Toggles -->
         <div class="time-range-toggles">
           <button (click)="changeRange('short_term')"
-            [style.background]="selectedRange === 'short_term' ? '#282828' : 'transparent'"
-            [style.color]="selectedRange === 'short_term' ? '#1ed760' : '#b3b3b3'"
-            style="border: none; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;">Last
-            4 Weeks</button>
+            [class.active]="selectedRange === 'short_term'" [attr.aria-pressed]="selectedRange === 'short_term'">4 weeks</button>
           <button (click)="changeRange('medium_term')"
-            [style.background]="selectedRange === 'medium_term' ? '#282828' : 'transparent'"
-            [style.color]="selectedRange === 'medium_term' ? '#1ed760' : '#b3b3b3'"
-            style="border: none; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;">Last
-            6 Months</button>
+            [class.active]="selectedRange === 'medium_term'" [attr.aria-pressed]="selectedRange === 'medium_term'">6 months</button>
           <button (click)="changeRange('long_term')"
-            [style.background]="selectedRange === 'long_term' ? '#282828' : 'transparent'"
-            [style.color]="selectedRange === 'long_term' ? '#1ed760' : '#b3b3b3'"
-            style="border: none; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;">Last
-            Year</button>
+            [class.active]="selectedRange === 'long_term'" [attr.aria-pressed]="selectedRange === 'long_term'">1 year</button>
         </div>
 
         <!-- Custom History Dropdown Overlay -->
@@ -107,7 +98,7 @@
       <button (click)="changeCategory('tracks')" class="p-button"
         [class.p-button-outlined]="selectedCategory !== 'tracks'"
         [class.p-button-secondary]="selectedCategory !== 'tracks'"
-        style="border-radius: 8px !important; padding: 8px 16px !important; display: flex; align-items: center; gap: 8px; font-size: 0.9rem !important;">
+        [class.is-active]="selectedCategory === 'tracks'" [attr.aria-pressed]="selectedCategory === 'tracks'">
         <i class="pi pi-star-fill"></i>
         <span class="tab-label-desktop">Top 100 Songs</span>
         <span class="tab-label-mobile">Songs</span>
@@ -115,7 +106,7 @@
       <button (click)="changeCategory('artists')" class="p-button"
         [class.p-button-outlined]="selectedCategory !== 'artists'"
         [class.p-button-secondary]="selectedCategory !== 'artists'"
-        style="border-radius: 8px !important; padding: 8px 16px !important; display: flex; align-items: center; gap: 8px; font-size: 0.9rem !important;">
+        [class.is-active]="selectedCategory === 'artists'" [attr.aria-pressed]="selectedCategory === 'artists'">
         <i class="pi pi-users"></i>
         <span class="tab-label-desktop">Top Artists</span>
         <span class="tab-label-mobile">Artists</span>
@@ -123,7 +114,7 @@
       <button (click)="changeCategory('genres')" class="p-button"
         [class.p-button-outlined]="selectedCategory !== 'genres'"
         [class.p-button-secondary]="selectedCategory !== 'genres'"
-        style="border-radius: 8px !important; padding: 8px 16px !important; display: flex; align-items: center; gap: 8px; font-size: 0.9rem !important;">
+        [class.is-active]="selectedCategory === 'genres'" [attr.aria-pressed]="selectedCategory === 'genres'">
         <i class="pi pi-tags"></i>
         <span class="tab-label-desktop">Top Genres</span>
         <span class="tab-label-mobile">Genres</span>
@@ -132,14 +123,17 @@
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="isLoading"
-    style="text-align: center; margin-top: 5rem; display: flex; flex-direction: column; align-items: center; gap: 20px;">
-    <i class="pi pi-spin pi-spinner" style="font-size: 3rem; color: #1db954;"></i>
-    <h3 style="font-weight: 500; color: #b3b3b3;">Fetching Spotify data...</h3>
+  <div *ngIf="isLoading" class="page-loading-state" role="status">
+    <i class="pi pi-spin pi-spinner"></i>
+    <h3>Loading your Spotify insights…</h3>
   </div>
 
   <!-- Loaded Views -->
   <div *ngIf="!isLoading">
+    <p class="stats-interaction-hint">
+      <i class="pi pi-chart-line" aria-hidden="true"></i>
+      Select any song, artist, or genre to view its history.
+    </p>
 
     <!-- Category 1: Top 100 Songs -->
     <div *ngIf="selectedCategory === 'tracks'">
@@ -150,7 +144,10 @@
       </div>
       <div class="stats-tracks-grid" *ngIf="displayedTracks.length > 0">
 
-        <div *ngFor="let track of displayedTracks; let idx = index" class="track-row-card"
+        <div *ngFor="let track of displayedTracks; let idx = index; trackBy: trackStatItem" class="track-row-card"
+          role="button" tabindex="0" title="View history graph"
+          [attr.aria-label]="'View history for ' + track.name"
+          (keydown)="onTrendCardKeydown($event, track, 'tracks')"
           (click)="openTrendPopup(track, 'tracks')">
           <div class="track-index" [class.is-hot-mover]="isHotMover(track, 'tracks')"
             [class.is-high-debut]="isHighDebutHotSong(track)" style="position: relative;">
@@ -196,28 +193,34 @@
               <span *ngIf="trend.type === 'new'" class="new-entry-dot" title="First appearance in saved stats"></span>
             </ng-container>
           </div>
-          <img
-            (click)="getTrackUrl(track) && $event.stopPropagation(); openTrackClick(getTrackUrl(track))"
-            [src]="getTrackCover(track)"
-            alt="Track Cover" class="track-cover">
+          <button type="button" class="spotify-artwork-link"
+            [disabled]="!getTrackUrl(track)"
+            [attr.aria-label]="'Open ' + track.name + ' on Spotify'"
+            title="Open on Spotify"
+            (click)="$event.stopPropagation(); openTrackClick(getTrackUrl(track))">
+            <img [src]="getTrackCover(track)"
+              [alt]="track.name + ' cover'" class="track-cover" loading="lazy" decoding="async">
+          </button>
           <div class="track-info">
             <span class="track-title">{{ track.name }}</span>
             <span class="track-artist">{{ getTrackArtist(track) }}</span>
           </div>
           <div class="track-meta">
             <span *ngIf="track.explicit" class="explicit-badge">E</span>
+            <span class="trend-open-cue" aria-hidden="true">
+              <i class="pi pi-chart-line"></i>
+              <span>History</span>
+            </span>
           </div>
         </div>
 
         <!-- Create Playlist Action Button -->
-        <div
-          style="margin-top: 30px; display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; grid-column: 1 / -1;">
-          <span *ngIf="playlistCreationSuccessMessage" style="font-size: 0.85rem; color: #1db954; font-weight: 600;">
+        <div class="stats-create-playlist-action">
+          <span *ngIf="playlistCreationSuccessMessage" class="success-text">
             <i class="pi pi-check-circle"></i> {{ playlistCreationSuccessMessage }}
           </span>
           <button (click)="createTopPlaylist()" class="p-button" [disabled]="isCreatingPlaylist"
-            style="border-radius: 8px !important; padding: 8px 18px !important; display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem !important; background: #1db954; border-color: #1db954; font-weight: 700; color: #ffffff; border: none; transition: all 0.2s;"
-            onmouseover="this.style.background='#1ed760'" onmouseout="this.style.background='#1db954'">
+            >
             <i class="pi" [class.pi-spin]="isCreatingPlaylist" [class.pi-spinner]="isCreatingPlaylist"
               [class.pi-plus-circle]="!isCreatingPlaylist"></i>
             {{ isCreatingPlaylist ? 'Creating...' : 'Create Playlist' }}
@@ -234,37 +237,50 @@
         <span *ngIf="!isSnapshotLoading()">No top artists found for this period.</span>
       </div>
       <div *ngIf="displayedArtists.length > 0" class="stats-artists-grid">
-        <div *ngFor="let artist of displayedArtists; let idx = index" class="artist-grid-card"
+        <div *ngFor="let artist of displayedArtists; let idx = index; trackBy: trackStatItem" class="artist-grid-card"
+          role="button" tabindex="0" title="View history graph"
+          [attr.aria-label]="'View history for ' + artist.name"
+          (keydown)="onTrendCardKeydown($event, artist, 'artists')"
           (click)="openTrendPopup(artist, 'artists')">
           <div class="artist-avatar-container">
-            <img
-              (click)="getArtistUrl(artist) && $event.stopPropagation(); openArtistClick(getArtistUrl(artist))"
-              [src]="getArtistImage(artist)" alt="Artist Photo"
-              class="artist-avatar">
+            <button type="button" class="spotify-artwork-link spotify-artist-link"
+              [disabled]="!getArtistUrl(artist)"
+              [attr.aria-label]="'Open ' + artist.name + ' on Spotify'"
+              title="Open on Spotify"
+              (click)="$event.stopPropagation(); openArtistClick(getArtistUrl(artist))">
+              <img [src]="getArtistImage(artist)" [alt]="artist.name + ' photo'"
+                class="artist-avatar" loading="lazy" decoding="async">
+            </button>
             <div class="artist-rank-badge" [class.is-hot-mover]="isHotMover(artist, 'artists')"
+              [class.is-high-debut]="isHighDebutHotArtist(artist)"
               [class.is-new]="getTrend(artist, idx, 'artists').type === 'new'"
               [class.has-trend]="getTrend(artist, idx, 'artists').type === 'up' || getTrend(artist, idx, 'artists').type === 'down'"
               [attr.title]="getTrend(artist, idx, 'artists').type === 'new' ? 'First appearance in saved stats' : null">
               <span class="number-wrapper">
-                <svg *ngIf="isHotMover(artist, 'artists')" class="hot-mover-flame" viewBox="0 0 24 24" fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
+                <svg *ngIf="isHotMover(artist, 'artists')" class="hot-mover-flame"
+                  [class.is-high-debut]="isHighDebutHotArtist(artist)" viewBox="0 0 24 24" fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  [attr.aria-label]="isHighDebutHotArtist(artist) ? 'Hot new Top 10 artist debut' : 'Hot rising artist'">
                   <path
                     d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
-                    fill="url(#flameGradientArtist)" />
+                    [attr.fill]="'url(#flameGradientArtist-' + idx + ')'" />
                   <path
                     d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
-                    transform="matrix(0.65 0 0 0.65 4.2 5.5)" fill="url(#flameInnerGradientArtist)" />
+                    transform="matrix(0.65 0 0 0.65 4.2 5.5)"
+                    [attr.fill]="'url(#flameInnerGradientArtist-' + idx + ')'" />
                   <defs>
-                    <linearGradient id="flameGradientArtist" x1="12" y1="3" x2="12" y2="21"
+                    <linearGradient [attr.id]="'flameGradientArtist-' + idx" x1="12" y1="3" x2="12" y2="21"
                       gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stop-color="#ff3d00" />
-                      <stop offset="50%" stop-color="#ff9100" />
-                      <stop offset="100%" stop-color="#ffea00" stop-opacity="0.1" />
+                      <stop offset="0%" [attr.stop-color]="isHighDebutHotArtist(artist) ? '#0066ff' : '#ff3d00'" />
+                      <stop offset="50%" [attr.stop-color]="isHighDebutHotArtist(artist) ? '#00bfff' : '#ff9100'" />
+                      <stop offset="100%" [attr.stop-color]="isHighDebutHotArtist(artist) ? '#8be9ff' : '#ffea00'"
+                        stop-opacity="0.1" />
                     </linearGradient>
-                    <linearGradient id="flameInnerGradientArtist" x1="12" y1="3" x2="12" y2="21"
+                    <linearGradient [attr.id]="'flameInnerGradientArtist-' + idx" x1="12" y1="3" x2="12" y2="21"
                       gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stop-color="#ffea00" />
-                      <stop offset="100%" stop-color="#ff5500" stop-opacity="0.4" />
+                      <stop offset="0%" [attr.stop-color]="isHighDebutHotArtist(artist) ? '#d9f8ff' : '#ffea00'" />
+                      <stop offset="100%" [attr.stop-color]="isHighDebutHotArtist(artist) ? '#0077ff' : '#ff5500'"
+                        stop-opacity="0.4" />
                     </linearGradient>
                   </defs>
                 </svg>
@@ -283,6 +299,10 @@
             </div>
           </div>
           <h4 class="artist-name">{{ artist.name }}</h4>
+          <span class="trend-open-cue" aria-hidden="true">
+            <i class="pi pi-chart-line"></i>
+            <span>History</span>
+          </span>
         </div>
       </div>
     </div>
@@ -298,6 +318,9 @@
         <h3>Genres</h3>
         <div class="genres-list-container">
           <div *ngFor="let genre of displayedGenres" class="genre-row card-clickable"
+            role="button" tabindex="0" title="View history graph"
+            [attr.aria-label]="'View history for ' + genre.name"
+            (keydown)="onTrendCardKeydown($event, genre, 'genres')"
             (click)="openTrendPopup(genre, 'genres')">
             <div class="genre-row-header">
               <span class="genre-name">
@@ -319,14 +342,20 @@
                   </span>
                 </ng-container>
               </span>
-              <span class="genre-percentage">
-                {{ genre.percentage < 1 ? '<1' : genre.percentage }}%
-                <ng-container *ngIf="genre.hasCompare && genre.percentageDiff !== 0">
-                  <span class="percentage-diff-badge" [class.positive]="genre.percentageDiff > 0"
-                    [class.negative]="genre.percentageDiff < 0">
-                    {{ genre.percentageDiff > 0 ? '+' : '' }}{{ genre.percentageDiff }}%
-                  </span>
-                </ng-container>
+              <span class="genre-row-meta">
+                <span class="genre-percentage">
+                  {{ genre.percentage < 1 ? '<1' : genre.percentage }}%
+                  <ng-container *ngIf="genre.hasCompare && genre.percentageDiff !== 0">
+                    <span class="percentage-diff-badge" [class.positive]="genre.percentageDiff > 0"
+                      [class.negative]="genre.percentageDiff < 0">
+                      {{ genre.percentageDiff > 0 ? '+' : '' }}{{ genre.percentageDiff }}%
+                    </span>
+                  </ng-container>
+                </span>
+                <span class="trend-open-cue" aria-hidden="true">
+                  <i class="pi pi-chart-line"></i>
+                  <span>History</span>
+                </span>
               </span>
             </div>
             <div class="progress-bar-container">

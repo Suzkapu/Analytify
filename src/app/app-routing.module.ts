@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {ExtraOptions, RouterModule, Routes} from '@angular/router';
 
 import {redirectLoggedInGuard} from '@core/auth/redirect-logged-in.guard';
 import {spotifyAuthGuard} from '@core/auth/spotify-auth.guard';
@@ -78,8 +78,14 @@ export const APP_ROUTES: Routes = [
   {path: '**', redirectTo: ''}
 ];
 
+export const ROUTER_OPTIONS: ExtraOptions = {
+  scrollPositionRestoration: 'enabled',
+  anchorScrolling: 'enabled',
+  scrollOffset: [0, 96]
+};
+
 @NgModule({
-  imports: [RouterModule.forRoot(APP_ROUTES, {scrollPositionRestoration: 'enabled'})],
+  imports: [RouterModule.forRoot(APP_ROUTES, ROUTER_OPTIONS)],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

@@ -9,7 +9,7 @@
   min-height: 100vh;
   min-height: 100dvh;
   gap: 20px;
-  background: #121212;
+  background: var(--color-bg);
 
   img {
     width: 64px;
@@ -22,8 +22,8 @@
   width: 36px;
   height: 36px;
   box-sizing: border-box;
-  border: 3px solid rgba(29, 185, 84, 0.2);
-  border-top-color: #1db954;
+  border: 3px solid var(--color-accent-soft);
+  border-top-color: var(--color-accent);
   border-radius: 50%;
   animation: app-spin 0.8s linear infinite;
 }

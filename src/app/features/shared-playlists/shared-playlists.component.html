@@ -1,10 +1,12 @@
 <app-header mobileTitle="Shared Playlists"></app-header>
 
 <main class="sharing-page">
-  <header class="sharing-hero">
-    <span class="eyebrow">Private Supabase grants</span>
-    <h1>Shared Playlists</h1>
-    <p>Browse playlists shared with you and control access to playlists you shared.</p>
+  <header class="sharing-hero page-hero">
+    <div>
+      <span class="page-eyebrow">Private playlist access</span>
+      <h1>Shared playlists</h1>
+      <p>Browse playlists shared with you and manage access to playlists you have shared.</p>
+    </div>
     <button *ngIf="canCreateShares" type="button" class="open-share-menu-button" (click)="openShareDialog()">
       <i class="pi pi-share-alt"></i>
       <span>Share a playlist</span>
@@ -36,7 +38,7 @@
       </div>
       <div class="share-grid" *ngIf="receivedShares.length">
         <a *ngFor="let share of receivedShares; trackBy: trackShare" [routerLink]="['/shared-playlists', share.id]" class="share-card">
-          <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="">
+          <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="" loading="lazy" decoding="async">
           <div>
             <span class="card-label">From {{ share.ownerDisplayName }}</span>
             <h3>{{ share.playlistName }}</h3>
@@ -59,7 +61,7 @@
         <p *ngIf="!canCreateShares">Enable Cloud Backup in your profile menu to share a playlist.</p>
       </div>
       <article *ngFor="let share of ownedShares; trackBy: trackShare" class="owner-share-row" [class.revoked]="share.revokedAt">
-        <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="">
+        <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="" loading="lazy" decoding="async">
         <div class="owner-share-copy">
           <span class="status-pill" [class.revoked]="share.revokedAt">
             {{ share.revokedAt ? 'Revoked' : (share.recipientUserId ? 'Claimed' : 'Waiting for recipient') }}

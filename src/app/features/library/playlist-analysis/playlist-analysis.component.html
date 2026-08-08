@@ -1,10 +1,7 @@
 <app-header
-  [mobileTitle]="playlistName || 'Playlist Analysis'"
-  [showMobileBackButton]="true"
-  (mobileBack)="goBack()">
+  [mobileTitle]="playlistName || 'Playlist Analysis'">
 </app-header>
 
-<!-- Under-Header Back Button -->
 <div class="back-bar-container">
   <button (click)="goBack()" class="back-text-button" title="Back to Playlists">
     <i class="pi pi-arrow-left"></i> Back
@@ -12,33 +9,31 @@
 </div>
 
 <!-- Cooldown Warning Banner -->
-<div *ngIf="cooldownMessage" style="background: rgba(255, 152, 0, 0.15); border: 1px solid #ff9800; color: #ff9800; border-radius: 8px; padding: 10px 16px; margin: 15px auto 0 auto; max-width: 1100px; display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 0.9rem; box-sizing: border-box; width: calc(100% - 40px);">
+<div *ngIf="cooldownMessage" class="analysis-alert" role="status">
   <i class="pi pi-exclamation-triangle"></i>
   <span>{{ cooldownMessage }}</span>
 </div>
 
 <!-- Animated Loading Progress Indicator -->
-<div *ngIf="isLoading" class="loading-container" style="text-align: center; margin-top: 6rem; display: flex; flex-direction: column; align-items: center; gap: 20px;">
-  <i class="pi pi-spin pi-spinner" style="font-size: 3.5rem; color: #1db954;"></i>
-  <h2 style="font-weight: 600; font-size: 1.4rem; color: #ffffff; margin: 0;">Analyzing playlist data...</h2>
-  <div style="font-size: 1.1rem; font-weight: 700; color: #1db954;">{{ loadedTracksCount }} of {{ totalTracks }} Loaded</div>
-  <div style="width: 320px; background-color: #282828; height: 8px; border-radius: 4px; overflow: hidden; position: relative;">
-    <div [style.width.%]="totalTracks > 0 ? (loadedTracksCount / totalTracks) * 100 : 0" style="background-color: #1db954; height: 100%; transition: width 0.15s ease-out; border-radius: 4px;"></div>
+<div *ngIf="isLoading" class="loading-container analysis-loading" role="status">
+  <i class="pi pi-spin pi-spinner"></i>
+  <h2>Analyzing playlist data…</h2>
+  <div class="analysis-loading-count">{{ loadedTracksCount }} of {{ totalTracks }} loaded</div>
+  <div class="analysis-loading-track">
+    <div [style.width.%]="totalTracks > 0 ? (loadedTracksCount / totalTracks) * 100 : 0" class="analysis-loading-fill"></div>
   </div>
 </div>
 
-<!-- Playlist Analytics Centered Title -->
-<div class="analysis-top-bar" *ngIf="!isLoading" style="display: flex; align-items: center; justify-content: center; min-height: 48px; width: 80vw; max-width: 1000px; margin: 20px auto 0 auto; box-sizing: border-box;">
-  <div style="text-align: center;">
-    <span
-      style="font-size: 0.8rem; font-weight: 800; color: #1db954; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px;">Spotify
-      Analytics</span>
-    <h2 style="margin: 0; font-weight: 800; color: #ffffff; font-size: 1.9rem;">{{ playlistName }}</h2>
+<header class="analysis-top-bar page-hero" *ngIf="!isLoading">
+  <div>
+    <span class="page-eyebrow">Playlist analysis</span>
+    <h1>{{ playlistName }}</h1>
+    <p>A focused overview of this playlist’s size, timeline, and standout tracks.</p>
   </div>
-</div>
+</header>
 
 <!-- Main Analysis Dashboard -->
-<div *ngIf="!isLoading" class="analysis-dashboard-container" style="margin-top: 20px;">
+<main *ngIf="!isLoading" class="analysis-dashboard-container">
 
   <!-- Real-Time Dual Progress Bars Panel -->
   <div *ngIf="!isLoading && (isLoadingTracks || isLoadingArtists)" class="progress-panel-container" style="margin-top: 0; margin-bottom: 24px; width: 100%; max-width: 100%;">
@@ -126,10 +121,10 @@
         <div style="display: flex; flex-direction: column; gap: 16px;">
           
           <!-- Oldest Song -->
-          <div *ngIf="oldestTrack" class="highlight-track-card"
+          <div *ngIf="oldestTrack" class="highlight-track-card spotify-destination"
             [class.is-clickable]="!!oldestTrack.external_urls?.spotify"
             (click)="openTrackClick(oldestTrack.external_urls?.spotify)">
-            <img [src]="oldestTrack.album?.images && oldestTrack.album?.images[0] ? oldestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="Album Art" class="highlight-track-art">
+            <img [src]="oldestTrack.album?.images && oldestTrack.album?.images[0] ? oldestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" [alt]="oldestTrack.name + ' cover'" class="highlight-track-art">
             <div class="highlight-track-info">
               <span class="highlight-track-tag tag-green">Oldest Release</span>
               <h4 class="highlight-track-title">{{ oldestTrack.name }}</h4>
@@ -141,10 +136,10 @@
           </div>
 
           <!-- Newest Song -->
-          <div *ngIf="newestTrack" class="highlight-track-card"
+          <div *ngIf="newestTrack" class="highlight-track-card spotify-destination"
             [class.is-clickable]="!!newestTrack.external_urls?.spotify"
             (click)="openTrackClick(newestTrack.external_urls?.spotify)">
-            <img [src]="newestTrack.album?.images && newestTrack.album?.images[0] ? newestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="Album Art" class="highlight-track-art">
+            <img [src]="newestTrack.album?.images && newestTrack.album?.images[0] ? newestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" [alt]="newestTrack.name + ' cover'" class="highlight-track-art">
             <div class="highlight-track-info">
               <span class="highlight-track-tag tag-green">Newest Release</span>
               <h4 class="highlight-track-title">{{ newestTrack.name }}</h4>
@@ -167,10 +162,10 @@
         <div style="display: flex; flex-direction: column; gap: 16px;">
           
           <!-- Shortest Song -->
-          <div *ngIf="shortestTrack" class="highlight-track-card"
+          <div *ngIf="shortestTrack" class="highlight-track-card spotify-destination"
             [class.is-clickable]="!!shortestTrack.external_urls?.spotify"
             (click)="openTrackClick(shortestTrack.external_urls?.spotify)">
-            <img [src]="shortestTrack.album?.images && shortestTrack.album?.images[0] ? shortestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="Album Art" class="highlight-track-art">
+            <img [src]="shortestTrack.album?.images && shortestTrack.album?.images[0] ? shortestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" [alt]="shortestTrack.name + ' cover'" class="highlight-track-art">
             <div class="highlight-track-info">
               <span class="highlight-track-tag tag-grey">Shortest Song</span>
               <h4 class="highlight-track-title">{{ shortestTrack.name }}</h4>
@@ -182,10 +177,10 @@
           </div>
 
           <!-- Longest Song -->
-          <div *ngIf="longestTrack" class="highlight-track-card"
+          <div *ngIf="longestTrack" class="highlight-track-card spotify-destination"
             [class.is-clickable]="!!longestTrack.external_urls?.spotify"
             (click)="openTrackClick(longestTrack.external_urls?.spotify)">
-            <img [src]="longestTrack.album?.images && longestTrack.album?.images[0] ? longestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="Album Art" class="highlight-track-art">
+            <img [src]="longestTrack.album?.images && longestTrack.album?.images[0] ? longestTrack.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" [alt]="longestTrack.name + ' cover'" class="highlight-track-art">
             <div class="highlight-track-info">
               <span class="highlight-track-tag tag-grey">Longest Song</span>
               <h4 class="highlight-track-title">{{ longestTrack.name }}</h4>
@@ -204,7 +199,7 @@
   </div>
 
 
-</div>
+</main>
 
 
 <app-footer></app-footer>

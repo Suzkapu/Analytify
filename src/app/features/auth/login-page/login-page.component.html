@@ -1,47 +1,52 @@
-<div class="login-wrapper">
-  <!-- Glowing background elements for aesthetic premium depth -->
-  <div class="glow-bg-orb orb-1"></div>
-  <div class="glow-bg-orb orb-2"></div>
+<main class="login-wrapper">
+  <div class="login-ambient ambient-one" aria-hidden="true"></div>
+  <div class="login-ambient ambient-two" aria-hidden="true"></div>
 
-  <div class="login-card-container">
-    <div class="login-card-header">
-      <div class="brand-logo-container">
-        <img src="assets/Analytify.png" alt="Analytify Logo" class="brand-logo">
+  <section class="login-shell" aria-labelledby="login-title">
+    <header class="login-intro">
+      <a routerLink="/" class="login-brand" aria-label="Analytify home">
+        <img src="assets/Analytify.png" alt="">
+        <span>Analytify</span>
+      </a>
+      <span class="page-eyebrow">Your listening, made visible</span>
+      <h1 id="login-title">Understand the music that defines you.</h1>
+      <p>Explore playlists, spot listening trends, and compare music with friends—all in one focused dashboard.</p>
+
+      <ul class="login-benefits" aria-label="Analytify features">
+        <li><i class="pi pi-chart-bar" aria-hidden="true"></i><span><strong>Clear insights</strong> across songs, artists, and genres</span></li>
+        <li><i class="pi pi-clone" aria-hidden="true"></i><span><strong>Playlist tools</strong> for analysis, merging, and sharing</span></li>
+        <li><i class="pi pi-shield" aria-hidden="true"></i><span><strong>Private by default</strong> with optional cloud backup</span></li>
+      </ul>
+    </header>
+
+    <article class="login-card-container">
+      <div class="login-card-header">
+        <span class="login-card-icon"><i class="pi pi-spotify" aria-hidden="true"></i></span>
+        <span class="page-eyebrow">Welcome to Analytify</span>
+        <h2>Connect your Spotify account</h2>
+        <p class="login-description">Sign in securely to load your library and personal listening insights.</p>
       </div>
-      <h1 class="brand-title">Analytify</h1>
-      <p class="brand-subtitle">Your Spotify Analytics Dashboard</p>
-    </div>
 
-    <div class="login-card-body">
-      <p class="login-description">
-        Explore your listening habits in detail. Analyze playlist metrics and view top tracks, artists, and genres over different timeframes.
-      </p>
+      <div class="login-card-body">
+        <button type="button" (click)="login()" class="login-spotify-button">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+            <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.565.387-.86.207-2.377-1.454-5.37-1.783-8.893-.982-.336.075-.668-.135-.744-.47-.077-.337.135-.668.47-.743 3.856-.88 7.15-.508 9.82 1.13.296.178.388.563.207.858zm1.224-2.723c-.226.367-.707.487-1.074.26-2.72-1.672-6.87-2.157-10.075-1.183-.413.125-.847-.11-1.01-.524-.125-.413.11-.847.524-1.01 3.663-1.112 8.234-.57 11.375 1.36.367.227.487.708.26 1.075zm.106-2.825C14.338 8.71 8.42 8.51 5.005 9.547c-.524.16-1.077-.14-1.237-.663-.16-.523.14-1.077.663-1.237 3.92-1.19 10.457-.96 14.586 1.493.473.28.627.893.346 1.366-.28.473-.893.627-1.366.346z"/>
+          </svg>
+          <span>Continue with Spotify</span>
+        </button>
 
-      <button (click)="login()" class="login-spotify-button">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-          <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.565.387-.86.207-2.377-1.454-5.37-1.783-8.893-.982-.336.075-.668-.135-.744-.47-.077-.337.135-.668.47-.743 3.856-.88 7.15-.508 9.82 1.13.296.178.388.563.207.858zm1.224-2.723c-.226.367-.707.487-1.074.26-2.72-1.672-6.87-2.157-10.075-1.183-.413.125-.847-.11-1.01-.524-.125-.413.11-.847.524-1.01 3.663-1.112 8.234-.57 11.375 1.36.367.227.487.708.26 1.075zm.106-2.825C14.338 8.71 8.42 8.51 5.005 9.547c-.524.16-1.077-.14-1.237-.663-.16-.523.14-1.077.663-1.237 3.92-1.19 10.457-.96 14.586 1.493.473.28.627.893.346 1.366-.28.473-.893.627-1.366.346z"/>
-        </svg>
-        <span>Connect with Spotify</span>
-      </button>
-
-      <div class="compare-entry">
-        <span>or</span>
-        <a routerLink="/compare-room" class="compare-room-button">
-          <i class="pi pi-users"></i>
-          <span>Compare playlists together</span>
-        </a>
+        <div class="compare-entry">
+          <span>Want to compare with friends?</span>
+          <a routerLink="/compare-room" class="compare-room-button">
+            <i class="pi pi-users" aria-hidden="true"></i>
+            <span>Open a Compare Room</span>
+          </a>
+        </div>
       </div>
-    </div>
 
-    <div class="login-card-footer">
-      <div class="made-by-tag">
-        <span>Made by</span>
-        <span class="author-name">Paulzgi</span>
-        <span>&amp;</span>
-        <span class="author-name">Suzkapu</span>
-      </div>
-    </div>
-  </div>
+      <p class="login-privacy-note"><i class="pi pi-lock" aria-hidden="true"></i> Spotify credentials are handled by Spotify and are never shown to Analytify.</p>
+    </article>
+  </section>
 
-  <app-footer style="width: 100%; z-index: 2;"></app-footer>
-</div>
+  <app-footer></app-footer>
+</main>

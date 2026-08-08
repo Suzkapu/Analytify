@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ViewEncapsulation, HostListener} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewEncapsulation, HostListener, NgZone} from '@angular/core';
 import {ActivatedRoute, NavigationExtras, Router} from "@angular/router";
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {StorageService} from "@core/data-access/storage/storage.service";
@@ -57,6 +57,7 @@ export class SongsComponent implements OnInit, OnDestroy {
   loadedArtistsDetailsCount: number = 0;
   totalUniqueArtists: number = 0;
   private loaderSubscription: Subscription | null = null;
+  private readonly windowScrollHandler = () => this.onWindowScroll();
 
   constructor(
     private route: ActivatedRoute, 
@@ -64,7 +65,8 @@ export class SongsComponent implements OnInit, OnDestroy {
     public authService: SpotifyAuthService,
     private storageService: StorageService,
     private playlistLoaderService: PlaylistLoaderService,
-    private imageHealingService: ImageHealingService
+    private imageHealingService: ImageHealingService,
+    private ngZone: NgZone
   ) {
     this.route.params.subscribe(async (params) => {
       this.playlistId = params['id'];
@@ -98,6 +100,9 @@ export class SongsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.filterArtists();
+    this.ngZone.runOutsideAngular(() => {
+      window.addEventListener('scroll', this.windowScrollHandler, {passive: true});
+    });
   }
 
   private readPlaylistCache(userId: string, storageKey: string) {
@@ -314,6 +319,7 @@ export class SongsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    window.removeEventListener('scroll', this.windowScrollHandler);
     if (this.loaderSubscription) {
       this.loaderSubscription.unsubscribe();
       this.loaderSubscription = null;
@@ -655,13 +661,33 @@ export class SongsComponent implements OnInit, OnDestroy {
     }
   }
 
-  @HostListener('window:scroll', [])
+  trackArtistItem(index: number, artist: any): string | number {
+    return artist?.id || artist?.uri || artist?.name || index;
+  }
+
+  trackSongItem(index: number, track: any): string | number {
+    return track?.id || track?.uri || `${track?.name || 'track'}:${index}`;
+  }
+
+  trackAlbumItem(index: number, album: any): string | number {
+    return album?.id || album?.uri || `${album?.name || 'album'}:${index}`;
+  }
+
   onWindowScroll() {
     const threshold = 300; // 300px before bottom
     const position = (window.innerHeight + window.scrollY);
     const height = document.documentElement.scrollHeight;
-    
-    if (position >= height - threshold) {
+
+    if (position < height - threshold) return;
+
+    const hasMoreItems = this.viewStyle === 'artists'
+      ? this.displayedArtistsCount < this.filteredArtists.length
+      : this.viewStyle === 'songs'
+        ? this.displayedTracksCount < this.filteredTracks.length
+        : this.displayedAlbumsCount < this.filteredAlbums.length;
+    if (!hasMoreItems) return;
+
+    this.ngZone.run(() => {
       if (this.viewStyle === 'artists') {
         if (this.displayedArtistsCount < this.filteredArtists.length) {
           this.displayedArtistsCount += 50;
@@ -674,6 +700,6 @@ export class SongsComponent implements OnInit, OnDestroy {
       } else if (this.displayedAlbumsCount < this.filteredAlbums.length) {
         this.displayedAlbumsCount += 50;
       }
-    }
+    });
   }
 }

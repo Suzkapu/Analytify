@@ -47,7 +47,9 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   hotMoverTracks = new Set<string>();
   hotMoverArtists = new Set<string>();
   highDebutTracks = new Set<string>();
+  highDebutArtists = new Set<string>();
   readonly highDebutRankLimit = 10;
+  readonly hotMoverDisplayLimit = 10;
   private historyWriteQueue: Promise<void> = Promise.resolve();
   private statsLoadSequence = 0;
   private historyLoadSequence = 0;
@@ -608,6 +610,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.hotMoverTracks.clear();
     this.hotMoverArtists.clear();
     this.highDebutTracks.clear();
+    this.highDebutArtists.clear();
 
     const tracks = this.displayedTracks;
     const artists = this.displayedArtists;
@@ -616,39 +619,38 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Calculate trends for all tracks
-    const trackMovers = tracks.map((track, idx) => {
-      const trend = this.getTrend(track, idx, 'tracks');
-      return { track, trend };
-    })
-    .filter(item => item.trend.type === 'up' && item.trend.diff !== undefined && item.trend.diff >= 15) // spike of 15+ places
-    .sort((a, b) => (b.trend.diff || 0) - (a.trend.diff || 0))
-    .slice(0, 3);
+    const selectHotCandidates = (items: any[], category: 'tracks' | 'artists') => {
+      const candidates: Array<{item: any; isHighDebut: boolean; score: number; rank: number}> = [];
 
-    trackMovers.forEach(item => {
-      const key = item.track.id || `${item.track.name}_${this.getTrackArtist(item.track)}`;
-      this.hotMoverTracks.add(key);
-    });
+      items.forEach((item, idx) => {
+        const trend = this.getTrend(item, idx, category);
+        const isHighDebut = trend.type === 'new' && idx < this.highDebutRankLimit;
+        const isStrongRise = trend.type === 'up' && trend.diff !== undefined && trend.diff >= 15;
+        if (!isHighDebut && !isStrongRise) return;
 
-    tracks.slice(0, this.highDebutRankLimit).forEach((track, idx) => {
-      if (this.getTrend(track, idx, 'tracks').type !== 'new') return;
+        // A debut is treated as a move from immediately outside the visible list.
+        // This gives every candidate one comparable score for the shared flame pool.
+        const score = isHighDebut ? items.length - idx : trend.diff || 0;
+        candidates.push({item, isHighDebut, score, rank: idx});
+      });
+
+      return candidates
+        .sort((a, b) => b.score - a.score || a.rank - b.rank)
+        .slice(0, this.hotMoverDisplayLimit);
+    };
+
+    selectHotCandidates(tracks, 'tracks').forEach(candidate => {
+      const track = candidate.item;
       const key = track.id || `${track.name}_${this.getTrackArtist(track)}`;
-      this.highDebutTracks.add(key);
       this.hotMoverTracks.add(key);
+      if (candidate.isHighDebut) this.highDebutTracks.add(key);
     });
 
-    // Calculate trends for all artists
-    const artistMovers = artists.map((artist, idx) => {
-      const trend = this.getTrend(artist, idx, 'artists');
-      return { artist, trend };
-    })
-    .filter(item => item.trend.type === 'up' && item.trend.diff !== undefined && item.trend.diff >= 15) // spike of 15+ places
-    .sort((a, b) => (b.trend.diff || 0) - (a.trend.diff || 0))
-    .slice(0, 3);
-
-    artistMovers.forEach(item => {
-      const key = item.artist.id || item.artist.name;
+    selectHotCandidates(artists, 'artists').forEach(candidate => {
+      const artist = candidate.item;
+      const key = artist.id || artist.name;
       this.hotMoverArtists.add(key);
+      if (candidate.isHighDebut) this.highDebutArtists.add(key);
     });
   }
 
@@ -666,6 +668,11 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   isHighDebutHotSong(track: any): boolean {
     const key = track.id || `${track.name}_${this.getTrackArtist(track)}`;
     return this.highDebutTracks.has(key);
+  }
+
+  isHighDebutHotArtist(artist: any): boolean {
+    const key = artist.id || artist.name;
+    return this.highDebutArtists.has(key);
   }
 
   getSelectedSnapshotLabel(): string {
@@ -1175,6 +1182,18 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.selectedSnapshotId = (event.target as HTMLSelectElement).value;
   }
 
+  onTrendCardKeydown(
+    event: KeyboardEvent,
+    item: any,
+    category: 'tracks' | 'artists' | 'genres'
+  ): void {
+    if (event.target !== event.currentTarget) return;
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+
+    event.preventDefault();
+    void this.openTrendPopup(item, category);
+  }
+
   async openTrendPopup(item: any, category: 'tracks' | 'artists' | 'genres') {
     const range = this.selectedRange;
     this.trendPopupItem = item;
@@ -1529,6 +1548,10 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     } else {
       snap.isLoaded = true;
     }
+  }
+
+  trackStatItem(index: number, item: any): string | number {
+    return item?.id || item?.uri || item?.spotifyId || item?.name || index;
   }
 
   @HostListener('document:click')

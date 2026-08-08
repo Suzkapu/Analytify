@@ -1,125 +1,128 @@
-/* Local stylesheet for ArtistDetailsComponent */
-.track-grid::-webkit-scrollbar {
-  width: 6px;
-}
-
-.track-grid::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 4px;
-}
-
-.track-grid::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
-}
-
-.track-grid::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
-}
+:host { display: block; }
 
 .details-container {
-  height: calc(100vh - 120px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  box-sizing: border-box;
+  width: min(940px, calc(100% - 48px));
+  min-height: calc(100dvh - 180px);
+  margin: 0 auto;
+  padding: 24px 0 40px;
 }
 
 .artist-profile-card {
-  border-radius: 20px;
-  background-color: #181818;
-  border: 1px solid rgba(255, 255, 255, 0.05);
   width: 100%;
-  max-width: 800px;
-  max-height: 80vh;
-  overflow: hidden;
+  padding: 28px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+.profile-header {
   display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  padding: 24px;
+  align-items: center;
+  gap: 24px;
+  padding-bottom: 26px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.artist-open-button {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  flex: 0 0 120px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 50%;
+  background: var(--color-surface-raised);
+  cursor: pointer;
+
+  &:disabled { cursor: default; opacity: 1 !important; }
+}
+
+.profile-image { width: 100%; height: 100%; object-fit: cover; }
+
+.artist-heading-copy {
+  min-width: 0;
+
+  h1 {
+    margin: 7px 0 6px;
+    font-size: clamp(2.1rem, 6vw, 3.8rem);
+    line-height: 1;
+    letter-spacing: -0.052em;
+    overflow-wrap: anywhere;
+  }
+
+  p { margin: 0; color: var(--color-text-muted); }
+}
+
+.artist-tracks-section { padding-top: 24px; }
+
+.section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+
+  h2 { margin: 4px 0 0; font-size: 1.3rem; }
+}
+
+.track-total {
+  min-width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-weight: 800;
 }
 
 .track-grid {
-  flex-grow: 1;
-  overflow-y: auto;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 12px;
-  padding: 4px;
-  box-sizing: border-box;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
 }
 
+.track-row-card {
+  width: 100%;
+  min-width: 0;
+  min-height: 66px;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 9px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-soft);
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+
+  &:hover:not(:disabled) { border-color: var(--color-border-strong); background: var(--color-surface-hover); }
+  &:disabled { cursor: default; opacity: 1 !important; }
+  > i { color: var(--color-text-subtle); font-size: 0.8rem; }
+}
+
+.track-image { width: 46px; height: 46px; border-radius: 8px; object-fit: cover; }
+.track-copy { min-width: 0; display: grid; justify-items: start; gap: 3px; }
+.track-name { width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.explicit-badge { padding: 1px 5px; border-radius: 4px; background: var(--color-danger-soft); color: var(--color-danger); font-size: 0.62rem; font-weight: 800; text-transform: uppercase; }
+
 @media (max-width: 768px) {
-  .details-container {
-    height: auto;
-    min-height: calc(100dvh - 120px);
-    align-items: flex-start;
-    padding: 12px;
-  }
-
-  .artist-profile-card {
-    max-height: none;
-    overflow: visible;
-    padding: 16px;
-
-    .profile-header {
-      margin-bottom: 16px;
-      
-      .profile-image {
-        width: 100px !important;
-        height: 100px !important;
-      }
-      
-      .name {
-        font-size: 1.6rem !important;
-      }
-    }
-  }
-
-  .track-grid {
-    overflow-y: visible;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 8px;
-    width: 100%;
-
-    .track-row-card {
-      min-width: 0;
-      box-sizing: border-box;
-    }
-  }
+  .details-container { width: calc(100% - 24px); min-height: 0; padding-top: 14px; }
+  .artist-profile-card { padding: 18px 14px; border-radius: var(--radius-lg); }
+  .profile-header { align-items: flex-start; gap: 16px; padding-bottom: 20px; }
+  .artist-open-button { width: 84px; height: 84px; flex-basis: 84px; }
+  .artist-heading-copy h1 { font-size: 1.8rem; }
+  .artist-heading-copy p { font-size: 0.82rem; }
+  .track-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 420px) {
-  .details-container {
-    padding: 8px 12px 16px;
-  }
-
-  .artist-profile-card {
-    padding: 14px 12px;
-    border-radius: 16px;
-
-    .profile-header {
-      .profile-image {
-        width: 88px !important;
-        height: 88px !important;
-      }
-
-      .name {
-        max-width: 100%;
-        overflow-wrap: anywhere;
-        font-size: 1.4rem !important;
-      }
-    }
-  }
-
-  .track-grid .track-row-card {
-    padding: 10px !important;
-    gap: 10px !important;
-
-    .track-image {
-      width: 44px !important;
-      height: 44px !important;
-    }
-  }
+  .profile-header { gap: 12px; }
+  .artist-open-button { width: 72px; height: 72px; flex-basis: 72px; }
+  .artist-heading-copy h1 { font-size: 1.5rem; }
+  .artist-heading-copy p { display: none; }
 }

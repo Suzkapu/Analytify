@@ -38,4 +38,14 @@ describe('LoginPageComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('renders the responsive sign-in experience and both entry paths', () => {
+    const element: HTMLElement = fixture.nativeElement;
+
+    expect(element.querySelector('main.login-wrapper')).not.toBeNull();
+    expect(element.querySelector('.login-shell')).not.toBeNull();
+    expect(element.querySelectorAll('.login-benefits li').length).toBe(3);
+    expect(element.querySelector('button.login-spotify-button')).not.toBeNull();
+    expect(element.querySelector('a.compare-room-button')).not.toBeNull();
+  });
 });

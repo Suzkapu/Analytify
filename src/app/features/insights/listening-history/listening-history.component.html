@@ -2,34 +2,41 @@
 
 
 <div class="stats-dashboard-container">
-  <!-- Centered Title Bar like Playlists -->
-  <div class="history-page-heading" style="display: flex; align-items: center; justify-content: center; min-height: 48px; width: 100%; margin: 20px auto 0 auto; box-sizing: border-box; text-align: center;">
-    <div style="text-align: center;">
-      <span style="font-size: 0.8rem; font-weight: 800; color: #1db954; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px;">Spotify Player</span>
-      <h2 style="margin: 0; font-weight: 800; color: #ffffff; font-size: 1.9rem;">Recently Played Songs</h2>
+  <header class="page-hero history-page-heading">
+    <div>
+      <span class="page-eyebrow">Listening activity</span>
+      <h1>Recently played</h1>
+      <p>Your latest Spotify plays, ordered from newest to oldest.</p>
     </div>
-  </div>
+  </header>
 
-  <div class="stats-content-wrapper" style="margin-top: 30px;">
-    <div *ngIf="isLoadingRecentlyPlayed" style="text-align: center; padding: 60px 0; width: 100%;">
-      <i class="pi pi-spin pi-spinner" style="font-size: 2.5rem; color: #1db954;"></i>
-      <h3 style="font-weight: 500; color: #b3b3b3; margin-top: 15px;">Loading listening history...</h3>
+  <div class="stats-content-wrapper">
+    <div *ngIf="isLoadingRecentlyPlayed" class="page-loading-state" role="status">
+      <i class="pi pi-spin pi-spinner"></i>
+      <h3>Loading listening history…</h3>
     </div>
     
-    <div *ngIf="!isLoadingRecentlyPlayed && recentlyPlayedTracks.length === 0" style="color: #666; text-align: center; padding: 60px 0; width: 100%; font-size: 1.1rem;">
-      No recently played tracks found.
-    </div>
+    <section *ngIf="!isLoadingRecentlyPlayed && recentlyPlayedTracks.length === 0" class="empty-state">
+      <span class="empty-state-icon"><i class="pi pi-history"></i></span>
+      <h2>No recent tracks</h2>
+      <p>Your latest Spotify plays will appear here when they are available.</p>
+    </section>
 
-    <div *ngIf="!isLoadingRecentlyPlayed && recentlyPlayedTracks.length > 0" class="listening-history-list" style="width: 100%;">
-      <div *ngFor="let item of recentlyPlayedTracks; let idx = index" class="track-row-card no-trend-pointer">
-        <div class="track-index" style="width: 75px; display: flex; flex-direction: column; align-items: center; font-size: 0.8rem; color: #888; gap: 4px;">
+    <div *ngIf="!isLoadingRecentlyPlayed && recentlyPlayedTracks.length > 0" class="listening-history-list">
+      <div *ngFor="let item of recentlyPlayedTracks; let idx = index; trackBy: trackHistoryItem" class="track-row-card no-trend-pointer">
+        <div class="track-index history-index">
           <span>#{{ idx + 1 }}</span>
-          <span style="font-size: 0.65rem; color: #888; text-align: center; white-space: nowrap;">{{ formatPlayedAt(item.played_at) }}</span>
+          <time>{{ formatPlayedAt(item.played_at) }}</time>
         </div>
-        <img (click)="openTrackClick(item.track.external_urls?.spotify); $event.stopPropagation()"
-          [src]="item.track.album?.images && item.track.album.images[0] ? item.track.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
-          alt="Track Cover" class="track-cover"
-          [class.is-clickable]="!!item.track.external_urls?.spotify">
+        <button type="button" class="spotify-artwork-link"
+          [disabled]="!item.track.external_urls?.spotify"
+          [attr.aria-label]="'Open ' + item.track.name + ' on Spotify'"
+          title="Open on Spotify"
+          (click)="openTrackClick(item.track.external_urls?.spotify); $event.stopPropagation()">
+          <img
+            [src]="item.track.album?.images && item.track.album.images[0] ? item.track.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
+            [alt]="item.track.name + ' cover'" class="track-cover" loading="lazy" decoding="async">
+        </button>
         <div class="track-info">
           <span class="track-title">{{ item.track.name }}</span>
           <span class="track-artist">{{ getTrackArtist(item.track) }}</span>

@@ -371,8 +371,6 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     this.router.navigate(['/playlists']);
   }
 
-
-
   openTrackClick(url: string) {
     if (url) {
       window.location.href = url;

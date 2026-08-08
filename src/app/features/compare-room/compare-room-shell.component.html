@@ -143,7 +143,9 @@
         </p>
 
         <div class="track-preview">
-          <a *ngFor="let track of sharedTracks | slice:0:12; trackBy: trackTrack" [href]="track.spotifyUrl" target="_blank" rel="noopener noreferrer" class="track-row">
+          <a *ngFor="let track of sharedTracks | slice:0:12; trackBy: trackTrack" [href]="track.spotifyUrl"
+            target="_blank" rel="noopener noreferrer" class="track-row spotify-destination"
+            [attr.aria-label]="'Open ' + track.name + ' on Spotify'">
             <img *ngIf="track.imageUrl" [src]="track.imageUrl" alt="">
             <div class="track-placeholder" *ngIf="!track.imageUrl"><i class="pi pi-music"></i></div>
             <span><strong>{{ track.name }}</strong><small>{{ track.artists[0].name }}</small></span>

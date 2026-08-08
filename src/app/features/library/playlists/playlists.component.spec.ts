@@ -87,6 +87,21 @@ describe('PlaylistsComponent', () => {
     expect(fixture.nativeElement.querySelector('.playlist-share-button')).toBeNull();
   });
 
+  it('renders the playlist workspace with a searchable toolbar and clear actions', () => {
+    component.playlists = [{id: 'party', name: 'Party', tracks: {total: 12}}];
+    component.filteredPlaylists = component.playlists;
+    fixture.detectChanges();
+
+    const element: HTMLElement = fixture.nativeElement;
+    expect(element.querySelector('main.playlists-page')).not.toBeNull();
+    expect(element.querySelector('.page-hero h1')?.textContent).toContain('Your playlists');
+    expect(element.querySelector('.playlist-count-chip')?.getAttribute('aria-label')).toBe('1 playlist');
+    expect(element.querySelector('.page-toolbar input[type="search"]')).not.toBeNull();
+    const cardActions = Array.from(element.querySelectorAll('.item-card .card-actions button'));
+    expect(cardActions.length).toBe(2);
+    expect(cardActions.every(button => button.classList.contains('playlist-card-action'))).toBeTrue();
+  });
+
   it('refreshes Spotify on every load even when a valid cached list exists', async () => {
     storage.set('current-user_playlists', JSON.stringify([
       {id: 'fav', name: 'Favourite Tracks', tracks: {total: 10}},

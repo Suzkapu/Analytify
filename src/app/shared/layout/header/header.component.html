@@ -1,77 +1,86 @@
 <header class="app-header" [class.has-mobile-back]="showMobileBackButton">
   <div class="app-header-sync-progressbar" *ngIf="authService.isSyncing" [style.width.%]="authService.syncProgress"></div>
-  <div class="header-left">
-    <button
-      *ngIf="showMobileBackButton"
-      type="button"
-      class="mobile-header-back"
-      title="Go back"
-      aria-label="Go back"
-      (click)="mobileBack.emit()">
-      <i class="pi pi-arrow-left" aria-hidden="true"></i>
-    </button>
-    <div class="header-logo" routerLink="/">
-      <img src="assets/Analytify.png" alt="Analytify Logo">
-      <span class="logo-text">Analytify</span>
+  <div class="header-shell">
+    <div class="header-left">
+      <button
+        *ngIf="showMobileBackButton"
+        type="button"
+        class="mobile-header-back"
+        title="Go back"
+        aria-label="Go back"
+        (click)="mobileBack.emit()">
+        <i class="pi pi-arrow-left" aria-hidden="true"></i>
+      </button>
+      <a class="header-logo" routerLink="/playlists" aria-label="Analytify home">
+        <img src="assets/Analytify.png" alt="">
+        <span class="logo-text">Analytify</span>
+      </a>
+
+      <nav class="header-nav" aria-label="Main navigation">
+        <a routerLink="/playlists" class="nav-link" routerLinkActive="active-nav"
+          [routerLinkActiveOptions]="{exact: true}">
+          <i class="pi pi-list" aria-hidden="true"></i>
+          <span class="nav-label">Playlists</span>
+        </a>
+        <a routerLink="/stats" class="nav-link" routerLinkActive="active-nav">
+          <i class="pi pi-chart-bar" aria-hidden="true"></i>
+          <span class="nav-label">Stats</span>
+        </a>
+        <a routerLink="/history" class="nav-link" routerLinkActive="active-nav">
+          <i class="pi pi-history" aria-hidden="true"></i>
+          <span class="nav-label">History</span>
+        </a>
+      </nav>
     </div>
-
-    <!-- Navigation Buttons -->
-    <nav class="header-nav" style="display: flex; gap: 8px; margin-left: 20px;">
-      <a routerLink="/playlists" class="nav-link" routerLinkActive="active-nav"
-        [routerLinkActiveOptions]="{exact: true}"><i class="pi pi-compass" style="font-size: 0.95rem;"></i> <span
-          class="hide-mobile">Browse Playlists</span></a>
-      <a routerLink="/stats" class="nav-link" routerLinkActive="active-nav"><i class="pi pi-chart-bar"
-          style="font-size: 0.95rem;"></i> <span class="hide-mobile">Personal Stats</span></a>
-      <a routerLink="/history" class="nav-link" routerLinkActive="active-nav"><i class="pi pi-history"
-          style="font-size: 0.95rem;"></i> <span class="hide-mobile">Listening History</span></a>
-    </nav>
-  </div>
-  <div class="header-center">
-    <span *ngIf="mobileTitle" class="mobile-page-title" role="heading" aria-level="1" [title]="mobileTitle">
-      {{ mobileTitle }}
-    </span>
-  </div>
-  <div class="header-right">
-
-    <!-- User Profile with Settings Dropdown -->
-    <div class="user-profile-container" style="position: relative; display: flex; align-items: center;">
-      <div class="user-profile-header" (click)="toggleSettingsDropdown($event)" title="Profile Settings">
-        <img *ngIf="profilePicUrl" [src]="profilePicUrl" alt="User Profile" class="profile-img">
-        <div *ngIf="!profilePicUrl" class="profile-placeholder">
-          <i class="pi pi-user"></i>
-        </div>
-      </div>
-
-      <!-- Settings Dropdown Overlay -->
-      <div class="profile-settings-dropdown" *ngIf="showSettingsDropdown">
-        <a routerLink="/compare-room" class="dropdown-item compare-room-dropdown-item">
-          <i class="pi pi-users"></i>
-          <span>Compare with other accounts</span>
-        </a>
-        <a routerLink="/shared-playlists" class="dropdown-item">
-          <i class="pi pi-share-alt"></i>
-          <span>Shared playlists</span>
-        </a>
-        <div class="dropdown-divider compare-room-dropdown-item"></div>
-        <div class="dropdown-item toggle-item" (click)="$event.stopPropagation()">
-          <i class="pi pi-database"></i>
-          <span>Cloud Backup</span>
-          <label class="switch">
-            <input type="checkbox" [checked]="authService.isBackupActive()" (change)="onBackupToggle($event)">
-            <span class="slider round"></span>
-          </label>
-        </div>
-        <div class="dropdown-divider"></div>
-        <button (click)="logout()" class="dropdown-item">
-          <i class="pi pi-sign-out"></i> Logout
+    <div class="header-center">
+      <span *ngIf="mobileTitle" class="mobile-page-title" role="heading" aria-level="1" [title]="mobileTitle">
+        {{ mobileTitle }}
+      </span>
+    </div>
+    <div class="header-right">
+      <div class="user-profile-container">
+        <button type="button" class="user-profile-header" (click)="toggleSettingsDropdown($event)"
+          title="Open profile menu" aria-label="Open profile menu" [attr.aria-expanded]="showSettingsDropdown"
+          aria-haspopup="menu">
+          <img *ngIf="profilePicUrl" [src]="profilePicUrl" alt="" class="profile-img">
+          <span *ngIf="!profilePicUrl" class="profile-placeholder" aria-hidden="true">
+            <i class="pi pi-user"></i>
+          </span>
         </button>
-        <div class="dropdown-divider"></div>
-        <a href="https://www.spotify.com/account/apps/" target="_blank" rel="noopener noreferrer" class="dropdown-item">
-          <i class="pi pi-external-link"></i> Revoke App Access
-        </a>
-        <button (click)="openClearDataModal()" class="dropdown-item danger">
-          <i class="pi pi-trash"></i> Clear Data
-        </button>
+
+        <div class="profile-settings-dropdown" *ngIf="showSettingsDropdown" role="menu">
+          <span class="dropdown-header">Workspace</span>
+          <a routerLink="/compare-room" class="dropdown-item compare-room-dropdown-item" role="menuitem">
+            <i class="pi pi-users"></i>
+            <span>Compare playlists</span>
+          </a>
+          <a routerLink="/shared-playlists" class="dropdown-item" role="menuitem">
+            <i class="pi pi-share-alt"></i>
+            <span>Shared playlists</span>
+          </a>
+          <div class="dropdown-divider compare-room-dropdown-item"></div>
+          <span class="dropdown-header">Data &amp; account</span>
+          <div class="dropdown-item toggle-item" (click)="$event.stopPropagation()">
+            <i class="pi pi-cloud"></i>
+            <span>Cloud backup</span>
+            <label class="switch" title="Toggle cloud backup">
+              <input type="checkbox" [checked]="authService.isBackupActive()" (change)="onBackupToggle($event)"
+                aria-label="Cloud backup">
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <button (click)="logout()" class="dropdown-item" role="menuitem">
+            <i class="pi pi-sign-out"></i><span>Log out</span>
+          </button>
+          <div class="dropdown-divider"></div>
+          <a href="https://www.spotify.com/account/apps/" target="_blank" rel="noopener noreferrer"
+            class="dropdown-item" role="menuitem">
+            <i class="pi pi-external-link"></i><span>Manage Spotify access</span>
+          </a>
+          <button (click)="openClearDataModal()" class="dropdown-item danger" role="menuitem">
+            <i class="pi pi-trash"></i><span>Clear data</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -84,7 +93,7 @@
       <i class="pi pi-trash"></i>
     </div>
     <h3 class="confirm-modal-title">Clear Profile Data</h3>
-    <p class="confirm-modal-text" style="margin-bottom: 24px; font-size: 0.95rem;">
+    <p class="confirm-modal-text selection-copy">
       Choose what data you would like to clear. Deleting cloud data compliance conforms to GDPR and Spotify Developer Policy.
     </p>
     
@@ -99,14 +108,14 @@
       
       <div class="data-option-card danger-option" (click)="selectClearDbData()">
         <div class="option-header">
-          <i class="pi pi-cloud option-icon" style="color: #ff5252;"></i>
-          <h4 style="color: #ff5252;">Delete Cloud Backup</h4>
+          <i class="pi pi-cloud option-icon danger-text"></i>
+          <h4 class="danger-text">Delete Cloud Backup</h4>
         </div>
         <p>Permanently deletes all synced history, saved snapshots, and cached profile data from our cloud database. (Local browser cache is kept).</p>
       </div>
     </div>
     
-    <div class="confirm-modal-actions" style="margin-top: 24px; justify-content: center;">
+    <div class="confirm-modal-actions selection-actions">
       <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="closeClearDataModal()">Cancel</button>
     </div>
   </div>
@@ -133,16 +142,16 @@
 <div class="confirm-modal-overlay" *ngIf="showConfirmDbDeleteModal" (click)="cancelDbDelete()">
   <div class="confirm-modal-card" (click)="$event.stopPropagation()">
     <div class="confirm-modal-icon danger-icon">
-      <i class="pi pi-cloud" style="color: #ff5252;"></i>
+      <i class="pi pi-cloud danger-text"></i>
     </div>
-    <h3 class="confirm-modal-title" style="color: #ff5252;">Confirm Database Erasure</h3>
+    <h3 class="confirm-modal-title danger-text">Confirm Database Erasure</h3>
     <p class="confirm-modal-text">
       Are you absolutely sure? This will permanently delete all your cloud backup data, listening snapshots, and playlist-sharing grants from our servers. Shared catalog metadata such as artist names is retained, but your personal links to it are erased forever. This action is irreversible.
     </p>
     <div class="confirm-modal-actions">
       <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="cancelDbDelete()">Cancel</button>
       <button class="confirm-modal-btn confirm-modal-btn-confirm danger-btn" (click)="confirmDbDelete()" [disabled]="isDeletingDbData">
-        <i class="pi pi-spin pi-spinner" *ngIf="isDeletingDbData" style="margin-right: 8px;"></i>
+        <i class="pi pi-spin pi-spinner action-spinner" *ngIf="isDeletingDbData"></i>
         {{ isDeletingDbData ? 'Erasing...' : 'Delete Cloud Data' }}
       </button>
     </div>

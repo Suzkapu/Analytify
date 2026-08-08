@@ -470,4 +470,8 @@ export class PlaylistsComponent {
     return userId.endsWith('_dev') ? userId.slice(0, -4) : userId;
   }
 
+  trackPlaylist(_index: number, playlist: any): string {
+    return playlist?.id || playlist?.uri || playlist?.name || String(_index);
+  }
+
 }

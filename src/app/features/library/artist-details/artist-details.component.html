@@ -1,45 +1,53 @@
 <app-header
-  [mobileTitle]="artist.name || 'Artist Details'"
-  [showMobileBackButton]="true"
-  (mobileBack)="goBack()">
+  [mobileTitle]="artist.name || 'Artist Details'">
 </app-header>
 
-<!-- Under-Header Back Button -->
 <div class="back-bar-container">
-  <button (click)="goBack()" class="back-text-button" title="Back">
+  <button (click)="goBack()" class="back-text-button" title="Go back">
     <i class="pi pi-arrow-left"></i> Back
   </button>
 </div>
 
-<div class="details-container">
-  <div class="artist-profile-card shadow-5">
-    
-    <!-- Profile Info -->
-    <div class="profile-header" style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 20px; flex-shrink: 0;">
-      <img alt="Artist Image" class="profile-image" [src]="artist.images && artist.images[0] ? artist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" (click)="openArtistClick()" [style.cursor]="getArtistSpotifyUrl() ? 'pointer' : 'default'" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #1db954; transition: transform 0.2s ease; box-shadow: 0 8px 24px rgba(29, 185, 84, 0.15);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"/>
-      <h2 class="name" style="margin: 12px 0 6px 0; font-size: 2.2rem; font-weight: 800; color: #ffffff;" [style.cursor]="getArtistSpotifyUrl() ? 'pointer' : 'default'" (click)="openArtistClick()">{{ artist.name }}</h2>
-    </div>
-    
-    <!-- Tracks Section -->
-    <h3 style="font-weight: 700; margin: 10px 0 12px 0; font-size: 1.15rem; color: #a7a7a7; flex-shrink: 0; display: flex; align-items: center; gap: 8px;">
-      <i class="pi pi-music" style="color: #1db954;"></i> Songs in Playlist
-    </h3>
-    
-    <div class="track-grid">
-      <div *ngFor="let track of tracks" class="track-row-card" style="background: #242424; border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 12px; transition: all 0.2s ease;" onmouseover="this.style.background='#2a2a2a'; this.style.borderColor='rgba(29, 185, 84, 0.1)';" onmouseout="this.style.background='#242424'; this.style.borderColor='rgba(255, 255, 255, 0.03)';">
-        <img (click)="openTrackClick(track.external_urls?.spotify)" alt="Track Image" class="track-image" [src]="track.album?.images && track.album?.images[0] ? track.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" [style.cursor]="track.external_urls?.spotify ? 'pointer' : 'default'" style="width: 46px; height: 46px; border-radius: 6px; object-fit: cover; border: 1px solid rgba(255,255,255,0.05); flex-shrink: 0;"/>
-        <div style="display: flex; flex-direction: column; min-width: 0; flex-grow: 1;">
-          <span (click)="openTrackClick(track.external_urls?.spotify)" class="track-name" [style.cursor]="track.external_urls?.spotify ? 'pointer' : 'default'" style="font-size: 0.95rem; font-weight: 700; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;" onmouseover="this.style.color='#1db954'" onmouseout="this.style.color='#ffffff'">{{ track.name }}</span>
-          <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
-            <span *ngIf="track.explicit" style="background: rgba(255, 50, 50, 0.15); color: #ff5252; font-size: 0.65rem; font-weight: 800; padding: 1px 4px; border-radius: 4px; letter-spacing: 0.5px; text-transform: uppercase;">E</span>
-          </div>
-        </div>
-        <i class="pi pi-external-link" (click)="openTrackClick(track.external_urls?.spotify)" [style.cursor]="track.external_urls?.spotify ? 'pointer' : 'default'" style="color: #666; font-size: 0.85rem;" onmouseover="this.style.color='#1db954'" onmouseout="this.style.color='#666'"></i>
+<main class="details-container">
+  <article class="artist-profile-card">
+    <header class="profile-header">
+      <button type="button" class="artist-open-button spotify-artwork-link" (click)="openArtistClick()"
+        [disabled]="!getArtistSpotifyUrl()" [attr.aria-label]="'Open ' + (artist.name || 'artist') + ' on Spotify'">
+        <img alt="" class="profile-image"
+          decoding="async"
+          [src]="artist.images && artist.images[0] ? artist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" />
+      </button>
+      <div class="artist-heading-copy">
+        <span class="page-eyebrow">Artist details</span>
+        <h1 class="name">{{ artist.name }}</h1>
+        <p>{{ tracks.length }} {{ tracks.length === 1 ? 'song' : 'songs' }} from this artist in your playlist</p>
       </div>
-    </div>
+    </header>
 
-  </div>
-</div>
+    <section class="artist-tracks-section" aria-labelledby="artist-tracks-title">
+      <div class="section-heading">
+        <div>
+          <span class="page-eyebrow">Playlist selection</span>
+          <h2 id="artist-tracks-title">Songs in this playlist</h2>
+        </div>
+        <span class="track-total">{{ tracks.length }}</span>
+      </div>
 
+      <div class="track-grid">
+        <button *ngFor="let track of tracks" type="button" class="track-row-card spotify-destination"
+          [disabled]="!track.external_urls?.spotify" (click)="openTrackClick(track.external_urls?.spotify)">
+          <img alt="" class="track-image"
+            loading="lazy" decoding="async"
+            [src]="track.album?.images && track.album?.images[0] ? track.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" />
+          <span class="track-copy">
+            <strong class="track-name">{{ track.name }}</strong>
+            <small *ngIf="track.explicit" class="explicit-badge">Explicit</small>
+          </span>
+          <i class="pi pi-external-link" aria-hidden="true"></i>
+        </button>
+      </div>
+    </section>
+  </article>
+</main>
 
 <app-footer></app-footer>

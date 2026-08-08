@@ -154,6 +154,10 @@ export class ListeningHistoryComponent implements OnInit {
     return track.artist || (track.artists && track.artists[0] ? track.artists[0].name : '');
   }
 
+  trackHistoryItem(index: number, item: any): string {
+    return `${item?.played_at || index}:${item?.track?.id || item?.track?.uri || ''}`;
+  }
+
   openTrackClick(url: string) {
     if (url) {
       window.open(url, '_blank');

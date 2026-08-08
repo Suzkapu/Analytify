@@ -1,12 +1,17 @@
-<header class="app-header">
-  <div class="header-left">
-    <div class="header-logo" routerLink="/">
-      <img src="assets/Analytify.png" alt="Analytify Logo">
-      <span class="logo-text">Analytify</span>
+<app-header *ngIf="isLoggedIn" mobileTitle="Legal &amp; Privacy"></app-header>
+
+<header *ngIf="!isLoggedIn" class="app-header legal-public-header">
+  <div class="header-shell legal-header-shell">
+    <div class="header-left">
+      <a class="header-logo" routerLink="/" aria-label="Analytify home">
+        <img src="assets/Analytify.png" alt="">
+        <span class="logo-text">Analytify</span>
+      </a>
     </div>
-  </div>
-  <div class="header-center">
-    <span class="mobile-page-title" role="heading" aria-level="1">Legal &amp; Privacy</span>
+    <div class="header-center">
+      <span class="mobile-page-title" role="heading" aria-level="1">Legal &amp; Privacy</span>
+    </div>
+    <div class="header-right"></div>
   </div>
 </header>
 
@@ -15,21 +20,30 @@
   <div class="glow-bg-orb orb-1"></div>
   <div class="glow-bg-orb orb-2"></div>
 
+  <div class="back-bar-container legal-back-bar">
+    <button (click)="goBack()" class="back-text-button" title="Go back">
+      <i class="pi pi-arrow-left"></i> Back
+    </button>
+  </div>
+
   <div class="legal-container">
-    <div class="back-link-container">
-      <button (click)="goBack()" class="back-text-button">
-        <i class="pi pi-chevron-left"></i> Back to Previous Page
-      </button>
-    </div>
+    <header class="legal-page-heading">
+      <span class="page-eyebrow">Transparency &amp; control</span>
+      <h1 class="legal-title">Legal &amp; privacy</h1>
+      <p class="legal-subtitle">How Analytify handles your data, who operates it, and the terms that apply.</p>
+    </header>
 
-    <div class="legal-card">
-      <h1 class="legal-title">Legal &amp; Privacy Information</h1>
-      <p class="legal-subtitle">Important disclosures regarding Analytify</p>
+    <div class="legal-layout">
+      <nav class="legal-nav" aria-label="On this page">
+        <span>On this page</span>
+        <a routerLink="/legal" fragment="impressum"><i class="pi pi-info-circle"></i> Legal notice</a>
+        <a routerLink="/legal" fragment="privacy"><i class="pi pi-shield"></i> Privacy &amp; data</a>
+        <a routerLink="/legal" fragment="terms"><i class="pi pi-file"></i> Terms</a>
+      </nav>
 
-      <div class="legal-divider"></div>
+      <article class="legal-card">
 
-      <!-- Section 1: Impressum -->
-      <section class="legal-section">
+      <section class="legal-section" id="impressum">
         <h2>
           <i class="pi pi-info-circle"></i>
           Impressum (Legal Notice)
@@ -58,7 +72,7 @@
       <div class="section-divider"></div>
 
       <!-- Section 2: Privacy Policy -->
-      <section class="legal-section">
+      <section class="legal-section" id="privacy">
         <h2>
           <i class="pi pi-shield"></i>
           Privacy Policy &amp; Data Handling (GDPR &amp; Spotify Compliance)
@@ -86,7 +100,7 @@
       <div class="section-divider"></div>
 
       <!-- Section 3: Terms & Disclaimers -->
-      <section class="legal-section">
+      <section class="legal-section" id="terms">
         <h2>
           <i class="pi pi-exclamation-triangle"></i>
           Terms of Service &amp; Disclaimers
@@ -105,6 +119,7 @@
           </li>
         </ol>
       </section>
+      </article>
     </div>
   </div>
 </div>

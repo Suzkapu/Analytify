@@ -1,15 +1,20 @@
-<app-header [mobileTitle]="share?.playlistName || 'Shared Playlist'" [showMobileBackButton]="true" (mobileBack)="back()"></app-header>
+<app-header [mobileTitle]="share?.playlistName || 'Shared Playlist'"></app-header>
+
+<div class="back-bar-container">
+  <button type="button" class="back-text-button" (click)="back()" title="Back to Shared Playlists">
+    <i class="pi pi-arrow-left"></i> Back
+  </button>
+</div>
 
 <main class="shared-detail-page">
   <section *ngIf="isLoading" class="detail-state"><i class="pi pi-spin pi-spinner"></i><p>Loading from Supabase…</p></section>
   <section *ngIf="!isLoading && !share" class="detail-state error-state">
-    <i class="pi pi-lock"></i><h1>Access unavailable</h1><p>{{ errorMessage }}</p><button (click)="back()">Back to Shared Playlists</button>
+    <i class="pi pi-lock"></i><h1>Access unavailable</h1><p>{{ errorMessage }}</p>
   </section>
 
   <ng-container *ngIf="!isLoading && share">
     <header class="playlist-hero">
-      <button type="button" class="back-button" (click)="back()" aria-label="Back"><i class="pi pi-arrow-left"></i></button>
-      <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="">
+      <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="" decoding="async">
       <div class="hero-copy">
         <span class="eyebrow">Shared by {{ share.ownerDisplayName }}</span>
         <h1>{{ share.playlistName }}</h1>
@@ -21,7 +26,8 @@
           <i class="pi" [ngClass]="isDownloading ? 'pi-spin pi-spinner' : (hasUpdate ? 'pi-refresh' : 'pi-download')"></i>
           {{ isDownloading ? 'Updating…' : downloadButtonLabel }}
         </button>
-        <a *ngIf="download?.spotifyPlaylistUrl" [href]="download?.spotifyPlaylistUrl" target="_blank" rel="noopener noreferrer">Open Spotify copy</a>
+        <a *ngIf="download?.spotifyPlaylistUrl" class="spotify-text-link spotify-destination"
+          [href]="download?.spotifyPlaylistUrl" target="_blank" rel="noopener noreferrer">Open Spotify copy</a>
         <small *ngIf="download">Updates automatically while you are logged in to Analytify.</small>
       </div>
     </header>
@@ -40,9 +46,11 @@
     <section *ngIf="activeView === 'songs'" class="songs-panel">
       <label class="track-search"><i class="pi pi-search"></i><input type="search" [(ngModel)]="searchText" (input)="filterTracks()" placeholder="Search songs, artists, or albums"></label>
       <div class="track-row header-row"><span>#</span><span>Title</span><span>Album</span><span>Time</span></div>
-      <a *ngFor="let track of filteredTracks; trackBy: trackTrack" class="track-row" [href]="track.spotifyUrl || null" [attr.target]="track.spotifyUrl ? '_blank' : null" rel="noopener noreferrer">
+      <a *ngFor="let track of filteredTracks; trackBy: trackTrack" class="track-row spotify-destination"
+        [href]="track.spotifyUrl || null" [attr.target]="track.spotifyUrl ? '_blank' : null"
+        rel="noopener noreferrer" [attr.aria-label]="track.spotifyUrl ? 'Open ' + track.name + ' on Spotify' : null">
         <span>{{ track.playlistIndex }}</span>
-        <span class="track-title"><img *ngIf="track.imageUrl" [src]="track.imageUrl" alt=""><i *ngIf="!track.imageUrl" class="pi pi-music"></i><span><strong>{{ track.name }}</strong><small>{{ track.artists[0].name }}</small></span></span>
+        <span class="track-title"><img *ngIf="track.imageUrl" [src]="track.imageUrl" alt="" loading="lazy" decoding="async"><i *ngIf="!track.imageUrl" class="pi pi-music"></i><span><strong>{{ track.name }}</strong><small>{{ track.artists[0].name }}</small></span></span>
         <span class="album-name">{{ track.albumName || '—' }}</span>
         <span>{{ formatDuration(track.durationMs || 0) }}</span>
       </a>
