@@ -13,6 +13,8 @@ import {
   CompareTrack
 } from '@core/compare-room/compare-room.models';
 import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.service';
+import {StorageService} from '@core/data-access/storage/storage.service';
+import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {firstValueFrom, Subscription} from 'rxjs';
 
 @Component({
@@ -47,7 +49,9 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     private auth: SpotifyAuthService,
     private source: ComparePlaylistSourceService,
     private spotify: ParticipantSpotifyService,
-    private router: Router
+    private router: Router,
+    private storage: StorageService,
+    private supabase: SupabaseService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -66,7 +70,7 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
       let mainParticipant: CompareParticipant | undefined;
       if (this.enteredAuthenticated) {
         this.mainAccessToken = await this.getMainAccessToken();
-        const profile = await this.spotify.getProfile(this.mainAccessToken);
+        const profile = await this.loadPersistentMainProfile();
         this.mainParticipantId = this.randomId();
         mainParticipant = {
           id: this.mainParticipantId,
@@ -333,6 +337,24 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     }
     if (!this.mainAccessToken) throw new Error('The main Spotify session is unavailable.');
     return this.mainAccessToken;
+  }
+
+  private async loadPersistentMainProfile(): Promise<any> {
+    const cachedUserId = this.auth.getUserId() || '';
+    const supabaseUserId = this.auth.getSupabaseUserId();
+    const storedProfile = supabaseUserId
+      ? await this.supabase.loadUserProfile(supabaseUserId)
+      : null;
+    const spotifyUserId = storedProfile?.spotify_id || cachedUserId.replace(/_dev$/, '');
+    if (!spotifyUserId) throw new Error('The main Spotify profile is unavailable.');
+    return {
+      id: spotifyUserId,
+      display_name: storedProfile?.display_name || spotifyUserId,
+      images: [{
+        url: storedProfile?.profile_pic_url ||
+          this.storage.getItem(`${cachedUserId}_profile_pic`) || ''
+      }].filter(image => !!image.url)
+    };
   }
 
   private describeError(error: unknown): string {

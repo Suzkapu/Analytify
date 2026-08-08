@@ -220,14 +220,7 @@ export class SongsComponent implements OnInit, OnDestroy {
         this.totalTracks = cache.cachedTotalTracks;
         this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
         this.filterArtists();
-        this.healCachedArtistImages();
-
-        if (this.playlistId === 'fav') {
-          const incrementalTask = this.playlistLoaderService.startNewFavouriteTracksCheck(userId);
-          if (incrementalTask) {
-            this.subscribeToLoaderTask(incrementalTask, true);
-          }
-        }
+        this.healVisibleArtistImages();
       } catch (e) {
         console.warn('Failed to parse some cached playlist keys:', e);
         this.loadPlaylistFromAPI(userId, isBackupActive, cache.isExpired);
@@ -273,9 +266,15 @@ export class SongsComponent implements OnInit, OnDestroy {
   }
 
   async refreshPlaylist() {
-    // A manual refresh re-evaluates local and cloud timestamps but does not
-    // bypass the one-Spotify-pull-per-day rule.
     this.playlistLoaderService.clearLoadingTask(this.playlistId);
+    if (this.playlistId === 'fav') {
+      const userId = this.authService.getUserId() || 'anonymous';
+      const incrementalTask = this.playlistLoaderService.startNewFavouriteTracksCheck(userId, true);
+      if (incrementalTask) this.subscribeToLoaderTask(incrementalTask, true);
+      return;
+    }
+    // Standard playlists keep their daily full-refresh boundary. Liked Songs
+    // exposes the cheaper incremental check explicitly through this action.
     await this.loadArtistsFromPlaylist();
   }
 
@@ -300,6 +299,7 @@ export class SongsComponent implements OnInit, OnDestroy {
         if (storedArtists) {
           this.artists = JSON.parse(storedArtists);
           this.filterArtists();
+          this.healVisibleArtistImages();
         }
         this.playlistLoaderService.clearLoadingTask(this.playlistId);
         if (this.loaderSubscription) {
@@ -504,14 +504,14 @@ export class SongsComponent implements OnInit, OnDestroy {
     this.imageHealingService.markArtistImageFailed(artist.id, failedImageUrl);
     artist.images = [];
     image.src = placeholderUrl;
-    this.healCachedArtistImages();
+    this.healVisibleArtistImages([artist]);
   }
 
-  private healCachedArtistImages() {
-    if (!Array.isArray(this.artists) || this.artists.length === 0) return;
+  private healVisibleArtistImages(artists = this.filteredArtists.slice(0, this.displayedArtistsCount)) {
+    if (!Array.isArray(artists) || artists.length === 0) return;
     const userId = this.authService.getUserId() || 'anonymous';
     this.imageHealingService.healArtistImages(
-      this.artists,
+      artists,
       `${userId}_${this.playlistId}`
     );
   }
@@ -665,6 +665,7 @@ export class SongsComponent implements OnInit, OnDestroy {
       if (this.viewStyle === 'artists') {
         if (this.displayedArtistsCount < this.filteredArtists.length) {
           this.displayedArtistsCount += 50;
+          this.healVisibleArtistImages();
         }
       } else if (this.viewStyle === 'songs') {
         if (this.displayedTracksCount < this.filteredTracks.length) {

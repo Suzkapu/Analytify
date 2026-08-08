@@ -150,11 +150,17 @@ export class PlaylistsComponent {
       }));
 
       let favouriteTotal = this.getCachedFavouriteTotal(userId, cachedPlaylists);
-      try {
-        const favouriteTracks = await firstValueFrom(this.spotifyDataService.getFavTracks(0, 1));
-        if (Number.isFinite(favouriteTracks?.total)) favouriteTotal = favouriteTracks.total;
-      } catch (error) {
-        console.warn('[Playlists] Could not refresh Liked Songs count; keeping the cached count.', error);
+      const favouriteTotalUpdatedKey = `${userId}_fav_Amount_lastUpdated`;
+      if (!this.isFreshSinceDailyCutoff(this.storageService.getItem(favouriteTotalUpdatedKey))) {
+        try {
+          const favouriteTracks = await firstValueFrom(this.spotifyDataService.getFavTracks(0, 1));
+          if (Number.isFinite(favouriteTracks?.total)) {
+            favouriteTotal = favouriteTracks.total;
+            this.storageService.setItem(favouriteTotalUpdatedKey, Date.now().toString());
+          }
+        } catch (error) {
+          console.warn('[Playlists] Could not refresh Liked Songs count; keeping the cached count.', error);
+        }
       }
 
       this.playlists = [this.createFavouritePlaylist(favouriteTotal), ...refreshedPlaylists];
@@ -171,6 +177,16 @@ export class PlaylistsComponent {
     } finally {
       this.isRefreshingPlaylists = false;
     }
+  }
+
+  private isFreshSinceDailyCutoff(timestamp: string | null): boolean {
+    const value = Number(timestamp);
+    if (!Number.isFinite(value)) return false;
+    const now = new Date();
+    const cutoff = new Date(now);
+    cutoff.setHours(1, 0, 0, 0);
+    if (now.getTime() < cutoff.getTime()) cutoff.setDate(cutoff.getDate() - 1);
+    return value >= cutoff.getTime();
   }
 
 

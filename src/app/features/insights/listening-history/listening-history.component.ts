@@ -35,6 +35,7 @@ export class ListeningHistoryComponent implements OnInit {
     const userId = this.authService.getUserId() || 'anonymous';
     const supabaseUserId = this.authService.getSupabaseUserId();
     const storageKey = `${userId}_recently_played`;
+    const lastCheckedKey = `${storageKey}_lastChecked`;
 
     // Load existing cache from StorageService
     let cachedTracks: any[] = [];
@@ -64,6 +65,12 @@ export class ListeningHistoryComponent implements OnInit {
 
     this.recentlyPlayedTracks = cachedTracks;
 
+    const lastChecked = Number(this.storageService.getItem(lastCheckedKey));
+    if (cachedTracks.length > 0 && Number.isFinite(lastChecked) && Date.now() - lastChecked < 5 * 60 * 1000) {
+      console.log('[History] Using the recently checked cache; skipping a repeated Spotify request.');
+      return;
+    }
+
     if (this.recentlyPlayedTracks.length === 0) {
       this.isLoadingRecentlyPlayed = true;
     }
@@ -73,7 +80,11 @@ export class ListeningHistoryComponent implements OnInit {
         ? '[History] Checking Spotify for listening-history entries newer than the local/Supabase cache.'
         : '[History] No cached listening history found. Fetching the latest entries from Spotify.'
     );
-    this.spotifyDataService.getRecentlyPlayed(50).subscribe({
+    const newestPlayedAt = cachedTracks.reduce((latest, item) => {
+      const playedAt = new Date(item?.played_at || '').getTime();
+      return Number.isFinite(playedAt) ? Math.max(latest, playedAt) : latest;
+    }, 0);
+    this.spotifyDataService.getRecentlyPlayed(50, newestPlayedAt || undefined).subscribe({
       next: (res: any) => {
         const newItems = res.items || [];
         
@@ -104,6 +115,7 @@ export class ListeningHistoryComponent implements OnInit {
         // Save back to StorageService
         try {
           this.storageService.setItem(storageKey, JSON.stringify(finalTracks));
+          this.storageService.setItem(lastCheckedKey, Date.now().toString());
         } catch (e) {
           console.warn('Failed to write to storage:', e);
         }

@@ -3,13 +3,25 @@ import {fakeAsync, flushMicrotasks, TestBed} from '@angular/core/testing';
 import {environment} from '@env/environment';
 import {CompareTrack} from './compare-room.models';
 import {ParticipantSpotifyService} from './participant-spotify.service';
+import {StorageService} from '@core/data-access/storage/storage.service';
 
 describe('ParticipantSpotifyService', () => {
   let service: ParticipantSpotifyService;
   let http: HttpTestingController;
+  let storage: Map<string, string>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({imports: [HttpClientTestingModule]});
+    storage = new Map<string, string>();
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [{
+        provide: StorageService,
+        useValue: {
+          getItem: (key: string) => storage.get(key) ?? null,
+          setItem: (key: string, value: string) => storage.set(key, value)
+        }
+      }]
+    });
     service = TestBed.inject(ParticipantSpotifyService);
     http = TestBed.inject(HttpTestingController);
   });
@@ -30,12 +42,9 @@ describe('ParticipantSpotifyService', () => {
       ]
     });
     flushMicrotasks();
-    const liked = http.expectOne(`${environment.spotifyUrl}/me/tracks?limit=1&offset=0`);
-    liked.flush({total: 42, items: []});
-    flushMicrotasks();
 
     expect(result?.map(item => item.id)).toEqual(['fav', 'owned', 'collab']);
-    expect(result?.[0].total).toBe(42);
+    expect(result?.[0].total).toBe(0);
   }));
 
   it('creates a private playlist and adds tracks in batches of one hundred', fakeAsync(() => {
@@ -111,6 +120,29 @@ describe('ParticipantSpotifyService', () => {
     expect(result.success).toBeTrue();
     expect(result.playlistId).toBe('existing-playlist');
     expect(result.addedTracks).toBe(105);
+  }));
+
+  it('skips an unchanged playlist metadata write on later shared-copy revisions', fakeAsync(() => {
+    (service as any).rememberAppliedMetadata(
+      'existing-playlist',
+      'Shared copy',
+      'Analytify Share ID: share-id'
+    );
+    void service.syncPlaylist(
+      'recipient-token',
+      'existing-playlist',
+      null,
+      'Shared copy',
+      'Analytify Share ID: share-id',
+      [track('1')]
+    );
+
+    const replace = http.expectOne(`${environment.spotifyUrl}/playlists/existing-playlist/items`);
+    expect(replace.request.method).toBe('PUT');
+    replace.flush({snapshot_id: 'replacement'});
+    flushMicrotasks();
+
+    http.expectNone(`${environment.spotifyUrl}/playlists/existing-playlist`);
   }));
 
   function track(id: string): CompareTrack {

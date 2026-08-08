@@ -25,7 +25,6 @@ describe('UserStatsComponent trends', () => {
       null as any,
       null as any,
       null as any,
-      null as any,
       null as any
     );
     component.selectedSnapshotId = 'current';
@@ -146,5 +145,14 @@ describe('UserStatsComponent trends', () => {
       .toEqual({type: 'up', diff: 1});
     expect(component.getTrend({name: 'alternative rock'}, 0, 'genres'))
       .toEqual({type: 'up', diff: 1});
+  });
+
+  it('keeps medium and long-term stats fresh for seven days', () => {
+    const sixDaysAgo = Date.now() - 6 * 24 * 60 * 60 * 1000;
+    const eightDaysAgo = Date.now() - 8 * 24 * 60 * 60 * 1000;
+
+    expect(component.isCacheExpired(String(sixDaysAgo), 'medium_term')).toBeFalse();
+    expect(component.isCacheExpired(String(sixDaysAgo), 'long_term')).toBeFalse();
+    expect(component.isCacheExpired(String(eightDaysAgo), 'medium_term')).toBeTrue();
   });
 });

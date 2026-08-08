@@ -16,18 +16,19 @@ describe('CompareRoomShellComponent', () => {
       isAuthenticated: jasmine.createSpy('isAuthenticated').and.returnValue(true),
       isTokenExpired: jasmine.createSpy('isTokenExpired').and.returnValue(false),
       getAccessToken: jasmine.createSpy('getAccessToken').and.returnValue('host-token'),
-      getUserId: jasmine.createSpy('getUserId').and.returnValue('host-user')
+      getUserId: jasmine.createSpy('getUserId').and.returnValue('host-user'),
+      getSupabaseUserId: jasmine.createSpy('getSupabaseUserId').and.returnValue('supabase-user')
     };
     const source = {
       loadMainPlaylists: jasmine.createSpy('loadMainPlaylists').and.resolveTo([])
     };
-    const spotify = {
-      getProfile: jasmine.createSpy('getProfile').and.resolveTo({
-        id: 'host-user',
-        display_name: 'Mobile host',
-        images: []
-      })
-    };
+    const spotify = {getProfile: jasmine.createSpy('getProfile')};
+    const storage = {getItem: jasmine.createSpy('getItem').and.returnValue(null)};
+    const supabase = {loadUserProfile: jasmine.createSpy('loadUserProfile').and.resolveTo({
+      spotify_id: 'host-user',
+      display_name: 'Mobile host',
+      profile_pic_url: null
+    })};
     const router = {navigate: jasmine.createSpy('navigate').and.resolveTo(true)};
     const originalWidth = window.innerWidth;
     Object.defineProperty(window, 'innerWidth', {configurable: true, value: 390});
@@ -38,7 +39,9 @@ describe('CompareRoomShellComponent', () => {
         auth as any,
         source as any,
         spotify as any,
-        router as any
+        router as any,
+        storage as any,
+        supabase as any
       );
 
       await component.ngOnInit();
@@ -49,6 +52,7 @@ describe('CompareRoomShellComponent', () => {
         isMainProfile: true
       }));
       expect(source.loadMainPlaylists).toHaveBeenCalledWith('host-token', 'host-user');
+      expect(spotify.getProfile).not.toHaveBeenCalled();
       expect(coordinator.addInvitation).toHaveBeenCalledTimes(1);
       expect(component.isStarting).toBeFalse();
     } finally {

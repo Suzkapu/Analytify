@@ -114,6 +114,20 @@ describe('PlaylistsComponent', () => {
       .toEqual(['fav', 'updated']);
   });
 
+  it('reuses a Liked Songs count that was refreshed after the daily cutoff', async () => {
+    storage.set('current-user_fav_Amount', '37');
+    storage.set('current-user_fav_Amount_lastUpdated', Date.now().toString());
+    spotifyDataService.getAccessibleUserPlaylists.and.returnValue(of({
+      currentUserId: 'current-user',
+      items: []
+    }));
+
+    await component.loadPlaylists();
+
+    expect(spotifyDataService.getFavTracks).not.toHaveBeenCalled();
+    expect(component.playlists[0].tracks.total).toBe(37);
+  });
+
   it('keeps followed playlists hidden by default and toggles them into the overview', () => {
     component.playlists = [
       {id: 'fav', name: 'Favourite Tracks', tracks: {total: 5}},

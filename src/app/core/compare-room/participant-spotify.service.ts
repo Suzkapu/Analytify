@@ -4,10 +4,11 @@ import {environment} from '@env/environment';
 import {firstValueFrom, timer} from 'rxjs';
 import {ComparePlaylist, CompareSaveResult, CompareTrack} from './compare-room.models';
 import {TRANSIENT_SPOTIFY_REQUEST} from './spotify-request-context';
+import {StorageService} from '@core/data-access/storage/storage.service';
 
 @Injectable({providedIn: 'root'})
 export class ParticipantSpotifyService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private storage: StorageService) {}
 
   async getProfile(accessToken: string): Promise<any> {
     return this.get<any>('/me', accessToken);
@@ -29,14 +30,9 @@ export class ParticipantSpotifyService {
     const playlists = items
       .filter(playlist => playlist?.owner?.id === spotifyUserId || playlist?.collaborative === true)
       .map(playlist => this.normalizePlaylist(playlist));
-    let likedTotal = 0;
-    try {
-      const likedPage = await this.get<any>('/me/tracks?limit=1&offset=0', accessToken);
-      likedTotal = Number(likedPage?.total || 0);
-    } catch {
-      // Liked Songs remains selectable even when Spotify cannot provide its count.
-    }
-    return [this.likedSongsPlaylist(likedTotal), ...playlists];
+    // The total is decorative and must not cost every transient participant an
+    // extra Spotify request. The real count is learned if Liked Songs is selected.
+    return [this.likedSongsPlaylist(0), ...playlists];
   }
 
   async getPlaylistTracks(playlist: ComparePlaylist, accessToken: string): Promise<CompareTrack[]> {
@@ -112,11 +108,14 @@ export class ParticipantSpotifyService {
     let addedTracks = 0;
     try {
       if (playlistId) {
-        await this.put(`/playlists/${encodeURIComponent(playlistId)}`, accessToken, {
-          name,
-          description,
-          public: false
-        });
+        if (!this.hasAppliedMetadata(playlistId, name, description)) {
+          await this.put(`/playlists/${encodeURIComponent(playlistId)}`, accessToken, {
+            name,
+            description,
+            public: false
+          });
+          this.rememberAppliedMetadata(playlistId, name, description);
+        }
       } else {
         const playlist = await this.post<any>('/me/playlists', accessToken, {
           name,
@@ -125,6 +124,7 @@ export class ParticipantSpotifyService {
         });
         playlistId = playlist.id;
         playlistUrl = playlist.external_urls?.spotify;
+        if (playlistId) this.rememberAppliedMetadata(playlistId, name, description);
       }
 
       if (!playlistId) throw new Error('Spotify did not return a playlist ID.');
@@ -154,6 +154,32 @@ export class ParticipantSpotifyService {
         error: this.describeError(error)
       };
     }
+  }
+
+  private hasAppliedMetadata(playlistId: string, name: string, description: string): boolean {
+    return this.storage.getItem(this.metadataCacheKey(playlistId)) === this.metadataSignature(name, description);
+  }
+
+  private rememberAppliedMetadata(playlistId: string, name: string, description: string): void {
+    this.storage.setItem(
+      this.metadataCacheKey(playlistId),
+      this.metadataSignature(name, description),
+      false
+    );
+  }
+
+  private metadataSignature(name: string, description: string): string {
+    const value = JSON.stringify({name, description});
+    let hash = 2166136261;
+    for (let index = 0; index < value.length; index++) {
+      hash ^= value.charCodeAt(index);
+      hash = Math.imul(hash, 16777619);
+    }
+    return (hash >>> 0).toString(16);
+  }
+
+  private metadataCacheKey(playlistId: string): string {
+    return `spotify_playlist_${playlistId}_applied_metadata`;
   }
 
   normalizeCachedTracks(artists: any[]): CompareTrack[] {

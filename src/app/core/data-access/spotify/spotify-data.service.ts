@@ -187,8 +187,9 @@ export class SpotifyDataService {
     return this.makeRequest(() => this.http.get(endpoint));
   }
 
-  getRecentlyPlayed(limit: number = 50): Observable<any> {
-    const endpoint = `${environment.spotifyUrl}/me/player/recently-played?limit=${limit}`;
+  getRecentlyPlayed(limit: number = 50, after?: number): Observable<any> {
+    const cursor = Number.isFinite(after) ? `&after=${after}` : '';
+    const endpoint = `${environment.spotifyUrl}/me/player/recently-played?limit=${limit}${cursor}`;
     return this.makeRequest(() => this.http.get(endpoint));
   }
 

@@ -121,7 +121,6 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     let cachedTotalTracks = 0;
     let cachedTrackCount: number | null = null;
     let isComplete = false;
-    let isOldCache = false;
 
     const parseCachedArtists = () => {
       parsedArtists = [];
@@ -162,8 +161,6 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
         }
       }
 
-      isOldCache = parsedArtists.length > 0 &&
-        parsedArtists.some(artist => !Array.isArray(artist.images));
       isComplete = !isParseError && this.playlistLoaderService.isCachedPlaylistComplete(
         parsedArtists,
         cachedTotalTracks,
@@ -174,7 +171,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     parseCachedArtists();
 
     if (
-      (!storedArtists || isExpired || isParseError || isOldCache || !isComplete) &&
+      (!storedArtists || isExpired || isParseError || !isComplete) &&
       isBackupActive
     ) {
       this.storageService.removeItem(`${storageKey}_CachedTrackCount`);
@@ -191,7 +188,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
       parseCachedArtists();
     }
 
-    if (storedArtists && !isExpired && !isParseError && !isOldCache && isComplete) {
+    if (storedArtists && !isExpired && !isParseError && isComplete) {
       console.log(`[Analysis] Loading playlist ${this.playlistId} data from the local IndexedDB cache.`);
       try {
         this.artists = parsedArtists;

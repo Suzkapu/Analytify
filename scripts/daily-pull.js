@@ -2,7 +2,8 @@
  * Analytify - Automated Daily Spotify Pull Script
  * 
  * This script runs in the background (e.g. via Linux cronjob or as a daemon)
- * to pull recent listening history plus daily top-item snapshots for all
+ * to pull recent listening history, daily short-term stats, and weekly
+ * medium/long-term top-item snapshots for all
  * registered users and store them in the normalized Supabase database.
  * 
  * Required Environment Variables:
@@ -136,12 +137,18 @@ function getDailyCutoffTimestamp() {
   return getDailyCutoff().toISOString();
 }
 
-function getDailySnapshotDate() {
-  const cutoff = getDailyCutoff();
+function getDailySnapshotDate(now = new Date()) {
+  const cutoff = getDailyCutoff(now);
   const year = cutoff.getFullYear();
   const month = String(cutoff.getMonth() + 1).padStart(2, '0');
   const day = String(cutoff.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
+}
+
+function getSnapshotDateDaysAgo(days) {
+  const date = getDailyCutoff();
+  date.setDate(date.getDate() - days);
+  return getDailySnapshotDate(date);
 }
 
 // 1. Get Spotify Access Token using Refresh Token
@@ -702,7 +709,22 @@ async function syncUserHistory(user, rangesToSync = []) {
     // B. Listening history is an intentionally independent, more frequent feed.
     // A failure or an empty response must never prevent the daily stats snapshots.
     try {
-      const recentlyPlayed = await apiRequest('https://api.spotify.com/v1/me/player/recently-played?limit=50', {
+      const { data: latestHistory, error: latestHistoryError } = await supabase
+        .from('listening_history')
+        .select('played_at')
+        .eq('user_id', user.id)
+        .order('played_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (latestHistoryError) throw latestHistoryError;
+
+      const historyUrl = new URL('https://api.spotify.com/v1/me/player/recently-played');
+      historyUrl.searchParams.set('limit', '50');
+      const latestPlayedAt = new Date(latestHistory?.played_at || '').getTime();
+      if (Number.isFinite(latestPlayedAt)) {
+        historyUrl.searchParams.set('after', String(latestPlayedAt));
+      }
+      const recentlyPlayed = await apiRequest(historyUrl.toString(), {
         headers: { 'Authorization': `Bearer ${spotifyAccessToken}` }
       });
 
@@ -762,8 +784,7 @@ async function syncUserHistory(user, rangesToSync = []) {
       console.warn(`[Sync] Listening history failed for user ${user.id}; continuing with remaining sync:`, historyError.message);
     }
 
-    // C. Each Supabase snapshot is a per-range daily gate. last_synced_at is
-    // only the coarse marker that all three daily ranges are complete.
+    // C. Short-term has a daily gate; medium/long-term have a seven-day gate.
     if (rangesToSync.length > 0) {
       const statsResult = await syncUserStats(user, spotifyAccessToken, rangesToSync);
       if (statsResult.completedRanges !== statsResult.expectedRanges) {
@@ -772,10 +793,10 @@ async function syncUserHistory(user, rangesToSync = []) {
         );
       }
     } else {
-      console.log(`All daily stats ranges for ${user.id} already exist; listening history only.`);
+      console.log(`All stats ranges for ${user.id} are inside their freshness windows; listening history only.`);
     }
 
-    const remainingRanges = await getMissingStatsRanges(user.id);
+    const remainingRanges = await getDueStatsRanges(user.id);
     if (remainingRanges.length === 0) {
       const { error: markerError } = await supabase
         .from('users')
@@ -799,18 +820,26 @@ function isSyncExpired(lastSyncedStr) {
   return !Number.isFinite(lastSynced) || lastSynced < getDailyCutoff().getTime();
 }
 
-async function getMissingStatsRanges(userId) {
+async function getDueStatsRanges(userId) {
   const allRanges = ['short_term', 'medium_term', 'long_term'];
   const { data, error } = await supabase
     .from('stats_snapshots')
-    .select('range')
+    .select('range, snapshot_date')
     .eq('user_id', userId)
-    .eq('snapshot_date', getDailySnapshotDate())
+    .gte('snapshot_date', getSnapshotDateDaysAgo(6))
     .in('range', allRanges);
   if (error) throw error;
 
-  const existingRanges = new Set((data || []).map(snapshot => snapshot.range));
-  return allRanges.filter(range => !existingRanges.has(range));
+  const today = getDailySnapshotDate();
+  const recentRanges = new Set((data || []).map(snapshot => snapshot.range));
+  const todayRanges = new Set(
+    (data || [])
+      .filter(snapshot => snapshot.snapshot_date === today)
+      .map(snapshot => snapshot.range)
+  );
+  return allRanges.filter(range => range === 'short_term'
+    ? !todayRanges.has(range)
+    : !recentRanges.has(range));
 }
 
 // Main entry point
@@ -847,18 +876,18 @@ async function main() {
       const markerIsCurrent = !isSyncExpired(user.last_synced_at);
       const rangesToSync = force
         ? ['short_term', 'medium_term', 'long_term']
-        : await getMissingStatsRanges(user.id);
+        : await getDueStatsRanges(user.id);
 
       if (markerIsCurrent && rangesToSync.length > 0) {
         console.warn(
-          `Daily marker for ${user.display_name} is current but snapshots are incomplete; repairing only missing ranges.`
+          `Daily marker for ${user.display_name} is current but a stats range is due; repairing only due ranges.`
         );
       }
 
       if (rangesToSync.length === 0) {
-        console.log(`Daily stats for ${user.display_name} are complete; syncing listening history only.`);
+        console.log(`Stats for ${user.display_name} are fresh; syncing listening history only.`);
       } else {
-        console.log(`Missing daily stats ranges for ${user.display_name}: ${rangesToSync.join(', ')}`);
+        console.log(`Stats ranges due for ${user.display_name}: ${rangesToSync.join(', ')}`);
       }
 
       const succeeded = await syncUserHistory(user, rangesToSync);

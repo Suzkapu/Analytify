@@ -28,12 +28,18 @@ function getDailyCutoffTimestamp(): string {
   return getDailyCutoff().toISOString();
 }
 
-function getDailySnapshotDate(): string {
-  const cutoff = getDailyCutoff();
+function getDailySnapshotDate(now: Date = new Date()): string {
+  const cutoff = getDailyCutoff(now);
   const year = cutoff.getFullYear();
   const month = String(cutoff.getMonth() + 1).padStart(2, '0');
   const day = String(cutoff.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
+}
+
+function getStatsSnapshotCutoff(maxAgeDays: number): string {
+  const cutoff = getDailyCutoff();
+  cutoff.setDate(cutoff.getDate() - Math.max(0, maxAgeDays - 1));
+  return getDailySnapshotDate(cutoff);
 }
 
 @Injectable({
@@ -858,34 +864,40 @@ export class SupabaseService {
     }
   }
 
-  /** Checks if there is already a user stats snapshot for today in database */
-  async hasStatsSnapshotForToday(supabaseUserId: string, range: string): Promise<boolean> {
+  /** Checks for a snapshot inside the range-specific freshness window. */
+  async hasRecentStatsSnapshot(
+    supabaseUserId: string,
+    range: string,
+    maxAgeDays: number
+  ): Promise<boolean> {
     try {
-      const todayStr = getDailySnapshotDate();
       const { data, error } = await this.client
         .from('stats_snapshots')
         .select('id')
         .eq('user_id', supabaseUserId)
         .eq('range', range)
-        .eq('snapshot_date', todayStr)
+        .gte('snapshot_date', getStatsSnapshotCutoff(maxAgeDays))
         .limit(1);
 
       if (error) throw error;
       return data && data.length > 0;
     } catch (e) {
-      console.warn('[SupabaseService] Error checking today\'s stats snapshot:', e);
+      console.warn('[SupabaseService] Error checking recent stats snapshot:', e);
       return false;
     }
   }
 
-  /** Loads today's stats snapshot from database */
-  async loadTodayStatsSnapshot(supabaseUserId: string, range: string): Promise<any> {
+  /** Loads the newest stats snapshot inside the requested freshness window. */
+  async loadLatestStatsSnapshot(
+    supabaseUserId: string,
+    range: string,
+    maxAgeDays: number
+  ): Promise<any> {
     try {
-      const todayStr = getDailySnapshotDate();
       const { data, error } = await this.client
         .from('stats_snapshots')
         .select(`
-          id, explicit_percentage, genre_diversity,
+          id, snapshot_date, explicit_percentage, genre_diversity,
           stats_snapshot_tracks (
             rank,
             tracks (
@@ -911,7 +923,9 @@ export class SupabaseService {
         `)
         .eq('user_id', supabaseUserId)
         .eq('range', range)
-        .eq('snapshot_date', todayStr)
+        .gte('snapshot_date', getStatsSnapshotCutoff(maxAgeDays))
+        .order('snapshot_date', {ascending: false})
+        .limit(1)
         .maybeSingle();
 
       if (error) throw error;
@@ -957,6 +971,7 @@ export class SupabaseService {
         }).filter((a: any) => !!a);
 
       return {
+        snapshotDate: data.snapshot_date,
         explicitPercentage: data.explicit_percentage,
         genreDiversity: data.genre_diversity,
         topTracks,

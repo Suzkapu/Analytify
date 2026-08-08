@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
-import { BehaviorSubject, Subscription, timer } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
 
@@ -42,9 +42,7 @@ export class PlaylistLoadTask {
   hasDataChanges: boolean = false;
 
   trackIndexCounter: number = 0;
-  requestedArtistIds = new Set<string>();
   completedArtistIds = new Set<string>();
-  artistFetchAttempts = new Map<string, number>();
   refreshingArtists: any[] = [];
   private activeSub = new Subscription();
   
@@ -124,7 +122,7 @@ export class PlaylistLoaderService {
     return task;
   }
 
-  startNewFavouriteTracksCheck(userId: string): PlaylistLoadTask | null {
+  startNewFavouriteTracksCheck(userId: string, force = false): PlaylistLoadTask | null {
     const playlistId = 'fav';
     const existingTask = this.tasks.get(playlistId);
     if (existingTask) {
@@ -132,7 +130,7 @@ export class PlaylistLoaderService {
     }
 
     const sessionKey = `${userId}_${playlistId}`;
-    if (this.incrementalChecksThisSession.has(sessionKey)) {
+    if (!force && this.incrementalChecksThisSession.has(sessionKey)) {
       return null;
     }
 
@@ -177,9 +175,7 @@ export class PlaylistLoaderService {
         ? `[PlaylistLoaderService] Starting incremental Spotify check for playlist ${task.playlistId}.`
         : `[PlaylistLoaderService] Starting full Spotify sync for playlist ${task.playlistId}.`
     );
-    task.requestedArtistIds.clear();
     task.completedArtistIds.clear();
-    task.artistFetchAttempts.clear();
     task.loadedArtistsDetailsCount = 0;
     task.totalUniqueArtists = 0;
 
@@ -202,7 +198,6 @@ export class PlaylistLoaderService {
     if (task.mode === 'incremental-new-only') {
       cachedArtists.forEach(artist => {
         if (artist?.id && Array.isArray(artist.images) && artist.images.length > 0) {
-          task.requestedArtistIds.add(artist.id);
           task.completedArtistIds.add(artist.id);
         }
       });
@@ -457,8 +452,7 @@ export class PlaylistLoaderService {
         task.loadedTracksCount = cachedTrackCount;
         task.isLoadingTracks = false;
         task.emitUpdate();
-        this.fetchArtistDetailsLazy(task, targetArray, userId);
-        this.checkCompletion(task, userId);
+        void this.hydrateArtistDetailsFromSupabase(task, targetArray, userId);
       },
       error: (err) => {
         console.warn('[PlaylistLoaderService] New favourite tracks check failed; keeping the cached playlist unchanged.', err);
@@ -559,11 +553,14 @@ export class PlaylistLoaderService {
     if (!Array.isArray(artists)) return false;
 
     const actualCachedTrackCount = this.countUniqueTracks(artists);
-    if (
-      storedCachedTrackCount !== null &&
-      actualCachedTrackCount !== storedCachedTrackCount
-    ) {
-      return false;
+    if (storedCachedTrackCount !== null) {
+      if (actualCachedTrackCount !== storedCachedTrackCount) return false;
+
+      // The marker is written only after pagination finishes and records the
+      // exact normalized unique-track dataset. Spotify's raw total can be
+      // larger because duplicates, local files and unavailable entries are
+      // deliberately omitted from that normalized cache.
+      if (actualCachedTrackCount > 0) return true;
     }
 
     if (!Number.isFinite(expectedTotal) || expectedTotal < 0) return false;
@@ -695,7 +692,14 @@ export class PlaylistLoaderService {
       task.emitUpdate();
     }
 
-    this.fetchArtistDetailsLazy(task, targetArray, userId);
+    // Artist imagery is optional. A playlist cache is complete once all track
+    // pages have been written; missing profiles are filled from Supabase here
+    // and Spotify fallback is deferred to the visible-image recovery path.
+    targetArray
+      .map(artist => artist?.id)
+      .filter((id): id is string => typeof id === 'string' && id.length > 0)
+      .forEach(id => task.completedArtistIds.add(id));
+    task.loadedArtistsDetailsCount = task.completedArtistIds.size;
     this.checkCompletion(task, userId);
   }
 
@@ -706,94 +710,6 @@ export class PlaylistLoaderService {
     task.isRefreshing = false;
     task.isComplete = true;
     task.emitUpdate();
-  }
-
-  private fetchArtistDetailsLazy(task: PlaylistLoadTask, targetArray: any[], userId: string) {
-    const validArtistIds = Array.from(new Set<string>(targetArray
-      .map(a => a.id)
-      .filter(id => id && typeof id === 'string' && id.trim() !== '')));
-    task.totalUniqueArtists = validArtistIds.length;
-
-    const pendingIds = validArtistIds.filter(id =>
-      !task.requestedArtistIds.has(id) &&
-      !task.completedArtistIds.has(id) &&
-      (task.artistFetchAttempts.get(id) || 0) < 3
-    );
-
-    if (pendingIds.length === 0) {
-      this.checkCompletion(task, userId);
-      return;
-    }
-
-    const batch = pendingIds.slice(0, 50);
-    batch.forEach(id => {
-      task.requestedArtistIds.add(id);
-      task.artistFetchAttempts.set(id, (task.artistFetchAttempts.get(id) || 0) + 1);
-    });
-
-    const sub = this.spotifyDataService.getArtistsByIds(batch).subscribe({
-      next: (res: any) => {
-        task.error = null;
-        const artistMap = new Map<string, any>();
-        (res.artists || []).forEach((a: any) => {
-          if (a) artistMap.set(a.id, a);
-        });
-
-        targetArray.forEach(artist => {
-          if (artistMap.has(artist.id)) {
-            const full = artistMap.get(artist.id);
-            artist.images = full.images || [];
-            artist.external_urls = full.external_urls;
-            task.completedArtistIds.add(artist.id);
-          }
-        });
-
-        const retryIds: string[] = [];
-        batch.forEach(id => {
-          if (artistMap.has(id)) return;
-          task.requestedArtistIds.delete(id);
-          if ((task.artistFetchAttempts.get(id) || 0) >= 3) {
-            // Deleted or unavailable artists must not block the whole playlist.
-            task.completedArtistIds.add(id);
-          } else {
-            retryIds.push(id);
-          }
-        });
-
-        if (this.authService.isBackupActive() && artistMap.size > 0) {
-          this.supabaseService.syncArtists(Array.from(artistMap.values())).catch(err => {
-            console.warn('[PlaylistLoaderService] Failed to sync Spotify artist details:', err);
-          });
-        }
-
-        task.loadedArtistsDetailsCount = task.completedArtistIds.size;
-        task.emitUpdate();
-
-        if (retryIds.length > 0) {
-          const retrySub = timer(1000).subscribe(() =>
-            this.fetchArtistDetailsLazy(task, targetArray, userId)
-          );
-          task.addSub(retrySub);
-        } else {
-          this.fetchArtistDetailsLazy(task, targetArray, userId);
-        }
-      },
-      error: (err) => {
-        console.error('Error batch loading artists lazy details:', err);
-        task.error = err;
-        batch.forEach(id => {
-          task.requestedArtistIds.delete(id);
-          if ((task.artistFetchAttempts.get(id) || 0) >= 3) {
-            task.completedArtistIds.add(id);
-          }
-        });
-        const retrySub = timer(3000).subscribe(() =>
-          this.fetchArtistDetailsLazy(task, targetArray, userId)
-        );
-        task.addSub(retrySub);
-      }
-    });
-    task.addSub(sub);
   }
 
   private getArtistsFromTracks(task: PlaylistLoadTask, items: any[], targetArray: any[], offset: number = 0) {

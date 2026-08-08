@@ -4,7 +4,6 @@ import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { forkJoin, Subscription } from 'rxjs';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
-import { ImageHealingService } from '@core/sync/image-healing/image-healing.service';
 
 function toDailySnapshotDateKey(ts: number): string {
   const d = new Date(ts);
@@ -70,8 +69,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     private spotifyDataService: SpotifyDataService,
     public authService: SpotifyAuthService,
     private storageService: StorageService,
-    private supabaseService: SupabaseService,
-    private imageHealingService: ImageHealingService
+    private supabaseService: SupabaseService
   ) { }
 
   async ngOnInit() {
@@ -110,10 +108,14 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.selectedCategory = category;
   }
 
-  isCacheExpired(lastUpdatedStr: string | null): boolean {
+  isCacheExpired(lastUpdatedStr: string | null, range = this.selectedRange): boolean {
     if (!lastUpdatedStr) return true;
     const lastUpdated = parseInt(lastUpdatedStr, 10);
     if (isNaN(lastUpdated)) return true;
+
+    if (range !== 'short_term') {
+      return lastUpdated < Date.now() - 7 * 24 * 60 * 60 * 1000;
+    }
 
     const now = new Date();
     const cutoff = new Date(now);
@@ -140,7 +142,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     const artistsKey = `${userId}_stats_${range}_artists`;
     const genresKey = `${userId}_stats_${range}_genres`;
     let lastUpdated = this.storageService.getItem(lastUpdatedKey);
-    let isExpired = this.isCacheExpired(lastUpdated);
+    let isExpired = this.isCacheExpired(lastUpdated, range);
     let cachedTracks = this.storageService.getItem(tracksKey);
     let cachedArtists = this.storageService.getItem(artistsKey);
     let cachedGenres = this.storageService.getItem(genresKey);
@@ -185,7 +187,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       if (!isCurrentLoad()) return;
 
       lastUpdated = this.storageService.getItem(lastUpdatedKey);
-      isExpired = this.isCacheExpired(lastUpdated);
+      isExpired = this.isCacheExpired(lastUpdated, range);
       cachedTracks = this.storageService.getItem(tracksKey);
       cachedArtists = this.storageService.getItem(artistsKey);
       cachedGenres = this.storageService.getItem(genresKey);
@@ -212,12 +214,21 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       // Prioritize Supabase data if backup is active
       if (this.authService.isBackupActive() && supabaseUserId) {
         this.isLoading = true;
-        const hasSnapshot = await this.supabaseService.hasStatsSnapshotForToday(supabaseUserId, range);
+        const maxAgeDays = range === 'short_term' ? 1 : 7;
+        const hasSnapshot = await this.supabaseService.hasRecentStatsSnapshot(
+          supabaseUserId,
+          range,
+          maxAgeDays
+        );
         if (!isCurrentLoad()) return;
 
         if (hasSnapshot) {
-          console.log(`[Stats] Cache missing/expired. Fetching today's stats snapshot for ${range} directly from Supabase Cloud...`);
-          const dbSnapshot = await this.supabaseService.loadTodayStatsSnapshot(supabaseUserId, range);
+          console.log(`[Stats] Cache missing/expired. Fetching a recent stats snapshot for ${range} directly from Supabase Cloud...`);
+          const dbSnapshot = await this.supabaseService.loadLatestStatsSnapshot(
+            supabaseUserId,
+            range,
+            maxAgeDays
+          );
           if (!isCurrentLoad()) return;
 
           if (dbSnapshot) {
@@ -229,7 +240,13 @@ export class UserStatsComponent implements OnInit, OnDestroy {
             this.storageService.setItem(tracksKey, JSON.stringify(this.topTracks));
             this.storageService.setItem(artistsKey, JSON.stringify(this.topArtists));
             this.storageService.setItem(genresKey, JSON.stringify(this.topGenres));
-            this.storageService.setItem(lastUpdatedKey, Date.now().toString());
+            const parsedSnapshotTimestamp = dbSnapshot.snapshotDate
+              ? new Date(`${dbSnapshot.snapshotDate}T01:00:00`).getTime()
+              : Date.now();
+            const snapshotTimestamp = Number.isFinite(parsedSnapshotTimestamp)
+              ? parsedSnapshotTimestamp
+              : Date.now();
+            this.storageService.setItem(lastUpdatedKey, snapshotTimestamp.toString());
 
             this.saveHistorySnapshot(userId, range);
             this.isLoading = false;
@@ -274,9 +291,6 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
           this.saveHistorySnapshot(userId, range);
           this.isLoading = false;
-          this.imageHealingService.healArtistImages(loadedArtists, `${userId}_stats_${range}_artists`);
-          this.imageHealingService.healTrackImages(loadedTracks, `${userId}_stats_${range}_tracks`);
-
           // If backup is active, sync to Supabase
           if (this.authService.isBackupActive() && supabaseUserId) {
             let explicitCount = 0;

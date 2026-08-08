@@ -41,13 +41,41 @@ describe('PlaylistLoaderService', () => {
     expect(service.isCachedPlaylistComplete(artists, 5000, null)).toBeFalse();
   });
 
-  it('accepts a completed cache whose count roughly matches Spotify', () => {
+  it('accepts a completed cache whose consistency marker matches its data', () => {
     const artists = [{
       id: 'artist',
       tracks: Array.from({ length: 4975 }, (_, index) => ({ id: `track-${index}` }))
     }];
 
     expect(service.isCachedPlaylistComplete(artists, 5000, 4975)).toBeTrue();
+  });
+
+  it('keeps the cautious source-total tolerance for legacy caches without a marker', () => {
+    const artists = [{
+      id: 'artist',
+      tracks: Array.from({ length: 4975 }, (_, index) => ({ id: `track-${index}` }))
+    }];
+
+    expect(service.isCachedPlaylistComplete(artists, 5000, null)).toBeTrue();
+  });
+
+  it('does not invalidate track data merely because artist images are absent', () => {
+    const artists = [{id: 'artist', tracks: [{id: 'track'}]}];
+
+    expect(service.isCachedPlaylistComplete(artists, 1, 1)).toBeTrue();
+  });
+
+  it('trusts an exact completed-cache marker when Spotify includes duplicate or unavailable entries', () => {
+    const artists = [{
+      id: 'artist',
+      tracks: Array.from({ length: 80 }, (_, index) => ({ id: `track-${index}` }))
+    }];
+
+    expect(service.isCachedPlaylistComplete(artists, 100, 80)).toBeTrue();
+  });
+
+  it('does not accept an empty marked cache when Spotify reports playlist entries', () => {
+    expect(service.isCachedPlaylistComplete([], 10, 0)).toBeFalse();
   });
 
   it('rejects a cache whose consistency marker does not match its data', () => {
@@ -104,6 +132,18 @@ describe('PlaylistLoaderService', () => {
     expect(first?.mode).toBe('incremental-new-only');
     expect(second).toBeNull();
     expect(trigger).toHaveBeenCalledTimes(1);
+  });
+
+  it('allows an explicit Liked Songs refresh after the automatic session check', () => {
+    storageValues['user_fav'] = JSON.stringify([{ id: 'artist', tracks: [{ id: 'track' }] }]);
+    const trigger = spyOn<any>(service, 'triggerApiLoad').and.stub();
+
+    service.startNewFavouriteTracksCheck('user');
+    service.clearLoadingTask('fav');
+    const forced = service.startNewFavouriteTracksCheck('user', true);
+
+    expect(forced?.mode).toBe('incremental-new-only');
+    expect(trigger).toHaveBeenCalledTimes(2);
   });
 
   it('publishes and persists complete tracks before optional artist enrichment finishes', () => {
