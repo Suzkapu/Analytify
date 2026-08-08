@@ -333,8 +333,29 @@
       flex: 1 1 0;
       min-width: 0;
       width: auto;
+      overflow: hidden;
       padding-inline: 8px !important;
       justify-content: center;
+    }
+
+    .controls-right .merge-toggle-button {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      min-height: 44px;
+      max-width: 44px;
+      max-height: 44px;
+      flex: 0 0 44px;
+      padding-inline: 0 !important;
+
+      .merge-toggle-label { display: none; }
+    }
+
+    .saved-toggle-button span,
+    .sort-playlists-button span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 

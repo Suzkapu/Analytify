@@ -34,9 +34,10 @@
           [class.p-button-outlined]="!isMergeSelectionMode"
           [class.p-button-secondary]="!isMergeSelectionMode"
           [disabled]="isCreatingMergedPlaylist"
-          title="Select multiple playlists and combine all unique songs">
-          <i class="pi" [ngClass]="isMergeSelectionMode ? 'pi-times' : 'pi-clone'"></i>
-          <span>{{ isMergeSelectionMode ? 'Cancel merge' : 'Merge' }}</span>
+          [attr.aria-label]="isMergeSelectionMode ? 'Cancel playlist merge' : 'Merge playlists'"
+          [title]="isMergeSelectionMode ? 'Cancel playlist merge' : 'Select multiple playlists and combine all unique songs'">
+          <i class="pi" aria-hidden="true" [ngClass]="isMergeSelectionMode ? 'pi-times' : 'pi-clone'"></i>
+          <span class="merge-toggle-label">{{ isMergeSelectionMode ? 'Cancel merge' : 'Merge' }}</span>
         </button>
         <button *ngIf="savedPlaylistCount > 0" type="button" (click)="toggleSavedPlaylists()"
           class="p-button p-button-outlined p-button-secondary saved-toggle-button"

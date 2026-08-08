@@ -97,6 +97,8 @@ describe('PlaylistsComponent', () => {
     expect(element.querySelector('.page-hero h1')?.textContent).toContain('Your playlists');
     expect(element.querySelector('.playlist-count-chip')?.getAttribute('aria-label')).toBe('1 playlist');
     expect(element.querySelector('.page-toolbar input[type="search"]')).not.toBeNull();
+    expect(element.querySelector('.merge-toggle-button')?.getAttribute('aria-label')).toBe('Merge playlists');
+    expect(element.querySelector('.merge-toggle-button .merge-toggle-label')?.textContent).toContain('Merge');
     const cardActions = Array.from(element.querySelectorAll('.item-card .card-actions button'));
     expect(cardActions.length).toBe(2);
     expect(cardActions.every(button => button.classList.contains('playlist-card-action'))).toBeTrue();
