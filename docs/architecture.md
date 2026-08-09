@@ -74,6 +74,6 @@ shared ────> core (only when shared layout needs application state)
 npm run verify
 ```
 
-This performs the architecture rules, application type checking, test-source type checking, and the optimized production build. Use `npm run test:ci` for one headless unit-test run with coverage, or `npm run verify:ci` for the complete GitHub Actions gate. The gate runs on every push and pull request; deployment remains limited to successful `main` builds.
+This performs the architecture rules, playlist-share retention contract check, application type checking, test-source type checking, and the optimized production build. Use `npm run test:ci` for one headless unit-test run with coverage, or `npm run verify:ci` for the complete GitHub Actions gate. The gate runs on every push and pull request; deployment remains limited to successful `main` builds.
 
 Product and architecture choices that constrain future changes are recorded in the [decision journal](decision-journal.md).

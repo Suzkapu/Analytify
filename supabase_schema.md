@@ -416,11 +416,12 @@ The feature modules below are optional. They require the core schema from sectio
 
 ### 3.1 Shared Playlists
 
-Adds durable playlist sharing, claim links, recipient download mappings, revision tracking, RLS, trusted RPCs, and Realtime updates. Omit this entire block when the Shared Playlists workspace feature is disabled.
+Adds durable playlist sharing, seven-day unclaimed-link retention, recipient download mappings, revision tracking, RLS, trusted RPCs, daily cleanup, and Realtime updates. Omit this entire block when the Shared Playlists workspace feature is disabled.
 
 ```sql
 -- BEGIN OPTIONAL MODULE: SHARED PLAYLISTS
 create extension if not exists pgcrypto with schema extensions;
+create extension if not exists pg_cron;
 create schema if not exists private;
 revoke all on schema private from public;
 
@@ -442,6 +443,7 @@ create table if not exists public.playlist_shares (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   accepted_at timestamptz,
+  claim_expires_at timestamptz not null default (now() + interval '7 days'),
   revoked_at timestamptz
 );
 
@@ -476,6 +478,12 @@ create index if not exists playlist_shares_source_idx
   where revoked_at is null;
 create index if not exists playlist_share_tracks_share_idx
   on public.playlist_share_tracks(share_id, position);
+create index if not exists playlist_shares_unclaimed_expiry_idx
+  on public.playlist_shares(claim_expires_at)
+  where recipient_user_id is null and revoked_at is null;
+create index if not exists playlist_shares_revoked_retention_idx
+  on public.playlist_shares(revoked_at)
+  where revoked_at is not null;
 
 alter table public.playlist_shares enable row level security;
 alter table public.playlist_share_tracks enable row level security;
@@ -751,6 +759,9 @@ begin
   if not found then
     raise exception 'This share link is invalid or has been revoked.';
   end if;
+  if v_share.recipient_user_id is null and v_share.claim_expires_at <= now() then
+    raise exception 'This share link expired before it was claimed.';
+  end if;
   if v_share.owner_user_id = v_user_id then
     raise exception 'The owner cannot claim their own share link.';
   end if;
@@ -778,18 +789,63 @@ create or replace function public.revoke_playlist_share(
 ) returns void
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
+declare
+  v_share_id uuid;
 begin
-  update public.playlist_shares
-  set revoked_at = now(), updated_at = now()
+  select id into v_share_id
+  from public.playlist_shares
   where id = p_share_id
     and owner_user_id = auth.uid()
-    and revoked_at is null;
+    and revoked_at is null
+  for update;
 
   if not found then
     raise exception 'The active share was not found or is not owned by this user.';
   end if;
+
+  delete from public.playlist_share_downloads where share_id = v_share_id;
+  delete from public.playlist_share_tracks where share_id = v_share_id;
+
+  update public.playlist_shares
+  set revoked_at = now(),
+      updated_at = now(),
+      playlist_description = '',
+      playlist_image_url = '',
+      owner_image_url = '',
+      token_hash = encode(digest(convert_to('revoked:' || id::text, 'UTF8'), 'sha256'), 'hex'),
+      snapshot_hash = encode(digest(convert_to('[]', 'UTF8'), 'sha256'), 'hex'),
+      track_count = 0
+  where id = v_share_id;
+end;
+$$;
+
+create or replace function private.cleanup_playlist_share_retention()
+returns table (
+  expired_unclaimed_deleted bigint,
+  revoked_tombstones_deleted bigint
+)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_expired_unclaimed_deleted bigint := 0;
+  v_revoked_tombstones_deleted bigint := 0;
+begin
+  delete from public.playlist_shares
+  where recipient_user_id is null
+    and revoked_at is null
+    and claim_expires_at <= now();
+  get diagnostics v_expired_unclaimed_deleted = row_count;
+
+  delete from public.playlist_shares
+  where revoked_at is not null
+    and revoked_at <= now() - interval '30 days';
+  get diagnostics v_revoked_tombstones_deleted = row_count;
+
+  return query select v_expired_unclaimed_deleted, v_revoked_tombstones_deleted;
 end;
 $$;
 
@@ -810,7 +866,8 @@ begin
   from public.playlist_shares
   where id = p_share_id
     and recipient_user_id = auth.uid()
-    and revoked_at is null;
+    and revoked_at is null
+  for update;
 
   if not found then
     raise exception 'The active shared playlist is unavailable.';
@@ -850,6 +907,7 @@ revoke all on function public.refresh_playlist_share(uuid, text, text, text, jso
 revoke all on function public.refresh_active_playlist_shares(text, text, jsonb) from public;
 revoke all on function public.claim_playlist_share(text) from public;
 revoke all on function public.revoke_playlist_share(uuid) from public;
+revoke all on function private.cleanup_playlist_share_retention() from public;
 revoke all on function public.record_playlist_share_download(uuid, text, text, bigint) from public;
 
 grant execute on function public.create_playlist_share(text, text, text, text, text, text, text, jsonb) to authenticated;
@@ -862,6 +920,12 @@ grant execute on function public.record_playlist_share_download(uuid, text, text
 grant select on public.playlist_shares to authenticated;
 grant select on public.playlist_share_tracks to authenticated;
 grant select on public.playlist_share_downloads to authenticated;
+
+select cron.schedule(
+  'analytify-playlist-share-retention',
+  '17 3 * * *',
+  $cron$select private.cleanup_playlist_share_retention();$cron$
+);
 -- Realtime addition from 20260802014500_playlist_share_realtime.sql
 do $$
 begin

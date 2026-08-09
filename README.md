@@ -75,6 +75,8 @@ https://analytify.dynv6.net/compare-room/callback
 
 The existing `/callback` URLs remain required for the normal Supabase-backed login.
 
+Shared Playlist claim links expire after seven days when unclaimed. Revocation removes the stored track snapshot and recipient download mapping immediately; a daily Supabase Cron job deletes expired unclaimed shares and 30-day revoked tombstones. Apply the migrations with `supabase db push` so the database-enforced retention policy and scheduled cleanup are active.
+
 Song League playlist automation requires the database migrations, the authenticated Edge Function, and its Spotify credentials:
 
 ```bash

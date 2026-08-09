@@ -118,7 +118,7 @@
     </ng-container>
 
     <ng-container *ngIf="shareLink">
-      <p class="share-ready-copy">Copy this link now. For security, Analytify stores only its hash and cannot show the same link again.</p>
+      <p class="share-ready-copy">Copy this link now. For security, Analytify stores only its hash and cannot show the same link again. The link expires after seven days if nobody claims it.</p>
       <div class="share-link-field">
         <input [value]="shareLink" readonly aria-label="Private playlist share link">
         <button type="button" (click)="copyShareLink()">
