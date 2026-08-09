@@ -1,13 +1,31 @@
-<main class="compare-room-page">
-  <header class="room-topbar">
-    <button type="button" class="icon-button" (click)="leaveRoom()" aria-label="Leave Compare Room">
-      <i class="pi pi-arrow-left"></i>
-    </button>
-    <div>
-      <span class="eyebrow">Private temporary session</span>
-      <h1>Playlist Compare Room</h1>
+<app-header *ngIf="enteredAuthenticated" mobileTitle="Compare Room"></app-header>
+
+<header *ngIf="!enteredAuthenticated" class="app-header public-room-header">
+  <div class="header-shell">
+    <div class="header-left">
+      <button type="button" class="header-logo public-room-brand" (click)="leaveRoom()"
+        aria-label="Leave Compare Room and return to login">
+        <img src="assets/Analytify.png" alt="">
+        <span class="logo-text">Analytify</span>
+      </button>
     </div>
-    <div class="room-security"><i class="pi pi-shield"></i> Guest logins are not saved</div>
+    <div class="header-center">
+      <span class="mobile-page-title" role="heading" aria-level="1">Compare Room</span>
+    </div>
+    <div class="header-right">
+      <span class="public-room-status"><i class="pi pi-lock"></i> Temporary room</span>
+    </div>
+  </div>
+</header>
+
+<main class="compare-room-page">
+  <header class="compare-room-hero page-hero">
+    <div>
+      <span class="page-eyebrow">Private temporary session</span>
+      <h1>Playlist Compare Room</h1>
+      <p>Choose playlists together, find the songs everyone shares, or combine every unique track.</p>
+    </div>
+    <span class="room-security"><i class="pi pi-shield"></i> Guest logins are not saved</span>
   </header>
 
   <section *ngIf="isStarting" class="state-card">
@@ -188,3 +206,5 @@
     </section>
   </ng-container>
 </main>
+
+<app-footer></app-footer>
