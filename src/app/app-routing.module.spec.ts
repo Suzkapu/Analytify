@@ -14,6 +14,7 @@ describe('application routes', () => {
       'analysis',
       'stats',
       'history',
+      'song-league',
       'shared-playlists',
       'legal',
       'compare-room',
@@ -22,7 +23,9 @@ describe('application routes', () => {
   });
 
   it('lazy-loads and protects every authenticated feature', () => {
-    const protectedPaths = ['playlists', 'songs', 'artistDetails', 'analysis', 'stats', 'history', 'shared-playlists'];
+    const protectedPaths = [
+      'playlists', 'songs', 'artistDetails', 'analysis', 'stats', 'history', 'song-league', 'shared-playlists'
+    ];
 
     protectedPaths.forEach(path => {
       const route = APP_ROUTES.find(candidate => candidate.path === path);

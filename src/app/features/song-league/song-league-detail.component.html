@@ -1,0 +1,188 @@
+<app-header mobileTitle="Song League" [showMobileBackButton]="true" (mobileBack)="back()"></app-header>
+
+<main class="song-league-page song-league-detail">
+  <div class="song-league-shell">
+    <section *ngIf="isLoading" class="league-state"><i class="pi pi-spin pi-spinner"></i><p>Loading league…</p></section>
+
+    <section *ngIf="!isLoading && !dashboard" class="league-state league-load-error" role="alert">
+      <i class="pi pi-exclamation-circle"></i>
+      <strong>The league could not be loaded</strong>
+      <p>{{ errorMessage || 'An unexpected database error occurred.' }}</p>
+      <div class="league-load-error-actions">
+        <button type="button" class="league-primary" (click)="retryLoad()"><i class="pi pi-refresh"></i> Retry</button>
+        <button type="button" class="league-secondary" (click)="back()">Back to leagues</button>
+      </div>
+    </section>
+
+    <ng-container *ngIf="!isLoading && dashboard as data">
+      <header class="league-detail-header">
+        <button type="button" class="league-back" (click)="back()" aria-label="Back to leagues"><i class="pi pi-arrow-left"></i></button>
+        <div>
+          <span class="league-eyebrow">{{ data.league.timezone }} · all-time standings</span>
+          <h1>{{ data.league.name }}</h1>
+          <p>{{ data.members.length }} members · one discovery every Friday · four scoring weeks per song</p>
+          <span class="picks-status-badge" [class.open]="isFriday && !alreadySubmittedToday">
+            <i class="pi" [ngClass]="isFriday && !alreadySubmittedToday ? 'pi-circle-fill' : 'pi-clock'"></i>
+            {{ isFriday && !alreadySubmittedToday ? 'Picks open' : 'Picks open again Friday' }}
+          </span>
+        </div>
+        <button *ngIf="isOwner" type="button" class="league-secondary invite-button" (click)="createInvite()" [disabled]="isCreatingInvite">
+          <i class="pi" [ngClass]="isCreatingInvite ? 'pi-spin pi-spinner' : 'pi-user-plus'"></i> Invite
+        </button>
+      </header>
+
+      <section *ngIf="inviteUrl" class="league-inline-invite">
+        <div><strong>New invitation ready</strong><span>Creating another invitation revokes the previous one.</span></div>
+        <div><input [value]="inviteUrl" readonly><button type="button" (click)="copyInvite()"><i class="pi" [ngClass]="inviteCopied ? 'pi-check' : 'pi-copy'"></i>{{ inviteCopied ? 'Copied' : 'Copy' }}</button></div>
+      </section>
+
+      <div *ngIf="errorMessage" class="league-notice error" role="alert"><i class="pi pi-exclamation-circle"></i><span>{{ errorMessage }}</span></div>
+      <div *ngIf="successMessage" class="league-notice success" role="status"><i class="pi pi-check-circle"></i><span>{{ successMessage }}</span></div>
+      <div *ngIf="playlistWarning" class="league-notice" role="status"><i class="pi pi-clock"></i><span>{{ playlistWarning }}</span></div>
+
+      <section *ngIf="isFriday && !alreadySubmittedToday" class="friday-composer-panel">
+        <div class="friday-composer-heading">
+          <strong>Choose this week’s discovery</strong>
+          <small>New to most opponents · nobody’s current Top 20</small>
+        </div>
+        <div class="recommendation-composer">
+          <form (ngSubmit)="findSongs()" class="league-search-form">
+            <i class="pi pi-search"></i>
+            <input type="search" name="songQuery" [(ngModel)]="songQuery"
+              placeholder="Search a song or paste a Spotify track link" [disabled]="isSearching || isSubmitting">
+            <button type="submit" [disabled]="songQuery.trim().length < 2 || isSearching || isSubmitting">
+              <i class="pi" [ngClass]="isSearching ? 'pi-spin pi-spinner' : 'pi-arrow-right'"></i>
+            </button>
+          </form>
+
+          <div *ngIf="searchResults.length" class="league-search-results">
+            <button *ngFor="let track of searchResults; trackBy: trackSearch" type="button" (click)="selectTrack(track)">
+              <img *ngIf="track.album.images?.[0]?.url" [src]="track.album.images[0].url" alt="">
+              <span><strong>{{ track.name }}</strong><small>{{ track.artists.length ? track.artists[0].name : 'Unknown artist' }} · {{ track.album.name }}</small></span>
+              <i class="pi pi-plus"></i>
+            </button>
+          </div>
+
+          <article *ngIf="selectedTrack as track" class="selected-league-track">
+            <img *ngIf="selectedTrackImage" [src]="selectedTrackImage" alt="">
+            <div><span>Ready to validate</span><strong>{{ track.name }}</strong><small>{{ track.artists.length ? track.artists[0].name : 'Unknown artist' }} · this choice locks immediately</small></div>
+            <button type="button" class="league-primary" (click)="submitRecommendation()" [disabled]="isSubmitting">
+              <i class="pi" [ngClass]="isSubmitting ? 'pi-spin pi-spinner' : 'pi-lock'"></i>{{ isSubmitting ? 'Checking…' : 'Lock in' }}
+            </button>
+          </article>
+        </div>
+      </section>
+
+      <div class="league-dashboard-grid">
+        <section class="standings-panel">
+          <div class="league-section-heading"><div><span class="league-eyebrow">Permanent score</span><h2>Standings</h2></div><i class="pi pi-star"></i></div>
+          <div class="standing-list">
+            <button *ngFor="let standing of data.standings; let index = index; trackBy: trackStanding" type="button"
+              class="standing-row" (click)="openBreakdown(standing)">
+              <span class="standing-place">{{ index + 1 }}</span>
+              <img *ngIf="standing.imageUrl" [src]="standing.imageUrl" alt="">
+              <span *ngIf="!standing.imageUrl" class="standing-avatar"><i class="pi pi-user"></i></span>
+              <span class="standing-name"><strong>{{ standing.displayName }}</strong><small>+{{ standing.lastSevenDaysPoints | number }} last 7 days</small></span>
+              <span class="standing-score"><strong>{{ standing.totalPoints | number }}</strong><small>points</small></span>
+              <i class="pi pi-chevron-right"></i>
+            </button>
+          </div>
+        </section>
+
+      </div>
+
+      <section class="active-songs-section">
+        <div class="league-section-heading">
+          <div><span class="league-eyebrow">Up to four per member</span><h2>Active recommendations</h2></div>
+          <span class="league-count">{{ data.recommendations.length }}</span>
+        </div>
+        <div *ngIf="data.recommendations.length === 0" class="league-empty compact"><i class="pi pi-headphones"></i><strong>No songs scoring yet</strong><p>The first accepted Friday picks will appear here.</p></div>
+        <div *ngIf="data.recommendations.length" class="active-song-grid">
+          <article *ngFor="let recommendation of data.recommendations; trackBy: trackRecommendation" class="active-song-card">
+            <div class="active-song-art">
+              <img *ngIf="recommendation.imageUrl" [src]="recommendation.imageUrl" alt="">
+              <span *ngIf="!recommendation.imageUrl"><i class="pi pi-music"></i></span>
+              <em>{{ recommendationStatus(recommendation) }}</em>
+            </div>
+            <div class="active-song-copy">
+              <span>Recommended by {{ recommenderName(recommendation.recommenderUserId) }}</span>
+              <h3>{{ recommendation.trackName }}</h3>
+              <p>{{ recommendation.artistNames }}</p>
+              <a *ngIf="recommendation.spotifyUrl" [href]="recommendation.spotifyUrl" target="_blank" rel="noopener noreferrer"><i class="pi pi-spotify"></i> Open in Spotify</a>
+            </div>
+            <div class="active-song-score"><strong>{{ recommendationPoints(recommendation.id) | number }}</strong><span>points</span></div>
+            <div class="listener-position-list">
+              <div *ngFor="let row of recommendationRows(recommendation.id); trackBy: trackBreakdown">
+                <span>{{ row.listenerDisplayName }}</span>
+                <strong *ngIf="row.latestRank !== null">#{{ row.latestRank }} <small>+{{ row.latestPoints }}</small></strong>
+                <strong *ngIf="row.latestRank === null" class="not-ranked">Not ranked <small>+0</small></strong>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="league-playlist-action">
+        <button *ngIf="!currentUserPlaylist?.spotifyPlaylistUrl" type="button" class="league-primary"
+          (click)="createWeeklyPlaylist()" [disabled]="isCreatingPlaylist">
+          <i class="pi" [ngClass]="isCreatingPlaylist ? 'pi-spin pi-spinner' : 'pi-spotify'"></i>
+          {{ isCreatingPlaylist ? 'Creating playlist…' : (currentUserPlaylist?.lastError ? 'Retry playlist setup' : 'Create my Weekly Picks playlist') }}
+        </button>
+        <a *ngIf="currentUserPlaylist?.spotifyPlaylistUrl as playlistUrl" class="league-secondary"
+          [href]="playlistUrl" target="_blank" rel="noopener noreferrer">
+          <i class="pi pi-spotify"></i> Open my Weekly Picks playlist
+        </a>
+        <p>Private on Spotify · updates after accepted Friday picks · replaces the previous week every Friday</p>
+      </section>
+
+      <app-song-league-rules></app-song-league-rules>
+
+      <section *ngIf="isOwner" class="league-admin-actions" aria-label="League administration">
+        <button type="button" class="league-delete-button" (click)="openDeleteLeagueModal()">
+          <i class="pi pi-trash"></i> Delete league
+        </button>
+      </section>
+    </ng-container>
+  </div>
+</main>
+
+<div *ngIf="selectedStanding as standing" class="league-modal-overlay" (click)="closeBreakdown()">
+  <section class="league-breakdown-modal" role="dialog" aria-modal="true" aria-labelledby="league-breakdown-title" (click)="$event.stopPropagation()">
+    <button type="button" class="league-modal-close" (click)="closeBreakdown()" aria-label="Close score breakdown">×</button>
+    <span class="league-eyebrow">Auditable all-time score</span>
+    <h2 id="league-breakdown-title">{{ standing.displayName }} · {{ standing.totalPoints | number }} points</h2>
+    <p>Every row shows which song and which friend’s daily Top Songs produced the points.</p>
+    <div *ngIf="breakdownRowsForSelected().length === 0" class="league-empty compact"><strong>No points yet</strong><p>Submitted songs will appear after their first scoring snapshot.</p></div>
+    <div *ngIf="breakdownRowsForSelected().length" class="breakdown-table">
+      <div class="breakdown-header"><span>Song</span><span>From</span><span>Latest</span><span>Total</span></div>
+      <div *ngFor="let row of breakdownRowsForSelected(); trackBy: trackBreakdown" class="breakdown-row">
+        <span class="breakdown-song"><img *ngIf="row.imageUrl" [src]="row.imageUrl" alt=""><span><strong>{{ row.trackName }}</strong><small>{{ row.artistNames }}</small></span></span>
+        <span>{{ row.listenerDisplayName }}</span>
+        <span>{{ row.latestRank === null ? 'Not ranked' : '#' + row.latestRank + ' of ' + row.latestListSize }}</span>
+        <strong>{{ row.totalPoints | number }}</strong>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div *ngIf="showDeleteLeagueModal" class="confirm-modal-overlay" (click)="closeDeleteLeagueModal()">
+  <section class="confirm-modal-card" role="alertdialog" aria-modal="true"
+    aria-labelledby="delete-song-league-title" aria-describedby="delete-song-league-description"
+    (click)="$event.stopPropagation()">
+    <div class="confirm-modal-icon danger-icon"><i class="pi pi-trash danger-text"></i></div>
+    <h3 id="delete-song-league-title" class="confirm-modal-title danger-text">Delete this league?</h3>
+    <p id="delete-song-league-description" class="confirm-modal-text league-delete-warning">
+      <strong>{{ dashboard?.league?.name }}</strong> and all of its standings, recommendations, invitations, and score history will be permanently deleted for every member. Spotify playlists already created for players will remain in their accounts, but Analytify will stop updating them.
+    </p>
+    <p class="league-delete-final-warning">This cannot be undone.</p>
+    <div class="confirm-modal-actions">
+      <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel"
+        (click)="closeDeleteLeagueModal()" [disabled]="isDeletingLeague">Cancel</button>
+      <button type="button" class="confirm-modal-btn confirm-modal-btn-confirm danger-btn"
+        (click)="confirmDeleteLeague()" [disabled]="isDeletingLeague">
+        <i class="pi" [ngClass]="isDeletingLeague ? 'pi-spin pi-spinner' : 'pi-trash'"></i>
+        {{ isDeletingLeague ? 'Deleting…' : 'Delete league permanently' }}
+      </button>
+    </div>
+  </section>
+</div>

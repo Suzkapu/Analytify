@@ -564,6 +564,18 @@ async function saveStatsSnapshot(
       }
     }
 
+    // Song League scores are derived from the completed short-term rank list.
+    // The RPC is idempotent for this snapshot, so a forced daily retry safely
+    // replaces any previously calculated rank contribution.
+    if (range === 'short_term') {
+      const { error: leagueScoreError } = await supabase.rpc('score_song_league_snapshot', {
+        p_snapshot_id: snapshotId
+      });
+      if (leagueScoreError) {
+        console.warn(`Song League scoring was skipped for snapshot ${snapshotId}: ${leagueScoreError.message}`);
+      }
+    }
+
     incompleteSnapshotId = null;
   } catch (error) {
     if (incompleteSnapshotId) {
@@ -842,6 +854,166 @@ async function getDueStatsRanges(userId) {
     : !recentRanges.has(range));
 }
 
+function isFridayInTimeZone(timeZone, now = new Date()) {
+  return new Intl.DateTimeFormat('en-US', { weekday: 'short', timeZone }).format(now) === 'Fri';
+}
+
+async function spotifyPlaylistRequest(pathname, accessToken, options = {}, retryCount = 0) {
+  const response = await fetch(`https://api.spotify.com/v1${pathname}`, {
+    ...options,
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+      'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
+      ...(options.headers || {})
+    }
+  });
+  if (response.status === 429 && retryCount < 3) {
+    const retryAfterSeconds = Math.min(10, Math.max(1, Number(response.headers.get('retry-after')) || 1));
+    console.warn(`[Song League] Spotify rate limited the playlist rollover. Retrying in ${retryAfterSeconds}s.`);
+    await new Promise(resolve => setTimeout(resolve, retryAfterSeconds * 1000));
+    return spotifyPlaylistRequest(pathname, accessToken, options, retryCount + 1);
+  }
+  const text = await response.text();
+  if (!response.ok) {
+    const error = new Error(`Spotify playlist request failed (${response.status}): ${text || response.statusText}`);
+    error.status = response.status;
+    throw error;
+  }
+  return text ? JSON.parse(text) : null;
+}
+
+function songLeaguePlaylistName(leagueName) {
+  return `Analytify · ${leagueName} · Weekly Picks`.slice(0, 100);
+}
+
+async function createSongLeaguePlaylist(accessToken, name, description) {
+  const playlist = await spotifyPlaylistRequest('/me/playlists', accessToken, {
+    method: 'POST',
+    body: JSON.stringify({ name, description, public: false })
+  });
+  if (!playlist?.id) throw new Error('Spotify did not return a playlist ID.');
+  return { id: playlist.id, url: playlist.external_urls?.spotify || '' };
+}
+
+async function replaceSongLeaguePlaylist(accessToken, playlistId, name, description, trackUris) {
+  await spotifyPlaylistRequest(`/playlists/${encodeURIComponent(playlistId)}`, accessToken, {
+    method: 'PUT',
+    body: JSON.stringify({ name, description, public: false })
+  });
+  await spotifyPlaylistRequest(`/playlists/${encodeURIComponent(playlistId)}/items`, accessToken, {
+    method: 'PUT',
+    body: JSON.stringify({ uris: trackUris.slice(0, 100) })
+  });
+}
+
+async function syncDueSongLeaguePlaylists(now = new Date()) {
+  const { data: leagues, error: leaguesError } = await supabase
+    .from('song_leagues')
+    .select('id, name, timezone')
+    .is('closed_at', null);
+  if (leaguesError) throw leaguesError;
+
+  for (const league of leagues || []) {
+    const { data: payloadRows, error: payloadError } = await supabase.rpc(
+      'get_song_league_weekly_playlist_payload',
+      { p_league_id: league.id, p_now: now.toISOString() }
+    );
+    if (payloadError) throw payloadError;
+    const payload = payloadRows?.[0];
+    if (!payload) continue;
+
+    const { data: members, error: membersError } = await supabase
+      .from('song_league_members')
+      .select('user_id')
+      .eq('league_id', league.id)
+      .is('left_at', null)
+      .order('joined_at', { ascending: true });
+    if (membersError) throw membersError;
+
+    const { data: mappings, error: mappingsError } = await supabase
+      .from('song_league_playlists')
+      .select('*')
+      .eq('league_id', league.id);
+    if (mappingsError) throw mappingsError;
+
+    const mappingById = new Map((mappings || []).map(mapping => [mapping.user_id, mapping]));
+    const optedInMembers = (members || []).filter(member => mappingById.has(member.user_id));
+    if (optedInMembers.length === 0) continue;
+
+    const isFridayRollover = isFridayInTimeZone(league.timezone, now);
+    const needsRetry = optedInMembers.some(member => {
+      const mapping = mappingById.get(member.user_id);
+      return !!mapping.last_error
+        || Number(mapping.last_synced_revision || 0) < Number(payload.playlist_revision || 0)
+        || (mapping.last_synced_round_id || null) !== (payload.round_id || null);
+    });
+    if (!isFridayRollover && !needsRetry) continue;
+
+    console.log(`[Song League] Refreshing private weekly playlists for ${league.name}.`);
+    const userIds = optedInMembers.map(member => member.user_id);
+    const { data: profiles, error: profilesError } = await supabase
+      .from('users')
+      .select('id, spotify_refresh_token')
+      .in('id', userIds);
+    if (profilesError) throw profilesError;
+    const profileById = new Map((profiles || []).map(profile => [profile.id, profile]));
+    const name = songLeaguePlaylistName(payload.league_name);
+    const description = `This Friday's Song League picks for ${payload.league_name}. Private and refreshed automatically by Analytify.`.slice(0, 300);
+    const trackUris = Array.isArray(payload.track_uris) ? payload.track_uris : [];
+
+    for (const member of optedInMembers) {
+      const profile = profileById.get(member.user_id);
+      const mapping = mappingById.get(member.user_id);
+      let playlistId = mapping?.spotify_playlist_id || '';
+      let playlistUrl = mapping?.spotify_playlist_url || '';
+      try {
+        if (!profile?.spotify_refresh_token) throw new Error('Spotify refresh token is missing.');
+        const accessToken = await getSpotifyAccessToken(profile.spotify_refresh_token);
+        if (!playlistId) {
+          const created = await createSongLeaguePlaylist(accessToken, name, description);
+          playlistId = created.id;
+          playlistUrl = created.url;
+        }
+        try {
+          await replaceSongLeaguePlaylist(accessToken, playlistId, name, description, trackUris);
+        } catch (error) {
+          if (error?.status !== 404) throw error;
+          const created = await createSongLeaguePlaylist(accessToken, name, description);
+          playlistId = created.id;
+          playlistUrl = created.url;
+          await replaceSongLeaguePlaylist(accessToken, playlistId, name, description, trackUris);
+        }
+
+        const { error: saveError } = await supabase.from('song_league_playlists').upsert({
+          league_id: league.id,
+          user_id: member.user_id,
+          spotify_playlist_id: playlistId,
+          spotify_playlist_url: playlistUrl,
+          last_synced_revision: Number(payload.playlist_revision || 0),
+          last_synced_round_id: payload.round_id || null,
+          last_synced_at: now.toISOString(),
+          last_error: null,
+          updated_at: now.toISOString()
+        }, { onConflict: 'league_id,user_id' });
+        if (saveError) throw saveError;
+      } catch (error) {
+        console.warn(`[Song League] Playlist rollover failed for member ${member.user_id}: ${error.message}`);
+        await supabase.from('song_league_playlists').upsert({
+          league_id: league.id,
+          user_id: member.user_id,
+          spotify_playlist_id: playlistId || null,
+          spotify_playlist_url: playlistUrl,
+          last_synced_revision: Number(mapping?.last_synced_revision || 0),
+          last_synced_round_id: mapping?.last_synced_round_id || null,
+          last_error: String(error.message || error).slice(0, 500),
+          updated_at: now.toISOString()
+        }, { onConflict: 'league_id,user_id' });
+      }
+    }
+  }
+}
+
 // Main entry point
 async function main() {
   console.log(`--- Analytify Spotify Sync started at ${new Date().toISOString()} ---`);
@@ -865,14 +1037,13 @@ async function main() {
 
     if (!users || users.length === 0) {
       console.log('No users found with active backup and a valid Spotify refresh token.');
-      return;
+    } else {
+      console.log(`Found ${users.length} user(s) to synchronize.`);
     }
-
-    console.log(`Found ${users.length} user(s) to synchronize.`);
     let failedUsers = 0;
 
     // Sync users sequentially to prevent rate limits
-    for (const user of users) {
+    for (const user of users || []) {
       const markerIsCurrent = !isSyncExpired(user.last_synced_at);
       const rangesToSync = force
         ? ['short_term', 'medium_term', 'long_term']
@@ -893,6 +1064,10 @@ async function main() {
       const succeeded = await syncUserHistory(user, rangesToSync);
       if (!succeeded) failedUsers++;
     }
+
+    // A local-Friday pass clears the prior round even with zero contributions.
+    // Later daily passes retry any contribution revision that did not reach Spotify.
+    await syncDueSongLeaguePlaylists();
 
     if (failedUsers > 0) {
       throw new Error(`${failedUsers} user sync(s) completed with errors`);

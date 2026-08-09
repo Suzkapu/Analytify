@@ -28,6 +28,17 @@ Analytify turns your Spotify library and listening data into a clear, visual ove
 - Review and approve the shared result before creating a private copy on every participant's Spotify account.
 - Keep guest Spotify credentials in memory only; room messages never contain access or refresh tokens.
 
+### Play Song League
+
+- Open its separate lazy-loaded module from the dedicated header Workspace launcher, beside Compare and Shared Playlists.
+- Create a private league for three to five friends and invite normal Analytify accounts.
+- Recommend one discovery during each Friday submission window.
+- Create your own private Weekly Picks playlist from the league; once enabled, accepted picks refresh it automatically.
+- Start each Friday with only that week's recommendations—the unattended rollover updates enabled playlists and removes the prior week's songs without interrupting their four-week scores.
+- Earn permanent points for four weeks from the song's daily position in every other member's four-week Top Songs.
+- Inspect the current rank and point contribution from every friend without exposing anyone's complete Top Songs list.
+- Let the league owner permanently delete the league and its game history through an explicit confirmation dialog.
+
 ### Analyze your music
 
 - See the total and average duration of a playlist.
@@ -35,6 +46,7 @@ Analytify turns your Spotify library and listening data into a clear, visual ove
 - Discover your top 100 tracks, top artists, and top genres.
 - Switch between your recent, medium-term, and long-term listening habits.
 - Create a Spotify playlist from your current top tracks.
+- Keep every playlist created by Analytify private by default.
 
 ### Follow changes over time
 
@@ -45,7 +57,7 @@ Analytify turns your Spotify library and listening data into a clear, visual ove
 
 ### Keep control of your data
 
-Analytify stores data locally in your browser so previously loaded views remain quickly available. Optional Cloud Backup keeps your history and snapshots available across sessions and enables automated daily collection. You can delete either the local cache or your personal cloud data from the profile menu.
+Analytify stores data locally in your browser so previously loaded views remain quickly available. Optional Cloud Backup keeps your history and snapshots available across sessions and enables automated daily collection. You can delete either the local cache or your personal cloud data from the profile menu. Song League requires Cloud Backup because its trusted daily snapshots are the source of every score.
 
 ## Development
 
@@ -62,6 +74,16 @@ https://analytify.dynv6.net/compare-room/callback
 ```
 
 The existing `/callback` URLs remain required for the normal Supabase-backed login.
+
+Song League playlist automation requires the database migrations, the authenticated Edge Function, and its Spotify credentials:
+
+```bash
+supabase db push
+supabase secrets set SPOTIFY_CLIENT_ID=... SPOTIFY_CLIENT_SECRET=...
+supabase functions deploy song-league-playlist-sync
+```
+
+The existing daily pull job performs the Friday rollover even when nobody contributes and retries any playlist revision that missed its immediate refresh. Deploy the updated `scripts/daily-pull.js` after applying the playlist migration so its service-role RPC is available.
 
 Run the complete compile and production-build verification before committing:
 

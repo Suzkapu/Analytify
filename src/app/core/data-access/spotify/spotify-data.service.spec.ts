@@ -1,5 +1,5 @@
-import {TestBed} from '@angular/core/testing';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {SpotifyDataService} from './spotify-data.service';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
@@ -7,6 +7,7 @@ import {firstValueFrom, of, throwError} from 'rxjs';
 
 describe('SpotifyDataService', () => {
   let service: SpotifyDataService;
+  let http: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -17,6 +18,7 @@ describe('SpotifyDataService', () => {
       ]
     });
     service = TestBed.inject(SpotifyDataService);
+    http = TestBed.inject(HttpTestingController);
   });
 
   it('should be created', () => {
@@ -101,4 +103,35 @@ describe('SpotifyDataService', () => {
     await expectAsync(firstValueFrom(service.makeRequest(request))).toBeRejectedWith(quotaError);
     expect(request).toHaveBeenCalledTimes(1);
   });
+
+  it('searches at most ten Spotify tracks with an encoded query', fakeAsync(() => {
+    let response: any;
+    service.searchTracks('new & rare', 50).subscribe(value => response = value);
+    tick();
+    const request = http.expectOne(request =>
+      request.url.includes('/search')
+      && request.url.includes('type=track')
+      && request.url.includes('limit=10')
+      && request.url.includes('q=new%20%26%20rare')
+    );
+    request.flush({tracks: {items: []}});
+
+    expect(response.tracks.items).toEqual([]);
+  }));
+
+  it('creates app-generated Spotify playlists as private by default', fakeAsync(() => {
+    let response: any;
+    service.createPlaylist('Top tracks', 'Created by Analytify').subscribe(value => response = value);
+    tick();
+
+    const request = http.expectOne(request => request.url.endsWith('/me/playlists'));
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({
+      name: 'Top tracks',
+      description: 'Created by Analytify',
+      public: false
+    });
+    request.flush({id: 'private-playlist'});
+    expect(response.id).toBe('private-playlist');
+  }));
 });

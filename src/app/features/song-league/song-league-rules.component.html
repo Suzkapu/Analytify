@@ -1,0 +1,50 @@
+<div class="league-rules-launcher">
+  <button type="button" class="league-secondary" (click)="open()">
+    <i class="pi pi-question-circle"></i> How Song League works
+  </button>
+</div>
+
+<div *ngIf="isOpen" class="league-rules-overlay" (click)="close()">
+  <section class="league-rules-modal" role="dialog" aria-modal="true" aria-labelledby="song-league-rules-title"
+    (click)="$event.stopPropagation()">
+    <button type="button" class="league-rules-close" (click)="close()" aria-label="Close game explanation">×</button>
+
+    <span class="league-eyebrow">The complete game</span>
+    <h2 id="song-league-rules-title">How Song League works</h2>
+    <p class="league-rules-lead">Bring three to five friends, recommend discoveries, and let everyone’s real Spotify rankings decide the winner.</p>
+
+    <div class="league-rules-steps">
+      <article>
+        <span>1</span>
+        <div><h3>Create your group</h3><p>Invite normal Analytify accounts. Everyone needs Cloud Backup so the game has trusted daily Top Songs snapshots.</p></div>
+      </article>
+      <article>
+        <span>2</span>
+        <div><h3>Choose one Friday discovery</h3><p>Your song must be absent from a strict majority of opponents and cannot already be in anyone else’s Top 20.</p></div>
+      </article>
+      <article>
+        <span>3</span>
+        <div><h3>Create your Spotify playlist</h3><p>Use the button below the recommendations to create your private Weekly Picks playlist. Accepted picks update it automatically, and Friday replaces the previous week.</p></div>
+      </article>
+      <article>
+        <span>4</span>
+        <div><h3>Climb the standings</h3><p>A recommendation scores from every opponent’s daily Top Songs for four weeks. Those points remain in the permanent standings.</p></div>
+      </article>
+    </div>
+
+    <section class="league-rules-score">
+      <div>
+        <span class="league-eyebrow">Scoring formula</span>
+        <strong>List size − rank + 1</strong>
+        <p>Your own ranking never awards points to your song.</p>
+      </div>
+      <div class="league-rules-examples" aria-label="Scoring examples for a Top 100 list">
+        <span><small>#1</small><strong>100</strong></span>
+        <span><small>#35</small><strong>66</strong></span>
+        <span><small>#100</small><strong>1</strong></span>
+      </div>
+    </section>
+
+    <button type="button" class="league-primary league-rules-done" (click)="close()">Got it</button>
+  </section>
+</div>

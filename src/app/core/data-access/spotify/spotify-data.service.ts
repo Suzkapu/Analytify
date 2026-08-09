@@ -186,6 +186,12 @@ export class SpotifyDataService {
     return this.makeRequest(() => this.http.get(trackEndpoint));
   }
 
+  searchTracks(query: string, limit: number = 10): Observable<any> {
+    const safeLimit = Math.max(1, Math.min(10, Math.trunc(limit)));
+    const endpoint = `${environment.spotifyUrl}/search?type=track&limit=${safeLimit}&q=${encodeURIComponent(query.trim())}`;
+    return this.makeRequest(() => this.http.get(endpoint));
+  }
+
   getUserTopArtists(timeRange: string, limit: number, offset: number): Observable<any> {
     const endpoint = `${environment.spotifyUrl}/me/top/artists?time_range=${timeRange}&limit=${limit}&offset=${offset}`;
     return this.makeRequest(() => this.http.get(endpoint));
@@ -204,7 +210,7 @@ export class SpotifyDataService {
 
   createPlaylist(name: string, description: string = ''): Observable<any> {
     const endpoint = `${environment.spotifyUrl}/me/playlists`;
-    return this.makeRequest(() => this.http.post(endpoint, { name, description, public: true }));
+    return this.makeRequest(() => this.http.post(endpoint, { name, description, public: false }));
   }
 
   addTracksToPlaylist(playlistId: string, trackUris: string[]): Observable<any> {

@@ -21,6 +21,7 @@ export class HeaderComponent implements OnInit {
 
   profilePicUrl: string | null = null;
   showSettingsDropdown = false;
+  showWorkspaceDropdown = false;
   
   // Modal states
   showClearDataModal = false;
@@ -74,7 +75,19 @@ export class HeaderComponent implements OnInit {
 
   toggleSettingsDropdown(event: Event) {
     event.stopPropagation();
+    this.showWorkspaceDropdown = false;
     this.showSettingsDropdown = !this.showSettingsDropdown;
+  }
+
+  toggleWorkspaceDropdown(event: Event) {
+    event.stopPropagation();
+    this.showSettingsDropdown = false;
+    this.showWorkspaceDropdown = !this.showWorkspaceDropdown;
+  }
+
+  get isWorkspaceRoute(): boolean {
+    return ['/compare-room', '/shared-playlists', '/song-league']
+      .some(route => this.router.url.startsWith(route));
   }
 
   async logout() {
@@ -182,5 +195,6 @@ export class HeaderComponent implements OnInit {
   @HostListener('document:click')
   onDocumentClick() {
     this.showSettingsDropdown = false;
+    this.showWorkspaceDropdown = false;
   }
 }

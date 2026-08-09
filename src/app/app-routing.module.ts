@@ -60,6 +60,12 @@ export const APP_ROUTES: Routes = [
       import('@features/insights/listening-history/listening-history.module').then(module => module.ListeningHistoryModule)
   },
   {
+    path: 'song-league',
+    canActivate: [spotifyAuthGuard],
+    loadChildren: () =>
+      import('@features/song-league/song-league.module').then(module => module.SongLeagueModule)
+  },
+  {
     path: 'shared-playlists',
     canActivate: [spotifyAuthGuard],
     loadChildren: () =>

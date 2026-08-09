@@ -38,6 +38,32 @@
       </span>
     </div>
     <div class="header-right">
+      <div class="workspace-launcher-container">
+        <button type="button" class="workspace-launcher-button" [class.active]="isWorkspaceRoute"
+          (click)="toggleWorkspaceDropdown($event)" title="Open workspace"
+          aria-label="Open workspace" [attr.aria-expanded]="showWorkspaceDropdown" aria-haspopup="menu">
+          <i class="pi pi-th-large" aria-hidden="true"></i>
+          <span class="workspace-launcher-label">Workspace</span>
+          <i class="pi pi-chevron-down workspace-launcher-chevron" aria-hidden="true"></i>
+        </button>
+
+        <div class="profile-settings-dropdown workspace-launcher-dropdown" *ngIf="showWorkspaceDropdown" role="menu">
+          <span class="dropdown-header">Explore together</span>
+          <a routerLink="/compare-room" class="dropdown-item workspace-launcher-item" role="menuitem">
+            <i class="pi pi-users"></i>
+            <span class="workspace-item-copy"><strong>Compare playlists</strong><small>Find music you share with friends</small></span>
+          </a>
+          <a routerLink="/shared-playlists" class="dropdown-item workspace-launcher-item" role="menuitem">
+            <i class="pi pi-share-alt"></i>
+            <span class="workspace-item-copy"><strong>Shared playlists</strong><small>Send an auto-updating private copy</small></span>
+          </a>
+          <a routerLink="/song-league" class="dropdown-item workspace-launcher-item" role="menuitem">
+            <i class="pi pi-star"></i>
+            <span class="workspace-item-copy"><strong>Song League</strong><small>Play the Friday recommendation game</small></span>
+          </a>
+        </div>
+      </div>
+
       <div class="user-profile-container">
         <button type="button" class="user-profile-header" (click)="toggleSettingsDropdown($event)"
           title="Open profile menu" aria-label="Open profile menu" [attr.aria-expanded]="showSettingsDropdown"
@@ -49,16 +75,6 @@
         </button>
 
         <div class="profile-settings-dropdown" *ngIf="showSettingsDropdown" role="menu">
-          <span class="dropdown-header">Workspace</span>
-          <a routerLink="/compare-room" class="dropdown-item compare-room-dropdown-item" role="menuitem">
-            <i class="pi pi-users"></i>
-            <span>Compare playlists</span>
-          </a>
-          <a routerLink="/shared-playlists" class="dropdown-item" role="menuitem">
-            <i class="pi pi-share-alt"></i>
-            <span>Shared playlists</span>
-          </a>
-          <div class="dropdown-divider compare-room-dropdown-item"></div>
           <span class="dropdown-header">Data &amp; account</span>
           <div class="dropdown-item toggle-item" (click)="$event.stopPropagation()">
             <i class="pi pi-cloud"></i>
@@ -146,7 +162,7 @@
     </div>
     <h3 class="confirm-modal-title danger-text">Confirm Database Erasure</h3>
     <p class="confirm-modal-text">
-      Are you absolutely sure? This will permanently delete all your cloud backup data, listening snapshots, and playlist-sharing grants from our servers. Shared catalog metadata such as artist names is retained, but your personal links to it are erased forever. This action is irreversible.
+      Are you absolutely sure? This will permanently delete all your cloud backup data, listening snapshots, playlist-sharing grants, and Song League membership from our servers. Shared catalog metadata such as artist names is retained, but your personal links to it are erased forever. This action is irreversible.
     </p>
     <div class="confirm-modal-actions">
       <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="cancelDbDelete()">Cancel</button>

@@ -17,12 +17,18 @@ src/app/
 │   ├── auth/
 │   ├── insights/
 │   ├── legal/
+│   ├── song-league/         # Persistent Friday recommendation game
 │   └── library/
 ├── shared/
 │   ├── layout/              # Header and footer
 │   └── shared.module.ts     # Common Angular and UI building blocks
 ├── app-routing.module.ts    # Public URL-to-feature boundaries
 └── app.module.ts            # Root bootstrap only
+
+supabase/
+├── migrations/              # RLS, trusted scoring, and playlist state
+└── functions/
+    └── song-league-playlist-sync/ # Authenticated multi-account Spotify playlist refresh
 ```
 
 ## Dependency rules
@@ -69,3 +75,5 @@ npm run verify
 ```
 
 This performs the architecture rules, application type checking, test-source type checking, and the optimized production build. Use `npm run test:ci` for one headless unit-test run with coverage, or `npm run verify:ci` for the complete GitHub Actions gate. The gate runs on every push and pull request; deployment remains limited to successful `main` builds.
+
+Product and architecture choices that constrain future changes are recorded in the [decision journal](decision-journal.md).

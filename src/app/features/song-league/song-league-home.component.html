@@ -1,0 +1,93 @@
+<app-header mobileTitle="Song League"></app-header>
+
+<main class="song-league-page song-league-home">
+  <div class="song-league-shell">
+    <header class="league-hero">
+      <div>
+        <span class="league-eyebrow">Friday music challenge</span>
+        <h1>Song League</h1>
+        <p>Recommend one discovery every Friday. It earns permanent points from its position in your friends’ four-week Top Songs.</p>
+      </div>
+      <button type="button" class="league-primary" (click)="showCreateForm = !showCreateForm"
+        [disabled]="!auth.isBackupActive()">
+        <i class="pi pi-plus-circle"></i> Create league
+      </button>
+    </header>
+
+    <section *ngIf="!auth.isBackupActive()" class="league-notice warning">
+      <i class="pi pi-cloud"></i>
+      <div>
+        <strong>Cloud Backup is required</strong>
+        <p>Enable it from your profile menu so daily Top Songs can verify recommendations and points.</p>
+      </div>
+    </section>
+
+    <section *ngIf="showCreateForm" class="league-create-card">
+      <div>
+        <span class="league-eyebrow">New private group</span>
+        <h2>Name your league</h2>
+        <p>The league uses your current timezone for the Friday submission window.</p>
+      </div>
+      <form (ngSubmit)="createLeague()">
+        <label>
+          <span>League name</span>
+          <input type="text" name="leagueName" [(ngModel)]="leagueName" maxlength="80"
+            placeholder="Friday Finds" [disabled]="isCreating" autofocus>
+        </label>
+        <div class="league-form-actions">
+          <button type="button" class="league-secondary" (click)="showCreateForm = false" [disabled]="isCreating">Cancel</button>
+          <button type="submit" class="league-primary" [disabled]="!leagueName.trim() || isCreating">
+            <i class="pi" [ngClass]="isCreating ? 'pi-spin pi-spinner' : 'pi-users'"></i>
+            {{ isCreating ? 'Creating…' : 'Create league' }}
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section *ngIf="inviteUrl" class="league-invite-ready" role="status">
+      <div>
+        <span class="league-eyebrow">League created</span>
+        <h2>Invite your friends</h2>
+        <p>This private link is shown once. Members must use their normal Analytify login and enable Cloud Backup.</p>
+      </div>
+      <div class="league-invite-field">
+        <input [value]="inviteUrl" readonly aria-label="Song League invitation URL">
+        <button type="button" (click)="copyInvite()"><i class="pi" [ngClass]="inviteCopied ? 'pi-check' : 'pi-copy'"></i>{{ inviteCopied ? 'Copied' : 'Copy' }}</button>
+      </div>
+      <button type="button" class="league-primary" (click)="openCreatedLeague()">Open league <i class="pi pi-arrow-right"></i></button>
+    </section>
+
+    <div *ngIf="errorMessage" class="league-notice error" role="alert">
+      <i class="pi pi-exclamation-circle"></i><span>{{ errorMessage }}</span>
+    </div>
+
+    <section class="league-list-section">
+      <div class="league-section-heading">
+        <div><span class="league-eyebrow">Your groups</span><h2>Active leagues</h2></div>
+        <span class="league-count">{{ leagues.length }}</span>
+      </div>
+
+      <div *ngIf="isLoading" class="league-state"><i class="pi pi-spin pi-spinner"></i><p>Loading leagues…</p></div>
+      <div *ngIf="!isLoading && leagues.length === 0" class="league-empty">
+        <i class="pi pi-star"></i>
+        <strong>No leagues yet</strong>
+        <p>Create one or open an invitation from a friend.</p>
+      </div>
+      <div *ngIf="!isLoading && leagues.length" class="league-grid">
+        <a *ngFor="let league of leagues; trackBy: trackLeague" [routerLink]="['/song-league', league.id]" class="league-card">
+          <div class="league-card-icon"><i class="pi pi-chart-line"></i></div>
+          <div>
+            <span>{{ league.timezone }}</span>
+            <h3>{{ league.name }}</h3>
+            <p>Hosted by {{ league.ownerDisplayName }}</p>
+          </div>
+          <i class="pi pi-chevron-right"></i>
+        </a>
+      </div>
+    </section>
+
+    <app-song-league-rules></app-song-league-rules>
+  </div>
+</main>
+
+<app-footer></app-footer>
