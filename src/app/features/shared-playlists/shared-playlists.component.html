@@ -40,8 +40,8 @@
         <a *ngFor="let share of receivedShares; trackBy: trackShare" [routerLink]="['/shared-playlists', share.id]" class="share-card">
           <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="" loading="lazy" decoding="async">
           <div>
-            <span class="card-label">From {{ share.ownerDisplayName }}</span>
-            <h3>{{ share.playlistName }}</h3>
+            <span class="card-label">Shared with you</span>
+            <h3>{{ receivedPlaylistName(share) }}</h3>
             <p>{{ share.trackCount }} songs · revision {{ share.revision }}</p>
           </div>
           <i class="pi pi-chevron-right"></i>

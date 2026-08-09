@@ -102,6 +102,13 @@ describe('SharedPlaylistsComponent', () => {
     expect(component.shareLink).toContain('/shared-playlists/claim/token');
   });
 
+  it('includes the owner in a received playlist name', () => {
+    expect(component.receivedPlaylistName({
+      playlistName: 'Party',
+      ownerDisplayName: 'Simon'
+    } as any)).toBe('Party · from Simon');
+  });
+
   it('subscribes for live list updates and cleans up the channel', async () => {
     await component.ngOnInit();
 

@@ -4,6 +4,7 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-source.service';
 import {ComparePlaylist} from '@core/compare-room/compare-room.models';
 import {PlaylistShare, PlaylistSharePublication} from '@core/sharing/playlist-sharing.models';
+import {sharedPlaylistName} from '@core/sharing/playlist-sharing-names';
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 
@@ -207,6 +208,10 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
 
   trackShare(_: number, share: PlaylistShare): string {
     return share.id;
+  }
+
+  receivedPlaylistName(share: PlaylistShare): string {
+    return sharedPlaylistName(share.playlistName, share.ownerDisplayName);
   }
 
   trackPlaylist(_: number, playlist: ComparePlaylist): string {

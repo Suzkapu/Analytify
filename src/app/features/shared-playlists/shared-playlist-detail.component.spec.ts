@@ -75,11 +75,12 @@ describe('SharedPlaylistDetailComponent', () => {
   it('updates the Spotify playlist stored for the immutable share ID', async () => {
     await component.load();
     expect(component.hasUpdate).toBeTrue();
+    expect(component.displayPlaylistName).toBe('Shared party · from Owner');
 
     await component.downloadOrUpdate();
 
     expect(spotify.syncPlaylist).toHaveBeenCalledWith(
-      'token', 'existing', 'spotify-url', 'Shared party', jasmine.stringContaining('Share ID: share-id'), jasmine.any(Array)
+      'token', 'existing', 'spotify-url', 'Shared party · from Owner', jasmine.stringContaining('Share ID: share-id'), jasmine.any(Array)
     );
     expect(sharing.recordDownload).toHaveBeenCalledWith('share-id', 'existing', 'spotify-url', 2);
     expect(component.download?.appliedRevision).toBe(2);

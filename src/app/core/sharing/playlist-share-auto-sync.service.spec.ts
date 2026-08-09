@@ -125,7 +125,7 @@ describe('PlaylistShareAutoSyncService', () => {
       'spotify-token',
       'existing-playlist',
       'spotify-url',
-      'Shared party',
+      'Shared party · from Owner',
       jasmine.stringContaining('Share ID: received-share'),
       [track('new-song')]
     );

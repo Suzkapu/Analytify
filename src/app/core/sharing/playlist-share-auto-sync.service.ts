@@ -4,6 +4,7 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {PlaylistSharingService} from './playlist-sharing.service';
+import {sharedPlaylistSpotifyName} from './playlist-sharing-names';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 
 const console = createScopedLogger('Playlist Share Sync');
@@ -145,7 +146,7 @@ export class PlaylistShareAutoSyncService {
           accessToken,
           details.download.spotifyPlaylistId,
           details.download.spotifyPlaylistUrl,
-          details.share.playlistName,
+          sharedPlaylistSpotifyName(details.share.playlistName, details.share.ownerDisplayName),
           description,
           details.tracks
         );

@@ -5,6 +5,7 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {CompareSaveResult, CompareTrack} from '@core/compare-room/compare-room.models';
 import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.service';
 import {PlaylistShare, PlaylistShareDownload, SharedPlaylistStats} from '@core/sharing/playlist-sharing.models';
+import {sharedPlaylistName, sharedPlaylistSpotifyName} from '@core/sharing/playlist-sharing-names';
 import {PlaylistShareAutoSyncService, PlaylistShareSpotifyUpdate} from '@core/sharing/playlist-share-auto-sync.service';
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
 
@@ -106,7 +107,7 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
         accessToken,
         this.download?.spotifyPlaylistId || null,
         this.download?.spotifyPlaylistUrl || null,
-        this.share.playlistName,
+        sharedPlaylistSpotifyName(this.share.playlistName, this.share.ownerDisplayName),
         description,
         this.tracks
       );
@@ -150,6 +151,13 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
     if (!this.download) return 'Add to my Spotify';
     if (this.hasUpdate) return 'Update my Spotify copy';
     return 'Spotify copy is up to date';
+  }
+
+  get displayPlaylistName(): string {
+    if (!this.share) return 'Shared Playlist';
+    return this.isRecipient
+      ? sharedPlaylistName(this.share.playlistName, this.share.ownerDisplayName)
+      : this.share.playlistName;
   }
 
   formatDuration(durationMs: number): string {

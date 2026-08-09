@@ -1,4 +1,4 @@
-<app-header [mobileTitle]="share?.playlistName || 'Shared Playlist'"></app-header>
+<app-header [mobileTitle]="displayPlaylistName"></app-header>
 
 <div class="back-bar-container">
   <button type="button" class="back-text-button" (click)="back()" title="Back to Shared Playlists">
@@ -16,8 +16,8 @@
     <header class="playlist-hero">
       <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="" decoding="async">
       <div class="hero-copy">
-        <span class="eyebrow">Shared by {{ share.ownerDisplayName }}</span>
-        <h1>{{ share.playlistName }}</h1>
+        <span class="eyebrow">{{ isRecipient ? 'Private playlist access' : 'Shared by you' }}</span>
+        <h1>{{ displayPlaylistName }}</h1>
         <p>{{ share.playlistDescription || 'A private playlist shared through Analytify.' }}</p>
         <small>{{ tracks.length }} songs · revision {{ share.revision }} · streamed from Supabase</small>
       </div>
