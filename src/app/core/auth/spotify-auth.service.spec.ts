@@ -83,4 +83,21 @@ describe('SpotifyAuthService', () => {
     expect(values['spotifyRefreshToken']).toBeUndefined();
     expect(authClient.signInWithOAuth).toHaveBeenCalled();
   });
+
+  it('recovers a usable Spotify session before a callback error is shown', async () => {
+    authClient.getSession.and.resolveTo({
+      data: {
+        session: {
+          provider_token: 'recovered-token',
+          provider_refresh_token: 'recovered-refresh',
+          user: {id: 'supabase-user', user_metadata: {provider_id: 'spotify-user'}}
+        }
+      },
+      error: null
+    });
+
+    expect(await service.recoverUsableSession()).toBeTrue();
+    expect(values['spotifyAccessToken']).toBe('recovered-token');
+    expect(service.isTokenExpired()).toBeFalse();
+  });
 });

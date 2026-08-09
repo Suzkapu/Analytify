@@ -229,6 +229,16 @@ export class SpotifyAuthService {
     }
   }
 
+  async recoverUsableSession(): Promise<boolean> {
+    await this.storageService.initFromDB();
+    if (this.isAuthenticated() && !this.isTokenExpired()) {
+      return true;
+    }
+
+    await this.restoreSessionFromSupabase();
+    return this.isAuthenticated() && !this.isTokenExpired();
+  }
+
   private async _restoreSessionFromSupabase(): Promise<boolean> {
     try {
       const { data: { session }, error } = await this.supabaseService.client.auth.getSession();

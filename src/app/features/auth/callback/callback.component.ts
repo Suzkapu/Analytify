@@ -25,7 +25,7 @@ export class CallbackComponent implements OnInit {
   }
 
   //Sets the access token
-  ngOnInit() {
+  ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       const code = params['code'];
       const error = params['error'];
@@ -33,56 +33,81 @@ export class CallbackComponent implements OnInit {
       if (code) {
         this.authService.exchangeSupabaseCodeForSession(code).subscribe({
           next: () => {
-            if (this.authService.isAuthenticated()) {
-              this.router.navigateByUrl(this.returnUrl.consume());
-            } else {
-              this.errorMessage = 'Authentication failed: Spotify token was not saved.';
-            }
+            void this.completeCallback('Authentication failed: Spotify token was not saved.');
           },
           error: (err) => {
-            console.error('Failed to exchange auth code for session', err);
-            // server_error often means stale PKCE state — auto retry login
-            const errMsg = err.message || JSON.stringify(err);
-            if (
-              errMsg.includes('server_error') ||
-              errMsg.includes('expired') ||
-              errMsg.includes('invalid') ||
-              errMsg.includes('provider token') ||
-              errMsg.includes('missing')
-            ) {
-              this.autoRedirectToLogin('Session expired. Redirecting back to login...');
-            } else {
-              this.errorMessage = `Failed to exchange authorization code: ${errMsg}`;
-            }
+            void this.handleCodeExchangeFailure(err);
           }
         });
       } else if (error) {
-        console.error('Spotify login error', error);
-        // server_error = stale PKCE state or expired OAuth flow — auto retry
-        if (error === 'server_error' || error === 'access_denied') {
-          this.autoRedirectToLogin('Session expired. Redirecting back to login...');
-        } else {
-          this.errorMessage = `Spotify login error: ${error}`;
-        }
+        void this.handleOAuthFailure(error);
       } else {
         // In case of hash fragment flow, wait a bit for Supabase client to parse URL hash
         setTimeout(() => {
-          this.authService.handleCallbackSession().subscribe({
-            next: () => {
-              if (this.authService.isAuthenticated()) {
-                this.router.navigateByUrl(this.returnUrl.consume());
-              } else {
-                this.errorMessage = 'Authentication failed: Spotify token was not saved.';
-              }
-            },
-            error: (err) => {
-              console.error('No active session found', err);
-              this.errorMessage = 'No authorization code or active session found.';
-            }
-          });
+          void this.handleImplicitCallback();
         }, 800);
       }
     });
+  }
+
+  private async handleCodeExchangeFailure(error: any): Promise<void> {
+    console.error('Failed to exchange auth code for session', error);
+    if (await this.resumeRecoveredSession()) return;
+
+    const errorMessage = error?.message || JSON.stringify(error);
+    if (
+      errorMessage.includes('server_error') ||
+      errorMessage.includes('expired') ||
+      errorMessage.includes('invalid') ||
+      errorMessage.includes('provider token') ||
+      errorMessage.includes('missing')
+    ) {
+      this.autoRedirectToLogin('Session expired. Redirecting back to login...');
+      return;
+    }
+    this.errorMessage = `Failed to exchange authorization code: ${errorMessage}`;
+  }
+
+  private async handleOAuthFailure(error: string): Promise<void> {
+    console.error('Spotify login error', error);
+    if (await this.resumeRecoveredSession()) return;
+
+    // server_error = stale PKCE state or expired OAuth flow — auto retry
+    if (error === 'server_error' || error === 'access_denied') {
+      this.autoRedirectToLogin('Session expired. Redirecting back to login...');
+      return;
+    }
+    this.errorMessage = `Spotify login error: ${error}`;
+  }
+
+  private async handleImplicitCallback(): Promise<void> {
+    if (await this.resumeRecoveredSession()) return;
+
+    this.authService.handleCallbackSession().subscribe({
+      next: () => {
+        void this.completeCallback('Authentication failed: Spotify token was not saved.');
+      },
+      error: (error) => {
+        console.error('No active session found', error);
+        this.errorMessage = 'No authorization code or active session found.';
+      }
+    });
+  }
+
+  private async completeCallback(errorMessage: string): Promise<void> {
+    if (await this.resumeRecoveredSession()) return;
+    this.errorMessage = errorMessage;
+  }
+
+  private async resumeRecoveredSession(): Promise<boolean> {
+    try {
+      if (!await this.authService.recoverUsableSession()) return false;
+      await this.router.navigateByUrl(this.returnUrl.consume());
+      return true;
+    } catch (error) {
+      console.warn('Existing session recovery failed', error);
+      return false;
+    }
   }
 
   private autoRedirectToLogin(message: string) {
