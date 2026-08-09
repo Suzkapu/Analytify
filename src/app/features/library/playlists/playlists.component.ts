@@ -8,6 +8,7 @@ import {ComparePlaylist, CompareSaveResult, CompareTrack} from '@core/compare-ro
 import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-source.service';
 import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {PlaylistLoaderService} from '@core/sync/playlist-loader/playlist-loader.service';
 
 const console = createScopedLogger('Playlists');
 
@@ -39,7 +40,8 @@ export class PlaylistsComponent {
     public authService: SpotifyAuthService,
     private storageService: StorageService,
     private comparePlaylistSource: ComparePlaylistSourceService,
-    private participantSpotify: ParticipantSpotifyService
+    private participantSpotify: ParticipantSpotifyService,
+    private playlistLoaderService: PlaylistLoaderService
   ) {
     this.route.params.subscribe(async () => {
       const userId = this.authService.getUserId() || 'anonymous';
@@ -167,6 +169,11 @@ export class PlaylistsComponent {
       }
 
       this.playlists = [this.createFavouritePlaylist(favouriteTotal), ...refreshedPlaylists];
+      this.playlistLoaderService.recordPortfolioMetadata(
+        userId,
+        this.playlists,
+        cachedPlaylists
+      );
       this.storageService.setItem(`${userId}_fav_Amount`, JSON.stringify(favouriteTotal));
       this.storageService.setItem(storageKey, JSON.stringify(this.playlists));
       this.storageService.setItem(lastUpdatedKey, Date.now().toString());
@@ -424,7 +431,8 @@ export class PlaylistsComponent {
       imageUrl: playlist.images?.[0]?.url || '',
       total: Number(playlist.tracks?.total ?? playlist.items?.total ?? 0),
       ownerName: playlist.owner?.display_name || playlist.owner?.id || '',
-      isLikedSongs: playlist.id === 'fav'
+      isLikedSongs: playlist.id === 'fav',
+      snapshotId: playlist.snapshot_id || undefined
     };
   }
 

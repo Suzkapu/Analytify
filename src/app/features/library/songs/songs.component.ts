@@ -115,6 +115,8 @@ export class SongsComponent implements OnInit, OnDestroy {
     let isParseError = false;
     let cachedTotalTracks = 0;
     let cachedTrackCount: number | null = null;
+    const sourceManifest = this.playlistLoaderService.readSourceManifest(userId, this.playlistId);
+    const sourceDirty = this.playlistLoaderService.isPlaylistSourceDirty(userId, this.playlistId);
 
     if (storedArtists) {
       try {
@@ -155,7 +157,8 @@ export class SongsComponent implements OnInit, OnDestroy {
     const isComplete = !isParseError && this.playlistLoaderService.isCachedPlaylistComplete(
       parsedArtists,
       cachedTotalTracks,
-      cachedTrackCount
+      cachedTrackCount,
+      sourceManifest
     );
 
     return {
@@ -163,11 +166,18 @@ export class SongsComponent implements OnInit, OnDestroy {
       parsedArtists,
       cachedTotalTracks,
       cachedTrackCount,
+      sourceManifest,
+      sourceDirty,
       isExpired: this.isCacheExpired(lastUpdated),
       isParseError,
       isComplete,
+      needsCloudRestore: !storedArtists ||
+        this.isCacheExpired(lastUpdated) ||
+        isParseError ||
+        !isComplete,
       isUsable: !!storedArtists &&
         !this.isCacheExpired(lastUpdated) &&
+        !sourceDirty &&
         !isParseError &&
         isComplete
     };
@@ -207,15 +217,19 @@ export class SongsComponent implements OnInit, OnDestroy {
     }
 
     let cache = this.readPlaylistCache(userId, storageKey);
-    if (!cache.isUsable && isBackupActive) {
+    if (cache.needsCloudRestore && isBackupActive) {
       // The cloud cache owns its own consistency marker. Do not retain a local
       // marker when replacing the serialized dataset from Supabase.
       this.storageService.removeItem(`${storageKey}_CachedTrackCount`);
+      this.storageService.removeItem(
+        this.playlistLoaderService.sourceManifestKey(userId, this.playlistId)
+      );
       await this.storageService.restoreItemsFromCloud([
         storageKey,
         `${storageKey}_Amount`,
         `${storageKey}_Name`,
         `${storageKey}_CachedTrackCount`,
+        this.playlistLoaderService.sourceManifestKey(userId, this.playlistId),
         `${storageKey}_lastUpdated`
       ]);
       cache = this.readPlaylistCache(userId, storageKey);
@@ -240,7 +254,8 @@ export class SongsComponent implements OnInit, OnDestroy {
         cache.isExpired,
         cache.storedArtists,
         cache.parsedArtists,
-        !cache.isComplete
+        !cache.isComplete,
+        !!cache.sourceManifest
       );
     }
   }
@@ -251,7 +266,8 @@ export class SongsComponent implements OnInit, OnDestroy {
     isExpired: boolean,
     storedArtists?: string | null,
     parsedArtists?: any[],
-    isIncomplete: boolean = false
+    isIncomplete: boolean = false,
+    hasSourceManifest: boolean = false
   ) {
     // Start a new loading task
     const isRefresh = !!storedArtists && parsedArtists && parsedArtists.length > 0;
@@ -269,7 +285,10 @@ export class SongsComponent implements OnInit, OnDestroy {
         console.warn('Failed to load temporary data from cache:', e);
       }
     }
-    const task = this.playlistLoaderService.startLoadingTask(userId, this.playlistId, isRefresh, isExpired);
+    const task = this.playlistId === 'fav' && isRefresh && !isIncomplete && hasSourceManifest
+      ? this.playlistLoaderService.startNewFavouriteTracksCheck(userId, true)
+      : this.playlistLoaderService.startLoadingTask(userId, this.playlistId, isRefresh, isExpired);
+    if (!task) return;
     this.subscribeToLoaderTask(task);
   }
 

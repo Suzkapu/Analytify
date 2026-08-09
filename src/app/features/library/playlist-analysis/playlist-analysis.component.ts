@@ -124,12 +124,16 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     let cachedTotalTracks = 0;
     let cachedTrackCount: number | null = null;
     let isComplete = false;
+    let sourceManifest = this.playlistLoaderService.readSourceManifest(userId, this.playlistId);
+    let sourceDirty = this.playlistLoaderService.isPlaylistSourceDirty(userId, this.playlistId);
 
     const parseCachedArtists = () => {
       parsedArtists = [];
       isParseError = false;
       cachedTotalTracks = 0;
       cachedTrackCount = null;
+      sourceManifest = this.playlistLoaderService.readSourceManifest(userId, this.playlistId);
+      sourceDirty = this.playlistLoaderService.isPlaylistSourceDirty(userId, this.playlistId);
       if (storedArtists) {
         try {
           const parsed = JSON.parse(storedArtists);
@@ -167,7 +171,8 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
       isComplete = !isParseError && this.playlistLoaderService.isCachedPlaylistComplete(
         parsedArtists,
         cachedTotalTracks,
-        cachedTrackCount
+        cachedTrackCount,
+        sourceManifest
       );
     };
 
@@ -178,11 +183,15 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
       isBackupActive
     ) {
       this.storageService.removeItem(`${storageKey}_CachedTrackCount`);
+      this.storageService.removeItem(
+        this.playlistLoaderService.sourceManifestKey(userId, this.playlistId)
+      );
       await this.storageService.restoreItemsFromCloud([
         storageKey,
         `${storageKey}_Amount`,
         `${storageKey}_Name`,
         `${storageKey}_CachedTrackCount`,
+        this.playlistLoaderService.sourceManifestKey(userId, this.playlistId),
         lastUpdatedKey
       ]);
       storedArtists = this.storageService.getItem(storageKey);
@@ -191,7 +200,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
       parseCachedArtists();
     }
 
-    if (storedArtists && !isExpired && !isParseError && isComplete) {
+    if (storedArtists && !isExpired && !isParseError && isComplete && !sourceDirty) {
       console.log(`[Analysis] Loading playlist ${this.playlistId} data from the local IndexedDB cache.`);
       try {
         this.artists = parsedArtists;
@@ -214,11 +223,19 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
         }
       }
       // If we have cached data but it's expired, we do background refresh to maintain smooth UX
-      this.triggerApiLoad(!!storedArtists && !isParseError, isExpired || !isComplete);
+      this.triggerApiLoad(
+        !!storedArtists && !isParseError,
+        isExpired || !isComplete || sourceDirty,
+        this.playlistId === 'fav' && !!sourceManifest && isComplete
+      );
     }
   }
 
-  triggerApiLoad(isBackgroundRefresh: boolean, isDailyFullSync: boolean = false) {
+  triggerApiLoad(
+    isBackgroundRefresh: boolean,
+    isDailyFullSync: boolean = false,
+    preferIncrementalLikedSongs: boolean = false
+  ) {
     const userId = this.authService.getUserId() || 'anonymous';
     
     // Cancel previous loader task subscription if any
@@ -227,7 +244,15 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
       this.loaderSubscription = null;
     }
 
-    const task = this.playlistLoaderService.startLoadingTask(userId, this.playlistId, isBackgroundRefresh, isDailyFullSync);
+    const task = preferIncrementalLikedSongs
+      ? this.playlistLoaderService.startNewFavouriteTracksCheck(userId, true)
+      : this.playlistLoaderService.startLoadingTask(
+          userId,
+          this.playlistId,
+          isBackgroundRefresh,
+          isDailyFullSync
+        );
+    if (!task) return;
     this.subscribeToLoaderTask(task);
   }
 

@@ -206,7 +206,8 @@ export class ParticipantSpotifyService {
       description: playlist.description || '',
       imageUrl: playlist.images?.[0]?.url || '',
       total: Number(playlist.items?.total ?? playlist.tracks?.total ?? 0),
-      ownerName: playlist.owner?.display_name || playlist.owner?.id || ''
+      ownerName: playlist.owner?.display_name || playlist.owner?.id || '',
+      snapshotId: playlist.snapshot_id || undefined
     };
   }
 

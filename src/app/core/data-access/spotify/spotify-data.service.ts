@@ -130,6 +130,12 @@ export class SpotifyDataService {
     );
   }
 
+  getPlaylistMetadata(playlistId: string): Observable<any> {
+    const fields = encodeURIComponent('id,name,snapshot_id,items.total');
+    const playlistEndpoint = `${environment.spotifyUrl}/playlists/${playlistId}?fields=${fields}`;
+    return this.makeRequest(() => this.http.get(playlistEndpoint));
+  }
+
   getAllTracksFromPlaylist(playlistId: string, offset: number, limit: number): Observable<any> {
     const playlistEndpoint = `${environment.spotifyUrl}/playlists/${playlistId}/items?offset=${offset}&limit=${limit}`;
     return this.makeRequest(() => this.http.get(playlistEndpoint)).pipe(

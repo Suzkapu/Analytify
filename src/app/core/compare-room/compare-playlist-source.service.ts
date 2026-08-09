@@ -3,13 +3,15 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {ComparePlaylist, CompareTrack} from './compare-room.models';
 import {ParticipantSpotifyService} from './participant-spotify.service';
+import {PlaylistLoaderService} from '@core/sync/playlist-loader/playlist-loader.service';
 
 @Injectable({providedIn: 'root'})
 export class ComparePlaylistSourceService {
   constructor(
     private storage: StorageService,
     private auth: SpotifyAuthService,
-    private spotify: ParticipantSpotifyService
+    private spotify: ParticipantSpotifyService,
+    private playlistLoader: PlaylistLoaderService
   ) {}
 
   async loadMainPlaylists(accessToken: string, spotifyUserId: string): Promise<ComparePlaylist[]> {
@@ -44,6 +46,9 @@ export class ComparePlaylistSourceService {
   ): Promise<{tracks: CompareTrack[]; source: 'local' | 'cloud' | 'spotify'}> {
     await this.storage.initFromDB();
     const storageKey = `${spotifyUserId}_${playlist.id}`;
+    if (!await this.reconcileKnownChange(spotifyUserId, playlist)) {
+      return {tracks: await this.spotify.getPlaylistTracks(playlist, accessToken), source: 'spotify'};
+    }
     let raw = this.storage.getItem(storageKey);
     const localTracks = this.parseTracks(raw, playlist);
     if (localTracks) return {tracks: localTracks, source: 'local'};
@@ -51,6 +56,9 @@ export class ComparePlaylistSourceService {
     // Initial sync may hydrate this exact cache entry from Supabase. It is
     // deliberately deferred until the local IndexedDB value proves unusable.
     await this.auth.ensureInitialSync();
+    if (!await this.reconcileKnownChange(spotifyUserId, playlist)) {
+      return {tracks: await this.spotify.getPlaylistTracks(playlist, accessToken), source: 'spotify'};
+    }
     raw = this.storage.getItem(storageKey);
     const hydratedTracks = this.parseTracks(raw, playlist);
     if (hydratedTracks) return {tracks: hydratedTracks, source: 'cloud'};
@@ -61,8 +69,12 @@ export class ComparePlaylistSourceService {
         `${storageKey}_Amount`,
         `${storageKey}_Name`,
         `${storageKey}_CachedTrackCount`,
+        this.playlistLoader.sourceManifestKey(spotifyUserId, playlist.id),
         `${storageKey}_lastUpdated`
       ]);
+      if (!await this.reconcileKnownChange(spotifyUserId, playlist)) {
+        return {tracks: await this.spotify.getPlaylistTracks(playlist, accessToken), source: 'spotify'};
+      }
       raw = this.storage.getItem(storageKey);
       const cloudTracks = this.parseTracks(raw, playlist);
       if (restored > 0 && cloudTracks) return {tracks: cloudTracks, source: 'cloud'};
@@ -117,6 +129,18 @@ export class ComparePlaylistSourceService {
 
   private stripDevSuffix(userId: string): string {
     return userId.endsWith('_dev') ? userId.slice(0, -4) : userId;
+  }
+
+  private async reconcileKnownChange(
+    spotifyUserId: string,
+    playlist: ComparePlaylist
+  ): Promise<boolean> {
+    this.playlistLoader.recordPlaylistMetadata(spotifyUserId, {
+      id: playlist.id,
+      total: playlist.total,
+      snapshotId: playlist.snapshotId
+    });
+    return this.playlistLoader.reconcilePlaylistIfDirty(spotifyUserId, playlist.id);
   }
 
   private combinedSource(sources: Set<'local' | 'cloud' | 'spotify'>): 'local' | 'cloud' | 'spotify' {

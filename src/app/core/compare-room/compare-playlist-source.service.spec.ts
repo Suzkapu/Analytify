@@ -4,12 +4,14 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {ComparePlaylist} from './compare-room.models';
 import {ComparePlaylistSourceService} from './compare-playlist-source.service';
+import {PlaylistLoaderService} from '@core/sync/playlist-loader/playlist-loader.service';
 
 describe('ComparePlaylistSourceService', () => {
   let service: ComparePlaylistSourceService;
   let http: HttpTestingController;
   let values: Record<string, string>;
   let auth: jasmine.SpyObj<SpotifyAuthService>;
+  let playlistLoader: jasmine.SpyObj<PlaylistLoaderService>;
 
   beforeEach(() => {
     values = {};
@@ -19,11 +21,24 @@ describe('ComparePlaylistSourceService', () => {
     );
     auth.ensureInitialSync.and.resolveTo();
     auth.isBackupActive.and.returnValue(false);
+    playlistLoader = jasmine.createSpyObj<PlaylistLoaderService>(
+      'PlaylistLoaderService',
+      [
+        'recordPlaylistMetadata',
+        'reconcilePlaylistIfDirty',
+        'sourceManifestKey'
+      ]
+    );
+    playlistLoader.reconcilePlaylistIfDirty.and.resolveTo(true);
+    playlistLoader.sourceManifestKey.and.callFake(
+      (userId, playlistId) => `${userId}_${playlistId}_SourceManifest`
+    );
 
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [
         {provide: SpotifyAuthService, useValue: auth},
+        {provide: PlaylistLoaderService, useValue: playlistLoader},
         {
           provide: StorageService,
           useValue: {

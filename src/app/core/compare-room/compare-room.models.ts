@@ -31,6 +31,7 @@ export interface ComparePlaylist {
   total: number;
   ownerName: string;
   isLikedSongs?: boolean;
+  snapshotId?: string;
 }
 
 export interface CompareParticipant {

@@ -8,6 +8,7 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-source.service';
 import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.service';
+import {PlaylistLoaderService} from '@core/sync/playlist-loader/playlist-loader.service';
 
 describe('PlaylistsComponent', () => {
   let component: PlaylistsComponent;
@@ -17,6 +18,7 @@ describe('PlaylistsComponent', () => {
   let storageService: jasmine.SpyObj<StorageService>;
   let comparePlaylistSource: jasmine.SpyObj<ComparePlaylistSourceService>;
   let participantSpotify: jasmine.SpyObj<ParticipantSpotifyService>;
+  let playlistLoader: jasmine.SpyObj<PlaylistLoaderService>;
   let storage: Map<string, string>;
 
   beforeEach(() => {
@@ -49,6 +51,10 @@ describe('PlaylistsComponent', () => {
       'ParticipantSpotifyService',
       ['createPlaylist']
     );
+    playlistLoader = jasmine.createSpyObj<PlaylistLoaderService>(
+      'PlaylistLoaderService',
+      ['recordPortfolioMetadata']
+    );
     authService.getUserId.and.returnValue('current-user');
     authService.isBackupActive.and.returnValue(false);
     authService.isAuthenticated.and.returnValue(false);
@@ -66,7 +72,8 @@ describe('PlaylistsComponent', () => {
         { provide: SpotifyAuthService, useValue: authService },
         { provide: StorageService, useValue: storageService },
         { provide: ComparePlaylistSourceService, useValue: comparePlaylistSource },
-        { provide: ParticipantSpotifyService, useValue: participantSpotify }
+        { provide: ParticipantSpotifyService, useValue: participantSpotify },
+        { provide: PlaylistLoaderService, useValue: playlistLoader }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     });
@@ -127,6 +134,11 @@ describe('PlaylistsComponent', () => {
     expect(spotifyDataService.getFavTracks).toHaveBeenCalledOnceWith(0, 1);
     expect(component.playlists.map(playlist => playlist.id)).toEqual(['fav', 'updated']);
     expect(component.playlists[0].tracks.total).toBe(42);
+    expect(playlistLoader.recordPortfolioMetadata).toHaveBeenCalledWith(
+      'current-user',
+      component.playlists,
+      jasmine.any(Array)
+    );
     expect(JSON.parse(storage.get('current-user_playlists') || '[]').map((playlist: any) => playlist.id))
       .toEqual(['fav', 'updated']);
   });
