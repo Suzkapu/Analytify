@@ -30,6 +30,7 @@ type StatsTrend = { type: 'up' | 'down' | 'same' | 'new'; diff?: number };
 export class UserStatsComponent implements OnInit, OnDestroy {
   selectedRange: string = 'short_term'; // 'short_term', 'medium_term', 'long_term'
   selectedCategory: string = 'tracks'; // 'tracks', 'artists', 'genres'
+  statsSearchQuery: string = '';
   isLoading: boolean = false;
 
 
@@ -1126,6 +1127,36 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       return snap.isLoaded === true ? (snap.topArtists || []) : [];
     }
     return this.topArtists;
+  }
+
+  get filteredTracks(): any[] {
+    const query = this.normalizeStatsIdentity(this.statsSearchQuery);
+    if (!query) return this.displayedTracks;
+    return this.displayedTracks.filter(track =>
+      this.normalizeStatsIdentity(track?.name).includes(query) ||
+      this.normalizeStatsIdentity(this.getTrackArtist(track)).includes(query)
+    );
+  }
+
+  get filteredArtists(): any[] {
+    const query = this.normalizeStatsIdentity(this.statsSearchQuery);
+    if (!query) return this.displayedArtists;
+    return this.displayedArtists.filter(artist =>
+      this.normalizeStatsIdentity(artist?.name).includes(query)
+    );
+  }
+
+  get isStatsSearchActive(): boolean {
+    return this.normalizeStatsIdentity(this.statsSearchQuery).length > 0;
+  }
+
+  clearStatsSearch(): void {
+    this.statsSearchQuery = '';
+  }
+
+  getStatsRankIndex(item: any, category: 'tracks' | 'artists'): number {
+    const items = category === 'tracks' ? this.displayedTracks : this.displayedArtists;
+    return this.findStatsItemIndex(items, item, category);
   }
 
   get displayedGenres(): any[] {

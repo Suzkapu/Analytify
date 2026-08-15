@@ -93,32 +93,51 @@
       </div>
     </div>
 
-    <!-- Category Tabs -->
-    <div class="category-tabs">
-      <button (click)="changeCategory('tracks')" class="p-button"
-        [class.p-button-outlined]="selectedCategory !== 'tracks'"
-        [class.p-button-secondary]="selectedCategory !== 'tracks'"
-        [class.is-active]="selectedCategory === 'tracks'" [attr.aria-pressed]="selectedCategory === 'tracks'">
-        <i class="pi pi-star-fill"></i>
-        <span class="tab-label-desktop">Top 100 Songs</span>
-        <span class="tab-label-mobile">Songs</span>
-      </button>
-      <button (click)="changeCategory('artists')" class="p-button"
-        [class.p-button-outlined]="selectedCategory !== 'artists'"
-        [class.p-button-secondary]="selectedCategory !== 'artists'"
-        [class.is-active]="selectedCategory === 'artists'" [attr.aria-pressed]="selectedCategory === 'artists'">
-        <i class="pi pi-users"></i>
-        <span class="tab-label-desktop">Top Artists</span>
-        <span class="tab-label-mobile">Artists</span>
-      </button>
-      <button (click)="changeCategory('genres')" class="p-button"
-        [class.p-button-outlined]="selectedCategory !== 'genres'"
-        [class.p-button-secondary]="selectedCategory !== 'genres'"
-        [class.is-active]="selectedCategory === 'genres'" [attr.aria-pressed]="selectedCategory === 'genres'">
-        <i class="pi pi-tags"></i>
-        <span class="tab-label-desktop">Top Genres</span>
-        <span class="tab-label-mobile">Genres</span>
-      </button>
+    <div class="stats-category-controls">
+      <!-- Category Tabs -->
+      <div class="category-tabs">
+        <button (click)="changeCategory('tracks')" class="p-button"
+          [class.p-button-outlined]="selectedCategory !== 'tracks'"
+          [class.p-button-secondary]="selectedCategory !== 'tracks'"
+          [class.is-active]="selectedCategory === 'tracks'" [attr.aria-pressed]="selectedCategory === 'tracks'">
+          <i class="pi pi-star-fill"></i>
+          <span class="tab-label-desktop">Top 100 Songs</span>
+          <span class="tab-label-mobile">Songs</span>
+        </button>
+        <button (click)="changeCategory('artists')" class="p-button"
+          [class.p-button-outlined]="selectedCategory !== 'artists'"
+          [class.p-button-secondary]="selectedCategory !== 'artists'"
+          [class.is-active]="selectedCategory === 'artists'" [attr.aria-pressed]="selectedCategory === 'artists'">
+          <i class="pi pi-users"></i>
+          <span class="tab-label-desktop">Top Artists</span>
+          <span class="tab-label-mobile">Artists</span>
+        </button>
+        <button (click)="changeCategory('genres')" class="p-button"
+          [class.p-button-outlined]="selectedCategory !== 'genres'"
+          [class.p-button-secondary]="selectedCategory !== 'genres'"
+          [class.is-active]="selectedCategory === 'genres'" [attr.aria-pressed]="selectedCategory === 'genres'">
+          <i class="pi pi-tags"></i>
+          <span class="tab-label-desktop">Top Genres</span>
+          <span class="tab-label-mobile">Genres</span>
+        </button>
+      </div>
+
+      <div *ngIf="selectedCategory === 'tracks' || selectedCategory === 'artists'" class="stats-top-search">
+        <div class="search-container stats-search-container">
+          <i class="pi pi-search" aria-hidden="true"></i>
+          <input type="search" class="search-input" [(ngModel)]="statsSearchQuery"
+            [placeholder]="selectedCategory === 'tracks' ? 'Search Top 100 songs or artists' : 'Search Top Artists'"
+            [attr.aria-label]="selectedCategory === 'tracks' ? 'Search Top 100 songs or artists' : 'Search Top Artists'">
+          <button *ngIf="isStatsSearchActive" type="button" class="stats-search-clear"
+            (click)="clearStatsSearch()" aria-label="Clear statistics search" title="Clear search">
+            <i class="pi pi-times" aria-hidden="true"></i>
+          </button>
+        </div>
+        <span *ngIf="isStatsSearchActive" class="stats-search-status" aria-live="polite">
+          {{ selectedCategory === 'tracks' ? filteredTracks.length : filteredArtists.length }}
+          {{ (selectedCategory === 'tracks' ? filteredTracks.length : filteredArtists.length) === 1 ? 'match' : 'matches' }}
+        </span>
+      </div>
     </div>
   </div>
 
@@ -142,9 +161,15 @@
           snapshot details...</span>
         <span *ngIf="!isSnapshotLoading()">No top tracks found for this period.</span>
       </div>
-      <div class="stats-tracks-grid" *ngIf="displayedTracks.length > 0">
+      <div *ngIf="displayedTracks.length > 0 && filteredTracks.length === 0" class="stats-search-empty" role="status">
+        <i class="pi pi-search" aria-hidden="true"></i>
+        <strong>Not in your Top 100</strong>
+        <span>No song or artist matches “{{ statsSearchQuery.trim() }}” in this period.</span>
+        <button type="button" (click)="clearStatsSearch()">Clear search</button>
+      </div>
+      <div class="stats-tracks-grid" *ngIf="filteredTracks.length > 0">
 
-        <div *ngFor="let track of displayedTracks; let idx = index; trackBy: trackStatItem" class="track-row-card"
+        <div *ngFor="let track of filteredTracks; let idx = index; trackBy: trackStatItem" class="track-row-card"
           role="button" tabindex="0" title="View history graph"
           [attr.aria-label]="'View history for ' + track.name"
           (keydown)="onTrendCardKeydown($event, track, 'tracks')"
@@ -179,9 +204,9 @@
                   </linearGradient>
                 </defs>
               </svg>
-              <span class="index-number-text">{{ idx + 1 }}</span>
+              <span class="index-number-text">{{ getStatsRankIndex(track, 'tracks') + 1 }}</span>
             </span>
-            <ng-container *ngIf="getTrend(track, idx, 'tracks') as trend">
+            <ng-container *ngIf="getTrend(track, getStatsRankIndex(track, 'tracks'), 'tracks') as trend">
               <span *ngIf="trend.type === 'up'" class="rank-trend-inline trend-up-color"
                 title="Moved up by {{ trend.diff }} places">
                 <i class="pi pi-caret-up"></i>
@@ -236,8 +261,14 @@
           snapshot details...</span>
         <span *ngIf="!isSnapshotLoading()">No top artists found for this period.</span>
       </div>
-      <div *ngIf="displayedArtists.length > 0" class="stats-artists-grid">
-        <div *ngFor="let artist of displayedArtists; let idx = index; trackBy: trackStatItem" class="artist-grid-card"
+      <div *ngIf="displayedArtists.length > 0 && filteredArtists.length === 0" class="stats-search-empty" role="status">
+        <i class="pi pi-search" aria-hidden="true"></i>
+        <strong>Not in your Top Artists</strong>
+        <span>No artist matches “{{ statsSearchQuery.trim() }}” in this period.</span>
+        <button type="button" (click)="clearStatsSearch()">Clear search</button>
+      </div>
+      <div *ngIf="filteredArtists.length > 0" class="stats-artists-grid">
+        <div *ngFor="let artist of filteredArtists; let idx = index; trackBy: trackStatItem" class="artist-grid-card"
           role="button" tabindex="0" title="View history graph"
           [attr.aria-label]="'View history for ' + artist.name"
           (keydown)="onTrendCardKeydown($event, artist, 'artists')"
@@ -253,9 +284,9 @@
             </button>
             <div class="artist-rank-badge" [class.is-hot-mover]="isHotMover(artist, 'artists')"
               [class.is-high-debut]="isHighDebutHotArtist(artist)"
-              [class.is-new]="getTrend(artist, idx, 'artists').type === 'new'"
-              [class.has-trend]="getTrend(artist, idx, 'artists').type === 'up' || getTrend(artist, idx, 'artists').type === 'down'"
-              [attr.title]="getTrend(artist, idx, 'artists').type === 'new' ? 'First appearance in saved stats' : null">
+              [class.is-new]="getTrend(artist, getStatsRankIndex(artist, 'artists'), 'artists').type === 'new'"
+              [class.has-trend]="getTrend(artist, getStatsRankIndex(artist, 'artists'), 'artists').type === 'up' || getTrend(artist, getStatsRankIndex(artist, 'artists'), 'artists').type === 'down'"
+              [attr.title]="getTrend(artist, getStatsRankIndex(artist, 'artists'), 'artists').type === 'new' ? 'First appearance in saved stats' : null">
               <span class="number-wrapper">
                 <svg *ngIf="isHotMover(artist, 'artists')" class="hot-mover-flame"
                   [class.is-high-debut]="isHighDebutHotArtist(artist)" viewBox="0 0 24 24" fill="none"
@@ -284,9 +315,9 @@
                     </linearGradient>
                   </defs>
                 </svg>
-                <span class="index-number-text">{{ idx + 1 }}</span>
+                <span class="index-number-text">{{ getStatsRankIndex(artist, 'artists') + 1 }}</span>
               </span>
-              <ng-container *ngIf="getTrend(artist, idx, 'artists') as trend">
+              <ng-container *ngIf="getTrend(artist, getStatsRankIndex(artist, 'artists'), 'artists') as trend">
                 <span *ngIf="trend.type === 'up'" class="rank-trend-inline trend-up-color"
                   title="Moved up by {{ trend.diff }} places">
                   <i class="pi pi-caret-up"></i>

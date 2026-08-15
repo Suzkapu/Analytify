@@ -245,4 +245,35 @@ describe('UserStatsComponent trends', () => {
 
     expect(openTrendPopup).not.toHaveBeenCalled();
   });
+
+  it('searches Top Songs by song or artist while preserving the real rank', () => {
+    component.topTracks = [
+      {id: 'first', name: 'First Song', artists: [{name: 'Someone Else'}]},
+      {id: 'wanted', name: 'Midnight City', artists: [{name: 'M83'}]},
+      {id: 'third', name: 'Third Song', artists: [{name: 'Another Artist'}]}
+    ];
+
+    component.statsSearchQuery = 'm83';
+
+    expect(component.filteredTracks.map(track => track.id)).toEqual(['wanted']);
+    expect(component.getStatsRankIndex(component.filteredTracks[0], 'tracks')).toBe(1);
+
+    component.statsSearchQuery = 'midnight';
+    expect(component.filteredTracks.map(track => track.id)).toEqual(['wanted']);
+  });
+
+  it('searches Top Artists case-insensitively and can clear the query', () => {
+    component.topArtists = [
+      {id: 'one', name: 'Massive Attack'},
+      {id: 'two', name: 'Portishead'}
+    ];
+    component.statsSearchQuery = 'PORTIS';
+
+    expect(component.filteredArtists.map(artist => artist.id)).toEqual(['two']);
+    expect(component.isStatsSearchActive).toBeTrue();
+
+    component.clearStatsSearch();
+    expect(component.filteredArtists.length).toBe(2);
+    expect(component.isStatsSearchActive).toBeFalse();
+  });
 });
