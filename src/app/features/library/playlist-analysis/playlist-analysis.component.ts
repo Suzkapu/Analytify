@@ -34,6 +34,8 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
 
   // Analysis results
   uniqueTracksCount: number = 0;
+  uniqueArtistsCount: number = 0;
+  uniqueAlbumsCount: number = 0;
   totalDurationFormatted: string = '';
   averageDurationFormatted: string = '';
   explicitCount: number = 0;
@@ -311,6 +313,25 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
 
     const uniqueTracks = Array.from(tracksMap.values());
     this.uniqueTracksCount = uniqueTracks.length;
+
+    const uniqueArtistKeys = new Set<string>();
+    const uniqueAlbumKeys = new Set<string>();
+    uniqueTracks.forEach(track => {
+      const trackArtists = Array.isArray(track.artists) ? track.artists : [];
+      trackArtists.forEach((artist: any) => {
+        const key = artist?.id || artist?.name?.trim().toLowerCase();
+        if (key) uniqueArtistKeys.add(key);
+      });
+
+      if (trackArtists.length === 0 && track.artist_name) {
+        uniqueArtistKeys.add(track.artist_name.trim().toLowerCase());
+      }
+
+      const albumKey = track.album?.id || track.album?.name?.trim().toLowerCase();
+      if (albumKey) uniqueAlbumKeys.add(albumKey);
+    });
+    this.uniqueArtistsCount = uniqueArtistKeys.size;
+    this.uniqueAlbumsCount = uniqueAlbumKeys.size;
 
     if (uniqueTracks.length === 0) {
       this.totalDurationFormatted = '0 sec';

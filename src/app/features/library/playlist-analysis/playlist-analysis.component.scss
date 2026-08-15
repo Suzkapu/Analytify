@@ -54,7 +54,7 @@ app-playlist-analysis {
 
   .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 12px;
     margin-bottom: 12px;
   }
@@ -238,6 +238,7 @@ app-playlist-analysis {
 
   @media (max-width: 860px) {
     .analysis-sections { grid-template-columns: minmax(0, 1fr); }
+    .metrics-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
 
   @media (max-width: 768px) {

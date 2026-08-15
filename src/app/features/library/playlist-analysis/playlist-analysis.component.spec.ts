@@ -32,12 +32,48 @@ describe('PlaylistAnalysisComponent', () => {
     component.uniqueTracksCount = 42;
     component.totalDurationFormatted = '2 hr 8 min';
     component.averageDurationFormatted = '3:03';
+    component.uniqueArtistsCount = 18;
+    component.uniqueAlbumsCount = 24;
     fixture.detectChanges();
 
     const element = fixture.nativeElement as HTMLElement;
     expect(element.querySelector('.analysis-page > .page-shell')).not.toBeNull();
     expect(element.querySelector('.page-shell > .page-back-row')).not.toBeNull();
-    expect(element.querySelectorAll('.metric-card').length).toBe(3);
+    expect(element.querySelectorAll('.metric-card').length).toBe(5);
     expect(element.querySelectorAll('.analysis-sections > .column-card').length).toBe(2);
+  });
+
+  it('counts unique artists and albums without duplicating collaborative tracks', () => {
+    const sharedTrack = {
+      id: 'track-1',
+      name: 'Together',
+      duration_ms: 180000,
+      artists: [
+        {id: 'artist-1', name: 'One'},
+        {id: 'artist-2', name: 'Two'}
+      ],
+      album: {id: 'album-1', name: 'First', release_date: '2020-01-01'}
+    };
+    component.artists = [
+      {id: 'artist-1', name: 'One', tracks: [sharedTrack]},
+      {id: 'artist-2', name: 'Two', tracks: [sharedTrack]},
+      {
+        id: 'artist-3',
+        name: 'Three',
+        tracks: [{
+          id: 'track-2',
+          name: 'Solo',
+          duration_ms: 200000,
+          artists: [{id: 'artist-3', name: 'Three'}],
+          album: {id: 'album-2', name: 'Second', release_date: '2024-01-01'}
+        }]
+      }
+    ];
+
+    component.runAnalysis();
+
+    expect(component.uniqueTracksCount).toBe(2);
+    expect(component.uniqueArtistsCount).toBe(3);
+    expect(component.uniqueAlbumsCount).toBe(2);
   });
 });
