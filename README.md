@@ -110,7 +110,7 @@ Run the same headless unit-test gate used by GitHub Actions when Chrome is avail
 npm run verify:ci
 ```
 
-Every push runs this gate. Deployment steps run only for a successful `main` push or a manually dispatched workflow.
+Every push runs this gate and, after it succeeds, deploys that branch to the shared live server. Pull-request-only events remain verification/preview builds and never receive deployment credentials. A manually dispatched workflow can also deploy its selected branch.
 
 The application uses lazy-loaded vertical feature slices, shared layout/UI modules, and a root-only core infrastructure layer. See [Architecture](docs/architecture.md) for the directory map, dependency rules, and instructions for adding a page or service.
 

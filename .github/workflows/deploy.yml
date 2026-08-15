@@ -39,7 +39,9 @@ jobs:
         run: bash -n scripts/deploy.sh
 
       - name: Deploy verified build to Oracle Server
-        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+        # Every branch push represents a deployable live version. Pull-request
+        # events still verify only, so fork PRs never receive deployment secrets.
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         env:
           DEPLOY_SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           DEPLOY_USER: ${{ secrets.REMOTE_USER }}

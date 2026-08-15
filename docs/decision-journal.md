@@ -65,3 +65,21 @@ The daily pull script had grown to include credentials, allowlisting, Spotify tr
 ### Consequences
 
 Administrators can change schedules without redeploying the frontend, failures are visible per task and user, and new synchronization purposes can be added by registering a handler. The worker must remain running or be invoked frequently, and the admin migration must be applied before the page or queue can be used.
+
+## 2026-08-15 — Deploy every pushed branch to the shared live server
+
+Status: Accepted
+
+### Context
+
+Feature branches passed the complete GitHub Actions verification gate but only `main` pushes updated the Oracle server. That made an otherwise healthy branch available only through its preview deployment.
+
+### Decision
+
+- Deploy every successful repository `push` event, regardless of branch name, to the shared live target.
+- Keep `pull_request` events verification-only so untrusted fork runs cannot access deployment secrets.
+- Continue supporting manual deployment of the selected workflow branch.
+
+### Consequences
+
+The newest successfully deployed branch becomes the live site, so later branch deployments can replace one another even before merge. Only branches pushed by repository writers can use the protected deployment credentials.
