@@ -1,48 +1,57 @@
 const {createHash} = require('crypto');
 
-function createSharedPlaylistsTask({supabase, spotify}) {
-  function normalizeTrack(entry, index) {
-    const track = entry?.item || entry?.track || entry;
-    if (!track?.id || track.type === 'episode') return null;
-    const artists = (track.artists || []).filter(artist => artist?.id && artist?.name)
-      .map(artist => ({id: artist.id, name: artist.name}));
-    if (!track.name || artists.length === 0) return null;
-    return {
-      id: track.id,
-      uri: track.uri || `spotify:track:${track.id}`,
-      name: track.name,
-      artists,
-      albumName: track.album?.name || '',
-      imageUrl: track.album?.images?.[0]?.url || '',
-      spotifyUrl: track.external_urls?.spotify || '',
-      playlistIndex: index + 1,
-      durationMs: Number(track.duration_ms || 0),
-      explicit: !!track.explicit,
-      releaseDate: track.album?.release_date || ''
-    };
-  }
+function normalizeTrack(entry, index) {
+  const track = entry?.item || entry?.track || entry;
+  if (!track?.id || track.type === 'episode') return null;
+  const artists = (track.artists || []).filter(artist => artist?.id && artist?.name)
+    .map(artist => ({id: artist.id, name: artist.name}));
+  if (!track.name || artists.length === 0) return null;
+  return {
+    id: track.id,
+    uri: track.uri || `spotify:track:${track.id}`,
+    name: track.name,
+    artists,
+    albumName: track.album?.name || '',
+    imageUrl: track.album?.images?.[0]?.url || '',
+    spotifyUrl: track.external_urls?.spotify || '',
+    playlistIndex: index + 1,
+    durationMs: Number(track.duration_ms || 0),
+    explicit: !!track.explicit,
+    releaseDate: track.album?.release_date || ''
+  };
+}
 
-  async function loadPlaylist(accessToken, playlistId) {
-    const metadata = await spotify.api(`/playlists/${encodeURIComponent(playlistId)}`, accessToken);
-    const entries = [];
-    for (let offset = 0; ; offset += 100) {
-      const page = await spotify.api(`/playlists/${encodeURIComponent(playlistId)}/items?limit=100&offset=${offset}`, accessToken);
-      entries.push(...(page?.items || []));
-      if (!page?.next) break;
-    }
-    const seen = new Set();
-    const tracks = entries.map(normalizeTrack).filter(track => {
-      if (!track || seen.has(track.id)) return false;
-      seen.add(track.id);
-      return true;
-    }).map((track, index) => ({...track, playlistIndex: index + 1}));
-    return {
-      name: metadata?.name || 'Shared playlist',
-      description: metadata?.description || '',
-      imageUrl: metadata?.images?.[0]?.url || '',
-      tracks
-    };
+async function loadSharedPlaylistSource(spotify, accessToken, playlistId) {
+  const isLikedSongs = playlistId === 'fav';
+  const pageSize = isLikedSongs ? 50 : 100;
+  const metadata = isLikedSongs
+    ? null
+    : await spotify.api(`/playlists/${encodeURIComponent(playlistId)}`, accessToken);
+  const entries = [];
+  for (let offset = 0; ; offset += pageSize) {
+    const pathname = isLikedSongs
+      ? `/me/tracks?limit=${pageSize}&offset=${offset}`
+      : `/playlists/${encodeURIComponent(playlistId)}/items?limit=${pageSize}&offset=${offset}`;
+    const page = await spotify.api(pathname, accessToken);
+    entries.push(...(page?.items || []));
+    if (!page?.next) break;
   }
+  const seen = new Set();
+  const tracks = entries.map(normalizeTrack).filter(track => {
+    if (!track || seen.has(track.id)) return false;
+    seen.add(track.id);
+    return true;
+  }).map((track, index) => ({...track, playlistIndex: index + 1}));
+  return {
+    name: isLikedSongs ? 'Favourite Tracks' : metadata?.name || 'Shared playlist',
+    description: metadata?.description || '',
+    imageUrl: metadata?.images?.[0]?.url || '',
+    preservePublishedMetadata: isLikedSongs,
+    tracks
+  };
+}
+
+function createSharedPlaylistsTask({supabase, spotify}) {
 
   async function refreshOwnedShares(user, accessToken) {
     const {data: shares, error} = await supabase.from('playlist_shares').select('*')
@@ -56,7 +65,7 @@ function createSharedPlaylistsTask({supabase, spotify}) {
     });
     let refreshed = 0;
     for (const [sourceId, sourceShares] of bySource) {
-      const playlist = await loadPlaylist(accessToken, sourceId);
+      const playlist = await loadSharedPlaylistSource(spotify, accessToken, sourceId);
       const snapshotHash = createHash('sha256').update(JSON.stringify(playlist.tracks)).digest('hex');
       for (const share of sourceShares) {
         const changed = snapshotHash !== share.snapshot_hash;
@@ -72,8 +81,12 @@ function createSharedPlaylistsTask({supabase, spotify}) {
         }
         const {error: updateError} = await supabase.from('playlist_shares').update({
           playlist_name: playlist.name.slice(0, 100),
-          playlist_description: playlist.description.slice(0, 300),
-          playlist_image_url: playlist.imageUrl,
+          playlist_description: playlist.preservePublishedMetadata
+            ? share.playlist_description
+            : playlist.description.slice(0, 300),
+          playlist_image_url: playlist.preservePublishedMetadata
+            ? share.playlist_image_url
+            : playlist.imageUrl,
           snapshot_hash: snapshotHash,
           track_count: playlist.tracks.length,
           revision: changed ? Number(share.revision || 1) + 1 : Number(share.revision || 1),
@@ -134,4 +147,4 @@ function createSharedPlaylistsTask({supabase, spotify}) {
   };
 }
 
-module.exports = {createSharedPlaylistsTask};
+module.exports = {createSharedPlaylistsTask, loadSharedPlaylistSource};
