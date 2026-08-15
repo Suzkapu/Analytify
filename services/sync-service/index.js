@@ -1,4 +1,5 @@
 const {createClient} = require('@supabase/supabase-js');
+const ws = require('ws');
 
 const {loadConfig} = require('./config');
 const {createSpotifyClient} = require('./spotify-client');
@@ -8,7 +9,8 @@ const {createScheduler} = require('./scheduler');
 async function createService() {
   const config = loadConfig();
   const supabase = createClient(config.supabaseUrl, config.supabaseServiceRoleKey, {
-    auth: {persistSession: false, autoRefreshToken: false}
+    auth: {persistSession: false, autoRefreshToken: false},
+    realtime: {transport: ws}
   });
   const spotify = createSpotifyClient(config);
   const tasks = createTaskRegistry({supabase, spotify});
