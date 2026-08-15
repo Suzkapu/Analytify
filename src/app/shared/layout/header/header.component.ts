@@ -6,6 +6,7 @@ import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import {PlaylistShareAutoSyncService} from '@core/sharing/playlist-share-auto-sync.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {AdminService} from '@core/admin/admin.service';
 
 const console = createScopedLogger('Profile and Settings');
 
@@ -22,6 +23,7 @@ export class HeaderComponent implements OnInit {
   profilePicUrl: string | null = null;
   showSettingsDropdown = false;
   showWorkspaceDropdown = false;
+  isAdmin = false;
   
   // Modal states
   showClearDataModal = false;
@@ -36,12 +38,16 @@ export class HeaderComponent implements OnInit {
     private supabaseService: SupabaseService,
     private spotifyDataService: SpotifyDataService,
     private playlistShareAutoSync: PlaylistShareAutoSyncService,
+    private adminService: AdminService,
     private router: Router
   ) {}
 
   async ngOnInit() {
     this.playlistShareAutoSync.start();
-    await this.loadUserProfile();
+    // Re-check the active Supabase identity so an admin result is never reused
+    // after logout when a different user signs in within the same app session.
+    const [, isAdmin] = await Promise.all([this.loadUserProfile(), this.adminService.isAdmin(true)]);
+    this.isAdmin = isAdmin;
   }
 
 

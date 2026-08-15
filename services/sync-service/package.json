@@ -1,0 +1,14 @@
+{
+  "name": "analytify-sync-service",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Configurable task worker for Analytify background synchronization",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js --watch",
+    "once": "node index.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.108.1"
+  }
+}

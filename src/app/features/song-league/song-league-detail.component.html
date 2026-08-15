@@ -18,15 +18,15 @@
       <header class="league-detail-header">
         <button type="button" class="league-back" (click)="back()" aria-label="Back to leagues"><i class="pi pi-arrow-left"></i></button>
         <div>
-          <span class="league-eyebrow">{{ data.league.timezone }} · all-time standings</span>
+          <span class="league-eyebrow">{{ data.league.isDemo ? 'Admin demo · synthetic opponents' : data.league.timezone + ' · all-time standings' }}</span>
           <h1>{{ data.league.name }}</h1>
-          <p>{{ data.members.length }} members · one discovery every Friday · four scoring weeks per song</p>
-          <span class="picks-status-badge" [class.open]="isFriday && !alreadySubmittedToday">
-            <i class="pi" [ngClass]="isFriday && !alreadySubmittedToday ? 'pi-circle-fill' : 'pi-clock'"></i>
-            {{ isFriday && !alreadySubmittedToday ? 'Picks open' : 'Picks open again Friday' }}
+          <p>{{ data.members.length }} members · {{ data.league.isDemo ? 'play any day against three bots' : 'one discovery every Friday · four scoring weeks per song' }}</p>
+          <span class="picks-status-badge" [class.open]="isPickOpen">
+            <i class="pi" [ngClass]="isPickOpen ? 'pi-circle-fill' : 'pi-clock'"></i>
+            {{ pickStatusLabel }}
           </span>
         </div>
-        <button *ngIf="isOwner" type="button" class="league-secondary invite-button" (click)="createInvite()" [disabled]="isCreatingInvite">
+        <button *ngIf="isOwner && !data.league.isDemo" type="button" class="league-secondary invite-button" (click)="createInvite()" [disabled]="isCreatingInvite">
           <i class="pi" [ngClass]="isCreatingInvite ? 'pi-spin pi-spinner' : 'pi-user-plus'"></i> Invite
         </button>
       </header>
@@ -40,10 +40,10 @@
       <div *ngIf="successMessage" class="league-notice success" role="status"><i class="pi pi-check-circle"></i><span>{{ successMessage }}</span></div>
       <div *ngIf="playlistWarning" class="league-notice" role="status"><i class="pi pi-clock"></i><span>{{ playlistWarning }}</span></div>
 
-      <section *ngIf="isFriday && !alreadySubmittedToday" class="friday-composer-panel">
+      <section *ngIf="isPickOpen" class="friday-composer-panel">
         <div class="friday-composer-heading">
-          <strong>Choose this week’s discovery</strong>
-          <small>New to most opponents · nobody’s current Top 20</small>
+          <strong>{{ data.league.isDemo ? 'Choose your demo discovery' : 'Choose this week’s discovery' }}</strong>
+          <small>{{ data.league.isDemo ? 'The bots will score it immediately' : 'New to most opponents · nobody’s current Top 20' }}</small>
         </div>
         <div class="recommendation-composer">
           <form (ngSubmit)="findSongs()" class="league-search-form">
@@ -122,7 +122,7 @@
         </div>
       </section>
 
-      <section class="league-playlist-action">
+      <section *ngIf="!data.league.isDemo" class="league-playlist-action">
         <button *ngIf="!currentUserPlaylist?.spotifyPlaylistUrl" type="button" class="league-primary"
           (click)="createWeeklyPlaylist()" [disabled]="isCreatingPlaylist">
           <i class="pi" [ngClass]="isCreatingPlaylist ? 'pi-spin pi-spinner' : 'pi-spotify'"></i>

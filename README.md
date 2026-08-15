@@ -77,7 +77,7 @@ The existing `/callback` URLs remain required for the normal Supabase-backed log
 
 Shared Playlist claim links expire after seven days when unclaimed. Revocation removes the stored track snapshot and recipient download mapping immediately; a daily Supabase Cron job deletes expired unclaimed shares and 30-day revoked tombstones. Apply the migrations with `supabase db push` so the database-enforced retention policy and scheduled cleanup are active.
 
-Song League playlist automation requires the database migrations, the authenticated Edge Function, and its Spotify credentials:
+Song League playlist creation requires the database migrations, the authenticated Edge Function, and its Spotify credentials:
 
 ```bash
 supabase db push
@@ -85,7 +85,18 @@ supabase secrets set SPOTIFY_CLIENT_ID=... SPOTIFY_CLIENT_SECRET=...
 supabase functions deploy song-league-playlist-sync
 ```
 
-The existing daily pull job performs the Friday rollover even when nobody contributes and retries any playlist revision that missed its immediate refresh. Deploy the updated `scripts/daily-pull.js` after applying the playlist migration so its service-role RPC is available.
+The configurable sync service replaces the former `scripts/daily-pull.js`. Its independent tasks cover listening history, each Spotify stats range, Shared Playlist sources and copies, and Song League playlist rollover. Administrators configure schedules and enqueue manual runs from `/admin`; the worker uses the same queue for scheduled and manual work.
+
+Create a protected GitHub Actions secret named `ADMIN_SPOTIFY_IDS` containing the comma-separated Spotify IDs allowed to administer the site. Deployment writes it to the worker as a mode-0600 file, and the worker reconciles `app_admins` on every pass. The worker also needs the existing Supabase service-role and Spotify client credentials in its runtime environment.
+
+```bash
+cd services/sync-service
+npm install --omit=dev
+npm start                 # long-running worker
+# or: npm run once        # one scheduler pass, useful from cron
+```
+
+Apply `20260815120000_admin_control_plane.sql` before starting the worker. See [the sync-service guide](services/sync-service/README.md) for the systemd and migration rollout order.
 
 Run the complete compile and production-build verification before committing:
 

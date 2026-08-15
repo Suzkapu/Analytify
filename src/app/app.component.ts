@@ -4,6 +4,7 @@ import {NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Route
 import {filter} from 'rxjs/operators';
 import {take} from 'rxjs';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {SiteSettingsService} from '@core/settings/site-settings.service';
 
 const navigationLog = createScopedLogger('Navigation');
 
@@ -16,6 +17,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   title = 'Spotify Artists Stats';
   showScrollBtn = false;
   isInitialNavigationLoading: boolean;
+  siteAnnouncement = '';
 
   private readonly windowScrollHandler = () => this.onWindowScroll();
   private navigationStartedAt = 0;
@@ -23,9 +25,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   constructor(
     private swUpdate: SwUpdate,
     private router: Router,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private siteSettings: SiteSettingsService
   ) {
     this.isInitialNavigationLoading = !this.router.navigated;
+    void this.siteSettings.load().then(settings => {
+      this.siteAnnouncement = settings.announcement;
+    }).catch(() => {});
 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {

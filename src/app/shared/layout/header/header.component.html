@@ -38,6 +38,10 @@
       </span>
     </div>
     <div class="header-right">
+      <a *ngIf="isAdmin" routerLink="/admin" class="workspace-launcher-button admin-launcher-button"
+        routerLinkActive="active" title="Open administration" aria-label="Open administration">
+        <i class="pi pi-shield" aria-hidden="true"></i><span class="workspace-launcher-label">Admin</span>
+      </a>
       <div class="workspace-launcher-container">
         <button type="button" class="workspace-launcher-button" [class.active]="isWorkspaceRoute"
           (click)="toggleWorkspaceDropdown($event)" title="Open workspace"

@@ -3,6 +3,7 @@ import {ExtraOptions, RouterModule, Routes} from '@angular/router';
 
 import {redirectLoggedInGuard} from '@core/auth/redirect-logged-in.guard';
 import {spotifyAuthGuard} from '@core/auth/spotify-auth.guard';
+import {adminGuard} from '@core/admin/admin.guard';
 
 export const APP_ROUTES: Routes = [
   {
@@ -58,6 +59,12 @@ export const APP_ROUTES: Routes = [
     canActivate: [spotifyAuthGuard],
     loadChildren: () =>
       import('@features/insights/listening-history/listening-history.module').then(module => module.ListeningHistoryModule)
+  },
+  {
+    path: 'admin',
+    canActivate: [spotifyAuthGuard, adminGuard],
+    loadChildren: () =>
+      import('@features/admin/admin.module').then(module => module.AdminModule)
   },
   {
     path: 'song-league',

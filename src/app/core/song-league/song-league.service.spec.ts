@@ -68,6 +68,18 @@ describe('SongLeagueService', () => {
     expect(recommendationId).toBe('recommendation-id');
   });
 
+  it('uses the admin-only demo submission function for a demo league', async () => {
+    rpc.and.resolveTo({data: 'demo-recommendation-id', error: null});
+    const selected = track();
+
+    const recommendationId = await service.submitRecommendation('demo-league', selected, true);
+
+    expect(rpc).toHaveBeenCalledWith('submit_song_league_demo_recommendation', {
+      p_league_id: 'demo-league', p_track_id: selected.id
+    });
+    expect(recommendationId).toBe('demo-recommendation-id');
+  });
+
   it('accepts Spotify URLs and URIs but rejects unrelated links', async () => {
     await service.loadTrackFromSpotifyUrl('https://open.spotify.com/track/1234567890123456789012?si=test');
     expect(spotify.getSingleTrack).toHaveBeenCalledWith('1234567890123456789012');

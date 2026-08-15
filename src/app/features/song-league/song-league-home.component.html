@@ -9,7 +9,7 @@
         <p>Recommend one discovery every Friday. It earns permanent points from its position in your friends’ four-week Top Songs.</p>
       </div>
       <button type="button" class="league-primary" (click)="showCreateForm = !showCreateForm"
-        [disabled]="!auth.isBackupActive()">
+        [disabled]="!canCreateLeague">
         <i class="pi pi-plus-circle"></i> Create league
       </button>
     </header>
@@ -20,6 +20,11 @@
         <strong>Cloud Backup is required</strong>
         <p>Enable it from your profile menu so daily Top Songs can verify recommendations and points.</p>
       </div>
+    </section>
+
+    <section *ngIf="!allowLeagueCreation && !isAdmin" class="league-notice warning">
+      <i class="pi pi-pause"></i>
+      <div><strong>New leagues are paused</strong><p>An administrator has temporarily disabled new Song League creation.</p></div>
     </section>
 
     <section *ngIf="showCreateForm" class="league-create-card">
@@ -78,7 +83,7 @@
           <div class="league-card-icon"><i class="pi pi-chart-line"></i></div>
           <div>
             <span>{{ league.timezone }}</span>
-            <h3>{{ league.name }}</h3>
+            <h3>{{ league.name }} <small *ngIf="league.isDemo">Demo</small></h3>
             <p>Hosted by {{ league.ownerDisplayName }}</p>
           </div>
           <i class="pi pi-chevron-right"></i>

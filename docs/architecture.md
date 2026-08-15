@@ -15,6 +15,7 @@ src/app/
 │   └── sync/                # Cross-source synchronization workflows
 ├── features/                # Lazy-loaded vertical page slices
 │   ├── auth/
+│   ├── admin/              # Admin authorization and control-plane API
 │   ├── insights/
 │   ├── legal/
 │   ├── song-league/         # Persistent Friday recommendation game
@@ -29,6 +30,9 @@ supabase/
 ├── migrations/              # RLS, trusted scoring, and playlist state
 └── functions/
     └── song-league-playlist-sync/ # Authenticated multi-account Spotify playlist refresh
+
+services/
+└── sync-service/           # Task registry, scheduler, Spotify workers, and queue audit
 ```
 
 ## Dependency rules
@@ -51,6 +55,12 @@ shared ────> core (only when shared layout needs application state)
 - Route modules are lazy loaded so a page is downloaded only when its URL is opened.
 - Use the configured `@core`, `@features`, `@shared`, and `@env` aliases instead of fragile multi-level relative imports.
 - `npm run architecture:check` enforces these dependency directions and is included in `npm run verify`.
+
+## Background synchronization
+
+The background worker is a separate service-role process. Its task registry isolates listening history, short-, medium-, and long-term stats, Shared Playlists, and Song League playlists. Scheduling configuration and run history live in Supabase; the Angular admin page only calls owner-checked RPCs and never receives service-role or Spotify client credentials.
+
+Manual runs and scheduled runs both enter `sync_job_runs`. A worker atomically claims queued rows, invokes the registered task, and updates `sync_task_state`, making retries and failures visible in the admin audit trail. Administrator identities are reconciled from the protected `ADMIN_SPOTIFY_IDS` deployment secret.
 
 ## Adding a page
 

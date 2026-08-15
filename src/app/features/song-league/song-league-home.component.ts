@@ -4,6 +4,8 @@ import {Router} from '@angular/router';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {SongLeague} from '@core/song-league/song-league.models';
 import {SongLeagueService} from '@core/song-league/song-league.service';
+import {SiteSettingsService} from '@core/settings/site-settings.service';
+import {AdminService} from '@core/admin/admin.service';
 
 @Component({
   selector: 'app-song-league-home',
@@ -19,15 +21,29 @@ export class SongLeagueHomeComponent implements OnInit {
   inviteUrl = '';
   inviteCopied = false;
   createdLeagueId = '';
+  allowLeagueCreation = true;
+  isAdmin = false;
 
   constructor(
     public auth: SpotifyAuthService,
     private songLeague: SongLeagueService,
+    private siteSettings: SiteSettingsService,
+    private admin: AdminService,
     private router: Router
   ) {}
 
   async ngOnInit(): Promise<void> {
+    const [settings, isAdmin] = await Promise.all([
+      this.siteSettings.load().catch(() => ({announcement: '', allowSongLeagueCreation: true})),
+      this.admin.isAdmin()
+    ]);
+    this.allowLeagueCreation = settings.allowSongLeagueCreation;
+    this.isAdmin = isAdmin;
     await this.load();
+  }
+
+  get canCreateLeague(): boolean {
+    return this.auth.isBackupActive() && (this.allowLeagueCreation || this.isAdmin);
   }
 
   async load(): Promise<void> {

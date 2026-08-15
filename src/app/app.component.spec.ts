@@ -4,6 +4,7 @@ import {SwUpdate} from '@angular/service-worker';
 import {NavigationEnd, Router} from '@angular/router';
 import {Subject} from 'rxjs';
 import {AppComponent} from './app.component';
+import {SiteSettingsService} from '@core/settings/site-settings.service';
 
 describe('AppComponent', () => {
   const routerEvents = new Subject<NavigationEnd>();
@@ -22,6 +23,10 @@ describe('AppComponent', () => {
           navigated: false,
           events: routerEvents.asObservable()
         }
+      },
+      {
+        provide: SiteSettingsService,
+        useValue: {load: () => Promise.resolve({announcement: '', allowSongLeagueCreation: true})}
       }
     ]
   }));

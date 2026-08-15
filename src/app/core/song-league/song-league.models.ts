@@ -6,6 +6,7 @@ export interface SongLeague {
   ownerDisplayName: string;
   ownerImageUrl: string;
   playlistRevision: number;
+  isDemo: boolean;
   createdAt: string;
 }
 

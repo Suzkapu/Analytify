@@ -156,10 +156,11 @@ export class SongLeagueService {
     return await firstValueFrom(this.spotify.getSingleTrack(trackId));
   }
 
-  async submitRecommendation(leagueId: string, track: SongLeagueTrack): Promise<string> {
+  async submitRecommendation(leagueId: string, track: SongLeagueTrack, isDemo = false): Promise<string> {
     if (!track?.id) throw new Error('Choose a Spotify track first.');
     await this.supabase.syncTracks([track]);
-    const {data, error} = await this.supabase.client.rpc('submit_song_league_recommendation', {
+    const {data, error} = await this.supabase.client.rpc(
+      isDemo ? 'submit_song_league_demo_recommendation' : 'submit_song_league_recommendation', {
       p_league_id: leagueId,
       p_track_id: track.id
     });
@@ -242,6 +243,7 @@ export class SongLeagueService {
       ownerDisplayName: row.owner_display_name || 'Spotify user',
       ownerImageUrl: row.owner_image_url || '',
       playlistRevision: Number(row.playlist_revision || 0),
+      isDemo: !!row.is_demo,
       createdAt: row.created_at
     };
   }

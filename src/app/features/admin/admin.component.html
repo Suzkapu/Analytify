@@ -1,0 +1,62 @@
+<app-header mobileTitle="Admin"></app-header>
+
+<main class="admin-page">
+  <div class="admin-shell">
+    <header class="admin-hero">
+      <div><span>Private control plane</span><h1>Analytify Admin</h1><p>Website controls, per-user background synchronization, and safe demo tools.</p></div>
+      <button type="button" class="admin-secondary" (click)="load()" [disabled]="isLoading"><i class="pi pi-refresh" [class.pi-spin]="isLoading"></i> Refresh</button>
+    </header>
+
+    <div *ngIf="errorMessage" class="admin-notice error" role="alert"><i class="pi pi-exclamation-circle"></i>{{ errorMessage }}</div>
+    <div *ngIf="successMessage" class="admin-notice success" role="status"><i class="pi pi-check-circle"></i>{{ successMessage }}</div>
+    <section *ngIf="isLoading" class="admin-loading"><i class="pi pi-spin pi-spinner"></i><span>Loading private controls…</span></section>
+
+    <ng-container *ngIf="!isLoading">
+      <section class="admin-panel site-settings-panel">
+        <div class="admin-section-heading"><div><span>Website</span><h2>Site settings</h2></div><i class="pi pi-sliders-h"></i></div>
+        <label class="admin-field wide"><span>Announcement banner</span><textarea [(ngModel)]="siteSettings.announcement" maxlength="500" rows="3" placeholder="Leave empty to hide the banner"></textarea><small>{{ siteSettings.announcement.length }}/500</small></label>
+        <label class="admin-switch-row"><span><strong>Allow new Song Leagues</strong><small>Existing leagues and admin demo leagues continue working when disabled.</small></span><input type="checkbox" [(ngModel)]="siteSettings.allowSongLeagueCreation"></label>
+        <button type="button" class="admin-primary" (click)="saveSiteSettings()" [disabled]="isSavingSite"><i class="pi" [ngClass]="isSavingSite ? 'pi-spin pi-spinner' : 'pi-save'"></i>{{ isSavingSite ? 'Saving…' : 'Save website settings' }}</button>
+      </section>
+
+      <section class="admin-panel demo-panel">
+        <div class="admin-section-heading"><div><span>Song League lab</span><h2>Play against demo bots</h2><p>Creates a disposable league with three synthetic opponents, recommendations, and scores.</p></div><i class="pi pi-bolt"></i></div>
+        <div class="demo-controls"><input type="text" [(ngModel)]="demoName" maxlength="80" aria-label="Demo league name"><button type="button" class="admin-primary" (click)="createDemoLeague()" [disabled]="isCreatingDemo"><i class="pi" [ngClass]="isCreatingDemo ? 'pi-spin pi-spinner' : 'pi-play'"></i>{{ isCreatingDemo ? 'Creating…' : 'Create playable demo' }}</button></div>
+      </section>
+
+      <section class="admin-users-section">
+        <div class="admin-section-heading"><div><span>Reusable sync service</span><h2>User schedules</h2><p>Every enabled data source is an independent task with its own interval.</p></div><span class="admin-count">{{ users.length }}</span></div>
+        <div class="admin-user-grid">
+          <article *ngFor="let user of users; trackBy: trackUser" class="admin-user-card" [class.disabled]="!user.enabled">
+            <header><span class="admin-avatar"><img *ngIf="user.profilePicUrl" [src]="user.profilePicUrl" alt=""><i *ngIf="!user.profilePicUrl" class="pi pi-user"></i></span><div><h3>{{ user.displayName }}</h3><p>{{ user.spotifyId }}</p></div><label class="compact-switch"><input type="checkbox" [(ngModel)]="user.enabled"><span></span></label></header>
+            <div class="user-health"><span [class.ok]="user.backupActive"><i class="pi" [ngClass]="user.backupActive ? 'pi-cloud' : 'pi-cloud-upload'"></i>{{ user.backupActive ? 'Cloud Backup on' : 'Cloud Backup off' }}</span><span [class.ok]="user.hasRefreshToken"><i class="pi pi-key"></i>{{ user.hasRefreshToken ? 'Spotify connected' : 'Reconnect needed' }}</span></div>
+            <label class="admin-field"><span>Timezone</span><input type="text" [(ngModel)]="user.timezone" placeholder="Europe/Vienna"></label>
+
+            <div class="task-settings">
+              <div><input type="checkbox" [(ngModel)]="user.historyEnabled" aria-label="Enable listening history"><span><strong>Listening history</strong><small>Every <input type="number" [(ngModel)]="user.historyIntervalMinutes" min="15" max="10080" aria-label="Listening history interval in minutes"> minutes</small></span></div>
+              <div><input type="checkbox" [(ngModel)]="user.shortTermEnabled" aria-label="Enable short-term stats"><span><strong>Short-term stats</strong><small>Every <input type="number" [(ngModel)]="user.shortTermIntervalHours" min="1" max="720" aria-label="Short-term stats interval in hours"> hours</small></span></div>
+              <div><input type="checkbox" [(ngModel)]="user.mediumTermEnabled" aria-label="Enable medium-term stats"><span><strong>Medium-term stats</strong><small>Every <input type="number" [(ngModel)]="user.mediumTermIntervalHours" min="1" max="2160" aria-label="Medium-term stats interval in hours"> hours</small></span></div>
+              <div><input type="checkbox" [(ngModel)]="user.longTermEnabled" aria-label="Enable long-term stats"><span><strong>Long-term stats</strong><small>Every <input type="number" [(ngModel)]="user.longTermIntervalHours" min="1" max="2160" aria-label="Long-term stats interval in hours"> hours</small></span></div>
+              <div><input type="checkbox" [(ngModel)]="user.songLeaguePlaylistsEnabled" aria-label="Enable Song League playlists"><span><strong>Song League playlists</strong><small>Every <input type="number" [(ngModel)]="user.songLeaguePlaylistIntervalMinutes" min="15" max="10080" aria-label="Song League playlist interval in minutes"> minutes</small></span></div>
+              <div><input type="checkbox" [(ngModel)]="user.sharedPlaylistsEnabled" aria-label="Enable Shared Playlists"><span><strong>Shared playlists</strong><small>Every <input type="number" [(ngModel)]="user.sharedPlaylistIntervalMinutes" min="15" max="10080" aria-label="Shared playlist interval in minutes"> minutes</small></span></div>
+            </div>
+
+            <p *ngIf="user.lastSuccessAt" class="last-run">Last success {{ user.lastSuccessAt | date:'medium' }}</p>
+            <p *ngIf="user.lastError" class="user-error">{{ user.lastError }}</p>
+            <footer><button type="button" class="admin-secondary" (click)="saveUser(user)" [disabled]="isUserBusy(user.userId)"><i class="pi pi-save"></i> Save</button><button type="button" class="admin-primary" (click)="runUserNow(user)" [disabled]="isUserBusy(user.userId) || !user.backupActive || !user.hasRefreshToken"><i class="pi pi-play"></i> Run enabled tasks</button></footer>
+          </article>
+        </div>
+      </section>
+
+      <section class="admin-panel runs-panel">
+        <div class="admin-section-heading"><div><span>Audit trail</span><h2>Recent runs</h2></div><button type="button" class="admin-icon-button" (click)="refreshRuns()" [disabled]="isRefreshingRuns" aria-label="Refresh recent runs"><i class="pi pi-refresh" [class.pi-spin]="isRefreshingRuns"></i></button></div>
+        <div *ngIf="!runs.length" class="admin-empty">No jobs have been queued yet.</div>
+        <div *ngIf="runs.length" class="run-list">
+          <article *ngFor="let run of runs; trackBy: trackRun"><span class="run-status" [ngClass]="run.status"><i class="pi" [ngClass]="run.status === 'running' ? 'pi-spin pi-spinner' : run.status === 'succeeded' ? 'pi-check' : run.status === 'failed' ? 'pi-times' : 'pi-clock'"></i></span><div><strong>{{ taskLabel(run.taskKey) }}</strong><small>{{ run.displayName }} · {{ run.triggerType }} · {{ run.requestedAt | date:'short' }}</small><em *ngIf="run.error">{{ run.error }}</em></div><b>{{ run.status }}</b></article>
+        </div>
+      </section>
+    </ng-container>
+  </div>
+</main>
+
+<app-footer></app-footer>

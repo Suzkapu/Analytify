@@ -1,6 +1,7 @@
 import {APP_ROUTES, ROUTER_OPTIONS} from './app-routing.module';
 import {redirectLoggedInGuard} from '@core/auth/redirect-logged-in.guard';
 import {spotifyAuthGuard} from '@core/auth/spotify-auth.guard';
+import {adminGuard} from '@core/admin/admin.guard';
 
 describe('application routes', () => {
   it('preserves every public URL and the fallback route', () => {
@@ -14,12 +15,19 @@ describe('application routes', () => {
       'analysis',
       'stats',
       'history',
+      'admin',
       'song-league',
       'shared-playlists',
       'legal',
       'compare-room',
       '**'
     ]);
+  });
+
+  it('requires both login and administrator authorization for the admin route', () => {
+    const route = APP_ROUTES.find(candidate => candidate.path === 'admin');
+    expect(route?.loadChildren).toEqual(jasmine.any(Function));
+    expect(route?.canActivate).toEqual([spotifyAuthGuard, adminGuard]);
   });
 
   it('lazy-loads and protects every authenticated feature', () => {

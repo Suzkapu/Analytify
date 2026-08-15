@@ -10,6 +10,9 @@
 </div>
 
 <a class="skip-link" href="#app-content">Skip to main content</a>
+<div *ngIf="siteAnnouncement" class="site-announcement" role="status">
+  <i class="pi pi-megaphone" aria-hidden="true"></i><span>{{ siteAnnouncement }}</span>
+</div>
 <div id="app-content" class="app-route-content" tabindex="-1">
   <router-outlet/>
 </div>

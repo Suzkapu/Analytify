@@ -114,7 +114,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     this.successMessage = '';
     this.playlistWarning = '';
     try {
-      await this.songLeague.submitRecommendation(this.leagueId, this.selectedTrack);
+      await this.songLeague.submitRecommendation(this.leagueId, this.selectedTrack, !!this.dashboard?.league.isDemo);
       const submittedName = this.selectedTrack.name;
       this.songQuery = '';
       this.selectedTrack = null;
@@ -250,6 +250,22 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     return this.dashboard.recommendations.some(item =>
       item.recommenderUserId === this.currentUserId && this.sameLeagueDay(item.submittedAt, new Date())
     );
+  }
+
+  get alreadySubmittedDemoPick(): boolean {
+    if (!this.dashboard?.league.isDemo) return false;
+    return this.dashboard.recommendations.some(item => item.recommenderUserId === this.currentUserId);
+  }
+
+  get isPickOpen(): boolean {
+    return this.dashboard?.league.isDemo
+      ? !this.alreadySubmittedDemoPick
+      : this.isFriday && !this.alreadySubmittedToday;
+  }
+
+  get pickStatusLabel(): string {
+    if (this.dashboard?.league.isDemo) return this.isPickOpen ? 'Demo pick open' : 'Demo pick complete';
+    return this.isPickOpen ? 'Picks open' : 'Picks open again Friday';
   }
 
   get isOwner(): boolean {
