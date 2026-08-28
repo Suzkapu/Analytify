@@ -26,14 +26,12 @@ ADMIN_SPOTIFY_IDS
 
 ## Rollout
 
-1. Apply `supabase/migrations/20260815120000_admin_control_plane.sql` and `20260816090000_personal_spotify_guest_access.sql`.
-2. Generate one key with `openssl rand -base64 32` and add it as the `SPOTIFY_TOKEN_ENCRYPTION_KEY` GitHub Actions and Supabase Function secret.
-3. Deploy both `spotify-credentials` and `song-league-playlist-sync` Edge Functions.
-4. Enable Anonymous Sign-Ins in Supabase Authentication for personal-app cloud opt-in.
-5. Add the `ADMIN_SPOTIFY_IDS` GitHub Actions secret.
-6. Deploy and install production dependencies in this directory.
-7. Stop the old daily-pull cron entry.
-8. Start this service with `npm start`, or invoke `npm run once` from a frequent cron entry.
+1. Generate one key with `openssl rand -base64 32` and store it as the `SPOTIFY_TOKEN_ENCRYPTION_KEY` GitHub Actions secret.
+2. Add `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`, `SPOTIFY_CLIENT_SECRET`, and `ADMIN_SPOTIFY_IDS` as protected GitHub Actions secrets.
+3. Enable Anonymous Sign-Ins in Supabase Authentication for personal-app cloud opt-in.
+4. Push the release. The deployment gate applies pending migrations, synchronizes the Edge Function secrets, publishes both functions, deploys Oracle, and checks the live endpoints.
+5. Stop the old daily-pull cron entry if it invokes the removed frontend script rather than this directory's compatibility entrypoint.
+6. Start this service with `npm start`, or invoke `npm run once` from a frequent cron entry.
 
 Example systemd command:
 

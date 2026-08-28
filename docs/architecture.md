@@ -93,6 +93,6 @@ Shared page state, metric card, and section-heading components live in `shared/u
 npm run verify
 ```
 
-This performs the architecture rules, playlist-share retention contract check, application type checking, test-source type checking, and the optimized production build. Use `npm run test:ci` for one headless unit-test run with coverage, or `npm run verify:ci` for the complete GitHub Actions gate. The gate runs on every push and pull request; every successful branch push deploys to the shared live server, while pull requests remain verification-only.
+This performs the architecture rules, playlist-share retention contract check, application type checking, test-source type checking, and the optimized production build. Use `npm run test:ci` for one headless unit-test run with coverage, or `npm run verify:ci` for the complete GitHub Actions gate. The gate runs on every push and pull request. Push deployments apply pending Supabase migrations, synchronize Edge Function secrets, deploy the functions, publish the Oracle application and worker, and finish with live endpoint checks; pull requests remain verification-only.
 
 Product and architecture choices that constrain future changes are recorded in the [decision journal](decision-journal.md).

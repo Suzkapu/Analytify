@@ -18,6 +18,10 @@ jobs:
       # Keeping it here also prevents a malformed REMOTE_HOST secret from making
       # ssh interpret a URL or other value as a DNS name.
       DEPLOY_HOST: analytify.dynv6.net
+      SUPABASE_PROJECT_REF: tmmhylpexbubyznlizfs
+      SPOTIFY_CLIENT_ID: 9b03c8eb85dd4df483c3ae097e6c39f0
+      SUPABASE_URL: https://tmmhylpexbubyznlizfs.supabase.co
+      SUPABASE_PUBLISHABLE_KEY: sb_publishable_hMg6wOlMTQai9ipA4ZlxzQ_rawnrTD-
 
     steps:
       - name: Checkout repository
@@ -36,7 +40,23 @@ jobs:
         run: npm run verify:ci
 
       - name: Validate deployment script
-        run: bash -n scripts/deploy.sh
+        run: bash -n scripts/deploy.sh scripts/deploy-supabase.sh
+
+      - name: Set up Supabase CLI
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        uses: supabase/setup-cli@3c2f5e2ae34c34e428e8e206e2c4d21fa2d20fbf # v2.1.1
+        with:
+          version: 2.84.2
+          github-token: ${{ github.token }}
+
+      - name: Deploy Supabase schema and functions
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          SPOTIFY_TOKEN_ENCRYPTION_KEY: ${{ secrets.SPOTIFY_TOKEN_ENCRYPTION_KEY }}
+        run: bash scripts/deploy-supabase.sh
 
       - name: Deploy verified build to Oracle Server
         # Every branch push represents a deployable live version. Pull-request
@@ -49,3 +69,9 @@ jobs:
           ADMIN_SPOTIFY_IDS: ${{ secrets.ADMIN_SPOTIFY_IDS }}
           SPOTIFY_TOKEN_ENCRYPTION_KEY: ${{ secrets.SPOTIFY_TOKEN_ENCRYPTION_KEY }}
         run: bash scripts/deploy.sh
+
+      - name: Verify live deployment
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        env:
+          APP_URL: https://analytify.dynv6.net
+        run: node scripts/verify-live-deployment.mjs

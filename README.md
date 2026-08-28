@@ -101,7 +101,7 @@ Enable **Anonymous Sign-Ins** in Supabase Authentication before personal-app use
 
 The configurable sync service replaces the former `scripts/daily-pull.js`. Its independent tasks cover listening history, each Spotify stats range, Shared Playlist sources and copies, and Song League playlist rollover. Administrators configure schedules and enqueue manual runs from `/admin`; the worker uses the same queue for scheduled and manual work.
 
-Create protected GitHub Actions secrets named `ADMIN_SPOTIFY_IDS` and `SPOTIFY_TOKEN_ENCRYPTION_KEY`. The latter must be a stable base64-encoded 32-byte key, which can be generated once with `openssl rand -base64 32`; losing or rotating it without a migration makes stored refresh tokens unreadable. Deployment writes both values to mode-0600 worker files. The same encryption key must be configured as a Supabase Edge Function secret.
+Create protected GitHub Actions secrets named `ADMIN_SPOTIFY_IDS`, `SPOTIFY_TOKEN_ENCRYPTION_KEY`, `SPOTIFY_CLIENT_SECRET`, `SUPABASE_ACCESS_TOKEN`, and `SUPABASE_DB_PASSWORD`. The encryption key must be a stable base64-encoded 32-byte key, which can be generated once with `openssl rand -base64 32`; losing or rotating it without a migration makes stored refresh tokens unreadable. Deployment applies pending Supabase migrations, synchronizes the Spotify and encryption secrets, publishes both Edge Functions, writes the admin and encryption values to mode-0600 worker files, and only succeeds after live Oracle and Supabase smoke checks pass.
 
 ```bash
 cd services/sync-service
@@ -110,7 +110,7 @@ npm start                 # long-running worker
 # or: npm run once        # one scheduler pass, useful from cron
 ```
 
-Apply `20260815120000_admin_control_plane.sql` and `20260816090000_personal_spotify_guest_access.sql` before starting the worker. At startup the worker encrypts existing hosted-app tokens and erases them from the deprecated column; first-use migration remains as a safe fallback. See [the sync-service guide](services/sync-service/README.md) for the rollout order.
+The deployment workflow applies `20260815120000_admin_control_plane.sql`, `20260816090000_personal_spotify_guest_access.sql`, and later pending migrations before publishing the application. At startup the worker encrypts existing hosted-app tokens and erases them from the deprecated column; first-use migration remains as a safe fallback. Enable Anonymous Sign-Ins once in the Supabase Authentication settings for personal-app users who opt into cloud features. See [the sync-service guide](services/sync-service/README.md) for the rollout order.
 
 Run the complete compile and production-build verification before committing:
 

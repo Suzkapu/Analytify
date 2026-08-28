@@ -5,6 +5,8 @@ const personalSpotifyMigration = readFileSync('supabase/migrations/2026081609000
 const schema = readFileSync('supabase_schema.md', 'utf8');
 const workflow = readFileSync('.github/workflows/deploy.yml', 'utf8');
 const deployment = readFileSync('scripts/deploy.sh', 'utf8');
+const supabaseDeployment = readFileSync('scripts/deploy-supabase.sh', 'utf8');
+const liveVerification = readFileSync('scripts/verify-live-deployment.mjs', 'utf8');
 const registry = readFileSync('services/sync-service/task-registry.js', 'utf8');
 
 const checks = [
@@ -14,6 +16,11 @@ const checks = [
   ['consolidated schema contains encrypted Spotify credentials', schema.includes('CREATE TABLE IF NOT EXISTS public.spotify_credentials')],
   ['GitHub deployment reads protected admin IDs', workflow.includes('secrets.ADMIN_SPOTIFY_IDS')],
   ['GitHub deployment reads the token-encryption key', workflow.includes('secrets.SPOTIFY_TOKEN_ENCRYPTION_KEY')],
+  ['GitHub deployment authenticates to Supabase', workflow.includes('secrets.SUPABASE_ACCESS_TOKEN') && workflow.includes('secrets.SUPABASE_DB_PASSWORD')],
+  ['GitHub deployment configures the hosted Spotify secret', workflow.includes('secrets.SPOTIFY_CLIENT_SECRET')],
+  ['Supabase deployment applies migrations', supabaseDeployment.includes('supabase db push')],
+  ['Supabase deployment publishes both Edge Functions', ['spotify-credentials', 'song-league-playlist-sync'].every(name => supabaseDeployment.includes(`functions deploy ${name}`))],
+  ['deployment verifies both Oracle and Supabase', workflow.includes('verify-live-deployment.mjs') && liveVerification.includes('Oracle and Supabase live deployment checks passed.')],
   ['deployment writes the protected admin allowlist', deployment.includes('.admin-spotify-ids')],
   ['deployment writes the protected token-encryption key', deployment.includes('.spotify-token-encryption-key')],
   ['the old monolithic daily-pull script is removed', !existsSync('scripts/daily-pull.js')],
