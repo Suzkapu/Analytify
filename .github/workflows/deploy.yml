@@ -48,7 +48,7 @@ jobs:
       - name: Start isolated Supabase loading-test stack
         run: >-
           supabase start --workdir integration
-          -x studio,imgproxy,storage-api,realtime,gotrue,mailpit,postgres-meta,edge-runtime,logflare,vector,supavisor
+          -x studio,imgproxy,storage-api,realtime,mailpit,postgres-meta,edge-runtime,logflare,vector,supavisor
 
       - name: Export isolated Supabase browser-test settings
         run: |
