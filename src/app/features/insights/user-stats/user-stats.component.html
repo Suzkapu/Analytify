@@ -142,10 +142,8 @@
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="isLoading" class="page-loading-state" role="status">
-    <i class="pi pi-spin pi-spinner"></i>
-    <h3>Loading your Spotify insights…</h3>
-  </div>
+  <app-page-state *ngIf="isLoading" [loading]="true" [compact]="true" icon="pi-spinner"
+    title="Loading your Spotify insights…"></app-page-state>
 
   <!-- Loaded Views -->
   <div *ngIf="!isLoading">

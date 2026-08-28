@@ -54,6 +54,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   highDebutArtists = new Set<string>();
   readonly highDebutRankLimit = 10;
   readonly hotMoverDisplayLimit = 10;
+  readonly newEntryBaselineRank = 101;
   private historyWriteQueue: Promise<void> = Promise.resolve();
   private statsLoadSequence = 0;
   private historyLoadSequence = 0;
@@ -80,11 +81,18 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     private supabaseService: SupabaseService
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() {
+    // Date selectors come from local metadata first and must not wait for the
+    // broad account sync or the current Spotify ranking request.
+    this.loadHistoryData();
     if (this.authService.isAuthenticated()) {
-      await this.authService.ensureInitialSync();
+      void this.authService.ensureInitialSync().then(() => {
+        if (this.snapshotOptions.length === 0 && this.authService.isBackupActive()) {
+          this.loadHistoryData();
+        }
+      }).catch(() => {});
     }
-    this.loadStats();
+    void this.loadStats();
   }
 
   ngOnDestroy() {
@@ -628,13 +636,17 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
       items.forEach((item, idx) => {
         const trend = this.getTrend(item, idx, category);
-        const isHighDebut = trend.type === 'new' && idx < this.highDebutRankLimit;
+        const isNewEntry = trend.type === 'new';
+        const isHighDebut = isNewEntry && idx < this.highDebutRankLimit;
         const isStrongRise = trend.type === 'up' && trend.diff !== undefined && trend.diff >= 15;
-        if (!isHighDebut && !isStrongRise) return;
+        if (!isNewEntry && !isStrongRise) return;
 
-        // A debut is treated as a move from immediately outside the visible list.
-        // This gives every candidate one comparable score for the shared flame pool.
-        const score = isHighDebut ? items.length - idx : trend.diff || 0;
+        // Spotify Top Songs uses 100 positions. Treat a debut as moving from
+        // the first position below that list so its gain is directly
+        // comparable with an existing entry's previous-rank minus new-rank.
+        const score = isNewEntry
+          ? this.newEntryBaselineRank - (idx + 1)
+          : trend.diff || 0;
         candidates.push({item, isHighDebut, score, rank: idx});
       });
 
@@ -853,7 +865,10 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       if (!isCurrentLoad()) return;
 
       // 2. Perform sync in background
-      const ready = this.authService.initialSyncPromise || Promise.resolve();
+      // The locally cached backup flag is sufficient to begin this lightweight
+      // metadata query. Initial account hydration continues independently and
+      // ngOnInit retries once if it discovers backup was enabled.
+      const ready = Promise.resolve();
       ready.then(() => {
         if (!isCurrentLoad()) return;
 
@@ -931,34 +946,9 @@ export class UserStatsComponent implements OnInit, OnDestroy {
               if (!isCurrentLoad()) return;
             }
 
-            // Background load of all detailed snapshots to populate local database fully
-            const hasUnloaded = this.historyData.some(d => d.isLoaded !== true);
-            if (hasUnloaded) {
-              console.log('[Stats] Background loading all detailed snapshots from cloud...');
-              this.supabaseService.loadAllStatsSnapshots(supabaseUserId, range).then(async (fullSnapshots) => {
-                if (!isCurrentLoad()) return;
-
-                let anyUpdated = false;
-                for (const fullSnap of fullSnapshots) {
-                  if (!isCurrentLoad()) return;
-
-                  const idx = this.historyData.findIndex(d => 
-                    (d.snapshotDate || toDateKey(d.timestamp)) === (fullSnap.snapshotDate || toDateKey(fullSnap.timestamp))
-                  );
-                  if (idx !== -1 && this.historyData[idx].isLoaded !== true) {
-                    this.historyData[idx] = { ...this.historyData[idx], ...fullSnap, isLoaded: true };
-                    await this.storageService.saveStatsHistory({ ...this.historyData[idx], userId }).catch(() => {});
-                    anyUpdated = true;
-                  }
-                }
-                if (anyUpdated) {
-                  console.log('[Stats] Background loaded detailed snapshots successfully.');
-                  this.calculateHotMovers();
-                }
-              }).catch(err => {
-                console.warn('[Stats] Failed to background load detailed snapshots:', err);
-              });
-            }
+            // Full snapshot payloads stay lazy. Only the selected and compare
+            // snapshots are loaded by ensureSnapshotLoaded(), which prevents
+            // hundreds of Top-100 joins and IndexedDB writes on page entry.
           }).catch(err => {
             console.warn('[Stats] Failed to load history snapshots from Supabase:', err);
           });
@@ -1237,42 +1227,48 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
     const hasUnloaded = this.historyData.some(d => d.isLoaded !== true);
     const supabaseUserId = this.authService.getSupabaseUserId();
+    let cloudPoints: any[] = [];
 
     if (hasUnloaded && this.authService.isBackupActive() && supabaseUserId) {
       this.isLoadingTrendData = true;
       try {
-        const userId = this.authService.getUserId() || 'anonymous';
-        console.log(`[Stats] Trend popup clicked, but some snapshots are not loaded. Fetching all snapshot details from cloud...`);
-        const fullSnapshots = await this.supabaseService.loadAllStatsSnapshots(supabaseUserId, range);
+        const identities = category === 'tracks'
+          ? this.getTrackIdentityIds(item)
+          : category === 'artists'
+            ? [item?.id]
+            : [typeof item === 'string' ? item : item?.name];
+        cloudPoints = await this.supabaseService.loadStatsItemTrend(
+          supabaseUserId,
+          range,
+          category,
+          identities
+        );
         if (range !== this.selectedRange || !this.showTrendPopup) return;
-        
-        const toDateKey = toDailySnapshotDateKey;
-        // Update historyData in-place and save to IndexedDB
-        for (const fullSnap of fullSnapshots) {
-          const idx = this.historyData.findIndex(d => 
-            (d.snapshotDate || toDateKey(d.timestamp)) === (fullSnap.snapshotDate || toDateKey(fullSnap.timestamp))
-          );
-          if (idx !== -1) {
-            this.historyData[idx] = { ...this.historyData[idx], ...fullSnap, isLoaded: true };
-            await this.storageService.saveStatsHistory({ ...this.historyData[idx], userId }).catch(() => {});
-          }
-        }
-        this.calculateHotMovers();
       } catch (err) {
-        console.error('Failed to load all stats snapshots for trend popup:', err);
+        console.error('Failed to load the item trend from cloud:', err);
       } finally {
         this.isLoadingTrendData = false;
       }
     }
 
-    this.calculateTrendPoints();
+    this.calculateTrendPoints(cloudPoints);
   }
 
-  calculateTrendPoints() {
+  calculateTrendPoints(seedPoints: any[] = []) {
     if (!this.trendPopupItem) return;
     const item = this.trendPopupItem;
     const category = this.trendPopupCategory;
-    const points: any[] = [];
+    const pointsByDate = new Map<string, any>();
+    seedPoints.forEach(point => {
+      const timestamp = Number(point.timestamp);
+      if (!Number.isFinite(timestamp) || !Number.isFinite(Number(point.rank))) return;
+      const dateKey = point.snapshotDate || toDailySnapshotDateKey(timestamp);
+      pointsByDate.set(dateKey, {
+        date: new Date(timestamp).toLocaleDateString(undefined, {month: 'short', day: 'numeric'}),
+        rank: Number(point.rank),
+        timestamp
+      });
+    });
     
     this.historyData.forEach(snap => {
       const list = category === 'tracks'
@@ -1282,7 +1278,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
           : (snap.topGenres || []);
       const rankIdx = this.findStatsItemIndex(list, item, category);
       if (rankIdx !== -1) {
-        points.push({
+        pointsByDate.set(snap.snapshotDate || toDailySnapshotDateKey(snap.timestamp), {
           date: new Date(snap.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
           rank: rankIdx + 1,
           timestamp: snap.timestamp
@@ -1308,14 +1304,15 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     const hasTodaySnapshot = lastSnap && lastSnap.timestamp >= cutoff.getTime();
 
     if (!hasTodaySnapshot && currentRankIdx !== -1) {
-      points.push({
+      pointsByDate.set('current', {
         date: 'Now',
         rank: currentRankIdx + 1,
         timestamp: Date.now()
       });
     }
 
-    this.trendPopupPoints = points;
+    this.trendPopupPoints = Array.from(pointsByDate.values())
+      .sort((left, right) => left.timestamp - right.timestamp);
     this.calculateVisibleLabels();
   }
 

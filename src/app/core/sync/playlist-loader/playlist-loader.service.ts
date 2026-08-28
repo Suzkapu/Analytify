@@ -210,6 +210,20 @@ export class PlaylistLoaderService {
       JSON.stringify(state),
       false
     );
+    // Playlist-list metadata arrives before the heavier detail payload. Cache
+    // its authoritative source total immediately so first-open progress and
+    // completeness checks do not have to guess. StorageService mirrors this
+    // user-scoped key to Supabase whenever Cloud Backup is enabled.
+    this.storageService.setItem(
+      `${userId}_${playlistId}_Amount`,
+      JSON.stringify(observedTotal)
+    );
+    if (typeof playlist?.name === 'string' && playlist.name.trim()) {
+      this.storageService.setItem(
+        `${userId}_${playlistId}_Name`,
+        JSON.stringify(playlist.name)
+      );
+    }
 
     // A stable normal-playlist snapshot proves that its complete manifest is
     // still current. Treat that metadata verification like a content refresh
@@ -365,6 +379,10 @@ export class PlaylistLoaderService {
     }
 
     let targetArray: any[];
+    // Expose cached metadata before the first Spotify page returns. This keeps
+    // the progress denominator stable even on slow or rate-limited requests.
+    task.totalTracks = this.readStoredNumber(`${userId}_${task.playlistId}_Amount`);
+    task.playlistName = this.readStoredString(`${userId}_${task.playlistId}_Name`);
     
     if (isBackgroundRefresh) {
       task.isRefreshing = true;
@@ -372,8 +390,6 @@ export class PlaylistLoaderService {
       task.isLoadingArtists = true;
       task.refreshingArtists = [];
       targetArray = task.refreshingArtists;
-      task.totalTracks = this.readStoredNumber(`${userId}_${task.playlistId}_Amount`);
-      task.playlistName = this.readStoredString(`${userId}_${task.playlistId}_Name`);
       if (storedArtists) {
         try {
           const parsedArtists = JSON.parse(storedArtists);

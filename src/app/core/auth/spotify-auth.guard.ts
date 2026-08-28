@@ -43,7 +43,12 @@ export const spotifyAuthGuard = async (
         return false;
       }
     }
-    await authService.ensureInitialSync();
+    // Navigation only needs a usable Spotify session. Broad cloud-cache
+    // hydration is shared and continues in the background so a slow database
+    // read cannot hold every protected route on the startup screen.
+    void authService.ensureInitialSync().catch(error => {
+      console.warn('[Guard] Background cloud synchronization failed:', error);
+    });
     return true;
   }
 

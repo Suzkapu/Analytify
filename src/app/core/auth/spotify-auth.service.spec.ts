@@ -13,6 +13,18 @@ describe('SpotifyAuthService', () => {
   let http: HttpTestingController;
   let supabaseService: any;
 
+  async function requestAfterMicrotasks(url: string) {
+    for (let attempt = 0; attempt < 10; attempt += 1) {
+      const requests = http.match(url);
+      if (requests.length > 0) {
+        expect(requests.length).toBe(1);
+        return requests[0];
+      }
+      await Promise.resolve();
+    }
+    throw new Error(`Timed out waiting for ${url}`);
+  }
+
   beforeEach(() => {
     values = {};
     authClient = {
@@ -115,6 +127,9 @@ describe('SpotifyAuthService', () => {
     expect(await service.recoverUsableSession()).toBeTrue();
     expect(values['spotifyAccessToken']).toBe('recovered-token');
     expect(service.isTokenExpired()).toBeFalse();
+    const profileRequest = await requestAfterMicrotasks('https://api.spotify.com/v1/me');
+    profileRequest.flush({id: 'spotify-user', display_name: 'Recovered listener', images: []});
+    await Promise.resolve();
   });
 
   it('exchanges a personal-app PKCE code and stores a local-only Spotify identity', async () => {
@@ -132,8 +147,7 @@ describe('SpotifyAuthService', () => {
     expect(tokenRequest.request.body).toContain('code_verifier=pkce-verifier');
     expect(tokenRequest.request.body).not.toContain('client_secret');
     tokenRequest.flush({access_token: 'personal-access', refresh_token: 'personal-refresh', expires_in: 3600});
-    await Promise.resolve();
-    const profileRequest = http.expectOne('https://api.spotify.com/v1/me');
+    const profileRequest = await requestAfterMicrotasks('https://api.spotify.com/v1/me');
     expect(profileRequest.request.headers.get('Authorization')).toBe('Bearer personal-access');
     profileRequest.flush({
       account_id: 'stable-personal-account',
@@ -173,7 +187,7 @@ describe('SpotifyAuthService', () => {
   });
 
   it('does not replace an existing profile when Spotify returns a different ID', async () => {
-    values['spotifyUserId'] = 'existing-user_dev';
+    values['spotifyUserId'] = 'existing-user';
     values['spotifyAccessToken'] = 'existing-token';
     sessionStorage.setItem('analytify_personal_spotify_auth_request', JSON.stringify({
       clientId: '12345678901234567890123456789012', state: 'expected', verifier: 'verifier',
@@ -183,18 +197,17 @@ describe('SpotifyAuthService', () => {
     const callback = service.handlePersonalAppCallback('code', 'expected');
     http.expectOne('https://accounts.spotify.com/api/token')
       .flush({access_token: 'other-access', refresh_token: 'other-refresh', expires_in: 3600});
-    await Promise.resolve();
-    http.expectOne('https://api.spotify.com/v1/me')
-      .flush({id: 'other-user', display_name: 'Other user', images: []});
+    const profileRequest = await requestAfterMicrotasks('https://api.spotify.com/v1/me');
+    profileRequest.flush({id: 'other-user', display_name: 'Other user', images: []});
 
     await expectAsync(callback).toBeRejectedWithError(/does not match the existing Analytify profile/i);
-    expect(values['spotifyUserId']).toBe('existing-user_dev');
+    expect(values['spotifyUserId']).toBe('existing-user');
     expect(values['spotifyAccessToken']).toBe('existing-token');
     expect(values['spotifyRefreshToken']).toBeUndefined();
   });
 
   it('preserves an existing profile key when Spotify also returns a stable account ID', async () => {
-    values['spotifyUserId'] = 'existing-user_dev';
+    values['spotifyUserId'] = 'existing-user';
     values['spotifyAccessToken'] = 'existing-token';
     sessionStorage.setItem('analytify_personal_spotify_auth_request', JSON.stringify({
       clientId: '12345678901234567890123456789012', state: 'expected', verifier: 'verifier',
@@ -204,8 +217,8 @@ describe('SpotifyAuthService', () => {
     const callback = service.handlePersonalAppCallback('code', 'expected');
     http.expectOne('https://accounts.spotify.com/api/token')
       .flush({access_token: 'personal-access', refresh_token: 'personal-refresh', expires_in: 3600});
-    await Promise.resolve();
-    http.expectOne('https://api.spotify.com/v1/me').flush({
+    const profileRequest = await requestAfterMicrotasks('https://api.spotify.com/v1/me');
+    profileRequest.flush({
       account_id: 'stable-account-id',
       id: 'existing-user',
       display_name: 'Existing user',
@@ -213,7 +226,7 @@ describe('SpotifyAuthService', () => {
     });
 
     expect(await callback).toBe('/playlists');
-    expect(values['spotifyUserId']).toBe('existing-user_dev');
+    expect(values['spotifyUserId']).toBe('existing-user');
     expect(values['spotifyRefreshToken']).toBe('personal-refresh');
   });
 
@@ -254,7 +267,7 @@ describe('SpotifyAuthService', () => {
     });
 
     const enabling = service.enableCloudIdentity();
-    const profileRequest = http.expectOne('https://api.spotify.com/v1/me');
+    const profileRequest = await requestAfterMicrotasks('https://api.spotify.com/v1/me');
     profileRequest.flush({id: 'personal-user', display_name: 'Private listener', images: []});
     await enabling;
 

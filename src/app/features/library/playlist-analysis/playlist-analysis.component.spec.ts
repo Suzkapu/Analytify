@@ -1,7 +1,7 @@
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ActivatedRoute, Router} from '@angular/router';
-import {EMPTY} from 'rxjs';
+import {EMPTY, Subject} from 'rxjs';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {PlaylistLoaderService} from '@core/sync/playlist-loader/playlist-loader.service';
@@ -39,7 +39,7 @@ describe('PlaylistAnalysisComponent', () => {
     const element = fixture.nativeElement as HTMLElement;
     expect(element.querySelector('.analysis-page > .page-shell')).not.toBeNull();
     expect(element.querySelector('.page-shell > .page-back-row')).not.toBeNull();
-    expect(element.querySelectorAll('.metric-card').length).toBe(5);
+    expect(element.querySelectorAll('app-metric-card').length).toBe(5);
     expect(element.querySelectorAll('.analysis-sections > .column-card').length).toBe(2);
   });
 
@@ -75,5 +75,38 @@ describe('PlaylistAnalysisComponent', () => {
     expect(component.uniqueTracksCount).toBe(2);
     expect(component.uniqueArtistsCount).toBe(3);
     expect(component.uniqueAlbumsCount).toBe(2);
+  });
+
+  it('starts the first playlist load without waiting for broad cloud hydration', async () => {
+    const params = new Subject<Record<string, string>>();
+    let finishInitialSync!: () => void;
+    const initialSync = new Promise<void>(resolve => finishInitialSync = resolve);
+    const auth = {
+      isAuthenticated: () => true,
+      ensureInitialSync: () => initialSync
+    };
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      declarations: [PlaylistAnalysisComponent],
+      providers: [
+        {provide: ActivatedRoute, useValue: {params}},
+        {provide: Router, useValue: {navigate: jasmine.createSpy('navigate')}},
+        {provide: SpotifyAuthService, useValue: auth},
+        {provide: StorageService, useValue: {}},
+        {provide: PlaylistLoaderService, useValue: {}}
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
+    });
+    const firstOpenFixture = TestBed.createComponent(PlaylistAnalysisComponent);
+    const firstOpenComponent = firstOpenFixture.componentInstance;
+    const load = spyOn(firstOpenComponent, 'loadPlaylistData').and.resolveTo();
+    firstOpenFixture.detectChanges();
+
+    params.next({id: 'playlist'});
+    await Promise.resolve();
+
+    expect(load).toHaveBeenCalledTimes(1);
+    finishInitialSync();
   });
 });

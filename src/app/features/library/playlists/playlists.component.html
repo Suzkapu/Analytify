@@ -103,11 +103,9 @@
   <button type="button" (click)="dismissMergeResult()" aria-label="Dismiss success message">×</button>
     </section>
 
-    <section *ngIf="playlists.length === 0" class="empty-state no-playlists">
-      <span class="empty-state-icon"><i class="pi pi-list"></i></span>
-      <h1>No playlists found</h1>
-      <p>Your Spotify playlists will appear here once they are available.</p>
-    </section>
+    <app-page-state *ngIf="playlists.length === 0" class="no-playlists" icon="pi-list"
+      title="No playlists found"
+      message="Your Spotify playlists will appear here once they are available."></app-page-state>
 
     <section class="card-container playlists-grid" aria-label="Your playlists">
   <ng-container *ngFor="let playlist of filteredPlaylists; trackBy: trackPlaylist">

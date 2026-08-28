@@ -1,0 +1,13 @@
+<section
+  class="shared-page-state"
+  [class.compact]="compact"
+  [class.danger]="tone === 'danger'"
+  [attr.role]="loading ? 'status' : null"
+  [attr.aria-live]="loading ? 'polite' : null">
+  <span class="shared-page-state-icon" aria-hidden="true">
+    <i class="pi" [ngClass]="[icon, loading ? 'pi-spin' : '']"></i>
+  </span>
+  <h2 *ngIf="title">{{ title }}</h2>
+  <p *ngIf="message">{{ message }}</p>
+  <ng-content></ng-content>
+</section>

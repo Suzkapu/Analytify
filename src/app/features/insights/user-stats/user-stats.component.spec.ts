@@ -156,6 +156,59 @@ describe('UserStatsComponent trends', () => {
     expect(component.isCacheExpired(String(eightDaysAgo), 'medium_term')).toBeTrue();
   });
 
+  it('starts local history and current stats without waiting for account hydration', () => {
+    const auth = {
+      isAuthenticated: () => true,
+      ensureInitialSync: () => new Promise<void>(() => {}),
+      isBackupActive: () => false
+    };
+    const immediateComponent = new UserStatsComponent(
+      null as any,
+      auth as any,
+      null as any,
+      null as any
+    );
+    const loadHistory = spyOn(immediateComponent, 'loadHistoryData');
+    const loadStats = spyOn(immediateComponent, 'loadStats').and.resolveTo();
+
+    immediateComponent.ngOnInit();
+
+    expect(loadHistory).toHaveBeenCalledTimes(1);
+    expect(loadStats).toHaveBeenCalledTimes(1);
+  });
+
+  it('loads one item trend instead of every historical Top list', async () => {
+    const supabase = {
+      loadStatsItemTrend: jasmine.createSpy('loadStatsItemTrend').and.resolveTo([{
+        timestamp: new Date('2026-08-01T12:00:00').getTime(),
+        snapshotDate: '2026-08-01',
+        rank: 4
+      }]),
+      loadAllStatsSnapshots: jasmine.createSpy('loadAllStatsSnapshots')
+    };
+    const trendComponent = new UserStatsComponent(
+      null as any,
+      {
+        getSupabaseUserId: () => 'user-id',
+        isBackupActive: () => true
+      } as any,
+      null as any,
+      supabase as any
+    );
+    trendComponent.historyData = [makeSnapshot('2026-08-01', [], [], [], false)];
+
+    await trendComponent.openTrendPopup({id: 'track-id', name: 'Track'}, 'tracks');
+
+    expect(supabase.loadStatsItemTrend).toHaveBeenCalledOnceWith(
+      'user-id',
+      'short_term',
+      'tracks',
+      ['track-id']
+    );
+    expect(supabase.loadAllStatsSnapshots).not.toHaveBeenCalled();
+    expect(trendComponent.trendPopupPoints.map(point => point.rank)).toEqual([4]);
+  });
+
   it('treats a genuinely new Top 10 song as a blue-flame hot debut', () => {
     const previous = makeSnapshot('2026-08-01', [
       {id: 'older-track', name: 'Older Track', artists: [{name: 'Artist'}]}
@@ -214,9 +267,33 @@ describe('UserStatsComponent trends', () => {
     component.calculateHotMovers();
 
     expect(component.hotMoverTracks.size).toBe(10);
-    expect(component.highDebutTracks.size).toBe(4);
-    expect(component.isHotMover(component.topTracks[11], 'tracks')).toBeTrue();
-    expect(component.isHighDebutHotSong(component.topTracks[4])).toBeFalse();
+    expect(component.highDebutTracks.size).toBe(6);
+    expect(component.isHotMover(component.topTracks[9], 'tracks')).toBeTrue();
+    expect(component.isHotMover(component.topTracks[10], 'tracks')).toBeFalse();
+  });
+
+  it('scores a new entry from below rank 100 so it can displace a slower existing mover', () => {
+    component.topTracks = [
+      {
+        id: 'new-number-one',
+        name: 'New Number One',
+        artists: [{name: 'Artist'}],
+        testTrend: {type: 'new' as const}
+      },
+      ...Array.from({length: 10}, (_, index) => ({
+        id: `existing-${index}`,
+        name: `Existing ${index}`,
+        artists: [{name: 'Artist'}],
+        testTrend: {type: 'up' as const, diff: 99 - index}
+      }))
+    ];
+    spyOn(component, 'getTrend').and.callFake((item: any) => item.testTrend);
+    component.historyData = [makeSnapshot('2026-08-01')];
+
+    component.calculateHotMovers();
+
+    expect(component.isHotMover(component.topTracks[0], 'tracks')).toBeTrue();
+    expect(component.isHotMover(component.topTracks[10], 'tracks')).toBeFalse();
   });
 
   it('opens item history with both keyboard activation keys', () => {

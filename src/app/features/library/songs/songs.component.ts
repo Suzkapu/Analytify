@@ -79,7 +79,7 @@ export class SongsComponent implements OnInit, OnDestroy {
       this.albumSortOrder =
         this.storageService.getItem(`${userId}_albums_sortOrder`) === 'asc' ? 'asc' : 'desc';
       if (this.authService.isAuthenticated()) {
-        await this.authService.ensureInitialSync();
+        void this.authService.ensureInitialSync().catch(() => {});
       }
       await this.loadArtistsFromPlaylist();
     });

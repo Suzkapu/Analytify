@@ -11,16 +11,12 @@
   </header>
 
   <div class="stats-content-wrapper">
-    <div *ngIf="isLoadingRecentlyPlayed" class="page-loading-state" role="status">
-      <i class="pi pi-spin pi-spinner"></i>
-      <h3>Loading listening history…</h3>
-    </div>
+    <app-page-state *ngIf="isLoadingRecentlyPlayed" [loading]="true" icon="pi-spinner"
+      title="Loading listening history…"></app-page-state>
     
-    <section *ngIf="!isLoadingRecentlyPlayed && recentlyPlayedTracks.length === 0" class="empty-state">
-      <span class="empty-state-icon"><i class="pi pi-history"></i></span>
-      <h2>No recent tracks</h2>
-      <p>Your latest Spotify plays will appear here when they are available.</p>
-    </section>
+    <app-page-state *ngIf="!isLoadingRecentlyPlayed && recentlyPlayedTracks.length === 0"
+      icon="pi-history" title="No recent tracks"
+      message="Your latest Spotify plays will appear here when they are available."></app-page-state>
 
     <div *ngIf="!isLoadingRecentlyPlayed && recentlyPlayedTracks.length > 0" class="listening-history-list">
       <div *ngFor="let item of recentlyPlayedTracks; let idx = index; trackBy: trackHistoryItem" class="track-row-card no-trend-pointer">

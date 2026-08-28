@@ -61,7 +61,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(async params => {
       this.playlistId = params['id'];
       if (this.authService.isAuthenticated()) {
-        await this.authService.ensureInitialSync();
+        void this.authService.ensureInitialSync().catch(() => {});
       }
       await this.loadPlaylistData();
     });
@@ -136,6 +136,16 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
       cachedTrackCount = null;
       sourceManifest = this.playlistLoaderService.readSourceManifest(userId, this.playlistId);
       sourceDirty = this.playlistLoaderService.isPlaylistSourceDirty(userId, this.playlistId);
+      const parsedAmount = JSON.parse(
+        this.storageService.getItem(`${storageKey}_Amount`) || '0'
+      );
+      cachedTotalTracks =
+        Number.isFinite(parsedAmount) && parsedAmount >= 0 ? parsedAmount : 0;
+      cachedTotalTracks = this.playlistLoaderService.resolveExpectedPlaylistTotal(
+        userId,
+        this.playlistId,
+        cachedTotalTracks
+      );
       if (storedArtists) {
         try {
           const parsed = JSON.parse(storedArtists);
@@ -144,17 +154,6 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
           } else {
             parsedArtists = parsed;
           }
-
-          const parsedAmount = JSON.parse(
-            this.storageService.getItem(`${storageKey}_Amount`) || '0'
-          );
-          cachedTotalTracks =
-            Number.isFinite(parsedAmount) && parsedAmount >= 0 ? parsedAmount : 0;
-          cachedTotalTracks = this.playlistLoaderService.resolveExpectedPlaylistTotal(
-            userId,
-            this.playlistId,
-            cachedTotalTracks
-          );
 
           const cachedTrackCountString =
             this.storageService.getItem(`${storageKey}_CachedTrackCount`);
@@ -214,6 +213,10 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
         this.triggerApiLoad(false, isExpired);
       }
     } else {
+      this.totalTracks = cachedTotalTracks;
+      this.playlistName = JSON.parse(
+        this.storageService.getItem(`${storageKey}_Name`) || '""'
+      );
       if (storedArtists && !isParseError) {
         try {
           this.artists = parsedArtists;

@@ -36,7 +36,7 @@ export class SongLeagueService {
     return {leagueId, inviteToken, inviteUrl: this.inviteUrl(inviteToken)};
   }
 
-  async rotateInvite(leagueId: string): Promise<{token: string; url: string}> {
+  async createInvite(leagueId: string): Promise<{token: string; url: string}> {
     const token = this.createToken();
     const {error} = await this.supabase.client.rpc('rotate_song_league_invite', {
       p_league_id: leagueId,

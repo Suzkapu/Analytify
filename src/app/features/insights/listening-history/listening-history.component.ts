@@ -24,11 +24,11 @@ export class ListeningHistoryComponent implements OnInit {
     private supabaseService: SupabaseService
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     if (this.authService.isAuthenticated()) {
-      await this.authService.ensureInitialSync();
+      void this.authService.ensureInitialSync().catch(() => {});
     }
-    this.loadRecentlyPlayed();
+    void this.loadRecentlyPlayed();
   }
 
 

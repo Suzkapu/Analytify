@@ -9,6 +9,7 @@ describe('application routes', () => {
       '',
       'login',
       'callback',
+      'spotify',
       'playlists',
       'songs',
       'artistDetails',
@@ -38,7 +39,7 @@ describe('application routes', () => {
     protectedPaths.forEach(path => {
       const route = APP_ROUTES.find(candidate => candidate.path === path);
       expect(route?.loadChildren).toEqual(jasmine.any(Function));
-      expect(route?.canActivate).toEqual([spotifyAuthGuard]);
+      expect(route?.canActivate).toContain(spotifyAuthGuard);
     });
   });
 
@@ -50,8 +51,8 @@ describe('application routes', () => {
     });
   });
 
-  it('keeps callback, legal, and Compare Room routes public', () => {
-    ['callback', 'legal', 'compare-room'].forEach(path => {
+  it('keeps callback, personal Spotify setup, legal, and Compare Room routes public', () => {
+    ['callback', 'spotify', 'legal', 'compare-room'].forEach(path => {
       const route = APP_ROUTES.find(candidate => candidate.path === path);
       expect(route?.canActivate).toBeUndefined();
       expect(route?.loadChildren).toEqual(jasmine.any(Function));

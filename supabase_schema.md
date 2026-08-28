@@ -145,6 +145,8 @@ CREATE TABLE IF NOT EXISTS stats_snapshots (
 );
 
 CREATE INDEX IF NOT EXISTS idx_stats_snapshots_user_range ON stats_snapshots(user_id, range);
+CREATE INDEX IF NOT EXISTS idx_stats_snapshots_user_range_date
+    ON stats_snapshots(user_id, range, snapshot_date DESC);
 
 -- Maps ranked top tracks for a given snapshot (constrained rank)
 CREATE TABLE IF NOT EXISTS stats_snapshot_tracks (
@@ -1351,10 +1353,6 @@ begin
   ) then
     raise exception 'Only the league owner can create an invite.';
   end if;
-
-  update public.song_league_invites
-  set revoked_at = now()
-  where league_id = p_league_id and revoked_at is null;
 
   insert into public.song_league_invites(league_id, token_hash, created_by)
   values (

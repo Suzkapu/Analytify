@@ -7,10 +7,10 @@
 </div>
 
 <main class="shared-detail-page">
-  <section *ngIf="isLoading" class="detail-state"><i class="pi pi-spin pi-spinner"></i><p>Loading from Supabase…</p></section>
-  <section *ngIf="!isLoading && !share" class="detail-state error-state">
-    <i class="pi pi-lock"></i><h1>Access unavailable</h1><p>{{ errorMessage }}</p>
-  </section>
+  <app-page-state *ngIf="isLoading" [loading]="true" [compact]="true" icon="pi-spinner"
+    title="Loading shared playlist…"></app-page-state>
+  <app-page-state *ngIf="!isLoading && !share" [compact]="true" tone="danger" icon="pi-lock"
+    title="Access unavailable" [message]="errorMessage"></app-page-state>
 
   <ng-container *ngIf="!isLoading && share">
     <header class="playlist-hero">

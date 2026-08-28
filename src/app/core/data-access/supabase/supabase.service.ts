@@ -1114,6 +1114,60 @@ export class SupabaseService {
     }
   }
 
+  /** Loads only the ranks for one item across snapshot dates. */
+  async loadStatsItemTrend(
+    supabaseUserId: string,
+    range: string,
+    category: 'tracks' | 'artists' | 'genres',
+    identities: string[]
+  ): Promise<Array<{timestamp: number; snapshotDate: string; rank: number}>> {
+    const keys = Array.from(new Set(identities.filter(Boolean)));
+    if (keys.length === 0) return [];
+
+    const table = category === 'tracks'
+      ? 'stats_snapshot_tracks'
+      : category === 'artists'
+        ? 'stats_snapshot_artists'
+        : 'stats_snapshot_genres';
+    const identityColumn = category === 'tracks'
+      ? 'track_id'
+      : category === 'artists'
+        ? 'artist_id'
+        : 'genre_name';
+
+    try {
+      let query = this.client
+        .from(table)
+        .select(`rank, stats_snapshots!inner(user_id, range, snapshot_date, created_at)`)
+        .eq('stats_snapshots.user_id', supabaseUserId)
+        .eq('stats_snapshots.range', range);
+      query = keys.length === 1
+        ? query.eq(identityColumn, keys[0])
+        : query.in(identityColumn, keys);
+      const {data, error} = await query;
+      if (error) throw error;
+
+      const byDate = new Map<string, {timestamp: number; snapshotDate: string; rank: number}>();
+      (data || []).forEach((row: any) => {
+        const snapshot = Array.isArray(row.stats_snapshots)
+          ? row.stats_snapshots[0]
+          : row.stats_snapshots;
+        if (!snapshot?.snapshot_date) return;
+        const point = {
+          timestamp: parseSnapshotTimestamp(snapshot.snapshot_date, snapshot.created_at),
+          snapshotDate: snapshot.snapshot_date,
+          rank: Number(row.rank)
+        };
+        const previous = byDate.get(point.snapshotDate);
+        if (!previous || point.rank < previous.rank) byDate.set(point.snapshotDate, point);
+      });
+      return Array.from(byDate.values()).sort((left, right) => left.timestamp - right.timestamp);
+    } catch (error) {
+      console.warn('[SupabaseService] Error loading stats item trend:', error);
+      return [];
+    }
+  }
+
   /** Loads full details for a single stats snapshot by ID */
   async loadStatsSnapshotById(supabaseUserId: string, snapshotId: string): Promise<any | null> {
     try {

@@ -11,6 +11,8 @@ const console = createScopedLogger('Local Storage');
 export class StorageService {
   /** Primary synchronous read layer – always in sync with IndexedDB */
   private inMemoryCache = new Map<string, string>();
+  private readonly databaseVersion = 2;
+  private readonly statsUserRangeIndex = 'by_user_range';
 
   private dbPromise: Promise<IDBDatabase> | null = null;
   private initPromise: Promise<void> | null = null;
@@ -31,13 +33,16 @@ export class StorageService {
         return;
       }
 
-      const request = indexedDB.open('AnalytifyDB');
+      const request = indexedDB.open('AnalytifyDB', this.databaseVersion);
 
       request.onupgradeneeded = (event: any) => {
         const db: IDBDatabase = event.target.result;
 
-        if (!db.objectStoreNames.contains('statsHistory')) {
-          db.createObjectStore('statsHistory', { keyPath: 'id', autoIncrement: true });
+        const statsStore = db.objectStoreNames.contains('statsHistory')
+          ? event.target.transaction.objectStore('statsHistory')
+          : db.createObjectStore('statsHistory', { keyPath: 'id', autoIncrement: true });
+        if (!statsStore.indexNames.contains(this.statsUserRangeIndex)) {
+          statsStore.createIndex(this.statsUserRangeIndex, ['userId', 'range'], {unique: false});
         }
         if (!db.objectStoreNames.contains('appData')) {
           // Generic key-value store – replaces localStorage
@@ -346,11 +351,16 @@ export class StorageService {
     return this.getDB().then(db => new Promise<any[]>((resolve, reject) => {
       const tx      = db.transaction('statsHistory', 'readonly');
       const store   = tx.objectStore('statsHistory');
-      const request = store.getAll();
+      const hasIndex = store.indexNames.contains(this.statsUserRangeIndex);
+      const request = hasIndex
+        ? store.index(this.statsUserRangeIndex).getAll(IDBKeyRange.only([userId, range]))
+        : store.getAll();
 
       request.onsuccess = (event: any) => {
         const all      = event.target.result || [];
-        const filtered = all.filter((item: any) => item.userId === userId && item.range === range);
+        const filtered = hasIndex
+          ? all
+          : all.filter((item: any) => item.userId === userId && item.range === range);
         filtered.sort((a: any, b: any) => a.timestamp - b.timestamp);
         resolve(filtered);
       };

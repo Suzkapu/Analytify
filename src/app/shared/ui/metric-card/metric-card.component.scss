@@ -1,0 +1,27 @@
+:host { display: block; min-width: 0; }
+
+.shared-metric-card {
+  min-width: 0;
+  min-height: 104px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-sizing: border-box;
+  transition: background var(--motion-fast), border-color var(--motion-fast);
+}
+
+.shared-metric-card:hover { border-color: var(--color-border-strong); background: var(--color-surface-raised); }
+.metric-icon { width: 52px; height: 52px; display: grid; place-items: center; flex: 0 0 auto; border-radius: var(--radius-md); background: var(--color-accent-soft); color: var(--color-accent); font-size: 1.35rem; }
+.metric-copy { min-width: 0; display: grid; gap: 3px; }
+.metric-copy small { color: var(--color-text-muted); font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.metric-copy strong { overflow: hidden; color: var(--color-text); font-size: clamp(1.35rem, 3vw, 1.9rem); line-height: 1.1; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (max-width: 768px) {
+  .shared-metric-card { min-height: 82px; padding: 14px; }
+  .metric-icon { width: 46px; height: 46px; }
+}

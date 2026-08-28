@@ -63,6 +63,14 @@ The background worker is a separate service-role process. Its task registry isol
 
 Manual runs and scheduled runs both enter `sync_job_runs`. A worker atomically claims queued rows, invokes the registered task, and updates `sync_task_state`, making retries and failures visible in the admin audit trail. Administrator identities are reconciled from the protected `ADMIN_SPOTIFY_IDS` deployment secret.
 
+## Responsive data loading
+
+Protected navigation validates or refreshes the Spotify token and then starts broad cloud hydration in the background. Feature pages paint their local IndexedDB cache first and request only their own missing keys. Playlist-list metadata persists source totals before detail pagination, so loading progress and cache-completeness checks share one denominator locally and through Cloud Backup.
+
+The Stats page reads the indexed snapshot date metadata first. Full Top Songs, Artists, and Genres payloads are loaded only for the selected and comparison snapshots; an item history chart uses a rank-only query for that item instead of downloading every historical Top list. Repeated cards use browser `content-visibility` where supported, while Angular feature routes remain lazy-loaded.
+
+Shared page state, metric card, and section-heading components live in `shared/ui`. Together with the global tokens and `app-header`/`app-footer`, these are the reusable visual segments for feature pages.
+
 ## Adding a page
 
 1. Create a page folder under the closest domain in `features/`.

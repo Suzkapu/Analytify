@@ -139,7 +139,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     this.isCreatingInvite = true;
     this.errorMessage = '';
     try {
-      const invitation = await this.songLeague.rotateInvite(this.leagueId);
+      const invitation = await this.songLeague.createInvite(this.leagueId);
       this.inviteUrl = invitation.url;
     } catch (error) {
       this.errorMessage = this.describeError(error, 'A new invitation could not be created.');

@@ -48,7 +48,7 @@ export class PlaylistsComponent {
       this.sortOrder = (this.storageService.getItem(`${userId}_playlists_sortOrder`) as 'asc' | 'desc' | 'none') || 'none';
       this.showSavedPlaylists = this.storageService.getItem(`${userId}_playlists_showSaved`) === 'true';
       if (this.authService.isAuthenticated()) {
-        await this.authService.ensureInitialSync();
+        void this.authService.ensureInitialSync().catch(() => {});
       }
       await this.loadPlaylists();
     });

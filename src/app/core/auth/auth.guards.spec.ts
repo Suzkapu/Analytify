@@ -60,7 +60,7 @@ describe('authentication guards', () => {
     expect(allowed).toBeFalse();
   });
 
-  it('refreshes an expired token and completes the initial sync before allowing access', async () => {
+  it('refreshes an expired token and starts the shared initial sync before allowing access', async () => {
     auth.isAuthenticated.and.returnValue(true);
     auth.isTokenExpired.and.returnValue(true);
 
@@ -68,6 +68,16 @@ describe('authentication guards', () => {
 
     expect(auth.refreshToken).toHaveBeenCalled();
     expect(auth.ensureInitialSync).toHaveBeenCalled();
+    expect(allowed).toBeTrue();
+  });
+
+  it('does not block navigation on broad cloud-cache hydration', async () => {
+    auth.isAuthenticated.and.returnValue(true);
+    auth.ensureInitialSync.and.returnValue(new Promise<void>(() => {}));
+
+    const allowed = await TestBed.runInInjectionContext(() => spotifyAuthGuard());
+
+    expect(auth.ensureInitialSync).toHaveBeenCalledTimes(1);
     expect(allowed).toBeTrue();
   });
 

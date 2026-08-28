@@ -147,22 +147,18 @@
     </div>
 
 <!-- Animated Loading Progress Indicator -->
-    <div *ngIf="isLoading" class="loading-container page-loading-state">
-  <i class="pi pi-spin pi-spinner"></i>
-  <h2>Analyzing playlist songs…</h2>
+    <app-page-state *ngIf="isLoading" [loading]="true" icon="pi-spinner" title="Analyzing playlist songs…">
   <div class="loading-count">{{ loadedTracksCount }} of {{ totalTracks }} loaded
   </div>
   <div class="loading-progress-track">
     <div [style.width.%]="totalTracks > 0 ? (loadedTracksCount / totalTracks) * 100 : 0"
       class="loading-progress-fill"></div>
   </div>
-    </div>
+    </app-page-state>
 
-    <section *ngIf="!isLoading && artists.length === 0" class="empty-state no-artists">
-      <span class="empty-state-icon"><i class="pi pi-users"></i></span>
-      <h2>No artists found</h2>
-      <p>This playlist does not contain any available artist data.</p>
-    </section>
+    <app-page-state *ngIf="!isLoading && artists.length === 0" class="no-artists" icon="pi-users"
+      title="No artists found"
+      message="This playlist does not contain any available artist data."></app-page-state>
 
 <!-- Main Content -->
 <ng-container *ngIf="!isLoading">

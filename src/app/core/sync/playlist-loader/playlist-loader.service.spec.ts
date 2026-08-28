@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { EMPTY, filter, firstValueFrom, of, take } from 'rxjs';
+import { EMPTY, NEVER, filter, firstValueFrom, of, take } from 'rxjs';
 import { PlaylistLoaderService, PlaylistLoadTask } from './playlist-loader.service';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
@@ -108,6 +108,30 @@ describe('PlaylistLoaderService', () => {
     ]);
 
     expect(service.resolveExpectedPlaylistTotal('user', 'playlist', 30)).toBe(5000);
+  });
+
+  it('caches playlist-list totals before the detail payload is loaded', () => {
+    service.recordPlaylistMetadata('user', {
+      id: 'playlist',
+      name: 'Road Trip',
+      tracks: {total: 5113},
+      snapshot_id: 'snapshot-one'
+    });
+
+    expect(storageValues['user_playlist_Amount']).toBe('5113');
+    expect(storageValues['user_playlist_Name']).toBe(JSON.stringify('Road Trip'));
+  });
+
+  it('publishes the cached total while the first Spotify page is pending', () => {
+    storageValues['user_playlist_Amount'] = '5113';
+    storageValues['user_playlist_Name'] = JSON.stringify('Road Trip');
+    spotify.getSinglePlaylist.and.returnValue(NEVER);
+
+    const task = service.startLoadingTask('user', 'playlist');
+
+    expect(task.progress$.value.totalTracks).toBe(5113);
+    expect(task.progress$.value.playlistName).toBe('Road Trip');
+    expect(task.progress$.value.isLoadingTracks).toBeTrue();
   });
 
   it('counts duplicate tracks only once across artists', () => {

@@ -13,15 +13,14 @@
       <span>{{ cooldownMessage }}</span>
     </div>
 
-    <section *ngIf="isLoading" class="page-loading-state analysis-loading" role="status">
-      <i class="pi pi-spin pi-spinner"></i>
-      <h2>Analyzing playlist data…</h2>
+    <app-page-state *ngIf="isLoading" class="analysis-loading" [loading]="true"
+      icon="pi-spinner" title="Analyzing playlist data…">
       <div class="analysis-loading-count">{{ loadedTracksCount }} of {{ totalTracks }} loaded</div>
       <div class="analysis-loading-track">
         <div [style.width.%]="totalTracks > 0 ? (loadedTracksCount / totalTracks) * 100 : 0"
           class="analysis-loading-fill"></div>
       </div>
-    </section>
+    </app-page-state>
 
     <ng-container *ngIf="!isLoading">
       <header class="analysis-top-bar page-hero">
@@ -67,56 +66,16 @@
         </div>
 
         <div class="metrics-grid">
-          <article class="metric-card">
-            <span class="metric-icon"><i class="pi pi-hashtag"></i></span>
-            <span class="metric-copy">
-              <small>Total songs</small>
-              <strong>{{ uniqueTracksCount }}</strong>
-            </span>
-          </article>
-
-          <article class="metric-card">
-            <span class="metric-icon"><i class="pi pi-users"></i></span>
-            <span class="metric-copy">
-              <small>Artists</small>
-              <strong>{{ uniqueArtistsCount }}</strong>
-            </span>
-          </article>
-
-          <article class="metric-card">
-            <span class="metric-icon"><i class="pi pi-clone"></i></span>
-            <span class="metric-copy">
-              <small>Albums</small>
-              <strong>{{ uniqueAlbumsCount }}</strong>
-            </span>
-          </article>
-
-          <article class="metric-card">
-            <span class="metric-icon"><i class="pi pi-clock"></i></span>
-            <span class="metric-copy">
-              <small>Total length</small>
-              <strong>{{ totalDurationFormatted }}</strong>
-            </span>
-          </article>
-
-          <article class="metric-card">
-            <span class="metric-icon"><i class="pi pi-hourglass"></i></span>
-            <span class="metric-copy">
-              <small>Average song length</small>
-              <strong>{{ averageDurationFormatted }}</strong>
-            </span>
-          </article>
+          <app-metric-card icon="pi-hashtag" label="Total songs" [value]="uniqueTracksCount"></app-metric-card>
+          <app-metric-card icon="pi-users" label="Artists" [value]="uniqueArtistsCount"></app-metric-card>
+          <app-metric-card icon="pi-clone" label="Albums" [value]="uniqueAlbumsCount"></app-metric-card>
+          <app-metric-card icon="pi-clock" label="Total length" [value]="totalDurationFormatted"></app-metric-card>
+          <app-metric-card icon="pi-hourglass" label="Average song length" [value]="averageDurationFormatted"></app-metric-card>
         </div>
 
         <div class="analysis-sections">
           <section class="column-card">
-            <header class="analysis-section-heading">
-              <span class="section-icon"><i class="pi pi-calendar"></i></span>
-              <div>
-                <span class="page-eyebrow">Timeline</span>
-                <h2>Release highlights</h2>
-              </div>
-            </header>
+            <app-section-heading icon="pi-calendar" eyebrow="Timeline" title="Release highlights"></app-section-heading>
 
             <div class="highlight-list">
               <button *ngIf="oldestTrack" type="button" class="highlight-track-card spotify-destination"
@@ -148,13 +107,7 @@
           </section>
 
           <section class="column-card">
-            <header class="analysis-section-heading">
-              <span class="section-icon"><i class="pi pi-arrows-h"></i></span>
-              <div>
-                <span class="page-eyebrow">Duration</span>
-                <h2>Song length extremes</h2>
-              </div>
-            </header>
+            <app-section-heading icon="pi-arrows-h" eyebrow="Duration" title="Song length extremes"></app-section-heading>
 
             <div class="highlight-list">
               <button *ngIf="shortestTrack" type="button" class="highlight-track-card spotify-destination"
