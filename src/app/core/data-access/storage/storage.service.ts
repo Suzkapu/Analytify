@@ -250,7 +250,11 @@ export class StorageService {
    * Callers invoke this only after the local dataset is missing, corrupt, or
    * expired, preserving the source priority: local -> Supabase -> Spotify.
    */
-  async restoreItemsFromCloud(keys: string[]): Promise<number> {
+  async restoreItemsFromCloud(
+    keys: string[],
+    canApply: () => boolean = () => true,
+    beforeApply: () => void = () => {}
+  ): Promise<number> {
     const uniqueKeys = Array.from(new Set(keys.filter(key => !!key)));
     if (uniqueKeys.length === 0) return 0;
 
@@ -261,6 +265,11 @@ export class StorageService {
     if (!backupActive) return 0;
 
     const entries = await this.supabaseService.loadUserCache(supabaseUserId, uniqueKeys);
+    // A feature may have moved on to a newer route selection or started a
+    // Spotify fallback while this request was in flight. Never let that late
+    // cloud response overwrite the newer source.
+    if (!canApply()) return 0;
+    if (entries.length > 0) beforeApply();
     entries.forEach(entry => this.setItem(entry.key, entry.value, false));
     if (entries.length > 0) {
       console.log(`[StorageService] Restored ${entries.length} requested cache keys from Supabase.`);

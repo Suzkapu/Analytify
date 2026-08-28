@@ -60,6 +60,8 @@ export class SongsComponent implements OnInit, OnDestroy {
   loadedArtistsDetailsCount: number = 0;
   totalUniqueArtists: number = 0;
   private loaderSubscription: Subscription | null = null;
+  private playlistLoadSequence = 0;
+  private readonly cloudPriorityWindowMs = 750;
   private readonly windowScrollHandler = () => this.onWindowScroll();
 
   constructor(
@@ -184,8 +186,12 @@ export class SongsComponent implements OnInit, OnDestroy {
   }
 
   async loadArtistsFromPlaylist() {
+    const loadSequence = ++this.playlistLoadSequence;
+    const playlistId = this.playlistId;
+    const isCurrentLoad = () =>
+      loadSequence === this.playlistLoadSequence && playlistId === this.playlistId;
     const userId = this.authService.getUserId() || 'anonymous';
-    const storageKey = `${userId}_${this.playlistId}`;
+    const storageKey = `${userId}_${playlistId}`;
     const isBackupActive = this.authService.isBackupActive();
 
     // Unsubscribe from any previous loader task
@@ -195,7 +201,7 @@ export class SongsComponent implements OnInit, OnDestroy {
     }
 
     // Check if there is an active background task running for this playlist
-    const activeTask = this.playlistLoaderService.getLoadingTask(this.playlistId);
+    const activeTask = this.playlistLoaderService.getLoadingTask(playlistId);
 
     if (activeTask) {
       const activeCache = this.readPlaylistCache(userId, storageKey);
@@ -218,22 +224,47 @@ export class SongsComponent implements OnInit, OnDestroy {
 
     let cache = this.readPlaylistCache(userId, storageKey);
     if (cache.needsCloudRestore && isBackupActive) {
+      this.paintPendingPlaylist(cache, userId);
       // The cloud cache owns its own consistency marker. Do not retain a local
       // marker when replacing the serialized dataset from Supabase.
-      this.storageService.removeItem(`${storageKey}_CachedTrackCount`);
-      this.storageService.removeItem(
-        this.playlistLoaderService.sourceManifestKey(userId, this.playlistId)
-      );
-      await this.storageService.restoreItemsFromCloud([
+      let spotifyFallbackStarted = false;
+      const cloudRestore = this.storageService.restoreItemsFromCloud([
         storageKey,
         `${storageKey}_Amount`,
         `${storageKey}_Name`,
         `${storageKey}_CachedTrackCount`,
         this.playlistLoaderService.sourceManifestKey(userId, this.playlistId),
         `${storageKey}_lastUpdated`
+      ], () => isCurrentLoad() && !spotifyFallbackStarted, () => {
+        this.storageService.removeItem(`${storageKey}_CachedTrackCount`);
+        this.storageService.removeItem(
+          this.playlistLoaderService.sourceManifestKey(userId, this.playlistId)
+        );
+      })
+        .then(() => 'cloud' as const)
+        .catch(error => {
+          console.warn('[Songs] Cloud playlist restore failed; continuing with Spotify.', error);
+          return 'cloud-error' as const;
+        });
+      const source = await Promise.race([
+        cloudRestore,
+        new Promise<'spotify'>(resolve =>
+          setTimeout(() => resolve('spotify'), this.cloudPriorityWindowMs)
+        )
       ]);
-      cache = this.readPlaylistCache(userId, storageKey);
+      if (!isCurrentLoad()) return;
+
+      if (source === 'cloud') {
+        cache = this.readPlaylistCache(userId, storageKey);
+      } else {
+        // Supabase retains source priority when it responds promptly. A slow
+        // restore must not hold the first navigation hostage, and its late
+        // response is prevented from overwriting the Spotify result.
+        spotifyFallbackStarted = true;
+      }
     }
+
+    if (!isCurrentLoad()) return;
 
     if (cache.isUsable) {
       console.log(`[Songs] Loading playlist ${this.playlistId} contents from the local IndexedDB cache.`);
@@ -243,6 +274,10 @@ export class SongsComponent implements OnInit, OnDestroy {
         this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
         this.filterArtists();
         this.healVisibleArtistImages();
+        this.isLoading = false;
+        this.isRefreshing = false;
+        this.isLoadingTracks = false;
+        this.isLoadingArtists = false;
       } catch (e) {
         console.warn('Failed to parse some cached playlist keys:', e);
         this.loadPlaylistFromAPI(userId, isBackupActive, cache.isExpired);
@@ -258,6 +293,25 @@ export class SongsComponent implements OnInit, OnDestroy {
         !!cache.sourceManifest
       );
     }
+  }
+
+  private paintPendingPlaylist(
+    cache: ReturnType<SongsComponent['readPlaylistCache']>,
+    userId: string
+  ): void {
+    this.totalTracks = cache.cachedTotalTracks;
+    this.playlistName = JSON.parse(
+      this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""'
+    );
+    if (!cache.isParseError && cache.parsedArtists.length > 0) {
+      this.artists = cache.parsedArtists;
+      this.filterArtists();
+      this.isRefreshing = true;
+      this.isLoading = false;
+    } else {
+      this.isLoading = true;
+    }
+    this.isLoadingTracks = true;
   }
 
   private loadPlaylistFromAPI(
@@ -341,6 +395,7 @@ export class SongsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.playlistLoadSequence++;
     window.removeEventListener('scroll', this.windowScrollHandler);
     if (this.loaderSubscription) {
       this.loaderSubscription.unsubscribe();

@@ -7,6 +7,7 @@ const guard = readFileSync('src/app/core/auth/spotify-auth.guard.ts', 'utf8');
 const asyncLoad = readFileSync('src/app/core/performance/async-load.ts', 'utf8');
 const playlistLoader = readFileSync('src/app/core/sync/playlist-loader/playlist-loader.service.ts', 'utf8');
 const compareSource = readFileSync('src/app/core/compare-room/compare-playlist-source.service.ts', 'utf8');
+const songs = readFileSync('src/app/features/library/songs/songs.component.ts', 'utf8');
 
 const historyStart = stats.indexOf('loadHistoryData()');
 const historyEnd = stats.indexOf('\n\n  getTrend(', historyStart);
@@ -22,7 +23,9 @@ const checks = [
   ['background history yields to the first paint', stats.includes('runAfterNextPaint')],
   ['bounded async work preserves result order', asyncLoad.includes('results[index] = await worker')],
   ['playlist pagination uses bounded parallel requests', playlistLoader.includes('}, 4),')],
-  ['multi-playlist comparison loads concurrently', compareSource.includes('mapWithConcurrency(')]
+  ['multi-playlist comparison loads concurrently', compareSource.includes('mapWithConcurrency(')],
+  ['playlist cloud restore has a first-open fallback window', songs.includes('cloudPriorityWindowMs') && songs.includes('Promise.race([')],
+  ['late cloud playlist data cannot overwrite Spotify', storage.includes('if (!canApply()) return 0')]
 ];
 
 const failures = checks.filter(([, valid]) => !valid).map(([label]) => label);

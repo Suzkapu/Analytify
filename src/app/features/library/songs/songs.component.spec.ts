@@ -1,11 +1,11 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
 import {ActivatedRoute, Router} from '@angular/router';
-import {EMPTY} from 'rxjs';
+import {EMPTY, Subject} from 'rxjs';
 import { SongsComponent } from './songs.component';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
-import {PlaylistLoaderService} from '@core/sync/playlist-loader/playlist-loader.service';
+import {PlaylistLoaderService, PlaylistLoadTask} from '@core/sync/playlist-loader/playlist-loader.service';
 import {ImageHealingService} from '@core/sync/image-healing/image-healing.service';
 
 describe('SongsComponent', () => {
@@ -36,6 +36,57 @@ describe('SongsComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('starts a shared Spotify task on the first open when cloud restore is slow', fakeAsync(() => {
+    const params = new Subject<Record<string, string>>();
+    const storage = {
+      getItem: jasmine.createSpy('getItem').and.returnValue(null),
+      removeItem: jasmine.createSpy('removeItem'),
+      restoreItemsFromCloud: jasmine.createSpy('restoreItemsFromCloud')
+        .and.returnValue(new Promise<number>(() => {}))
+    };
+    const auth = {
+      getUserId: () => 'user',
+      isBackupActive: () => true,
+      isAuthenticated: () => true,
+      ensureInitialSync: () => Promise.resolve()
+    };
+    const task = new PlaylistLoadTask('playlist');
+    task.isLoadingTracks = true;
+    task.isLoadingArtists = true;
+    task.emitUpdate();
+    const loader = {
+      readSourceManifest: () => null,
+      isPlaylistSourceDirty: () => false,
+      isCachedPlaylistComplete: () => false,
+      resolveExpectedPlaylistTotal: () => 0,
+      getLoadingTask: () => undefined,
+      sourceManifestKey: () => 'manifest',
+      startLoadingTask: jasmine.createSpy('startLoadingTask').and.returnValue(task)
+    };
+    const firstOpen = new SongsComponent(
+      {params} as any,
+      {navigate: jasmine.createSpy('navigate')} as any,
+      auth as any,
+      storage as any,
+      loader as any,
+      {} as any,
+      {runOutsideAngular: (callback: () => void) => callback()} as any
+    );
+
+    params.next({id: 'playlist'});
+    flushMicrotasks();
+
+    expect(firstOpen.isLoading).toBeTrue();
+    expect(loader.startLoadingTask).not.toHaveBeenCalled();
+
+    tick(750);
+    flushMicrotasks();
+
+    expect(loader.startLoadingTask).toHaveBeenCalledTimes(1);
+    expect(loader.startLoadingTask).toHaveBeenCalledWith('user', 'playlist', false, true);
+    firstOpen.ngOnDestroy();
+  }));
 
   it('sorts albums by playlist song count in both directions', () => {
     component.playlistAlbums = [

@@ -63,6 +63,23 @@ describe('StorageService', () => {
     expect(supabase.loadUserCache).not.toHaveBeenCalled();
   });
 
+  it('does not apply a late cloud response after a newer source takes over', async () => {
+    supabase.loadUserCache.and.resolveTo([
+      {key: 'spotify-user_playlist-1', value: 'stale-cloud-value'}
+    ] as any);
+
+    const beforeApply = jasmine.createSpy('beforeApply');
+    const restored = await service.restoreItemsFromCloud(
+      ['spotify-user_playlist-1'],
+      () => false,
+      beforeApply
+    );
+
+    expect(restored).toBe(0);
+    expect(beforeApply).not.toHaveBeenCalled();
+    expect(service.getItem('spotify-user_playlist-1')).toBeNull();
+  });
+
   it('updates and removes values synchronously', () => {
     service.setItem('local-key', 'value', false);
     expect(service.getItem('local-key')).toBe('value');
