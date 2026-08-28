@@ -147,6 +147,7 @@ export class HeaderComponent implements OnInit {
     this.showBackupConfirmModal = false;
     try {
       await this.authService.enableBackup();
+      this.playlistShareAutoSync.start();
       void this.playlistShareAutoSync.syncNow().catch(error => {
         console.warn('[HeaderComponent] Playlist shares could not be refreshed after enabling Cloud Backup.', error);
       });

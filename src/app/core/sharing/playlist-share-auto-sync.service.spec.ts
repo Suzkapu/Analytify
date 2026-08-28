@@ -21,6 +21,7 @@ describe('PlaylistShareAutoSyncService', () => {
         'isAuthenticated',
         'ensureInitialSync',
         'isBackupActive',
+        'getSupabaseUserId',
         'getUserId',
         'getAccessToken',
         'isTokenExpired',
@@ -46,6 +47,7 @@ describe('PlaylistShareAutoSyncService', () => {
     auth.isAuthenticated.and.returnValue(true);
     auth.ensureInitialSync.and.resolveTo();
     auth.isBackupActive.and.returnValue(true);
+    auth.getSupabaseUserId.and.returnValue('supabase-user');
     auth.getUserId.and.returnValue('spotify-user');
     auth.getAccessToken.and.returnValue('spotify-token');
     auth.isTokenExpired.and.returnValue(false);
@@ -97,6 +99,19 @@ describe('PlaylistShareAutoSyncService', () => {
 
     expect(sharing.listOwnedShares).not.toHaveBeenCalled();
     expect(sharing.refreshActiveSharesFromCache).not.toHaveBeenCalled();
+  });
+
+  it('does not subscribe or query without an explicit cloud identity', async () => {
+    auth.getSupabaseUserId.and.returnValue(null);
+
+    service.start();
+    await service.syncNow();
+
+    expect(sharing.subscribeToShareChanges).not.toHaveBeenCalled();
+    expect(auth.ensureInitialSync).not.toHaveBeenCalled();
+    expect(sharing.listOwnedShares).not.toHaveBeenCalled();
+    expect(sharing.listReceivedShares).not.toHaveBeenCalled();
+    expect(sharing.listReceivedDownloads).not.toHaveBeenCalled();
   });
 
   it('automatically updates an existing recipient Spotify copy without creating another playlist', async () => {

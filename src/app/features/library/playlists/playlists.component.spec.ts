@@ -62,6 +62,7 @@ describe('PlaylistsComponent', () => {
     authService.isTokenExpired.and.returnValue(false);
     storageService.getItem.and.callFake((key: string) => storage.get(key) ?? null);
     storageService.setItem.and.callFake((key: string, value: string) => storage.set(key, value));
+    storageService.restoreItemsFromCloud.and.resolveTo(0);
 
     TestBed.configureTestingModule({
       declarations: [PlaylistsComponent],
@@ -111,36 +112,37 @@ describe('PlaylistsComponent', () => {
     expect(cardActions.every(button => button.classList.contains('playlist-card-action'))).toBeTrue();
   });
 
-  it('refreshes Spotify on every load even when a valid cached list exists', async () => {
+  it('does not call Spotify when the cached playlist portfolio is complete and fresh', async () => {
     storage.set('current-user_playlists', JSON.stringify([
       {id: 'fav', name: 'Favourite Tracks', tracks: {total: 10}},
       {id: 'cached', name: 'Cached playlist', owner: {id: 'current-user'}, tracks: {total: 2}}
     ]));
     storage.set('current-user_playlists_lastUpdated', Date.now().toString());
-    spotifyDataService.getAccessibleUserPlaylists.and.returnValue(of({
-      currentUserId: 'current-user',
-      items: [{
-        id: 'updated',
-        name: 'Updated playlist',
-        owner: {id: 'current-user'},
-        items: {total: 3}
-      }]
-    }));
-    spotifyDataService.getFavTracks.and.returnValue(of({total: 42}));
+    await component.loadPlaylists();
+
+    expect(spotifyDataService.getAccessibleUserPlaylists).not.toHaveBeenCalled();
+    expect(spotifyDataService.getFavTracks).not.toHaveBeenCalled();
+    expect(storageService.restoreItemsFromCloud).not.toHaveBeenCalled();
+    expect(component.playlists.map(playlist => playlist.id)).toEqual(['fav', 'cached']);
+    expect(playlistLoader.recordPortfolioMetadata).not.toHaveBeenCalled();
+  });
+
+  it('uses a fresh cloud playlist portfolio before falling back to Spotify', async () => {
+    authService.isBackupActive.and.returnValue(true);
+    storageService.restoreItemsFromCloud.and.callFake(async () => {
+      storage.set('current-user_playlists', JSON.stringify([
+        {id: 'fav', name: 'Favourite Tracks', tracks: {total: 12}},
+        {id: 'cloud', name: 'Cloud playlist', tracks: {total: 4}}
+      ]));
+      storage.set('current-user_playlists_lastUpdated', Date.now().toString());
+      return 2;
+    });
 
     await component.loadPlaylists();
 
-    expect(spotifyDataService.getAccessibleUserPlaylists).toHaveBeenCalledOnceWith('current-user', true);
-    expect(spotifyDataService.getFavTracks).toHaveBeenCalledOnceWith(0, 1);
-    expect(component.playlists.map(playlist => playlist.id)).toEqual(['fav', 'updated']);
-    expect(component.playlists[0].tracks.total).toBe(42);
-    expect(playlistLoader.recordPortfolioMetadata).toHaveBeenCalledWith(
-      'current-user',
-      component.playlists,
-      jasmine.any(Array)
-    );
-    expect(JSON.parse(storage.get('current-user_playlists') || '[]').map((playlist: any) => playlist.id))
-      .toEqual(['fav', 'updated']);
+    expect(storageService.restoreItemsFromCloud).toHaveBeenCalled();
+    expect(spotifyDataService.getAccessibleUserPlaylists).not.toHaveBeenCalled();
+    expect(component.playlists.map(playlist => playlist.id)).toEqual(['fav', 'cloud']);
   });
 
   it('reuses a Liked Songs count that was refreshed after the daily cutoff', async () => {

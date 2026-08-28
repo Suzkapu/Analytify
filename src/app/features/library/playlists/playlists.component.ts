@@ -32,6 +32,8 @@ export class PlaylistsComponent {
   mergeError = '';
   mergeResult: CompareSaveResult | null = null;
   private currentSpotifyProfileId = '';
+  private playlistLoadSequence = 0;
+  private readonly cloudPriorityWindowMs = 750;
 
   constructor(
     private route: ActivatedRoute, 
@@ -55,6 +57,8 @@ export class PlaylistsComponent {
   }
 
   async loadPlaylists() {
+    const loadSequence = ++this.playlistLoadSequence;
+    const isCurrentLoad = () => loadSequence === this.playlistLoadSequence;
     const userId = this.authService.getUserId() || 'anonymous';
     const storageKey = `${userId}_playlists`;
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
@@ -84,21 +88,13 @@ export class PlaylistsComponent {
       }
     };
 
-    parseCachedPlaylists();
+    const paintCachedPlaylists = () => {
+      if (!storedPlaylists || isParseError) return;
 
-    // The cached list paints immediately. If it is absent or corrupt, make one
-    // feature-scoped Supabase read before the unconditional Spotify refresh.
-    if ((!storedPlaylists || isParseError) && isBackupActive) {
-      await this.storageService.restoreItemsFromCloud([storageKey, lastUpdatedKey]);
-      storedPlaylists = this.storageService.getItem(storageKey);
-      parseCachedPlaylists();
-    }
-
-    if (storedPlaylists && !isParseError) {
-      console.log('[Playlists] Painting the playlist list from cache before refreshing Spotify.');
+      console.log('[Playlists] Painting the playlist list from cache.');
       this.playlists = parsedPlaylists;
 
-      // Sync Favourite Tracks total with the latest loaded amount if available
+      // Sync Favourite Tracks total with the latest separately cached amount.
       const favPlaylist = this.playlists.find(p => p.id === 'fav');
       if (favPlaylist) {
         const storedAmountStr = this.storageService.getItem(`${userId}_fav_Amount`);
@@ -119,8 +115,61 @@ export class PlaylistsComponent {
       }
 
       this.filterPlaylists();
+    };
+
+    const hasCompleteFreshCache = () => {
+      if (!storedPlaylists || isParseError || parsedPlaylists.length === 0) return false;
+      const hasFavouriteTracks = parsedPlaylists.some(playlist => playlist?.id === 'fav');
+      const hasCompletePortfolio = parsedPlaylists.every(playlist =>
+        typeof playlist?.id === 'string' && Number.isFinite(playlist?.tracks?.total)
+      );
+      return hasFavouriteTracks
+        && hasCompletePortfolio
+        && this.isFreshSinceDailyCutoff(this.storageService.getItem(lastUpdatedKey));
+    };
+
+    parseCachedPlaylists();
+    paintCachedPlaylists();
+
+    // A complete portfolio refreshed since the daily cutoff is authoritative.
+    // Re-entering this route must not spend Spotify quota to rediscover it.
+    if (hasCompleteFreshCache()) {
+      this.isRefreshingPlaylists = false;
+      return;
     }
 
+    // Expired, missing, or incomplete local data gets one bounded cloud chance.
+    // If Supabase is slow, Spotify starts after the head-start; the late cloud
+    // response is prevented from overwriting the newer fallback.
+    if (isBackupActive) {
+      this.isRefreshingPlaylists = true;
+      let spotifyFallbackStarted = false;
+      const cloudRestore = this.storageService.restoreItemsFromCloud(
+        [storageKey, lastUpdatedKey],
+        () => isCurrentLoad() && !spotifyFallbackStarted
+      );
+      const cloudFinishedInTime = await Promise.race([
+        cloudRestore.then(() => true).catch(error => {
+          console.warn('[Playlists] Cloud portfolio restore failed; continuing with Spotify.', error);
+          return true;
+        }),
+        new Promise<boolean>(resolve => setTimeout(() => resolve(false), this.cloudPriorityWindowMs))
+      ]);
+      if (!isCurrentLoad()) return;
+      if (cloudFinishedInTime) {
+        storedPlaylists = this.storageService.getItem(storageKey);
+        parseCachedPlaylists();
+        paintCachedPlaylists();
+        if (hasCompleteFreshCache()) {
+          this.isRefreshingPlaylists = false;
+          return;
+        }
+      } else {
+        spotifyFallbackStarted = true;
+      }
+    }
+
+    if (!isCurrentLoad()) return;
     await this.refreshPlaylistsFromSpotify(
       userId,
       storageKey,

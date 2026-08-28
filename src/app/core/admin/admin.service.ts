@@ -1,15 +1,25 @@
 import {Injectable} from '@angular/core';
 
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
+import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {AdminSyncRun, AdminUserSyncSettings, SiteSettings, SyncTaskKey} from './admin.models';
 
 @Injectable({providedIn: 'root'})
 export class AdminService {
   private adminPromise: Promise<boolean> | null = null;
 
-  constructor(private supabase: SupabaseService) {}
+  constructor(
+    private supabase: SupabaseService,
+    private auth: SpotifyAuthService
+  ) {}
 
   isAdmin(refresh = false): Promise<boolean> {
+    // Local-only sessions cannot be application administrators because they
+    // have no trusted cloud identity. Avoid an RPC that can only return false.
+    if (!this.auth.getSupabaseUserId()) {
+      this.adminPromise = Promise.resolve(false);
+      return this.adminPromise;
+    }
     if (!this.adminPromise || refresh) {
       this.adminPromise = Promise.resolve(this.supabase.client.rpc('is_app_admin')).then(({data, error}) => {
         if (error) return false;

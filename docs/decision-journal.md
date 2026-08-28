@@ -2,6 +2,28 @@
 
 This journal records product and architecture decisions that should survive implementation details and future redesigns.
 
+## 2026-08-28 — Use external APIs only for stale, missing, or explicitly requested data
+
+Status: Accepted
+
+### Context
+
+Spotify quota, network latency, and cloud round trips are limited resources. Reopening a route previously refreshed complete datasets even when a valid local copy was already available, and shared-playlist startup queried Supabase for local-only personal-app sessions. Parallel loading improves elapsed time only when it does not multiply work the user did not need.
+
+### Decision
+
+- Treat a complete, fresh local dataset as authoritative and make no external read for that feature.
+- Read private Supabase data only when the user has an established cloud identity and the feature needs missing, corrupt, or expired data. Public normalized catalog fallbacks remain available without creating a private identity.
+- Read Spotify only after the local and permitted cloud sources are missing, incomplete, or stale, or after an explicit user action that requires current remote data.
+- Make Spotify writes only for an explicit create/update action or an existing opt-in mapping, such as a downloaded shared playlist or enabled Song League playlist.
+- Run worker Spotify tasks only when their database schedule is due or an administrator has explicitly queued a manual run.
+- Use parallel and lazy loading to reduce wait time without increasing the set of API requests. Late lower-priority responses must not replace newer fallback data.
+- Use feature-specific freshness boundaries: playlist portfolios and short-term stats refresh after the daily 01:00 cutoff; medium- and long-term stats after seven days; listening history after five minutes; playlist details according to their manifest completeness and incremental refresh state.
+
+### Consequences
+
+Returning users see cached data immediately and repeated navigation does not spend Spotify or Supabase quota. Cloud collaboration still works for users who established a cloud identity, including recipients who disabled Cloud Backup. Truly stale data may briefly show while its replacement is assembled, and each new API-backed feature must define a completeness and freshness rule plus a regression test.
+
 ## 2026-08-16 — Allow local-first access through personal Spotify apps
 
 Status: Accepted

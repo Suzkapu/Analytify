@@ -42,7 +42,9 @@ export class PlaylistShareAutoSyncService {
   }
 
   start(): void {
-    if (this.started) return;
+    // Shared playlists are a cloud feature. Local-only Spotify sessions must
+    // not open a realtime channel or issue Supabase share queries.
+    if (this.started || !this.auth.getSupabaseUserId()) return;
     this.started = true;
     this.unsubscribeShareChanges = this.sharing.subscribeToShareChanges(() => this.runRecipientSyncInBackground());
     this.runInBackground();
@@ -84,8 +86,9 @@ export class PlaylistShareAutoSyncService {
   }
 
   private async performSync(includeOwner: boolean): Promise<void> {
-    if (!this.auth.isAuthenticated()) return;
+    if (!this.auth.isAuthenticated() || !this.auth.getSupabaseUserId()) return;
     await this.auth.ensureInitialSync();
+    if (!this.auth.getSupabaseUserId()) return;
     if (includeOwner && this.auth.isBackupActive()) {
       try {
         await this.syncOwnedSharesFromCache();

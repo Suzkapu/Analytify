@@ -10,6 +10,7 @@
     "retention:check": "node scripts/check-playlist-share-retention.mjs",
     "song-league-invites:check": "node scripts/check-song-league-invites.mjs",
     "performance:check": "node scripts/check-performance-contracts.mjs",
+    "api-usage:check": "node scripts/check-api-on-demand.mjs",
     "admin:check": "node scripts/check-admin-control-plane.mjs",
     "sync-service:check": "node --test services/sync-service/date-utils.test.js services/sync-service/task-registry.test.js services/sync-service/credential-store.test.js services/sync-service/spotify-client.test.js services/sync-service/tasks/shared-playlists-task.test.js",
     "typecheck": "tsc -p tsconfig.app.json --noEmit",
@@ -17,8 +18,8 @@
     "test:ci": "ng test --watch=false --browsers=ChromeHeadless --code-coverage --progress=false",
     "sync:once": "node services/sync-service/index.js",
     "sync:watch": "node services/sync-service/index.js --watch",
-    "verify": "npm run architecture:check && npm run retention:check && npm run song-league-invites:check && npm run performance:check && npm run admin:check && npm run sync-service:check && npm run typecheck && npm run typecheck:tests && npm run build:production",
-    "verify:ci": "npm run architecture:check && npm run retention:check && npm run song-league-invites:check && npm run performance:check && npm run admin:check && npm run sync-service:check && npm run typecheck && npm run typecheck:tests && npm run test:ci && npm run build:production",
+    "verify": "npm run architecture:check && npm run retention:check && npm run song-league-invites:check && npm run performance:check && npm run api-usage:check && npm run admin:check && npm run sync-service:check && npm run typecheck && npm run typecheck:tests && npm run build:production",
+    "verify:ci": "npm run architecture:check && npm run retention:check && npm run song-league-invites:check && npm run performance:check && npm run api-usage:check && npm run admin:check && npm run sync-service:check && npm run typecheck && npm run typecheck:tests && npm run test:ci && npm run build:production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
