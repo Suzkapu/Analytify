@@ -34,8 +34,8 @@ integrationDescribe('real Supabase-first playlist and stats loading', () => {
   let statsFixture: ComponentFixture<UserStatsComponent> | null = null;
 
   beforeAll(async () => {
-    const supabaseUrl = karmaArgs[integrationMarker + 1];
-    const supabaseAnonKey = karmaArgs[integrationMarker + 2];
+    const supabaseUrl = stripEnvironmentQuotes(karmaArgs[integrationMarker + 1]);
+    const supabaseAnonKey = stripEnvironmentQuotes(karmaArgs[integrationMarker + 2]);
     if (!supabaseUrl || !supabaseAnonKey) {
       throw new Error('The CI Supabase URL and anonymous key were not passed to Karma.');
     }
@@ -151,4 +151,8 @@ async function waitFor(predicate: () => boolean, timeoutMs = 10_000): Promise<vo
     }
     await new Promise(resolve => setTimeout(resolve, 25));
   }
+}
+
+function stripEnvironmentQuotes(value = ''): string {
+  return value.replace(/^['"]|['"]$/g, '');
 }

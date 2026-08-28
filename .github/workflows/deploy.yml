@@ -55,7 +55,8 @@ jobs:
           supabase status --workdir integration -o env \
             --override-name api.url=SUPABASE_INTEGRATION_URL \
             --override-name auth.anon_key=SUPABASE_INTEGRATION_ANON_KEY \
-            >> "$GITHUB_ENV"
+            > /tmp/analytify-supabase-integration.env
+          sed 's/"//g' /tmp/analytify-supabase-integration.env >> "$GITHUB_ENV"
 
       - name: Verify real Supabase-first playlist and stats loading
         run: npm run test:supabase-integration
