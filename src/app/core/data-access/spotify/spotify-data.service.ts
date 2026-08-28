@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { SpotifyAuthService } from "@core/auth/spotify-auth.service";
 import { Observable, throwError, BehaviorSubject, EMPTY, from, of, forkJoin, defer, timer } from "rxjs";
-import { catchError, concatMap, expand, map, mergeMap, reduce, take, toArray } from 'rxjs/operators';
+import { catchError, expand, map, mergeMap, reduce, take, toArray } from 'rxjs/operators';
 import {environment} from "@env/environment";
 import {StorageService} from "@core/data-access/storage/storage.service";
 import {createScopedLogger} from '@core/diagnostics/app-logger';
@@ -161,10 +161,10 @@ export class SpotifyDataService {
     if (uniqueIds.length === 0) return of({ artists: [] });
 
     return from(uniqueIds).pipe(
-      concatMap((id, index) => timer(index === 0 ? 0 : 500).pipe(
-        mergeMap(() => this.getSingleArtist(id)),
-        catchError(() => of(null))
-      )),
+      mergeMap(
+        id => this.getSingleArtist(id).pipe(catchError(() => of(null))),
+        4
+      ),
       toArray(),
       map(artists => ({ artists: artists.filter(Boolean) }))
     );

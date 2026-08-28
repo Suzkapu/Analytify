@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, from, Subscription } from 'rxjs';
+import {map, mergeMap, tap, toArray} from 'rxjs/operators';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
@@ -506,61 +507,69 @@ export class PlaylistLoaderService {
     targetArray: any[],
     cachedArtists: any[]
   ) {
-    if (task.playlistId === 'fav') {
-      const sub = this.spotifyDataService.getFavTracks(offset, limit).subscribe({
-        next: (tracks: any) => {
-          const pageItems = tracks.items || [];
-          if (Number.isFinite(tracks?.total) && tracks.total !== total) {
+    const offsets: number[] = [];
+    for (let pageOffset = offset; pageOffset < total; pageOffset += limit) {
+      offsets.push(pageOffset);
+    }
+
+    // Pages are independent once Spotify has supplied the authoritative total.
+    // Fetch a bounded group concurrently, then sort and apply all pages in one
+    // synchronous commit so request completion order never leaks into the UI.
+    const sub = from(offsets).pipe(
+      mergeMap(pageOffset => {
+        const request = task.playlistId === 'fav'
+          ? this.spotifyDataService.getFavTracks(pageOffset, limit)
+          : this.spotifyDataService.getAllTracksFromPlaylist(task.playlistId, pageOffset, limit);
+        return request.pipe(
+          tap(response => {
+            task.loadedTracksCount = Math.min(
+              task.loadedTracksCount + (response?.items || []).length,
+              total
+            );
+            task.emitUpdate();
+          }),
+          map(response => ({offset: pageOffset, response}))
+        );
+      }, 4),
+      toArray(),
+      map(pages => pages.sort((left, right) => left.offset - right.offset))
+    ).subscribe({
+      next: pages => {
+        for (const page of pages) {
+          const pageItems = page.response?.items || [];
+          if (
+            task.playlistId === 'fav' &&
+            Number.isFinite(page.response?.total) &&
+            page.response.total !== total
+          ) {
             this.failTask(task, new Error('Liked Songs changed while it was being synchronized. Please retry.'));
             return;
           }
-          if (pageItems.length === 0 && offset < total) {
-            this.failTask(task, new Error(`Spotify returned an empty favourite-tracks page at offset ${offset}.`));
+          if (pageItems.length === 0 && page.offset < total) {
+            const sourceName = task.playlistId === 'fav' ? 'favourite-tracks' : 'playlist';
+            this.failTask(task, new Error(`Spotify returned an empty ${sourceName} page at offset ${page.offset}.`));
             return;
           }
-          task.sourceEntries.push(...sourceEntriesFromSpotify(pageItems, offset));
-          this.getArtistsFromTracks(task, pageItems, targetArray, offset);
-          task.loadedTracksCount = Math.min(offset + pageItems.length, total);
-          task.emitUpdate();
-          
-          if (task.loadedTracksCount < total) {
-            this.loadRemainingTracks(task, userId, task.loadedTracksCount, limit, total, targetArray, cachedArtists);
-          } else {
-            this.verifyAndFinishTrackLoading(task, targetArray, cachedArtists, userId);
-          }
-        },
-        error: (err) => {
-          console.error('Error loading remaining fav tracks:', err);
-          this.failTask(task, err);
         }
-      });
-      task.addSub(sub);
-    } else {
-      const sub = this.spotifyDataService.getAllTracksFromPlaylist(task.playlistId, offset, limit).subscribe({
-        next: (tracks: any) => {
-          const pageItems = tracks.items || [];
-          if (pageItems.length === 0 && offset < total) {
-            this.failTask(task, new Error(`Spotify returned an empty playlist page at offset ${offset}.`));
-            return;
-          }
-          task.sourceEntries.push(...sourceEntriesFromSpotify(pageItems, offset));
-          this.getArtistsFromTracks(task, pageItems, targetArray, offset);
-          task.loadedTracksCount = Math.min(offset + pageItems.length, total);
-          task.emitUpdate();
-          
-          if (task.loadedTracksCount < total) {
-            this.loadRemainingTracks(task, userId, task.loadedTracksCount, limit, total, targetArray, cachedArtists);
-          } else {
-            this.verifyAndFinishTrackLoading(task, targetArray, cachedArtists, userId);
-          }
-        },
-        error: (err) => {
-          console.error('Error loading remaining playlist tracks:', err);
-          this.failTask(task, err);
+
+        for (const page of pages) {
+          const pageItems = page.response?.items || [];
+          task.sourceEntries.push(...sourceEntriesFromSpotify(pageItems, page.offset));
+          this.getArtistsFromTracks(task, pageItems, targetArray, page.offset, false);
         }
-      });
-      task.addSub(sub);
-    }
+        task.loadedTracksCount = Math.min(
+          pages.reduce((count, page) => count + (page.response?.items || []).length, offset),
+          total
+        );
+        task.emitUpdate();
+        this.verifyAndFinishTrackLoading(task, targetArray, cachedArtists, userId);
+      },
+      error: err => {
+        console.error('Error loading remaining playlist tracks:', err);
+        this.failTask(task, err);
+      }
+    });
+    task.addSub(sub);
   }
 
   private loadNewFavouriteTracksOnly(
@@ -1010,7 +1019,13 @@ export class PlaylistLoaderService {
     task.emitUpdate();
   }
 
-  private getArtistsFromTracks(task: PlaylistLoadTask, items: any[], targetArray: any[], offset: number = 0) {
+  private getArtistsFromTracks(
+    task: PlaylistLoadTask,
+    items: any[],
+    targetArray: any[],
+    offset: number = 0,
+    emitUpdate = true
+  ) {
     try {
       let highestIndex = offset;
       for (const [itemOffset, item] of items.entries()) {
@@ -1066,7 +1081,7 @@ export class PlaylistLoaderService {
         task.trackIndexCounter = highestIndex;
       }
       task.totalUniqueArtists = targetArray.length;
-      task.emitUpdate();
+      if (emitUpdate) task.emitUpdate();
     } catch (error) {
       console.error('Error getting artists from tracks:', error);
     }

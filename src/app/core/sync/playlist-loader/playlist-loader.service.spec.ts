@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { EMPTY, NEVER, filter, firstValueFrom, of, take } from 'rxjs';
+import { EMPTY, NEVER, Subject, filter, firstValueFrom, of, take } from 'rxjs';
 import { PlaylistLoaderService, PlaylistLoadTask } from './playlist-loader.service';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
@@ -132,6 +132,25 @@ describe('PlaylistLoaderService', () => {
     expect(task.progress$.value.totalTracks).toBe(5113);
     expect(task.progress$.value.playlistName).toBe('Road Trip');
     expect(task.progress$.value.isLoadingTracks).toBeTrue();
+  });
+
+  it('fetches remaining playlist pages with four-way bounded concurrency', () => {
+    const pages = new Map(
+      [50, 100, 150, 200, 250].map(offset => [offset, new Subject<any>()])
+    );
+    spotify.getAllTracksFromPlaylist.and.callFake(
+      (_playlistId, offset) => pages.get(offset)!.asObservable()
+    );
+    const task = new PlaylistLoadTask('playlist');
+    task.loadedTracksCount = 50;
+
+    (service as any).loadRemainingTracks(task, 'user', 50, 50, 300, [], []);
+
+    expect(spotify.getAllTracksFromPlaylist).toHaveBeenCalledTimes(4);
+    pages.get(50)!.next({items: [spotifyEntry('track-50', '2026-08-01T00:00:00Z')]});
+    pages.get(50)!.complete();
+    expect(spotify.getAllTracksFromPlaylist).toHaveBeenCalledTimes(5);
+    task.cancel();
   });
 
   it('counts duplicate tracks only once across artists', () => {

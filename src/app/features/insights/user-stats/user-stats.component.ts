@@ -5,6 +5,7 @@ import { StorageService } from '@core/data-access/storage/storage.service';
 import { forkJoin, Subscription } from 'rxjs';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {mapWithConcurrency, runAfterNextPaint} from '@core/performance/async-load';
 
 const console = createScopedLogger('Personal Stats');
 
@@ -59,6 +60,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   private statsLoadSequence = 0;
   private historyLoadSequence = 0;
   private statsSubscription: Subscription | null = null;
+  private cancelScheduledHistoryLoad: (() => void) | null = null;
 
   // Trend modal variables
   showTrendPopup: boolean = false;
@@ -82,17 +84,18 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    // Date selectors come from local metadata first and must not wait for the
-    // broad account sync or the current Spotify ranking request.
-    this.loadHistoryData();
+    // Start the visible selected-range request in the critical turn. Historical
+    // metadata begins only after the browser gets a paint opportunity, while
+    // broad account hydration remains fully independent in the background.
+    void this.loadStats();
+    this.scheduleHistoryLoad();
     if (this.authService.isAuthenticated()) {
       void this.authService.ensureInitialSync().then(() => {
         if (this.snapshotOptions.length === 0 && this.authService.isBackupActive()) {
-          this.loadHistoryData();
+          this.scheduleHistoryLoad();
         }
       }).catch(() => {});
     }
-    void this.loadStats();
   }
 
   ngOnDestroy() {
@@ -100,6 +103,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.historyLoadSequence++;
     this.statsSubscription?.unsubscribe();
     this.statsSubscription = null;
+    this.cancelScheduledHistoryLoad?.();
+    this.cancelScheduledHistoryLoad = null;
   }
 
   changeRange(range: string) {
@@ -116,8 +121,16 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.snapshotOptions = [];
     this.historyGroups = [];
     this.compareGroups = [];
-    this.loadHistoryData();
-    this.loadStats();
+    void this.loadStats();
+    this.scheduleHistoryLoad();
+  }
+
+  private scheduleHistoryLoad(): void {
+    this.cancelScheduledHistoryLoad?.();
+    this.cancelScheduledHistoryLoad = runAfterNextPaint(() => {
+      this.cancelScheduledHistoryLoad = null;
+      this.loadHistoryData();
+    });
   }
 
   changeCategory(category: string) {
@@ -193,6 +206,20 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
     parseCachedStats();
 
+    const hasUsableCachedStats = () =>
+      !isCacheIncomplete &&
+      (parsedTracks.length > 0 || parsedArtists.length > 0 || parsedGenres.length > 0);
+
+    // Stale-while-revalidate: never blank a complete current view merely
+    // because its refresh is due. The replacement is assembled off-screen and
+    // committed atomically when every required response has completed.
+    if (hasUsableCachedStats() && isExpired && isCurrentLoad()) {
+      this.topTracks = parsedTracks;
+      this.topArtists = parsedArtists;
+      this.topGenres = parsedGenres;
+      this.isLoading = true;
+    }
+
     if ((isExpired || isCacheIncomplete) && this.authService.isBackupActive()) {
       await this.storageService.restoreItemsFromCloud([
         tracksKey,
@@ -231,51 +258,47 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       if (this.authService.isBackupActive() && supabaseUserId) {
         this.isLoading = true;
         const maxAgeDays = range === 'short_term' ? 1 : 7;
-        const hasSnapshot = await this.supabaseService.hasRecentStatsSnapshot(
+        const dbSnapshot = await this.supabaseService.loadLatestStatsSnapshot(
           supabaseUserId,
           range,
           maxAgeDays
         );
         if (!isCurrentLoad()) return;
 
-        if (hasSnapshot) {
+        if (dbSnapshot) {
           console.log(`[Stats] Cache missing/expired. Fetching a recent stats snapshot for ${range} directly from Supabase Cloud...`);
-          const dbSnapshot = await this.supabaseService.loadLatestStatsSnapshot(
-            supabaseUserId,
-            range,
-            maxAgeDays
-          );
-          if (!isCurrentLoad()) return;
-
-          if (dbSnapshot) {
-            this.topTracks = dbSnapshot.topTracks;
-            this.topArtists = dbSnapshot.topArtists;
-            this.topGenres = dbSnapshot.topGenres || [];
+          const loadedTracks = dbSnapshot.topTracks;
+          const loadedArtists = dbSnapshot.topArtists;
+          const loadedGenres = dbSnapshot.topGenres || [];
+          this.topTracks = loadedTracks;
+          this.topArtists = loadedArtists;
+          this.topGenres = loadedGenres;
             
-            // Cache locally
-            this.storageService.setItem(tracksKey, JSON.stringify(this.topTracks));
-            this.storageService.setItem(artistsKey, JSON.stringify(this.topArtists));
-            this.storageService.setItem(genresKey, JSON.stringify(this.topGenres));
-            const parsedSnapshotTimestamp = dbSnapshot.snapshotDate
-              ? new Date(`${dbSnapshot.snapshotDate}T01:00:00`).getTime()
-              : Date.now();
-            const snapshotTimestamp = Number.isFinite(parsedSnapshotTimestamp)
-              ? parsedSnapshotTimestamp
-              : Date.now();
-            this.storageService.setItem(lastUpdatedKey, snapshotTimestamp.toString());
+          // Cache locally
+          this.storageService.setItem(tracksKey, JSON.stringify(loadedTracks));
+          this.storageService.setItem(artistsKey, JSON.stringify(loadedArtists));
+          this.storageService.setItem(genresKey, JSON.stringify(loadedGenres));
+          const parsedSnapshotTimestamp = dbSnapshot.snapshotDate
+            ? new Date(`${dbSnapshot.snapshotDate}T01:00:00`).getTime()
+            : Date.now();
+          const snapshotTimestamp = Number.isFinite(parsedSnapshotTimestamp)
+            ? parsedSnapshotTimestamp
+            : Date.now();
+          this.storageService.setItem(lastUpdatedKey, snapshotTimestamp.toString());
 
-            this.saveHistorySnapshot(userId, range);
-            this.isLoading = false;
-            return; // Skip Spotify API call entirely!
-          }
+          this.saveHistorySnapshot(userId, range);
+          this.isLoading = false;
+          return; // Skip Spotify API call entirely!
         }
       }
 
       console.log(`[Stats] Cache and database snapshot missing/expired. Loading stats for ${range} from Spotify API...`);
       this.isLoading = true;
-      this.topTracks = [];
-      this.topArtists = [];
-      this.topGenres = [];
+      if (!hasUsableCachedStats()) {
+        this.topTracks = [];
+        this.topArtists = [];
+        this.topGenres = [];
+      }
 
       const artistsReq = this.spotifyDataService.getUserTopArtists(range, 50, 0);
       const tracksReq = this.spotifyDataService.getUserTopTracks(range, 50, 0);
@@ -895,14 +918,14 @@ export class UserStatsComponent implements OnInit, OnDestroy {
                 const localDateKeys = new Set(localHistory.map((h: any) =>
                   h.snapshotDate || toDateKey(h.timestamp)
                 ));
-                for (const snap of dbSnapshots) {
+                const missingSnapshots = dbSnapshots.filter((snap: any) => {
                   const key = snap.snapshotDate || toDateKey(snap.timestamp);
-                  if (!localDateKeys.has(key)) {
-                    await this.storageService.saveStatsHistory({ ...snap, userId, isLoaded: false });
-                    localDateKeys.add(key);
-                    localUpdated = true;
-                  }
-                }
+                  return !localDateKeys.has(key);
+                });
+                await mapWithConcurrency(missingSnapshots, async (snap: any) => {
+                  await this.storageService.saveStatsHistory({ ...snap, userId, isLoaded: false });
+                  localUpdated = true;
+                });
               } catch (e) {
                 console.warn('[Stats] Failed to restore DB history snapshots locally:', e);
               }
@@ -914,7 +937,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
                 !cloudDateKeys.has(h.snapshotDate || toDateKey(h.timestamp))
               );
 
-              for (const localSnap of localOnlySnapshots) {
+              await mapWithConcurrency(localOnlySnapshots, async (localSnap: any) => {
                 const dateStr = localSnap.snapshotDate || toDateKey(localSnap.timestamp);
                 let explicitCount = 0;
                 (localSnap.topTracks || []).forEach((t: any) => {
@@ -936,7 +959,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
                   true,    // onlyInsertMissing — don't overwrite existing metadata objects
                   dateStr  // customDateStr — use the real historical date, not today
                 );
-              }
+              }, 2);
             } catch (e) {
               console.warn('[Stats] Failed to upload local-only snapshots to cloud:', e);
             }

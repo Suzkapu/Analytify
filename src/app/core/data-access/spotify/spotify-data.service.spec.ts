@@ -3,7 +3,7 @@ import {HttpClientTestingModule, HttpTestingController} from '@angular/common/ht
 import {SpotifyDataService} from './spotify-data.service';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
-import {firstValueFrom, of, throwError} from 'rxjs';
+import {firstValueFrom, of, Subject, throwError} from 'rxjs';
 
 describe('SpotifyDataService', () => {
   let service: SpotifyDataService;
@@ -94,6 +94,31 @@ describe('SpotifyDataService', () => {
     expect(await firstValueFrom(service.getTracksByIds([]))).toEqual({ tracks: [] });
     expect(artistRequest).not.toHaveBeenCalled();
     expect(trackRequest).not.toHaveBeenCalled();
+  });
+
+  it('loads artist profiles with bounded parallel requests', async () => {
+    const subjects = new Map(
+      ['one', 'two', 'three', 'four', 'five'].map(id => [id, new Subject<any>()])
+    );
+    const artistRequest = spyOn(service, 'getSingleArtist').and.callFake(
+      id => subjects.get(id)!.asObservable()
+    );
+
+    const resultPromise = firstValueFrom(service.getArtistsByIds(Array.from(subjects.keys())));
+
+    expect(artistRequest).toHaveBeenCalledTimes(4);
+    subjects.get('one')!.next({id: 'one'});
+    subjects.get('one')!.complete();
+    expect(artistRequest).toHaveBeenCalledTimes(5);
+
+    ['two', 'three', 'four', 'five'].forEach(id => {
+      subjects.get(id)!.next({id});
+      subjects.get(id)!.complete();
+    });
+    const result = await resultPromise;
+
+    expect(result.artists.map((artist: any) => artist.id).sort())
+      .toEqual(['five', 'four', 'one', 'three', 'two']);
   });
 
   it('does not retry a Spotify quota-exceeded response', async () => {

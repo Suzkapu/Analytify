@@ -4,6 +4,7 @@ import {StorageService} from '@core/data-access/storage/storage.service';
 import {ComparePlaylist, CompareTrack} from './compare-room.models';
 import {ParticipantSpotifyService} from './participant-spotify.service';
 import {PlaylistLoaderService} from '@core/sync/playlist-loader/playlist-loader.service';
+import {mapWithConcurrency} from '@core/performance/async-load';
 
 @Injectable({providedIn: 'root'})
 export class ComparePlaylistSourceService {
@@ -88,11 +89,15 @@ export class ComparePlaylistSourceService {
     accessToken: string,
     spotifyUserId: string
   ): Promise<{tracks: CompareTrack[]; source: 'local' | 'cloud' | 'spotify'}> {
+    const results = await mapWithConcurrency(
+      playlists,
+      playlist => this.loadMainTracks(playlist, accessToken, spotifyUserId),
+      3
+    );
     const tracks: CompareTrack[] = [];
     const seen = new Set<string>();
     const sources = new Set<'local' | 'cloud' | 'spotify'>();
-    for (const playlist of playlists) {
-      const result = await this.loadMainTracks(playlist, accessToken, spotifyUserId);
+    for (const result of results) {
       sources.add(result.source);
       result.tracks.forEach(track => {
         if (seen.has(track.id)) return;

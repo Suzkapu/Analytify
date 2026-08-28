@@ -83,24 +83,30 @@ export class PlaylistSharingService {
   }
 
   async loadShare(shareId: string): Promise<PlaylistShareDetails> {
-    const {data: shareRow, error: shareError} = await this.supabase.client
+    const shareRequest = this.supabase.client
       .from('playlist_shares')
       .select('*')
       .eq('id', shareId)
       .maybeSingle();
-    if (shareError) throw shareError;
-    if (!shareRow) throw new Error('This shared playlist is unavailable or has been revoked.');
-
-    const trackRows = await this.loadAllShareTracks(shareId);
-
-    const {data: downloadRow, error: downloadError} = await this.supabase.client
+    const downloadRequest = this.supabase.client
       .from('playlist_share_downloads')
       .select('*')
       .eq('share_id', shareId)
       .maybeSingle();
+    const [
+      {data: shareRow, error: shareError},
+      trackRows,
+      {data: downloadRow, error: downloadError},
+      currentUserId
+    ] = await Promise.all([
+      shareRequest,
+      this.loadAllShareTracks(shareId),
+      downloadRequest,
+      this.currentAuthUserId()
+    ]);
+    if (shareError) throw shareError;
+    if (!shareRow) throw new Error('This shared playlist is unavailable or has been revoked.');
     if (downloadError) throw downloadError;
-
-    const currentUserId = await this.currentAuthUserId();
 
     return {
       share: this.mapShare(shareRow),

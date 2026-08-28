@@ -4,6 +4,9 @@ const stats = readFileSync('src/app/features/insights/user-stats/user-stats.comp
 const storage = readFileSync('src/app/core/data-access/storage/storage.service.ts', 'utf8');
 const migration = readFileSync('supabase/migrations/20260828163000_stats_snapshot_date_index.sql', 'utf8');
 const guard = readFileSync('src/app/core/auth/spotify-auth.guard.ts', 'utf8');
+const asyncLoad = readFileSync('src/app/core/performance/async-load.ts', 'utf8');
+const playlistLoader = readFileSync('src/app/core/sync/playlist-loader/playlist-loader.service.ts', 'utf8');
+const compareSource = readFileSync('src/app/core/compare-room/compare-playlist-source.service.ts', 'utf8');
 
 const historyStart = stats.indexOf('loadHistoryData()');
 const historyEnd = stats.indexOf('\n\n  getTrend(', historyStart);
@@ -14,7 +17,12 @@ const checks = [
   ['Trend popup uses a single-item rank query', stats.includes('loadStatsItemTrend(')],
   ['IndexedDB history has a user/range index', storage.includes("createIndex(this.statsUserRangeIndex, ['userId', 'range']")],
   ['server snapshot dates have a covering index', migration.includes('user_id, range, snapshot_date desc')],
-  ['route guard starts cloud hydration without awaiting it', guard.includes('void authService.ensureInitialSync()')]
+  ['route guard starts cloud hydration without awaiting it', guard.includes('void authService.ensureInitialSync()')],
+  ['current stats start before deferred history', stats.indexOf('void this.loadStats()') < stats.indexOf('this.scheduleHistoryLoad()')],
+  ['background history yields to the first paint', stats.includes('runAfterNextPaint')],
+  ['bounded async work preserves result order', asyncLoad.includes('results[index] = await worker')],
+  ['playlist pagination uses bounded parallel requests', playlistLoader.includes('}, 4),')],
+  ['multi-playlist comparison loads concurrently', compareSource.includes('mapWithConcurrency(')]
 ];
 
 const failures = checks.filter(([, valid]) => !valid).map(([label]) => label);

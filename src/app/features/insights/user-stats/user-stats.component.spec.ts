@@ -1,4 +1,5 @@
 import {UserStatsComponent} from './user-stats.component';
+import {NEVER} from 'rxjs';
 
 describe('UserStatsComponent trends', () => {
   let component: UserStatsComponent;
@@ -156,7 +157,7 @@ describe('UserStatsComponent trends', () => {
     expect(component.isCacheExpired(String(eightDaysAgo), 'medium_term')).toBeTrue();
   });
 
-  it('starts local history and current stats without waiting for account hydration', () => {
+  it('starts current stats first and defers history without waiting for account hydration', () => {
     const auth = {
       isAuthenticated: () => true,
       ensureInitialSync: () => new Promise<void>(() => {}),
@@ -173,8 +174,44 @@ describe('UserStatsComponent trends', () => {
 
     immediateComponent.ngOnInit();
 
-    expect(loadHistory).toHaveBeenCalledTimes(1);
     expect(loadStats).toHaveBeenCalledTimes(1);
+    expect(loadHistory).not.toHaveBeenCalled();
+
+    jasmine.clock().tick(500);
+
+    expect(loadHistory).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps complete stale current stats visible while its parallel refresh is pending', async () => {
+    const values: Record<string, string> = {
+      'user_stats_short_term_tracks': JSON.stringify([{id: 'cached-track'}]),
+      'user_stats_short_term_artists': JSON.stringify([{id: 'cached-artist'}]),
+      'user_stats_short_term_genres': JSON.stringify([{name: 'cached-genre'}]),
+      'user_stats_short_term_lastUpdated': '1'
+    };
+    const spotify = {
+      getUserTopArtists: jasmine.createSpy('getUserTopArtists').and.returnValue(NEVER),
+      getUserTopTracks: jasmine.createSpy('getUserTopTracks').and.returnValue(NEVER)
+    };
+    const staleComponent = new UserStatsComponent(
+      spotify as any,
+      {
+        getUserId: () => 'user',
+        getSupabaseUserId: () => null,
+        isBackupActive: () => false
+      } as any,
+      {getItem: (key: string) => values[key] ?? null} as any,
+      null as any
+    );
+
+    await staleComponent.loadStats();
+
+    expect(staleComponent.topTracks.map(track => track.id)).toEqual(['cached-track']);
+    expect(staleComponent.topArtists.map(artist => artist.id)).toEqual(['cached-artist']);
+    expect(staleComponent.topGenres.map(genre => genre.name)).toEqual(['cached-genre']);
+    expect(staleComponent.isLoading).toBeTrue();
+    expect(spotify.getUserTopArtists).toHaveBeenCalledTimes(1);
+    expect(spotify.getUserTopTracks).toHaveBeenCalledTimes(2);
   });
 
   it('loads one item trend instead of every historical Top list', async () => {
