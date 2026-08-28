@@ -123,10 +123,12 @@ integrationDescribe('real Supabase-first playlist and stats loading', () => {
 
     statsFixture = TestBed.createComponent(UserStatsComponent);
     spyOn<any>(statsFixture.componentInstance, 'scheduleHistoryLoad');
-    // Current-stat loading writes a local history snapshot and normally starts
-    // a second, deferred history-metadata query. History has its own tests; this
-    // CI case is intentionally scoped to the visible current-stat restore.
-    spyOn(statsFixture.componentInstance, 'loadHistoryData');
+    // Current-stat loading normally persists a history snapshot, whose completed
+    // write starts an independent history-metadata query. Stop that workflow at
+    // its synchronous boundary so no promise can outlive Jasmine's spy cleanup.
+    // History persistence has its own tests; this case verifies the visible
+    // current-stat restore and the absence of Spotify HTTP requests.
+    spyOn(statsFixture.componentInstance, 'saveHistorySnapshot');
     statsFixture.detectChanges();
     await waitFor(() => statsFixture!.componentInstance.topTracks.length === 1);
     statsFixture.detectChanges();
