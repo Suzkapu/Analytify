@@ -124,6 +124,8 @@ Run the same headless unit-test gate used by GitHub Actions when Chrome is avail
 npm run verify:ci
 ```
 
+GitHub Actions additionally starts an isolated Supabase/PostgREST stack and runs `npm run test:supabase-integration`. That CI-only integration begins with empty IndexedDB, restores seeded playlist and current-stat data through the real `SupabaseService` and `StorageService`, renders the real Angular components, and fails if the mocked Spotify HTTP boundary receives a request. It uses no production database, Spotify token, or Spotify client secret and is intentionally not part of the ordinary local verification command.
+
 Every push runs this gate and, after it succeeds, deploys that branch to the shared live server. Pull-request-only events remain verification/preview builds and never receive deployment credentials. A manually dispatched workflow can also deploy its selected branch.
 
 The application uses lazy-loaded vertical feature slices, shared layout/UI modules, and a root-only core infrastructure layer. See [Architecture](docs/architecture.md) for the directory map, dependency rules, and instructions for adding a page or service.

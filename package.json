@@ -16,6 +16,7 @@
     "typecheck": "tsc -p tsconfig.app.json --noEmit",
     "typecheck:tests": "tsc -p tsconfig.spec.json --noEmit",
     "test:ci": "ng test --watch=false --browsers=ChromeHeadless --code-coverage --progress=false",
+    "test:supabase-integration": "ng test --watch=false --browsers=ChromeHeadless --karma-config karma.supabase-integration.conf.cjs --include=src/app/integration/supabase-loading.integration.spec.ts --progress=false",
     "sync:once": "node services/sync-service/index.js",
     "sync:watch": "node services/sync-service/index.js --watch",
     "verify": "npm run architecture:check && npm run retention:check && npm run song-league-invites:check && npm run performance:check && npm run api-usage:check && npm run admin:check && npm run sync-service:check && npm run typecheck && npm run typecheck:tests && npm run build:production",

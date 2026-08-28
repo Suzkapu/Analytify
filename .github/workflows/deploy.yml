@@ -39,15 +39,33 @@ jobs:
       - name: Verify tests and production build
         run: npm run verify:ci
 
-      - name: Validate deployment script
-        run: bash -n scripts/deploy.sh scripts/deploy-supabase.sh
-
       - name: Set up Supabase CLI
-        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         uses: supabase/setup-cli@3c2f5e2ae34c34e428e8e206e2c4d21fa2d20fbf # v2.1.1
         with:
           version: 2.84.2
           github-token: ${{ github.token }}
+
+      - name: Start isolated Supabase loading-test stack
+        run: >-
+          supabase start --workdir integration
+          -x studio,imgproxy,storage-api,realtime,gotrue,mailpit,postgres-meta,edge-runtime,logflare,vector,supavisor
+
+      - name: Export isolated Supabase browser-test settings
+        run: |
+          supabase status --workdir integration -o env \
+            --override-name api.url=SUPABASE_INTEGRATION_URL \
+            --override-name auth.anon_key=SUPABASE_INTEGRATION_ANON_KEY \
+            >> "$GITHUB_ENV"
+
+      - name: Verify real Supabase-first playlist and stats loading
+        run: npm run test:supabase-integration
+
+      - name: Stop isolated Supabase loading-test stack
+        if: always()
+        run: supabase stop --workdir integration --no-backup
+
+      - name: Validate deployment script
+        run: bash -n scripts/deploy.sh scripts/deploy-supabase.sh
 
       - name: Deploy Supabase schema and functions
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'

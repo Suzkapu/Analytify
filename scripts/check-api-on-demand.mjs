@@ -8,6 +8,8 @@ const admin = readFileSync('src/app/core/admin/admin.service.ts', 'utf8');
 const stats = readFileSync('src/app/features/insights/user-stats/user-stats.component.ts', 'utf8');
 const history = readFileSync('src/app/features/insights/listening-history/listening-history.component.ts', 'utf8');
 const scheduler = readFileSync('services/sync-service/scheduler.js', 'utf8');
+const integration = readFileSync('src/app/integration/supabase-loading.integration.spec.ts', 'utf8');
+const workflow = readFileSync('.github/workflows/deploy.yml', 'utf8');
 
 const playlistLoadStart = playlists.indexOf('async loadPlaylists()');
 const playlistRefreshStart = playlists.indexOf('private async refreshPlaylistsFromSpotify', playlistLoadStart);
@@ -30,7 +32,12 @@ const checks = [
   ['Stats return from complete unexpired cache', stats.includes('if (!isExpired && !isCacheIncomplete)') && stats.includes('if (!isCacheIncomplete) return;')],
   ['Listening history has a five-minute request freshness gate', history.includes('Date.now() - lastChecked < 5 * 60 * 1000')],
   ['Scheduled worker skips tasks that are not due', scheduler.includes('state?.next_run_at') && scheduler.includes('> now.getTime()) continue;')],
-  ['Manual worker runs only queued jobs', scheduler.includes(".eq('status', 'queued')")]
+  ['Manual worker runs only queued jobs', scheduler.includes(".eq('status', 'queued')")],
+  ['Supabase loading integration uses the real cloud query', integration.includes("spyOn(supabase, 'loadUserCache').and.callThrough()")],
+  ['Supabase loading integration renders both playlist and stats fixtures', integration.includes("toContain('CI Cloud Playlist')") && integration.includes("toContain('CI Supabase Song')")],
+  ['Supabase loading integration rejects Spotify HTTP calls', integration.includes('http.expectNone(request => request.url.startsWith(environment.spotifyUrl))')],
+  ['GitHub Actions starts the isolated Supabase stack', workflow.includes('supabase start --workdir integration')],
+  ['Deployment is gated by the Supabase loading integration', workflow.includes('npm run test:supabase-integration')]
 ];
 
 const failures = checks.filter(([, valid]) => !valid).map(([label]) => label);
