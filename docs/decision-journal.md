@@ -2,6 +2,29 @@
 
 This journal records product and architecture decisions that should survive implementation details and future redesigns.
 
+## 2026-08-16 — Allow local-first access through personal Spotify apps
+
+Status: Accepted
+
+### Context
+
+Spotify Development Mode limits a developer app to a small allowlist. Requiring every listener to use Analytify's hosted Spotify app prevents otherwise interested users from using local playlist and statistics features. Asking for email-based Analytify accounts would also collect recovery data that is unnecessary for those features.
+
+### Decision
+
+- Offer a visible personal-app login that accepts only Spotify's public Client ID and uses Authorization Code with PKCE.
+- Keep Playlists, Stats, History, and analysis local by default, with no Supabase user creation.
+- Never request a Spotify Client Secret, email address, phone number, password, or recovery identity.
+- Permit Spotify ID, display name, and profile image because they already identify an Analytify profile.
+- Create a browser-bound anonymous Supabase identity only after explicit cloud-feature consent.
+- Encrypt scheduled refresh tokens with a server-only AES-256-GCM key and support both hosted and personal-app refresh modes.
+- Allow an authenticated existing profile to switch to a personal Client ID only after Spotify verifies the same Spotify ID.
+- Permanently delete an anonymous cloud identity and its linked data when its unrecoverable browser session is logged out or cleared.
+
+### Consequences
+
+Core features are available beyond the hosted app allowlist without collecting new recovery data. Personal-app users must configure an exact callback and meet Spotify's own Development Mode requirements. Anonymous cloud profiles cannot be restored on another browser, and the deployment encryption key becomes durable production infrastructure that must be backed up securely.
+
 ## 2026-08-09 — Use a dedicated Workspace launcher
 
 Status: Accepted

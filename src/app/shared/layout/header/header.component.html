@@ -101,6 +101,9 @@
             class="dropdown-item" role="menuitem">
             <i class="pi pi-external-link"></i><span>Manage Spotify access</span>
           </a>
+          <button (click)="openPersonalSpotifyConnection()" class="dropdown-item" role="menuitem">
+            <i class="pi pi-key"></i><span>{{ authService.isPersonalAppConnection() ? 'Change personal Spotify app' : 'Use personal Spotify app' }}</span>
+          </button>
           <button (click)="openClearDataModal()" class="dropdown-item danger" role="menuitem">
             <i class="pi pi-trash"></i><span>Clear data</span>
           </button>
@@ -153,11 +156,28 @@
     </div>
     <h3 class="confirm-modal-title">Confirm Local Reset</h3>
     <p class="confirm-modal-text">
-      Are you absolutely sure? This will delete all local history caches and snapshots in this browser, and log you out. This action is irreversible.
+      Are you absolutely sure? This will delete all local history caches and snapshots in this browser, and log you out.
+      <ng-container *ngIf="authService.isAnonymousCloudIdentity()"> Your anonymous cloud identity and all data linked to it will also be permanently deleted because it cannot be recovered without this browser.</ng-container>
+      This action is irreversible.
     </p>
     <div class="confirm-modal-actions">
       <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="cancelLocalDelete()">Cancel</button>
       <button class="confirm-modal-btn confirm-modal-btn-confirm" (click)="confirmLocalDelete()">Clear and Logout</button>
+    </div>
+  </div>
+</div>
+
+<!-- Anonymous Identity Logout Confirmation -->
+<div class="confirm-modal-overlay" *ngIf="showGuestLogoutConfirmModal" (click)="showGuestLogoutConfirmModal = false">
+  <div class="confirm-modal-card" (click)="$event.stopPropagation()">
+    <div class="confirm-modal-icon danger-icon"><i class="pi pi-exclamation-triangle danger-text"></i></div>
+    <h3 class="confirm-modal-title danger-text">Delete anonymous cloud identity?</h3>
+    <p class="confirm-modal-text">This account has no email, password, or recovery identity. Logging out permanently deletes its Cloud Backup, shares, Song League membership, scheduled credentials, and local session.</p>
+    <div class="confirm-modal-actions">
+      <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="showGuestLogoutConfirmModal = false">Cancel</button>
+      <button class="confirm-modal-btn confirm-modal-btn-confirm danger-btn" (click)="confirmGuestLogout()" [disabled]="isGuestLogoutRunning">
+        <i class="pi pi-spin pi-spinner action-spinner" *ngIf="isGuestLogoutRunning"></i>{{ isGuestLogoutRunning ? 'Deleting…' : 'Delete and Log Out' }}
+      </button>
     </div>
   </div>
 </div>
@@ -190,7 +210,7 @@
     </div>
     <h3 class="confirm-modal-title">Enable Cloud Backup</h3>
     <p class="confirm-modal-text">
-      This action will upload your Spotify listening history and stats snapshots to a cloud server to synchronize them across multiple devices. Your data will no longer be stored solely on your local device.
+      This action will upload your Spotify ID, display name, profile image, listening history, and stats snapshots to a cloud server. Personal-app users receive an anonymous identity with no email, phone number, password, or recovery identity. Its Spotify refresh token is encrypted for scheduled features, and the identity cannot be recovered after this browser is cleared.
     </p>
     <div class="confirm-modal-actions">
       <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="cancelBackupToggle()">Cancel</button>

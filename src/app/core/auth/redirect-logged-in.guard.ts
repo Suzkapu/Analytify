@@ -16,10 +16,10 @@ export const redirectLoggedInGuard = async () => {
   // Wait for StorageService to finish loading from IndexedDB
   await storageService.initFromDB();
 
-  // Try to restore session from Supabase if not authenticated locally
+  // Restore either a local personal-app refresh token or the hosted Supabase session.
   if (!authService.isAuthenticated()) {
     try {
-      await authService.restoreSessionFromSupabase();
+      await authService.recoverUsableSession();
     } catch (e) {
       console.warn('[Guard] Failed to restore session from Supabase:', e);
     }

@@ -9,6 +9,7 @@ export const environment = {
   // secret in this browser configuration.
   spotifyClientId: '9b03c8eb85dd4df483c3ae097e6c39f0',
   spotifyRedirectUri: 'https://analytify.dynv6.net/callback',
+  personalSpotifyRedirectUri: 'https://analytify.dynv6.net/spotify/callback',
   compareRoomRedirectUri: 'https://analytify.dynv6.net/compare-room/callback',
   spotifyScopes: [
     'user-read-private',

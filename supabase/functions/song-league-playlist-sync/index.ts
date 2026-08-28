@@ -1,4 +1,9 @@
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2.108.1';
+import {
+  decryptSpotifyRefreshToken,
+  encryptSpotifyRefreshToken,
+  StoredSpotifyCredential
+} from '../_shared/spotify-credential-crypto.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -53,18 +58,23 @@ async function spotifyRequest(
 
 async function refreshSpotifyAccessToken(
   refreshToken: string,
+  connectionMode: 'hosted' | 'personal_pkce',
+  personalClientId: string | null,
   clientId: string,
   clientSecret: string
 ): Promise<{accessToken: string; refreshToken?: string}> {
+  const effectiveClientId = connectionMode === 'personal_pkce' ? personalClientId : clientId;
+  if (!effectiveClientId) throw new Error('Spotify Client ID is missing.');
+  const parameters: Record<string, string> = {
+    grant_type: 'refresh_token',
+    refresh_token: refreshToken,
+    client_id: effectiveClientId
+  };
+  if (connectionMode === 'hosted') parameters.client_secret = clientSecret;
   const response = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    body: new URLSearchParams({
-      grant_type: 'refresh_token',
-      refresh_token: refreshToken,
-      client_id: clientId,
-      client_secret: clientSecret
-    })
+    body: new URLSearchParams(parameters)
   });
   const body = await response.json();
   if (!response.ok || !body.access_token) {
@@ -116,6 +126,7 @@ Deno.serve(async (request: Request) => {
     const serviceRoleKey = requiredEnvironment('SUPABASE_SERVICE_ROLE_KEY');
     const spotifyClientId = requiredEnvironment('SPOTIFY_CLIENT_ID');
     const spotifyClientSecret = requiredEnvironment('SPOTIFY_CLIENT_SECRET');
+    const encryptionKey = requiredEnvironment('SPOTIFY_TOKEN_ENCRYPTION_KEY');
     const authorization = request.headers.get('Authorization') || '';
     const jwt = authorization.replace(/^Bearer\s+/i, '');
     if (!jwt) return json({error: 'Authentication is required.'}, 401);
@@ -165,14 +176,21 @@ Deno.serve(async (request: Request) => {
       if (membersError) throw membersError;
 
       const userIds = (members || []).map((member: any) => member.user_id);
-      const [{data: profiles, error: profileError}, {data: mappings, error: mappingError}] = await Promise.all([
+      const [
+        {data: profiles, error: profileError},
+        {data: credentialRows, error: credentialError},
+        {data: mappings, error: mappingError}
+      ] = await Promise.all([
         admin.from('users').select('id, spotify_refresh_token').in('id', userIds),
+        admin.from('spotify_credentials').select('*').in('user_id', userIds),
         admin.from('song_league_playlists').select('*').eq('league_id', leagueId)
       ]);
       if (profileError) throw profileError;
+      if (credentialError) throw credentialError;
       if (mappingError) throw mappingError;
 
       const profileById = new Map((profiles || []).map((profile: any) => [profile.id, profile]));
+      const credentialById = new Map((credentialRows || []).map((credential: any) => [credential.user_id, credential]));
       const mappingById = new Map((mappings || []).map((mapping: any) => [mapping.user_id, mapping]));
       const targetMembers = (members || []).filter((member: any) =>
         createForCurrentUser
@@ -192,17 +210,42 @@ Deno.serve(async (request: Request) => {
         let playlistId = mapping?.spotify_playlist_id || '';
         let playlistUrl = mapping?.spotify_playlist_url || '';
         try {
-          if (!profile?.spotify_refresh_token) throw new Error('Reconnect Spotify so Analytify can maintain this playlist.');
+          const storedCredential: any = credentialById.get(member.user_id);
+          let connectionMode: 'hosted' | 'personal_pkce' = 'hosted';
+          let personalClientId: string | null = null;
+          let refreshToken = profile?.spotify_refresh_token || '';
+          if (storedCredential) {
+            connectionMode = storedCredential.connection_mode;
+            personalClientId = storedCredential.client_id || null;
+            refreshToken = await decryptSpotifyRefreshToken(
+              storedCredential as StoredSpotifyCredential,
+              encryptionKey
+            );
+          }
+          if (!refreshToken) throw new Error('Reconnect Spotify so Analytify can maintain this playlist.');
           const token = await refreshSpotifyAccessToken(
-            profile.spotify_refresh_token,
+            refreshToken,
+            connectionMode,
+            personalClientId,
             spotifyClientId,
             spotifyClientSecret
           );
-          if (token.refreshToken) {
-            const {error: tokenError} = await admin.from('users')
-              .update({spotify_refresh_token: token.refreshToken})
-              .eq('id', member.user_id);
+          if (!storedCredential || token.refreshToken) {
+            const nextRefreshToken = token.refreshToken || refreshToken;
+            const encrypted = await encryptSpotifyRefreshToken(nextRefreshToken, encryptionKey);
+            const {error: tokenError} = await admin.from('spotify_credentials').upsert({
+              user_id: member.user_id,
+              connection_mode: connectionMode,
+              client_id: connectionMode === 'personal_pkce' ? personalClientId : null,
+              refresh_token_ciphertext: encrypted.ciphertext,
+              refresh_token_nonce: encrypted.nonce,
+              key_version: 1,
+              updated_at: new Date().toISOString()
+            }, {onConflict: 'user_id'});
             if (tokenError) throw tokenError;
+            const {error: plaintextClearError} = await admin.from('users')
+              .update({spotify_refresh_token: null}).eq('id', member.user_id);
+            if (plaintextClearError) throw plaintextClearError;
           }
 
           if (!playlistId) {

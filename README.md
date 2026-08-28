@@ -59,6 +59,8 @@ Analytify turns your Spotify library and listening data into a clear, visual ove
 
 Analytify stores data locally in your browser so previously loaded views remain quickly available. Optional Cloud Backup keeps your history and snapshots available across sessions and enables automated daily collection. You can delete either the local cache or your personal cloud data from the profile menu. Song League requires Cloud Backup because its trusted daily snapshots are the source of every score.
 
+Users who are not allowlisted on Analytify's hosted Spotify app can choose **Use your own Spotify app** on the login page. They paste only their public Client ID and authorize with PKCE; no Client Secret, email, phone number, or Analytify registration is required. Core library and statistics features remain local until the user explicitly enables a cloud feature.
+
 ## Development
 
 ```bash
@@ -75,19 +77,31 @@ https://analytify.dynv6.net/compare-room/callback
 
 The existing `/callback` URLs remain required for the normal Supabase-backed login.
 
+Personal Spotify apps must register Analytify's dedicated callback exactly:
+
+```text
+http://127.0.0.1:4200/spotify/callback
+https://analytify.dynv6.net/spotify/callback
+```
+
+Each personal app uses Authorization Code with PKCE. When creating it, select Web API. Spotify currently requires the app owner to have Premium and limits a Development Mode app to five allowlisted Spotify users. Analytify uses Spotify's stable `account_id` for new local profiles when available, while existing profiles retain their established cache key.
+
 Shared Playlist claim links expire after seven days when unclaimed. Revocation removes the stored track snapshot and recipient download mapping immediately; a daily Supabase Cron job deletes expired unclaimed shares and 30-day revoked tombstones. Apply the migrations with `supabase db push` so the database-enforced retention policy and scheduled cleanup are active.
 
 Song League playlist creation requires the database migrations, the authenticated Edge Function, and its Spotify credentials:
 
 ```bash
 supabase db push
-supabase secrets set SPOTIFY_CLIENT_ID=... SPOTIFY_CLIENT_SECRET=...
+supabase secrets set SPOTIFY_CLIENT_ID=... SPOTIFY_CLIENT_SECRET=... SPOTIFY_TOKEN_ENCRYPTION_KEY=...
+supabase functions deploy spotify-credentials
 supabase functions deploy song-league-playlist-sync
 ```
 
+Enable **Anonymous Sign-Ins** in Supabase Authentication before personal-app users can opt into Cloud Backup or server-backed Workspace features. Anonymous identities contain no email or phone and are deleted when their browser-bound Analytify session is cleared.
+
 The configurable sync service replaces the former `scripts/daily-pull.js`. Its independent tasks cover listening history, each Spotify stats range, Shared Playlist sources and copies, and Song League playlist rollover. Administrators configure schedules and enqueue manual runs from `/admin`; the worker uses the same queue for scheduled and manual work.
 
-Create a protected GitHub Actions secret named `ADMIN_SPOTIFY_IDS` containing the comma-separated Spotify IDs allowed to administer the site. Deployment writes it to the worker as a mode-0600 file, and the worker reconciles `app_admins` on every pass. The worker also needs the existing Supabase service-role and Spotify client credentials in its runtime environment.
+Create protected GitHub Actions secrets named `ADMIN_SPOTIFY_IDS` and `SPOTIFY_TOKEN_ENCRYPTION_KEY`. The latter must be a stable base64-encoded 32-byte key, which can be generated once with `openssl rand -base64 32`; losing or rotating it without a migration makes stored refresh tokens unreadable. Deployment writes both values to mode-0600 worker files. The same encryption key must be configured as a Supabase Edge Function secret.
 
 ```bash
 cd services/sync-service
@@ -96,7 +110,7 @@ npm start                 # long-running worker
 # or: npm run once        # one scheduler pass, useful from cron
 ```
 
-Apply `20260815120000_admin_control_plane.sql` before starting the worker. See [the sync-service guide](services/sync-service/README.md) for the systemd and migration rollout order.
+Apply `20260815120000_admin_control_plane.sql` and `20260816090000_personal_spotify_guest_access.sql` before starting the worker. At startup the worker encrypts existing hosted-app tokens and erases them from the deprecated column; first-use migration remains as a safe fallback. See [the sync-service guide](services/sync-service/README.md) for the rollout order.
 
 Run the complete compile and production-build verification before committing:
 

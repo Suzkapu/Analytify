@@ -19,19 +19,26 @@ function createSpotifyClient(config) {
     return text ? JSON.parse(text) : null;
   }
 
-  async function accessToken(refreshToken) {
+  async function accessToken(credential) {
+    if (!credential?.refreshToken) throw new Error('Spotify refresh credential is missing.');
+    const personal = credential.connectionMode === 'personal_pkce';
+    const clientId = personal ? credential.clientId : config.spotifyClientId;
+    if (!clientId) throw new Error('Spotify Client ID is missing.');
     const body = new URLSearchParams({
       grant_type: 'refresh_token',
-      refresh_token: refreshToken,
-      client_id: config.spotifyClientId,
-      client_secret: config.spotifyClientSecret
+      refresh_token: credential.refreshToken,
+      client_id: clientId
     });
+    if (!personal) body.set('client_secret', config.spotifyClientSecret);
     const data = await request('https://accounts.spotify.com/api/token', {
       method: 'POST',
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       body: body.toString()
     });
     if (!data?.access_token) throw new Error('Spotify did not return an access token.');
+    if (data.refresh_token && data.refresh_token !== credential.refreshToken) {
+      await credential.saveRefreshToken(data.refresh_token);
+    }
     return data.access_token;
   }
 

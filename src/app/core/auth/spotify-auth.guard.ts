@@ -20,10 +20,10 @@ export const spotifyAuthGuard = async (
   // Wait for StorageService to finish loading from IndexedDB
   await storageService.initFromDB();
 
-  // Try to restore session from Supabase if not authenticated locally
+  // Restore either a local personal-app refresh token or the hosted Supabase session.
   if (!authService.isAuthenticated()) {
     try {
-      await authService.restoreSessionFromSupabase();
+      await authService.recoverUsableSession();
     } catch (e) {
       console.warn('[Guard] Failed to restore session from Supabase:', e);
     }
@@ -39,7 +39,7 @@ export const spotifyAuthGuard = async (
         console.warn('[Guard] Spotify token refresh failed, redirecting to Spotify OAuth for renewal:', err);
         returnUrl.remember(state?.url);
         // Automatically redirect to Spotify OAuth without prompt: 'consent' for immediate login renewal
-        await authService.loginWithSupabase(false);
+        await authService.renewSpotifyAuthorization(state?.url || '/playlists');
         return false;
       }
     }

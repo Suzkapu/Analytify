@@ -29,7 +29,7 @@ export class SpotifyAuthInterceptor implements HttpInterceptor {
             catchError((refreshErr) => {
               console.error('Auto token refresh failed', refreshErr);
               console.warn('Refresh token is invalid or expired. Redirecting to Spotify OAuth for renewal.');
-              this.authService.loginWithSupabase(false);
+              this.authService.renewSpotifyAuthorization(window.location.pathname + window.location.search);
               return throwError(() => refreshErr);
             })
           );
@@ -72,7 +72,7 @@ export class SpotifyAuthInterceptor implements HttpInterceptor {
           ),
           catchError(refreshErr => {
             console.warn('Spotify token refresh failed after a 401. Redirecting to Spotify OAuth.', refreshErr);
-            this.authService.loginWithSupabase(false);
+            this.authService.renewSpotifyAuthorization(window.location.pathname + window.location.search);
             return throwError(() => refreshErr);
           })
         );

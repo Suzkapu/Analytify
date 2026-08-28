@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
     spotify_id VARCHAR(255) UNIQUE NOT NULL,
     display_name VARCHAR(255),
     profile_pic_url TEXT,
-    spotify_refresh_token TEXT,
+    spotify_refresh_token TEXT, -- Deprecated staged-migration source; encrypted Supabase credentials live below
     last_synced_at TIMESTAMPTZ, -- Coarse daily stats completion marker; per-range snapshots remain authoritative
     backup_active BOOLEAN DEFAULT false NOT NULL, -- Setting: Controls if automated database backup is enabled for the user
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL
@@ -215,6 +215,29 @@ If you host your application on **Supabase** and want to utilize native Supabase
 *If self-hosting a standard PostgreSQL instance, omit this section.*
 
 ```sql
+-- ─── 0. OPTIONAL ENCRYPTED SPOTIFY CREDENTIAL STORE ─────────────────────────
+-- Browser clients never receive table privileges. The spotify-credentials Edge
+-- Function encrypts refresh tokens with SPOTIFY_TOKEN_ENCRYPTION_KEY before
+-- inserting them, and trusted background workers decrypt them in memory only.
+CREATE TABLE IF NOT EXISTS public.spotify_credentials (
+  user_id UUID PRIMARY KEY REFERENCES public.users(id) ON DELETE CASCADE,
+  connection_mode TEXT NOT NULL CHECK (connection_mode IN ('hosted', 'personal_pkce')),
+  client_id TEXT,
+  refresh_token_ciphertext TEXT NOT NULL,
+  refresh_token_nonce TEXT NOT NULL,
+  key_version INTEGER NOT NULL DEFAULT 1 CHECK (key_version > 0),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  CONSTRAINT spotify_credentials_personal_client_check CHECK (
+    (connection_mode = 'hosted' AND client_id IS NULL)
+    OR (connection_mode = 'personal_pkce' AND client_id ~ '^[A-Za-z0-9]{32}$')
+  )
+);
+
+ALTER TABLE public.spotify_credentials ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON public.spotify_credentials FROM anon, authenticated;
+GRANT ALL ON public.spotify_credentials TO service_role;
+
 -- ─── 1. LINK TO SUPABASE INTERNAL AUTH ────────────────────────────────────────
 -- NOTE: In development mode, the foreign key constraint from users.id to auth.users.id
 -- is dropped so that development UUIDs (starting with 'de11') can exist.
@@ -2200,7 +2223,7 @@ begin
     coalesce(profile.display_name, 'Spotify user')::text,
     coalesce(profile.profile_pic_url, '')::text,
     profile.backup_active,
-    profile.spotify_refresh_token is not null,
+    (credential.user_id is not null or profile.spotify_refresh_token is not null),
     coalesce(settings.enabled, false),
     coalesce(settings.timezone, 'Europe/Vienna')::text,
     coalesce(settings.history_enabled, true),
@@ -2218,6 +2241,7 @@ begin
     state.last_success_at,
     state.last_error
   from public.users profile
+  left join public.spotify_credentials credential on credential.user_id = profile.id
   left join public.sync_user_settings settings on settings.user_id = profile.id
   left join lateral (
     select max(task.last_success_at) as last_success_at,

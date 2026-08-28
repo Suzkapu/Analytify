@@ -9,7 +9,7 @@
     "architecture:check": "node scripts/check-architecture.mjs",
     "retention:check": "node scripts/check-playlist-share-retention.mjs",
     "admin:check": "node scripts/check-admin-control-plane.mjs",
-    "sync-service:check": "node --test services/sync-service/date-utils.test.js services/sync-service/task-registry.test.js services/sync-service/tasks/shared-playlists-task.test.js",
+    "sync-service:check": "node --test services/sync-service/date-utils.test.js services/sync-service/task-registry.test.js services/sync-service/credential-store.test.js services/sync-service/spotify-client.test.js services/sync-service/tasks/shared-playlists-task.test.js",
     "typecheck": "tsc -p tsconfig.app.json --noEmit",
     "typecheck:tests": "tsc -p tsconfig.spec.json --noEmit",
     "test:ci": "ng test --watch=false --browsers=ChromeHeadless --code-coverage --progress=false",

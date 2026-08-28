@@ -37,6 +37,11 @@ function loadConfig() {
     supabaseServiceRoleKey: required('SUPABASE_SERVICE_ROLE_KEY', process.env.SUPABASE_SERVICE_ROLE_KEY),
     spotifyClientId: required('SPOTIFY_CLIENT_ID', process.env.SPOTIFY_CLIENT_ID),
     spotifyClientSecret: required('SPOTIFY_CLIENT_SECRET', process.env.SPOTIFY_CLIENT_SECRET),
+    spotifyTokenEncryptionKey: required('SPOTIFY_TOKEN_ENCRYPTION_KEY', readProtectedValue(
+      'SPOTIFY_TOKEN_ENCRYPTION_KEY',
+      'SPOTIFY_TOKEN_ENCRYPTION_KEY_FILE',
+      '.spotify-token-encryption-key'
+    )),
     adminSpotifyIds,
     pollSeconds: Math.max(15, Number(process.env.SYNC_SERVICE_POLL_SECONDS) || 60),
     maxJobsPerPass: Math.max(1, Math.min(50, Number(process.env.SYNC_SERVICE_MAX_JOBS) || 10))

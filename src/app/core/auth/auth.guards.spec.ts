@@ -17,9 +17,11 @@ describe('authentication guards', () => {
     auth = jasmine.createSpyObj<SpotifyAuthService>('SpotifyAuthService', [
       'isAuthenticated',
       'restoreSessionFromSupabase',
+      'recoverUsableSession',
       'isTokenExpired',
       'refreshToken',
       'loginWithSupabase',
+      'renewSpotifyAuthorization',
       'ensureInitialSync'
     ]);
     storage = jasmine.createSpyObj<StorageService>('StorageService', ['initFromDB']);
@@ -29,9 +31,11 @@ describe('authentication guards', () => {
 
     storage.initFromDB.and.resolveTo();
     auth.restoreSessionFromSupabase.and.resolveTo(false);
+    auth.recoverUsableSession.and.resolveTo(false);
     auth.isTokenExpired.and.returnValue(false);
     auth.refreshToken.and.returnValue(of({ access_token: 'refreshed-token' }));
     auth.loginWithSupabase.and.resolveTo();
+    auth.renewSpotifyAuthorization.and.resolveTo();
     auth.ensureInitialSync.and.resolveTo();
     router.navigate.and.resolveTo(true);
 
@@ -50,7 +54,7 @@ describe('authentication guards', () => {
 
     const allowed = await TestBed.runInInjectionContext(() => spotifyAuthGuard());
 
-    expect(storage.initFromDB).toHaveBeenCalledBefore(auth.restoreSessionFromSupabase);
+    expect(storage.initFromDB).toHaveBeenCalledBefore(auth.recoverUsableSession);
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
     expect(returnUrl.remember).toHaveBeenCalledWith(undefined);
     expect(allowed).toBeFalse();
@@ -74,7 +78,7 @@ describe('authentication guards', () => {
 
     const allowed = await TestBed.runInInjectionContext(() => spotifyAuthGuard());
 
-    expect(auth.loginWithSupabase).toHaveBeenCalledWith(false);
+    expect(auth.renewSpotifyAuthorization).toHaveBeenCalledWith('/playlists');
     expect(auth.ensureInitialSync).not.toHaveBeenCalled();
     expect(allowed).toBeFalse();
   });
@@ -93,7 +97,7 @@ describe('authentication guards', () => {
 
     const allowed = await TestBed.runInInjectionContext(() => redirectLoggedInGuard());
 
-    expect(auth.restoreSessionFromSupabase).toHaveBeenCalled();
+    expect(auth.recoverUsableSession).toHaveBeenCalled();
     expect(router.navigate).not.toHaveBeenCalled();
     expect(allowed).toBeTrue();
   });

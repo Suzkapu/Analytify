@@ -34,6 +34,12 @@
           <span>Continue with Spotify</span>
         </button>
 
+        <a routerLink="/spotify/connect" class="personal-app-button">
+          <i class="pi pi-key" aria-hidden="true"></i>
+          <span>Use your own Spotify app</span>
+        </a>
+        <p class="personal-app-note">No Analytify account, email, or Client Secret required.</p>
+
         <div class="compare-entry">
           <span>Want to compare with friends?</span>
           <a routerLink="/compare-room" class="compare-room-button">
@@ -43,7 +49,7 @@
         </div>
       </div>
 
-      <p class="login-privacy-note"><i class="pi pi-lock" aria-hidden="true"></i> Spotify credentials are handled by Spotify and are never shown to Analytify.</p>
+      <p class="login-privacy-note"><i class="pi pi-lock" aria-hidden="true"></i> Analytify never asks for your Spotify Client Secret. Personal-app sessions stay local unless you explicitly enable cloud features.</p>
     </article>
   </section>
 

@@ -5,6 +5,7 @@ const {loadConfig} = require('./config');
 const {createSpotifyClient} = require('./spotify-client');
 const {createTaskRegistry} = require('./task-registry');
 const {createScheduler} = require('./scheduler');
+const {createCredentialStore} = require('./credential-store');
 
 async function createService() {
   const config = loadConfig();
@@ -13,8 +14,16 @@ async function createService() {
     realtime: {transport: ws}
   });
   const spotify = createSpotifyClient(config);
+  const credentials = createCredentialStore({
+    supabase,
+    encryptionKey: config.spotifyTokenEncryptionKey
+  });
+  const migratedCredentials = await credentials.migrateAllLegacy();
+  if (migratedCredentials) {
+    console.log(`[Sync service] Encrypted ${migratedCredentials} legacy Spotify credential(s).`);
+  }
   const tasks = createTaskRegistry({supabase, spotify});
-  const scheduler = createScheduler({supabase, config, tasks});
+  const scheduler = createScheduler({supabase, config, tasks, credentials});
   return {config, scheduler};
 }
 

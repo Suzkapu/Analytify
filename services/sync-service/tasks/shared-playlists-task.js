@@ -139,7 +139,7 @@ function createSharedPlaylistsTask({supabase, spotify}) {
   }
 
   return async function runSharedPlaylistsTask({user}) {
-    const accessToken = await spotify.accessToken(user.spotify_refresh_token);
+    const accessToken = await spotify.accessToken(user.spotify_credential);
     return {
       refreshedSources: await refreshOwnedShares(user, accessToken),
       updatedCopies: await updateReceivedCopies(user, accessToken)

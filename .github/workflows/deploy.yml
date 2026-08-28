@@ -47,4 +47,5 @@ jobs:
           DEPLOY_USER: ${{ secrets.REMOTE_USER }}
           DEPLOY_TARGET: ${{ secrets.TARGET_DIR }}
           ADMIN_SPOTIFY_IDS: ${{ secrets.ADMIN_SPOTIFY_IDS }}
+          SPOTIFY_TOKEN_ENCRYPTION_KEY: ${{ secrets.SPOTIFY_TOKEN_ENCRYPTION_KEY }}
         run: bash scripts/deploy.sh

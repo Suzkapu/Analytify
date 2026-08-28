@@ -1,0 +1,75 @@
+:host { display: block; }
+
+.personal-connect-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  padding: clamp(20px, 5vw, 64px);
+  background: radial-gradient(circle at 15% 5%, rgba(30, 215, 96, .08), transparent 35%), var(--color-bg);
+}
+
+.personal-connect-card {
+  position: relative;
+  width: min(720px, 100%);
+  box-sizing: border-box;
+  padding: clamp(24px, 5vw, 48px);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-lg);
+}
+
+.back-button {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.eyebrow { color: var(--color-accent); font-size: .75rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+h1 { margin: 12px 48px 12px 0; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.02; letter-spacing: -.045em; }
+.lead { margin: 0; color: var(--color-text-muted); line-height: 1.6; }
+
+.setup-steps { list-style: none; margin: 34px 0; padding: 0; display: grid; gap: 28px; }
+.setup-steps li { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 14px; }
+.step-number { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; background: var(--color-accent-soft); color: var(--color-accent); font-weight: 900; }
+h2 { margin: 3px 0 7px; font-size: 1rem; }
+.setup-steps p { margin: 0 0 10px; color: var(--color-text-muted); font-size: .9rem; line-height: 1.5; }
+a { color: var(--color-accent); font-weight: 750; text-decoration: none; }
+label { display: block; margin: 14px 0 7px; color: var(--color-text); font-size: .82rem; font-weight: 750; }
+input { width: 100%; min-height: 48px; box-sizing: border-box; padding: 0 14px; border: 1px solid var(--color-border-strong); border-radius: 12px; background: var(--color-surface); color: var(--color-text); font: inherit; }
+input:focus { outline: 2px solid var(--color-accent-border); border-color: var(--color-accent); }
+.field-note { margin-top: 7px !important; color: var(--color-text-subtle) !important; font-size: .76rem !important; }
+
+.callback-field { display: flex; align-items: center; gap: 8px; padding: 8px 8px 8px 12px; border: 1px solid var(--color-border-strong); border-radius: 12px; background: var(--color-surface); }
+.callback-field code { min-width: 0; flex: 1; overflow-wrap: anywhere; color: var(--color-text); font-size: .78rem; }
+.callback-field button { min-height: 36px; border: 0; border-radius: 9px; padding: 0 11px; background: var(--color-surface-hover); color: var(--color-text); cursor: pointer; font: inherit; font-size: .78rem; font-weight: 750; }
+.callback-field i { margin-right: 6px; }
+
+.migration-note { display: flex; gap: 10px; margin-bottom: 18px; padding: 12px; border: 1px solid var(--color-accent-border); border-radius: 12px; background: var(--color-accent-soft); color: var(--color-text-muted); font-size: .8rem; line-height: 1.45; }
+.migration-note i { color: var(--color-accent); }
+.error-message { color: var(--color-danger, #ff7474); font-size: .86rem; }
+.actions { display: flex; justify-content: flex-end; gap: 10px; }
+.actions button { min-height: 46px; border-radius: var(--radius-pill); padding: 0 18px; font: inherit; font-weight: 800; cursor: pointer; }
+.actions .secondary { border: 1px solid var(--color-border-strong); background: transparent; color: var(--color-text); }
+.actions .primary { border: 0; background: var(--color-accent); color: var(--color-accent-contrast); }
+.actions .primary:disabled { opacity: .5; cursor: not-allowed; }
+.actions i { margin-right: 7px; }
+
+@media (max-width: 560px) {
+  .personal-connect-page { padding: 12px; align-items: start; }
+  .personal-connect-card { padding: 24px 18px; border-radius: 20px; }
+  .back-button { top: 18px; right: 18px; }
+  .callback-field { align-items: stretch; flex-direction: column; }
+  .actions { flex-direction: column-reverse; }
+  .actions button { width: 100%; }
+}
+

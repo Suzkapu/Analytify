@@ -30,7 +30,9 @@ export class HeaderComponent implements OnInit {
   showConfirmLocalDeleteModal = false;
   showConfirmDbDeleteModal = false;
   showBackupConfirmModal = false;
+  showGuestLogoutConfirmModal = false;
   isDeletingDbData = false;
+  isGuestLogoutRunning = false;
 
   constructor(
     public authService: SpotifyAuthService,
@@ -97,8 +99,32 @@ export class HeaderComponent implements OnInit {
   }
 
   async logout() {
+    if (this.authService.isAnonymousCloudIdentity()) {
+      this.showSettingsDropdown = false;
+      this.showGuestLogoutConfirmModal = true;
+      return;
+    }
     await this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  async confirmGuestLogout() {
+    this.isGuestLogoutRunning = true;
+    try {
+      await this.authService.logout();
+      this.showGuestLogoutConfirmModal = false;
+      await this.router.navigate(['/login']);
+    } catch (error) {
+      console.error('Failed to delete anonymous cloud identity:', error);
+      alert('The anonymous cloud identity could not be deleted, so Analytify kept you logged in. Please try again.');
+    } finally {
+      this.isGuestLogoutRunning = false;
+    }
+  }
+
+  openPersonalSpotifyConnection() {
+    this.showSettingsDropdown = false;
+    void this.router.navigate(['/spotify/connect'], {queryParams: {returnUrl: this.router.url}});
   }
 
   onBackupToggle(event: Event) {
@@ -161,10 +187,11 @@ export class HeaderComponent implements OnInit {
     this.showConfirmLocalDeleteModal = false;
     try {
       await this.authService.clearCacheAndLogout();
+      await this.router.navigate(['/login']);
     } catch (err) {
       console.error('Failed to clear cache and logout:', err);
+      alert('Analytify could not delete the anonymous cloud identity, so local data was not cleared. Please try again.');
     }
-    this.router.navigate(['/login']);
   }
 
   async confirmDbDelete() {

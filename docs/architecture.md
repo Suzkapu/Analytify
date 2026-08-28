@@ -29,6 +29,7 @@ src/app/
 supabase/
 ├── migrations/              # RLS, trusted scoring, and playlist state
 └── functions/
+    ├── spotify-credentials/  # Authenticated encrypted credential registration/deletion
     └── song-league-playlist-sync/ # Authenticated multi-account Spotify playlist refresh
 
 services/
@@ -58,7 +59,7 @@ shared ────> core (only when shared layout needs application state)
 
 ## Background synchronization
 
-The background worker is a separate service-role process. Its task registry isolates listening history, short-, medium-, and long-term stats, Shared Playlists, and Song League playlists. Scheduling configuration and run history live in Supabase; the Angular admin page only calls owner-checked RPCs and never receives service-role or Spotify client credentials.
+The background worker is a separate service-role process. Its task registry isolates listening history, short-, medium-, and long-term stats, Shared Playlists, and Song League playlists. Scheduling configuration and run history live in Supabase; the Angular admin page only calls owner-checked RPCs and never receives service-role or Spotify client credentials. Refresh tokens are AES-256-GCM encrypted with a deployment secret and decrypted only in trusted worker or Edge Function memory. Hosted connections refresh with the server's confidential client, while personal PKCE connections refresh with that user's public Client ID and no Client Secret.
 
 Manual runs and scheduled runs both enter `sync_job_runs`. A worker atomically claims queued rows, invokes the registered task, and updates `sync_task_state`, making retries and failures visible in the admin audit trail. Administrator identities are reconciled from the protected `ADMIN_SPOTIFY_IDS` deployment secret.
 
@@ -84,6 +85,6 @@ Manual runs and scheduled runs both enter `sync_job_runs`. A worker atomically c
 npm run verify
 ```
 
-This performs the architecture rules, playlist-share retention contract check, application type checking, test-source type checking, and the optimized production build. Use `npm run test:ci` for one headless unit-test run with coverage, or `npm run verify:ci` for the complete GitHub Actions gate. The gate runs on every push and pull request; deployment remains limited to successful `main` builds.
+This performs the architecture rules, playlist-share retention contract check, application type checking, test-source type checking, and the optimized production build. Use `npm run test:ci` for one headless unit-test run with coverage, or `npm run verify:ci` for the complete GitHub Actions gate. The gate runs on every push and pull request; every successful branch push deploys to the shared live server, while pull requests remain verification-only.
 
 Product and architecture choices that constrain future changes are recorded in the [decision journal](decision-journal.md).

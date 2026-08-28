@@ -1,10 +1,13 @@
 import {Injectable} from '@angular/core';
 import {environment} from "@env/environment";
-import {Observable, throwError, Subject, from, defer} from 'rxjs';
-import {tap, catchError, shareReplay, switchMap} from 'rxjs/operators';
+import {HttpClient, HttpContext, HttpHeaders, HttpParams} from '@angular/common/http';
+import {Observable, throwError, Subject, from, defer, firstValueFrom} from 'rxjs';
+import {tap, catchError, shareReplay, switchMap, finalize} from 'rxjs/operators';
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {PersonalSpotifyAuthRequest, SpotifyConnectionMode} from './spotify-auth.models';
+import {TRANSIENT_SPOTIFY_REQUEST} from '@core/compare-room/spotify-request-context';
 
 const console = createScopedLogger('Authentication');
 
@@ -24,6 +27,11 @@ function toDailySnapshotDateKey(timestamp: number): string {
 })
 export class SpotifyAuthService {
   private readonly storageKey = 'spotifyAccessToken';
+  private readonly connectionModeKey = 'spotifyConnectionMode';
+  private readonly personalClientIdKey = 'personalSpotifyClientId';
+  private readonly personalRequestKey = 'analytify_personal_spotify_auth_request';
+  private readonly anonymousCloudKey = 'anonymousCloudIdentity';
+  private readonly cloudIdentityReadyKey = 'cloudIdentityReady';
   private refreshObservable: Observable<any> | null = null;
   private restoreSessionPromise: Promise<boolean> | null = null;
   logout$ = new Subject<void>();
@@ -34,7 +42,8 @@ export class SpotifyAuthService {
 
   constructor(
     private storageService: StorageService,
-    private supabaseService: SupabaseService
+    private supabaseService: SupabaseService,
+    private http: HttpClient
   ) {
     this.storageService.initFromDB().then(async () => {
       // The callback owns the one-time PKCE code exchange. Starting session
@@ -43,7 +52,7 @@ export class SpotifyAuthService {
         return;
       }
       if (!this.isAuthenticated()) {
-        await this.restoreSessionFromSupabase().catch(() => {});
+        await this.recoverUsableSession().catch(() => false);
       }
       if (this.isAuthenticated()) {
         this.ensureInitialSync();
@@ -80,6 +89,7 @@ export class SpotifyAuthService {
       await this.clearSupabaseSession();
       this.clearSpotifyCredentials();
     }
+    this.storageService.setItem(this.connectionModeKey, 'hosted', false);
     const queryParams: any = {
       access_type: 'offline'
     };
@@ -94,6 +104,153 @@ export class SpotifyAuthService {
         queryParams
       }
     });
+  }
+
+  getConnectionMode(): SpotifyConnectionMode {
+    return this.storageService.getItem(this.connectionModeKey) === 'personal_pkce'
+      ? 'personal_pkce'
+      : 'hosted';
+  }
+
+  isPersonalAppConnection(): boolean {
+    return this.getConnectionMode() === 'personal_pkce';
+  }
+
+  getPersonalSpotifyClientId(): string {
+    return this.storageService.getItem(this.personalClientIdKey) || '';
+  }
+
+  hasCloudIdentity(): boolean {
+    if (!this.getSupabaseUserId()) return false;
+    return !this.isPersonalAppConnection()
+      || this.storageService.getItem(this.cloudIdentityReadyKey) === 'true';
+  }
+
+  isAnonymousCloudIdentity(): boolean {
+    return this.storageService.getItem(this.anonymousCloudKey) === 'true';
+  }
+
+  async startPersonalAppAuthorization(clientId: string, returnUrl = '/playlists'): Promise<void> {
+    const normalizedClientId = clientId.trim();
+    if (!/^[a-zA-Z0-9]{32}$/.test(normalizedClientId)) {
+      throw new Error('Enter the 32-character Client ID from your Spotify Developer app.');
+    }
+
+    const verifier = this.randomUrlSafeString(64);
+    const request: PersonalSpotifyAuthRequest = {
+      clientId: normalizedClientId,
+      state: this.randomUrlSafeString(32),
+      verifier,
+      returnUrl: this.safeInternalReturnUrl(returnUrl),
+      expectedSpotifyId: this.normalizedSpotifyId(this.getUserId()),
+      createdAt: Date.now()
+    };
+    const challenge = await this.createPkceChallenge(verifier);
+    sessionStorage.setItem(this.personalRequestKey, JSON.stringify(request));
+
+    const params = new URLSearchParams({
+      response_type: 'code',
+      client_id: normalizedClientId,
+      redirect_uri: environment.personalSpotifyRedirectUri,
+      scope: environment.spotifyScopes,
+      state: request.state,
+      code_challenge_method: 'S256',
+      code_challenge: challenge,
+      show_dialog: 'true'
+    });
+    window.location.assign(`${environment.authorizeUrl}?${params.toString()}`);
+  }
+
+  clearPendingPersonalAppAuthorization(): void {
+    sessionStorage.removeItem(this.personalRequestKey);
+  }
+
+  async handlePersonalAppCallback(code: string, state: string): Promise<string> {
+    const rawRequest = sessionStorage.getItem(this.personalRequestKey);
+    if (!rawRequest) {
+      throw new Error('The personal Spotify authorization request is missing or expired.');
+    }
+
+    let request: PersonalSpotifyAuthRequest;
+    try {
+      request = JSON.parse(rawRequest) as PersonalSpotifyAuthRequest;
+    } catch {
+      sessionStorage.removeItem(this.personalRequestKey);
+      throw new Error('The saved Spotify authorization request is invalid.');
+    }
+    sessionStorage.removeItem(this.personalRequestKey);
+    if (request.state !== state) {
+      throw new Error('Spotify returned an invalid authorization state. Please start again.');
+    }
+    if (Date.now() - request.createdAt > 10 * 60_000) {
+      throw new Error('The Spotify authorization request expired. Please start again.');
+    }
+    if (!/^[a-zA-Z0-9]{32}$/.test(request.clientId)) {
+      throw new Error('The saved Spotify Client ID is invalid.');
+    }
+
+    const tokenBody = new HttpParams()
+      .set('client_id', request.clientId)
+      .set('grant_type', 'authorization_code')
+      .set('code', code)
+      .set('redirect_uri', environment.personalSpotifyRedirectUri)
+      .set('code_verifier', request.verifier);
+    const token = await firstValueFrom(this.http.post<any>(
+      'https://accounts.spotify.com/api/token',
+      tokenBody.toString(),
+      {headers: new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'})}
+    ));
+    if (!token?.access_token || !token?.refresh_token) {
+      throw new Error('Spotify did not return the tokens required for a persistent session.');
+    }
+
+    const profile = await firstValueFrom(this.http.get<any>(`${environment.spotifyUrl}/me`, {
+      headers: new HttpHeaders({Authorization: `Bearer ${token.access_token}`}),
+      context: new HttpContext().set(TRANSIENT_SPOTIFY_REQUEST, true)
+    }));
+    const returnedSpotifyId = this.spotifyAccountIdentity(profile);
+    if (!returnedSpotifyId) {
+      throw new Error('Spotify did not return a usable profile.');
+    }
+    if (request.expectedSpotifyId && !this.spotifyProfileMatches(profile, request.expectedSpotifyId)) {
+      throw new Error('This Spotify account does not match the existing Analytify profile. No data was changed.');
+    }
+    // Existing profiles retain their established key so their local and cloud
+    // caches do not split when Spotify returns the newer stable account_id.
+    const effectiveSpotifyId = request.expectedSpotifyId || returnedSpotifyId;
+
+    if (this.getSupabaseUserId()) {
+      const rotatedRefreshToken = await this.registerCurrentSpotifyCredentials(profile, {
+        accessToken: token.access_token,
+        refreshToken: token.refresh_token,
+        connectionMode: 'personal_pkce',
+        clientId: request.clientId,
+        spotifyId: effectiveSpotifyId
+      });
+      if (rotatedRefreshToken) token.refresh_token = rotatedRefreshToken;
+    }
+
+    this.storageService.setItem(this.connectionModeKey, 'personal_pkce', false);
+    this.storageService.setItem(this.personalClientIdKey, request.clientId, false);
+    this.setUserId(effectiveSpotifyId);
+    this.storeSpotifyTokenResponse(token, false);
+    const localSpotifyId = this.getUserId() || effectiveSpotifyId;
+    const profileImage = profile.images?.[0]?.url || '';
+    this.storageService.setItem(`${localSpotifyId}_profile_pic`, profileImage, false);
+    this.storageService.setItem(`${localSpotifyId}_display_name`, profile.display_name || '', false);
+    this.initialSyncPromise = null;
+
+    return request.returnUrl;
+  }
+
+  async renewSpotifyAuthorization(returnUrl = '/playlists'): Promise<void> {
+    if (this.isPersonalAppConnection()) {
+      const clientId = this.getPersonalSpotifyClientId();
+      if (!clientId) throw new Error('Reconnect your personal Spotify app from the login page.');
+      await this.startPersonalAppAuthorization(clientId, returnUrl);
+      return;
+    }
+    await this.loginWithSupabase(false);
   }
 
   /** Clears stale Supabase session state — call before re-initiating login after a server_error */
@@ -116,6 +273,7 @@ export class SpotifyAuthService {
             throw new Error('Spotify provider token missing from OAuth callback. Please restart login.');
           }
           this.storageService.setItem(this.storageKey, session.provider_token);
+          this.storageService.setItem(this.connectionModeKey, 'hosted', false);
           if (session.provider_refresh_token) {
             this.storageService.setItem('spotifyRefreshToken', session.provider_refresh_token);
           }
@@ -132,12 +290,12 @@ export class SpotifyAuthService {
 
             const displayName = session.user.user_metadata?.['full_name'] || session.user.user_metadata?.['name'] || null;
             const profilePicUrl = session.user.user_metadata?.['avatar_url'] || null;
-            const effectiveUserId = this.getSupabaseUserId() || session.user.id;
-
             this.initialSyncPromise = (async () => {
               try {
                 if (session.provider_refresh_token) {
-                  await this.saveRefreshTokenToDatabase(effectiveUserId, session.provider_refresh_token);
+                  await this.registerCurrentSpotifyCredentials().catch(error => {
+                    console.warn('Hosted Spotify credentials could not be moved to encrypted storage.', error);
+                  });
                 }
                 await this.syncBackupActiveStatus();
               } catch (err) {
@@ -154,20 +312,6 @@ export class SpotifyAuthService {
     );
   }
 
-  private async saveRefreshTokenToDatabase(userId: string, refreshToken: string) {
-    try {
-      const { error } = await this.supabaseService.client
-        .from('users')
-        .update({ spotify_refresh_token: refreshToken })
-        .eq('id', userId);
-      if (error) {
-        console.warn('Could not save Spotify refresh token to database. Make sure public.users has spotify_refresh_token column:', error);
-      }
-    } catch (e) {
-      console.error('Error saving Spotify refresh token to database:', e);
-    }
-  }
-
   handleCallbackSession(): Observable<any> {
     return from(this.supabaseService.client.auth.getSession()).pipe(
       tap(({ data: { session } }: any) => {
@@ -176,6 +320,7 @@ export class SpotifyAuthService {
             throw new Error('Spotify provider token missing from OAuth callback. Please restart login.');
           }
           this.storageService.setItem(this.storageKey, session.provider_token);
+          this.storageService.setItem(this.connectionModeKey, 'hosted', false);
           if (session.provider_refresh_token) {
             this.storageService.setItem('spotifyRefreshToken', session.provider_refresh_token);
           }
@@ -192,12 +337,12 @@ export class SpotifyAuthService {
 
             const displayName = session.user.user_metadata?.['full_name'] || session.user.user_metadata?.['name'] || null;
             const profilePicUrl = session.user.user_metadata?.['avatar_url'] || null;
-            const effectiveUserId = this.getSupabaseUserId() || session.user.id;
-
             this.initialSyncPromise = (async () => {
               try {
                 if (session.provider_refresh_token) {
-                  await this.saveRefreshTokenToDatabase(effectiveUserId, session.provider_refresh_token);
+                  await this.registerCurrentSpotifyCredentials().catch(error => {
+                    console.warn('Hosted Spotify credentials could not be moved to encrypted storage.', error);
+                  });
                 }
                 await this.syncBackupActiveStatus();
               } catch (err) {
@@ -235,6 +380,16 @@ export class SpotifyAuthService {
       return true;
     }
 
+    if (this.isPersonalAppConnection() && this.storageService.getItem('spotifyRefreshToken')) {
+      try {
+        await firstValueFrom(this.refreshToken());
+        return this.isAuthenticated() && !this.isTokenExpired();
+      } catch (error) {
+        console.warn('[Auth] Personal Spotify token refresh failed:', error);
+        return false;
+      }
+    }
+
     await this.restoreSessionFromSupabase();
     return this.isAuthenticated() && !this.isTokenExpired();
   }
@@ -246,6 +401,13 @@ export class SpotifyAuthService {
       
       if (session) {
         console.log('[Auth] Restoring session from Supabase client...');
+        if (this.isPersonalAppConnection()) {
+          if (session.user) {
+            this.storageService.setItem('supabaseUserId', session.user.id, false);
+            this.storageService.setItem(this.anonymousCloudKey, session.user.is_anonymous ? 'true' : 'false', false);
+          }
+          return this.isAuthenticated();
+        }
         const hadUsableSpotifyAccessToken =
           !!this.storageService.getItem(this.storageKey) && !this.isTokenExpired();
 
@@ -256,6 +418,7 @@ export class SpotifyAuthService {
           }
           this.storageService.setItem('spotifyUserId', spotifyId);
           this.storageService.setItem('supabaseUserId', session.user.id);
+          this.storageService.setItem(this.anonymousCloudKey, session.user.is_anonymous ? 'true' : 'false', false);
         }
 
         if (!hadUsableSpotifyAccessToken && session.provider_token) {
@@ -276,6 +439,28 @@ export class SpotifyAuthService {
 
   refreshToken(): Observable<any> {
     if (this.refreshObservable) {
+      return this.refreshObservable;
+    }
+
+    if (this.isPersonalAppConnection()) {
+      const refreshToken = this.storageService.getItem('spotifyRefreshToken');
+      const clientId = this.getPersonalSpotifyClientId();
+      if (!refreshToken || !clientId) {
+        return throwError(() => new Error('The personal Spotify session cannot be refreshed. Please reconnect.'));
+      }
+      const body = new HttpParams()
+        .set('grant_type', 'refresh_token')
+        .set('refresh_token', refreshToken)
+        .set('client_id', clientId);
+      this.refreshObservable = this.http.post<any>(
+        'https://accounts.spotify.com/api/token',
+        body.toString(),
+        {headers: new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'})}
+      ).pipe(
+        tap(response => this.storeSpotifyTokenResponse(response)),
+        finalize(() => this.refreshObservable = null),
+        shareReplay(1)
+      );
       return this.refreshObservable;
     }
 
@@ -316,15 +501,14 @@ export class SpotifyAuthService {
     return this.refreshObservable;
   }
 
-  private storeSpotifyTokenResponse(response: any): void {
+  private storeSpotifyTokenResponse(response: any, registerCloudCredential = true): void {
     if (!response?.access_token) return;
 
     this.storageService.setItem(this.storageKey, response.access_token);
     if (response.refresh_token) {
       this.storageService.setItem('spotifyRefreshToken', response.refresh_token);
-      const supabaseUserId = this.getSupabaseUserId();
-      if (supabaseUserId) {
-        this.saveRefreshTokenToDatabase(supabaseUserId, response.refresh_token);
+      if (registerCloudCredential && this.getSupabaseUserId()) {
+        void this.registerCurrentSpotifyCredentials().catch(() => {});
       }
     }
 
@@ -338,6 +522,10 @@ export class SpotifyAuthService {
     this.storageService.removeItem('spotifyTokenExpiresAt');
     this.storageService.removeItem('spotifyUserId');
     this.storageService.removeItem('supabaseUserId');
+    this.storageService.removeItem(this.connectionModeKey);
+    this.storageService.removeItem(this.personalClientIdKey);
+    this.storageService.removeItem(this.anonymousCloudKey);
+    this.storageService.removeItem(this.cloudIdentityReadyKey);
     this.initialSyncPromise = null;
   }
 
@@ -389,6 +577,9 @@ export class SpotifyAuthService {
 
   async logout(): Promise<void> {
     const supabaseUserId = this.getSupabaseUserId();
+    if (this.isAnonymousCloudIdentity()) {
+      await this.deleteAnonymousCloudAccount();
+    }
     if (supabaseUserId) {
       this.storageService.removeItem(`${supabaseUserId}_backup_active`);
       this.storageService.removeItem(`${supabaseUserId}_last_synced_at`);
@@ -398,6 +589,10 @@ export class SpotifyAuthService {
     this.storageService.removeItem('supabaseUserId');
     this.storageService.removeItem('spotifyRefreshToken');
     this.storageService.removeItem('spotifyTokenExpiresAt');
+    this.storageService.removeItem(this.connectionModeKey);
+    this.storageService.removeItem(this.personalClientIdKey);
+    this.storageService.removeItem(this.anonymousCloudKey);
+    this.storageService.removeItem(this.cloudIdentityReadyKey);
     try {
       await this.supabaseService.client.auth.signOut();
     } catch (err) {
@@ -410,6 +605,9 @@ export class SpotifyAuthService {
   }
 
   async clearCacheAndLogout(): Promise<void> {
+    if (this.isAnonymousCloudIdentity()) {
+      await this.deleteAnonymousCloudAccount();
+    }
     await this.storageService.clear();
     try {
       await this.supabaseService.client.auth.signOut();
@@ -506,6 +704,7 @@ export class SpotifyAuthService {
   }
 
   async enableBackup(): Promise<void> {
+    await this.enableCloudIdentity();
     const supabaseUserId = this.getSupabaseUserId();
     if (!supabaseUserId) {
       throw new Error('User not logged in');
@@ -516,6 +715,41 @@ export class SpotifyAuthService {
     await this.supabaseService.updateBackupActive(supabaseUserId, true);
     this.storageService.setItem(`${supabaseUserId}_backup_active`, 'true');
     await this.pushLocalCacheToDatabase(supabaseUserId);
+  }
+
+  async enableCloudIdentity(): Promise<void> {
+    if (this.getSupabaseUserId()) {
+      if (this.isPersonalAppConnection()) await this.registerCurrentSpotifyCredentials();
+      return;
+    }
+    if (!this.isPersonalAppConnection()) {
+      throw new Error('Sign in with Spotify before enabling cloud features.');
+    }
+
+    let {data: {session}, error: sessionError} = await this.supabaseService.client.auth.getSession();
+    if (sessionError) throw sessionError;
+    if (!session) {
+      const anonymousResult = await this.supabaseService.client.auth.signInAnonymously();
+      if (anonymousResult.error) throw anonymousResult.error;
+      session = anonymousResult.data.session;
+    }
+    if (!session?.user) throw new Error('The anonymous cloud identity could not be created.');
+    if (session.user.email || session.user.phone) {
+      throw new Error('The cloud identity unexpectedly contains personal recovery data.');
+    }
+
+    this.storageService.setItem('supabaseUserId', session.user.id, false);
+    this.storageService.setItem(this.anonymousCloudKey, session.user.is_anonymous ? 'true' : 'false', false);
+    const profile = await this.loadCurrentSpotifyProfile();
+    const profileUserId = this.getSupabaseUserId() || session.user.id;
+    await this.supabaseService.ensureUserProfile(
+      profileUserId,
+      this.getUserId(),
+      profile.display_name || null,
+      profile.images?.[0]?.url || null
+    );
+    await this.registerCurrentSpotifyCredentials(profile);
+    this.initialSyncPromise = null;
   }
 
   async disableBackup(): Promise<void> {
@@ -635,6 +869,102 @@ export class SpotifyAuthService {
       this.isSyncing = false;
       this.syncProgress = 0;
     }
+  }
+
+  private async registerCurrentSpotifyCredentials(
+    profile?: any,
+    override?: {
+      accessToken: string;
+      refreshToken: string;
+      connectionMode: SpotifyConnectionMode;
+      clientId: string | null;
+      spotifyId: string;
+    }
+  ): Promise<string | null> {
+    const profileUserId = this.getSupabaseUserId();
+    const accessToken = override?.accessToken || this.getAccessToken();
+    const refreshToken = override?.refreshToken || this.storageService.getItem('spotifyRefreshToken');
+    if (!profileUserId || !accessToken || !refreshToken) return null;
+
+    const spotifyProfile = profile || await this.loadCurrentSpotifyProfile();
+    const connectionMode = override?.connectionMode || this.getConnectionMode();
+    const clientId = override?.clientId !== undefined
+      ? override.clientId
+      : (connectionMode === 'personal_pkce' ? this.getPersonalSpotifyClientId() : null);
+    const {data, error} = await this.supabaseService.client.functions.invoke('spotify-credentials', {
+      body: {
+        action: 'store',
+        profileUserId,
+        connectionMode,
+        clientId,
+        accessToken,
+        refreshToken,
+        spotifyId: override?.spotifyId || this.getUserId() || spotifyProfile.id
+      }
+    });
+    if (error) throw new Error(`Cloud credential registration failed: ${error.message}`);
+    const rotatedRefreshToken = typeof data?.rotatedRefreshToken === 'string' && data.rotatedRefreshToken
+      ? data.rotatedRefreshToken
+      : null;
+    if (rotatedRefreshToken && !override) {
+      this.storageService.setItem('spotifyRefreshToken', rotatedRefreshToken, false);
+    }
+    this.storageService.setItem(this.cloudIdentityReadyKey, 'true', false);
+    return rotatedRefreshToken;
+  }
+
+  private async deleteAnonymousCloudAccount(): Promise<void> {
+    const profileUserId = this.getSupabaseUserId();
+    if (!profileUserId) return;
+    const {error} = await this.supabaseService.client.functions.invoke('spotify-credentials', {
+      body: {action: 'delete_account', profileUserId}
+    });
+    if (error) throw new Error(`Anonymous cloud account deletion failed: ${error.message}`);
+  }
+
+  private async loadCurrentSpotifyProfile(): Promise<any> {
+    const accessToken = this.getAccessToken();
+    if (!accessToken) throw new Error('Spotify is not connected.');
+    return firstValueFrom(this.http.get<any>(`${environment.spotifyUrl}/me`, {
+      headers: new HttpHeaders({Authorization: `Bearer ${accessToken}`}),
+      context: new HttpContext().set(TRANSIENT_SPOTIFY_REQUEST, true)
+    }));
+  }
+
+  private normalizedSpotifyId(value: string | null): string | null {
+    if (!value) return null;
+    return value.endsWith('_dev') ? value.slice(0, -4) : value;
+  }
+
+  private spotifyAccountIdentity(profile: any): string | null {
+    return typeof profile?.account_id === 'string' && profile.account_id
+      ? profile.account_id
+      : (typeof profile?.id === 'string' && profile.id ? profile.id : null);
+  }
+
+  private spotifyProfileMatches(profile: any, expectedSpotifyId: string): boolean {
+    const expected = this.normalizedSpotifyId(expectedSpotifyId);
+    return [profile?.account_id, profile?.id]
+      .some(value => typeof value === 'string' && this.normalizedSpotifyId(value) === expected);
+  }
+
+  private safeInternalReturnUrl(value: string): string {
+    return value.startsWith('/') && !value.startsWith('//') ? value : '/playlists';
+  }
+
+  private randomUrlSafeString(byteCount: number): string {
+    return this.base64Url(crypto.getRandomValues(new Uint8Array(byteCount)));
+  }
+
+  private async createPkceChallenge(verifier: string): Promise<string> {
+    const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier));
+    return this.base64Url(new Uint8Array(digest));
+  }
+
+  private base64Url(bytes: Uint8Array): string {
+    let binary = '';
+    bytes.forEach(byte => binary += String.fromCharCode(byte));
+    return btoa(binary).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
   }
 
   private clearAllCookies(): void {

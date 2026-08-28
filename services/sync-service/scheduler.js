@@ -1,6 +1,6 @@
 const {TASK_DEFINITIONS, intervalMilliseconds} = require('./task-registry');
 
-function createScheduler({supabase, config, tasks}) {
+function createScheduler({supabase, config, tasks, credentials}) {
   async function reconcileAdmins() {
     const {data: profiles, error: profileError} = await supabase.from('users')
       .select('id, spotify_id').in('spotify_id', config.adminSpotifyIds);
@@ -32,18 +32,25 @@ function createScheduler({supabase, config, tasks}) {
     if (settingsError) throw settingsError;
     if (!settingsRows?.length) return 0;
     const userIds = settingsRows.map(settings => settings.user_id);
-    const [{data: users, error: userError}, {data: states, error: stateError}] = await Promise.all([
+    const [
+      {data: users, error: userError},
+      {data: states, error: stateError},
+      {data: credentialRows, error: credentialError}
+    ] = await Promise.all([
       supabase.from('users').select('id, backup_active, spotify_refresh_token').in('id', userIds),
-      supabase.from('sync_task_state').select('*').in('user_id', userIds)
+      supabase.from('sync_task_state').select('*').in('user_id', userIds),
+      supabase.from('spotify_credentials').select('user_id').in('user_id', userIds)
     ]);
     if (userError) throw userError;
     if (stateError) throw stateError;
+    if (credentialError) throw credentialError;
     const userById = new Map((users || []).map(user => [user.id, user]));
+    const credentialUserIds = new Set((credentialRows || []).map(row => row.user_id));
     const stateByKey = new Map((states || []).map(state => [`${state.user_id}:${state.task_key}`, state]));
     let queued = 0;
     for (const settings of settingsRows) {
       const user = userById.get(settings.user_id);
-      if (!user?.backup_active || !user.spotify_refresh_token) continue;
+      if (!user?.backup_active || (!user.spotify_refresh_token && !credentialUserIds.has(user.id))) continue;
       for (const [taskKey, definition] of Object.entries(TASK_DEFINITIONS)) {
         if (!settings[definition.enabledField]) continue;
         const state = stateByKey.get(`${settings.user_id}:${taskKey}`);
@@ -91,8 +98,13 @@ function createScheduler({supabase, config, tasks}) {
     }, {onConflict: 'user_id,task_key'});
     try {
       if (!user.backup_active) throw new Error('Cloud Backup is disabled for this user.');
-      if (!user.spotify_refresh_token) throw new Error('Spotify refresh token is missing.');
-      const details = await handler({taskKey: job.task_key, user, settings});
+      const spotifyCredential = await credentials.get(user.id, user.spotify_refresh_token);
+      if (!spotifyCredential) throw new Error('Spotify refresh credential is missing.');
+      const details = await handler({
+        taskKey: job.task_key,
+        user: {...user, spotify_credential: spotifyCredential, spotify_refresh_token: undefined},
+        settings
+      });
       const finishedAt = new Date();
       const nextRunAt = new Date(finishedAt.getTime() + intervalMilliseconds(job.task_key, settings));
       const {error: stateError} = await supabase.from('sync_task_state').upsert({

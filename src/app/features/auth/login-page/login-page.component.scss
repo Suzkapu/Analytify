@@ -130,6 +130,7 @@
 .login-card-body { margin-top: 26px; }
 
 .login-spotify-button,
+.personal-app-button,
 .compare-room-button {
   width: 100%;
   min-height: 52px;
@@ -142,6 +143,23 @@
   font: inherit;
   font-weight: 800;
   text-decoration: none;
+}
+
+.personal-app-button {
+  margin-top: 12px;
+  border: 1px solid var(--color-accent-border);
+  color: var(--color-text);
+  background: var(--color-accent-soft);
+  transition: background var(--motion-fast), border-color var(--motion-fast);
+
+  &:hover { background: var(--color-surface-hover); border-color: var(--color-accent); }
+}
+
+.personal-app-note {
+  margin: 8px 0 0;
+  color: var(--color-text-subtle);
+  text-align: center;
+  font-size: .72rem;
 }
 
 .login-spotify-button {

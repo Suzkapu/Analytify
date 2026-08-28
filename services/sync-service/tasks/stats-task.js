@@ -120,7 +120,7 @@ function createStatsTask({supabase, spotify, catalog}) {
   return async function runStatsTask({taskKey, user, settings}) {
     const range = RANGE_BY_TASK[taskKey];
     if (!range) throw new Error(`Unsupported stats task: ${taskKey}`);
-    const accessToken = await spotify.accessToken(user.spotify_refresh_token);
+    const accessToken = await spotify.accessToken(user.spotify_credential);
     const [artistsResponse, firstTracksResponse] = await Promise.all([
       spotify.api(`/me/top/artists?time_range=${range}&limit=50&offset=0`, accessToken),
       spotify.api(`/me/top/tracks?time_range=${range}&limit=50&offset=0`, accessToken)

@@ -1,6 +1,6 @@
 function createHistoryTask({supabase, spotify, catalog}) {
   return async function runHistoryTask({user}) {
-    const accessToken = await spotify.accessToken(user.spotify_refresh_token);
+    const accessToken = await spotify.accessToken(user.spotify_credential);
     const {data: latest, error: latestError} = await supabase.from('listening_history')
       .select('played_at').eq('user_id', user.id)
       .order('played_at', {ascending: false}).limit(1).maybeSingle();

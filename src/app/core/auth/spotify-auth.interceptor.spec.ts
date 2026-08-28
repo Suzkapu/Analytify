@@ -14,13 +14,15 @@ describe('SpotifyAuthInterceptor', () => {
       'isTokenExpired',
       'getAccessToken',
       'refreshToken',
-      'loginWithSupabase'
+      'loginWithSupabase',
+      'renewSpotifyAuthorization'
     ]);
     auth.isAuthenticated.and.returnValue(true);
     auth.isTokenExpired.and.returnValue(false);
     auth.getAccessToken.and.returnValue('cached-token');
     auth.refreshToken.and.returnValue(of({ access_token: 'refreshed-token' }));
     auth.loginWithSupabase.and.resolveTo();
+    auth.renewSpotifyAuthorization.and.resolveTo();
     interceptor = new SpotifyAuthInterceptor(auth);
   });
 

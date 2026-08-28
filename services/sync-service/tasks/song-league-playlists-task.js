@@ -26,7 +26,7 @@ function createSongLeaguePlaylistsTask({supabase, spotify}) {
       .select('*').eq('user_id', user.id);
     if (mappingError) throw mappingError;
     if (!mappings?.length) return {updated: 0, skipped: 0};
-    const accessToken = await spotify.accessToken(user.spotify_refresh_token);
+    const accessToken = await spotify.accessToken(user.spotify_credential);
     let updated = 0;
     let skipped = 0;
 

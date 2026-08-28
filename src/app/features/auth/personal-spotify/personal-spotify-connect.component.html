@@ -1,0 +1,56 @@
+<main class="personal-connect-page">
+  <section class="personal-connect-card" aria-labelledby="personal-connect-title">
+    <button type="button" class="back-button" (click)="cancel()" aria-label="Go back">
+      <i class="pi pi-arrow-left"></i>
+    </button>
+
+    <span class="eyebrow">Personal Spotify app</span>
+    <h1 id="personal-connect-title">Connect without an Analytify account</h1>
+    <p class="lead">Your Spotify session stays in this browser. Analytify does not ask for an email, phone number, password, or Client Secret.</p>
+
+    <ol class="setup-steps">
+      <li>
+        <span class="step-number">1</span>
+        <div>
+          <h2>Create or open your Spotify app</h2>
+          <p>Use Spotify's Developer Dashboard. When creating the app, select Web API. Spotify currently requires the app owner to have Premium.</p>
+          <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener noreferrer">Open Spotify Developer Dashboard <i class="pi pi-external-link"></i></a>
+        </div>
+      </li>
+      <li>
+        <span class="step-number">2</span>
+        <div>
+          <h2>Add this Redirect URI</h2>
+          <p>Open Settings, add this under Redirect URIs, and save. It must match exactly.</p>
+          <div class="callback-field">
+            <code>{{ callbackUri }}</code>
+            <button type="button" (click)="copyCallback()"><i class="pi" [ngClass]="copied ? 'pi-check' : 'pi-copy'"></i>{{ copied ? 'Copied' : 'Copy' }}</button>
+          </div>
+        </div>
+      </li>
+      <li>
+        <span class="step-number">3</span>
+        <div>
+          <h2>Paste the public Client ID</h2>
+          <label for="personal-client-id">Spotify Client ID</label>
+          <input id="personal-client-id" name="personalClientId" [(ngModel)]="clientId" maxlength="32"
+            autocomplete="off" spellcheck="false" placeholder="32-character Client ID">
+          <p class="field-note">Never paste your Client Secret. Analytify neither needs nor accepts it.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="migration-note" *ngIf="auth.isAuthenticated()">
+      <i class="pi pi-shield"></i>
+      <span>Spotify will need to return the same Spotify ID as your current profile. Your existing cloud data will otherwise remain untouched.</span>
+    </div>
+    <p class="error-message" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
+    <div class="actions">
+      <button type="button" class="secondary" (click)="cancel()">Cancel</button>
+      <button type="button" class="primary" (click)="connect()" [disabled]="connecting || clientId.trim().length !== 32">
+        <i class="pi" [ngClass]="connecting ? 'pi-spin pi-spinner' : 'pi-spotify'"></i>
+        {{ connecting ? 'Opening Spotify…' : (auth.isAuthenticated() ? 'Reconnect with this app' : 'Connect with Spotify') }}
+      </button>
+    </div>
+  </section>
+</main>

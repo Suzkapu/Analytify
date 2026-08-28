@@ -39,7 +39,7 @@ describe('LoginPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('renders the responsive sign-in experience and both entry paths', () => {
+  it('renders the hosted, personal-app, and Compare Room entry paths', () => {
     const element: HTMLElement = fixture.nativeElement;
 
     expect(element.querySelector('main.login-wrapper')).not.toBeNull();
@@ -49,6 +49,7 @@ describe('LoginPageComponent', () => {
     expect(element.querySelector('.login-intro > .login-brand')).toBeNull();
     expect(element.querySelector('.login-card-icon')).toBeNull();
     expect(element.querySelector('button.login-spotify-button')).not.toBeNull();
+    expect(element.querySelector('a.personal-app-button')).not.toBeNull();
     expect(element.querySelector('a.compare-room-button')).not.toBeNull();
   });
 });

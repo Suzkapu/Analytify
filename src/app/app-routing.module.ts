@@ -4,6 +4,7 @@ import {ExtraOptions, RouterModule, Routes} from '@angular/router';
 import {redirectLoggedInGuard} from '@core/auth/redirect-logged-in.guard';
 import {spotifyAuthGuard} from '@core/auth/spotify-auth.guard';
 import {adminGuard} from '@core/admin/admin.guard';
+import {cloudIdentityGuard} from '@core/auth/cloud-identity.guard';
 
 export const APP_ROUTES: Routes = [
   {
@@ -23,6 +24,11 @@ export const APP_ROUTES: Routes = [
     path: 'callback',
     loadChildren: () =>
       import('@features/auth/callback/callback.module').then(module => module.CallbackModule)
+  },
+  {
+    path: 'spotify',
+    loadChildren: () =>
+      import('@features/auth/personal-spotify/personal-spotify.module').then(module => module.PersonalSpotifyModule)
   },
   {
     path: 'playlists',
@@ -68,13 +74,15 @@ export const APP_ROUTES: Routes = [
   },
   {
     path: 'song-league',
-    canActivate: [spotifyAuthGuard],
+    canActivate: [spotifyAuthGuard, cloudIdentityGuard],
+    data: {cloudBackup: true},
     loadChildren: () =>
       import('@features/song-league/song-league.module').then(module => module.SongLeagueModule)
   },
   {
     path: 'shared-playlists',
-    canActivate: [spotifyAuthGuard],
+    canActivate: [spotifyAuthGuard, cloudIdentityGuard],
+    data: {cloudBackup: false},
     loadChildren: () =>
       import('@features/shared-playlists/shared-playlists.module').then(module => module.SharedPlaylistsModule)
   },

@@ -15,6 +15,7 @@ require_value DEPLOY_USER
 require_value DEPLOY_TARGET
 require_value DEPLOY_SSH_KEY
 require_value ADMIN_SPOTIFY_IDS
+require_value SPOTIFY_TOKEN_ENCRYPTION_KEY
 
 if [[ "$DEPLOY_HOST" == *"://"* || "$DEPLOY_HOST" == */* || "$DEPLOY_HOST" == *" "* ]]; then
   echo "Deployment configuration error: DEPLOY_HOST must be a hostname without a scheme, path, or spaces." >&2
@@ -30,7 +31,8 @@ fi
 runner_temp="${RUNNER_TEMP:-/tmp}"
 key_file="$(mktemp "${runner_temp%/}/analytify-deploy-key.XXXXXX")"
 allowlist_file="$(mktemp "${runner_temp%/}/analytify-admin-spotify-ids.XXXXXX")"
-trap 'rm -f "$key_file" "$allowlist_file"' EXIT
+token_key_file="$(mktemp "${runner_temp%/}/analytify-token-encryption-key.XXXXXX")"
+trap 'rm -f "$key_file" "$allowlist_file" "$token_key_file"' EXIT
 
 printf '%s\n' "$DEPLOY_SSH_KEY" | tr -d '\r' > "$key_file"
 chmod 600 "$key_file"
@@ -42,6 +44,13 @@ if [[ ! "$normalized_admin_ids" =~ ^[A-Za-z0-9._-]+(,[A-Za-z0-9._-]+)*$ ]]; then
 fi
 printf '%s\n' "$normalized_admin_ids" > "$allowlist_file"
 chmod 600 "$allowlist_file"
+
+if [[ ! "$SPOTIFY_TOKEN_ENCRYPTION_KEY" =~ ^[A-Za-z0-9+/]{43}=$ ]]; then
+  echo "Deployment configuration error: SPOTIFY_TOKEN_ENCRYPTION_KEY must be a base64-encoded 32-byte key." >&2
+  exit 1
+fi
+printf '%s\n' "$SPOTIFY_TOKEN_ENCRYPTION_KEY" > "$token_key_file"
+chmod 600 "$token_key_file"
 
 ssh_command="ssh -p ${deploy_port} -i ${key_file} -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3"
 remote="${DEPLOY_USER}@${DEPLOY_HOST}"
@@ -116,5 +125,6 @@ deploy_private_file_with_retry() {
 deploy_with_retry "dist/spoti-front/" "${target_root}/" true
 deploy_with_retry "services/sync-service/" "${target_root}/../analytify-sync/" false
 deploy_private_file_with_retry "$allowlist_file" "${target_root}/../analytify-sync/.admin-spotify-ids"
+deploy_private_file_with_retry "$token_key_file" "${target_root}/../analytify-sync/.spotify-token-encryption-key"
 
 echo "Deployment completed successfully."
