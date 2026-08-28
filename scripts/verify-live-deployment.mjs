@@ -20,7 +20,7 @@ const probes = [
     options: {},
     validate: async response => response.ok && (await response.text()).includes('<app-root')
   },
-  ...['sync_task_definitions', 'spotify_credentials'].map(table => ({
+  ...['sync_user_settings', 'spotify_credentials'].map(table => ({
     label: `Supabase ${table} table`,
     url: `${supabaseUrl}/rest/v1/${table}?select=*&limit=0`,
     options: {headers: supabaseHeaders},
