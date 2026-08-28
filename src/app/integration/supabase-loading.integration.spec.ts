@@ -123,6 +123,10 @@ integrationDescribe('real Supabase-first playlist and stats loading', () => {
 
     statsFixture = TestBed.createComponent(UserStatsComponent);
     spyOn<any>(statsFixture.componentInstance, 'scheduleHistoryLoad');
+    // Current-stat loading writes a local history snapshot and normally starts
+    // a second, deferred history-metadata query. History has its own tests; this
+    // CI case is intentionally scoped to the visible current-stat restore.
+    spyOn(statsFixture.componentInstance, 'loadHistoryData');
     statsFixture.detectChanges();
     await waitFor(() => statsFixture!.componentInstance.topTracks.length === 1);
     statsFixture.detectChanges();
