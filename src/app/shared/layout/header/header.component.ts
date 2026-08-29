@@ -122,11 +122,6 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  openPersonalSpotifyConnection() {
-    this.showSettingsDropdown = false;
-    void this.router.navigate(['/spotify/connect'], {queryParams: {returnUrl: this.router.url}});
-  }
-
   onBackupToggle(event: Event) {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {

@@ -9,6 +9,7 @@
     "architecture:check": "node scripts/check-architecture.mjs",
     "retention:check": "node scripts/check-playlist-share-retention.mjs",
     "song-league-invites:check": "node scripts/check-song-league-invites.mjs",
+    "song-league-rules:check": "node scripts/check-song-league-rules.mjs",
     "performance:check": "node scripts/check-performance-contracts.mjs",
     "api-usage:check": "node scripts/check-api-on-demand.mjs",
     "admin:check": "node scripts/check-admin-control-plane.mjs",
@@ -19,8 +20,8 @@
     "test:supabase-integration": "ng test --watch=false --browsers=ChromeHeadless --karma-config karma.supabase-integration.conf.cjs --include=src/app/integration/supabase-loading.integration.spec.ts --progress=false",
     "sync:once": "node services/sync-service/index.js",
     "sync:watch": "node services/sync-service/index.js --watch",
-    "verify": "npm run architecture:check && npm run retention:check && npm run song-league-invites:check && npm run performance:check && npm run api-usage:check && npm run admin:check && npm run sync-service:check && npm run typecheck && npm run typecheck:tests && npm run build:production",
-    "verify:ci": "npm run architecture:check && npm run retention:check && npm run song-league-invites:check && npm run performance:check && npm run api-usage:check && npm run admin:check && npm run sync-service:check && npm run typecheck && npm run typecheck:tests && npm run test:ci && npm run build:production",
+    "verify": "npm run architecture:check && npm run retention:check && npm run song-league-invites:check && npm run song-league-rules:check && npm run performance:check && npm run api-usage:check && npm run admin:check && npm run sync-service:check && npm run typecheck && npm run typecheck:tests && npm run build:production",
+    "verify:ci": "npm run architecture:check && npm run retention:check && npm run song-league-invites:check && npm run song-league-rules:check && npm run performance:check && npm run api-usage:check && npm run admin:check && npm run sync-service:check && npm run typecheck && npm run typecheck:tests && npm run test:ci && npm run build:production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

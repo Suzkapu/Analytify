@@ -1546,8 +1546,8 @@ begin
   into v_opponent_count, v_absent_count, v_best_existing_rank
   from opponent_ranks;
 
-  if v_opponent_count < 2 then
-    raise exception 'At least two opponents need fresh Top Songs for discovery validation.';
+  if v_opponent_count < 1 then
+    raise exception 'At least one opponent needs fresh Top Songs for discovery validation.';
   end if;
   if v_absent_count * 2 <= v_opponent_count then
     raise exception 'Choose a song that is new to a strict majority of the league.';

@@ -101,9 +101,6 @@
             class="dropdown-item" role="menuitem">
             <i class="pi pi-external-link"></i><span>Manage Spotify access</span>
           </a>
-          <button (click)="openPersonalSpotifyConnection()" class="dropdown-item" role="menuitem">
-            <i class="pi pi-key"></i><span>{{ authService.isPersonalAppConnection() ? 'Change personal Spotify app' : 'Use personal Spotify app' }}</span>
-          </button>
           <button (click)="openClearDataModal()" class="dropdown-item danger" role="menuitem">
             <i class="pi pi-trash"></i><span>Clear data</span>
           </button>

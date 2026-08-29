@@ -130,8 +130,7 @@
 .login-card-body { margin-top: 26px; }
 
 .login-spotify-button,
-.personal-app-button,
-.compare-room-button {
+.personal-app-button {
   width: 100%;
   min-height: 52px;
   box-sizing: border-box;
@@ -170,31 +169,6 @@
   box-shadow: 0 12px 28px rgba(30, 215, 96, 0.16);
 
   &:hover { background: var(--color-accent-hover); }
-}
-
-.compare-entry {
-  display: grid;
-  gap: 11px;
-  margin-top: 22px;
-
-  > span {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: var(--color-text-subtle);
-    font-size: 0.76rem;
-
-    &::before,
-    &::after { content: ''; height: 1px; flex: 1; background: var(--color-border); }
-  }
-}
-
-.compare-room-button {
-  border: 1px solid var(--color-border-strong);
-  color: var(--color-text);
-  transition: background var(--motion-fast), border-color var(--motion-fast);
-
-  &:hover { background: var(--color-surface-hover); border-color: var(--color-accent-border); }
 }
 
 .login-privacy-note {
