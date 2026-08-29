@@ -22,6 +22,24 @@ function toDailySnapshotDateKey(ts: number): string {
 
 type StatsCategory = 'tracks' | 'artists' | 'genres';
 type StatsTrend = { type: 'up' | 'down' | 'same' | 'new'; diff?: number };
+type CompareCalendarDay = {
+  dateKey: string;
+  dayNumber: number;
+  optionId: string | null;
+  isAvailable: boolean;
+  isSelected: boolean;
+  isToday: boolean;
+  ariaLabel: string;
+};
+
+function compareCalendarWeekdays(): string[] {
+  const monday = new Date(2024, 0, 1, 12);
+  return Array.from({length: 7}, (_, offset) => {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + offset);
+    return date.toLocaleDateString(undefined, {weekday: 'narrow'});
+  });
+}
 
 @Component({
   selector: 'app-user-stats',
@@ -46,9 +64,12 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   compareSnapshotId: string = '';
   snapshotOptions: any[] = [];
   historyGroups: any[] = [];
-  compareGroups: any[] = [];
   showHistoryMenu: boolean = false;
   showCompareMenu: boolean = false;
+  compareCalendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  compareCalendarMonthLabel = '';
+  compareCalendarDays: Array<CompareCalendarDay | null> = [];
+  readonly compareCalendarWeekdays = compareCalendarWeekdays();
   hotMoverTracks = new Set<string>();
   hotMoverArtists = new Set<string>();
   highDebutTracks = new Set<string>();
@@ -120,7 +141,6 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.historyData = [];
     this.snapshotOptions = [];
     this.historyGroups = [];
-    this.compareGroups = [];
     void this.loadStats();
     this.scheduleHistoryLoad();
   }
@@ -485,6 +505,9 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   toggleCompareMenu(event: Event) {
     event.stopPropagation();
     this.showHistoryMenu = false;
+    if (!this.showCompareMenu) {
+      this.refreshCompareCalendar(true);
+    }
     this.showCompareMenu = !this.showCompareMenu;
   }
 
@@ -499,7 +522,105 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
   updateSnapshotGroups() {
     this.historyGroups = this.groupSnapshots(this.snapshotOptions, this.selectedSnapshotId);
-    this.compareGroups = this.groupSnapshots(this.getCompareOptions(), this.compareSnapshotId);
+    this.refreshCompareCalendar();
+  }
+
+  canNavigateCompareCalendar(direction: -1 | 1): boolean {
+    const months = this.getAvailableCompareMonths();
+    const currentIndex = months.findIndex(month => month.getTime() === this.compareCalendarMonth.getTime());
+    return currentIndex >= 0 && currentIndex + direction >= 0 && currentIndex + direction < months.length;
+  }
+
+  navigateCompareCalendar(direction: -1 | 1, event: Event): void {
+    event.stopPropagation();
+    const months = this.getAvailableCompareMonths();
+    const currentIndex = months.findIndex(month => month.getTime() === this.compareCalendarMonth.getTime());
+    const target = months[currentIndex + direction];
+    if (!target) return;
+
+    this.compareCalendarMonth = target;
+    this.refreshCompareCalendar();
+  }
+
+  selectCompareCalendarDay(day: CompareCalendarDay, event: Event): void {
+    event.stopPropagation();
+    if (!day.isAvailable || !day.optionId) return;
+    this.selectCompareSnapshot(day.optionId, event);
+  }
+
+  private refreshCompareCalendar(focusSelection = false): void {
+    const options = this.getCompareOptions();
+    if (options.length === 0) {
+      this.compareCalendarMonthLabel = '';
+      this.compareCalendarDays = [];
+      return;
+    }
+
+    const availableByDate = new Map<string, string>();
+    options.forEach(option => {
+      const dateKey = this.getCompareOptionDateKey(option);
+      if (dateKey) availableByDate.set(dateKey, option.id);
+    });
+
+    const months = this.getAvailableCompareMonths(options);
+    const selectedOption = options.find(option => option.id === this.compareSnapshotId);
+    const selectedDateKey = selectedOption ? this.getCompareOptionDateKey(selectedOption) : null;
+    const selectedMonth = selectedDateKey ? this.monthFromDateKey(selectedDateKey) : null;
+    const currentMonthExists = months.some(month => month.getTime() === this.compareCalendarMonth.getTime());
+
+    if ((focusSelection && selectedMonth) || !currentMonthExists) {
+      this.compareCalendarMonth = selectedMonth || months[months.length - 1];
+    }
+
+    this.compareCalendarMonthLabel = this.compareCalendarMonth.toLocaleDateString(undefined, {
+      month: 'long',
+      year: 'numeric'
+    });
+
+    const year = this.compareCalendarMonth.getFullYear();
+    const month = this.compareCalendarMonth.getMonth();
+    const firstDayOffset = (new Date(year, month, 1).getDay() + 6) % 7;
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const todayKey = toDailySnapshotDateKey(Date.now());
+    const cells: Array<CompareCalendarDay | null> = Array.from({length: firstDayOffset}, () => null);
+
+    for (let dayNumber = 1; dayNumber <= daysInMonth; dayNumber++) {
+      const date = new Date(year, month, dayNumber, 12);
+      const dateKey = toDailySnapshotDateKey(date.getTime());
+      const optionId = availableByDate.get(dateKey) || null;
+      cells.push({
+        dateKey,
+        dayNumber,
+        optionId,
+        isAvailable: !!optionId,
+        isSelected: optionId === this.compareSnapshotId,
+        isToday: dateKey === todayKey,
+        ariaLabel: `${date.toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'})}${optionId ? ', available for comparison' : ', unavailable for comparison'}`
+      });
+    }
+
+    this.compareCalendarDays = cells;
+  }
+
+  private getAvailableCompareMonths(options = this.getCompareOptions()): Date[] {
+    const months = new Map<number, Date>();
+    options.forEach(option => {
+      const dateKey = this.getCompareOptionDateKey(option);
+      if (!dateKey) return;
+      const month = this.monthFromDateKey(dateKey);
+      months.set(month.getTime(), month);
+    });
+    return Array.from(months.values()).sort((left, right) => left.getTime() - right.getTime());
+  }
+
+  private getCompareOptionDateKey(option: any): string | null {
+    if (option.id === 'current') return toDailySnapshotDateKey(Date.now());
+    return option.dateKey || this.getSnapshotDateKey(option.id);
+  }
+
+  private monthFromDateKey(dateKey: string): Date {
+    const [year, month] = dateKey.split('-').map(Number);
+    return new Date(year, month - 1, 1);
   }
 
   groupSnapshots(options: any[], selectedId: string): any[] {
@@ -542,11 +663,6 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     group.isOpen = !group.isOpen;
   }
 
-  toggleCompareGroup(group: any, event: Event) {
-    event.stopPropagation();
-    group.isOpen = !group.isOpen;
-  }
-
   /** Returns the most recent historical snapshot id that is NOT the currently selected snapshot. */
   private getDefaultCompareId(): string {
     const opts = this.getCompareOptions();
@@ -568,7 +684,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
     const options: any[] = historicalOptions.map(opt => ({
       id: opt.id,
-      label: opt.label
+      label: opt.label,
+      dateKey: opt.dateKey
     }));
 
     if (this.selectedSnapshotId !== 'current') {
@@ -861,7 +978,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
         // Populate snapshot options with clean date format (no timestamp)
         this.snapshotOptions = historicalOnly.slice().reverse().map(d => ({
           id: d.timestamp.toString(),
-          label: new Date(d.timestamp).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
+          label: new Date(d.timestamp).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }),
+          dateKey: d.snapshotDate || toDailySnapshotDateKey(d.timestamp)
         }));
 
         this.updateSnapshotGroups();

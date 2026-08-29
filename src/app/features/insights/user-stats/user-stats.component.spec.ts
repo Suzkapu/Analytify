@@ -182,6 +182,93 @@ describe('UserStatsComponent trends', () => {
     expect(loadHistory).toHaveBeenCalledTimes(1);
   });
 
+  it('highlights only dates that have comparison snapshots', () => {
+    const julyOne = makeSnapshot('2026-07-01');
+    const julyFifteen = makeSnapshot('2026-07-15');
+    component.historyData = [julyOne, julyFifteen];
+    component.snapshotOptions = [julyFifteen, julyOne].map(snapshot => ({
+      id: snapshot.timestamp.toString(),
+      label: snapshot.snapshotDate,
+      dateKey: snapshot.snapshotDate
+    }));
+
+    component.updateSnapshotGroups();
+
+    const days = component.compareCalendarDays.filter(day => !!day) as any[];
+    expect(days.filter(day => day.isAvailable).map(day => day.dateKey)).toEqual([
+      '2026-07-01',
+      '2026-07-15'
+    ]);
+    expect(days.find(day => day.dateKey === '2026-07-02').isAvailable).toBeFalse();
+  });
+
+  it('jumps between months that contain available snapshots', () => {
+    const may = makeSnapshot('2026-05-10');
+    const july = makeSnapshot('2026-07-20');
+    component.historyData = [may, july];
+    component.snapshotOptions = [july, may].map(snapshot => ({
+      id: snapshot.timestamp.toString(),
+      label: snapshot.snapshotDate,
+      dateKey: snapshot.snapshotDate
+    }));
+    component.compareSnapshotId = july.timestamp.toString();
+    component.updateSnapshotGroups();
+
+    expect(component.compareCalendarMonth.getMonth()).toBe(6);
+    expect(component.canNavigateCompareCalendar(-1)).toBeTrue();
+
+    component.navigateCompareCalendar(-1, new Event('click'));
+
+    expect(component.compareCalendarMonth.getMonth()).toBe(4);
+    expect(component.canNavigateCompareCalendar(-1)).toBeFalse();
+    expect(component.canNavigateCompareCalendar(1)).toBeTrue();
+  });
+
+  it('ignores unavailable calendar days and selects an available date through the existing lazy path', () => {
+    const snapshot = makeSnapshot('2026-07-15');
+    component.historyData = [snapshot];
+    component.snapshotOptions = [{
+      id: snapshot.timestamp.toString(),
+      label: snapshot.snapshotDate,
+      dateKey: snapshot.snapshotDate
+    }];
+    component.showCompareMenu = true;
+    component.updateSnapshotGroups();
+    const days = component.compareCalendarDays.filter(day => !!day) as any[];
+    const unavailable = days.find(day => day.dateKey === '2026-07-14');
+    const available = days.find(day => day.dateKey === '2026-07-15');
+    const ensureSnapshotLoaded = spyOn(component, 'ensureSnapshotLoaded');
+
+    component.selectCompareCalendarDay(unavailable, new Event('click'));
+    expect(component.compareSnapshotId).toBe('');
+    expect(ensureSnapshotLoaded).not.toHaveBeenCalled();
+
+    component.selectCompareCalendarDay(available, new Event('click'));
+    expect(component.compareSnapshotId).toBe(snapshot.timestamp.toString());
+    expect(component.showCompareMenu).toBeFalse();
+    expect(ensureSnapshotLoaded).toHaveBeenCalledOnceWith(snapshot.timestamp.toString());
+  });
+
+  it('offers Today but excludes the primary historical snapshot from comparison', () => {
+    const primary = makeSnapshot('2026-07-15');
+    const older = makeSnapshot('2026-06-15');
+    component.historyData = [older, primary];
+    component.snapshotOptions = [primary, older].map(snapshot => ({
+      id: snapshot.timestamp.toString(),
+      label: snapshot.snapshotDate,
+      dateKey: snapshot.snapshotDate
+    }));
+    component.selectedSnapshotId = primary.timestamp.toString();
+    component.compareSnapshotId = 'current';
+
+    component.updateSnapshotGroups();
+
+    const allAvailableDays = component.getCompareOptions();
+    expect(allAvailableDays.map(option => option.id)).toContain('current');
+    expect(allAvailableDays.map(option => option.id)).not.toContain(primary.timestamp.toString());
+    expect(component.compareCalendarDays.some(day => !!day?.isToday && day.isAvailable && day.optionId === 'current')).toBeTrue();
+  });
+
   it('keeps complete stale current stats visible while its parallel refresh is pending', async () => {
     const values: Record<string, string> = {
       'user_stats_short_term_tracks': JSON.stringify([{id: 'cached-track'}]),
