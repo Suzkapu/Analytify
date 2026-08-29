@@ -69,7 +69,10 @@
     <section class="league-list-section">
       <div class="league-section-heading">
         <div><span class="league-eyebrow">Your groups</span><h2>Active leagues</h2></div>
-        <span class="league-count">{{ leagues.length }}</span>
+        <span class="league-count" [attr.aria-busy]="isLoading">
+          <i *ngIf="isLoading" class="pi pi-spin pi-spinner" aria-label="Loading league count"></i>
+          <ng-container *ngIf="!isLoading">{{ leagues.length }}</ng-container>
+        </span>
       </div>
 
       <div *ngIf="isLoading" class="league-state"><i class="pi pi-spin pi-spinner"></i><p>Loading leagues…</p></div>

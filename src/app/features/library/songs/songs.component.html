@@ -107,7 +107,8 @@
     </section>
 
 <!-- Real-Time Dual Progress Bars Panel -->
-    <div *ngIf="!isLoading && (isLoadingTracks || isLoadingArtists)" class="progress-panel-container">
+    <div *ngIf="!isLoading && (isLoadingTracks || isLoadingArtists)" class="progress-panel-container"
+      role="status" aria-live="polite">
   <div class="progress-panel-header">
     <span class="progress-status-text">
       <i class="pi pi-spin pi-spinner status-icon"></i>
@@ -121,7 +122,10 @@
     <div class="progress-bar-wrapper">
       <div class="progress-label-row">
         <span class="progress-label"><i class="pi pi-music"></i> Songs Loaded</span>
-        <span class="progress-value">{{ loadedTracksCount }} / {{ totalTracks }}</span>
+        <span class="progress-value" *ngIf="totalTracks > 0; else discoveringSongTotal">
+          {{ loadedTracksCount }} / {{ totalTracks }}
+        </span>
+        <ng-template #discoveringSongTotal><span class="progress-value">Discovering…</span></ng-template>
       </div>
       <div class="progress-bar-track">
         <div class="progress-bar-fill fill-tracks" [style.width.%]="totalTracks > 0 ? (loadedTracksCount / totalTracks) * 100 : 0"></div>
@@ -131,7 +135,10 @@
     <div class="progress-bar-wrapper">
       <div class="progress-label-row">
         <span class="progress-label"><i class="pi pi-user"></i> Artist Profiles Loaded</span>
-        <span class="progress-value">{{ loadedArtistsDetailsCount }} / {{ totalUniqueArtists }}</span>
+        <span class="progress-value" *ngIf="totalUniqueArtists > 0; else discoveringSongArtists">
+          {{ loadedArtistsDetailsCount }} / {{ totalUniqueArtists }}
+        </span>
+        <ng-template #discoveringSongArtists><span class="progress-value">Discovering…</span></ng-template>
       </div>
       <div class="progress-bar-track">
         <div class="progress-bar-fill fill-artists" [style.width.%]="totalUniqueArtists > 0 ? (loadedArtistsDetailsCount / totalUniqueArtists) * 100 : 0"></div>
@@ -148,9 +155,13 @@
 
 <!-- Animated Loading Progress Indicator -->
     <app-page-state *ngIf="isLoading" [loading]="true" icon="pi-spinner" title="Analyzing playlist songs…">
-  <div class="loading-count">{{ loadedTracksCount }} of {{ totalTracks }} loaded
+  <div *ngIf="totalTracks > 0; else discoveringSongs" class="loading-count">
+    {{ loadedTracksCount }} of {{ totalTracks }} songs loaded
   </div>
-  <div class="loading-progress-track">
+  <ng-template #discoveringSongs>
+    <div class="loading-count">Finding cached playlist data…</div>
+  </ng-template>
+  <div *ngIf="totalTracks > 0" class="loading-progress-track">
     <div [style.width.%]="totalTracks > 0 ? (loadedTracksCount / totalTracks) * 100 : 0"
       class="loading-progress-fill"></div>
   </div>

@@ -8,7 +8,14 @@
   </button>
 </div>
 
-<main class="details-container">
+<app-page-state *ngIf="isLoadingArtist" [loading]="true" [compact]="true" icon="pi-spinner"
+  title="Loading artist details…"
+  message="Checking the playlist cache and saved artist data first."></app-page-state>
+
+<app-page-state *ngIf="!isLoadingArtist && artistLoadError" [compact]="true" tone="danger"
+  icon="pi-exclamation-circle" title="Artist unavailable" [message]="artistLoadError"></app-page-state>
+
+<main *ngIf="!isLoadingArtist && !artistLoadError" class="details-container">
   <article class="artist-profile-card">
     <header class="profile-header">
       <button type="button" class="artist-open-button spotify-artwork-link" (click)="openArtistClick()"

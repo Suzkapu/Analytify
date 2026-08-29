@@ -51,7 +51,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   selectedRange: string = 'short_term'; // 'short_term', 'medium_term', 'long_term'
   selectedCategory: string = 'tracks'; // 'tracks', 'artists', 'genres'
   statsSearchQuery: string = '';
-  isLoading: boolean = false;
+  isLoading: boolean = true;
+  isRefreshingStats: boolean = false;
 
 
   topTracks: any[] = [];
@@ -143,6 +144,9 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.compareSnapshotId = '';
     this.historyData = [];
     this.snapshotOptions = [];
+    this.topTracks = [];
+    this.topArtists = [];
+    this.topGenres = [];
     void this.loadStats();
     this.scheduleHistoryLoad();
   }
@@ -202,6 +206,15 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     let parsedArtists: any[] = [];
     let parsedGenres: any[] = [];
 
+    const updateLoadingState = () => {
+      const hasVisibleStats = this.topTracks.length > 0
+        || this.topArtists.length > 0
+        || this.topGenres.length > 0;
+      this.isLoading = !hasVisibleStats;
+      this.isRefreshingStats = hasVisibleStats;
+    };
+    updateLoadingState();
+
     const parseCachedStats = () => {
       isCacheIncomplete = false;
       parsedTracks = [];
@@ -239,7 +252,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       this.topTracks = parsedTracks;
       this.topArtists = parsedArtists;
       this.topGenres = parsedGenres;
-      this.isLoading = true;
+      this.isLoading = false;
+      this.isRefreshingStats = true;
     }
 
     if ((isExpired || isCacheIncomplete) && this.authService.isBackupActive()) {
@@ -268,6 +282,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
         this.topGenres = parsedGenres;
         this.saveHistorySnapshot(userId, range);
         this.isLoading = false;
+        this.isRefreshingStats = false;
       } catch (e) {
         console.warn('Failed to parse validated user stats cache:', e);
         isCacheIncomplete = true;
@@ -278,7 +293,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     if (isExpired || isCacheIncomplete) {
       // Prioritize Supabase data if backup is active
       if (this.authService.isBackupActive() && supabaseUserId) {
-        this.isLoading = true;
+        updateLoadingState();
         const maxAgeDays = range === 'short_term' ? 1 : 7;
         const dbSnapshot = await this.supabaseService.loadLatestStatsSnapshot(
           supabaseUserId,
@@ -310,12 +325,13 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
           this.saveHistorySnapshot(userId, range);
           this.isLoading = false;
+          this.isRefreshingStats = false;
           return; // Skip Spotify API call entirely!
         }
       }
 
       console.log(`[Stats] Cache and database snapshot missing/expired. Loading stats for ${range} from Spotify API...`);
-      this.isLoading = true;
+      updateLoadingState();
       if (!hasUsableCachedStats()) {
         this.topTracks = [];
         this.topArtists = [];
@@ -352,6 +368,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
           this.saveHistorySnapshot(userId, range);
           this.isLoading = false;
+          this.isRefreshingStats = false;
           // If backup is active, sync to Supabase
           if (this.authService.isBackupActive() && supabaseUserId) {
             let explicitCount = 0;
@@ -381,6 +398,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
           console.error('Failed to load user stats:', err);
           this.isLoading = false;
+          this.isRefreshingStats = false;
           // Fallback if API fails but we have stale cache
           if (
             Array.isArray(parsedTracks) &&

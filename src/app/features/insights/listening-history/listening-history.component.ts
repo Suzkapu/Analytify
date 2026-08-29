@@ -15,7 +15,7 @@ const console = createScopedLogger('Listening History');
 export class ListeningHistoryComponent implements OnInit {
 
   recentlyPlayedTracks: any[] = [];
-  isLoadingRecentlyPlayed: boolean = false;
+  isLoadingRecentlyPlayed: boolean = true;
 
   constructor(
     private spotifyDataService: SpotifyDataService,
@@ -35,6 +35,7 @@ export class ListeningHistoryComponent implements OnInit {
 
 
   async loadRecentlyPlayed() {
+    this.isLoadingRecentlyPlayed = this.recentlyPlayedTracks.length === 0;
     const userId = this.authService.getUserId() || 'anonymous';
     const supabaseUserId = this.authService.getSupabaseUserId();
     const storageKey = `${userId}_recently_played`;
@@ -67,6 +68,7 @@ export class ListeningHistoryComponent implements OnInit {
     }
 
     this.recentlyPlayedTracks = cachedTracks;
+    if (cachedTracks.length > 0) this.isLoadingRecentlyPlayed = false;
 
     const lastChecked = Number(this.storageService.getItem(lastCheckedKey));
     if (cachedTracks.length > 0 && Number.isFinite(lastChecked) && Date.now() - lastChecked < 5 * 60 * 1000) {

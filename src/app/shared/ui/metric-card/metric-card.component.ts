@@ -10,4 +10,5 @@ export class MetricCardComponent {
   @Input() icon = 'pi-chart-bar';
   @Input() label = '';
   @Input() value: string | number = '';
+  @Input() loading = false;
 }

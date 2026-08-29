@@ -6,6 +6,10 @@
       <span class="page-eyebrow">Personal listening</span>
       <h1>Your top listening</h1>
       <p>See the songs, artists, and genres shaping your Spotify profile—and how they change over time.</p>
+      <small *ngIf="isRefreshingStats" class="page-sync-state" role="status">
+        <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+        Refreshing this range in parallel while cached stats remain visible…
+      </small>
     </div>
   </header>
 

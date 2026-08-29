@@ -364,7 +364,8 @@ describe('UserStatsComponent trends', () => {
     expect(staleComponent.topTracks.map(track => track.id)).toEqual(['cached-track']);
     expect(staleComponent.topArtists.map(artist => artist.id)).toEqual(['cached-artist']);
     expect(staleComponent.topGenres.map(genre => genre.name)).toEqual(['cached-genre']);
-    expect(staleComponent.isLoading).toBeTrue();
+    expect(staleComponent.isLoading).toBeFalse();
+    expect(staleComponent.isRefreshingStats).toBeTrue();
     expect(spotify.getUserTopArtists).toHaveBeenCalledTimes(1);
     expect(spotify.getUserTopTracks).toHaveBeenCalledTimes(2);
   });

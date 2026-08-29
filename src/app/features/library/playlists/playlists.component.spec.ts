@@ -87,6 +87,13 @@ describe('PlaylistsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('shows loading instead of a false empty-playlists result on first paint', () => {
+    const element = fixture.nativeElement as HTMLElement;
+    expect(component.isLoadingPlaylists).toBeTrue();
+    expect(element.textContent).toContain('Loading your playlists…');
+    expect(element.textContent).not.toContain('No playlists found');
+  });
+
   it('does not render sharing controls on individual playlist cards', () => {
     authService.isBackupActive.and.returnValue(true);
     component.playlists = [{id: 'party', name: 'Party', tracks: {total: 12}}];

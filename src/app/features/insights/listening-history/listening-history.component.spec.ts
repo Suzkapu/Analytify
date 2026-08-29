@@ -33,6 +33,10 @@ describe('ListeningHistoryComponent', () => {
     expect(spotify.getRecentlyPlayed).toHaveBeenCalledOnceWith(50, new Date(playedAt).getTime());
   });
 
+  it('shows loading immediately instead of an empty history state', () => {
+    expect(component.isLoadingRecentlyPlayed).toBeTrue();
+  });
+
   it('skips Spotify when history was checked in the last five minutes', async () => {
     storage.set('user_recently_played', JSON.stringify([{
       played_at: '2026-08-08T10:00:00.000Z',

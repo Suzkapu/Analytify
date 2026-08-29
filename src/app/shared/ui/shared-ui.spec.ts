@@ -30,4 +30,23 @@ describe('shared UI segments', () => {
     expect(fixture.nativeElement.querySelector('small').textContent).toContain('Artists');
     expect(fixture.nativeElement.querySelector('strong').textContent).toContain('444');
   });
+
+  it('replaces a pending metric with its real value immediately when loading completes', () => {
+    const fixture = TestBed.createComponent(MetricCardComponent);
+    fixture.componentInstance.label = 'Albums';
+    fixture.componentInstance.value = 27;
+    fixture.componentInstance.loading = true;
+    fixture.detectChanges();
+
+    const card = fixture.nativeElement.querySelector('.shared-metric-card') as HTMLElement;
+    expect(card.getAttribute('aria-busy')).toBe('true');
+    expect(card.querySelector('.metric-loading')).not.toBeNull();
+    expect(card.querySelector('strong')).toBeNull();
+
+    fixture.componentInstance.loading = false;
+    fixture.detectChanges();
+
+    expect(card.querySelector('.metric-loading')).toBeNull();
+    expect(card.querySelector('strong')?.textContent).toContain('27');
+  });
 });

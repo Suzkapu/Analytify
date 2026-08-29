@@ -15,8 +15,13 @@
 
     <app-page-state *ngIf="isLoading" class="analysis-loading" [loading]="true"
       icon="pi-spinner" title="Analyzing playlist data…">
-      <div class="analysis-loading-count">{{ loadedTracksCount }} of {{ totalTracks }} loaded</div>
-      <div class="analysis-loading-track">
+      <div *ngIf="totalTracks > 0; else discoveringPlaylist" class="analysis-loading-count">
+        {{ loadedTracksCount }} of {{ totalTracks }} songs loaded
+      </div>
+      <ng-template #discoveringPlaylist>
+        <div class="analysis-loading-count">Finding cached playlist data…</div>
+      </ng-template>
+      <div *ngIf="totalTracks > 0" class="analysis-loading-track">
         <div [style.width.%]="totalTracks > 0 ? (loadedTracksCount / totalTracks) * 100 : 0"
           class="analysis-loading-fill"></div>
       </div>
@@ -32,7 +37,8 @@
       </header>
 
       <section class="analysis-dashboard" aria-label="Playlist statistics">
-        <div *ngIf="isLoadingTracks || isLoadingArtists" class="progress-panel-container analysis-progress">
+        <div *ngIf="isLoadingTracks || isLoadingArtists" class="progress-panel-container analysis-progress"
+          role="status" aria-live="polite">
           <div class="progress-panel-header">
             <span class="progress-status-text">
               <i class="pi pi-spin pi-spinner status-icon"></i>
@@ -45,7 +51,10 @@
             <div class="progress-bar-wrapper">
               <div class="progress-label-row">
                 <span class="progress-label"><i class="pi pi-music"></i> Songs loaded</span>
-                <span class="progress-value">{{ loadedTracksCount }} / {{ totalTracks }}</span>
+                <span class="progress-value" *ngIf="totalTracks > 0; else discoveringTrackTotal">
+                  {{ loadedTracksCount }} / {{ totalTracks }}
+                </span>
+                <ng-template #discoveringTrackTotal><span class="progress-value">Discovering…</span></ng-template>
               </div>
               <div class="progress-bar-track">
                 <div class="progress-bar-fill fill-tracks"
@@ -55,7 +64,10 @@
             <div class="progress-bar-wrapper">
               <div class="progress-label-row">
                 <span class="progress-label"><i class="pi pi-user"></i> Artist profiles loaded</span>
-                <span class="progress-value">{{ loadedArtistsDetailsCount }} / {{ totalUniqueArtists }}</span>
+                <span class="progress-value" *ngIf="totalUniqueArtists > 0; else discoveringArtistTotal">
+                  {{ loadedArtistsDetailsCount }} / {{ totalUniqueArtists }}
+                </span>
+                <ng-template #discoveringArtistTotal><span class="progress-value">Discovering…</span></ng-template>
               </div>
               <div class="progress-bar-track">
                 <div class="progress-bar-fill fill-artists"
@@ -66,14 +78,19 @@
         </div>
 
         <div class="metrics-grid">
-          <app-metric-card icon="pi-hashtag" label="Total songs" [value]="uniqueTracksCount"></app-metric-card>
-          <app-metric-card icon="pi-users" label="Artists" [value]="uniqueArtistsCount"></app-metric-card>
-          <app-metric-card icon="pi-clone" label="Albums" [value]="uniqueAlbumsCount"></app-metric-card>
-          <app-metric-card icon="pi-clock" label="Total length" [value]="totalDurationFormatted"></app-metric-card>
-          <app-metric-card icon="pi-hourglass" label="Average song length" [value]="averageDurationFormatted"></app-metric-card>
+          <app-metric-card icon="pi-hashtag" label="Total songs" [value]="uniqueTracksCount"
+            [loading]="isAnalysisPending"></app-metric-card>
+          <app-metric-card icon="pi-users" label="Artists" [value]="uniqueArtistsCount"
+            [loading]="isAnalysisPending"></app-metric-card>
+          <app-metric-card icon="pi-clone" label="Albums" [value]="uniqueAlbumsCount"
+            [loading]="isAnalysisPending"></app-metric-card>
+          <app-metric-card icon="pi-clock" label="Total length" [value]="totalDurationFormatted"
+            [loading]="isAnalysisPending"></app-metric-card>
+          <app-metric-card icon="pi-hourglass" label="Average song length" [value]="averageDurationFormatted"
+            [loading]="isAnalysisPending"></app-metric-card>
         </div>
 
-        <div class="analysis-sections">
+        <div *ngIf="!isAnalysisPending" class="analysis-sections">
           <section class="column-card">
             <app-section-heading icon="pi-calendar" eyebrow="Timeline" title="Release highlights"></app-section-heading>
 

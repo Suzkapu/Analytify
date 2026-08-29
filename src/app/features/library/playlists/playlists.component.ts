@@ -22,6 +22,7 @@ export class PlaylistsComponent {
   searchText: string = '';
   sortOrder: 'asc' | 'desc' | 'none' = 'none';
   showSavedPlaylists = false;
+  isLoadingPlaylists = true;
   isRefreshingPlaylists = false;
   isMergeSelectionMode = false;
   selectedPlaylistIds = new Set<string>();
@@ -59,6 +60,10 @@ export class PlaylistsComponent {
   async loadPlaylists() {
     const loadSequence = ++this.playlistLoadSequence;
     const isCurrentLoad = () => loadSequence === this.playlistLoadSequence;
+    const finishInitialLoad = () => {
+      if (isCurrentLoad()) this.isLoadingPlaylists = false;
+    };
+    this.isLoadingPlaylists = this.playlists.length === 0;
     const userId = this.authService.getUserId() || 'anonymous';
     const storageKey = `${userId}_playlists`;
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
@@ -115,6 +120,7 @@ export class PlaylistsComponent {
       }
 
       this.filterPlaylists();
+      if (this.playlists.length > 0) this.isLoadingPlaylists = false;
     };
 
     const hasCompleteFreshCache = () => {
@@ -135,6 +141,7 @@ export class PlaylistsComponent {
     // Re-entering this route must not spend Spotify quota to rediscover it.
     if (hasCompleteFreshCache()) {
       this.isRefreshingPlaylists = false;
+      finishInitialLoad();
       return;
     }
 
@@ -162,6 +169,7 @@ export class PlaylistsComponent {
         paintCachedPlaylists();
         if (hasCompleteFreshCache()) {
           this.isRefreshingPlaylists = false;
+          finishInitialLoad();
           return;
         }
       } else {
@@ -177,6 +185,7 @@ export class PlaylistsComponent {
       profileIdKey,
       parsedPlaylists
     );
+    finishInitialLoad();
   }
 
   private async refreshPlaylistsFromSpotify(

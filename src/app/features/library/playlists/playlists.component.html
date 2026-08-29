@@ -103,7 +103,11 @@
   <button type="button" (click)="dismissMergeResult()" aria-label="Dismiss success message">×</button>
     </section>
 
-    <app-page-state *ngIf="playlists.length === 0" class="no-playlists" icon="pi-list"
+    <app-page-state *ngIf="isLoadingPlaylists && playlists.length === 0" class="no-playlists"
+      [loading]="true" icon="pi-spinner" title="Loading your playlists…"
+      message="Checking your local cache and saved Spotify library."></app-page-state>
+
+    <app-page-state *ngIf="!isLoadingPlaylists && playlists.length === 0" class="no-playlists" icon="pi-list"
       title="No playlists found"
       message="Your Spotify playlists will appear here once they are available."></app-page-state>
 

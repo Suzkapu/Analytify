@@ -17,6 +17,8 @@ export class ArtistDetailsComponent {
   artist: any = {};
   tracks: any[] = [];
   playlistId: string = '';
+  isLoadingArtist = true;
+  artistLoadError = '';
 
 
   constructor(
@@ -49,6 +51,8 @@ export class ArtistDetailsComponent {
   }
 
   async loadArtistDetails(id: string) {
+    this.isLoadingArtist = true;
+    this.artistLoadError = '';
     const userId = this.authService.getUserId() || 'anonymous';
     const artistCacheKey = `${userId}_artist_${id}`;
     const artistUpdatedKey = `${artistCacheKey}_lastUpdated`;
@@ -68,7 +72,7 @@ export class ArtistDetailsComponent {
 
     let cachedArtist = readArtistCache();
     if (cachedArtist) {
-      this.artist = cachedArtist;
+      this.finishArtistLoading(cachedArtist);
       return;
     }
 
@@ -83,7 +87,7 @@ export class ArtistDetailsComponent {
             : null;
           if (found) {
             console.log('[ArtistDetails] Loading artist details from the local IndexedDB playlist cache.');
-            this.artist = found;
+            this.finishArtistLoading(found);
             return;
           }
         } catch (error) {
@@ -96,7 +100,7 @@ export class ArtistDetailsComponent {
       await this.storageService.restoreItemsFromCloud([artistCacheKey, artistUpdatedKey]);
       cachedArtist = readArtistCache();
       if (cachedArtist) {
-        this.artist = cachedArtist;
+        this.finishArtistLoading(cachedArtist);
         return;
       }
     }
@@ -104,7 +108,7 @@ export class ArtistDetailsComponent {
     const dbArtist = await this.supabaseService.loadArtistById(id);
     if (dbArtist) {
       console.log('[ArtistDetails] Loading artist details from Supabase.');
-      this.artist = dbArtist;
+      this.finishArtistLoading(dbArtist);
       this.storageService.setItem(artistCacheKey, JSON.stringify(dbArtist));
       this.storageService.setItem(artistUpdatedKey, Date.now().toString());
       return;
@@ -113,7 +117,7 @@ export class ArtistDetailsComponent {
     console.log("[ArtistDetails] Cache missing. Loading artist details from Spotify API...");
     this.spotifyDataService.getSingleArtist(id).subscribe({
       next: (artist: any) => {
-        this.artist = artist;
+        this.finishArtistLoading(artist);
         this.storageService.setItem(artistCacheKey, JSON.stringify(artist));
         this.storageService.setItem(artistUpdatedKey, Date.now().toString());
         if (this.authService.isBackupActive()) {
@@ -122,8 +126,17 @@ export class ArtistDetailsComponent {
           });
         }
       },
-      error: (err) => console.error('[ArtistDetails] Failed to load artist from Spotify:', err)
+      error: (err) => {
+        console.error('[ArtistDetails] Failed to load artist from Spotify:', err);
+        this.isLoadingArtist = false;
+        this.artistLoadError = 'Artist details could not be loaded.';
+      }
     });
+  }
+
+  private finishArtistLoading(artist: any): void {
+    this.artist = artist;
+    this.isLoadingArtist = false;
   }
 
   openTrackClick(url?: string) {

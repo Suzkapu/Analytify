@@ -18,7 +18,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
   playlistId: string = '';
   playlistName: string = '';
   artists: any[] = [];
-  isLoading: boolean = false;
+  isLoading: boolean = true;
   isRefreshing: boolean = false;
   refreshingArtists: any[] = [];
   loadedTracksCount: number = 0;
@@ -92,6 +92,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
   }
 
   async loadPlaylistData() {
+    this.isLoading = this.artists.length === 0;
     const userId = this.authService.getUserId() || 'anonymous';
     const storageKey = `${userId}_${this.playlistId}`;
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
@@ -106,6 +107,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
           this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
           this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
           this.runAnalysis();
+          this.isLoading = false;
         } catch (e) {
           console.warn('Failed to parse stored artists for active task:', e);
         }
@@ -208,6 +210,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
         this.totalTracks = cachedTotalTracks;
         this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
         this.runAnalysis();
+        this.isLoading = false;
       } catch (e) {
         console.warn('Failed to load playlist analysis data from cache:', e);
         this.triggerApiLoad(false, isExpired);
@@ -278,6 +281,10 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
       }
 
       if (progress.isComplete) {
+        this.isLoading = false;
+        this.isLoadingTracks = false;
+        this.isLoadingArtists = false;
+        this.isRefreshing = false;
         const storedArtists = this.storageService.getItem(`${userId}_${this.playlistId}`);
         if (storedArtists) {
           try {
@@ -294,9 +301,6 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
         }
       } else if (!silent) {
         this.artists = (this.artists.length === 0 || !progress.isRefreshing) ? progress.artists : this.artists;
-        if (this.artists && this.artists.length > 0) {
-          this.runAnalysis();
-        }
       }
     });
   }
@@ -393,6 +397,11 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
       this.newestTrack = null;
     }
 
+  }
+
+  get isAnalysisPending(): boolean {
+    return (this.isLoading || this.isLoadingTracks || this.isLoadingArtists)
+      && this.uniqueTracksCount === 0;
   }
 
   formatDuration(ms: number): string {

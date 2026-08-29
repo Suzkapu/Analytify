@@ -23,7 +23,7 @@ export class SongsComponent implements OnInit, OnDestroy {
   sortOrder: 'asc' | 'desc' | 'none' = 'none';
   playlistId: string = '';
   totalTracks: number = 0;
-  isLoading: boolean = false;
+  isLoading: boolean = true;
   isRefreshing: boolean = false;
   refreshingArtists: any[] = [];
   loadedTracksCount: number = 0;
@@ -186,6 +186,7 @@ export class SongsComponent implements OnInit, OnDestroy {
   }
 
   async loadArtistsFromPlaylist() {
+    this.isLoading = this.artists.length === 0;
     const loadSequence = ++this.playlistLoadSequence;
     const playlistId = this.playlistId;
     const isCurrentLoad = () =>
@@ -211,6 +212,7 @@ export class SongsComponent implements OnInit, OnDestroy {
           this.totalTracks = activeCache.cachedTotalTracks;
           this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
           this.filterArtists();
+          this.isLoading = false;
         } catch (e) {
           console.warn('Failed to parse stored artists for active task:', e);
         }
@@ -375,6 +377,10 @@ export class SongsComponent implements OnInit, OnDestroy {
       }
 
       if (progress.isComplete) {
+        this.isLoading = false;
+        this.isLoadingTracks = false;
+        this.isLoadingArtists = false;
+        this.isRefreshing = false;
         const userId = this.authService.getUserId() || 'anonymous';
         const storedArtists = this.storageService.getItem(`${userId}_${this.playlistId}`);
         if (storedArtists) {

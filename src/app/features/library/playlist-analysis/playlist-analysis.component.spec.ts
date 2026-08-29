@@ -28,6 +28,7 @@ describe('PlaylistAnalysisComponent', () => {
   });
 
   it('uses the shared page shell and themed analysis cards', () => {
+    component.isLoading = false;
     component.playlistName = 'Road Trip';
     component.uniqueTracksCount = 42;
     component.totalDurationFormatted = '2 hr 8 min';
@@ -41,6 +42,16 @@ describe('PlaylistAnalysisComponent', () => {
     expect(element.querySelector('.page-shell > .page-back-row')).not.toBeNull();
     expect(element.querySelectorAll('app-metric-card').length).toBe(5);
     expect(element.querySelectorAll('.analysis-sections > .column-card').length).toBe(2);
+  });
+
+  it('shows an indeterminate loading state before a playlist total is known', () => {
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(component.isLoading).toBeTrue();
+    expect(element.querySelector('.analysis-loading')).not.toBeNull();
+    expect(element.textContent).toContain('Finding cached playlist data…');
+    expect(element.querySelector('.metrics-grid')).toBeNull();
   });
 
   it('counts unique artists and albums without duplicating collaborative tracks', () => {

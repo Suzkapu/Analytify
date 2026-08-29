@@ -1,7 +1,11 @@
-<article class="metric-card shared-metric-card">
+<article class="metric-card shared-metric-card" [attr.aria-busy]="loading">
   <span class="metric-icon"><i class="pi" [ngClass]="icon"></i></span>
   <span class="metric-copy">
     <small>{{ label }}</small>
-    <strong>{{ value }}</strong>
+    <strong *ngIf="!loading">{{ value }}</strong>
+    <span *ngIf="loading" class="metric-loading" role="status">
+      <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+      <span class="sr-only">Loading {{ label }}</span>
+    </span>
   </span>
 </article>
