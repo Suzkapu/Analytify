@@ -41,20 +41,38 @@
 }
 .site-announcement {
   min-height: 38px;
-  padding: calc(8px + env(safe-area-inset-top, 0px)) 16px 8px;
+  width: min(720px, calc(100% - 24px));
+  max-height: min(40vh, 240px);
+  padding: 10px 16px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   position: fixed;
-  inset: 0 0 auto;
+  top: max(12px, env(safe-area-inset-top, 0px));
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1200;
-  border-bottom: 1px solid rgba(30, 215, 96, .22);
+  overflow: hidden;
+  pointer-events: none;
+  border: 1px solid rgba(30, 215, 96, .32);
+  border-radius: 12px;
   background: #112217;
   box-shadow: 0 8px 24px rgba(0, 0, 0, .28);
   color: #aaf0c0;
   font-size: .82rem;
   font-weight: 700;
   text-align: center;
+
+  span {
+    overflow: hidden;
+    overflow-wrap: anywhere;
+  }
+}
+
+.site-announcement-transient span {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }

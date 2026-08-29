@@ -7,6 +7,7 @@ import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {SiteSettingsService} from '@core/settings/site-settings.service';
 
 const navigationLog = createScopedLogger('Navigation');
+const ANNOUNCEMENT_AUTO_HIDE_MS = 5000;
 
 @Component({
   selector: 'app-root',
@@ -18,9 +19,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   showScrollBtn = false;
   isInitialNavigationLoading: boolean;
   siteAnnouncement = '';
+  announcementVisible = true;
+  isLandingAnnouncement = true;
 
   private readonly windowScrollHandler = () => this.onWindowScroll();
   private navigationStartedAt = 0;
+  private announcementHideTimer?: ReturnType<typeof setTimeout>;
+  private transientAnnouncementShown = false;
 
   constructor(
     private swUpdate: SwUpdate,
@@ -31,6 +36,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.isInitialNavigationLoading = !this.router.navigated;
     void this.siteSettings.load().then(settings => {
       this.siteAnnouncement = settings.announcement;
+      this.updateAnnouncementVisibility(this.router.url);
     }).catch(() => {});
 
     this.router.events.subscribe(event => {
@@ -38,6 +44,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         this.navigationStartedAt = performance.now();
         navigationLog.step('Opening page', {url: event.url});
       } else if (event instanceof NavigationEnd) {
+        this.updateAnnouncementVisibility(event.urlAfterRedirects);
         navigationLog.success('Page ready', {
           url: event.urlAfterRedirects,
           durationMs: Math.round(performance.now() - this.navigationStartedAt)
@@ -78,6 +85,46 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     window.removeEventListener('scroll', this.windowScrollHandler);
+    this.clearAnnouncementHideTimer();
+  }
+
+  private updateAnnouncementVisibility(url: string): void {
+    if (!this.siteAnnouncement) {
+      this.announcementVisible = false;
+      this.clearAnnouncementHideTimer();
+      return;
+    }
+
+    this.isLandingAnnouncement = this.isLandingRoute(url);
+    if (this.isLandingAnnouncement) {
+      this.announcementVisible = true;
+      this.clearAnnouncementHideTimer();
+      return;
+    }
+
+    if (this.transientAnnouncementShown) {
+      this.announcementVisible = this.announcementHideTimer !== undefined;
+      return;
+    }
+
+    this.transientAnnouncementShown = true;
+    this.announcementVisible = true;
+    this.announcementHideTimer = setTimeout(() => {
+      this.announcementHideTimer = undefined;
+      this.announcementVisible = false;
+    }, ANNOUNCEMENT_AUTO_HIDE_MS);
+  }
+
+  private isLandingRoute(url: string): boolean {
+    const path = url.split(/[?#]/, 1)[0].replace(/\/+$/, '');
+    return path === '' || path === '/login';
+  }
+
+  private clearAnnouncementHideTimer(): void {
+    if (this.announcementHideTimer !== undefined) {
+      clearTimeout(this.announcementHideTimer);
+      this.announcementHideTimer = undefined;
+    }
   }
 
   onWindowScroll(): void {

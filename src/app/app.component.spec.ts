@@ -2,6 +2,7 @@ import {TestBed} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {SwUpdate} from '@angular/service-worker';
 import {NavigationEnd, Router} from '@angular/router';
+import {fakeAsync, flushMicrotasks, tick} from '@angular/core/testing';
 import {Subject} from 'rxjs';
 import {AppComponent} from './app.component';
 import {SiteSettingsService} from '@core/settings/site-settings.service';
@@ -21,6 +22,7 @@ describe('AppComponent', () => {
         provide: Router,
         useValue: {
           navigated: false,
+          url: '/',
           events: routerEvents.asObservable()
         }
       },
@@ -59,8 +61,35 @@ describe('AppComponent', () => {
     const announcement = fixture.nativeElement.querySelector('.site-announcement') as HTMLElement;
     expect(announcement).not.toBeNull();
     expect(getComputedStyle(announcement).position).toBe('fixed');
-    expect(getComputedStyle(announcement).top).toBe('0px');
+    expect(getComputedStyle(announcement).pointerEvents).toBe('none');
   });
+
+  it('should keep the announcement visible on the landing page', fakeAsync(() => {
+    const fixture = TestBed.createComponent(AppComponent);
+    flushMicrotasks();
+    fixture.componentInstance.siteAnnouncement = 'Scheduled maintenance';
+
+    routerEvents.next(new NavigationEnd(1, '/', '/'));
+    tick(6000);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.site-announcement')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('.site-announcement-transient')).toBeNull();
+  }));
+
+  it('should briefly show the announcement on other pages and then hide it', fakeAsync(() => {
+    const fixture = TestBed.createComponent(AppComponent);
+    flushMicrotasks();
+    fixture.componentInstance.siteAnnouncement = 'Scheduled maintenance';
+
+    routerEvents.next(new NavigationEnd(1, '/stats', '/stats'));
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.site-announcement-transient')).not.toBeNull();
+
+    tick(5000);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.site-announcement')).toBeNull();
+  }));
 
   it('should show a loading screen until the initial navigation finishes', () => {
     const fixture = TestBed.createComponent(AppComponent);
