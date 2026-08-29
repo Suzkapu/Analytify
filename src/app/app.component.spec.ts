@@ -51,6 +51,17 @@ describe('AppComponent', () => {
     expect(compiled.querySelector('.scroll-to-top-btn')).not.toBeNull();
   });
 
+  it('should overlay an announcement without moving the routed page', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.componentInstance.siteAnnouncement = 'Scheduled maintenance';
+    fixture.detectChanges();
+
+    const announcement = fixture.nativeElement.querySelector('.site-announcement') as HTMLElement;
+    expect(announcement).not.toBeNull();
+    expect(getComputedStyle(announcement).position).toBe('fixed');
+    expect(getComputedStyle(announcement).top).toBe('0px');
+  });
+
   it('should show a loading screen until the initial navigation finishes', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
