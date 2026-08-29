@@ -26,37 +26,49 @@
             [class.active]="selectedRange === 'long_term'" [attr.aria-pressed]="selectedRange === 'long_term'">1 year</button>
         </div>
 
-        <!-- Custom History Dropdown Overlay -->
+        <!-- Snapshot comparison calendars -->
         <div class="history-select-container" *ngIf="snapshotOptions.length > 0">
           <div class="spotify-custom-dropdown" [class.open]="showHistoryMenu"
             [class.active]="selectedSnapshotId !== 'current'">
-            <button class="dropdown-trigger-btn" (click)="toggleHistoryMenu($event)">
+            <button class="dropdown-trigger-btn" (click)="toggleHistoryMenu($event)"
+              [attr.aria-expanded]="showHistoryMenu" aria-haspopup="dialog" aria-controls="stats-history-calendar">
               <span>{{ getSelectedSnapshotLabel() }}</span>
-              <i class="pi pi-chevron-down icon-right"></i>
+              <i class="pi pi-calendar icon-right"></i>
             </button>
-            <div class="dropdown-menu-overlay" *ngIf="showHistoryMenu">
-              <div class="menu-section-header">Select Snapshot</div>
-              <div class="menu-item" [class.active]="selectedSnapshotId === 'current'"
-                (click)="selectHistorySnapshot('current', $event)">
-                <span>Today</span>
-                <i *ngIf="selectedSnapshotId === 'current'" class="pi pi-check"></i>
+            <div id="stats-history-calendar" class="dropdown-menu-overlay compare-calendar-popover"
+              *ngIf="showHistoryMenu" role="dialog" aria-label="Choose the primary stats date"
+              (click)="$event.stopPropagation()">
+              <div class="compare-calendar-heading">
+                <div>
+                  <span class="menu-section-header">View snapshot</span>
+                  <strong>{{ historyCalendarMonthLabel }}</strong>
+                </div>
+                <div class="compare-calendar-navigation" aria-label="Available snapshot months">
+                  <button type="button" (click)="navigateHistoryCalendar(-1, $event)"
+                    [disabled]="!canNavigateHistoryCalendar(-1)" aria-label="Previous available month">
+                    <i class="pi pi-chevron-left"></i>
+                  </button>
+                  <button type="button" (click)="navigateHistoryCalendar(1, $event)"
+                    [disabled]="!canNavigateHistoryCalendar(1)" aria-label="Next available month">
+                    <i class="pi pi-chevron-right"></i>
+                  </button>
+                </div>
               </div>
-              
-              <!-- Grouped Historical Snapshots -->
-              <div *ngFor="let group of historyGroups" class="menu-group-container">
-                <div class="menu-group-header" (click)="toggleHistoryGroup(group, $event)">
-                  <i class="pi" [class.pi-chevron-right]="!group.isOpen" [class.pi-chevron-down]="group.isOpen"></i>
-                  <span class="group-title">{{ group.label }}</span>
-                  <span class="group-count">({{ group.options.length }})</span>
-                </div>
-                <div class="menu-group-items" *ngIf="group.isOpen">
-                  <div *ngFor="let opt of group.options" class="menu-item nested-item" 
-                    [class.active]="selectedSnapshotId === opt.id"
-                    (click)="selectHistorySnapshot(opt.id, $event)">
-                    <span>{{ opt.label }}</span>
-                    <i *ngIf="selectedSnapshotId === opt.id" class="pi pi-check"></i>
-                  </div>
-                </div>
+
+              <div class="compare-calendar-weekdays" aria-hidden="true">
+                <span *ngFor="let weekday of compareCalendarWeekdays">{{ weekday }}</span>
+              </div>
+              <div class="compare-calendar-grid">
+                <ng-container *ngFor="let day of historyCalendarDays">
+                  <span *ngIf="!day" class="compare-calendar-spacer" aria-hidden="true"></span>
+                  <button *ngIf="day" type="button" class="compare-calendar-day"
+                    [class.is-available]="day.isAvailable" [class.is-selected]="day.isSelected"
+                    [class.is-today]="day.isToday" [disabled]="!day.isAvailable"
+                    [attr.aria-label]="day.ariaLabel" [attr.aria-pressed]="day.isSelected"
+                    (click)="selectHistoryCalendarDay(day, $event)">
+                    {{ day.dayNumber }}
+                  </button>
+                </ng-container>
               </div>
             </div>
           </div>
@@ -105,10 +117,6 @@
                 </ng-container>
               </div>
 
-              <div class="compare-calendar-legend">
-                <span><i class="available-date-dot"></i> Available</span>
-                <span class="compare-calendar-hint">Only saved snapshots can be selected</span>
-              </div>
             </div>
           </div>
         </div>

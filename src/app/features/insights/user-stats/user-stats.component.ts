@@ -22,7 +22,8 @@ function toDailySnapshotDateKey(ts: number): string {
 
 type StatsCategory = 'tracks' | 'artists' | 'genres';
 type StatsTrend = { type: 'up' | 'down' | 'same' | 'new'; diff?: number };
-type CompareCalendarDay = {
+type SnapshotCalendarTarget = 'history' | 'compare';
+type SnapshotCalendarDay = {
   dateKey: string;
   dayNumber: number;
   optionId: string | null;
@@ -63,12 +64,14 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   selectedSnapshotId: string = 'current';
   compareSnapshotId: string = '';
   snapshotOptions: any[] = [];
-  historyGroups: any[] = [];
   showHistoryMenu: boolean = false;
   showCompareMenu: boolean = false;
+  historyCalendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  historyCalendarMonthLabel = '';
+  historyCalendarDays: Array<SnapshotCalendarDay | null> = [];
   compareCalendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   compareCalendarMonthLabel = '';
-  compareCalendarDays: Array<CompareCalendarDay | null> = [];
+  compareCalendarDays: Array<SnapshotCalendarDay | null> = [];
   readonly compareCalendarWeekdays = compareCalendarWeekdays();
   hotMoverTracks = new Set<string>();
   hotMoverArtists = new Set<string>();
@@ -140,7 +143,6 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.compareSnapshotId = '';
     this.historyData = [];
     this.snapshotOptions = [];
-    this.historyGroups = [];
     void this.loadStats();
     this.scheduleHistoryLoad();
   }
@@ -486,6 +488,9 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   toggleHistoryMenu(event: Event) {
     event.stopPropagation();
     this.showCompareMenu = false;
+    if (!this.showHistoryMenu) {
+      this.refreshHistoryCalendar(true);
+    }
     this.showHistoryMenu = !this.showHistoryMenu;
   }
 
@@ -521,68 +526,102 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   }
 
   updateSnapshotGroups() {
-    this.historyGroups = this.groupSnapshots(this.snapshotOptions, this.selectedSnapshotId);
+    this.refreshHistoryCalendar();
     this.refreshCompareCalendar();
+  }
+
+  canNavigateHistoryCalendar(direction: -1 | 1): boolean {
+    return this.canNavigateSnapshotCalendar('history', direction);
+  }
+
+  navigateHistoryCalendar(direction: -1 | 1, event: Event): void {
+    this.navigateSnapshotCalendar('history', direction, event);
+  }
+
+  selectHistoryCalendarDay(day: SnapshotCalendarDay, event: Event): void {
+    event.stopPropagation();
+    if (!day.isAvailable || !day.optionId) return;
+    this.selectHistorySnapshot(day.optionId, event);
   }
 
   canNavigateCompareCalendar(direction: -1 | 1): boolean {
-    const months = this.getAvailableCompareMonths();
-    const currentIndex = months.findIndex(month => month.getTime() === this.compareCalendarMonth.getTime());
-    return currentIndex >= 0 && currentIndex + direction >= 0 && currentIndex + direction < months.length;
+    return this.canNavigateSnapshotCalendar('compare', direction);
   }
 
   navigateCompareCalendar(direction: -1 | 1, event: Event): void {
-    event.stopPropagation();
-    const months = this.getAvailableCompareMonths();
-    const currentIndex = months.findIndex(month => month.getTime() === this.compareCalendarMonth.getTime());
-    const target = months[currentIndex + direction];
-    if (!target) return;
-
-    this.compareCalendarMonth = target;
-    this.refreshCompareCalendar();
+    this.navigateSnapshotCalendar('compare', direction, event);
   }
 
-  selectCompareCalendarDay(day: CompareCalendarDay, event: Event): void {
+  selectCompareCalendarDay(day: SnapshotCalendarDay, event: Event): void {
     event.stopPropagation();
     if (!day.isAvailable || !day.optionId) return;
     this.selectCompareSnapshot(day.optionId, event);
   }
 
+  private canNavigateSnapshotCalendar(target: SnapshotCalendarTarget, direction: -1 | 1): boolean {
+    const months = this.getAvailableSnapshotMonths(target);
+    const currentMonth = this.getSnapshotCalendarMonth(target);
+    const currentIndex = months.findIndex(month => month.getTime() === currentMonth.getTime());
+    return currentIndex >= 0 && currentIndex + direction >= 0 && currentIndex + direction < months.length;
+  }
+
+  private navigateSnapshotCalendar(target: SnapshotCalendarTarget, direction: -1 | 1, event: Event): void {
+    event.stopPropagation();
+    const months = this.getAvailableSnapshotMonths(target);
+    const currentMonth = this.getSnapshotCalendarMonth(target);
+    const currentIndex = months.findIndex(month => month.getTime() === currentMonth.getTime());
+    const nextMonth = months[currentIndex + direction];
+    if (!nextMonth) return;
+
+    this.setSnapshotCalendarMonth(target, nextMonth);
+    this.refreshSnapshotCalendar(target);
+  }
+
+  private refreshHistoryCalendar(focusSelection = false): void {
+    this.refreshSnapshotCalendar('history', focusSelection);
+  }
+
   private refreshCompareCalendar(focusSelection = false): void {
-    const options = this.getCompareOptions();
+    this.refreshSnapshotCalendar('compare', focusSelection);
+  }
+
+  private refreshSnapshotCalendar(target: SnapshotCalendarTarget, focusSelection = false): void {
+    const options = this.getSnapshotCalendarOptions(target);
     if (options.length === 0) {
-      this.compareCalendarMonthLabel = '';
-      this.compareCalendarDays = [];
+      this.setSnapshotCalendarView(target, '', []);
       return;
     }
 
     const availableByDate = new Map<string, string>();
     options.forEach(option => {
-      const dateKey = this.getCompareOptionDateKey(option);
+      const dateKey = this.getSnapshotOptionDateKey(option);
       if (dateKey) availableByDate.set(dateKey, option.id);
     });
 
-    const months = this.getAvailableCompareMonths(options);
-    const selectedOption = options.find(option => option.id === this.compareSnapshotId);
-    const selectedDateKey = selectedOption ? this.getCompareOptionDateKey(selectedOption) : null;
+    const selectedId = target === 'history' ? this.selectedSnapshotId : this.compareSnapshotId;
+    const months = this.getAvailableSnapshotMonths(target, options);
+    const selectedOption = options.find(option => option.id === selectedId);
+    const selectedDateKey = selectedOption ? this.getSnapshotOptionDateKey(selectedOption) : null;
     const selectedMonth = selectedDateKey ? this.monthFromDateKey(selectedDateKey) : null;
-    const currentMonthExists = months.some(month => month.getTime() === this.compareCalendarMonth.getTime());
+    let currentMonth = this.getSnapshotCalendarMonth(target);
+    const currentMonthExists = months.some(month => month.getTime() === currentMonth.getTime());
 
     if ((focusSelection && selectedMonth) || !currentMonthExists) {
-      this.compareCalendarMonth = selectedMonth || months[months.length - 1];
+      currentMonth = selectedMonth || months[months.length - 1];
+      this.setSnapshotCalendarMonth(target, currentMonth);
     }
 
-    this.compareCalendarMonthLabel = this.compareCalendarMonth.toLocaleDateString(undefined, {
+    const monthLabel = currentMonth.toLocaleDateString(undefined, {
       month: 'long',
       year: 'numeric'
     });
 
-    const year = this.compareCalendarMonth.getFullYear();
-    const month = this.compareCalendarMonth.getMonth();
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
     const firstDayOffset = (new Date(year, month, 1).getDay() + 6) % 7;
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const todayKey = toDailySnapshotDateKey(Date.now());
-    const cells: Array<CompareCalendarDay | null> = Array.from({length: firstDayOffset}, () => null);
+    const cells: Array<SnapshotCalendarDay | null> = Array.from({length: firstDayOffset}, () => null);
 
     for (let dayNumber = 1; dayNumber <= daysInMonth; dayNumber++) {
       const date = new Date(year, month, dayNumber, 12);
@@ -593,19 +632,22 @@ export class UserStatsComponent implements OnInit, OnDestroy {
         dayNumber,
         optionId,
         isAvailable: !!optionId,
-        isSelected: optionId === this.compareSnapshotId,
+        isSelected: optionId === selectedId,
         isToday: dateKey === todayKey,
-        ariaLabel: `${date.toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'})}${optionId ? ', available for comparison' : ', unavailable for comparison'}`
+        ariaLabel: `${date.toLocaleDateString(undefined, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'})}${optionId ? ', available' : ', unavailable'}`
       });
     }
 
-    this.compareCalendarDays = cells;
+    this.setSnapshotCalendarView(target, monthLabel, cells);
   }
 
-  private getAvailableCompareMonths(options = this.getCompareOptions()): Date[] {
+  private getAvailableSnapshotMonths(
+    target: SnapshotCalendarTarget,
+    options = this.getSnapshotCalendarOptions(target)
+  ): Date[] {
     const months = new Map<number, Date>();
     options.forEach(option => {
-      const dateKey = this.getCompareOptionDateKey(option);
+      const dateKey = this.getSnapshotOptionDateKey(option);
       if (!dateKey) return;
       const month = this.monthFromDateKey(dateKey);
       months.set(month.getTime(), month);
@@ -613,7 +655,34 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     return Array.from(months.values()).sort((left, right) => left.getTime() - right.getTime());
   }
 
-  private getCompareOptionDateKey(option: any): string | null {
+  private getSnapshotCalendarOptions(target: SnapshotCalendarTarget): any[] {
+    return target === 'history' ? this.getHistoryOptions() : this.getCompareOptions();
+  }
+
+  private getSnapshotCalendarMonth(target: SnapshotCalendarTarget): Date {
+    return target === 'history' ? this.historyCalendarMonth : this.compareCalendarMonth;
+  }
+
+  private setSnapshotCalendarMonth(target: SnapshotCalendarTarget, month: Date): void {
+    if (target === 'history') this.historyCalendarMonth = month;
+    else this.compareCalendarMonth = month;
+  }
+
+  private setSnapshotCalendarView(
+    target: SnapshotCalendarTarget,
+    label: string,
+    days: Array<SnapshotCalendarDay | null>
+  ): void {
+    if (target === 'history') {
+      this.historyCalendarMonthLabel = label;
+      this.historyCalendarDays = days;
+    } else {
+      this.compareCalendarMonthLabel = label;
+      this.compareCalendarDays = days;
+    }
+  }
+
+  private getSnapshotOptionDateKey(option: any): string | null {
     if (option.id === 'current') return toDailySnapshotDateKey(Date.now());
     return option.dateKey || this.getSnapshotDateKey(option.id);
   }
@@ -621,46 +690,6 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   private monthFromDateKey(dateKey: string): Date {
     const [year, month] = dateKey.split('-').map(Number);
     return new Date(year, month - 1, 1);
-  }
-
-  groupSnapshots(options: any[], selectedId: string): any[] {
-    const groupsMap = new Map<string, any>();
-    
-    options.forEach(opt => {
-      const date = new Date(parseInt(opt.id, 10));
-      if (isNaN(date.getTime())) return;
-      const year = date.getFullYear();
-      const monthLabel = date.toLocaleDateString(undefined, { month: 'long' });
-      const groupKey = `${monthLabel} ${year}`;
-      
-      if (!groupsMap.has(groupKey)) {
-        groupsMap.set(groupKey, {
-          key: groupKey,
-          label: groupKey,
-          isOpen: false,
-          options: []
-        });
-      }
-      
-      const group = groupsMap.get(groupKey);
-      group.options.push(opt);
-      
-      if (opt.id === selectedId) {
-        group.isOpen = true;
-      }
-    });
-
-    const groups = Array.from(groupsMap.values());
-    if (groups.length > 0 && !groups.some(g => g.isOpen)) {
-      groups[0].isOpen = true;
-    }
-    
-    return groups;
-  }
-
-  toggleHistoryGroup(group: any, event: Event) {
-    event.stopPropagation();
-    group.isOpen = !group.isOpen;
   }
 
   /** Returns the most recent historical snapshot id that is NOT the currently selected snapshot. */
@@ -676,6 +705,17 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     if (this.compareSnapshotId) {
       this.ensureSnapshotLoaded(this.compareSnapshotId);
     }
+  }
+
+  getHistoryOptions(): any[] {
+    return [
+      {id: 'current', label: 'Today', dateKey: toDailySnapshotDateKey(Date.now())},
+      ...this.snapshotOptions.map(option => ({
+        id: option.id,
+        label: option.label,
+        dateKey: option.dateKey
+      }))
+    ];
   }
 
   getCompareOptions(): any[] {

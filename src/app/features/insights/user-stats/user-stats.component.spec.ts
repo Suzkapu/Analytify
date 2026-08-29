@@ -269,6 +269,74 @@ describe('UserStatsComponent trends', () => {
     expect(component.compareCalendarDays.some(day => !!day?.isToday && day.isAvailable && day.optionId === 'current')).toBeTrue();
   });
 
+  it('offers Today and saved snapshots in the primary calendar', () => {
+    const snapshot = makeSnapshot('2026-07-15');
+    component.historyData = [snapshot];
+    component.snapshotOptions = [{
+      id: snapshot.timestamp.toString(),
+      label: snapshot.snapshotDate,
+      dateKey: snapshot.snapshotDate
+    }];
+
+    component.updateSnapshotGroups();
+
+    expect(component.historyCalendarDays.some(day =>
+      !!day?.isToday && day.isAvailable && day.isSelected && day.optionId === 'current'
+    )).toBeTrue();
+    expect(component.canNavigateHistoryCalendar(-1)).toBeTrue();
+
+    component.navigateHistoryCalendar(-1, new Event('click'));
+
+    expect(component.historyCalendarDays.some(day =>
+      day?.dateKey === '2026-07-15' && day.isAvailable && day.optionId === snapshot.timestamp.toString()
+    )).toBeTrue();
+  });
+
+  it('selects the primary calendar date and rebuilds comparison options without that date', () => {
+    const primary = makeSnapshot('2026-07-15');
+    const older = makeSnapshot('2026-06-15');
+    component.historyData = [older, primary];
+    component.snapshotOptions = [primary, older].map(snapshot => ({
+      id: snapshot.timestamp.toString(),
+      label: snapshot.snapshotDate,
+      dateKey: snapshot.snapshotDate
+    }));
+    component.updateSnapshotGroups();
+    component.navigateHistoryCalendar(-1, new Event('click'));
+    const selectedDay = component.historyCalendarDays.find(day => day?.dateKey === '2026-07-15') as any;
+    const ensureSnapshotLoaded = spyOn(component, 'ensureSnapshotLoaded');
+
+    component.selectHistoryCalendarDay(selectedDay, new Event('click'));
+
+    expect(component.selectedSnapshotId).toBe(primary.timestamp.toString());
+    expect(component.compareSnapshotId).toBe(older.timestamp.toString());
+    expect(component.getCompareOptions().map(option => option.id)).not.toContain(primary.timestamp.toString());
+    expect(component.showHistoryMenu).toBeFalse();
+    expect(ensureSnapshotLoaded).toHaveBeenCalledWith(primary.timestamp.toString());
+    expect(ensureSnapshotLoaded).toHaveBeenCalledWith(older.timestamp.toString());
+  });
+
+  it('navigates the primary and comparison calendars independently', () => {
+    const may = makeSnapshot('2026-05-10');
+    const july = makeSnapshot('2026-07-20');
+    component.historyData = [may, july];
+    component.snapshotOptions = [july, may].map(snapshot => ({
+      id: snapshot.timestamp.toString(),
+      label: snapshot.snapshotDate,
+      dateKey: snapshot.snapshotDate
+    }));
+    component.compareSnapshotId = july.timestamp.toString();
+    component.updateSnapshotGroups();
+
+    component.navigateHistoryCalendar(-1, new Event('click'));
+    expect(component.historyCalendarMonth.getMonth()).toBe(6);
+    expect(component.compareCalendarMonth.getMonth()).toBe(6);
+
+    component.navigateCompareCalendar(-1, new Event('click'));
+    expect(component.historyCalendarMonth.getMonth()).toBe(6);
+    expect(component.compareCalendarMonth.getMonth()).toBe(4);
+  });
+
   it('keeps complete stale current stats visible while its parallel refresh is pending', async () => {
     const values: Record<string, string> = {
       'user_stats_short_term_tracks': JSON.stringify([{id: 'cached-track'}]),

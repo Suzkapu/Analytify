@@ -41,6 +41,8 @@
 }
 
 /* Stats comparison availability calendar */
+.spotify-custom-dropdown.open .dropdown-trigger-btn .pi-calendar { transform: none; }
+
 .spotify-custom-dropdown .dropdown-menu-overlay.compare-calendar-popover {
   width: min(320px, calc(100vw - 24px));
   max-height: none;
@@ -119,23 +121,6 @@
   &.is-selected { border-color: #1ed760; background: #1ed760; color: #07140b; box-shadow: 0 0 0 3px rgba(30, 215, 96, 0.18); }
   &:disabled { opacity: 1; }
 }
-
-.compare-calendar-legend {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--color-text-muted, #b3b3b3);
-  font-size: 0.68rem;
-
-  span:first-child { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-}
-
-.available-date-dot { width: 8px; height: 8px; border-radius: 50%; background: #1ed760; box-shadow: 0 0 8px rgba(30, 215, 96, 0.5); }
-.compare-calendar-hint { text-align: right; }
 
 @media (max-width: 480px) {
   .spotify-custom-dropdown .dropdown-menu-overlay.compare-calendar-popover { padding: 12px; }
