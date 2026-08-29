@@ -141,6 +141,7 @@ describe('SongsComponent', () => {
   });
 
   it('keeps the album drill-down inside the shared page shell', () => {
+    component.isLoading = false;
     component.artists = [{id: 'artist-a'}];
     component.viewStyle = 'albums';
     component.selectedAlbum = {

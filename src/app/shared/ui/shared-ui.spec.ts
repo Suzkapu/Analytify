@@ -43,7 +43,7 @@ describe('shared UI segments', () => {
     expect(card.querySelector('.metric-loading')).not.toBeNull();
     expect(card.querySelector('strong')).toBeNull();
 
-    fixture.componentInstance.loading = false;
+    fixture.componentRef.setInput('loading', false);
     fixture.detectChanges();
 
     expect(card.querySelector('.metric-loading')).toBeNull();

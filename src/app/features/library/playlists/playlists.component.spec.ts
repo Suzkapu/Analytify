@@ -9,6 +9,7 @@ import {StorageService} from '@core/data-access/storage/storage.service';
 import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-source.service';
 import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.service';
 import {PlaylistLoaderService} from '@core/sync/playlist-loader/playlist-loader.service';
+import {SharedModule} from '@shared/shared.module';
 
 describe('PlaylistsComponent', () => {
   let component: PlaylistsComponent;
@@ -66,6 +67,7 @@ describe('PlaylistsComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [PlaylistsComponent],
+      imports: [SharedModule],
       providers: [
         { provide: ActivatedRoute, useValue: { params: EMPTY } },
         { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } },
