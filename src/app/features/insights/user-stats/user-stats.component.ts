@@ -117,7 +117,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   ) { }
 
   get spyOwnerUserId(): string {
-    return this.route?.snapshot.paramMap.get('userId') || '';
+    return this.route?.snapshot?.paramMap?.get('userId') || '';
   }
 
   get isSpyMode(): boolean {

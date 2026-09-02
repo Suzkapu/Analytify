@@ -182,6 +182,19 @@ describe('UserStatsComponent trends', () => {
     expect(loadHistory).toHaveBeenCalledTimes(1);
   });
 
+  it('treats a route without a snapshot as the current user stats page', () => {
+    const routedComponent = new UserStatsComponent(
+      null as any,
+      null as any,
+      null as any,
+      null as any,
+      {} as any,
+      null as any
+    );
+
+    expect(routedComponent.isSpyMode).toBeFalse();
+  });
+
   it('loads an approved user through the consent service without calling Spotify or local history', async () => {
     const spotify = {
       getUserTopArtists: jasmine.createSpy('getUserTopArtists'),
