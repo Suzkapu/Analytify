@@ -13,8 +13,10 @@ import {HeaderComponent} from './header.component';
 describe('HeaderComponent entry points', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
+  let backupActive: boolean;
 
   beforeEach(() => {
+    backupActive = true;
     TestBed.configureTestingModule({
       declarations: [HeaderComponent],
       providers: [
@@ -24,7 +26,7 @@ describe('HeaderComponent entry points', () => {
             isSyncing: false,
             syncProgress: 0,
             getUserId: () => 'registered-user',
-            isBackupActive: () => true
+            isBackupActive: () => backupActive
           }
         },
         {provide: StorageService, useValue: {getItem: () => ''}},
@@ -82,5 +84,17 @@ describe('HeaderComponent entry points', () => {
 
     expect(statsLink).toBeDefined();
     expect(statsLink?.getAttribute('routerlink')).toBe('/stats');
+  });
+
+  it('keeps Private sharing available when Cloud Backup is off', () => {
+    backupActive = false;
+    component.showWorkspaceDropdown = true;
+    fixture.detectChanges();
+
+    const sharingLink = Array.from(
+      fixture.nativeElement.querySelectorAll('.workspace-launcher-dropdown a.workspace-launcher-item')
+    ).find((link: any) => link.textContent?.includes('Private sharing')) as HTMLAnchorElement | undefined;
+    expect(sharingLink).toBeDefined();
+    expect(sharingLink?.getAttribute('aria-disabled')).not.toBe('true');
   });
 });

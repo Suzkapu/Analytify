@@ -59,6 +59,12 @@ describe('application routes', () => {
     expect(userStats?.loadChildren).toEqual(jasmine.any(Function));
   });
 
+  it('does not turn database-only private sharing access into a Cloud Backup opt-in', () => {
+    const privateSharing = APP_ROUTES.find(candidate => candidate.path === 'shared-playlists');
+
+    expect(privateSharing?.data?.['cloudBackup']).toBeFalse();
+  });
+
   it('redirects logged-in users away from both login entry routes', () => {
     ['', 'login'].forEach(path => {
       const route = APP_ROUTES.find(candidate => candidate.path === path);

@@ -283,6 +283,10 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
 
   async refreshShare(share: PlaylistShare): Promise<void> {
     if (this.busyShareId) return;
+    if (!this.canCreateShares) {
+      this.errorMessage = 'Enable Cloud Backup before refreshing a shared playlist snapshot.';
+      return;
+    }
     this.busyShareId = share.id;
     this.errorMessage = '';
     this.successMessage = '';

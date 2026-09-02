@@ -60,6 +60,10 @@
         <p *ngIf="canCreateShares">Choose “Share a playlist” above to select a playlist and create a revocable private link.</p>
         <p *ngIf="!canCreateShares">Enable Cloud Backup in your profile menu to share a playlist.</p>
       </div>
+      <p *ngIf="ownedShares.length && !canCreateShares" class="share-publishing-notice" role="note">
+        <i class="pi pi-cloud"></i>
+        Your existing shares remain accessible and revocable. Enable Cloud Backup to refresh or publish playlist data.
+      </p>
       <article *ngFor="let share of ownedShares; trackBy: trackShare" class="owner-share-row" [class.revoked]="share.revokedAt">
         <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="" loading="lazy" decoding="async">
         <div class="owner-share-copy">
@@ -70,7 +74,8 @@
           <p>{{ share.trackCount }} songs · revision {{ share.revision }}<span *ngIf="share.recipientDisplayName"> · {{ share.recipientDisplayName }}</span></p>
         </div>
         <div class="owner-share-actions" *ngIf="!share.revokedAt">
-          <button type="button" (click)="refreshShare(share)" [disabled]="!!busyShareId">
+          <button type="button" (click)="refreshShare(share)" [disabled]="!!busyShareId || !canCreateShares"
+            [title]="canCreateShares ? 'Refresh this shared playlist snapshot' : 'Enable Cloud Backup to refresh this snapshot'">
             <i class="pi" [ngClass]="busyShareId === share.id ? 'pi-spin pi-spinner' : 'pi-refresh'"></i> Refresh snapshot
           </button>
           <button type="button" class="danger" (click)="revokeShare(share)" [disabled]="!!busyShareId">

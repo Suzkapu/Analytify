@@ -96,10 +96,53 @@ describe('SharedPlaylistsComponent', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
+    expect(sharing.listReceivedShares).toHaveBeenCalled();
+    expect(sharing.listOwnedShares).toHaveBeenCalled();
+    expect(statsSharing.listAccessRequests).toHaveBeenCalled();
     expect(fixture.nativeElement.querySelector('.open-share-menu-button')).not.toBeNull();
     await component.openShareDialog();
+    fixture.detectChanges();
+    const choices = Array.from(
+      fixture.nativeElement.querySelectorAll('.share-mode-picker button')
+    ) as HTMLButtonElement[];
+    expect(choices[0].disabled).toBeTrue();
+    expect(choices[0].textContent).toContain('Requires Cloud Backup');
+    expect(choices[1].disabled).toBeFalse();
     await component.selectShareMode('playlist');
     expect(source.loadMainPlaylists).not.toHaveBeenCalled();
+  });
+
+  it('grays out snapshot refresh with an explanation but keeps revoke available when backup is off', async () => {
+    auth.isBackupActive.and.returnValue(false);
+    sharing.listOwnedShares.and.resolveTo([{
+      id: 'share-id', sourcePlaylistId: 'party', playlistName: 'Party', playlistDescription: '',
+      playlistImageUrl: '', ownerDisplayName: 'Owner', recipientDisplayName: 'Friend',
+      trackCount: 1, revision: 1, revokedAt: null
+    } as any]);
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const actions = Array.from(
+      fixture.nativeElement.querySelectorAll('.owner-share-actions button')
+    ) as HTMLButtonElement[];
+    const refresh = actions.find(button => button.textContent?.includes('Refresh snapshot'));
+    const revoke = actions.find(button => button.textContent?.includes('Revoke access'));
+    expect(refresh?.disabled).toBeTrue();
+    expect(refresh?.title).toContain('Enable Cloud Backup');
+    expect(revoke?.disabled).toBeFalse();
+  });
+
+  it('defensively refuses snapshot refresh without loading or publishing Spotify data', async () => {
+    auth.isBackupActive.and.returnValue(false);
+
+    await component.refreshShare({id: 'share-id', playlistName: 'Party'} as any);
+
+    expect(component.errorMessage).toContain('Enable Cloud Backup');
+    expect(source.loadMainPlaylists).not.toHaveBeenCalled();
+    expect(source.loadMainTracks).not.toHaveBeenCalled();
+    expect(sharing.refreshShare).not.toHaveBeenCalled();
   });
 
   it('titles the page for both playlist and stats sharing', async () => {
