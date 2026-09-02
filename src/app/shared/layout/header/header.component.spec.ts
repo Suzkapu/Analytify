@@ -61,4 +61,26 @@ describe('HeaderComponent entry points', () => {
     expect(compareLink).not.toBeNull();
     expect(compareLink?.textContent).toContain('Compare playlists');
   });
+
+  it('labels the sharing workspace for both playlists and approved stats', () => {
+    component.showWorkspaceDropdown = true;
+    fixture.detectChanges();
+
+    const links = Array.from(
+      fixture.nativeElement.querySelectorAll('.workspace-launcher-dropdown a.workspace-launcher-item')
+    ) as HTMLAnchorElement[];
+    const sharingLink = links.find(link => link.textContent?.includes('Private sharing')) || null;
+    expect(sharingLink).not.toBeNull();
+    expect(sharingLink?.textContent).toContain('playlists');
+    expect(sharingLink?.textContent).toContain('stats');
+    expect(sharingLink?.textContent).not.toContain('Shared playlists');
+  });
+
+  it('keeps the top Stats button pointed at the current user profile', () => {
+    const statsLink = Array.from(fixture.nativeElement.querySelectorAll('.header-nav a'))
+      .find((link: any) => link.textContent?.trim() === 'Stats') as HTMLAnchorElement | undefined;
+
+    expect(statsLink).toBeDefined();
+    expect(statsLink?.getAttribute('routerlink')).toBe('/stats');
+  });
 });

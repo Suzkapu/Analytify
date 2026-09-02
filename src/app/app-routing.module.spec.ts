@@ -43,6 +43,22 @@ describe('application routes', () => {
     });
   });
 
+  it('uses a browser title that covers both private sharing types', () => {
+    const route = APP_ROUTES.find(candidate => candidate.path === 'shared-playlists');
+
+    expect(route?.title).toBe('Private Sharing | Analytify');
+  });
+
+  it('keeps private sharing and user stats in lazy-loaded feature modules', () => {
+    const privateSharing = APP_ROUTES.find(candidate => candidate.path === 'shared-playlists');
+    const userStats = APP_ROUTES.find(candidate => candidate.path === 'stats');
+
+    expect(privateSharing?.component).toBeUndefined();
+    expect(privateSharing?.loadChildren).toEqual(jasmine.any(Function));
+    expect(userStats?.component).toBeUndefined();
+    expect(userStats?.loadChildren).toEqual(jasmine.any(Function));
+  });
+
   it('redirects logged-in users away from both login entry routes', () => {
     ['', 'login'].forEach(path => {
       const route = APP_ROUTES.find(candidate => candidate.path === path);

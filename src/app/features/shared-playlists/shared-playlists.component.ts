@@ -381,6 +381,6 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
 
   private describeError(error: unknown): string {
     const value = error as any;
-    return value?.message || value?.error_description || 'Shared playlists could not be loaded.';
+    return value?.message || value?.error_description || 'Private sharing could not be loaded.';
   }
 }

@@ -1,11 +1,11 @@
-<app-header mobileTitle="Shared Playlists"></app-header>
+<app-header mobileTitle="Private Sharing"></app-header>
 
 <main class="sharing-page">
   <header class="sharing-hero page-hero">
     <div>
-      <span class="page-eyebrow">Private playlist access</span>
-      <h1>Shared playlists</h1>
-      <p>Browse playlists shared with you and manage access to playlists you have shared.</p>
+      <span class="page-eyebrow">Revocable access</span>
+      <h1>Private sharing</h1>
+      <p>Share playlist snapshots, request approved stats access, and manage everything you have shared.</p>
     </div>
     <button type="button" class="open-share-menu-button" (click)="openShareDialog()">
       <i class="pi pi-share-alt"></i>
@@ -108,7 +108,7 @@
 
     <section class="share-section owner-section" *ngIf="sentStatsRequests.length || grantedStatsAccess.length">
       <div class="section-heading">
-        <div><span class="eyebrow">Per-user consent</span><h2>Stats access control</h2></div>
+        <div><span class="eyebrow">Stats sharing</span><h2>Requests</h2></div>
         <span>{{ sentStatsRequests.length + grantedStatsAccess.length }}</span>
       </div>
       <article *ngFor="let request of sentStatsRequests" class="owner-share-row stats-access-row"

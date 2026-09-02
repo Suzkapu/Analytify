@@ -81,6 +81,7 @@ export const APP_ROUTES: Routes = [
   },
   {
     path: 'shared-playlists',
+    title: 'Private Sharing | Analytify',
     canActivate: [spotifyAuthGuard, cloudIdentityGuard],
     data: {cloudBackup: false},
     loadChildren: () =>

@@ -30,7 +30,7 @@ Analytify turns your Spotify library and listening data into a clear, visual ove
 
 ### Play Song League
 
-- Open its separate lazy-loaded module from the dedicated header Workspace launcher, beside Compare and Shared Playlists.
+- Open its separate lazy-loaded module from the dedicated header Workspace launcher, beside Compare and Private Sharing.
 - Create a private league for three to five friends and invite normal Analytify accounts.
 - Recommend one discovery during each Friday submission window.
 - Create your own private Weekly Picks playlist from the league; once enabled, accepted picks refresh it automatically.

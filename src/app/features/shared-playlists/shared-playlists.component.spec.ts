@@ -1,6 +1,7 @@
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
+import {RouterTestingModule} from '@angular/router/testing';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-source.service';
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
@@ -76,7 +77,7 @@ describe('SharedPlaylistsComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [SharedPlaylistsComponent],
-      imports: [FormsModule],
+      imports: [FormsModule, RouterTestingModule],
       providers: [
         {provide: PlaylistSharingService, useValue: sharing},
         {provide: SpotifyAuthService, useValue: auth},
@@ -99,6 +100,36 @@ describe('SharedPlaylistsComponent', () => {
     await component.openShareDialog();
     await component.selectShareMode('playlist');
     expect(source.loadMainPlaylists).not.toHaveBeenCalled();
+  });
+
+  it('titles the page for both playlist and stats sharing', async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const heading = fixture.nativeElement.querySelector('h1') as HTMLElement;
+    expect(heading.textContent?.trim()).toBe('Private sharing');
+    expect(fixture.nativeElement.textContent).toContain('playlist');
+    expect(fixture.nativeElement.textContent).toContain('stats');
+  });
+
+  it('starts playlist and stats sharing loads in parallel', async () => {
+    let resolveReceived!: (shares: any[]) => void;
+    let resolveOwned!: (shares: any[]) => void;
+    let resolveRequests!: (requests: any[]) => void;
+    sharing.listReceivedShares.and.returnValue(new Promise(resolve => resolveReceived = resolve));
+    sharing.listOwnedShares.and.returnValue(new Promise(resolve => resolveOwned = resolve));
+    statsSharing.listAccessRequests.and.returnValue(new Promise(resolve => resolveRequests = resolve));
+
+    const reload = component.reload();
+
+    expect(sharing.listReceivedShares).toHaveBeenCalledTimes(1);
+    expect(sharing.listOwnedShares).toHaveBeenCalledTimes(1);
+    expect(statsSharing.listAccessRequests).toHaveBeenCalledTimes(1);
+
+    resolveReceived([]);
+    resolveOwned([]);
+    resolveRequests([]);
+    await reload;
   });
 
   it('selects and publishes the playlist from the sharing menu', async () => {
@@ -162,6 +193,24 @@ describe('SharedPlaylistsComponent', () => {
     await component.revokeStatsAccess(request);
 
     expect(statsSharing.revokeAccess).toHaveBeenCalledOnceWith('request-id');
+  });
+
+  it('shows approved stats as the real stats route and labels access management as Requests', async () => {
+    statsSharing.listAccessRequests.and.resolveTo([{
+      id: 'request-id', ownerUserId: 'owner-id', viewerUserId: 'viewer-id',
+      ownerDisplayName: 'Stats Owner', ownerImageUrl: '', viewerDisplayName: 'Viewer', viewerImageUrl: '',
+      status: 'approved', requestedAt: '2026-09-01T10:00:00Z', respondedAt: '2026-09-01T11:00:00Z',
+      revokedAt: null, updatedAt: '2026-09-01T11:00:00Z', viewerRole: 'viewer'
+    }]);
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const statsLink = fixture.nativeElement.querySelector('.stats-user-card') as HTMLAnchorElement;
+    expect(statsLink.getAttribute('href')).toBe('/stats/owner-id');
+    expect(fixture.nativeElement.textContent).toContain('Requests');
+    expect(fixture.nativeElement.textContent).not.toContain('Per-user consent');
   });
 
   it('refreshes an existing shared playlist with its newest track snapshot', async () => {
