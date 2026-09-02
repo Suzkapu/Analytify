@@ -164,6 +164,41 @@ describe('SharedPlaylistsComponent', () => {
     expect(statsSharing.revokeAccess).toHaveBeenCalledOnceWith('request-id');
   });
 
+  it('refreshes an existing shared playlist with its newest track snapshot', async () => {
+    sharing.refreshShare.and.resolveTo(4);
+    const share = {
+      id: 'share-id', sourcePlaylistId: 'party', playlistName: 'Old party',
+      playlistDescription: 'Keep this description', playlistImageUrl: 'old.jpg',
+      ownerDisplayName: 'Owner', trackCount: 1
+    } as any;
+
+    await component.refreshShare(share);
+
+    expect(source.loadMainTracks).toHaveBeenCalledWith(
+      jasmine.objectContaining({id: 'party'}),
+      'access-token',
+      'spotify-user'
+    );
+    expect(sharing.refreshShare).toHaveBeenCalledWith('share-id', jasmine.objectContaining({
+      sourcePlaylistId: 'party',
+      playlistName: 'Party',
+      playlistDescription: 'Keep this description',
+      playlistImageUrl: 'party.jpg'
+    }));
+    expect(component.successMessage).toContain('revision 4');
+  });
+
+  it('does not revoke a playlist when its owner cancels the confirmation', async () => {
+    spyOn(window, 'confirm').and.returnValue(false);
+
+    await component.revokeShare({
+      id: 'share-id', playlistName: 'Party', recipientDisplayName: 'Friend'
+    } as any);
+
+    expect(sharing.revokeShare).not.toHaveBeenCalled();
+    expect(component.busyShareId).toBe('');
+  });
+
   it('includes the owner in a received playlist name', () => {
     expect(component.receivedPlaylistName({
       playlistName: 'Party',
