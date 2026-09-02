@@ -6,6 +6,8 @@ import {ComparePlaylist} from '@core/compare-room/compare-room.models';
 import {PlaylistShare, PlaylistSharePublication} from '@core/sharing/playlist-sharing.models';
 import {sharedPlaylistName} from '@core/sharing/playlist-sharing-names';
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
+import {StatsAccessRequest, StatsShareableUser} from '@core/sharing/stats-sharing.models';
+import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 
 const console = createScopedLogger('Shared Playlists');
@@ -30,18 +32,32 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   shareLink = '';
   shareError = '';
   shareLinkCopied = false;
+  shareMode: 'playlist' | 'stats' | null = null;
+  availableStatsUsers: StatsShareableUser[] = [];
+  statsAccessRequests: StatsAccessRequest[] = [];
+  selectedStatsOwnerId = '';
+  isLoadingStatsUsers = false;
+  isRequestingStats = false;
+  consentRequest: StatsAccessRequest | null = null;
+  busyStatsRequestId = '';
 
   private unsubscribeFromShareChanges: (() => void) | null = null;
+  private unsubscribeFromStatsChanges: (() => void) | null = null;
   private silentReloadPromise: Promise<void> | null = null;
+  private dismissedConsentRequestIds = new Set<string>();
 
   constructor(
     private sharing: PlaylistSharingService,
     private auth: SpotifyAuthService,
-    private source: ComparePlaylistSourceService
+    private source: ComparePlaylistSourceService,
+    private statsSharing: StatsSharingService
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.unsubscribeFromShareChanges = this.sharing.subscribeToShareChanges(() => {
+      this.reloadSilently();
+    });
+    this.unsubscribeFromStatsChanges = this.statsSharing.subscribeToAccessChanges(() => {
       this.reloadSilently();
     });
     await this.reload();
@@ -50,6 +66,8 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribeFromShareChanges?.();
     this.unsubscribeFromShareChanges = null;
+    this.unsubscribeFromStatsChanges?.();
+    this.unsubscribeFromStatsChanges = null;
   }
 
   async reload(silent = false): Promise<void> {
@@ -58,10 +76,12 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
       this.errorMessage = '';
     }
     try {
-      [this.receivedShares, this.ownedShares] = await Promise.all([
+      [this.receivedShares, this.ownedShares, this.statsAccessRequests] = await Promise.all([
         this.sharing.listReceivedShares(),
-        this.sharing.listOwnedShares()
+        this.sharing.listOwnedShares(),
+        this.statsSharing.listAccessRequests()
       ]);
+      this.selectNextConsentRequest();
     } catch (error) {
       if (silent) {
         console.warn('[SharedPlaylists] Could not apply a live share update.', error);
@@ -81,15 +101,57 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     return this.availablePlaylists.find(playlist => playlist.id === this.selectedPlaylistId) || null;
   }
 
+  get selectedStatsOwner(): StatsShareableUser | null {
+    return this.availableStatsUsers.find(user => user.userId === this.selectedStatsOwnerId) || null;
+  }
+
+  get approvedStatsAccess(): StatsAccessRequest[] {
+    return this.statsAccessRequests.filter(request => request.viewerRole === 'viewer' && request.status === 'approved');
+  }
+
+  get sentStatsRequests(): StatsAccessRequest[] {
+    return this.statsAccessRequests.filter(request => request.viewerRole === 'viewer');
+  }
+
+  get grantedStatsAccess(): StatsAccessRequest[] {
+    return this.statsAccessRequests.filter(request => request.viewerRole === 'owner' && request.status === 'approved');
+  }
+
   async openShareDialog(): Promise<void> {
-    if (!this.canCreateShares) return;
     this.isShareDialogOpen = true;
-    this.isLoadingSharePlaylists = true;
+    this.shareMode = null;
+    this.isLoadingSharePlaylists = false;
     this.availablePlaylists = [];
+    this.availableStatsUsers = [];
     this.selectedPlaylistId = '';
+    this.selectedStatsOwnerId = '';
     this.shareLink = '';
     this.shareError = '';
     this.shareLinkCopied = false;
+  }
+
+  async selectShareMode(mode: 'playlist' | 'stats'): Promise<void> {
+    this.shareMode = mode;
+    this.shareError = '';
+    if (mode === 'stats') {
+      this.isLoadingStatsUsers = true;
+      this.availableStatsUsers = [];
+      this.selectedStatsOwnerId = '';
+      try {
+        this.availableStatsUsers = await this.statsSharing.listAvailableUsers();
+      } catch (error) {
+        this.shareError = this.describeError(error);
+      } finally {
+        this.isLoadingStatsUsers = false;
+      }
+      return;
+    }
+
+    if (!this.canCreateShares) {
+      this.shareError = 'Enable Cloud Backup before sharing a playlist.';
+      return;
+    }
+    this.isLoadingSharePlaylists = true;
     try {
       const accessToken = await this.getUsableAccessToken();
       const spotifyUserId = this.auth.getUserId();
@@ -103,13 +165,75 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   }
 
   closeShareDialog(): void {
-    if (this.isCreatingShare) return;
+    if (this.isCreatingShare || this.isRequestingStats) return;
     this.isShareDialogOpen = false;
+    this.shareMode = null;
     this.availablePlaylists = [];
+    this.availableStatsUsers = [];
     this.selectedPlaylistId = '';
+    this.selectedStatsOwnerId = '';
     this.shareLink = '';
     this.shareError = '';
     this.shareLinkCopied = false;
+  }
+
+  async requestStatsAccess(): Promise<void> {
+    if (this.isRequestingStats) return;
+    const owner = this.selectedStatsOwner;
+    if (!owner) {
+      this.shareError = 'Select a registered user whose stats you want to view.';
+      return;
+    }
+    this.isRequestingStats = true;
+    this.shareError = '';
+    try {
+      await this.statsSharing.requestAccess(owner.userId);
+      this.successMessage = `Your stats request was sent to ${owner.displayName}.`;
+      this.isRequestingStats = false;
+      this.closeShareDialog();
+      await this.reload(true);
+    } catch (error) {
+      this.shareError = this.describeError(error);
+    } finally {
+      this.isRequestingStats = false;
+    }
+  }
+
+  async respondToStatsRequest(approve: boolean): Promise<void> {
+    const request = this.consentRequest;
+    if (!request || this.busyStatsRequestId) return;
+    this.busyStatsRequestId = request.id;
+    try {
+      await this.statsSharing.respondToRequest(request.id, approve);
+      this.successMessage = approve
+        ? `${request.viewerDisplayName} can now view your saved stats.`
+        : `You declined ${request.viewerDisplayName}’s stats request.`;
+      this.dismissedConsentRequestIds.add(request.id);
+      this.consentRequest = null;
+      await this.reload(true);
+    } catch (error) {
+      this.errorMessage = this.describeError(error);
+    } finally {
+      this.busyStatsRequestId = '';
+    }
+  }
+
+  async revokeStatsAccess(request: StatsAccessRequest): Promise<void> {
+    if (this.busyStatsRequestId) return;
+    const otherUser = request.viewerRole === 'owner'
+      ? request.viewerDisplayName
+      : request.ownerDisplayName;
+    if (!window.confirm(`Revoke stats access shared with ${otherUser}?`)) return;
+    this.busyStatsRequestId = request.id;
+    try {
+      await this.statsSharing.revokeAccess(request.id);
+      this.successMessage = `Stats access shared with ${otherUser} was revoked.`;
+      await this.reload(true);
+    } catch (error) {
+      this.errorMessage = this.describeError(error);
+    } finally {
+      this.busyStatsRequestId = '';
+    }
   }
 
   async createShareLink(): Promise<void> {
@@ -223,6 +347,14 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     this.silentReloadPromise = this.reload(true).finally(() => {
       this.silentReloadPromise = null;
     });
+  }
+
+  private selectNextConsentRequest(): void {
+    if (this.consentRequest) return;
+    this.consentRequest = this.statsAccessRequests
+      .filter(request => request.viewerRole === 'owner' && request.status === 'pending')
+      .filter(request => !this.dismissedConsentRequestIds.has(request.id))
+      .sort((left, right) => left.requestedAt.localeCompare(right.requestedAt))[0] || null;
   }
 
   private playlistFromShare(share: PlaylistShare): ComparePlaylist {

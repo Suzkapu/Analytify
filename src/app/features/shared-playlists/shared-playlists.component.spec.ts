@@ -4,6 +4,7 @@ import {FormsModule} from '@angular/forms';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-source.service';
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
+import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 import {SharedPlaylistsComponent} from './shared-playlists.component';
 
 describe('SharedPlaylistsComponent', () => {
@@ -12,6 +13,7 @@ describe('SharedPlaylistsComponent', () => {
   let sharing: jasmine.SpyObj<PlaylistSharingService>;
   let auth: jasmine.SpyObj<SpotifyAuthService>;
   let source: jasmine.SpyObj<ComparePlaylistSourceService>;
+  let statsSharing: jasmine.SpyObj<StatsSharingService>;
   let unsubscribe: jasmine.Spy;
 
   beforeEach(() => {
@@ -33,6 +35,14 @@ describe('SharedPlaylistsComponent', () => {
     source = jasmine.createSpyObj<ComparePlaylistSourceService>('ComparePlaylistSourceService', [
       'loadMainPlaylists',
       'loadMainTracks'
+    ]);
+    statsSharing = jasmine.createSpyObj<StatsSharingService>('StatsSharingService', [
+      'listAvailableUsers',
+      'listAccessRequests',
+      'subscribeToAccessChanges',
+      'requestAccess',
+      'respondToRequest',
+      'revokeAccess'
     ]);
     unsubscribe = jasmine.createSpy('unsubscribe');
     sharing.listReceivedShares.and.resolveTo([]);
@@ -57,6 +67,12 @@ describe('SharedPlaylistsComponent', () => {
       isLikedSongs: false
     }]);
     source.loadMainTracks.and.resolveTo({source: 'local', tracks: [track('song')]});
+    statsSharing.listAvailableUsers.and.resolveTo([]);
+    statsSharing.listAccessRequests.and.resolveTo([]);
+    statsSharing.subscribeToAccessChanges.and.returnValue(jasmine.createSpy('unsubscribeStats'));
+    statsSharing.requestAccess.and.resolveTo('request-id');
+    statsSharing.respondToRequest.and.resolveTo();
+    statsSharing.revokeAccess.and.resolveTo();
 
     TestBed.configureTestingModule({
       declarations: [SharedPlaylistsComponent],
@@ -65,6 +81,7 @@ describe('SharedPlaylistsComponent', () => {
         {provide: PlaylistSharingService, useValue: sharing},
         {provide: SpotifyAuthService, useValue: auth},
         {provide: ComparePlaylistSourceService, useValue: source}
+        ,{provide: StatsSharingService, useValue: statsSharing}
       ],
       schemas: [NO_ERRORS_SCHEMA]
     });
@@ -72,19 +89,21 @@ describe('SharedPlaylistsComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('hides playlist publishing when the owner has not enabled Cloud Backup', async () => {
+  it('keeps stats requests available but blocks playlist publishing without Cloud Backup', async () => {
     auth.isBackupActive.and.returnValue(false);
 
     fixture.detectChanges();
     await fixture.whenStable();
 
-    expect(fixture.nativeElement.querySelector('.open-share-menu-button')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.open-share-menu-button')).not.toBeNull();
     await component.openShareDialog();
+    await component.selectShareMode('playlist');
     expect(source.loadMainPlaylists).not.toHaveBeenCalled();
   });
 
   it('selects and publishes the playlist from the sharing menu', async () => {
     await component.openShareDialog();
+    await component.selectShareMode('playlist');
     component.selectedPlaylistId = 'party';
 
     await component.createShareLink();
@@ -100,6 +119,49 @@ describe('SharedPlaylistsComponent', () => {
       playlistDescription: 'Party songs'
     }));
     expect(component.shareLink).toContain('/shared-playlists/claim/token');
+  });
+
+  it('lets a user select stats access and request one registered user', async () => {
+    statsSharing.listAvailableUsers.and.resolveTo([{
+      userId: 'owner-id', displayName: 'Stats Owner', imageUrl: '',
+      requestId: null, requestStatus: null
+    }]);
+
+    await component.openShareDialog();
+    await component.selectShareMode('stats');
+    component.selectedStatsOwnerId = 'owner-id';
+    await component.requestStatsAccess();
+
+    expect(statsSharing.requestAccess).toHaveBeenCalledOnceWith('owner-id');
+    expect(component.successMessage).toContain('Stats Owner');
+  });
+
+  it('opens a custom consent popup for the oldest pending request and records agreement', async () => {
+    statsSharing.listAccessRequests.and.resolveTo([{
+      id: 'request-id', ownerUserId: 'me', viewerUserId: 'viewer-id',
+      ownerDisplayName: 'Me', ownerImageUrl: '', viewerDisplayName: 'Viewer', viewerImageUrl: '',
+      status: 'pending', requestedAt: '2026-09-01T10:00:00Z', respondedAt: null,
+      revokedAt: null, updatedAt: '2026-09-01T10:00:00Z', viewerRole: 'owner'
+    }]);
+
+    await component.ngOnInit();
+    expect(component.consentRequest?.viewerDisplayName).toBe('Viewer');
+
+    await component.respondToStatsRequest(true);
+
+    expect(statsSharing.respondToRequest).toHaveBeenCalledOnceWith('request-id', true);
+    expect(component.consentRequest).toBeNull();
+  });
+
+  it('allows either side to revoke a per-user stats grant', async () => {
+    spyOn(window, 'confirm').and.returnValue(true);
+    const request = {
+      id: 'request-id', ownerDisplayName: 'Owner', viewerDisplayName: 'Viewer', status: 'approved'
+    } as any;
+
+    await component.revokeStatsAccess(request);
+
+    expect(statsSharing.revokeAccess).toHaveBeenCalledOnceWith('request-id');
   });
 
   it('includes the owner in a received playlist name', () => {

@@ -10,7 +10,10 @@ import {UserStatsComponent} from './user-stats.component';
   imports: [
     SharedModule,
     LayoutModule,
-    RouterModule.forChild([{path: '', component: UserStatsComponent}])
+    RouterModule.forChild([
+      {path: ':userId', component: UserStatsComponent},
+      {path: '', pathMatch: 'full', component: UserStatsComponent}
+    ])
   ]
 })
 export class UserStatsModule {}

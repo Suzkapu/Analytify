@@ -1,12 +1,13 @@
-<app-header mobileTitle="Your Top Listening"></app-header>
+<app-header [mobileTitle]="isSpyMode ? (spyDisplayName || 'Shared stats') : 'Your Top Listening'"></app-header>
 
 <div class="stats-dashboard-container">
   <header class="page-hero stats-page-heading">
     <div>
-      <span class="page-eyebrow">Personal listening</span>
-      <h1>Your top listening</h1>
-      <p>See the songs, artists, and genres shaping your Spotify profile—and how they change over time.</p>
-      <small *ngIf="isRefreshingStats" class="page-sync-state" role="status">
+      <span class="page-eyebrow">{{ isSpyMode ? 'Spy mode · approved access' : 'Personal listening' }}</span>
+      <h1>{{ isSpyMode ? ((spyDisplayName || 'Shared') + ' top listening') : 'Your top listening' }}</h1>
+      <p *ngIf="!isSpyMode">See the songs, artists, and genres shaping your Spotify profile—and how they change over time.</p>
+      <p *ngIf="isSpyMode">A read-only view shared with you by this user<span *ngIf="spySnapshotDate"> · saved {{ spySnapshotDate | date:'mediumDate' }}</span>.</p>
+      <small *ngIf="isRefreshingStats && !isSpyMode" class="page-sync-state" role="status">
         <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
         Refreshing this range in parallel while cached stats remain visible…
       </small>
@@ -177,7 +178,9 @@
 
   <!-- Loading State -->
   <app-page-state *ngIf="isLoading" [loading]="true" [compact]="true" icon="pi-spinner"
-    title="Loading your Spotify insights…"></app-page-state>
+    [title]="isSpyMode ? 'Loading shared Spotify insights…' : 'Loading your Spotify insights…'"></app-page-state>
+  <app-page-state *ngIf="sharedStatsError && !isLoading" [compact]="true" icon="pi-lock"
+    title="Shared stats unavailable" [message]="sharedStatsError"></app-page-state>
 
   <!-- Loaded Views -->
   <div *ngIf="!isLoading">

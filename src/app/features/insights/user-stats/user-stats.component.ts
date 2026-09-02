@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, Optional } from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
@@ -6,6 +7,7 @@ import { forkJoin, Subscription } from 'rxjs';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {mapWithConcurrency, runAfterNextPaint} from '@core/performance/async-load';
+import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 
 const console = createScopedLogger('Personal Stats');
 
@@ -53,6 +55,10 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   statsSearchQuery: string = '';
   isLoading: boolean = true;
   isRefreshingStats: boolean = false;
+  spyDisplayName = '';
+  spyImageUrl = '';
+  spySnapshotDate = '';
+  sharedStatsError = '';
 
 
   topTracks: any[] = [];
@@ -105,14 +111,25 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     private spotifyDataService: SpotifyDataService,
     public authService: SpotifyAuthService,
     private storageService: StorageService,
-    private supabaseService: SupabaseService
+    private supabaseService: SupabaseService,
+    @Optional() private route?: ActivatedRoute,
+    @Optional() private statsSharing?: StatsSharingService
   ) { }
+
+  get spyOwnerUserId(): string {
+    return this.route?.snapshot.paramMap.get('userId') || '';
+  }
+
+  get isSpyMode(): boolean {
+    return !!this.spyOwnerUserId;
+  }
 
   ngOnInit() {
     // Start the visible selected-range request in the critical turn. Historical
     // metadata begins only after the browser gets a paint opportunity, while
     // broad account hydration remains fully independent in the background.
     void this.loadStats();
+    if (this.isSpyMode) return;
     this.scheduleHistoryLoad();
     if (this.authService.isAuthenticated()) {
       void this.authService.ensureInitialSync().then(() => {
@@ -148,7 +165,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.topArtists = [];
     this.topGenres = [];
     void this.loadStats();
-    this.scheduleHistoryLoad();
+    if (!this.isSpyMode) this.scheduleHistoryLoad();
   }
 
   private scheduleHistoryLoad(): void {
@@ -186,6 +203,11 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     const loadSequence = ++this.statsLoadSequence;
     this.statsSubscription?.unsubscribe();
     this.statsSubscription = null;
+
+    if (this.isSpyMode) {
+      await this.loadSharedStats(loadSequence);
+      return;
+    }
 
     const userId = this.authService.getUserId() || 'anonymous';
     const supabaseUserId = this.authService.getSupabaseUserId();
@@ -981,6 +1003,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   }
 
   loadHistoryData() {
+    if (this.isSpyMode) return;
     const loadSequence = ++this.historyLoadSequence;
     const userId = this.authService.getUserId() || 'anonymous';
     const supabaseUserId = this.authService.getSupabaseUserId();
@@ -1418,6 +1441,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   }
 
   async openTrendPopup(item: any, category: 'tracks' | 'artists' | 'genres') {
+    if (this.isSpyMode) return;
     const range = this.selectedRange;
     this.trendPopupItem = item;
     this.trendPopupCategory = category;
@@ -1451,6 +1475,33 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     }
 
     this.calculateTrendPoints(cloudPoints);
+  }
+
+  private async loadSharedStats(loadSequence: number): Promise<void> {
+    this.isLoading = true;
+    this.isRefreshingStats = false;
+    this.sharedStatsError = '';
+    this.topTracks = [];
+    this.topArtists = [];
+    this.topGenres = [];
+    try {
+      if (!this.statsSharing) throw new Error('Stats sharing is unavailable.');
+      const snapshot = await this.statsSharing.loadSharedStats(this.spyOwnerUserId, this.selectedRange);
+      if (loadSequence !== this.statsLoadSequence) return;
+      if (!snapshot) throw new Error('This user does not have a saved snapshot for this range yet.');
+      this.spyDisplayName = snapshot.ownerDisplayName;
+      this.spyImageUrl = snapshot.ownerImageUrl;
+      this.spySnapshotDate = snapshot.snapshotDate;
+      this.topTracks = snapshot.topTracks;
+      this.topArtists = snapshot.topArtists;
+      this.topGenres = snapshot.topGenres;
+    } catch (error) {
+      if (loadSequence !== this.statsLoadSequence) return;
+      const value = error as any;
+      this.sharedStatsError = value?.message || 'These shared stats are unavailable.';
+    } finally {
+      if (loadSequence === this.statsLoadSequence) this.isLoading = false;
+    }
   }
 
   calculateTrendPoints(seedPoints: any[] = []) {

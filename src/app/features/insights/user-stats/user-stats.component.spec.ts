@@ -182,6 +182,58 @@ describe('UserStatsComponent trends', () => {
     expect(loadHistory).toHaveBeenCalledTimes(1);
   });
 
+  it('loads an approved user through the consent service without calling Spotify or local history', async () => {
+    const spotify = {
+      getUserTopArtists: jasmine.createSpy('getUserTopArtists'),
+      getUserTopTracks: jasmine.createSpy('getUserTopTracks')
+    };
+    const storage = {getStatsHistory: jasmine.createSpy('getStatsHistory')};
+    const statsSharing = {
+      loadSharedStats: jasmine.createSpy('loadSharedStats').and.resolveTo({
+        ownerUserId: 'owner-id', ownerDisplayName: 'Stats Owner', ownerImageUrl: '',
+        snapshotDate: '2026-08-01', topTracks: [{id: 'track'}],
+        topArtists: [{id: 'artist'}], topGenres: [{name: 'indie', count: 4, percentage: 40}]
+      })
+    };
+    const spyComponent = new UserStatsComponent(
+      spotify as any,
+      {} as any,
+      storage as any,
+      {} as any,
+      {snapshot: {paramMap: {get: () => 'owner-id'}}} as any,
+      statsSharing as any
+    );
+
+    await spyComponent.loadStats();
+
+    expect(statsSharing.loadSharedStats).toHaveBeenCalledOnceWith('owner-id', 'short_term');
+    expect(spyComponent.spyDisplayName).toBe('Stats Owner');
+    expect(spyComponent.topTracks).toEqual([{id: 'track'}]);
+    expect(spotify.getUserTopTracks).not.toHaveBeenCalled();
+    expect(storage.getStatsHistory).not.toHaveBeenCalled();
+  });
+
+  it('never falls back to the viewer data when shared stats access is unavailable', async () => {
+    const spotify = {getUserTopTracks: jasmine.createSpy('getUserTopTracks')};
+    const statsSharing = {
+      loadSharedStats: jasmine.createSpy('loadSharedStats').and.rejectWith(new Error('Stats access is not approved.'))
+    };
+    const spyComponent = new UserStatsComponent(
+      spotify as any,
+      {} as any,
+      {} as any,
+      {} as any,
+      {snapshot: {paramMap: {get: () => 'owner-id'}}} as any,
+      statsSharing as any
+    );
+
+    await spyComponent.loadStats();
+
+    expect(spyComponent.sharedStatsError).toBe('Stats access is not approved.');
+    expect(spyComponent.topTracks).toEqual([]);
+    expect(spotify.getUserTopTracks).not.toHaveBeenCalled();
+  });
+
   it('highlights only dates that have comparison snapshots', () => {
     const julyOne = makeSnapshot('2026-07-01');
     const julyFifteen = makeSnapshot('2026-07-15');

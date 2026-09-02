@@ -7,9 +7,9 @@
       <h1>Shared playlists</h1>
       <p>Browse playlists shared with you and manage access to playlists you have shared.</p>
     </div>
-    <button *ngIf="canCreateShares" type="button" class="open-share-menu-button" (click)="openShareDialog()">
+    <button type="button" class="open-share-menu-button" (click)="openShareDialog()">
       <i class="pi pi-share-alt"></i>
-      <span>Share a playlist</span>
+      <span>Share or request access</span>
     </button>
   </header>
 
@@ -79,6 +79,66 @@
         </div>
       </article>
     </section>
+
+    <section class="share-section stats-access-section">
+      <div class="section-heading">
+        <div><span class="eyebrow">Spy mode</span><h2>Stats you can view</h2></div>
+        <span>{{ approvedStatsAccess.length }}</span>
+      </div>
+      <div *ngIf="approvedStatsAccess.length === 0" class="empty-share-card compact-empty-card">
+        <i class="pi pi-eye"></i>
+        <strong>No stats access yet</strong>
+        <p>Request access above. The other person must explicitly agree before you can see anything.</p>
+      </div>
+      <div class="share-grid" *ngIf="approvedStatsAccess.length">
+        <a *ngFor="let request of approvedStatsAccess" [routerLink]="['/stats', request.ownerUserId]" class="share-card stats-user-card">
+          <span class="stats-avatar">
+            <img *ngIf="request.ownerImageUrl" [src]="request.ownerImageUrl" alt="">
+            <i *ngIf="!request.ownerImageUrl" class="pi pi-user"></i>
+          </span>
+          <div>
+            <span class="card-label">Stats access approved</span>
+            <h3>{{ request.ownerDisplayName }}</h3>
+            <p>Open their read-only stats page</p>
+          </div>
+          <i class="pi pi-eye"></i>
+        </a>
+      </div>
+    </section>
+
+    <section class="share-section owner-section" *ngIf="sentStatsRequests.length || grantedStatsAccess.length">
+      <div class="section-heading">
+        <div><span class="eyebrow">Per-user consent</span><h2>Stats access control</h2></div>
+        <span>{{ sentStatsRequests.length + grantedStatsAccess.length }}</span>
+      </div>
+      <article *ngFor="let request of sentStatsRequests" class="owner-share-row stats-access-row"
+        [class.revoked]="request.status === 'revoked' || request.status === 'declined'">
+        <span class="stats-avatar"><i class="pi pi-user"></i></span>
+        <div class="owner-share-copy">
+          <span class="status-pill" [class.revoked]="request.status === 'revoked' || request.status === 'declined'">{{ request.status }}</span>
+          <h3>{{ request.ownerDisplayName }}</h3>
+          <p>{{ request.status === 'pending' ? 'Waiting for their decision' : 'Your request to view their stats' }}</p>
+        </div>
+        <div class="owner-share-actions" *ngIf="request.status === 'pending' || request.status === 'approved'">
+          <button type="button" class="danger" (click)="revokeStatsAccess(request)" [disabled]="!!busyStatsRequestId">
+            <i class="pi pi-ban"></i> {{ request.status === 'pending' ? 'Cancel request' : 'Revoke access' }}
+          </button>
+        </div>
+      </article>
+      <article *ngFor="let request of grantedStatsAccess" class="owner-share-row stats-access-row">
+        <span class="stats-avatar"><i class="pi pi-eye"></i></span>
+        <div class="owner-share-copy">
+          <span class="status-pill">Approved</span>
+          <h3>{{ request.viewerDisplayName }}</h3>
+          <p>Can view your saved stats</p>
+        </div>
+        <div class="owner-share-actions">
+          <button type="button" class="danger" (click)="revokeStatsAccess(request)" [disabled]="!!busyStatsRequestId">
+            <i class="pi pi-ban"></i> Revoke access
+          </button>
+        </div>
+      </article>
+    </section>
   </ng-container>
 </main>
 
@@ -86,13 +146,26 @@
   <section class="share-modal" (click)="$event.stopPropagation()" role="dialog" aria-modal="true"
     aria-labelledby="share-dialog-title">
     <button type="button" class="share-modal-close" (click)="closeShareDialog()"
-      [disabled]="isCreatingShare" aria-label="Close">×</button>
-    <div class="share-modal-icon"><i class="pi pi-share-alt"></i></div>
-    <span class="eyebrow">Revocable Supabase access</span>
-    <h2 id="share-dialog-title">Share a playlist</h2>
-    <p *ngIf="!shareLink">Select one of your playlists. Analytify loads its cached songs first and creates a private link for one recipient.</p>
+      [disabled]="isCreatingShare || isRequestingStats" aria-label="Close">×</button>
+    <div class="share-modal-icon"><i class="pi" [ngClass]="shareMode === 'stats' ? 'pi-eye' : 'pi-share-alt'"></i></div>
+    <span class="eyebrow">Revocable, private access</span>
+    <h2 id="share-dialog-title">{{ shareMode === 'playlist' ? 'Share a playlist' : (shareMode === 'stats' ? 'Request stats access' : 'What do you want to share?') }}</h2>
+    <p *ngIf="!shareMode">Choose whether to publish a playlist snapshot or ask another registered user to let you view their saved stats.</p>
 
-    <ng-container *ngIf="!shareLink">
+    <div *ngIf="!shareMode" class="share-mode-picker">
+      <button type="button" (click)="selectShareMode('playlist')" [disabled]="!canCreateShares">
+        <i class="pi pi-list"></i><strong>Playlist</strong>
+        <span>{{ canCreateShares ? 'Create a private playlist link' : 'Requires Cloud Backup' }}</span>
+      </button>
+      <button type="button" (click)="selectShareMode('stats')">
+        <i class="pi pi-eye"></i><strong>Stats</strong><span>Ask a user for explicit access</span>
+      </button>
+    </div>
+
+    <p *ngIf="shareMode === 'playlist' && !shareLink">Select one of your playlists. Analytify loads its cached songs first and creates a private link for one recipient.</p>
+    <p *ngIf="shareMode === 'stats'">Select a user. They will see a consent popup and must agree before their stats become visible to you.</p>
+
+    <ng-container *ngIf="shareMode === 'playlist' && !shareLink">
       <label class="share-playlist-picker">
         <span>Playlist to share</span>
         <select [(ngModel)]="selectedPlaylistId" [disabled]="isLoadingSharePlaylists || isCreatingShare">
@@ -117,6 +190,22 @@
         class="share-picker-empty">No playlists are available to share.</p>
     </ng-container>
 
+    <ng-container *ngIf="shareMode === 'stats'">
+      <label class="share-playlist-picker">
+        <span>Registered user</span>
+        <select [(ngModel)]="selectedStatsOwnerId" [disabled]="isLoadingStatsUsers || isRequestingStats">
+          <option value="" disabled>{{ isLoadingStatsUsers ? 'Loading users…' : 'Select a user' }}</option>
+          <option *ngFor="let user of availableStatsUsers" [value]="user.userId"
+            [disabled]="user.requestStatus === 'pending' || user.requestStatus === 'approved'">
+            {{ user.displayName }}{{ user.requestStatus ? ' · ' + user.requestStatus : '' }}
+          </option>
+        </select>
+      </label>
+      <p *ngIf="!isLoadingStatsUsers && availableStatsUsers.length === 0 && !shareError" class="share-picker-empty">
+        No other Cloud Backup users are available.
+      </p>
+    </ng-container>
+
     <ng-container *ngIf="shareLink">
       <p class="share-ready-copy">Copy this link now. For security, Analytify stores only its hash and cannot show the same link again. The link expires after seven days if nobody claims it.</p>
       <div class="share-link-field">
@@ -130,13 +219,36 @@
 
     <div *ngIf="shareError" class="share-modal-error" role="alert">{{ shareError }}</div>
     <div class="share-modal-actions">
-      <button *ngIf="!shareLink" type="button" class="share-primary" (click)="createShareLink()"
+      <button *ngIf="shareMode === 'playlist' && !shareLink" type="button" class="share-primary" (click)="createShareLink()"
         [disabled]="!selectedPlaylistId || isLoadingSharePlaylists || isCreatingShare">
         <i class="pi" [ngClass]="isCreatingShare ? 'pi-spin pi-spinner' : 'pi-link'"></i>
         <span>{{ isCreatingShare ? 'Publishing snapshot…' : 'Create private link' }}</span>
       </button>
-      <button type="button" class="share-secondary" (click)="closeShareDialog()" [disabled]="isCreatingShare">
+      <button *ngIf="shareMode === 'stats'" type="button" class="share-primary" (click)="requestStatsAccess()"
+        [disabled]="!selectedStatsOwnerId || isLoadingStatsUsers || isRequestingStats">
+        <i class="pi" [ngClass]="isRequestingStats ? 'pi-spin pi-spinner' : 'pi-send'"></i>
+        <span>{{ isRequestingStats ? 'Sending request…' : 'Request stats access' }}</span>
+      </button>
+      <button type="button" class="share-secondary" (click)="closeShareDialog()" [disabled]="isCreatingShare || isRequestingStats">
         {{ shareLink ? 'Done' : 'Cancel' }}
+      </button>
+    </div>
+  </section>
+</div>
+
+<div *ngIf="consentRequest as request" class="share-modal-overlay stats-consent-overlay">
+  <section class="share-modal consent-modal" role="alertdialog" aria-modal="true" aria-labelledby="stats-consent-title">
+    <div class="share-modal-icon"><i class="pi pi-eye"></i></div>
+    <span class="eyebrow">Stats access request</span>
+    <h2 id="stats-consent-title">Let {{ request.viewerDisplayName }} view your stats?</h2>
+    <p>This shares your saved top songs, artists, and genres with this user only. It does not share your Spotify login or listening history.</p>
+    <p><strong>You can revoke this access at any time from this page.</strong></p>
+    <div class="share-modal-actions">
+      <button type="button" class="share-primary" (click)="respondToStatsRequest(true)" [disabled]="!!busyStatsRequestId">
+        <i class="pi pi-check"></i> Agree and share
+      </button>
+      <button type="button" class="share-secondary" (click)="respondToStatsRequest(false)" [disabled]="!!busyStatsRequestId">
+        Decline
       </button>
     </div>
   </section>
