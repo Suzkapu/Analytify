@@ -6,6 +6,8 @@ export type SyncTaskKey =
   | 'song_league_playlists'
   | 'shared_playlists';
 
+export type SyncIntervalUnit = 'minutes' | 'hours' | 'days';
+
 export interface SiteSettings {
   announcement: string;
   allowSongLeagueCreation: boolean;
@@ -22,16 +24,22 @@ export interface AdminUserSyncSettings {
   timezone: string;
   historyEnabled: boolean;
   historyIntervalMinutes: number;
+  historyIntervalUnit: SyncIntervalUnit;
   shortTermEnabled: boolean;
   shortTermIntervalHours: number;
+  shortTermIntervalUnit: SyncIntervalUnit;
   mediumTermEnabled: boolean;
   mediumTermIntervalHours: number;
+  mediumTermIntervalUnit: SyncIntervalUnit;
   longTermEnabled: boolean;
   longTermIntervalHours: number;
+  longTermIntervalUnit: SyncIntervalUnit;
   songLeaguePlaylistsEnabled: boolean;
   songLeaguePlaylistIntervalMinutes: number;
+  songLeaguePlaylistIntervalUnit: SyncIntervalUnit;
   sharedPlaylistsEnabled: boolean;
   sharedPlaylistIntervalMinutes: number;
+  sharedPlaylistIntervalUnit: SyncIntervalUnit;
   lastSuccessAt: string | null;
   lastError: string | null;
 }

@@ -8,6 +8,8 @@ const deployment = readFileSync('scripts/deploy.sh', 'utf8');
 const supabaseDeployment = readFileSync('scripts/deploy-supabase.sh', 'utf8');
 const liveVerification = readFileSync('scripts/verify-live-deployment.mjs', 'utf8');
 const registry = readFileSync('services/sync-service/task-registry.js', 'utf8');
+const intervalUnitsMigration = readFileSync('supabase/migrations/20260903210000_configurable_sync_interval_units.sql', 'utf8');
+const adminTemplate = readFileSync('src/app/features/admin/admin.component.html', 'utf8');
 
 const checks = [
   ['admin migration defines the control-plane RPCs', migration.includes('admin_update_sync_user') && migration.includes('admin_list_sync_runs')],
@@ -26,7 +28,14 @@ const checks = [
   ['the old monolithic daily-pull script is removed', !existsSync('scripts/daily-pull.js')],
   ['worker registers listening history', registry.includes('listening_history')],
   ['worker registers all three stats ranges', ['stats_short_term', 'stats_medium_term', 'stats_long_term'].every(key => registry.includes(key))],
-  ['worker registers both playlist purposes', ['shared_playlists', 'song_league_playlists'].every(key => registry.includes(key))]
+  ['worker registers both playlist purposes', ['shared_playlists', 'song_league_playlists'].every(key => registry.includes(key))],
+  ['every schedule supports minutes, hours, and days',
+    (adminTemplate.match(/<option value="minutes">minutes<\/option><option value="hours">hours<\/option><option value="days">days<\/option>/g) || []).length === 6],
+  ['schedule units are persisted and validated',
+    ['history_interval_unit', 'short_term_interval_unit', 'medium_term_interval_unit', 'long_term_interval_unit',
+      'song_league_playlist_interval_unit', 'shared_playlist_interval_unit'].every(field => intervalUnitsMigration.includes(field))
+      && intervalUnitsMigration.includes("('minutes', 'hours', 'days')")],
+  ['worker uses persisted schedule units', registry.includes('unitField') && registry.includes('86_400_000')]
 ];
 
 const failures = checks.filter(([, passed]) => !passed).map(([name]) => name);

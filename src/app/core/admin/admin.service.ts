@@ -61,16 +61,22 @@ export class AdminService {
       timezone: row.timezone || 'Europe/Vienna',
       historyEnabled: !!row.history_enabled,
       historyIntervalMinutes: Number(row.history_interval_minutes || 60),
+      historyIntervalUnit: row.history_interval_unit || 'minutes',
       shortTermEnabled: !!row.short_term_enabled,
       shortTermIntervalHours: Number(row.short_term_interval_hours || 24),
+      shortTermIntervalUnit: row.short_term_interval_unit || 'hours',
       mediumTermEnabled: !!row.medium_term_enabled,
       mediumTermIntervalHours: Number(row.medium_term_interval_hours || 168),
+      mediumTermIntervalUnit: row.medium_term_interval_unit || 'hours',
       longTermEnabled: !!row.long_term_enabled,
       longTermIntervalHours: Number(row.long_term_interval_hours || 168),
+      longTermIntervalUnit: row.long_term_interval_unit || 'hours',
       songLeaguePlaylistsEnabled: !!row.song_league_playlists_enabled,
       songLeaguePlaylistIntervalMinutes: Number(row.song_league_playlist_interval_minutes || 60),
+      songLeaguePlaylistIntervalUnit: row.song_league_playlist_interval_unit || 'minutes',
       sharedPlaylistsEnabled: !!row.shared_playlists_enabled,
       sharedPlaylistIntervalMinutes: Number(row.shared_playlist_interval_minutes || 60),
+      sharedPlaylistIntervalUnit: row.shared_playlist_interval_unit || 'minutes',
       lastSuccessAt: row.last_success_at || null,
       lastError: row.last_error || null
     }));
@@ -83,16 +89,22 @@ export class AdminService {
       p_timezone: settings.timezone,
       p_history_enabled: settings.historyEnabled,
       p_history_interval_minutes: settings.historyIntervalMinutes,
+      p_history_interval_unit: settings.historyIntervalUnit,
       p_short_term_enabled: settings.shortTermEnabled,
       p_short_term_interval_hours: settings.shortTermIntervalHours,
+      p_short_term_interval_unit: settings.shortTermIntervalUnit,
       p_medium_term_enabled: settings.mediumTermEnabled,
       p_medium_term_interval_hours: settings.mediumTermIntervalHours,
+      p_medium_term_interval_unit: settings.mediumTermIntervalUnit,
       p_long_term_enabled: settings.longTermEnabled,
       p_long_term_interval_hours: settings.longTermIntervalHours,
+      p_long_term_interval_unit: settings.longTermIntervalUnit,
       p_song_league_playlists_enabled: settings.songLeaguePlaylistsEnabled,
       p_song_league_playlist_interval_minutes: settings.songLeaguePlaylistIntervalMinutes,
+      p_song_league_playlist_interval_unit: settings.songLeaguePlaylistIntervalUnit,
       p_shared_playlists_enabled: settings.sharedPlaylistsEnabled,
-      p_shared_playlist_interval_minutes: settings.sharedPlaylistIntervalMinutes
+      p_shared_playlist_interval_minutes: settings.sharedPlaylistIntervalMinutes,
+      p_shared_playlist_interval_unit: settings.sharedPlaylistIntervalUnit
     });
     if (error) throw error;
   }

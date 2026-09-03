@@ -14,7 +14,22 @@ test('registers every independently configurable synchronization purpose', () =>
   ]);
 });
 
-test('converts minute and hour schedules to worker intervals', () => {
+test('converts every selectable schedule unit to worker intervals', () => {
   assert.equal(intervalMilliseconds('listening_history', {history_interval_minutes: 30}), 1_800_000);
   assert.equal(intervalMilliseconds('stats_short_term', {short_term_interval_hours: 24}), 86_400_000);
+  assert.equal(intervalMilliseconds('stats_short_term', {
+    short_term_interval_hours: 15,
+    short_term_interval_unit: 'minutes'
+  }), 900_000);
+  assert.equal(intervalMilliseconds('shared_playlists', {
+    shared_playlist_interval_minutes: 2,
+    shared_playlist_interval_unit: 'days'
+  }), 172_800_000);
+});
+
+test('rejects unsupported schedule units', () => {
+  assert.throws(() => intervalMilliseconds('stats_long_term', {
+    long_term_interval_hours: 1,
+    long_term_interval_unit: 'weeks'
+  }), /Unsupported interval unit/);
 });
