@@ -54,7 +54,7 @@ app-playlist-analysis {
 
   .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
     gap: 12px;
     margin-bottom: 12px;
   }
@@ -116,10 +116,35 @@ app-playlist-analysis {
     }
   }
 
-  .analysis-sections {
+  .analysis-sections,
+  .frequency-sections {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
+  }
+
+  .frequency-sections { margin-bottom: 12px; }
+
+  .frequency-list {
+    display: grid;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 36px;
+      color: var(--color-text);
+    }
+
+    span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    em { color: var(--color-text-subtle); font-style: normal; }
+    strong { flex: 0 0 auto; color: var(--color-accent); }
   }
 
   .column-card {
@@ -237,7 +262,8 @@ app-playlist-analysis {
   }
 
   @media (max-width: 860px) {
-    .analysis-sections { grid-template-columns: minmax(0, 1fr); }
+    .analysis-sections,
+    .frequency-sections { grid-template-columns: minmax(0, 1fr); }
     .metrics-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
 

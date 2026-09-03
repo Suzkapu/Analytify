@@ -86,8 +86,30 @@
             [loading]="isAnalysisPending"></app-metric-card>
           <app-metric-card icon="pi-clock" label="Total length" [value]="totalDurationFormatted"
             [loading]="isAnalysisPending"></app-metric-card>
+          <app-metric-card icon="pi-exclamation-circle" label="Explicit" [value]="explicitCount"
+            [loading]="isAnalysisPending"></app-metric-card>
           <app-metric-card icon="pi-hourglass" label="Average song length" [value]="averageDurationFormatted"
             [loading]="isAnalysisPending"></app-metric-card>
+        </div>
+
+        <div *ngIf="!isAnalysisPending" class="frequency-sections">
+          <section class="column-card frequency-card">
+            <app-section-heading icon="pi-users" eyebrow="Most frequent" title="Top artists"></app-section-heading>
+            <ol class="frequency-list">
+              <li *ngFor="let artist of topArtists; let rank = index">
+                <span><em>{{ rank + 1 }}.</em> {{ artist.name }}</span><strong>{{ artist.count }}</strong>
+              </li>
+            </ol>
+          </section>
+
+          <section class="column-card frequency-card">
+            <app-section-heading icon="pi-clone" eyebrow="Most frequent" title="Top albums"></app-section-heading>
+            <ol class="frequency-list">
+              <li *ngFor="let album of topAlbums; let rank = index">
+                <span><em>{{ rank + 1 }}.</em> {{ album.name }}</span><strong>{{ album.count }}</strong>
+              </li>
+            </ol>
+          </section>
         </div>
 
         <div *ngIf="!isAnalysisPending" class="analysis-sections">

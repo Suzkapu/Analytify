@@ -40,6 +40,8 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
   averageDurationFormatted: string = '';
   explicitCount: number = 0;
   explicitPercentage: number = 0;
+  topArtists: Array<{id: string; name: string; count: number}> = [];
+  topAlbums: Array<{name: string; count: number}> = [];
 
   longestTrack: any = null;
   shortestTrack: any = null;
@@ -323,28 +325,57 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
 
     const uniqueArtistKeys = new Set<string>();
     const uniqueAlbumKeys = new Set<string>();
+    const artistCounts = new Map<string, {id: string; name: string; count: number}>();
+    const albumCounts = new Map<string, number>();
     uniqueTracks.forEach(track => {
       const trackArtists = Array.isArray(track.artists) ? track.artists : [];
+      const countedTrackArtists = new Set<string>();
       trackArtists.forEach((artist: any) => {
         const key = artist?.id || artist?.name?.trim().toLowerCase();
-        if (key) uniqueArtistKeys.add(key);
+        if (!key) return;
+        uniqueArtistKeys.add(key);
+        if (!countedTrackArtists.has(key)) {
+          const current = artistCounts.get(key) || {
+            id: artist?.id || key,
+            name: artist?.name || track.artist_name || 'Unknown artist',
+            count: 0
+          };
+          current.count++;
+          artistCounts.set(key, current);
+          countedTrackArtists.add(key);
+        }
       });
 
       if (trackArtists.length === 0 && track.artist_name) {
-        uniqueArtistKeys.add(track.artist_name.trim().toLowerCase());
+        const key = track.artist_name.trim().toLowerCase();
+        uniqueArtistKeys.add(key);
+        const current = artistCounts.get(key) || {id: key, name: track.artist_name, count: 0};
+        current.count++;
+        artistCounts.set(key, current);
       }
 
       const albumKey = track.album?.id || track.album?.name?.trim().toLowerCase();
       if (albumKey) uniqueAlbumKeys.add(albumKey);
+      const albumName = track.album?.name?.trim();
+      if (albumName) albumCounts.set(albumName, (albumCounts.get(albumName) || 0) + 1);
     });
     this.uniqueArtistsCount = uniqueArtistKeys.size;
     this.uniqueAlbumsCount = uniqueAlbumKeys.size;
+    this.topArtists = Array.from(artistCounts.values())
+      .sort((left, right) => right.count - left.count)
+      .slice(0, 10);
+    this.topAlbums = Array.from(albumCounts.entries())
+      .map(([name, count]) => ({name, count}))
+      .sort((left, right) => right.count - left.count)
+      .slice(0, 10);
 
     if (uniqueTracks.length === 0) {
       this.totalDurationFormatted = '0 sec';
       this.averageDurationFormatted = '0:00';
       this.explicitCount = 0;
       this.explicitPercentage = 0;
+      this.topArtists = [];
+      this.topAlbums = [];
       this.longestTrack = null;
       this.shortestTrack = null;
       this.oldestTrack = null;
