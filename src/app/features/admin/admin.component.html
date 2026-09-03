@@ -24,6 +24,19 @@
         <div class="demo-controls"><input type="text" [(ngModel)]="demoName" maxlength="80" aria-label="Demo league name"><button type="button" class="admin-primary" (click)="createDemoLeague()" [disabled]="isCreatingDemo"><i class="pi" [ngClass]="isCreatingDemo ? 'pi-spin pi-spinner' : 'pi-play'"></i>{{ isCreatingDemo ? 'Creating…' : 'Create playable demo' }}</button></div>
       </section>
 
+      <section class="admin-panel notification-test-panel">
+        <div class="admin-section-heading">
+          <div><span>Push delivery</span><h2>Test PWA notification</h2><p>Sends a private test only to your registered Analytify PWA devices.</p></div>
+          <i class="pi pi-bell"></i>
+        </div>
+        <button type="button" class="admin-primary" (click)="sendTestNotification()"
+          [disabled]="isSendingTestNotification">
+          <i class="pi" [ngClass]="isSendingTestNotification ? 'pi-spin pi-spinner' : 'pi-send'"></i>
+          {{ isSendingTestNotification ? 'Sending…' : 'Send test notification' }}
+        </button>
+        <small class="notification-test-hint">Enable notifications from Data &amp; account on this device before testing.</small>
+      </section>
+
       <section class="admin-users-section">
         <div class="admin-section-heading"><div><span>Reusable sync service</span><h2>User schedules</h2><p>Every enabled data source is an independent task with its own interval.</p></div><span class="admin-count">{{ users.length }}</span></div>
         <div class="admin-user-grid">

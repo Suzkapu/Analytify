@@ -2727,3 +2727,19 @@ grant all on public.sync_job_runs to service_role;
 grant all on public.song_league_demo_bots to service_role;
 -- END OPTIONAL MODULE: ADMIN CONTROL PLANE
 ```
+
+---
+
+## 7. Optional Song League PWA Notification Module
+
+The production notification module is applied by
+`supabase/migrations/20260903200000_song_league_push_notifications.sql`. It adds:
+
+- `notification_preferences`, with an explicit, per-user Song League opt-in;
+- `push_subscriptions`, containing independent Web Push endpoints for each PWA device;
+- `song_league_push_deliveries`, an idempotent per-league, per-Friday, per-device queue;
+- authenticated preference and device-registration RPCs;
+- service-role-only queue and `FOR UPDATE SKIP LOCKED` delivery-claim RPCs.
+
+All notification and subscription rows are deleted through the existing `users` cascade.
+The Edge Function removes expired endpoints after a push service returns HTTP 404 or 410.

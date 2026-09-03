@@ -1,6 +1,6 @@
 const {TASK_DEFINITIONS, intervalMilliseconds} = require('./task-registry');
 
-function createScheduler({supabase, config, tasks, credentials}) {
+function createScheduler({supabase, config, tasks, credentials, pushDispatcher}) {
   async function reconcileAdmins() {
     const {data: profiles, error: profileError} = await supabase.from('users')
       .select('id, spotify_id').in('spotify_id', config.adminSpotifyIds);
@@ -133,6 +133,11 @@ function createScheduler({supabase, config, tasks, credentials}) {
   }
 
   async function runPass() {
+    try {
+      await pushDispatcher.dispatchDue(new Date());
+    } catch (error) {
+      console.error(`[Push] Song League notification pass failed: ${String(error.message || error)}`);
+    }
     await reconcileAdmins();
     const queued = await enqueueDueJobs();
     const jobs = await claimQueuedJobs();

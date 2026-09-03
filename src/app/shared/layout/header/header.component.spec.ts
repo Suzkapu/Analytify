@@ -8,6 +8,7 @@ import {SpotifyDataService} from '@core/data-access/spotify/spotify-data.service
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {PlaylistShareAutoSyncService} from '@core/sharing/playlist-share-auto-sync.service';
+import {PushNotificationService} from '@core/notifications/push-notification.service';
 import {HeaderComponent} from './header.component';
 
 describe('HeaderComponent entry points', () => {
@@ -33,6 +34,16 @@ describe('HeaderComponent entry points', () => {
         {provide: SupabaseService, useValue: {}},
         {provide: SpotifyDataService, useValue: {}},
         {provide: PlaylistShareAutoSyncService, useValue: {start: jasmine.createSpy('start')}},
+        {
+          provide: PushNotificationService,
+          useValue: {
+            loadSettings: jasmine.createSpy('loadSettings').and.resolveTo({
+              supported: true, installedPwa: true, permission: 'granted',
+              deviceSubscribed: true, songLeagueEnabled: true
+            }),
+            setSongLeagueEnabled: jasmine.createSpy('setSongLeagueEnabled')
+          }
+        },
         {provide: AdminService, useValue: {isAdmin: () => Promise.resolve(false)}},
         {provide: Router, useValue: {url: '/playlists', navigate: jasmine.createSpy('navigate')}}
       ],
@@ -96,5 +107,23 @@ describe('HeaderComponent entry points', () => {
     ).find((link: any) => link.textContent?.includes('Private sharing')) as HTMLAnchorElement | undefined;
     expect(sharingLink).toBeDefined();
     expect(sharingLink?.getAttribute('aria-disabled')).not.toBe('true');
+  });
+
+  it('opens an extensible notification manager from Data & account', async () => {
+    component.showSettingsDropdown = true;
+    fixture.detectChanges();
+
+    const button = Array.from(fixture.nativeElement.querySelectorAll('.profile-settings-dropdown button'))
+      .find((item: any) => item.textContent?.includes('Notifications')) as HTMLButtonElement;
+    expect(button).toBeDefined();
+
+    button.click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const dialog = fixture.nativeElement.querySelector('.notification-settings-modal') as HTMLElement;
+    expect(dialog).not.toBeNull();
+    expect(dialog.textContent).toContain('Song League');
+    expect(dialog.querySelectorAll('.notification-category-row').length).toBe(1);
   });
 });

@@ -22,6 +22,7 @@ jobs:
       SPOTIFY_CLIENT_ID: 9b03c8eb85dd4df483c3ae097e6c39f0
       SUPABASE_URL: https://tmmhylpexbubyznlizfs.supabase.co
       SUPABASE_PUBLISHABLE_KEY: sb_publishable_hMg6wOlMTQai9ipA4ZlxzQ_rawnrTD-
+      WEB_PUSH_VAPID_PUBLIC_KEY: BIpszothnaePO-LGeIvE4x7AEKMr2YdiyuJZWjkMIlHqPe1Tp3WE79_otTv_C_pQ2C9JwfsnlqcoQn0aVEVcANA
 
     steps:
       - name: Checkout repository
@@ -75,6 +76,7 @@ jobs:
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
           SPOTIFY_TOKEN_ENCRYPTION_KEY: ${{ secrets.SPOTIFY_TOKEN_ENCRYPTION_KEY }}
+          WEB_PUSH_VAPID_PRIVATE_KEY: ${{ secrets.WEB_PUSH_VAPID_PRIVATE_KEY }}
         run: bash scripts/deploy-supabase.sh
 
       - name: Deploy verified build to Oracle Server

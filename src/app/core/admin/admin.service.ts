@@ -141,4 +141,13 @@ export class AdminService {
     if (!leagueId) throw new Error('The demo league was not created.');
     return leagueId;
   }
+
+  async sendTestNotification(): Promise<number> {
+    const {data, error} = await this.supabase.client.functions.invoke('song-league-notifications', {
+      body: {action: 'test'}
+    });
+    if (error) throw error;
+    if (data?.error) throw new Error(data.error);
+    return Number(data?.sent || 0);
+  }
 }

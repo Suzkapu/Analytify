@@ -93,6 +93,9 @@
               <span class="slider round"></span>
             </label>
           </div>
+          <button (click)="openNotificationSettings()" class="dropdown-item" role="menuitem">
+            <i class="pi pi-bell"></i><span>Notifications</span>
+          </button>
           <button (click)="logout()" class="dropdown-item" role="menuitem">
             <i class="pi pi-sign-out"></i><span>Log out</span>
           </button>
@@ -109,6 +112,44 @@
     </div>
   </div>
 </header>
+
+<div class="confirm-modal-overlay" *ngIf="showNotificationSettingsModal" (click)="closeNotificationSettings()">
+  <section class="confirm-modal-card notification-settings-modal" role="dialog" aria-modal="true"
+    aria-labelledby="notification-settings-title" (click)="$event.stopPropagation()">
+    <button type="button" class="notification-modal-close" (click)="closeNotificationSettings()"
+      [disabled]="isSavingNotificationSettings" aria-label="Close notification settings">×</button>
+    <div class="confirm-modal-icon"><i class="pi pi-bell"></i></div>
+    <h3 id="notification-settings-title" class="confirm-modal-title">Notifications</h3>
+    <p class="confirm-modal-text">Choose which updates Analytify may send to your installed PWA. More categories can be added here later.</p>
+
+    <div *ngIf="isLoadingNotificationSettings" class="notification-settings-loading" role="status">
+      <i class="pi pi-spin pi-spinner"></i> Loading notification settings…
+    </div>
+    <div *ngIf="!isLoadingNotificationSettings" class="notification-category-list">
+      <label class="notification-category-row">
+        <span class="notification-category-icon"><i class="pi pi-star"></i></span>
+        <span class="notification-category-copy">
+          <strong>Song League</strong>
+          <small>Receive a reminder when Friday picks open in one of your leagues.</small>
+          <em *ngIf="notificationSettings.songLeagueEnabled && notificationSettings.deviceSubscribed">Enabled on this device</em>
+          <em *ngIf="!notificationSettings.installedPwa">Install Analytify as an app for the most reliable delivery.</em>
+          <em *ngIf="notificationSettings.permission === 'denied'" class="notification-denied">Blocked in browser settings</em>
+        </span>
+        <span class="switch" title="Toggle Song League notifications">
+          <input type="checkbox" [checked]="notificationSettings.songLeagueEnabled && notificationSettings.deviceSubscribed"
+            [disabled]="isSavingNotificationSettings || (!notificationSettings.supported && !notificationSettings.songLeagueEnabled)"
+            (change)="toggleSongLeagueNotifications($event)" aria-label="Song League notifications">
+          <span class="slider round"></span>
+        </span>
+      </label>
+    </div>
+    <p *ngIf="notificationError" class="notification-settings-error" role="alert">{{ notificationError }}</p>
+    <div class="confirm-modal-actions">
+      <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel"
+        (click)="closeNotificationSettings()" [disabled]="isSavingNotificationSettings">Done</button>
+    </div>
+  </section>
+</div>
 
 <!-- Clear Data Selection Modal -->
 <div class="confirm-modal-overlay" *ngIf="showClearDataModal" (click)="closeClearDataModal()">

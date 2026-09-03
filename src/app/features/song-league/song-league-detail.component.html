@@ -40,6 +40,24 @@
       <div *ngIf="successMessage" class="league-notice success" role="status"><i class="pi pi-check-circle"></i><span>{{ successMessage }}</span></div>
       <div *ngIf="playlistWarning" class="league-notice" role="status"><i class="pi pi-clock"></i><span>{{ playlistWarning }}</span></div>
 
+      <section *ngIf="!data.league.isDemo" class="league-notification-control" aria-label="Song League notifications">
+        <span class="league-notification-icon"><i class="pi pi-bell"></i></span>
+        <span>
+          <strong>Pick-opening notifications</strong>
+          <small *ngIf="songLeagueNotificationsActive">On for your registered PWA devices</small>
+          <small *ngIf="!songLeagueNotificationsActive && notificationSettings.supported">Get a reminder on this device when Friday picks open</small>
+          <small *ngIf="!notificationSettings.supported">Install or open Analytify in a browser that supports PWA notifications</small>
+          <em *ngIf="notificationMessage" role="status">{{ notificationMessage }}</em>
+        </span>
+        <button type="button" class="league-secondary" role="switch"
+          [attr.aria-checked]="songLeagueNotificationsActive"
+          [disabled]="isSavingNotifications || (!notificationSettings.supported && !notificationSettings.songLeagueEnabled)"
+          (click)="toggleSongLeagueNotifications()">
+          <i class="pi" [ngClass]="isSavingNotifications ? 'pi-spin pi-spinner' : songLeagueNotificationsActive ? 'pi-bell-slash' : 'pi-bell'"></i>
+          {{ isSavingNotifications ? 'Saving…' : songLeagueNotificationsActive ? 'Turn off' : 'Notify me' }}
+        </button>
+      </section>
+
       <section *ngIf="isPickOpen" class="friday-composer-panel">
         <div class="friday-composer-heading">
           <strong>{{ data.league.isDemo ? 'Choose your demo discovery' : 'Choose this week’s discovery' }}</strong>

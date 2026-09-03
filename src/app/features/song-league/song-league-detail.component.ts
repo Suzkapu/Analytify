@@ -10,6 +10,10 @@ import {
   SongLeagueTrack
 } from '@core/song-league/song-league.models';
 import {SongLeagueService} from '@core/song-league/song-league.service';
+import {
+  PushNotificationService,
+  PushNotificationSettings
+} from '@core/notifications/push-notification.service';
 
 @Component({
   selector: 'app-song-league-detail',
@@ -23,6 +27,12 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   errorMessage = '';
   successMessage = '';
   playlistWarning = '';
+  notificationMessage = '';
+  isSavingNotifications = false;
+  notificationSettings: PushNotificationSettings = {
+    supported: false, installedPwa: false, permission: 'unavailable',
+    deviceSubscribed: false, songLeagueEnabled: false
+  };
 
   songQuery = '';
   searchResults: SongLeagueTrack[] = [];
@@ -45,15 +55,21 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private songLeague: SongLeagueService
+    private songLeague: SongLeagueService,
+    private pushNotifications: PushNotificationService
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.leagueId = this.route.snapshot.paramMap.get('leagueId') || '';
     try {
-      this.currentUserId = await this.songLeague.currentUserId();
+      const [currentUserId, notificationSettings] = await Promise.all([
+        this.songLeague.currentUserId(),
+        this.pushNotifications.loadSettings().catch(() => null),
+        this.load()
+      ]);
+      this.currentUserId = currentUserId;
+      if (notificationSettings) this.notificationSettings = notificationSettings;
       this.unsubscribeLeague = this.songLeague.subscribeToLeague(this.leagueId, () => void this.reloadLive());
-      await this.load();
     } catch (error) {
       this.errorMessage = this.describeError(error, 'The Song League could not be opened.');
       this.isLoading = false;
@@ -79,6 +95,27 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
 
   retryLoad(): void {
     void this.load();
+  }
+
+  get songLeagueNotificationsActive(): boolean {
+    return this.notificationSettings.songLeagueEnabled && this.notificationSettings.deviceSubscribed;
+  }
+
+  async toggleSongLeagueNotifications(): Promise<void> {
+    if (this.isSavingNotifications) return;
+    this.isSavingNotifications = true;
+    this.notificationMessage = '';
+    try {
+      const enabled = !this.songLeagueNotificationsActive;
+      this.notificationSettings = await this.pushNotifications.setSongLeagueEnabled(enabled);
+      this.notificationMessage = enabled
+        ? 'Pick-opening notifications are enabled on this device.'
+        : 'Song League notifications are turned off.';
+    } catch (error) {
+      this.notificationMessage = this.describeError(error, 'The notification setting could not be changed.');
+    } finally {
+      this.isSavingNotifications = false;
+    }
   }
 
   async findSongs(): Promise<void> {

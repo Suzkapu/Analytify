@@ -20,6 +20,7 @@ export class AdminComponent implements OnInit {
   queueingUsers = new Set<string>();
   demoName = 'Admin Demo League';
   isCreatingDemo = false;
+  isSendingTestNotification = false;
   successMessage = '';
   errorMessage = '';
 
@@ -111,6 +112,20 @@ export class AdminComponent implements OnInit {
     } catch (error) {
       this.errorMessage = this.describeError(error, 'The demo league could not be created.');
       this.isCreatingDemo = false;
+    }
+  }
+
+  async sendTestNotification(): Promise<void> {
+    if (this.isSendingTestNotification) return;
+    this.isSendingTestNotification = true;
+    this.clearMessages();
+    try {
+      const sent = await this.admin.sendTestNotification();
+      this.successMessage = `Test notification sent to ${sent} registered PWA ${sent === 1 ? 'device' : 'devices'}.`;
+    } catch (error) {
+      this.errorMessage = this.describeError(error, 'The test notification could not be sent.');
+    } finally {
+      this.isSendingTestNotification = false;
     }
   }
 

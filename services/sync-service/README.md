@@ -11,6 +11,8 @@ This worker replaces the former monolithic `scripts/daily-pull.js`. It reads per
 - `shared_playlists`
 - `song_league_playlists`
 
+Each scheduler pass also invokes the idempotent `song-league-notifications` Edge Function. It queues each league's local-Friday opening once per subscribed PWA device and delivers pending pushes without requiring a Spotify task or credential refresh.
+
 ## Required runtime configuration
 
 ```text

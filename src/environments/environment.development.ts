@@ -7,6 +7,7 @@ export const environment = {
   // ─── NEW: ADDED FOR SUPABASE & AUTH ───────────────────────────
   supabaseUrl: 'https://tmmhylpexbubyznlizfs.supabase.co',
   supabaseKey: 'sb_publishable_hMg6wOlMTQai9ipA4ZlxzQ_rawnrTD-',
+  vapidPublicKey: 'BIpszothnaePO-LGeIvE4x7AEKMr2YdiyuJZWjkMIlHqPe1Tp3WE79_otTv_C_pQ2C9JwfsnlqcoQn0aVEVcANA',
   // Spotify client IDs are public OAuth identifiers. Never place the client
   // secret in this browser configuration.
   spotifyClientId: '9b03c8eb85dd4df483c3ae097e6c39f0',

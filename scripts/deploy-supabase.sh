@@ -16,6 +16,8 @@ require_value SUPABASE_DB_PASSWORD
 require_value SPOTIFY_CLIENT_ID
 require_value SPOTIFY_CLIENT_SECRET
 require_value SPOTIFY_TOKEN_ENCRYPTION_KEY
+require_value WEB_PUSH_VAPID_PUBLIC_KEY
+require_value WEB_PUSH_VAPID_PRIVATE_KEY
 
 if [[ ! "$SUPABASE_PROJECT_REF" =~ ^[a-z0-9]{20}$ ]]; then
   echo "Supabase deployment configuration error: SUPABASE_PROJECT_REF is invalid." >&2
@@ -32,6 +34,16 @@ if [[ ! "$SPOTIFY_TOKEN_ENCRYPTION_KEY" =~ ^[A-Za-z0-9+/]{43}=$ ]]; then
   exit 1
 fi
 
+if [[ ! "$WEB_PUSH_VAPID_PUBLIC_KEY" =~ ^[A-Za-z0-9_-]{87}$ ]]; then
+  echo "Supabase deployment configuration error: WEB_PUSH_VAPID_PUBLIC_KEY is invalid." >&2
+  exit 1
+fi
+
+if [[ ! "$WEB_PUSH_VAPID_PRIVATE_KEY" =~ ^[A-Za-z0-9_-]{43}$ ]]; then
+  echo "Supabase deployment configuration error: WEB_PUSH_VAPID_PRIVATE_KEY is invalid." >&2
+  exit 1
+fi
+
 if ! command -v supabase >/dev/null 2>&1; then
   echo "Supabase deployment configuration error: the Supabase CLI is unavailable." >&2
   exit 1
@@ -43,11 +55,16 @@ supabase secrets set \
   "SPOTIFY_CLIENT_ID=${SPOTIFY_CLIENT_ID}" \
   "SPOTIFY_CLIENT_SECRET=${SPOTIFY_CLIENT_SECRET}" \
   "SPOTIFY_TOKEN_ENCRYPTION_KEY=${SPOTIFY_TOKEN_ENCRYPTION_KEY}" \
+  "WEB_PUSH_VAPID_PUBLIC_KEY=${WEB_PUSH_VAPID_PUBLIC_KEY}" \
+  "WEB_PUSH_VAPID_PRIVATE_KEY=${WEB_PUSH_VAPID_PRIVATE_KEY}" \
   --project-ref "$SUPABASE_PROJECT_REF"
 supabase functions deploy spotify-credentials \
   --project-ref "$SUPABASE_PROJECT_REF" \
   --use-api
 supabase functions deploy song-league-playlist-sync \
+  --project-ref "$SUPABASE_PROJECT_REF" \
+  --use-api
+supabase functions deploy song-league-notifications \
   --project-ref "$SUPABASE_PROJECT_REF" \
   --use-api
 

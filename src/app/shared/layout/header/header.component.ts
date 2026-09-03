@@ -7,6 +7,10 @@ import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.servi
 import {PlaylistShareAutoSyncService} from '@core/sharing/playlist-share-auto-sync.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {AdminService} from '@core/admin/admin.service';
+import {
+  PushNotificationService,
+  PushNotificationSettings
+} from '@core/notifications/push-notification.service';
 
 const console = createScopedLogger('Profile and Settings');
 
@@ -31,8 +35,19 @@ export class HeaderComponent implements OnInit {
   showConfirmDbDeleteModal = false;
   showBackupConfirmModal = false;
   showGuestLogoutConfirmModal = false;
+  showNotificationSettingsModal = false;
   isDeletingDbData = false;
   isGuestLogoutRunning = false;
+  isLoadingNotificationSettings = false;
+  isSavingNotificationSettings = false;
+  notificationError = '';
+  notificationSettings: PushNotificationSettings = {
+    supported: false,
+    installedPwa: false,
+    permission: 'unavailable',
+    deviceSubscribed: false,
+    songLeagueEnabled: false
+  };
 
   constructor(
     public authService: SpotifyAuthService,
@@ -41,6 +56,7 @@ export class HeaderComponent implements OnInit {
     private spotifyDataService: SpotifyDataService,
     private playlistShareAutoSync: PlaylistShareAutoSyncService,
     private adminService: AdminService,
+    private pushNotifications: PushNotificationService,
     private router: Router
   ) {}
 
@@ -155,6 +171,38 @@ export class HeaderComponent implements OnInit {
   openClearDataModal() {
     this.showSettingsDropdown = false;
     this.showClearDataModal = true;
+  }
+
+  async openNotificationSettings(): Promise<void> {
+    this.showSettingsDropdown = false;
+    this.showNotificationSettingsModal = true;
+    this.isLoadingNotificationSettings = true;
+    this.notificationError = '';
+    try {
+      this.notificationSettings = await this.pushNotifications.loadSettings();
+    } catch (error) {
+      this.notificationError = (error as any)?.message || 'Notification settings could not be loaded.';
+    } finally {
+      this.isLoadingNotificationSettings = false;
+    }
+  }
+
+  closeNotificationSettings(): void {
+    if (this.isSavingNotificationSettings) return;
+    this.showNotificationSettingsModal = false;
+  }
+
+  async toggleSongLeagueNotifications(event: Event): Promise<void> {
+    const enabled = (event.target as HTMLInputElement).checked;
+    this.isSavingNotificationSettings = true;
+    this.notificationError = '';
+    try {
+      this.notificationSettings = await this.pushNotifications.setSongLeagueEnabled(enabled);
+    } catch (error) {
+      this.notificationError = (error as any)?.message || 'The notification setting could not be changed.';
+    } finally {
+      this.isSavingNotificationSettings = false;
+    }
   }
 
   closeClearDataModal() {

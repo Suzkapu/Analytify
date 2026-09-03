@@ -38,6 +38,7 @@ Analytify turns your Spotify library and listening data into a clear, visual ove
 - Earn permanent points for four weeks from the song's daily position in every other member's four-week Top Songs.
 - Inspect the current rank and point contribution from every friend without exposing anyone's complete Top Songs list.
 - Let the league owner permanently delete the league and its game history through an explicit confirmation dialog.
+- Opt into PWA push reminders when Friday picks open, then disable them in Song League or the shared notification manager.
 
 ### Analyze your music
 
@@ -92,16 +93,17 @@ Song League playlist creation requires the database migrations, the authenticate
 
 ```bash
 supabase db push
-supabase secrets set SPOTIFY_CLIENT_ID=... SPOTIFY_CLIENT_SECRET=... SPOTIFY_TOKEN_ENCRYPTION_KEY=...
+supabase secrets set SPOTIFY_CLIENT_ID=... SPOTIFY_CLIENT_SECRET=... SPOTIFY_TOKEN_ENCRYPTION_KEY=... WEB_PUSH_VAPID_PUBLIC_KEY=... WEB_PUSH_VAPID_PRIVATE_KEY=...
 supabase functions deploy spotify-credentials
 supabase functions deploy song-league-playlist-sync
+supabase functions deploy song-league-notifications
 ```
 
 Enable **Anonymous Sign-Ins** in Supabase Authentication before personal-app users can opt into Cloud Backup or server-backed Workspace features. Anonymous identities contain no email or phone and are deleted when their browser-bound Analytify session is cleared.
 
 The configurable sync service replaces the former `scripts/daily-pull.js`. Its independent tasks cover listening history, each Spotify stats range, Shared Playlist sources and copies, and Song League playlist rollover. Administrators configure schedules and enqueue manual runs from `/admin`; the worker uses the same queue for scheduled and manual work.
 
-Create protected GitHub Actions secrets named `ADMIN_SPOTIFY_IDS`, `SPOTIFY_TOKEN_ENCRYPTION_KEY`, `SPOTIFY_CLIENT_SECRET`, `SUPABASE_ACCESS_TOKEN`, and `SUPABASE_DB_PASSWORD`. The encryption key must be a stable base64-encoded 32-byte key, which can be generated once with `openssl rand -base64 32`; losing or rotating it without a migration makes stored refresh tokens unreadable. Deployment applies pending Supabase migrations, synchronizes the Spotify and encryption secrets, publishes both Edge Functions, writes the admin and encryption values to mode-0600 worker files, and only succeeds after live Oracle and Supabase smoke checks pass.
+Create protected GitHub Actions secrets named `ADMIN_SPOTIFY_IDS`, `SPOTIFY_TOKEN_ENCRYPTION_KEY`, `SPOTIFY_CLIENT_SECRET`, `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`, and `WEB_PUSH_VAPID_PRIVATE_KEY`. The encryption key must be a stable base64-encoded 32-byte key, which can be generated once with `openssl rand -base64 32`; losing or rotating it without a migration makes stored refresh tokens unreadable. Generate a P-256 VAPID key pair once for PWA push delivery, keep its 43-character base64url private scalar in `WEB_PUSH_VAPID_PRIVATE_KEY`, and publish the matching uncompressed public key in the application environment. Deployment applies pending Supabase migrations, synchronizes the Spotify, encryption, and Web Push secrets, publishes the Edge Functions, writes protected worker configuration, and only succeeds after live Oracle and Supabase smoke checks pass.
 
 ```bash
 cd services/sync-service
