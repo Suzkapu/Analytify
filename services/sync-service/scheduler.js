@@ -1,4 +1,8 @@
-const {TASK_DEFINITIONS, intervalMilliseconds} = require('./task-registry');
+const {TASK_DEFINITIONS, intervalMilliseconds, isScheduledTaskAllowed} = require('./task-registry');
+
+function isJobAllowed(job, settings, now = new Date()) {
+  return job.trigger_type !== 'scheduled' || isScheduledTaskAllowed(job.task_key, settings, now);
+}
 
 function createScheduler({supabase, config, tasks, credentials, pushDispatcher}) {
   async function reconcileAdmins() {
@@ -53,6 +57,7 @@ function createScheduler({supabase, config, tasks, credentials, pushDispatcher})
       if (!user?.backup_active || (!user.spotify_refresh_token && !credentialUserIds.has(user.id))) continue;
       for (const [taskKey, definition] of Object.entries(TASK_DEFINITIONS)) {
         if (!settings[definition.enabledField]) continue;
+        if (!isScheduledTaskAllowed(taskKey, settings, now)) continue;
         const state = stateByKey.get(`${settings.user_id}:${taskKey}`);
         if (state?.next_run_at && new Date(state.next_run_at).getTime() > now.getTime()) continue;
         const {error} = await supabase.from('sync_job_runs').insert({
@@ -91,6 +96,16 @@ function createScheduler({supabase, config, tasks, credentials, pushDispatcher})
     if (settingsError) throw settingsError;
     const handler = tasks[job.task_key];
     if (!handler) throw new Error(`No handler registered for ${job.task_key}.`);
+    if (!isJobAllowed(job, settings)) {
+      const cancelledAt = new Date().toISOString();
+      const {error: cancelError} = await supabase.from('sync_job_runs').update({
+        status: 'cancelled',
+        finished_at: cancelledAt,
+        details: {reason: 'Outside the configured scheduling day.'}
+      }).eq('id', job.id);
+      if (cancelError) throw cancelError;
+      return;
+    }
     const startedAt = new Date().toISOString();
     await supabase.from('sync_task_state').upsert({
       user_id: user.id, task_key: job.task_key, last_started_at: startedAt,
@@ -148,4 +163,4 @@ function createScheduler({supabase, config, tasks, credentials, pushDispatcher})
   return {reconcileAdmins, enqueueDueJobs, claimQueuedJobs, runJob, runPass};
 }
 
-module.exports = {createScheduler};
+module.exports = {createScheduler, isJobAllowed};

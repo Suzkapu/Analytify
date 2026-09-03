@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const {TASK_DEFINITIONS, intervalMilliseconds} = require('./task-registry');
+const {TASK_DEFINITIONS, intervalMilliseconds, isScheduledTaskAllowed} = require('./task-registry');
 
 test('registers every independently configurable synchronization purpose', () => {
   assert.deepEqual(Object.keys(TASK_DEFINITIONS).sort(), [
@@ -32,4 +32,21 @@ test('rejects unsupported schedule units', () => {
     long_term_interval_hours: 1,
     long_term_interval_unit: 'weeks'
   }), /Unsupported interval unit/);
+});
+
+test('allows scheduled Song League playlist refreshes only on local Fridays by default', () => {
+  const thursdayUtcFridayVienna = new Date('2026-09-03T22:30:00.000Z');
+  const fridayUtcSaturdayVienna = new Date('2026-09-04T22:30:00.000Z');
+  const settings = {timezone: 'Europe/Vienna'};
+
+  assert.equal(isScheduledTaskAllowed('song_league_playlists', settings, thursdayUtcFridayVienna), true);
+  assert.equal(isScheduledTaskAllowed('song_league_playlists', settings, fridayUtcSaturdayVienna), false);
+  assert.equal(isScheduledTaskAllowed('shared_playlists', settings, fridayUtcSaturdayVienna), true);
+});
+
+test('allows Song League playlist refreshes every day when Friday-only scheduling is disabled', () => {
+  assert.equal(isScheduledTaskAllowed('song_league_playlists', {
+    timezone: 'Europe/Vienna',
+    song_league_playlist_fridays_only: false
+  }, new Date('2026-09-01T12:00:00.000Z')), true);
 });

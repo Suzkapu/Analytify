@@ -9,7 +9,9 @@ const supabaseDeployment = readFileSync('scripts/deploy-supabase.sh', 'utf8');
 const liveVerification = readFileSync('scripts/verify-live-deployment.mjs', 'utf8');
 const registry = readFileSync('services/sync-service/task-registry.js', 'utf8');
 const intervalUnitsMigration = readFileSync('supabase/migrations/20260903210000_configurable_sync_interval_units.sql', 'utf8');
+const fridayPlaylistMigration = readFileSync('supabase/migrations/20260903220000_song_league_friday_playlist_refresh.sql', 'utf8');
 const adminTemplate = readFileSync('src/app/features/admin/admin.component.html', 'utf8');
+const scheduler = readFileSync('services/sync-service/scheduler.js', 'utf8');
 
 const checks = [
   ['admin migration defines the control-plane RPCs', migration.includes('admin_update_sync_user') && migration.includes('admin_list_sync_runs')],
@@ -35,7 +37,12 @@ const checks = [
     ['history_interval_unit', 'short_term_interval_unit', 'medium_term_interval_unit', 'long_term_interval_unit',
       'song_league_playlist_interval_unit', 'shared_playlist_interval_unit'].every(field => intervalUnitsMigration.includes(field))
       && intervalUnitsMigration.includes("('minutes', 'hours', 'days')")],
-  ['worker uses persisted schedule units', registry.includes('unitField') && registry.includes('86_400_000')]
+  ['worker uses persisted schedule units', registry.includes('unitField') && registry.includes('86_400_000')],
+  ['Song League playlist schedules default to local Fridays',
+    fridayPlaylistMigration.includes('song_league_playlist_fridays_only boolean not null default true')
+      && adminTemplate.includes('user.songLeaguePlaylistFridaysOnly')
+      && scheduler.includes('isScheduledTaskAllowed(taskKey, settings, now)')
+      && scheduler.includes("job.trigger_type !== 'scheduled'")]
 ];
 
 const failures = checks.filter(([, passed]) => !passed).map(([name]) => name);

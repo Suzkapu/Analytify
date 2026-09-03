@@ -49,6 +49,7 @@ describe('AdminService', () => {
       user_id: 'user-1', spotify_id: 'spotify-1', display_name: 'Listener',
       history_interval_unit: 'hours', short_term_interval_unit: 'minutes',
       medium_term_interval_unit: 'days', long_term_interval_unit: 'days',
+      song_league_playlist_fridays_only: false,
       song_league_playlist_interval_unit: 'hours', shared_playlist_interval_unit: 'minutes'
     }], error: null});
 
@@ -58,6 +59,7 @@ describe('AdminService', () => {
     expect(user.shortTermIntervalUnit).toBe('minutes');
     expect(user.mediumTermIntervalUnit).toBe('days');
     expect(user.longTermIntervalUnit).toBe('days');
+    expect(user.songLeaguePlaylistFridaysOnly).toBeFalse();
     expect(user.songLeaguePlaylistIntervalUnit).toBe('hours');
     expect(user.sharedPlaylistIntervalUnit).toBe('minutes');
   });
@@ -70,7 +72,8 @@ describe('AdminService', () => {
       shortTermEnabled: true, shortTermIntervalHours: 30, shortTermIntervalUnit: 'minutes',
       mediumTermEnabled: true, mediumTermIntervalHours: 2, mediumTermIntervalUnit: 'days',
       longTermEnabled: true, longTermIntervalHours: 3, longTermIntervalUnit: 'days',
-      songLeaguePlaylistsEnabled: true, songLeaguePlaylistIntervalMinutes: 4, songLeaguePlaylistIntervalUnit: 'hours',
+      songLeaguePlaylistsEnabled: true, songLeaguePlaylistFridaysOnly: false,
+      songLeaguePlaylistIntervalMinutes: 4, songLeaguePlaylistIntervalUnit: 'hours',
       sharedPlaylistsEnabled: true, sharedPlaylistIntervalMinutes: 5, sharedPlaylistIntervalUnit: 'minutes',
       lastSuccessAt: null, lastError: null
     } as AdminUserSyncSettings;
@@ -83,6 +86,7 @@ describe('AdminService', () => {
     expect(parameters.p_short_term_interval_unit).toBe('minutes');
     expect(parameters.p_medium_term_interval_unit).toBe('days');
     expect(parameters.p_long_term_interval_unit).toBe('days');
+    expect(parameters.p_song_league_playlist_fridays_only).toBeFalse();
     expect(parameters.p_song_league_playlist_interval_unit).toBe('hours');
     expect(parameters.p_shared_playlist_interval_unit).toBe('minutes');
   });

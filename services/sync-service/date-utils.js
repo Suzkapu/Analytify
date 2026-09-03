@@ -39,4 +39,8 @@ function cutoffTimestamp(now = new Date(), timezone = 'Europe/Vienna') {
   return dailyCutoff(now, timezone).toISOString();
 }
 
-module.exports = {dailyCutoff, snapshotDate, cutoffTimestamp};
+function isFridayInTimezone(now = new Date(), timezone = 'Europe/Vienna') {
+  return new Intl.DateTimeFormat('en-US', {timeZone: timezone, weekday: 'short'}).format(now) === 'Fri';
+}
+
+module.exports = {dailyCutoff, snapshotDate, cutoffTimestamp, isFridayInTimezone};

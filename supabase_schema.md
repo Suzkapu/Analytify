@@ -2132,6 +2132,7 @@ create table if not exists public.sync_user_settings (
   long_term_interval_hours integer not null default 168 check (long_term_interval_hours between 1 and 10080),
   long_term_interval_unit text not null default 'hours' check (long_term_interval_unit in ('minutes', 'hours', 'days')),
   song_league_playlists_enabled boolean not null default true,
+  song_league_playlist_fridays_only boolean not null default true,
   song_league_playlist_interval_minutes integer not null default 60 check (song_league_playlist_interval_minutes between 1 and 10080),
   song_league_playlist_interval_unit text not null default 'minutes' check (song_league_playlist_interval_unit in ('minutes', 'hours', 'days')),
   shared_playlists_enabled boolean not null default true,
@@ -2278,6 +2279,7 @@ returns table (
   long_term_interval_hours integer,
   long_term_interval_unit text,
   song_league_playlists_enabled boolean,
+  song_league_playlist_fridays_only boolean,
   song_league_playlist_interval_minutes integer,
   song_league_playlist_interval_unit text,
   shared_playlists_enabled boolean,
@@ -2316,6 +2318,7 @@ begin
     coalesce(settings.long_term_interval_hours, 168),
     coalesce(settings.long_term_interval_unit, 'hours')::text,
     coalesce(settings.song_league_playlists_enabled, true),
+    coalesce(settings.song_league_playlist_fridays_only, true),
     coalesce(settings.song_league_playlist_interval_minutes, 60),
     coalesce(settings.song_league_playlist_interval_unit, 'minutes')::text,
     coalesce(settings.shared_playlists_enabled, true),
@@ -2354,6 +2357,7 @@ create or replace function public.admin_update_sync_user(
   p_long_term_interval_hours integer,
   p_long_term_interval_unit text,
   p_song_league_playlists_enabled boolean,
+  p_song_league_playlist_fridays_only boolean,
   p_song_league_playlist_interval_minutes integer,
   p_song_league_playlist_interval_unit text,
   p_shared_playlists_enabled boolean,
@@ -2383,7 +2387,8 @@ begin
     short_term_enabled, short_term_interval_hours, short_term_interval_unit,
     medium_term_enabled, medium_term_interval_hours, medium_term_interval_unit,
     long_term_enabled, long_term_interval_hours, long_term_interval_unit,
-    song_league_playlists_enabled, song_league_playlist_interval_minutes, song_league_playlist_interval_unit,
+    song_league_playlists_enabled, song_league_playlist_fridays_only,
+    song_league_playlist_interval_minutes, song_league_playlist_interval_unit,
     shared_playlists_enabled, shared_playlist_interval_minutes, shared_playlist_interval_unit,
     updated_at, updated_by
   ) values (
@@ -2392,7 +2397,8 @@ begin
     p_short_term_enabled, p_short_term_interval_hours, p_short_term_interval_unit,
     p_medium_term_enabled, p_medium_term_interval_hours, p_medium_term_interval_unit,
     p_long_term_enabled, p_long_term_interval_hours, p_long_term_interval_unit,
-    p_song_league_playlists_enabled, p_song_league_playlist_interval_minutes, p_song_league_playlist_interval_unit,
+    p_song_league_playlists_enabled, p_song_league_playlist_fridays_only,
+    p_song_league_playlist_interval_minutes, p_song_league_playlist_interval_unit,
     p_shared_playlists_enabled, p_shared_playlist_interval_minutes, p_shared_playlist_interval_unit,
     now(), auth.uid()
   ) on conflict (user_id) do update set
@@ -2411,6 +2417,7 @@ begin
     long_term_interval_hours = excluded.long_term_interval_hours,
     long_term_interval_unit = excluded.long_term_interval_unit,
     song_league_playlists_enabled = excluded.song_league_playlists_enabled,
+    song_league_playlist_fridays_only = excluded.song_league_playlist_fridays_only,
     song_league_playlist_interval_minutes = excluded.song_league_playlist_interval_minutes,
     song_league_playlist_interval_unit = excluded.song_league_playlist_interval_unit,
     shared_playlists_enabled = excluded.shared_playlists_enabled,
@@ -2738,7 +2745,7 @@ revoke all on function private.enforce_song_league_creation_setting() from publi
 revoke all on function public.is_app_admin() from public;
 revoke all on function public.get_public_site_settings() from public;
 revoke all on function public.admin_list_users() from public;
-revoke all on function public.admin_update_sync_user(uuid, boolean, text, boolean, integer, text, boolean, integer, text, boolean, integer, text, boolean, integer, text, boolean, integer, text, boolean, integer, text) from public;
+revoke all on function public.admin_update_sync_user(uuid, boolean, text, boolean, integer, text, boolean, integer, text, boolean, integer, text, boolean, integer, text, boolean, boolean, integer, text, boolean, integer, text) from public;
 revoke all on function public.admin_update_site_settings(text, boolean) from public;
 revoke all on function public.admin_enqueue_sync(uuid, text[]) from public;
 revoke all on function public.admin_list_sync_runs(integer) from public;
@@ -2749,7 +2756,7 @@ revoke all on function public.delete_song_league(uuid) from public;
 grant execute on function public.is_app_admin() to authenticated;
 grant execute on function public.get_public_site_settings() to anon, authenticated;
 grant execute on function public.admin_list_users() to authenticated;
-grant execute on function public.admin_update_sync_user(uuid, boolean, text, boolean, integer, text, boolean, integer, text, boolean, integer, text, boolean, integer, text, boolean, integer, text, boolean, integer, text) to authenticated;
+grant execute on function public.admin_update_sync_user(uuid, boolean, text, boolean, integer, text, boolean, integer, text, boolean, integer, text, boolean, integer, text, boolean, boolean, integer, text, boolean, integer, text) to authenticated;
 grant execute on function public.admin_update_site_settings(text, boolean) to authenticated;
 grant execute on function public.admin_enqueue_sync(uuid, text[]) to authenticated;
 grant execute on function public.admin_list_sync_runs(integer) to authenticated;

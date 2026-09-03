@@ -35,6 +35,7 @@ export interface AdminUserSyncSettings {
   longTermIntervalHours: number;
   longTermIntervalUnit: SyncIntervalUnit;
   songLeaguePlaylistsEnabled: boolean;
+  songLeaguePlaylistFridaysOnly: boolean;
   songLeaguePlaylistIntervalMinutes: number;
   songLeaguePlaylistIntervalUnit: SyncIntervalUnit;
   sharedPlaylistsEnabled: boolean;

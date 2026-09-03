@@ -3,6 +3,7 @@ const {createHistoryTask} = require('./tasks/history-task');
 const {createStatsTask} = require('./tasks/stats-task');
 const {createSongLeaguePlaylistsTask} = require('./tasks/song-league-playlists-task');
 const {createSharedPlaylistsTask} = require('./tasks/shared-playlists-task');
+const {isFridayInTimezone} = require('./date-utils');
 
 const TASK_DEFINITIONS = {
   listening_history: {enabledField: 'history_enabled', intervalField: 'history_interval_minutes', unitField: 'history_interval_unit', defaultUnit: 'minutes'},
@@ -11,6 +12,7 @@ const TASK_DEFINITIONS = {
   stats_long_term: {enabledField: 'long_term_enabled', intervalField: 'long_term_interval_hours', unitField: 'long_term_interval_unit', defaultUnit: 'hours'},
   song_league_playlists: {
     enabledField: 'song_league_playlists_enabled',
+    fridayOnlyField: 'song_league_playlist_fridays_only',
     intervalField: 'song_league_playlist_interval_minutes',
     unitField: 'song_league_playlist_interval_unit', defaultUnit: 'minutes'
   },
@@ -20,6 +22,12 @@ const TASK_DEFINITIONS = {
     unitField: 'shared_playlist_interval_unit', defaultUnit: 'minutes'
   }
 };
+
+function isScheduledTaskAllowed(taskKey, settings, now = new Date()) {
+  const definition = TASK_DEFINITIONS[taskKey];
+  if (!definition.fridayOnlyField || settings[definition.fridayOnlyField] === false) return true;
+  return isFridayInTimezone(now, settings.timezone || 'Europe/Vienna');
+}
 
 function intervalMilliseconds(taskKey, settings) {
   const definition = TASK_DEFINITIONS[taskKey];
@@ -43,4 +51,4 @@ function createTaskRegistry(dependencies) {
   };
 }
 
-module.exports = {TASK_DEFINITIONS, intervalMilliseconds, createTaskRegistry};
+module.exports = {TASK_DEFINITIONS, intervalMilliseconds, isScheduledTaskAllowed, createTaskRegistry};
