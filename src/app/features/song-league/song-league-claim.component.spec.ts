@@ -1,6 +1,7 @@
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ActivatedRoute, Router} from '@angular/router';
+import {RouterTestingModule} from '@angular/router/testing';
 import {SharedModule} from '@shared/shared.module';
 
 import {PushNotificationService} from '@core/notifications/push-notification.service';
@@ -11,7 +12,7 @@ describe('SongLeagueClaimComponent notification prompt', () => {
   let fixture: ComponentFixture<SongLeagueClaimComponent>;
   let component: SongLeagueClaimComponent;
   let notifications: jasmine.SpyObj<PushNotificationService>;
-  let router: jasmine.SpyObj<Router>;
+  let router: Router;
 
   beforeEach(() => {
     const songLeague = jasmine.createSpyObj<SongLeagueService>('SongLeagueService', ['claimLeague']);
@@ -27,20 +28,18 @@ describe('SongLeagueClaimComponent notification prompt', () => {
       supported: true, installedPwa: true, permission: 'granted',
       deviceSubscribed: true, songLeagueEnabled: true, active: true
     });
-    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
-    router.navigate.and.resolveTo(true);
-
     TestBed.configureTestingModule({
-      imports: [SharedModule],
+      imports: [SharedModule, RouterTestingModule],
       declarations: [SongLeagueClaimComponent],
       providers: [
         {provide: ActivatedRoute, useValue: {snapshot: {paramMap: {get: () => 'invite-token'}}}},
-        {provide: Router, useValue: router},
         {provide: SongLeagueService, useValue: songLeague},
         {provide: PushNotificationService, useValue: notifications}
       ],
       schemas: [NO_ERRORS_SCHEMA]
     });
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate').and.resolveTo(true);
     fixture = TestBed.createComponent(SongLeagueClaimComponent);
     component = fixture.componentInstance;
   });
