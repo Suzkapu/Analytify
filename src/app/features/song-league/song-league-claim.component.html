@@ -8,3 +8,23 @@
     <a *ngIf="!isJoining" routerLink="/song-league" class="league-primary">Go to Song League</a>
   </section>
 </main>
+
+<div class="league-notification-prompt-overlay" *ngIf="showNotificationPrompt">
+  <section class="league-notification-prompt" role="dialog" aria-modal="true"
+    aria-labelledby="league-notification-prompt-title" aria-describedby="league-notification-prompt-description">
+    <span class="league-notification-prompt-icon"><i class="pi pi-bell"></i></span>
+    <span class="league-notification-prompt-kicker">League joined</span>
+    <h2 id="league-notification-prompt-title">Enable pick notifications?</h2>
+    <p id="league-notification-prompt-description">Analytify can notify this device when Friday picks open in your Song Leagues.</p>
+    <p *ngIf="notificationError" class="league-notification-prompt-error" role="alert">{{ notificationError }}</p>
+    <div class="league-notification-prompt-actions">
+      <button type="button" class="league-secondary" (click)="skipNotifications()"
+        [disabled]="isEnablingNotifications">Not now</button>
+      <button type="button" class="league-primary" (click)="enableNotifications()"
+        [disabled]="isEnablingNotifications">
+        <i class="pi" [ngClass]="isEnablingNotifications ? 'pi-spin pi-spinner' : 'pi-bell'"></i>
+        {{ isEnablingNotifications ? 'Enabling…' : 'Enable notifications' }}
+      </button>
+    </div>
+  </section>
+</div>

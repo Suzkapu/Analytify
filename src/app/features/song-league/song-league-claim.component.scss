@@ -12,3 +12,48 @@
   p { margin: 0 0 22px; color: #aeb7b1; line-height: 1.6; }
 }
 .league-claim-icon { width: 68px; height: 68px; margin: 0 auto; display: grid; place-items: center; border-radius: 50%; background: rgba(30, 215, 96, 0.1); color: #4ee27f; font-size: 1.8rem; }
+
+.league-notification-prompt-overlay {
+  position: fixed;
+  z-index: 1200;
+  inset: 0;
+  padding: 18px;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  background: rgba(3, 7, 4, .78);
+  backdrop-filter: blur(7px);
+}
+.league-notification-prompt {
+  width: min(460px, 100%);
+  padding: 30px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 22px;
+  background: #121914;
+  box-shadow: 0 24px 80px rgba(0,0,0,.45);
+  text-align: center;
+
+  h2 { margin: 8px 0; color: #fff; font-size: 1.65rem; }
+  p { margin: 0; color: #aeb7b1; line-height: 1.55; }
+}
+.league-notification-prompt-icon {
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 14px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(30,215,96,.12);
+  color: #4ee27f;
+  font-size: 1.4rem;
+}
+.league-notification-prompt-kicker { color: #4ee27f; font-size: .72rem; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+.league-notification-prompt-error { margin-top: 14px !important; color: #ff9fa6 !important; }
+.league-notification-prompt-actions { margin-top: 24px; display: grid; grid-template-columns: 1fr 1.35fr; gap: 10px; }
+.league-notification-prompt-actions button { min-height: 46px; justify-content: center; }
+
+@media (max-width: 480px) {
+  .league-notification-prompt { padding: 24px 18px; }
+  .league-notification-prompt-actions { grid-template-columns: 1fr; }
+}

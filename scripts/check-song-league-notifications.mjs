@@ -8,6 +8,7 @@ const dispatcher = readFileSync('services/sync-service/push-dispatcher.js', 'utf
 const header = readFileSync('src/app/shared/layout/header/header.component.html', 'utf8');
 const league = readFileSync('src/app/features/song-league/song-league-detail.component.html', 'utf8');
 const admin = readFileSync('src/app/features/admin/admin.component.html', 'utf8');
+const claim = readFileSync('src/app/features/song-league/song-league-claim.component.html', 'utf8');
 const webPushSource = readFileSync('supabase/functions/song-league-notifications/web-push.ts', 'utf8');
 
 const contracts = [
@@ -23,7 +24,8 @@ const contracts = [
   ['trusted worker dispatch', dispatcher.includes("invoke('song-league-notifications'")],
   ['Data & account manager', header.includes('notification-settings-modal') && header.includes('Song League')],
   ['in-league notification switch', league.includes('league-notification-control') && league.includes('Turn off')],
-  ['admin test delivery', admin.includes('Send test notification')]
+  ['admin test delivery', admin.includes('Send test notification')],
+  ['post-join notification opt-in', claim.includes('Enable pick notifications?') && claim.includes('Not now')]
 ];
 
 const missing = contracts.filter(([, present]) => !present).map(([label]) => label);
