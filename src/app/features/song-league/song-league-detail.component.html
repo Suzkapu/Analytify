@@ -45,13 +45,14 @@
         <span>
           <strong>Pick-opening notifications</strong>
           <small *ngIf="songLeagueNotificationsActive">On for your registered PWA devices</small>
-          <small *ngIf="!songLeagueNotificationsActive && notificationSettings.supported">Get a reminder on this device when Friday picks open</small>
+          <small *ngIf="!songLeagueNotificationsActive && notificationSettings.supported && notificationSettings.permission !== 'denied'">Get a reminder on this device when Friday picks open</small>
+          <small *ngIf="notificationSettings.permission === 'denied'">Blocked or expired in browser settings</small>
           <small *ngIf="!notificationSettings.supported">Install or open Analytify in a browser that supports PWA notifications</small>
           <em *ngIf="notificationMessage" role="status">{{ notificationMessage }}</em>
         </span>
         <button type="button" class="league-secondary" role="switch"
           [attr.aria-checked]="songLeagueNotificationsActive"
-          [disabled]="isSavingNotifications || (!notificationSettings.supported && !notificationSettings.songLeagueEnabled)"
+          [disabled]="isSavingNotifications || (!notificationSettings.supported && !notificationSettings.songLeagueEnabled) || (notificationSettings.permission === 'denied' && !notificationSettings.songLeagueEnabled)"
           (click)="toggleSongLeagueNotifications()">
           <i class="pi" [ngClass]="isSavingNotifications ? 'pi-spin pi-spinner' : songLeagueNotificationsActive ? 'pi-bell-slash' : 'pi-bell'"></i>
           {{ isSavingNotifications ? 'Saving…' : songLeagueNotificationsActive ? 'Turn off' : 'Notify me' }}

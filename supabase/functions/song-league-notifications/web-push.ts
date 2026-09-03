@@ -95,17 +95,25 @@ export async function sendWebPush(
     encryptedBody(subscription, message),
     vapidAuthorization(subscription.endpoint, vapid)
   ]);
-  const response = await fetch(subscription.endpoint, {
-    method: 'POST',
-    headers: {
-      Authorization: authorization,
-      'Content-Encoding': 'aes128gcm',
-      'Content-Type': 'application/octet-stream',
-      TTL: '86400',
-      Urgency: 'normal'
-    },
-    body
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10_000);
+  let response: Response;
+  try {
+    response = await fetch(subscription.endpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: authorization,
+        'Content-Encoding': 'aes128gcm',
+        'Content-Type': 'application/octet-stream',
+        TTL: '86400',
+        Urgency: 'normal'
+      },
+      body,
+      signal: controller.signal
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
   if (!response.ok) {
     const error = new Error(`Push service returned HTTP ${response.status}.`) as Error & {statusCode: number};
     error.statusCode = response.status;

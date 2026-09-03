@@ -1,6 +1,6 @@
 import {TestBed} from '@angular/core/testing';
 import {SwPush} from '@angular/service-worker';
-import {of} from 'rxjs';
+import {defer, of} from 'rxjs';
 
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {PushNotificationService} from './push-notification.service';
@@ -9,6 +9,8 @@ describe('PushNotificationService', () => {
   let service: PushNotificationService;
   let rpc: jasmine.Spy;
   let requestSubscription: jasmine.Spy;
+  let browserSubscription: PushSubscription | null;
+  let permissionState: PermissionState;
   const subscription = {
     endpoint: 'https://push.example/device',
     toJSON: () => ({
@@ -18,6 +20,11 @@ describe('PushNotificationService', () => {
   } as unknown as PushSubscription;
 
   beforeEach(() => {
+    browserSubscription = null;
+    permissionState = 'granted';
+    spyOn(navigator.permissions, 'query').and.callFake(async () => ({
+      state: permissionState
+    } as PermissionStatus));
     rpc = jasmine.createSpy('rpc').and.callFake(async (name: string) => ({
       data: name === 'get_notification_preferences' ? [{song_league_enabled: false}] : null,
       error: null
@@ -28,12 +35,50 @@ describe('PushNotificationService', () => {
         PushNotificationService,
         {
           provide: SwPush,
-          useValue: {isEnabled: true, subscription: of(null), requestSubscription}
+          useValue: {isEnabled: true, subscription: defer(() => of(browserSubscription)), requestSubscription}
         },
         {provide: SupabaseService, useValue: {client: {rpc}}}
       ]
     });
     service = TestBed.inject(PushNotificationService);
+  });
+
+  it('reuses a browser subscription that was already granted instead of registering again', async () => {
+    browserSubscription = subscription;
+
+    const settings = await service.setSongLeagueEnabled(true);
+
+    expect(requestSubscription).not.toHaveBeenCalled();
+    expect(settings.deviceSubscribed).toBeTrue();
+    expect(rpc).toHaveBeenCalledWith('upsert_push_subscription', jasmine.any(Object));
+  });
+
+  it('reconciles a completed browser registration when its promise reports a duplicate push error', async () => {
+    requestSubscription.and.callFake(async () => {
+      browserSubscription = subscription;
+      throw new Error('Registration failed - push service error');
+    });
+
+    const settings = await service.setSongLeagueEnabled(true);
+
+    expect(settings.deviceSubscribed).toBeTrue();
+    expect(rpc).toHaveBeenCalledWith('upsert_push_subscription', jasmine.any(Object));
+  });
+
+  it('turns the effective state off when a temporary browser permission expires', async () => {
+    browserSubscription = subscription;
+    permissionState = 'prompt';
+    rpc.and.callFake(async (name: string) => ({
+      data: name === 'get_notification_preferences' ? [{song_league_enabled: true}] : null,
+      error: null
+    }));
+
+    const settings = await service.loadSettings();
+
+    expect(settings.songLeagueEnabled).toBeTrue();
+    expect(settings.deviceSubscribed).toBeTrue();
+    expect(settings.permission).toBe('default');
+    expect(settings.active).toBeFalse();
   });
 
   it('registers the current PWA device before enabling Song League notifications', async () => {

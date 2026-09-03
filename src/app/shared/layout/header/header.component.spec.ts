@@ -39,7 +39,7 @@ describe('HeaderComponent entry points', () => {
           useValue: {
             loadSettings: jasmine.createSpy('loadSettings').and.resolveTo({
               supported: true, installedPwa: true, permission: 'granted',
-              deviceSubscribed: true, songLeagueEnabled: true
+              deviceSubscribed: true, songLeagueEnabled: true, active: true
             }),
             setSongLeagueEnabled: jasmine.createSpy('setSongLeagueEnabled')
           }

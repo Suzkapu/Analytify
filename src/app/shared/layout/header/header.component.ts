@@ -46,7 +46,8 @@ export class HeaderComponent implements OnInit {
     installedPwa: false,
     permission: 'unavailable',
     deviceSubscribed: false,
-    songLeagueEnabled: false
+    songLeagueEnabled: false,
+    active: false
   };
 
   constructor(
@@ -95,6 +96,12 @@ export class HeaderComponent implements OnInit {
       },
       error: (err) => console.error('Failed to load user profile:', err)
     });
+  }
+
+  onProfileImageError(): void {
+    this.profilePicUrl = null;
+    const userId = this.authService.getUserId() || 'anonymous';
+    this.storageService.setItem(`${userId}_profile_pic`, '');
   }
 
   toggleSettingsDropdown(event: Event) {
@@ -192,11 +199,20 @@ export class HeaderComponent implements OnInit {
     this.showNotificationSettingsModal = false;
   }
 
+  @HostListener('window:focus')
+  refreshOpenNotificationSettings(): void {
+    if (!this.showNotificationSettingsModal || this.isSavingNotificationSettings) return;
+    void this.pushNotifications.loadSettings().then(settings => {
+      this.notificationSettings = settings;
+    }).catch(() => undefined);
+  }
+
   async toggleSongLeagueNotifications(event: Event): Promise<void> {
     const enabled = (event.target as HTMLInputElement).checked;
     this.isSavingNotificationSettings = true;
     this.notificationError = '';
     try {
+      this.notificationSettings = await this.pushNotifications.loadSettings();
       this.notificationSettings = await this.pushNotifications.setSongLeagueEnabled(enabled);
     } catch (error) {
       this.notificationError = (error as any)?.message || 'The notification setting could not be changed.';

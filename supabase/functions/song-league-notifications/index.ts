@@ -11,10 +11,18 @@ type Delivery = PushDevice & {
   attempts: number;
 };
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Max-Age': '86400',
+  'Vary': 'Origin'
+};
+
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: {'Content-Type': 'application/json', 'Cache-Control': 'no-store'}
+    headers: {'Content-Type': 'application/json', 'Cache-Control': 'no-store', ...corsHeaders}
   });
 }
 
@@ -42,7 +50,16 @@ function payload(title: string, body: string, path: string, tag: string): string
   });
 }
 
+async function mapConcurrently<T, R>(items: T[], concurrency: number, work: (item: T) => Promise<R>): Promise<R[]> {
+  const results: R[] = [];
+  for (let index = 0; index < items.length; index += concurrency) {
+    results.push(...await Promise.all(items.slice(index, index + concurrency).map(work)));
+  }
+  return results;
+}
+
 Deno.serve(async request => {
+  if (request.method === 'OPTIONS') return new Response(null, {status: 204, headers: corsHeaders});
   if (request.method !== 'POST') return json({error: 'Method not allowed.'}, 405);
   try {
     const supabaseUrl = required('SUPABASE_URL');
@@ -74,8 +91,7 @@ Deno.serve(async request => {
       if (deviceError) throw deviceError;
       if (!devices?.length) return json({error: 'Enable notifications on this PWA device first.'}, 409);
 
-      let sent = 0;
-      for (const device of devices as PushDevice[]) {
+      const outcomes = await mapConcurrently(devices as PushDevice[], 8, async device => {
         try {
           await sendWebPush(device, payload(
             'Analytify notifications work',
@@ -83,15 +99,16 @@ Deno.serve(async request => {
             '/admin',
             `analytify-admin-test-${Date.now()}`
           ), vapid);
-          sent++;
+          return true;
         } catch (error) {
           if ([404, 410].includes(Number((error as any)?.statusCode))) {
             await admin.from('push_subscriptions').delete().eq('id', device.id);
-            continue;
+            return false;
           }
           throw error;
         }
-      }
+      });
+      const sent = outcomes.filter(Boolean).length;
       if (!sent) return json({error: 'No active PWA devices could receive the test.'}, 409);
       return json({ok: true, sent});
     }
@@ -109,9 +126,7 @@ Deno.serve(async request => {
     });
     if (claimError) throw claimError;
 
-    let sent = 0;
-    let failed = 0;
-    for (const delivery of (claimed || []) as Delivery[]) {
+    const outcomes = await mapConcurrently((claimed || []) as Delivery[], 10, async delivery => {
       try {
         await sendWebPush(delivery, payload(
           `Picks are open in ${delivery.league_name}`,
@@ -122,7 +137,7 @@ Deno.serve(async request => {
         await admin.from('song_league_push_deliveries').update({
           status: 'sent', sent_at: new Date().toISOString(), last_error: null, updated_at: new Date().toISOString()
         }).eq('id', delivery.delivery_id);
-        sent++;
+        return true;
       } catch (error) {
         const statusCode = Number((error as any)?.statusCode || 0);
         if (statusCode === 404 || statusCode === 410) {
@@ -135,9 +150,11 @@ Deno.serve(async request => {
             updated_at: new Date().toISOString()
           }).eq('id', delivery.delivery_id);
         }
-        failed++;
+        return false;
       }
-    }
+    });
+    const sent = outcomes.filter(Boolean).length;
+    const failed = outcomes.length - sent;
     return json({ok: failed === 0, queued: Number(queued || 0), sent, failed});
   } catch (error) {
     console.error('Song League notification delivery failed:', error);

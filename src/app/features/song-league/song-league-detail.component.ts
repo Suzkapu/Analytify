@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {
@@ -31,7 +31,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   isSavingNotifications = false;
   notificationSettings: PushNotificationSettings = {
     supported: false, installedPwa: false, permission: 'unavailable',
-    deviceSubscribed: false, songLeagueEnabled: false
+    deviceSubscribed: false, songLeagueEnabled: false, active: false
   };
 
   songQuery = '';
@@ -81,6 +81,14 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     this.unsubscribeLeague = null;
   }
 
+  @HostListener('window:focus')
+  refreshNotificationState(): void {
+    if (!this.leagueId || this.isSavingNotifications) return;
+    void this.pushNotifications.loadSettings().then(settings => {
+      this.notificationSettings = settings;
+    }).catch(() => undefined);
+  }
+
   async load(silent = false): Promise<void> {
     if (!silent) this.isLoading = true;
     this.errorMessage = '';
@@ -98,7 +106,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   }
 
   get songLeagueNotificationsActive(): boolean {
-    return this.notificationSettings.songLeagueEnabled && this.notificationSettings.deviceSubscribed;
+    return this.notificationSettings.active;
   }
 
   async toggleSongLeagueNotifications(): Promise<void> {
@@ -106,7 +114,8 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     this.isSavingNotifications = true;
     this.notificationMessage = '';
     try {
-      const enabled = !this.songLeagueNotificationsActive;
+      this.notificationSettings = await this.pushNotifications.loadSettings();
+      const enabled = !this.notificationSettings.active;
       this.notificationSettings = await this.pushNotifications.setSongLeagueEnabled(enabled);
       this.notificationMessage = enabled
         ? 'Pick-opening notifications are enabled on this device.'

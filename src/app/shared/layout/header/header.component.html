@@ -76,7 +76,7 @@
         <button type="button" class="user-profile-header" (click)="toggleSettingsDropdown($event)"
           title="Open profile menu" aria-label="Open profile menu" [attr.aria-expanded]="showSettingsDropdown"
           aria-haspopup="menu">
-          <img *ngIf="profilePicUrl" [src]="profilePicUrl" alt="" class="profile-img">
+          <img *ngIf="profilePicUrl" [src]="profilePicUrl" (error)="onProfileImageError()" alt="" class="profile-img">
           <span *ngIf="!profilePicUrl" class="profile-placeholder" aria-hidden="true">
             <i class="pi pi-user"></i>
           </span>
@@ -131,13 +131,14 @@
         <span class="notification-category-copy">
           <strong>Song League</strong>
           <small>Receive a reminder when Friday picks open in one of your leagues.</small>
-          <em *ngIf="notificationSettings.songLeagueEnabled && notificationSettings.deviceSubscribed">Enabled on this device</em>
+          <em *ngIf="notificationSettings.active">Enabled on this device</em>
+          <em *ngIf="notificationSettings.permission === 'granted' && notificationSettings.deviceSubscribed && !notificationSettings.songLeagueEnabled">Ready on this device</em>
           <em *ngIf="!notificationSettings.installedPwa">Install Analytify as an app for the most reliable delivery.</em>
           <em *ngIf="notificationSettings.permission === 'denied'" class="notification-denied">Blocked in browser settings</em>
         </span>
         <span class="switch" title="Toggle Song League notifications">
-          <input type="checkbox" [checked]="notificationSettings.songLeagueEnabled && notificationSettings.deviceSubscribed"
-            [disabled]="isSavingNotificationSettings || (!notificationSettings.supported && !notificationSettings.songLeagueEnabled)"
+          <input type="checkbox" [checked]="notificationSettings.active"
+            [disabled]="isSavingNotificationSettings || (!notificationSettings.supported && !notificationSettings.songLeagueEnabled) || (notificationSettings.permission === 'denied' && !notificationSettings.songLeagueEnabled)"
             (change)="toggleSongLeagueNotifications($event)" aria-label="Song League notifications">
           <span class="slider round"></span>
         </span>

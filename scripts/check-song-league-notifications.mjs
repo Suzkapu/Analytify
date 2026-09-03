@@ -18,6 +18,7 @@ const contracts = [
   ['timezone-aware Friday opening', migration.includes('p_now at time zone league.timezone')],
   ['concurrent delivery claiming', migration.includes('for update skip locked')],
   ['expired subscription cleanup', edgeFunction.includes('[404, 410]') && edgeFunction.includes("from('push_subscriptions')") && edgeFunction.includes('.delete()')],
+  ['browser preflight support', edgeFunction.includes("request.method === 'OPTIONS'") && edgeFunction.includes('Access-Control-Allow-Origin')],
   ['PWA notification deep link', edgeFunction.includes("operation: 'openWindow'")],
   ['trusted worker dispatch', dispatcher.includes("invoke('song-league-notifications'")],
   ['Data & account manager', header.includes('notification-settings-modal') && header.includes('Song League')],
