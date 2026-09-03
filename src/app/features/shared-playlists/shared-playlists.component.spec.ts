@@ -306,6 +306,19 @@ describe('SharedPlaylistsComponent', () => {
     expect(unsubscribe).toHaveBeenCalledTimes(1);
   });
 
+  it('does not open a realtime channel when the page closes during its initial load', async () => {
+    let finishLoad!: (shares: any[]) => void;
+    sharing.listReceivedShares.and.returnValue(new Promise(resolve => finishLoad = resolve));
+
+    const initialization = component.ngOnInit();
+    component.ngOnDestroy();
+    finishLoad([]);
+    await initialization;
+
+    expect(sharing.subscribeToShareChanges).not.toHaveBeenCalled();
+    expect(statsSharing.subscribeToAccessChanges).not.toHaveBeenCalled();
+  });
+
   function track(id: string) {
     return {
       id,

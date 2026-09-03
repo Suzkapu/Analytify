@@ -113,7 +113,9 @@
 
     <section class="card-container playlists-grid" aria-label="Your playlists">
   <ng-container *ngFor="let playlist of filteredPlaylists; trackBy: trackPlaylist">
-    <div class="item-card" [class.merge-mode]="isMergeSelectionMode" [class.merge-selected]="isPlaylistSelected(playlist.id)">
+    <div class="item-card" [class.merge-mode]="isMergeSelectionMode"
+      [class.merge-selected]="isPlaylistSelected(playlist.id)"
+      [class.saved-playlist-card]="isSavedPlaylist(playlist)">
       <div class="card-content">
         <button *ngIf="isMergeSelectionMode" type="button" class="playlist-select-button"
           (click)="togglePlaylistSelection(playlist)" [disabled]="isCreatingMergedPlaylist"

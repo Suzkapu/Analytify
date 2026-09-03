@@ -78,10 +78,15 @@
   align-items: center;
   gap: 5px;
   width: fit-content;
-  margin-bottom: 5px;
+  max-width: 100%;
+  margin-bottom: 2px;
   color: var(--color-accent);
   font-size: 0.68rem;
   font-weight: 800;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .merge-composer,
@@ -291,6 +296,15 @@
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
       overflow: hidden;
+    }
+  }
+
+  &.saved-playlist-card .playlist-details {
+    .song-count { margin-top: 2px; }
+    .description {
+      min-height: 1.35em;
+      margin-top: 2px;
+      -webkit-line-clamp: 1;
     }
   }
 

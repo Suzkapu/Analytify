@@ -1,6 +1,13 @@
 import {AfterViewInit, Component, NgZone, OnDestroy} from '@angular/core';
 import {SwUpdate, VersionReadyEvent} from '@angular/service-worker';
-import {NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router} from '@angular/router';
+import {
+  NavigationCancel,
+  NavigationCancellationCode,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router
+} from '@angular/router';
 import {filter} from 'rxjs/operators';
 import {take} from 'rxjs';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
@@ -50,7 +57,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           durationMs: Math.round(performance.now() - this.navigationStartedAt)
         });
       } else if (event instanceof NavigationCancel) {
-        navigationLog.warn('Navigation cancelled', {url: event.url, reason: event.reason});
+        const expectedCancellation = event.code === NavigationCancellationCode.Redirect
+          || event.code === NavigationCancellationCode.SupersededByNewNavigation;
+        if (expectedCancellation) {
+          navigationLog.debug('Navigation redirected', {url: event.url});
+        } else {
+          navigationLog.warn('Navigation cancelled', {url: event.url, reason: event.reason});
+        }
       } else if (event instanceof NavigationError) {
         navigationLog.error('Navigation failed', {url: event.url, error: event.error});
       }

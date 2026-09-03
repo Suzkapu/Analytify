@@ -34,6 +34,7 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
   private spotifyUpdateSubscription = new Subscription();
   private isLiveReloading = false;
   private liveReloadPending = false;
+  private destroyed = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -45,20 +46,23 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.destroyed = false;
     this.shareId = this.route.snapshot.paramMap.get('id') || '';
     this.spotifyUpdateSubscription = this.shareAutoSync.spotifyUpdates$.subscribe(update => {
       if (update.shareId === this.shareId) void this.applySpotifyAutoUpdate(update);
     });
+    await this.load();
+    if (this.destroyed) return;
     if (this.shareId) {
       this.unsubscribeShareChanges = this.sharing.subscribeToShareChanges(
         () => void this.reloadFromLiveUpdate(),
         this.shareId
       );
     }
-    await this.load();
   }
 
   ngOnDestroy(): void {
+    this.destroyed = true;
     this.unsubscribeShareChanges?.();
     this.unsubscribeShareChanges = null;
     this.spotifyUpdateSubscription.unsubscribe();

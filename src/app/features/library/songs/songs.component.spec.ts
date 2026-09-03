@@ -118,6 +118,28 @@ describe('SongsComponent', () => {
     expect(album.tracks.map((track: any) => track.id)).toEqual(['one', 'two']);
   });
 
+  it('builds album details from cached tracks even when the album id is absent', () => {
+    component.playlistTracks = [{
+      id: 'cached-track',
+      name: 'Cached Track',
+      duration_ms: 123000,
+      artists: [{id: 'artist', name: 'Artist'}],
+      album: {name: 'Cache Album', images: [{url: 'cache.jpg'}]}
+    }];
+
+    component.updatePlaylistAlbums();
+
+    expect(component.playlistAlbums.length).toBe(1);
+    expect(component.playlistAlbums[0]).toEqual(jasmine.objectContaining({
+      id: null,
+      name: 'Cache Album',
+      imageUrl: 'cache.jpg',
+      spotifyUrl: null,
+      trackCount: 1
+    }));
+    expect(component.playlistAlbums[0].tracks[0].id).toBe('cached-track');
+  });
+
   it('opens and closes the in-app album songs view', () => {
     const scrollTo = spyOn(window, 'scrollTo') as jasmine.Spy;
     spyOn(window, 'requestAnimationFrame').and.callFake(callback => {

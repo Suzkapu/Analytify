@@ -185,6 +185,25 @@ describe('PlaylistsComponent', () => {
     expect(storage.get('current-user_playlists_showSaved')).toBe('true');
   });
 
+  it('keeps playlist cards at their compact height when saved-owner details are shown', () => {
+    component.playlists = [
+      {id: 'owned', name: 'Owned', description: 'A compact card', owner: {id: 'current-user'}, tracks: {total: 2}},
+      {id: 'saved', name: 'Saved', description: 'Another compact card', owner: {id: 'friend', display_name: 'Friend'}, tracks: {total: 3}}
+    ];
+    (component as any).currentSpotifyProfileId = 'current-user';
+    component.filterPlaylists();
+    fixture.detectChanges();
+
+    const compactHeight = (fixture.nativeElement.querySelector('.item-card') as HTMLElement).getBoundingClientRect().height;
+    component.toggleSavedPlaylists();
+    fixture.detectChanges();
+
+    const cards = Array.from(fixture.nativeElement.querySelectorAll('.item-card')) as HTMLElement[];
+    expect(cards[1].classList).toContain('saved-playlist-card');
+    expect(cards[0].getBoundingClientRect().height).toBeCloseTo(compactHeight, 0);
+    expect(cards[1].getBoundingClientRect().height).toBeCloseTo(compactHeight, 0);
+  });
+
   it('merges multiple selected playlists without duplicate tracks', async () => {
     component.playlists = [
       {id: 'one', name: 'One', tracks: {total: 2}},

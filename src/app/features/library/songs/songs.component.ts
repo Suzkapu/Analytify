@@ -532,9 +532,12 @@ export class SongsComponent implements OnInit, OnDestroy {
 
     this.playlistTracks.forEach(track => {
       const album = track.album;
-      if (!album?.id) return;
+      const albumName = String(album?.name || '').trim();
+      if (!albumName && !album?.id) return;
+      const albumId = album?.id ? String(album.id) : null;
+      const albumKey = albumId || `name:${albumName.toLocaleLowerCase()}`;
 
-      const existing = albums.get(album.id);
+      const existing = albums.get(albumKey);
       if (existing) {
         existing.trackCount++;
         existing.durationMs += track.duration_ms || 0;
@@ -546,12 +549,12 @@ export class SongsComponent implements OnInit, OnDestroy {
         ? album.artists
         : (track.artists || []);
 
-      albums.set(album.id, {
-        id: album.id,
-        name: album.name || 'Unknown Album',
+      albums.set(albumKey, {
+        id: albumId,
+        name: albumName || 'Unknown Album',
         imageUrl: album.images?.[0]?.url || null,
         spotifyUrl: album.external_urls?.spotify ||
-          `https://open.spotify.com/album/${encodeURIComponent(album.id)}`,
+          (albumId ? `https://open.spotify.com/album/${encodeURIComponent(albumId)}` : null),
         releaseDate: album.release_date || '',
         artists: artists.map((artist: any) => artist.name).filter(Boolean),
         trackCount: 1,

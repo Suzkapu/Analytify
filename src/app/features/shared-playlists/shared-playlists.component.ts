@@ -45,6 +45,7 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   private unsubscribeFromStatsChanges: (() => void) | null = null;
   private silentReloadPromise: Promise<void> | null = null;
   private dismissedConsentRequestIds = new Set<string>();
+  private destroyed = false;
 
   constructor(
     private sharing: PlaylistSharingService,
@@ -54,16 +55,19 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.destroyed = false;
+    await this.reload();
+    if (this.destroyed) return;
     this.unsubscribeFromShareChanges = this.sharing.subscribeToShareChanges(() => {
       this.reloadSilently();
     });
     this.unsubscribeFromStatsChanges = this.statsSharing.subscribeToAccessChanges(() => {
       this.reloadSilently();
     });
-    await this.reload();
   }
 
   ngOnDestroy(): void {
+    this.destroyed = true;
     this.unsubscribeFromShareChanges?.();
     this.unsubscribeFromShareChanges = null;
     this.unsubscribeFromStatsChanges?.();

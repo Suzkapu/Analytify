@@ -86,6 +86,23 @@ describe('SharedPlaylistDetailComponent', () => {
     expect(component.download?.appliedRevision).toBe(2);
   });
 
+  it('does not open a realtime channel when the detail page closes during its initial load', async () => {
+    let finishLoad!: (details: any) => void;
+    sharing.loadShare.and.returnValue(new Promise(resolve => finishLoad = resolve));
+
+    const initialization = component.ngOnInit();
+    component.ngOnDestroy();
+    finishLoad({
+      share: share(1),
+      tracks: [track('song')],
+      download: null,
+      viewerRole: 'recipient'
+    });
+    await initialization;
+
+    expect(sharing.subscribeToShareChanges).not.toHaveBeenCalled();
+  });
+
   it('silently reloads a matching live update while background synchronization handles Spotify', async () => {
     sharing.loadShare.and.returnValues(
       Promise.resolve({

@@ -1,14 +1,14 @@
 import {TestBed} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {SwUpdate} from '@angular/service-worker';
-import {NavigationEnd, Router} from '@angular/router';
+import {NavigationCancel, NavigationCancellationCode, NavigationEnd, Router} from '@angular/router';
 import {fakeAsync, flushMicrotasks, tick} from '@angular/core/testing';
 import {Subject} from 'rxjs';
 import {AppComponent} from './app.component';
 import {SiteSettingsService} from '@core/settings/site-settings.service';
 
 describe('AppComponent', () => {
-  const routerEvents = new Subject<NavigationEnd>();
+  const routerEvents = new Subject<NavigationEnd | NavigationCancel>();
 
   beforeEach(() => TestBed.configureTestingModule({
     imports: [RouterTestingModule],
@@ -101,5 +101,19 @@ describe('AppComponent', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('.app-loading')).toBeNull();
+  });
+
+  it('does not warn when a navigation is superseded by a newer navigation', () => {
+    const warn = spyOn(console, 'warn');
+    TestBed.createComponent(AppComponent);
+
+    routerEvents.next(new NavigationCancel(
+      2,
+      '/playlists',
+      'A newer navigation replaced this one.',
+      NavigationCancellationCode.SupersededByNewNavigation
+    ));
+
+    expect(warn).not.toHaveBeenCalled();
   });
 });
