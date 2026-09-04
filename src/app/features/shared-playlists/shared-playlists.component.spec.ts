@@ -270,15 +270,23 @@ describe('SharedPlaylistsComponent', () => {
       .toContain('The request could not be saved.');
   });
 
-  it('allows either side to revoke a per-user stats grant', async () => {
-    spyOn(window, 'confirm').and.returnValue(true);
+  it('uses a custom confirmation dialog before either side revokes a stats grant', async () => {
     const request = {
-      id: 'request-id', ownerDisplayName: 'Owner', viewerDisplayName: 'Viewer', status: 'approved'
+      id: 'request-id', ownerDisplayName: 'Owner', viewerDisplayName: 'Viewer',
+      viewerRole: 'owner', status: 'approved'
     } as any;
 
-    await component.revokeStatsAccess(request);
+    component.openStatsRevocation(request);
+    fixture.detectChanges();
+
+    const dialog = fixture.nativeElement.querySelector('.stats-revoke-modal') as HTMLElement;
+    expect(dialog.textContent).toContain('Stop sharing with Viewer?');
+    expect(statsSharing.revokeAccess).not.toHaveBeenCalled();
+
+    await component.confirmStatsRevocation();
 
     expect(statsSharing.revokeAccess).toHaveBeenCalledOnceWith('request-id');
+    expect(component.statsRevocationRequest).toBeNull();
   });
 
   it('shows approved stats as the real stats route and labels access management as Requests', async () => {

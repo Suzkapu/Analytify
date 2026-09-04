@@ -142,6 +142,32 @@
 
 .stats-consent-overlay { z-index: 1600; }
 .consent-modal { max-width: 500px; }
+.stats-revoke-overlay { z-index: 1600; }
+.stats-revoke-modal { max-width: 500px; }
+.revoke-icon { background: var(--color-danger-soft); color: var(--color-danger); }
+
+.revoke-person-card {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  margin: 18px 0 4px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-surface);
+  text-align: left;
+
+  > span:nth-child(2) { min-width: 0; display: grid; gap: 2px; }
+  strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  small { color: var(--color-text-subtle); font-size: 0.72rem; }
+  > i { color: var(--color-danger); }
+}
+
+.share-modal-actions .stats-revoke-confirm {
+  background: var(--color-danger);
+  color: #fff;
+}
 
 .stats-user-picker { position: relative; }
 

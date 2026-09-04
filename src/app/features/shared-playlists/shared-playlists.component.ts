@@ -41,6 +41,7 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   isRequestingStats = false;
   consentRequest: StatsAccessRequest | null = null;
   consentError = '';
+  statsRevocationRequest: StatsAccessRequest | null = null;
   busyStatsRequestId = '';
 
   private unsubscribeFromShareChanges: (() => void) | null = null;
@@ -256,16 +257,27 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     }
   }
 
-  async revokeStatsAccess(request: StatsAccessRequest): Promise<void> {
+  openStatsRevocation(request: StatsAccessRequest): void {
     if (this.busyStatsRequestId) return;
+    this.statsRevocationRequest = request;
+  }
+
+  closeStatsRevocation(): void {
+    if (this.busyStatsRequestId) return;
+    this.statsRevocationRequest = null;
+  }
+
+  async confirmStatsRevocation(): Promise<void> {
+    const request = this.statsRevocationRequest;
+    if (!request || this.busyStatsRequestId) return;
     const otherUser = request.viewerRole === 'owner'
       ? request.viewerDisplayName
       : request.ownerDisplayName;
-    if (!window.confirm(`Revoke stats access shared with ${otherUser}?`)) return;
     this.busyStatsRequestId = request.id;
     try {
       await this.statsSharing.revokeAccess(request.id);
       this.successMessage = `Stats access shared with ${otherUser} was revoked.`;
+      this.statsRevocationRequest = null;
       await this.reload(true);
     } catch (error) {
       this.errorMessage = this.describeError(error);

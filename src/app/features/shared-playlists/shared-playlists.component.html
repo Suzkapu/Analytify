@@ -125,7 +125,7 @@
           <p>{{ request.status === 'pending' ? 'Waiting for their decision' : 'Your request to view their stats' }}</p>
         </div>
         <div class="owner-share-actions" *ngIf="request.status === 'pending' || request.status === 'approved'">
-          <button type="button" class="danger" (click)="revokeStatsAccess(request)" [disabled]="!!busyStatsRequestId">
+          <button type="button" class="danger" (click)="openStatsRevocation(request)" [disabled]="!!busyStatsRequestId">
             <i class="pi pi-ban"></i> {{ request.status === 'pending' ? 'Cancel request' : 'Revoke access' }}
           </button>
         </div>
@@ -138,7 +138,7 @@
           <p>Can view your saved stats</p>
         </div>
         <div class="owner-share-actions">
-          <button type="button" class="danger" (click)="revokeStatsAccess(request)" [disabled]="!!busyStatsRequestId">
+          <button type="button" class="danger" (click)="openStatsRevocation(request)" [disabled]="!!busyStatsRequestId">
             <i class="pi pi-ban"></i> Revoke access
           </button>
         </div>
@@ -291,6 +291,37 @@
       </button>
       <button type="button" class="share-secondary" (click)="respondToStatsRequest(false)" [disabled]="!!busyStatsRequestId">
         Decline
+      </button>
+    </div>
+  </section>
+</div>
+
+<div *ngIf="statsRevocationRequest as request" class="share-modal-overlay stats-revoke-overlay"
+  (click)="closeStatsRevocation()">
+  <section class="share-modal stats-revoke-modal" role="alertdialog" aria-modal="true"
+    aria-labelledby="stats-revoke-title" (click)="$event.stopPropagation()">
+    <button type="button" class="share-modal-close" (click)="closeStatsRevocation()"
+      [disabled]="!!busyStatsRequestId" aria-label="Keep stats access">×</button>
+    <div class="share-modal-icon revoke-icon"><i class="pi pi-user-minus"></i></div>
+    <span class="eyebrow">Revoke stats access</span>
+    <h2 id="stats-revoke-title">Stop sharing with {{ request.viewerRole === 'owner' ? request.viewerDisplayName : request.ownerDisplayName }}?</h2>
+    <p>They will immediately lose access to your saved stats. You can share again later through a new request.</p>
+    <div class="revoke-person-card">
+      <span class="stats-picker-avatar">
+        <img *ngIf="request.viewerRole === 'owner' ? request.viewerImageUrl : request.ownerImageUrl"
+          [src]="request.viewerRole === 'owner' ? request.viewerImageUrl : request.ownerImageUrl" alt="">
+        <i *ngIf="!(request.viewerRole === 'owner' ? request.viewerImageUrl : request.ownerImageUrl)" class="pi pi-user"></i>
+      </span>
+      <span><strong>{{ request.viewerRole === 'owner' ? request.viewerDisplayName : request.ownerDisplayName }}</strong><small>Currently has access</small></span>
+      <i class="pi pi-lock"></i>
+    </div>
+    <div class="share-modal-actions">
+      <button type="button" class="share-secondary" (click)="closeStatsRevocation()"
+        [disabled]="!!busyStatsRequestId">Keep access</button>
+      <button type="button" class="stats-revoke-confirm" (click)="confirmStatsRevocation()"
+        [disabled]="!!busyStatsRequestId">
+        <i class="pi" [ngClass]="busyStatsRequestId ? 'pi-spin pi-spinner' : 'pi-ban'"></i>
+        {{ busyStatsRequestId ? 'Revoking…' : 'Revoke access' }}
       </button>
     </div>
   </section>
