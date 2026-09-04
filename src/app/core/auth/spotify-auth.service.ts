@@ -238,6 +238,13 @@ export class SpotifyAuthService {
     const profileImage = profile.images?.[0]?.url || '';
     this.storageService.setItem(`${localSpotifyId}_profile_pic`, profileImage, false);
     this.storageService.setItem(`${localSpotifyId}_display_name`, profile.display_name || '', false);
+    // account_id is the durable cache identity for newer personal-app
+    // sessions, while playlist.owner.id still uses the public Spotify profile
+    // ID. Keep both so ownership checks never compare identifiers from two
+    // different namespaces.
+    if (profile.id) {
+      this.storageService.setItem(`${localSpotifyId}_spotify_profile_id`, profile.id, false);
+    }
     this.initialSyncPromise = null;
 
     return request.returnUrl;
@@ -728,7 +735,12 @@ export class SpotifyAuthService {
     if (sessionError) throw sessionError;
     if (!session) {
       const anonymousResult = await this.supabaseService.client.auth.signInAnonymously();
-      if (anonymousResult.error) throw anonymousResult.error;
+      if (anonymousResult.error) {
+        if (/anonymous sign-ins are disabled/i.test(anonymousResult.error.message || '')) {
+          throw new Error('Cloud Backup is temporarily unavailable because anonymous cloud identities are disabled on the server.');
+        }
+        throw anonymousResult.error;
+      }
       session = anonymousResult.data.session;
     }
     if (!session?.user) throw new Error('The anonymous cloud identity could not be created.');

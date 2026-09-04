@@ -180,6 +180,7 @@ describe('SpotifyAuthService', () => {
     expect(values['spotifyConnectionMode']).toBe('personal_pkce');
     expect(values['personalSpotifyClientId']).toBe('12345678901234567890123456789012');
     expect(values['spotifyUserId']).toContain('stable-personal-account');
+    expect(values[`${service.getUserId()}_spotify_profile_id`]).toBe('personal-user');
     expect(values['spotifyRefreshToken']).toBe('personal-refresh');
     expect(values['supabaseUserId']).toBeUndefined();
     expect(authClient.signInAnonymously).not.toHaveBeenCalled();
@@ -299,5 +300,16 @@ describe('SpotifyAuthService', () => {
       'spotify-credentials',
       jasmine.objectContaining({body: jasmine.objectContaining({connectionMode: 'personal_pkce'})})
     );
+  });
+
+  it('explains a disabled anonymous-auth server setting when Cloud Backup is enabled', async () => {
+    values['spotifyConnectionMode'] = 'personal_pkce';
+    authClient.signInAnonymously.and.resolveTo({
+      data: {session: null},
+      error: {message: 'Anonymous sign-ins are disabled'}
+    });
+
+    await expectAsync(service.enableCloudIdentity())
+      .toBeRejectedWithError(/temporarily unavailable.*anonymous cloud identities are disabled/i);
   });
 });

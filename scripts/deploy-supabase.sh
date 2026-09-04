@@ -50,6 +50,19 @@ if ! command -v supabase >/dev/null 2>&1; then
 fi
 
 supabase link --project-ref "$SUPABASE_PROJECT_REF"
+# Personal Spotify-app users opt in to Cloud Backup through browser-bound
+# anonymous Auth users. Keep the hosted project setting aligned with that
+# application contract on every deployment.
+auth_config_response="$(curl --fail-with-body --silent --show-error \
+  --request PATCH \
+  --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+  --header "Content-Type: application/json" \
+  --data '{"external_anonymous_users_enabled":true}' \
+  "https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_REF}/config/auth")"
+if [[ "$auth_config_response" != *'"external_anonymous_users_enabled":true'* ]]; then
+  echo "Supabase deployment error: anonymous Auth users were not enabled." >&2
+  exit 1
+fi
 # Audit fixes can introduce a migration whose timestamp predates an already
 # deployed hotfix. Supabase otherwise refuses that safe, pending migration.
 supabase db push --include-all

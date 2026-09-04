@@ -86,6 +86,23 @@ describe('HeaderComponent entry points', () => {
     expect(storageService.setItem).not.toHaveBeenCalledWith('registered-user_profile_pic', '');
   });
 
+  it('replaces an expired cached avatar with the latest Spotify profile image', () => {
+    component.profilePicUrl = 'https://expired.example/avatar.jpg';
+    spotifyDataService.getCurrentUser.and.returnValue(of({
+      id: 'public-profile-id',
+      images: [{url: 'https://cdn.example/current-avatar.jpg'}]
+    }));
+
+    component.onProfileImageError();
+
+    expect(component.profilePicUrl).toBe('https://cdn.example/current-avatar.jpg');
+    expect(storageService.setItem).toHaveBeenCalledWith(
+      'registered-user_spotify_profile_id',
+      'public-profile-id',
+      false
+    );
+  });
+
   it('recovers from a previously cached empty avatar by loading Spotify again', async () => {
     storageService.getItem.and.returnValue('');
     spotifyDataService.getCurrentUser.and.returnValue(of({

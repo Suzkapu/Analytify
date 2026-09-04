@@ -315,22 +315,30 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       parsedArtists = [];
       parsedGenres = [];
 
-      if (cachedTracks && cachedArtists && cachedGenres) {
-        try {
-          parsedTracks = JSON.parse(cachedTracks);
-          parsedArtists = JSON.parse(cachedArtists);
-          parsedGenres = JSON.parse(cachedGenres);
-
-          if (!Array.isArray(parsedTracks) || !Array.isArray(parsedArtists) || !Array.isArray(parsedGenres)) {
-            isCacheIncomplete = true;
-            return;
-          }
-        } catch (e) {
+      try {
+        parsedTracks = cachedTracks ? JSON.parse(cachedTracks) : [];
+        parsedArtists = cachedArtists ? JSON.parse(cachedArtists) : [];
+        parsedGenres = cachedGenres ? JSON.parse(cachedGenres) : [];
+        if (!Array.isArray(parsedTracks) || !Array.isArray(parsedArtists) || !Array.isArray(parsedGenres)) {
           isCacheIncomplete = true;
+          return;
         }
-      } else {
+      } catch (e) {
         isCacheIncomplete = true;
+        return;
       }
+
+      // Spotify marks artist genres as deprecated and some personal apps now
+      // receive an empty/missing genre cache even while artist data is intact.
+      // Rebuild locally whenever the cached artist objects still carry genres.
+      if (parsedGenres.length === 0 && parsedArtists.length > 0) {
+        parsedGenres = this.buildGenres(parsedArtists);
+        if (parsedGenres.length > 0) {
+          this.storageService.setItem(genresKey, JSON.stringify(parsedGenres));
+          cachedGenres = JSON.stringify(parsedGenres);
+        }
+      }
+      isCacheIncomplete = !cachedTracks || !cachedArtists;
     };
 
     parseCachedStats();
@@ -448,7 +456,12 @@ export class UserStatsComponent implements OnInit, OnDestroy {
           const page1 = res.tracks.items || [];
           const page2 = res.tracksPage2.items || [];
           const loadedTracks = [...page1, ...page2];
-          const loadedGenres = this.buildGenres(loadedArtists);
+          const calculatedGenres = this.buildGenres(loadedArtists);
+          // Do not let a transient/deprecated empty genres payload erase the
+          // last usable genre view. Tracks and artists still refresh normally.
+          const loadedGenres = calculatedGenres.length > 0
+            ? calculatedGenres
+            : parsedGenres;
 
           this.topArtists = loadedArtists;
           this.topTracks = loadedTracks;

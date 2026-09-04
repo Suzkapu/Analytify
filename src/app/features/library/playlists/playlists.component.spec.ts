@@ -26,7 +26,7 @@ describe('PlaylistsComponent', () => {
     storage = new Map<string, string>();
     spotifyDataService = jasmine.createSpyObj<SpotifyDataService>(
       'SpotifyDataService',
-      ['getAccessibleUserPlaylists', 'getFavTracks']
+      ['getAccessibleUserPlaylists', 'getFavTracks', 'getCurrentUser']
     );
     authService = jasmine.createSpyObj<SpotifyAuthService>(
       'SpotifyAuthService',
@@ -35,6 +35,7 @@ describe('PlaylistsComponent', () => {
         'isBackupActive',
         'isAuthenticated',
         'ensureInitialSync',
+        'isPersonalAppConnection',
         'getAccessToken',
         'isTokenExpired',
         'refreshToken'
@@ -59,6 +60,7 @@ describe('PlaylistsComponent', () => {
     authService.getUserId.and.returnValue('current-user');
     authService.isBackupActive.and.returnValue(false);
     authService.isAuthenticated.and.returnValue(false);
+    authService.isPersonalAppConnection.and.returnValue(false);
     authService.getAccessToken.and.returnValue('access-token');
     authService.isTokenExpired.and.returnValue(false);
     storageService.getItem.and.callFake((key: string) => storage.get(key) ?? null);
@@ -166,6 +168,23 @@ describe('PlaylistsComponent', () => {
 
     expect(spotifyDataService.getFavTracks).not.toHaveBeenCalled();
     expect(component.playlists[0].tracks.total).toBe(37);
+  });
+
+  it('loads the public profile ID before classifying personal-app playlist owners', async () => {
+    authService.isPersonalAppConnection.and.returnValue(true);
+    spotifyDataService.getCurrentUser.and.returnValue(of({id: 'public-profile-id'}));
+    spotifyDataService.getAccessibleUserPlaylists.and.returnValue(of({
+      currentUserId: 'public-profile-id',
+      items: [{id: 'owned', owner: {id: 'public-profile-id'}, items: {total: 2}}]
+    }));
+    spotifyDataService.getFavTracks.and.returnValue(of({total: 0}));
+
+    await component.loadPlaylists();
+
+    expect(spotifyDataService.getCurrentUser).toHaveBeenCalledTimes(1);
+    expect(spotifyDataService.getAccessibleUserPlaylists).toHaveBeenCalledWith('public-profile-id', true);
+    expect(storage.get('current-user_spotify_profile_id')).toBe('public-profile-id');
+    expect(component.savedPlaylistCount).toBe(0);
   });
 
   it('keeps followed playlists hidden by default and toggles them into the overview', () => {

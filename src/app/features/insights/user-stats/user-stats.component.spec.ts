@@ -435,6 +435,24 @@ describe('UserStatsComponent trends', () => {
     expect(spotify.getUserTopTracks).toHaveBeenCalledTimes(2);
   });
 
+  it('rebuilds a missing genre cache from cached top artists', async () => {
+    const values: Record<string, string> = {
+      'user_stats_short_term_tracks': JSON.stringify([{id: 'cached-track'}]),
+      'user_stats_short_term_artists': JSON.stringify([{id: 'artist', genres: ['indie rock']}]),
+      'user_stats_short_term_lastUpdated': Date.now().toString()
+    };
+    const cachedComponent = new UserStatsComponent(
+      {} as any,
+      {getUserId: () => 'user', getSupabaseUserId: () => null, isBackupActive: () => false} as any,
+      {getItem: (key: string) => values[key] ?? null, setItem: jasmine.createSpy('setItem')} as any,
+      null as any
+    );
+
+    await cachedComponent.loadStats();
+
+    expect(cachedComponent.topGenres.map(genre => genre.name)).toEqual(['indie rock']);
+  });
+
   it('loads one item trend instead of every historical Top list', async () => {
     const supabase = {
       loadStatsItemTrend: jasmine.createSpy('loadStatsItemTrend').and.resolveTo([{

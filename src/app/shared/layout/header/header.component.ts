@@ -41,6 +41,7 @@ export class HeaderComponent implements OnInit {
   isLoadingNotificationSettings = false;
   isSavingNotificationSettings = false;
   notificationError = '';
+  private attemptedProfileImageRecovery = false;
   notificationSettings: PushNotificationSettings = {
     supported: false,
     installedPwa: false,
@@ -97,6 +98,9 @@ export class HeaderComponent implements OnInit {
       next: (user: any) => {
         const pic = user.images && user.images[0] ? user.images[0].url : '';
         this.profilePicUrl = pic || null;
+        if (user?.id) {
+          this.storageService.setItem(`${userId}_spotify_profile_id`, user.id, false);
+        }
         if (pic) {
           this.storageService.setItem(`${userId}_profile_pic`, pic);
         } else {
@@ -108,9 +112,25 @@ export class HeaderComponent implements OnInit {
   }
 
   onProfileImageError(): void {
+    const failedUrl = this.profilePicUrl;
     this.profilePicUrl = null;
     const userId = this.authService.getUserId() || 'anonymous';
     this.storageService.removeItem(`${userId}_profile_pic`);
+    if (this.attemptedProfileImageRecovery) return;
+
+    this.attemptedProfileImageRecovery = true;
+    this.spotifyDataService.getCurrentUser().subscribe({
+      next: (user: any) => {
+        const refreshedUrl = user?.images?.[0]?.url || '';
+        if (!refreshedUrl || refreshedUrl === failedUrl) return;
+        this.profilePicUrl = refreshedUrl;
+        this.storageService.setItem(`${userId}_profile_pic`, refreshedUrl);
+        if (user?.id) {
+          this.storageService.setItem(`${userId}_spotify_profile_id`, user.id, false);
+        }
+      },
+      error: (error) => console.warn('Failed to refresh the expired profile image:', error)
+    });
   }
 
   toggleSettingsDropdown(event: Event) {
@@ -180,7 +200,7 @@ export class HeaderComponent implements OnInit {
       });
     } catch (err) {
       console.error('Failed to enable backup:', err);
-      alert('Failed to enable database backup. Please try again.');
+      alert(err instanceof Error ? err.message : 'Failed to enable database backup. Please try again.');
     }
   }
 

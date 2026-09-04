@@ -69,8 +69,9 @@ export class PlaylistsComponent {
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
     const profileIdKey = `${userId}_spotify_profile_id`;
     const isBackupActive = this.authService.isBackupActive();
+    const isPersonalConnection = this.authService.isPersonalAppConnection();
     this.currentSpotifyProfileId = this.storageService.getItem(profileIdKey)
-      || (userId !== 'anonymous' ? this.stripDevSuffix(userId) : '');
+      || (userId !== 'anonymous' && !isPersonalConnection ? this.stripDevSuffix(userId) : '');
     let storedPlaylists = this.storageService.getItem(storageKey);
     let parsedPlaylists: any[] = [];
     let isParseError = false;
@@ -137,6 +138,23 @@ export class PlaylistsComponent {
     parseCachedPlaylists();
     paintCachedPlaylists();
 
+    // One-time migration for personal-app sessions created before the public
+    // profile ID was cached separately from account_id. Paint the cache first,
+    // then repair ownership without waiting for a full playlist refresh.
+    if (isPersonalConnection && !this.currentSpotifyProfileId) {
+      try {
+        const profile = await firstValueFrom(this.spotifyDataService.getCurrentUser());
+        if (!isCurrentLoad()) return;
+        if (profile?.id) {
+          this.currentSpotifyProfileId = profile.id;
+          this.storageService.setItem(profileIdKey, profile.id, false);
+          this.filterPlaylists();
+        }
+      } catch (error) {
+        console.warn('[Playlists] Could not resolve the public Spotify profile ID; ownership labels are deferred.', error);
+      }
+    }
+
     // A complete portfolio refreshed since the daily cutoff is authoritative.
     // Re-entering this route must not spend Spotify quota to rediscover it.
     if (hasCompleteFreshCache()) {
@@ -197,7 +215,12 @@ export class PlaylistsComponent {
   ): Promise<void> {
     this.isRefreshingPlaylists = true;
     const cachedProfileId = this.storageService.getItem(profileIdKey);
-    const authProfileId = userId !== 'anonymous' ? this.stripDevSuffix(userId) : undefined;
+    // A personal PKCE session may use Spotify's account_id as its durable
+    // local key. That value is not comparable with playlist.owner.id, so force
+    // one /me lookup until the callback/profile refresh has cached profile.id.
+    const authProfileId = userId !== 'anonymous' && !this.authService.isPersonalAppConnection()
+      ? this.stripDevSuffix(userId)
+      : undefined;
     const knownProfileId = cachedProfileId || authProfileId;
     try {
       const response = await firstValueFrom(
