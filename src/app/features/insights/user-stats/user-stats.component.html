@@ -169,10 +169,13 @@
             <i class="pi pi-times" aria-hidden="true"></i>
           </button>
         </div>
-        <span *ngIf="isStatsSearchActive" class="stats-search-status" aria-live="polite">
-          {{ selectedCategory === 'tracks' ? filteredTracks.length : filteredArtists.length }}
-          {{ (selectedCategory === 'tracks' ? filteredTracks.length : filteredArtists.length) === 1 ? 'match' : 'matches' }}
-        </span>
+        <button type="button" class="stats-past-toggle" [class.is-active]="includePastStatsSearch"
+          [attr.aria-pressed]="includePastStatsSearch"
+          [attr.aria-label]="includePastStatsSearch ? 'Turn past ranking search off' : 'Turn past ranking search on'"
+          (click)="togglePastStatsSearch()">
+          <i class="pi pi-history" aria-hidden="true"></i>
+          <span>Past</span>
+        </button>
       </div>
     </div>
   </div>
@@ -190,7 +193,7 @@
       Select any song, artist, or genre to view its history.
     </p>
 
-    <section *ngIf="isStatsSearchActive && selectedSnapshotId === 'current' && !isSpyMode"
+    <section *ngIf="includePastStatsSearch && statsSearchQuery.trim().length >= 2 && selectedSnapshotId === 'current' && !isSpyMode"
       class="past-stats-results" aria-live="polite">
       <div class="past-stats-heading">
         <span><i class="pi pi-history"></i></span>

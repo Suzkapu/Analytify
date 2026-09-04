@@ -752,6 +752,42 @@ describe('UserStatsComponent trends', () => {
     expect(historicalComponent.pastTopResults.map(item => item.id)).toEqual(['former']);
   });
 
+  it('keeps past search off by default and starts it only when toggled on', () => {
+    const searchPastTopItems = jasmine.createSpy('searchPastTopItems').and.resolveTo([]);
+    const historicalComponent = new UserStatsComponent(
+      null as any,
+      {getSupabaseUserId: () => 'user-id', isBackupActive: () => true} as any,
+      null as any,
+      {searchPastTopItems} as any
+    );
+
+    historicalComponent.onStatsSearchChange('former');
+    jasmine.clock().tick(300);
+    expect(historicalComponent.includePastStatsSearch).toBeFalse();
+    expect(searchPastTopItems).not.toHaveBeenCalled();
+
+    historicalComponent.togglePastStatsSearch();
+    jasmine.clock().tick(300);
+    expect(historicalComponent.includePastStatsSearch).toBeTrue();
+    expect(searchPastTopItems).toHaveBeenCalledOnceWith('short_term', 'track', 'former');
+  });
+
+  it('clears and cancels historical results when past search is turned off', () => {
+    component.includePastStatsSearch = true;
+    component.statsSearchQuery = 'former';
+    component.pastTopResults = [{
+      kind: 'artist', id: 'former', name: 'Former', subtitle: '', imageUrl: '', spotifyUrl: '',
+      bestRank: 3, firstSeen: '2026-01-01', lastSeen: '2026-02-01', appearances: 2
+    }];
+    component.isSearchingPastStats = true;
+
+    component.togglePastStatsSearch();
+
+    expect(component.includePastStatsSearch).toBeFalse();
+    expect(component.pastTopResults).toEqual([]);
+    expect(component.isSearchingPastStats).toBeFalse();
+  });
+
   it('explains that cloud history is required without querying Supabase', async () => {
     const searchPastTopItems = jasmine.createSpy('searchPastTopItems');
     const localComponent = new UserStatsComponent(

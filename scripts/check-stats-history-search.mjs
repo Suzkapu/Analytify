@@ -16,7 +16,9 @@ const checks = [
   ['accessible result status', template.includes('past-stats-results') && template.includes('aria-live="polite"')],
   ['past matches open position history', template.includes('(click)="openPastTopResult(item)"') && component.includes('openPastTopResult(item: PastTopItem)')],
   ['past matches are buttons, not external links', template.includes('<button *ngFor="let item of pastTopResults"') && !template.includes('[href]="item.spotifyUrl || null"')],
-  ['past cards omit aggregate summary text', !template.includes('Best #{{ item.bestRank }}') && !template.includes('last seen {{ item.lastSeen }}')]
+  ['past cards omit aggregate summary text', !template.includes('Best #{{ item.bestRank }}') && !template.includes('last seen {{ item.lastSeen }}')],
+  ['past search is explicitly opt-in', component.includes('includePastStatsSearch = false') && component.includes('togglePastStatsSearch()')],
+  ['past toggle replaces match count', template.includes('(click)="togglePastStatsSearch()"') && !template.includes('class="stats-search-status"')]
 ];
 
 const failures = checks.filter(([, valid]) => !valid).map(([label]) => label);

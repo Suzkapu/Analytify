@@ -53,6 +53,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   selectedRange: string = 'short_term'; // 'short_term', 'medium_term', 'long_term'
   selectedCategory: string = 'tracks'; // 'tracks', 'artists', 'genres'
   statsSearchQuery: string = '';
+  includePastStatsSearch = false;
   pastTopResults: PastTopItem[] = [];
   isSearchingPastStats = false;
   pastStatsSearchError = '';
@@ -196,11 +197,20 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.schedulePastStatsSearch();
   }
 
+  togglePastStatsSearch(): void {
+    this.includePastStatsSearch = !this.includePastStatsSearch;
+    if (this.includePastStatsSearch) {
+      this.schedulePastStatsSearch();
+      return;
+    }
+    this.resetPastStatsSearch();
+  }
+
   private schedulePastStatsSearch(): void {
     if (this.pastSearchTimer) clearTimeout(this.pastSearchTimer);
     this.pastSearchTimer = null;
     const query = this.statsSearchQuery.trim();
-    if (query.length < 2 || this.isSpyMode || this.selectedSnapshotId !== 'current'
+    if (!this.includePastStatsSearch || query.length < 2 || this.isSpyMode || this.selectedSnapshotId !== 'current'
       || !['tracks', 'artists'].includes(this.selectedCategory)) {
       this.resetPastStatsSearch();
       return;
