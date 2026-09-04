@@ -13,7 +13,10 @@ const checks = [
   ['debounced lazy request', component.includes('pastSearchTimer') && component.includes('setTimeout')],
   ['stale request protection', component.includes('pastSearchSequence')],
   ['current-page exclusion', component.includes('currentIds')],
-  ['accessible result status', template.includes('past-stats-results') && template.includes('aria-live="polite"')]
+  ['accessible result status', template.includes('past-stats-results') && template.includes('aria-live="polite"')],
+  ['past matches open position history', template.includes('(click)="openPastTopResult(item)"') && component.includes('openPastTopResult(item: PastTopItem)')],
+  ['past matches are buttons, not external links', template.includes('<button *ngFor="let item of pastTopResults"') && !template.includes('[href]="item.spotifyUrl || null"')],
+  ['past cards omit aggregate summary text', !template.includes('Best #{{ item.bestRank }}') && !template.includes('last seen {{ item.lastSeen }}')]
 ];
 
 const failures = checks.filter(([, valid]) => !valid).map(([label]) => label);

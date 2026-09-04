@@ -3018,17 +3018,16 @@ app-user-stats {
   .past-stats-heading { display: flex; align-items: center; gap: 12px; }
   .past-stats-heading > span { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; background: rgba(30, 215, 96, .14); color: #1ed760; }
   .past-stats-heading > div { display: flex; flex-direction: column; flex: 1; }
-  .past-stats-heading small, .past-stats-message { color: #a7a7a7; }
+  .past-stats-message { color: #a7a7a7; }
   .past-stats-message { margin: 14px 0 0; }
   .past-stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
-  .past-stats-card { display: flex; align-items: center; gap: 12px; min-width: 0; padding: 11px; border-radius: 13px; color: inherit; text-decoration: none; background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.06); }
+  .past-stats-card { display: flex; align-items: center; gap: 12px; width: 100%; min-width: 0; padding: 11px; border-radius: 13px; color: inherit; text-align: left; cursor: pointer; font: inherit; background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.06); }
   .past-stats-card:hover { background: rgba(255,255,255,.08); border-color: rgba(30,215,96,.3); }
   .past-stats-card img, .past-stats-placeholder { width: 48px; height: 48px; flex: 0 0 48px; border-radius: 9px; object-fit: cover; }
   .past-stats-placeholder { display: grid; place-items: center; background: #282828; color: #1ed760; }
   .past-stats-copy { display: flex; flex-direction: column; min-width: 0; flex: 1; }
-  .past-stats-copy strong, .past-stats-copy small, .past-stats-copy em { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .past-stats-copy strong, .past-stats-copy small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .past-stats-copy small { color: #b3b3b3; }
-  .past-stats-copy em { margin-top: 4px; color: #1ed760; font-size: .75rem; font-style: normal; }
 
   @media (max-width: 768px) {
     .past-stats-grid { grid-template-columns: minmax(0, 1fr); }

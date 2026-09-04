@@ -544,6 +544,49 @@ describe('UserStatsComponent trends', () => {
     expect(trendComponent.trendPopupPoints.map(point => point.rank)).toEqual([4]);
   });
 
+  it('opens a past search result in the position-history graph without preloaded snapshots', async () => {
+    const supabase = {
+      loadStatsItemTrend: jasmine.createSpy('loadStatsItemTrend').and.resolveTo([{
+        timestamp: new Date('2026-07-15T12:00:00').getTime(),
+        snapshotDate: '2026-07-15',
+        rank: 12
+      }])
+    };
+    const trendComponent = new UserStatsComponent(
+      null as any,
+      {getSupabaseUserId: () => 'user-id', isBackupActive: () => true} as any,
+      null as any,
+      supabase as any
+    );
+    const result = {
+      kind: 'track' as const,
+      id: 'past-track',
+      name: 'Past Track',
+      subtitle: 'Past Artist',
+      imageUrl: 'cover.jpg',
+      spotifyUrl: 'https://open.spotify.com/track/past-track',
+      bestRank: 12,
+      firstSeen: '2026-07-15',
+      lastSeen: '2026-07-15',
+      appearances: 1
+    };
+
+    trendComponent.openPastTopResult(result);
+    await Promise.resolve();
+
+    expect(supabase.loadStatsItemTrend).toHaveBeenCalledOnceWith(
+      'user-id',
+      'short_term',
+      'tracks',
+      ['past-track']
+    );
+    expect(trendComponent.showTrendPopup).toBeTrue();
+    expect(trendComponent.trendPopupItem).toBe(result);
+    expect(trendComponent.trendPopupPoints.map(point => point.rank)).toEqual([12]);
+    expect(trendComponent.getTrackArtist(result)).toBe('Past Artist');
+    expect(trendComponent.getTrackCover(result)).toBe('cover.jpg');
+  });
+
   it('treats a genuinely new Top 10 song as a blue-flame hot debut', () => {
     const previous = makeSnapshot('2026-08-01', [
       {id: 'older-track', name: 'Older Track', artists: [{name: 'Artist'}]}

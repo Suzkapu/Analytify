@@ -196,7 +196,6 @@
         <span><i class="pi pi-history"></i></span>
         <div>
           <strong>Past rankings</strong>
-          <small>Saved {{ selectedCategory === 'artists' ? 'artists' : 'songs' }} that are no longer in the current list</small>
         </div>
         <i *ngIf="isSearchingPastStats" class="pi pi-spin pi-spinner"></i>
       </div>
@@ -204,17 +203,16 @@
       <p *ngIf="!isSearchingPastStats && !pastStatsSearchError && pastTopResults.length === 0"
         class="past-stats-message">No former ranking matches this search.</p>
       <div *ngIf="pastTopResults.length" class="past-stats-grid">
-        <a *ngFor="let item of pastTopResults" class="past-stats-card"
-          [href]="item.spotifyUrl || null" [attr.target]="item.spotifyUrl ? '_blank' : null"
-          [attr.rel]="item.spotifyUrl ? 'noopener noreferrer' : null">
+        <button *ngFor="let item of pastTopResults" type="button" class="past-stats-card"
+          [attr.aria-label]="'View position history for ' + item.name"
+          title="View history graph" (click)="openPastTopResult(item)">
           <img *ngIf="item.imageUrl" [src]="item.imageUrl" alt="" loading="lazy" decoding="async">
           <span *ngIf="!item.imageUrl" class="past-stats-placeholder"><i class="pi pi-music"></i></span>
           <span class="past-stats-copy">
             <strong>{{ item.name }}</strong><small *ngIf="item.subtitle">{{ item.subtitle }}</small>
-            <em>Best #{{ item.bestRank }} · last seen {{ item.lastSeen }} · {{ item.appearances }} {{ item.appearances === 1 ? 'snapshot' : 'snapshots' }}</em>
           </span>
-          <i *ngIf="item.spotifyUrl" class="pi pi-external-link"></i>
-        </a>
+          <i class="pi pi-chart-line" aria-hidden="true"></i>
+        </button>
       </div>
     </section>
 

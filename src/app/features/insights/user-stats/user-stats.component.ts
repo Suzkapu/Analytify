@@ -1587,6 +1587,10 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     void this.openTrendPopup(item, category);
   }
 
+  openPastTopResult(item: PastTopItem): void {
+    void this.openTrendPopup(item, item.kind === 'artist' ? 'artists' : 'tracks');
+  }
+
   async openTrendPopup(item: any, category: 'tracks' | 'artists' | 'genres') {
     if (this.isSpyMode) return;
     const range = this.selectedRange;
@@ -1599,7 +1603,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     const supabaseUserId = this.authService.getSupabaseUserId();
     let cloudPoints: any[] = [];
 
-    if (hasUnloaded && this.authService.isBackupActive() && supabaseUserId) {
+    const isPastSearchResult = item?.kind === 'track' || item?.kind === 'artist';
+    if ((hasUnloaded || isPastSearchResult) && this.authService.isBackupActive() && supabaseUserId) {
       this.isLoadingTrendData = true;
       try {
         const identities = category === 'tracks'
@@ -1897,7 +1902,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       track.albumCover,
       track.album?.images?.[0]?.url,
       track.album?.image_url,
-      track.image_url
+      track.image_url,
+      track.imageUrl
     ];
     for (const url of candidates) {
       if (!this.isPlaceholderImage(url)) return url;
@@ -1914,6 +1920,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     if (typeof track?.artist === 'string') return track.artist;
     if (typeof track?.artist?.name === 'string') return track.artist.name;
     if (typeof track?.artist_name === 'string') return track.artist_name;
+    if (typeof track?.subtitle === 'string') return track.subtitle;
     return track?.artists?.[0]?.name || '';
   }
 
