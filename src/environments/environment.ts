@@ -1,3 +1,5 @@
+import {HOSTED_SPOTIFY_SCOPES} from './spotify-scopes';
+
 export const environment = {
   production: true,
   spotifyUrl: 'https://api.spotify.com/v1',
@@ -12,14 +14,5 @@ export const environment = {
   spotifyRedirectUri: 'https://analytify.dynv6.net/callback',
   personalSpotifyRedirectUri: 'https://analytify.dynv6.net/spotify/callback',
   compareRoomRedirectUri: 'https://analytify.dynv6.net/compare-room/callback',
-  spotifyScopes: [
-    'user-read-private',
-    'user-top-read',
-    'user-read-recently-played',
-    'playlist-read-private',
-    'playlist-read-collaborative',
-    'playlist-modify-public',
-    'playlist-modify-private',
-    'user-library-read'
-  ].join(' ')
+  spotifyScopes: HOSTED_SPOTIFY_SCOPES.join(' ')
 };

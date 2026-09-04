@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
 import {CompareRoomAuthRequest, SpotifyTransientSession} from './compare-room.models';
 import {firstValueFrom} from 'rxjs';
+import {COMPARE_ROOM_SPOTIFY_SCOPES} from '@env/spotify-scopes';
 
 @Injectable({providedIn: 'root'})
 export class TransientParticipantAuthService {
@@ -58,18 +59,11 @@ export class TransientParticipantAuthService {
     };
     sessionStorage.setItem(this.requestKey, JSON.stringify(request));
 
-    const scopes = [
-      'user-read-private',
-      'user-library-read',
-      'playlist-read-private',
-      'playlist-read-collaborative',
-      'playlist-modify-private'
-    ].join(' ');
     const params = new URLSearchParams({
       response_type: 'code',
       client_id: clientId,
       redirect_uri: environment.compareRoomRedirectUri,
-      scope: scopes,
+      scope: COMPARE_ROOM_SPOTIFY_SCOPES.join(' '),
       state: request.state,
       code_challenge_method: 'S256',
       code_challenge: challenge,

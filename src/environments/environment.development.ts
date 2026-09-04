@@ -1,3 +1,5 @@
+import {HOSTED_SPOTIFY_SCOPES} from './spotify-scopes';
+
 export const environment = {
   production: false,
   spotifyUrl: 'https://api.spotify.com/v1',
@@ -15,14 +17,5 @@ export const environment = {
   spotifyRedirectUri: 'http://127.0.0.1:4200/callback',
   personalSpotifyRedirectUri: 'http://127.0.0.1:4200/spotify/callback',
   compareRoomRedirectUri: 'http://127.0.0.1:4200/compare-room/callback',
-  spotifyScopes: [
-    'user-read-private',
-    'user-top-read',
-    'user-read-recently-played',
-    'playlist-read-private',
-    'playlist-read-collaborative',
-    'playlist-modify-public',
-    'playlist-modify-private',
-    'user-library-read'
-  ].join(' ')
+  spotifyScopes: HOSTED_SPOTIFY_SCOPES.join(' ')
 };
