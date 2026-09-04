@@ -210,6 +210,30 @@ describe('SharedPlaylistsComponent', () => {
     expect(component.successMessage).toContain('Stats Owner');
   });
 
+  it('uses a themed stats-user picker with readable request states', async () => {
+    statsSharing.listAvailableUsers.and.resolveTo([
+      {userId: 'available', displayName: 'New listener', imageUrl: '', requestId: null, requestStatus: null},
+      {userId: 'approved', displayName: 'Already sharing', imageUrl: '', requestId: 'request', requestStatus: 'approved'}
+    ]);
+    await component.openShareDialog();
+    await component.selectShareMode('stats');
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.stats-user-picker select')).toBeNull();
+    (fixture.nativeElement.querySelector('.stats-user-picker-trigger') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    const options = Array.from(
+      fixture.nativeElement.querySelectorAll('.stats-user-picker-option')
+    ) as HTMLButtonElement[];
+
+    expect(options[1].disabled).toBeTrue();
+    expect(options[1].textContent).toContain('Already shared');
+    options[0].click();
+    fixture.detectChanges();
+    expect(component.selectedStatsOwnerId).toBe('available');
+    expect(fixture.nativeElement.querySelector('.stats-user-picker-menu')).toBeNull();
+  });
+
   it('opens a custom consent popup for the oldest pending request and records agreement', async () => {
     statsSharing.listAccessRequests.and.resolveTo([{
       id: 'request-id', ownerUserId: 'me', viewerUserId: 'viewer-id',
@@ -225,6 +249,25 @@ describe('SharedPlaylistsComponent', () => {
 
     expect(statsSharing.respondToRequest).toHaveBeenCalledOnceWith('request-id', true);
     expect(component.consentRequest).toBeNull();
+  });
+
+  it('keeps a failed consent request visible and reports the RPC error inside the popup', async () => {
+    const request = {
+      id: 'request-id', ownerUserId: 'me', viewerUserId: 'viewer-id',
+      ownerDisplayName: 'Me', ownerImageUrl: '', viewerDisplayName: 'Viewer', viewerImageUrl: '',
+      status: 'pending', requestedAt: '2026-09-01T10:00:00Z', respondedAt: null,
+      revokedAt: null, updatedAt: '2026-09-01T10:00:00Z', viewerRole: 'owner'
+    } as const;
+    statsSharing.listAccessRequests.and.resolveTo([request]);
+    statsSharing.respondToRequest.and.rejectWith(new Error('The request could not be saved.'));
+    await component.ngOnInit();
+
+    await component.respondToStatsRequest(true);
+    fixture.detectChanges();
+
+    expect(component.consentRequest?.id).toBe('request-id');
+    expect(fixture.nativeElement.querySelector('.consent-modal [role="alert"]')?.textContent)
+      .toContain('The request could not be saved.');
   });
 
   it('allows either side to revoke a per-user stats grant', async () => {

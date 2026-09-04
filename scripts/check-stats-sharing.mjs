@@ -5,6 +5,10 @@ const migration = readFileSync(
   new URL('../supabase/migrations/20260902190000_stats_spy_mode.sql', import.meta.url),
   'utf8'
 ).toLowerCase();
+const responseFix = readFileSync(
+  new URL('../supabase/migrations/20260904170000_fix_stats_access_response.sql', import.meta.url),
+  'utf8'
+).toLowerCase();
 const service = readFileSync(
   new URL('../src/app/core/sharing/stats-sharing.service.ts', import.meta.url),
   'utf8'
@@ -38,7 +42,16 @@ assert.match(migration, /owner_user_id <> auth\.uid\(\)[\s\S]*raise exception 'o
 assert.match(migration, /auth\.uid\(\) not in \(v_request\.owner_user_id, v_request\.viewer_user_id\)/);
 assert.doesNotMatch(migration, /create policy[\s\S]{0,1200}stats_snapshots[\s\S]{0,500}approved/);
 
+assert.match(responseFix, /create or replace function public\.answer_stats_access_request/);
+assert.match(responseFix, /p_decision text/);
+assert.match(responseFix, /owner_user_id = auth\.uid\(\)/);
+assert.match(responseFix, /status = 'pending'/);
+assert.match(responseFix, /if v_request\.status = p_decision then/);
+assert.match(responseFix, /revoke all on function public\.answer_stats_access_request\(uuid, text\) from public/);
+assert.match(responseFix, /grant execute on function public\.answer_stats_access_request\(uuid, text\) to authenticated/);
+
 assert.match(service, /rpc\('get_shared_stats_snapshot'/);
+assert.match(service, /rpc\('answer_stats_access_request'/);
 assert.match(statsPage, /if \(this\.isSpyMode\) \{[\s\S]*await this\.loadSharedStats\(loadSequence\);[\s\S]*return;/);
 
 console.log('Stats sharing consent and isolation checks passed.');

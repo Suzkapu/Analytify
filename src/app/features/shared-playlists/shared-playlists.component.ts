@@ -36,9 +36,11 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   availableStatsUsers: StatsShareableUser[] = [];
   statsAccessRequests: StatsAccessRequest[] = [];
   selectedStatsOwnerId = '';
+  isStatsUserPickerOpen = false;
   isLoadingStatsUsers = false;
   isRequestingStats = false;
   consentRequest: StatsAccessRequest | null = null;
+  consentError = '';
   busyStatsRequestId = '';
 
   private unsubscribeFromShareChanges: (() => void) | null = null;
@@ -141,6 +143,7 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
       this.isLoadingStatsUsers = true;
       this.availableStatsUsers = [];
       this.selectedStatsOwnerId = '';
+      this.isStatsUserPickerOpen = false;
       try {
         this.availableStatsUsers = await this.statsSharing.listAvailableUsers();
       } catch (error) {
@@ -176,6 +179,7 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     this.availableStatsUsers = [];
     this.selectedPlaylistId = '';
     this.selectedStatsOwnerId = '';
+    this.isStatsUserPickerOpen = false;
     this.shareLink = '';
     this.shareError = '';
     this.shareLinkCopied = false;
@@ -203,10 +207,32 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleStatsUserPicker(): void {
+    if (this.isLoadingStatsUsers || this.isRequestingStats) return;
+    this.isStatsUserPickerOpen = !this.isStatsUserPickerOpen;
+  }
+
+  selectStatsOwner(user: StatsShareableUser): void {
+    if (user.requestStatus === 'pending' || user.requestStatus === 'approved') return;
+    this.selectedStatsOwnerId = user.userId;
+    this.isStatsUserPickerOpen = false;
+  }
+
+  statsUserStatusLabel(user: StatsShareableUser): string {
+    switch (user.requestStatus) {
+      case 'approved': return 'Already shared';
+      case 'pending': return 'Awaiting reply';
+      case 'declined': return 'Declined · request again';
+      case 'revoked': return 'Revoked · request again';
+      default: return 'Available to request';
+    }
+  }
+
   async respondToStatsRequest(approve: boolean): Promise<void> {
     const request = this.consentRequest;
     if (!request || this.busyStatsRequestId) return;
     this.busyStatsRequestId = request.id;
+    this.consentError = '';
     try {
       await this.statsSharing.respondToRequest(request.id, approve);
       this.successMessage = approve
@@ -214,9 +240,17 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
         : `You declined ${request.viewerDisplayName}’s stats request.`;
       this.dismissedConsentRequestIds.add(request.id);
       this.consentRequest = null;
-      await this.reload(true);
+      this.statsAccessRequests = this.statsAccessRequests.map(item => item.id === request.id
+        ? {
+          ...item,
+          status: approve ? 'approved' : 'declined',
+          respondedAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        }
+        : item);
+      this.selectNextConsentRequest();
     } catch (error) {
-      this.errorMessage = this.describeError(error);
+      this.consentError = this.describeError(error);
     } finally {
       this.busyStatsRequestId = '';
     }
@@ -350,6 +384,10 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     return playlist.id;
   }
 
+  trackStatsUser(_: number, user: StatsShareableUser): string {
+    return user.userId;
+  }
+
   private reloadSilently(): void {
     if (this.silentReloadPromise) return;
     this.silentReloadPromise = this.reload(true).finally(() => {
@@ -359,6 +397,7 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
 
   private selectNextConsentRequest(): void {
     if (this.consentRequest) return;
+    this.consentError = '';
     this.consentRequest = this.statsAccessRequests
       .filter(request => request.viewerRole === 'owner' && request.status === 'pending')
       .filter(request => !this.dismissedConsentRequestIds.has(request.id))

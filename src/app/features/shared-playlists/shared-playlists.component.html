@@ -196,16 +196,52 @@
     </ng-container>
 
     <ng-container *ngIf="shareMode === 'stats'">
-      <label class="share-playlist-picker">
-        <span>Registered user</span>
-        <select [(ngModel)]="selectedStatsOwnerId" [disabled]="isLoadingStatsUsers || isRequestingStats">
-          <option value="" disabled>{{ isLoadingStatsUsers ? 'Loading users…' : 'Select a user' }}</option>
-          <option *ngFor="let user of availableStatsUsers" [value]="user.userId"
-            [disabled]="user.requestStatus === 'pending' || user.requestStatus === 'approved'">
-            {{ user.displayName }}{{ user.requestStatus ? ' · ' + user.requestStatus : '' }}
-          </option>
-        </select>
-      </label>
+      <div class="share-playlist-picker stats-user-picker" (keydown.escape)="isStatsUserPickerOpen = false">
+        <span id="stats-user-picker-label">Registered user</span>
+        <button type="button" class="stats-user-picker-trigger"
+          aria-haspopup="listbox" [attr.aria-expanded]="isStatsUserPickerOpen"
+          aria-labelledby="stats-user-picker-label stats-user-picker-value"
+          [disabled]="isLoadingStatsUsers || isRequestingStats"
+          (click)="toggleStatsUserPicker()">
+          <ng-container *ngIf="selectedStatsOwner as user; else statsPickerPlaceholder">
+            <span class="stats-picker-avatar">
+              <img *ngIf="user.imageUrl" [src]="user.imageUrl" alt="">
+              <i *ngIf="!user.imageUrl" class="pi pi-user"></i>
+            </span>
+            <span class="stats-picker-copy" id="stats-user-picker-value">
+              <strong>{{ user.displayName }}</strong>
+              <small>{{ statsUserStatusLabel(user) }}</small>
+            </span>
+          </ng-container>
+          <ng-template #statsPickerPlaceholder>
+            <span class="stats-picker-avatar placeholder"><i class="pi" [ngClass]="isLoadingStatsUsers ? 'pi-spin pi-spinner' : 'pi-users'"></i></span>
+            <span class="stats-picker-copy" id="stats-user-picker-value">
+              <strong>{{ isLoadingStatsUsers ? 'Loading users…' : 'Select a user' }}</strong>
+              <small>{{ isLoadingStatsUsers ? 'Checking registered accounts' : 'Choose who you want to ask' }}</small>
+            </span>
+          </ng-template>
+          <i class="pi picker-chevron" [ngClass]="isStatsUserPickerOpen ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+        </button>
+
+        <div *ngIf="isStatsUserPickerOpen" class="stats-user-picker-menu" role="listbox"
+          aria-labelledby="stats-user-picker-label">
+          <button *ngFor="let user of availableStatsUsers; trackBy: trackStatsUser" type="button"
+            class="stats-user-picker-option" role="option"
+            [attr.aria-selected]="selectedStatsOwnerId === user.userId"
+            [disabled]="user.requestStatus === 'pending' || user.requestStatus === 'approved'"
+            (click)="selectStatsOwner(user)">
+            <span class="stats-picker-avatar">
+              <img *ngIf="user.imageUrl" [src]="user.imageUrl" alt="">
+              <i *ngIf="!user.imageUrl" class="pi pi-user"></i>
+            </span>
+            <span class="stats-picker-copy">
+              <strong>{{ user.displayName }}</strong>
+              <small>{{ statsUserStatusLabel(user) }}</small>
+            </span>
+            <i *ngIf="selectedStatsOwnerId === user.userId" class="pi pi-check picker-selected"></i>
+          </button>
+        </div>
+      </div>
       <p *ngIf="!isLoadingStatsUsers && availableStatsUsers.length === 0 && !shareError" class="share-picker-empty">
         No other Cloud Backup users are available.
       </p>
@@ -248,6 +284,7 @@
     <h2 id="stats-consent-title">Let {{ request.viewerDisplayName }} view your stats?</h2>
     <p>This shares your saved top songs, artists, and genres with this user only. It does not share your Spotify login or listening history.</p>
     <p><strong>You can revoke this access at any time from this page.</strong></p>
+    <div *ngIf="consentError" class="share-modal-error" role="alert">{{ consentError }}</div>
     <div class="share-modal-actions">
       <button type="button" class="share-primary" (click)="respondToStatsRequest(true)" [disabled]="!!busyStatsRequestId">
         <i class="pi pi-check"></i> Agree and share

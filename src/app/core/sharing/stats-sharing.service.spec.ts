@@ -59,8 +59,8 @@ describe('StatsSharingService', () => {
 
     expect(rpc.calls.allArgs()).toEqual([
       ['request_stats_access', {p_owner_user_id: 'owner-id'}],
-      ['respond_stats_access', {p_request_id: 'request-id', p_approve: true}],
-      ['respond_stats_access', {p_request_id: 'request-id', p_approve: false}],
+      ['answer_stats_access_request', {p_request_id: 'request-id', p_decision: 'approved'}],
+      ['answer_stats_access_request', {p_request_id: 'request-id', p_decision: 'declined'}],
       ['revoke_stats_access', {p_request_id: 'request-id'}]
     ]);
   });

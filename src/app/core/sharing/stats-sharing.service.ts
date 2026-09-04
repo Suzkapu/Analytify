@@ -54,9 +54,9 @@ export class StatsSharingService {
   }
 
   async respondToRequest(requestId: string, approve: boolean): Promise<void> {
-    const {error} = await this.supabase.client.rpc('respond_stats_access', {
+    const {error} = await this.supabase.client.rpc('answer_stats_access_request', {
       p_request_id: requestId,
-      p_approve: approve
+      p_decision: approve ? 'approved' : 'declined'
     });
     if (error) throw error;
   }
