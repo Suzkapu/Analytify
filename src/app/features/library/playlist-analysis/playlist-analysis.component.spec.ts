@@ -174,4 +174,143 @@ describe('PlaylistAnalysisComponent', () => {
     expect(load).toHaveBeenCalledTimes(1);
     finishInitialSync();
   });
+
+  it('detaches playlist A progress as soon as the route changes to playlist B', async () => {
+    const params = new Subject<Record<string, string>>();
+    const playlistAProgress = new Subject<any>();
+    let finishPlaylistBRestore!: () => void;
+    const playlistBRestore = new Promise<void>(resolve => finishPlaylistBRestore = resolve);
+    const storage = jasmine.createSpyObj<StorageService>('StorageService', [
+      'getItem', 'removeItem', 'restoreItemsFromCloud'
+    ]);
+    storage.getItem.and.returnValue(null);
+    storage.restoreItemsFromCloud.and.returnValue(playlistBRestore.then(() => 0));
+    const loader = jasmine.createSpyObj<PlaylistLoaderService>('PlaylistLoaderService', [
+      'getLoadingTask', 'readSourceManifest', 'isPlaylistSourceDirty',
+      'resolveExpectedPlaylistTotal', 'isCachedPlaylistComplete', 'sourceManifestKey',
+      'startLoadingTask', 'startNewFavouriteTracksCheck', 'clearLoadingTask'
+    ]);
+    loader.getLoadingTask.and.callFake(id => id === 'playlist-a'
+      ? {mode: 'full', progress$: playlistAProgress} as any
+      : undefined);
+    loader.readSourceManifest.and.returnValue(null);
+    loader.isPlaylistSourceDirty.and.returnValue(false);
+    loader.resolveExpectedPlaylistTotal.and.callFake((_userId, _playlistId, total) => total);
+    loader.isCachedPlaylistComplete.and.returnValue(false);
+    loader.sourceManifestKey.and.callFake((_userId, playlistId) => `manifest_${playlistId}`);
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      declarations: [PlaylistAnalysisComponent],
+      providers: [
+        {provide: ActivatedRoute, useValue: {params}},
+        {provide: Router, useValue: {navigate: jasmine.createSpy('navigate')}},
+        {
+          provide: SpotifyAuthService,
+          useValue: {
+            isAuthenticated: () => false,
+            getUserId: () => 'user',
+            isBackupActive: () => true
+          }
+        },
+        {provide: StorageService, useValue: storage},
+        {provide: PlaylistLoaderService, useValue: loader}
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
+    });
+    const routeFixture = TestBed.createComponent(PlaylistAnalysisComponent);
+    const routeComponent = routeFixture.componentInstance;
+    routeFixture.detectChanges();
+
+    params.next({id: 'playlist-a'});
+    params.next({id: 'playlist-b'});
+    await Promise.resolve();
+    expect(playlistAProgress.observers.length).toBe(0);
+    playlistAProgress.next({
+      isLoadingTracks: false,
+      isLoadingArtists: false,
+      isRefreshing: false,
+      loadedTracksCount: 1,
+      totalTracks: 1,
+      loadedArtistsDetailsCount: 1,
+      totalUniqueArtists: 1,
+      playlistName: 'Playlist A',
+      cooldownMessage: '',
+      artists: [],
+      isComplete: true
+    });
+
+    expect(routeComponent.playlistId).toBe('playlist-b');
+    expect(routeComponent.playlistName).not.toBe('Playlist A');
+    expect(loader.clearLoadingTask).not.toHaveBeenCalledWith('playlist-b');
+
+    finishPlaylistBRestore();
+    routeFixture.destroy();
+  });
+
+  it('ignores playlist A cloud restoration after playlist B has taken over', async () => {
+    const params = new Subject<Record<string, string>>();
+    let finishPlaylistARestore!: () => void;
+    let finishPlaylistBRestore!: () => void;
+    const playlistARestore = new Promise<void>(resolve => finishPlaylistARestore = resolve);
+    const playlistBRestore = new Promise<void>(resolve => finishPlaylistBRestore = resolve);
+    const storage = jasmine.createSpyObj<StorageService>('StorageService', [
+      'getItem', 'removeItem', 'restoreItemsFromCloud'
+    ]);
+    storage.getItem.and.returnValue(null);
+    storage.restoreItemsFromCloud.and.callFake(keys =>
+      (keys[0].endsWith('_playlist-a') ? playlistARestore : playlistBRestore).then(() => 0)
+    );
+    const loader = jasmine.createSpyObj<PlaylistLoaderService>('PlaylistLoaderService', [
+      'getLoadingTask', 'readSourceManifest', 'isPlaylistSourceDirty',
+      'resolveExpectedPlaylistTotal', 'isCachedPlaylistComplete', 'sourceManifestKey',
+      'startLoadingTask', 'startNewFavouriteTracksCheck', 'clearLoadingTask'
+    ]);
+    loader.getLoadingTask.and.returnValue(undefined);
+    loader.readSourceManifest.and.returnValue(null);
+    loader.isPlaylistSourceDirty.and.returnValue(false);
+    loader.resolveExpectedPlaylistTotal.and.callFake((_userId, _playlistId, total) => total);
+    loader.isCachedPlaylistComplete.and.returnValue(false);
+    loader.sourceManifestKey.and.callFake((_userId, playlistId) => `manifest_${playlistId}`);
+    loader.startLoadingTask.and.returnValue({mode: 'full', progress$: EMPTY} as any);
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      declarations: [PlaylistAnalysisComponent],
+      providers: [
+        {provide: ActivatedRoute, useValue: {params}},
+        {provide: Router, useValue: {navigate: jasmine.createSpy('navigate')}},
+        {
+          provide: SpotifyAuthService,
+          useValue: {
+            isAuthenticated: () => false,
+            getUserId: () => 'user',
+            isBackupActive: () => true
+          }
+        },
+        {provide: StorageService, useValue: storage},
+        {provide: PlaylistLoaderService, useValue: loader}
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
+    });
+    const routeFixture = TestBed.createComponent(PlaylistAnalysisComponent);
+    const routeComponent = routeFixture.componentInstance;
+    routeFixture.detectChanges();
+
+    params.next({id: 'playlist-a'});
+    params.next({id: 'playlist-b'});
+    finishPlaylistBRestore();
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(loader.startLoadingTask).toHaveBeenCalledTimes(1);
+    expect(loader.startLoadingTask.calls.mostRecent().args[1]).toBe('playlist-b');
+
+    finishPlaylistARestore();
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(routeComponent.playlistId).toBe('playlist-b');
+    expect(loader.startLoadingTask).toHaveBeenCalledTimes(1);
+    routeFixture.destroy();
+  });
 });

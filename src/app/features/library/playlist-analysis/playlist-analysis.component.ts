@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { SpotifyAuthService } from "@core/auth/spotify-auth.service";
 import { StorageService } from "@core/data-access/storage/storage.service";
-import { Subscription } from 'rxjs';
+import {distinctUntilChanged, map, Subscription} from 'rxjs';
 import { PlaylistLoaderService } from "@core/sync/playlist-loader/playlist-loader.service";
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 
@@ -50,6 +50,8 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
 
 
   private loaderSubscription: Subscription | null = null;
+  private routeSubscription: Subscription | null = null;
+  private loadGeneration = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -60,20 +62,26 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.route.params.subscribe(async params => {
-      this.playlistId = params['id'];
+    this.routeSubscription = this.route.params.pipe(
+      map(params => params['id']),
+      distinctUntilChanged()
+    ).subscribe(playlistId => {
+      const loadGeneration = ++this.loadGeneration;
+      this.unsubscribeFromLoaderTask();
+      this.playlistId = playlistId;
+      this.resetPlaylistView();
       if (this.authService.isAuthenticated()) {
         void this.authService.ensureInitialSync().catch(() => {});
       }
-      await this.loadPlaylistData();
+      void this.loadPlaylistData(playlistId, loadGeneration);
     });
   }
 
   ngOnDestroy() {
-    if (this.loaderSubscription) {
-      this.loaderSubscription.unsubscribe();
-      this.loaderSubscription = null;
-    }
+    this.loadGeneration++;
+    this.routeSubscription?.unsubscribe();
+    this.routeSubscription = null;
+    this.unsubscribeFromLoaderTask();
   }
 
 
@@ -93,21 +101,25 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     return lastUpdated < cutoff.getTime();
   }
 
-  async loadPlaylistData() {
+  async loadPlaylistData(
+    playlistId: string = this.playlistId,
+    loadGeneration: number = this.loadGeneration
+  ) {
+    if (!this.isCurrentLoad(playlistId, loadGeneration)) return;
     this.isLoading = this.artists.length === 0;
     const userId = this.authService.getUserId() || 'anonymous';
-    const storageKey = `${userId}_${this.playlistId}`;
+    const storageKey = `${userId}_${playlistId}`;
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
 
     // Check if there is an active background task running for this playlist
-    const activeTask = this.playlistLoaderService.getLoadingTask(this.playlistId);
+    const activeTask = this.playlistLoaderService.getLoadingTask(playlistId);
     if (activeTask) {
       const storedArtists = this.storageService.getItem(storageKey);
       if (storedArtists) {
         try {
           this.artists = JSON.parse(storedArtists);
-          this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
-          this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
+          this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${playlistId}_Amount`) || '0');
+          this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${playlistId}_Name`) || '""');
           this.runAnalysis();
           this.isLoading = false;
         } catch (e) {
@@ -116,7 +128,9 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
       }
       this.subscribeToLoaderTask(
         activeTask,
-        activeTask.mode === 'incremental-new-only'
+        activeTask.mode === 'incremental-new-only',
+        playlistId,
+        loadGeneration
       );
       return;
     }
@@ -130,16 +144,16 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     let cachedTotalTracks = 0;
     let cachedTrackCount: number | null = null;
     let isComplete = false;
-    let sourceManifest = this.playlistLoaderService.readSourceManifest(userId, this.playlistId);
-    let sourceDirty = this.playlistLoaderService.isPlaylistSourceDirty(userId, this.playlistId);
+    let sourceManifest = this.playlistLoaderService.readSourceManifest(userId, playlistId);
+    let sourceDirty = this.playlistLoaderService.isPlaylistSourceDirty(userId, playlistId);
 
     const parseCachedArtists = () => {
       parsedArtists = [];
       isParseError = false;
       cachedTotalTracks = 0;
       cachedTrackCount = null;
-      sourceManifest = this.playlistLoaderService.readSourceManifest(userId, this.playlistId);
-      sourceDirty = this.playlistLoaderService.isPlaylistSourceDirty(userId, this.playlistId);
+      sourceManifest = this.playlistLoaderService.readSourceManifest(userId, playlistId);
+      sourceDirty = this.playlistLoaderService.isPlaylistSourceDirty(userId, playlistId);
       const parsedAmount = JSON.parse(
         this.storageService.getItem(`${storageKey}_Amount`) || '0'
       );
@@ -147,7 +161,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
         Number.isFinite(parsedAmount) && parsedAmount >= 0 ? parsedAmount : 0;
       cachedTotalTracks = this.playlistLoaderService.resolveExpectedPlaylistTotal(
         userId,
-        this.playlistId,
+        playlistId,
         cachedTotalTracks
       );
       if (storedArtists) {
@@ -189,16 +203,17 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     ) {
       this.storageService.removeItem(`${storageKey}_CachedTrackCount`);
       this.storageService.removeItem(
-        this.playlistLoaderService.sourceManifestKey(userId, this.playlistId)
+        this.playlistLoaderService.sourceManifestKey(userId, playlistId)
       );
       await this.storageService.restoreItemsFromCloud([
         storageKey,
         `${storageKey}_Amount`,
         `${storageKey}_Name`,
         `${storageKey}_CachedTrackCount`,
-        this.playlistLoaderService.sourceManifestKey(userId, this.playlistId),
+        this.playlistLoaderService.sourceManifestKey(userId, playlistId),
         lastUpdatedKey
-      ]);
+      ], () => this.isCurrentLoad(playlistId, loadGeneration));
+      if (!this.isCurrentLoad(playlistId, loadGeneration)) return;
       storedArtists = this.storageService.getItem(storageKey);
       lastUpdated = this.storageService.getItem(lastUpdatedKey);
       isExpired = this.isCacheExpired(lastUpdated);
@@ -206,16 +221,16 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     }
 
     if (storedArtists && !isExpired && !isParseError && isComplete && !sourceDirty) {
-      console.log(`[Analysis] Loading playlist ${this.playlistId} data from the local IndexedDB cache.`);
+      console.log(`[Analysis] Loading playlist ${playlistId} data from the local IndexedDB cache.`);
       try {
         this.artists = parsedArtists;
         this.totalTracks = cachedTotalTracks;
-        this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
+        this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${playlistId}_Name`) || '""');
         this.runAnalysis();
         this.isLoading = false;
       } catch (e) {
         console.warn('Failed to load playlist analysis data from cache:', e);
-        this.triggerApiLoad(false, isExpired);
+        this.triggerApiLoad(false, isExpired, false, playlistId, loadGeneration);
       }
     } else {
       this.totalTracks = cachedTotalTracks;
@@ -225,8 +240,8 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
       if (storedArtists && !isParseError) {
         try {
           this.artists = parsedArtists;
-          this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Amount`) || '0');
-          this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${this.playlistId}_Name`) || '""');
+          this.totalTracks = JSON.parse(this.storageService.getItem(`${userId}_${playlistId}_Amount`) || '0');
+          this.playlistName = JSON.parse(this.storageService.getItem(`${userId}_${playlistId}_Name`) || '""');
           this.runAnalysis();
         } catch (e) {
           console.warn('Failed to load temporary stale analysis data:', e);
@@ -236,7 +251,9 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
       this.triggerApiLoad(
         !!storedArtists && !isParseError,
         isExpired || !isComplete || sourceDirty,
-        this.playlistId === 'fav' && !!sourceManifest && isComplete
+        playlistId === 'fav' && !!sourceManifest && isComplete,
+        playlistId,
+        loadGeneration
       );
     }
   }
@@ -244,31 +261,36 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
   triggerApiLoad(
     isBackgroundRefresh: boolean,
     isDailyFullSync: boolean = false,
-    preferIncrementalLikedSongs: boolean = false
+    preferIncrementalLikedSongs: boolean = false,
+    playlistId: string = this.playlistId,
+    loadGeneration: number = this.loadGeneration
   ) {
+    if (!this.isCurrentLoad(playlistId, loadGeneration)) return;
     const userId = this.authService.getUserId() || 'anonymous';
-    
-    // Cancel previous loader task subscription if any
-    if (this.loaderSubscription) {
-      this.loaderSubscription.unsubscribe();
-      this.loaderSubscription = null;
-    }
+
+    this.unsubscribeFromLoaderTask();
 
     const task = preferIncrementalLikedSongs
       ? this.playlistLoaderService.startNewFavouriteTracksCheck(userId, true)
       : this.playlistLoaderService.startLoadingTask(
           userId,
-          this.playlistId,
+          playlistId,
           isBackgroundRefresh,
           isDailyFullSync
         );
     if (!task) return;
-    this.subscribeToLoaderTask(task);
+    this.subscribeToLoaderTask(task, false, playlistId, loadGeneration);
   }
 
-  private subscribeToLoaderTask(task: any, silent: boolean = false) {
+  private subscribeToLoaderTask(
+    task: any,
+    silent: boolean = false,
+    playlistId: string = this.playlistId,
+    loadGeneration: number = this.loadGeneration
+  ) {
     const userId = this.authService.getUserId() || 'anonymous';
     this.loaderSubscription = task.progress$.subscribe((progress: any) => {
+      if (!this.isCurrentLoad(playlistId, loadGeneration)) return;
       if (!silent) {
         this.isLoading = (progress.isLoadingTracks || progress.isLoadingArtists) && !progress.isRefreshing && progress.artists.length === 0;
         this.isLoadingTracks = progress.isLoadingTracks;
@@ -287,7 +309,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
         this.isLoadingTracks = false;
         this.isLoadingArtists = false;
         this.isRefreshing = false;
-        const storedArtists = this.storageService.getItem(`${userId}_${this.playlistId}`);
+        const storedArtists = this.storageService.getItem(`${userId}_${playlistId}`);
         if (storedArtists) {
           try {
             this.artists = JSON.parse(storedArtists);
@@ -296,15 +318,38 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
             console.warn('Failed to parse artists on completion:', e);
           }
         }
-        this.playlistLoaderService.clearLoadingTask(this.playlistId);
-        if (this.loaderSubscription) {
-          this.loaderSubscription.unsubscribe();
-          this.loaderSubscription = null;
-        }
+        this.playlistLoaderService.clearLoadingTask(playlistId);
+        this.unsubscribeFromLoaderTask();
       } else if (!silent) {
         this.artists = (this.artists.length === 0 || !progress.isRefreshing) ? progress.artists : this.artists;
       }
     });
+  }
+
+  private isCurrentLoad(playlistId: string, loadGeneration: number): boolean {
+    return this.playlistId === playlistId && this.loadGeneration === loadGeneration;
+  }
+
+  private unsubscribeFromLoaderTask(): void {
+    this.loaderSubscription?.unsubscribe();
+    this.loaderSubscription = null;
+  }
+
+  private resetPlaylistView(): void {
+    this.playlistName = '';
+    this.artists = [];
+    this.isLoading = true;
+    this.isRefreshing = false;
+    this.refreshingArtists = [];
+    this.loadedTracksCount = 0;
+    this.totalTracks = 0;
+    this.cooldownMessage = '';
+    this.isLoadingTracks = false;
+    this.isLoadingArtists = false;
+    this.loadedArtistsDetailsCount = 0;
+    this.totalUniqueArtists = 0;
+    this.requestedArtistIds.clear();
+    this.runAnalysis();
   }
 
   runAnalysis() {
