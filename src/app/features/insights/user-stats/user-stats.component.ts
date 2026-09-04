@@ -343,6 +343,26 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
     parseCachedStats();
 
+    const enrichParsedGenres = async () => {
+      if (parsedGenres.length > 0 || !parsedArtists.some((artist: any) => !!artist?.id)) return;
+      try {
+        const enriched = await this.enrichArtistGenres(parsedArtists);
+        if (!isCurrentLoad()) return;
+        if (enriched.genres.length > 0) {
+          parsedArtists = enriched.artists;
+          parsedGenres = enriched.genres;
+          cachedArtists = JSON.stringify(parsedArtists);
+          cachedGenres = JSON.stringify(parsedGenres);
+          this.storageService.setItem(artistsKey, cachedArtists);
+          this.storageService.setItem(genresKey, cachedGenres);
+        }
+      } catch (error) {
+        console.warn('[Stats] Could not enrich cached artist genres.', error);
+      }
+    };
+    await enrichParsedGenres();
+    if (!isCurrentLoad()) return;
+
     const hasUsableCachedStats = () =>
       !isCacheIncomplete &&
       (parsedTracks.length > 0 || parsedArtists.length > 0 || parsedGenres.length > 0);
@@ -373,6 +393,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       cachedArtists = this.storageService.getItem(artistsKey);
       cachedGenres = this.storageService.getItem(genresKey);
       parseCachedStats();
+      await enrichParsedGenres();
+      if (!isCurrentLoad()) return;
     }
 
     if (!isExpired && !isCacheIncomplete) {
@@ -407,8 +429,18 @@ export class UserStatsComponent implements OnInit, OnDestroy {
         if (dbSnapshot) {
           console.log(`[Stats] Cache missing/expired. Fetching a recent stats snapshot for ${range} directly from Supabase Cloud...`);
           const loadedTracks = dbSnapshot.topTracks;
-          const loadedArtists = dbSnapshot.topArtists;
-          const loadedGenres = dbSnapshot.topGenres || [];
+          let loadedArtists = dbSnapshot.topArtists;
+          let loadedGenres = dbSnapshot.topGenres || [];
+          if (loadedGenres.length === 0 && loadedArtists.some((artist: any) => !!artist?.id)) {
+            try {
+              const enriched = await this.enrichArtistGenres(loadedArtists);
+              if (!isCurrentLoad()) return;
+              loadedArtists = enriched.artists;
+              loadedGenres = enriched.genres;
+            } catch (error) {
+              console.warn('[Stats] Could not enrich restored artist genres.', error);
+            }
+          }
           this.topTracks = loadedTracks;
           this.topArtists = loadedArtists;
           this.topGenres = loadedGenres;
@@ -459,20 +491,10 @@ export class UserStatsComponent implements OnInit, OnDestroy {
           let calculatedGenres = this.buildGenres(loadedArtists);
           if (calculatedGenres.length === 0 && loadedArtists.some((artist: any) => !!artist?.id)) {
             try {
-              const enriched = await firstValueFrom(
-                this.spotifyDataService.getArtistsByIds(
-                  loadedArtists.map((artist: any) => artist?.id).filter(Boolean)
-                )
-              );
+              const enriched = await this.enrichArtistGenres(loadedArtists);
               if (!isCurrentLoad()) return;
-              const enrichedById = new Map(
-                (enriched?.artists || []).map((artist: any) => [artist.id, artist])
-              );
-              loadedArtists = loadedArtists.map((artist: any) => ({
-                ...artist,
-                ...(enrichedById.get(artist.id) || {})
-              }));
-              calculatedGenres = this.buildGenres(loadedArtists);
+              loadedArtists = enriched.artists;
+              calculatedGenres = enriched.genres;
             } catch (error) {
               console.warn('[Stats] Could not enrich artist genres; keeping the last usable genre cache.', error);
             }
@@ -544,6 +566,23 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
   calculateGenres() {
     this.topGenres = this.buildGenres(this.topArtists);
+  }
+
+  private async enrichArtistGenres(artists: any[]): Promise<{artists: any[]; genres: any[]}> {
+    const directGenres = this.buildGenres(artists);
+    if (directGenres.length > 0) return {artists, genres: directGenres};
+
+    const ids = artists.map((artist: any) => artist?.id).filter(Boolean);
+    if (ids.length === 0) return {artists, genres: []};
+    const enriched = await firstValueFrom(this.spotifyDataService.getArtistsByIds(ids));
+    const enrichedById = new Map<string, any>(
+      (enriched?.artists || []).map((artist: any) => [artist.id, artist])
+    );
+    const enrichedArtists = artists.map((artist: any) => ({
+      ...artist,
+      ...(enrichedById.get(artist.id) || {})
+    }));
+    return {artists: enrichedArtists, genres: this.buildGenres(enrichedArtists)};
   }
 
   private buildGenres(artists: any[]): { name: string; count: number; percentage: number; percentage_simple: number }[] {

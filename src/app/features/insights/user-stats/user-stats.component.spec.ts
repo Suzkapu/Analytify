@@ -480,6 +480,38 @@ describe('UserStatsComponent trends', () => {
     expect(genreComponent.topGenres.map(genre => genre.name)).toEqual(['indie rock']);
   });
 
+  it('repairs fresh cached stats with missing genres immediately', async () => {
+    const values: Record<string, string> = {
+      'user_stats_short_term_tracks': JSON.stringify([{id: 'track'}]),
+      'user_stats_short_term_artists': JSON.stringify([{id: 'artist', genres: []}]),
+      'user_stats_short_term_genres': JSON.stringify([]),
+      'user_stats_short_term_lastUpdated': Date.now().toString()
+    };
+    const spotify = {
+      getArtistsByIds: jasmine.createSpy('getArtistsByIds')
+        .and.returnValue(of({artists: [{id: 'artist', genres: ['indie rock']}]})),
+      getUserTopArtists: jasmine.createSpy('getUserTopArtists'),
+      getUserTopTracks: jasmine.createSpy('getUserTopTracks')
+    };
+    const cachedComponent = new UserStatsComponent(
+      spotify as any,
+      {getUserId: () => 'user', getSupabaseUserId: () => null, isBackupActive: () => false} as any,
+      {
+        getItem: (key: string) => values[key] ?? null,
+        setItem: (key: string, value: string) => values[key] = value,
+        getStatsHistory: () => Promise.resolve([]),
+        saveStatsHistory: () => Promise.resolve()
+      } as any,
+      null as any
+    );
+
+    await cachedComponent.loadStats();
+
+    expect(spotify.getArtistsByIds).toHaveBeenCalledOnceWith(['artist']);
+    expect(spotify.getUserTopArtists).not.toHaveBeenCalled();
+    expect(cachedComponent.topGenres.map(genre => genre.name)).toEqual(['indie rock']);
+  });
+
   it('loads one item trend instead of every historical Top list', async () => {
     const supabase = {
       loadStatsItemTrend: jasmine.createSpy('loadStatsItemTrend').and.resolveTo([{
