@@ -45,6 +45,7 @@ integrationDescribe('real Supabase-first playlist and stats loading', () => {
       'getSupabaseUserId',
       'isBackupActive',
       'isAuthenticated',
+      'isPersonalAppConnection',
       'ensureInitialSync',
       'getAccessToken',
       'isTokenExpired',
@@ -54,6 +55,7 @@ integrationDescribe('real Supabase-first playlist and stats loading', () => {
     auth.getSupabaseUserId.and.returnValue(cloudUserId);
     auth.isBackupActive.and.returnValue(true);
     auth.isAuthenticated.and.returnValue(false);
+    auth.isPersonalAppConnection.and.returnValue(false);
     auth.ensureInitialSync.and.resolveTo();
     auth.getAccessToken.and.returnValue('unused-ci-spotify-token');
     auth.isTokenExpired.and.returnValue(false);
