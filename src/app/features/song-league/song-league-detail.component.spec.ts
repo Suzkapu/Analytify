@@ -25,7 +25,9 @@ describe('SongLeagueDetailComponent notifications', () => {
       deviceSubscribed: true, songLeagueEnabled: false, active: false
     });
     const songLeague = jasmine.createSpyObj<SongLeagueService>('SongLeagueService', [
-      'currentUserId', 'loadDashboard', 'subscribeToLeague', 'isFridayInTimezone'
+      'currentUserId', 'loadDashboard', 'ensureMemberReadyForLeague',
+      'subscribeToLeague', 'isFridayInTimezone', 'submitRecommendation',
+      'syncWeeklyPlaylists'
     ]);
     songLeague.currentUserId.and.resolveTo('member');
     songLeague.loadDashboard.and.resolveTo({
@@ -39,6 +41,11 @@ describe('SongLeagueDetailComponent notifications', () => {
     });
     songLeague.subscribeToLeague.and.returnValue(jasmine.createSpy('unsubscribe'));
     songLeague.isFridayInTimezone.and.returnValue(false);
+    songLeague.ensureMemberReadyForLeague.and.resolveTo({
+      refreshed: false, snapshotDate: '2026-09-04'
+    });
+    songLeague.submitRecommendation.and.resolveTo('recommendation');
+    songLeague.syncWeeklyPlaylists.and.resolveTo();
 
     TestBed.configureTestingModule({
       imports: [SharedModule],
@@ -68,5 +75,42 @@ describe('SongLeagueDetailComponent notifications', () => {
 
     expect(notifications.setSongLeagueEnabled).toHaveBeenCalledOnceWith(false);
     expect(component.notificationSettings.songLeagueEnabled).toBeFalse();
+  });
+
+  it('repairs member sync and refreshes stale stats while the league is loading', async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const songLeague = TestBed.inject(SongLeagueService) as jasmine.SpyObj<SongLeagueService>;
+    expect(songLeague.ensureMemberReadyForLeague).toHaveBeenCalledOnceWith(
+      'league', 'Europe/Vienna'
+    );
+  });
+
+  it('rechecks today\'s stats immediately before locking a recommendation', async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const songLeague = TestBed.inject(SongLeagueService) as jasmine.SpyObj<SongLeagueService>;
+    songLeague.ensureMemberReadyForLeague.calls.reset();
+    const callOrder: string[] = [];
+    songLeague.ensureMemberReadyForLeague.and.callFake(async () => {
+      callOrder.push('refresh');
+      return {refreshed: false, snapshotDate: '2026-09-04'};
+    });
+    songLeague.submitRecommendation.and.callFake(async () => {
+      callOrder.push('submit');
+      return 'recommendation';
+    });
+    component.selectedTrack = {
+      id: 'track', name: 'Fresh pick', artists: [{id: 'artist', name: 'Artist'}],
+      album: {id: 'album', name: 'Album', images: []}
+    };
+
+    await component.submitRecommendation();
+
+    expect(songLeague.ensureMemberReadyForLeague).toHaveBeenCalledOnceWith(
+      'league', 'Europe/Vienna'
+    );
+    expect(callOrder).toEqual(['refresh', 'submit']);
   });
 });

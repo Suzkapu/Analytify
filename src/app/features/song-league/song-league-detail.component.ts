@@ -51,6 +51,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   private leagueId = '';
   private unsubscribeLeague: (() => void) | null = null;
   private reloadPending = false;
+  private memberReady = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -93,7 +94,15 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     if (!silent) this.isLoading = true;
     this.errorMessage = '';
     try {
-      this.dashboard = await this.songLeague.loadDashboard(this.leagueId);
+      const dashboard = await this.songLeague.loadDashboard(this.leagueId);
+      this.dashboard = dashboard;
+      if (!this.memberReady && !dashboard.league.isDemo) {
+        await this.songLeague.ensureMemberReadyForLeague(
+          this.leagueId,
+          dashboard.league.timezone
+        );
+        this.memberReady = true;
+      }
     } catch (error) {
       this.errorMessage = this.describeError(error, 'The Song League could not be loaded.');
     } finally {
@@ -160,6 +169,13 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     this.successMessage = '';
     this.playlistWarning = '';
     try {
+      if (!this.dashboard?.league.isDemo) {
+        await this.songLeague.ensureMemberReadyForLeague(
+          this.leagueId,
+          this.dashboard?.league.timezone || 'Europe/Vienna'
+        );
+        this.memberReady = true;
+      }
       await this.songLeague.submitRecommendation(this.leagueId, this.selectedTrack, !!this.dashboard?.league.isDemo);
       const submittedName = this.selectedTrack.name;
       this.songQuery = '';

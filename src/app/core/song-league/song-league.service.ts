@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {firstValueFrom} from 'rxjs';
+import {firstValueFrom, forkJoin} from 'rxjs';
 
 import {SpotifyDataService} from '@core/data-access/spotify/spotify-data.service';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
@@ -18,6 +18,11 @@ import {
 
 @Injectable({providedIn: 'root'})
 export class SongLeagueService {
+  private readonly shortTermRefreshes = new Map<string, Promise<{
+    refreshed: boolean;
+    snapshotDate: string;
+  }>>();
+
   constructor(
     private supabase: SupabaseService,
     private spotify: SpotifyDataService
@@ -206,9 +211,117 @@ export class SongLeagueService {
     return data.user.id;
   }
 
+  async ensureMemberReadyForLeague(
+    leagueId: string,
+    timezone: string,
+    now: Date = new Date()
+  ): Promise<{refreshed: boolean; snapshotDate: string}> {
+    const {error: settingsError} = await this.supabase.client.rpc(
+      'ensure_song_league_member_sync',
+      {p_league_id: leagueId}
+    );
+    if (settingsError) throw settingsError;
+
+    const userId = await this.currentUserId();
+    const snapshotDate = this.dateInTimezone(now, timezone);
+    const refreshKey = `${userId}:${snapshotDate}`;
+    const activeRefresh = this.shortTermRefreshes.get(refreshKey);
+    if (activeRefresh) return activeRefresh;
+
+    const refresh = this.ensureFreshShortTermStats(userId, snapshotDate).finally(() => {
+      if (this.shortTermRefreshes.get(refreshKey) === refresh) {
+        this.shortTermRefreshes.delete(refreshKey);
+      }
+    });
+    this.shortTermRefreshes.set(refreshKey, refresh);
+    return refresh;
+  }
+
   isFridayInTimezone(timezone: string, now: Date = new Date()): boolean {
     const weekday = new Intl.DateTimeFormat('en-US', {weekday: 'short', timeZone: timezone}).format(now);
     return weekday === 'Fri';
+  }
+
+  private async ensureFreshShortTermStats(
+    userId: string,
+    snapshotDate: string
+  ): Promise<{refreshed: boolean; snapshotDate: string}> {
+    const existing = await this.supabase.loadLatestStatsSnapshot(userId, 'short_term', 2);
+    if (
+      existing?.snapshotDate === snapshotDate
+      && Array.isArray(existing.topTracks)
+      && existing.topTracks.length > 0
+    ) {
+      return {refreshed: false, snapshotDate};
+    }
+
+    const response = await firstValueFrom(forkJoin({
+      artists: this.spotify.getUserTopArtists('short_term', 50, 0),
+      tracks: this.spotify.getUserTopTracks('short_term', 50, 0),
+      tracksPage2: this.spotify.getUserTopTracks('short_term', 50, 50)
+    }));
+    const topArtists = response.artists?.items || [];
+    const topTracks = [
+      ...(response.tracks?.items || []),
+      ...(response.tracksPage2?.items || [])
+    ];
+    if (topTracks.length === 0) {
+      throw new Error('Spotify did not return short-term Top Songs for today.');
+    }
+    const topGenres = this.genresFromArtists(topArtists);
+    const explicitCount = topTracks.filter((track: any) => !!track?.explicit).length;
+    const explicitPercentage = Math.round((explicitCount / topTracks.length) * 100);
+    await this.supabase.saveStatsSnapshot(
+      userId,
+      'short_term',
+      explicitPercentage,
+      topGenres.length,
+      topTracks,
+      topArtists,
+      topGenres,
+      false,
+      snapshotDate
+    );
+    return {refreshed: true, snapshotDate};
+  }
+
+  private genresFromArtists(artists: any[]): Array<{
+    name: string;
+    count: number;
+    percentage: number;
+    percentage_simple: number;
+  }> {
+    const weights = new Map<string, number>();
+    artists.forEach((artist, index) => {
+      const rankWeight = Math.max(1, 50 - index);
+      (artist?.genres || []).forEach((name: string) => {
+        const normalized = name?.trim();
+        if (normalized && normalized.toLowerCase() !== 'artist') {
+          weights.set(normalized, (weights.get(normalized) || 0) + rankWeight);
+        }
+      });
+    });
+    const totalWeight = Array.from(weights.values()).reduce((sum, weight) => sum + weight, 0);
+    return Array.from(weights.entries())
+      .sort((left, right) => right[1] - left[1])
+      .slice(0, 15)
+      .map(([name, count]) => ({
+        name,
+        count,
+        percentage: totalWeight ? (count / totalWeight) * 100 : 0,
+        percentage_simple: totalWeight ? (count / totalWeight) * 100 : 0
+      }));
+  }
+
+  private dateInTimezone(date: Date, timezone: string): string {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).formatToParts(date);
+    const value = (type: string) => parts.find(part => part.type === type)?.value || '';
+    return `${value('year')}-${value('month')}-${value('day')}`;
   }
 
   private inviteUrl(token: string): string {
