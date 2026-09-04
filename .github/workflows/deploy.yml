@@ -34,6 +34,11 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Set up Deno
+        uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
+        with:
+          deno-version: v2.9.6
+
       - name: Install dependencies
         run: npm ci
 
@@ -41,6 +46,7 @@ jobs:
         run: npm run verify:ci
 
       - name: Set up Supabase CLI
+        id: supabase-cli
         uses: supabase/setup-cli@3c2f5e2ae34c34e428e8e206e2c4d21fa2d20fbf # v2.1.1
         with:
           version: 2.84.2
@@ -63,7 +69,7 @@ jobs:
         run: npm run test:supabase-integration
 
       - name: Stop isolated Supabase loading-test stack
-        if: always()
+        if: always() && steps.supabase-cli.outcome == 'success'
         run: supabase stop --workdir integration --no-backup
 
       - name: Validate deployment script
