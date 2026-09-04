@@ -3,7 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
-import { forkJoin, Subscription } from 'rxjs';
+import { firstValueFrom, forkJoin, Subscription } from 'rxjs';
 import {PastTopItem, SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {mapWithConcurrency, runAfterNextPaint} from '@core/performance/async-load';
@@ -452,11 +452,31 @@ export class UserStatsComponent implements OnInit, OnDestroy {
         next: async (res: any) => {
           if (!isCurrentLoad()) return;
 
-          const loadedArtists = res.artists.items || [];
+          let loadedArtists = res.artists.items || [];
           const page1 = res.tracks.items || [];
           const page2 = res.tracksPage2.items || [];
           const loadedTracks = [...page1, ...page2];
-          const calculatedGenres = this.buildGenres(loadedArtists);
+          let calculatedGenres = this.buildGenres(loadedArtists);
+          if (calculatedGenres.length === 0 && loadedArtists.some((artist: any) => !!artist?.id)) {
+            try {
+              const enriched = await firstValueFrom(
+                this.spotifyDataService.getArtistsByIds(
+                  loadedArtists.map((artist: any) => artist?.id).filter(Boolean)
+                )
+              );
+              if (!isCurrentLoad()) return;
+              const enrichedById = new Map(
+                (enriched?.artists || []).map((artist: any) => [artist.id, artist])
+              );
+              loadedArtists = loadedArtists.map((artist: any) => ({
+                ...artist,
+                ...(enrichedById.get(artist.id) || {})
+              }));
+              calculatedGenres = this.buildGenres(loadedArtists);
+            } catch (error) {
+              console.warn('[Stats] Could not enrich artist genres; keeping the last usable genre cache.', error);
+            }
+          }
           // Do not let a transient/deprecated empty genres payload erase the
           // last usable genre view. Tracks and artists still refresh normally.
           const loadedGenres = calculatedGenres.length > 0

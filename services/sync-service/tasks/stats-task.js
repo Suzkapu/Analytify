@@ -6,6 +6,44 @@ const RANGE_BY_TASK = {
   stats_long_term: 'long_term'
 };
 
+function genresFromArtists(artists) {
+  const weights = new Map();
+  artists.forEach((artist, index) => {
+    const rankWeight = 50 - index;
+    (artist.genres || []).forEach(name => {
+      if (name && name.trim().toLowerCase() !== 'artist') {
+        weights.set(name, (weights.get(name) || 0) + rankWeight);
+      }
+    });
+  });
+  return Array.from(weights.entries())
+    .sort((left, right) => right[1] - left[1])
+    .slice(0, 15)
+    .map(([name, weight]) => ({name, weight}));
+}
+
+async function hydrateArtistGenres(spotify, accessToken, artists, concurrency = 4) {
+  if (genresFromArtists(artists).length > 0) return artists;
+  const ids = Array.from(new Set(artists.map(artist => artist?.id).filter(Boolean)));
+  if (ids.length === 0) return artists;
+
+  const enrichedById = new Map();
+  let cursor = 0;
+  const worker = async () => {
+    while (cursor < ids.length) {
+      const id = ids[cursor++];
+      try {
+        const artist = await spotify.api(`/artists/${encodeURIComponent(id)}`, accessToken);
+        if (artist?.id) enrichedById.set(artist.id, artist);
+      } catch (error) {
+        console.warn(`[Stats] Artist genre enrichment failed for ${id}: ${error.message}`);
+      }
+    }
+  };
+  await Promise.all(Array.from({length: Math.min(concurrency, ids.length)}, () => worker()));
+  return artists.map(artist => ({...artist, ...(enrichedById.get(artist.id) || {})}));
+}
+
 function createStatsTask({supabase, spotify, catalog}) {
   async function saveSnapshot(user, settings, range, topTracks, topArtists, topGenres) {
     const date = snapshotDate(new Date(), settings.timezone);
@@ -101,22 +139,6 @@ function createStatsTask({supabase, spotify, catalog}) {
     }
   }
 
-  function genresFromArtists(artists) {
-    const weights = new Map();
-    artists.forEach((artist, index) => {
-      const rankWeight = 50 - index;
-      (artist.genres || []).forEach(name => {
-        if (name && name.trim().toLowerCase() !== 'artist') {
-          weights.set(name, (weights.get(name) || 0) + rankWeight);
-        }
-      });
-    });
-    return Array.from(weights.entries())
-      .sort((left, right) => right[1] - left[1])
-      .slice(0, 15)
-      .map(([name, weight]) => ({name, weight}));
-  }
-
   return async function runStatsTask({taskKey, user, settings}) {
     const range = RANGE_BY_TASK[taskKey];
     if (!range) throw new Error(`Unsupported stats task: ${taskKey}`);
@@ -131,8 +153,9 @@ function createStatsTask({supabase, spotify, catalog}) {
     } catch (error) {
       console.warn(`[Stats] Second ${range} track page failed: ${error.message}`);
     }
-    const topArtists = artistsResponse?.items || [];
+    let topArtists = artistsResponse?.items || [];
     const topTracks = [...(firstTracksResponse?.items || []), ...(secondTracksResponse?.items || [])];
+    topArtists = await hydrateArtistGenres(spotify, accessToken, topArtists);
     await catalog.persistPulledTracks(accessToken, topTracks, topArtists);
     const result = await saveSnapshot(user, settings, range, topTracks, topArtists, genresFromArtists(topArtists));
     const {error: markerError} = await supabase.from('users')
@@ -142,4 +165,4 @@ function createStatsTask({supabase, spotify, catalog}) {
   };
 }
 
-module.exports = {createStatsTask, RANGE_BY_TASK};
+module.exports = {createStatsTask, RANGE_BY_TASK, genresFromArtists, hydrateArtistGenres};

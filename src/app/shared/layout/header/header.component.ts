@@ -100,6 +100,7 @@ export class HeaderComponent implements OnInit {
         this.profilePicUrl = pic || null;
         if (user?.id) {
           this.storageService.setItem(`${userId}_spotify_profile_id`, user.id, false);
+          this.storageService.setItem(`${userId}_spotify_profile_id_verified`, 'true', false);
         }
         if (pic) {
           this.storageService.setItem(`${userId}_profile_pic`, pic);
@@ -127,6 +128,7 @@ export class HeaderComponent implements OnInit {
         this.storageService.setItem(`${userId}_profile_pic`, refreshedUrl);
         if (user?.id) {
           this.storageService.setItem(`${userId}_spotify_profile_id`, user.id, false);
+          this.storageService.setItem(`${userId}_spotify_profile_id_verified`, 'true', false);
         }
       },
       error: (error) => console.warn('Failed to refresh the expired profile image:', error)

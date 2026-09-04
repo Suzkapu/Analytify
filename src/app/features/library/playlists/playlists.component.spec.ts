@@ -187,6 +187,28 @@ describe('PlaylistsComponent', () => {
     expect(component.savedPlaylistCount).toBe(0);
   });
 
+  it('repairs a cached account ID before classifying personal-app playlist owners', async () => {
+    authService.isPersonalAppConnection.and.returnValue(true);
+    storage.set('current-user_spotify_profile_id', 'stable-account-id');
+    storage.set('current-user_playlists', JSON.stringify([
+      {id: 'fav', name: 'Favourite Tracks', tracks: {total: 10}},
+      {id: 'owned', name: 'Owned', owner: {id: 'public-profile-id'}, tracks: {total: 2}},
+      {id: 'saved', name: 'Saved', owner: {id: 'friend'}, tracks: {total: 3}}
+    ]));
+    storage.set('current-user_playlists_lastUpdated', Date.now().toString());
+    spotifyDataService.getCurrentUser.and.returnValue(of({
+      account_id: 'stable-account-id', id: 'public-profile-id'
+    }));
+
+    await component.loadPlaylists();
+
+    expect(spotifyDataService.getCurrentUser).toHaveBeenCalledTimes(1);
+    expect(storage.get('current-user_spotify_profile_id')).toBe('public-profile-id');
+    expect(storage.get('current-user_spotify_profile_id_verified')).toBe('true');
+    expect(component.filteredPlaylists.map(playlist => playlist.id)).toEqual(['fav', 'owned']);
+    expect(component.savedPlaylistCount).toBe(1);
+  });
+
   it('keeps followed playlists hidden by default and toggles them into the overview', () => {
     component.playlists = [
       {id: 'fav', name: 'Favourite Tracks', tracks: {total: 5}},

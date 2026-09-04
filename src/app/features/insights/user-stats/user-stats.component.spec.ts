@@ -1,5 +1,5 @@
 import {UserStatsComponent} from './user-stats.component';
-import {NEVER} from 'rxjs';
+import {NEVER, of} from 'rxjs';
 
 describe('UserStatsComponent trends', () => {
   let component: UserStatsComponent;
@@ -451,6 +451,34 @@ describe('UserStatsComponent trends', () => {
     await cachedComponent.loadStats();
 
     expect(cachedComponent.topGenres.map(genre => genre.name)).toEqual(['indie rock']);
+  });
+
+  it('lazily hydrates artist profiles when a personal-app Top Artists response has no genres', async () => {
+    const values: Record<string, string> = {};
+    const spotify = {
+      getUserTopArtists: jasmine.createSpy('getUserTopArtists')
+        .and.returnValue(of({items: [{id: 'artist', name: 'Artist', genres: []}]})),
+      getUserTopTracks: jasmine.createSpy('getUserTopTracks').and.returnValue(of({items: []})),
+      getArtistsByIds: jasmine.createSpy('getArtistsByIds')
+        .and.returnValue(of({artists: [{id: 'artist', genres: ['indie rock']}]}))
+    };
+    spotify.getUserTopArtists.and.returnValue(NEVER);
+    const genreComponent = new UserStatsComponent(
+      spotify as any,
+      {getUserId: () => 'user', getSupabaseUserId: () => null, isBackupActive: () => false} as any,
+      {
+        getItem: (key: string) => values[key] ?? null,
+        setItem: (key: string, value: string) => values[key] = value,
+        getStatsHistory: () => Promise.resolve([]),
+        saveStatsHistory: () => Promise.resolve()
+      } as any,
+      null as any
+    );
+    await genreComponent.loadStats();
+    await Promise.resolve();
+
+    expect(spotify.getArtistsByIds).toHaveBeenCalledOnceWith(['artist']);
+    expect(genreComponent.topGenres.map(genre => genre.name)).toEqual(['indie rock']);
   });
 
   it('loads one item trend instead of every historical Top list', async () => {

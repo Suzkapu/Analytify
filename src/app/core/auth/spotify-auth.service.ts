@@ -244,6 +244,7 @@ export class SpotifyAuthService {
     // different namespaces.
     if (profile.id) {
       this.storageService.setItem(`${localSpotifyId}_spotify_profile_id`, profile.id, false);
+      this.storageService.setItem(`${localSpotifyId}_spotify_profile_id_verified`, 'true', false);
     }
     this.initialSyncPromise = null;
 

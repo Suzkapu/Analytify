@@ -68,6 +68,7 @@ export class PlaylistsComponent {
     const storageKey = `${userId}_playlists`;
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
     const profileIdKey = `${userId}_spotify_profile_id`;
+    const profileIdVerifiedKey = `${userId}_spotify_profile_id_verified`;
     const isBackupActive = this.authService.isBackupActive();
     const isPersonalConnection = this.authService.isPersonalAppConnection();
     this.currentSpotifyProfileId = this.storageService.getItem(profileIdKey)
@@ -138,16 +139,17 @@ export class PlaylistsComponent {
     parseCachedPlaylists();
     paintCachedPlaylists();
 
-    // One-time migration for personal-app sessions created before the public
-    // profile ID was cached separately from account_id. Paint the cache first,
-    // then repair ownership without waiting for a full playlist refresh.
-    if (isPersonalConnection && !this.currentSpotifyProfileId) {
+    // Older personal-app sessions may have cached account_id in this slot.
+    // account_id is the correct stable Analytify identity, but playlist.owner.id
+    // is the public Spotify user ID. Verify the cache once before classifying.
+    if (isPersonalConnection && this.storageService.getItem(profileIdVerifiedKey) !== 'true') {
       try {
         const profile = await firstValueFrom(this.spotifyDataService.getCurrentUser());
         if (!isCurrentLoad()) return;
         if (profile?.id) {
           this.currentSpotifyProfileId = profile.id;
           this.storageService.setItem(profileIdKey, profile.id, false);
+          this.storageService.setItem(profileIdVerifiedKey, 'true', false);
           this.filterPlaylists();
         }
       } catch (error) {

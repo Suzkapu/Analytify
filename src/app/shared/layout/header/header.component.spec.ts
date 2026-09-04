@@ -183,5 +183,8 @@ describe('HeaderComponent entry points', () => {
     expect(dialog.textContent).toContain('New Song League picks');
     expect(dialog.textContent).toContain('Stats access requests');
     expect(dialog.querySelectorAll('.notification-category-row').length).toBe(3);
+    const songPickRow = Array.from(dialog.querySelectorAll('.notification-category-row'))
+      .find((row: any) => row.textContent?.includes('New Song League picks')) as HTMLElement | undefined;
+    expect(songPickRow?.querySelector('.notification-category-icon .pi-volume-up')).not.toBeNull();
   });
 });

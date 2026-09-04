@@ -45,7 +45,8 @@ describe('SpotifyAuthService', () => {
         auth: authClient,
         functions: {invoke: jasmine.createSpy('invoke').and.resolveTo({data: {ok: true}, error: null})}
       },
-      ensureUserProfile: jasmine.createSpy('ensureUserProfile').and.resolveTo()
+      ensureUserProfile: jasmine.createSpy('ensureUserProfile').and.resolveTo(),
+      updateBackupActive: jasmine.createSpy('updateBackupActive').and.resolveTo()
     };
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
@@ -300,6 +301,36 @@ describe('SpotifyAuthService', () => {
       'spotify-credentials',
       jasmine.objectContaining({body: jasmine.objectContaining({connectionMode: 'personal_pkce'})})
     );
+  });
+
+  it('enables Cloud Sync after registering a personal-app credential', async () => {
+    values['spotifyConnectionMode'] = 'personal_pkce';
+    values['personalSpotifyClientId'] = '12345678901234567890123456789012';
+    values['spotifyAccessToken'] = 'personal-access';
+    values['spotifyRefreshToken'] = 'personal-refresh';
+    values['spotifyTokenExpiresAt'] = String(Date.now() + 3_600_000);
+    values['spotifyUserId'] = 'stable-account-id';
+    authClient.signInAnonymously.and.resolveTo({
+      data: {session: {user: {id: '11111111-1111-4111-8111-111111111111', is_anonymous: true}}},
+      error: null
+    });
+    spyOn<any>(service, 'pushLocalCacheToDatabase').and.resolveTo();
+
+    const enabling = service.enableBackup();
+    const profileRequest = await requestAfterMicrotasks('https://api.spotify.com/v1/me');
+    profileRequest.flush({account_id: 'stable-account-id', id: 'public-profile-id', images: []});
+    await enabling;
+
+    expect(supabaseService.client.functions.invoke).toHaveBeenCalledWith(
+      'spotify-credentials',
+      jasmine.objectContaining({body: jasmine.objectContaining({
+        connectionMode: 'personal_pkce',
+        clientId: '12345678901234567890123456789012'
+      })})
+    );
+    expect(supabaseService.updateBackupActive)
+      .toHaveBeenCalledOnceWith('11111111-1111-4111-8111-111111111111', true);
+    expect(values['11111111-1111-4111-8111-111111111111_backup_active']).toBe('true');
   });
 
   it('explains a disabled anonymous-auth server setting when Cloud Backup is enabled', async () => {
