@@ -65,12 +65,32 @@ describe('SpotifyAuthService', () => {
   });
 
   afterEach(() => {
+    localStorage.removeItem('unrelated-application-setting');
     sessionStorage.clear();
     http.verify();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  it('clears only Analytify session state when logging out', async () => {
+    values['spotifyAccessToken'] = 'token';
+    values['spotifyUserId'] = 'spotify-user';
+    values['supabaseUserId'] = 'supabase-user';
+    localStorage.setItem('unrelated-application-setting', 'keep-me');
+    sessionStorage.setItem('unrelated-session-setting', 'keep-me-too');
+    sessionStorage.setItem('analytify_personal_spotify_auth_request', 'pending');
+    sessionStorage.setItem('analytify_compare_auth_request', 'pending');
+    sessionStorage.setItem('analytifyAuthReturnUrl', '/stats');
+
+    await service.logout();
+
+    expect(localStorage.getItem('unrelated-application-setting')).toBe('keep-me');
+    expect(sessionStorage.getItem('unrelated-session-setting')).toBe('keep-me-too');
+    expect(sessionStorage.getItem('analytify_personal_spotify_auth_request')).toBeNull();
+    expect(sessionStorage.getItem('analytify_compare_auth_request')).toBeNull();
+    expect(sessionStorage.getItem('analytifyAuthReturnUrl')).toBeNull();
   });
 
   it('stores the Spotify provider token returned by the explicit code exchange', async () => {

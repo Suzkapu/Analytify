@@ -598,8 +598,7 @@ export class SpotifyAuthService {
     } catch (err) {
       console.error('Supabase signout failed', err);
     }
-    localStorage.clear();
-    sessionStorage.clear();
+    this.clearAnalytifySessionStorage();
     this.clearAllCookies();
     this.logout$.next();
   }
@@ -614,8 +613,7 @@ export class SpotifyAuthService {
     } catch (err) {
       console.error('Supabase signout failed', err);
     }
-    localStorage.clear();
-    sessionStorage.clear();
+    this.clearAnalytifySessionStorage();
     this.clearAllCookies();
     this.logout$.next();
   }
@@ -977,6 +975,14 @@ export class SpotifyAuthService {
       document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=' + window.location.hostname;
       document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.' + window.location.hostname.replace(/^www\./, '');
     }
+  }
+
+  private clearAnalytifySessionStorage(): void {
+    [
+      this.personalRequestKey,
+      'analytify_compare_auth_request',
+      'analytifyAuthReturnUrl'
+    ].forEach(key => sessionStorage.removeItem(key));
   }
 
   getSupabaseUserId(): string | null {
