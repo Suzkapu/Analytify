@@ -3,6 +3,7 @@ import {readFileSync} from 'node:fs';
 const migration = readFileSync('supabase/migrations/20260904190000_stats_history_notifications_and_league_capacity.sql', 'utf8').toLowerCase();
 const component = readFileSync('src/app/features/insights/user-stats/user-stats.component.ts', 'utf8');
 const template = readFileSync('src/app/features/insights/user-stats/user-stats.component.html', 'utf8');
+const styles = readFileSync('src/styles.scss', 'utf8');
 
 const checks = [
   ['authenticated server-side search', migration.includes('function public.search_past_top_items') && migration.includes('auth.uid()')],
@@ -18,7 +19,8 @@ const checks = [
   ['past matches are buttons, not external links', template.includes('<button *ngFor="let item of pastTopResults"') && !template.includes('[href]="item.spotifyUrl || null"')],
   ['past cards omit aggregate summary text', !template.includes('Best #{{ item.bestRank }}') && !template.includes('last seen {{ item.lastSeen }}')],
   ['past search is explicitly opt-in', component.includes('includePastStatsSearch = false') && component.includes('togglePastStatsSearch()')],
-  ['past toggle replaces match count', template.includes('(click)="togglePastStatsSearch()"') && !template.includes('class="stats-search-status"')]
+  ['past toggle replaces match count', template.includes('(click)="togglePastStatsSearch()"') && !template.includes('class="stats-search-status"')],
+  ['native search clear is hidden', styles.includes("input[type='search']::-webkit-search-cancel-button") && styles.includes("input[type='search']::-ms-clear")]
 ];
 
 const failures = checks.filter(([, valid]) => !valid).map(([label]) => label);

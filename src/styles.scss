@@ -3062,6 +3062,16 @@ app-user-stats {
       width: 100%;
       padding-right: 42px !important;
     }
+
+    input[type='search']::-webkit-search-cancel-button,
+    input[type='search']::-webkit-search-decoration {
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    input[type='search']::-ms-clear {
+      display: none;
+    }
   }
 
   .stats-search-clear {
