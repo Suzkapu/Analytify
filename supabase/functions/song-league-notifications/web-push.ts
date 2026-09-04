@@ -11,19 +11,23 @@ export interface VapidDetails {
 }
 
 const encoder = new TextEncoder();
+type OwnedBytes = Uint8Array<ArrayBuffer>;
 
-function fromBase64Url(value: string): Uint8Array {
+function fromBase64Url(value: string): OwnedBytes {
   const padded = value.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - value.length % 4) % 4);
-  return Uint8Array.from(atob(padded), character => character.charCodeAt(0));
+  const decoded = atob(padded);
+  const result = new Uint8Array(decoded.length);
+  for (let index = 0; index < decoded.length; index++) result[index] = decoded.charCodeAt(index);
+  return result;
 }
 
-function toBase64Url(value: Uint8Array): string {
+function toBase64Url(value: Uint8Array<ArrayBufferLike>): string {
   let binary = '';
   value.forEach(byte => binary += String.fromCharCode(byte));
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 }
 
-function concat(...values: Uint8Array[]): Uint8Array {
+function concat(...values: Uint8Array<ArrayBufferLike>[]): OwnedBytes {
   const result = new Uint8Array(values.reduce((length, value) => length + value.length, 0));
   let offset = 0;
   values.forEach(value => {
@@ -33,7 +37,7 @@ function concat(...values: Uint8Array[]): Uint8Array {
   return result;
 }
 
-async function hkdf(key: Uint8Array, salt: Uint8Array, info: Uint8Array, length: number): Promise<Uint8Array> {
+async function hkdf(key: OwnedBytes, salt: OwnedBytes, info: OwnedBytes, length: number): Promise<OwnedBytes> {
   const imported = await crypto.subtle.importKey('raw', key, 'HKDF', false, ['deriveBits']);
   const bits = await crypto.subtle.deriveBits({name: 'HKDF', hash: 'SHA-256', salt, info}, imported, length * 8);
   return new Uint8Array(bits);
@@ -60,7 +64,7 @@ async function vapidAuthorization(endpoint: string, details: VapidDetails): Prom
   return `vapid t=${unsigned}.${toBase64Url(new Uint8Array(signature))}, k=${details.publicKey}`;
 }
 
-async function encryptedBody(subscription: WebPushSubscription, message: string): Promise<Uint8Array> {
+async function encryptedBody(subscription: WebPushSubscription, message: string): Promise<OwnedBytes> {
   const clientPublic = fromBase64Url(subscription.p256dh);
   const clientKey = await crypto.subtle.importKey(
     'raw', clientPublic, {name: 'ECDH', namedCurve: 'P-256'}, false, []
