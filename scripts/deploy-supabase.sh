@@ -50,7 +50,9 @@ if ! command -v supabase >/dev/null 2>&1; then
 fi
 
 supabase link --project-ref "$SUPABASE_PROJECT_REF"
-supabase db push
+# Audit fixes can introduce a migration whose timestamp predates an already
+# deployed hotfix. Supabase otherwise refuses that safe, pending migration.
+supabase db push --include-all
 supabase secrets set \
   "SPOTIFY_CLIENT_ID=${SPOTIFY_CLIENT_ID}" \
   "SPOTIFY_CLIENT_SECRET=${SPOTIFY_CLIENT_SECRET}" \

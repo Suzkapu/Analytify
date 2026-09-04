@@ -22,7 +22,7 @@ const checks = [
   ['GitHub deployment reads the token-encryption key', workflow.includes('secrets.SPOTIFY_TOKEN_ENCRYPTION_KEY')],
   ['GitHub deployment authenticates to Supabase', workflow.includes('secrets.SUPABASE_ACCESS_TOKEN') && workflow.includes('secrets.SUPABASE_DB_PASSWORD')],
   ['GitHub deployment configures the hosted Spotify secret', workflow.includes('secrets.SPOTIFY_CLIENT_SECRET')],
-  ['Supabase deployment applies migrations', supabaseDeployment.includes('supabase db push')],
+  ['Supabase deployment applies all pending migrations', supabaseDeployment.includes('supabase db push --include-all')],
   ['Supabase deployment publishes both Edge Functions', ['spotify-credentials', 'song-league-playlist-sync'].every(name => supabaseDeployment.includes(`functions deploy ${name}`))],
   ['deployment verifies both Oracle and Supabase', workflow.includes('verify-live-deployment.mjs') && liveVerification.includes('Oracle and Supabase live deployment checks passed.')],
   ['deployment writes the protected admin allowlist', deployment.includes('.admin-spotify-ids')],
