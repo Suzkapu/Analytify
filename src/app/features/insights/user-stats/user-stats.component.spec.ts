@@ -462,7 +462,6 @@ describe('UserStatsComponent trends', () => {
       getArtistsByIds: jasmine.createSpy('getArtistsByIds')
         .and.returnValue(of({artists: [{id: 'artist', genres: ['indie rock']}]}))
     };
-    spotify.getUserTopArtists.and.returnValue(NEVER);
     const genreComponent = new UserStatsComponent(
       spotify as any,
       {getUserId: () => 'user', getSupabaseUserId: () => null, isBackupActive: () => false} as any,
