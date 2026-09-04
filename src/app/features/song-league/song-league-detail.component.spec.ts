@@ -19,23 +19,25 @@ describe('SongLeagueDetailComponent notifications', () => {
     notifications.loadSettings.and.resolveTo({
       supported: true, installedPwa: true, permission: 'granted',
       deviceSubscribed: true, songLeagueEnabled: true, songLeagueSongAddedEnabled: false,
-      songLeagueMember: true, active: true, songAddedActive: false
+      songLeagueMember: true, statsAccessRequestsEnabled: true,
+      active: true, songAddedActive: false, statsAccessActive: true
     });
     notifications.setSongLeagueEnabled.and.resolveTo({
       supported: true, installedPwa: true, permission: 'granted',
       deviceSubscribed: true, songLeagueEnabled: false, songLeagueSongAddedEnabled: false,
-      songLeagueMember: true, active: false, songAddedActive: false
+      songLeagueMember: true, statsAccessRequestsEnabled: true,
+      active: false, songAddedActive: false, statsAccessActive: true
     });
     const songLeague = jasmine.createSpyObj<SongLeagueService>('SongLeagueService', [
       'currentUserId', 'loadDashboard', 'ensureMemberReadyForLeague',
       'subscribeToLeague', 'isFridayInTimezone', 'submitRecommendation',
-      'syncWeeklyPlaylists'
+      'syncWeeklyPlaylists', 'setMemberLimit'
     ]);
     songLeague.currentUserId.and.resolveTo('member');
     songLeague.loadDashboard.and.resolveTo({
       league: {
         id: 'league', ownerUserId: 'owner', name: 'Friday Finds', timezone: 'Europe/Vienna',
-        ownerDisplayName: 'Owner', ownerImageUrl: '', playlistRevision: 0, isDemo: false,
+        ownerDisplayName: 'Owner', ownerImageUrl: '', playlistRevision: 0, maxMembers: 5, isDemo: false,
         createdAt: '2026-09-01T00:00:00Z'
       },
       members: [{leagueId: 'league', userId: 'member', role: 'member', displayName: 'Member', imageUrl: '', joinedAt: 'now'}],
@@ -48,6 +50,7 @@ describe('SongLeagueDetailComponent notifications', () => {
     });
     songLeague.submitRecommendation.and.resolveTo('recommendation');
     songLeague.syncWeeklyPlaylists.and.resolveTo();
+    songLeague.setMemberLimit.and.resolveTo(12);
 
     TestBed.configureTestingModule({
       imports: [SharedModule],
@@ -114,5 +117,18 @@ describe('SongLeagueDetailComponent notifications', () => {
       'league', 'Europe/Vienna'
     );
     expect(callOrder).toEqual(['refresh', 'submit']);
+  });
+
+  it('lets only the owner save a capacity at or above the current roster', async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const songLeague = TestBed.inject(SongLeagueService) as jasmine.SpyObj<SongLeagueService>;
+    component.currentUserId = 'owner';
+    component.memberLimit = 12;
+
+    await component.saveMemberLimit();
+
+    expect(songLeague.setMemberLimit).toHaveBeenCalledOnceWith('league', 12);
+    expect(component.dashboard?.league.maxMembers).toBe(12);
   });
 });

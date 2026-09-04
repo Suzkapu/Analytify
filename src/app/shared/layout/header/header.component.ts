@@ -49,8 +49,10 @@ export class HeaderComponent implements OnInit {
     songLeagueEnabled: false,
     songLeagueSongAddedEnabled: false,
     songLeagueMember: false,
+    statsAccessRequestsEnabled: true,
     active: false,
-    songAddedActive: false
+    songAddedActive: false,
+    statsAccessActive: false
   };
 
   constructor(
@@ -235,6 +237,20 @@ export class HeaderComponent implements OnInit {
     try {
       this.notificationSettings = await this.pushNotifications.loadSettings();
       this.notificationSettings = await this.pushNotifications.setSongLeagueSongAddedEnabled(enabled);
+    } catch (error) {
+      this.notificationError = (error as any)?.message || 'The notification setting could not be changed.';
+    } finally {
+      this.isSavingNotificationSettings = false;
+    }
+  }
+
+  async toggleStatsAccessNotifications(event: Event): Promise<void> {
+    const enabled = (event.target as HTMLInputElement).checked;
+    this.isSavingNotificationSettings = true;
+    this.notificationError = '';
+    try {
+      this.notificationSettings = await this.pushNotifications.loadSettings();
+      this.notificationSettings = await this.pushNotifications.setStatsAccessRequestsEnabled(enabled);
     } catch (error) {
       this.notificationError = (error as any)?.message || 'The notification setting could not be changed.';
     } finally {

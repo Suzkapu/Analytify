@@ -51,6 +51,15 @@ export class SongLeagueService {
     return {token, url: this.inviteUrl(token)};
   }
 
+  async setMemberLimit(leagueId: string, maxMembers: number): Promise<number> {
+    const {data, error} = await this.supabase.client.rpc('set_song_league_member_limit', {
+      p_league_id: leagueId,
+      p_max_members: maxMembers
+    });
+    if (error) throw error;
+    return Number(data);
+  }
+
   async claimLeague(token: string): Promise<string> {
     const {data, error} = await this.supabase.client.rpc('claim_song_league', {
       p_invite_token: token
@@ -356,6 +365,7 @@ export class SongLeagueService {
       ownerDisplayName: row.owner_display_name || 'Spotify user',
       ownerImageUrl: row.owner_image_url || '',
       playlistRevision: Number(row.playlist_revision || 0),
+      maxMembers: Number(row.max_members || 5),
       isDemo: !!row.is_demo,
       createdAt: row.created_at
     };

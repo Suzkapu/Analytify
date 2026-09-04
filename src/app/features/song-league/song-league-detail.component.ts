@@ -33,7 +33,8 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     supported: false, installedPwa: false, permission: 'unavailable',
     deviceSubscribed: false, songLeagueEnabled: false,
     songLeagueSongAddedEnabled: false, songLeagueMember: false,
-    active: false, songAddedActive: false
+    statsAccessRequestsEnabled: true,
+    active: false, songAddedActive: false, statsAccessActive: false
   };
 
   songQuery = '';
@@ -46,6 +47,8 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   inviteUrl = '';
   inviteCopied = false;
   isCreatingInvite = false;
+  memberLimit = 5;
+  isSavingMemberLimit = false;
   showDeleteLeagueModal = false;
   isDeletingLeague = false;
   selectedStanding: SongLeagueStanding | null = null;
@@ -98,6 +101,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     try {
       const dashboard = await this.songLeague.loadDashboard(this.leagueId);
       this.dashboard = dashboard;
+      this.memberLimit = dashboard.league.maxMembers;
       if (!this.memberReady && !dashboard.league.isDemo) {
         await this.songLeague.ensureMemberReadyForLeague(
           this.leagueId,
@@ -209,6 +213,28 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
       this.errorMessage = this.describeError(error, 'A new invitation could not be created.');
     } finally {
       this.isCreatingInvite = false;
+    }
+  }
+
+  async saveMemberLimit(): Promise<void> {
+    if (!this.dashboard || !this.isOwner || this.isSavingMemberLimit) return;
+    const requestedLimit = Math.trunc(Number(this.memberLimit));
+    if (requestedLimit < this.dashboard.members.length || requestedLimit < 2 || requestedLimit > 50) {
+      this.errorMessage = `Choose between ${Math.max(2, this.dashboard.members.length)} and 50 members.`;
+      return;
+    }
+    this.isSavingMemberLimit = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+    try {
+      const savedLimit = await this.songLeague.setMemberLimit(this.dashboard.league.id, requestedLimit);
+      this.memberLimit = savedLimit;
+      this.dashboard.league.maxMembers = savedLimit;
+      this.successMessage = `This league can now have up to ${savedLimit} members.`;
+    } catch (error) {
+      this.errorMessage = this.describeError(error, 'The member limit could not be changed.');
+    } finally {
+      this.isSavingMemberLimit = false;
     }
   }
 

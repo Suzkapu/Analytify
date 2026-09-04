@@ -117,24 +117,34 @@ Deno.serve(async request => {
       p_now: requestedNow
     });
     if (queueError) throw queueError;
-    const [openingClaims, songClaims] = await Promise.all([
+    const [openingClaims, songClaims, statsAccessClaims] = await Promise.all([
       admin.rpc('claim_song_league_push_deliveries', {p_limit: 100}),
-      admin.rpc('claim_song_league_song_push_deliveries', {p_limit: 100})
+      admin.rpc('claim_song_league_song_push_deliveries', {p_limit: 100}),
+      admin.rpc('claim_stats_access_push_deliveries', {p_limit: 100})
     ]);
     if (openingClaims.error) throw openingClaims.error;
     if (songClaims.error) throw songClaims.error;
+    if (statsAccessClaims.error) throw statsAccessClaims.error;
     const claimed = [
       ...(openingClaims.data || []).map((delivery: Delivery) => ({
         ...delivery, delivery_table: 'song_league_push_deliveries' as const
       })),
-      ...(songClaims.data || []) as Delivery[]
+      ...(songClaims.data || []) as Delivery[],
+      ...(statsAccessClaims.data || []) as Delivery[]
     ];
 
     const outcomes = await mapConcurrently(claimed, 10, delivery =>
       deliverSongLeaguePush(delivery, {
         admin,
         sendWebPush,
-        notificationPayload: delivery.delivery_table === 'song_league_song_push_deliveries'
+        notificationPayload: delivery.delivery_table === 'stats_access_push_deliveries'
+          ? payload(
+            'New stats access request',
+            `${delivery.viewer_display_name || 'A registered user'} wants to view your saved stats.`,
+            '/shared-playlists',
+            `stats-access-${delivery.delivery_id}`
+          )
+          : delivery.delivery_table === 'song_league_song_push_deliveries'
           ? payload(
             `${delivery.recommender_display_name} added a song`,
             `“${delivery.track_name}” was added to ${delivery.league_name}.`,

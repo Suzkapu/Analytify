@@ -4,7 +4,7 @@ import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.servi
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { forkJoin, Subscription } from 'rxjs';
-import { SupabaseService } from '@core/data-access/supabase/supabase.service';
+import {PastTopItem, SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {mapWithConcurrency, runAfterNextPaint} from '@core/performance/async-load';
 import {StatsSharingService} from '@core/sharing/stats-sharing.service';
@@ -53,6 +53,9 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   selectedRange: string = 'short_term'; // 'short_term', 'medium_term', 'long_term'
   selectedCategory: string = 'tracks'; // 'tracks', 'artists', 'genres'
   statsSearchQuery: string = '';
+  pastTopResults: PastTopItem[] = [];
+  isSearchingPastStats = false;
+  pastStatsSearchError = '';
   isLoading: boolean = true;
   isRefreshingStats: boolean = false;
   spyDisplayName = '';
@@ -92,6 +95,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   private historyLoadSequence = 0;
   private statsSubscription: Subscription | null = null;
   private cancelScheduledHistoryLoad: (() => void) | null = null;
+  private pastSearchTimer: ReturnType<typeof setTimeout> | null = null;
+  private pastSearchSequence = 0;
 
   // Trend modal variables
   showTrendPopup: boolean = false;
@@ -147,6 +152,9 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.statsSubscription = null;
     this.cancelScheduledHistoryLoad?.();
     this.cancelScheduledHistoryLoad = null;
+    this.pastSearchSequence++;
+    if (this.pastSearchTimer) clearTimeout(this.pastSearchTimer);
+    this.pastSearchTimer = null;
   }
 
   changeRange(range: string) {
@@ -164,8 +172,10 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.topTracks = [];
     this.topArtists = [];
     this.topGenres = [];
+    this.resetPastStatsSearch();
     void this.loadStats();
     if (!this.isSpyMode) this.scheduleHistoryLoad();
+    this.schedulePastStatsSearch();
   }
 
   private scheduleHistoryLoad(): void {
@@ -178,6 +188,68 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
   changeCategory(category: string) {
     this.selectedCategory = category;
+    this.schedulePastStatsSearch();
+  }
+
+  onStatsSearchChange(query: string): void {
+    this.statsSearchQuery = query;
+    this.schedulePastStatsSearch();
+  }
+
+  private schedulePastStatsSearch(): void {
+    if (this.pastSearchTimer) clearTimeout(this.pastSearchTimer);
+    this.pastSearchTimer = null;
+    const query = this.statsSearchQuery.trim();
+    if (query.length < 2 || this.isSpyMode || this.selectedSnapshotId !== 'current'
+      || !['tracks', 'artists'].includes(this.selectedCategory)) {
+      this.resetPastStatsSearch();
+      return;
+    }
+    const sequence = ++this.pastSearchSequence;
+    this.isSearchingPastStats = true;
+    this.pastStatsSearchError = '';
+    this.pastSearchTimer = setTimeout(() => {
+      this.pastSearchTimer = null;
+      void this.searchPastStats(query, sequence);
+    }, 300);
+  }
+
+  async searchPastStats(query = this.statsSearchQuery.trim(), sequence = ++this.pastSearchSequence): Promise<void> {
+    const supabaseUserId = this.authService.getSupabaseUserId();
+    if (!supabaseUserId || !this.authService.isBackupActive()) {
+      if (sequence === this.pastSearchSequence) {
+        this.pastTopResults = [];
+        this.isSearchingPastStats = false;
+        this.pastStatsSearchError = 'Enable Cloud Backup to search your saved ranking history.';
+      }
+      return;
+    }
+    const kind = this.selectedCategory === 'artists' ? 'artist' : 'track';
+    const range = this.selectedRange;
+    try {
+      const results = await this.supabaseService.searchPastTopItems(range, kind, query);
+      if (sequence !== this.pastSearchSequence || range !== this.selectedRange
+        || kind !== (this.selectedCategory === 'artists' ? 'artist' : 'track')) return;
+      const currentIds = new Set((kind === 'track' ? this.topTracks : this.topArtists)
+        .map(item => item?.id).filter(Boolean));
+      this.pastTopResults = results.filter(item => !currentIds.has(item.id));
+      this.pastStatsSearchError = '';
+    } catch (error) {
+      if (sequence !== this.pastSearchSequence) return;
+      this.pastTopResults = [];
+      this.pastStatsSearchError = (error as any)?.message || 'Saved ranking history could not be searched.';
+    } finally {
+      if (sequence === this.pastSearchSequence) this.isSearchingPastStats = false;
+    }
+  }
+
+  private resetPastStatsSearch(): void {
+    this.pastSearchSequence++;
+    if (this.pastSearchTimer) clearTimeout(this.pastSearchTimer);
+    this.pastSearchTimer = null;
+    this.pastTopResults = [];
+    this.isSearchingPastStats = false;
+    this.pastStatsSearchError = '';
   }
 
   isCacheExpired(lastUpdatedStr: string | null, range = this.selectedRange): boolean {
@@ -541,6 +613,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     const bestCompare = this.snapshotOptions.find(opt => opt.id !== snapshotId);
     this.compareSnapshotId = bestCompare ? bestCompare.id : (snapshotId !== 'current' ? 'current' : '');
     this.showHistoryMenu = false;
+    if (snapshotId === 'current') this.schedulePastStatsSearch();
+    else this.resetPastStatsSearch();
     this.calculateHotMovers();
     this.ensureSnapshotLoaded(snapshotId);
     if (this.compareSnapshotId) this.ensureSnapshotLoaded(this.compareSnapshotId);
@@ -1364,6 +1438,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
   clearStatsSearch(): void {
     this.statsSearchQuery = '';
+    this.resetPastStatsSearch();
   }
 
   getStatsRankIndex(item: any, category: 'tracks' | 'artists'): number {

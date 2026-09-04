@@ -9,7 +9,8 @@ export type Delivery = {
   opening_date?: string;
   track_name?: string;
   recommender_display_name?: string;
-  delivery_table?: 'song_league_push_deliveries' | 'song_league_song_push_deliveries';
+  viewer_display_name?: string;
+  delivery_table?: 'song_league_push_deliveries' | 'song_league_song_push_deliveries' | 'stats_access_push_deliveries';
   attempts: number;
 };
 

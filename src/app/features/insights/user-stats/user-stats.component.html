@@ -160,7 +160,8 @@
       <div *ngIf="selectedCategory === 'tracks' || selectedCategory === 'artists'" class="stats-top-search">
         <div class="search-container stats-search-container">
           <i class="pi pi-search" aria-hidden="true"></i>
-          <input type="search" class="search-input" [(ngModel)]="statsSearchQuery"
+          <input type="search" class="search-input" [ngModel]="statsSearchQuery"
+            (ngModelChange)="onStatsSearchChange($event)"
             [placeholder]="selectedCategory === 'tracks' ? 'Search Top 100 songs or artists' : 'Search Top Artists'"
             [attr.aria-label]="selectedCategory === 'tracks' ? 'Search Top 100 songs or artists' : 'Search Top Artists'">
           <button *ngIf="isStatsSearchActive" type="button" class="stats-search-clear"
@@ -188,6 +189,34 @@
       <i class="pi pi-chart-line" aria-hidden="true"></i>
       Select any song, artist, or genre to view its history.
     </p>
+
+    <section *ngIf="isStatsSearchActive && selectedSnapshotId === 'current' && !isSpyMode"
+      class="past-stats-results" aria-live="polite">
+      <div class="past-stats-heading">
+        <span><i class="pi pi-history"></i></span>
+        <div>
+          <strong>Past rankings</strong>
+          <small>Saved {{ selectedCategory === 'artists' ? 'artists' : 'songs' }} that are no longer in the current list</small>
+        </div>
+        <i *ngIf="isSearchingPastStats" class="pi pi-spin pi-spinner"></i>
+      </div>
+      <p *ngIf="pastStatsSearchError" class="past-stats-message">{{ pastStatsSearchError }}</p>
+      <p *ngIf="!isSearchingPastStats && !pastStatsSearchError && pastTopResults.length === 0"
+        class="past-stats-message">No former ranking matches this search.</p>
+      <div *ngIf="pastTopResults.length" class="past-stats-grid">
+        <a *ngFor="let item of pastTopResults" class="past-stats-card"
+          [href]="item.spotifyUrl || null" [attr.target]="item.spotifyUrl ? '_blank' : null"
+          [attr.rel]="item.spotifyUrl ? 'noopener noreferrer' : null">
+          <img *ngIf="item.imageUrl" [src]="item.imageUrl" alt="" loading="lazy" decoding="async">
+          <span *ngIf="!item.imageUrl" class="past-stats-placeholder"><i class="pi pi-music"></i></span>
+          <span class="past-stats-copy">
+            <strong>{{ item.name }}</strong><small *ngIf="item.subtitle">{{ item.subtitle }}</small>
+            <em>Best #{{ item.bestRank }} · last seen {{ item.lastSeen }} · {{ item.appearances }} {{ item.appearances === 1 ? 'snapshot' : 'snapshots' }}</em>
+          </span>
+          <i *ngIf="item.spotifyUrl" class="pi pi-external-link"></i>
+        </a>
+      </div>
+    </section>
 
     <!-- Category 1: Top 100 Songs -->
     <div *ngIf="selectedCategory === 'tracks'">

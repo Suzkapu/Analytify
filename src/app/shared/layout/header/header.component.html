@@ -159,6 +159,23 @@
           <span class="slider round"></span>
         </span>
       </label>
+
+      <label class="notification-category-row">
+        <span class="notification-category-icon"><i class="pi pi-eye"></i></span>
+        <span class="notification-category-copy">
+          <strong>Stats access requests</strong>
+          <small>Know when another registered user asks to view your stats</small>
+          <em *ngIf="notificationSettings.statsAccessActive">Enabled on this device</em>
+          <em *ngIf="notificationSettings.permission === 'granted' && notificationSettings.deviceSubscribed && !notificationSettings.statsAccessRequestsEnabled">Turned off</em>
+          <em *ngIf="notificationSettings.permission === 'denied'" class="notification-denied">Blocked in browser settings</em>
+        </span>
+        <span class="switch" title="Toggle stats access request notifications">
+          <input type="checkbox" [checked]="notificationSettings.statsAccessActive"
+            [disabled]="isSavingNotificationSettings || (!notificationSettings.supported && !notificationSettings.statsAccessRequestsEnabled) || (notificationSettings.permission === 'denied' && !notificationSettings.statsAccessRequestsEnabled)"
+            (change)="toggleStatsAccessNotifications($event)" aria-label="Stats access request notifications">
+          <span class="slider"></span>
+        </span>
+      </label>
     </div>
     <p *ngIf="notificationError" class="notification-settings-error" role="alert">{{ notificationError }}</p>
     <div class="confirm-modal-actions">

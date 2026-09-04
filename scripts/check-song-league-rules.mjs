@@ -9,6 +9,10 @@ const freshnessMigration = readFileSync(
   'utf8'
 );
 const schema = readFileSync('supabase_schema.md', 'utf8');
+const capacityMigration = readFileSync(
+  'supabase/migrations/20260904190000_stats_history_notifications_and_league_capacity.sql',
+  'utf8'
+).toLowerCase();
 
 function recommendationFunction(source) {
   const start = source.lastIndexOf('create or replace function public.submit_song_league_recommendation');
@@ -40,7 +44,12 @@ const checks = [
   ['Friday roster accepts two fresh members', ensureRoundFunction.includes('if v_roster_size < 2 then')],
   ['Friday roster no longer requires three fresh members', !ensureRoundFunction.includes('v_roster_size < 3')],
   ['Friday baseline requires the current league-local day', ensureRoundFunction.includes('candidate.snapshot_date = v_today')],
-  ['Friday baseline is immutable after the first recommendation', ensureRoundFunction.includes('select 1 from public.song_league_recommendations where round_id = v_round_id')]
+  ['Friday baseline is immutable after the first recommendation', ensureRoundFunction.includes('select 1 from public.song_league_recommendations where round_id = v_round_id')],
+  ['league capacity defaults to five', capacityMigration.includes('max_members integer not null default 5')],
+  ['capacity is owner managed and bounded', capacityMigration.includes('owner_user_id = auth.uid()') && capacityMigration.includes('between 2 and 50')],
+  ['capacity cannot shrink below the roster', capacityMigration.includes('p_max_members < v_active_members')],
+  ['joining locks the league capacity row', capacityMigration.includes('select max_members into v_member_limit') && capacityMigration.includes('for update')],
+  ['joining enforces the configured capacity', capacityMigration.includes('v_member_count >= v_member_limit')]
 ];
 
 const failures = checks.filter(([, valid]) => !valid).map(([label]) => label);

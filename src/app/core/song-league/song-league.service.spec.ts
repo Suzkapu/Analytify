@@ -76,6 +76,17 @@ describe('SongLeagueService', () => {
     expect(firstParameters.p_invite_token).not.toBe(secondParameters.p_invite_token);
   });
 
+  it('updates the per-league member limit through the owner-only RPC', async () => {
+    rpc.and.resolveTo({data: 12, error: null});
+
+    const saved = await service.setMemberLimit('league-id', 12);
+
+    expect(saved).toBe(12);
+    expect(rpc).toHaveBeenCalledOnceWith('set_song_league_member_limit', {
+      p_league_id: 'league-id', p_max_members: 12
+    });
+  });
+
   it('syncs canonical track metadata before asking the trusted RPC to validate a recommendation', async () => {
     const callOrder: string[] = [];
     syncTracks.and.callFake(async () => { callOrder.push('sync'); });

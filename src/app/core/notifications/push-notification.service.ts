@@ -13,8 +13,10 @@ export interface PushNotificationSettings {
   songLeagueEnabled: boolean;
   songLeagueSongAddedEnabled: boolean;
   songLeagueMember: boolean;
+  statsAccessRequestsEnabled: boolean;
   active: boolean;
   songAddedActive: boolean;
+  statsAccessActive: boolean;
 }
 
 @Injectable({providedIn: 'root'})
@@ -37,11 +39,13 @@ export class PushNotificationService {
     const songLeagueEnabled = !!row?.song_league_enabled;
     const songLeagueSongAddedEnabled = !!row?.song_league_song_added_enabled;
     const songLeagueMember = !!row?.song_league_member;
-    if ((songLeagueEnabled || songLeagueSongAddedEnabled) && subscription && permission === 'granted') {
+    const statsAccessRequestsEnabled = row?.stats_access_requests_enabled !== false;
+    if ((songLeagueEnabled || songLeagueSongAddedEnabled || statsAccessRequestsEnabled)
+      && subscription && permission === 'granted') {
       await this.registerDevice(subscription);
     }
     return this.settings(
-      songLeagueEnabled, songLeagueSongAddedEnabled, songLeagueMember,
+      songLeagueEnabled, songLeagueSongAddedEnabled, songLeagueMember, statsAccessRequestsEnabled,
       !!subscription, permission
     );
   }
@@ -54,8 +58,12 @@ export class PushNotificationService {
     return this.setCategoryEnabled('song_league_song_added', enabled);
   }
 
+  async setStatsAccessRequestsEnabled(enabled: boolean): Promise<PushNotificationSettings> {
+    return this.setCategoryEnabled('stats_access_requests', enabled);
+  }
+
   private async setCategoryEnabled(
-    category: 'song_league' | 'song_league_song_added',
+    category: 'song_league' | 'song_league_song_added' | 'stats_access_requests',
     enabled: boolean
   ): Promise<PushNotificationSettings> {
     let subscription = await this.currentSubscription();
@@ -107,7 +115,8 @@ export class PushNotificationService {
       ...settings,
       deviceSubscribed: true,
       active: settings.songLeagueEnabled && settings.permission === 'granted',
-      songAddedActive: settings.songLeagueSongAddedEnabled && settings.permission === 'granted'
+      songAddedActive: settings.songLeagueSongAddedEnabled && settings.permission === 'granted',
+      statsAccessActive: settings.statsAccessRequestsEnabled && settings.permission === 'granted'
     };
   }
 
@@ -160,6 +169,7 @@ export class PushNotificationService {
     songLeagueEnabled: boolean,
     songLeagueSongAddedEnabled: boolean,
     songLeagueMember: boolean,
+    statsAccessRequestsEnabled: boolean,
     deviceSubscribed: boolean,
     permission: NotificationPermission | 'unavailable'
   ): PushNotificationSettings {
@@ -171,8 +181,10 @@ export class PushNotificationService {
       songLeagueEnabled,
       songLeagueSongAddedEnabled,
       songLeagueMember,
+      statsAccessRequestsEnabled,
       active: songLeagueEnabled && deviceSubscribed && permission === 'granted',
-      songAddedActive: songLeagueSongAddedEnabled && deviceSubscribed && permission === 'granted'
+      songAddedActive: songLeagueSongAddedEnabled && deviceSubscribed && permission === 'granted',
+      statsAccessActive: statsAccessRequestsEnabled && deviceSubscribed && permission === 'granted'
     };
   }
 

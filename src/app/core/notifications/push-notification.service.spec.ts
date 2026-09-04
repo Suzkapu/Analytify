@@ -11,7 +11,7 @@ describe('PushNotificationService', () => {
   let requestSubscription: jasmine.Spy;
   let browserSubscription: PushSubscription | null;
   let permissionState: PermissionState;
-  let preferences: {song_league_enabled: boolean; song_league_song_added_enabled: boolean; song_league_member: boolean};
+  let preferences: {song_league_enabled: boolean; song_league_song_added_enabled: boolean; song_league_member: boolean; stats_access_requests_enabled: boolean};
   const subscription = {
     endpoint: 'https://push.example/device',
     toJSON: () => ({
@@ -26,7 +26,8 @@ describe('PushNotificationService', () => {
     preferences = {
       song_league_enabled: false,
       song_league_song_added_enabled: false,
-      song_league_member: true
+      song_league_member: true,
+      stats_access_requests_enabled: true
     };
     spyOn(navigator.permissions, 'query').and.callFake(async () => ({
       state: permissionState
@@ -36,6 +37,9 @@ describe('PushNotificationService', () => {
         if (parameters.p_category === 'song_league') preferences.song_league_enabled = parameters.p_enabled;
         if (parameters.p_category === 'song_league_song_added') {
           preferences.song_league_song_added_enabled = parameters.p_enabled;
+        }
+        if (parameters.p_category === 'stats_access_requests') {
+          preferences.stats_access_requests_enabled = parameters.p_enabled;
         }
       }
       return {data: name === 'get_notification_preferences' ? [preferences] : null, error: null};
@@ -128,5 +132,19 @@ describe('PushNotificationService', () => {
     });
     expect(enabled.songAddedActive).toBeTrue();
     expect(enabled.songLeagueEnabled).toBeFalse();
+  });
+
+  it('enables stats-request notifications as an independent default-on category', async () => {
+    browserSubscription = subscription;
+
+    const initial = await service.loadSettings();
+    const disabled = await service.setStatsAccessRequestsEnabled(false);
+
+    expect(initial.statsAccessActive).toBeTrue();
+    expect(rpc).toHaveBeenCalledWith('set_notification_preference', {
+      p_category: 'stats_access_requests', p_enabled: false
+    });
+    expect(disabled.statsAccessRequestsEnabled).toBeFalse();
+    expect(disabled.songLeagueEnabled).toBeFalse();
   });
 });

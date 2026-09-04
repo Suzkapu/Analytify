@@ -611,4 +611,39 @@ describe('UserStatsComponent trends', () => {
     expect(component.filteredArtists.length).toBe(2);
     expect(component.isStatsSearchActive).toBeFalse();
   });
+
+  it('searches Supabase lazily for former songs and excludes a live current match', async () => {
+    const searchPastTopItems = jasmine.createSpy('searchPastTopItems').and.resolveTo([
+      {kind: 'track', id: 'current', name: 'Still here', subtitle: '', imageUrl: '', spotifyUrl: '', bestRank: 1, firstSeen: '2026-01-01', lastSeen: '2026-02-01', appearances: 2},
+      {kind: 'track', id: 'former', name: 'Gone song', subtitle: 'Artist', imageUrl: '', spotifyUrl: '', bestRank: 7, firstSeen: '2026-01-01', lastSeen: '2026-03-01', appearances: 4}
+    ]);
+    const historicalComponent = new UserStatsComponent(
+      null as any,
+      {getSupabaseUserId: () => 'user-id', isBackupActive: () => true} as any,
+      null as any,
+      {searchPastTopItems} as any
+    );
+    historicalComponent.topTracks = [{id: 'current'}];
+    historicalComponent.selectedCategory = 'tracks';
+
+    await historicalComponent.searchPastStats('gone');
+
+    expect(searchPastTopItems).toHaveBeenCalledOnceWith('short_term', 'track', 'gone');
+    expect(historicalComponent.pastTopResults.map(item => item.id)).toEqual(['former']);
+  });
+
+  it('explains that cloud history is required without querying Supabase', async () => {
+    const searchPastTopItems = jasmine.createSpy('searchPastTopItems');
+    const localComponent = new UserStatsComponent(
+      null as any,
+      {getSupabaseUserId: () => null, isBackupActive: () => false} as any,
+      null as any,
+      {searchPastTopItems} as any
+    );
+
+    await localComponent.searchPastStats('older');
+
+    expect(searchPastTopItems).not.toHaveBeenCalled();
+    expect(localComponent.pastStatsSearchError).toContain('Cloud Backup');
+  });
 });

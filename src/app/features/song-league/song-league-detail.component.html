@@ -20,7 +20,7 @@
         <div>
           <span class="league-eyebrow">{{ data.league.isDemo ? 'Admin demo · synthetic opponents' : data.league.timezone + ' · all-time standings' }}</span>
           <h1>{{ data.league.name }}</h1>
-          <p>{{ data.members.length }} members · {{ data.league.isDemo ? 'play any day against three bots' : 'one discovery every Friday · four scoring weeks per song' }}</p>
+          <p>{{ data.members.length }} / {{ data.league.maxMembers }} members · {{ data.league.isDemo ? 'play any day against three bots' : 'one discovery every Friday · four scoring weeks per song' }}</p>
           <span class="picks-status-badge" [class.open]="isPickOpen">
             <i class="pi" [ngClass]="isPickOpen ? 'pi-circle-fill' : 'pi-clock'"></i>
             {{ pickStatusLabel }}
@@ -30,6 +30,18 @@
           <i class="pi" [ngClass]="isCreatingInvite ? 'pi-spin pi-spinner' : 'pi-user-plus'"></i> Invite
         </button>
       </header>
+
+      <section *ngIf="isOwner && !data.league.isDemo" class="league-member-limit">
+        <span><i class="pi pi-users"></i></span>
+        <div><strong>Member capacity</strong><small>Includes you · between {{ data.members.length > 2 ? data.members.length : 2 }} and 50</small></div>
+        <input type="number" [(ngModel)]="memberLimit" [min]="data.members.length > 2 ? data.members.length : 2"
+          max="50" [disabled]="isSavingMemberLimit" aria-label="Maximum Song League members">
+        <button type="button" class="league-secondary" (click)="saveMemberLimit()"
+          [disabled]="isSavingMemberLimit || memberLimit === data.league.maxMembers">
+          <i class="pi" [ngClass]="isSavingMemberLimit ? 'pi-spin pi-spinner' : 'pi-check'"></i>
+          {{ isSavingMemberLimit ? 'Saving…' : 'Save' }}
+        </button>
+      </section>
 
       <section *ngIf="inviteUrl" class="league-inline-invite">
         <div><strong>New invitation ready</strong><span>Creating another invitation revokes the previous one.</span></div>

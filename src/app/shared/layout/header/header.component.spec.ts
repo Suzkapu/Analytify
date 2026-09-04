@@ -49,10 +49,12 @@ describe('HeaderComponent entry points', () => {
               supported: true, installedPwa: true, permission: 'granted',
               deviceSubscribed: true, songLeagueEnabled: true,
               songLeagueSongAddedEnabled: false, songLeagueMember: true,
-              active: true, songAddedActive: false
+              statsAccessRequestsEnabled: true,
+              active: true, songAddedActive: false, statsAccessActive: true
             }),
             setSongLeagueEnabled: jasmine.createSpy('setSongLeagueEnabled'),
-            setSongLeagueSongAddedEnabled: jasmine.createSpy('setSongLeagueSongAddedEnabled')
+            setSongLeagueSongAddedEnabled: jasmine.createSpy('setSongLeagueSongAddedEnabled'),
+            setStatsAccessRequestsEnabled: jasmine.createSpy('setStatsAccessRequestsEnabled')
           }
         },
         {provide: AdminService, useValue: {isAdmin: () => Promise.resolve(false)}},
@@ -162,6 +164,7 @@ describe('HeaderComponent entry points', () => {
     expect(dialog).not.toBeNull();
     expect(dialog.textContent).toContain('Song League');
     expect(dialog.textContent).toContain('New Song League picks');
-    expect(dialog.querySelectorAll('.notification-category-row').length).toBe(2);
+    expect(dialog.textContent).toContain('Stats access requests');
+    expect(dialog.querySelectorAll('.notification-category-row').length).toBe(3);
   });
 });

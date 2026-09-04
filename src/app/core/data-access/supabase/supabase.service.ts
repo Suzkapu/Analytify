@@ -5,6 +5,19 @@ import {createScopedLogger} from '@core/diagnostics/app-logger';
 
 const console = createScopedLogger('Supabase');
 
+export interface PastTopItem {
+  kind: 'track' | 'artist';
+  id: string;
+  name: string;
+  subtitle: string;
+  imageUrl: string;
+  spotifyUrl: string;
+  bestRank: number;
+  firstSeen: string;
+  lastSeen: string;
+  appearances: number;
+}
+
 function parseSnapshotTimestamp(snapshotDate?: string, createdAt?: string): number {
   if (snapshotDate) {
     const parts = snapshotDate.split('-');
@@ -986,6 +999,36 @@ export class SupabaseService {
       console.error('[SupabaseService] Error loading stats snapshot from DB:', e);
       return null;
     }
+  }
+
+  /** Searches only matching historical snapshot rows; full history stays in Supabase. */
+  async searchPastTopItems(
+    range: string,
+    kind: 'track' | 'artist',
+    query: string,
+    limit = 20
+  ): Promise<PastTopItem[]> {
+    const trimmed = query.trim();
+    if (trimmed.length < 2) return [];
+    const {data, error} = await this.client.rpc('search_past_top_items', {
+      p_range: range,
+      p_kind: kind,
+      p_query: trimmed,
+      p_limit: limit
+    });
+    if (error) throw error;
+    return (data || []).map((row: any) => ({
+      kind: row.kind,
+      id: row.item_id,
+      name: row.item_name,
+      subtitle: row.subtitle || '',
+      imageUrl: row.image_url || '',
+      spotifyUrl: row.spotify_url || '',
+      bestRank: Number(row.best_rank),
+      firstSeen: row.first_seen,
+      lastSeen: row.last_seen,
+      appearances: Number(row.appearances || 0)
+    }));
   }
 
   /** Loads all stats snapshots for a user from database for a specific range */

@@ -4,6 +4,7 @@ import ts from 'typescript';
 
 const migration = readFileSync('supabase/migrations/20260903200000_song_league_push_notifications.sql', 'utf8').toLowerCase();
 const songAddedMigration = readFileSync('supabase/migrations/20260904180000_song_league_song_added_notifications.sql', 'utf8').toLowerCase();
+const statsRequestMigration = readFileSync('supabase/migrations/20260904190000_stats_history_notifications_and_league_capacity.sql', 'utf8').toLowerCase();
 const edgeFunction = readFileSync('supabase/functions/song-league-notifications/index.ts', 'utf8');
 const deliveryState = readFileSync('supabase/functions/song-league-notifications/delivery-state.ts', 'utf8');
 const dispatcher = readFileSync('services/sync-service/push-dispatcher.js', 'utf8');
@@ -34,7 +35,13 @@ const contracts = [
   ['new-song delivery is idempotent per device', songAddedMigration.includes('unique (recommendation_id, subscription_id)')],
   ['new-song delivery queues after recommendation insert', songAddedMigration.includes('after insert on public.song_league_recommendations')],
   ['notification manager gates new-song controls by membership', header.includes('*ngIf="notificationSettings.songLeagueMember"') && header.includes('New Song League picks')],
-  ['delivery categories are claimed in parallel', edgeFunction.includes('Promise.all') && edgeFunction.includes('claim_song_league_song_push_deliveries')]
+  ['delivery categories are claimed in parallel', edgeFunction.includes('Promise.all') && edgeFunction.includes('claim_song_league_song_push_deliveries')],
+  ['stats requests notify owners by default', statsRequestMigration.includes('stats_access_requests_enabled boolean not null default true')],
+  ['stats-request delivery is idempotent per device', statsRequestMigration.includes('unique(request_id, subscription_id)')],
+  ['repeat pending requests do not enqueue twice', statsRequestMigration.includes("tg_op = 'insert'") && statsRequestMigration.includes('requested_at is distinct from')],
+  ['stats-request claims stay pending and opted in', statsRequestMigration.includes("request.status = 'pending'") && statsRequestMigration.includes('stats_access_requests_enabled')],
+  ['stats-request deep link', edgeFunction.includes("'/shared-playlists'") && edgeFunction.includes('claim_stats_access_push_deliveries')],
+  ['stats-request preference is manageable', header.includes('Stats access requests') && header.includes('toggleStatsAccessNotifications')]
 ];
 
 const missing = contracts.filter(([, present]) => !present).map(([label]) => label);

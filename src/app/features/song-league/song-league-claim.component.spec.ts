@@ -23,12 +23,14 @@ describe('SongLeagueClaimComponent notification prompt', () => {
     notifications.loadSettings.and.resolveTo({
       supported: true, installedPwa: true, permission: 'default',
       deviceSubscribed: false, songLeagueEnabled: false, songLeagueSongAddedEnabled: false,
-      songLeagueMember: true, active: false, songAddedActive: false
+      songLeagueMember: true, statsAccessRequestsEnabled: true,
+      active: false, songAddedActive: false, statsAccessActive: false
     });
     notifications.setSongLeagueEnabled.and.resolveTo({
       supported: true, installedPwa: true, permission: 'granted',
       deviceSubscribed: true, songLeagueEnabled: true, songLeagueSongAddedEnabled: false,
-      songLeagueMember: true, active: true, songAddedActive: false
+      songLeagueMember: true, statsAccessRequestsEnabled: true,
+      active: true, songAddedActive: false, statsAccessActive: true
     });
     TestBed.configureTestingModule({
       imports: [SharedModule, RouterTestingModule],
@@ -82,7 +84,8 @@ describe('SongLeagueClaimComponent notification prompt', () => {
     notifications.loadSettings.and.resolveTo({
       supported: true, installedPwa: true, permission: 'granted',
       deviceSubscribed: true, songLeagueEnabled: true, songLeagueSongAddedEnabled: false,
-      songLeagueMember: true, active: true, songAddedActive: false
+      songLeagueMember: true, statsAccessRequestsEnabled: true,
+      active: true, songAddedActive: false, statsAccessActive: true
     });
 
     fixture.detectChanges();
