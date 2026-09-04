@@ -15,6 +15,8 @@ Scheduled Song League playlist refreshes run only on Friday in each user's confi
 
 Each scheduler pass also invokes the idempotent `song-league-notifications` Edge Function. It queues each league's local-Friday opening once per subscribed PWA device and delivers pending pushes without requiring a Spotify task or credential refresh.
 
+Listening-history runs page backward from Spotify's newest recently played item to the last committed per-user high-water mark. A run processes at most 20 pages (1,000 plays); if it reaches that bound, its job details report `truncated: true` and a durable resume cursor continues the same backfill on the next run. The committed high-water mark advances only after the scan reaches its previous checkpoint, so page failures and retries cannot turn a partial scan into a permanent gap.
+
 ## Required runtime configuration
 
 ```text
