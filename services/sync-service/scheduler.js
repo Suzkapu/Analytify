@@ -107,11 +107,12 @@ function createScheduler({supabase, config, tasks, credentials, pushDispatcher})
       return;
     }
     const startedAt = new Date().toISOString();
-    await supabase.from('sync_task_state').upsert({
-      user_id: user.id, task_key: job.task_key, last_started_at: startedAt,
-      last_error: null, updated_at: startedAt
-    }, {onConflict: 'user_id,task_key'});
     try {
+      const {error: startedStateError} = await supabase.from('sync_task_state').upsert({
+        user_id: user.id, task_key: job.task_key, last_started_at: startedAt,
+        last_error: null, updated_at: startedAt
+      }, {onConflict: 'user_id,task_key'});
+      if (startedStateError) throw startedStateError;
       if (!user.backup_active) throw new Error('Cloud Backup is disabled for this user.');
       const spotifyCredential = await credentials.get(user.id, user.spotify_refresh_token);
       if (!spotifyCredential) throw new Error('Spotify refresh credential is missing.');
@@ -136,14 +137,22 @@ function createScheduler({supabase, config, tasks, credentials, pushDispatcher})
       const message = String(error.message || error).slice(0, 1000);
       const failedAt = new Date();
       const retryAt = new Date(failedAt.getTime() + Math.min(3_600_000, intervalMilliseconds(job.task_key, settings)));
-      await supabase.from('sync_task_state').upsert({
+      const stateWrite = supabase.from('sync_task_state').upsert({
         user_id: user.id, task_key: job.task_key, last_started_at: startedAt,
         next_run_at: retryAt.toISOString(), last_error: message, updated_at: failedAt.toISOString()
       }, {onConflict: 'user_id,task_key'});
-      await supabase.from('sync_job_runs').update({
+      const runWrite = supabase.from('sync_job_runs').update({
         status: 'failed', finished_at: failedAt.toISOString(), error: message
       }).eq('id', job.id);
+      const [{error: stateError}, {error: runError}] = await Promise.all([stateWrite, runWrite]);
       console.error(`[Sync] ${job.task_key} failed for ${user.display_name}: ${message}`);
+      const persistenceErrors = [stateError, runError].filter(Boolean);
+      if (persistenceErrors.length === 1) throw persistenceErrors[0];
+      if (persistenceErrors.length > 1) {
+        throw new AggregateError(persistenceErrors, persistenceErrors.map(
+          persistenceError => String(persistenceError.message || persistenceError)
+        ).join('; '));
+      }
     }
   }
 

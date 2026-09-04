@@ -1,16 +1,12 @@
 import {createClient} from 'npm:@supabase/supabase-js@2.108.1';
 import {sendWebPush} from './web-push.ts';
+import {
+  deleteExpiredPushSubscription,
+  deliverSongLeaguePush,
+  type Delivery
+} from './delivery-state.ts';
 
 type PushDevice = {id: string; endpoint: string; p256dh: string; auth: string};
-type Delivery = PushDevice & {
-  delivery_id: string;
-  subscription_id: string;
-  league_id: string;
-  league_name: string;
-  opening_date: string;
-  attempts: number;
-};
-
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -102,7 +98,7 @@ Deno.serve(async request => {
           return true;
         } catch (error) {
           if ([404, 410].includes(Number((error as any)?.statusCode))) {
-            await admin.from('push_subscriptions').delete().eq('id', device.id);
+            await deleteExpiredPushSubscription(admin, device.id);
             return false;
           }
           throw error;
@@ -126,33 +122,19 @@ Deno.serve(async request => {
     });
     if (claimError) throw claimError;
 
-    const outcomes = await mapConcurrently((claimed || []) as Delivery[], 10, async delivery => {
-      try {
-        await sendWebPush(delivery, payload(
+    const outcomes = await mapConcurrently((claimed || []) as Delivery[], 10, delivery =>
+      deliverSongLeaguePush(delivery, {
+        admin,
+        sendWebPush,
+        notificationPayload: payload(
           `Picks are open in ${delivery.league_name}`,
           'Choose this Friday’s discovery before the pick window closes.',
           `/song-league/${encodeURIComponent(delivery.league_id)}`,
           `song-league-${delivery.league_id}-${delivery.opening_date}`
-        ), vapid);
-        await admin.from('song_league_push_deliveries').update({
-          status: 'sent', sent_at: new Date().toISOString(), last_error: null, updated_at: new Date().toISOString()
-        }).eq('id', delivery.delivery_id);
-        return true;
-      } catch (error) {
-        const statusCode = Number((error as any)?.statusCode || 0);
-        if (statusCode === 404 || statusCode === 410) {
-          await admin.from('push_subscriptions').delete().eq('id', delivery.subscription_id);
-        } else {
-          const exhausted = delivery.attempts >= 3;
-          await admin.from('song_league_push_deliveries').update({
-            status: exhausted ? 'failed' : 'retry',
-            last_error: String((error as any)?.message || error).slice(0, 500),
-            updated_at: new Date().toISOString()
-          }).eq('id', delivery.delivery_id);
-        }
-        return false;
-      }
-    });
+        ),
+        vapid
+      })
+    );
     const sent = outcomes.filter(Boolean).length;
     const failed = outcomes.length - sent;
     return json({ok: failed === 0, queued: Number(queued || 0), sent, failed});

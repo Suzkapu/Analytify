@@ -4,6 +4,7 @@ import ts from 'typescript';
 
 const migration = readFileSync('supabase/migrations/20260903200000_song_league_push_notifications.sql', 'utf8').toLowerCase();
 const edgeFunction = readFileSync('supabase/functions/song-league-notifications/index.ts', 'utf8');
+const deliveryState = readFileSync('supabase/functions/song-league-notifications/delivery-state.ts', 'utf8');
 const dispatcher = readFileSync('services/sync-service/push-dispatcher.js', 'utf8');
 const header = readFileSync('src/app/shared/layout/header/header.component.html', 'utf8');
 const league = readFileSync('src/app/features/song-league/song-league-detail.component.html', 'utf8');
@@ -18,7 +19,7 @@ const contracts = [
   ['per-device delivery uniqueness', migration.includes('unique (league_id, opening_date, subscription_id)')],
   ['timezone-aware Friday opening', migration.includes('p_now at time zone league.timezone')],
   ['concurrent delivery claiming', migration.includes('for update skip locked')],
-  ['expired subscription cleanup', edgeFunction.includes('[404, 410]') && edgeFunction.includes("from('push_subscriptions')") && edgeFunction.includes('.delete()')],
+  ['expired subscription cleanup', (edgeFunction + deliveryState).includes('[404, 410]') && deliveryState.includes("from('push_subscriptions')") && deliveryState.includes('.delete()')],
   ['browser preflight support', edgeFunction.includes("request.method === 'OPTIONS'") && edgeFunction.includes('Access-Control-Allow-Origin')],
   ['PWA notification deep link', edgeFunction.includes("operation: 'openWindow'")],
   ['trusted worker dispatch', dispatcher.includes("invoke('song-league-notifications'")],
