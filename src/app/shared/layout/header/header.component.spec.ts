@@ -10,14 +10,21 @@ import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {PlaylistShareAutoSyncService} from '@core/sharing/playlist-share-auto-sync.service';
 import {PushNotificationService} from '@core/notifications/push-notification.service';
 import {HeaderComponent} from './header.component';
+import {of} from 'rxjs';
 
 describe('HeaderComponent entry points', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
   let backupActive: boolean;
+  let storageService: jasmine.SpyObj<StorageService>;
+  let spotifyDataService: jasmine.SpyObj<SpotifyDataService>;
 
   beforeEach(() => {
     backupActive = true;
+    storageService = jasmine.createSpyObj<StorageService>('StorageService', ['getItem', 'setItem', 'removeItem']);
+    storageService.getItem.and.returnValue('cached-avatar.jpg');
+    spotifyDataService = jasmine.createSpyObj<SpotifyDataService>('SpotifyDataService', ['getCurrentUser']);
+    spotifyDataService.getCurrentUser.and.returnValue(of({images: []}));
     TestBed.configureTestingModule({
       declarations: [HeaderComponent],
       providers: [
@@ -27,12 +34,13 @@ describe('HeaderComponent entry points', () => {
             isSyncing: false,
             syncProgress: 0,
             getUserId: () => 'registered-user',
+            getSupabaseUserId: () => null,
             isBackupActive: () => backupActive
           }
         },
-        {provide: StorageService, useValue: {getItem: () => ''}},
+        {provide: StorageService, useValue: storageService},
         {provide: SupabaseService, useValue: {}},
-        {provide: SpotifyDataService, useValue: {}},
+        {provide: SpotifyDataService, useValue: spotifyDataService},
         {provide: PlaylistShareAutoSyncService, useValue: {start: jasmine.createSpy('start')}},
         {
           provide: PushNotificationService,
@@ -61,6 +69,32 @@ describe('HeaderComponent entry points', () => {
     const menu = fixture.nativeElement.querySelector('.user-profile-container .profile-settings-dropdown') as HTMLElement;
     expect(menu.textContent).not.toContain('personal Spotify app');
     expect(menu.querySelector('.pi-key')).toBeNull();
+  });
+
+  it('does not poison the avatar cache when the image fails to load', () => {
+    component.profilePicUrl = 'https://cdn.example/avatar.jpg';
+
+    component.onProfileImageError();
+
+    expect(component.profilePicUrl).toBeNull();
+    expect(storageService.removeItem).toHaveBeenCalledOnceWith('registered-user_profile_pic');
+    expect(storageService.setItem).not.toHaveBeenCalledWith('registered-user_profile_pic', '');
+  });
+
+  it('recovers from a previously cached empty avatar by loading Spotify again', async () => {
+    storageService.getItem.and.returnValue('');
+    spotifyDataService.getCurrentUser.and.returnValue(of({
+      images: [{url: 'https://cdn.example/recovered-avatar.jpg'}]
+    }));
+
+    await component.loadUserProfile();
+
+    expect(spotifyDataService.getCurrentUser).toHaveBeenCalled();
+    expect(component.profilePicUrl).toBe('https://cdn.example/recovered-avatar.jpg');
+    expect(storageService.setItem).toHaveBeenCalledWith(
+      'registered-user_profile_pic',
+      'https://cdn.example/recovered-avatar.jpg'
+    );
   });
 
   it('keeps Compare Room available from the authenticated workspace menu', () => {

@@ -73,8 +73,8 @@ export class HeaderComponent implements OnInit {
   async loadUserProfile() {
     const userId = this.authService.getUserId() || 'anonymous';
     const cached = this.storageService.getItem(`${userId}_profile_pic`);
-    if (cached !== null) {
-      this.profilePicUrl = cached || null;
+    if (cached) {
+      this.profilePicUrl = cached;
       return;
     }
 
@@ -91,8 +91,12 @@ export class HeaderComponent implements OnInit {
     this.spotifyDataService.getCurrentUser().subscribe({
       next: (user: any) => {
         const pic = user.images && user.images[0] ? user.images[0].url : '';
-        this.storageService.setItem(`${userId}_profile_pic`, pic);
         this.profilePicUrl = pic || null;
+        if (pic) {
+          this.storageService.setItem(`${userId}_profile_pic`, pic);
+        } else {
+          this.storageService.removeItem(`${userId}_profile_pic`);
+        }
       },
       error: (err) => console.error('Failed to load user profile:', err)
     });
@@ -101,7 +105,7 @@ export class HeaderComponent implements OnInit {
   onProfileImageError(): void {
     this.profilePicUrl = null;
     const userId = this.authService.getUserId() || 'anonymous';
-    this.storageService.setItem(`${userId}_profile_pic`, '');
+    this.storageService.removeItem(`${userId}_profile_pic`);
   }
 
   toggleSettingsDropdown(event: Event) {
