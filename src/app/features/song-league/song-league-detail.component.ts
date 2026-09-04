@@ -31,7 +31,9 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   isSavingNotifications = false;
   notificationSettings: PushNotificationSettings = {
     supported: false, installedPwa: false, permission: 'unavailable',
-    deviceSubscribed: false, songLeagueEnabled: false, active: false
+    deviceSubscribed: false, songLeagueEnabled: false,
+    songLeagueSongAddedEnabled: false, songLeagueMember: false,
+    active: false, songAddedActive: false
   };
 
   songQuery = '';

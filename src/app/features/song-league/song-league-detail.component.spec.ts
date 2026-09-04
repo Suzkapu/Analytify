@@ -18,11 +18,13 @@ describe('SongLeagueDetailComponent notifications', () => {
     );
     notifications.loadSettings.and.resolveTo({
       supported: true, installedPwa: true, permission: 'granted',
-      deviceSubscribed: true, songLeagueEnabled: true, active: true
+      deviceSubscribed: true, songLeagueEnabled: true, songLeagueSongAddedEnabled: false,
+      songLeagueMember: true, active: true, songAddedActive: false
     });
     notifications.setSongLeagueEnabled.and.resolveTo({
       supported: true, installedPwa: true, permission: 'granted',
-      deviceSubscribed: true, songLeagueEnabled: false, active: false
+      deviceSubscribed: true, songLeagueEnabled: false, songLeagueSongAddedEnabled: false,
+      songLeagueMember: true, active: false, songAddedActive: false
     });
     const songLeague = jasmine.createSpyObj<SongLeagueService>('SongLeagueService', [
       'currentUserId', 'loadDashboard', 'ensureMemberReadyForLeague',

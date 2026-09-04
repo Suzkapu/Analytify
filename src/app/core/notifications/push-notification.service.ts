@@ -11,7 +11,10 @@ export interface PushNotificationSettings {
   permission: NotificationPermission | 'unavailable';
   deviceSubscribed: boolean;
   songLeagueEnabled: boolean;
+  songLeagueSongAddedEnabled: boolean;
+  songLeagueMember: boolean;
   active: boolean;
+  songAddedActive: boolean;
 }
 
 @Injectable({providedIn: 'root'})
@@ -32,13 +35,29 @@ export class PushNotificationService {
       ? preferenceResult.data[0]
       : preferenceResult.data;
     const songLeagueEnabled = !!row?.song_league_enabled;
-    if (songLeagueEnabled && subscription && permission === 'granted') {
+    const songLeagueSongAddedEnabled = !!row?.song_league_song_added_enabled;
+    const songLeagueMember = !!row?.song_league_member;
+    if ((songLeagueEnabled || songLeagueSongAddedEnabled) && subscription && permission === 'granted') {
       await this.registerDevice(subscription);
     }
-    return this.settings(songLeagueEnabled, !!subscription, permission);
+    return this.settings(
+      songLeagueEnabled, songLeagueSongAddedEnabled, songLeagueMember,
+      !!subscription, permission
+    );
   }
 
   async setSongLeagueEnabled(enabled: boolean): Promise<PushNotificationSettings> {
+    return this.setCategoryEnabled('song_league', enabled);
+  }
+
+  async setSongLeagueSongAddedEnabled(enabled: boolean): Promise<PushNotificationSettings> {
+    return this.setCategoryEnabled('song_league_song_added', enabled);
+  }
+
+  private async setCategoryEnabled(
+    category: 'song_league' | 'song_league_song_added',
+    enabled: boolean
+  ): Promise<PushNotificationSettings> {
     let subscription = await this.currentSubscription();
     if (enabled) {
       if (!this.swPush.isEnabled) {
@@ -73,12 +92,11 @@ export class PushNotificationService {
     }
 
     const preference = await this.supabase.client.rpc('set_notification_preference', {
-      p_category: 'song_league',
+      p_category: category,
       p_enabled: enabled
     });
     if (preference.error) throw preference.error;
-    const permission = await this.currentPermission();
-    return this.settings(enabled, !!subscription, permission);
+    return this.loadSettings();
   }
 
   private async currentSubscription(): Promise<PushSubscription | null> {
@@ -128,6 +146,8 @@ export class PushNotificationService {
 
   private settings(
     songLeagueEnabled: boolean,
+    songLeagueSongAddedEnabled: boolean,
+    songLeagueMember: boolean,
     deviceSubscribed: boolean,
     permission: NotificationPermission | 'unavailable'
   ): PushNotificationSettings {
@@ -137,7 +157,10 @@ export class PushNotificationService {
       permission,
       deviceSubscribed,
       songLeagueEnabled,
-      active: songLeagueEnabled && deviceSubscribed && permission === 'granted'
+      songLeagueSongAddedEnabled,
+      songLeagueMember,
+      active: songLeagueEnabled && deviceSubscribed && permission === 'granted',
+      songAddedActive: songLeagueSongAddedEnabled && deviceSubscribed && permission === 'granted'
     };
   }
 

@@ -94,3 +94,16 @@ test('the shared expired-subscription cleanup rejects failed admin-test writes',
   );
   assert.deepEqual(admin.writes[0], {table: 'push_subscriptions', operation: 'delete'});
 });
+
+test('updates the dedicated new-song delivery table', async () => {
+  const admin = createAdmin(null);
+  const songDelivery = {
+    ...delivery,
+    delivery_table: 'song_league_song_push_deliveries'
+  };
+
+  await deliverSongLeaguePush(songDelivery, dependencies(admin, async () => {}));
+
+  assert.equal(admin.writes[0].table, 'song_league_song_push_deliveries');
+  assert.equal(admin.writes[0].value.status, 'sent');
+});

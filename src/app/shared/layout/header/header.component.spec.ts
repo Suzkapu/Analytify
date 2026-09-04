@@ -47,9 +47,12 @@ describe('HeaderComponent entry points', () => {
           useValue: {
             loadSettings: jasmine.createSpy('loadSettings').and.resolveTo({
               supported: true, installedPwa: true, permission: 'granted',
-              deviceSubscribed: true, songLeagueEnabled: true, active: true
+              deviceSubscribed: true, songLeagueEnabled: true,
+              songLeagueSongAddedEnabled: false, songLeagueMember: true,
+              active: true, songAddedActive: false
             }),
-            setSongLeagueEnabled: jasmine.createSpy('setSongLeagueEnabled')
+            setSongLeagueEnabled: jasmine.createSpy('setSongLeagueEnabled'),
+            setSongLeagueSongAddedEnabled: jasmine.createSpy('setSongLeagueSongAddedEnabled')
           }
         },
         {provide: AdminService, useValue: {isAdmin: () => Promise.resolve(false)}},
@@ -158,6 +161,7 @@ describe('HeaderComponent entry points', () => {
     const dialog = fixture.nativeElement.querySelector('.notification-settings-modal') as HTMLElement;
     expect(dialog).not.toBeNull();
     expect(dialog.textContent).toContain('Song League');
-    expect(dialog.querySelectorAll('.notification-category-row').length).toBe(1);
+    expect(dialog.textContent).toContain('New Song League picks');
+    expect(dialog.querySelectorAll('.notification-category-row').length).toBe(2);
   });
 });

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import ts from 'typescript';
 
 const migration = readFileSync('supabase/migrations/20260903200000_song_league_push_notifications.sql', 'utf8').toLowerCase();
+const songAddedMigration = readFileSync('supabase/migrations/20260904180000_song_league_song_added_notifications.sql', 'utf8').toLowerCase();
 const edgeFunction = readFileSync('supabase/functions/song-league-notifications/index.ts', 'utf8');
 const deliveryState = readFileSync('supabase/functions/song-league-notifications/delivery-state.ts', 'utf8');
 const dispatcher = readFileSync('services/sync-service/push-dispatcher.js', 'utf8');
@@ -26,7 +27,14 @@ const contracts = [
   ['Data & account manager', header.includes('notification-settings-modal') && header.includes('Song League')],
   ['in-league notification switch', league.includes('league-notification-control') && league.includes('Turn off')],
   ['admin test delivery', admin.includes('Send test notification')],
-  ['post-join notification opt-in', claim.includes('Enable pick notifications?') && claim.includes('Not now')]
+  ['post-join notification opt-in', claim.includes('Enable pick notifications?') && claim.includes('Not now')],
+  ['new-song notifications default off', songAddedMigration.includes('song_league_song_added_enabled boolean not null default false')],
+  ['new-song toggle requires membership', songAddedMigration.includes('join a song league before enabling new-song notifications')],
+  ['new-song delivery excludes its author', songAddedMigration.includes('recipient.user_id <> new.recommender_user_id')],
+  ['new-song delivery is idempotent per device', songAddedMigration.includes('unique (recommendation_id, subscription_id)')],
+  ['new-song delivery queues after recommendation insert', songAddedMigration.includes('after insert on public.song_league_recommendations')],
+  ['notification manager gates new-song controls by membership', header.includes('*ngIf="notificationSettings.songLeagueMember"') && header.includes('New Song League picks')],
+  ['delivery categories are claimed in parallel', edgeFunction.includes('Promise.all') && edgeFunction.includes('claim_song_league_song_push_deliveries')]
 ];
 
 const missing = contracts.filter(([, present]) => !present).map(([label]) => label);

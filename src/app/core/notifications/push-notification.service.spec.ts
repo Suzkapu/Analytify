@@ -11,6 +11,7 @@ describe('PushNotificationService', () => {
   let requestSubscription: jasmine.Spy;
   let browserSubscription: PushSubscription | null;
   let permissionState: PermissionState;
+  let preferences: {song_league_enabled: boolean; song_league_song_added_enabled: boolean; song_league_member: boolean};
   const subscription = {
     endpoint: 'https://push.example/device',
     toJSON: () => ({
@@ -22,13 +23,23 @@ describe('PushNotificationService', () => {
   beforeEach(() => {
     browserSubscription = null;
     permissionState = 'granted';
+    preferences = {
+      song_league_enabled: false,
+      song_league_song_added_enabled: false,
+      song_league_member: true
+    };
     spyOn(navigator.permissions, 'query').and.callFake(async () => ({
       state: permissionState
     } as PermissionStatus));
-    rpc = jasmine.createSpy('rpc').and.callFake(async (name: string) => ({
-      data: name === 'get_notification_preferences' ? [{song_league_enabled: false}] : null,
-      error: null
-    }));
+    rpc = jasmine.createSpy('rpc').and.callFake(async (name: string, parameters?: any) => {
+      if (name === 'set_notification_preference') {
+        if (parameters.p_category === 'song_league') preferences.song_league_enabled = parameters.p_enabled;
+        if (parameters.p_category === 'song_league_song_added') {
+          preferences.song_league_song_added_enabled = parameters.p_enabled;
+        }
+      }
+      return {data: name === 'get_notification_preferences' ? [preferences] : null, error: null};
+    });
     requestSubscription = jasmine.createSpy('requestSubscription').and.resolveTo(subscription);
     TestBed.configureTestingModule({
       providers: [
@@ -68,10 +79,7 @@ describe('PushNotificationService', () => {
   it('turns the effective state off when a temporary browser permission expires', async () => {
     browserSubscription = subscription;
     permissionState = 'prompt';
-    rpc.and.callFake(async (name: string) => ({
-      data: name === 'get_notification_preferences' ? [{song_league_enabled: true}] : null,
-      error: null
-    }));
+    preferences.song_league_enabled = true;
 
     const settings = await service.loadSettings();
 
@@ -102,9 +110,23 @@ describe('PushNotificationService', () => {
     const settings = await service.setSongLeagueEnabled(false);
 
     expect(requestSubscription).not.toHaveBeenCalled();
-    expect(rpc).toHaveBeenCalledOnceWith('set_notification_preference', {
+    expect(rpc).toHaveBeenCalledWith('set_notification_preference', {
       p_category: 'song_league', p_enabled: false
     });
     expect(settings.songLeagueEnabled).toBeFalse();
+  });
+
+  it('keeps new-song notifications off by default and enables them as a separate category', async () => {
+    browserSubscription = subscription;
+
+    const initial = await service.loadSettings();
+    const enabled = await service.setSongLeagueSongAddedEnabled(true);
+
+    expect(initial.songAddedActive).toBeFalse();
+    expect(rpc).toHaveBeenCalledWith('set_notification_preference', {
+      p_category: 'song_league_song_added', p_enabled: true
+    });
+    expect(enabled.songAddedActive).toBeTrue();
+    expect(enabled.songLeagueEnabled).toBeFalse();
   });
 });

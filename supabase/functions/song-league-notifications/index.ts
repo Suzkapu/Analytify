@@ -117,21 +117,36 @@ Deno.serve(async request => {
       p_now: requestedNow
     });
     if (queueError) throw queueError;
-    const {data: claimed, error: claimError} = await admin.rpc('claim_song_league_push_deliveries', {
-      p_limit: 100
-    });
-    if (claimError) throw claimError;
+    const [openingClaims, songClaims] = await Promise.all([
+      admin.rpc('claim_song_league_push_deliveries', {p_limit: 100}),
+      admin.rpc('claim_song_league_song_push_deliveries', {p_limit: 100})
+    ]);
+    if (openingClaims.error) throw openingClaims.error;
+    if (songClaims.error) throw songClaims.error;
+    const claimed = [
+      ...(openingClaims.data || []).map((delivery: Delivery) => ({
+        ...delivery, delivery_table: 'song_league_push_deliveries' as const
+      })),
+      ...(songClaims.data || []) as Delivery[]
+    ];
 
-    const outcomes = await mapConcurrently((claimed || []) as Delivery[], 10, delivery =>
+    const outcomes = await mapConcurrently(claimed, 10, delivery =>
       deliverSongLeaguePush(delivery, {
         admin,
         sendWebPush,
-        notificationPayload: payload(
-          `Picks are open in ${delivery.league_name}`,
-          'Choose this Friday’s discovery before the pick window closes.',
-          `/song-league/${encodeURIComponent(delivery.league_id)}`,
-          `song-league-${delivery.league_id}-${delivery.opening_date}`
-        ),
+        notificationPayload: delivery.delivery_table === 'song_league_song_push_deliveries'
+          ? payload(
+            `${delivery.recommender_display_name} added a song`,
+            `“${delivery.track_name}” was added to ${delivery.league_name}.`,
+            `/song-league/${encodeURIComponent(delivery.league_id)}`,
+            `song-league-song-${delivery.delivery_id}`
+          )
+          : payload(
+            `Picks are open in ${delivery.league_name}`,
+            'Choose this Friday’s discovery before the pick window closes.',
+            `/song-league/${encodeURIComponent(delivery.league_id)}`,
+            `song-league-${delivery.league_id}-${delivery.opening_date}`
+          ),
         vapid
       })
     );

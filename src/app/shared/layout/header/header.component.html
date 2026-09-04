@@ -129,7 +129,7 @@
       <label class="notification-category-row">
         <span class="notification-category-icon"><i class="pi pi-star"></i></span>
         <span class="notification-category-copy">
-          <strong>Song League</strong>
+          <strong>Song League pick windows</strong>
           <small>Receive a reminder when Friday picks open in one of your leagues.</small>
           <em *ngIf="notificationSettings.active">Enabled on this device</em>
           <em *ngIf="notificationSettings.permission === 'granted' && notificationSettings.deviceSubscribed && !notificationSettings.songLeagueEnabled">Ready on this device</em>
@@ -140,6 +140,22 @@
           <input type="checkbox" [checked]="notificationSettings.active"
             [disabled]="isSavingNotificationSettings || (!notificationSettings.supported && !notificationSettings.songLeagueEnabled) || (notificationSettings.permission === 'denied' && !notificationSettings.songLeagueEnabled)"
             (change)="toggleSongLeagueNotifications($event)" aria-label="Song League notifications">
+          <span class="slider round"></span>
+        </span>
+      </label>
+      <label *ngIf="notificationSettings.songLeagueMember" class="notification-category-row">
+        <span class="notification-category-icon"><i class="pi pi-music"></i></span>
+        <span class="notification-category-copy">
+          <strong>New Song League picks</strong>
+          <small>Get notified when another member adds a song to one of your leagues.</small>
+          <em *ngIf="notificationSettings.songAddedActive">Enabled on this device</em>
+          <em *ngIf="notificationSettings.permission === 'granted' && notificationSettings.deviceSubscribed && !notificationSettings.songLeagueSongAddedEnabled">Off by default</em>
+          <em *ngIf="notificationSettings.permission === 'denied'" class="notification-denied">Blocked in browser settings</em>
+        </span>
+        <span class="switch" title="Toggle new Song League pick notifications">
+          <input type="checkbox" [checked]="notificationSettings.songAddedActive"
+            [disabled]="isSavingNotificationSettings || (!notificationSettings.supported && !notificationSettings.songLeagueSongAddedEnabled) || (notificationSettings.permission === 'denied' && !notificationSettings.songLeagueSongAddedEnabled)"
+            (change)="toggleSongAddedNotifications($event)" aria-label="New Song League pick notifications">
           <span class="slider round"></span>
         </span>
       </label>

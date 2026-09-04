@@ -6,7 +6,10 @@ export type Delivery = {
   auth: string;
   league_id: string;
   league_name: string;
-  opening_date: string;
+  opening_date?: string;
+  track_name?: string;
+  recommender_display_name?: string;
+  delivery_table?: 'song_league_push_deliveries' | 'song_league_song_push_deliveries';
   attempts: number;
 };
 
@@ -44,6 +47,7 @@ export async function deliverSongLeaguePush(
   delivery: Delivery,
   dependencies: DeliveryDependencies
 ): Promise<boolean> {
+  const deliveryTable = delivery.delivery_table || 'song_league_push_deliveries';
   try {
     await dependencies.sendWebPush(delivery, dependencies.notificationPayload, dependencies.vapid);
   } catch (error) {
@@ -52,7 +56,7 @@ export async function deliverSongLeaguePush(
       await deleteExpiredPushSubscription(dependencies.admin, delivery.subscription_id);
     } else {
       const exhausted = delivery.attempts >= 3;
-      const {error: retryError} = await dependencies.admin.from('song_league_push_deliveries').update({
+      const {error: retryError} = await dependencies.admin.from(deliveryTable).update({
         status: exhausted ? 'failed' : 'retry',
         last_error: String((error as Error)?.message || error).slice(0, 500),
         updated_at: (dependencies.now || (() => new Date().toISOString()))()
@@ -63,7 +67,7 @@ export async function deliverSongLeaguePush(
   }
 
   const timestamp = (dependencies.now || (() => new Date().toISOString()))();
-  const {error: sentError} = await dependencies.admin.from('song_league_push_deliveries').update({
+  const {error: sentError} = await dependencies.admin.from(deliveryTable).update({
     status: 'sent', sent_at: timestamp, last_error: null, updated_at: timestamp
   }).eq('id', delivery.delivery_id);
   throwIfDatabaseError(sentError);
