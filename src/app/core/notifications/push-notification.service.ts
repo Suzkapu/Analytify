@@ -96,7 +96,19 @@ export class PushNotificationService {
       p_enabled: enabled
     });
     if (preference.error) throw preference.error;
-    return this.loadSettings();
+    const settings = await this.loadSettings();
+    if (!enabled || !subscription || settings.deviceSubscribed) return settings;
+
+    // PushManager/SwPush may publish the new subscription one tick after
+    // requestSubscription resolves. The returned subscription is already the
+    // authoritative registration for this action, so keep the UI in sync
+    // instead of briefly flipping the newly enabled toggle back off.
+    return {
+      ...settings,
+      deviceSubscribed: true,
+      active: settings.songLeagueEnabled && settings.permission === 'granted',
+      songAddedActive: settings.songLeagueSongAddedEnabled && settings.permission === 'granted'
+    };
   }
 
   private async currentSubscription(): Promise<PushSubscription | null> {

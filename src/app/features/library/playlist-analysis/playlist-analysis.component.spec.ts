@@ -300,8 +300,7 @@ describe('PlaylistAnalysisComponent', () => {
     params.next({id: 'playlist-a'});
     params.next({id: 'playlist-b'});
     finishPlaylistBRestore();
-    await Promise.resolve();
-    await Promise.resolve();
+    await expectAsync(waitFor(() => loader.startLoadingTask.calls.count() === 1)).toBeResolved();
     expect(loader.startLoadingTask).toHaveBeenCalledTimes(1);
     expect(loader.startLoadingTask.calls.mostRecent().args[1]).toBe('playlist-b');
 
@@ -314,3 +313,11 @@ describe('PlaylistAnalysisComponent', () => {
     routeFixture.destroy();
   });
 });
+
+async function waitFor(predicate: () => boolean): Promise<void> {
+  const deadline = Date.now() + 1000;
+  while (!predicate()) {
+    if (Date.now() >= deadline) throw new Error('Timed out waiting for playlist load');
+    await new Promise(resolve => setTimeout(resolve, 0));
+  }
+}
