@@ -11,6 +11,18 @@
           "/index.html",
           "/manifest.webmanifest",
           "/*.css",
+          "/runtime*.js",
+          "/polyfills*.js",
+          "/main*.js"
+        ]
+      }
+    },
+    {
+      "name": "feature-chunks",
+      "installMode": "lazy",
+      "updateMode": "lazy",
+      "resources": {
+        "files": [
           "/*.js"
         ]
       }
