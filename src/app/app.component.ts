@@ -66,6 +66,17 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         }
       } else if (event instanceof NavigationError) {
         navigationLog.error('Navigation failed', {url: event.url, error: event.error});
+        const isChunkLoadError = event.error?.name === 'ChunkLoadError'
+          || /loading chunk/i.test(event.error?.message || '')
+          || /failed to fetch dynamically imported module/i.test(event.error?.message || '');
+        if (isChunkLoadError) {
+          const reloadKey = 'analytify_last_chunk_reload';
+          const lastReload = Number(sessionStorage.getItem(reloadKey) || 0);
+          if (Date.now() - lastReload > 10_000) {
+            sessionStorage.setItem(reloadKey, String(Date.now()));
+            window.location.reload();
+          }
+        }
       }
     });
 
