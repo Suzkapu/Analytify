@@ -8,7 +8,7 @@ const admin = readFileSync('src/app/core/admin/admin.service.ts', 'utf8');
 const stats = readFileSync('src/app/features/insights/user-stats/user-stats.component.ts', 'utf8');
 const history = readFileSync('src/app/features/insights/listening-history/listening-history.component.ts', 'utf8');
 const scheduler = readFileSync('services/sync-service/scheduler.js', 'utf8');
-const syncJobLeases = readFileSync('supabase/migrations/20260905160000_sync_job_leases_and_atomic_completion.sql', 'utf8');
+const syncJobLeases = readFileSync('supabase/migrations/20260905163000_sync_job_leases_and_atomic_completion.sql', 'utf8');
 const integration = readFileSync('src/app/integration/supabase-loading.integration.spec.ts', 'utf8');
 const workflow = readFileSync('.github/workflows/deploy.yml', 'utf8');
 
