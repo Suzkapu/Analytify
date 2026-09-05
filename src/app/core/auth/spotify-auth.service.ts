@@ -39,6 +39,7 @@ export class SpotifyAuthService {
   isSyncing = false;
   syncProgress = 0;
   initialSyncPromise: Promise<void> | null = null;
+  private credentialRegistrationPromise: Promise<string | null> | null = null;
 
   constructor(
     private storageService: StorageService,
@@ -682,30 +683,7 @@ export class SpotifyAuthService {
         ).catch(err => {
           console.warn('[SpotifyAuthService] Failed to clean redundant normalized cache keys:', err);
         });
-        if (active) {
-          await this.pullCacheFromDatabase(supabaseUserId);
-        }
       }
-    }
-  }
-
-  private async pullCacheFromDatabase(supabaseUserId: string): Promise<void> {
-    try {
-      console.log('[Auth] Pulling user cache from Supabase...');
-      const dbCache = await this.supabaseService.loadUserCache(supabaseUserId);
-      if (dbCache && dbCache.length > 0) {
-        dbCache.forEach(item => {
-          // Local data is the primary source. Cloud data only fills gaps during
-          // the broad startup hydration; expired feature caches explicitly
-          // request their cloud keys before falling back to Spotify.
-          if (this.storageService.getItem(item.key) === null) {
-            this.storageService.setItem(item.key, item.value, false);
-          }
-        });
-        console.log(`[Auth] Loaded ${dbCache.length} cache keys from database.`);
-      }
-    } catch (e) {
-      console.error('[Auth] Failed to pull user cache from database:', e);
     }
   }
 
@@ -883,6 +861,26 @@ export class SpotifyAuthService {
   }
 
   private async registerCurrentSpotifyCredentials(
+    profile?: any,
+    override?: {
+      accessToken: string;
+      refreshToken: string;
+      connectionMode: SpotifyConnectionMode;
+      clientId: string | null;
+      spotifyId: string;
+    }
+  ): Promise<string | null> {
+    if (profile || override) {
+      return this.persistCurrentSpotifyCredentials(profile, override);
+    }
+    if (!this.credentialRegistrationPromise) {
+      this.credentialRegistrationPromise = this.persistCurrentSpotifyCredentials()
+        .finally(() => { this.credentialRegistrationPromise = null; });
+    }
+    return this.credentialRegistrationPromise;
+  }
+
+  private async persistCurrentSpotifyCredentials(
     profile?: any,
     override?: {
       accessToken: string;

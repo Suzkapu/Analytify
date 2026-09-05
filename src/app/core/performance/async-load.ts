@@ -1,5 +1,19 @@
 export const DEFAULT_IO_CONCURRENCY = 4;
 
+/** Runs tasks with the same key one at a time while unrelated keys remain parallel. */
+export class KeyedSerialTaskQueue {
+  private readonly pending = new Map<string, Promise<unknown>>();
+
+  run<T>(key: string, task: () => Promise<T>): Promise<T> {
+    const previous = this.pending.get(key) || Promise.resolve();
+    const current = previous.catch(() => undefined).then(task);
+    this.pending.set(key, current);
+    return current.finally(() => {
+      if (this.pending.get(key) === current) this.pending.delete(key);
+    });
+  }
+}
+
 /**
  * Runs independent asynchronous work with a small, shared-safe fan-out.
  * Keeping the result index stable lets callers assemble one complete view and

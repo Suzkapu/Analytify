@@ -1,4 +1,4 @@
-import {mapWithConcurrency, runAfterNextPaint} from './async-load';
+import {KeyedSerialTaskQueue, mapWithConcurrency, runAfterNextPaint} from './async-load';
 
 describe('async loading primitives', () => {
   it('runs bounded work concurrently while preserving input order', async () => {
@@ -27,5 +27,36 @@ describe('async loading primitives', () => {
     jasmine.clock().tick(25);
     expect(task).toHaveBeenCalledTimes(1);
     jasmine.clock().uninstall();
+  });
+
+  it('serializes writes for one key without blocking independent keys', async () => {
+    const queue = new KeyedSerialTaskQueue();
+    const releases: Array<() => void> = [];
+    const started: string[] = [];
+    const task = (label: string) => queue.run('daily-stats', async () => {
+      started.push(label);
+      await new Promise<void>(resolve => releases.push(resolve));
+    });
+
+    const first = task('first');
+    const second = task('second');
+    const independent = queue.run('other-range', async () => { started.push('independent'); });
+    await Promise.resolve();
+
+    expect(started).toEqual(['first', 'independent']);
+    releases.shift()?.();
+    await first;
+    expect(started).toEqual(['first', 'independent', 'second']);
+    releases.shift()?.();
+    await Promise.all([second, independent]);
+  });
+
+  it('continues a keyed queue after an earlier write fails', async () => {
+    const queue = new KeyedSerialTaskQueue();
+    const failed = queue.run('snapshot', async () => { throw new Error('conflict'); });
+    const recovered = queue.run('snapshot', async () => 'saved');
+
+    await expectAsync(failed).toBeRejectedWithError('conflict');
+    await expectAsync(recovered).toBeResolvedTo('saved');
   });
 });

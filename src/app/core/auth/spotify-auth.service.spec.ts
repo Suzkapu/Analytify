@@ -333,6 +333,21 @@ describe('SpotifyAuthService', () => {
     expect(values['11111111-1111-4111-8111-111111111111_backup_active']).toBe('true');
   });
 
+  it('coalesces overlapping hosted credential registrations', async () => {
+    values['supabaseUserId'] = '11111111-1111-4111-8111-111111111111';
+    values['spotifyUserId'] = 'spotify-user';
+    values['spotifyAccessToken'] = 'hosted-access';
+    values['spotifyRefreshToken'] = 'hosted-refresh';
+
+    const first = (service as any).registerCurrentSpotifyCredentials();
+    const second = (service as any).registerCurrentSpotifyCredentials();
+    const profileRequest = await requestAfterMicrotasks('https://api.spotify.com/v1/me');
+    profileRequest.flush({id: 'spotify-user', display_name: 'Listener', images: []});
+    await Promise.all([first, second]);
+
+    expect(supabaseService.client.functions.invoke).toHaveBeenCalledTimes(1);
+  });
+
   it('explains a disabled anonymous-auth server setting when Cloud Backup is enabled', async () => {
     values['spotifyConnectionMode'] = 'personal_pkce';
     authClient.signInAnonymously.and.resolveTo({

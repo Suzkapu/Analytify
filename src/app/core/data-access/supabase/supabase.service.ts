@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '@env/environment';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {KeyedSerialTaskQueue} from '@core/performance/async-load';
 
 const console = createScopedLogger('Supabase');
 
@@ -40,10 +41,6 @@ function getDailyCutoff(now: Date = new Date()): Date {
   return cutoff;
 }
 
-function getDailyCutoffTimestamp(): string {
-  return getDailyCutoff().toISOString();
-}
-
 function getDailySnapshotDate(now: Date = new Date()): string {
   const cutoff = getDailyCutoff(now);
   const year = cutoff.getFullYear();
@@ -63,6 +60,7 @@ function getStatsSnapshotCutoff(maxAgeDays: number): string {
 })
 export class SupabaseService {
   public client: SupabaseClient;
+  private readonly statsSnapshotWrites = new KeyedSerialTaskQueue();
 
   constructor() {
     this.client = createClient(environment.supabaseUrl, environment.supabaseKey, {
@@ -1318,15 +1316,40 @@ export class SupabaseService {
     onlyInsertMissing = false,
     customDateStr?: string
   ): Promise<void> {
-    let incompleteSnapshotId: string | null = null;
+    const snapshotDate = customDateStr || getDailySnapshotDate();
+    return this.statsSnapshotWrites.run(
+      `${supabaseUserId}:${range}:${snapshotDate}`,
+      () => this.persistStatsSnapshot(
+        supabaseUserId,
+        range,
+        explicitPercentage,
+        genreDiversity,
+        topTracks,
+        topArtists,
+        topGenres,
+        onlyInsertMissing,
+        snapshotDate
+      )
+    );
+  }
+
+  private async persistStatsSnapshot(
+    supabaseUserId: string,
+    range: string,
+    explicitPercentage: number,
+    genreDiversity: number,
+    topTracks: any[],
+    topArtists: any[],
+    topGenres: any[],
+    onlyInsertMissing: boolean,
+    snapshotDate: string
+  ): Promise<void> {
 
     try {
       await this.ensureSession();
 
-      const todayStr = customDateStr || getDailySnapshotDate();
-      const fetchedAt = customDateStr
-        ? new Date(`${customDateStr}T01:00:00`).toISOString()
-        : getDailyCutoffTimestamp();
+      const todayStr = snapshotDate;
+      const fetchedAt = new Date(`${snapshotDate}T01:00:00`).toISOString();
 
       // 1. Sync metadata objects (artists -> albums -> tracks) — deduplicated by id
       const tracksMap2 = new Map<string, any>();
@@ -1364,174 +1387,69 @@ export class SupabaseService {
       await this.syncAlbums(rawAlbums, onlyInsertMissing);
       await this.syncTracks(rawTracks, onlyInsertMissing);
 
-      // 2. Create the snapshot row
-      const { data: snapshot, error: snapshotErr } = await this.client
-        .from('stats_snapshots')
-        .upsert({
-          user_id: supabaseUserId,
-          range: range,
-          snapshot_date: todayStr,
-          explicit_percentage: explicitPercentage,
-          genre_diversity: genreDiversity
-        }, { onConflict: 'user_id,range,snapshot_date' })
-        .select('id')
-        .single();
-
-      if (snapshotErr) throw snapshotErr;
-      const snapshotId = snapshot.id;
-      incompleteSnapshotId = snapshotId;
-
-      // Rewriting the same daily snapshot must replace its ranks. Otherwise
-      // shorter lists leave stale rows and moved items can violate the
-      // per-snapshot unique constraints.
-      for (const table of [
-        'stats_snapshot_tracks',
-        'stats_snapshot_artists',
-        'stats_snapshot_genres'
-      ]) {
-        const { error } = await this.client
-          .from(table)
-          .delete()
-          .eq('snapshot_id', snapshotId);
-        if (error) throw error;
-      }
-
-      // 3. Link tracks
+      // Build unique rank lists before replacing the snapshot in one locked
+      // database transaction. This prevents browser and worker refreshes from
+      // interleaving deletes and inserts for the same day.
       const seenTrackIds = new Set<string>();
       const trackLinks: any[] = [];
       topTracks.forEach(track => {
         if (track?.id && !seenTrackIds.has(track.id)) {
           seenTrackIds.add(track.id);
           trackLinks.push({
-            snapshot_id: snapshotId,
             track_id: track.id,
             rank: trackLinks.length + 1
           });
         }
       });
 
-      if (trackLinks.length > 0) {
-        const { error } = await this.client
-          .from('stats_snapshot_tracks')
-          .upsert(trackLinks, { onConflict: 'snapshot_id,rank' });
-        if (error) throw error;
-      }
-
-      // 4. Link artists
       const seenArtistIds = new Set<string>();
       const artistLinks: any[] = [];
       topArtists.forEach(artist => {
         if (artist?.id && !seenArtistIds.has(artist.id)) {
           seenArtistIds.add(artist.id);
           artistLinks.push({
-            snapshot_id: snapshotId,
             artist_id: artist.id,
             rank: artistLinks.length + 1
           });
         }
       });
 
-      if (artistLinks.length > 0) {
-        const { error } = await this.client
-          .from('stats_snapshot_artists')
-          .upsert(artistLinks, { onConflict: 'snapshot_id,rank' });
-        if (error) throw error;
-      }
-
-      // 5. Persist the ranked genre snapshot independently of artist metadata.
       const seenGenres = new Set<string>();
       const genreLinks: any[] = [];
       topGenres.forEach(genre => {
         if (genre?.name && !seenGenres.has(genre.name)) {
           seenGenres.add(genre.name);
           genreLinks.push({
-            snapshot_id: snapshotId,
             genre_name: genre.name,
             rank: genreLinks.length + 1,
-            weight: typeof genre.percentage === 'number' ? genre.percentage : (genre.count || 0)
+            weight: Math.round(Number.isFinite(genre.percentage)
+              ? genre.percentage
+              : (Number.isFinite(genre.count) ? genre.count : 0))
           });
         }
       });
 
-      if (genreLinks.length > 0) {
-        const { error: genreError } = await this.client
-          .from('genres')
-          .upsert(genreLinks.map(link => ({ name: link.genre_name })), { onConflict: 'name' });
-        if (genreError) throw genreError;
-
-        const { error: genreLinkError } = await this.client
-          .from('stats_snapshot_genres')
-          .upsert(genreLinks, { onConflict: 'snapshot_id,rank' });
-        if (genreLinkError) throw genreLinkError;
-      }
-
-      // Raw top-item history represents one replaceable daily rank list too.
-      // Clearing first prevents stale trailing ranks after a shorter retry.
-      for (const table of ['user_top_tracks_history', 'user_top_artists_history']) {
-        const { error } = await this.client
-          .from(table)
-          .delete()
-          .eq('user_id', supabaseUserId)
-          .eq('time_range', range)
-          .eq('fetched_at', fetchedAt);
-        if (error) throw error;
-      }
-
-      // 6. Save raw top items history to user_top_tracks_history
-      if (trackLinks.length > 0) {
-        const topTracksHistory = trackLinks.map(link => ({
-          user_id: supabaseUserId,
-          time_range: range,
-          rank: link.rank,
-          track_id: link.track_id,
-          fetched_at: fetchedAt
-        }));
-
-        if (topTracksHistory.length > 0) {
-          const { error } = await this.client
-            .from('user_top_tracks_history')
-            .upsert(topTracksHistory, { onConflict: 'user_id,time_range,fetched_at,rank' });
-          if (error) throw error;
-        }
-      }
-
-      // 7. Save raw top items history to user_top_artists_history
-      if (artistLinks.length > 0) {
-        const topArtistsHistory = artistLinks.map(link => ({
-          user_id: supabaseUserId,
-          time_range: range,
-          rank: link.rank,
-          artist_id: link.artist_id,
-          fetched_at: fetchedAt
-        }));
-
-        if (topArtistsHistory.length > 0) {
-          const { error } = await this.client
-            .from('user_top_artists_history')
-            .upsert(topArtistsHistory, { onConflict: 'user_id,time_range,fetched_at,rank' });
-          if (error) throw error;
-        }
-      }
+      const {error: replaceError} = await this.client.rpc('replace_stats_snapshot', {
+        p_user_id: supabaseUserId,
+        p_range: range,
+        p_snapshot_date: todayStr,
+        p_explicit_percentage: explicitPercentage,
+        p_genre_diversity: genreDiversity,
+        p_tracks: trackLinks,
+        p_artists: artistLinks,
+        p_genres: genreLinks,
+        p_fetched_at: fetchedAt
+      });
+      if (replaceError) throw replaceError;
 
       // last_synced_at is deliberately not a generic activity timestamp.
       // It advances only when all three current daily stats snapshots exist.
-      incompleteSnapshotId = null;
-      if (!customDateStr) {
+      if (snapshotDate === getDailySnapshotDate()) {
         await this.markDailyStatsCompleteIfReady(supabaseUserId);
       }
 
       console.log(`[SupabaseService] Saved stats snapshot for today (${todayStr}, ${range}) to database.`);
     } catch (e) {
-      if (incompleteSnapshotId) {
-        const { error: cleanupError } = await this.client
-          .from('stats_snapshots')
-          .delete()
-          .eq('id', incompleteSnapshotId)
-          .eq('user_id', supabaseUserId);
-        if (cleanupError) {
-          console.warn('[SupabaseService] Failed to remove an incomplete stats snapshot:', cleanupError);
-        }
-      }
       console.error('[SupabaseService] Error saving stats snapshot to DB:', e);
       throw e;
     }

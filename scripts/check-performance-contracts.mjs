@@ -1,8 +1,11 @@
 import {readFileSync} from 'node:fs';
 
 const stats = readFileSync('src/app/features/insights/user-stats/user-stats.component.ts', 'utf8');
+const supabase = readFileSync('src/app/core/data-access/supabase/supabase.service.ts', 'utf8');
+const authService = readFileSync('src/app/core/auth/spotify-auth.service.ts', 'utf8');
 const storage = readFileSync('src/app/core/data-access/storage/storage.service.ts', 'utf8');
 const migration = readFileSync('supabase/migrations/20260828163000_stats_snapshot_date_index.sql', 'utf8');
+const atomicStatsMigration = readFileSync('supabase/migrations/20260905090000_atomic_stats_snapshot_replace.sql', 'utf8');
 const guard = readFileSync('src/app/core/auth/spotify-auth.guard.ts', 'utf8');
 const asyncLoad = readFileSync('src/app/core/performance/async-load.ts', 'utf8');
 const playlistLoader = readFileSync('src/app/core/sync/playlist-loader/playlist-loader.service.ts', 'utf8');
@@ -37,7 +40,12 @@ const checks = [
   ['playlist cloud restore has a first-open fallback window', songs.includes('cloudPriorityWindowMs') && songs.includes('Promise.race([')],
   ['late cloud playlist data cannot overwrite Spotify', storage.includes('if (!canApply()) return 0')],
   ['PWA install does not prefetch every lazy JavaScript chunk', !prefetchedServiceWorkerFiles.includes('/*.js')],
-  ['PWA feature chunks are cached lazily', !!lazyScriptGroup]
+  ['PWA feature chunks are cached lazily', !!lazyScriptGroup],
+  ['same-day snapshot writes are serialized by user, range, and date', supabase.includes('statsSnapshotWrites.run(') && supabase.includes('`${supabaseUserId}:${range}:${snapshotDate}`')],
+  ['snapshot replacement is one locked database transaction', atomicStatsMigration.includes('pg_advisory_xact_lock') && supabase.includes("rpc('replace_stats_snapshot'")],
+  ['genre weights are normalized to database integers', supabase.includes('weight: Math.round(')],
+  ['startup avoids an unbounded user-cache download', !authService.includes('loadUserCache(supabaseUserId)')],
+  ['overlapping credential registration is coalesced', authService.includes('credentialRegistrationPromise')]
 ];
 
 const failures = checks.filter(([, valid]) => !valid).map(([label]) => label);
