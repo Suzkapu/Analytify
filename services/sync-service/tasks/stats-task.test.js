@@ -93,3 +93,18 @@ test('replaces a daily snapshot through one atomic database call', async () => {
   assert.deepEqual(touchedTables.sort(), ['artists', 'stats_snapshots', 'tracks', 'users']);
   assert.ok(rpcCalls.some(([name]) => name === 'score_song_league_snapshot'));
 });
+
+test('deduplicates tracks with matching title and artist so duplicate releases are omitted', () => {
+  const {deduplicateTracks} = require('./stats-task');
+  const tracks = [
+    {id: 'track-1', name: 'Светлана!', artists: [{name: 'NEXTIME'}]},
+    {id: 'track-2', name: 'Other Song', artists: [{name: 'Other Artist'}]},
+    {id: 'track-3', name: 'Светлана!', artists: [{name: 'NEXTIME'}]},
+    {id: 'track-1', name: 'Светлана!', artists: [{name: 'NEXTIME'}]}
+  ];
+  const deduplicated = deduplicateTracks(tracks);
+  assert.equal(deduplicated.length, 2);
+  assert.equal(deduplicated[0].id, 'track-1');
+  assert.equal(deduplicated[1].id, 'track-2');
+});
+

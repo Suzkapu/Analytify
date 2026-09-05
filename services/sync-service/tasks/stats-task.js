@@ -44,6 +44,25 @@ async function hydrateArtistGenres(spotify, accessToken, artists, concurrency = 
   return artists.map(artist => ({...artist, ...(enrichedById.get(artist.id) || {})}));
 }
 
+function deduplicateTracks(tracks) {
+  const seenIds = new Set();
+  const seenNames = new Set();
+  return (tracks || []).filter(track => {
+    if (!track || !track.id) return false;
+    if (seenIds.has(track.id)) return false;
+    const name = (track.name || '').trim().toLowerCase();
+    const artist = (track.artists && track.artists[0] && track.artists[0].name
+      ? track.artists[0].name
+      : track.artist || '').trim().toLowerCase();
+    const nameKey = name && artist ? `${name}:::${artist}` : '';
+    if (nameKey && seenNames.has(nameKey)) return false;
+
+    seenIds.add(track.id);
+    if (nameKey) seenNames.add(nameKey);
+    return true;
+  });
+}
+
 function createStatsTask({supabase, spotify, catalog}) {
   async function saveSnapshot(user, settings, range, topTracks, topArtists, topGenres) {
     const date = snapshotDate(new Date(), settings.timezone);
@@ -110,7 +129,8 @@ function createStatsTask({supabase, spotify, catalog}) {
       console.warn(`[Stats] Second ${range} track page failed: ${error.message}`);
     }
     let topArtists = artistsResponse?.items || [];
-    const topTracks = [...(firstTracksResponse?.items || []), ...(secondTracksResponse?.items || [])];
+    const rawTracks = [...(firstTracksResponse?.items || []), ...(secondTracksResponse?.items || [])];
+    const topTracks = deduplicateTracks(rawTracks);
     topArtists = await hydrateArtistGenres(spotify, accessToken, topArtists);
     await catalog.persistPulledTracks(accessToken, topTracks, topArtists);
     const result = await saveSnapshot(user, settings, range, topTracks, topArtists, genresFromArtists(topArtists));
@@ -121,4 +141,4 @@ function createStatsTask({supabase, spotify, catalog}) {
   };
 }
 
-module.exports = {createStatsTask, RANGE_BY_TASK, genresFromArtists, hydrateArtistGenres};
+module.exports = {createStatsTask, RANGE_BY_TASK, genresFromArtists, hydrateArtistGenres, deduplicateTracks};

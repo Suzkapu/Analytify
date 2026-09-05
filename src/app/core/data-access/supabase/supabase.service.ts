@@ -1238,15 +1238,21 @@ export class SupabaseService {
       // database transaction. This prevents browser and worker refreshes from
       // interleaving deletes and inserts for the same day.
       const seenTrackIds = new Set<string>();
+      const seenTrackIdentities = new Set<string>();
       const trackLinks: any[] = [];
       topTracks.forEach(track => {
-        if (track?.id && !seenTrackIds.has(track.id)) {
-          seenTrackIds.add(track.id);
-          trackLinks.push({
-            track_id: track.id,
-            rank: trackLinks.length + 1
-          });
-        }
+        if (!track?.id || seenTrackIds.has(track.id)) return;
+        const name = (track.name || '').trim().toLowerCase();
+        const artist = this.getTrackArtistName(track).trim().toLowerCase();
+        const nameKey = name && artist ? `${name}:::${artist}` : '';
+        if (nameKey && seenTrackIdentities.has(nameKey)) return;
+
+        seenTrackIds.add(track.id);
+        if (nameKey) seenTrackIdentities.add(nameKey);
+        trackLinks.push({
+          track_id: track.id,
+          rank: trackLinks.length + 1
+        });
       });
 
       const seenArtistIds = new Set<string>();
@@ -1385,6 +1391,13 @@ export class SupabaseService {
       .update({ last_synced_at: new Date().toISOString() })
       .eq('id', supabaseUserId);
     if (markerError) throw markerError;
+  }
+
+  private getTrackArtistName(track: any): string {
+    if (typeof track?.artist === 'string') return track.artist;
+    if (typeof track?.artist?.name === 'string') return track.artist.name;
+    if (typeof track?.artist_name === 'string') return track.artist_name;
+    return track?.artists?.[0]?.name || '';
   }
 
 }

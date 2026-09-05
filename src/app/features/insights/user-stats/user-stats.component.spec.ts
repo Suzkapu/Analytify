@@ -717,6 +717,33 @@ describe('UserStatsComponent trends', () => {
     expect(component.filteredTracks.map(track => track.id)).toEqual(['wanted']);
   });
 
+  it('deduplicates tracks with matching title and artist so the same song does not reappear', () => {
+    const rawTracks = [
+      {id: 'track-1', name: 'Светлана!', artists: [{name: 'NEXTIME'}]},
+      {id: 'track-60', name: 'jonglieren', artists: [{name: '$OHO BANI'}]},
+      {id: 'track-61', name: 'Светлана!', artists: [{name: 'NEXTIME'}]},
+      {id: 'track-62', name: 'The greatest - Techno', artists: [{name: 'Naisak'}]}
+    ];
+
+    component.topTracks = rawTracks;
+
+    expect(component.displayedTracks.map(t => t.id)).toEqual(['track-1', 'track-60', 'track-62']);
+    expect(component.displayedTracks.length).toBe(3);
+  });
+
+  it('correctly reports rank indices for each displayed track without collapsing to earlier matches', () => {
+    const track1 = {id: 'track-1', name: 'Song A', artists: [{name: 'Artist A'}]};
+    const track2 = {id: 'track-2', name: 'Song B', artists: [{name: 'Artist B'}]};
+    const track3 = {id: 'track-3', name: 'Song C', artists: [{name: 'Artist C'}]};
+
+    component.topTracks = [track1, track2, track3];
+
+    expect(component.getStatsRankIndex(track1, 'tracks')).toBe(0);
+    expect(component.getStatsRankIndex(track2, 'tracks')).toBe(1);
+    expect(component.getStatsRankIndex(track3, 'tracks')).toBe(2);
+  });
+
+
   it('searches Top Artists case-insensitively and can clear the query', () => {
     component.topArtists = [
       {id: 'one', name: 'Massive Attack'},
