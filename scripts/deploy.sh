@@ -89,9 +89,9 @@ bash "$(dirname "$0")/assert-deployment-freshness.sh" "$deploy_ref" "$deploy_com
 ssh_command="ssh -p ${deploy_port} -i ${key_file} -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3"
 remote="${DEPLOY_USER}@${DEPLOY_HOST}"
 target_root="${DEPLOY_TARGET%/}"
-release_root="${target_root}/../analytify-releases"
+release_root="$(dirname "${target_root}")/analytify-releases"
 web_release="${release_root}/web-${deploy_commit_sha}"
-worker_root="${target_root}/../analytify-sync"
+worker_root="$(dirname "${target_root}")/analytify-sync"
 worker_release="${worker_root}/releases/${deploy_commit_sha}"
 worker_current="${worker_root}/current"
 

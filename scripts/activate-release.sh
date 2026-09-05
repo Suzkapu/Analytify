@@ -45,7 +45,7 @@ if [[ -L "$worker_current" ]]; then previous_worker="$(readlink -f "$worker_curr
 
 # Preserve content-hashed files needed by already-open PWA clients without
 # letting an older index or service-worker manifest replace the new release.
-if [[ -n "$previous_web" ]]; then
+if [[ -n "$previous_web" && -d "$previous_web" ]]; then
   rsync --archive --ignore-existing "${previous_web}/" "${web_release}/"
 fi
 
