@@ -49,6 +49,12 @@ if ! command -v supabase >/dev/null 2>&1; then
   exit 1
 fi
 
+deploy_commit_sha="${DEPLOY_COMMIT_SHA:-$(git rev-parse HEAD 2>/dev/null || echo "")}"
+deploy_ref="${DEPLOY_REF:-${GITHUB_REF:-refs/heads/main}}"
+
+# Verify run represents the current protected ref before any irreversible mutation
+bash "$(dirname "$0")/assert-deployment-freshness.sh" "$deploy_ref" "$deploy_commit_sha"
+
 supabase link --project-ref "$SUPABASE_PROJECT_REF"
 # Personal Spotify-app users opt in to Cloud Backup through browser-bound
 # anonymous Auth users. Keep the hosted project setting aligned with that
@@ -66,6 +72,16 @@ fi
 # Audit fixes can introduce a migration whose timestamp predates an already
 # deployed hotfix. Supabase otherwise refuses that safe, pending migration.
 supabase db push --include-all
+
+if [[ -n "$deploy_commit_sha" ]]; then
+  record_sql="INSERT INTO public.deployment_records (component, commit_sha, deployed_at) VALUES ('supabase', '${deploy_commit_sha}', now()) ON CONFLICT (component) DO UPDATE SET commit_sha = EXCLUDED.commit_sha, deployed_at = EXCLUDED.deployed_at;"
+  curl --fail-with-body --silent --show-error \
+    --request POST \
+    --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --data "{\"query\":\"${record_sql}\"}" \
+    "https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_REF}/database/query" >/dev/null || true
+fi
 supabase secrets set \
   "SPOTIFY_CLIENT_ID=${SPOTIFY_CLIENT_ID}" \
   "SPOTIFY_CLIENT_SECRET=${SPOTIFY_CLIENT_SECRET}" \

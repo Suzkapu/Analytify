@@ -8,6 +8,7 @@ import {PastTopItem, SupabaseService} from '@core/data-access/supabase/supabase.
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {mapWithConcurrency, runAfterNextPaint} from '@core/performance/async-load';
 import {StatsSharingService} from '@core/sharing/stats-sharing.service';
+import {SpotifyNavigationService} from '@core/navigation/spotify-navigation.service';
 
 const console = createScopedLogger('Personal Stats');
 
@@ -112,6 +113,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
   isCreatingPlaylist: boolean = false;
   playlistCreationSuccessMessage: string = '';
+  private readonly nav: SpotifyNavigationService;
 
   constructor(
     private spotifyDataService: SpotifyDataService,
@@ -119,8 +121,11 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     private storageService: StorageService,
     private supabaseService: SupabaseService,
     @Optional() private route?: ActivatedRoute,
-    @Optional() private statsSharing?: StatsSharingService
-  ) { }
+    @Optional() private statsSharing?: StatsSharingService,
+    @Optional() private spotifyNavigation?: SpotifyNavigationService
+  ) {
+    this.nav = this.spotifyNavigation || new SpotifyNavigationService();
+  }
 
   get spyOwnerUserId(): string {
     return this.route?.snapshot?.paramMap?.get('userId') || '';
@@ -632,15 +637,11 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   }
 
   openTrackClick(url: string) {
-    if (url) {
-      window.location.href = url;
-    }
+    this.nav.openTrack(url);
   }
 
   openArtistClick(url: string) {
-    if (url) {
-      window.location.href = url;
-    }
+    this.nav.openArtist(url);
   }
 
 
@@ -1941,7 +1942,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   }
 
   getTrackUrl(track: any): string {
-    return track.spotifyUrl || track.external_urls?.spotify || '';
+    return this.nav.getTrackUrl(track) || '';
   }
 
   getTrackArtist(track: any): string {
@@ -1962,7 +1963,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   }
 
   getArtistUrl(artist: any): string {
-    return artist.spotifyUrl || artist.external_urls?.spotify || '';
+    return this.nav.getArtistUrl(artist) || '';
   }
 
   isSnapshotLoading(): boolean {

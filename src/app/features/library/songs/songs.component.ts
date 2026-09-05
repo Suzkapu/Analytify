@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ViewEncapsulation, HostListener, NgZone} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewEncapsulation, HostListener, NgZone, Optional} from '@angular/core';
 import {ActivatedRoute, NavigationExtras, Router} from "@angular/router";
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {StorageService} from "@core/data-access/storage/storage.service";
@@ -6,6 +6,7 @@ import {PlaylistLoaderService} from "@core/sync/playlist-loader/playlist-loader.
 import {ImageHealingService} from "@core/sync/image-healing/image-healing.service";
 import {Subscription} from 'rxjs';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {SpotifyNavigationService} from '@core/navigation/spotify-navigation.service';
 
 const console = createScopedLogger('Songs');
 
@@ -63,6 +64,7 @@ export class SongsComponent implements OnInit, OnDestroy {
   private playlistLoadSequence = 0;
   private readonly cloudPriorityWindowMs = 750;
   private readonly windowScrollHandler = () => this.onWindowScroll();
+  private readonly nav: SpotifyNavigationService;
 
   constructor(
     private route: ActivatedRoute, 
@@ -71,8 +73,10 @@ export class SongsComponent implements OnInit, OnDestroy {
     private storageService: StorageService,
     private playlistLoaderService: PlaylistLoaderService,
     private imageHealingService: ImageHealingService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    @Optional() private spotifyNavigation?: SpotifyNavigationService
   ) {
+    this.nav = this.spotifyNavigation || new SpotifyNavigationService();
     this.route.params.subscribe(async (params) => {
       this.playlistId = params['id'];
       this.sortAscending = this.getDefaultSortDirection(this.trackSortKey);
@@ -553,8 +557,8 @@ export class SongsComponent implements OnInit, OnDestroy {
         id: albumId,
         name: albumName || 'Unknown Album',
         imageUrl: album.images?.[0]?.url || null,
-        spotifyUrl: album.external_urls?.spotify ||
-          (albumId ? `https://open.spotify.com/album/${encodeURIComponent(albumId)}` : null),
+        spotifyUrl: this.nav.getAlbumUrl(album) ||
+          (albumId && /^[A-Za-z0-9]+$/.test(albumId) ? `https://open.spotify.com/album/${encodeURIComponent(albumId)}` : null),
         releaseDate: album.release_date || '',
         artists: artists.map((artist: any) => artist.name).filter(Boolean),
         trackCount: 1,
@@ -742,9 +746,7 @@ export class SongsComponent implements OnInit, OnDestroy {
   }
 
   openTrackClick(url: string) {
-    if (url) {
-      window.open(url, '_blank', 'noopener,noreferrer');
-    }
+    this.nav.openTrack(url);
   }
 
   trackArtistItem(index: number, artist: any): string | number {

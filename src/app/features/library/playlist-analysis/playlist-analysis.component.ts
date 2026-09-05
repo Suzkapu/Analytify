@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation, Optional } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { SpotifyAuthService } from "@core/auth/spotify-auth.service";
 import { StorageService } from "@core/data-access/storage/storage.service";
 import {distinctUntilChanged, map, Subscription} from 'rxjs';
 import { PlaylistLoaderService } from "@core/sync/playlist-loader/playlist-loader.service";
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {SpotifyNavigationService} from '@core/navigation/spotify-navigation.service';
 
 const console = createScopedLogger('Playlist Analysis');
 
@@ -53,13 +54,18 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
   private routeSubscription: Subscription | null = null;
   private loadGeneration = 0;
 
+  private readonly nav: SpotifyNavigationService;
+
   constructor(
     private route: ActivatedRoute,
     public authService: SpotifyAuthService,
     private router: Router,
     private storageService: StorageService,
-    private playlistLoaderService: PlaylistLoaderService
-  ) { }
+    private playlistLoaderService: PlaylistLoaderService,
+    @Optional() private spotifyNavigation?: SpotifyNavigationService
+  ) {
+    this.nav = this.spotifyNavigation || new SpotifyNavigationService();
+  }
 
   ngOnInit() {
     this.routeSubscription = this.route.params.pipe(
@@ -509,9 +515,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
   }
 
   openTrackClick(url: string) {
-    if (url) {
-      window.location.href = url;
-    }
+    this.nav.openTrack(url);
   }
 
   }

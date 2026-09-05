@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS artists (
     id VARCHAR(255) PRIMARY KEY, -- Spotify Artist ID
     name VARCHAR(255) NOT NULL,
     image_url TEXT,
-    spotify_url TEXT,
+    spotify_url TEXT CONSTRAINT chk_artists_spotify_url CHECK (spotify_url IS NULL OR spotify_url ~ '^https://open\.spotify\.com/(intl-[a-z]{2}(-[a-z0-9]{2,4})?/)?artist/[A-Za-z0-9_-]{1,100}(\?[^#\s]*)?$'),
     last_updated TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS albums (
     release_date DATE, -- Optimized to DATE for standard SQL queries and sorting (requires YYYY-MM-DD padding on import)
     release_date_precision VARCHAR(10) CONSTRAINT chk_release_precision CHECK (release_date_precision IN ('year', 'month', 'day')), -- Tells UI how to render
     image_url TEXT, -- Album cover
-    spotify_url TEXT,
+    spotify_url TEXT CONSTRAINT chk_albums_spotify_url CHECK (spotify_url IS NULL OR spotify_url ~ '^https://open\.spotify\.com/(intl-[a-z]{2}(-[a-z0-9]{2,4})?/)?album/[A-Za-z0-9_-]{1,100}(\?[^#\s]*)?$'),
     upc VARCHAR(100), -- Universal Product Code (External ID)
     ean VARCHAR(100), -- International Article Number (External ID)
     restriction_reason VARCHAR(100), -- e.g. 'market', 'product', 'explicit'
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS tracks (
     album_id VARCHAR(255) REFERENCES albums(id) ON DELETE SET NULL, -- SET NULL keeps tracks if album record is deleted
     duration_ms INTEGER DEFAULT 0 NOT NULL,
     explicit BOOLEAN DEFAULT false NOT NULL,
-    spotify_url TEXT,
+    spotify_url TEXT CONSTRAINT chk_tracks_spotify_url CHECK (spotify_url IS NULL OR spotify_url ~ '^https://open\.spotify\.com/(intl-[a-z]{2}(-[a-z0-9]{2,4})?/)?track/[A-Za-z0-9_-]{1,100}(\?[^#\s]*)?$'),
     track_number INTEGER DEFAULT 1 NOT NULL,
     disc_number INTEGER DEFAULT 1 NOT NULL,
     is_playable BOOLEAN DEFAULT true NOT NULL,
@@ -2788,3 +2788,30 @@ The production notification module is applied by
 
 All notification and subscription rows are deleted through the existing `users` cascade.
 The Edge Function removes expired endpoints after a push service returns HTTP 404 or 410.
+
+---
+
+## 8. Deployment Records Module
+
+The deployment tracking module is applied by
+`supabase/migrations/20260905150000_deployment_records.sql`. It adds:
+
+- `public.deployment_records`, storing the deployed commit SHA and timestamp for each component;
+- Public read access (`Allow public read access to deployment records` policy) for live verification probes;
+- Write access for deployment scripts and service-role recording.
+
+```sql
+create table if not exists public.deployment_records (
+  component text primary key,
+  commit_sha text not null,
+  deployed_at timestamptz not null default now()
+);
+
+alter table public.deployment_records enable row level security;
+
+create policy "Allow public read access to deployment records"
+  on public.deployment_records
+  for select
+  to anon, authenticated
+  using (true);
+```
