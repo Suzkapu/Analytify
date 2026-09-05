@@ -432,7 +432,7 @@ describe('UserStatsComponent trends', () => {
     expect(staleComponent.isLoading).toBeFalse();
     expect(staleComponent.isRefreshingStats).toBeTrue();
     expect(spotify.getUserTopArtists).toHaveBeenCalledTimes(1);
-    expect(spotify.getUserTopTracks).toHaveBeenCalledTimes(2);
+    expect(spotify.getUserTopTracks).toHaveBeenCalledTimes(3);
   });
 
   it('rebuilds a missing genre cache from cached top artists', async () => {

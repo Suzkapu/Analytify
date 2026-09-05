@@ -108,3 +108,51 @@ test('deduplicates tracks with matching title and artist so duplicate releases a
   assert.equal(deduplicated[1].id, 'track-2');
 });
 
+test('loads overflow tracks in parallel and keeps a full 100 after de-duplication', async () => {
+  const rpcCalls = [];
+  const startedPages = [];
+  let releasePages;
+  const pagesReady = new Promise(resolve => { releasePages = resolve; });
+  const supabase = {
+    from(table) {
+      if (table === 'tracks' || table === 'artists') {
+        return {select() { return {async in(_column, ids) { return {data: ids.map(id => ({id})), error: null}; }}; }};
+      }
+      if (table === 'stats_snapshots') {
+        return {select() { return {eq() { return this; }, async maybeSingle() { return {data: null, error: null}; }}; }};
+      }
+      if (table === 'users') return {update() { return {async eq() { return {error: null}; }}; }};
+      throw new Error(`Unexpected table ${table}`);
+    },
+    async rpc(name, parameters) {
+      rpcCalls.push([name, parameters]);
+      return {data: name === 'replace_stats_snapshot_v2' ? [{snapshot_id: 'snapshot', revision: 1}] : null, error: null};
+    }
+  };
+  const page = (start, count) => Array.from({length: count}, (_, index) => ({
+    id: `track-${start + index}`,
+    name: `Song ${start + index}`,
+    artists: [{id: 'artist-id', name: 'Artist'}],
+    explicit: false
+  }));
+  const spotify = {
+    async accessToken() { return 'token'; },
+    async api(pathname) {
+      if (pathname.includes('/artists')) return {items: [{id: 'artist-id', genres: ['rock']}]};
+      startedPages.push(pathname);
+      if (startedPages.length === 3) releasePages();
+      await pagesReady;
+      if (pathname.includes('offset=100')) return {items: page(100, 10)};
+      if (pathname.includes('offset=50')) return {items: [page(0, 1)[0], ...page(51, 49)]};
+      return {items: page(0, 50)};
+    }
+  };
+  const run = createStatsTask({supabase, spotify, catalog: {async persistPulledTracks() {}}});
+
+  await run({taskKey: 'stats_short_term', user: {id: 'user', spotify_credential: {}}, settings: {timezone: 'UTC'}});
+
+  assert.equal(startedPages.length, 3);
+  const replacement = rpcCalls.find(([name]) => name === 'replace_stats_snapshot_v2');
+  assert.equal(replacement[1].p_tracks.length, 100);
+  assert.equal(replacement[1].p_tracks[99].track_id, 'track-100');
+});

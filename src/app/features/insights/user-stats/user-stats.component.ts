@@ -492,11 +492,15 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       const artistsReq = this.spotifyDataService.getUserTopArtists(range, 50, 0);
       const tracksReq = this.spotifyDataService.getUserTopTracks(range, 50, 0);
       const tracksReq2 = this.spotifyDataService.getUserTopTracks(range, 50, 50);
+      // Fetch a small overflow page in parallel so semantic de-duplication does
+      // not turn a full Top 100 into 99 visible songs.
+      const tracksOverflowReq = this.spotifyDataService.getUserTopTracks(range, 10, 100);
 
       this.statsSubscription = forkJoin({
         artists: artistsReq,
         tracks: tracksReq,
-        tracksPage2: tracksReq2
+        tracksPage2: tracksReq2,
+        tracksOverflow: tracksOverflowReq
       }).subscribe({
         next: async (res: any) => {
           if (!isCurrentLoad()) return;
@@ -504,7 +508,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
           let loadedArtists = res.artists.items || [];
           const page1 = res.tracks.items || [];
           const page2 = res.tracksPage2.items || [];
-          const loadedTracks = this.deduplicateStatsTracks([...page1, ...page2]);
+          const overflow = res.tracksOverflow.items || [];
+          const loadedTracks = this.deduplicateStatsTracks([...page1, ...page2, ...overflow]).slice(0, 100);
           let calculatedGenres = this.buildGenres(loadedArtists);
           if (calculatedGenres.length === 0 && loadedArtists.some((artist: any) => !!artist?.id)) {
             try {

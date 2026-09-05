@@ -118,19 +118,27 @@ function createStatsTask({supabase, spotify, catalog}) {
     const range = RANGE_BY_TASK[taskKey];
     if (!range) throw new Error(`Unsupported stats task: ${taskKey}`);
     const accessToken = await spotify.accessToken(user.spotify_credential);
-    const [artistsResponse, firstTracksResponse] = await Promise.all([
+    const optionalPage = async pathname => {
+      try {
+        return await spotify.api(pathname, accessToken);
+      } catch (error) {
+        console.warn(`[Stats] Additional ${range} track page failed: ${error.message}`);
+        return {items: []};
+      }
+    };
+    const [artistsResponse, firstTracksResponse, secondTracksResponse, overflowTracksResponse] = await Promise.all([
       spotify.api(`/me/top/artists?time_range=${range}&limit=50&offset=0`, accessToken),
-      spotify.api(`/me/top/tracks?time_range=${range}&limit=50&offset=0`, accessToken)
+      spotify.api(`/me/top/tracks?time_range=${range}&limit=50&offset=0`, accessToken),
+      optionalPage(`/me/top/tracks?time_range=${range}&limit=50&offset=50`),
+      optionalPage(`/me/top/tracks?time_range=${range}&limit=10&offset=100`)
     ]);
-    let secondTracksResponse = {items: []};
-    try {
-      secondTracksResponse = await spotify.api(`/me/top/tracks?time_range=${range}&limit=50&offset=50`, accessToken);
-    } catch (error) {
-      console.warn(`[Stats] Second ${range} track page failed: ${error.message}`);
-    }
     let topArtists = artistsResponse?.items || [];
-    const rawTracks = [...(firstTracksResponse?.items || []), ...(secondTracksResponse?.items || [])];
-    const topTracks = deduplicateTracks(rawTracks);
+    const rawTracks = [
+      ...(firstTracksResponse?.items || []),
+      ...(secondTracksResponse?.items || []),
+      ...(overflowTracksResponse?.items || [])
+    ];
+    const topTracks = deduplicateTracks(rawTracks).slice(0, 100);
     topArtists = await hydrateArtistGenres(spotify, accessToken, topArtists);
     await catalog.persistPulledTracks(accessToken, topTracks, topArtists);
     const result = await saveSnapshot(user, settings, range, topTracks, topArtists, genresFromArtists(topArtists));
