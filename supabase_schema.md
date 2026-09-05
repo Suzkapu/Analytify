@@ -2036,6 +2036,36 @@ begin
   end if;
 end;
 $$;
+
+-- Playlist sync concurrency lock from 20260905160000_song_league_playlist_sync_locks.sql
+create or replace function public.try_lock_song_league_playlist_sync(p_league_id uuid)
+returns boolean
+language plpgsql
+security definer
+set search_path = public, pg_catalog
+as $$
+begin
+  return pg_try_advisory_lock(hashtext('song_league_playlist_sync:' || p_league_id::text));
+end;
+$$;
+
+create or replace function public.unlock_song_league_playlist_sync(p_league_id uuid)
+returns boolean
+language plpgsql
+security definer
+set search_path = public, pg_catalog
+as $$
+begin
+  return pg_advisory_unlock(hashtext('song_league_playlist_sync:' || p_league_id::text));
+end;
+$$;
+
+revoke all on function public.try_lock_song_league_playlist_sync(uuid) from public, anon, authenticated;
+grant execute on function public.try_lock_song_league_playlist_sync(uuid) to service_role;
+
+revoke all on function public.unlock_song_league_playlist_sync(uuid) from public, anon, authenticated;
+grant execute on function public.unlock_song_league_playlist_sync(uuid) to service_role;
+
 -- Standings ordering fix from 20260809170000_song_league_standings_order_fix.sql
 create or replace function public.get_song_league_standings(
   p_league_id uuid

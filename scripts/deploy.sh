@@ -138,7 +138,12 @@ if [[ -n "$deploy_commit_sha" ]]; then
   fi
 fi
 
-deploy_with_retry "dist/spoti-front/" "${target_root}/" true
+# Keep content-hashed assets from earlier releases. Already-open PWA tabs and
+# service workers can request their previous CSS/JS between version discovery
+# and activation; deleting those files turns a safe delayed update into a
+# partially unstyled or broken page. A separate retention job may remove assets
+# only after the supported rollback/cache window has elapsed.
+deploy_with_retry "dist/spoti-front/" "${target_root}/" false
 deploy_with_retry "services/sync-service/" "${target_root}/../analytify-sync/" false
 deploy_private_file_with_retry "$allowlist_file" "${target_root}/../analytify-sync/.admin-spotify-ids"
 deploy_private_file_with_retry "$token_key_file" "${target_root}/../analytify-sync/.spotify-token-encryption-key"

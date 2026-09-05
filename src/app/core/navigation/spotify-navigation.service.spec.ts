@@ -154,7 +154,7 @@ describe('SpotifyNavigationService', () => {
 
     beforeEach(() => {
       openSpy = spyOn(window, 'open').and.stub();
-      assignSpy = spyOn(window.location, 'assign').and.stub();
+      assignSpy = spyOn(service as any, 'navigateLocation').and.stub();
       spyOn(console, 'warn').and.stub();
     });
 

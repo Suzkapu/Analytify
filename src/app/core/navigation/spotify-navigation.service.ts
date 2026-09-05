@@ -40,13 +40,14 @@ export class SpotifyNavigationService {
    */
   sanitizeSpotifyUrl(rawUrl: unknown, expectedType?: SpotifyCatalogType): string | null {
     if (typeof rawUrl !== 'string') return null;
-    const trimmed = rawUrl.trim();
-    if (!trimmed) return null;
 
-    // Reject control characters, any internal whitespace, and backslashes
-    if (/[\s\x00-\x1f\x7f-\x9f\\]/.test(trimmed)) {
+    // Reject control characters, any whitespace, and backslashes
+    if (/[\s\x00-\x1f\x7f-\x9f\\]/.test(rawUrl)) {
       return null;
     }
+
+    const trimmed = rawUrl.trim();
+    if (!trimmed) return null;
 
     // Reject authority trickery in the raw string before URL parsing
     const schemeSeparator = '://';
@@ -72,21 +73,38 @@ export class SpotifyNavigationService {
       return null;
     }
 
-    if (parsed.protocol !== 'https:') return null;
-    if (parsed.username || parsed.password) return null;
-    if (parsed.port && parsed.port !== '443') return null;
-
-    if (parsed.hostname.toLowerCase() !== APPROVED_HOST) return null;
-
-    const match = parsed.pathname.match(SPOTIFY_PATH_PATTERN);
-    if (!match) return null;
-
-    const entityType = match[1] as SpotifyCatalogType;
-    if (expectedType && entityType !== expectedType) {
+    // Host must match approved host exactly
+    if (parsed.hostname.toLowerCase() !== APPROVED_HOST) {
       return null;
     }
 
-    return parsed.toString();
+    // Protocol must be strict https:
+    if (parsed.protocol !== 'https:') {
+      return null;
+    }
+
+    // Must not have port or credentials
+    if (parsed.port || parsed.username || parsed.password) {
+      return null;
+    }
+
+    // Path must match approved entity structure
+    const match = parsed.pathname.match(SPOTIFY_PATH_PATTERN);
+    if (!match) {
+      return null;
+    }
+
+    const [, detectedType, id] = match;
+    if (!id || id.length > 100) {
+      return null;
+    }
+
+    if (expectedType && detectedType !== expectedType) {
+      return null;
+    }
+
+    // Strip fragment entirely, preserve query parameters if any (or strip them as well)
+    return `https://${APPROVED_HOST}${parsed.pathname}${parsed.search}`;
   }
 
   /**
@@ -109,11 +127,15 @@ export class SpotifyNavigationService {
 
     const target = options.target || '_blank';
     if (target === '_self') {
-      window.location.assign(validatedUrl);
+      this.navigateLocation(validatedUrl);
     } else {
       window.open(validatedUrl, '_blank', 'noopener,noreferrer');
     }
     return true;
+  }
+
+  protected navigateLocation(url: string): void {
+    window.location.assign(url);
   }
 
   /**
