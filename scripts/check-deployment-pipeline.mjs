@@ -115,6 +115,8 @@ const checks = [
     deployScript.includes('.deployed-commit')],
   ['deploy.sh verifies remote deployed commit after sync',
     deployScript.includes('Verifying deployed commit SHA on Oracle Server')],
+  ['Web deploy retains prior hashed assets for active PWA versions',
+    deployScript.includes('deploy_with_retry "dist/spoti-front/" "${target_root}/" false')],
   ['deploy-supabase.sh records deployed commit SHA in deployment_records',
     supabaseDeployScript.includes('INSERT INTO public.deployment_records') && supabaseDeployScript.includes('commit_sha')],
   ['Live verification verifies version.json and deployment_records',
