@@ -14,6 +14,7 @@ const admin = readFileSync('src/app/features/admin/admin.component.html', 'utf8'
 const claim = readFileSync('src/app/features/song-league/song-league-claim.component.html', 'utf8');
 const webPushSource = readFileSync('supabase/functions/song-league-notifications/web-push.ts', 'utf8');
 const boundedFetchSource = readFileSync('supabase/functions/_shared/bounded-fetch.ts', 'utf8');
+const pushEndpointSource = readFileSync('supabase/functions/song-league-notifications/push-endpoint.ts', 'utf8');
 
 const contracts = [
   ['explicit opt-in default', migration.includes('song_league_enabled boolean not null default false')],
@@ -53,10 +54,9 @@ if (missing.length) {
   // Build one self-contained data module. A relative import cannot be resolved
   // from a data: URL, which is what lets this contract test run without a
   // separate TypeScript loader.
-  const selfContainedWebPush = `${boundedFetchSource}\n${webPushSource.replace(
-    /import \{boundedFetch} from '\.\.\/_shared\/bounded-fetch\.ts';\s*/,
-    ''
-  )}`;
+  const selfContainedWebPush = `${boundedFetchSource}\n${pushEndpointSource}\n${webPushSource
+    .replace(/import \{boundedFetch} from '\.\.\/_shared\/bounded-fetch\.ts';\s*/, '')
+    .replace(/import \{normalizedPushEndpoint} from '\.\/push-endpoint\.ts';\s*/, '')}`;
   const compiledWebPush = ts.transpileModule(selfContainedWebPush, {
     compilerOptions: {module: ts.ModuleKind.ES2022, target: ts.ScriptTarget.ES2022}
   }).outputText;
@@ -79,7 +79,7 @@ if (missing.length) {
   };
   try {
     await webPush.sendWebPush({
-      endpoint: 'https://push.example.test/device',
+      endpoint: 'https://fcm.googleapis.com/fcm/send/device',
       p256dh: base64Url(clientPublic),
       auth: base64Url(crypto.getRandomValues(new Uint8Array(16)))
     }, JSON.stringify({notification: {title: 'Test'}}), {
@@ -90,7 +90,7 @@ if (missing.length) {
   } finally {
     globalThis.fetch = originalFetch;
   }
-  assert.equal(request.url, 'https://push.example.test/device');
+  assert.equal(request.url.toString(), 'https://fcm.googleapis.com/fcm/send/device');
   assert.match(request.options.headers.Authorization, /^vapid t=.+, k=.+/);
   assert.equal(request.options.headers['Content-Encoding'], 'aes128gcm');
   assert.ok(request.options.body.byteLength > 100);

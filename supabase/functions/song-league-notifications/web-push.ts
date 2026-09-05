@@ -1,4 +1,5 @@
 import {boundedFetch} from '../_shared/bounded-fetch.ts';
+import {normalizedPushEndpoint} from './push-endpoint.ts';
 
 export interface WebPushSubscription {
   endpoint: string;
@@ -97,12 +98,14 @@ export async function sendWebPush(
   message: string,
   vapid: VapidDetails
 ): Promise<void> {
+  const endpoint = normalizedPushEndpoint(subscription.endpoint);
   const [body, authorization] = await Promise.all([
     encryptedBody(subscription, message),
-    vapidAuthorization(subscription.endpoint, vapid)
+    vapidAuthorization(endpoint.toString(), vapid)
   ]);
-  const response = await boundedFetch(subscription.endpoint, {
+  const response = await boundedFetch(endpoint, {
       method: 'POST',
+      redirect: 'manual',
       headers: {
         Authorization: authorization,
         'Content-Encoding': 'aes128gcm',
@@ -112,6 +115,12 @@ export async function sendWebPush(
       },
       body,
     }, {timeoutMs: 10_000, maxAttempts: 1});
+  const responseLength = Number(response.headers.get('content-length') || 0);
+  if (Number.isFinite(responseLength) && responseLength > 4096) {
+    await response.body?.cancel().catch(() => undefined);
+    throw new Error('Push service returned an oversized response.');
+  }
+  await response.body?.cancel().catch(() => undefined);
   if (!response.ok) {
     const error = new Error(`Push service returned HTTP ${response.status}.`) as Error & {statusCode: number};
     error.statusCode = response.status;

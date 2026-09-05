@@ -12,6 +12,7 @@ describe('SpotifyAuthService', () => {
   let storage: any;
   let http: HttpTestingController;
   let supabaseService: any;
+  let rpc: jasmine.Spy;
 
   async function requestAfterMicrotasks(url: string) {
     for (let attempt = 0; attempt < 10; attempt += 1) {
@@ -40,9 +41,11 @@ describe('SpotifyAuthService', () => {
       setItem: jasmine.createSpy('setItem').and.callFake((key: string, value: string) => values[key] = value),
       removeItem: jasmine.createSpy('removeItem').and.callFake((key: string) => delete values[key])
     };
+    rpc = jasmine.createSpy('rpc').and.resolveTo({data: true, error: null});
     supabaseService = {
       client: {
         auth: authClient,
+        rpc,
         functions: {invoke: jasmine.createSpy('invoke').and.resolveTo({data: {ok: true}, error: null})}
       },
       ensureUserProfile: jasmine.createSpy('ensureUserProfile').and.resolveTo(),
@@ -92,6 +95,25 @@ describe('SpotifyAuthService', () => {
     expect(sessionStorage.getItem('analytify_personal_spotify_auth_request')).toBeNull();
     expect(sessionStorage.getItem('analytify_compare_auth_request')).toBeNull();
     expect(sessionStorage.getItem('analytifyAuthReturnUrl')).toBeNull();
+  });
+
+  it('unlinks the current push endpoint before logout without revoking browser permission', async () => {
+    const unsubscribe = jasmine.createSpy('unsubscribe');
+    const getSubscription = jasmine.createSpy('getSubscription').and.resolveTo({
+      endpoint: 'https://fcm.googleapis.com/fcm/send/device', unsubscribe
+    });
+    spyOnProperty(navigator, 'serviceWorker', 'get').and.returnValue({
+      getRegistration: () => Promise.resolve({pushManager: {getSubscription}})
+    } as unknown as ServiceWorkerContainer);
+
+    await service.logout();
+
+    expect(rpc).toHaveBeenCalledWith('unlink_push_subscription', {
+      p_endpoint: 'https://fcm.googleapis.com/fcm/send/device'
+    });
+    expect((rpc.calls.mostRecent() as any).invocationOrder)
+      .toBeLessThan((authClient.signOut.calls.mostRecent() as any).invocationOrder);
+    expect(unsubscribe).not.toHaveBeenCalled();
   });
 
   it('stores the Spotify provider token returned by the explicit code exchange', async () => {

@@ -279,6 +279,7 @@ export class SpotifyAuthService {
 
   /** Clears stale Supabase session state — call before re-initiating login after a server_error */
   async clearSupabaseSession(): Promise<void> {
+    await this.unlinkCurrentPushDevice();
     try {
       await this.supabaseService.client.auth.signOut({ scope: 'local' });
     } catch (e) {
@@ -601,6 +602,7 @@ export class SpotifyAuthService {
 
   async logout(): Promise<void> {
     const supabaseUserId = this.getSupabaseUserId();
+    await this.unlinkCurrentPushDevice();
     if (this.isAnonymousCloudIdentity()) {
       await this.deleteAnonymousCloudAccount();
     }
@@ -628,6 +630,7 @@ export class SpotifyAuthService {
   }
 
   async clearCacheAndLogout(): Promise<void> {
+    await this.unlinkCurrentPushDevice();
     if (this.isAnonymousCloudIdentity()) {
       await this.deleteAnonymousCloudAccount();
     }
@@ -640,6 +643,23 @@ export class SpotifyAuthService {
     this.clearAnalytifySessionStorage();
     this.clearAllCookies();
     this.logout$.next();
+  }
+
+  private async unlinkCurrentPushDevice(): Promise<void> {
+    if (typeof navigator === 'undefined' || !navigator.serviceWorker) return;
+    try {
+      const registration = await navigator.serviceWorker.getRegistration();
+      const subscription = await registration?.pushManager?.getSubscription();
+      if (!subscription?.endpoint) return;
+      const result = await this.supabaseService.client.rpc('unlink_push_subscription', {
+        p_endpoint: subscription.endpoint
+      });
+      if (result.error) throw result.error;
+    } catch (error) {
+      // Account exit must remain available while a device is offline. The
+      // server also removes expired subscriptions after a 404/410 response.
+      console.warn('Could not unlink this notification device before sign out.', error);
+    }
   }
 
   isBackupActive(): boolean {
