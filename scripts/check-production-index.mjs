@@ -4,6 +4,10 @@ const indexPath = 'dist/spoti-front/index.html';
 const html = readFileSync(indexPath, 'utf8');
 const stylesheetLinks = [...html.matchAll(/<link\b[^>]*\brel=["']stylesheet["'][^>]*>/gi)].map(match => match[0]);
 
+if (!/<meta\b[^>]*\bname=["']viewport["'][^>]*\bcontent=["'][^"']*width=device-width[^"']*["']/i.test(html)) {
+  throw new Error('Production index is missing a device-width viewport declaration.');
+}
+
 if (stylesheetLinks.length === 0) {
   throw new Error('Production index does not contain a stylesheet link.');
 }
