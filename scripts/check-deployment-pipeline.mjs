@@ -7,6 +7,8 @@ const deployScript = readFileSync('scripts/deploy.sh', 'utf8');
 const supabaseDeployScript = readFileSync('scripts/deploy-supabase.sh', 'utf8');
 const freshnessScript = readFileSync('scripts/assert-deployment-freshness.sh', 'utf8');
 const liveVerification = readFileSync('scripts/verify-live-deployment.mjs', 'utf8');
+const releaseActivation = readFileSync('scripts/activate-release.sh', 'utf8');
+const workerService = readFileSync('deploy/analytify-sync.service.template', 'utf8');
 const migration = readFileSync('supabase/migrations/20260905150000_deployment_records.sql', 'utf8');
 const schemaDoc = readFileSync('supabase_schema.md', 'utf8');
 
@@ -115,8 +117,18 @@ const checks = [
     deployScript.includes('.deployed-commit')],
   ['deploy.sh verifies remote deployed commit after sync',
     deployScript.includes('Verifying deployed commit SHA on Oracle Server')],
-  ['Web deploy retains prior hashed assets for active PWA versions',
-    deployScript.includes('deploy_with_retry "dist/spoti-front/" "${target_root}/" false')],
+  ['Web deploy stages an immutable commit-addressed release',
+    deployScript.includes('web-${deploy_commit_sha}') && deployScript.includes('"${web_release}/" true')],
+  ['Web activation uses an atomic symlink switch and retains its previous release',
+    releaseActivation.includes('ln -sfnT "$web_release"') && releaseActivation.includes('previous_web')],
+  ['Failed activation rolls web and worker back together',
+    releaseActivation.includes('Activation failed; restoring') && releaseActivation.includes('previous_worker')],
+  ['Worker installs only locked production dependencies',
+    deployScript.includes('npm ci --omit=dev --ignore-scripts')],
+  ['Checked-in worker service is restarted during release activation',
+    workerService.includes('ExecStart=/usr/bin/node') && releaseActivation.includes('systemctl restart analytify-sync.service')],
+  ['Worker readiness must report the exact release SHA',
+    releaseActivation.includes('worker_sha') && releaseActivation.includes('expected_sha')],
   ['deploy-supabase.sh records deployed commit SHA in deployment_records',
     supabaseDeployScript.includes('INSERT INTO public.deployment_records') && supabaseDeployScript.includes('commit_sha')],
   ['Live verification verifies version.json and deployment_records',

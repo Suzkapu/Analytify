@@ -1,0 +1,26 @@
+[Unit]
+Description=Analytify background synchronization worker
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=@@DEPLOY_USER@@
+WorkingDirectory=@@WORKER_CURRENT@@
+EnvironmentFile=/etc/analytify-sync.env
+Environment=ADMIN_SPOTIFY_IDS_FILE=@@WORKER_ROOT@@/.admin-spotify-ids
+Environment=SPOTIFY_TOKEN_ENCRYPTION_KEY_FILE=@@WORKER_ROOT@@/.spotify-token-encryption-key
+Environment=SYNC_SERVICE_HEALTH_PORT=8787
+ExecStart=/usr/bin/node @@WORKER_CURRENT@@/index.js --watch
+Restart=always
+RestartSec=10
+TimeoutStartSec=60
+TimeoutStopSec=30
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=@@WORKER_ROOT@@
+
+[Install]
+WantedBy=multi-user.target

@@ -77,7 +77,7 @@ jobs:
         run: supabase stop --workdir . --no-backup
 
       - name: Validate deployment script
-        run: bash -n scripts/deploy.sh scripts/deploy-supabase.sh scripts/assert-deployment-freshness.sh
+        run: bash -n scripts/deploy.sh scripts/deploy-supabase.sh scripts/assert-deployment-freshness.sh scripts/activate-release.sh
 
       - name: Upload production build artifact
         uses: actions/upload-artifact@v4
@@ -156,6 +156,8 @@ jobs:
           DEPLOY_TARGET: ${{ secrets.TARGET_DIR }}
           ADMIN_SPOTIFY_IDS: ${{ secrets.ADMIN_SPOTIFY_IDS }}
           SPOTIFY_TOKEN_ENCRYPTION_KEY: ${{ secrets.SPOTIFY_TOKEN_ENCRYPTION_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
         run: bash scripts/deploy.sh
 
       - name: Verify live deployment
