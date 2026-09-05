@@ -3,6 +3,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '@env/environment';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {KeyedSerialTaskQueue} from '@core/performance/async-load';
+import {SpotifyNavigationService} from '@core/navigation/spotify-navigation.service';
 
 const console = createScopedLogger('Supabase');
 
@@ -62,7 +63,7 @@ export class SupabaseService {
   public client: SupabaseClient;
   private readonly statsSnapshotWrites = new KeyedSerialTaskQueue();
 
-  constructor() {
+  constructor(private readonly spotifyNavigation: SpotifyNavigationService = new SpotifyNavigationService()) {
     this.client = createClient(environment.supabaseUrl, environment.supabaseKey, {
       auth: {
         flowType: 'pkce',
@@ -356,7 +357,10 @@ export class SupabaseService {
           image_url: this.isPlaceholderImage(incomingImage)
             ? (existing?.image_url || null)
             : incomingImage,
-          spotify_url: a.external_urls?.spotify || a.spotifyUrl || a.spotify_url || existing?.spotify_url || null,
+          spotify_url: this.spotifyNavigation.sanitizeSpotifyUrl(
+            a.external_urls?.spotify || a.spotifyUrl || a.spotify_url || existing?.spotify_url,
+            'artist'
+          ),
           last_updated: new Date().toISOString()
         };
       });
@@ -385,11 +389,12 @@ export class SupabaseService {
       if (error) throw error;
       if (!data) return null;
 
+      const safeSpotifyUrl = this.spotifyNavigation.sanitizeSpotifyUrl(data.spotify_url, 'artist');
       return {
         id: data.id,
         name: data.name,
         images: data.image_url ? [{ url: data.image_url }] : [],
-        external_urls: { spotify: data.spotify_url }
+        external_urls: safeSpotifyUrl ? { spotify: safeSpotifyUrl } : undefined
       };
     } catch (e) {
       console.warn('[SupabaseService] Failed to load artist:', e);
@@ -414,12 +419,15 @@ export class SupabaseService {
         artists.push(...(data || []));
       }
 
-      return artists.map(artist => ({
-        id: artist.id,
-        name: artist.name,
-        images: artist.image_url ? [{ url: artist.image_url }] : [],
-        external_urls: artist.spotify_url ? { spotify: artist.spotify_url } : undefined
-      }));
+      return artists.map(artist => {
+        const safeSpotifyUrl = this.spotifyNavigation.sanitizeSpotifyUrl(artist.spotify_url, 'artist');
+        return {
+          id: artist.id,
+          name: artist.name,
+          images: artist.image_url ? [{ url: artist.image_url }] : [],
+          external_urls: safeSpotifyUrl ? { spotify: safeSpotifyUrl } : undefined
+        };
+      });
     } catch (e) {
       console.warn('[SupabaseService] Failed to load artist profiles:', e);
       return [];
@@ -473,7 +481,10 @@ export class SupabaseService {
           image_url: this.isPlaceholderImage(incomingImage)
             ? (existing?.image_url || null)
             : incomingImage,
-          spotify_url: a.external_urls?.spotify || a.spotifyUrl || a.spotify_url || existing?.spotify_url || null,
+          spotify_url: this.spotifyNavigation.sanitizeSpotifyUrl(
+            a.external_urls?.spotify || a.spotifyUrl || a.spotify_url || existing?.spotify_url,
+            'album'
+          ),
           restriction_reason: a.restrictions?.reason || existing?.restriction_reason || null,
           upc: a.external_ids?.upc || a.upc || existing?.upc || null,
           ean: a.external_ids?.ean || a.ean || existing?.ean || null,
@@ -673,7 +684,10 @@ export class SupabaseService {
           album_id: t.album?.id || t.albumId || existing?.album_id || null,
           duration_ms: Number.isFinite(durationMs) ? durationMs : (existing?.duration_ms ?? 0),
           explicit: typeof t.explicit === 'boolean' ? t.explicit : (existing?.explicit ?? false),
-          spotify_url: t.external_urls?.spotify || t.spotifyUrl || t.spotify_url || existing?.spotify_url || null,
+          spotify_url: this.spotifyNavigation.sanitizeSpotifyUrl(
+            t.external_urls?.spotify || t.spotifyUrl || t.spotify_url || existing?.spotify_url,
+            'track'
+          ),
           track_number: Number.isFinite(trackNumber) ? trackNumber : (existing?.track_number ?? 1),
           disc_number: Number.isFinite(discNumber) ? discNumber : (existing?.disc_number ?? 1),
           is_playable: typeof t.is_playable === 'boolean' ? t.is_playable : (existing?.is_playable ?? true),

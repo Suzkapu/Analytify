@@ -1,9 +1,10 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, Optional } from '@angular/core';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {SpotifyNavigationService} from '@core/navigation/spotify-navigation.service';
 
 const console = createScopedLogger('Listening History');
 
@@ -16,13 +17,17 @@ export class ListeningHistoryComponent implements OnInit {
 
   recentlyPlayedTracks: any[] = [];
   isLoadingRecentlyPlayed: boolean = true;
+  private readonly nav: SpotifyNavigationService;
 
   constructor(
     private spotifyDataService: SpotifyDataService,
     public authService: SpotifyAuthService,
     private storageService: StorageService,
-    private supabaseService: SupabaseService
-  ) { }
+    private supabaseService: SupabaseService,
+    @Optional() private spotifyNavigation?: SpotifyNavigationService
+  ) {
+    this.nav = this.spotifyNavigation || new SpotifyNavigationService();
+  }
 
   ngOnInit() {
     if (this.authService.isAuthenticated()) {
@@ -164,9 +169,7 @@ export class ListeningHistoryComponent implements OnInit {
   }
 
   openTrackClick(url: string) {
-    if (url) {
-      window.open(url, '_blank');
-    }
+    this.nav.openTrack(url);
   }
 
 

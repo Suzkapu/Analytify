@@ -19,7 +19,7 @@
     "performance:check": "node scripts/check-performance-contracts.mjs",
     "api-usage:check": "node scripts/check-api-on-demand.mjs",
     "admin:check": "node scripts/check-admin-control-plane.mjs",
-    "sync-service:check": "node --test services/sync-service/date-utils.test.js services/sync-service/task-registry.test.js services/sync-service/scheduler.test.js services/sync-service/credential-store.test.js services/sync-service/spotify-client.test.js services/sync-service/push-dispatcher.test.js services/sync-service/tasks/history-task.test.js services/sync-service/tasks/stats-task.test.js services/sync-service/tasks/shared-playlists-task.test.js",
+    "sync-service:check": "node --test services/sync-service/spotify-url-validator.test.js services/sync-service/date-utils.test.js services/sync-service/task-registry.test.js services/sync-service/scheduler.test.js services/sync-service/credential-store.test.js services/sync-service/spotify-client.test.js services/sync-service/push-dispatcher.test.js services/sync-service/tasks/history-task.test.js services/sync-service/tasks/stats-task.test.js services/sync-service/tasks/shared-playlists-task.test.js",
     "edge-functions:check": "deno check --config supabase/functions/deno.json supabase/functions/spotify-credentials/index.ts supabase/functions/song-league-playlist-sync/index.ts supabase/functions/song-league-notifications/index.ts",
     "typecheck": "tsc -p tsconfig.app.json --noEmit",
     "typecheck:tests": "tsc -p tsconfig.spec.json --noEmit",

@@ -1,10 +1,11 @@
-import {Component} from '@angular/core';
+import {Component, Optional} from '@angular/core';
 import {SpotifyDataService} from "@core/data-access/spotify/spotify-data.service";
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {StorageService} from "@core/data-access/storage/storage.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SupabaseService} from "@core/data-access/supabase/supabase.service";
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {SpotifyNavigationService} from '@core/navigation/spotify-navigation.service';
 
 const console = createScopedLogger('Artist Details');
 
@@ -19,7 +20,7 @@ export class ArtistDetailsComponent {
   playlistId: string = '';
   isLoadingArtist = true;
   artistLoadError = '';
-
+  private readonly nav: SpotifyNavigationService;
 
   constructor(
     private route: ActivatedRoute, 
@@ -27,8 +28,10 @@ export class ArtistDetailsComponent {
     private router: Router,
     public authService: SpotifyAuthService,
     private storageService: StorageService,
-    private supabaseService: SupabaseService
+    private supabaseService: SupabaseService,
+    @Optional() private spotifyNavigation?: SpotifyNavigationService
   ) {
+    this.nav = this.spotifyNavigation || new SpotifyNavigationService();
     this.route.params.subscribe(async (params) => {
       this.tracks = Array.isArray(history.state?.tracks) ? history.state.tracks : [];
       this.playlistId = history.state?.playlistId || '';
@@ -140,23 +143,19 @@ export class ArtistDetailsComponent {
   }
 
   openTrackClick(url?: string) {
-    if (url) {
-      window.location.href = url;
-    }
+    this.nav.openTrack(url);
   }
 
   openArtistClick() {
-    const url = this.getArtistSpotifyUrl();
-    if (url) {
-      window.location.href = url;
-    }
+    this.nav.openArtist(this.getArtistSpotifyUrl());
   }
 
   getArtistSpotifyUrl(): string {
-    if (this.artist?.external_urls?.spotify) {
-      return this.artist.external_urls.spotify;
+    const safeUrl = this.nav.getArtistUrl(this.artist);
+    if (safeUrl) {
+      return safeUrl;
     }
-    return this.artist?.id
+    return this.artist?.id && /^[A-Za-z0-9]+$/.test(this.artist.id)
       ? `https://open.spotify.com/artist/${encodeURIComponent(this.artist.id)}`
       : '';
   }
