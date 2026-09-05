@@ -40,32 +40,85 @@
       <section class="admin-users-section">
         <div class="admin-section-heading"><div><span>Reusable sync service</span><h2>User schedules</h2><p>Every enabled data source is an independent task with its own interval.</p></div><span class="admin-count">{{ users.length }}</span></div>
         <div class="admin-user-grid">
-          <article *ngFor="let user of users; trackBy: trackUser" class="admin-user-card" [class.disabled]="!user.enabled">
-            <header><span class="admin-avatar"><img *ngIf="user.profilePicUrl" [src]="user.profilePicUrl" alt=""><i *ngIf="!user.profilePicUrl" class="pi pi-user"></i></span><div><h3>{{ user.displayName }}</h3><p>{{ user.spotifyId }}</p></div><label class="compact-switch"><input type="checkbox" [(ngModel)]="user.enabled"><span></span></label></header>
-            <div class="user-health"><span [class.ok]="user.backupActive"><i class="pi" [ngClass]="user.backupActive ? 'pi-cloud' : 'pi-cloud-upload'"></i>{{ user.backupActive ? 'Cloud Backup on' : 'Cloud Backup off' }}</span><span [class.ok]="user.hasRefreshToken"><i class="pi pi-key"></i>{{ user.hasRefreshToken ? 'Spotify connected' : 'Reconnect needed' }}</span></div>
-            <label class="admin-field"><span>Timezone</span><input type="text" [(ngModel)]="user.timezone" placeholder="Europe/Vienna"></label>
+          <article *ngFor="let user of users; trackBy: trackUser" class="admin-user-card" [class.disabled]="!user.enabled" [class.expanded]="isUserExpanded(user.userId)">
+            <header>
+              <span class="admin-avatar" (click)="toggleUserExpanded(user.userId)" style="cursor: pointer;">
+                <img *ngIf="user.profilePicUrl" [src]="user.profilePicUrl" alt="">
+                <i *ngIf="!user.profilePicUrl" class="pi pi-user"></i>
+              </span>
+              <div class="user-card-title" (click)="toggleUserExpanded(user.userId)" style="cursor: pointer;">
+                <h3>{{ user.displayName }}</h3>
+                <p>{{ user.spotifyId }}</p>
+              </div>
+              <div class="user-header-actions" (click)="$event.stopPropagation()">
+                <label class="compact-switch" title="Toggle synchronization">
+                  <input type="checkbox" [(ngModel)]="user.enabled">
+                  <span></span>
+                </label>
+                <button type="button" class="admin-icon-button card-toggle-btn"
+                  (click)="toggleUserExpanded(user.userId)"
+                  [attr.aria-expanded]="isUserExpanded(user.userId)"
+                  [attr.aria-label]="isUserExpanded(user.userId) ? 'Collapse ' + user.displayName + ' settings' : 'Expand ' + user.displayName + ' settings'">
+                  <i class="pi" [ngClass]="isUserExpanded(user.userId) ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+                </button>
+              </div>
+            </header>
 
-            <div class="task-settings">
-              <div><input type="checkbox" [(ngModel)]="user.historyEnabled" aria-label="Enable listening history"><span><strong>Listening history</strong><small class="schedule-control">Every <input type="number" [(ngModel)]="user.historyIntervalMinutes" min="1" max="10080" aria-label="Listening history interval"><select [(ngModel)]="user.historyIntervalUnit" aria-label="Listening history interval unit"><option value="minutes">minutes</option><option value="hours">hours</option><option value="days">days</option></select></small></span></div>
-              <div><input type="checkbox" [(ngModel)]="user.shortTermEnabled" aria-label="Enable short-term stats"><span><strong>Short-term stats</strong><small class="schedule-control">Every <input type="number" [(ngModel)]="user.shortTermIntervalHours" min="1" max="10080" aria-label="Short-term stats interval"><select [(ngModel)]="user.shortTermIntervalUnit" aria-label="Short-term stats interval unit"><option value="minutes">minutes</option><option value="hours">hours</option><option value="days">days</option></select></small></span></div>
-              <div><input type="checkbox" [(ngModel)]="user.mediumTermEnabled" aria-label="Enable medium-term stats"><span><strong>Medium-term stats</strong><small class="schedule-control">Every <input type="number" [(ngModel)]="user.mediumTermIntervalHours" min="1" max="10080" aria-label="Medium-term stats interval"><select [(ngModel)]="user.mediumTermIntervalUnit" aria-label="Medium-term stats interval unit"><option value="minutes">minutes</option><option value="hours">hours</option><option value="days">days</option></select></small></span></div>
-              <div><input type="checkbox" [(ngModel)]="user.longTermEnabled" aria-label="Enable long-term stats"><span><strong>Long-term stats</strong><small class="schedule-control">Every <input type="number" [(ngModel)]="user.longTermIntervalHours" min="1" max="10080" aria-label="Long-term stats interval"><select [(ngModel)]="user.longTermIntervalUnit" aria-label="Long-term stats interval unit"><option value="minutes">minutes</option><option value="hours">hours</option><option value="days">days</option></select></small></span></div>
-              <div><input type="checkbox" [(ngModel)]="user.songLeaguePlaylistsEnabled" aria-label="Enable Song League playlists"><span><strong>Song League playlists</strong><small class="schedule-control">Every <input type="number" [(ngModel)]="user.songLeaguePlaylistIntervalMinutes" min="1" max="10080" aria-label="Song League playlist interval"><select [(ngModel)]="user.songLeaguePlaylistIntervalUnit" aria-label="Song League playlist interval unit"><option value="minutes">minutes</option><option value="hours">hours</option><option value="days">days</option></select></small><label class="task-option"><input type="checkbox" [(ngModel)]="user.songLeaguePlaylistFridaysOnly" aria-label="Refresh Song League playlists only on Fridays"> Only refresh on Fridays</label></span></div>
-              <div><input type="checkbox" [(ngModel)]="user.sharedPlaylistsEnabled" aria-label="Enable Shared Playlists"><span><strong>Shared playlists</strong><small class="schedule-control">Every <input type="number" [(ngModel)]="user.sharedPlaylistIntervalMinutes" min="1" max="10080" aria-label="Shared playlist interval"><select [(ngModel)]="user.sharedPlaylistIntervalUnit" aria-label="Shared playlist interval unit"><option value="minutes">minutes</option><option value="hours">hours</option><option value="days">days</option></select></small></span></div>
+            <div class="user-health">
+              <span [class.ok]="user.backupActive">
+                <i class="pi" [ngClass]="user.backupActive ? 'pi-cloud' : 'pi-cloud-upload'"></i>
+                {{ user.backupActive ? 'Cloud Backup on' : 'Cloud Backup off' }}
+              </span>
+              <span [class.ok]="user.hasRefreshToken">
+                <i class="pi pi-key"></i>
+                {{ user.hasRefreshToken ? 'Spotify connected' : 'Reconnect needed' }}
+              </span>
+              <span *ngIf="!isUserExpanded(user.userId)" class="user-summary-badge" (click)="toggleUserExpanded(user.userId)" style="cursor: pointer;">
+                <i class="pi pi-calendar"></i>
+                {{ enabledTasksCount(user) }} tasks enabled
+              </span>
             </div>
 
-            <p *ngIf="user.lastSuccessAt" class="last-run">Last success {{ user.lastSuccessAt | date:'medium' }}</p>
-            <p *ngIf="user.lastError" class="user-error">{{ user.lastError }}</p>
-            <footer><button type="button" class="admin-secondary" (click)="saveUser(user)" [disabled]="isUserBusy(user.userId)"><i class="pi pi-save"></i> Save</button><button type="button" class="admin-primary" (click)="runUserNow(user)" [disabled]="isUserBusy(user.userId) || !user.backupActive || !user.hasRefreshToken"><i class="pi pi-play"></i> Run enabled tasks</button></footer>
+            <div *ngIf="isUserExpanded(user.userId)" class="user-card-settings">
+              <label class="admin-field"><span>Timezone</span><input type="text" [(ngModel)]="user.timezone" placeholder="Europe/Vienna"></label>
+
+              <div class="task-settings">
+                <div><input type="checkbox" [(ngModel)]="user.historyEnabled" aria-label="Enable listening history"><span><strong>Listening history</strong><small class="schedule-control">Every <input type="number" [(ngModel)]="user.historyIntervalMinutes" min="1" max="10080" aria-label="Listening history interval"><select [(ngModel)]="user.historyIntervalUnit" aria-label="Listening history interval unit"><option value="minutes">minutes</option><option value="hours">hours</option><option value="days">days</option></select></small></span></div>
+                <div><input type="checkbox" [(ngModel)]="user.shortTermEnabled" aria-label="Enable short-term stats"><span><strong>Short-term stats</strong><small class="schedule-control">Every <input type="number" [(ngModel)]="user.shortTermIntervalHours" min="1" max="10080" aria-label="Short-term stats interval"><select [(ngModel)]="user.shortTermIntervalUnit" aria-label="Short-term stats interval unit"><option value="minutes">minutes</option><option value="hours">hours</option><option value="days">days</option></select></small></span></div>
+                <div><input type="checkbox" [(ngModel)]="user.mediumTermEnabled" aria-label="Enable medium-term stats"><span><strong>Medium-term stats</strong><small class="schedule-control">Every <input type="number" [(ngModel)]="user.mediumTermIntervalHours" min="1" max="10080" aria-label="Medium-term stats interval"><select [(ngModel)]="user.mediumTermIntervalUnit" aria-label="Medium-term stats interval unit"><option value="minutes">minutes</option><option value="hours">hours</option><option value="days">days</option></select></small></span></div>
+                <div><input type="checkbox" [(ngModel)]="user.longTermEnabled" aria-label="Enable long-term stats"><span><strong>Long-term stats</strong><small class="schedule-control">Every <input type="number" [(ngModel)]="user.longTermIntervalHours" min="1" max="10080" aria-label="Long-term stats interval"><select [(ngModel)]="user.longTermIntervalUnit" aria-label="Long-term stats interval unit"><option value="minutes">minutes</option><option value="hours">hours</option><option value="days">days</option></select></small></span></div>
+                <div><input type="checkbox" [(ngModel)]="user.songLeaguePlaylistsEnabled" aria-label="Enable Song League playlists"><span><strong>Song League playlists</strong><small class="schedule-control">Every <input type="number" [(ngModel)]="user.songLeaguePlaylistIntervalMinutes" min="1" max="10080" aria-label="Song League playlist interval"><select [(ngModel)]="user.songLeaguePlaylistIntervalUnit" aria-label="Song League playlist interval unit"><option value="minutes">minutes</option><option value="hours">hours</option><option value="days">days</option></select></small><label class="task-option"><input type="checkbox" [(ngModel)]="user.songLeaguePlaylistFridaysOnly" aria-label="Refresh Song League playlists only on Fridays"> Only refresh on Fridays</label></span></div>
+                <div><input type="checkbox" [(ngModel)]="user.sharedPlaylistsEnabled" aria-label="Enable Shared Playlists"><span><strong>Shared playlists</strong><small class="schedule-control">Every <input type="number" [(ngModel)]="user.sharedPlaylistIntervalMinutes" min="1" max="10080" aria-label="Shared playlist interval"><select [(ngModel)]="user.sharedPlaylistIntervalUnit" aria-label="Shared playlist interval unit"><option value="minutes">minutes</option><option value="hours">hours</option><option value="days">days</option></select></small></span></div>
+              </div>
+
+              <p *ngIf="user.lastSuccessAt" class="last-run">Last success {{ user.lastSuccessAt | date:'medium' }}</p>
+              <p *ngIf="user.lastError" class="user-error">{{ user.lastError }}</p>
+              <footer><button type="button" class="admin-secondary" (click)="saveUser(user)" [disabled]="isUserBusy(user.userId)"><i class="pi pi-save"></i> Save</button><button type="button" class="admin-primary" (click)="runUserNow(user)" [disabled]="isUserBusy(user.userId) || !user.backupActive || !user.hasRefreshToken"><i class="pi pi-play"></i> Run enabled tasks</button></footer>
+            </div>
           </article>
         </div>
       </section>
 
-      <section class="admin-panel runs-panel">
-        <div class="admin-section-heading"><div><span>Audit trail</span><h2>Recent runs</h2></div><button type="button" class="admin-icon-button" (click)="refreshRuns()" [disabled]="isRefreshingRuns" aria-label="Refresh recent runs"><i class="pi pi-refresh" [class.pi-spin]="isRefreshingRuns"></i></button></div>
-        <div *ngIf="!runs.length" class="admin-empty">No jobs have been queued yet.</div>
-        <div *ngIf="runs.length" class="run-list">
-          <article *ngFor="let run of runs; trackBy: trackRun"><span class="run-status" [ngClass]="run.status"><i class="pi" [ngClass]="run.status === 'running' ? 'pi-spin pi-spinner' : run.status === 'succeeded' ? 'pi-check' : run.status === 'failed' ? 'pi-times' : 'pi-clock'"></i></span><div><strong>{{ taskLabel(run.taskKey) }}</strong><small>{{ run.displayName }} · {{ run.triggerType }} · {{ run.requestedAt | date:'short' }}</small><em *ngIf="run.error">{{ run.error }}</em></div><b>{{ run.status }}</b></article>
+      <section class="admin-panel runs-panel" [class.collapsed]="isRunsCollapsed">
+        <div class="admin-section-heading runs-heading" (click)="toggleRunsCollapsed()" role="button" tabindex="0" (keydown.enter)="toggleRunsCollapsed()" (keydown.space)="toggleRunsCollapsed(); $event.preventDefault()" [attr.aria-expanded]="!isRunsCollapsed" aria-controls="admin-runs-content">
+          <div>
+            <span>Audit trail</span>
+            <h2>Recent runs <small *ngIf="runs.length" class="runs-count">({{ runs.length }})</small></h2>
+          </div>
+          <div class="runs-heading-actions" (click)="$event.stopPropagation()">
+            <button type="button" class="admin-icon-button" (click)="refreshRuns()" [disabled]="isRefreshingRuns" aria-label="Refresh recent runs">
+              <i class="pi pi-refresh" [class.pi-spin]="isRefreshingRuns"></i>
+            </button>
+            <button type="button" class="admin-icon-button" (click)="toggleRunsCollapsed()" [attr.aria-expanded]="!isRunsCollapsed" [attr.aria-label]="isRunsCollapsed ? 'Expand recent runs' : 'Collapse recent runs'">
+              <i class="pi" [ngClass]="isRunsCollapsed ? 'pi-chevron-down' : 'pi-chevron-up'"></i>
+            </button>
+          </div>
+        </div>
+        <div id="admin-runs-content" *ngIf="!isRunsCollapsed">
+          <div *ngIf="!runs.length" class="admin-empty">No jobs have been queued yet.</div>
+          <div *ngIf="runs.length" class="run-list">
+            <article *ngFor="let run of runs; trackBy: trackRun"><span class="run-status" [ngClass]="run.status"><i class="pi" [ngClass]="run.status === 'running' ? 'pi-spin pi-spinner' : run.status === 'succeeded' ? 'pi-check' : run.status === 'failed' ? 'pi-times' : 'pi-clock'"></i></span><div><strong>{{ taskLabel(run.taskKey) }}</strong><small>{{ run.displayName }} · {{ run.triggerType }} · {{ run.requestedAt | date:'short' }}</small><em *ngIf="run.error">{{ run.error }}</em></div><b>{{ run.status }}</b></article>
+          </div>
         </div>
       </section>
     </ng-container>

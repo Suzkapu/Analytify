@@ -47,9 +47,15 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 .compact-switch span::after { content: ''; width: 18px; height: 18px; position: absolute; top: 3px; left: 3px; border-radius: 50%; background: #929b94; transition: .2s; }
 .compact-switch input:checked + span { background: rgba(30,215,96,.3); }
 .compact-switch input:checked + span::after { left: 21px; background: #39df74; }
+.user-header-actions { display: flex; align-items: center; gap: 8px; }
+.card-toggle-btn { width: 34px; height: 34px; min-height: 34px; padding: 0; border-radius: 9px; }
 .user-health { margin: 13px 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .user-health span { padding: 5px 8px; display: inline-flex; gap: 5px; border-radius: 99px; background: rgba(255,90,100,.07); color: #bd7b80; font-size: .67rem; font-weight: 800; }
 .user-health span.ok { background: rgba(30,215,96,.07); color: #65d88c; }
+.user-summary-badge { padding: 5px 8px; display: inline-flex; align-items: center; gap: 5px; border-radius: 99px; background: rgba(255,255,255,.05); color: #a2aca4; font-size: .67rem; font-weight: 800; transition: background .15s; }
+.user-summary-badge:hover { background: rgba(255,255,255,.1); }
+.admin-user-card:not(.expanded) .user-health { margin-bottom: 0; }
+.user-card-settings { margin-top: 14px; }
 .task-settings { margin-top: 13px; display: grid; gap: 5px; }
 .task-settings > div { padding: 9px; display: grid; grid-template-columns: auto minmax(0,1fr); align-items: center; gap: 9px; border-radius: 9px; background: rgba(255,255,255,.024); }
 .task-settings strong, .task-settings small { display: block; }
@@ -72,5 +78,9 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 .run-status { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: rgba(255,255,255,.06); color: #8e9990; }
 .run-status.succeeded { background: rgba(30,215,96,.1); color: #48e27c; }.run-status.failed { background: rgba(255,80,90,.1); color: #ff7e87; }.run-status.running { color: #6aaeff; }
 .admin-empty { padding: 30px; color: #737e76; text-align: center; }
+.runs-heading { cursor: pointer; user-select: none; }
+.runs-heading-actions { display: flex; align-items: center; gap: 8px; }
+.runs-count { color: #7f8a82; font-size: .95rem; font-weight: normal; margin-left: 6px; }
+.runs-panel.collapsed .admin-section-heading { margin-bottom: 0; }
 @media (max-width: 850px) { .admin-user-grid { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .admin-page { padding: 24px 12px 60px; }.admin-hero { align-items: stretch; flex-direction: column; }.admin-panel { padding: 16px; }.demo-controls { grid-template-columns: 1fr; }.admin-user-card footer { flex-direction: column; }.admin-user-card footer button { width: 100%; }.run-list article { grid-template-columns: 30px minmax(0,1fr); }.run-list b { grid-column: 2; }.admin-switch-row { align-items: start; } }

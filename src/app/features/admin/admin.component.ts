@@ -13,6 +13,8 @@ export class AdminComponent implements OnInit {
   siteSettings: SiteSettings = {announcement: '', allowSongLeagueCreation: true};
   users: AdminUserSyncSettings[] = [];
   runs: AdminSyncRun[] = [];
+  isRunsCollapsed = true;
+  expandedUsers = new Set<string>();
   isLoading = true;
   isSavingSite = false;
   isRefreshingRuns = false;
@@ -99,6 +101,33 @@ export class AdminComponent implements OnInit {
     } finally {
       this.isRefreshingRuns = false;
     }
+  }
+
+  toggleRunsCollapsed(): void {
+    this.isRunsCollapsed = !this.isRunsCollapsed;
+  }
+
+  isUserExpanded(userId: string): boolean {
+    return this.expandedUsers.has(userId);
+  }
+
+  toggleUserExpanded(userId: string): void {
+    if (this.expandedUsers.has(userId)) {
+      this.expandedUsers.delete(userId);
+    } else {
+      this.expandedUsers.add(userId);
+    }
+  }
+
+  enabledTasksCount(user: AdminUserSyncSettings): number {
+    return [
+      user.historyEnabled,
+      user.shortTermEnabled,
+      user.mediumTermEnabled,
+      user.longTermEnabled,
+      user.songLeaguePlaylistsEnabled,
+      user.sharedPlaylistsEnabled
+    ].filter(Boolean).length;
   }
 
   async createDemoLeague(): Promise<void> {
