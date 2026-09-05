@@ -28,7 +28,7 @@ export class SongLeagueService {
     private spotify: SpotifyDataService
   ) {}
 
-  async createLeague(name: string, timezone: string): Promise<CreatedSongLeague> {
+  async createLeague(name: string, timezone: string, maxMembers = 5): Promise<CreatedSongLeague> {
     const inviteToken = this.createToken();
     const {data, error} = await this.supabase.client.rpc('create_song_league', {
       p_name: name,
@@ -38,6 +38,9 @@ export class SongLeagueService {
     if (error) throw error;
     const leagueId = String(data || '');
     if (!leagueId) throw new Error('Supabase did not return a Song League ID.');
+    if (maxMembers && maxMembers >= 2 && maxMembers <= 50 && maxMembers !== 5) {
+      await this.setMemberLimit(leagueId, maxMembers);
+    }
     return {leagueId, inviteToken, inviteUrl: this.inviteUrl(inviteToken)};
   }
 

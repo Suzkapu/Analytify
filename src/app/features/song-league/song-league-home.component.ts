@@ -17,6 +17,7 @@ export class SongLeagueHomeComponent implements OnInit {
   isCreating = false;
   showCreateForm = false;
   leagueName = '';
+  memberCapacity = 5;
   errorMessage = '';
   inviteUrl = '';
   inviteCopied = false;
@@ -65,10 +66,13 @@ export class SongLeagueHomeComponent implements OnInit {
     this.errorMessage = '';
     try {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Vienna';
-      const created = await this.songLeague.createLeague(name, timezone);
+      const capacity = Math.trunc(Number(this.memberCapacity)) || 5;
+      const boundedCapacity = Math.max(2, Math.min(50, capacity));
+      const created = await this.songLeague.createLeague(name, timezone, boundedCapacity);
       this.inviteUrl = created.inviteUrl;
       this.createdLeagueId = created.leagueId;
       this.leagueName = '';
+      this.memberCapacity = 5;
       this.showCreateForm = false;
       await this.load();
     } catch (error) {

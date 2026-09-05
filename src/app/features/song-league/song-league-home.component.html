@@ -39,9 +39,15 @@
           <input type="text" name="leagueName" [(ngModel)]="leagueName" maxlength="80"
             placeholder="Friday Finds" [disabled]="isCreating" autofocus>
         </label>
+        <label>
+          <span>Member capacity</span>
+          <input type="number" name="memberCapacity" [(ngModel)]="memberCapacity" min="2" max="50"
+            [disabled]="isCreating" placeholder="5">
+          <small>Includes you · between 2 and 50 players</small>
+        </label>
         <div class="league-form-actions">
           <button type="button" class="league-secondary" (click)="showCreateForm = false" [disabled]="isCreating">Cancel</button>
-          <button type="submit" class="league-primary" [disabled]="!leagueName.trim() || isCreating">
+          <button type="submit" class="league-primary" [disabled]="!leagueName.trim() || isCreating || memberCapacity < 2 || memberCapacity > 50">
             <i class="pi" [ngClass]="isCreating ? 'pi-spin pi-spinner' : 'pi-users'"></i>
             {{ isCreating ? 'Creating…' : 'Create league' }}
           </button>

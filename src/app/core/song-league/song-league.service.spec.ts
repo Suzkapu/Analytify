@@ -62,6 +62,21 @@ describe('SongLeagueService', () => {
     expect(created.inviteUrl).toContain(`/song-league/join/${parameters.p_invite_token}`);
   });
 
+  it('sets custom member capacity on creation when specified', async () => {
+    rpc.and.resolveTo({data: 2, error: null});
+    const created = await service.createLeague('Two Player Duel', 'Europe/Vienna', 2);
+
+    expect(created.leagueId).toBe('2');
+    expect(rpc.calls.allArgs().map(args => args[0])).toEqual([
+      'create_song_league',
+      'set_song_league_member_limit'
+    ]);
+    expect(rpc.calls.mostRecent().args[1]).toEqual({
+      p_league_id: '2',
+      p_max_members: 2
+    });
+  });
+
   it('creates independent invitation tokens when more players are invited', async () => {
     await service.createInvite('league-id');
     const firstParameters = rpc.calls.mostRecent().args[1];
