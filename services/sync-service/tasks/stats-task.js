@@ -70,7 +70,10 @@ function createStatsTask({supabase, spotify, catalog}) {
       genre_name: genre.name, rank: index + 1, weight: Math.round(genre.weight || 0)
     }));
 
-    const {data: snapshotId, error} = await supabase.rpc('replace_stats_snapshot', {
+    const {data: currentSnapshot, error: revisionError} = await supabase.from('stats_snapshots')
+      .select('revision').eq('user_id', user.id).eq('range', range).eq('snapshot_date', date).maybeSingle();
+    if (revisionError) throw revisionError;
+    const {data: replacement, error} = await supabase.rpc('replace_stats_snapshot_v2', {
       p_user_id: user.id,
       p_range: range,
       p_snapshot_date: date,
@@ -79,9 +82,12 @@ function createStatsTask({supabase, spotify, catalog}) {
       p_tracks: trackRows,
       p_artists: artistRows,
       p_genres: genreRows,
-      p_fetched_at: fetchedAt
+      p_fetched_at: fetchedAt,
+      p_idempotency_key: `${user.id}:${range}:${date}:${fetchedAt}`,
+      p_expected_revision: Number(currentSnapshot?.revision || 0)
     });
     if (error) throw error;
+    const snapshotId = Array.isArray(replacement) ? replacement[0]?.snapshot_id : replacement?.snapshot_id;
     if (range === 'short_term') {
       const {error: scoreError} = await supabase.rpc('score_song_league_snapshot', {p_snapshot_id: snapshotId});
       if (scoreError) console.warn(`[Stats] Song League scoring skipped: ${scoreError.message}`);

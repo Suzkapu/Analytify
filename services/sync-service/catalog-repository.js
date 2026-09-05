@@ -1,6 +1,29 @@
 const {validateSpotifyUrl} = require('./spotify-url-validator.js');
+const {createHash} = require('node:crypto');
 
 function createCatalogRepository(supabase, spotify) {
+  async function replaceAtomically(kind, ids, items, relationships = []) {
+    const stableIds = Array.from(new Set(ids.filter(Boolean))).sort();
+    const resourceKey = `${kind}:${createHash('sha256').update(stableIds.join('\n')).digest('hex')}`;
+    const idempotencyKey = createHash('sha256')
+      .update(JSON.stringify({kind, items, relationships})).digest('hex');
+    const {data: version, error: versionError} = await supabase.from('catalog_write_versions')
+      .select('revision').eq('resource_key', resourceKey).maybeSingle();
+    if (versionError) throw versionError;
+    const parameters = {
+      p_resource_key: resourceKey,
+      p_expected_revision: Number(version?.revision || 0),
+      p_idempotency_key: idempotencyKey,
+      p_artists: kind === 'artists' ? items : [],
+      p_albums: kind === 'albums' ? items : [],
+      p_tracks: kind === 'tracks' ? items : [],
+      p_album_artists: kind === 'albums' ? relationships : [],
+      p_track_artists: kind === 'tracks' ? relationships : []
+    };
+    const {error} = await supabase.rpc('replace_spotify_catalog', parameters);
+    if (error) throw error;
+  }
+
   async function mapWithConcurrency(items, concurrency, mapper) {
     const results = new Array(items.length);
     let nextIndex = 0;
@@ -46,8 +69,7 @@ function createCatalogRepository(supabase, spotify) {
         last_updated: new Date().toISOString()
       };
     });
-    const {error: saveError} = await supabase.from('artists').upsert(rows, {onConflict: 'id'});
-    if (saveError) throw saveError;
+    await replaceAtomically('artists', Array.from(merged.keys()), rows);
   }
 
   function normalizeReleaseDate(value) {
@@ -91,14 +113,7 @@ function createCatalogRepository(supabase, spotify) {
         if (artist?.id) relationships.push({album_id: album.id, artist_id: artist.id});
       });
     }
-    const {error: saveError} = await supabase.from('albums').upsert(rows, {onConflict: 'id'});
-    if (saveError) throw saveError;
-    const {error: clearError} = await supabase.from('album_artists').delete().in('album_id', Array.from(albumsById.keys()));
-    if (clearError) throw clearError;
-    if (relationships.length > 0) {
-      const {error: relationError} = await supabase.from('album_artists').upsert(relationships, {onConflict: 'album_id,artist_id'});
-      if (relationError) throw relationError;
-    }
+    await replaceAtomically('albums', Array.from(albumsById.keys()), rows, relationships);
   }
 
   async function syncTracks(trackIds, pulledTracks = []) {
@@ -136,14 +151,7 @@ function createCatalogRepository(supabase, spotify) {
         if (artist?.id) relationships.push({track_id: track.id, artist_id: artist.id, artist_rank: rank});
       });
     }
-    const {error: saveError} = await supabase.from('tracks').upsert(rows, {onConflict: 'id'});
-    if (saveError) throw saveError;
-    const {error: clearError} = await supabase.from('track_artists').delete().in('track_id', Array.from(tracksById.keys()));
-    if (clearError) throw clearError;
-    if (relationships.length > 0) {
-      const {error: relationError} = await supabase.from('track_artists').upsert(relationships, {onConflict: 'track_id,artist_rank'});
-      if (relationError) throw relationError;
-    }
+    await replaceAtomically('tracks', Array.from(tracksById.keys()), rows, relationships);
   }
 
   async function persistPulledTracks(accessToken, tracks, suppliedArtists = []) {

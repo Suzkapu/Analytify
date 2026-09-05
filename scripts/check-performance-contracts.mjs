@@ -42,7 +42,7 @@ const checks = [
   ['PWA install does not prefetch every lazy JavaScript chunk', !prefetchedServiceWorkerFiles.includes('/*.js')],
   ['PWA feature chunks are cached lazily', !!lazyScriptGroup],
   ['same-day snapshot writes are serialized by user, range, and date', supabase.includes('statsSnapshotWrites.run(') && supabase.includes('`${supabaseUserId}:${range}:${snapshotDate}`')],
-  ['snapshot replacement is one locked database transaction', atomicStatsMigration.includes('pg_advisory_xact_lock') && supabase.includes("rpc('replace_stats_snapshot'")],
+  ['snapshot replacement is one locked database transaction', atomicStatsMigration.includes('pg_advisory_xact_lock') && supabase.includes("rpc('replace_stats_snapshot_v2'")],
   ['genre weights are normalized to database integers', supabase.includes('weight: Math.round(')],
   ['startup avoids an unbounded user-cache download', !authService.includes('loadUserCache(supabaseUserId)')],
   ['overlapping credential registration is coalesced', authService.includes('credentialRegistrationPromise')]

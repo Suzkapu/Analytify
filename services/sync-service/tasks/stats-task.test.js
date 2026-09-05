@@ -45,6 +45,11 @@ test('replaces a daily snapshot through one atomic database call', async () => {
           return {data: ids.map(id => ({id})), error: null};
         }}; }};
       }
+      if (table === 'stats_snapshots') {
+        return {select() { return {eq() { return this; }, async maybeSingle() {
+          return {data: null, error: null};
+        }}; }};
+      }
       if (table === 'users') {
         return {update() { return {async eq() { return {error: null}; }}; }};
       }
@@ -52,7 +57,7 @@ test('replaces a daily snapshot through one atomic database call', async () => {
     },
     async rpc(name, parameters) {
       rpcCalls.push([name, parameters]);
-      return {data: name === 'replace_stats_snapshot' ? 'snapshot-id' : null, error: null};
+      return {data: name === 'replace_stats_snapshot_v2' ? [{snapshot_id: 'snapshot-id', revision: 1}] : null, error: null};
     }
   };
   const spotify = {
@@ -80,11 +85,11 @@ test('replaces a daily snapshot through one atomic database call', async () => {
     settings: {timezone: 'Europe/Vienna'}
   });
 
-  const replacement = rpcCalls.find(([name]) => name === 'replace_stats_snapshot');
+  const replacement = rpcCalls.find(([name]) => name === 'replace_stats_snapshot_v2');
   assert.ok(replacement);
   assert.equal(replacement[1].p_tracks.length, 2);
   assert.equal(replacement[1].p_artists.length, 1);
   assert.equal(replacement[1].p_genres[0].weight, 50);
-  assert.deepEqual(touchedTables.sort(), ['artists', 'tracks', 'users']);
+  assert.deepEqual(touchedTables.sort(), ['artists', 'stats_snapshots', 'tracks', 'users']);
   assert.ok(rpcCalls.some(([name]) => name === 'score_song_league_snapshot'));
 });

@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(33);
+select plan(43);
 
 select has_table('public', 'users', 'users is reconstructible');
 select has_table('public', 'artists', 'artists is reconstructible');
@@ -59,6 +59,33 @@ select is((select count(*) from public.users), 1::bigint,
   'authenticated RLS exposes only the current profile');
 select is(public.is_app_admin(), true, 'admin identity is recognized by its protected membership');
 
+select lives_ok($$ select * from public.replace_stats_snapshot_v2(
+  '10000000-0000-4000-8000-000000000001', 'short_term', '2026-09-05', 0, 0,
+  '[{"track_id":"catalogtrack0000000001","rank":1}]', '[]', '[]',
+  '2026-09-05T00:00:00Z', 'snapshot-key-0001', 0
+) $$, 'first versioned snapshot replacement succeeds');
+select is((select revision from public.stats_snapshots where user_id = auth.uid()
+  and range = 'short_term' and snapshot_date = '2026-09-05'), 1::bigint,
+  'snapshot revision starts at one');
+select lives_ok($$ select * from public.replace_stats_snapshot_v2(
+  '10000000-0000-4000-8000-000000000001', 'short_term', '2026-09-05', 0, 0,
+  '[{"track_id":"catalogtrack0000000001","rank":1}]', '[]', '[]',
+  '2026-09-05T00:00:00Z', 'snapshot-key-0001', 0
+) $$, 'replaying the same snapshot key is idempotent');
+select throws_ok($$ select * from public.replace_stats_snapshot_v2(
+  '10000000-0000-4000-8000-000000000001', 'short_term', '2026-09-05', 0, 0,
+  '[]', '[]', '[]', '2026-09-05T00:00:01Z', 'snapshot-key-0002', 0
+) $$, '40001', 'stale snapshot compare-and-swap is rejected');
+select throws_ok($$ select * from public.replace_stats_snapshot_v2(
+  '10000000-0000-4000-8000-000000000001', 'short_term', '2026-09-05', 0, 0,
+  '[{"track_id":"missingtrack00000000001","rank":1}]', '[]', '[]',
+  '2026-09-05T00:00:02Z', 'snapshot-key-0003', 1
+) $$, '23503', 'fault during replacement rolls its transaction back');
+select is((select track_id from public.stats_snapshot_tracks relation
+  join public.stats_snapshots snapshot on snapshot.id = relation.snapshot_id
+  where snapshot.user_id = auth.uid() and snapshot.range = 'short_term'),
+  'catalogtrack0000000001', 'last-known-good snapshot survives a failed replacement');
+
 select lives_ok($$ select * from public.tracks where id = 'catalogtrack0000000001' $$,
   'authenticated users can read catalog rows');
 select throws_ok($$ update public.tracks set name = 'Poisoned' where id = 'catalogtrack0000000001' $$,
@@ -81,8 +108,26 @@ select is((select name from public.tracks where id = 'newcatalogtrack0000001'), 
   'insert-only ingestion cannot rewrite an existing catalog row');
 
 set local role service_role;
+select set_config('request.jwt.claim.role', 'service_role', true);
 select is((select count(*) from public.users), 2::bigint,
   'service role can perform trusted cross-user work');
+select lives_ok($$ select public.replace_spotify_catalog(
+  'tracks:catalogtrack0000000001', 0, 'catalog-write-key-0001', '[]', '[]',
+  '[{"id":"catalogtrack0000000001","name":"Worker value","duration_ms":1,"explicit":false,"track_number":1,"disc_number":1,"is_playable":true,"is_local":false}]',
+  '[]', '[]'
+) $$, 'trusted catalog replacement succeeds');
+select lives_ok($$ select public.replace_spotify_catalog(
+  'tracks:catalogtrack0000000001', 0, 'catalog-write-key-0001', '[]', '[]',
+  '[{"id":"catalogtrack0000000001","name":"Worker value","duration_ms":1,"explicit":false,"track_number":1,"disc_number":1,"is_playable":true,"is_local":false}]',
+  '[]', '[]'
+) $$, 'trusted catalog replacement replay is idempotent');
+select throws_ok($$ select public.replace_spotify_catalog(
+  'tracks:catalogtrack0000000001', 0, 'catalog-write-key-0002', '[]', '[]',
+  '[{"id":"catalogtrack0000000001","name":"Stale value","duration_ms":1,"explicit":false,"track_number":1,"disc_number":1,"is_playable":true,"is_local":false}]',
+  '[]', '[]'
+) $$, '40001', 'stale catalog compare-and-swap is rejected');
+select is((select name from public.tracks where id = 'catalogtrack0000000001'),
+  'Worker value', 'stale catalog replacement cannot overwrite the committed version');
 reset role;
 
 select * from finish();

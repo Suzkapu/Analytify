@@ -1276,7 +1276,15 @@ export class SupabaseService {
         }
       });
 
-      const {error: replaceError} = await this.client.rpc('replace_stats_snapshot', {
+      const {data: currentSnapshot, error: revisionError} = await this.client
+        .from('stats_snapshots')
+        .select('revision')
+        .eq('user_id', supabaseUserId)
+        .eq('range', range)
+        .eq('snapshot_date', todayStr)
+        .maybeSingle();
+      if (revisionError) throw revisionError;
+      const {error: replaceError} = await this.client.rpc('replace_stats_snapshot_v2', {
         p_user_id: supabaseUserId,
         p_range: range,
         p_snapshot_date: todayStr,
@@ -1285,7 +1293,9 @@ export class SupabaseService {
         p_tracks: trackLinks,
         p_artists: artistLinks,
         p_genres: genreLinks,
-        p_fetched_at: fetchedAt
+        p_fetched_at: fetchedAt,
+        p_idempotency_key: `${supabaseUserId}:${range}:${todayStr}:${fetchedAt}`,
+        p_expected_revision: Number(currentSnapshot?.revision || 0)
       });
       if (replaceError) throw replaceError;
 
