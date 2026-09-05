@@ -13,6 +13,7 @@
     "song-league-rules:check": "node scripts/check-song-league-rules.mjs",
     "song-league-notifications:check": "node --test supabase/functions/song-league-notifications/delivery-state.test.mjs && node scripts/check-song-league-notifications.mjs",
     "push-security:check": "node scripts/check-push-security.mjs",
+    "catalog-security:check": "node scripts/check-catalog-security.mjs",
     "song-league-sync:check": "node scripts/check-song-league-sync-security.mjs",
     "stats-calendars:check": "node scripts/check-stats-calendars.mjs",
     "stats-sharing:check": "node scripts/check-stats-sharing.mjs",
@@ -33,7 +34,7 @@
     "sync:once": "node services/sync-service/index.js",
     "sync:watch": "node services/sync-service/index.js --watch",
     "verify": "npm run architecture:check && npm run retention:check && npm run share-refresh:check && npm run song-league-invites:check && npm run song-league-rules:check && npm run song-league-notifications:check && npm run song-league-sync:check && npm run stats-calendars:check && npm run stats-sharing:check && npm run stats-history-search:check && npm run loading-feedback:check && npm run performance:check && npm run api-usage:check && npm run admin:check && npm run deployment-pipeline:check && npm run sync-service:deps:check && npm run sync-service:check && npm run edge-functions:check && npm run typecheck && npm run typecheck:tests && npm run build:production",
-    "verify:ci": "npm run architecture:check && npm run retention:check && npm run share-refresh:check && npm run song-league-invites:check && npm run song-league-rules:check && npm run song-league-notifications:check && npm run push-security:check && npm run song-league-sync:check && npm run stats-calendars:check && npm run stats-sharing:check && npm run stats-history-search:check && npm run loading-feedback:check && npm run performance:check && npm run api-usage:check && npm run admin:check && npm run deployment-pipeline:check && npm run sync-service:deps:check && npm run sync-service:check && npm run edge-functions:check && npm run typecheck && npm run typecheck:tests && npm run test:ci && npm run build:production",
+    "verify:ci": "npm run architecture:check && npm run retention:check && npm run share-refresh:check && npm run song-league-invites:check && npm run song-league-rules:check && npm run song-league-notifications:check && npm run push-security:check && npm run catalog-security:check && npm run song-league-sync:check && npm run stats-calendars:check && npm run stats-sharing:check && npm run stats-history-search:check && npm run loading-feedback:check && npm run performance:check && npm run api-usage:check && npm run admin:check && npm run deployment-pipeline:check && npm run sync-service:deps:check && npm run sync-service:check && npm run edge-functions:check && npm run typecheck && npm run typecheck:tests && npm run test:ci && npm run build:production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

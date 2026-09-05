@@ -392,24 +392,26 @@ USING (
     )
 );
 
--- E. Shared Metadata Tables Access Policies (For authenticated clients to select/insert/upsert metadata)
+-- E. Shared Metadata Tables Access Policies (browser clients are read-only;
+-- validated insert-only ingestion uses public.ingest_spotify_catalog and the
+-- trusted sync worker owns metadata updates)
 DROP POLICY IF EXISTS "Allow read access to all authenticated users" ON artists;
-CREATE POLICY "Allow all access to authenticated users" ON artists FOR ALL TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Authenticated users can read catalog" ON artists FOR SELECT TO authenticated USING (true);
 
 DROP POLICY IF EXISTS "Allow read access to all authenticated users" ON genres;
-CREATE POLICY "Allow all access to authenticated users" ON genres FOR ALL TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Authenticated users can read catalog" ON genres FOR SELECT TO authenticated USING (true);
 
 DROP POLICY IF EXISTS "Allow read access to all authenticated users" ON albums;
-CREATE POLICY "Allow all access to authenticated users" ON albums FOR ALL TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Authenticated users can read catalog" ON albums FOR SELECT TO authenticated USING (true);
 
 DROP POLICY IF EXISTS "Allow read access to all authenticated users" ON album_artists;
-CREATE POLICY "Allow all access to authenticated users" ON album_artists FOR ALL TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Authenticated users can read catalog" ON album_artists FOR SELECT TO authenticated USING (true);
 
 DROP POLICY IF EXISTS "Allow read access to all authenticated users" ON tracks;
-CREATE POLICY "Allow all access to authenticated users" ON tracks FOR ALL TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Authenticated users can read catalog" ON tracks FOR SELECT TO authenticated USING (true);
 
 DROP POLICY IF EXISTS "Allow read access to all authenticated users" ON track_artists;
-CREATE POLICY "Allow all access to authenticated users" ON track_artists FOR ALL TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Authenticated users can read catalog" ON track_artists FOR SELECT TO authenticated USING (true);
 
 -- F. Raw Top Items History Policies (using InitPlan Caching)
 DROP POLICY IF EXISTS "Users can manage own top tracks raw history" ON user_top_tracks_history;

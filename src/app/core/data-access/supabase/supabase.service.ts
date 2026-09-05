@@ -187,6 +187,20 @@ export class SupabaseService {
       .filter((artist: any) => !!artist.id);
   }
 
+  private async ingestCatalog(
+    kind: 'artists' | 'albums' | 'tracks',
+    items: any[],
+    relationships: any[] = []
+  ): Promise<void> {
+    if (items.length === 0 && relationships.length === 0) return;
+    const {error} = await this.client.rpc('ingest_spotify_catalog', {
+      p_kind: kind,
+      p_items: items,
+      p_relationships: relationships
+    });
+    if (error) throw error;
+  }
+
   /** Syncs Spotify artists metadata into the database */
   async syncArtists(artists: any[], onlyInsertMissing = false): Promise<void> {
     if (!artists || artists.length === 0) return;
@@ -237,10 +251,7 @@ export class SupabaseService {
       });
 
       if (artistsToInsert.length > 0) {
-        const { error } = await this.client
-          .from('artists')
-          .upsert(artistsToInsert, { onConflict: 'id' });
-        if (error) throw error;
+        await this.ingestCatalog('artists', artistsToInsert);
       }
     } catch (e) {
       console.error('[SupabaseService] Error syncing artists:', e);
@@ -364,10 +375,8 @@ export class SupabaseService {
       });
 
       const albumArtistsToInsert: any[] = [];
-      const relationshipAlbumIds: string[] = [];
       uniqueAlbums.forEach(a => {
         if (a.id && Array.isArray(a.artists)) {
-          relationshipAlbumIds.push(a.id);
           a.artists.forEach((art: any) => {
             if (art.id) {
                albumArtistsToInsert.push({ album_id: a.id, artist_id: art.id });
@@ -406,33 +415,12 @@ export class SupabaseService {
             };
           });
 
-          const { error: artErr } = await this.client
-            .from('artists')
-            .upsert(artistPlaceholders, { onConflict: 'id' });
-          if (artErr) throw artErr;
+          await this.ingestCatalog('artists', artistPlaceholders);
         }
       }
 
-      if (albumsToInsert.length > 0) {
-        const { error } = await this.client
-          .from('albums')
-          .upsert(albumsToInsert, { onConflict: 'id' });
-        if (error) throw error;
-      }
-
-      if (relationshipAlbumIds.length > 0) {
-        const { error: clearErr } = await this.client
-          .from('album_artists')
-          .delete()
-          .in('album_id', Array.from(new Set(relationshipAlbumIds)));
-        if (clearErr) throw clearErr;
-      }
-
-      if (albumArtistsToInsert.length > 0) {
-        const { error } = await this.client
-          .from('album_artists')
-          .upsert(albumArtistsToInsert, { onConflict: 'album_id,artist_id' });
-        if (error) throw error;
+      if (albumsToInsert.length > 0 || albumArtistsToInsert.length > 0) {
+        await this.ingestCatalog('albums', albumsToInsert, albumArtistsToInsert);
       }
     } catch (e) {
       console.error('[SupabaseService] Error syncing albums:', e);
@@ -500,10 +488,7 @@ export class SupabaseService {
             };
           });
 
-          const { error: albErr } = await this.client
-            .from('albums')
-            .upsert(albumPlaceholderToInsert, { onConflict: 'id' });
-          if (albErr) throw albErr;
+          await this.ingestCatalog('albums', albumPlaceholderToInsert);
         }
       }
 
@@ -537,10 +522,7 @@ export class SupabaseService {
             };
           });
 
-          const { error: artErr } = await this.client
-            .from('artists')
-            .upsert(artistPlaceholders, { onConflict: 'id' });
-          if (artErr) throw artErr;
+          await this.ingestCatalog('artists', artistPlaceholders);
         }
       }
 
@@ -570,10 +552,8 @@ export class SupabaseService {
       });
 
       const trackArtistsToInsert: any[] = [];
-      const relationshipTrackIds: string[] = [];
       uniqueTracks.forEach(t => {
         if (t.id && Array.isArray(t.artists)) {
-          relationshipTrackIds.push(t.id);
           t.artists.forEach((art: any, rank: number) => {
             if (art.id) {
               trackArtistsToInsert.push({ track_id: t.id, artist_id: art.id, artist_rank: rank });
@@ -582,26 +562,8 @@ export class SupabaseService {
         }
       });
 
-      if (tracksToInsert.length > 0) {
-        const { error } = await this.client
-          .from('tracks')
-          .upsert(tracksToInsert, { onConflict: 'id' });
-        if (error) throw error;
-      }
-
-      if (relationshipTrackIds.length > 0) {
-        const { error: clearErr } = await this.client
-          .from('track_artists')
-          .delete()
-          .in('track_id', Array.from(new Set(relationshipTrackIds)));
-        if (clearErr) throw clearErr;
-      }
-
-      if (trackArtistsToInsert.length > 0) {
-        const { error } = await this.client
-          .from('track_artists')
-          .upsert(trackArtistsToInsert, { onConflict: 'track_id,artist_rank' });
-        if (error) throw error;
+      if (tracksToInsert.length > 0 || trackArtistsToInsert.length > 0) {
+        await this.ingestCatalog('tracks', tracksToInsert, trackArtistsToInsert);
       }
     } catch (e) {
       console.error('[SupabaseService] Error syncing tracks:', e);
