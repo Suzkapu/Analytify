@@ -7,7 +7,7 @@ import {KeyedSerialTaskQueue} from '@core/performance/async-load';
 const console = createScopedLogger('Supabase');
 
 export interface PastTopItem {
-  kind: 'track' | 'artist';
+  kind: 'track' | 'artist' | 'genre';
   id: string;
   name: string;
   subtitle: string;
@@ -1002,7 +1002,7 @@ export class SupabaseService {
   /** Searches only matching historical snapshot rows; full history stays in Supabase. */
   async searchPastTopItems(
     range: string,
-    kind: 'track' | 'artist',
+    kind: 'track' | 'artist' | 'genre',
     query: string,
     limit = 20
   ): Promise<PastTopItem[]> {

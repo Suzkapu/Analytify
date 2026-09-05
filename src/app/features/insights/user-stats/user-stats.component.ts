@@ -211,7 +211,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.pastSearchTimer = null;
     const query = this.statsSearchQuery.trim();
     if (!this.includePastStatsSearch || query.length < 2 || this.isSpyMode || this.selectedSnapshotId !== 'current'
-      || !['tracks', 'artists'].includes(this.selectedCategory)) {
+      || !['tracks', 'artists', 'genres'].includes(this.selectedCategory)) {
       this.resetPastStatsSearch();
       return;
     }
@@ -234,15 +234,16 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       }
       return;
     }
-    const kind = this.selectedCategory === 'artists' ? 'artist' : 'track';
+    const kind = this.pastSearchKind();
     const range = this.selectedRange;
     try {
       const results = await this.supabaseService.searchPastTopItems(range, kind, query);
       if (sequence !== this.pastSearchSequence || range !== this.selectedRange
-        || kind !== (this.selectedCategory === 'artists' ? 'artist' : 'track')) return;
-      const currentIds = new Set((kind === 'track' ? this.topTracks : this.topArtists)
-        .map(item => item?.id).filter(Boolean));
-      this.pastTopResults = results.filter(item => !currentIds.has(item.id));
+        || kind !== this.pastSearchKind()) return;
+      const currentIds = new Set((kind === 'track' ? this.topTracks : kind === 'artist' ? this.topArtists : this.topGenres)
+        .map(item => this.normalizeStatsIdentity(kind === 'genre' ? item?.name : item?.id))
+        .filter(Boolean));
+      this.pastTopResults = results.filter(item => !currentIds.has(this.normalizeStatsIdentity(item.id)));
       this.pastStatsSearchError = '';
     } catch (error) {
       if (sequence !== this.pastSearchSequence) return;
@@ -260,6 +261,12 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.pastTopResults = [];
     this.isSearchingPastStats = false;
     this.pastStatsSearchError = '';
+  }
+
+  private pastSearchKind(): 'track' | 'artist' | 'genre' {
+    if (this.selectedCategory === 'artists') return 'artist';
+    if (this.selectedCategory === 'genres') return 'genre';
+    return 'track';
   }
 
   isCacheExpired(lastUpdatedStr: string | null, range = this.selectedRange): boolean {
@@ -1514,6 +1521,14 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     );
   }
 
+  get filteredGenres(): any[] {
+    const query = this.normalizeStatsIdentity(this.statsSearchQuery);
+    if (!query) return this.displayedGenres;
+    return this.displayedGenres.filter(genre =>
+      this.normalizeStatsIdentity(genre?.name).includes(query)
+    );
+  }
+
   get isStatsSearchActive(): boolean {
     return this.normalizeStatsIdentity(this.statsSearchQuery).length > 0;
   }
@@ -1598,7 +1613,10 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   }
 
   openPastTopResult(item: PastTopItem): void {
-    void this.openTrendPopup(item, item.kind === 'artist' ? 'artists' : 'tracks');
+    const category: StatsCategory = item.kind === 'artist'
+      ? 'artists'
+      : item.kind === 'genre' ? 'genres' : 'tracks';
+    void this.openTrendPopup(item, category);
   }
 
   async openTrendPopup(item: any, category: 'tracks' | 'artists' | 'genres') {
@@ -1613,7 +1631,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     const supabaseUserId = this.authService.getSupabaseUserId();
     let cloudPoints: any[] = [];
 
-    const isPastSearchResult = item?.kind === 'track' || item?.kind === 'artist';
+    const isPastSearchResult = item?.kind === 'track' || item?.kind === 'artist' || item?.kind === 'genre';
     if ((hasUnloaded || isPastSearchResult) && this.authService.isBackupActive() && supabaseUserId) {
       this.isLoadingTrendData = true;
       try {

@@ -732,6 +732,17 @@ describe('UserStatsComponent trends', () => {
     expect(component.isStatsSearchActive).toBeFalse();
   });
 
+  it('searches Top Genres case-insensitively', () => {
+    component.topGenres = [
+      {name: 'Alternative Rock', count: 8, percentage: 40},
+      {name: 'Dream Pop', count: 5, percentage: 25}
+    ];
+    component.statsSearchQuery = 'DREAM';
+
+    expect(component.filteredGenres.map(genre => genre.name)).toEqual(['Dream Pop']);
+    expect(component.filteredGenres[0].rank).toBe(2);
+  });
+
   it('searches Supabase lazily for former songs and excludes a live current match', async () => {
     const searchPastTopItems = jasmine.createSpy('searchPastTopItems').and.resolveTo([
       {kind: 'track', id: 'current', name: 'Still here', subtitle: '', imageUrl: '', spotifyUrl: '', bestRank: 1, firstSeen: '2026-01-01', lastSeen: '2026-02-01', appearances: 2},
@@ -750,6 +761,47 @@ describe('UserStatsComponent trends', () => {
 
     expect(searchPastTopItems).toHaveBeenCalledOnceWith('short_term', 'track', 'gone');
     expect(historicalComponent.pastTopResults.map(item => item.id)).toEqual(['former']);
+  });
+
+  it('searches Supabase lazily for former genres and excludes a current genre', async () => {
+    const searchPastTopItems = jasmine.createSpy('searchPastTopItems').and.resolveTo([
+      {kind: 'genre', id: 'dream pop', name: 'dream pop'},
+      {kind: 'genre', id: 'trip hop', name: 'trip hop'}
+    ]);
+    const historicalComponent = new UserStatsComponent(
+      null as any,
+      {getSupabaseUserId: () => 'user-id', isBackupActive: () => true} as any,
+      null as any,
+      {searchPastTopItems} as any
+    );
+    historicalComponent.topGenres = [{name: 'Dream Pop', count: 4, percentage: 20}];
+    historicalComponent.selectedCategory = 'genres';
+
+    await historicalComponent.searchPastStats('hop');
+
+    expect(searchPastTopItems).toHaveBeenCalledOnceWith('short_term', 'genre', 'hop');
+    expect(historicalComponent.pastTopResults.map(item => item.id)).toEqual(['trip hop']);
+  });
+
+  it('opens a former genre in the position-history graph', async () => {
+    const loadStatsItemTrend = jasmine.createSpy('loadStatsItemTrend').and.resolveTo([{
+      timestamp: new Date('2026-07-15T12:00:00').getTime(), snapshotDate: '2026-07-15', rank: 6
+    }]);
+    const historicalComponent = new UserStatsComponent(
+      null as any,
+      {getSupabaseUserId: () => 'user-id', isBackupActive: () => true} as any,
+      null as any,
+      {loadStatsItemTrend} as any
+    );
+    const genre = {kind: 'genre' as const, id: 'trip hop', name: 'trip hop'} as any;
+
+    historicalComponent.openPastTopResult(genre);
+    await Promise.resolve();
+
+    expect(loadStatsItemTrend).toHaveBeenCalledOnceWith(
+      'user-id', 'short_term', 'genres', ['trip hop']
+    );
+    expect(historicalComponent.trendPopupCategory).toBe('genres');
   });
 
   it('keeps past search off by default and starts it only when toggled on', () => {

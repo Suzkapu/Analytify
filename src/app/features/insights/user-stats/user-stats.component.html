@@ -157,13 +157,13 @@
         </button>
       </div>
 
-      <div *ngIf="selectedCategory === 'tracks' || selectedCategory === 'artists'" class="stats-top-search">
+      <div class="stats-top-search">
         <div class="search-container stats-search-container">
           <i class="pi pi-search" aria-hidden="true"></i>
           <input type="search" class="search-input" [ngModel]="statsSearchQuery"
             (ngModelChange)="onStatsSearchChange($event)"
-            [placeholder]="selectedCategory === 'tracks' ? 'Search Top 100 songs or artists' : 'Search Top Artists'"
-            [attr.aria-label]="selectedCategory === 'tracks' ? 'Search Top 100 songs or artists' : 'Search Top Artists'">
+            [placeholder]="selectedCategory === 'tracks' ? 'Search Top 100 songs or artists' : (selectedCategory === 'artists' ? 'Search Top Artists' : 'Search Top Genres')"
+            [attr.aria-label]="selectedCategory === 'tracks' ? 'Search Top 100 songs or artists' : (selectedCategory === 'artists' ? 'Search Top Artists' : 'Search Top Genres')">
           <button *ngIf="isStatsSearchActive" type="button" class="stats-search-clear"
             (click)="clearStatsSearch()" aria-label="Clear statistics search" title="Clear search">
             <i class="pi pi-times" aria-hidden="true"></i>
@@ -210,7 +210,7 @@
           [attr.aria-label]="'View position history for ' + item.name"
           title="View history graph" (click)="openPastTopResult(item)">
           <img *ngIf="item.imageUrl" [src]="item.imageUrl" alt="" loading="lazy" decoding="async">
-          <span *ngIf="!item.imageUrl" class="past-stats-placeholder"><i class="pi pi-music"></i></span>
+          <span *ngIf="!item.imageUrl" class="past-stats-placeholder"><i class="pi" [ngClass]="item.kind === 'genre' ? 'pi-tags' : 'pi-music'"></i></span>
           <span class="past-stats-copy">
             <strong>{{ item.name }}</strong><small *ngIf="item.subtitle">{{ item.subtitle }}</small>
           </span>
@@ -410,10 +410,16 @@
           snapshot details...</span>
         <span *ngIf="!isSnapshotLoading()">No genre data available for this period.</span>
       </div>
-      <div *ngIf="displayedGenres.length > 0" class="genre-stats-card">
+      <div *ngIf="displayedGenres.length > 0 && filteredGenres.length === 0" class="stats-search-empty" role="status">
+        <i class="pi pi-search" aria-hidden="true"></i>
+        <strong>Not in your Top Genres</strong>
+        <span>No genre matches “{{ statsSearchQuery.trim() }}” in this period.</span>
+        <button type="button" (click)="clearStatsSearch()">Clear search</button>
+      </div>
+      <div *ngIf="filteredGenres.length > 0" class="genre-stats-card">
         <h3>Genres</h3>
         <div class="genres-list-container">
-          <div *ngFor="let genre of displayedGenres" class="genre-row card-clickable"
+          <div *ngFor="let genre of filteredGenres" class="genre-row card-clickable"
             role="button" tabindex="0" title="View history graph"
             [attr.aria-label]="'View history for ' + genre.name"
             (keydown)="onTrendCardKeydown($event, genre, 'genres')"
