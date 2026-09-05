@@ -1,10 +1,16 @@
 const {TASK_DEFINITIONS, intervalMilliseconds, isScheduledTaskAllowed} = require('./task-registry');
+const {randomUUID} = require('node:crypto');
 
 function isJobAllowed(job, settings, now = new Date()) {
   return job.trigger_type !== 'scheduled' || isScheduledTaskAllowed(job.task_key, settings, now);
 }
 
 function createScheduler({supabase, config, tasks, credentials, pushDispatcher}) {
+  const workerId = config.workerId || randomUUID();
+  const leaseSeconds = Math.max(30, Math.min(900, Number(config.leaseSeconds) || 120));
+  const heartbeatIntervalMs = Number(config.heartbeatIntervalMs)
+    || Math.max(10_000, Math.floor(leaseSeconds * 1_000 / 3));
+
   async function reconcileAdmins() {
     const {data: profiles, error: profileError} = await supabase.from('users')
       .select('id, spotify_id').in('spotify_id', config.adminSpotifyIds);
@@ -71,88 +77,113 @@ function createScheduler({supabase, config, tasks, credentials, pushDispatcher})
   }
 
   async function claimQueuedJobs() {
-    const {data: candidates, error} = await supabase.from('sync_job_runs')
-      .select('*').eq('status', 'queued').order('requested_at', {ascending: true})
-      .limit(config.maxJobsPerPass);
+    const {data: candidates, error} = await supabase.rpc('claim_sync_jobs', {
+      p_worker_id: workerId,
+      p_limit: config.maxJobsPerPass,
+      p_lease_seconds: leaseSeconds
+    });
     if (error) throw error;
-    const claimed = [];
-    for (const candidate of candidates || []) {
-      const {data, error: claimError} = await supabase.from('sync_job_runs').update({
-        status: 'running', started_at: new Date().toISOString(), error: null
-      }).eq('id', candidate.id).eq('status', 'queued').select('*').maybeSingle();
-      if (claimError) throw claimError;
-      if (data) claimed.push(data);
+    return candidates || [];
+  }
+
+  async function completeJob(job, status, state, details = {}) {
+    const {error} = await supabase.rpc('complete_sync_job', {
+      p_job_id: job.id,
+      p_worker_id: workerId,
+      p_status: status,
+      p_last_started_at: state.lastStartedAt || null,
+      p_last_success_at: state.lastSuccessAt || null,
+      p_next_run_at: state.nextRunAt || null,
+      p_last_error: state.lastError || null,
+      p_details: details || {}
+    });
+    if (error) throw error;
+  }
+
+  async function withLeaseHeartbeat(job, work) {
+    let heartbeatError = null;
+    let heartbeatInFlight = Promise.resolve();
+    const timer = setInterval(() => {
+      heartbeatInFlight = (async () => {
+        const {data, error} = await supabase.rpc('heartbeat_sync_job', {
+          p_job_id: job.id,
+          p_worker_id: workerId,
+          p_lease_seconds: leaseSeconds
+        });
+        if (error) heartbeatError = error;
+        else if (data !== true) heartbeatError = new Error('The sync job lease was lost.');
+      })().catch(error => { heartbeatError = error; });
+    }, heartbeatIntervalMs);
+    timer.unref?.();
+    try {
+      const result = await work();
+      await heartbeatInFlight;
+      if (heartbeatError) throw heartbeatError;
+      return result;
+    } finally {
+      clearInterval(timer);
+      await heartbeatInFlight;
     }
-    return claimed;
   }
 
   async function runJob(job) {
-    const [{data: user, error: userError}, {data: settings, error: settingsError}] = await Promise.all([
-      supabase.from('users').select('id, spotify_id, display_name, spotify_refresh_token, backup_active')
-        .eq('id', job.user_id).single(),
-      supabase.from('sync_user_settings').select('*').eq('user_id', job.user_id).single()
-    ]);
-    if (userError) throw userError;
-    if (settingsError) throw settingsError;
-    const handler = tasks[job.task_key];
-    if (!handler) throw new Error(`No handler registered for ${job.task_key}.`);
-    if (!isJobAllowed(job, settings)) {
-      const cancelledAt = new Date().toISOString();
-      const {error: cancelError} = await supabase.from('sync_job_runs').update({
-        status: 'cancelled',
-        finished_at: cancelledAt,
-        details: {reason: 'Outside the configured scheduling day.'}
-      }).eq('id', job.id);
-      if (cancelError) throw cancelError;
-      return;
-    }
-    const startedAt = new Date().toISOString();
+    let user = {id: job.user_id, display_name: job.user_id};
+    let settings = {};
+    const startedAt = job.started_at || new Date().toISOString();
     try {
-      const {error: startedStateError} = await supabase.from('sync_task_state').upsert({
-        user_id: user.id, task_key: job.task_key, last_started_at: startedAt,
-        last_error: null, updated_at: startedAt
-      }, {onConflict: 'user_id,task_key'});
-      if (startedStateError) throw startedStateError;
-      if (!user.backup_active) throw new Error('Cloud Backup is disabled for this user.');
-      const spotifyCredential = await credentials.get(user.id, user.spotify_refresh_token);
-      if (!spotifyCredential) throw new Error('Spotify refresh credential is missing.');
-      const details = await handler({
-        taskKey: job.task_key,
-        user: {...user, spotify_credential: spotifyCredential, spotify_refresh_token: undefined},
-        settings
+      const [{data: loadedUser, error: userError}, {data: loadedSettings, error: settingsError}] = await Promise.all([
+        supabase.from('users').select('id, spotify_id, display_name, spotify_refresh_token, backup_active')
+          .eq('id', job.user_id).single(),
+        supabase.from('sync_user_settings').select('*').eq('user_id', job.user_id).single()
+      ]);
+      if (userError) throw userError;
+      if (settingsError) throw settingsError;
+      user = loadedUser;
+      settings = loadedSettings;
+      const handler = tasks[job.task_key];
+      if (!handler) throw new Error(`No handler registered for ${job.task_key}.`);
+      if (!isJobAllowed(job, settings)) {
+        await completeJob(job, 'cancelled', {}, {reason: 'Outside the configured scheduling day.'});
+        return;
+      }
+      const details = await withLeaseHeartbeat(job, async () => {
+        const {error: startedStateError} = await supabase.from('sync_task_state').upsert({
+          user_id: user.id, task_key: job.task_key, last_started_at: startedAt,
+          last_error: null, updated_at: startedAt
+        }, {onConflict: 'user_id,task_key'});
+        if (startedStateError) throw startedStateError;
+        if (!user.backup_active) throw new Error('Cloud Backup is disabled for this user.');
+        const spotifyCredential = await credentials.get(user.id, user.spotify_refresh_token);
+        if (!spotifyCredential) throw new Error('Spotify refresh credential is missing.');
+        return handler({
+          taskKey: job.task_key,
+          user: {...user, spotify_credential: spotifyCredential, spotify_refresh_token: undefined},
+          settings
+        });
       });
       const finishedAt = new Date();
       const nextRunAt = new Date(finishedAt.getTime() + intervalMilliseconds(job.task_key, settings));
-      const {error: stateError} = await supabase.from('sync_task_state').upsert({
-        user_id: user.id, task_key: job.task_key,
-        last_started_at: startedAt, last_success_at: finishedAt.toISOString(),
-        next_run_at: nextRunAt.toISOString(), last_error: null, updated_at: finishedAt.toISOString()
-      }, {onConflict: 'user_id,task_key'});
-      if (stateError) throw stateError;
-      const {error: runError} = await supabase.from('sync_job_runs').update({
-        status: 'succeeded', finished_at: finishedAt.toISOString(), details: details || {}
-      }).eq('id', job.id);
-      if (runError) throw runError;
+      await completeJob(job, 'succeeded', {
+        lastStartedAt: startedAt,
+        lastSuccessAt: finishedAt.toISOString(),
+        nextRunAt: nextRunAt.toISOString(),
+        lastError: null
+      }, details || {});
     } catch (error) {
       const message = String(error.message || error).slice(0, 1000);
       const failedAt = new Date();
-      const retryAt = new Date(failedAt.getTime() + Math.min(3_600_000, intervalMilliseconds(job.task_key, settings)));
-      const stateWrite = supabase.from('sync_task_state').upsert({
-        user_id: user.id, task_key: job.task_key, last_started_at: startedAt,
-        next_run_at: retryAt.toISOString(), last_error: message, updated_at: failedAt.toISOString()
-      }, {onConflict: 'user_id,task_key'});
-      const runWrite = supabase.from('sync_job_runs').update({
-        status: 'failed', finished_at: failedAt.toISOString(), error: message
-      }).eq('id', job.id);
-      const [{error: stateError}, {error: runError}] = await Promise.all([stateWrite, runWrite]);
-      console.error(`[Sync] ${job.task_key} failed for ${user.display_name}: ${message}`);
-      const persistenceErrors = [stateError, runError].filter(Boolean);
-      if (persistenceErrors.length === 1) throw persistenceErrors[0];
-      if (persistenceErrors.length > 1) {
-        throw new AggregateError(persistenceErrors, persistenceErrors.map(
-          persistenceError => String(persistenceError.message || persistenceError)
-        ).join('; '));
-      }
+      let retryDelay = 300_000;
+      try {
+        retryDelay = Math.min(3_600_000, intervalMilliseconds(job.task_key, settings));
+      } catch {}
+      const retryAt = new Date(failedAt.getTime() + retryDelay);
+      console.error(`[Sync][job:${job.id}] ${job.task_key} failed for ${user.display_name}: ${message}`);
+      await completeJob(job, 'failed', {
+        lastStartedAt: startedAt,
+        lastSuccessAt: null,
+        nextRunAt: retryAt.toISOString(),
+        lastError: message
+      });
     }
   }
 
@@ -169,7 +200,7 @@ function createScheduler({supabase, config, tasks, credentials, pushDispatcher})
     return {queued, processed: jobs.length};
   }
 
-  return {reconcileAdmins, enqueueDueJobs, claimQueuedJobs, runJob, runPass};
+  return {workerId, reconcileAdmins, enqueueDueJobs, claimQueuedJobs, runJob, runPass};
 }
 
 module.exports = {createScheduler, isJobAllowed};
