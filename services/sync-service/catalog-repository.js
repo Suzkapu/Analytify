@@ -1,6 +1,4 @@
-const {validateSpotifyUrl} = require('./spotify-url-validator.js');
 const {createHash} = require('node:crypto');
-
 function createCatalogRepository(supabase, spotify) {
   async function replaceAtomically(kind, ids, items, relationships = []) {
     const stableIds = Array.from(new Set(ids.filter(Boolean))).sort();
@@ -65,7 +63,7 @@ function createCatalogRepository(supabase, spotify) {
         id: item.id,
         name: item.name || previous?.name || 'Unknown Artist',
         image_url: item.images?.[0]?.url || previous?.image_url || null,
-        spotify_url: validateSpotifyUrl(item.external_urls?.spotify, 'artist') || validateSpotifyUrl(previous?.spotify_url, 'artist') || null,
+        spotify_url: item.external_urls?.spotify || previous?.spotify_url || null,
         last_updated: new Date().toISOString()
       };
     });
@@ -103,7 +101,7 @@ function createCatalogRepository(supabase, spotify) {
         release_date: normalizeReleaseDate(album.release_date) || previous?.release_date || null,
         release_date_precision: album.release_date_precision || previous?.release_date_precision || 'year',
         image_url: album.images?.[0]?.url || previous?.image_url || null,
-        spotify_url: validateSpotifyUrl(album.external_urls?.spotify, 'album') || validateSpotifyUrl(previous?.spotify_url, 'album') || null,
+        spotify_url: album.external_urls?.spotify || previous?.spotify_url || null,
         restriction_reason: album.restrictions?.reason || previous?.restriction_reason || null,
         upc: album.external_ids?.upc || album.upc || previous?.upc || null,
         ean: album.external_ids?.ean || album.ean || previous?.ean || null,
@@ -138,7 +136,7 @@ function createCatalogRepository(supabase, spotify) {
         album_id: track.album?.id || previous?.album_id || null,
         duration_ms: Number.isFinite(track.duration_ms) ? track.duration_ms : (previous?.duration_ms || 0),
         explicit: typeof track.explicit === 'boolean' ? track.explicit : (previous?.explicit || false),
-        spotify_url: validateSpotifyUrl(track.external_urls?.spotify, 'track') || validateSpotifyUrl(previous?.spotify_url, 'track') || null,
+        spotify_url: track.external_urls?.spotify || previous?.spotify_url || null,
         track_number: Number.isFinite(track.track_number) ? track.track_number : (previous?.track_number || 1),
         disc_number: Number.isFinite(track.disc_number) ? track.disc_number : (previous?.disc_number || 1),
         is_playable: typeof track.is_playable === 'boolean' ? track.is_playable : (previous?.is_playable ?? true),
