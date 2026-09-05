@@ -382,12 +382,14 @@ describe('SpotifyAuthService', () => {
     storage.getCacheKeys = jasmine.createSpy('getCacheKeys').and.returnValue(['cache-key']);
     storage.shouldSyncUserCacheKey = jasmine.createSpy('shouldSyncUserCacheKey').and.returnValue(true);
     supabaseService.syncListeningHistory = jasmine.createSpy('syncListeningHistory').and.resolveTo();
-    supabaseService.saveUserCache = jasmine.createSpy('saveUserCache').and.returnValues(
-      Promise.reject(new Error('cache unavailable')),
-      Promise.reject(new Error('cache unavailable')),
-      Promise.reject(new Error('cache unavailable')),
-      Promise.resolve()
-    );
+    let saveCacheAttempts = 0;
+    supabaseService.saveUserCache = jasmine.createSpy('saveUserCache').and.callFake(() => {
+      saveCacheAttempts++;
+      if (saveCacheAttempts <= 3) {
+        return Promise.reject(new Error('cache unavailable'));
+      }
+      return Promise.resolve();
+    });
     (service as any).backupRetryDelays = [0, 0];
 
     await expectAsync((service as any).pushLocalCacheToDatabase('supabase-user'))
