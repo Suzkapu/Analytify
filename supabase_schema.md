@@ -2820,30 +2820,3 @@ The production notification module is applied by
 
 All notification and subscription rows are deleted through the existing `users` cascade.
 The Edge Function removes expired endpoints after a push service returns HTTP 404 or 410.
-
----
-
-## 8. Deployment Records Module
-
-The deployment tracking module is applied by
-`supabase/migrations/20260905150000_deployment_records.sql`. It adds:
-
-- `public.deployment_records`, storing the deployed commit SHA and timestamp for each component;
-- Public read access (`Allow public read access to deployment records` policy) for live verification probes;
-- Write access for deployment scripts and service-role recording.
-
-```sql
-create table if not exists public.deployment_records (
-  component text primary key,
-  commit_sha text not null,
-  deployed_at timestamptz not null default now()
-);
-
-alter table public.deployment_records enable row level security;
-
-create policy "Allow public read access to deployment records"
-  on public.deployment_records
-  for select
-  to anon, authenticated
-  using (true);
-```

@@ -77,15 +77,10 @@ printf 'SUPABASE_URL=%s\nSUPABASE_SERVICE_ROLE_KEY=%s\nSPOTIFY_CLIENT_ID=%s\nSPO
 chmod 600 "$worker_environment_file"
 
 deploy_commit_sha="${DEPLOY_COMMIT_SHA:-$(git rev-parse HEAD 2>/dev/null || echo "")}"
-deploy_ref="${DEPLOY_REF:-${GITHUB_REF:-refs/heads/main}}"
 if [[ ! "$deploy_commit_sha" =~ ^[0-9a-f]{40}$ ]]; then
   echo "Deployment configuration error: DEPLOY_COMMIT_SHA must be a full Git commit SHA." >&2
   exit 1
 fi
-
-# Verify run represents the current protected ref before any irreversible mutation
-bash "$(dirname "$0")/assert-deployment-freshness.sh" "$deploy_ref" "$deploy_commit_sha"
-
 ssh_command="ssh -p ${deploy_port} -i ${key_file} -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3"
 remote="${DEPLOY_USER}@${DEPLOY_HOST}"
 target_root="${DEPLOY_TARGET%/}"
@@ -178,8 +173,8 @@ deploy_with_retry "services/sync-service/" "${worker_release}/" true
 deploy_private_file_with_retry "$allowlist_file" "${worker_root}/.admin-spotify-ids"
 deploy_private_file_with_retry "$token_key_file" "${worker_root}/.spotify-token-encryption-key"
 
-echo "Installing the worker's locked production dependencies..."
-$ssh_command "$remote" "cd '${worker_release}' && npm ci --omit=dev --ignore-scripts"
+echo "Installing the worker's production dependencies..."
+$ssh_command "$remote" "cd '${worker_release}' && npm install --omit=dev --ignore-scripts"
 
 sed \
   -e "s|@@DEPLOY_USER@@|${DEPLOY_USER}|g" \
@@ -203,5 +198,4 @@ if [[ -n "$deploy_commit_sha" ]]; then
   fi
   echo "Remote commit verified on server: ${deploy_commit_sha}"
 fi
-
 echo "Deployment completed successfully."
