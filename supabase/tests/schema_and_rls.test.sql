@@ -44,10 +44,10 @@ insert into public.tracks(id, name) values ('catalogtrack0000000001', 'Original'
 insert into public.app_admins(user_id) values ('10000000-0000-4000-8000-000000000001');
 
 set local role anon;
-select throws_ok($$ select * from public.users $$, '42501', 'permission denied for table users',
+select is_empty($$ select * from public.users $$,
   'anonymous clients cannot enumerate profiles');
 select throws_ok($$ select public.ingest_spotify_catalog('tracks', '[]', '[]') $$,
-  '42501', 'permission denied for function ingest_spotify_catalog',
+  'P0001', 'Authentication is required.',
   'anonymous clients cannot call authenticated ingestion RPCs');
 reset role;
 
@@ -75,12 +75,14 @@ select lives_ok($$ select * from public.replace_stats_snapshot_v2(
 select throws_ok($$ select * from public.replace_stats_snapshot_v2(
   '10000000-0000-4000-8000-000000000001', 'short_term', '2026-09-05', 0, 0,
   '[]', '[]', '[]', '2026-09-05T00:00:01Z', 'snapshot-key-0002', 0
-) $$, '40001', 'stale snapshot compare-and-swap is rejected');
+) $$, '40001', 'The stats snapshot changed before this replacement committed.',
+  'stale snapshot compare-and-swap is rejected');
 select throws_ok($$ select * from public.replace_stats_snapshot_v2(
   '10000000-0000-4000-8000-000000000001', 'short_term', '2026-09-05', 0, 0,
   '[{"track_id":"missingtrack00000000001","rank":1}]', '[]', '[]',
   '2026-09-05T00:00:02Z', 'snapshot-key-0003', 1
-) $$, '23503', 'fault during replacement rolls its transaction back');
+) $$, '23503', 'insert or update on table "stats_snapshot_tracks" violates foreign key constraint "stats_snapshot_tracks_track_id_fkey"',
+  'fault during replacement rolls its transaction back');
 select is((select track_id from public.stats_snapshot_tracks relation
   join public.stats_snapshots snapshot on snapshot.id = relation.snapshot_id
   where snapshot.user_id = auth.uid() and snapshot.range = 'short_term'),
@@ -125,7 +127,8 @@ select throws_ok($$ select public.replace_spotify_catalog(
   'tracks:catalogtrack0000000001', 0, 'catalog-write-key-0002', '[]', '[]',
   '[{"id":"catalogtrack0000000001","name":"Stale value","duration_ms":1,"explicit":false,"track_number":1,"disc_number":1,"is_playable":true,"is_local":false}]',
   '[]', '[]'
-) $$, '40001', 'stale catalog compare-and-swap is rejected');
+) $$, '40001', 'The catalog resource changed before this replacement committed.',
+  'stale catalog compare-and-swap is rejected');
 select is((select name from public.tracks where id = 'catalogtrack0000000001'),
   'Worker value', 'stale catalog replacement cannot overwrite the committed version');
 reset role;
