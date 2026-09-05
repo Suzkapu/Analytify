@@ -34,6 +34,40 @@ const probes = [
   }))
 ];
 
+const expectedCommitSha = (process.env.EXPECTED_COMMIT_SHA || process.env.DEPLOY_COMMIT_SHA)?.trim();
+if (expectedCommitSha) {
+  probes.push(
+    {
+      label: 'Analytify application version',
+      url: `${appUrl}/version.json`,
+      options: {},
+      validate: async response => {
+        if (!response.ok) return false;
+        try {
+          const body = await response.json();
+          return body?.commit === expectedCommitSha;
+        } catch {
+          return false;
+        }
+      }
+    },
+    {
+      label: 'Supabase deployment record',
+      url: `${supabaseUrl}/rest/v1/deployment_records?component=eq.supabase&select=commit_sha`,
+      options: {headers: supabaseHeaders},
+      validate: async response => {
+        if (!response.ok) return false;
+        try {
+          const records = await response.json();
+          return Array.isArray(records) && records.length > 0 && records[0]?.commit_sha === expectedCommitSha;
+        } catch {
+          return false;
+        }
+      }
+    }
+  );
+}
+
 const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 
 async function runProbe(probe) {

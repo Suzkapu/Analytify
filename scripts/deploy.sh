@@ -52,6 +52,12 @@ fi
 printf '%s\n' "$SPOTIFY_TOKEN_ENCRYPTION_KEY" > "$token_key_file"
 chmod 600 "$token_key_file"
 
+deploy_commit_sha="${DEPLOY_COMMIT_SHA:-$(git rev-parse HEAD 2>/dev/null || echo "")}"
+deploy_ref="${DEPLOY_REF:-${GITHUB_REF:-refs/heads/main}}"
+
+# Verify run represents the current protected ref before any irreversible mutation
+bash "$(dirname "$0")/assert-deployment-freshness.sh" "$deploy_ref" "$deploy_commit_sha"
+
 ssh_command="ssh -p ${deploy_port} -i ${key_file} -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3"
 remote="${DEPLOY_USER}@${DEPLOY_HOST}"
 target_root="${DEPLOY_TARGET%/}"
@@ -122,9 +128,29 @@ deploy_private_file_with_retry() {
   return 1
 }
 
+if [[ -n "$deploy_commit_sha" ]]; then
+  if [[ -d "dist/spoti-front" ]]; then
+    printf '{"commit":"%s","deployedAt":"%s"}\n' "$deploy_commit_sha" "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" > "dist/spoti-front/version.json"
+    printf '%s\n' "$deploy_commit_sha" > "dist/spoti-front/.deployed-commit"
+  fi
+  if [[ -d "services/sync-service" ]]; then
+    printf '%s\n' "$deploy_commit_sha" > "services/sync-service/.deployed-commit"
+  fi
+fi
+
 deploy_with_retry "dist/spoti-front/" "${target_root}/" true
 deploy_with_retry "services/sync-service/" "${target_root}/../analytify-sync/" false
 deploy_private_file_with_retry "$allowlist_file" "${target_root}/../analytify-sync/.admin-spotify-ids"
 deploy_private_file_with_retry "$token_key_file" "${target_root}/../analytify-sync/.spotify-token-encryption-key"
+
+if [[ -n "$deploy_commit_sha" ]]; then
+  echo "Verifying deployed commit SHA on Oracle Server..."
+  remote_commit="$($ssh_command "${remote}" "cat ${target_root}/.deployed-commit 2>/dev/null || cat ${target_root}/../analytify-sync/.deployed-commit 2>/dev/null || true")"
+  if [[ -n "$remote_commit" && "$remote_commit" != *"$deploy_commit_sha"* ]]; then
+    echo "Deployment verification error: Remote commit (${remote_commit}) does not match expected (${deploy_commit_sha})." >&2
+    exit 1
+  fi
+  echo "Remote commit verified on server: ${deploy_commit_sha}"
+fi
 
 echo "Deployment completed successfully."
