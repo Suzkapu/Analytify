@@ -44,14 +44,29 @@ export class SongLeagueService {
     return {leagueId, inviteToken, inviteUrl: this.inviteUrl(inviteToken)};
   }
 
-  async createInvite(leagueId: string): Promise<{token: string; url: string}> {
+  async createInvite(leagueId: string, expiresInHours = 168): Promise<{token: string; url: string}> {
     const token = this.createToken();
     const {error} = await this.supabase.client.rpc('rotate_song_league_invite', {
       p_league_id: leagueId,
-      p_invite_token: token
+      p_invite_token: token,
+      p_expires_in_hours: expiresInHours,
+      p_usage_policy: 'multi_use',
+      p_max_uses: null
     });
     if (error) throw error;
     return {token, url: this.inviteUrl(token)};
+  }
+
+  async revokeInvite(inviteId: string): Promise<void> {
+    const {error} = await this.supabase.client.rpc('revoke_song_league_invite', {p_invite_id: inviteId});
+    if (error) throw error;
+  }
+
+  async approveRejoin(leagueId: string, userId: string): Promise<void> {
+    const {error} = await this.supabase.client.rpc('approve_song_league_rejoin', {
+      p_league_id: leagueId, p_user_id: userId
+    });
+    if (error) throw error;
   }
 
   async setMemberLimit(leagueId: string, maxMembers: number): Promise<number> {

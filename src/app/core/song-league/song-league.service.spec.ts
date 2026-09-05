@@ -88,7 +88,21 @@ describe('SongLeagueService', () => {
       'rotate_song_league_invite'
     ]);
     expect(firstParameters.p_league_id).toBe('league-id');
+    expect(firstParameters.p_expires_in_hours).toBe(168);
+    expect(firstParameters.p_usage_policy).toBe('multi_use');
     expect(firstParameters.p_invite_token).not.toBe(secondParameters.p_invite_token);
+  });
+
+  it('revokes one invitation without rotating unrelated links', async () => {
+    await service.revokeInvite('invite-id');
+    expect(rpc).toHaveBeenCalledOnceWith('revoke_song_league_invite', {p_invite_id: 'invite-id'});
+  });
+
+  it('records explicit owner approval before a departed member rejoins', async () => {
+    await service.approveRejoin('league-id', 'departed-user');
+    expect(rpc).toHaveBeenCalledOnceWith('approve_song_league_rejoin', {
+      p_league_id: 'league-id', p_user_id: 'departed-user'
+    });
   });
 
   it('updates the per-league member limit through the owner-only RPC', async () => {
