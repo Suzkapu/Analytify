@@ -64,6 +64,18 @@ jobs:
         if: always() && steps.supabase-cli.outcome == 'success'
         run: supabase stop --workdir integration --no-backup
 
+      - name: Rebuild and test the complete schema from empty
+        run: |
+          supabase start --workdir . \
+            -x studio,imgproxy,storage-api,realtime,mailpit,postgres-meta,edge-runtime,logflare,vector,supavisor
+          supabase db reset --workdir .
+          supabase db lint --workdir . --level error
+          supabase test db --workdir .
+
+      - name: Stop schema-rehearsal stack
+        if: always() && steps.supabase-cli.outcome == 'success'
+        run: supabase stop --workdir . --no-backup
+
       - name: Validate deployment script
         run: bash -n scripts/deploy.sh scripts/deploy-supabase.sh scripts/assert-deployment-freshness.sh
 

@@ -1,0 +1,31 @@
+project_id = "analytify-schema-rehearsal"
+
+[api]
+enabled = true
+port = 54331
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54332
+shadow_port = 54330
+major_version = 15
+
+[auth]
+enable_anonymous_sign_ins = true
+
+[studio]
+enabled = false
+
+[inbucket]
+enabled = false
+
+[storage]
+enabled = false
+
+[edge_runtime]
+enabled = false
+
+[analytics]
+enabled = false
