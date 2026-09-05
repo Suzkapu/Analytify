@@ -42,6 +42,7 @@ describe('async loading primitives', () => {
     const second = task('second');
     const independent = queue.run('other-range', async () => { started.push('independent'); });
     await Promise.resolve();
+    await Promise.resolve();
 
     expect(started).toEqual(['first', 'independent']);
     releases.shift()?.();
