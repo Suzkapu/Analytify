@@ -1,0 +1,6 @@
+-- Historical migration marker.
+--
+-- This version was deployed before the associated application change was
+-- rolled back. Keep the version in source so hosted migration history and
+-- clean database rebuilds remain compatible. Its schema changes are removed
+-- by 20260905210000_rollback_gemini_changes.sql.
