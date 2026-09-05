@@ -24,6 +24,12 @@ export interface StatsAccessRequest {
   viewerRole: 'owner' | 'viewer';
 }
 
+export interface CreatedStatsAccessInvite {
+  inviteId: string;
+  claimToken: string;
+  claimUrl: string;
+}
+
 export interface SharedStatsSnapshot {
   ownerUserId: string;
   ownerDisplayName: string;

@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
+import {environment} from '@env/environment';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {
+  CreatedStatsAccessInvite,
   SharedStatsSnapshot,
   StatsAccessRequest,
   StatsAccessStatus,
@@ -50,6 +52,31 @@ export class StatsSharingService {
     if (error) throw error;
     const requestId = String(data || '');
     if (!requestId) throw new Error('The stats access request could not be created.');
+    return requestId;
+  }
+
+  async createAccessInvite(): Promise<CreatedStatsAccessInvite> {
+    const token = this.createClaimToken();
+    const {data, error} = await this.supabase.client.rpc('create_stats_access_invite', {
+      p_claim_token: token
+    });
+    if (error) throw error;
+    const inviteId = String(data || '');
+    if (!inviteId) throw new Error('The stats request link could not be created.');
+    return {
+      inviteId,
+      claimToken: token,
+      claimUrl: `${environment.appUrl.replace(/\/$/, '')}/shared-playlists/stats-request/${encodeURIComponent(token)}`
+    };
+  }
+
+  async claimAccessInvite(token: string): Promise<string> {
+    const {data, error} = await this.supabase.client.rpc('claim_stats_access_invite', {
+      p_claim_token: token
+    });
+    if (error) throw error;
+    const requestId = String(data || '');
+    if (!requestId) throw new Error('The stats access request could not be opened.');
     return requestId;
   }
 
@@ -108,5 +135,10 @@ export class StatsSharingService {
     return () => {
       void this.supabase.client.removeChannel(channel);
     };
+  }
+
+  private createClaimToken(): string {
+    const bytes = crypto.getRandomValues(new Uint8Array(32));
+    return Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
   }
 }

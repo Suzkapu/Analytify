@@ -148,10 +148,10 @@
 </main>
 
 <div *ngIf="isShareDialogOpen" class="share-modal-overlay" (click)="closeShareDialog()">
-  <section class="share-modal" (click)="$event.stopPropagation()" role="dialog" aria-modal="true"
+  <section class="share-modal" [class.stats-request-modal]="shareMode === 'stats'" (click)="$event.stopPropagation()" role="dialog" aria-modal="true"
     aria-labelledby="share-dialog-title">
     <button type="button" class="share-modal-close" (click)="closeShareDialog()"
-      [disabled]="isCreatingShare || isRequestingStats" aria-label="Close">×</button>
+      [disabled]="isCreatingShare || isRequestingStats || isCreatingStatsLink" aria-label="Close">×</button>
     <div class="share-modal-icon"><i class="pi" [ngClass]="shareMode === 'stats' ? 'pi-eye' : 'pi-share-alt'"></i></div>
     <span class="eyebrow">Revocable, private access</span>
     <h2 id="share-dialog-title">{{ shareMode === 'playlist' ? 'Share a playlist' : (shareMode === 'stats' ? 'Request stats access' : 'What do you want to share?') }}</h2>
@@ -168,7 +168,7 @@
     </div>
 
     <p *ngIf="shareMode === 'playlist' && !shareLink">Select one of your playlists. Analytify loads its cached songs first and creates a private link for one recipient.</p>
-    <p *ngIf="shareMode === 'stats'">Select a user. They will see a consent popup and must agree before their stats become visible to you.</p>
+    <p *ngIf="shareMode === 'stats' && !statsRequestLink">Search for a registered user, or create a private request link. They must agree before their stats become visible to you.</p>
 
     <ng-container *ngIf="shareMode === 'playlist' && !shareLink">
       <label class="share-playlist-picker">
@@ -195,10 +195,10 @@
         class="share-picker-empty">No playlists are available to share.</p>
     </ng-container>
 
-    <ng-container *ngIf="shareMode === 'stats'">
+    <ng-container *ngIf="shareMode === 'stats' && !statsRequestLink">
       <div class="share-playlist-picker stats-user-picker" (keydown.escape)="isStatsUserPickerOpen = false">
         <span id="stats-user-picker-label">Registered user</span>
-        <button type="button" class="stats-user-picker-trigger"
+        <button #statsUserPickerTrigger type="button" class="stats-user-picker-trigger"
           aria-haspopup="listbox" [attr.aria-expanded]="isStatsUserPickerOpen"
           aria-labelledby="stats-user-picker-label stats-user-picker-value"
           [disabled]="isLoadingStatsUsers || isRequestingStats"
@@ -223,28 +223,21 @@
           <i class="pi picker-chevron" [ngClass]="isStatsUserPickerOpen ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
         </button>
 
-        <div *ngIf="isStatsUserPickerOpen" class="stats-user-picker-menu" role="listbox"
-          aria-labelledby="stats-user-picker-label">
-          <button *ngFor="let user of availableStatsUsers; trackBy: trackStatsUser" type="button"
-            class="stats-user-picker-option" role="option"
-            [attr.aria-selected]="selectedStatsOwnerId === user.userId"
-            [disabled]="user.requestStatus === 'pending' || user.requestStatus === 'approved'"
-            (click)="selectStatsOwner(user)">
-            <span class="stats-picker-avatar">
-              <img *ngIf="user.imageUrl" [src]="user.imageUrl" alt="">
-              <i *ngIf="!user.imageUrl" class="pi pi-user"></i>
-            </span>
-            <span class="stats-picker-copy">
-              <strong>{{ user.displayName }}</strong>
-              <small>{{ statsUserStatusLabel(user) }}</small>
-            </span>
-            <i *ngIf="selectedStatsOwnerId === user.userId" class="pi pi-check picker-selected"></i>
-          </button>
-        </div>
       </div>
       <p *ngIf="!isLoadingStatsUsers && availableStatsUsers.length === 0 && !shareError" class="share-picker-empty">
         No other Cloud Backup users are available.
       </p>
+    </ng-container>
+
+    <ng-container *ngIf="statsRequestLink">
+      <p class="share-ready-copy">Send this private link to the person whose stats you want to request. When they open it, Analytify will show the accept or decline window.</p>
+      <div class="share-link-field">
+        <input [value]="statsRequestLink" readonly aria-label="Private stats request link">
+        <button type="button" (click)="copyStatsRequestLink()">
+          <i class="pi" [ngClass]="statsRequestLinkCopied ? 'pi-check' : 'pi-copy'"></i>
+          <span>{{ statsRequestLinkCopied ? 'Copied' : 'Copy' }}</span>
+        </button>
+      </div>
     </ng-container>
 
     <ng-container *ngIf="shareLink">
@@ -265,16 +258,48 @@
         <i class="pi" [ngClass]="isCreatingShare ? 'pi-spin pi-spinner' : 'pi-link'"></i>
         <span>{{ isCreatingShare ? 'Publishing snapshot…' : 'Create private link' }}</span>
       </button>
-      <button *ngIf="shareMode === 'stats'" type="button" class="share-primary" (click)="requestStatsAccess()"
+      <button *ngIf="shareMode === 'stats' && !statsRequestLink" type="button" class="share-primary" (click)="requestStatsAccess()"
         [disabled]="!selectedStatsOwnerId || isLoadingStatsUsers || isRequestingStats">
         <i class="pi" [ngClass]="isRequestingStats ? 'pi-spin pi-spinner' : 'pi-send'"></i>
         <span>{{ isRequestingStats ? 'Sending request…' : 'Request stats access' }}</span>
       </button>
-      <button type="button" class="share-secondary" (click)="closeShareDialog()" [disabled]="isCreatingShare || isRequestingStats">
-        {{ shareLink ? 'Done' : 'Cancel' }}
+      <button *ngIf="shareMode === 'stats' && !statsRequestLink" type="button" class="stats-link-button"
+        (click)="createStatsRequestLink()" [disabled]="isCreatingStatsLink || isRequestingStats">
+        <i class="pi" [ngClass]="isCreatingStatsLink ? 'pi-spin pi-spinner' : 'pi-link'"></i>
+        {{ isCreatingStatsLink ? 'Creating link…' : 'Request via link' }}
+      </button>
+      <button type="button" class="share-secondary" (click)="closeShareDialog()"
+        [disabled]="isCreatingShare || isRequestingStats || isCreatingStatsLink">
+        {{ shareLink || statsRequestLink ? 'Done' : 'Cancel' }}
       </button>
     </div>
   </section>
+
+  <div *ngIf="isStatsUserPickerOpen" class="stats-user-picker-menu" role="listbox"
+    aria-labelledby="stats-user-picker-label" [ngStyle]="statsPickerMenuStyle"
+    (click)="$event.stopPropagation()" (keydown.escape)="closeStatsUserPicker()">
+    <label class="stats-user-search">
+      <i class="pi pi-search"></i>
+      <input [(ngModel)]="statsUserSearch" type="search" autocomplete="off"
+        placeholder="Search users" aria-label="Search registered users">
+    </label>
+    <button *ngFor="let user of filteredStatsUsers; trackBy: trackStatsUser" type="button"
+      class="stats-user-picker-option" role="option"
+      [attr.aria-selected]="selectedStatsOwnerId === user.userId"
+      [disabled]="user.requestStatus === 'pending' || user.requestStatus === 'approved'"
+      (click)="selectStatsOwner(user)">
+      <span class="stats-picker-avatar">
+        <img *ngIf="user.imageUrl" [src]="user.imageUrl" alt="">
+        <i *ngIf="!user.imageUrl" class="pi pi-user"></i>
+      </span>
+      <span class="stats-picker-copy">
+        <strong>{{ user.displayName }}</strong>
+        <small>{{ statsUserStatusLabel(user) }}</small>
+      </span>
+      <i *ngIf="selectedStatsOwnerId === user.userId" class="pi pi-check picker-selected"></i>
+    </button>
+    <p *ngIf="filteredStatsUsers.length === 0" class="stats-user-search-empty">No matching users</p>
+  </div>
 </div>
 
 <div *ngIf="consentRequest as request" class="share-modal-overlay stats-consent-overlay">

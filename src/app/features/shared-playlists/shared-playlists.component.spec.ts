@@ -42,6 +42,7 @@ describe('SharedPlaylistsComponent', () => {
       'listAccessRequests',
       'subscribeToAccessChanges',
       'requestAccess',
+      'createAccessInvite',
       'respondToRequest',
       'revokeAccess'
     ]);
@@ -72,6 +73,11 @@ describe('SharedPlaylistsComponent', () => {
     statsSharing.listAccessRequests.and.resolveTo([]);
     statsSharing.subscribeToAccessChanges.and.returnValue(jasmine.createSpy('unsubscribeStats'));
     statsSharing.requestAccess.and.resolveTo('request-id');
+    statsSharing.createAccessInvite.and.resolveTo({
+      inviteId: 'invite-id',
+      claimToken: 'stats-token',
+      claimUrl: 'https://analytify.app/shared-playlists/stats-request/stats-token'
+    });
     statsSharing.respondToRequest.and.resolveTo();
     statsSharing.revokeAccess.and.resolveTo();
 
@@ -232,6 +238,42 @@ describe('SharedPlaylistsComponent', () => {
     fixture.detectChanges();
     expect(component.selectedStatsOwnerId).toBe('available');
     expect(fixture.nativeElement.querySelector('.stats-user-picker-menu')).toBeNull();
+  });
+
+  it('searches registered users inside a viewport overlay without expanding the modal', async () => {
+    statsSharing.listAvailableUsers.and.resolveTo([
+      {userId: 'one', displayName: 'Alice Listener', imageUrl: '', requestId: null, requestStatus: null},
+      {userId: 'two', displayName: 'Bob Beats', imageUrl: '', requestId: null, requestStatus: null}
+    ]);
+    await component.openShareDialog();
+    await component.selectShareMode('stats');
+    fixture.detectChanges();
+
+    (fixture.nativeElement.querySelector('.stats-user-picker-trigger') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    const menu = fixture.nativeElement.querySelector('.stats-user-picker-menu') as HTMLElement;
+    expect(getComputedStyle(menu).position).toBe('fixed');
+
+    const search = menu.querySelector('.stats-user-search input') as HTMLInputElement;
+    search.value = 'bob';
+    search.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    const options = Array.from(menu.querySelectorAll('.stats-user-picker-option')) as HTMLElement[];
+    expect(options.length).toBe(1);
+    expect(options[0].textContent).toContain('Bob Beats');
+  });
+
+  it('creates a private link that opens the recipient stats consent flow', async () => {
+    await component.openShareDialog();
+    await component.selectShareMode('stats');
+
+    await component.createStatsRequestLink();
+    fixture.detectChanges();
+
+    expect(statsSharing.createAccessInvite).toHaveBeenCalledTimes(1);
+    expect(component.statsRequestLink).toContain('/shared-playlists/stats-request/stats-token');
+    expect(fixture.nativeElement.querySelector('[aria-label="Private stats request link"]')).not.toBeNull();
+    expect(fixture.nativeElement.textContent).toContain('accept or decline window');
   });
 
   it('opens a custom consent popup for the oldest pending request and records agreement', async () => {

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {firstValueFrom} from 'rxjs';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-source.service';
@@ -18,6 +18,8 @@ const console = createScopedLogger('Shared Playlists');
   styleUrls: ['./shared-playlists.component.scss']
 })
 export class SharedPlaylistsComponent implements OnInit, OnDestroy {
+  @ViewChild('statsUserPickerTrigger') private statsUserPickerTrigger?: ElementRef<HTMLButtonElement>;
+
   receivedShares: PlaylistShare[] = [];
   ownedShares: PlaylistShare[] = [];
   availablePlaylists: ComparePlaylist[] = [];
@@ -36,9 +38,14 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   availableStatsUsers: StatsShareableUser[] = [];
   statsAccessRequests: StatsAccessRequest[] = [];
   selectedStatsOwnerId = '';
+  statsUserSearch = '';
   isStatsUserPickerOpen = false;
   isLoadingStatsUsers = false;
   isRequestingStats = false;
+  isCreatingStatsLink = false;
+  statsRequestLink = '';
+  statsRequestLinkCopied = false;
+  statsPickerMenuStyle: Record<string, string> = {};
   consentRequest: StatsAccessRequest | null = null;
   consentError = '';
   statsRevocationRequest: StatsAccessRequest | null = null;
@@ -112,6 +119,12 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     return this.availableStatsUsers.find(user => user.userId === this.selectedStatsOwnerId) || null;
   }
 
+  get filteredStatsUsers(): StatsShareableUser[] {
+    const query = this.statsUserSearch.trim().toLocaleLowerCase();
+    if (!query) return this.availableStatsUsers;
+    return this.availableStatsUsers.filter(user => user.displayName.toLocaleLowerCase().includes(query));
+  }
+
   get approvedStatsAccess(): StatsAccessRequest[] {
     return this.statsAccessRequests.filter(request => request.viewerRole === 'viewer' && request.status === 'approved');
   }
@@ -132,7 +145,10 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     this.availableStatsUsers = [];
     this.selectedPlaylistId = '';
     this.selectedStatsOwnerId = '';
+    this.statsUserSearch = '';
     this.shareLink = '';
+    this.statsRequestLink = '';
+    this.statsRequestLinkCopied = false;
     this.shareError = '';
     this.shareLinkCopied = false;
   }
@@ -144,6 +160,7 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
       this.isLoadingStatsUsers = true;
       this.availableStatsUsers = [];
       this.selectedStatsOwnerId = '';
+      this.statsUserSearch = '';
       this.isStatsUserPickerOpen = false;
       try {
         this.availableStatsUsers = await this.statsSharing.listAvailableUsers();
@@ -173,15 +190,18 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   }
 
   closeShareDialog(): void {
-    if (this.isCreatingShare || this.isRequestingStats) return;
+    if (this.isCreatingShare || this.isRequestingStats || this.isCreatingStatsLink) return;
     this.isShareDialogOpen = false;
     this.shareMode = null;
     this.availablePlaylists = [];
     this.availableStatsUsers = [];
     this.selectedPlaylistId = '';
     this.selectedStatsOwnerId = '';
+    this.statsUserSearch = '';
     this.isStatsUserPickerOpen = false;
     this.shareLink = '';
+    this.statsRequestLink = '';
+    this.statsRequestLinkCopied = false;
     this.shareError = '';
     this.shareLinkCopied = false;
   }
@@ -211,12 +231,68 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   toggleStatsUserPicker(): void {
     if (this.isLoadingStatsUsers || this.isRequestingStats) return;
     this.isStatsUserPickerOpen = !this.isStatsUserPickerOpen;
+    if (this.isStatsUserPickerOpen) {
+      this.statsUserSearch = '';
+      setTimeout(() => this.updateStatsPickerMenuPosition());
+    }
   }
 
   selectStatsOwner(user: StatsShareableUser): void {
     if (user.requestStatus === 'pending' || user.requestStatus === 'approved') return;
     this.selectedStatsOwnerId = user.userId;
     this.isStatsUserPickerOpen = false;
+  }
+
+  closeStatsUserPicker(): void {
+    this.isStatsUserPickerOpen = false;
+    this.statsUserSearch = '';
+  }
+
+  @HostListener('window:resize')
+  updateStatsPickerMenuPosition(): void {
+    if (!this.isStatsUserPickerOpen || !this.statsUserPickerTrigger) return;
+    const rect = this.statsUserPickerTrigger.nativeElement.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const margin = 12;
+    const gap = 7;
+    const below = viewportHeight - rect.bottom - margin - gap;
+    const above = rect.top - margin - gap;
+    const maxHeight = Math.max(140, Math.min(300, Math.max(below, above)));
+    const top = below >= 180 || below >= above
+      ? rect.bottom + gap
+      : Math.max(margin, rect.top - gap - maxHeight);
+    this.statsPickerMenuStyle = {
+      top: `${Math.round(top)}px`,
+      left: `${Math.round(rect.left)}px`,
+      width: `${Math.round(rect.width)}px`,
+      maxHeight: `${Math.round(maxHeight)}px`
+    };
+  }
+
+  async createStatsRequestLink(): Promise<void> {
+    if (this.isCreatingStatsLink) return;
+    this.isCreatingStatsLink = true;
+    this.shareError = '';
+    try {
+      const created = await this.statsSharing.createAccessInvite();
+      this.statsRequestLink = created.claimUrl;
+      this.statsRequestLinkCopied = false;
+      this.closeStatsUserPicker();
+    } catch (error) {
+      this.shareError = this.describeError(error);
+    } finally {
+      this.isCreatingStatsLink = false;
+    }
+  }
+
+  async copyStatsRequestLink(): Promise<void> {
+    if (!this.statsRequestLink) return;
+    try {
+      await navigator.clipboard.writeText(this.statsRequestLink);
+      this.statsRequestLinkCopied = true;
+    } catch {
+      this.shareError = 'Clipboard access is unavailable. Select and copy the link manually.';
+    }
   }
 
   statsUserStatusLabel(user: StatsShareableUser): string {

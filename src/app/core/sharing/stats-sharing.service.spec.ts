@@ -65,6 +65,24 @@ describe('StatsSharingService', () => {
     ]);
   });
 
+  it('creates and claims a one-recipient stats request link through guarded RPCs', async () => {
+    rpc.and.resolveTo({data: 'invite-id', error: null});
+
+    const invite = await service.createAccessInvite();
+    expect(invite.inviteId).toBe('invite-id');
+    expect(invite.claimToken.length).toBe(64);
+    expect(invite.claimUrl).toContain('/shared-playlists/stats-request/');
+    expect(rpc).toHaveBeenCalledWith('create_stats_access_invite', {
+      p_claim_token: invite.claimToken
+    });
+
+    rpc.and.resolveTo({data: 'request-id', error: null});
+    await expectAsync(service.claimAccessInvite('private-token')).toBeResolvedTo('request-id');
+    expect(rpc).toHaveBeenCalledWith('claim_stats_access_invite', {
+      p_claim_token: 'private-token'
+    });
+  });
+
   it('maps access records with the role returned for the current user', async () => {
     rpc.and.resolveTo({data: [{
       id: 'request-id', owner_user_id: 'owner-id', viewer_user_id: 'viewer-id',

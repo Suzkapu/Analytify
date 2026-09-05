@@ -1,0 +1,10 @@
+<main class="claim-page">
+  <section class="claim-card">
+    <i class="pi" [ngClass]="isOpening ? 'pi-spin pi-spinner' : 'pi-eye-slash'"></i>
+    <span>Private stats request</span>
+    <h1>{{ isOpening ? 'Opening the stats request…' : 'This request is unavailable' }}</h1>
+    <p *ngIf="isOpening">The request is being connected to your Analytify profile. You will choose whether to accept or decline next.</p>
+    <p *ngIf="!isOpening">{{ errorMessage }}</p>
+    <a *ngIf="!isOpening" routerLink="/shared-playlists">Go to Private Sharing</a>
+  </section>
+</main>

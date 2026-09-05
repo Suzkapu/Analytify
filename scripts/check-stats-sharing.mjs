@@ -9,12 +9,20 @@ const responseFix = readFileSync(
   new URL('../supabase/migrations/20260904170000_fix_stats_access_response.sql', import.meta.url),
   'utf8'
 ).toLowerCase();
+const requestLinks = readFileSync(
+  new URL('../supabase/migrations/20260905110000_stats_access_request_links.sql', import.meta.url),
+  'utf8'
+).toLowerCase();
 const service = readFileSync(
   new URL('../src/app/core/sharing/stats-sharing.service.ts', import.meta.url),
   'utf8'
 );
 const statsPage = readFileSync(
   new URL('../src/app/features/insights/user-stats/user-stats.component.ts', import.meta.url),
+  'utf8'
+);
+const sharingRoutes = readFileSync(
+  new URL('../src/app/features/shared-playlists/shared-playlists.module.ts', import.meta.url),
   'utf8'
 );
 
@@ -52,6 +60,17 @@ assert.match(responseFix, /grant execute on function public\.answer_stats_access
 
 assert.match(service, /rpc\('get_shared_stats_snapshot'/);
 assert.match(service, /rpc\('answer_stats_access_request'/);
+assert.match(service, /rpc\('create_stats_access_invite'/);
+assert.match(service, /rpc\('claim_stats_access_invite'/);
 assert.match(statsPage, /if \(this\.isSpyMode\) \{[\s\S]*await this\.loadSharedStats\(loadSequence\);[\s\S]*return;/);
+
+assert.match(requestLinks, /create table public\.stats_access_invites/);
+assert.match(requestLinks, /alter table public\.stats_access_invites enable row level security/);
+assert.match(requestLinks, /digest\(convert_to\(p_claim_token/);
+assert.match(requestLinks, /expires_at <= now\(\)/);
+assert.match(requestLinks, /viewer_user_id = v_owner_id[\s\S]*cannot open your own stats request link/);
+assert.match(requestLinks, /status = 'pending'[\s\S]*requested_at = now\(\)/);
+assert.match(requestLinks, /revoke all on table public\.stats_access_invites from public, anon, authenticated/);
+assert.match(sharingRoutes, /path: 'stats-request\/:token'/);
 
 console.log('Stats sharing consent and isolation checks passed.');
