@@ -310,6 +310,9 @@ describe('SpotifyAuthService', () => {
     values['spotifyRefreshToken'] = 'personal-refresh';
     values['spotifyTokenExpiresAt'] = String(Date.now() + 3_600_000);
     values['spotifyUserId'] = 'stable-account-id';
+    values['11111111-1111-4111-8111-111111111111_backup_upload_manifest'] = JSON.stringify({
+      version: 1, completed: ['listening-history'], failures: {}
+    });
     authClient.signInAnonymously.and.resolveTo({
       data: {session: {user: {id: '11111111-1111-4111-8111-111111111111', is_anonymous: true}}},
       error: null
@@ -331,6 +334,51 @@ describe('SpotifyAuthService', () => {
     expect(supabaseService.updateBackupActive)
       .toHaveBeenCalledOnceWith('11111111-1111-4111-8111-111111111111', true);
     expect(values['11111111-1111-4111-8111-111111111111_backup_active']).toBe('true');
+    expect(values['11111111-1111-4111-8111-111111111111_backup_upload_manifest']).toBeUndefined();
+    expect((service as any).pushLocalCacheToDatabase.calls.first().invocationOrder)
+      .toBeLessThan(supabaseService.updateBackupActive.calls.first().invocationOrder);
+    expect(service.backupActivationState).toBe('active');
+  });
+
+  it('keeps Cloud Backup inactive when a required upload fails', async () => {
+    values['supabaseUserId'] = '11111111-1111-4111-8111-111111111111';
+    values['11111111-1111-4111-8111-111111111111_backup_active'] = 'false';
+    spyOn<any>(service, 'pushLocalCacheToDatabase').and.rejectWith(new Error('Listening history: database unavailable'));
+
+    await expectAsync(service.enableBackup()).toBeRejectedWithError(/Listening history/);
+
+    expect(supabaseService.updateBackupActive).not.toHaveBeenCalled();
+    expect(values['11111111-1111-4111-8111-111111111111_backup_active']).toBe('false');
+    expect(service.backupActivationState).toBe('failed');
+  });
+
+  it('persists completed upload steps and resumes only failed datasets', async () => {
+    values['spotifyUserId'] = 'spotify-user';
+    values['spotify-user_recently_played'] = JSON.stringify([{track: {id: 'track-1'}, played_at: '2026-09-05T08:00:00Z'}]);
+    values['cache-key'] = 'cached value';
+    storage.getStatsHistory = jasmine.createSpy('getStatsHistory').and.resolveTo([]);
+    storage.getCacheKeys = jasmine.createSpy('getCacheKeys').and.returnValue(['cache-key']);
+    storage.shouldSyncUserCacheKey = jasmine.createSpy('shouldSyncUserCacheKey').and.returnValue(true);
+    supabaseService.syncListeningHistory = jasmine.createSpy('syncListeningHistory').and.resolveTo();
+    supabaseService.saveUserCache = jasmine.createSpy('saveUserCache').and.returnValues(
+      Promise.reject(new Error('cache unavailable')),
+      Promise.reject(new Error('cache unavailable')),
+      Promise.reject(new Error('cache unavailable')),
+      Promise.resolve()
+    );
+    (service as any).backupRetryDelays = [0, 0];
+
+    await expectAsync((service as any).pushLocalCacheToDatabase('supabase-user'))
+      .toBeRejectedWithError(/Local cache.*cache unavailable/s);
+    expect(supabaseService.syncListeningHistory).toHaveBeenCalledTimes(1);
+    expect(values['supabase-user_backup_upload_manifest']).toContain('listening-history');
+
+    await (service as any).pushLocalCacheToDatabase('supabase-user');
+
+    expect(supabaseService.syncListeningHistory).toHaveBeenCalledTimes(1);
+    expect(supabaseService.saveUserCache).toHaveBeenCalledTimes(4);
+    expect(values['supabase-user_backup_upload_manifest']).toContain('cache:cache-key');
+    expect(service.syncProgress).toBe(100);
   });
 
   it('coalesces overlapping hosted credential registrations', async () => {

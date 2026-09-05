@@ -22,6 +22,14 @@ function toDailySnapshotDateKey(timestamp: number): string {
   return `${year}-${month}-${day}`;
 }
 
+export type BackupActivationState = 'idle' | 'enabling' | 'syncing' | 'active' | 'failed';
+
+interface BackupUploadManifest {
+  version: 1;
+  completed: string[];
+  failures: Record<string, string>;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -38,8 +46,11 @@ export class SpotifyAuthService {
 
   isSyncing = false;
   syncProgress = 0;
+  backupActivationState: BackupActivationState = 'idle';
+  backupSyncFailures: string[] = [];
   initialSyncPromise: Promise<void> | null = null;
   private credentialRegistrationPromise: Promise<string | null> | null = null;
+  private readonly backupRetryDelays = [250, 500];
 
   constructor(
     private storageService: StorageService,
@@ -651,6 +662,9 @@ export class SpotifyAuthService {
       } else if (data) {
         const active = !!data.backup_active;
         this.storageService.setItem(`${supabaseUserId}_backup_active`, active ? 'true' : 'false');
+        if (this.backupActivationState !== 'failed') {
+          this.backupActivationState = active ? 'active' : 'idle';
+        }
         this.storageService.setItem(`${supabaseUserId}_last_synced_at`, data.last_synced_at || '');
         const redundantCacheKeys = [
           `${supabaseUserId}_backup_active`,
@@ -679,17 +693,24 @@ export class SpotifyAuthService {
   }
 
   async enableBackup(): Promise<void> {
-    await this.enableCloudIdentity();
-    const supabaseUserId = this.getSupabaseUserId();
-    if (!supabaseUserId) {
-      throw new Error('User not logged in');
+    this.backupActivationState = 'enabling';
+    this.backupSyncFailures = [];
+    try {
+      await this.enableCloudIdentity();
+      const supabaseUserId = this.getSupabaseUserId();
+      if (!supabaseUserId) throw new Error('User not logged in');
+      this.backupActivationState = 'syncing';
+      await this.pushLocalCacheToDatabase(supabaseUserId);
+      // The flag is the commit point: scheduled features cannot observe an
+      // active backup until every required local dataset was acknowledged.
+      await this.supabaseService.updateBackupActive(supabaseUserId, true);
+      this.storageService.setItem(`${supabaseUserId}_backup_active`, 'true');
+      this.storageService.removeItem(`${supabaseUserId}_backup_upload_manifest`);
+      this.backupActivationState = 'active';
+    } catch (error) {
+      this.backupActivationState = 'failed';
+      throw error;
     }
-
-    // The cloud flag is authoritative. Only expose backup as enabled locally
-    // after Supabase accepted the setting.
-    await this.supabaseService.updateBackupActive(supabaseUserId, true);
-    this.storageService.setItem(`${supabaseUserId}_backup_active`, 'true');
-    await this.pushLocalCacheToDatabase(supabaseUserId);
   }
 
   async enableCloudIdentity(): Promise<void> {
@@ -732,12 +753,27 @@ export class SpotifyAuthService {
     }
     await this.supabaseService.updateBackupActive(supabaseUserId, false);
     this.storageService.setItem(`${supabaseUserId}_backup_active`, 'false');
+    this.backupActivationState = 'idle';
   }
 
   private async pushLocalCacheToDatabase(supabaseUserId: string): Promise<void> {
     const spotifyUserId = this.getUserId() || 'anonymous';
     this.isSyncing = true;
     this.syncProgress = 0;
+
+    const manifestKey = `${supabaseUserId}_backup_upload_manifest`;
+    let manifest: BackupUploadManifest = {version: 1, completed: [], failures: {}};
+    try {
+      const savedManifest = this.storageService.getItem(manifestKey);
+      if (savedManifest) {
+        const parsed = JSON.parse(savedManifest);
+        if (parsed?.version === 1 && Array.isArray(parsed.completed)) {
+          manifest = {version: 1, completed: parsed.completed, failures: parsed.failures || {}};
+        }
+      }
+    } catch {
+      manifest = {version: 1, completed: [], failures: {}};
+    }
 
     try {
       // 1. Gather all items to count total steps
@@ -780,67 +816,73 @@ export class SpotifyAuthService {
       const cacheKeys = this.storageService.getCacheKeys()
         .filter(key => this.storageService.shouldSyncUserCacheKey(key));
 
-      const totalSteps = 1 + statsToSync.length + cacheKeys.length;
+      const steps: Array<{id: string; label: string; run: () => Promise<void>}> = [];
+      if (cachedHistory.length > 0) steps.push({
+        id: 'listening-history', label: 'Listening history',
+        run: () => this.supabaseService.syncListeningHistory(supabaseUserId, cachedHistory)
+      });
+      statsToSync.forEach(item => {
+        const date = item.snap.snapshotDate || toDailySnapshotDateKey(item.snap.timestamp);
+        steps.push({
+          id: `stats:${item.range}:${date}`,
+          label: `${item.range.replace('_', ' ')} stats for ${date}`,
+          run: () => this.supabaseService.saveStatsSnapshot(
+            supabaseUserId, item.range, item.snap.explicitPercentage || 0,
+            item.snap.genreDiversity || 0, item.snap.topTracks || [], item.snap.topArtists || [],
+            item.snap.topGenres || [], true, date
+          )
+        });
+      });
+      cacheKeys.forEach(key => steps.push({
+        id: `cache:${key}`, label: `Local cache “${key}”`,
+        run: async () => {
+          const value = this.storageService.getItem(key);
+          if (value !== null) await this.supabaseService.saveUserCache(supabaseUserId, key, value);
+        }
+      }));
+
+      const totalSteps = Math.max(1, steps.length);
       let completedSteps = 0;
-
-      // Step 1: Listening History Sync
-      if (cachedHistory && cachedHistory.length > 0) {
-        try {
-          await this.supabaseService.syncListeningHistory(supabaseUserId, cachedHistory);
-        } catch (e) {
-          console.warn('Failed to push listening history cache to DB:', e);
-        }
-      }
-      completedSteps++;
-      this.syncProgress = Math.round((completedSteps / totalSteps) * 100);
-
-      // Steps 2 to N: Stats Snapshots Sync
-      for (const item of statsToSync) {
-        try {
-          const customDateStr =
-            item.snap.snapshotDate || toDailySnapshotDateKey(item.snap.timestamp);
-          await this.supabaseService.saveStatsSnapshot(
-            supabaseUserId,
-            item.range,
-            item.snap.explicitPercentage || 0,
-            item.snap.genreDiversity || 0,
-            item.snap.topTracks || [],
-            item.snap.topArtists || [],
-            item.snap.topGenres || [],
-            true, // onlyInsertMissing = true
-            customDateStr
-          );
-        } catch (e) {
-          console.warn('Failed to push stats snapshot cache to DB:', e);
-        }
-        completedSteps++;
-        this.syncProgress = Math.round((completedSteps / totalSteps) * 100);
-      }
-
-      // Steps N+1 to M: Generic User Cache keys sync
-      for (const key of cacheKeys) {
-        try {
-          const val = this.storageService.getItem(key);
-          if (val !== null) {
-            await this.supabaseService.saveUserCache(supabaseUserId, key, val);
+      const completed = new Set(manifest.completed);
+      for (const step of steps) {
+        if (!completed.has(step.id)) {
+          let lastError: unknown;
+          for (let attempt = 1; attempt <= 3; attempt++) {
+            try {
+              await step.run();
+              lastError = null;
+              break;
+            } catch (error) {
+              lastError = error;
+              if (attempt < 3) await new Promise(resolve => setTimeout(
+                resolve, this.backupRetryDelays[attempt - 1]
+              ));
+            }
           }
-        } catch (e) {
-          console.warn(`Failed to push user cache key ${key} to DB:`, e);
+          if (lastError) {
+            manifest.failures[step.id] = lastError instanceof Error ? lastError.message : String(lastError);
+          } else {
+            completed.add(step.id);
+            delete manifest.failures[step.id];
+          }
+          manifest.completed = Array.from(completed);
+          this.storageService.setItem(manifestKey, JSON.stringify(manifest));
         }
         completedSteps++;
         this.syncProgress = Math.round((completedSteps / totalSteps) * 100);
       }
 
+      this.backupSyncFailures = steps.filter(step => manifest.failures[step.id])
+        .map(step => `${step.label}: ${manifest.failures[step.id]}`);
+      if (this.backupSyncFailures.length > 0) {
+        throw new Error(`Cloud Backup could not upload all required data:\n${this.backupSyncFailures.join('\n')}`);
+      }
       this.syncProgress = 100;
-      setTimeout(() => {
-        this.isSyncing = false;
-        this.syncProgress = 0;
-      }, 1000);
-
     } catch (e) {
       console.error('Failed to run cache push to DB:', e);
+      throw e;
+    } finally {
       this.isSyncing = false;
-      this.syncProgress = 0;
     }
   }
 
