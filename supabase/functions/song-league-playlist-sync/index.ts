@@ -4,6 +4,7 @@ import {
   encryptSpotifyRefreshToken,
   StoredSpotifyCredential
 } from '../_shared/spotify-credential-crypto.ts';
+import {boundedFetch} from '../_shared/bounded-fetch.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -33,10 +34,9 @@ function requiredEnvironment(name: string): string {
 async function spotifyRequest(
   path: string,
   accessToken: string,
-  init: RequestInit = {},
-  retryCount = 0
+  init: RequestInit = {}
 ): Promise<any> {
-  const response = await fetch(`https://api.spotify.com/v1${path}`, {
+  const response = await boundedFetch(`https://api.spotify.com/v1${path}`, {
     ...init,
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -44,11 +44,6 @@ async function spotifyRequest(
       ...(init.headers || {})
     }
   });
-  if (response.status === 429 && retryCount < 2) {
-    const delaySeconds = Math.min(5, Math.max(1, Number(response.headers.get('retry-after')) || 1));
-    await new Promise(resolve => setTimeout(resolve, delaySeconds * 1_000));
-    return spotifyRequest(path, accessToken, init, retryCount + 1);
-  }
   const text = await response.text();
   if (!response.ok) {
     throw new SpotifyHttpError(response.status, `Spotify ${response.status}: ${text || response.statusText}`);
@@ -71,11 +66,11 @@ async function refreshSpotifyAccessToken(
     client_id: effectiveClientId
   };
   if (connectionMode === 'hosted') parameters.client_secret = clientSecret;
-  const response = await fetch('https://accounts.spotify.com/api/token', {
+  const response = await boundedFetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
     body: new URLSearchParams(parameters)
-  });
+  }, {retryUnsafe: true});
   const body = await response.json();
   if (!response.ok || !body.access_token) {
     throw new Error(`Spotify token refresh failed (${response.status}): ${body.error_description || body.error || 'unknown error'}`);

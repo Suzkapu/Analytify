@@ -5,6 +5,7 @@ import {
   spotifyProfileIds,
   spotifyProfileMatches
 } from './profile-verification.ts';
+import {boundedFetch} from '../_shared/bounded-fetch.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -46,18 +47,18 @@ async function accessTokenFromRefreshToken(
   if (connectionMode === 'hosted') {
     parameters.client_secret = requiredEnvironment('SPOTIFY_CLIENT_SECRET');
   }
-  const response = await fetch('https://accounts.spotify.com/api/token', {
+  const response = await boundedFetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
     body: new URLSearchParams(parameters)
-  });
+  }, {retryUnsafe: true});
   const body = await response.json().catch(() => ({}));
   if (!response.ok || !body?.access_token) throw new Error('Spotify could not verify the refresh credential.');
   return {accessToken: body.access_token, refreshToken: body.refresh_token || refreshToken};
 }
 
 async function spotifyProfile(accessToken: string): Promise<any> {
-  const response = await fetch('https://api.spotify.com/v1/me', {
+  const response = await boundedFetch('https://api.spotify.com/v1/me', {
     headers: {Authorization: `Bearer ${accessToken}`, 'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'}
   });
   const profile = await response.json().catch(() => ({}));

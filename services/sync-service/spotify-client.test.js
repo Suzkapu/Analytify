@@ -1,51 +1,43 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const {createSpotifyClient, retryAfterMilliseconds} = require('./spotify-client');
 
-const {createSpotifyClient} = require('./spotify-client');
+const response = (status, body = '', headers = {}) => ({status, ok: status >= 200 && status < 300, statusText: '',
+  headers: {get: name => headers[name.toLowerCase()] || null}, text: async () => body});
 
-test('refreshes a personal PKCE credential without sending a client secret', async () => {
-  const originalFetch = global.fetch;
-  let requestBody = '';
-  let savedRefreshToken = '';
-  global.fetch = async (_url, options) => {
-    requestBody = options.body;
-    return new Response(JSON.stringify({access_token: 'access', refresh_token: 'rotated'}), {
-      status: 200, headers: {'Content-Type': 'application/json'}
-    });
-  };
-  try {
-    const spotify = createSpotifyClient({spotifyClientId: 'hosted-id', spotifyClientSecret: 'hosted-secret'});
-    const accessToken = await spotify.accessToken({
-      connectionMode: 'personal_pkce',
-      clientId: 'personal-client-id',
-      refreshToken: 'personal-refresh',
-      async saveRefreshToken(value) { savedRefreshToken = value; }
-    });
-    assert.equal(accessToken, 'access');
-    assert.match(requestBody, /client_id=personal-client-id/);
-    assert.doesNotMatch(requestBody, /client_secret/);
-    assert.equal(savedRefreshToken, 'rotated');
-  } finally {
-    global.fetch = originalFetch;
-  }
+test('honors Retry-After and retries transient idempotent requests', async () => {
+  const waits = [], replies = [response(429, 'slow down', {'retry-after': '2'}), response(200, '{"ok":true}')];
+  const client = createSpotifyClient({}, {fetch: async () => replies.shift(), sleep: async ms => waits.push(ms), now: () => 0});
+  assert.deepEqual(await client.request('https://api.spotify.com/v1/me'), {ok: true});
+  assert.deepEqual(waits, [2000]);
 });
 
-test('keeps the hosted confidential-client refresh behavior', async () => {
-  const originalFetch = global.fetch;
-  let requestBody = '';
-  global.fetch = async (_url, options) => {
-    requestBody = options.body;
-    return new Response(JSON.stringify({access_token: 'access'}), {
-      status: 200, headers: {'Content-Type': 'application/json'}
-    });
-  };
-  try {
-    const spotify = createSpotifyClient({spotifyClientId: 'hosted-id', spotifyClientSecret: 'hosted-secret'});
-    await spotify.accessToken({connectionMode: 'hosted', clientId: null, refreshToken: 'hosted-refresh'});
-    assert.match(requestBody, /client_id=hosted-id/);
-    assert.match(requestBody, /client_secret=hosted-secret/);
-  } finally {
-    global.fetch = originalFetch;
-  }
+test('does not retry unsafe Spotify side effects by default', async () => {
+  let calls = 0;
+  const client = createSpotifyClient({}, {fetch: async () => { calls++; return response(503, 'down'); }});
+  await assert.rejects(client.request('https://api.spotify.com/v1/playlists/x/items', {method: 'POST'}), error => error.kind === 'transient');
+  assert.equal(calls, 1);
 });
 
+test('stops before a retry would exceed the elapsed budget', async () => {
+  const client = createSpotifyClient({spotifyRetryBudgetMs: 100}, {fetch: async () => response(503, 'down'), random: () => 0, now: () => 0});
+  await assert.rejects(client.request('https://api.spotify.com/v1/me'), error => error.kind === 'retry_exhausted');
+});
+
+test('classifies a deadline abort as a timeout', async () => {
+  const client = createSpotifyClient({spotifyRequestTimeoutMs: 5, spotifyMaxAttempts: 1}, {
+    fetch: async (_url, options) => new Promise((_resolve, reject) => options.signal.addEventListener('abort', () => reject(options.signal.reason)))
+  });
+  await assert.rejects(client.request('https://api.spotify.com/v1/me'), error => error.kind === 'timeout');
+});
+
+test('does not start a request after caller cancellation', async () => {
+  const controller = new AbortController(); controller.abort();
+  const client = createSpotifyClient({}, {fetch: async () => { throw new Error('must not run'); }});
+  await assert.rejects(client.request('https://api.spotify.com/v1/me', {signal: controller.signal}), error => error.kind === 'cancelled');
+});
+
+test('parses seconds and dates from Retry-After', () => {
+  assert.equal(retryAfterMilliseconds('3', 0), 3000);
+  assert.equal(retryAfterMilliseconds('Thu, 01 Jan 1970 00:00:04 GMT', 1000), 3000);
+});

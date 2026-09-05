@@ -1,3 +1,5 @@
+import {boundedFetch} from '../_shared/bounded-fetch.ts';
+
 export interface WebPushSubscription {
   endpoint: string;
   p256dh: string;
@@ -99,11 +101,7 @@ export async function sendWebPush(
     encryptedBody(subscription, message),
     vapidAuthorization(subscription.endpoint, vapid)
   ]);
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 10_000);
-  let response: Response;
-  try {
-    response = await fetch(subscription.endpoint, {
+  const response = await boundedFetch(subscription.endpoint, {
       method: 'POST',
       headers: {
         Authorization: authorization,
@@ -113,11 +111,7 @@ export async function sendWebPush(
         Urgency: 'normal'
       },
       body,
-      signal: controller.signal
-    });
-  } finally {
-    clearTimeout(timeout);
-  }
+    }, {timeoutMs: 10_000, maxAttempts: 1});
   if (!response.ok) {
     const error = new Error(`Push service returned HTTP ${response.status}.`) as Error & {statusCode: number};
     error.statusCode = response.status;

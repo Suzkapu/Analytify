@@ -73,14 +73,18 @@ const wait = milliseconds => new Promise(resolve => setTimeout(resolve, millisec
 async function runProbe(probe) {
   let lastStatus = 'no response';
   for (let attempt = 1; attempt <= 5; attempt += 1) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(new Error('probe deadline exceeded')), 10_000);
     try {
-      const response = await fetch(probe.url, probe.options);
+      const response = await fetch(probe.url, {...probe.options, signal: controller.signal});
       lastStatus = response.status;
       if (await probe.validate(response)) return;
     } catch (error) {
       lastStatus = error instanceof Error ? error.message : String(error);
+    } finally {
+      clearTimeout(timeout);
     }
-    if (attempt < 5) await wait(3_000);
+    if (attempt < 5) await wait(2_500 + Math.round(Math.random() * 1_000));
   }
   throw new Error(`${probe.label} failed its live check (last result: ${lastStatus}).`);
 }

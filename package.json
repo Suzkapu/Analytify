@@ -23,7 +23,7 @@
     "sync-service:install": "npm --prefix services/sync-service ci --omit=dev",
     "sync-service:deps:check": "node scripts/check-sync-service-dependencies.mjs",
     "sync-service:check": "node --test services/sync-service/spotify-url-validator.test.js services/sync-service/date-utils.test.js services/sync-service/task-registry.test.js services/sync-service/scheduler.test.js services/sync-service/credential-store.test.js services/sync-service/spotify-client.test.js services/sync-service/push-dispatcher.test.js services/sync-service/tasks/history-task.test.js services/sync-service/tasks/stats-task.test.js services/sync-service/tasks/shared-playlists-task.test.js services/sync-service/runtime-dependencies.test.js",
-    "edge-functions:check": "deno check --config supabase/functions/deno.json supabase/functions/spotify-credentials/index.ts supabase/functions/song-league-playlist-sync/index.ts supabase/functions/song-league-notifications/index.ts && deno test --config supabase/functions/deno.json supabase/functions/spotify-credentials/profile-verification.test.ts",
+    "edge-functions:check": "deno check --config supabase/functions/deno.json supabase/functions/spotify-credentials/index.ts supabase/functions/song-league-playlist-sync/index.ts supabase/functions/song-league-notifications/index.ts && deno test --config supabase/functions/deno.json supabase/functions/_shared/bounded-fetch.test.ts supabase/functions/spotify-credentials/profile-verification.test.ts",
     "typecheck": "tsc -p tsconfig.app.json --noEmit",
     "typecheck:tests": "tsc -p tsconfig.spec.json --noEmit",
     "test:ci": "ng test --watch=false --browsers=ChromeHeadless --code-coverage --progress=false",
