@@ -34,7 +34,6 @@ function createSpotifyClient(config, dependencies = {}) {
     const cancel = () => controller.abort(externalSignal.reason);
     externalSignal?.addEventListener('abort', cancel, {once: true});
     const timer = setTimeout(() => controller.abort(new Error('deadline exceeded')), timeoutMs);
-    timer.unref?.();
     try {
       return await fetchImpl(url, {...options, signal: controller.signal});
     } catch (error) {
