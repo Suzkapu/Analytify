@@ -59,7 +59,8 @@ describe('AdminComponent', () => {
   it('keeps Recent runs (Audit trail) collapsed by default', async () => {
     expect(component.isRunsCollapsed).toBeTrue();
 
-    await component.load();
+    fixture.detectChanges();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(component.isRunsCollapsed).toBeTrue();
@@ -67,11 +68,13 @@ describe('AdminComponent', () => {
     expect(runsContent).toBeNull();
 
     const runsPanel = fixture.nativeElement.querySelector('.runs-panel');
+    expect(runsPanel).not.toBeNull();
     expect(runsPanel.classList).toContain('collapsed');
   });
 
   it('expands and collapses Recent runs when toggled', async () => {
-    await component.load();
+    fixture.detectChanges();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     component.toggleRunsCollapsed();
@@ -125,7 +128,8 @@ describe('AdminComponent', () => {
       }
     ]);
 
-    await component.load();
+    fixture.detectChanges();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(component.isUserExpanded('user-1')).toBeFalse();

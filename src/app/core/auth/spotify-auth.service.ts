@@ -233,6 +233,7 @@ export class SpotifyAuthService {
 
     this.storageService.setItem(this.connectionModeKey, 'personal_pkce', false);
     this.storageService.setItem(this.personalClientIdKey, request.clientId, false);
+    this.setUserId(effectiveSpotifyId);
     this.storeSpotifyTokenResponse(token, false);
     const localSpotifyId = this.getUserId() || effectiveSpotifyId;
     const profileImage = profile.images?.[0]?.url || '';
