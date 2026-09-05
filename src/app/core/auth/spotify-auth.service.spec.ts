@@ -296,7 +296,7 @@ describe('SpotifyAuthService', () => {
     expect(authClient.signInAnonymously).toHaveBeenCalledTimes(1);
     expect(values['anonymousCloudIdentity']).toBe('true');
     expect(values['supabaseUserId']).toBe('11111111-1111-4111-8111-111111111111');
-    expect(supabaseService.ensureUserProfile).toHaveBeenCalled();
+    expect(supabaseService.ensureUserProfile).not.toHaveBeenCalled();
     expect(supabaseService.client.functions.invoke).toHaveBeenCalledWith(
       'spotify-credentials',
       jasmine.objectContaining({body: jasmine.objectContaining({connectionMode: 'personal_pkce'})})

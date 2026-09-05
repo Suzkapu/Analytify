@@ -635,20 +635,7 @@ export class SpotifyAuthService {
   async syncBackupActiveStatus(): Promise<void> {
     const supabaseUserId = this.getSupabaseUserId();
     if (supabaseUserId) {
-      // Ensure the public.users row exists — recreates it if deleted manually.
-      // Read user metadata from the live Supabase session.
       const spotifyId = this.getUserId();
-      let displayName: string | null = null;
-      let profilePicUrl: string | null = null;
-      try {
-        const { data: { session } } = await this.supabaseService.client.auth.getSession();
-        if (session?.user?.user_metadata) {
-          displayName = session.user.user_metadata['full_name'] || session.user.user_metadata['name'] || null;
-          profilePicUrl = session.user.user_metadata['avatar_url'] || null;
-        }
-      } catch { /* non-fatal */ }
-      await this.supabaseService.ensureUserProfile(supabaseUserId, spotifyId, displayName, profilePicUrl);
-
       const { data, error } = await this.supabaseService.client
         .from('users')
         .select('backup_active, last_synced_at')
@@ -730,13 +717,6 @@ export class SpotifyAuthService {
     this.storageService.setItem('supabaseUserId', session.user.id, false);
     this.storageService.setItem(this.anonymousCloudKey, session.user.is_anonymous ? 'true' : 'false', false);
     const profile = await this.loadCurrentSpotifyProfile();
-    const profileUserId = this.getSupabaseUserId() || session.user.id;
-    await this.supabaseService.ensureUserProfile(
-      profileUserId,
-      this.getUserId(),
-      profile.display_name || null,
-      profile.images?.[0]?.url || null
-    );
     await this.registerCurrentSpotifyCredentials(profile);
     this.initialSyncPromise = null;
   }

@@ -1,5 +1,10 @@
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2.108.1';
 import {encryptSpotifyRefreshToken} from '../_shared/spotify-credential-crypto.ts';
+import {
+  existingProfileAcceptsVerifiedIdentity,
+  spotifyProfileIds,
+  spotifyProfileMatches
+} from './profile-verification.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -23,20 +28,6 @@ function isUuid(value: string): boolean {
 
 function devProfileId(userId: string): string {
   return `de11${userId.slice(4)}`;
-}
-
-function normalizedSpotifyId(value: string): string {
-  return value.endsWith('_dev') ? value.slice(0, -4) : value;
-}
-
-function spotifyProfileIds(profile: any): string[] {
-  return Array.from(new Set([profile?.account_id, profile?.id]
-    .filter((value): value is string => typeof value === 'string' && value.length > 0)));
-}
-
-function spotifyProfileMatches(profile: any, spotifyId: string): boolean {
-  const normalized = normalizedSpotifyId(spotifyId);
-  return spotifyProfileIds(profile).some(value => normalizedSpotifyId(value) === normalized);
 }
 
 async function accessTokenFromRefreshToken(
@@ -133,9 +124,9 @@ Deno.serve(async (request: Request) => {
     const {data: existingProfile, error: profileError} = await admin.from('users')
       .select('id, spotify_id').eq('id', profileUserId).maybeSingle();
     if (profileError) throw profileError;
-    if (existingProfile
-      && existingProfile.spotify_id !== profileUserId
-      && !spotifyProfileMatches(currentProfile, existingProfile.spotify_id)) {
+    if (existingProfile && !existingProfileAcceptsVerifiedIdentity(
+      existingProfile.spotify_id, profileUserId, currentProfile
+    )) {
       return json({error: 'This Spotify account does not match the existing Analytify profile.'}, 409);
     }
     const finalSpotifyId = requestedSpotifyId || currentProfile.account_id || currentProfile.id;
