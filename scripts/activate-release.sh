@@ -60,13 +60,18 @@ sudo -n systemctl enable analytify-sync.service
 sudo -n systemctl restart analytify-sync.service
 
 worker_ok=false
-for _attempt in 1 2 3 4 5 6; do
+for _attempt in $(seq 1 30); do
   worker_sha="$(curl --fail --silent --max-time 5 "http://127.0.0.1:${health_port}/health" \
     | sed -n 's/.*"commit":"\([^"]*\)".*/\1/p' || true)"
   if [[ "$worker_sha" == "$expected_sha" ]]; then worker_ok=true; break; fi
   sleep 2
 done
-[[ "$worker_ok" == true ]] || { echo "Worker did not become ready at ${expected_sha}." >&2; exit 1; }
+if [[ "$worker_ok" != true ]]; then
+  echo "Worker did not become ready at ${expected_sha}." >&2
+  sudo -n systemctl status analytify-sync.service --no-pager --full >&2 || true
+  sudo -n journalctl -u analytify-sync.service --no-pager -n 80 >&2 || true
+  exit 1
+fi
 
 web_ok=false
 for _attempt in 1 2 3 4 5 6; do
