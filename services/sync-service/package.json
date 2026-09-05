@@ -6,10 +6,11 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js --watch",
-    "once": "node index.js"
+    "once": "node index.js",
+    "check:deps": "node ../../scripts/check-sync-service-dependencies.mjs"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.108.1",
-    "ws": "^8.18.3"
+    "@supabase/supabase-js": "2.108.1",
+    "ws": "8.18.3"
   }
 }
