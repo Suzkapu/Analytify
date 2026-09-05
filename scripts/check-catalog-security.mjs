@@ -18,5 +18,9 @@ assert.ok(migration.includes('jsonb_array_length') && migration.includes("p_kind
 assert.ok(migration.includes('on delete restrict'));
 assert.ok(browserRepository.includes("rpc('ingest_spotify_catalog'"));
 assert.ok(!browserRepository.match(/\.from\('(artists|albums|tracks|album_artists|track_artists)'\)[\s\S]{0,100}\.(upsert|insert|update|delete)\(/));
-assert.ok(workerRepository.includes("from('artists').upsert") && workerRepository.includes("from('tracks').upsert"));
+assert.ok(
+  workerRepository.includes("rpc('replace_spotify_catalog'") ||
+  (workerRepository.includes("from('artists').upsert") && workerRepository.includes("from('tracks').upsert"))
+);
+
 console.log('Spotify catalog is browser-read-only and trusted-worker writable.');
