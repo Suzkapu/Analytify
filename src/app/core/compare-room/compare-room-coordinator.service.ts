@@ -14,6 +14,7 @@ import {
 } from './compare-room.models';
 import {CompareRoomTransportService} from './compare-room-transport.service';
 import {PlaylistIntersectionService} from './playlist-intersection.service';
+import {MAX_COMPARE_CHUNK_TRACKS, MAX_COMPARE_TRACKS, proposalContentHash} from './compare-room-integrity';
 
 @Injectable({providedIn: 'root'})
 export class CompareRoomCoordinatorService {
@@ -26,6 +27,7 @@ export class CompareRoomCoordinatorService {
   private roomId = '';
   private acceptedParticipantIds = new Set<string>();
   private participantTrackBuffers = new Map<string, CompareTrack[]>();
+  private hostSenderId = '';
 
   constructor(
     private transport: CompareRoomTransportService,
@@ -39,7 +41,9 @@ export class CompareRoomCoordinatorService {
   async createRoom(mainParticipant?: CompareParticipant): Promise<void> {
     this.resetState();
     this.roomId = this.randomToken(24);
-    await this.transport.connect(this.roomId, message => this.handleMessage(message));
+    this.hostSenderId = this.randomToken(18);
+    await this.transport.createRoom(this.roomId, this.hostSenderId);
+    await this.transport.connect(this.roomId, envelope => this.handleMessage(envelope.message));
     if (mainParticipant) {
       this.acceptedParticipantIds.add(mainParticipant.id);
       this.participants$.next([mainParticipant]);
@@ -62,6 +66,7 @@ export class CompareRoomCoordinatorService {
         color: {dark: '#08120c', light: '#ffffff'}
       })
     };
+    await this.transport.createInvitation(id, secret);
     this.invitations$.next([...this.invitations$.value, invitation]);
     this.invalidateProposal();
     return invitation;
@@ -74,6 +79,7 @@ export class CompareRoomCoordinatorService {
     // Remove the slot immediately so a claimed-but-stalled join cannot keep the
     // host UI locked while the best-effort notification is sent to the guest.
     this.invitations$.next(this.invitations$.value.filter(item => item.id !== invitationId));
+    await this.transport.revokeInvitation(invitationId);
     if (invitation?.claimedBy) {
       await this.removeParticipant(invitation.claimedBy);
     } else {
@@ -102,7 +108,7 @@ export class CompareRoomCoordinatorService {
     );
   }
 
-  prepareProposal(name?: string, mode: CompareMergeMode = 'intersection'): CompareMergeProposal | null {
+  async prepareProposal(name?: string, mode: CompareMergeMode = 'intersection'): Promise<CompareMergeProposal | null> {
     if (!this.canPrepareResult()) return null;
     const participants = this.participants$.value;
     const participantTracks = participants.map(participant => participant.tracks);
@@ -114,6 +120,9 @@ export class CompareRoomCoordinatorService {
       this.proposal$.next(null);
       return null;
     }
+    if (tracks.length > MAX_COMPARE_TRACKS) {
+      throw new Error(`Compare Room results are limited to ${MAX_COMPARE_TRACKS} tracks.`);
+    }
     const participantNames = participants.map(participant => participant.displayName);
     const defaultName = `${mode === 'union' ? 'Merged playlists' : 'Shared songs'} — ${participantNames.join(', ')}`;
     const participantStats = this.buildParticipantStats(participants, tracks);
@@ -121,7 +130,7 @@ export class CompareRoomCoordinatorService {
       participant.id,
       this.buildParticipantDescription(participant, participantStats, tracks.length, mode)
     ]));
-    const proposal: CompareMergeProposal = {
+    const unsignedProposal: Omit<CompareMergeProposal, 'contentHash'> = {
       id: this.randomToken(12),
       name: (name?.trim() || defaultName).slice(0, 100),
       description: this.buildGenericDescription(participantNames, tracks.length, mode),
@@ -132,10 +141,15 @@ export class CompareRoomCoordinatorService {
       participantNames,
       participantStats
     };
+    const proposal: CompareMergeProposal = {
+      ...unsignedProposal,
+      contentHash: await proposalContentHash(unsignedProposal)
+    };
     this.proposal$.next(proposal);
     this.participants$.next(participants.map(participant => ({
       ...participant,
       approvedProposalId: participant.isMainProfile ? proposal.id : undefined,
+      approvedProposalHash: participant.isMainProfile ? proposal.contentHash : undefined,
       result: undefined
     })));
     void this.transport.send({
@@ -149,7 +163,7 @@ export class CompareRoomCoordinatorService {
     const proposal = this.proposal$.value;
     const participants = this.participants$.value;
     return !!proposal && participants.length >= 2 && participants.every(participant =>
-      participant.approvedProposalId === proposal.id
+      participant.approvedProposalId === proposal.id && participant.approvedProposalHash === proposal.contentHash
     );
   }
 
@@ -164,11 +178,11 @@ export class CompareRoomCoordinatorService {
       result: undefined
     })));
     await this.transport.send({type: 'create-playlist-start', proposal: {...proposal, tracks: []}});
-    for (let index = 0; index < proposal.tracks.length; index += 100) {
+    for (let index = 0; index < proposal.tracks.length; index += MAX_COMPARE_CHUNK_TRACKS) {
       await this.transport.send({
         type: 'create-playlist-track-chunk',
         proposalId: proposal.id,
-        tracks: proposal.tracks.slice(index, index + 100)
+        tracks: proposal.tracks.slice(index, index + MAX_COMPARE_CHUNK_TRACKS)
       });
     }
     await this.transport.send({type: 'create-playlist-commit', proposalId: proposal.id});
@@ -199,29 +213,19 @@ export class CompareRoomCoordinatorService {
 
   async closeRoom(): Promise<void> {
     if (this.roomId) {
-      await this.transport.send({type: 'room-closed'}).catch(() => {});
+      await this.transport.closeRoom().catch(() => {});
     }
     await this.transport.disconnect();
     this.resetState();
   }
 
   private handleMessage(message: CompareRoomMessage): void {
-    if (message.type === 'join-request') {
-      const invitation = this.invitations$.value.find(item =>
-        item.id === message.invitationId && item.secret === message.invitationSecret
-      );
-      if (!invitation || invitation.claimedBy) {
-        void this.transport.send({
-          type: 'join-rejected',
-          participantId: message.participantId,
-          reason: invitation?.claimedBy ? 'This invitation has already been used.' : 'This invitation is invalid.'
-        });
-        return;
-      }
+    if (message.type === 'invitation-claimed') {
+      const invitation = this.invitations$.value.find(item => item.id === message.invitationId);
+      if (!invitation || invitation.claimedBy) return;
       invitation.claimedBy = message.participantId;
       this.invitations$.next([...this.invitations$.value]);
       this.acceptedParticipantIds.add(message.participantId);
-      void this.transport.send({type: 'join-accepted', participantId: message.participantId});
       return;
     }
 
@@ -232,15 +236,8 @@ export class CompareRoomCoordinatorService {
         participant.spotifyUserId === message.participant.spotifyUserId
       );
       if (duplicateAccount) {
-        this.acceptedParticipantIds.delete(message.participant.id);
-        this.invitations$.next(this.invitations$.value.map(invitation =>
-          invitation.claimedBy === message.participant.id ? {...invitation, claimedBy: undefined} : invitation
-        ));
-        void this.transport.send({
-          type: 'join-rejected',
-          participantId: message.participant.id,
-          reason: `${duplicateAccount.displayName} is already in this room.`
-        });
+        void this.removeParticipant(message.participant.id).catch(error => this.reportError(error));
+        this.error$.next(`${duplicateAccount.displayName} is already in this room.`);
         return;
       }
     } else if ('participantId' in message && !this.acceptedParticipantIds.has(message.participantId)) {
@@ -272,8 +269,13 @@ export class CompareRoomCoordinatorService {
       this.invalidateProposal();
     } else if (message.type === 'proposal-approval') {
       const participant = this.participants$.value.find(item => item.id === message.participantId);
-      if (participant && this.proposal$.value?.id === message.proposalId) {
-        this.upsertParticipant({...participant, approvedProposalId: message.proposalId});
+      if (participant && this.proposal$.value?.id === message.proposalId &&
+        this.proposal$.value.contentHash === message.contentHash) {
+        this.upsertParticipant({
+          ...participant,
+          approvedProposalId: message.proposalId,
+          approvedProposalHash: message.contentHash
+        });
       }
     } else if (message.type === 'save-result') {
       this.setLocalSaveResult(message.participantId, message.result);
@@ -345,6 +347,7 @@ export class CompareRoomCoordinatorService {
     this.participants$.next(this.participants$.value.map(participant => ({
       ...participant,
       approvedProposalId: undefined,
+      approvedProposalHash: undefined,
       result: undefined
     })));
     if (hadProposal) {
@@ -358,6 +361,7 @@ export class CompareRoomCoordinatorService {
 
   private resetState(): void {
     this.roomId = '';
+    this.hostSenderId = '';
     this.acceptedParticipantIds.clear();
     this.participantTrackBuffers.clear();
     this.participants$.next([]);

@@ -148,7 +148,7 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
   setMergeMode(mode: CompareMergeMode): void {
     if (this.mergeMode === mode) return;
     this.mergeMode = mode;
-    if (this.proposal) this.coordinator.prepareProposal(this.playlistName, this.mergeMode);
+    if (this.proposal) void this.refreshProposal();
   }
 
   async addParticipant(): Promise<void> {
@@ -174,21 +174,34 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     });
   }
 
-  prepareResult(): void {
+  async prepareResult(): Promise<void> {
     this.isPreparing = true;
     this.errorMessage = '';
-    const proposal = this.coordinator.prepareProposal(this.playlistName, this.mergeMode);
-    if (!proposal && this.coordinator.canPrepareResult()) {
-      this.errorMessage = this.mergeMode === 'intersection'
-        ? 'No songs are shared by everyone. Remove a participant or select different playlists.'
-        : 'The selected playlists do not contain any usable Spotify tracks.';
+    try {
+      const proposal = await this.coordinator.prepareProposal(this.playlistName, this.mergeMode);
+      if (!proposal && this.coordinator.canPrepareResult()) {
+        this.errorMessage = this.mergeMode === 'intersection'
+          ? 'No songs are shared by everyone. Remove a participant or select different playlists.'
+          : 'The selected playlists do not contain any usable Spotify tracks.';
+      }
+    } catch (error) {
+      this.errorMessage = this.describeError(error);
+    } finally {
+      this.isPreparing = false;
     }
-    this.isPreparing = false;
   }
 
   updateProposalName(): void {
     if (!this.proposal) return;
-    this.coordinator.prepareProposal(this.playlistName, this.mergeMode);
+    void this.refreshProposal();
+  }
+
+  private async refreshProposal(): Promise<void> {
+    try {
+      await this.coordinator.prepareProposal(this.playlistName, this.mergeMode);
+    } catch (error) {
+      this.errorMessage = this.describeError(error);
+    }
   }
 
   async execute(): Promise<void> {

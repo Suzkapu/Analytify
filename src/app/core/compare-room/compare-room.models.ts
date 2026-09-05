@@ -46,6 +46,7 @@ export interface CompareParticipant {
   tracks: CompareTrack[];
   dataSource?: 'local' | 'cloud' | 'spotify';
   approvedProposalId?: string;
+  approvedProposalHash?: string;
   result?: CompareSaveResult;
   isMainProfile?: boolean;
   error?: string;
@@ -80,6 +81,7 @@ export interface CompareSaveResult {
 
 export interface CompareMergeProposal {
   id: string;
+  contentHash: string;
   name: string;
   description: string;
   descriptionsByParticipant?: Record<string, string>;
@@ -91,21 +93,27 @@ export interface CompareMergeProposal {
 }
 
 export type CompareRoomMessage =
-  | {type: 'join-request'; invitationId: string; invitationSecret: string; participantId: string}
-  | {type: 'join-accepted'; participantId: string}
-  | {type: 'join-rejected'; participantId: string; reason: string}
+  | {type: 'invitation-claimed'; invitationId: string; participantId: string}
   | {type: 'participant-state'; participant: CompareParticipant}
   | {type: 'participant-track-chunk'; participantId: string; tracks: CompareTrack[]}
   | {type: 'participant-tracks-complete'; participant: CompareParticipant; total: number}
   | {type: 'remove-participant'; participantId: string}
   | {type: 'merge-proposal'; proposal: CompareMergeProposal}
   | {type: 'merge-proposal-cancelled'}
-  | {type: 'proposal-approval'; participantId: string; proposalId: string}
+  | {type: 'proposal-approval'; participantId: string; proposalId: string; contentHash: string}
   | {type: 'create-playlist-start'; proposal: CompareMergeProposal}
   | {type: 'create-playlist-track-chunk'; proposalId: string; tracks: CompareTrack[]}
   | {type: 'create-playlist-commit'; proposalId: string}
   | {type: 'save-result'; participantId: string; result: CompareSaveResult}
   | {type: 'room-closed'};
+
+export interface CompareRoomEnvelope {
+  id: number;
+  senderParticipantId: string;
+  senderRole: 'host' | 'guest';
+  sequence: number;
+  message: CompareRoomMessage;
+}
 
 export interface SpotifyTransientSession {
   accessToken: string;

@@ -75,6 +75,23 @@ export class SupabaseService {
     });
   }
 
+  /** Creates an authenticated database identity for collaboration without
+   * enabling Cloud Backup or uploading Spotify data. */
+  async ensureCollaborationSession(): Promise<string> {
+    const current = await this.client.auth.getSession();
+    if (current.error) throw current.error;
+    let session = current.data.session;
+    if (!session) {
+      const signedIn = await this.client.auth.signInAnonymously();
+      if (signedIn.error || !signedIn.data.session) {
+        throw signedIn.error || new Error('Could not create a private collaboration session.');
+      }
+      session = signedIn.data.session;
+    }
+    await this.client.realtime.setAuth(session.access_token);
+    return session.user.id;
+  }
+
   /** Ensures the Supabase session is still valid, refreshing if needed.
    *  Prevents "No API key found" errors caused by expired JWTs during long syncs. */
   private async ensureSession(): Promise<void> {

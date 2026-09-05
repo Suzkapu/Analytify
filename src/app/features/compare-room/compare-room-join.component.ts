@@ -159,7 +159,7 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
   async approve(): Promise<void> {
     if (!this.proposal || !this.participant) return;
     try {
-      await this.guest.approve(this.proposal.id);
+      await this.guest.approve(this.proposal.id, this.proposal.contentHash);
       this.hasApproved = true;
     } catch (error) {
       this.fail(this.describeError(error));
