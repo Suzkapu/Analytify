@@ -4,6 +4,7 @@ import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
+import { ProfileImageService } from '@core/profile/profile-image.service';
 import {PlaylistShareAutoSyncService} from '@core/sharing/playlist-share-auto-sync.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {AdminService} from '@core/admin/admin.service';
@@ -61,6 +62,7 @@ export class HeaderComponent implements OnInit {
     private storageService: StorageService,
     private supabaseService: SupabaseService,
     private spotifyDataService: SpotifyDataService,
+    private profileImageService: ProfileImageService,
     private playlistShareAutoSync: PlaylistShareAutoSyncService,
     private adminService: AdminService,
     private pushNotifications: PushNotificationService,
@@ -79,9 +81,26 @@ export class HeaderComponent implements OnInit {
   async loadUserProfile() {
     const userId = this.authService.getUserId() || 'anonymous';
     const cached = this.storageService.getItem(`${userId}_profile_pic`);
-    if (cached) {
-      this.profilePicUrl = cached;
+    const meta = this.profileImageService.getMetadata(userId);
+
+    // If marked as permanently absent, show quiet fallback without re-fetching
+    if (meta?.isPermanentlyAbsent) {
+      this.profilePicUrl = null;
       return;
+    }
+
+    // If in failure cooldown, provide quiet fallback
+    if (meta && meta.failureCount >= this.profileImageService.maxRetries && meta.lastFailureAt && Date.now() - meta.lastFailureAt < this.profileImageService.cooldownMs) {
+      this.profilePicUrl = null;
+      return;
+    }
+
+    if (cached) {
+      if (!this.profileImageService.isUrlExpired(cached, meta?.cachedAt, meta?.expiresAt)) {
+        this.profilePicUrl = cached;
+        return;
+      }
+      // Expired URL: fall through to refresh from provider
     }
 
     const supabaseUserId = this.authService.getSupabaseUserId();
@@ -89,6 +108,7 @@ export class HeaderComponent implements OnInit {
       const dbProfile = await this.supabaseService.loadUserProfile(supabaseUserId);
       if (dbProfile?.profile_pic_url) {
         this.storageService.setItem(`${userId}_profile_pic`, dbProfile.profile_pic_url);
+        this.profileImageService.saveProfileImage(userId, dbProfile.profile_pic_url, 'supabase');
         this.profilePicUrl = dbProfile.profile_pic_url;
         return;
       }
@@ -96,7 +116,7 @@ export class HeaderComponent implements OnInit {
 
     this.spotifyDataService.getCurrentUser().subscribe({
       next: (user: any) => {
-        const pic = user.images && user.images[0] ? user.images[0].url : '';
+        const pic = user?.images && user.images[0] ? user.images[0].url : '';
         this.profilePicUrl = pic || null;
         if (user?.id) {
           this.storageService.setItem(`${userId}_spotify_profile_id`, user.id, false);
@@ -104,8 +124,10 @@ export class HeaderComponent implements OnInit {
         }
         if (pic) {
           this.storageService.setItem(`${userId}_profile_pic`, pic);
+          this.profileImageService.saveProfileImage(userId, pic, 'spotify');
         } else {
           this.storageService.removeItem(`${userId}_profile_pic`);
+          this.profileImageService.setPermanentlyAbsent(userId);
         }
       },
       error: (err) => console.error('Failed to load user profile:', err)
@@ -117,6 +139,13 @@ export class HeaderComponent implements OnInit {
     this.profilePicUrl = null;
     const userId = this.authService.getUserId() || 'anonymous';
     this.storageService.removeItem(`${userId}_profile_pic`);
+
+    this.profileImageService.handleImageError(failedUrl, userId).then(recoveredUrl => {
+      if (recoveredUrl) {
+        this.profilePicUrl = recoveredUrl;
+      }
+    });
+
     if (this.attemptedProfileImageRecovery) return;
 
     this.attemptedProfileImageRecovery = true;
@@ -126,6 +155,7 @@ export class HeaderComponent implements OnInit {
         if (!refreshedUrl || refreshedUrl === failedUrl) return;
         this.profilePicUrl = refreshedUrl;
         this.storageService.setItem(`${userId}_profile_pic`, refreshedUrl);
+        this.profileImageService.saveProfileImage(userId, refreshedUrl, 'spotify');
         if (user?.id) {
           this.storageService.setItem(`${userId}_spotify_profile_id`, user.id, false);
           this.storageService.setItem(`${userId}_spotify_profile_id_verified`, 'true', false);

@@ -233,11 +233,14 @@ export class SpotifyAuthService {
 
     this.storageService.setItem(this.connectionModeKey, 'personal_pkce', false);
     this.storageService.setItem(this.personalClientIdKey, request.clientId, false);
-    this.setUserId(effectiveSpotifyId);
     this.storeSpotifyTokenResponse(token, false);
     const localSpotifyId = this.getUserId() || effectiveSpotifyId;
     const profileImage = profile.images?.[0]?.url || '';
-    this.storageService.setItem(`${localSpotifyId}_profile_pic`, profileImage, false);
+    if (profileImage) {
+      this.storageService.setItem(`${localSpotifyId}_profile_pic`, profileImage, false);
+    } else {
+      this.storageService.removeItem(`${localSpotifyId}_profile_pic`);
+    }
     this.storageService.setItem(`${localSpotifyId}_display_name`, profile.display_name || '', false);
     // account_id is the durable cache identity for newer personal-app
     // sessions, while playlist.owner.id still uses the public Spotify profile
