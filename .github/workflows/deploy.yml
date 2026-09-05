@@ -156,7 +156,7 @@ jobs:
           DEPLOY_TARGET: ${{ secrets.TARGET_DIR }}
           ADMIN_SPOTIFY_IDS: ${{ secrets.ADMIN_SPOTIFY_IDS }}
           SPOTIFY_TOKEN_ENCRYPTION_KEY: ${{ secrets.SPOTIFY_TOKEN_ENCRYPTION_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SERVICE_ROLE_KEY }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
         run: bash scripts/deploy.sh
 

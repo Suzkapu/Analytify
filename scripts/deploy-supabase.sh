@@ -99,4 +99,13 @@ supabase functions deploy song-league-notifications \
   --project-ref "$SUPABASE_PROJECT_REF" \
   --use-api
 
+if [[ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" && -n "${GITHUB_ENV:-}" ]]; then
+  api_keys_json="$(curl --fail-with-body --silent --show-error \
+    --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+    "https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_REF}/api-keys")"
+  service_role_key="$(node -e 'const keys = JSON.parse(process.argv[1]); const item = keys.find(k => k.name === "service_role" || k.name === "service_role key"); if (!item?.api_key) throw new Error("service_role key not found in Supabase API keys response"); console.log(item.api_key);' "$api_keys_json")"
+  echo "::add-mask::${service_role_key}"
+  echo "SUPABASE_SERVICE_ROLE_KEY=${service_role_key}" >> "$GITHUB_ENV"
+fi
+
 echo "Supabase migrations, secrets, and Edge Functions deployed successfully."
