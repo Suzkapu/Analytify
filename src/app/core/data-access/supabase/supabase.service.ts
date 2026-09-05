@@ -1493,7 +1493,7 @@ export class SupabaseService {
       if (error) throw error;
       return data || [];
     } catch (e) {
-      console.error('[SupabaseService] Failed to load user cache from database:', e);
+      console.info('[SupabaseService] No user cache found in database:', e);
       return [];
     }
   }

@@ -80,6 +80,15 @@ describe('StorageService', () => {
     expect(service.getItem('spotify-user_playlist-1')).toBeNull();
   });
 
+  it('handles cloud cache load failures gracefully without throwing', async () => {
+    supabase.loadUserCache.and.rejectWith(new Error('504 Gateway Timeout'));
+
+    const restored = await service.restoreItemsFromCloud(['spotify-user_playlist-1']);
+
+    expect(restored).toBe(0);
+    expect(service.getItem('spotify-user_playlist-1')).toBeNull();
+  });
+
   it('updates and removes values synchronously', () => {
     service.setItem('local-key', 'value', false);
     expect(service.getItem('local-key')).toBe('value');

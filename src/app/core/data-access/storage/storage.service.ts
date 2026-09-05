@@ -264,17 +264,22 @@ export class StorageService {
     const backupActive = this.inMemoryCache.get(`${supabaseUserId}_backup_active`) === 'true';
     if (!backupActive) return 0;
 
-    const entries = await this.supabaseService.loadUserCache(supabaseUserId, uniqueKeys);
-    // A feature may have moved on to a newer route selection or started a
-    // Spotify fallback while this request was in flight. Never let that late
-    // cloud response overwrite the newer source.
-    if (!canApply()) return 0;
-    if (entries.length > 0) beforeApply();
-    entries.forEach(entry => this.setItem(entry.key, entry.value, false));
-    if (entries.length > 0) {
-      console.log(`[StorageService] Restored ${entries.length} requested cache keys from Supabase.`);
+    try {
+      const entries = await this.supabaseService.loadUserCache(supabaseUserId, uniqueKeys);
+      // A feature may have moved on to a newer route selection or started a
+      // Spotify fallback while this request was in flight. Never let that late
+      // cloud response overwrite the newer source.
+      if (!canApply()) return 0;
+      if (entries.length > 0) beforeApply();
+      entries.forEach(entry => this.setItem(entry.key, entry.value, false));
+      if (entries.length > 0) {
+        console.log(`[StorageService] Restored ${entries.length} requested cache keys from Supabase.`);
+      }
+      return entries.length;
+    } catch (e) {
+      console.info('[StorageService] No cache found in cloud:', e);
+      return 0;
     }
-    return entries.length;
   }
 
   /** Clears ALL app data (appData + statsHistory) and the in-memory cache. */
