@@ -86,7 +86,7 @@ remote="${DEPLOY_USER}@${DEPLOY_HOST}"
 target_root="${DEPLOY_TARGET%/}"
 release_root="$(dirname "${target_root}")/analytify-releases"
 web_release="${release_root}/web-${deploy_commit_sha}"
-worker_root="$(dirname "${target_root}")/analytify-sync"
+worker_root="/var/lib/analytify-sync"
 worker_release="${worker_root}/releases/${deploy_commit_sha}"
 worker_current="${worker_root}/current"
 
@@ -167,7 +167,7 @@ if [[ -n "$deploy_commit_sha" ]]; then
 fi
 
 echo "Preparing immutable release directories on Oracle Server..."
-$ssh_command "$remote" "mkdir -p '${web_release}' '${worker_release}' '${worker_root}'"
+$ssh_command "$remote" "mkdir -p '${web_release}' && sudo -n install -d -o '${DEPLOY_USER}' -m 0750 '${worker_root}' '${worker_root}/releases'"
 deploy_with_retry "dist/spoti-front/" "${web_release}/" true
 deploy_with_retry "services/sync-service/" "${worker_release}/" true
 deploy_private_file_with_retry "$allowlist_file" "${worker_root}/.admin-spotify-ids"
