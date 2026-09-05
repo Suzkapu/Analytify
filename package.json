@@ -20,7 +20,7 @@
     "performance:check": "node scripts/check-performance-contracts.mjs",
     "api-usage:check": "node scripts/check-api-on-demand.mjs",
     "admin:check": "node scripts/check-admin-control-plane.mjs",
-    "deployment-pipeline:check": "node scripts/check-deployment-pipeline.mjs",
+    "deployment-pipeline:check": "node --test scripts/production-index-validator.test.mjs && node scripts/check-deployment-pipeline.mjs",
     "sync-service:install": "npm --prefix services/sync-service ci --omit=dev",
     "sync-service:deps:check": "node scripts/check-sync-service-dependencies.mjs",
     "sync-service:check": "node --test services/sync-service/spotify-url-validator.test.js services/sync-service/date-utils.test.js services/sync-service/task-registry.test.js services/sync-service/scheduler.test.js services/sync-service/credential-store.test.js services/sync-service/spotify-client.test.js services/sync-service/push-dispatcher.test.js services/sync-service/tasks/history-task.test.js services/sync-service/tasks/stats-task.test.js services/sync-service/tasks/shared-playlists-task.test.js services/sync-service/runtime-dependencies.test.js",
