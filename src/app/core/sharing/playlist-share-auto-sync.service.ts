@@ -5,6 +5,7 @@ import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.
 import {PlaylistSharingService} from './playlist-sharing.service';
 import {sharedPlaylistSpotifyName} from './playlist-sharing-names';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {SessionGeneration, SessionLifecycleService} from '@core/auth/session-lifecycle.service';
 
 const console = createScopedLogger('Playlist Share Sync');
 
@@ -33,7 +34,8 @@ export class PlaylistShareAutoSyncService {
   constructor(
     private auth: SpotifyAuthService,
     private sharing: PlaylistSharingService,
-    private spotify: ParticipantSpotifyService
+    private spotify: ParticipantSpotifyService,
+    private sessionLifecycle: SessionLifecycleService
   ) {
     this.auth.logout$.subscribe(() => this.stop());
   }
@@ -64,32 +66,36 @@ export class PlaylistShareAutoSyncService {
       this.syncRequested = true;
       return this.syncPromise;
     }
-    this.syncPromise = this.performPendingSyncs().finally(() => {
+    const generation = this.sessionLifecycle.capture();
+    this.syncPromise = this.sessionLifecycle.track(this.performPendingSyncs(generation), generation).finally(() => {
       this.lastSyncAt = Date.now();
       this.syncPromise = null;
     });
     return this.syncPromise;
   }
 
-  private async performPendingSyncs(): Promise<void> {
+  private async performPendingSyncs(generation: SessionGeneration): Promise<void> {
     do {
       this.syncRequested = false;
-      await this.performSync();
-    } while (this.syncRequested);
+      await this.performSync(generation);
+    } while (this.syncRequested && this.sessionLifecycle.isCurrent(generation));
   }
 
-  private async performSync(): Promise<void> {
+  private async performSync(generation: SessionGeneration): Promise<void> {
+    if (!this.sessionLifecycle.isCurrent(generation)) return;
     if (!this.auth.isAuthenticated() || !this.auth.getSupabaseUserId()) return;
     await this.auth.ensureInitialSync();
+    if (!this.sessionLifecycle.isCurrent(generation)) return;
     if (!this.auth.getSupabaseUserId()) return;
-    await this.syncReceivedSpotifyCopies();
+    await this.syncReceivedSpotifyCopies(generation);
   }
 
-  private async syncReceivedSpotifyCopies(): Promise<void> {
+  private async syncReceivedSpotifyCopies(generation: SessionGeneration): Promise<void> {
     const [receivedShares, downloads] = await Promise.all([
       this.sharing.listReceivedShares(),
       this.sharing.listReceivedDownloads()
     ]);
+    if (!this.sessionLifecycle.isCurrent(generation)) return;
     if (receivedShares.length === 0 || downloads.length === 0) return;
 
     const downloadByShareId = new Map(downloads.map(download => [download.shareId, download]));
@@ -101,6 +107,7 @@ export class PlaylistShareAutoSyncService {
       let leaseToken: string | null = null;
       try {
         const details = await this.sharing.loadShare(share.id);
+        if (!this.sessionLifecycle.isCurrent(generation)) return;
         if (!details.download || details.download.appliedRevision >= details.share.revision) continue;
         leaseToken = await this.sharing.claimDownloadSync(
           details.share.id,
@@ -108,6 +115,10 @@ export class PlaylistShareAutoSyncService {
           details.download.appliedRevision
         );
         if (!leaseToken) continue;
+        if (!this.sessionLifecycle.isCurrent(generation)) {
+          await this.sharing.releaseDownloadSync(share.id, leaseToken);
+          return;
+        }
         if (!accessToken) accessToken = await this.getUsableAccessToken();
         const description = `Shared by ${details.share.ownerDisplayName} through Analytify. Share ID: ${details.share.id}`.slice(0, 300);
         const result = await this.spotify.syncPlaylist(
@@ -116,8 +127,13 @@ export class PlaylistShareAutoSyncService {
           details.download.spotifyPlaylistUrl,
           sharedPlaylistSpotifyName(details.share.playlistName, details.share.ownerDisplayName),
           description,
-          details.tracks
+          details.tracks,
+          generation.signal
         );
+        if (!this.sessionLifecycle.isCurrent(generation)) {
+          await this.sharing.releaseDownloadSync(share.id, leaseToken);
+          return;
+        }
         if (!result.success || !result.playlistId) {
           throw new Error(result.error || 'Spotify could not update the downloaded playlist.');
         }

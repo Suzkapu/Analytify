@@ -8,6 +8,7 @@ import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {PersonalSpotifyAuthRequest, SpotifyConnectionMode} from './spotify-auth.models';
 import {TRANSIENT_SPOTIFY_REQUEST} from '@core/compare-room/spotify-request-context';
+import {SessionLifecycleService} from './session-lifecycle.service';
 
 const console = createScopedLogger('Authentication');
 
@@ -55,7 +56,8 @@ export class SpotifyAuthService {
   constructor(
     private storageService: StorageService,
     private supabaseService: SupabaseService,
-    private http: HttpClient
+    private http: HttpClient,
+    private sessionLifecycle: SessionLifecycleService
   ) {
     this.storageService.initFromDB().then(async () => {
       // The callback owns the one-time PKCE code exchange. Starting session
@@ -74,12 +76,13 @@ export class SpotifyAuthService {
 
   ensureInitialSync(): Promise<void> {
     if (!this.initialSyncPromise) {
-      this.initialSyncPromise = this._ensureInitialSync();
+      const generation = this.sessionLifecycle.capture();
+      this.initialSyncPromise = this.sessionLifecycle.track(this._ensureInitialSync(generation), generation);
     }
     return this.initialSyncPromise;
   }
 
-  private async _ensureInitialSync(): Promise<void> {
+  private async _ensureInitialSync(generation: {id: number; signal: AbortSignal}): Promise<void> {
     const supabaseUserId = this.getSupabaseUserId();
     if (!supabaseUserId) return;
 
@@ -88,6 +91,7 @@ export class SpotifyAuthService {
     await this.syncBackupActiveStatus().catch(err => {
       console.warn('[Auth] Initial sync failed:', err);
     });
+    this.assertCurrentSession(generation);
   }
 
   private get accessToken(): string | null {
@@ -98,6 +102,8 @@ export class SpotifyAuthService {
     if (promptConsent) {
       // A user-initiated login must not inherit a Supabase session whose
       // Spotify provider token has expired or was never persisted.
+      this.logout$.next();
+      await this.sessionLifecycle.invalidateAndDrain();
       await this.clearSupabaseSession();
       this.clearSpotifyCredentials();
     }
@@ -178,6 +184,7 @@ export class SpotifyAuthService {
   }
 
   async handlePersonalAppCallback(code: string, state: string): Promise<string> {
+    let generation = this.sessionLifecycle.capture();
     const rawRequest = sessionStorage.getItem(this.personalRequestKey);
     if (!rawRequest) {
       throw new Error('The personal Spotify authorization request is missing or expired.');
@@ -207,19 +214,20 @@ export class SpotifyAuthService {
       .set('code', code)
       .set('redirect_uri', environment.personalSpotifyRedirectUri)
       .set('code_verifier', request.verifier);
-    const token = await firstValueFrom(this.http.post<any>(
-      'https://accounts.spotify.com/api/token',
-      tokenBody.toString(),
+    const token = await this.sessionLifecycle.track(firstValueFrom(this.http.post<any>(
+      'https://accounts.spotify.com/api/token', tokenBody.toString(),
       {headers: new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'})}
-    ));
+    )), generation);
+    this.assertCurrentSession(generation);
     if (!token?.access_token || !token?.refresh_token) {
       throw new Error('Spotify did not return the tokens required for a persistent session.');
     }
 
-    const profile = await firstValueFrom(this.http.get<any>(`${environment.spotifyUrl}/me`, {
+    const profile = await this.sessionLifecycle.track(firstValueFrom(this.http.get<any>(`${environment.spotifyUrl}/me`, {
       headers: new HttpHeaders({Authorization: `Bearer ${token.access_token}`}),
       context: new HttpContext().set(TRANSIENT_SPOTIFY_REQUEST, true)
-    }));
+    })), generation);
+    this.assertCurrentSession(generation);
     const returnedSpotifyId = this.spotifyAccountIdentity(profile);
     if (!returnedSpotifyId) {
       throw new Error('Spotify did not return a usable profile.');
@@ -230,15 +238,21 @@ export class SpotifyAuthService {
     // Existing profiles retain their established key so their local and cloud
     // caches do not split when Spotify returns the newer stable account_id.
     const effectiveSpotifyId = request.expectedSpotifyId || returnedSpotifyId;
+    const currentSpotifyId = this.getUserId();
+    if (currentSpotifyId && currentSpotifyId !== effectiveSpotifyId) {
+      await this.sessionLifecycle.invalidateAndDrain();
+      generation = this.sessionLifecycle.capture();
+    }
 
     if (this.getSupabaseUserId()) {
-      const rotatedRefreshToken = await this.registerCurrentSpotifyCredentials(profile, {
+      const rotatedRefreshToken = await this.sessionLifecycle.track(this.registerCurrentSpotifyCredentials(profile, {
         accessToken: token.access_token,
         refreshToken: token.refresh_token,
         connectionMode: 'personal_pkce',
         clientId: request.clientId,
         spotifyId: effectiveSpotifyId
-      });
+      }), generation);
+      this.assertCurrentSession(generation);
       if (rotatedRefreshToken) token.refresh_token = rotatedRefreshToken;
     }
 
@@ -285,8 +299,14 @@ export class SpotifyAuthService {
 
 
   exchangeSupabaseCodeForSession(code: string): Observable<any> {
-    return from(this.supabaseService.client.auth.exchangeCodeForSession(code)).pipe(
+    const generation = this.sessionLifecycle.capture();
+    const exchange = this.sessionLifecycle.track(
+      this.supabaseService.client.auth.exchangeCodeForSession(code),
+      generation
+    );
+    return from(exchange).pipe(
       tap(({ data, error }: any) => {
+        this.assertCurrentSession(generation);
         if (error) throw error;
         const session = data?.session;
         if (session) {
@@ -311,7 +331,7 @@ export class SpotifyAuthService {
 
             const displayName = session.user.user_metadata?.['full_name'] || session.user.user_metadata?.['name'] || null;
             const profilePicUrl = session.user.user_metadata?.['avatar_url'] || null;
-            this.initialSyncPromise = (async () => {
+            this.initialSyncPromise = this.sessionLifecycle.track((async () => {
               try {
                 if (session.provider_refresh_token) {
                   await this.registerCurrentSpotifyCredentials().catch(error => {
@@ -322,7 +342,8 @@ export class SpotifyAuthService {
               } catch (err) {
                 console.warn('Failed during login synchronization setup:', err);
               }
-            })();
+              this.assertCurrentSession(generation);
+            })(), generation);
           }
         }
       }),
@@ -334,8 +355,14 @@ export class SpotifyAuthService {
   }
 
   handleCallbackSession(): Observable<any> {
-    return from(this.supabaseService.client.auth.getSession()).pipe(
+    const generation = this.sessionLifecycle.capture();
+    const sessionRequest = this.sessionLifecycle.track(
+      this.supabaseService.client.auth.getSession(),
+      generation
+    );
+    return from(sessionRequest).pipe(
       tap(({ data: { session } }: any) => {
+        this.assertCurrentSession(generation);
         if (session) {
           if (!session.provider_token) {
             throw new Error('Spotify provider token missing from OAuth callback. Please restart login.');
@@ -358,7 +385,7 @@ export class SpotifyAuthService {
 
             const displayName = session.user.user_metadata?.['full_name'] || session.user.user_metadata?.['name'] || null;
             const profilePicUrl = session.user.user_metadata?.['avatar_url'] || null;
-            this.initialSyncPromise = (async () => {
+            this.initialSyncPromise = this.sessionLifecycle.track((async () => {
               try {
                 if (session.provider_refresh_token) {
                   await this.registerCurrentSpotifyCredentials().catch(error => {
@@ -369,7 +396,8 @@ export class SpotifyAuthService {
               } catch (err) {
                 console.warn('Failed during callback login synchronization setup:', err);
               }
-            })();
+              this.assertCurrentSession(generation);
+            })(), generation);
           }
         } else {
           throw new Error('No active session found.');
@@ -416,8 +444,11 @@ export class SpotifyAuthService {
   }
 
   private async _restoreSessionFromSupabase(): Promise<boolean> {
+    const generation = this.sessionLifecycle.capture();
     try {
-      const { data: { session }, error } = await this.supabaseService.client.auth.getSession();
+      const sessionRequest = this.supabaseService.client.auth.getSession();
+      const { data: { session }, error } = await this.sessionLifecycle.track(sessionRequest, generation);
+      if (!this.sessionLifecycle.isCurrent(generation)) return false;
       if (error) throw error;
       
       if (session) {
@@ -464,6 +495,7 @@ export class SpotifyAuthService {
     }
 
     if (this.isPersonalAppConnection()) {
+      const generation = this.sessionLifecycle.capture();
       const refreshToken = this.storageService.getItem('spotifyRefreshToken');
       const clientId = this.getPersonalSpotifyClientId();
       if (!refreshToken || !clientId) {
@@ -478,13 +510,14 @@ export class SpotifyAuthService {
         body.toString(),
         {headers: new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'})}
       ).pipe(
-        tap(response => this.storeSpotifyTokenResponse(response)),
+        tap(response => this.storeSpotifyTokenResponse(response, true, generation)),
         finalize(() => this.refreshObservable = null),
         shareReplay(1)
       );
       return this.refreshObservable;
     }
 
+    const generation = this.sessionLifecycle.capture();
     const refreshViaSupabase$ = defer(
       () => from(this.supabaseService.client.auth.refreshSession())
     ).pipe(
@@ -496,7 +529,7 @@ export class SpotifyAuthService {
             access_token: session.provider_token,
             refresh_token: session.provider_refresh_token,
             expires_in: 3600
-          });
+          }, true, generation);
           return from(Promise.resolve({ access_token: session.provider_token }));
         }
         throw new Error('No Spotify provider token in refreshed Supabase session');
@@ -522,19 +555,33 @@ export class SpotifyAuthService {
     return this.refreshObservable;
   }
 
-  private storeSpotifyTokenResponse(response: any, registerCloudCredential = true): void {
+  private storeSpotifyTokenResponse(
+    response: any,
+    registerCloudCredential = true,
+    generation = this.sessionLifecycle.capture()
+  ): void {
+    if (!this.sessionLifecycle.isCurrent(generation)) return;
     if (!response?.access_token) return;
 
     this.storageService.setItem(this.storageKey, response.access_token);
     if (response.refresh_token) {
       this.storageService.setItem('spotifyRefreshToken', response.refresh_token);
       if (registerCloudCredential && this.getSupabaseUserId()) {
-        void this.registerCurrentSpotifyCredentials().catch(() => {});
+        this.sessionLifecycle.track(
+          this.registerCurrentSpotifyCredentials(),
+          generation
+        ).catch(() => {});
       }
     }
 
     const expiresAt = Date.now() + (response.expires_in || 3600) * 1000;
     this.storageService.setItem('spotifyTokenExpiresAt', expiresAt.toString());
+  }
+
+  private assertCurrentSession(generation: {id: number; signal: AbortSignal}): void {
+    if (!this.sessionLifecycle.isCurrent(generation)) {
+      throw new DOMException('Session ended.', 'AbortError');
+    }
   }
 
   private clearSpotifyCredentials(): void {
@@ -597,6 +644,9 @@ export class SpotifyAuthService {
   }
 
   async logout(): Promise<void> {
+    // Stop subscriptions and timers before waiting for in-flight generation A.
+    this.logout$.next();
+    await this.sessionLifecycle.invalidateAndDrain();
     const supabaseUserId = this.getSupabaseUserId();
     await this.unlinkCurrentPushDevice();
     if (this.isAnonymousCloudIdentity()) {
@@ -622,10 +672,12 @@ export class SpotifyAuthService {
     }
     this.clearAnalytifySessionStorage();
     this.clearAllCookies();
-    this.logout$.next();
+    await this.sessionLifecycle.drainCurrent();
   }
 
   async clearCacheAndLogout(): Promise<void> {
+    this.logout$.next();
+    await this.sessionLifecycle.invalidateAndDrain();
     await this.unlinkCurrentPushDevice();
     if (this.isAnonymousCloudIdentity()) {
       await this.deleteAnonymousCloudAccount();
@@ -638,7 +690,7 @@ export class SpotifyAuthService {
     }
     this.clearAnalytifySessionStorage();
     this.clearAllCookies();
-    this.logout$.next();
+    await this.sessionLifecycle.drainCurrent();
   }
 
   private async unlinkCurrentPushDevice(): Promise<void> {

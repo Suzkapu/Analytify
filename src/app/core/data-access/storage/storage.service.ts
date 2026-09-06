@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {SessionLifecycleService} from '@core/auth/session-lifecycle.service';
 
 const console = createScopedLogger('Local Storage');
 
@@ -18,7 +19,10 @@ export class StorageService {
   private initPromise: Promise<void> | null = null;
   private cloudWriteQueues = new Map<string, Promise<void>>();
 
-  constructor(private supabaseService: SupabaseService) {}
+  constructor(
+    private supabaseService: SupabaseService,
+    private sessionLifecycle: SessionLifecycleService
+  ) {}
 
   // ─── IndexedDB bootstrap ───────────────────────────────────────────────────
 
@@ -255,6 +259,7 @@ export class StorageService {
     canApply: () => boolean = () => true,
     beforeApply: () => void = () => {}
   ): Promise<number> {
+    const generation = this.sessionLifecycle.capture();
     const uniqueKeys = Array.from(new Set(keys.filter(key => !!key)));
     if (uniqueKeys.length === 0) return 0;
 
@@ -265,11 +270,14 @@ export class StorageService {
     if (!backupActive) return 0;
 
     try {
-      const entries = await this.supabaseService.loadUserCache(supabaseUserId, uniqueKeys);
+      const entries = await this.sessionLifecycle.track(
+        this.supabaseService.loadUserCache(supabaseUserId, uniqueKeys),
+        generation
+      );
       // A feature may have moved on to a newer route selection or started a
       // Spotify fallback while this request was in flight. Never let that late
       // cloud response overwrite the newer source.
-      if (!canApply()) return 0;
+      if (!this.sessionLifecycle.isCurrent(generation) || !canApply()) return 0;
       if (entries.length > 0) beforeApply();
       entries.forEach(entry => this.setItem(entry.key, entry.value, false));
       if (entries.length > 0) {
@@ -294,21 +302,55 @@ export class StorageService {
   // ─── IndexedDB appData helpers (fire-and-forget async) ───────────────────
 
   private persistKV(key: string, value: string): void {
-    this.getDB().then(db => {
+    const generation = this.sessionLifecycle.capture();
+    const write = this.getDB().then(db => new Promise<void>(resolve => {
+      if (!this.sessionLifecycle.isCurrent(generation)) {
+        resolve();
+        return;
+      }
       const tx    = db.transaction('appData', 'readwrite');
+      const finish = () => {
+        generation.signal.removeEventListener('abort', abort);
+        resolve();
+      };
+      const abort = () => {
+        try { tx.abort(); } catch {}
+      };
+      generation.signal.addEventListener('abort', abort, {once: true});
+      tx.oncomplete = finish;
+      tx.onabort = finish;
+      tx.onerror = finish;
       const store = tx.objectStore('appData');
       const req   = store.put({ key, value });
       req.onerror = (e: any) => console.warn('[StorageService] IndexedDB put request failed:', e.target.error);
-    }).catch(err => console.warn('[StorageService] IndexedDB write failed:', err));
+    })).catch(err => console.warn('[StorageService] IndexedDB write failed:', err));
+    this.sessionLifecycle.track(write, generation);
   }
 
   private deleteKV(key: string): void {
-    this.getDB().then(db => {
+    const generation = this.sessionLifecycle.capture();
+    const removal = this.getDB().then(db => new Promise<void>(resolve => {
+      if (!this.sessionLifecycle.isCurrent(generation)) {
+        resolve();
+        return;
+      }
       const tx    = db.transaction('appData', 'readwrite');
+      const finish = () => {
+        generation.signal.removeEventListener('abort', abort);
+        resolve();
+      };
+      const abort = () => {
+        try { tx.abort(); } catch {}
+      };
+      generation.signal.addEventListener('abort', abort, {once: true});
+      tx.oncomplete = finish;
+      tx.onabort = finish;
+      tx.onerror = finish;
       const store = tx.objectStore('appData');
       const req   = store.delete(key);
       req.onerror = (e: any) => console.warn('[StorageService] IndexedDB delete request failed:', e.target.error);
-    }).catch(err => console.warn('[StorageService] IndexedDB delete failed:', err));
+    })).catch(err => console.warn('[StorageService] IndexedDB delete failed:', err));
+    this.sessionLifecycle.track(removal, generation);
   }
 
   private clearKV(): Promise<void> {
@@ -329,26 +371,46 @@ export class StorageService {
   // ─── Stats history (IndexedDB statsHistory store) ─────────────────────────
 
   saveStatsHistory(historyEntry: any): Promise<void> {
-    return this.getDB().then(db => new Promise<void>((resolve, reject) => {
-      const tx      = db.transaction('statsHistory', 'readwrite');
-      const store   = tx.objectStore('statsHistory');
-      const request = store.put(historyEntry);
-      request.onsuccess = () => resolve();
-      request.onerror   = (e: any) => reject(e.target.error);
-    })).catch(err => {
+    const generation = this.sessionLifecycle.capture();
+    const write = this.getDB().then(db => {
+      if (!this.sessionLifecycle.isCurrent(generation)) return;
+      return new Promise<void>((resolve, reject) => {
+        const tx      = db.transaction('statsHistory', 'readwrite');
+        const abort = () => {
+          try { tx.abort(); } catch {}
+        };
+        generation.signal.addEventListener('abort', abort, {once: true});
+        const store   = tx.objectStore('statsHistory');
+        const request = store.put(historyEntry);
+        request.onsuccess = () => {
+          generation.signal.removeEventListener('abort', abort);
+          resolve();
+        };
+        request.onerror   = (e: any) => {
+          generation.signal.removeEventListener('abort', abort);
+          reject(e.target.error);
+        };
+      });
+    }).catch(err => {
+      if (generation.signal.aborted) return;
       console.warn('IndexedDB failed to write stats history:', err);
       throw err;
     });
+    return this.sessionLifecycle.track(write, generation);
   }
 
   private enqueueCloudWrite(supabaseUserId: string, key: string, value: string): void {
+    const generation = this.sessionLifecycle.capture();
     const queueKey = `${supabaseUserId}:${key}`;
     const previousWrite = this.cloudWriteQueues.get(queueKey) || Promise.resolve();
     const nextWrite = previousWrite
       .catch(() => {
         // A failed older write must not block the newest value.
       })
-      .then(() => this.supabaseService.saveUserCache(supabaseUserId, key, value))
+      .then(() => {
+        if (!this.sessionLifecycle.isCurrent(generation)) return;
+        return this.supabaseService.saveUserCache(supabaseUserId, key, value);
+      })
       .catch(err => {
         console.warn('[StorageService] Failed to sync cache key to Supabase:', key, err);
       })
@@ -359,6 +421,7 @@ export class StorageService {
       });
 
     this.cloudWriteQueues.set(queueKey, nextWrite);
+    this.sessionLifecycle.track(nextWrite, generation);
   }
 
   getStatsHistory(userId: string, range: string): Promise<any[]> {

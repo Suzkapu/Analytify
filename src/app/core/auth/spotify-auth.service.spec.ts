@@ -209,6 +209,30 @@ describe('SpotifyAuthService', () => {
     expect(authClient.signInAnonymously).not.toHaveBeenCalled();
   });
 
+  it('does not let account A callback data repopulate storage after logout begins', async () => {
+    sessionStorage.setItem('analytify_personal_spotify_auth_request', JSON.stringify({
+      clientId: '12345678901234567890123456789012',
+      state: 'expected-state',
+      verifier: 'pkce-verifier',
+      returnUrl: '/stats',
+      expectedSpotifyId: null,
+      createdAt: Date.now()
+    }));
+    const callbackA = service.handlePersonalAppCallback('spotify-code', 'expected-state');
+    http.expectOne('https://accounts.spotify.com/api/token')
+      .flush({access_token: 'account-a-token', refresh_token: 'account-a-refresh', expires_in: 3600});
+    const profileA = await requestAfterMicrotasks('https://api.spotify.com/v1/me');
+
+    const logoutA = service.logout();
+    profileA.flush({id: 'account-a', display_name: 'Account A', images: []});
+
+    await expectAsync(callbackA).toBeRejectedWithError(DOMException, 'Session ended.');
+    await logoutA;
+    expect(values['spotifyUserId']).toBeUndefined();
+    expect(values['spotifyAccessToken']).toBeUndefined();
+    expect(values['spotifyRefreshToken']).toBeUndefined();
+  });
+
   it('rejects a personal-app callback with an invalid state before exchanging tokens', async () => {
     sessionStorage.setItem('analytify_personal_spotify_auth_request', JSON.stringify({
       clientId: '12345678901234567890123456789012', state: 'expected', verifier: 'verifier',

@@ -1,7 +1,8 @@
 import {HttpClient, HttpContext, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
-import {firstValueFrom, timer} from 'rxjs';
+import {firstValueFrom, fromEvent, Observable, timer} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 import {ComparePlaylist, CompareSaveResult, CompareTrack} from './compare-room.models';
 import {TRANSIENT_SPOTIFY_REQUEST} from './spotify-request-context';
 import {StorageService} from '@core/data-access/storage/storage.service';
@@ -101,19 +102,21 @@ export class ParticipantSpotifyService {
     existingPlaylistUrl: string | null,
     name: string,
     description: string,
-    tracks: CompareTrack[]
+    tracks: CompareTrack[],
+    signal?: AbortSignal
   ): Promise<CompareSaveResult> {
     let playlistId = existingPlaylistId;
     let playlistUrl = existingPlaylistUrl || undefined;
     let addedTracks = 0;
     try {
       if (playlistId) {
+        signal?.throwIfAborted();
         if (!this.hasAppliedMetadata(playlistId, name, description)) {
           await this.put(`/playlists/${encodeURIComponent(playlistId)}`, accessToken, {
             name,
             description,
             public: false
-          });
+          }, 0, signal);
           this.rememberAppliedMetadata(playlistId, name, description);
         }
       } else {
@@ -121,7 +124,7 @@ export class ParticipantSpotifyService {
           name,
           description,
           public: false
-        });
+        }, 0, signal);
         playlistId = playlist.id;
         playlistUrl = playlist.external_urls?.spotify;
         if (playlistId) this.rememberAppliedMetadata(playlistId, name, description);
@@ -130,11 +133,13 @@ export class ParticipantSpotifyService {
       if (!playlistId) throw new Error('Spotify did not return a playlist ID.');
       const uris = tracks.map(track => track.uri).filter(Boolean);
       const firstBatch = uris.slice(0, 100);
-      await this.put(`/playlists/${encodeURIComponent(playlistId)}/items`, accessToken, {uris: firstBatch});
+      signal?.throwIfAborted();
+      await this.put(`/playlists/${encodeURIComponent(playlistId)}/items`, accessToken, {uris: firstBatch}, 0, signal);
       addedTracks = firstBatch.length;
       for (let index = 100; index < uris.length; index += 100) {
         const batch = uris.slice(index, index + 100);
-        await this.post(`/playlists/${encodeURIComponent(playlistId)}/items`, accessToken, {uris: batch});
+        signal?.throwIfAborted();
+        await this.post(`/playlists/${encodeURIComponent(playlistId)}/items`, accessToken, {uris: batch}, 0, signal);
         addedTracks += batch.length;
       }
       return {
@@ -264,20 +269,38 @@ export class ParticipantSpotifyService {
     }
   }
 
-  private async post<T>(path: string, accessToken: string, body: any, attempt = 0): Promise<T> {
+  private async post<T>(
+    path: string, accessToken: string, body: any, attempt = 0, signal?: AbortSignal
+  ): Promise<T> {
     try {
-      return await firstValueFrom(this.http.post<T>(`${environment.spotifyUrl}${path}`, body, this.options(accessToken)));
+      const request = this.withAbort(
+        this.http.post<T>(`${environment.spotifyUrl}${path}`, body, this.options(accessToken)),
+        signal
+      );
+      return await firstValueFrom(request);
     } catch (error) {
-      return this.retry<T>(() => this.post<T>(path, accessToken, body, attempt + 1), error, attempt);
+      return this.retry<T>(() => this.post<T>(path, accessToken, body, attempt + 1, signal), error, attempt, signal);
     }
   }
 
-  private async put<T>(path: string, accessToken: string, body: any, attempt = 0): Promise<T> {
+  private async put<T>(
+    path: string, accessToken: string, body: any, attempt = 0, signal?: AbortSignal
+  ): Promise<T> {
     try {
-      return await firstValueFrom(this.http.put<T>(`${environment.spotifyUrl}${path}`, body, this.options(accessToken)));
+      const request = this.withAbort(
+        this.http.put<T>(`${environment.spotifyUrl}${path}`, body, this.options(accessToken)),
+        signal
+      );
+      return await firstValueFrom(request);
     } catch (error) {
-      return this.retry<T>(() => this.put<T>(path, accessToken, body, attempt + 1), error, attempt);
+      return this.retry<T>(() => this.put<T>(path, accessToken, body, attempt + 1, signal), error, attempt, signal);
     }
+  }
+
+  private withAbort<T>(request: Observable<T>, signal?: AbortSignal): Observable<T> {
+    if (!signal) return request;
+    signal.throwIfAborted();
+    return request.pipe(takeUntil(fromEvent(signal, 'abort')));
   }
 
   private options(accessToken: string) {
@@ -290,12 +313,17 @@ export class ParticipantSpotifyService {
     };
   }
 
-  private async retry<T>(operation: () => Promise<T>, error: unknown, attempt: number): Promise<T> {
+  private async retry<T>(
+    operation: () => Promise<T>,
+    error: unknown,
+    attempt: number,
+    signal?: AbortSignal
+  ): Promise<T> {
     if (!(error instanceof HttpErrorResponse) || error.status !== 429 || attempt >= 3) {
       throw error;
     }
     const retryAfter = Math.max(1, Number(error.headers.get('Retry-After') || 2));
-    await firstValueFrom(timer(retryAfter * 1000));
+    await firstValueFrom(this.withAbort(timer(retryAfter * 1000), signal));
     return operation();
   }
 

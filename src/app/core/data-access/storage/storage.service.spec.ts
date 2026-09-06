@@ -1,10 +1,12 @@
 import {StorageService} from './storage.service';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
+import {SessionLifecycleService} from '@core/auth/session-lifecycle.service';
 
 describe('StorageService', () => {
   let supabase: jasmine.SpyObj<SupabaseService>;
   let service: StorageService;
   let cache: Map<string, string>;
+  let lifecycle: SessionLifecycleService;
 
   beforeEach(() => {
     supabase = jasmine.createSpyObj<SupabaseService>('SupabaseService', [
@@ -14,7 +16,8 @@ describe('StorageService', () => {
     supabase.loadUserCache.and.resolveTo([]);
     supabase.saveUserCache.and.resolveTo();
 
-    service = new StorageService(supabase);
+    lifecycle = new SessionLifecycleService();
+    service = new StorageService(supabase, lifecycle);
     cache = (service as any).inMemoryCache;
     spyOn<any>(service, 'persistKV').and.stub();
     spyOn<any>(service, 'deleteKV').and.stub();
@@ -86,6 +89,20 @@ describe('StorageService', () => {
     const restored = await service.restoreItemsFromCloud(['spotify-user_playlist-1']);
 
     expect(restored).toBe(0);
+    expect(service.getItem('spotify-user_playlist-1')).toBeNull();
+  });
+
+  it('ignores deferred account A cloud data after logout starts account B', async () => {
+    let resolveLoad!: (entries: any[]) => void;
+    supabase.loadUserCache.and.returnValue(new Promise(resolve => resolveLoad = resolve));
+    const restoreA = service.restoreItemsFromCloud(['spotify-user_playlist-1']);
+    const logoutA = lifecycle.invalidateAndDrain();
+    cache.set('spotifyUserId', 'spotify-user-b');
+    cache.set('supabaseUserId', 'supabase-user-b');
+    resolveLoad([{key: 'spotify-user_playlist-1', value: 'account-a'}]);
+
+    expect(await restoreA).toBe(0);
+    await logoutA;
     expect(service.getItem('spotify-user_playlist-1')).toBeNull();
   });
 

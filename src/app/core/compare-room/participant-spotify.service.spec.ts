@@ -145,6 +145,28 @@ describe('ParticipantSpotifyService', () => {
     http.expectNone(`${environment.spotifyUrl}/playlists/existing-playlist`);
   }));
 
+  it('cancels an in-flight Spotify mutation when its session ends', fakeAsync(() => {
+    const controller = new AbortController();
+    let result: any;
+    void service.syncPlaylist(
+      'account-a-token',
+      'existing-playlist',
+      null,
+      'Account A share',
+      'Description',
+      [track('1')],
+      controller.signal
+    ).then(value => result = value);
+    const request = http.expectOne(`${environment.spotifyUrl}/playlists/existing-playlist`);
+
+    controller.abort();
+    flushMicrotasks();
+
+    expect(request.cancelled).toBeTrue();
+    expect(result.success).toBeFalse();
+    expect(result.addedTracks).toBe(0);
+  }));
+
   function track(id: string): CompareTrack {
     return {
       id,

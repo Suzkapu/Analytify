@@ -4,6 +4,7 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.service';
 import {PlaylistShareAutoSyncService} from './playlist-share-auto-sync.service';
 import {PlaylistSharingService} from './playlist-sharing.service';
+import {SessionLifecycleService} from '@core/auth/session-lifecycle.service';
 
 describe('PlaylistShareAutoSyncService', () => {
   let service: PlaylistShareAutoSyncService;
@@ -110,7 +111,8 @@ describe('PlaylistShareAutoSyncService', () => {
       'spotify-url',
       'Shared party · from Owner',
       jasmine.stringContaining('Share ID: received-share'),
-      [track('new-song')]
+      [track('new-song')],
+      jasmine.any(AbortSignal)
     );
     expect(sharing.claimDownloadSync).toHaveBeenCalledWith('received-share', 3, 2);
     expect(sharing.completeDownloadSync).toHaveBeenCalledWith(
@@ -146,6 +148,28 @@ describe('PlaylistShareAutoSyncService', () => {
 
     expect(spotify.syncPlaylist).not.toHaveBeenCalled();
     expect(sharing.completeDownloadSync).not.toHaveBeenCalled();
+  });
+
+  it('ignores account A Spotify completion after teardown starts account B', async () => {
+    sharing.listReceivedShares.and.resolveTo([share(3)]);
+    sharing.listReceivedDownloads.and.resolveTo([download(2)]);
+    sharing.loadShare.and.resolveTo({
+      share: share(3), tracks: [track('new-song')], download: download(2), viewerRole: 'recipient'
+    });
+    let resolveSpotify!: (result: any) => void;
+    spotify.syncPlaylist.and.returnValue(new Promise(resolve => resolveSpotify = resolve));
+
+    const syncA = service.syncNow();
+    while (!spotify.syncPlaylist.calls.any()) await Promise.resolve();
+    const teardownA = TestBed.inject(SessionLifecycleService).invalidateAndDrain();
+    resolveSpotify({
+      success: true, playlistId: 'existing-playlist', playlistUrl: 'spotify-url',
+      playlistName: 'Shared party', addedTracks: 1
+    });
+    await Promise.all([syncA, teardownA]);
+
+    expect(sharing.completeDownloadSync).not.toHaveBeenCalled();
+    expect(sharing.releaseDownloadSync).toHaveBeenCalledWith('received-share', 'lease-token');
   });
 
   it('reacts to realtime changes with recipient sync only so owner publication cannot loop', async () => {
