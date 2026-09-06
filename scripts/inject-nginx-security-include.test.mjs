@@ -29,12 +29,14 @@ test('security policy is installed in application and internal-redirect location
 }
 `);
   assert.equal(result.status, 0);
-  assert.match(result.output, /location \/ \{\n\s+include \/etc\/nginx\/snippets\/analytify-security[.]conf;/);
+  assert.match(result.output, /location \/ \{\n\s+server_tokens off;\n\s+include \/etc\/nginx\/snippets\/analytify-security[.]conf;/);
   assert.equal(result.output.match(/analytify-security[.]conf/g)?.length, 2);
+  assert.equal(result.output.match(/server_tokens off;/g)?.length, 2);
 });
 
 test('existing includes are not duplicated while uncovered locations are repaired', () => {
   const site = `location / {
+  server_tokens off;
   include /etc/nginx/snippets/analytify-security.conf;
 }
 location = /index.html {
@@ -44,6 +46,18 @@ location = /index.html {
   const result = render(site);
   assert.equal(result.status, 0);
   assert.equal(result.output.match(/analytify-security[.]conf/g)?.length, 2);
+  assert.equal(result.output.match(/server_tokens off;/g)?.length, 2);
+});
+
+test('an existing server_tokens directive is preserved without duplication', () => {
+  const result = render(`location / {
+  server_tokens off;
+  try_files $uri /index.html;
+}
+`);
+  assert.equal(result.status, 0);
+  assert.equal(result.output.match(/server_tokens off;/g)?.length, 1);
+  assert.equal(result.output.match(/analytify-security[.]conf/g)?.length, 1);
 });
 
 test('installer refuses to guess when the application location is missing', () => {

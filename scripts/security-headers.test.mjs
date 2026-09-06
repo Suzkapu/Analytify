@@ -14,7 +14,7 @@ test('versioned nginx configuration supplies the required browser defenses', () 
     headers.set(match[1], match[2]);
   }
   assert.deepEqual(invalidSecurityHeaders(headers), []);
-  assert.match(nginx, /server_tokens off;/);
+  assert.doesNotMatch(nginx, /server_tokens off;/);
   assert.doesNotMatch(nginx, /script-src[^;]*'unsafe-inline'/);
   assert.match(nginx, /frame-ancestors 'none'/);
   assert.match(deploy, /install-nginx-security[.]sh/);
@@ -22,6 +22,7 @@ test('versioned nginx configuration supplies the required browser defenses', () 
   assert.match(installer, /restore_previous/);
   assert.match(installer, /nginx\/snippets\/analytify-security[.]conf/);
   assert.match(installer, /inject-nginx-security-include[.]mjs/);
+  assert.match(readFileSync('scripts/inject-nginx-security-include.mjs', 'utf8'), /server_tokens off;/);
   assert.match(liveVerification, /invalidSecurityHeaders\(response[.]headers\)/);
 });
 
