@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {firstValueFrom, Subscription} from 'rxjs';
+import {distinctUntilChanged, firstValueFrom, map, Subscription} from 'rxjs';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {CompareSaveResult, CompareTrack} from '@core/compare-room/compare-room.models';
 import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.service';
@@ -35,6 +35,8 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
   private isLiveReloading = false;
   private liveReloadPending = false;
   private destroyed = false;
+  private loadGeneration = 0;
+  private routeSubscription = new Subscription();
 
   constructor(
     private route: ActivatedRoute,
@@ -47,33 +49,43 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     this.destroyed = false;
-    this.shareId = this.route.snapshot.paramMap.get('id') || '';
     this.spotifyUpdateSubscription = this.shareAutoSync.spotifyUpdates$.subscribe(update => {
       if (update.shareId === this.shareId) void this.applySpotifyAutoUpdate(update);
     });
-    await this.load();
-    if (this.destroyed) return;
-    if (this.shareId) {
-      this.unsubscribeShareChanges = this.sharing.subscribeToShareChanges(
-        () => void this.reloadFromLiveUpdate(),
-        this.shareId
-      );
+    if (this.route.paramMap) {
+      this.routeSubscription = this.route.paramMap.pipe(
+        map(params => params.get('id') || ''),
+        distinctUntilChanged()
+      ).subscribe(shareId => void this.activateShareRoute(shareId));
+    } else {
+      await this.activateShareRoute(this.route.snapshot.paramMap.get('id') || '');
     }
   }
 
   ngOnDestroy(): void {
     this.destroyed = true;
+    this.loadGeneration++;
+    this.routeSubscription.unsubscribe();
     this.unsubscribeShareChanges?.();
     this.unsubscribeShareChanges = null;
     this.spotifyUpdateSubscription.unsubscribe();
   }
 
-  async load(silent = false): Promise<void> {
+  async load(
+    silent = false,
+    shareId = this.shareId || this.route.snapshot.paramMap.get('id') || '',
+    generation = this.loadGeneration
+  ): Promise<void> {
+    if (!this.shareId && shareId) this.shareId = shareId;
+    const canApply = () => !this.destroyed
+      && this.shareId === shareId
+      && this.loadGeneration === generation;
+    if (!canApply()) return;
     if (!silent) this.isLoading = true;
     this.errorMessage = '';
     try {
-      const shareId = this.shareId || this.route.snapshot.paramMap.get('id') || '';
       const details = await this.sharing.loadShare(shareId);
+      if (!canApply()) return;
       this.share = details.share;
       this.tracks = details.tracks;
       this.download = this.newerDownload(this.download, details.download);
@@ -81,10 +93,11 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
       this.stats = this.sharing.calculateStats(this.tracks);
       this.filterTracks();
     } catch (error) {
+      if (!canApply()) return;
       this.share = null;
       this.errorMessage = (error as any)?.message || 'This shared playlist is unavailable or has been revoked.';
     } finally {
-      if (!silent) this.isLoading = false;
+      if (!silent && canApply()) this.isLoading = false;
     }
   }
 
@@ -177,6 +190,8 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
   }
 
   private async reloadFromLiveUpdate(): Promise<void> {
+    const shareId = this.shareId;
+    const generation = this.loadGeneration;
     if (this.isLiveReloading) {
       this.liveReloadPending = true;
       return;
@@ -187,7 +202,8 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
       do {
         this.liveReloadPending = false;
         const previousRevision = this.share?.revision || 0;
-        await this.load(true);
+        await this.load(true, shareId, generation);
+        if (shareId !== this.shareId || generation !== this.loadGeneration) return;
         const currentRevision = this.share?.revision || 0;
         if (previousRevision > 0 && currentRevision > previousRevision) {
           this.saveResult = null;
@@ -204,12 +220,38 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
   }
 
   private async applySpotifyAutoUpdate(update: PlaylistShareSpotifyUpdate): Promise<void> {
+    const generation = this.loadGeneration;
+    if (update.shareId !== this.shareId) return;
     if (update.success) {
-      await this.load(true);
+      await this.load(true, update.shareId, generation);
+      if (update.shareId !== this.shareId || generation !== this.loadGeneration) return;
       this.liveUpdateMessage = `Your Spotify copy was automatically updated to revision ${update.revision}.`;
       return;
     }
     this.errorMessage = `${update.error || 'The automatic Spotify update failed.'} You can retry it below.`;
+  }
+
+  private async activateShareRoute(shareId: string): Promise<void> {
+    const generation = ++this.loadGeneration;
+    this.unsubscribeShareChanges?.();
+    this.unsubscribeShareChanges = null;
+    this.shareId = shareId;
+    this.share = null;
+    this.tracks = [];
+    this.filteredTracks = [];
+    this.download = null;
+    this.stats = null;
+    this.errorMessage = '';
+    this.liveUpdateMessage = '';
+    this.saveResult = null;
+    this.isLiveReloading = false;
+    this.liveReloadPending = false;
+    await this.load(false, shareId, generation);
+    if (this.destroyed || this.shareId !== shareId || this.loadGeneration !== generation || !shareId) return;
+    this.unsubscribeShareChanges = this.sharing.subscribeToShareChanges(
+      () => void this.reloadFromLiveUpdate(),
+      shareId
+    );
   }
 
   private newerDownload(

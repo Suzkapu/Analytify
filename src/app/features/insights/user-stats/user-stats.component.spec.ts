@@ -1,5 +1,5 @@
 import {UserStatsComponent} from './user-stats.component';
-import {NEVER, of} from 'rxjs';
+import {NEVER, of, Subject} from 'rxjs';
 
 describe('UserStatsComponent trends', () => {
   let component: UserStatsComponent;
@@ -245,6 +245,39 @@ describe('UserStatsComponent trends', () => {
     expect(spyComponent.sharedStatsError).toBe('Stats access is not approved.');
     expect(spyComponent.topTracks).toEqual([]);
     expect(spotify.getUserTopTracks).not.toHaveBeenCalled();
+  });
+
+  it('keeps shared user B visible when shared user A resolves later', async () => {
+    const paramMap = new Subject<any>();
+    const pending = new Map<string, (snapshot: any) => void>();
+    const routedComponent = new UserStatsComponent(
+      {} as any,
+      {} as any,
+      {} as any,
+      {} as any,
+      {paramMap, snapshot: {paramMap: {get: () => ''}}} as any,
+      {loadSharedStats: (id: string) => new Promise(resolve => pending.set(id, resolve))} as any
+    );
+    routedComponent.ngOnInit();
+    paramMap.next({get: () => 'owner-a'});
+    paramMap.next({get: () => 'owner-b'});
+
+    pending.get('owner-b')?.({
+      ownerUserId: 'owner-b', ownerDisplayName: 'Owner B', ownerImageUrl: '', snapshotDate: '2026-08-02',
+      topTracks: [{id: 'b'}], topArtists: [], topGenres: []
+    });
+    await Promise.resolve();
+    await Promise.resolve();
+    pending.get('owner-a')?.({
+      ownerUserId: 'owner-a', ownerDisplayName: 'Owner A', ownerImageUrl: '', snapshotDate: '2026-08-01',
+      topTracks: [{id: 'a'}], topArtists: [], topGenres: []
+    });
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(routedComponent.spyDisplayName).toBe('Owner B');
+    expect(routedComponent.topTracks).toEqual([{id: 'b'}]);
+    routedComponent.ngOnDestroy();
   });
 
   it('highlights only dates that have comparison snapshots', () => {

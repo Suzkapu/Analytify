@@ -3,7 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
-import { firstValueFrom, forkJoin, Subscription } from 'rxjs';
+import { distinctUntilChanged, firstValueFrom, forkJoin, map, Subscription } from 'rxjs';
 import {PastTopItem, SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {mapWithConcurrency, runAfterNextPaint} from '@core/performance/async-load';
@@ -99,6 +99,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   private cancelScheduledHistoryLoad: (() => void) | null = null;
   private pastSearchTimer: ReturnType<typeof setTimeout> | null = null;
   private pastSearchSequence = 0;
+  private activeSpyOwnerUserId: string | null = null;
+  private routeSubscription: Subscription | null = null;
 
   // Trend modal variables
   showTrendPopup: boolean = false;
@@ -124,7 +126,9 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   ) { }
 
   get spyOwnerUserId(): string {
-    return this.route?.snapshot?.paramMap?.get('userId') || '';
+    return this.activeSpyOwnerUserId
+      ?? this.route?.snapshot?.paramMap?.get('userId')
+      ?? '';
   }
 
   get isSpyMode(): boolean {
@@ -132,6 +136,34 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    if (this.route?.paramMap) {
+      this.routeSubscription = this.route.paramMap.pipe(
+        map(params => params.get('userId') || ''),
+        distinctUntilChanged()
+      ).subscribe(userId => this.activateStatsRoute(userId));
+      return;
+    }
+    this.activateStatsRoute(this.spyOwnerUserId);
+  }
+
+  private activateStatsRoute(userId: string): void {
+    this.statsLoadSequence++;
+    this.historyLoadSequence++;
+    this.statsSubscription?.unsubscribe();
+    this.statsSubscription = null;
+    this.cancelScheduledHistoryLoad?.();
+    this.cancelScheduledHistoryLoad = null;
+    this.resetPastStatsSearch();
+    this.activeSpyOwnerUserId = userId;
+    this.spyDisplayName = '';
+    this.spyImageUrl = '';
+    this.spySnapshotDate = '';
+    this.sharedStatsError = '';
+    this.topTracks = [];
+    this.topArtists = [];
+    this.topGenres = [];
+    this.historyData = [];
+    this.snapshotOptions = [];
     // Start the visible selected-range request in the critical turn. Historical
     // metadata begins only after the browser gets a paint opportunity, while
     // broad account hydration remains fully independent in the background.
@@ -152,6 +184,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.historyLoadSequence++;
     this.statsSubscription?.unsubscribe();
     this.statsSubscription = null;
+    this.routeSubscription?.unsubscribe();
+    this.routeSubscription = null;
     this.cancelScheduledHistoryLoad?.();
     this.cancelScheduledHistoryLoad = null;
     this.pastSearchSequence++;
@@ -294,8 +328,9 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.statsSubscription?.unsubscribe();
     this.statsSubscription = null;
 
-    if (this.isSpyMode) {
-      await this.loadSharedStats(loadSequence);
+    const spyOwnerUserId = this.spyOwnerUserId;
+    if (spyOwnerUserId) {
+      await this.loadSharedStats(loadSequence, spyOwnerUserId);
       return;
     }
 
@@ -1714,7 +1749,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.calculateTrendPoints(cloudPoints);
   }
 
-  private async loadSharedStats(loadSequence: number): Promise<void> {
+  private async loadSharedStats(loadSequence: number, ownerUserId: string): Promise<void> {
     this.isLoading = true;
     this.isRefreshingStats = false;
     this.sharedStatsError = '';
@@ -1723,8 +1758,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.topGenres = [];
     try {
       if (!this.statsSharing) throw new Error('Stats sharing is unavailable.');
-      const snapshot = await this.statsSharing.loadSharedStats(this.spyOwnerUserId, this.selectedRange);
-      if (loadSequence !== this.statsLoadSequence) return;
+      const snapshot = await this.statsSharing.loadSharedStats(ownerUserId, this.selectedRange);
+      if (loadSequence !== this.statsLoadSequence || ownerUserId !== this.spyOwnerUserId) return;
       if (!snapshot) throw new Error('This user does not have a saved snapshot for this range yet.');
       this.spyDisplayName = snapshot.ownerDisplayName;
       this.spyImageUrl = snapshot.ownerImageUrl;
@@ -1733,11 +1768,11 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       this.topArtists = snapshot.topArtists;
       this.topGenres = snapshot.topGenres;
     } catch (error) {
-      if (loadSequence !== this.statsLoadSequence) return;
+      if (loadSequence !== this.statsLoadSequence || ownerUserId !== this.spyOwnerUserId) return;
       const value = error as any;
       this.sharedStatsError = value?.message || 'These shared stats are unavailable.';
     } finally {
-      if (loadSequence === this.statsLoadSequence) this.isLoading = false;
+      if (loadSequence === this.statsLoadSequence && ownerUserId === this.spyOwnerUserId) this.isLoading = false;
     }
   }
 

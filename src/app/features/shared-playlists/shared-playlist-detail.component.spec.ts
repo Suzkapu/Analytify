@@ -160,6 +160,38 @@ describe('SharedPlaylistDetailComponent', () => {
     expect(unsubscribeShareChanges).toHaveBeenCalledTimes(1);
   });
 
+  it('keeps share B and its realtime channel when share A resolves later', async () => {
+    const paramMap = new Subject<any>();
+    const pending = new Map<string, (details: any) => void>();
+    const unsubscribers = new Map<string, jasmine.Spy>();
+    sharing.loadShare.and.callFake((id: string) => new Promise(resolve => pending.set(id, resolve)));
+    sharing.subscribeToShareChanges.and.callFake((_callback, id) => {
+      const unsubscribe = jasmine.createSpy(`unsubscribe-${id}`);
+      unsubscribers.set(id || '', unsubscribe);
+      return unsubscribe;
+    });
+    const routed = new SharedPlaylistDetailComponent(
+      {paramMap, snapshot: {paramMap: {get: () => ''}}} as any,
+      {navigate: jasmine.createSpy('navigate')} as any,
+      TestBed.inject(SpotifyAuthService), sharing, spotify,
+      {spotifyUpdates$: spotifyUpdates.asObservable()} as any
+    );
+    void routed.ngOnInit();
+
+    paramMap.next({get: () => 'share-a'});
+    paramMap.next({get: () => 'share-b'});
+    pending.get('share-b')?.({share: {...share(2), id: 'share-b'}, tracks: [track('b')], download: null, viewerRole: 'recipient'});
+    await flushAsyncWork();
+    pending.get('share-a')?.({share: {...share(1), id: 'share-a'}, tracks: [track('a')], download: null, viewerRole: 'recipient'});
+    await flushAsyncWork();
+
+    expect(routed.share?.id).toBe('share-b');
+    expect(routed.tracks.map(item => item.id)).toEqual(['b']);
+    expect(sharing.subscribeToShareChanges).toHaveBeenCalledOnceWith(jasmine.any(Function), 'share-b');
+    routed.ngOnDestroy();
+    expect(unsubscribers.get('share-b')).toHaveBeenCalled();
+  });
+
   function share(revision: number) {
     return {
       id: 'share-id', ownerUserId: 'owner', recipientUserId: 'recipient', sourcePlaylistId: 'source',

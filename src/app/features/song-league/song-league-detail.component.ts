@@ -1,5 +1,6 @@
 import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+import {distinctUntilChanged, map, Subscription} from 'rxjs';
 
 import {
   SongLeagueDashboard,
@@ -57,6 +58,9 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   private unsubscribeLeague: (() => void) | null = null;
   private reloadPending = false;
   private memberReady = false;
+  private destroyed = false;
+  private loadGeneration = 0;
+  private routeSubscription = new Subscription();
 
   constructor(
     private route: ActivatedRoute,
@@ -66,23 +70,53 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.leagueId = this.route.snapshot.paramMap.get('leagueId') || '';
+    this.destroyed = false;
+    if (this.route.paramMap) {
+      this.routeSubscription = this.route.paramMap.pipe(
+        map(params => params.get('leagueId') || ''),
+        distinctUntilChanged()
+      ).subscribe(leagueId => void this.activateLeagueRoute(leagueId));
+      return;
+    }
+    await this.activateLeagueRoute(this.route.snapshot.paramMap.get('leagueId') || '');
+  }
+
+  private async activateLeagueRoute(leagueId: string): Promise<void> {
+    const generation = ++this.loadGeneration;
+    this.unsubscribeLeague?.();
+    this.unsubscribeLeague = null;
+    this.leagueId = leagueId;
+    this.dashboard = null;
+    this.isLoading = true;
+    this.isReloading = false;
+    this.reloadPending = false;
+    this.memberReady = false;
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.playlistWarning = '';
+    this.inviteUrl = '';
+    this.selectedStanding = null;
     try {
       const [currentUserId, notificationSettings] = await Promise.all([
         this.songLeague.currentUserId(),
         this.pushNotifications.loadSettings().catch(() => null),
-        this.load()
+        this.load(false, leagueId, generation)
       ]);
+      if (!this.isCurrentLeague(leagueId, generation)) return;
       this.currentUserId = currentUserId;
       if (notificationSettings) this.notificationSettings = notificationSettings;
-      this.unsubscribeLeague = this.songLeague.subscribeToLeague(this.leagueId, () => void this.reloadLive());
+      this.unsubscribeLeague = this.songLeague.subscribeToLeague(leagueId, () => void this.reloadLive());
     } catch (error) {
+      if (!this.isCurrentLeague(leagueId, generation)) return;
       this.errorMessage = this.describeError(error, 'The Song League could not be opened.');
       this.isLoading = false;
     }
   }
 
   ngOnDestroy(): void {
+    this.destroyed = true;
+    this.loadGeneration++;
+    this.routeSubscription.unsubscribe();
     this.unsubscribeLeague?.();
     this.unsubscribeLeague = null;
   }
@@ -95,24 +129,33 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     }).catch(() => undefined);
   }
 
-  async load(silent = false): Promise<void> {
+  async load(
+    silent = false,
+    leagueId = this.leagueId || this.route.snapshot.paramMap.get('leagueId') || '',
+    generation = this.loadGeneration
+  ): Promise<void> {
+    if (!this.leagueId && leagueId) this.leagueId = leagueId;
+    if (!this.isCurrentLeague(leagueId, generation)) return;
     if (!silent) this.isLoading = true;
     this.errorMessage = '';
     try {
-      const dashboard = await this.songLeague.loadDashboard(this.leagueId);
+      const dashboard = await this.songLeague.loadDashboard(leagueId);
+      if (!this.isCurrentLeague(leagueId, generation)) return;
       this.dashboard = dashboard;
       this.memberLimit = dashboard.league.maxMembers;
       if (!this.memberReady && !dashboard.league.isDemo) {
         await this.songLeague.ensureMemberReadyForLeague(
-          this.leagueId,
+          leagueId,
           dashboard.league.timezone
         );
+        if (!this.isCurrentLeague(leagueId, generation)) return;
         this.memberReady = true;
       }
     } catch (error) {
+      if (!this.isCurrentLeague(leagueId, generation)) return;
       this.errorMessage = this.describeError(error, 'The Song League could not be loaded.');
     } finally {
-      if (!silent) this.isLoading = false;
+      if (!silent && this.isCurrentLeague(leagueId, generation)) this.isLoading = false;
     }
   }
 
@@ -387,6 +430,8 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   }
 
   private async reloadLive(): Promise<void> {
+    const leagueId = this.leagueId;
+    const generation = this.loadGeneration;
     if (this.isReloading) {
       this.reloadPending = true;
       return;
@@ -395,11 +440,16 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     try {
       do {
         this.reloadPending = false;
-        await this.load(true);
+        await this.load(true, leagueId, generation);
+        if (!this.isCurrentLeague(leagueId, generation)) return;
       } while (this.reloadPending);
     } finally {
       this.isReloading = false;
     }
+  }
+
+  private isCurrentLeague(leagueId: string, generation: number): boolean {
+    return !this.destroyed && this.leagueId === leagueId && this.loadGeneration === generation;
   }
 
   private sameLeagueDay(value: string, now: Date): boolean {
