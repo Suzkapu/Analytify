@@ -438,7 +438,7 @@ export class StorageService {
       'analytifyAuthReturnUrl', 'spotify_rate_limit_until', 'spotifyRetryAfter'
     ]);
     return exactKeys.has(key)
-      || /_(backup_active|last_synced_at|sortOrder|showSaved|profile_pic|display_name|spotify_profile_id|spotify_profile_id_verified|lastUpdated|lastChecked|Amount|Name|CachedTrackCount|source_manifest|source_sync_state|backup_upload_manifest|applied_metadata)$/.test(key);
+      || /_(backup_active|last_synced_at|sortOrder|showSaved|profile_pic|profile_pic_metadata|display_name|spotify_profile_id|spotify_profile_id_verified|lastUpdated|lastChecked|Amount|Name|CachedTrackCount|source_manifest|source_sync_state|backup_upload_manifest|applied_metadata)$/.test(key);
   }
 
   private async readStoredEntry(

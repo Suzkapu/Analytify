@@ -1,4 +1,4 @@
-import {Component, EventEmitter, HostListener, Input, OnInit, Optional, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Optional, Output} from '@angular/core';
 import { Router } from '@angular/router';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
@@ -6,6 +6,7 @@ import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import {PlaylistShareAutoSyncService} from '@core/sharing/playlist-share-auto-sync.service';
 import {StatsSharingService} from '@core/sharing/stats-sharing.service';
+import {firstValueFrom} from 'rxjs';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {AdminService} from '@core/admin/admin.service';
 import {
@@ -15,12 +16,22 @@ import {
 
 const console = createScopedLogger('Profile and Settings');
 
+type ProfileImageCacheMetadata = {
+  url: string;
+  source: 'spotify' | 'supabase';
+  expiresAt: number;
+  absent: boolean;
+  retryCount: number;
+  nextRetryAt: number;
+};
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+
+export class HeaderComponent implements OnInit, OnDestroy {
   @Input() mobileTitle = '';
   @Input() showMobileBackButton = false;
   @Output() mobileBack = new EventEmitter<void>();
@@ -45,7 +56,8 @@ export class HeaderComponent implements OnInit {
   statsDiscoverable = false;
   isSavingStatsDiscoverability = false;
   notificationError = '';
-  private attemptedProfileImageRecovery = false;
+  private profileRetryTimer: ReturnType<typeof setTimeout> | null = null;
+  private readonly profileRetryDelays = [1_000, 5_000, 30_000];
   notificationSettings: PushNotificationSettings = {
     supported: false,
     installedPwa: false,
@@ -87,64 +99,187 @@ export class HeaderComponent implements OnInit {
     this.statsDiscoverable = statsDiscoverable;
   }
 
+  ngOnDestroy(): void {
+    if (this.profileRetryTimer) clearTimeout(this.profileRetryTimer);
+    this.profileRetryTimer = null;
+  }
 
-  async loadUserProfile() {
+
+  async loadUserProfile(forceProvider = false) {
     const userId = this.authService.getUserId() || 'anonymous';
-    const cached = this.storageService.getItem(`${userId}_profile_pic`);
-    if (cached) {
+    const imageKey = `${userId}_profile_pic`;
+    const metadataKey = `${imageKey}_metadata`;
+    const metadata = this.readProfileImageMetadata(metadataKey);
+    const cached = this.storageService.getItem(imageKey);
+    if (!forceProvider && metadata && metadata.retryCount > 0) {
+      this.profilePicUrl = null;
+      if (typeof navigator !== 'undefined' && navigator.onLine === false) return;
+      if (metadata.nextRetryAt > Date.now()) {
+        this.armProfileImageRetry(metadata.nextRetryAt - Date.now());
+      } else {
+        await this.refreshProfileImageFromSpotify(userId, imageKey, metadataKey, metadata);
+      }
+      return;
+    }
+    if (!forceProvider && metadata && metadata.expiresAt > Date.now()) {
+      this.profilePicUrl = metadata.absent ? null : (metadata.url || cached);
+      return;
+    }
+    if (!forceProvider && cached && !metadata) {
+      const migrated = this.profileImageMetadata(cached, 'supabase');
+      this.writeProfileImageMetadata(metadataKey, migrated);
       this.profilePicUrl = cached;
       return;
     }
 
     const supabaseUserId = this.authService.getSupabaseUserId();
-    if (supabaseUserId) {
+    if (!forceProvider && supabaseUserId) {
       const dbProfile = await this.supabaseService.loadUserProfile(supabaseUserId);
       if (dbProfile?.profile_pic_url) {
-        this.storageService.setItem(`${userId}_profile_pic`, dbProfile.profile_pic_url);
+        this.storageService.setItem(imageKey, dbProfile.profile_pic_url);
+        this.writeProfileImageMetadata(metadataKey, this.profileImageMetadata(dbProfile.profile_pic_url, 'supabase'));
         this.profilePicUrl = dbProfile.profile_pic_url;
         return;
       }
     }
 
-    this.spotifyDataService.getCurrentUser().subscribe({
-      next: (user: any) => {
-        const pic = user.images && user.images[0] ? user.images[0].url : '';
-        this.profilePicUrl = pic || null;
-        if (user?.id) {
-          this.storageService.setItem(`${userId}_spotify_profile_id`, user.id, false);
-          this.storageService.setItem(`${userId}_spotify_profile_id_verified`, 'true', false);
-        }
-        if (pic) {
-          this.storageService.setItem(`${userId}_profile_pic`, pic);
-        } else {
-          this.storageService.removeItem(`${userId}_profile_pic`);
-        }
-      },
-      error: (err) => console.error('Failed to load user profile:', err)
-    });
+    await this.refreshProfileImageFromSpotify(userId, imageKey, metadataKey, metadata);
   }
 
-  onProfileImageError(): void {
+  onProfileImageError(status?: number): void {
     const failedUrl = this.profilePicUrl;
     this.profilePicUrl = null;
     const userId = this.authService.getUserId() || 'anonymous';
-    this.storageService.removeItem(`${userId}_profile_pic`);
-    if (this.attemptedProfileImageRecovery) return;
-
-    this.attemptedProfileImageRecovery = true;
-    this.spotifyDataService.getCurrentUser().subscribe({
-      next: (user: any) => {
-        const refreshedUrl = user?.images?.[0]?.url || '';
-        if (!refreshedUrl || refreshedUrl === failedUrl) return;
-        this.profilePicUrl = refreshedUrl;
-        this.storageService.setItem(`${userId}_profile_pic`, refreshedUrl);
-        if (user?.id) {
-          this.storageService.setItem(`${userId}_spotify_profile_id`, user.id, false);
-          this.storageService.setItem(`${userId}_spotify_profile_id_verified`, 'true', false);
-        }
-      },
-      error: (error) => console.warn('Failed to refresh the expired profile image:', error)
+    const imageKey = `${userId}_profile_pic`;
+    const metadataKey = `${imageKey}_metadata`;
+    const current = this.readProfileImageMetadata(metadataKey)
+      || this.profileImageMetadata(failedUrl || '', 'spotify');
+    if (status === 404) {
+      this.writeProfileImageMetadata(metadataKey, {
+        ...current, url: '', absent: true, expiresAt: Date.now() + 6 * 60 * 60 * 1000,
+        retryCount: 0, nextRetryAt: 0
+      });
+      this.storageService.removeItem(imageKey);
+      return;
+    }
+    this.writeProfileImageMetadata(metadataKey, {
+      ...current, url: failedUrl || current.url, absent: false,
+      retryCount: Math.min(current.retryCount + 1, this.profileRetryDelays.length),
+      nextRetryAt: Date.now()
     });
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) return;
+    void this.loadUserProfile(true);
+  }
+
+  @HostListener('window:online')
+  retryProfileImageWhenOnline(): void {
+    if (!this.profilePicUrl) void this.loadUserProfile(true);
+  }
+
+  private readProfileImageMetadata(key: string): ProfileImageCacheMetadata | null {
+    const raw = this.storageService.getItem(key);
+    if (!raw) return null;
+    try {
+      const value = JSON.parse(raw) as Partial<ProfileImageCacheMetadata>;
+      if (typeof value.url !== 'string' || typeof value.expiresAt !== 'number') return null;
+      return {
+        url: value.url,
+        source: value.source === 'supabase' ? 'supabase' : 'spotify',
+        expiresAt: value.expiresAt,
+        absent: value.absent === true,
+        retryCount: Number.isFinite(value.retryCount) ? Math.max(0, Number(value.retryCount)) : 0,
+        nextRetryAt: Number.isFinite(value.nextRetryAt) ? Math.max(0, Number(value.nextRetryAt)) : 0
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  private writeProfileImageMetadata(key: string, metadata: ProfileImageCacheMetadata): void {
+    this.storageService.setItem(key, JSON.stringify(metadata), false);
+  }
+
+  private profileImageMetadata(
+    url: string,
+    source: ProfileImageCacheMetadata['source']
+  ): ProfileImageCacheMetadata {
+    return {
+      url,
+      source,
+      expiresAt: this.profileImageExpiry(url),
+      absent: !url,
+      retryCount: 0,
+      nextRetryAt: 0
+    };
+  }
+
+  private profileImageExpiry(url: string): number {
+    try {
+      const providerExpiry = Number(new URL(url).searchParams.get('ext')) * 1000;
+      if (Number.isFinite(providerExpiry) && providerExpiry > Date.now()) return providerExpiry;
+    } catch {
+      // A relative or malformed provider URL still receives a bounded cache lifetime.
+    }
+    return Date.now() + 24 * 60 * 60 * 1000;
+  }
+
+  private async refreshProfileImageFromSpotify(
+    userId: string,
+    imageKey: string,
+    metadataKey: string,
+    previous: ProfileImageCacheMetadata | null
+  ): Promise<void> {
+    try {
+      const profile = await firstValueFrom(this.spotifyDataService.getCurrentUser());
+      const url = profile?.images?.[0]?.url || '';
+      if (profile?.id) {
+        this.storageService.setItem(`${userId}_spotify_profile_id`, profile.id, false);
+        this.storageService.setItem(`${userId}_spotify_profile_id_verified`, 'true', false);
+      }
+      if (!url) {
+        this.profilePicUrl = null;
+        this.storageService.removeItem(imageKey);
+        this.writeProfileImageMetadata(metadataKey, {
+          ...this.profileImageMetadata('', 'spotify'),
+          expiresAt: Date.now() + 6 * 60 * 60 * 1000
+        });
+        return;
+      }
+
+      if (previous && previous.url === url && previous.retryCount > 0) {
+        this.scheduleProfileImageRetry(metadataKey, previous);
+        return;
+      }
+      this.storageService.setItem(imageKey, url);
+      this.writeProfileImageMetadata(metadataKey, this.profileImageMetadata(url, 'spotify'));
+      this.profilePicUrl = url;
+    } catch (error) {
+      console.warn('Profile image refresh failed; keeping a temporary fallback.', error);
+      this.profilePicUrl = null;
+      this.scheduleProfileImageRetry(metadataKey, previous);
+    }
+  }
+
+  private scheduleProfileImageRetry(
+    metadataKey: string,
+    previous: ProfileImageCacheMetadata | null
+  ): void {
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) return;
+    const current = this.readProfileImageMetadata(metadataKey) || previous;
+    const retryCount = current?.retryCount ?? 0;
+    if (!current || retryCount >= this.profileRetryDelays.length) return;
+    const delay = this.profileRetryDelays[retryCount];
+    const metadata = {...current, retryCount: retryCount + 1, nextRetryAt: Date.now() + delay};
+    this.writeProfileImageMetadata(metadataKey, metadata);
+    this.armProfileImageRetry(delay);
+  }
+
+  private armProfileImageRetry(delay: number): void {
+    if (this.profileRetryTimer) clearTimeout(this.profileRetryTimer);
+    this.profileRetryTimer = setTimeout(() => {
+      this.profileRetryTimer = null;
+      void this.loadUserProfile(true);
+    }, Math.max(0, delay));
   }
 
   toggleSettingsDropdown(event: Event) {

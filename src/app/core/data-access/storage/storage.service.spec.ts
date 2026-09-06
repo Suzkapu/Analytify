@@ -35,6 +35,7 @@ describe('StorageService', () => {
     expect(service.shouldSyncUserCacheKey('supabase-user_last_synced_at')).toBeFalse();
     expect(service.shouldSyncUserCacheKey('spotify-user_recently_played')).toBeFalse();
     expect(service.shouldSyncUserCacheKey('spotify-user_profile_pic')).toBeFalse();
+    expect((service as any).isBootstrapMetadataKey('spotify-user_profile_pic_metadata')).toBeTrue();
     expect(service.shouldSyncUserCacheKey('spotify-user_stats_short_term')).toBeFalse();
     expect(service.shouldSyncUserCacheKey('another-user_playlist-1')).toBeFalse();
   });

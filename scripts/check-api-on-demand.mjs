@@ -28,7 +28,7 @@ const checks = [
   ['Old unconditional-playlist-refresh contract is gone', !playlistTests.includes('refreshes Spotify on every load')],
   ['Shared-playlist startup requires a cloud identity', shareSync.includes('if (this.started || !this.auth.getSupabaseUserId()) return;')],
   ['Shared-playlist sync exits before hydration without a cloud identity', shareSync.includes('if (!this.auth.isAuthenticated() || !this.auth.getSupabaseUserId()) return;')],
-  ['Shared-playlist sync rechecks cloud identity after hydration', shareSync.includes('await this.auth.ensureInitialSync();\n    if (!this.auth.getSupabaseUserId()) return;')],
+  ['Shared-playlist sync rechecks cloud identity after hydration', /await this\.auth\.ensureInitialSync\(\);[\s\S]{0,200}if \(!this\.auth\.getSupabaseUserId\(\)\) return;/.test(shareSync)],
   ['Admin role checks avoid impossible local-only RPCs', admin.includes('if (!this.auth.getSupabaseUserId())') && admin.indexOf('if (!this.auth.getSupabaseUserId())') < admin.indexOf("this.supabase.client.rpc('is_app_admin')")],
   ['Stats return from complete unexpired cache', stats.includes('if (!isExpired && !isCacheIncomplete)') && stats.includes('if (!isCacheIncomplete) return;')],
   ['Listening history has a five-minute request freshness gate', history.includes('Date.now() - lastChecked < 5 * 60 * 1000')],
