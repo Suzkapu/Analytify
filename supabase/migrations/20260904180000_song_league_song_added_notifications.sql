@@ -143,9 +143,10 @@ begin
     raise exception 'Song League push delivery is restricted to the trusted worker.';
   end if;
 
-  update public.song_league_song_push_deliveries
+  update public.song_league_song_push_deliveries delivery
   set status = 'retry', updated_at = now(), last_error = 'Delivery claim expired before completion.'
-  where status = 'sending' and updated_at < now() - interval '10 minutes' and attempts < 3;
+  where delivery.status = 'sending' and delivery.updated_at < now() - interval '10 minutes'
+    and delivery.attempts < 3;
 
   return query
   with candidates as (

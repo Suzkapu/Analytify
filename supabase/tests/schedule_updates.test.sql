@@ -37,6 +37,7 @@ select set_config('request.jwt.claim.sub', '64000000-0000-4000-8000-000000000001
 
 select lives_ok($$ select pg_temp.apply_schedule(true, 2, 'hours') $$,
   'enabling a schedule atomically initializes every task state');
+set local role service_role;
 select is((select count(*) from public.sync_task_state
     where user_id = '64000000-0000-4000-8000-000000000002' and next_run_at is not null), 6::bigint,
   'enabled tasks all receive an effective next run');
@@ -47,6 +48,9 @@ select ok((select bool_and(next_run_at between now() - interval '1 second' and n
 insert into public.sync_job_runs(user_id, task_key, trigger_type) values
   ('64000000-0000-4000-8000-000000000002', 'listening_history', 'scheduled'),
   ('64000000-0000-4000-8000-000000000002', 'stats_short_term', 'manual');
+set local role authenticated;
+select set_config('request.jwt.claim.role', 'authenticated', true);
+select set_config('request.jwt.claim.sub', '64000000-0000-4000-8000-000000000001', true);
 select lives_ok($$ select pg_temp.apply_schedule(false, 3, 'days') $$,
   'disabling a schedule atomically rebases its task state');
 select is((select status from public.sync_job_runs where task_key = 'listening_history'

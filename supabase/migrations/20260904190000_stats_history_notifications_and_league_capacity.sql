@@ -223,9 +223,10 @@ language plpgsql security definer set search_path = public
 as $$
 begin
   if auth.role() <> 'service_role' then raise exception 'Push delivery is restricted to the trusted worker.'; end if;
-  update public.stats_access_push_deliveries set status = 'retry', updated_at = now(),
+  update public.stats_access_push_deliveries delivery set status = 'retry', updated_at = now(),
     last_error = 'Delivery claim expired before completion.'
-  where status = 'sending' and updated_at < now() - interval '10 minutes' and attempts < 3;
+  where delivery.status = 'sending' and delivery.updated_at < now() - interval '10 minutes'
+    and delivery.attempts < 3;
   return query
   with candidates as (
     select delivery.id from public.stats_access_push_deliveries delivery
