@@ -7,7 +7,9 @@ import {
   PlaylistShare,
   PlaylistShareDetails,
   PlaylistShareDownload,
+  PlaylistShareMetadata,
   PlaylistSharePublication,
+  PlaylistShareTrackLoadOptions,
   SharedPlaylistStats
 } from './playlist-sharing.models';
 
@@ -83,6 +85,14 @@ export class PlaylistSharingService {
   }
 
   async loadShare(shareId: string): Promise<PlaylistShareDetails> {
+    const [metadata, tracks] = await Promise.all([
+      this.loadShareMetadata(shareId),
+      this.loadShareTracks(shareId)
+    ]);
+    return {...metadata, tracks};
+  }
+
+  async loadShareMetadata(shareId: string): Promise<PlaylistShareMetadata> {
     const shareRequest = this.supabase.client
       .from('playlist_shares')
       .select('*')
@@ -95,12 +105,10 @@ export class PlaylistSharingService {
       .maybeSingle();
     const [
       {data: shareRow, error: shareError},
-      trackRows,
       {data: downloadRow, error: downloadError},
       currentUserId
     ] = await Promise.all([
       shareRequest,
-      this.loadAllShareTracks(shareId),
       downloadRequest,
       this.currentAuthUserId()
     ]);
@@ -110,10 +118,52 @@ export class PlaylistSharingService {
 
     return {
       share: this.mapShare(shareRow),
-      tracks: (trackRows || []).map(row => row.track as CompareTrack),
       download: downloadRow ? this.mapDownload(downloadRow) : null,
       viewerRole: shareRow.owner_user_id === currentUserId ? 'owner' : 'recipient'
     };
+  }
+
+  async loadShareTracks(
+    shareId: string,
+    options: PlaylistShareTrackLoadOptions = {}
+  ): Promise<CompareTrack[]> {
+    const pageSize = Math.max(50, Math.min(500, options.pageSize || 500));
+    const concurrency = Math.max(1, Math.min(4, options.concurrency || 3));
+    const rows: Array<{position: number; track: CompareTrack}> = [];
+    const first = await this.loadShareTrackPage(shareId, 0, pageSize, options.signal, true);
+    rows.push(...first.rows);
+    const total = first.count ?? first.rows.length;
+    options.onPage?.(first.rows.map(row => row.track), rows.length, total);
+    if (first.rows.length < pageSize) return rows.map(row => row.track);
+
+    const offsets = first.count == null
+      ? [pageSize]
+      : Array.from({length: Math.ceil(total / pageSize) - 1}, (_, index) => (index + 1) * pageSize);
+    for (let cursor = 0; cursor < offsets.length; cursor += concurrency) {
+      this.throwIfAborted(options.signal);
+      const batchOffsets = offsets.slice(cursor, cursor + concurrency);
+      const settled = await Promise.allSettled(batchOffsets.map(offset =>
+        this.loadShareTrackPage(shareId, offset, pageSize, options.signal, false)
+      ));
+      const failed = settled.find(result => result.status === 'rejected') as PromiseRejectedResult | undefined;
+      settled.forEach(result => {
+        if (result.status !== 'fulfilled') return;
+        rows.push(...result.value.rows);
+        options.onPage?.(result.value.rows.map(row => row.track), rows.length, total);
+      });
+      if (failed) {
+        const error = new Error('Some shared playlist songs could not be loaded. Please retry.');
+        Object.assign(error, {cause: failed.reason, partialTracks: rows.map(row => row.track)});
+        throw error;
+      }
+      if (first.count == null) {
+        const last = settled[settled.length - 1];
+        if (last?.status === 'fulfilled' && last.value.rows.length === pageSize) {
+          offsets.push(batchOffsets[batchOffsets.length - 1] + pageSize);
+        }
+      }
+    }
+    return rows.sort((left, right) => left.position - right.position).map(row => row.track);
   }
 
   async refreshShare(
@@ -282,21 +332,33 @@ export class PlaylistSharingService {
     return data.user.id;
   }
 
-  private async loadAllShareTracks(shareId: string): Promise<Array<{position: number; track: CompareTrack}>> {
-    const pageSize = 500;
-    const rows: Array<{position: number; track: CompareTrack}> = [];
-    for (let from = 0; ; from += pageSize) {
-      const {data, error} = await this.supabase.client
-        .from('playlist_share_tracks')
-        .select('position, track')
-        .eq('share_id', shareId)
-        .order('position', {ascending: true})
-        .range(from, from + pageSize - 1);
-      if (error) throw error;
-      const page = (data || []) as Array<{position: number; track: CompareTrack}>;
-      rows.push(...page);
-      if (page.length < pageSize) return rows;
-    }
+  private async loadShareTrackPage(
+    shareId: string,
+    from: number,
+    pageSize: number,
+    signal: AbortSignal | undefined,
+    includeCount: boolean
+  ): Promise<{rows: Array<{position: number; track: CompareTrack}>; count: number | null}> {
+    this.throwIfAborted(signal);
+    let query: any = this.supabase.client
+      .from('playlist_share_tracks')
+      .select('position, track', includeCount ? {count: 'exact'} : undefined)
+      .eq('share_id', shareId)
+      .order('position', {ascending: true})
+      .range(from, from + pageSize - 1);
+    if (signal && typeof query.abortSignal === 'function') query = query.abortSignal(signal);
+    const {data, error, count} = await query;
+    this.throwIfAborted(signal);
+    if (error) throw error;
+    return {
+      rows: (data || []) as Array<{position: number; track: CompareTrack}>,
+      count: typeof count === 'number' ? count : null
+    };
+  }
+
+  private throwIfAborted(signal?: AbortSignal): void {
+    if (!signal?.aborted) return;
+    throw new DOMException('Shared playlist loading was cancelled.', 'AbortError');
   }
 
   private async loadCurrentProfile(): Promise<{displayName: string; imageUrl: string}> {

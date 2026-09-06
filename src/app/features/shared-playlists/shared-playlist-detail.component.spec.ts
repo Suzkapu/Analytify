@@ -19,6 +19,8 @@ describe('SharedPlaylistDetailComponent', () => {
   beforeEach(() => {
     sharing = jasmine.createSpyObj<PlaylistSharingService>('PlaylistSharingService', [
       'loadShare',
+      'loadShareMetadata',
+      'loadShareTracks',
       'calculateStats',
       'recordDownload',
       'subscribeToShareChanges'
@@ -27,19 +29,23 @@ describe('SharedPlaylistDetailComponent', () => {
     spotifyUpdates = new Subject<PlaylistShareSpotifyUpdate>();
     sharing.subscribeToShareChanges.and.returnValue(unsubscribeShareChanges);
     spotify = jasmine.createSpyObj<ParticipantSpotifyService>('ParticipantSpotifyService', ['syncPlaylist']);
-    sharing.loadShare.and.resolveTo({
+    sharing.loadShareMetadata.and.resolveTo({
       share: {
         id: 'share-id', ownerUserId: 'owner', recipientUserId: 'recipient', sourcePlaylistId: 'source',
         playlistName: 'Shared party', playlistDescription: '', playlistImageUrl: '', ownerDisplayName: 'Owner',
         ownerImageUrl: '', recipientDisplayName: 'Recipient', trackCount: 1, revision: 2,
         createdAt: 'now', updatedAt: 'now', acceptedAt: 'now', revokedAt: null
       },
-      tracks: [track('song')],
       download: {
         shareId: 'share-id', spotifyPlaylistId: 'existing', spotifyPlaylistUrl: 'spotify-url',
         appliedRevision: 1, updatedAt: 'before'
       },
       viewerRole: 'recipient'
+    });
+    sharing.loadShareTracks.and.callFake(async (_id, options) => {
+      const tracks = [track('song')];
+      options?.onPage?.(tracks, tracks.length, tracks.length);
+      return tracks;
     });
     sharing.calculateStats.and.returnValue({
       tracks: 1, artists: 1, albums: 0, durationMs: 0, explicitTracks: 0, topArtists: [], topAlbums: []
@@ -88,13 +94,12 @@ describe('SharedPlaylistDetailComponent', () => {
 
   it('does not open a realtime channel when the detail page closes during its initial load', async () => {
     let finishLoad!: (details: any) => void;
-    sharing.loadShare.and.returnValue(new Promise(resolve => finishLoad = resolve));
+    sharing.loadShareMetadata.and.returnValue(new Promise(resolve => finishLoad = resolve));
 
     const initialization = component.ngOnInit();
     component.ngOnDestroy();
     finishLoad({
       share: share(1),
-      tracks: [track('song')],
       download: null,
       viewerRole: 'recipient'
     });
@@ -103,20 +108,73 @@ describe('SharedPlaylistDetailComponent', () => {
     expect(sharing.subscribeToShareChanges).not.toHaveBeenCalled();
   });
 
+  it('renders playlist metadata before track hydration finishes', async () => {
+    let finishTracks!: (tracks: any[]) => void;
+    sharing.loadShareTracks.and.returnValue(new Promise(resolve => finishTracks = resolve));
+
+    const loading = component.load();
+    await flushAsyncWork();
+    fixture.detectChanges();
+
+    expect(component.share?.playlistName).toBe('Shared party');
+    expect(component.isLoading).toBeFalse();
+    expect(component.isTracksLoading).toBeTrue();
+    expect(fixture.nativeElement.textContent).toContain('Shared party');
+    finishTracks([track('song')]);
+    await loading;
+  });
+
+  it('keeps partial pages visible when a later page fails', async () => {
+    sharing.loadShareTracks.and.callFake(async (_id, options) => {
+      options?.onPage?.([track('first')], 1, 2);
+      throw new Error('Some shared playlist songs could not be loaded. Please retry.');
+    });
+
+    await component.load();
+
+    expect(component.tracks.map(item => item.id)).toEqual(['first']);
+    expect(component.trackLoadError).toContain('could not be loaded');
+  });
+
+  it('aborts track hydration when the page is destroyed', async () => {
+    let capturedSignal: AbortSignal | undefined;
+    sharing.loadShareTracks.and.callFake((_id, options) => {
+      capturedSignal = options?.signal;
+      return new Promise(() => undefined);
+    });
+    void component.load();
+    await flushAsyncWork();
+
+    component.ngOnDestroy();
+
+    expect(capturedSignal?.aborted).toBeTrue();
+  });
+
+  it('limits the rendered track window for very large playlists', () => {
+    component.filteredTracks = Array.from({length: 2_000}, (_, index) => track(`song-${index}`));
+
+    expect(component.visibleTracks.length).toBe(component.virtualWindowSize);
+    component.onTrackListScroll({currentTarget: {scrollTop: 62_000}} as any);
+    expect(component.visibleTracks.length).toBe(component.virtualWindowSize);
+    expect(component.visibleTrackStart).toBeGreaterThan(0);
+  });
+
   it('silently reloads a matching live update while background synchronization handles Spotify', async () => {
-    sharing.loadShare.and.returnValues(
+    sharing.loadShareMetadata.and.returnValues(
       Promise.resolve({
         share: share(2),
-        tracks: [track('old-song')],
         download: download(1),
         viewerRole: 'recipient'
       }),
       Promise.resolve({
         share: share(3),
-        tracks: [track('new-song')],
         download: download(1),
         viewerRole: 'recipient'
       })
+    );
+    sharing.loadShareTracks.and.returnValues(
+      Promise.resolve([track('old-song')]),
+      Promise.resolve([track('new-song')])
     );
 
     await component.ngOnInit();
@@ -135,13 +193,17 @@ describe('SharedPlaylistDetailComponent', () => {
   });
 
   it('shows the applied revision after the background service updates the Spotify copy', async () => {
-    sharing.loadShare.and.returnValues(
+    sharing.loadShareMetadata.and.returnValues(
       Promise.resolve({
-        share: share(3), tracks: [track('new-song')], download: download(2), viewerRole: 'recipient'
+        share: share(3), download: download(2), viewerRole: 'recipient'
       }),
       Promise.resolve({
-        share: share(3), tracks: [track('new-song')], download: download(3), viewerRole: 'recipient'
+        share: share(3), download: download(3), viewerRole: 'recipient'
       })
+    );
+    sharing.loadShareTracks.and.returnValues(
+      Promise.resolve([track('new-song')]),
+      Promise.resolve([track('new-song')])
     );
     await component.ngOnInit();
 
@@ -164,7 +226,8 @@ describe('SharedPlaylistDetailComponent', () => {
     const paramMap = new Subject<any>();
     const pending = new Map<string, (details: any) => void>();
     const unsubscribers = new Map<string, jasmine.Spy>();
-    sharing.loadShare.and.callFake((id: string) => new Promise(resolve => pending.set(id, resolve)));
+    sharing.loadShareMetadata.and.callFake((id: string) => new Promise(resolve => pending.set(id, resolve)));
+    sharing.loadShareTracks.and.callFake(async (id: string) => [track(id === 'share-b' ? 'b' : 'a')]);
     sharing.subscribeToShareChanges.and.callFake((_callback, id) => {
       const unsubscribe = jasmine.createSpy(`unsubscribe-${id}`);
       unsubscribers.set(id || '', unsubscribe);
@@ -180,9 +243,9 @@ describe('SharedPlaylistDetailComponent', () => {
 
     paramMap.next({get: () => 'share-a'});
     paramMap.next({get: () => 'share-b'});
-    pending.get('share-b')?.({share: {...share(2), id: 'share-b'}, tracks: [track('b')], download: null, viewerRole: 'recipient'});
+    pending.get('share-b')?.({share: {...share(2), id: 'share-b'}, download: null, viewerRole: 'recipient'});
     await flushAsyncWork();
-    pending.get('share-a')?.({share: {...share(1), id: 'share-a'}, tracks: [track('a')], download: null, viewerRole: 'recipient'});
+    pending.get('share-a')?.({share: {...share(1), id: 'share-a'}, download: null, viewerRole: 'recipient'});
     await flushAsyncWork();
 
     expect(routed.share?.id).toBe('share-b');

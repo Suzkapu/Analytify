@@ -170,9 +170,7 @@ describe('SpotifyAuthService', () => {
     expect(await service.recoverUsableSession()).toBeTrue();
     expect(values['spotifyAccessToken']).toBe('recovered-token');
     expect(service.isTokenExpired()).toBeFalse();
-    const profileRequest = await requestAfterMicrotasks('https://api.spotify.com/v1/me');
-    profileRequest.flush({id: 'spotify-user', display_name: 'Recovered listener', images: []});
-    await Promise.resolve();
+    expect(http.match('https://api.spotify.com/v1/me').length).toBe(0);
   });
 
   it('exchanges a personal-app PKCE code and stores a local-only Spotify identity', async () => {
@@ -389,6 +387,9 @@ describe('SpotifyAuthService', () => {
 
   it('keeps Cloud Backup inactive when a required upload fails', async () => {
     values['supabaseUserId'] = '11111111-1111-4111-8111-111111111111';
+    values['spotifyAccessToken'] = 'access-token';
+    values['spotifyRefreshToken'] = 'refresh-token';
+    values['spotifyUserId'] = 'spotify-user';
     values['11111111-1111-4111-8111-111111111111_backup_active'] = 'false';
     spyOn<any>(service, 'pushLocalCacheToDatabase').and.rejectWith(new Error('Listening history: database unavailable'));
 

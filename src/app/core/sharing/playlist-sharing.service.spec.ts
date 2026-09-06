@@ -162,7 +162,7 @@ describe('PlaylistSharingService', () => {
       track: track(`track-${index}`, index + 1)
     }));
     const range = jasmine.createSpy('range').and.callFake((start: number, end: number) =>
-      Promise.resolve({data: rows.slice(start, end + 1), error: null})
+      Promise.resolve({data: rows.slice(start, end + 1), error: null, count: rows.length})
     );
     const shareQuery: any = {
       select: () => shareQuery,
@@ -205,6 +205,43 @@ describe('PlaylistSharingService', () => {
       [500, 999],
       [1000, 1499]
     ]);
+  });
+
+  it('emits parallel pages in stable playlist order', async () => {
+    const rows = Array.from({length: 1_100}, (_, index) => ({position: index, track: track(`t-${index}`, index + 1)}));
+    let active = 0;
+    let maximumActive = 0;
+    const range = jasmine.createSpy('range').and.callFake(async (start: number, end: number) => {
+      active++;
+      maximumActive = Math.max(maximumActive, active);
+      await new Promise(resolve => setTimeout(resolve, start === 500 ? 5 : 0));
+      active--;
+      return {data: rows.slice(start, end + 1), error: null, count: rows.length};
+    });
+    const query: any = {select: () => query, eq: () => query, order: () => query, range};
+    from.and.returnValue(query);
+    const pages: string[][] = [];
+
+    const result = await service.loadShareTracks('large-share', {
+      pageSize: 500, concurrency: 3, onPage: page => pages.push(page.map(item => item.id))
+    });
+
+    expect(maximumActive).toBe(2);
+    expect(pages[1][0]).toBe('t-500');
+    expect(pages[2][0]).toBe('t-1000');
+    expect(result.map(item => item.id)).toEqual(rows.map(row => row.track.id));
+  });
+
+  it('aborts remaining track-page work', async () => {
+    const controller = new AbortController();
+    const query: any = {
+      select: () => query, eq: () => query, order: () => query,
+      range: () => Promise.resolve({data: Array.from({length: 500}, (_, i) => ({position: i, track: track(`${i}`, i)})), error: null, count: 1_500})
+    };
+    from.and.returnValue(query);
+    controller.abort();
+
+    await expectAsync(service.loadShareTracks('share', {signal: controller.signal})).toBeRejectedWithError('Shared playlist loading was cancelled.');
   });
 
   function cachedTrack(id: string, playlistIndex: number) {

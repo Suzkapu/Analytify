@@ -76,10 +76,12 @@ export class ArtistDetailsComponent implements OnDestroy {
     const userId = this.authService.getUserId() || 'anonymous';
     const artistCacheKey = `${userId}_artist_${id}`;
     const artistUpdatedKey = `${artistCacheKey}_lastUpdated`;
-    await this.storageService.hydrateItems?.([
-      artistCacheKey,
-      ...(this.playlistId ? [`${userId}_${this.playlistId}`] : [])
-    ]);
+    if (this.storageService.hydrateItems) {
+      await this.storageService.hydrateItems([
+        artistCacheKey,
+        ...(this.playlistId ? [`${userId}_${this.playlistId}`] : [])
+      ]);
+    }
     if (!canApply()) return;
 
     const readArtistCache = (): any | null => {

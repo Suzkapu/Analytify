@@ -23,6 +23,11 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
   searchText = '';
   activeView: 'songs' | 'stats' = 'songs';
   isLoading = true;
+  isTracksLoading = false;
+  trackLoadError = '';
+  readonly virtualRowHeight = 62;
+  readonly virtualWindowSize = 120;
+  visibleTrackStart = 0;
   isDownloading = false;
   errorMessage = '';
   liveUpdateMessage = '';
@@ -37,6 +42,11 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
   private destroyed = false;
   private loadGeneration = 0;
   private routeSubscription = new Subscription();
+  private trackLoadController: AbortController | null = null;
+  private artistCounts = new Map<string, {id: string; name: string; count: number}>();
+  private albumCounts = new Map<string, number>();
+  private totalDurationMs = 0;
+  private explicitTrackCount = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -66,6 +76,8 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
     this.destroyed = true;
     this.loadGeneration++;
     this.routeSubscription.unsubscribe();
+    this.trackLoadController?.abort();
+    this.trackLoadController = null;
     this.unsubscribeShareChanges?.();
     this.unsubscribeShareChanges = null;
     this.spotifyUpdateSubscription.unsubscribe();
@@ -83,15 +95,37 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
     if (!canApply()) return;
     if (!silent) this.isLoading = true;
     this.errorMessage = '';
+    this.trackLoadError = '';
+    this.trackLoadController?.abort();
+    const controller = new AbortController();
+    this.trackLoadController = controller;
     try {
-      const details = await this.sharing.loadShare(shareId);
+      const details = await this.sharing.loadShareMetadata(shareId);
       if (!canApply()) return;
       this.share = details.share;
-      this.tracks = details.tracks;
       this.download = this.newerDownload(this.download, details.download);
       this.viewerRole = details.viewerRole;
-      this.stats = this.sharing.calculateStats(this.tracks);
-      this.filterTracks();
+      this.isLoading = false;
+      this.resetTrackView();
+      this.isTracksLoading = true;
+      try {
+        const tracks = await this.sharing.loadShareTracks(shareId, {
+          signal: controller.signal,
+          concurrency: 3,
+          onPage: page => {
+            if (!canApply() || controller.signal.aborted) return;
+            this.appendTrackPage(page);
+          }
+        });
+        if (!canApply() || controller.signal.aborted) return;
+        this.tracks = tracks;
+        this.filterTracks(false);
+      } catch (error) {
+        if (!canApply() || controller.signal.aborted || (error as any)?.name === 'AbortError') return;
+        this.trackLoadError = (error as any)?.message || 'Some songs could not be loaded. Please retry.';
+      } finally {
+        if (canApply() && !controller.signal.aborted) this.isTracksLoading = false;
+      }
     } catch (error) {
       if (!canApply()) return;
       this.share = null;
@@ -101,7 +135,7 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  filterTracks(): void {
+  filterTracks(resetWindow = true): void {
     const query = this.searchText.trim().toLowerCase();
     this.filteredTracks = !query
       ? [...this.tracks]
@@ -110,10 +144,31 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
           || track.artists.some(artist => artist.name.toLowerCase().includes(query))
           || track.albumName.toLowerCase().includes(query)
         );
+    if (resetWindow) this.visibleTrackStart = 0;
+  }
+
+  get visibleTracks(): CompareTrack[] {
+    return this.filteredTracks.slice(this.visibleTrackStart, this.visibleTrackStart + this.virtualWindowSize);
+  }
+
+  get virtualTopPadding(): number {
+    return this.visibleTrackStart * this.virtualRowHeight;
+  }
+
+  get virtualBottomPadding(): number {
+    return Math.max(0, this.filteredTracks.length - this.visibleTrackStart - this.virtualWindowSize)
+      * this.virtualRowHeight;
+  }
+
+  onTrackListScroll(event: Event): void {
+    const scrollTop = (event.currentTarget as HTMLElement).scrollTop;
+    const nextStart = Math.max(0, Math.floor(scrollTop / this.virtualRowHeight) - 10);
+    const maximum = Math.max(0, this.filteredTracks.length - this.virtualWindowSize);
+    this.visibleTrackStart = Math.min(nextStart, maximum);
   }
 
   async downloadOrUpdate(): Promise<void> {
-    if (!this.share || !this.isRecipient || this.isDownloading) return;
+    if (!this.share || !this.isRecipient || this.isDownloading || this.isTracksLoading || this.trackLoadError) return;
     this.isDownloading = true;
     this.errorMessage = '';
     this.saveResult = null;
@@ -233,6 +288,8 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
 
   private async activateShareRoute(shareId: string): Promise<void> {
     const generation = ++this.loadGeneration;
+    this.trackLoadController?.abort();
+    this.trackLoadController = null;
     this.unsubscribeShareChanges?.();
     this.unsubscribeShareChanges = null;
     this.shareId = shareId;
@@ -241,6 +298,8 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
     this.filteredTracks = [];
     this.download = null;
     this.stats = null;
+    this.isTracksLoading = false;
+    this.trackLoadError = '';
     this.errorMessage = '';
     this.liveUpdateMessage = '';
     this.saveResult = null;
@@ -261,6 +320,50 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
     if (!incoming) return current;
     if (!current || current.shareId !== incoming.shareId) return incoming;
     return current.appliedRevision > incoming.appliedRevision ? current : incoming;
+  }
+
+  private resetTrackView(): void {
+    this.tracks = [];
+    this.filteredTracks = [];
+    this.visibleTrackStart = 0;
+    this.artistCounts.clear();
+    this.albumCounts.clear();
+    this.totalDurationMs = 0;
+    this.explicitTrackCount = 0;
+    this.stats = this.currentStats();
+  }
+
+  private appendTrackPage(page: CompareTrack[]): void {
+    this.tracks = [...this.tracks, ...page];
+    page.forEach(track => {
+      this.totalDurationMs += Number(track.durationMs || 0);
+      if (track.explicit) this.explicitTrackCount++;
+      track.artists.forEach(artist => {
+        const current = this.artistCounts.get(artist.id) || {...artist, count: 0};
+        current.count++;
+        this.artistCounts.set(artist.id, current);
+      });
+      if (track.albumName) {
+        this.albumCounts.set(track.albumName, (this.albumCounts.get(track.albumName) || 0) + 1);
+      }
+    });
+    this.stats = this.currentStats();
+    this.filterTracks(false);
+  }
+
+  private currentStats(): SharedPlaylistStats {
+    return {
+      tracks: this.tracks.length,
+      artists: this.artistCounts.size,
+      albums: this.albumCounts.size,
+      durationMs: this.totalDurationMs,
+      explicitTracks: this.explicitTrackCount,
+      topArtists: Array.from(this.artistCounts.values()).sort((a, b) => b.count - a.count).slice(0, 10),
+      topAlbums: Array.from(this.albumCounts.entries())
+        .map(([name, count]) => ({name, count}))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 10)
+    };
   }
 
   private async getUsableAccessToken(): Promise<string> {

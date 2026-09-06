@@ -19,10 +19,11 @@
         <span class="eyebrow">{{ isRecipient ? 'Private playlist access' : 'Shared by you' }}</span>
         <h1>{{ displayPlaylistName }}</h1>
         <p>{{ share.playlistDescription || 'A private playlist shared through Analytify.' }}</p>
-        <small>{{ tracks.length }} songs · revision {{ share.revision }} · streamed from Supabase</small>
+        <small>{{ share.trackCount }} songs · revision {{ share.revision }} · streamed from Supabase</small>
+        <small *ngIf="isTracksLoading" role="status">Loading songs… {{ tracks.length }} / {{ share.trackCount }}</small>
       </div>
       <div class="download-block" *ngIf="isRecipient">
-        <button type="button" (click)="downloadOrUpdate()" [disabled]="isDownloading || (!!download && !hasUpdate)">
+        <button type="button" (click)="downloadOrUpdate()" [disabled]="isDownloading || isTracksLoading || !!trackLoadError || (!!download && !hasUpdate)">
           <i class="pi" [ngClass]="isDownloading ? 'pi-spin pi-spinner' : (hasUpdate ? 'pi-refresh' : 'pi-download')"></i>
           {{ isDownloading ? 'Updating…' : downloadButtonLabel }}
         </button>
@@ -33,6 +34,7 @@
     </header>
 
     <div *ngIf="errorMessage" class="detail-alert error" role="alert"><i class="pi pi-exclamation-circle"></i>{{ errorMessage }}</div>
+    <div *ngIf="trackLoadError" class="detail-alert error" role="alert"><i class="pi pi-exclamation-circle"></i>{{ trackLoadError }}</div>
     <div *ngIf="liveUpdateMessage" class="detail-alert success" role="status">
       <i class="pi pi-bolt"></i>{{ liveUpdateMessage }}
     </div>
@@ -46,14 +48,18 @@
     <section *ngIf="activeView === 'songs'" class="songs-panel">
       <label class="track-search"><i class="pi pi-search"></i><input type="search" [(ngModel)]="searchText" (input)="filterTracks()" placeholder="Search songs, artists, or albums"></label>
       <div class="track-row header-row"><span>#</span><span>Title</span><span>Album</span><span>Time</span></div>
-      <a *ngFor="let track of filteredTracks; trackBy: trackTrack" class="track-row spotify-destination"
-        [href]="track.spotifyUrl | safeSpotifyUrl:'track'" [attr.target]="(track.spotifyUrl | safeSpotifyUrl:'track') ? '_blank' : null"
-        rel="noopener noreferrer" [attr.aria-label]="track.spotifyUrl ? 'Open ' + track.name + ' on Spotify' : null">
-        <span>{{ track.playlistIndex }}</span>
-        <span class="track-title"><img *ngIf="track.imageUrl" [src]="track.imageUrl" alt="" loading="lazy" decoding="async"><i *ngIf="!track.imageUrl" class="pi pi-music"></i><span><strong>{{ track.name }}</strong><small>{{ track.artists[0].name }}</small></span></span>
-        <span class="album-name">{{ track.albumName || '—' }}</span>
-        <span>{{ formatDuration(track.durationMs || 0) }}</span>
-      </a>
+      <div class="virtual-track-list" (scroll)="onTrackListScroll($event)">
+        <div aria-hidden="true" [style.height.px]="virtualTopPadding"></div>
+        <a *ngFor="let track of visibleTracks; trackBy: trackTrack" class="track-row spotify-destination"
+          [href]="track.spotifyUrl | safeSpotifyUrl:'track'" [attr.target]="(track.spotifyUrl | safeSpotifyUrl:'track') ? '_blank' : null"
+          rel="noopener noreferrer" [attr.aria-label]="track.spotifyUrl ? 'Open ' + track.name + ' on Spotify' : null">
+          <span>{{ track.playlistIndex }}</span>
+          <span class="track-title"><img *ngIf="track.imageUrl" [src]="track.imageUrl" alt="" loading="lazy" decoding="async"><i *ngIf="!track.imageUrl" class="pi pi-music"></i><span><strong>{{ track.name }}</strong><small>{{ track.artists[0].name }}</small></span></span>
+          <span class="album-name">{{ track.albumName || '—' }}</span>
+          <span>{{ formatDuration(track.durationMs || 0) }}</span>
+        </a>
+        <div aria-hidden="true" [style.height.px]="virtualBottomPadding"></div>
+      </div>
     </section>
 
     <section *ngIf="activeView === 'stats' && stats" class="stats-panel">

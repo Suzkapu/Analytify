@@ -137,6 +137,7 @@ describe('HeaderComponent entry points', () => {
   it('caches a confirmed missing avatar after a 404 without retrying Spotify', () => {
     component.profilePicUrl = 'https://cdn.example/missing.jpg';
     spotifyDataService.getCurrentUser.calls.reset();
+    storageService.setItem.calls.reset();
 
     component.onProfileImageError(404);
 

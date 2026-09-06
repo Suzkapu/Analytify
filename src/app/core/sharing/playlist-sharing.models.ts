@@ -34,6 +34,15 @@ export interface PlaylistShareDetails {
   viewerRole: 'owner' | 'recipient';
 }
 
+export type PlaylistShareMetadata = Omit<PlaylistShareDetails, 'tracks'>;
+
+export interface PlaylistShareTrackLoadOptions {
+  signal?: AbortSignal;
+  pageSize?: number;
+  concurrency?: number;
+  onPage?: (tracks: CompareTrack[], loaded: number, total: number) => void;
+}
+
 export interface PlaylistSharePublication {
   sourcePlaylistId: string;
   playlistName: string;
