@@ -3,6 +3,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '@env/environment';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {KeyedSerialTaskQueue} from '@core/performance/async-load';
+import {sanitizeSpotifyUrl} from '@core/navigation/spotify-url';
 
 const console = createScopedLogger('Supabase');
 
@@ -258,7 +259,10 @@ export class SupabaseService {
           image_url: this.isPlaceholderImage(incomingImage)
             ? (existing?.image_url || null)
             : incomingImage,
-          spotify_url: a.external_urls?.spotify || a.spotifyUrl || a.spotify_url || existing?.spotify_url || null,
+          spotify_url: sanitizeSpotifyUrl(
+            a.external_urls?.spotify || a.spotifyUrl || a.spotify_url || existing?.spotify_url,
+            'artist'
+          ),
           last_updated: new Date().toISOString()
         };
       });
@@ -372,7 +376,10 @@ export class SupabaseService {
           image_url: this.isPlaceholderImage(incomingImage)
             ? (existing?.image_url || null)
             : incomingImage,
-          spotify_url: a.external_urls?.spotify || a.spotifyUrl || a.spotify_url || existing?.spotify_url || null,
+          spotify_url: sanitizeSpotifyUrl(
+            a.external_urls?.spotify || a.spotifyUrl || a.spotify_url || existing?.spotify_url,
+            'album'
+          ),
           restriction_reason: a.restrictions?.reason || existing?.restriction_reason || null,
           upc: a.external_ids?.upc || a.upc || existing?.upc || null,
           ean: a.external_ids?.ean || a.ean || existing?.ean || null,
@@ -543,7 +550,10 @@ export class SupabaseService {
           album_id: t.album?.id || t.albumId || existing?.album_id || null,
           duration_ms: Number.isFinite(durationMs) ? durationMs : (existing?.duration_ms ?? 0),
           explicit: typeof t.explicit === 'boolean' ? t.explicit : (existing?.explicit ?? false),
-          spotify_url: t.external_urls?.spotify || t.spotifyUrl || t.spotify_url || existing?.spotify_url || null,
+          spotify_url: sanitizeSpotifyUrl(
+            t.external_urls?.spotify || t.spotifyUrl || t.spotify_url || existing?.spotify_url,
+            'track'
+          ),
           track_number: Number.isFinite(trackNumber) ? trackNumber : (existing?.track_number ?? 1),
           disc_number: Number.isFinite(discNumber) ? discNumber : (existing?.disc_number ?? 1),
           is_playable: typeof t.is_playable === 'boolean' ? t.is_playable : (existing?.is_playable ?? true),

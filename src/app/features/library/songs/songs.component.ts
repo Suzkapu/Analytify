@@ -6,6 +6,7 @@ import {PlaylistLoaderService} from "@core/sync/playlist-loader/playlist-loader.
 import {ImageHealingService} from "@core/sync/image-healing/image-healing.service";
 import {Subscription} from 'rxjs';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {openSpotifyUrl} from '@core/navigation/spotify-url';
 
 const console = createScopedLogger('Songs');
 
@@ -742,9 +743,7 @@ export class SongsComponent implements OnInit, OnDestroy {
   }
 
   openTrackClick(url: string) {
-    if (url) {
-      window.open(url, '_blank', 'noopener,noreferrer');
-    }
+    openSpotifyUrl(url, {expectedType: 'album'});
   }
 
   trackArtistItem(index: number, artist: any): string | number {

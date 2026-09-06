@@ -161,7 +161,7 @@
         </p>
 
         <div class="track-preview">
-          <a *ngFor="let track of sharedTracks | slice:0:12; trackBy: trackTrack" [href]="track.spotifyUrl"
+          <a *ngFor="let track of sharedTracks | slice:0:12; trackBy: trackTrack" [href]="track.spotifyUrl | safeSpotifyUrl:'track'"
             target="_blank" rel="noopener noreferrer" class="track-row spotify-destination"
             [attr.aria-label]="'Open ' + track.name + ' on Spotify'">
             <img *ngIf="track.imageUrl" [src]="track.imageUrl" alt="">
@@ -196,7 +196,7 @@
             <span *ngIf="participant.result?.success">{{ participant.result?.addedTracks }} tracks added</span>
             <span *ngIf="!participant.result?.success">{{ participant.result?.error || 'Playlist creation failed' }}</span>
           </div>
-          <a *ngIf="participant.result?.playlistUrl" [href]="participant.result?.playlistUrl" target="_blank" rel="noopener noreferrer">Open in Spotify</a>
+          <a *ngIf="participant.result?.playlistUrl" [href]="participant.result?.playlistUrl | safeSpotifyUrl:'playlist'" target="_blank" rel="noopener noreferrer">Open in Spotify</a>
         </article>
       </div>
       <div class="success-actions">

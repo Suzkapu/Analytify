@@ -8,6 +8,7 @@ import {PastTopItem, SupabaseService} from '@core/data-access/supabase/supabase.
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {mapWithConcurrency, runAfterNextPaint} from '@core/performance/async-load';
 import {StatsSharingService} from '@core/sharing/stats-sharing.service';
+import {openSpotifyUrl} from '@core/navigation/spotify-url';
 
 const console = createScopedLogger('Personal Stats');
 
@@ -637,15 +638,11 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   }
 
   openTrackClick(url: string) {
-    if (url) {
-      window.location.href = url;
-    }
+    openSpotifyUrl(url, {expectedType: 'track', target: '_self'});
   }
 
   openArtistClick(url: string) {
-    if (url) {
-      window.location.href = url;
-    }
+    openSpotifyUrl(url, {expectedType: 'artist', target: '_self'});
   }
 
 

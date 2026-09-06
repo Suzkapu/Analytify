@@ -139,7 +139,7 @@
               <span>Recommended by {{ recommenderName(recommendation.recommenderUserId) }}</span>
               <h3>{{ recommendation.trackName }}</h3>
               <p>{{ recommendation.artistNames }}</p>
-              <a *ngIf="recommendation.spotifyUrl" [href]="recommendation.spotifyUrl" target="_blank" rel="noopener noreferrer"><i class="pi pi-spotify"></i> Open in Spotify</a>
+              <a *ngIf="recommendation.spotifyUrl" [href]="recommendation.spotifyUrl | safeSpotifyUrl:'track'" target="_blank" rel="noopener noreferrer"><i class="pi pi-spotify"></i> Open in Spotify</a>
             </div>
             <div class="active-song-score"><strong>{{ recommendationPoints(recommendation.id) | number }}</strong><span>points</span></div>
             <div class="listener-position-list">
@@ -160,7 +160,7 @@
           {{ isCreatingPlaylist ? 'Creating playlist…' : (currentUserPlaylist?.lastError ? 'Retry playlist setup' : 'Create my Weekly Picks playlist') }}
         </button>
         <a *ngIf="currentUserPlaylist?.spotifyPlaylistUrl as playlistUrl" class="league-secondary"
-          [href]="playlistUrl" target="_blank" rel="noopener noreferrer">
+          [href]="playlistUrl | safeSpotifyUrl:'playlist'" target="_blank" rel="noopener noreferrer">
           <i class="pi pi-spotify"></i> Open my Weekly Picks playlist
         </a>
         <p>Private on Spotify · updates after accepted Friday picks · replaces the previous week every Friday</p>

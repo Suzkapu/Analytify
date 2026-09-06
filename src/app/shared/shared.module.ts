@@ -7,6 +7,7 @@ import {InputTextModule} from 'primeng/inputtext';
 import {MetricCardComponent} from './ui/metric-card/metric-card.component';
 import {PageStateComponent} from './ui/page-state/page-state.component';
 import {SectionHeadingComponent} from './ui/section-heading/section-heading.component';
+import {SafeSpotifyUrlPipe} from './pipes/safe-spotify-url.pipe';
 
 const SHARED_MODULES = [
   CommonModule,
@@ -18,7 +19,7 @@ const SHARED_MODULES = [
 
 @NgModule({
   imports: SHARED_MODULES,
-  declarations: [MetricCardComponent, PageStateComponent, SectionHeadingComponent],
-  exports: [...SHARED_MODULES, MetricCardComponent, PageStateComponent, SectionHeadingComponent]
+  declarations: [MetricCardComponent, PageStateComponent, SectionHeadingComponent, SafeSpotifyUrlPipe],
+  exports: [...SHARED_MODULES, MetricCardComponent, PageStateComponent, SectionHeadingComponent, SafeSpotifyUrlPipe]
 })
 export class SharedModule {}

@@ -5,6 +5,7 @@ import { StorageService } from "@core/data-access/storage/storage.service";
 import {distinctUntilChanged, map, Subscription} from 'rxjs';
 import { PlaylistLoaderService } from "@core/sync/playlist-loader/playlist-loader.service";
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {openSpotifyUrl} from '@core/navigation/spotify-url';
 
 const console = createScopedLogger('Playlist Analysis');
 
@@ -509,9 +510,7 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
   }
 
   openTrackClick(url: string) {
-    if (url) {
-      window.location.href = url;
-    }
+    openSpotifyUrl(url, {expectedType: 'track', target: '_self'});
   }
 
   }

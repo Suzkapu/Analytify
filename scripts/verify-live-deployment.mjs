@@ -1,3 +1,5 @@
+import {invalidSecurityHeaders} from './security-headers.mjs';
+
 const requiredEnvironment = name => {
   const value = process.env[name]?.trim();
   if (!value) throw new Error(`${name} is required for the live deployment check.`);
@@ -18,7 +20,14 @@ const probes = [
     label: 'Analytify application',
     url: `${appUrl}/`,
     options: {},
-    validate: async response => response.ok && (await response.text()).includes('<app-root')
+    validate: async response => {
+      const invalidHeaders = invalidSecurityHeaders(response.headers);
+      if (invalidHeaders.length > 0) {
+        console.error(`Live application security headers invalid: ${invalidHeaders.join(', ')}`);
+        return false;
+      }
+      return response.ok && (await response.text()).includes('<app-root');
+    }
   },
   ...['sync_user_settings', 'spotify_credentials'].map(table => ({
     label: `Supabase ${table} table`,

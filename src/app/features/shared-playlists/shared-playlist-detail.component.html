@@ -27,7 +27,7 @@
           {{ isDownloading ? 'Updating…' : downloadButtonLabel }}
         </button>
         <a *ngIf="download?.spotifyPlaylistUrl" class="spotify-text-link spotify-destination"
-          [href]="download?.spotifyPlaylistUrl" target="_blank" rel="noopener noreferrer">Open Spotify copy</a>
+          [href]="download?.spotifyPlaylistUrl | safeSpotifyUrl:'playlist'" target="_blank" rel="noopener noreferrer">Open Spotify copy</a>
         <small *ngIf="download">Updates automatically while you are logged in to Analytify.</small>
       </div>
     </header>
@@ -47,7 +47,7 @@
       <label class="track-search"><i class="pi pi-search"></i><input type="search" [(ngModel)]="searchText" (input)="filterTracks()" placeholder="Search songs, artists, or albums"></label>
       <div class="track-row header-row"><span>#</span><span>Title</span><span>Album</span><span>Time</span></div>
       <a *ngFor="let track of filteredTracks; trackBy: trackTrack" class="track-row spotify-destination"
-        [href]="track.spotifyUrl || null" [attr.target]="track.spotifyUrl ? '_blank' : null"
+        [href]="track.spotifyUrl | safeSpotifyUrl:'track'" [attr.target]="(track.spotifyUrl | safeSpotifyUrl:'track') ? '_blank' : null"
         rel="noopener noreferrer" [attr.aria-label]="track.spotifyUrl ? 'Open ' + track.name + ' on Spotify' : null">
         <span>{{ track.playlistIndex }}</span>
         <span class="track-title"><img *ngIf="track.imageUrl" [src]="track.imageUrl" alt="" loading="lazy" decoding="async"><i *ngIf="!track.imageUrl" class="pi pi-music"></i><span><strong>{{ track.name }}</strong><small>{{ track.artists[0].name }}</small></span></span>

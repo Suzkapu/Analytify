@@ -4,6 +4,7 @@ import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {openSpotifyUrl} from '@core/navigation/spotify-url';
 
 const console = createScopedLogger('Listening History');
 
@@ -164,9 +165,7 @@ export class ListeningHistoryComponent implements OnInit {
   }
 
   openTrackClick(url: string) {
-    if (url) {
-      window.open(url, '_blank');
-    }
+    openSpotifyUrl(url, {expectedType: 'track'});
   }
 
 

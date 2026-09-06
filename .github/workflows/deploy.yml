@@ -85,7 +85,7 @@ jobs:
         run: supabase stop --workdir . --no-backup
 
       - name: Validate deployment script
-        run: bash -n scripts/deploy.sh scripts/deploy-supabase.sh scripts/activate-release.sh
+        run: bash -n scripts/deploy.sh scripts/deploy-supabase.sh scripts/activate-release.sh scripts/install-nginx-security.sh
 
       - name: Deploy Supabase schema and functions
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'

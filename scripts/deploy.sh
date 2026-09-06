@@ -172,6 +172,11 @@ deploy_with_retry "dist/spoti-front/" "${web_release}/" true
 deploy_with_retry "services/sync-service/" "${worker_release}/" true
 deploy_private_file_with_retry "$allowlist_file" "${worker_root}/.admin-spotify-ids"
 deploy_private_file_with_retry "$token_key_file" "${worker_root}/.spotify-token-encryption-key"
+deploy_private_file_with_retry "deploy/analytify-security.conf" "${worker_root}/.analytify-nginx-security-${deploy_commit_sha}.conf"
+deploy_with_retry "scripts/install-nginx-security.sh" "${worker_root}/install-nginx-security.sh" false
+
+echo "Installing and syntax-checking the versioned nginx security policy..."
+$ssh_command "$remote" "chmod 700 '${worker_root}/install-nginx-security.sh' && '${worker_root}/install-nginx-security.sh' '${worker_root}/.analytify-nginx-security-${deploy_commit_sha}.conf'"
 
 echo "Installing the worker's production dependencies..."
 $ssh_command "$remote" "cd '${worker_release}' && npm install --omit=dev --ignore-scripts"

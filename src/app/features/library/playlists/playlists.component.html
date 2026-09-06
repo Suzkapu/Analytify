@@ -99,7 +99,7 @@
     <span *ngIf="!mergeResult.success">{{ mergeResult.addedTracks }} songs were added before the error. {{ mergeResult.error }}</span>
   </div>
   <a *ngIf="mergeResult.playlistUrl" class="spotify-text-link spotify-destination"
-    [href]="mergeResult.playlistUrl" target="_blank" rel="noopener noreferrer">Inspect in Spotify</a>
+    [href]="mergeResult.playlistUrl | safeSpotifyUrl:'playlist'" target="_blank" rel="noopener noreferrer">Inspect in Spotify</a>
   <button type="button" (click)="dismissMergeResult()" aria-label="Dismiss success message">×</button>
     </section>
 

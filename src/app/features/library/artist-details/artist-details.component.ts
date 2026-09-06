@@ -5,6 +5,7 @@ import {StorageService} from "@core/data-access/storage/storage.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SupabaseService} from "@core/data-access/supabase/supabase.service";
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {openSpotifyUrl} from '@core/navigation/spotify-url';
 
 const console = createScopedLogger('Artist Details');
 
@@ -140,16 +141,12 @@ export class ArtistDetailsComponent {
   }
 
   openTrackClick(url?: string) {
-    if (url) {
-      window.location.href = url;
-    }
+    openSpotifyUrl(url, {expectedType: 'track', target: '_self'});
   }
 
   openArtistClick() {
     const url = this.getArtistSpotifyUrl();
-    if (url) {
-      window.location.href = url;
-    }
+    openSpotifyUrl(url, {expectedType: 'artist', target: '_self'});
   }
 
   getArtistSpotifyUrl(): string {
