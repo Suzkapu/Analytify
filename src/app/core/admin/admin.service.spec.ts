@@ -37,6 +37,17 @@ describe('AdminService', () => {
     expect(rpc).toHaveBeenCalledOnceWith('is_app_admin');
   });
 
+  it('caches admin status for one identity and invalidates it when the session changes', async () => {
+    auth.getSupabaseUserId.and.returnValue('user-a');
+    expect(await service.isAdmin()).toBeTrue();
+    expect(await service.isAdmin()).toBeTrue();
+    expect(rpc).toHaveBeenCalledTimes(1);
+
+    auth.getSupabaseUserId.and.returnValue('user-b');
+    expect(await service.isAdmin()).toBeTrue();
+    expect(rpc).toHaveBeenCalledTimes(2);
+  });
+
   it('sends a test push only through the authenticated notification function', async () => {
     expect(await service.sendTestNotification()).toBe(1);
     expect(invoke).toHaveBeenCalledOnceWith('song-league-notifications', {

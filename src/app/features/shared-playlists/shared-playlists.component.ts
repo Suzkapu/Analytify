@@ -9,6 +9,7 @@ import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
 import {StatsAccessRequest, StatsShareableUser} from '@core/sharing/stats-sharing.models';
 import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {PlaylistShareAutoSyncService} from '@core/sharing/playlist-share-auto-sync.service';
 
 const console = createScopedLogger('Shared Playlists');
 
@@ -66,11 +67,13 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     private sharing: PlaylistSharingService,
     private auth: SpotifyAuthService,
     private source: ComparePlaylistSourceService,
-    private statsSharing: StatsSharingService
+    private statsSharing: StatsSharingService,
+    private shareAutoSync: PlaylistShareAutoSyncService
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.destroyed = false;
+    this.shareAutoSync.start();
     await this.reload();
     if (this.destroyed) return;
     this.unsubscribeFromShareChanges = this.sharing.subscribeToShareChanges(() => {

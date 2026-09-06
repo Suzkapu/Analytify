@@ -6,6 +6,7 @@ import {ServiceWorkerModule} from '@angular/service-worker';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {CoreModule} from '@core/core.module';
+import {LayoutModule} from '@shared/layout/layout.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -13,6 +14,7 @@ import {CoreModule} from '@core/core.module';
     BrowserModule,
     BrowserAnimationsModule,
     CoreModule,
+    LayoutModule,
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),

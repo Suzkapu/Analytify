@@ -7,6 +7,7 @@ import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
 import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 import {SharedPlaylistsComponent} from './shared-playlists.component';
+import {PlaylistShareAutoSyncService} from '@core/sharing/playlist-share-auto-sync.service';
 
 describe('SharedPlaylistsComponent', () => {
   let fixture: ComponentFixture<SharedPlaylistsComponent>;
@@ -16,6 +17,7 @@ describe('SharedPlaylistsComponent', () => {
   let source: jasmine.SpyObj<ComparePlaylistSourceService>;
   let statsSharing: jasmine.SpyObj<StatsSharingService>;
   let unsubscribe: jasmine.Spy;
+  let startAutoSync: jasmine.Spy;
 
   beforeEach(() => {
     sharing = jasmine.createSpyObj<PlaylistSharingService>('PlaylistSharingService', [
@@ -49,6 +51,7 @@ describe('SharedPlaylistsComponent', () => {
       'reportUser'
     ]);
     unsubscribe = jasmine.createSpy('unsubscribe');
+    startAutoSync = jasmine.createSpy('start');
     sharing.listReceivedShares.and.resolveTo([]);
     sharing.listOwnedShares.and.resolveTo([]);
     sharing.subscribeToShareChanges.and.returnValue(unsubscribe);
@@ -93,11 +96,19 @@ describe('SharedPlaylistsComponent', () => {
         {provide: SpotifyAuthService, useValue: auth},
         {provide: ComparePlaylistSourceService, useValue: source}
         ,{provide: StatsSharingService, useValue: statsSharing}
+        ,{provide: PlaylistShareAutoSyncService, useValue: {start: startAutoSync}}
       ],
       schemas: [NO_ERRORS_SCHEMA]
     });
     fixture = TestBed.createComponent(SharedPlaylistsComponent);
     component = fixture.componentInstance;
+  });
+
+  it('starts recipient auto-sync only when the sharing workspace is entered', async () => {
+    expect(startAutoSync).not.toHaveBeenCalled();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(startAutoSync).toHaveBeenCalledTimes(1);
   });
 
   it('keeps stats requests available but blocks playlist publishing without Cloud Backup', async () => {

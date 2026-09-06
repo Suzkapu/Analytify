@@ -1,7 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 
-import {LayoutModule} from '@shared/layout/layout.module';
 import {SharedModule} from '@shared/shared.module';
 import {ListeningHistoryComponent} from './listening-history.component';
 
@@ -9,7 +8,6 @@ import {ListeningHistoryComponent} from './listening-history.component';
   declarations: [ListeningHistoryComponent],
   imports: [
     SharedModule,
-    LayoutModule,
     RouterModule.forChild([{path: '', component: ListeningHistoryComponent}])
   ]
 })

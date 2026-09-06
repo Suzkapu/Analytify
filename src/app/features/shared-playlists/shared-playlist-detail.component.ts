@@ -59,6 +59,7 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     this.destroyed = false;
+    this.shareAutoSync.start();
     this.spotifyUpdateSubscription = this.shareAutoSync.spotifyUpdates$.subscribe(update => {
       if (update.shareId === this.shareId) void this.applySpotifyAutoUpdate(update);
     });

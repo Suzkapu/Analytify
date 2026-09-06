@@ -7,6 +7,7 @@ import {AdminSyncRun, AdminUserSyncSettings, SiteSettings, SyncTaskKey} from './
 @Injectable({providedIn: 'root'})
 export class AdminService {
   private adminPromise: Promise<boolean> | null = null;
+  private adminUserId: string | null = null;
 
   constructor(
     private supabase: SupabaseService,
@@ -16,11 +17,14 @@ export class AdminService {
   isAdmin(refresh = false): Promise<boolean> {
     // Local-only sessions cannot be application administrators because they
     // have no trusted cloud identity. Avoid an RPC that can only return false.
-    if (!this.auth.getSupabaseUserId()) {
+    const userId = this.auth.getSupabaseUserId();
+    if (!userId) {
+      this.adminUserId = null;
       this.adminPromise = Promise.resolve(false);
       return this.adminPromise;
     }
-    if (!this.adminPromise || refresh) {
+    if (!this.adminPromise || refresh || this.adminUserId !== userId) {
+      this.adminUserId = userId;
       this.adminPromise = Promise.resolve(this.supabase.client.rpc('is_app_admin')).then(({data, error}) => {
         if (error) return false;
         return data === true;

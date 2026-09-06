@@ -4,7 +4,6 @@ import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
-import {PlaylistShareAutoSyncService} from '@core/sharing/playlist-share-auto-sync.service';
 import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 import {firstValueFrom} from 'rxjs';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
@@ -77,7 +76,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private storageService: StorageService,
     private supabaseService: SupabaseService,
     private spotifyDataService: SpotifyDataService,
-    private playlistShareAutoSync: PlaylistShareAutoSyncService,
     private adminService: AdminService,
     private pushNotifications: PushNotificationService,
     private router: Router,
@@ -85,12 +83,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
-    this.playlistShareAutoSync.start();
     // Re-check the active Supabase identity so an admin result is never reused
     // after logout when a different user signs in within the same app session.
     const [, isAdmin, statsDiscoverable] = await Promise.all([
       this.loadUserProfile(),
-      this.adminService.isAdmin(true),
+      this.adminService.isAdmin(),
       this.authService.hasCloudIdentity?.() && this.statsSharing
         ? this.statsSharing.getDiscoverability().catch(() => false)
         : Promise.resolve(false)
@@ -383,10 +380,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.showBackupConfirmModal = false;
     try {
       await this.authService.enableBackup();
-      this.playlistShareAutoSync.start();
-      void this.playlistShareAutoSync.syncNow().catch(error => {
-        console.warn('[HeaderComponent] Playlist shares could not be refreshed after enabling Cloud Backup.', error);
-      });
     } catch (err) {
       console.error('Failed to enable backup:', err);
       alert(err instanceof Error ? err.message : 'Failed to enable database backup. Please try again.');

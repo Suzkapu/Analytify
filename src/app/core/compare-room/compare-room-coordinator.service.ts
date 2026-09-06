@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import * as QRCode from 'qrcode';
 import {
   CompareInvitation,
   CompareMergeMode,
@@ -56,6 +55,8 @@ export class CompareRoomCoordinatorService {
     const secret = this.randomToken(24);
     const joinUrl = `${window.location.origin}/compare-room/join/${this.roomId}` +
       `#invitation=${encodeURIComponent(id)}&secret=${encodeURIComponent(secret)}`;
+    // QR generation is only downloaded when the host actually opens an invite slot.
+    const QRCode = await import('qrcode');
     const invitation: CompareInvitation = {
       id,
       secret,

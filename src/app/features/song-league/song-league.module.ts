@@ -1,7 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 
-import {LayoutModule} from '@shared/layout/layout.module';
 import {SharedModule} from '@shared/shared.module';
 import {SongLeagueClaimComponent} from './song-league-claim.component';
 import {SongLeagueDetailComponent} from './song-league-detail.component';
@@ -17,7 +16,6 @@ import {SongLeagueRulesComponent} from './song-league-rules.component';
   ],
   imports: [
     SharedModule,
-    LayoutModule,
     RouterModule.forChild([
       {path: '', pathMatch: 'full', component: SongLeagueHomeComponent},
       {path: 'join/:token', component: SongLeagueClaimComponent},

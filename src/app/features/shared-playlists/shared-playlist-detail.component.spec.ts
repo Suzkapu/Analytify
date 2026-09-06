@@ -7,6 +7,7 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.service';
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
 import {PlaylistShareAutoSyncService, PlaylistShareSpotifyUpdate} from '@core/sharing/playlist-share-auto-sync.service';
+import {SafeSpotifyUrlPipe} from '@shared/pipes/safe-spotify-url.pipe';
 
 describe('SharedPlaylistDetailComponent', () => {
   let fixture: ComponentFixture<SharedPlaylistDetailComponent>;
@@ -60,7 +61,7 @@ describe('SharedPlaylistDetailComponent', () => {
     });
 
     TestBed.configureTestingModule({
-      declarations: [SharedPlaylistDetailComponent],
+      declarations: [SharedPlaylistDetailComponent, SafeSpotifyUrlPipe],
       providers: [
         {provide: ActivatedRoute, useValue: {snapshot: {paramMap: {get: () => 'share-id'}}}},
         {provide: Router, useValue: {navigate: jasmine.createSpy('navigate')}},
@@ -70,7 +71,9 @@ describe('SharedPlaylistDetailComponent', () => {
         },
         {provide: ParticipantSpotifyService, useValue: spotify},
         {provide: PlaylistSharingService, useValue: sharing},
-        {provide: PlaylistShareAutoSyncService, useValue: {spotifyUpdates$: spotifyUpdates.asObservable()}}
+        {provide: PlaylistShareAutoSyncService, useValue: {
+          start: jasmine.createSpy('start'), spotifyUpdates$: spotifyUpdates.asObservable()
+        }}
       ],
       schemas: [NO_ERRORS_SCHEMA]
     });
