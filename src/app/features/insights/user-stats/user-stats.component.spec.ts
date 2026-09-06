@@ -148,6 +148,35 @@ describe('UserStatsComponent trends', () => {
       .toEqual({type: 'up', diff: 1});
   });
 
+  it('builds a 100-item immutable view once across repeated render bindings', () => {
+    const tracks = Array.from({length: 100}, (_, index) => ({
+      id: `track-${index}`, name: `Track ${index}`, artists: [{name: `Artist ${index}`}]
+    }));
+    const comparison = makeSnapshot('2026-07-30', [...tracks].reverse());
+    component.topTracks = tracks;
+    component.historyData = [comparison];
+    component.compareSnapshotId = comparison.timestamp.toString();
+
+    const firstRender = component.filteredTracks;
+    firstRender.forEach(track => {
+      component.getStatsRankIndex(track, 'tracks');
+      component.getTrend(track, component.getStatsRankIndex(track, 'tracks'), 'tracks');
+      component.getTrend(track, component.getStatsRankIndex(track, 'tracks'), 'tracks');
+    });
+
+    expect(firstRender.length).toBe(100);
+    expect(component.filteredTracks).toBe(firstRender);
+    expect(component.statsViewBuildCount).toBe(1);
+
+    component.onStatsSearchChange('Track 9');
+    expect(component.filteredTracks.length).toBe(11);
+    expect(component.statsViewBuildCount).toBe(2);
+  });
+
+  it('uses OnPush change detection for the precomputed stats view', () => {
+    expect((UserStatsComponent as any).ɵcmp.onPush).toBeTrue();
+  });
+
   it('keeps medium and long-term stats fresh for seven days', () => {
     const sixDaysAgo = Date.now() - 6 * 24 * 60 * 60 * 1000;
     const eightDaysAgo = Date.now() - 8 * 24 * 60 * 60 * 1000;

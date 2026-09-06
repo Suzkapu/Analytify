@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener, Optional } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, HostListener, Optional } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
@@ -48,12 +48,15 @@ function compareCalendarWeekdays(): string[] {
 @Component({
   selector: 'app-user-stats',
   templateUrl: './user-stats.component.html',
-  styleUrls: ['./user-stats.component.scss']
+  styleUrls: ['./user-stats.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserStatsComponent implements OnInit, OnDestroy {
   selectedRange: string = 'short_term'; // 'short_term', 'medium_term', 'long_term'
   selectedCategory: string = 'tracks'; // 'tracks', 'artists', 'genres'
-  statsSearchQuery: string = '';
+  private _statsSearchQuery = '';
+  get statsSearchQuery(): string { return this._statsSearchQuery; }
+  set statsSearchQuery(value: string) { this._statsSearchQuery = value; this.invalidateStatsView(); }
   includePastStatsSearch = false;
   pastTopResults: PastTopItem[] = [];
   isSearchingPastStats = false;
@@ -66,15 +69,36 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   sharedStatsError = '';
 
 
-  topTracks: any[] = [];
-  topArtists: any[] = [];
-  topGenres: { name: string; count: number; percentage: number; percentage_simple?: number }[] = [];
+  private _topTracks: any[] = [];
+  get topTracks(): any[] { return this._topTracks; }
+  set topTracks(value: any[]) { this._topTracks = value || []; this.invalidateStatsView(); }
+  private _topArtists: any[] = [];
+  get topArtists(): any[] { return this._topArtists; }
+  set topArtists(value: any[]) { this._topArtists = value || []; this.invalidateStatsView(); }
+  private _topGenres: { name: string; count: number; percentage: number; percentage_simple?: number }[] = [];
+  get topGenres(): { name: string; count: number; percentage: number; percentage_simple?: number }[] { return this._topGenres; }
+  set topGenres(value: { name: string; count: number; percentage: number; percentage_simple?: number }[]) {
+    this._topGenres = value || [];
+    this.invalidateStatsView();
+  }
   
   // Stats History variables
-  historyData: any[] = [];
+  private _historyData: any[] = [];
+  get historyData(): any[] { return this._historyData; }
+  set historyData(value: any[]) {
+    this._historyData = value || [];
+    this.snapshotById = new Map(this._historyData.map(snapshot => [snapshot.timestamp.toString(), snapshot]));
+    this.rebuildHistoricalImageIndexes();
+    this.itemIndexCache = new WeakMap();
+    this.invalidateStatsView();
+  }
   selectedHistoryPoint: any = null;
-  selectedSnapshotId: string = 'current';
-  compareSnapshotId: string = '';
+  private _selectedSnapshotId = 'current';
+  get selectedSnapshotId(): string { return this._selectedSnapshotId; }
+  set selectedSnapshotId(value: string) { this._selectedSnapshotId = value; this.invalidateStatsView(); }
+  private _compareSnapshotId = '';
+  get compareSnapshotId(): string { return this._compareSnapshotId; }
+  set compareSnapshotId(value: string) { this._compareSnapshotId = value; this.invalidateStatsView(); }
   snapshotOptions: any[] = [];
   showHistoryMenu: boolean = false;
   showCompareMenu: boolean = false;
@@ -101,6 +125,31 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   private pastSearchSequence = 0;
   private activeSpyOwnerUserId: string | null = null;
   private routeSubscription: Subscription | null = null;
+  private statsViewVersion = 0;
+  private builtStatsViewVersion = -1;
+  private isBuildingStatsView = false;
+  private displayedTracksView: any[] = [];
+  private displayedArtistsView: any[] = [];
+  private displayedGenresView: any[] = [];
+  private filteredTracksView: any[] = [];
+  private filteredArtistsView: any[] = [];
+  private filteredGenresView: any[] = [];
+  private trackRankByItem = new WeakMap<object, number>();
+  private artistRankByItem = new WeakMap<object, number>();
+  private trendByCategory: Record<StatsCategory, WeakMap<object, StatsTrend>> = {
+    tracks: new WeakMap(), artists: new WeakMap(), genres: new WeakMap()
+  };
+  private itemIndexCache = new WeakMap<any[], Map<string, number>>();
+  private snapshotById = new Map<string, any>();
+  private historicalTrackCoverByKey = new Map<string, string>();
+  private historicalArtistImageByKey = new Map<string, string>();
+  private priorAppearanceDateKey: string | null = null;
+  private priorAppearanceHasUnloaded = false;
+  private priorAppearanceKeys: Record<StatsCategory, Set<string>> = {
+    tracks: new Set(), artists: new Set(), genres: new Set()
+  };
+  /** Used by the regression test to prove UI checks do not rebuild 100-item models. */
+  statsViewBuildCount = 0;
 
   // Trend modal variables
   showTrendPopup: boolean = false;
@@ -122,7 +171,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     private storageService: StorageService,
     private supabaseService: SupabaseService,
     @Optional() private route?: ActivatedRoute,
-    @Optional() private statsSharing?: StatsSharingService
+    @Optional() private statsSharing?: StatsSharingService,
+    @Optional() private changeDetector?: ChangeDetectorRef
   ) { }
 
   get spyOwnerUserId(): string {
@@ -266,6 +316,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
         this.pastTopResults = [];
         this.isSearchingPastStats = false;
         this.pastStatsSearchError = 'Enable Cloud Backup to search your saved ranking history.';
+        this.changeDetector?.markForCheck();
       }
       return;
     }
@@ -285,7 +336,10 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       this.pastTopResults = [];
       this.pastStatsSearchError = (error as any)?.message || 'Saved ranking history could not be searched.';
     } finally {
-      if (sequence === this.pastSearchSequence) this.isSearchingPastStats = false;
+      if (sequence === this.pastSearchSequence) {
+        this.isSearchingPastStats = false;
+        this.changeDetector?.markForCheck();
+      }
     }
   }
 
@@ -619,6 +673,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
             this.topArtists = parsedArtists;
             this.topGenres = parsedGenres;
           }
+          this.changeDetector?.markForCheck();
         }
       });
     }
@@ -1023,7 +1078,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       };
     }
 
-    return this.historyData.find(d => d.timestamp.toString() === this.compareSnapshotId) || null;
+    return this.snapshotById.get(this.compareSnapshotId) || null;
   }
 
   getComparisonSnapshot(): any {
@@ -1384,17 +1439,29 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
 
   getTrend(item: any, currentIdx: number, category: StatsCategory): StatsTrend {
+    this.ensureStatsViewModel();
+    if (item && typeof item === 'object') {
+      const cached = this.trendByCategory[category].get(item);
+      if (cached) return cached;
+    }
+    return this.calculateTrend(item, currentIdx, category);
+  }
+
+  private calculateTrend(
+    item: any,
+    currentIdx: number,
+    category: StatsCategory,
+    previousSnapshot = this.getComparisonSnapshot()
+  ): StatsTrend {
     if (!this.historyData || this.historyData.length === 0) {
       return { type: 'same' };
     }
 
-    const prevSnapshot = this.getComparisonSnapshot();
-
-    if (!prevSnapshot) {
+    if (!previousSnapshot) {
       return { type: 'same' };
     }
 
-    const comparisonItems = this.getSnapshotItems(prevSnapshot, category);
+    const comparisonItems = this.getSnapshotItems(previousSnapshot, category);
     const comparisonIdx = this.findStatsItemIndex(comparisonItems, item, category);
     const selectedDateKey = this.getSnapshotDateKey(this.selectedSnapshotId);
     const comparisonDateKey = this.getSnapshotDateKey(this.compareSnapshotId);
@@ -1451,27 +1518,18 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       .filter((id): id is string => typeof id === 'string' && id.length > 0);
   }
 
-  private statsItemsMatch(left: any, right: any, category: StatsCategory): boolean {
-    if (!left || !right) return false;
-
+  private statsIdentityKeys(item: any, category: StatsCategory): string[] {
+    if (!item) return [];
+    const name = this.getStatsItemName(item, category);
     if (category === 'tracks') {
-      const leftIds = this.getTrackIdentityIds(left);
-      const rightIds = new Set(this.getTrackIdentityIds(right));
-      if (leftIds.some(id => rightIds.has(id))) return true;
-
-      const leftName = this.getStatsItemName(left, category);
-      const rightName = this.getStatsItemName(right, category);
-      const leftArtist = this.normalizeStatsIdentity(this.getTrackArtist(left));
-      const rightArtist = this.normalizeStatsIdentity(this.getTrackArtist(right));
-      return !!leftName && !!leftArtist && leftName === rightName && leftArtist === rightArtist;
+      const ids = this.getTrackIdentityIds(item).map(id => `id:${id}`);
+      const artist = this.normalizeStatsIdentity(this.getTrackArtist(item));
+      return [...ids, ...(name && artist ? [`name:${name}:::${artist}`] : [])];
     }
-
-    if (category === 'artists' && left.id && right.id && left.id === right.id) {
-      return true;
+    if (category === 'artists') {
+      return [...(item?.id ? [`id:${item.id}`] : []), ...(name ? [`name:${name}`] : [])];
     }
-
-    const leftName = this.getStatsItemName(left, category);
-    return !!leftName && leftName === this.getStatsItemName(right, category);
+    return name ? [`name:${name}`] : [];
   }
 
   deduplicateStatsTracks(tracks: any[]): any[] {
@@ -1495,23 +1553,21 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
   private findStatsItemIndex(items: any[], item: any, category: StatsCategory): number {
     if (!item || !Array.isArray(items) || items.length === 0) return -1;
-    const exactIndex = items.indexOf(item);
-    if (exactIndex !== -1) return exactIndex;
-
-    if (category === 'tracks') {
-      const targetIds = new Set(this.getTrackIdentityIds(item));
-      if (targetIds.size > 0) {
-        const idIndex = items.findIndex(candidate =>
-          this.getTrackIdentityIds(candidate).some(id => targetIds.has(id))
-        );
-        if (idIndex !== -1) return idIndex;
-      }
-    } else if (category === 'artists' && item?.id) {
-      const idIndex = items.findIndex(candidate => candidate?.id === item.id);
-      if (idIndex !== -1) return idIndex;
+    let index = this.itemIndexCache.get(items);
+    if (!index) {
+      index = new Map<string, number>();
+      items.forEach((candidate, candidateIndex) => {
+        for (const key of this.statsIdentityKeys(candidate, category)) {
+          if (!index!.has(key)) index!.set(key, candidateIndex);
+        }
+      });
+      this.itemIndexCache.set(items, index);
     }
-
-    return items.findIndex(candidate => this.statsItemsMatch(candidate, item, category));
+    for (const key of this.statsIdentityKeys(item, category)) {
+      const found = index.get(key);
+      if (found !== undefined) return found;
+    }
+    return -1;
   }
 
   private getSnapshotDateKey(snapshotId: string): string | null {
@@ -1519,7 +1575,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       return toDailySnapshotDateKey(Date.now());
     }
 
-    const snapshot = this.historyData.find(d => d.timestamp.toString() === snapshotId);
+    const snapshot = this.snapshotById.get(snapshotId);
     if (snapshot) {
       return snapshot.snapshotDate || toDailySnapshotDateKey(snapshot.timestamp);
     }
@@ -1533,6 +1589,11 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     category: StatsCategory,
     selectedDateKey: string
   ): 'present' | 'absent' | 'unknown' {
+    if (this.priorAppearanceDateKey === selectedDateKey) {
+      const keys = this.priorAppearanceKeys[category];
+      if (this.statsIdentityKeys(item, category).some(key => keys.has(key))) return 'present';
+      return this.priorAppearanceHasUnloaded ? 'unknown' : 'absent';
+    }
     let hasUnloadedSnapshot = false;
 
     for (const snapshot of this.historyData) {
@@ -1552,62 +1613,11 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     return hasUnloadedSnapshot ? 'unknown' : 'absent';
   }
 
-  get displayedTracks(): any[] {
-    let rawTracks: any[] = [];
-    if (this.selectedSnapshotId === 'current') {
-      rawTracks = this.topTracks;
-    } else {
-      const snap = this.historyData.find(d => d.timestamp.toString() === this.selectedSnapshotId);
-      if (snap) {
-        if (snap.isLoaded === false) {
-          this.lazyLoadSnapshotDetails(snap.timestamp.toString());
-        }
-        rawTracks = snap.isLoaded === true ? (snap.topTracks || []) : [];
-      } else {
-        rawTracks = this.topTracks;
-      }
-    }
-    return this.deduplicateStatsTracks(rawTracks);
-  }
-
-  get displayedArtists(): any[] {
-    if (this.selectedSnapshotId === 'current') {
-      return this.topArtists;
-    }
-    const snap = this.historyData.find(d => d.timestamp.toString() === this.selectedSnapshotId);
-    if (snap) {
-      if (snap.isLoaded === false) {
-        this.lazyLoadSnapshotDetails(snap.timestamp.toString());
-      }
-      return snap.isLoaded === true ? (snap.topArtists || []) : [];
-    }
-    return this.topArtists;
-  }
-
-  get filteredTracks(): any[] {
-    const query = this.normalizeStatsIdentity(this.statsSearchQuery);
-    if (!query) return this.displayedTracks;
-    return this.displayedTracks.filter(track =>
-      this.normalizeStatsIdentity(track?.name).includes(query) ||
-      this.normalizeStatsIdentity(this.getTrackArtist(track)).includes(query)
-    );
-  }
-
-  get filteredArtists(): any[] {
-    const query = this.normalizeStatsIdentity(this.statsSearchQuery);
-    if (!query) return this.displayedArtists;
-    return this.displayedArtists.filter(artist =>
-      this.normalizeStatsIdentity(artist?.name).includes(query)
-    );
-  }
-
-  get filteredGenres(): any[] {
-    const query = this.normalizeStatsIdentity(this.statsSearchQuery);
-    if (!query) return this.displayedGenres;
-    return this.displayedGenres.filter(genre =>
-      this.normalizeStatsIdentity(genre?.name).includes(query)
-    );
-  }
+  get displayedTracks(): any[] { this.ensureStatsViewModel(); return this.displayedTracksView; }
+  get displayedArtists(): any[] { this.ensureStatsViewModel(); return this.displayedArtistsView; }
+  get filteredTracks(): any[] { this.ensureStatsViewModel(); return this.filteredTracksView; }
+  get filteredArtists(): any[] { this.ensureStatsViewModel(); return this.filteredArtistsView; }
+  get filteredGenres(): any[] { this.ensureStatsViewModel(); return this.filteredGenresView; }
 
   get isStatsSearchActive(): boolean {
     return this.normalizeStatsIdentity(this.statsSearchQuery).length > 0;
@@ -1619,59 +1629,34 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   }
 
   getStatsRankIndex(item: any, category: 'tracks' | 'artists'): number {
-    const items = category === 'tracks' ? this.displayedTracks : this.displayedArtists;
-    const exactIndex = items.indexOf(item);
-    if (exactIndex !== -1) return exactIndex;
-    if (category === 'tracks') {
-      const targetIds = new Set(this.getTrackIdentityIds(item));
-      if (targetIds.size > 0) {
-        const idIndex = items.findIndex(candidate =>
-          this.getTrackIdentityIds(candidate).some(id => targetIds.has(id))
-        );
-        if (idIndex !== -1) return idIndex;
-      }
-    } else if (category === 'artists' && item?.id) {
-      const idIndex = items.findIndex(candidate => candidate?.id === item.id);
-      if (idIndex !== -1) return idIndex;
-    }
-    return this.findStatsItemIndex(items, item, category);
+    this.ensureStatsViewModel();
+    const cached = item && typeof item === 'object'
+      ? (category === 'tracks' ? this.trackRankByItem : this.artistRankByItem).get(item)
+      : undefined;
+    return cached ?? this.findStatsItemIndex(
+      category === 'tracks' ? this.displayedTracksView : this.displayedArtistsView,
+      item,
+      category
+    );
   }
 
-  get displayedGenres(): any[] {
-    let rawGenres: any[] = [];
-    if (this.selectedSnapshotId === 'current') {
-      rawGenres = this.topGenres;
-    } else {
-      const snapshot = this.historyData.find(d => d.timestamp.toString() === this.selectedSnapshotId);
-      if (snapshot) {
-        if (snapshot.isLoaded === false) {
-          this.lazyLoadSnapshotDetails(snapshot.timestamp.toString());
-        }
-        rawGenres = snapshot.isLoaded === true ? (snapshot.topGenres || []) : [];
-      }
-    }
+  get displayedGenres(): any[] { this.ensureStatsViewModel(); return this.displayedGenresView; }
 
+  private buildDisplayedGenres(rawGenres: any[], previousSnapshot: any): any[] {
     if (rawGenres.length === 0) return [];
-
     const maxPercentage = rawGenres[0].percentage || 1;
-    const previousSnapshot = this.getComparisonSnapshot();
     const previousGenres = previousSnapshot ? (previousSnapshot.topGenres || []) : [];
 
     return rawGenres.map((genre: any, index: number) => {
       const currentRank = index + 1;
       const currentPercentage = genre.percentage || 0;
       const previousIndex = this.findStatsItemIndex(previousGenres, genre, 'genres');
-      const trend = this.getTrend(genre, index, 'genres');
-
-      let previousPercentage = 0;
-
-      if (previousIndex !== -1) {
-        const previousGenre = previousGenres[previousIndex];
-        previousPercentage = typeof previousGenre === 'string' ? 0 : (previousGenre.percentage || 0);
-      }
-
-      const percentageDiff = currentPercentage - previousPercentage;
-      return {
+      const trend = this.calculateTrend(genre, index, 'genres', previousSnapshot);
+      const previousGenre = previousIndex !== -1 ? previousGenres[previousIndex] : null;
+      const previousPercentage = previousGenre && typeof previousGenre !== 'string'
+        ? (previousGenre.percentage || 0)
+        : 0;
+      const view = {
         name: genre.name,
         percentage: currentPercentage,
         percentage_simple: currentPercentage > 0
@@ -1683,11 +1668,102 @@ export class UserStatsComponent implements OnInit, OnDestroy {
         rank: currentRank,
         trendType: trend.type,
         rankDiff: trend.diff || 0,
-        percentageDiff,
+        percentageDiff: currentPercentage - previousPercentage,
         prevPercentage: previousPercentage,
         hasCompare: !!previousSnapshot
       };
+      this.trendByCategory.genres.set(view, trend);
+      return view;
     });
+  }
+
+  private selectedRawItems(category: StatsCategory): any[] {
+    if (this.selectedSnapshotId === 'current') {
+      return category === 'tracks' ? this.topTracks : category === 'artists' ? this.topArtists : this.topGenres;
+    }
+    const snapshot = this.snapshotById.get(this.selectedSnapshotId);
+    if (!snapshot) return category === 'tracks' ? this.topTracks : category === 'artists' ? this.topArtists : [];
+    if (snapshot.isLoaded === false) {
+      this.lazyLoadSnapshotDetails(snapshot.timestamp.toString());
+      return [];
+    }
+    return snapshot.isLoaded === true ? this.getSnapshotItems(snapshot, category) : [];
+  }
+
+  private ensureStatsViewModel(): void {
+    if (this.builtStatsViewVersion === this.statsViewVersion || this.isBuildingStatsView) return;
+    this.isBuildingStatsView = true;
+    try {
+      this.statsViewBuildCount++;
+      this.itemIndexCache = new WeakMap();
+      this.displayedTracksView = this.deduplicateStatsTracks(this.selectedRawItems('tracks'));
+      this.displayedArtistsView = [...this.selectedRawItems('artists')];
+      this.trackRankByItem = new WeakMap();
+      this.artistRankByItem = new WeakMap();
+      this.trendByCategory = {tracks: new WeakMap(), artists: new WeakMap(), genres: new WeakMap()};
+      this.displayedTracksView.forEach((item, index) => {
+        if (item && typeof item === 'object') this.trackRankByItem.set(item, index);
+      });
+      this.displayedArtistsView.forEach((item, index) => {
+        if (item && typeof item === 'object') this.artistRankByItem.set(item, index);
+      });
+
+      const selectedDateKey = this.getSnapshotDateKey(this.selectedSnapshotId);
+      this.buildPriorAppearanceIndex(selectedDateKey);
+      const previousSnapshot = this.getComparisonSnapshot();
+      this.displayedTracksView.forEach((item, index) => {
+        if (item && typeof item === 'object') {
+          this.trendByCategory.tracks.set(item, this.calculateTrend(item, index, 'tracks', previousSnapshot));
+        }
+      });
+      this.displayedArtistsView.forEach((item, index) => {
+        if (item && typeof item === 'object') {
+          this.trendByCategory.artists.set(item, this.calculateTrend(item, index, 'artists', previousSnapshot));
+        }
+      });
+      this.displayedGenresView = this.buildDisplayedGenres(this.selectedRawItems('genres'), previousSnapshot);
+
+      const query = this.normalizeStatsIdentity(this.statsSearchQuery);
+      this.filteredTracksView = !query ? this.displayedTracksView : this.displayedTracksView.filter(track =>
+        this.normalizeStatsIdentity(track?.name).includes(query)
+        || this.normalizeStatsIdentity(this.getTrackArtist(track)).includes(query)
+      );
+      this.filteredArtistsView = !query ? this.displayedArtistsView : this.displayedArtistsView.filter(artist =>
+        this.normalizeStatsIdentity(artist?.name).includes(query)
+      );
+      this.filteredGenresView = !query ? this.displayedGenresView : this.displayedGenresView.filter(genre =>
+        this.normalizeStatsIdentity(genre?.name).includes(query)
+      );
+      this.builtStatsViewVersion = this.statsViewVersion;
+    } finally {
+      this.isBuildingStatsView = false;
+    }
+  }
+
+  private invalidateStatsView(): void {
+    this.statsViewVersion++;
+    this.changeDetector?.markForCheck();
+  }
+
+  private buildPriorAppearanceIndex(selectedDateKey: string | null): void {
+    this.priorAppearanceDateKey = selectedDateKey;
+    this.priorAppearanceHasUnloaded = false;
+    this.priorAppearanceKeys = {tracks: new Set(), artists: new Set(), genres: new Set()};
+    if (!selectedDateKey) return;
+
+    for (const snapshot of this.historyData) {
+      const dateKey = snapshot.snapshotDate || toDailySnapshotDateKey(snapshot.timestamp);
+      if (dateKey >= selectedDateKey) continue;
+      if (snapshot.isLoaded !== true) {
+        this.priorAppearanceHasUnloaded = true;
+        continue;
+      }
+      (['tracks', 'artists', 'genres'] as StatsCategory[]).forEach(category => {
+        this.getSnapshotItems(snapshot, category).forEach(item => {
+          this.statsIdentityKeys(item, category).forEach(key => this.priorAppearanceKeys[category].add(key));
+        });
+      });
+    }
   }
 
   onSnapshotChange(event: Event) {
@@ -1745,6 +1821,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
         console.error('Failed to load the item trend from cloud:', err);
       } finally {
         this.isLoadingTrendData = false;
+        this.changeDetector?.markForCheck();
       }
     }
 
@@ -1774,7 +1851,10 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       const value = error as any;
       this.sharedStatsError = value?.message || 'These shared stats are unavailable.';
     } finally {
-      if (loadSequence === this.statsLoadSequence && ownerUserId === this.spyOwnerUserId) this.isLoading = false;
+      if (loadSequence === this.statsLoadSequence && ownerUserId === this.spyOwnerUserId) {
+        this.isLoading = false;
+        this.changeDetector?.markForCheck();
+      }
     }
   }
 
@@ -1995,28 +2075,35 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
   /** Search historical snapshots for a real image for this track by id/name */
   private findHistoricalTrackCover(track: any): string {
-    if (!this.historyData || this.historyData.length === 0) return '';
-    for (let i = this.historyData.length - 1; i >= 0; i--) {
-      const snap = this.historyData[i];
-      const found = (snap.topTracks || []).find((t: any) =>
-        this.statsItemsMatch(t, track, 'tracks')
-      );
-      if (found && !this.isPlaceholderImage(found.albumCover)) return found.albumCover;
+    for (const key of this.statsIdentityKeys(track, 'tracks')) {
+      const cover = this.historicalTrackCoverByKey.get(key);
+      if (cover) return cover;
     }
     return '';
   }
 
   /** Search historical snapshots for a real image for this artist by id/name */
   private findHistoricalArtistImage(artist: any): string {
-    if (!this.historyData || this.historyData.length === 0) return '';
-    for (let i = this.historyData.length - 1; i >= 0; i--) {
-      const snap = this.historyData[i];
-      const found = (snap.topArtists || []).find((a: any) =>
-        (artist.id && a.id && a.id === artist.id) || (a.name === artist.name)
-      );
-      if (found && !this.isPlaceholderImage(found.imageUrl)) return found.imageUrl;
+    for (const key of this.statsIdentityKeys(artist, 'artists')) {
+      const image = this.historicalArtistImageByKey.get(key);
+      if (image) return image;
     }
     return '';
+  }
+
+  private rebuildHistoricalImageIndexes(): void {
+    this.historicalTrackCoverByKey = new Map();
+    this.historicalArtistImageByKey = new Map();
+    for (const snapshot of this._historyData) {
+      (snapshot.topTracks || []).forEach((track: any) => {
+        if (this.isPlaceholderImage(track?.albumCover)) return;
+        this.statsIdentityKeys(track, 'tracks').forEach(key => this.historicalTrackCoverByKey.set(key, track.albumCover));
+      });
+      (snapshot.topArtists || []).forEach((artist: any) => {
+        if (this.isPlaceholderImage(artist?.imageUrl)) return;
+        this.statsIdentityKeys(artist, 'artists').forEach(key => this.historicalArtistImageByKey.set(key, artist.imageUrl));
+      });
+    }
   }
 
   getTrackCover(track: any): string {
@@ -2061,25 +2148,28 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
   isSnapshotLoading(): boolean {
     if (this.selectedSnapshotId === 'current') return false;
-    const snap = this.historyData.find(d => d.timestamp.toString() === this.selectedSnapshotId);
+    const snap = this.snapshotById.get(this.selectedSnapshotId);
     return snap ? snap.isLoaded === 'loading' : false;
   }
 
   ensureSnapshotLoaded(snapshotId: string | 'current') {
     if (!snapshotId || snapshotId === 'current') return;
 
-    const snap = this.historyData.find(d => d.timestamp.toString() === snapshotId);
+    const snap = this.snapshotById.get(snapshotId);
     if (!snap || snap.isLoaded) return;
 
     this.lazyLoadSnapshotDetails(snapshotId);
   }
 
   lazyLoadSnapshotDetails(snapshotIdStr: string) {
-    const snap = this.historyData.find(d => d.timestamp.toString() === snapshotIdStr);
+    const snap = this.snapshotById.get(snapshotIdStr);
     if (!snap || snap.isLoaded === 'loading' || snap.isLoaded === true) return;
 
     const range = this.selectedRange;
-    snap.isLoaded = 'loading';
+    this.historyData = this.historyData.map(snapshot => snapshot === snap
+      ? {...snapshot, isLoaded: 'loading'}
+      : snapshot
+    );
     const supabaseUserId = this.authService.getSupabaseUserId();
     if (supabaseUserId && snap.id) {
       console.log(`[Stats] Lazy-loading snapshot details on demand: ${snap.snapshotDate || snapshotIdStr}`);
@@ -2089,21 +2179,33 @@ export class UserStatsComponent implements OnInit, OnDestroy {
         if (fullSnap) {
           const idx = this.historyData.findIndex(d => d.timestamp.toString() === snapshotIdStr);
           if (idx !== -1) {
-            this.historyData[idx] = { ...this.historyData[idx], ...fullSnap, isLoaded: true };
+            this.historyData = this.historyData.map((snapshot, snapshotIndex) => snapshotIndex === idx
+              ? {...snapshot, ...fullSnap, isLoaded: true}
+              : snapshot
+            );
             // Save to local IndexedDB for future offline usage
             const userId = this.authService.getUserId() || 'anonymous';
             this.storageService.saveStatsHistory({ ...this.historyData[idx], userId }).catch(() => {});
             this.calculateHotMovers();
           }
         } else {
-          snap.isLoaded = false;
+          this.historyData = this.historyData.map(snapshot => snapshot.timestamp.toString() === snapshotIdStr
+            ? {...snapshot, isLoaded: false}
+            : snapshot
+          );
         }
       }).catch(err => {
         console.error('Failed to lazy load snapshot details:', err);
-        snap.isLoaded = false;
+        this.historyData = this.historyData.map(snapshot => snapshot.timestamp.toString() === snapshotIdStr
+          ? {...snapshot, isLoaded: false}
+          : snapshot
+        );
       });
     } else {
-      snap.isLoaded = true;
+      this.historyData = this.historyData.map(snapshot => snapshot.timestamp.toString() === snapshotIdStr
+        ? {...snapshot, isLoaded: true}
+        : snapshot
+      );
     }
   }
 

@@ -29,7 +29,7 @@ const checks = [
   ['Shared-playlist startup requires a cloud identity', shareSync.includes('if (this.started || !this.auth.getSupabaseUserId()) return;')],
   ['Shared-playlist sync exits before hydration without a cloud identity', shareSync.includes('if (!this.auth.isAuthenticated() || !this.auth.getSupabaseUserId()) return;')],
   ['Shared-playlist sync rechecks cloud identity after hydration', /await this\.auth\.ensureInitialSync\(\);[\s\S]{0,200}if \(!this\.auth\.getSupabaseUserId\(\)\) return;/.test(shareSync)],
-  ['Admin role checks avoid impossible local-only RPCs', admin.includes('if (!this.auth.getSupabaseUserId())') && admin.indexOf('if (!this.auth.getSupabaseUserId())') < admin.indexOf("this.supabase.client.rpc('is_app_admin')")],
+  ['Admin role checks avoid impossible local-only RPCs', admin.includes('const userId = this.auth.getSupabaseUserId()') && admin.includes('if (!userId)') && admin.indexOf('if (!userId)') < admin.indexOf("this.supabase.client.rpc('is_app_admin')")],
   ['Stats return from complete unexpired cache', stats.includes('if (!isExpired && !isCacheIncomplete)') && stats.includes('if (!isCacheIncomplete) return;')],
   ['Listening history has a five-minute request freshness gate', history.includes('Date.now() - lastChecked < 5 * 60 * 1000')],
   ['Scheduled worker skips tasks that are not due', scheduler.includes('state?.next_run_at') && scheduler.includes('> now.getTime()) continue;')],
