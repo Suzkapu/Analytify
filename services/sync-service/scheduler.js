@@ -2,7 +2,12 @@ const {TASK_DEFINITIONS, intervalMilliseconds, isScheduledTaskAllowed} = require
 const {randomUUID} = require('node:crypto');
 
 function isJobAllowed(job, settings, now = new Date()) {
-  return job.trigger_type !== 'scheduled' || isScheduledTaskAllowed(job.task_key, settings, now);
+  if (job.trigger_type !== 'scheduled') return true;
+  const definition = TASK_DEFINITIONS[job.task_key];
+  return !!definition
+    && settings.enabled === true
+    && settings[definition.enabledField] === true
+    && isScheduledTaskAllowed(job.task_key, settings, now);
 }
 
 function createScheduler({supabase, config, tasks, credentials, pushDispatcher}) {
@@ -142,8 +147,12 @@ function createScheduler({supabase, config, tasks, credentials, pushDispatcher})
       settings = loadedSettings;
       const handler = tasks[job.task_key];
       if (!handler) throw new Error(`No handler registered for ${job.task_key}.`);
-      if (!isJobAllowed(job, settings)) {
-        await completeJob(job, 'cancelled', {}, {reason: 'Outside the configured scheduling day.'});
+      if (!isJobAllowed(job, settings) || !user.backup_active) {
+        await completeJob(job, 'cancelled', {}, {
+          reason: !user.backup_active
+            ? 'Cloud Backup was disabled after this automatic job was queued.'
+            : 'This automatic task is no longer eligible under the current schedule.'
+        });
         return;
       }
       const details = await withLeaseHeartbeat(job, async () => {
@@ -152,7 +161,6 @@ function createScheduler({supabase, config, tasks, credentials, pushDispatcher})
           last_error: null, updated_at: startedAt
         }, {onConflict: 'user_id,task_key'});
         if (startedStateError) throw startedStateError;
-        if (!user.backup_active) throw new Error('Cloud Backup is disabled for this user.');
         const spotifyCredential = await credentials.get(user.id, user.spotify_refresh_token);
         if (!spotifyCredential) throw new Error('Spotify refresh credential is missing.');
         return handler({

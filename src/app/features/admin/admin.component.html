@@ -92,6 +92,8 @@
               </div>
 
               <p *ngIf="user.lastSuccessAt" class="last-run">Last success {{ user.lastSuccessAt | date:'medium' }}</p>
+              <p *ngIf="user.nextEffectiveRunAt" class="last-run">Next effective automatic run {{ user.nextEffectiveRunAt | date:'medium' }}</p>
+              <p *ngIf="user.manualJobRetained" class="last-run"><i class="pi pi-info-circle"></i> A manually requested run is retained.</p>
               <p *ngIf="user.lastError" class="user-error">{{ user.lastError }}</p>
               <footer><button type="button" class="admin-secondary" (click)="saveUser(user)" [disabled]="isUserBusy(user.userId)"><i class="pi pi-save"></i> Save</button><button type="button" class="admin-primary" (click)="runUserNow(user)" [disabled]="isUserBusy(user.userId) || !user.backupActive || !user.hasRefreshToken"><i class="pi pi-play"></i> Run enabled tasks</button></footer>
             </div>

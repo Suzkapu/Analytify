@@ -110,10 +110,15 @@ describe('SharedPlaylistDetailComponent', () => {
 
   it('renders playlist metadata before track hydration finishes', async () => {
     let finishTracks!: (tracks: any[]) => void;
-    sharing.loadShareTracks.and.returnValue(new Promise(resolve => finishTracks = resolve));
+    let tracksStarted!: () => void;
+    const trackLoadingStarted = new Promise<void>(resolve => tracksStarted = resolve);
+    sharing.loadShareTracks.and.callFake(() => {
+      tracksStarted();
+      return new Promise(resolve => finishTracks = resolve);
+    });
 
     const loading = component.load();
-    await flushAsyncWork();
+    await trackLoadingStarted;
     fixture.detectChanges();
 
     expect(component.share?.playlistName).toBe('Shared party');

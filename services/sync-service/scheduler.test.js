@@ -56,6 +56,21 @@ test('allows explicitly queued manual playlist jobs on any day', () => {
   }, new Date('2026-09-01T12:00:00.000Z')), true);
 });
 
+test('rejects an automatic job disabled after it was queued', () => {
+  assert.equal(isJobAllowed({task_key: 'stats_short_term', trigger_type: 'scheduled'}, {
+    enabled: true, short_term_enabled: false
+  }), false);
+  assert.equal(isJobAllowed({task_key: 'stats_short_term', trigger_type: 'scheduled'}, {
+    enabled: false, short_term_enabled: true
+  }), false);
+});
+
+test('retains explicitly queued manual work after automatic scheduling is disabled', () => {
+  assert.equal(isJobAllowed({task_key: 'stats_short_term', trigger_type: 'manual'}, {
+    enabled: false, short_term_enabled: false
+  }), true);
+});
+
 test('claims jobs atomically with a stable worker identity and bounded lease', async () => {
   const claimed = [{...job, status: 'running'}];
   const {scheduler, rpcCalls} = harness({rpcResults: {claim_sync_jobs: {data: claimed, error: null}}});
@@ -90,6 +105,20 @@ test('records handler failures through the atomic completion boundary', async ()
   assert.equal(completions.length, 1);
   assert.equal(completions[0].args.p_status, 'failed');
   assert.equal(completions[0].args.p_last_error, 'handler failed');
+});
+
+test('cancels a claimed automatic job when its task was disabled after enqueue', async () => {
+  const scheduled = {...job, trigger_type: 'scheduled'};
+  const handler = async () => ({updated: 1});
+  const {scheduler, rpcCalls, taskStateWrites} = harness({handler, settingsResult: {
+    data: {enabled: true, short_term_enabled: false, short_term_interval_hours: 1}, error: null
+  }});
+
+  await scheduler.runJob(scheduled);
+
+  assert.equal(taskStateWrites.length, 0);
+  const completion = rpcCalls.find(call => call.name === 'complete_sync_job');
+  assert.equal(completion.args.p_status, 'cancelled');
 });
 
 test('heartbeats long-running work before completing it', async () => {

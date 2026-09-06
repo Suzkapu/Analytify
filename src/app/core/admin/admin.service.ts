@@ -48,8 +48,13 @@ export class AdminService {
   }
 
   async listUsers(): Promise<AdminUserSyncSettings[]> {
-    const {data, error} = await this.supabase.client.rpc('admin_list_users');
+    const [{data, error}, {data: statusData, error: statusError}] = await Promise.all([
+      this.supabase.client.rpc('admin_list_users'),
+      this.supabase.client.rpc('admin_list_schedule_status')
+    ]);
     if (error) throw error;
+    if (statusError) throw statusError;
+    const statusByUser = new Map((statusData || []).map((row: any) => [row.user_id, row]));
     return (data || []).map((row: any) => ({
       userId: row.user_id,
       spotifyId: row.spotify_id,
@@ -79,7 +84,9 @@ export class AdminService {
       sharedPlaylistIntervalMinutes: Number(row.shared_playlist_interval_minutes || 60),
       sharedPlaylistIntervalUnit: row.shared_playlist_interval_unit || 'minutes',
       lastSuccessAt: row.last_success_at || null,
-      lastError: row.last_error || null
+      lastError: row.last_error || null,
+      nextEffectiveRunAt: (statusByUser.get(row.user_id) as any)?.next_effective_run_at || null,
+      manualJobRetained: !!(statusByUser.get(row.user_id) as any)?.manual_job_retained
     }));
   }
 

@@ -54,13 +54,20 @@ describe('ArtistDetailsComponent', () => {
 
     params.next({id: 'artist-a'});
     params.next({id: 'artist-b'});
+    await waitUntil(() => pending.has('artist-b'));
     pending.get('artist-b')?.({id: 'artist-b', name: 'Artist B'});
-    await Promise.resolve();
+    await waitUntil(() => routed.artist.id === 'artist-b');
     expect(routed.artist.id).toBe('artist-b');
 
     pending.get('artist-a')?.({id: 'artist-a', name: 'Artist A'});
-    await Promise.resolve();
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
     expect(routed.artist.id).toBe('artist-b');
     routed.ngOnDestroy();
   });
+
+  async function waitUntil(predicate: () => boolean): Promise<void> {
+    for (let attempt = 0; attempt < 20 && !predicate(); attempt++) {
+      await new Promise<void>(resolve => setTimeout(resolve, 0));
+    }
+  }
 });

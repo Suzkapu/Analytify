@@ -45,13 +45,15 @@ describe('AdminService', () => {
   });
 
   it('loads the persisted interval unit for every scheduled task', async () => {
-    rpc.and.resolveTo({data: [{
-      user_id: 'user-1', spotify_id: 'spotify-1', display_name: 'Listener',
-      history_interval_unit: 'hours', short_term_interval_unit: 'minutes',
-      medium_term_interval_unit: 'days', long_term_interval_unit: 'days',
-      song_league_playlist_fridays_only: false,
-      song_league_playlist_interval_unit: 'hours', shared_playlist_interval_unit: 'minutes'
-    }], error: null});
+    rpc.and.callFake((name: string) => Promise.resolve({data: name === 'admin_list_schedule_status' ? [{
+      user_id: 'user-1', next_effective_run_at: '2026-09-11T08:00:00Z', manual_job_retained: true
+    }] : [{
+        user_id: 'user-1', spotify_id: 'spotify-1', display_name: 'Listener',
+        history_interval_unit: 'hours', short_term_interval_unit: 'minutes',
+        medium_term_interval_unit: 'days', long_term_interval_unit: 'days',
+        song_league_playlist_fridays_only: false,
+        song_league_playlist_interval_unit: 'hours', shared_playlist_interval_unit: 'minutes'
+      }], error: null}));
 
     const [user] = await service.listUsers();
 
@@ -62,6 +64,8 @@ describe('AdminService', () => {
     expect(user.songLeaguePlaylistFridaysOnly).toBeFalse();
     expect(user.songLeaguePlaylistIntervalUnit).toBe('hours');
     expect(user.sharedPlaylistIntervalUnit).toBe('minutes');
+    expect(user.nextEffectiveRunAt).toBe('2026-09-11T08:00:00Z');
+    expect(user.manualJobRetained).toBeTrue();
   });
 
   it('saves all selected interval units with the schedule values', async () => {

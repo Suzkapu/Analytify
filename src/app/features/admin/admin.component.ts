@@ -66,6 +66,8 @@ export class AdminComponent implements OnInit {
     this.clearMessages();
     try {
       await this.admin.updateUser(user);
+      const refreshed = await this.admin.listUsers();
+      this.users = refreshed;
       this.successMessage = `Synchronization settings saved for ${user.displayName}.`;
     } catch (error) {
       this.errorMessage = this.describeError(error, `Settings for ${user.displayName} could not be saved.`);

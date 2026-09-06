@@ -12,6 +12,7 @@ const intervalUnitsMigration = readFileSync('supabase/migrations/20260903210000_
 const fridayPlaylistMigration = readFileSync('supabase/migrations/20260903220000_song_league_friday_playlist_refresh.sql', 'utf8');
 const adminTemplate = readFileSync('src/app/features/admin/admin.component.html', 'utf8');
 const scheduler = readFileSync('services/sync-service/scheduler.js', 'utf8');
+const deterministicScheduleMigration = readFileSync('supabase/migrations/20260906170000_deterministic_sync_schedule_updates.sql', 'utf8');
 
 const checks = [
   ['admin migration defines the control-plane RPCs', migration.includes('admin_update_sync_user') && migration.includes('admin_list_sync_runs')],
@@ -42,7 +43,15 @@ const checks = [
     fridayPlaylistMigration.includes('song_league_playlist_fridays_only boolean not null default true')
       && adminTemplate.includes('user.songLeaguePlaylistFridaysOnly')
       && scheduler.includes('isScheduledTaskAllowed(taskKey, settings, now)')
-      && scheduler.includes("job.trigger_type !== 'scheduled'")]
+      && scheduler.includes("job.trigger_type !== 'scheduled'")],
+  ['schedule edits atomically rebase task state and cancel stale automatic jobs',
+    deterministicScheduleMigration.includes('next_eligible_sync_time')
+      && deterministicScheduleMigration.includes("run.trigger_type = 'scheduled'")
+      && deterministicScheduleMigration.includes("run.status = 'queued'")],
+  ['claimed automatic jobs revalidate master and task enablement',
+    scheduler.includes('settings.enabled === true') && scheduler.includes('settings[definition.enabledField] === true')],
+  ['manual jobs remain visible independently from automatic schedules',
+    deterministicScheduleMigration.includes('manual_job_retained')]
 ];
 
 const failures = checks.filter(([, passed]) => !passed).map(([name]) => name);

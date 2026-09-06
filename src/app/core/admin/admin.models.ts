@@ -43,6 +43,8 @@ export interface AdminUserSyncSettings {
   sharedPlaylistIntervalUnit: SyncIntervalUnit;
   lastSuccessAt: string | null;
   lastError: string | null;
+  nextEffectiveRunAt?: string | null;
+  manualJobRetained?: boolean;
 }
 
 export interface AdminSyncRun {
