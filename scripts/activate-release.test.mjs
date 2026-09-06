@@ -20,3 +20,10 @@ test('worker keeps home directories private and deploys from var lib', () => {
   assert.match(deploy, /worker_root="\/var\/lib\/analytify-sync"/);
   assert.match(deploy, /sudo -n install -d -o '\$\{DEPLOY_USER\}' -m 0750/);
 });
+
+test('remote control commands retry transient DNS and transport failures', () => {
+  const deploy = readFileSync(new URL('./deploy.sh', import.meta.url), 'utf8');
+  assert.match(deploy, /remote_command_with_retry\(\)/);
+  assert.match(deploy, /for attempt in 1 2 3/);
+  assert.match(deploy, /Remote command failed after 3 attempts/);
+});

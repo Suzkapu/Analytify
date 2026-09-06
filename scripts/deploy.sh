@@ -92,6 +92,20 @@ worker_root="/var/lib/analytify-sync"
 worker_release="${worker_root}/releases/${deploy_commit_sha}"
 worker_current="${worker_root}/current"
 
+remote_command_with_retry() {
+  local command="$1"
+  local attempt
+  for attempt in 1 2 3; do
+    if $ssh_command "$remote" "$command"; then return 0; fi
+    if (( attempt < 3 )); then
+      echo "Remote command failed; retrying after $((attempt * 5)) seconds..." >&2
+      sleep "$((attempt * 5))"
+    fi
+  done
+  echo "Remote command failed after 3 attempts." >&2
+  return 1
+}
+
 deploy_with_retry() {
   local source="$1"
   local target="$2"
@@ -169,7 +183,7 @@ if [[ -n "$deploy_commit_sha" ]]; then
 fi
 
 echo "Preparing immutable release directories on Oracle Server..."
-$ssh_command "$remote" "mkdir -p '${web_release}' && sudo -n install -d -o '${DEPLOY_USER}' -m 0750 '${worker_root}' '${worker_root}/releases'"
+remote_command_with_retry "mkdir -p '${web_release}' && sudo -n install -d -o '${DEPLOY_USER}' -m 0750 '${worker_root}' '${worker_root}/releases'"
 deploy_with_retry "dist/spoti-front/" "${web_release}/" true
 deploy_with_retry "services/sync-service/" "${worker_release}/" true
 deploy_private_file_with_retry "$allowlist_file" "${worker_root}/.admin-spotify-ids"
@@ -179,10 +193,10 @@ deploy_with_retry "scripts/install-nginx-security.sh" "${worker_root}/install-ng
 deploy_with_retry "scripts/inject-nginx-security-include.mjs" "${worker_root}/inject-nginx-security-include.mjs" false
 
 echo "Installing and syntax-checking the versioned nginx security policy..."
-$ssh_command "$remote" "chmod 700 '${worker_root}/install-nginx-security.sh' && '${worker_root}/install-nginx-security.sh' '${worker_root}/.analytify-nginx-security-${deploy_commit_sha}.conf'"
+remote_command_with_retry "chmod 700 '${worker_root}/install-nginx-security.sh' && '${worker_root}/install-nginx-security.sh' '${worker_root}/.analytify-nginx-security-${deploy_commit_sha}.conf'"
 
 echo "Installing the worker's production dependencies..."
-$ssh_command "$remote" "cd '${worker_release}' && npm ci --omit=dev --ignore-scripts"
+remote_command_with_retry "cd '${worker_release}' && npm ci --omit=dev --ignore-scripts"
 
 sed \
   -e "s|@@DEPLOY_USER@@|${DEPLOY_USER}|g" \
@@ -192,14 +206,14 @@ sed \
 deploy_private_file_with_retry "$service_file" "${worker_root}/.analytify-sync.service-${deploy_commit_sha}"
 deploy_private_file_with_retry "$worker_environment_file" "${worker_root}/.analytify-sync.env-${deploy_commit_sha}"
 deploy_with_retry "scripts/activate-release.sh" "${worker_root}/activate-release.sh" false
-$ssh_command "$remote" "chmod 700 '${worker_root}/activate-release.sh' && sudo -n install -o root -g root -m 0644 '${worker_root}/.analytify-sync.service-${deploy_commit_sha}' /etc/systemd/system/analytify-sync.service && sudo -n install -o root -g root -m 0600 '${worker_root}/.analytify-sync.env-${deploy_commit_sha}' /etc/analytify-sync.env"
+remote_command_with_retry "chmod 700 '${worker_root}/activate-release.sh' && sudo -n install -o root -g root -m 0644 '${worker_root}/.analytify-sync.service-${deploy_commit_sha}' /etc/systemd/system/analytify-sync.service && sudo -n install -o root -g root -m 0600 '${worker_root}/.analytify-sync.env-${deploy_commit_sha}' /etc/analytify-sync.env"
 
 echo "Atomically activating and health-checking the web and worker releases..."
-$ssh_command "$remote" "'${worker_root}/activate-release.sh' '${web_release}' '${target_root}' '${worker_release}' '${worker_root}' '${deploy_commit_sha}' 'https://${DEPLOY_HOST}' 8787"
+remote_command_with_retry "'${worker_root}/activate-release.sh' '${web_release}' '${target_root}' '${worker_release}' '${worker_root}' '${deploy_commit_sha}' 'https://${DEPLOY_HOST}' 8787"
 
 if [[ -n "$deploy_commit_sha" ]]; then
   echo "Verifying deployed commit SHA on Oracle Server..."
-  remote_commit="$($ssh_command "${remote}" "cat '${target_root}/.deployed-commit' 2>/dev/null && cat '${worker_current}/.deployed-commit' 2>/dev/null")"
+  remote_commit="$(remote_command_with_retry "cat '${target_root}/.deployed-commit' 2>/dev/null && cat '${worker_current}/.deployed-commit' 2>/dev/null")"
   if [[ -n "$remote_commit" && "$remote_commit" != *"$deploy_commit_sha"* ]]; then
     echo "Deployment verification error: Remote commit (${remote_commit}) does not match expected (${deploy_commit_sha})." >&2
     exit 1
