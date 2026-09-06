@@ -245,7 +245,7 @@ describe('SharedPlaylistDetailComponent', () => {
       {paramMap, snapshot: {paramMap: {get: () => ''}}} as any,
       {navigate: jasmine.createSpy('navigate')} as any,
       TestBed.inject(SpotifyAuthService), sharing, spotify,
-      {spotifyUpdates$: spotifyUpdates.asObservable()} as any
+      {start: jasmine.createSpy('start'), spotifyUpdates$: spotifyUpdates.asObservable()} as any
     );
     void routed.ngOnInit();
 
