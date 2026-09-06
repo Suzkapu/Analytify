@@ -18,12 +18,18 @@ async function createService() {
   const spotify = createSpotifyClient(config);
   const credentials = createCredentialStore({
     supabase,
-    encryptionKey: config.spotifyTokenEncryptionKey
+    encryptionKey: config.spotifyTokenEncryptionKey,
+    encryptionKeys: config.spotifyTokenEncryptionKeys,
+    writeKeyVersion: config.spotifyTokenEncryptionWriteVersion
   });
   const pushDispatcher = createPushDispatcher({supabase});
   const migratedCredentials = await credentials.migrateAllLegacy();
   if (migratedCredentials) {
     console.log(`[Sync service] Encrypted ${migratedCredentials} legacy Spotify credential(s).`);
+  }
+  const rotation = await credentials.rotatePending();
+  if (rotation.examined) {
+    console.log(`[Sync service] Credential rotation: ${rotation.rotated} succeeded, ${rotation.failed} deferred.`);
   }
   const tasks = createTaskRegistry({supabase, spotify});
   const scheduler = createScheduler({supabase, config, tasks, credentials, pushDispatcher});

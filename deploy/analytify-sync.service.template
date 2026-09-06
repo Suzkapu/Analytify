@@ -10,6 +10,7 @@ WorkingDirectory=@@WORKER_CURRENT@@
 EnvironmentFile=/etc/analytify-sync.env
 Environment=ADMIN_SPOTIFY_IDS_FILE=@@WORKER_ROOT@@/.admin-spotify-ids
 Environment=SPOTIFY_TOKEN_ENCRYPTION_KEY_FILE=@@WORKER_ROOT@@/.spotify-token-encryption-key
+Environment=SPOTIFY_TOKEN_ENCRYPTION_KEYS_FILE=@@WORKER_ROOT@@/.spotify-token-encryption-keys
 Environment=SYNC_SERVICE_HEALTH_PORT=8787
 ExecStart=/usr/bin/node @@WORKER_CURRENT@@/index.js --watch
 Restart=always

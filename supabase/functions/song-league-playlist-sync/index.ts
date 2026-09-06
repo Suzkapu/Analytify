@@ -2,6 +2,7 @@ import {createClient} from 'https://esm.sh/@supabase/supabase-js@2.108.1';
 import {
   decryptSpotifyRefreshToken,
   encryptSpotifyRefreshToken,
+  spotifyCredentialKeyRingFromEnvironment,
   StoredSpotifyCredential
 } from '../_shared/spotify-credential-crypto.ts';
 import {boundedFetch} from '../_shared/bounded-fetch.ts';
@@ -133,7 +134,7 @@ Deno.serve(async (request: Request) => {
     const serviceRoleKey = requiredEnvironment('SUPABASE_SERVICE_ROLE_KEY');
     const spotifyClientId = requiredEnvironment('SPOTIFY_CLIENT_ID');
     const spotifyClientSecret = requiredEnvironment('SPOTIFY_CLIENT_SECRET');
-    const encryptionKey = requiredEnvironment('SPOTIFY_TOKEN_ENCRYPTION_KEY');
+    const encryptionKeyRing = spotifyCredentialKeyRingFromEnvironment();
     const authorization = request.headers.get('Authorization') || '';
     const jwt = authorization.replace(/^Bearer\s+/i, '');
     if (!jwt) return json({error: 'Authentication is required.'}, 401);
@@ -298,7 +299,7 @@ Deno.serve(async (request: Request) => {
               personalClientId = storedCredential.client_id || null;
               refreshToken = await decryptSpotifyRefreshToken(
                 storedCredential as StoredSpotifyCredential,
-                encryptionKey
+                encryptionKeyRing
               );
             }
             if (!refreshToken) throw new Error('Reconnect Spotify so Analytify can maintain this playlist.');
@@ -311,14 +312,14 @@ Deno.serve(async (request: Request) => {
             );
             if (!storedCredential || token.refreshToken) {
               const nextRefreshToken = token.refreshToken || refreshToken;
-              const encrypted = await encryptSpotifyRefreshToken(nextRefreshToken, encryptionKey);
+              const encrypted = await encryptSpotifyRefreshToken(nextRefreshToken, encryptionKeyRing);
               const {error: tokenError} = await admin.from('spotify_credentials').upsert({
                 user_id: member.user_id,
                 connection_mode: connectionMode,
                 client_id: connectionMode === 'personal_pkce' ? personalClientId : null,
                 refresh_token_ciphertext: encrypted.ciphertext,
                 refresh_token_nonce: encrypted.nonce,
-                key_version: 1,
+                key_version: encrypted.keyVersion,
                 updated_at: new Date().toISOString()
               }, {onConflict: 'user_id'});
               if (tokenError) throw tokenError;

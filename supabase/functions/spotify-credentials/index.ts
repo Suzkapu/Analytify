@@ -1,5 +1,8 @@
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2.108.1';
-import {encryptSpotifyRefreshToken} from '../_shared/spotify-credential-crypto.ts';
+import {
+  encryptSpotifyRefreshToken,
+  spotifyCredentialKeyRingFromEnvironment
+} from '../_shared/spotify-credential-crypto.ts';
 import {
   existingProfileAcceptsVerifiedIdentity,
   spotifyProfileIds,
@@ -179,7 +182,7 @@ Deno.serve(async (request: Request) => {
 
     const encrypted = await encryptSpotifyRefreshToken(
       verifiedRefresh!.refreshToken,
-      requiredEnvironment('SPOTIFY_TOKEN_ENCRYPTION_KEY')
+      spotifyCredentialKeyRingFromEnvironment()
     );
     const {error: credentialError} = await admin.from('spotify_credentials').upsert({
       user_id: profileUserId,
@@ -187,7 +190,7 @@ Deno.serve(async (request: Request) => {
       client_id: connectionMode === 'personal_pkce' ? clientId : null,
       refresh_token_ciphertext: encrypted.ciphertext,
       refresh_token_nonce: encrypted.nonce,
-      key_version: 1,
+      key_version: encrypted.keyVersion,
       updated_at: new Date().toISOString()
     }, {onConflict: 'user_id'});
     if (credentialError) throw credentialError;

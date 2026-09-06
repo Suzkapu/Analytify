@@ -28,7 +28,7 @@ SPOTIFY_TOKEN_ENCRYPTION_KEY
 ADMIN_SPOTIFY_IDS
 ```
 
-`ADMIN_SPOTIFY_IDS` is a comma-separated allowlist. Production deployment writes it into `.admin-spotify-ids`. `SPOTIFY_TOKEN_ENCRYPTION_KEY` is a stable base64-encoded 32-byte AES key; deployment writes it into `.spotify-token-encryption-key`. The corresponding `*_FILE` variables can point to other protected files. `SYNC_SERVICE_POLL_SECONDS` and `SYNC_SERVICE_MAX_JOBS` are optional.
+`ADMIN_SPOTIFY_IDS` is a comma-separated allowlist. Production deployment writes it into `.admin-spotify-ids`. `SPOTIFY_TOKEN_ENCRYPTION_KEY` is the legacy version-1 base64-encoded 32-byte AES key. Versioned rotation uses `SPOTIFY_TOKEN_ENCRYPTION_KEYS` (a JSON object) and `SPOTIFY_TOKEN_ENCRYPTION_WRITE_VERSION`; deployment writes the key ring into `.spotify-token-encryption-keys`. The corresponding `*_FILE` variables can point to other protected files. See [the rotation runbook](../../docs/spotify-credential-key-rotation.md). `SYNC_SERVICE_POLL_SECONDS` and `SYNC_SERVICE_MAX_JOBS` are optional.
 
 ## Rollout
 

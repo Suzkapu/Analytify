@@ -22,6 +22,38 @@ function required(name, value) {
   return value;
 }
 
+function credentialKeyConfig() {
+  const legacyKey = readProtectedValue(
+    'SPOTIFY_TOKEN_ENCRYPTION_KEY',
+    'SPOTIFY_TOKEN_ENCRYPTION_KEY_FILE',
+    '.spotify-token-encryption-key'
+  );
+  const serializedRing = readProtectedValue(
+    'SPOTIFY_TOKEN_ENCRYPTION_KEYS',
+    'SPOTIFY_TOKEN_ENCRYPTION_KEYS_FILE',
+    '.spotify-token-encryption-keys'
+  );
+  let encryptionKeys = null;
+  if (serializedRing) {
+    try {
+      encryptionKeys = JSON.parse(serializedRing);
+    } catch {
+      throw new Error('SPOTIFY_TOKEN_ENCRYPTION_KEYS must be valid JSON.');
+    }
+    if (!encryptionKeys || typeof encryptionKeys !== 'object' || Array.isArray(encryptionKeys)) {
+      throw new Error('SPOTIFY_TOKEN_ENCRYPTION_KEYS must be a JSON object keyed by version.');
+    }
+  }
+  if (!encryptionKeys && !legacyKey) {
+    throw new Error('SPOTIFY_TOKEN_ENCRYPTION_KEYS or SPOTIFY_TOKEN_ENCRYPTION_KEY is required.');
+  }
+  return {
+    spotifyTokenEncryptionKey: legacyKey,
+    spotifyTokenEncryptionKeys: encryptionKeys,
+    spotifyTokenEncryptionWriteVersion: Number(process.env.SPOTIFY_TOKEN_ENCRYPTION_WRITE_VERSION || 1)
+  };
+}
+
 function loadConfig() {
   const adminSpotifyIds = parseIdList(readProtectedValue(
     'ADMIN_SPOTIFY_IDS',
@@ -37,15 +69,11 @@ function loadConfig() {
     supabaseServiceRoleKey: required('SUPABASE_SERVICE_ROLE_KEY', process.env.SUPABASE_SERVICE_ROLE_KEY),
     spotifyClientId: required('SPOTIFY_CLIENT_ID', process.env.SPOTIFY_CLIENT_ID),
     spotifyClientSecret: required('SPOTIFY_CLIENT_SECRET', process.env.SPOTIFY_CLIENT_SECRET),
-    spotifyTokenEncryptionKey: required('SPOTIFY_TOKEN_ENCRYPTION_KEY', readProtectedValue(
-      'SPOTIFY_TOKEN_ENCRYPTION_KEY',
-      'SPOTIFY_TOKEN_ENCRYPTION_KEY_FILE',
-      '.spotify-token-encryption-key'
-    )),
+    ...credentialKeyConfig(),
     adminSpotifyIds,
     pollSeconds: Math.max(15, Number(process.env.SYNC_SERVICE_POLL_SECONDS) || 60),
     maxJobsPerPass: Math.max(1, Math.min(50, Number(process.env.SYNC_SERVICE_MAX_JOBS) || 10))
   };
 }
 
-module.exports = {loadConfig, parseIdList};
+module.exports = {loadConfig, parseIdList, credentialKeyConfig};

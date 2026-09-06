@@ -45,9 +45,10 @@ runner_temp="${RUNNER_TEMP:-/tmp}"
 key_file="$(mktemp "${runner_temp%/}/analytify-deploy-key.XXXXXX")"
 allowlist_file="$(mktemp "${runner_temp%/}/analytify-admin-spotify-ids.XXXXXX")"
 token_key_file="$(mktemp "${runner_temp%/}/analytify-token-encryption-key.XXXXXX")"
+token_keys_file="$(mktemp "${runner_temp%/}/analytify-token-encryption-keys.XXXXXX")"
 service_file="$(mktemp "${runner_temp%/}/analytify-sync-service.XXXXXX")"
 worker_environment_file="$(mktemp "${runner_temp%/}/analytify-sync-environment.XXXXXX")"
-trap 'rm -f "$key_file" "$allowlist_file" "$token_key_file" "$service_file" "$worker_environment_file"' EXIT
+trap 'rm -f "$key_file" "$allowlist_file" "$token_key_file" "$token_keys_file" "$service_file" "$worker_environment_file"' EXIT
 
 printf '%s\n' "$DEPLOY_SSH_KEY" | tr -d '\r' > "$key_file"
 chmod 600 "$key_file"
@@ -66,13 +67,18 @@ if [[ ! "$SPOTIFY_TOKEN_ENCRYPTION_KEY" =~ ^[A-Za-z0-9+/]{43}=$ ]]; then
 fi
 printf '%s\n' "$SPOTIFY_TOKEN_ENCRYPTION_KEY" > "$token_key_file"
 chmod 600 "$token_key_file"
+token_keys_json="${SPOTIFY_TOKEN_ENCRYPTION_KEYS:-{\"1\":\"${SPOTIFY_TOKEN_ENCRYPTION_KEY}\"}}"
+token_write_version="${SPOTIFY_TOKEN_ENCRYPTION_WRITE_VERSION:-1}"
+node -e 'const ring=JSON.parse(process.argv[1]); const version=process.argv[2]; if (!Number.isInteger(Number(version)) || !ring[version]) throw new Error("active Spotify token key is missing from key ring"); for (const value of Object.values(ring)) if (!/^[A-Za-z0-9+/]{43}=$/.test(value)) throw new Error("invalid Spotify token key ring");' "$token_keys_json" "$token_write_version"
+printf '%s\n' "$token_keys_json" > "$token_keys_file"
+chmod 600 "$token_keys_file"
 
 if [[ ! "$SUPABASE_URL" =~ ^https://[a-z0-9.-]+$ ]] || [[ ! "$SPOTIFY_CLIENT_ID" =~ ^[A-Za-z0-9]{32}$ ]]; then
   echo "Deployment configuration error: worker public configuration is invalid." >&2
   exit 1
 fi
-printf 'SUPABASE_URL=%s\nSUPABASE_SERVICE_ROLE_KEY=%s\nSPOTIFY_CLIENT_ID=%s\nSPOTIFY_CLIENT_SECRET=%s\n' \
-  "$SUPABASE_URL" "$SUPABASE_SERVICE_ROLE_KEY" "$SPOTIFY_CLIENT_ID" "$SPOTIFY_CLIENT_SECRET" \
+printf 'SUPABASE_URL=%s\nSUPABASE_SERVICE_ROLE_KEY=%s\nSPOTIFY_CLIENT_ID=%s\nSPOTIFY_CLIENT_SECRET=%s\nSPOTIFY_TOKEN_ENCRYPTION_WRITE_VERSION=%s\n' \
+  "$SUPABASE_URL" "$SUPABASE_SERVICE_ROLE_KEY" "$SPOTIFY_CLIENT_ID" "$SPOTIFY_CLIENT_SECRET" "$token_write_version" \
   > "$worker_environment_file"
 chmod 600 "$worker_environment_file"
 
@@ -188,6 +194,7 @@ deploy_with_retry "dist/spoti-front/" "${web_release}/" true
 deploy_with_retry "services/sync-service/" "${worker_release}/" true
 deploy_private_file_with_retry "$allowlist_file" "${worker_root}/.admin-spotify-ids"
 deploy_private_file_with_retry "$token_key_file" "${worker_root}/.spotify-token-encryption-key"
+deploy_private_file_with_retry "$token_keys_file" "${worker_root}/.spotify-token-encryption-keys"
 deploy_private_file_with_retry "deploy/analytify-security.conf" "${worker_root}/.analytify-nginx-security-${deploy_commit_sha}.conf"
 deploy_with_retry "scripts/install-nginx-security.sh" "${worker_root}/install-nginx-security.sh" false
 deploy_with_retry "scripts/inject-nginx-security-include.mjs" "${worker_root}/inject-nginx-security-include.mjs" false

@@ -33,6 +33,9 @@ if [[ ! "$SPOTIFY_TOKEN_ENCRYPTION_KEY" =~ ^[A-Za-z0-9+/]{43}=$ ]]; then
   echo "Supabase deployment configuration error: SPOTIFY_TOKEN_ENCRYPTION_KEY must be a base64-encoded 32-byte key." >&2
   exit 1
 fi
+token_keys_json="${SPOTIFY_TOKEN_ENCRYPTION_KEYS:-{\"1\":\"${SPOTIFY_TOKEN_ENCRYPTION_KEY}\"}}"
+token_write_version="${SPOTIFY_TOKEN_ENCRYPTION_WRITE_VERSION:-1}"
+node -e 'const ring=JSON.parse(process.argv[1]); const version=process.argv[2]; if (!Number.isInteger(Number(version)) || !ring[version]) throw new Error("active Spotify token key is missing from key ring"); for (const value of Object.values(ring)) if (!/^[A-Za-z0-9+/]{43}=$/.test(value)) throw new Error("invalid Spotify token key ring");' "$token_keys_json" "$token_write_version"
 
 if [[ ! "$WEB_PUSH_VAPID_PUBLIC_KEY" =~ ^[A-Za-z0-9_-]{87}$ ]]; then
   echo "Supabase deployment configuration error: WEB_PUSH_VAPID_PUBLIC_KEY is invalid." >&2
@@ -78,6 +81,8 @@ supabase secrets set \
   "SPOTIFY_CLIENT_ID=${SPOTIFY_CLIENT_ID}" \
   "SPOTIFY_CLIENT_SECRET=${SPOTIFY_CLIENT_SECRET}" \
   "SPOTIFY_TOKEN_ENCRYPTION_KEY=${SPOTIFY_TOKEN_ENCRYPTION_KEY}" \
+  "SPOTIFY_TOKEN_ENCRYPTION_KEYS=${token_keys_json}" \
+  "SPOTIFY_TOKEN_ENCRYPTION_WRITE_VERSION=${token_write_version}" \
   "WEB_PUSH_VAPID_PUBLIC_KEY=${WEB_PUSH_VAPID_PUBLIC_KEY}" \
   "WEB_PUSH_VAPID_PRIVATE_KEY=${WEB_PUSH_VAPID_PRIVATE_KEY}" \
   --project-ref "$SUPABASE_PROJECT_REF"
