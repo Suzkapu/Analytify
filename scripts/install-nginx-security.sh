@@ -70,11 +70,9 @@ sudo -n cp "$site_file" "$site_backup"
 
 sudo -n install -d -o root -g root -m 0755 /etc/nginx/snippets
 sudo -n install -o root -g root -m 0644 "$source_file" "$snippet_file"
-if ! sudo -n grep -Fq 'include /etc/nginx/snippets/analytify-security.conf;' "$site_file"; then
-  node "$(dirname "$0")/inject-nginx-security-include.mjs" "$site_file" "$rendered_site"
-  sudo -n install -o root -g root -m 0644 "$rendered_site" "$site_file"
-  site_changed=true
-fi
+node "$(dirname "$0")/inject-nginx-security-include.mjs" "$site_file" "$rendered_site"
+sudo -n install -o root -g root -m 0644 "$rendered_site" "$site_file"
+site_changed=true
 sudo -n rm -f "$legacy_file"
 
 sudo -n nginx -t

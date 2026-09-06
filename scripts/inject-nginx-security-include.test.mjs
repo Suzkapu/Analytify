@@ -16,32 +16,38 @@ function render(source) {
   return {...result, output: result.status === 0 ? readFileSync(output, 'utf8') : ''};
 }
 
-test('security policy is installed inside the exact application location', () => {
+test('security policy is installed in application and internal-redirect locations', () => {
   const result = render(`server {
   server_name analytify.dynv6.net;
   location / {
     add_header Cache-Control "no-cache";
     try_files $uri /index.html;
   }
+  location = /index.html {
+    add_header Cache-Control "no-store";
+  }
 }
 `);
   assert.equal(result.status, 0);
   assert.match(result.output, /location \/ \{\n\s+include \/etc\/nginx\/snippets\/analytify-security[.]conf;/);
-  assert.equal(result.output.match(/analytify-security[.]conf/g)?.length, 1);
+  assert.equal(result.output.match(/analytify-security[.]conf/g)?.length, 2);
 });
 
-test('an existing managed include is not duplicated', () => {
+test('existing includes are not duplicated while uncovered locations are repaired', () => {
   const site = `location / {
   include /etc/nginx/snippets/analytify-security.conf;
+}
+location = /index.html {
+  add_header Cache-Control "no-store";
 }
 `;
   const result = render(site);
   assert.equal(result.status, 0);
-  assert.equal(result.output, site);
+  assert.equal(result.output.match(/analytify-security[.]conf/g)?.length, 2);
 });
 
 test('installer refuses to guess when the application location is missing', () => {
   const result = render('server { location /api { proxy_pass http://backend; } }\n');
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /no exact location \/ block/);
+  assert.match(result.stderr, /no location blocks/);
 });
