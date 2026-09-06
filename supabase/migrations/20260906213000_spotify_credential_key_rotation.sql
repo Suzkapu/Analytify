@@ -15,3 +15,4 @@ create index if not exists spotify_credential_rotation_audit_user_completed_idx
 alter table public.spotify_credential_rotation_audit enable row level security;
 revoke all on public.spotify_credential_rotation_audit from anon, authenticated;
 grant all on public.spotify_credential_rotation_audit to service_role;
+grant usage, select on sequence public.spotify_credential_rotation_audit_id_seq to service_role;
