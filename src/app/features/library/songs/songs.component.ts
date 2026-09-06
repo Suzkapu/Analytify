@@ -195,6 +195,8 @@ export class SongsComponent implements OnInit, OnDestroy {
     const userId = this.authService.getUserId() || 'anonymous';
     const storageKey = `${userId}_${playlistId}`;
     const isBackupActive = this.authService.isBackupActive();
+    await this.storageService.hydrateItems?.([storageKey]);
+    if (!isCurrentLoad()) return;
 
     // Unsubscribe from any previous loader task
     if (this.loaderSubscription) {

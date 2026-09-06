@@ -114,4 +114,63 @@ describe('StorageService', () => {
     service.removeItem('local-key');
     expect(service.getItem('local-key')).toBeNull();
   });
+
+  it('bootstraps metadata without enumerating the feature payload store', async () => {
+    const bootstrapService = new StorageService(supabase, lifecycle);
+    const request: any = {};
+    const transaction = jasmine.createSpy('transaction').and.callFake((storeName: string) => ({
+      objectStore: () => ({
+        getAll: () => {
+          queueMicrotask(() => request.onsuccess?.({
+            target: {result: [{key: 'spotifyAccessToken', value: 'token'}]}
+          }));
+          return request;
+        }
+      })
+    }));
+    spyOn<any>(bootstrapService, 'getDB').and.resolveTo({transaction} as any);
+
+    await bootstrapService.initFromDB();
+
+    expect(transaction).toHaveBeenCalledOnceWith('appData', 'readonly');
+    expect(transaction).not.toHaveBeenCalledWith('featureData', jasmine.anything());
+    expect(bootstrapService.getItem('spotifyAccessToken')).toBe('token');
+    expect(bootstrapService.getItem('spotify-user_playlist-with-10000-tracks')).toBeNull();
+  });
+
+  it('hydrates only requested feature keys from IndexedDB', async () => {
+    const localService = new StorageService(supabase, lifecycle);
+    const requested: Array<{store: string; key: string}> = [];
+    const values = new Map([['spotify-user_playlist-1', '[{"id":"track"}]']]);
+    const database = {
+      transaction: (store: string) => ({
+        objectStore: () => ({
+          get: (key: string) => {
+            requested.push({store, key});
+            const request: any = {};
+            queueMicrotask(() => {
+              request.result = store === 'featureData' && values.has(key)
+                ? {key, value: values.get(key)}
+                : undefined;
+              request.onsuccess?.();
+            });
+            return request;
+          }
+        })
+      })
+    };
+    spyOn<any>(localService, 'getDB').and.resolveTo(database as any);
+
+    expect(await localService.hydrateItems(['spotify-user_playlist-1'])).toBe(1);
+
+    expect(localService.getItem('spotify-user_playlist-1')).toBe('[{"id":"track"}]');
+    expect(requested).toEqual([{store: 'featureData', key: 'spotify-user_playlist-1'}]);
+  });
+
+  it('classifies auth metadata separately from route-owned feature payloads', () => {
+    expect((service as any).isBootstrapMetadataKey('spotifyRefreshToken')).toBeTrue();
+    expect((service as any).isBootstrapMetadataKey('cloud-user_backup_active')).toBeTrue();
+    expect((service as any).isBootstrapMetadataKey('spotify-user_playlists')).toBeFalse();
+    expect((service as any).isBootstrapMetadataKey('spotify-user_playlist-id')).toBeFalse();
+  });
 });

@@ -41,6 +41,7 @@ export class CompareGuestPlaylistSourceService {
 
     const storageKey = `${context.spotifyUserId}_playlists`;
     const timestampKey = `${storageKey}_lastUpdated`;
+    await this.storage.hydrateItems?.([storageKey]);
     const local = this.playlistCandidate(
       this.storage.getItem(storageKey),
       this.storage.getItem(timestampKey),
@@ -75,6 +76,7 @@ export class CompareGuestPlaylistSourceService {
     const storageKey = `${context.spotifyUserId}_${playlist.id}`;
     const countKey = `${storageKey}_CachedTrackCount`;
     const timestampKey = `${storageKey}_lastUpdated`;
+    await this.storage.hydrateItems?.([storageKey]);
     const local = this.trackCandidate(
       this.storage.getItem(storageKey),
       this.storage.getItem(countKey),

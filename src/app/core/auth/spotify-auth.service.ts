@@ -826,6 +826,7 @@ export class SpotifyAuthService {
 
   private async pushLocalCacheToDatabase(supabaseUserId: string): Promise<void> {
     const spotifyUserId = this.getUserId() || 'anonymous';
+    await this.storageService.hydrateAllFeatureData?.();
     this.isSyncing = true;
     this.syncProgress = 0;
 

@@ -71,6 +71,8 @@ export class PlaylistsComponent {
     const profileIdVerifiedKey = `${userId}_spotify_profile_id_verified`;
     const isBackupActive = this.authService.isBackupActive();
     const isPersonalConnection = this.authService.isPersonalAppConnection();
+    await this.storageService.hydrateItems?.([storageKey]);
+    if (!isCurrentLoad()) return;
     this.currentSpotifyProfileId = this.storageService.getItem(profileIdKey)
       || (userId !== 'anonymous' && !isPersonalConnection ? this.stripDevSuffix(userId) : '');
     let storedPlaylists = this.storageService.getItem(storageKey);

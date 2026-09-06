@@ -111,6 +111,8 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     const userId = this.authService.getUserId() || 'anonymous';
     const storageKey = `${userId}_${playlistId}`;
     const lastUpdatedKey = `${storageKey}_lastUpdated`;
+    await this.storageService.hydrateItems?.([storageKey]);
+    if (!this.isCurrentLoad(playlistId, loadGeneration)) return;
 
     // Check if there is an active background task running for this playlist
     const activeTask = this.playlistLoaderService.getLoadingTask(playlistId);

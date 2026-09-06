@@ -16,8 +16,8 @@ export class ComparePlaylistSourceService {
   ) {}
 
   async loadMainPlaylists(accessToken: string, spotifyUserId: string): Promise<ComparePlaylist[]> {
-    await this.storage.initFromDB();
     const storageKey = `${spotifyUserId}_playlists`;
+    await this.storage.hydrateItems?.([storageKey]);
     let raw = this.storage.getItem(storageKey);
 
     const localPlaylists = this.parsePlaylists(raw);
@@ -45,8 +45,8 @@ export class ComparePlaylistSourceService {
     accessToken: string,
     spotifyUserId: string
   ): Promise<{tracks: CompareTrack[]; source: 'local' | 'cloud' | 'spotify'}> {
-    await this.storage.initFromDB();
     const storageKey = `${spotifyUserId}_${playlist.id}`;
+    await this.storage.hydrateItems?.([storageKey]);
     if (!await this.reconcileKnownChange(spotifyUserId, playlist)) {
       return {tracks: await this.spotify.getPlaylistTracks(playlist, accessToken), source: 'spotify'};
     }

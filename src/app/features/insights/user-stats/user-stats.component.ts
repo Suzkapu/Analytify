@@ -343,6 +343,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     const tracksKey = `${userId}_stats_${range}_tracks`;
     const artistsKey = `${userId}_stats_${range}_artists`;
     const genresKey = `${userId}_stats_${range}_genres`;
+    await this.storageService.hydrateItems?.([tracksKey, artistsKey, genresKey]);
+    if (loadSequence !== this.statsLoadSequence || range !== this.selectedRange) return;
     let lastUpdated = this.storageService.getItem(lastUpdatedKey);
     let isExpired = this.isCacheExpired(lastUpdated, range);
     let cachedTracks = this.storageService.getItem(tracksKey);

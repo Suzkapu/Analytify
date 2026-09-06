@@ -46,6 +46,9 @@ const checks = [
   ['snapshot replacement is one locked database transaction', atomicStatsMigration.includes('pg_advisory_xact_lock') && supabase.includes("rpc('replace_stats_snapshot_v2'")],
   ['genre weights are normalized to database integers', supabase.includes('weight: Math.round(')],
   ['startup avoids an unbounded user-cache download', !authService.includes('loadUserCache(supabaseUserId)')],
+  ['IndexedDB separates route payloads from bootstrap metadata', storage.includes("featureStore = 'featureData'")],
+  ['feature-local IndexedDB reads use a bounded concurrency budget', storage.includes('localReadConcurrency = 4')],
+  ['backup activation, not startup, opts into full feature hydration', authService.includes('hydrateAllFeatureData?.()')],
   ['overlapping credential registration is coalesced', authService.includes('credentialRegistrationPromise')]
 ];
 

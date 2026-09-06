@@ -12,8 +12,11 @@ const console = createScopedLogger('Local Storage');
 export class StorageService {
   /** Primary synchronous read layer – always in sync with IndexedDB */
   private inMemoryCache = new Map<string, string>();
-  private readonly databaseVersion = 2;
+  private readonly databaseVersion = 3;
   private readonly statsUserRangeIndex = 'by_user_range';
+  private readonly metadataStore = 'appData';
+  private readonly featureStore = 'featureData';
+  private readonly localReadConcurrency = 4;
 
   private dbPromise: Promise<IDBDatabase> | null = null;
   private initPromise: Promise<void> | null = null;
@@ -52,6 +55,21 @@ export class StorageService {
           // Generic key-value store – replaces localStorage
           db.createObjectStore('appData', { keyPath: 'key' });
         }
+        const featureStore = db.objectStoreNames.contains(this.featureStore)
+          ? event.target.transaction.objectStore(this.featureStore)
+          : db.createObjectStore(this.featureStore, {keyPath: 'key'});
+        const metadataStore = event.target.transaction.objectStore(this.metadataStore);
+        const cursorRequest = metadataStore.openCursor();
+        cursorRequest.onsuccess = (cursorEvent: any) => {
+          const cursor: IDBCursorWithValue | null = cursorEvent.target.result;
+          if (!cursor) return;
+          const entry = cursor.value as {key: string; value: string};
+          if (!this.isBootstrapMetadataKey(entry.key)) {
+            featureStore.put(entry);
+            cursor.delete();
+          }
+          cursor.continue();
+        };
       };
 
       request.onsuccess = (event: any) => resolve(event.target.result);
@@ -63,8 +81,8 @@ export class StorageService {
 
   /**
    * Called once at app startup (via APP_INITIALIZER).
-   * Loads every 'appData' entry from IndexedDB into inMemoryCache so all
-   * subsequent getItem() calls are synchronous.
+   * Loads only the small metadata store. Feature payloads live separately and
+   * are hydrated by the route that needs them.
    */
   initFromDB(): Promise<void> {
     if (this.initPromise) {
@@ -73,8 +91,8 @@ export class StorageService {
 
     this.initPromise = this.getDB().then(db => new Promise<void>((resolve) => {
       try {
-        const tx    = db.transaction('appData', 'readonly');
-        const store = tx.objectStore('appData');
+        const tx    = db.transaction(this.metadataStore, 'readonly');
+        const store = tx.objectStore(this.metadataStore);
         const req   = store.getAll();
 
         req.onsuccess = async (event: any) => {
@@ -197,6 +215,45 @@ export class StorageService {
     return this.inMemoryCache.get(key) ?? null;
   }
 
+  /** Hydrate only the local feature keys required by the active route. */
+  async hydrateItems(keys: string[]): Promise<number> {
+    const uniqueKeys = Array.from(new Set(keys.filter(key => !!key && !this.inMemoryCache.has(key))));
+    if (uniqueKeys.length === 0) return 0;
+    const db = await this.getDB().catch(() => null);
+    if (!db) return 0;
+    let loaded = 0;
+    for (let offset = 0; offset < uniqueKeys.length; offset += this.localReadConcurrency) {
+      const batch = uniqueKeys.slice(offset, offset + this.localReadConcurrency);
+      const entries = await Promise.all(batch.map(key => this.readStoredEntry(db, key)));
+      entries.forEach(entry => {
+        if (!entry || this.inMemoryCache.has(entry.key)) return;
+        this.inMemoryCache.set(entry.key, entry.value);
+        loaded++;
+      });
+    }
+    return loaded;
+  }
+
+  /** Used only after an explicit backup upload request, never during startup. */
+  async hydrateAllFeatureData(): Promise<number> {
+    const db = await this.getDB().catch(() => null);
+    if (!db) return 0;
+    return new Promise<number>(resolve => {
+      try {
+        const request = db.transaction(this.featureStore, 'readonly')
+          .objectStore(this.featureStore).getAll();
+        request.onsuccess = () => {
+          const entries = (request.result || []) as Array<{key: string; value: string}>;
+          entries.forEach(entry => this.inMemoryCache.set(entry.key, entry.value));
+          resolve(entries.length);
+        };
+        request.onerror = () => resolve(0);
+      } catch {
+        resolve(0);
+      }
+    });
+  }
+
   setItem(key: string, value: string, syncToCloud = true): void {
     this.inMemoryCache.set(key, value);
     this.persistKV(key, value);
@@ -308,7 +365,9 @@ export class StorageService {
         resolve();
         return;
       }
-      const tx    = db.transaction('appData', 'readwrite');
+      const targetStore = this.isBootstrapMetadataKey(key) ? this.metadataStore : this.featureStore;
+      const otherStore = targetStore === this.metadataStore ? this.featureStore : this.metadataStore;
+      const tx    = db.transaction([targetStore, otherStore], 'readwrite');
       const finish = () => {
         generation.signal.removeEventListener('abort', abort);
         resolve();
@@ -320,8 +379,9 @@ export class StorageService {
       tx.oncomplete = finish;
       tx.onabort = finish;
       tx.onerror = finish;
-      const store = tx.objectStore('appData');
+      const store = tx.objectStore(targetStore);
       const req   = store.put({ key, value });
+      tx.objectStore(otherStore).delete(key);
       req.onerror = (e: any) => console.warn('[StorageService] IndexedDB put request failed:', e.target.error);
     })).catch(err => console.warn('[StorageService] IndexedDB write failed:', err));
     this.sessionLifecycle.track(write, generation);
@@ -334,7 +394,7 @@ export class StorageService {
         resolve();
         return;
       }
-      const tx    = db.transaction('appData', 'readwrite');
+      const tx    = db.transaction([this.metadataStore, this.featureStore], 'readwrite');
       const finish = () => {
         generation.signal.removeEventListener('abort', abort);
         resolve();
@@ -346,8 +406,9 @@ export class StorageService {
       tx.oncomplete = finish;
       tx.onabort = finish;
       tx.onerror = finish;
-      const store = tx.objectStore('appData');
+      const store = tx.objectStore(this.metadataStore);
       const req   = store.delete(key);
+      tx.objectStore(this.featureStore).delete(key);
       req.onerror = (e: any) => console.warn('[StorageService] IndexedDB delete request failed:', e.target.error);
     })).catch(err => console.warn('[StorageService] IndexedDB delete failed:', err));
     this.sessionLifecycle.track(removal, generation);
@@ -355,17 +416,45 @@ export class StorageService {
 
   private clearKV(): Promise<void> {
     return this.getDB().then(db => new Promise<void>((resolve, reject) => {
-      const tx    = db.transaction('appData', 'readwrite');
-      const store = tx.objectStore('appData');
-      const req   = store.clear();
-      req.onsuccess = () => resolve();
-      req.onerror = (e: any) => {
+      const tx = db.transaction([this.metadataStore, this.featureStore], 'readwrite');
+      tx.objectStore(this.metadataStore).clear();
+      tx.objectStore(this.featureStore).clear();
+      tx.oncomplete = () => resolve();
+      tx.onerror = (e: any) => {
         console.warn('[StorageService] IndexedDB clear request failed:', e.target.error);
         reject(e.target.error);
       };
     })).catch(err => {
       console.warn('[StorageService] IndexedDB clearKV failed:', err);
     });
+  }
+
+  private isBootstrapMetadataKey(key: string): boolean {
+    const exactKeys = new Set([
+      'spotifyAccessToken', 'spotifyRefreshToken', 'spotifyTokenExpiresAt',
+      'spotifyUserId', 'supabaseUserId', 'spotifyConnectionMode',
+      'personalSpotifyClientId', 'anonymousCloudIdentity', 'cloudIdentityReady',
+      'analytify_personal_spotify_auth_request', 'analytify_compare_auth_request',
+      'analytifyAuthReturnUrl', 'spotify_rate_limit_until', 'spotifyRetryAfter'
+    ]);
+    return exactKeys.has(key)
+      || /_(backup_active|last_synced_at|sortOrder|showSaved|profile_pic|display_name|spotify_profile_id|spotify_profile_id_verified|lastUpdated|lastChecked|Amount|Name|CachedTrackCount|source_manifest|source_sync_state|backup_upload_manifest|applied_metadata)$/.test(key);
+  }
+
+  private async readStoredEntry(
+    db: IDBDatabase,
+    key: string
+  ): Promise<{key: string; value: string} | null> {
+    const read = (storeName: string) => new Promise<{key: string; value: string} | null>(resolve => {
+      try {
+        const request = db.transaction(storeName, 'readonly').objectStore(storeName).get(key);
+        request.onsuccess = () => resolve(request.result || null);
+        request.onerror = () => resolve(null);
+      } catch {
+        resolve(null);
+      }
+    });
+    return (await read(this.featureStore)) || await read(this.metadataStore);
   }
 
   // ─── Stats history (IndexedDB statsHistory store) ─────────────────────────

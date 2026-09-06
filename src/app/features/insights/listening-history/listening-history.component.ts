@@ -41,6 +41,7 @@ export class ListeningHistoryComponent implements OnInit {
     const supabaseUserId = this.authService.getSupabaseUserId();
     const storageKey = `${userId}_recently_played`;
     const lastCheckedKey = `${storageKey}_lastChecked`;
+    await this.storageService.hydrateItems?.([storageKey]);
 
     // Load existing cache from StorageService
     let cachedTracks: any[] = [];
