@@ -45,8 +45,26 @@ jobs:
       - name: Install locked sync-worker dependencies
         run: npm ci --prefix services/sync-service --ignore-scripts
 
+      - name: Record test runtime versions
+        run: |
+          node --version > test-runtime-versions.txt
+          npm --version >> test-runtime-versions.txt
+          deno --version >> test-runtime-versions.txt
+          google-chrome --version >> test-runtime-versions.txt
+
       - name: Verify tests and production build
         run: npm run verify:ci
+
+      - name: Publish browser coverage and runtime manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: analytify-test-evidence-${{ github.sha }}
+          path: |
+            coverage/spoti-front
+            test-runtime-versions.txt
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Set up Supabase CLI
         id: supabase-cli
