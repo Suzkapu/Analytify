@@ -182,7 +182,7 @@ echo "Installing and syntax-checking the versioned nginx security policy..."
 $ssh_command "$remote" "chmod 700 '${worker_root}/install-nginx-security.sh' && '${worker_root}/install-nginx-security.sh' '${worker_root}/.analytify-nginx-security-${deploy_commit_sha}.conf'"
 
 echo "Installing the worker's production dependencies..."
-$ssh_command "$remote" "cd '${worker_release}' && npm install --omit=dev --ignore-scripts"
+$ssh_command "$remote" "cd '${worker_release}' && npm ci --omit=dev --ignore-scripts"
 
 sed \
   -e "s|@@DEPLOY_USER@@|${DEPLOY_USER}|g" \
