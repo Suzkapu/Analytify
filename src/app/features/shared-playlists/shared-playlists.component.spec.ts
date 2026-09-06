@@ -44,7 +44,9 @@ describe('SharedPlaylistsComponent', () => {
       'requestAccess',
       'createAccessInvite',
       'respondToRequest',
-      'revokeAccess'
+      'revokeAccess',
+      'blockUser',
+      'reportUser'
     ]);
     unsubscribe = jasmine.createSpy('unsubscribe');
     sharing.listReceivedShares.and.resolveTo([]);
@@ -80,6 +82,8 @@ describe('SharedPlaylistsComponent', () => {
     });
     statsSharing.respondToRequest.and.resolveTo();
     statsSharing.revokeAccess.and.resolveTo();
+    statsSharing.blockUser.and.resolveTo();
+    statsSharing.reportUser.and.resolveTo();
 
     TestBed.configureTestingModule({
       declarations: [SharedPlaylistsComponent],
@@ -209,6 +213,9 @@ describe('SharedPlaylistsComponent', () => {
 
     await component.openShareDialog();
     await component.selectShareMode('stats');
+    component.availableStatsUsers = [{
+      userId: 'owner-id', displayName: 'Stats Owner', imageUrl: '', requestId: null, requestStatus: null
+    }];
     component.selectedStatsOwnerId = 'owner-id';
     await component.requestStatsAccess();
 
@@ -223,10 +230,18 @@ describe('SharedPlaylistsComponent', () => {
     ]);
     await component.openShareDialog();
     await component.selectShareMode('stats');
+    component.availableStatsUsers = [
+      {userId: 'available', displayName: 'New listener', imageUrl: '', requestId: null, requestStatus: null},
+      {userId: 'approved', displayName: 'Already sharing', imageUrl: '', requestId: 'request', requestStatus: 'approved'}
+    ];
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('.stats-user-picker select')).toBeNull();
     (fixture.nativeElement.querySelector('.stats-user-picker-trigger') as HTMLButtonElement).click();
+    component.availableStatsUsers = [
+      {userId: 'available', displayName: 'New listener', imageUrl: '', requestId: null, requestStatus: null},
+      {userId: 'approved', displayName: 'Already sharing', imageUrl: '', requestId: 'request', requestStatus: 'approved'}
+    ];
     fixture.detectChanges();
     const options = Array.from(
       fixture.nativeElement.querySelectorAll('.stats-user-picker-option')
@@ -241,6 +256,7 @@ describe('SharedPlaylistsComponent', () => {
   });
 
   it('searches registered users inside a viewport overlay without expanding the modal', async () => {
+    jasmine.clock().install();
     statsSharing.listAvailableUsers.and.resolveTo([
       {userId: 'one', displayName: 'Alice Listener', imageUrl: '', requestId: null, requestStatus: null},
       {userId: 'two', displayName: 'Bob Beats', imageUrl: '', requestId: null, requestStatus: null}
@@ -254,13 +270,16 @@ describe('SharedPlaylistsComponent', () => {
     const menu = fixture.nativeElement.querySelector('.stats-user-picker-menu') as HTMLElement;
     expect(getComputedStyle(menu).position).toBe('fixed');
 
-    const search = menu.querySelector('.stats-user-search input') as HTMLInputElement;
-    search.value = 'bob';
-    search.dispatchEvent(new Event('input'));
+    component.onStatsUserSearchChange('bob');
+    jasmine.clock().tick(300);
+    await Promise.resolve();
+    await Promise.resolve();
     fixture.detectChanges();
     const options = Array.from(menu.querySelectorAll('.stats-user-picker-option')) as HTMLElement[];
     expect(options.length).toBe(1);
     expect(options[0].textContent).toContain('Bob Beats');
+    expect(statsSharing.listAvailableUsers).toHaveBeenCalledOnceWith('bob');
+    jasmine.clock().uninstall();
   });
 
   it('creates a private link that opens the recipient stats consent flow', async () => {
@@ -274,6 +293,22 @@ describe('SharedPlaylistsComponent', () => {
     expect(component.statsRequestLink).toContain('/shared-playlists/stats-request/stats-token');
     expect(fixture.nativeElement.querySelector('[aria-label="Private stats request link"]')).not.toBeNull();
     expect(fixture.nativeElement.textContent).toContain('accept or decline window');
+  });
+
+  it('blocks and reports a Stats requester through the custom privacy dialog', async () => {
+    const request = {
+      id: 'request-id', ownerUserId: 'me', viewerUserId: 'viewer-id', ownerDisplayName: 'Me',
+      ownerImageUrl: '', viewerDisplayName: 'Spam viewer', viewerImageUrl: '', status: 'pending',
+      requestedAt: 'now', respondedAt: null, revokedAt: null, updatedAt: 'now', viewerRole: 'owner'
+    } as any;
+    component.openStatsModeration(request);
+    component.moderationReason = 'Repeated unwanted requests';
+
+    await component.blockStatsUser(true);
+
+    expect(statsSharing.reportUser).toHaveBeenCalledOnceWith('viewer-id', 'Repeated unwanted requests');
+    expect(component.moderationRequest).toBeNull();
+    expect(component.successMessage).toContain('blocked and reported');
   });
 
   it('opens a custom consent popup for the oldest pending request and records agreement', async () => {

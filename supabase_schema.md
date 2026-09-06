@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS users (
     spotify_refresh_token TEXT, -- Deprecated staged-migration source; encrypted Supabase credentials live below
     last_synced_at TIMESTAMPTZ, -- Coarse daily stats completion marker; per-range snapshots remain authoritative
     backup_active BOOLEAN DEFAULT false NOT NULL, -- Setting: Controls if automated database backup is enabled for the user
+    stats_discoverable BOOLEAN DEFAULT false NOT NULL, -- Separate opt-in for display-name Stats request search
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 

@@ -8,6 +8,7 @@ import {SpotifyDataService} from '@core/data-access/spotify/spotify-data.service
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {PlaylistShareAutoSyncService} from '@core/sharing/playlist-share-auto-sync.service';
+import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 import {PushNotificationService} from '@core/notifications/push-notification.service';
 import {HeaderComponent} from './header.component';
 import {of} from 'rxjs';
@@ -18,6 +19,7 @@ describe('HeaderComponent entry points', () => {
   let backupActive: boolean;
   let storageService: jasmine.SpyObj<StorageService>;
   let spotifyDataService: jasmine.SpyObj<SpotifyDataService>;
+  let statsSharing: jasmine.SpyObj<StatsSharingService>;
 
   beforeEach(() => {
     backupActive = true;
@@ -25,6 +27,11 @@ describe('HeaderComponent entry points', () => {
     storageService.getItem.and.returnValue('cached-avatar.jpg');
     spotifyDataService = jasmine.createSpyObj<SpotifyDataService>('SpotifyDataService', ['getCurrentUser']);
     spotifyDataService.getCurrentUser.and.returnValue(of({images: []}));
+    statsSharing = jasmine.createSpyObj<StatsSharingService>('StatsSharingService', [
+      'getDiscoverability', 'setDiscoverability'
+    ]);
+    statsSharing.getDiscoverability.and.resolveTo(false);
+    statsSharing.setDiscoverability.and.callFake(async enabled => enabled);
     TestBed.configureTestingModule({
       declarations: [HeaderComponent],
       providers: [
@@ -35,13 +42,16 @@ describe('HeaderComponent entry points', () => {
             syncProgress: 0,
             getUserId: () => 'registered-user',
             getSupabaseUserId: () => null,
-            isBackupActive: () => backupActive
+            isBackupActive: () => backupActive,
+            hasCloudIdentity: () => true,
+            hasScheduledSpotifyAccess: () => false
           }
         },
         {provide: StorageService, useValue: storageService},
         {provide: SupabaseService, useValue: {}},
         {provide: SpotifyDataService, useValue: spotifyDataService},
         {provide: PlaylistShareAutoSyncService, useValue: {start: jasmine.createSpy('start')}},
+        {provide: StatsSharingService, useValue: statsSharing},
         {
           provide: PushNotificationService,
           useValue: {
@@ -186,5 +196,22 @@ describe('HeaderComponent entry points', () => {
     const songPickRow = Array.from(dialog.querySelectorAll('.notification-category-row'))
       .find((row: any) => row.textContent?.includes('New Song League picks')) as HTMLElement | undefined;
     expect(songPickRow?.querySelector('.notification-category-icon .pi-volume-up')).not.toBeNull();
+  });
+
+  it('keeps Stats discoverability separate and off until explicitly enabled', async () => {
+    await fixture.whenStable();
+    component.showSettingsDropdown = true;
+    fixture.detectChanges();
+    const toggle = fixture.nativeElement.querySelector(
+      'input[aria-label="Allow Stats access requests"]'
+    ) as HTMLInputElement;
+    expect(toggle.checked).toBeFalse();
+
+    toggle.checked = true;
+    toggle.dispatchEvent(new Event('change'));
+    await fixture.whenStable();
+
+    expect(statsSharing.setDiscoverability).toHaveBeenCalledOnceWith(true);
+    expect(component.statsDiscoverable).toBeTrue();
   });
 });

@@ -1,10 +1,11 @@
-import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnInit, Optional, Output} from '@angular/core';
 import { Router } from '@angular/router';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import {PlaylistShareAutoSyncService} from '@core/sharing/playlist-share-auto-sync.service';
+import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {AdminService} from '@core/admin/admin.service';
 import {
@@ -41,6 +42,8 @@ export class HeaderComponent implements OnInit {
   isLoadingNotificationSettings = false;
   isSavingNotificationSettings = false;
   isRemovingScheduledAccess = false;
+  statsDiscoverable = false;
+  isSavingStatsDiscoverability = false;
   notificationError = '';
   private attemptedProfileImageRecovery = false;
   notificationSettings: PushNotificationSettings = {
@@ -65,15 +68,23 @@ export class HeaderComponent implements OnInit {
     private playlistShareAutoSync: PlaylistShareAutoSyncService,
     private adminService: AdminService,
     private pushNotifications: PushNotificationService,
-    private router: Router
+    private router: Router,
+    @Optional() private statsSharing?: StatsSharingService
   ) {}
 
   async ngOnInit() {
     this.playlistShareAutoSync.start();
     // Re-check the active Supabase identity so an admin result is never reused
     // after logout when a different user signs in within the same app session.
-    const [, isAdmin] = await Promise.all([this.loadUserProfile(), this.adminService.isAdmin(true)]);
+    const [, isAdmin, statsDiscoverable] = await Promise.all([
+      this.loadUserProfile(),
+      this.adminService.isAdmin(true),
+      this.authService.hasCloudIdentity?.() && this.statsSharing
+        ? this.statsSharing.getDiscoverability().catch(() => false)
+        : Promise.resolve(false)
+    ]);
     this.isAdmin = isAdmin;
+    this.statsDiscoverable = statsDiscoverable;
   }
 
 
@@ -203,6 +214,29 @@ export class HeaderComponent implements OnInit {
       alert('Scheduled Spotify access could not be removed. Please try again.');
     } finally {
       this.isRemovingScheduledAccess = false;
+    }
+  }
+
+  get hasCollaborationIdentity(): boolean {
+    return this.authService.hasCloudIdentity?.() ?? false;
+  }
+
+  async onStatsDiscoverabilityToggle(event: Event): Promise<void> {
+    const checkbox = event.target as HTMLInputElement;
+    const previous = this.statsDiscoverable;
+    if (!this.statsSharing || this.isSavingStatsDiscoverability) {
+      checkbox.checked = previous;
+      return;
+    }
+    this.isSavingStatsDiscoverability = true;
+    try {
+      this.statsDiscoverable = await this.statsSharing.setDiscoverability(checkbox.checked);
+    } catch (error) {
+      checkbox.checked = previous;
+      console.error('Failed to update Stats discoverability:', error);
+      alert('Stats discoverability could not be updated. Please try again.');
+    } finally {
+      this.isSavingStatsDiscoverability = false;
     }
   }
 

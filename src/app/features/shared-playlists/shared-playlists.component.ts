@@ -50,12 +50,17 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   consentError = '';
   statsRevocationRequest: StatsAccessRequest | null = null;
   busyStatsRequestId = '';
+  moderationRequest: StatsAccessRequest | null = null;
+  moderationReason = '';
+  isModeratingStatsUser = false;
 
   private unsubscribeFromShareChanges: (() => void) | null = null;
   private unsubscribeFromStatsChanges: (() => void) | null = null;
   private silentReloadPromise: Promise<void> | null = null;
   private dismissedConsentRequestIds = new Set<string>();
   private destroyed = false;
+  private statsSearchTimer: ReturnType<typeof setTimeout> | null = null;
+  private statsSearchSequence = 0;
 
   constructor(
     private sharing: PlaylistSharingService,
@@ -82,6 +87,8 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     this.unsubscribeFromShareChanges = null;
     this.unsubscribeFromStatsChanges?.();
     this.unsubscribeFromStatsChanges = null;
+    if (this.statsSearchTimer) clearTimeout(this.statsSearchTimer);
+    this.statsSearchTimer = null;
   }
 
   async reload(silent = false): Promise<void> {
@@ -157,18 +164,10 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     this.shareMode = mode;
     this.shareError = '';
     if (mode === 'stats') {
-      this.isLoadingStatsUsers = true;
       this.availableStatsUsers = [];
       this.selectedStatsOwnerId = '';
       this.statsUserSearch = '';
       this.isStatsUserPickerOpen = false;
-      try {
-        this.availableStatsUsers = await this.statsSharing.listAvailableUsers();
-      } catch (error) {
-        this.shareError = this.describeError(error);
-      } finally {
-        this.isLoadingStatsUsers = false;
-      }
       return;
     }
 
@@ -233,8 +232,37 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     this.isStatsUserPickerOpen = !this.isStatsUserPickerOpen;
     if (this.isStatsUserPickerOpen) {
       this.statsUserSearch = '';
+      this.availableStatsUsers = [];
       setTimeout(() => this.updateStatsPickerMenuPosition());
     }
+  }
+
+  onStatsUserSearchChange(query: string): void {
+    this.statsUserSearch = query;
+    this.selectedStatsOwnerId = '';
+    if (this.statsSearchTimer) clearTimeout(this.statsSearchTimer);
+    this.statsSearchTimer = null;
+    const normalized = query.trim();
+    const sequence = ++this.statsSearchSequence;
+    if (normalized.length < 3) {
+      this.availableStatsUsers = [];
+      this.isLoadingStatsUsers = false;
+      return;
+    }
+    this.isLoadingStatsUsers = true;
+    this.statsSearchTimer = setTimeout(async () => {
+      this.statsSearchTimer = null;
+      try {
+        const users = await this.statsSharing.listAvailableUsers(normalized);
+        if (sequence !== this.statsSearchSequence || this.destroyed) return;
+        this.availableStatsUsers = users;
+        this.shareError = '';
+      } catch (error) {
+        if (sequence === this.statsSearchSequence) this.shareError = this.describeError(error);
+      } finally {
+        if (sequence === this.statsSearchSequence) this.isLoadingStatsUsers = false;
+      }
+    }, 300);
   }
 
   selectStatsOwner(user: StatsShareableUser): void {
@@ -245,7 +273,6 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
 
   closeStatsUserPicker(): void {
     this.isStatsUserPickerOpen = false;
-    this.statsUserSearch = '';
   }
 
   @HostListener('window:resize')
@@ -359,6 +386,38 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
       this.errorMessage = this.describeError(error);
     } finally {
       this.busyStatsRequestId = '';
+    }
+  }
+
+  openStatsModeration(request: StatsAccessRequest): void {
+    this.moderationRequest = request;
+    this.moderationReason = '';
+  }
+
+  closeStatsModeration(): void {
+    if (!this.isModeratingStatsUser) this.moderationRequest = null;
+  }
+
+  async blockStatsUser(report = false): Promise<void> {
+    const request = this.moderationRequest;
+    if (!request || this.isModeratingStatsUser) return;
+    const otherUserId = request.viewerRole === 'owner' ? request.viewerUserId : request.ownerUserId;
+    const otherName = request.viewerRole === 'owner' ? request.viewerDisplayName : request.ownerDisplayName;
+    if (report && this.moderationReason.trim().length < 3) {
+      this.errorMessage = 'Describe the report in at least 3 characters.';
+      return;
+    }
+    this.isModeratingStatsUser = true;
+    try {
+      if (report) await this.statsSharing.reportUser(otherUserId, this.moderationReason);
+      else await this.statsSharing.blockUser(otherUserId);
+      this.successMessage = `${otherName} was blocked${report ? ' and reported' : ''}.`;
+      this.moderationRequest = null;
+      await this.reload(true);
+    } catch (error) {
+      this.errorMessage = this.describeError(error);
+    } finally {
+      this.isModeratingStatsUser = false;
     }
   }
 

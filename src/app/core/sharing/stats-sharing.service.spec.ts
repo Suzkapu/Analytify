@@ -40,13 +40,38 @@ describe('StatsSharingService', () => {
       request_id: 'request-id', request_status: 'approved'
     }], error: null});
 
-    const users = await service.listAvailableUsers();
+    const users = await service.listAvailableUsers('Owner');
 
-    expect(rpc).toHaveBeenCalledOnceWith('list_stats_shareable_users');
+    expect(rpc).toHaveBeenCalledOnceWith('search_stats_shareable_users', {p_query: 'Owner'});
     expect(users).toEqual([{
       userId: 'owner-id', displayName: 'Owner', imageUrl: 'owner.jpg',
       requestId: 'request-id', requestStatus: 'approved'
     }]);
+  });
+
+  it('never downloads a directory for blank or short searches', async () => {
+    expect(await service.listAvailableUsers('')).toEqual([]);
+    expect(await service.listAvailableUsers('ab')).toEqual([]);
+    expect(rpc).not.toHaveBeenCalled();
+  });
+
+  it('manages discoverability, blocks, and reports through guarded RPCs', async () => {
+    rpc.and.callFake((name: string, args?: any) => Promise.resolve({
+      data: name === 'set_stats_discovery_setting' ? args.p_enabled : true,
+      error: null
+    }));
+
+    expect(await service.getDiscoverability()).toBeTrue();
+    expect(await service.setDiscoverability(false)).toBeFalse();
+    await service.blockUser('blocked-user');
+    await service.reportUser('reported-user', ' spam request ');
+
+    expect(rpc.calls.allArgs()).toEqual([
+      ['get_stats_discovery_setting'],
+      ['set_stats_discovery_setting', {p_enabled: false}],
+      ['block_stats_user', {p_user_id: 'blocked-user'}],
+      ['report_stats_user', {p_user_id: 'reported-user', p_reason: 'spam request'}]
+    ]);
   });
 
   it('requests, approves, declines, and revokes access only through guarded RPCs', async () => {

@@ -93,6 +93,17 @@
               <span class="slider round"></span>
             </label>
           </div>
+          <div *ngIf="hasCollaborationIdentity" class="dropdown-item toggle-item" (click)="$event.stopPropagation()"
+            title="Allow other registered users to find you by display-name search and request Stats access">
+            <i class="pi pi-eye"></i>
+            <span>Stats requests</span>
+            <label class="switch" title="Toggle Stats request discoverability">
+              <input type="checkbox" [checked]="statsDiscoverable"
+                [disabled]="isSavingStatsDiscoverability" (change)="onStatsDiscoverabilityToggle($event)"
+                aria-label="Allow Stats access requests">
+              <span class="slider round"></span>
+            </label>
+          </div>
           <button (click)="openNotificationSettings()" class="dropdown-item" role="menuitem">
             <i class="pi pi-bell"></i><span>Notifications</span>
           </button>

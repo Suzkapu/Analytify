@@ -13,6 +13,10 @@ const requestLinks = readFileSync(
   new URL('../supabase/migrations/20260905110000_stats_access_request_links.sql', import.meta.url),
   'utf8'
 ).toLowerCase();
+const privateDiscovery = readFileSync(
+  new URL('../supabase/migrations/20260906150000_private_stats_discovery.sql', import.meta.url),
+  'utf8'
+).toLowerCase();
 const service = readFileSync(
   new URL('../src/app/core/sharing/stats-sharing.service.ts', import.meta.url),
   'utf8'
@@ -72,5 +76,16 @@ assert.match(requestLinks, /viewer_user_id = v_owner_id[\s\S]*cannot open your o
 assert.match(requestLinks, /status = 'pending'[\s\S]*requested_at = now\(\)/);
 assert.match(requestLinks, /revoke all on table public\.stats_access_invites from public, anon, authenticated/);
 assert.match(sharingRoutes, /path: 'stats-request\/:token'/);
+
+assert.match(privateDiscovery, /stats_discoverable boolean not null default false/);
+assert.match(privateDiscovery, /revoke execute on function public\.list_stats_shareable_users\(\) from authenticated/);
+assert.match(privateDiscovery, /char_length\(v_query\) < 3 then return/);
+assert.match(privateDiscovery, /limit 20/);
+assert.match(privateDiscovery, /too many stats requests/);
+assert.match(privateDiscovery, /create table if not exists public\.stats_user_blocks/);
+assert.match(privateDiscovery, /create table if not exists public\.stats_user_reports/);
+assert.match(privateDiscovery, /safe_stats_profile_image/);
+assert.match(service, /rpc\('search_stats_shareable_users'/);
+assert.doesNotMatch(service, /rpc\('list_stats_shareable_users'/);
 
 console.log('Stats sharing consent and isolation checks passed.');

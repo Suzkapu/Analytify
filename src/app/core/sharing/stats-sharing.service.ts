@@ -13,8 +13,12 @@ import {
 export class StatsSharingService {
   constructor(private supabase: SupabaseService) {}
 
-  async listAvailableUsers(): Promise<StatsShareableUser[]> {
-    const {data, error} = await this.supabase.client.rpc('list_stats_shareable_users');
+  async listAvailableUsers(query: string): Promise<StatsShareableUser[]> {
+    const normalized = query.trim();
+    if (normalized.length < 3) return [];
+    const {data, error} = await this.supabase.client.rpc('search_stats_shareable_users', {
+      p_query: normalized
+    });
     if (error) throw error;
     return (data || []).map((row: any) => ({
       userId: row.user_id,
@@ -23,6 +27,33 @@ export class StatsSharingService {
       requestId: row.request_id || null,
       requestStatus: (row.request_status as StatsAccessStatus) || null
     }));
+  }
+
+  async getDiscoverability(): Promise<boolean> {
+    const {data, error} = await this.supabase.client.rpc('get_stats_discovery_setting');
+    if (error) throw error;
+    return data === true;
+  }
+
+  async setDiscoverability(enabled: boolean): Promise<boolean> {
+    const {data, error} = await this.supabase.client.rpc('set_stats_discovery_setting', {
+      p_enabled: enabled
+    });
+    if (error) throw error;
+    return data === true;
+  }
+
+  async blockUser(userId: string): Promise<void> {
+    const {error} = await this.supabase.client.rpc('block_stats_user', {p_user_id: userId});
+    if (error) throw error;
+  }
+
+  async reportUser(userId: string, reason: string): Promise<void> {
+    const {error} = await this.supabase.client.rpc('report_stats_user', {
+      p_user_id: userId,
+      p_reason: reason.trim()
+    });
+    if (error) throw error;
   }
 
   async listAccessRequests(): Promise<StatsAccessRequest[]> {

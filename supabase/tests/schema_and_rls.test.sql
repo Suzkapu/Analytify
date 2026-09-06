@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(43);
+select plan(56);
 
 select has_table('public', 'users', 'users is reconstructible');
 select has_table('public', 'artists', 'artists is reconstructible');
@@ -12,6 +12,9 @@ select has_table('public', 'stats_snapshots', 'stats snapshots are reconstructib
 select has_table('public', 'playlist_shares', 'playlist sharing is reconstructible');
 select has_table('public', 'song_leagues', 'Song League is reconstructible');
 select has_table('public', 'stats_access_requests', 'stats access is reconstructible');
+select has_table('public', 'stats_user_blocks', 'Stats user blocks are reconstructible');
+select has_table('public', 'stats_user_reports', 'Stats abuse reports are reconstructible');
+select has_column('public', 'users', 'stats_discoverable', 'Stats discoverability is separately stored');
 select has_table('public', 'push_subscriptions', 'push subscriptions are reconstructible');
 select has_table('public', 'sync_job_runs', 'sync control plane is reconstructible');
 select has_function('public', 'replace_stats_snapshot', array[
@@ -23,6 +26,16 @@ select has_function('public', 'claim_song_league', array['text'],
   'secure invite claim RPC is present');
 select has_function('public', 'unlink_push_subscription', array['text'],
   'push unlink RPC is present');
+select has_function('public', 'get_stats_discovery_setting', array[]::text[],
+  'Stats discovery read RPC is present');
+select has_function('public', 'set_stats_discovery_setting', array['boolean'],
+  'Stats discovery consent RPC is present');
+select has_function('public', 'search_stats_shareable_users', array['text'],
+  'query-only Stats user search RPC is present');
+select has_function('public', 'block_stats_user', array['uuid'],
+  'Stats block RPC is present');
+select has_function('public', 'report_stats_user', array['uuid', 'text'],
+  'Stats report RPC is present');
 
 select is((select relrowsecurity from pg_class where oid = 'public.users'::regclass), true,
   'users has RLS');
@@ -32,6 +45,10 @@ select is((select relrowsecurity from pg_class where oid = 'public.playlist_shar
   'playlist shares has RLS');
 select is((select relrowsecurity from pg_class where oid = 'public.song_leagues'::regclass), true,
   'Song League has RLS');
+select is((select relrowsecurity from pg_class where oid = 'public.stats_user_blocks'::regclass), true,
+  'Stats blocks have RLS');
+select is((select relrowsecurity from pg_class where oid = 'public.stats_user_reports'::regclass), true,
+  'Stats reports have RLS');
 
 insert into auth.users(id, email) values
   ('10000000-0000-4000-8000-000000000001', 'one@example.test'),
@@ -58,6 +75,12 @@ select set_config('request.jwt.claim.role', 'authenticated', true);
 select is((select count(*) from public.users), 1::bigint,
   'authenticated RLS exposes only the current profile');
 select is(public.is_app_admin(), true, 'admin identity is recognized by its protected membership');
+select is(public.get_stats_discovery_setting(), false,
+  'Stats discoverability defaults off even when a profile exists');
+select is((select count(*) from public.search_stats_shareable_users('sp')), 0::bigint,
+  'short search terms cannot enumerate Stats profiles');
+select is(public.set_stats_discovery_setting(true), true,
+  'the profile owner can explicitly opt into Stats discovery');
 
 select lives_ok($$ select * from public.replace_stats_snapshot_v2(
   '10000000-0000-4000-8000-000000000001', 'short_term', '2026-09-05', 0, 0,

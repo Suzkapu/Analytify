@@ -128,6 +128,9 @@
           <button type="button" class="danger" (click)="openStatsRevocation(request)" [disabled]="!!busyStatsRequestId">
             <i class="pi pi-ban"></i> {{ request.status === 'pending' ? 'Cancel request' : 'Revoke access' }}
           </button>
+          <button type="button" class="secondary" (click)="openStatsModeration(request)" [disabled]="!!busyStatsRequestId">
+            <i class="pi pi-shield"></i> Block / report
+          </button>
         </div>
       </article>
       <article *ngFor="let request of grantedStatsAccess" class="owner-share-row stats-access-row">
@@ -140,6 +143,9 @@
         <div class="owner-share-actions">
           <button type="button" class="danger" (click)="openStatsRevocation(request)" [disabled]="!!busyStatsRequestId">
             <i class="pi pi-ban"></i> Revoke access
+          </button>
+          <button type="button" class="secondary" (click)="openStatsModeration(request)" [disabled]="!!busyStatsRequestId">
+            <i class="pi pi-shield"></i> Block / report
           </button>
         </div>
       </article>
@@ -225,7 +231,7 @@
 
       </div>
       <p *ngIf="!isLoadingStatsUsers && availableStatsUsers.length === 0 && !shareError" class="share-picker-empty">
-        No other Cloud Backup users are available.
+        Search at least 3 characters, or create a private request link.
       </p>
     </ng-container>
 
@@ -280,7 +286,7 @@
     (click)="$event.stopPropagation()" (keydown.escape)="closeStatsUserPicker()">
     <label class="stats-user-search">
       <i class="pi pi-search"></i>
-      <input [(ngModel)]="statsUserSearch" type="search" autocomplete="off"
+      <input [ngModel]="statsUserSearch" (ngModelChange)="onStatsUserSearchChange($event)" type="search" autocomplete="off"
         placeholder="Search users" aria-label="Search registered users">
     </label>
     <button *ngFor="let user of filteredStatsUsers; trackBy: trackStatsUser" type="button"
@@ -298,8 +304,29 @@
       </span>
       <i *ngIf="selectedStatsOwnerId === user.userId" class="pi pi-check picker-selected"></i>
     </button>
-    <p *ngIf="filteredStatsUsers.length === 0" class="stats-user-search-empty">No matching users</p>
+    <p *ngIf="statsUserSearch.trim().length < 3" class="stats-user-search-empty">Type at least 3 characters</p>
+    <p *ngIf="statsUserSearch.trim().length >= 3 && !isLoadingStatsUsers && filteredStatsUsers.length === 0" class="stats-user-search-empty">No matching discoverable users</p>
   </div>
+</div>
+
+<div *ngIf="moderationRequest as request" class="share-modal-overlay" (click)="closeStatsModeration()">
+  <section class="share-modal consent-modal" role="dialog" aria-modal="true" aria-labelledby="stats-moderation-title"
+    (click)="$event.stopPropagation()">
+    <div class="share-modal-icon"><i class="pi pi-shield"></i></div>
+    <span class="eyebrow">Privacy control</span>
+    <h2 id="stats-moderation-title">Block {{ request.viewerRole === 'owner' ? request.viewerDisplayName : request.ownerDisplayName }}?</h2>
+    <p>Blocking immediately revokes pending or approved Stats access in both directions and hides you from each other in search.</p>
+    <label class="share-playlist-picker">
+      <span>Optional report reason</span>
+      <input [(ngModel)]="moderationReason" maxlength="500" placeholder="Describe spam, impersonation, or abuse">
+    </label>
+    <div class="share-modal-actions">
+      <button type="button" class="share-secondary" (click)="closeStatsModeration()" [disabled]="isModeratingStatsUser">Cancel</button>
+      <button type="button" class="share-secondary" (click)="blockStatsUser(false)" [disabled]="isModeratingStatsUser">Block only</button>
+      <button type="button" class="share-primary danger" (click)="blockStatsUser(true)"
+        [disabled]="isModeratingStatsUser || moderationReason.trim().length < 3">Block and report</button>
+    </div>
+  </section>
 </div>
 
 <div *ngIf="consentRequest as request" class="share-modal-overlay stats-consent-overlay">

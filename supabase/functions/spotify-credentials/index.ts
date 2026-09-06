@@ -27,6 +27,17 @@ function isUuid(value: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 }
 
+function safeProfileImageUrl(value: unknown): string | null {
+  if (typeof value !== 'string' || value.length > 2048) return null;
+  try {
+    const url = new URL(value);
+    const allowed = /(^|\.)(scdn\.co|spotifycdn\.com|fbsbx\.com)$/i.test(url.hostname);
+    return url.protocol === 'https:' && allowed ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
 function devProfileId(userId: string): string {
   return `de11${userId.slice(4)}`;
 }
@@ -161,7 +172,7 @@ Deno.serve(async (request: Request) => {
       id: profileUserId,
       spotify_id: finalSpotifyId,
       display_name: currentProfile.display_name || 'Spotify User',
-      profile_pic_url: currentProfile.images?.[0]?.url || null
+      profile_pic_url: safeProfileImageUrl(currentProfile.images?.[0]?.url)
     }, {onConflict: 'id'});
     if (profileSaveError) throw profileSaveError;
     if (action === 'profile') return json({ok: true, spotifyId: finalSpotifyId});
