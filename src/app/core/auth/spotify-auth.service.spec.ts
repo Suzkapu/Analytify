@@ -334,10 +334,7 @@ describe('SpotifyAuthService', () => {
       error: null
     });
 
-    const enabling = service.enableCloudIdentity();
-    const profileRequest = await requestAfterMicrotasks('https://api.spotify.com/v1/me');
-    profileRequest.flush({id: 'personal-user', display_name: 'Private listener', images: []});
-    await enabling;
+    await service.enableCloudIdentity();
 
     expect(authClient.signInAnonymously).toHaveBeenCalledTimes(1);
     expect(values['anonymousCloudIdentity']).toBe('true');
@@ -345,8 +342,15 @@ describe('SpotifyAuthService', () => {
     expect(supabaseService.ensureUserProfile).not.toHaveBeenCalled();
     expect(supabaseService.client.functions.invoke).toHaveBeenCalledWith(
       'spotify-credentials',
-      jasmine.objectContaining({body: jasmine.objectContaining({connectionMode: 'personal_pkce'})})
+      jasmine.objectContaining({body: jasmine.objectContaining({
+        action: 'profile',
+        profileUserId: '11111111-1111-4111-8111-111111111111'
+      })})
     );
+    const body = supabaseService.client.functions.invoke.calls.mostRecent().args[1].body;
+    expect(body.refreshToken).toBeUndefined();
+    expect(values['collaborationIdentityReady']).toBe('true');
+    expect(values['cloudIdentityReady']).toBeUndefined();
   });
 
   it('enables Cloud Sync after registering a personal-app credential', async () => {
@@ -365,10 +369,7 @@ describe('SpotifyAuthService', () => {
     });
     spyOn<any>(service, 'pushLocalCacheToDatabase').and.resolveTo();
 
-    const enabling = service.enableBackup();
-    const profileRequest = await requestAfterMicrotasks('https://api.spotify.com/v1/me');
-    profileRequest.flush({account_id: 'stable-account-id', id: 'public-profile-id', images: []});
-    await enabling;
+    await service.enableBackup();
 
     expect(supabaseService.client.functions.invoke).toHaveBeenCalledWith(
       'spotify-credentials',
@@ -437,11 +438,52 @@ describe('SpotifyAuthService', () => {
 
     const first = (service as any).registerCurrentSpotifyCredentials();
     const second = (service as any).registerCurrentSpotifyCredentials();
-    const profileRequest = await requestAfterMicrotasks('https://api.spotify.com/v1/me');
-    profileRequest.flush({id: 'spotify-user', display_name: 'Listener', images: []});
     await Promise.all([first, second]);
 
     expect(supabaseService.client.functions.invoke).toHaveBeenCalledTimes(1);
+  });
+
+  it('models collaboration, backup, and scheduled access independently', () => {
+    values['spotifyConnectionMode'] = 'personal_pkce';
+    expect(service.getCloudCapabilities()).toEqual({
+      localOnly: true, collaboration: false, backup: false, scheduledSpotifyAccess: false
+    });
+
+    values['spotifyConnectionMode'] = 'hosted';
+    values['supabaseUserId'] = 'hosted-cloud-user';
+    expect(service.getCloudCapabilities()).toEqual({
+      localOnly: false, collaboration: true, backup: false, scheduledSpotifyAccess: false
+    });
+
+    values['spotifyConnectionMode'] = 'personal_pkce';
+    values['supabaseUserId'] = 'cloud-user';
+    values['collaborationIdentityReady'] = 'true';
+
+    expect(service.getCloudCapabilities()).toEqual({
+      localOnly: false, collaboration: true, backup: false, scheduledSpotifyAccess: false
+    });
+
+    values['cloudIdentityReady'] = 'true';
+    values['cloud-user_backup_active'] = 'true';
+    expect(service.getCloudCapabilities()).toEqual({
+      localOnly: false, collaboration: true, backup: true, scheduledSpotifyAccess: true
+    });
+  });
+
+  it('deletes unattended Spotify credentials without deleting collaboration identity', async () => {
+    values['spotifyConnectionMode'] = 'personal_pkce';
+    values['supabaseUserId'] = '11111111-1111-4111-8111-111111111111';
+    values['collaborationIdentityReady'] = 'true';
+    values['cloudIdentityReady'] = 'true';
+
+    await service.disableScheduledSpotifyAccess();
+
+    expect(supabaseService.client.functions.invoke).toHaveBeenCalledWith(
+      'spotify-credentials',
+      {body: {action: 'delete_credentials', profileUserId: '11111111-1111-4111-8111-111111111111'}}
+    );
+    expect(values['cloudIdentityReady']).toBeUndefined();
+    expect(service.hasCloudIdentity()).toBeTrue();
   });
 
   it('explains a disabled anonymous-auth server setting when Cloud Backup is enabled', async () => {

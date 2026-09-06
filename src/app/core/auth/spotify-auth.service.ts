@@ -24,6 +24,12 @@ function toDailySnapshotDateKey(timestamp: number): string {
 }
 
 export type BackupActivationState = 'idle' | 'enabling' | 'syncing' | 'active' | 'failed';
+export interface CloudCapabilities {
+  localOnly: boolean;
+  collaboration: boolean;
+  backup: boolean;
+  scheduledSpotifyAccess: boolean;
+}
 
 interface BackupUploadManifest {
   version: 1;
@@ -40,6 +46,9 @@ export class SpotifyAuthService {
   private readonly personalClientIdKey = 'personalSpotifyClientId';
   private readonly personalRequestKey = 'analytify_personal_spotify_auth_request';
   private readonly anonymousCloudKey = 'anonymousCloudIdentity';
+  private readonly collaborationIdentityReadyKey = 'collaborationIdentityReady';
+  // Kept under its historical storage name so existing encrypted-credential
+  // installations migrate without another server write.
   private readonly cloudIdentityReadyKey = 'cloudIdentityReady';
   private refreshObservable: Observable<any> | null = null;
   private restoreSessionPromise: Promise<boolean> | null = null;
@@ -141,7 +150,20 @@ export class SpotifyAuthService {
   hasCloudIdentity(): boolean {
     if (!this.getSupabaseUserId()) return false;
     return !this.isPersonalAppConnection()
+      || this.storageService.getItem(this.collaborationIdentityReadyKey) === 'true'
       || this.storageService.getItem(this.cloudIdentityReadyKey) === 'true';
+  }
+
+  hasScheduledSpotifyAccess(): boolean {
+    return !!this.getSupabaseUserId()
+      && this.storageService.getItem(this.cloudIdentityReadyKey) === 'true';
+  }
+
+  getCloudCapabilities(): CloudCapabilities {
+    const collaboration = this.hasCloudIdentity();
+    const backup = this.isBackupActive();
+    const scheduledSpotifyAccess = this.hasScheduledSpotifyAccess();
+    return {localOnly: !collaboration, collaboration, backup, scheduledSpotifyAccess};
   }
 
   isAnonymousCloudIdentity(): boolean {
@@ -245,15 +267,19 @@ export class SpotifyAuthService {
     }
 
     if (this.getSupabaseUserId()) {
-      const rotatedRefreshToken = await this.sessionLifecycle.track(this.registerCurrentSpotifyCredentials(profile, {
-        accessToken: token.access_token,
-        refreshToken: token.refresh_token,
-        connectionMode: 'personal_pkce',
-        clientId: request.clientId,
-        spotifyId: effectiveSpotifyId
-      }), generation);
-      this.assertCurrentSession(generation);
-      if (rotatedRefreshToken) token.refresh_token = rotatedRefreshToken;
+      if (this.hasScheduledSpotifyAccess()) {
+        const rotatedRefreshToken = await this.sessionLifecycle.track(this.registerCurrentSpotifyCredentials(profile, {
+          accessToken: token.access_token,
+          refreshToken: token.refresh_token,
+          connectionMode: 'personal_pkce',
+          clientId: request.clientId,
+          spotifyId: effectiveSpotifyId
+        }), generation);
+        this.assertCurrentSession(generation);
+        if (rotatedRefreshToken) token.refresh_token = rotatedRefreshToken;
+      } else {
+        await this.sessionLifecycle.track(this.registerCloudProfile(profile, token.access_token, effectiveSpotifyId), generation);
+      }
     }
 
     this.storageService.setItem(this.connectionModeKey, 'personal_pkce', false);
@@ -333,12 +359,15 @@ export class SpotifyAuthService {
             const profilePicUrl = session.user.user_metadata?.['avatar_url'] || null;
             this.initialSyncPromise = this.sessionLifecycle.track((async () => {
               try {
-                if (session.provider_refresh_token) {
+                await this.registerCloudProfile().catch(error => {
+                  console.warn('The collaboration profile could not be refreshed.', error);
+                });
+                await this.syncBackupActiveStatus();
+                if (session.provider_refresh_token && this.isBackupActive()) {
                   await this.registerCurrentSpotifyCredentials().catch(error => {
                     console.warn('Hosted Spotify credentials could not be moved to encrypted storage.', error);
                   });
                 }
-                await this.syncBackupActiveStatus();
               } catch (err) {
                 console.warn('Failed during login synchronization setup:', err);
               }
@@ -387,12 +416,15 @@ export class SpotifyAuthService {
             const profilePicUrl = session.user.user_metadata?.['avatar_url'] || null;
             this.initialSyncPromise = this.sessionLifecycle.track((async () => {
               try {
-                if (session.provider_refresh_token) {
+                await this.registerCloudProfile().catch(error => {
+                  console.warn('The collaboration profile could not be refreshed.', error);
+                });
+                await this.syncBackupActiveStatus();
+                if (session.provider_refresh_token && this.isBackupActive()) {
                   await this.registerCurrentSpotifyCredentials().catch(error => {
                     console.warn('Hosted Spotify credentials could not be moved to encrypted storage.', error);
                   });
                 }
-                await this.syncBackupActiveStatus();
               } catch (err) {
                 console.warn('Failed during callback login synchronization setup:', err);
               }
@@ -566,7 +598,7 @@ export class SpotifyAuthService {
     this.storageService.setItem(this.storageKey, response.access_token);
     if (response.refresh_token) {
       this.storageService.setItem('spotifyRefreshToken', response.refresh_token);
-      if (registerCloudCredential && this.getSupabaseUserId()) {
+      if (registerCloudCredential && this.hasScheduledSpotifyAccess()) {
         this.sessionLifecycle.track(
           this.registerCurrentSpotifyCredentials(),
           generation
@@ -593,6 +625,7 @@ export class SpotifyAuthService {
     this.storageService.removeItem(this.connectionModeKey);
     this.storageService.removeItem(this.personalClientIdKey);
     this.storageService.removeItem(this.anonymousCloudKey);
+    this.storageService.removeItem(this.collaborationIdentityReadyKey);
     this.storageService.removeItem(this.cloudIdentityReadyKey);
     this.initialSyncPromise = null;
   }
@@ -664,6 +697,7 @@ export class SpotifyAuthService {
     this.storageService.removeItem(this.connectionModeKey);
     this.storageService.removeItem(this.personalClientIdKey);
     this.storageService.removeItem(this.anonymousCloudKey);
+    this.storageService.removeItem(this.collaborationIdentityReadyKey);
     this.storageService.removeItem(this.cloudIdentityReadyKey);
     try {
       await this.supabaseService.client.auth.signOut();
@@ -765,6 +799,7 @@ export class SpotifyAuthService {
     this.backupSyncFailures = [];
     try {
       await this.enableCloudIdentity();
+      await this.enableScheduledSpotifyAccess();
       const supabaseUserId = this.getSupabaseUserId();
       if (!supabaseUserId) throw new Error('User not logged in');
       this.backupActivationState = 'syncing';
@@ -783,7 +818,7 @@ export class SpotifyAuthService {
 
   async enableCloudIdentity(): Promise<void> {
     if (this.getSupabaseUserId()) {
-      if (this.isPersonalAppConnection()) await this.registerCurrentSpotifyCredentials();
+      if (!this.hasCloudIdentity()) await this.registerCloudProfile();
       return;
     }
     if (!this.isPersonalAppConnection()) {
@@ -809,9 +844,29 @@ export class SpotifyAuthService {
 
     this.storageService.setItem('supabaseUserId', session.user.id, false);
     this.storageService.setItem(this.anonymousCloudKey, session.user.is_anonymous ? 'true' : 'false', false);
-    const profile = await this.loadCurrentSpotifyProfile();
-    await this.registerCurrentSpotifyCredentials(profile);
+    await this.registerCloudProfile();
     this.initialSyncPromise = null;
+  }
+
+  async enableScheduledSpotifyAccess(): Promise<void> {
+    await this.enableCloudIdentity();
+    if (this.hasScheduledSpotifyAccess()) return;
+    const registered = await this.registerCurrentSpotifyCredentials();
+    if (!registered && !this.hasScheduledSpotifyAccess()) {
+      // A null rotated token is normal; successful registration marks the
+      // capability synchronously. Reaching here means required tokens lacked.
+      throw new Error('Reconnect Spotify before enabling scheduled access.');
+    }
+  }
+
+  async disableScheduledSpotifyAccess(): Promise<void> {
+    const profileUserId = this.getSupabaseUserId();
+    if (!profileUserId) return;
+    const {error} = await this.supabaseService.client.functions.invoke('spotify-credentials', {
+      body: {action: 'delete_credentials', profileUserId}
+    });
+    if (error) throw new Error(`Cloud credential deletion failed: ${error.message}`);
+    this.storageService.removeItem(this.cloudIdentityReadyKey);
   }
 
   async disableBackup(): Promise<void> {
@@ -955,6 +1010,26 @@ export class SpotifyAuthService {
     }
   }
 
+  private async registerCloudProfile(
+    profile?: any,
+    accessToken = this.getAccessToken() || '',
+    spotifyId = this.getUserId() || ''
+  ): Promise<void> {
+    const profileUserId = this.getSupabaseUserId();
+    if (!profileUserId || !accessToken) throw new Error('Spotify is not connected.');
+    const spotifyProfile = profile || {};
+    const {error} = await this.supabaseService.client.functions.invoke('spotify-credentials', {
+      body: {
+        action: 'profile',
+        profileUserId,
+        accessToken,
+        spotifyId: spotifyId || spotifyProfile.account_id || spotifyProfile.id
+      }
+    });
+    if (error) throw new Error(`Collaboration profile registration failed: ${error.message}`);
+    this.storageService.setItem(this.collaborationIdentityReadyKey, 'true', false);
+  }
+
   private async registerCurrentSpotifyCredentials(
     profile?: any,
     override?: {
@@ -990,7 +1065,7 @@ export class SpotifyAuthService {
     const refreshToken = override?.refreshToken || this.storageService.getItem('spotifyRefreshToken');
     if (!profileUserId || !accessToken || !refreshToken) return null;
 
-    const spotifyProfile = profile || await this.loadCurrentSpotifyProfile();
+    const spotifyProfile = profile || {};
     const connectionMode = override?.connectionMode || this.getConnectionMode();
     const clientId = override?.clientId !== undefined
       ? override.clientId

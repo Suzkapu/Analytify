@@ -62,7 +62,7 @@ assert.match(service, /rpc\('get_shared_stats_snapshot'/);
 assert.match(service, /rpc\('answer_stats_access_request'/);
 assert.match(service, /rpc\('create_stats_access_invite'/);
 assert.match(service, /rpc\('claim_stats_access_invite'/);
-assert.match(statsPage, /if \(this\.isSpyMode\) \{[\s\S]*await this\.loadSharedStats\(loadSequence\);[\s\S]*return;/);
+assert.match(statsPage, /const spyOwnerUserId = this\.spyOwnerUserId;[\s\S]*if \(spyOwnerUserId\) \{[\s\S]*await this\.loadSharedStats\(loadSequence, spyOwnerUserId\);[\s\S]*return;/);
 
 assert.match(requestLinks, /create table public\.stats_access_invites/);
 assert.match(requestLinks, /alter table public\.stats_access_invites enable row level security/);

@@ -40,6 +40,7 @@ export class HeaderComponent implements OnInit {
   isGuestLogoutRunning = false;
   isLoadingNotificationSettings = false;
   isSavingNotificationSettings = false;
+  isRemovingScheduledAccess = false;
   notificationError = '';
   private attemptedProfileImageRecovery = false;
   notificationSettings: PushNotificationSettings = {
@@ -185,6 +186,23 @@ export class HeaderComponent implements OnInit {
         console.error('Failed to disable backup:', err);
         alert('Failed to disable database backup. Please try again.');
       });
+    }
+  }
+
+  get hasScheduledSpotifyAccess(): boolean {
+    return this.authService.hasScheduledSpotifyAccess?.() ?? false;
+  }
+
+  async removeScheduledSpotifyAccess(): Promise<void> {
+    if (this.isRemovingScheduledAccess) return;
+    this.isRemovingScheduledAccess = true;
+    try {
+      await this.authService.disableScheduledSpotifyAccess();
+    } catch (error) {
+      console.error('Failed to remove scheduled Spotify access:', error);
+      alert('Scheduled Spotify access could not be removed. Please try again.');
+    } finally {
+      this.isRemovingScheduledAccess = false;
     }
   }
 

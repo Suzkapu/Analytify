@@ -96,6 +96,11 @@
           <button (click)="openNotificationSettings()" class="dropdown-item" role="menuitem">
             <i class="pi pi-bell"></i><span>Notifications</span>
           </button>
+          <button *ngIf="hasScheduledSpotifyAccess" (click)="removeScheduledSpotifyAccess()"
+            class="dropdown-item" role="menuitem" [disabled]="isRemovingScheduledAccess"
+            title="Deletes the encrypted refresh credential; collaboration access remains available">
+            <i class="pi pi-clock"></i><span>{{ isRemovingScheduledAccess ? 'Removing scheduled access…' : 'Remove scheduled Spotify access' }}</span>
+          </button>
           <button (click)="logout()" class="dropdown-item" role="menuitem">
             <i class="pi pi-sign-out"></i><span>Log out</span>
           </button>

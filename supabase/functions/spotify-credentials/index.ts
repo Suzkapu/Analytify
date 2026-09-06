@@ -98,25 +98,41 @@ Deno.serve(async (request: Request) => {
       return json({ok: true});
     }
 
-    if (action !== 'store') return json({error: 'Unsupported credential action.'}, 400);
+    if (action === 'delete_credentials') {
+      const {error: credentialDeleteError} = await admin.from('spotify_credentials')
+        .delete().eq('user_id', profileUserId);
+      if (credentialDeleteError) throw credentialDeleteError;
+      const {error: plaintextClearError} = await admin.from('users')
+        .update({spotify_refresh_token: null}).eq('id', profileUserId);
+      if (plaintextClearError) throw plaintextClearError;
+      return json({ok: true});
+    }
+
+    if (!['profile', 'store'].includes(action)) return json({error: 'Unsupported credential action.'}, 400);
     const connectionMode = body?.connectionMode;
     const clientId = typeof body?.clientId === 'string' ? body.clientId.trim() : null;
     const accessToken = typeof body?.accessToken === 'string' ? body.accessToken : '';
     const submittedRefreshToken = typeof body?.refreshToken === 'string' ? body.refreshToken : '';
     const requestedSpotifyId = typeof body?.spotifyId === 'string' ? body.spotifyId : '';
-    if (!['hosted', 'personal_pkce'].includes(connectionMode)) return json({error: 'Invalid connection mode.'}, 400);
-    if (connectionMode === 'personal_pkce' && !/^[A-Za-z0-9]{32}$/.test(clientId || '')) {
+    if (action === 'store' && !['hosted', 'personal_pkce'].includes(connectionMode)) return json({error: 'Invalid connection mode.'}, 400);
+    if (action === 'store' && connectionMode === 'personal_pkce' && !/^[A-Za-z0-9]{32}$/.test(clientId || '')) {
       return json({error: 'A valid Spotify Client ID is required.'}, 400);
     }
-    if (!accessToken || !submittedRefreshToken || submittedRefreshToken.length > 4096) return json({error: 'Spotify credentials are incomplete.'}, 400);
+    if (!accessToken) return json({error: 'A Spotify access token is required.'}, 400);
+    if (action === 'store' && (!submittedRefreshToken || submittedRefreshToken.length > 4096)) {
+      return json({error: 'Spotify credentials are incomplete.'}, 400);
+    }
 
     const currentProfile = await spotifyProfile(accessToken);
-    const verifiedRefresh = await accessTokenFromRefreshToken(submittedRefreshToken, connectionMode, clientId);
-    const refreshProfile = await spotifyProfile(verifiedRefresh.accessToken);
     const currentProfileIds = spotifyProfileIds(currentProfile);
-    const refreshProfileIds = spotifyProfileIds(refreshProfile);
-    if (!currentProfileIds.some(value => refreshProfileIds.includes(value))) {
-      return json({error: 'The Spotify access and refresh credentials belong to different accounts.'}, 409);
+    let verifiedRefresh: {accessToken: string; refreshToken: string} | null = null;
+    if (action === 'store') {
+      verifiedRefresh = await accessTokenFromRefreshToken(submittedRefreshToken, connectionMode, clientId);
+      const refreshProfile = await spotifyProfile(verifiedRefresh.accessToken);
+      const refreshProfileIds = spotifyProfileIds(refreshProfile);
+      if (!currentProfileIds.some(value => refreshProfileIds.includes(value))) {
+        return json({error: 'The Spotify access and refresh credentials belong to different accounts.'}, 409);
+      }
     }
     if (requestedSpotifyId && !spotifyProfileMatches(currentProfile, requestedSpotifyId)) {
       return json({error: 'The verified Spotify ID does not match the requested profile.'}, 409);
@@ -148,9 +164,10 @@ Deno.serve(async (request: Request) => {
       profile_pic_url: currentProfile.images?.[0]?.url || null
     }, {onConflict: 'id'});
     if (profileSaveError) throw profileSaveError;
+    if (action === 'profile') return json({ok: true, spotifyId: finalSpotifyId});
 
     const encrypted = await encryptSpotifyRefreshToken(
-      verifiedRefresh.refreshToken,
+      verifiedRefresh!.refreshToken,
       requiredEnvironment('SPOTIFY_TOKEN_ENCRYPTION_KEY')
     );
     const {error: credentialError} = await admin.from('spotify_credentials').upsert({
@@ -170,8 +187,8 @@ Deno.serve(async (request: Request) => {
       ok: true,
       spotifyId: finalSpotifyId,
       connectionMode,
-      rotatedRefreshToken: verifiedRefresh.refreshToken !== submittedRefreshToken
-        ? verifiedRefresh.refreshToken
+      rotatedRefreshToken: verifiedRefresh!.refreshToken !== submittedRefreshToken
+        ? verifiedRefresh!.refreshToken
         : null
     });
   } catch (error) {

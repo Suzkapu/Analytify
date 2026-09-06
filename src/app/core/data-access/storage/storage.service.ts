@@ -433,7 +433,7 @@ export class StorageService {
     const exactKeys = new Set([
       'spotifyAccessToken', 'spotifyRefreshToken', 'spotifyTokenExpiresAt',
       'spotifyUserId', 'supabaseUserId', 'spotifyConnectionMode',
-      'personalSpotifyClientId', 'anonymousCloudIdentity', 'cloudIdentityReady',
+      'personalSpotifyClientId', 'anonymousCloudIdentity', 'collaborationIdentityReady', 'cloudIdentityReady',
       'analytify_personal_spotify_auth_request', 'analytify_compare_auth_request',
       'analytifyAuthReturnUrl', 'spotify_rate_limit_until', 'spotifyRetryAfter'
     ]);

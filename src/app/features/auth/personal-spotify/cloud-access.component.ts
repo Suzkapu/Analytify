@@ -9,7 +9,8 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
       <i class="pi pi-cloud-upload hero-icon"></i>
       <span class="eyebrow">Optional cloud access</span>
       <h1>{{ enableBackup ? 'Enable Cloud Backup' : 'Enable this workspace feature' }}</h1>
-      <p>Analytify will create an anonymous cloud identity. It stores your Spotify ID, display name, profile image, selected listening snapshots, and an encrypted Spotify refresh token for scheduled features.</p>
+      <p *ngIf="!enableBackup">Analytify will create an anonymous collaboration identity containing only your verified Spotify ID, display name, and profile image. It does not upload listening data or store a Spotify refresh token.</p>
+      <p *ngIf="enableBackup">Cloud Backup adds your selected listening snapshots and an encrypted Spotify refresh token so opted-in scheduled features can run while this browser is closed.</p>
       <ul>
         <li>No email address, phone number, password, or recovery identity is requested.</li>
         <li>Your Spotify Client Secret is never requested or stored.</li>
@@ -44,7 +45,9 @@ export class CloudAccessComponent implements OnInit {
   ngOnInit(): void {
     this.returnUrl = this.safeReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl'));
     this.enableBackup = this.route.snapshot.queryParamMap.get('backup') === '1';
-    if (this.auth.hasCloudIdentity()) void this.router.navigateByUrl(this.returnUrl);
+    if (this.enableBackup ? this.auth.isBackupActive() : this.auth.hasCloudIdentity()) {
+      void this.router.navigateByUrl(this.returnUrl);
+    }
   }
 
   async confirm(): Promise<void> {
@@ -66,4 +69,3 @@ export class CloudAccessComponent implements OnInit {
     return value?.startsWith('/') && !value.startsWith('//') ? value : '/playlists';
   }
 }
-
