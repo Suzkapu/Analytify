@@ -53,12 +53,16 @@ select set_config('request.jwt.claim.role', 'authenticated', true);
 select set_config('request.jwt.claim.sub', '64000000-0000-4000-8000-000000000001', true);
 select lives_ok($$ select pg_temp.apply_schedule(false, 3, 'days') $$,
   'disabling a schedule atomically rebases its task state');
+set local role service_role;
 select is((select status from public.sync_job_runs where task_key = 'listening_history'
     and user_id = '64000000-0000-4000-8000-000000000002'), 'cancelled',
   'a queued automatic job is cancelled by the schedule edit');
 select is((select status from public.sync_job_runs where task_key = 'stats_short_term'
     and user_id = '64000000-0000-4000-8000-000000000002'), 'queued',
   'a queued manual job is retained by the schedule edit');
+set local role authenticated;
+select set_config('request.jwt.claim.role', 'authenticated', true);
+select set_config('request.jwt.claim.sub', '64000000-0000-4000-8000-000000000001', true);
 select ok((select manual_job_retained from public.admin_list_schedule_status()
     where user_id = '64000000-0000-4000-8000-000000000002'),
   'the admin status reports retained manual work');
