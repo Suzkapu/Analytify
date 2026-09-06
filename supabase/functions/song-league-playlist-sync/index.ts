@@ -199,9 +199,10 @@ Deno.serve(async (request: Request) => {
       }
     }
 
+    const leaseToken = crypto.randomUUID();
     const {data: lockAcquired, error: lockError} = await admin.rpc(
-      'try_lock_song_league_playlist_sync',
-      {p_league_id: leagueId}
+      'claim_song_league_playlist_sync',
+      {p_league_id: leagueId, p_lease_token: leaseToken}
     );
     if (lockError) throw lockError;
     if (!lockAcquired) {
@@ -272,6 +273,7 @@ Deno.serve(async (request: Request) => {
         for (const member of targetMembers) {
           const profile: any = profileById.get(member.user_id);
           const mapping: any = mappingById.get(member.user_id);
+          const expectedAppliedRevision = Number(mapping?.last_synced_revision || 0);
           let playlistId = mapping?.spotify_playlist_id || '';
           let playlistUrl = mapping?.spotify_playlist_url || '';
 
@@ -340,31 +342,26 @@ Deno.serve(async (request: Request) => {
               await replacePrivatePlaylist(token.accessToken, playlistId, name, description, trackUris);
             }
 
-            const {error: saveError} = await admin.from('song_league_playlists').upsert({
-              league_id: leagueId,
-              user_id: member.user_id,
-              spotify_playlist_id: playlistId,
-              spotify_playlist_url: playlistUrl,
-              last_synced_revision: finalRevision,
-              last_synced_round_id: payload.round_id || null,
-              last_synced_at: new Date().toISOString(),
-              last_error: null,
-              updated_at: new Date().toISOString()
-            }, {onConflict: 'league_id,user_id'});
+            const {data: completed, error: saveError} = await admin.rpc(
+              'complete_song_league_playlist_sync',
+              {
+                p_league_id: leagueId,
+                p_user_id: member.user_id,
+                p_expected_source_revision: finalRevision,
+                p_expected_applied_revision: expectedAppliedRevision,
+                p_expected_round_id: payload.round_id || null,
+                p_lease_token: leaseToken,
+                p_spotify_playlist_id: playlistId,
+                p_spotify_playlist_url: playlistUrl
+              }
+            );
             if (saveError) throw saveError;
+            if (!completed) {
+              throw new Error('Song League picks changed while the Spotify playlist was updating.');
+            }
             finalResults.push({userId: member.user_id, success: true, skipped: false});
           } catch (error) {
             const message = error instanceof Error ? error.message : 'Playlist synchronization failed.';
-            await admin.from('song_league_playlists').upsert({
-              league_id: leagueId,
-              user_id: member.user_id,
-              spotify_playlist_id: playlistId || null,
-              spotify_playlist_url: playlistUrl,
-              last_synced_revision: Number(mapping?.last_synced_revision || 0),
-              last_synced_round_id: mapping?.last_synced_round_id || null,
-              last_error: message.slice(0, 500),
-              updated_at: new Date().toISOString()
-            }, {onConflict: 'league_id,user_id'});
             finalResults.push({userId: member.user_id, success: false, error: message, skipped: false});
           }
         }
@@ -389,8 +386,9 @@ Deno.serve(async (request: Request) => {
       });
     } finally {
       try {
-        await admin.rpc('unlock_song_league_playlist_sync', {
-          p_league_id: leagueId
+        await admin.rpc('release_song_league_playlist_sync', {
+          p_league_id: leagueId,
+          p_lease_token: leaseToken
         });
       } catch {
         // Ignore unlock cleanup failure to avoid hiding main task errors

@@ -431,7 +431,7 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
         playlistImageUrl: playlist.imageUrl || share.playlistImageUrl,
         tracks: result.tracks
       };
-      const revision = await this.sharing.refreshShare(share.id, publication);
+      const revision = await this.sharing.refreshShare(share.id, share.revision, publication);
       this.successMessage = `“${playlist.name}” is published at revision ${revision}.`;
       await this.reload(true);
     } catch (error) {

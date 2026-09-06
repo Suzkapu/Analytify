@@ -73,6 +73,50 @@ describe('PlaylistSharingService', () => {
     expect(created.claimUrl).toContain(`/shared-playlists/claim/${rpcArguments.p_claim_token}`);
   });
 
+  it('binds recipient synchronization to an opaque lease and exact revisions', async () => {
+    rpc.and.callFake((name: string) => Promise.resolve({
+      data: name === 'claim_playlist_share_sync' || name === 'complete_playlist_share_sync',
+      error: null
+    }));
+
+    const lease = await service.claimDownloadSync('share-id', 7, 5);
+    expect(lease).toMatch(/^[0-9a-f-]{36}$/);
+    expect(rpc).toHaveBeenCalledWith('claim_playlist_share_sync', {
+      p_share_id: 'share-id',
+      p_recipient_user_id: null,
+      p_expected_source_revision: 7,
+      p_expected_applied_revision: 5,
+      p_lease_token: lease
+    });
+
+    const completed = await service.completeDownloadSync(
+      'share-id', 7, 5, lease!, 'spotify-id', 'https://open.spotify.com/playlist/spotify-id'
+    );
+    expect(completed).toBeTrue();
+    expect(rpc).toHaveBeenCalledWith('complete_playlist_share_sync', jasmine.objectContaining({
+      p_expected_source_revision: 7,
+      p_expected_applied_revision: 5,
+      p_lease_token: lease
+    }));
+  });
+
+  it('sends the revision the owner viewed with an explicit snapshot refresh', async () => {
+    rpc.and.resolveTo({data: 6, error: null});
+    const publication = {
+      sourcePlaylistId: 'source',
+      playlistName: 'Fresh',
+      playlistDescription: '',
+      playlistImageUrl: '',
+      tracks: [track('one', 1)]
+    };
+
+    expect(await service.refreshShare('share-id', 5, publication)).toBe(6);
+    expect(rpc).toHaveBeenCalledWith('refresh_playlist_share', jasmine.objectContaining({
+      p_share_id: 'share-id',
+      p_expected_revision: 5
+    }));
+  });
+
   it('deduplicates cached tracks and derives playlist statistics without Spotify calls', () => {
     const tracks = service.normalizeCachedTracks([
       {tracks: [{...cachedTrack('shared', 2), artists: [{id: 'a', name: 'A'}, {id: 'b', name: 'B'}]}]},

@@ -116,28 +116,18 @@ export class PlaylistSharingService {
     };
   }
 
-  async refreshShare(shareId: string, publication: PlaylistSharePublication): Promise<number> {
+  async refreshShare(
+    shareId: string,
+    expectedRevision: number,
+    publication: PlaylistSharePublication
+  ): Promise<number> {
     const {data, error} = await this.supabase.client.rpc('refresh_playlist_share', {
       p_share_id: shareId,
+      p_expected_revision: expectedRevision,
       p_playlist_name: publication.playlistName,
       p_playlist_description: publication.playlistDescription,
       p_playlist_image_url: publication.playlistImageUrl,
       p_tracks: publication.tracks
-    });
-    if (error) throw error;
-    return Number(data || 0);
-  }
-
-  async refreshActiveSharesFromCache(
-    sourcePlaylistId: string,
-    playlistName: string,
-    cachedArtists: any[]
-  ): Promise<number> {
-    const tracks = this.normalizeCachedTracks(cachedArtists);
-    const {data, error} = await this.supabase.client.rpc('refresh_active_playlist_shares', {
-      p_source_playlist_id: sourcePlaylistId,
-      p_playlist_name: playlistName,
-      p_tracks: tracks
     });
     if (error) throw error;
     return Number(data || 0);
@@ -178,6 +168,53 @@ export class PlaylistSharingService {
       p_spotify_playlist_id: spotifyPlaylistId,
       p_spotify_playlist_url: spotifyPlaylistUrl,
       p_applied_revision: appliedRevision
+    });
+    if (error) throw error;
+  }
+
+  async claimDownloadSync(
+    shareId: string,
+    expectedSourceRevision: number,
+    expectedAppliedRevision: number
+  ): Promise<string | null> {
+    const leaseToken = crypto.randomUUID();
+    const {data, error} = await this.supabase.client.rpc('claim_playlist_share_sync', {
+      p_share_id: shareId,
+      p_recipient_user_id: null,
+      p_expected_source_revision: expectedSourceRevision,
+      p_expected_applied_revision: expectedAppliedRevision,
+      p_lease_token: leaseToken
+    });
+    if (error) throw error;
+    return data ? leaseToken : null;
+  }
+
+  async completeDownloadSync(
+    shareId: string,
+    expectedSourceRevision: number,
+    expectedAppliedRevision: number,
+    leaseToken: string,
+    spotifyPlaylistId: string,
+    spotifyPlaylistUrl: string
+  ): Promise<boolean> {
+    const {data, error} = await this.supabase.client.rpc('complete_playlist_share_sync', {
+      p_share_id: shareId,
+      p_recipient_user_id: null,
+      p_expected_source_revision: expectedSourceRevision,
+      p_expected_applied_revision: expectedAppliedRevision,
+      p_lease_token: leaseToken,
+      p_spotify_playlist_id: spotifyPlaylistId,
+      p_spotify_playlist_url: spotifyPlaylistUrl
+    });
+    if (error) throw error;
+    return data === true;
+  }
+
+  async releaseDownloadSync(shareId: string, leaseToken: string): Promise<void> {
+    const {error} = await this.supabase.client.rpc('release_playlist_share_sync', {
+      p_share_id: shareId,
+      p_recipient_user_id: null,
+      p_lease_token: leaseToken
     });
     if (error) throw error;
   }

@@ -354,7 +354,7 @@ describe('SharedPlaylistsComponent', () => {
     const share = {
       id: 'share-id', sourcePlaylistId: 'party', playlistName: 'Old party',
       playlistDescription: 'Keep this description', playlistImageUrl: 'old.jpg',
-      ownerDisplayName: 'Owner', trackCount: 1
+      ownerDisplayName: 'Owner', trackCount: 1, revision: 3
     } as any;
 
     await component.refreshShare(share);
@@ -364,7 +364,7 @@ describe('SharedPlaylistsComponent', () => {
       'access-token',
       'spotify-user'
     );
-    expect(sharing.refreshShare).toHaveBeenCalledWith('share-id', jasmine.objectContaining({
+    expect(sharing.refreshShare).toHaveBeenCalledWith('share-id', 3, jasmine.objectContaining({
       sourcePlaylistId: 'party',
       playlistName: 'Party',
       playlistDescription: 'Keep this description',

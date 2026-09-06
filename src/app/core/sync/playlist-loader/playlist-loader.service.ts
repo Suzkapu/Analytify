@@ -5,7 +5,6 @@ import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { BehaviorSubject, from, Subscription } from 'rxjs';
 import {map, mergeMap, tap, toArray} from 'rxjs/operators';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
-import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {
   areSourceEntriesNewestFirst,
@@ -114,8 +113,7 @@ export class PlaylistLoaderService {
     private spotifyDataService: SpotifyDataService,
     private storageService: StorageService,
     private authService: SpotifyAuthService,
-    private supabaseService: SupabaseService,
-    private playlistSharingService: PlaylistSharingService
+    private supabaseService: SupabaseService
   ) {
     this.authService.logout$.subscribe(() => {
       this.clearAllTasks();
@@ -1190,14 +1188,6 @@ export class PlaylistLoaderService {
     );
     if (updateDailyFullSyncTimestamp) {
       this.storageService.setItem(`${userId}_${task.playlistId}_lastUpdated`, Date.now().toString());
-    }
-
-    // Owners publish refreshed snapshots only while their Cloud Backup opt-in
-    // is active. Recipients never need to enable Cloud Backup to receive them.
-    if (this.authService.isBackupActive()) {
-      void this.playlistSharingService
-        .refreshActiveSharesFromCache(task.playlistId, task.playlistName, cleanedArtists)
-        .catch(error => console.warn('[PlaylistLoaderService] Could not refresh active playlist shares.', error));
     }
 
   }
