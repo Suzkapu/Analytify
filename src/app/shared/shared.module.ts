@@ -8,6 +8,7 @@ import {MetricCardComponent} from './ui/metric-card/metric-card.component';
 import {PageStateComponent} from './ui/page-state/page-state.component';
 import {SectionHeadingComponent} from './ui/section-heading/section-heading.component';
 import {SafeSpotifyUrlPipe} from './pipes/safe-spotify-url.pipe';
+import {AccessibleDialogDirective} from './ui/accessible-dialog.directive';
 
 const SHARED_MODULES = [
   CommonModule,
@@ -19,7 +20,7 @@ const SHARED_MODULES = [
 
 @NgModule({
   imports: SHARED_MODULES,
-  declarations: [MetricCardComponent, PageStateComponent, SectionHeadingComponent, SafeSpotifyUrlPipe],
-  exports: [...SHARED_MODULES, MetricCardComponent, PageStateComponent, SectionHeadingComponent, SafeSpotifyUrlPipe]
+  declarations: [MetricCardComponent, PageStateComponent, SectionHeadingComponent, SafeSpotifyUrlPipe, AccessibleDialogDirective],
+  exports: [...SHARED_MODULES, MetricCardComponent, PageStateComponent, SectionHeadingComponent, SafeSpotifyUrlPipe, AccessibleDialogDirective]
 })
 export class SharedModule {}

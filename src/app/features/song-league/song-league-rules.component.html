@@ -6,12 +6,13 @@
 
 <div *ngIf="isOpen" class="league-rules-overlay" (click)="close()">
   <section class="league-rules-modal" role="dialog" aria-modal="true" aria-labelledby="song-league-rules-title"
+    aria-describedby="song-league-rules-description" appAccessibleDialog (modalEscape)="close()"
     (click)="$event.stopPropagation()">
-    <button type="button" class="league-rules-close" (click)="close()" aria-label="Close game explanation">×</button>
+    <button type="button" class="league-rules-close" appModalInitialFocus (click)="close()" aria-label="Close game explanation">×</button>
 
     <span class="league-eyebrow">The complete game</span>
     <h2 id="song-league-rules-title">How Song League works</h2>
-    <p class="league-rules-lead">Play with 2 to 50 players, recommend discoveries, and let everyone’s real Spotify rankings decide the winner.</p>
+    <p id="song-league-rules-description" class="league-rules-lead">Play with 2 to 50 players, recommend discoveries, and let everyone’s real Spotify rankings decide the winner.</p>
 
     <div class="league-rules-steps">
       <article>

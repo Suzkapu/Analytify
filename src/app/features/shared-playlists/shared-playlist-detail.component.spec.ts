@@ -117,7 +117,7 @@ describe('SharedPlaylistDetailComponent', () => {
       return new Promise(resolve => finishTracks = resolve);
     });
 
-    const loading = component.load();
+    fixture.detectChanges();
     await trackLoadingStarted;
     fixture.detectChanges();
 
@@ -126,7 +126,7 @@ describe('SharedPlaylistDetailComponent', () => {
     expect(component.isTracksLoading).toBeTrue();
     expect(fixture.nativeElement.textContent).toContain('Shared party');
     finishTracks([track('song')]);
-    await loading;
+    await fixture.whenStable();
   });
 
   it('keeps partial pages visible when a later page fails', async () => {

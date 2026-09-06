@@ -131,12 +131,13 @@
 
 <div class="confirm-modal-overlay" *ngIf="showNotificationSettingsModal" (click)="closeNotificationSettings()">
   <section class="confirm-modal-card notification-settings-modal" role="dialog" aria-modal="true"
-    aria-labelledby="notification-settings-title" (click)="$event.stopPropagation()">
-    <button type="button" class="notification-modal-close" (click)="closeNotificationSettings()"
+    aria-labelledby="notification-settings-title" aria-describedby="notification-settings-description"
+    appAccessibleDialog (modalEscape)="closeNotificationSettings()" (click)="$event.stopPropagation()">
+    <button type="button" class="notification-modal-close" appModalInitialFocus (click)="closeNotificationSettings()"
       [disabled]="isSavingNotificationSettings" aria-label="Close notification settings">×</button>
     <div class="confirm-modal-icon"><i class="pi pi-bell"></i></div>
     <h3 id="notification-settings-title" class="confirm-modal-title">Notifications</h3>
-    <p class="confirm-modal-text">Choose which updates Analytify may send to your installed PWA. More categories can be added here later.</p>
+    <p id="notification-settings-description" class="confirm-modal-text">Choose which updates Analytify may send to your installed PWA. More categories can be added here later.</p>
 
     <div *ngIf="isLoadingNotificationSettings" class="notification-settings-loading" role="status">
       <i class="pi pi-spin pi-spinner"></i> Loading notification settings…
@@ -203,12 +204,14 @@
 
 <!-- Clear Data Selection Modal -->
 <div class="confirm-modal-overlay" *ngIf="showClearDataModal" (click)="closeClearDataModal()">
-  <div class="confirm-modal-card selection-card" (click)="$event.stopPropagation()">
+  <div class="confirm-modal-card selection-card" role="dialog" aria-modal="true"
+    aria-labelledby="clear-profile-data-title" aria-describedby="clear-profile-data-description"
+    appAccessibleDialog (modalEscape)="closeClearDataModal()" (click)="$event.stopPropagation()">
     <div class="confirm-modal-icon">
       <i class="pi pi-trash"></i>
     </div>
-    <h3 class="confirm-modal-title">Clear Profile Data</h3>
-    <p class="confirm-modal-text selection-copy">
+    <h3 id="clear-profile-data-title" class="confirm-modal-title">Clear Profile Data</h3>
+    <p id="clear-profile-data-description" class="confirm-modal-text selection-copy">
       Choose what data you would like to clear. Deleting cloud data compliance conforms to GDPR and Spotify Developer Policy.
     </p>
     
@@ -231,25 +234,27 @@
     </div>
     
     <div class="confirm-modal-actions selection-actions">
-      <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="closeClearDataModal()">Cancel</button>
+      <button class="confirm-modal-btn confirm-modal-btn-cancel" appModalInitialFocus (click)="closeClearDataModal()">Cancel</button>
     </div>
   </div>
 </div>
 
 <!-- Local Reset Confirmation Modal -->
 <div class="confirm-modal-overlay" *ngIf="showConfirmLocalDeleteModal" (click)="cancelLocalDelete()">
-  <div class="confirm-modal-card" (click)="$event.stopPropagation()">
+  <div class="confirm-modal-card" role="alertdialog" aria-modal="true"
+    aria-labelledby="local-reset-title" aria-describedby="local-reset-description"
+    appAccessibleDialog (modalEscape)="cancelLocalDelete()" (click)="$event.stopPropagation()">
     <div class="confirm-modal-icon">
       <i class="pi pi-exclamation-triangle"></i>
     </div>
-    <h3 class="confirm-modal-title">Confirm Local Reset</h3>
-    <p class="confirm-modal-text">
+    <h3 id="local-reset-title" class="confirm-modal-title">Confirm Local Reset</h3>
+    <p id="local-reset-description" class="confirm-modal-text">
       Are you absolutely sure? This will delete all local history caches and snapshots in this browser, and log you out.
       <ng-container *ngIf="authService.isAnonymousCloudIdentity()"> Your anonymous cloud identity and all data linked to it will also be permanently deleted because it cannot be recovered without this browser.</ng-container>
       This action is irreversible.
     </p>
     <div class="confirm-modal-actions">
-      <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="cancelLocalDelete()">Cancel</button>
+      <button class="confirm-modal-btn confirm-modal-btn-cancel" appModalInitialFocus (click)="cancelLocalDelete()">Cancel</button>
       <button class="confirm-modal-btn confirm-modal-btn-confirm" (click)="confirmLocalDelete()">Clear and Logout</button>
     </div>
   </div>
@@ -257,12 +262,14 @@
 
 <!-- Anonymous Identity Logout Confirmation -->
 <div class="confirm-modal-overlay" *ngIf="showGuestLogoutConfirmModal" (click)="showGuestLogoutConfirmModal = false">
-  <div class="confirm-modal-card" (click)="$event.stopPropagation()">
+  <div class="confirm-modal-card" role="alertdialog" aria-modal="true"
+    aria-labelledby="guest-logout-title" aria-describedby="guest-logout-description"
+    appAccessibleDialog (modalEscape)="showGuestLogoutConfirmModal = false" (click)="$event.stopPropagation()">
     <div class="confirm-modal-icon danger-icon"><i class="pi pi-exclamation-triangle danger-text"></i></div>
-    <h3 class="confirm-modal-title danger-text">Delete anonymous cloud identity?</h3>
-    <p class="confirm-modal-text">This account has no email, password, or recovery identity. Logging out permanently deletes its Cloud Backup, shares, Song League membership, scheduled credentials, and local session.</p>
+    <h3 id="guest-logout-title" class="confirm-modal-title danger-text">Delete anonymous cloud identity?</h3>
+    <p id="guest-logout-description" class="confirm-modal-text">This account has no email, password, or recovery identity. Logging out permanently deletes its Cloud Backup, shares, Song League membership, scheduled credentials, and local session.</p>
     <div class="confirm-modal-actions">
-      <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="showGuestLogoutConfirmModal = false">Cancel</button>
+      <button class="confirm-modal-btn confirm-modal-btn-cancel" appModalInitialFocus (click)="showGuestLogoutConfirmModal = false">Cancel</button>
       <button class="confirm-modal-btn confirm-modal-btn-confirm danger-btn" (click)="confirmGuestLogout()" [disabled]="isGuestLogoutRunning">
         <i class="pi pi-spin pi-spinner action-spinner" *ngIf="isGuestLogoutRunning"></i>{{ isGuestLogoutRunning ? 'Deleting…' : 'Delete and Log Out' }}
       </button>
@@ -272,16 +279,18 @@
 
 <!-- Cloud Permanent Erasure Confirmation Modal -->
 <div class="confirm-modal-overlay" *ngIf="showConfirmDbDeleteModal" (click)="cancelDbDelete()">
-  <div class="confirm-modal-card" (click)="$event.stopPropagation()">
+  <div class="confirm-modal-card" role="alertdialog" aria-modal="true"
+    aria-labelledby="database-erasure-title" aria-describedby="database-erasure-description"
+    appAccessibleDialog (modalEscape)="cancelDbDelete()" (click)="$event.stopPropagation()">
     <div class="confirm-modal-icon danger-icon">
       <i class="pi pi-cloud danger-text"></i>
     </div>
-    <h3 class="confirm-modal-title danger-text">Confirm Database Erasure</h3>
-    <p class="confirm-modal-text">
+    <h3 id="database-erasure-title" class="confirm-modal-title danger-text">Confirm Database Erasure</h3>
+    <p id="database-erasure-description" class="confirm-modal-text">
       Are you absolutely sure? This will permanently delete all your cloud backup data, listening snapshots, playlist-sharing grants, and Song League membership from our servers. Shared catalog metadata such as artist names is retained, but your personal links to it are erased forever. This action is irreversible.
     </p>
     <div class="confirm-modal-actions">
-      <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="cancelDbDelete()">Cancel</button>
+      <button class="confirm-modal-btn confirm-modal-btn-cancel" appModalInitialFocus (click)="cancelDbDelete()">Cancel</button>
       <button class="confirm-modal-btn confirm-modal-btn-confirm danger-btn" (click)="confirmDbDelete()" [disabled]="isDeletingDbData">
         <i class="pi pi-spin pi-spinner action-spinner" *ngIf="isDeletingDbData"></i>
         {{ isDeletingDbData ? 'Erasing...' : 'Delete Cloud Data' }}
@@ -292,16 +301,18 @@
 
 <!-- Custom Backup Confirmation Modal -->
 <div class="confirm-modal-overlay" *ngIf="showBackupConfirmModal" (click)="cancelBackupToggle()">
-  <div class="confirm-modal-card" (click)="$event.stopPropagation()">
+  <div class="confirm-modal-card" role="dialog" aria-modal="true"
+    aria-labelledby="backup-confirm-title" aria-describedby="backup-confirm-description"
+    appAccessibleDialog (modalEscape)="cancelBackupToggle()" (click)="$event.stopPropagation()">
     <div class="confirm-modal-icon">
       <i class="pi pi-database"></i>
     </div>
-    <h3 class="confirm-modal-title">Enable Cloud Backup</h3>
-    <p class="confirm-modal-text">
+    <h3 id="backup-confirm-title" class="confirm-modal-title">Enable Cloud Backup</h3>
+    <p id="backup-confirm-description" class="confirm-modal-text">
       This action will upload your Spotify ID, display name, profile image, listening history, and stats snapshots to a cloud server. Personal-app users receive an anonymous identity with no email, phone number, password, or recovery identity. Its Spotify refresh token is encrypted for scheduled features, and the identity cannot be recovered after this browser is cleared.
     </p>
     <div class="confirm-modal-actions">
-      <button class="confirm-modal-btn confirm-modal-btn-cancel" (click)="cancelBackupToggle()">Cancel</button>
+      <button class="confirm-modal-btn confirm-modal-btn-cancel" appModalInitialFocus (click)="cancelBackupToggle()">Cancel</button>
       <button class="confirm-modal-btn confirm-modal-btn-confirm" (click)="confirmBackupToggle()">Proceed</button>
     </div>
   </div>

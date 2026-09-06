@@ -178,11 +178,13 @@
 </main>
 
 <div *ngIf="selectedStanding as standing" class="league-modal-overlay" (click)="closeBreakdown()">
-  <section class="league-breakdown-modal" role="dialog" aria-modal="true" aria-labelledby="league-breakdown-title" (click)="$event.stopPropagation()">
-    <button type="button" class="league-modal-close" (click)="closeBreakdown()" aria-label="Close score breakdown">×</button>
+  <section class="league-breakdown-modal" role="dialog" aria-modal="true" aria-labelledby="league-breakdown-title"
+    aria-describedby="league-breakdown-description" appAccessibleDialog (modalEscape)="closeBreakdown()"
+    (click)="$event.stopPropagation()">
+    <button type="button" class="league-modal-close" appModalInitialFocus (click)="closeBreakdown()" aria-label="Close score breakdown">×</button>
     <span class="league-eyebrow">Auditable all-time score</span>
     <h2 id="league-breakdown-title">{{ standing.displayName }} · {{ standing.totalPoints | number }} points</h2>
-    <p>Every row shows which song and which friend’s daily Top Songs produced the points.</p>
+    <p id="league-breakdown-description">Every row shows which song and which friend’s daily Top Songs produced the points.</p>
     <div *ngIf="breakdownRowsForSelected().length === 0" class="league-empty compact"><strong>No points yet</strong><p>Submitted songs will appear after their first scoring snapshot.</p></div>
     <div *ngIf="breakdownRowsForSelected().length" class="breakdown-table">
       <div class="breakdown-header"><span>Song</span><span>From</span><span>Latest</span><span>Total</span></div>
@@ -199,7 +201,7 @@
 <div *ngIf="showDeleteLeagueModal" class="confirm-modal-overlay" (click)="closeDeleteLeagueModal()">
   <section class="confirm-modal-card" role="alertdialog" aria-modal="true"
     aria-labelledby="delete-song-league-title" aria-describedby="delete-song-league-description"
-    (click)="$event.stopPropagation()">
+    appAccessibleDialog (modalEscape)="closeDeleteLeagueModal()" (click)="$event.stopPropagation()">
     <div class="confirm-modal-icon danger-icon"><i class="pi pi-trash danger-text"></i></div>
     <h3 id="delete-song-league-title" class="confirm-modal-title danger-text">Delete this league?</h3>
     <p id="delete-song-league-description" class="confirm-modal-text league-delete-warning">
@@ -207,7 +209,7 @@
     </p>
     <p class="league-delete-final-warning">This cannot be undone.</p>
     <div class="confirm-modal-actions">
-      <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel"
+      <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel" appModalInitialFocus
         (click)="closeDeleteLeagueModal()" [disabled]="isDeletingLeague">Cancel</button>
       <button type="button" class="confirm-modal-btn confirm-modal-btn-confirm danger-btn"
         (click)="confirmDeleteLeague()" [disabled]="isDeletingLeague">

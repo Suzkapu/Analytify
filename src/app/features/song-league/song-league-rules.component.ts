@@ -1,4 +1,4 @@
-import {Component, HostListener} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-song-league-rules',
@@ -14,10 +14,5 @@ export class SongLeagueRulesComponent {
 
   close(): void {
     this.isOpen = false;
-  }
-
-  @HostListener('document:keydown.escape')
-  closeOnEscape(): void {
-    this.close();
   }
 }
