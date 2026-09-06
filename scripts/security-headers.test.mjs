@@ -20,6 +20,8 @@ test('versioned nginx configuration supplies the required browser defenses', () 
   assert.match(deploy, /install-nginx-security[.]sh/);
   assert.match(installer, /nginx -t/);
   assert.match(installer, /restore_previous/);
+  assert.match(installer, /nginx\/snippets\/analytify-security[.]conf/);
+  assert.match(installer, /inject-nginx-security-include[.]mjs/);
   assert.match(liveVerification, /invalidSecurityHeaders\(response[.]headers\)/);
 });
 

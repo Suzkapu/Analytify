@@ -2,6 +2,8 @@ name: Verify and deploy
 
 on:
   push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
@@ -10,20 +12,18 @@ on:
 permissions:
   contents: read
 
-jobs:
-  verify-and-deploy:
-    runs-on: ubuntu-latest
-    env:
-      # This hostname is public and should not be hidden in a repository secret.
-      # Keeping it here also prevents a malformed REMOTE_HOST secret from making
-      # ssh interpret a URL or other value as a DNS name.
-      DEPLOY_HOST: analytify.dynv6.net
-      SUPABASE_PROJECT_REF: tmmhylpexbubyznlizfs
-      SPOTIFY_CLIENT_ID: 9b03c8eb85dd4df483c3ae097e6c39f0
-      SUPABASE_URL: https://tmmhylpexbubyznlizfs.supabase.co
-      SUPABASE_PUBLISHABLE_KEY: sb_publishable_hMg6wOlMTQai9ipA4ZlxzQ_rawnrTD-
-      WEB_PUSH_VAPID_PUBLIC_KEY: BIpszothnaePO-LGeIvE4x7AEKMr2YdiyuJZWjkMIlHqPe1Tp3WE79_otTv_C_pQ2C9JwfsnlqcoQn0aVEVcANA
+env:
+  # These values are public application configuration, not credentials.
+  DEPLOY_HOST: analytify.dynv6.net
+  SUPABASE_PROJECT_REF: tmmhylpexbubyznlizfs
+  SPOTIFY_CLIENT_ID: 9b03c8eb85dd4df483c3ae097e6c39f0
+  SUPABASE_URL: https://tmmhylpexbubyznlizfs.supabase.co
+  SUPABASE_PUBLISHABLE_KEY: sb_publishable_hMg6wOlMTQai9ipA4ZlxzQ_rawnrTD-
+  WEB_PUSH_VAPID_PUBLIC_KEY: BIpszothnaePO-LGeIvE4x7AEKMr2YdiyuJZWjkMIlHqPe1Tp3WE79_otTv_C_pQ2C9JwfsnlqcoQn0aVEVcANA
 
+jobs:
+  verify:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -84,12 +84,55 @@ jobs:
         if: always() && steps.supabase-cli.outcome == 'success'
         run: supabase stop --workdir . --no-backup
 
-      - name: Validate deployment script
-        run: bash -n scripts/deploy.sh scripts/deploy-supabase.sh scripts/activate-release.sh scripts/install-nginx-security.sh
+      - name: Validate deployment scripts
+        run: bash -n scripts/deploy.sh scripts/deploy-supabase.sh scripts/activate-release.sh scripts/install-nginx-security.sh scripts/assert-deployment-freshness.sh
+
+      - name: Store verified production build
+        uses: actions/upload-artifact@v4
+        with:
+          name: analytify-web-${{ github.sha }}
+          path: dist/spoti-front
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy-production:
+    needs: verify
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency:
+      group: analytify-production
+      cancel-in-progress: true
+    steps:
+      - name: Checkout verified commit
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@3c2f5e2ae34c34e428e8e206e2c4d21fa2d20fbf # v2.1.1
+        with:
+          version: 2.84.2
+          github-token: ${{ github.token }}
+
+      - name: Restore verified production build
+        uses: actions/download-artifact@v4
+        with:
+          name: analytify-web-${{ github.sha }}
+          path: dist/spoti-front
+
+      - name: Reject superseded deployment before Supabase mutation
+        run: bash scripts/assert-deployment-freshness.sh "$GITHUB_REF" "$GITHUB_SHA"
 
       - name: Deploy Supabase schema and functions
-        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         env:
+          DEPLOY_COMMIT_SHA: ${{ github.sha }}
+          DEPLOY_REF: ${{ github.ref }}
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
@@ -97,11 +140,13 @@ jobs:
           WEB_PUSH_VAPID_PRIVATE_KEY: ${{ secrets.WEB_PUSH_VAPID_PRIVATE_KEY }}
         run: bash scripts/deploy-supabase.sh
 
+      - name: Reject superseded deployment before Oracle mutation
+        run: bash scripts/assert-deployment-freshness.sh "$GITHUB_REF" "$GITHUB_SHA"
+
       - name: Deploy verified build to Oracle Server
-        # Every branch push represents a deployable live version. Pull-request
-        # events still verify only, so fork PRs never receive deployment secrets.
-        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         env:
+          DEPLOY_COMMIT_SHA: ${{ github.sha }}
+          DEPLOY_REF: ${{ github.ref }}
           DEPLOY_SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           DEPLOY_USER: ${{ secrets.REMOTE_USER }}
           DEPLOY_TARGET: ${{ secrets.TARGET_DIR }}
@@ -111,8 +156,8 @@ jobs:
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
         run: bash scripts/deploy.sh
 
-      - name: Verify live deployment
-        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+      - name: Verify every live component runs the intended commit
         env:
           APP_URL: https://analytify.dynv6.net
+          EXPECTED_COMMIT_SHA: ${{ github.sha }}
         run: node scripts/verify-live-deployment.mjs

@@ -49,6 +49,14 @@ if ! command -v supabase >/dev/null 2>&1; then
   exit 1
 fi
 
+deploy_commit_sha="${DEPLOY_COMMIT_SHA:-$(git rev-parse HEAD 2>/dev/null || echo "")}"
+if [[ ! "$deploy_commit_sha" =~ ^[0-9a-f]{40}$ ]]; then
+  echo "Supabase deployment configuration error: DEPLOY_COMMIT_SHA must be a full Git commit SHA." >&2
+  exit 1
+fi
+deploy_ref="${DEPLOY_REF:-${GITHUB_REF:-refs/heads/main}}"
+bash "$(dirname "$0")/assert-deployment-freshness.sh" "$deploy_ref" "$deploy_commit_sha"
+
 supabase link --project-ref "$SUPABASE_PROJECT_REF"
 # Personal Spotify-app users opt in to Cloud Backup through browser-bound
 # anonymous Auth users. Keep the hosted project setting aligned with that
@@ -82,6 +90,14 @@ supabase functions deploy song-league-playlist-sync \
 supabase functions deploy song-league-notifications \
   --project-ref "$SUPABASE_PROJECT_REF" \
   --use-api
+
+deployment_revision_sql="insert into public.deployment_revisions(component, commit_sha, deployed_at) values ('supabase', '${deploy_commit_sha}', now()) on conflict (component) do update set commit_sha = excluded.commit_sha, deployed_at = excluded.deployed_at;"
+curl --fail-with-body --silent --show-error \
+  --request POST \
+  --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+  --header "Content-Type: application/json" \
+  --data "$(node -e 'process.stdout.write(JSON.stringify({query: process.argv[1]}))' "$deployment_revision_sql")" \
+  "https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_REF}/database/query" >/dev/null
 
 if [[ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" && -n "${GITHUB_ENV:-}" ]]; then
   api_keys_json="$(curl --fail-with-body --silent --show-error \

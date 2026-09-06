@@ -81,6 +81,8 @@ if [[ ! "$deploy_commit_sha" =~ ^[0-9a-f]{40}$ ]]; then
   echo "Deployment configuration error: DEPLOY_COMMIT_SHA must be a full Git commit SHA." >&2
   exit 1
 fi
+deploy_ref="${DEPLOY_REF:-${GITHUB_REF:-refs/heads/main}}"
+bash "$(dirname "$0")/assert-deployment-freshness.sh" "$deploy_ref" "$deploy_commit_sha"
 ssh_command="ssh -p ${deploy_port} -i ${key_file} -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3"
 remote="${DEPLOY_USER}@${DEPLOY_HOST}"
 target_root="${DEPLOY_TARGET%/}"
@@ -174,6 +176,7 @@ deploy_private_file_with_retry "$allowlist_file" "${worker_root}/.admin-spotify-
 deploy_private_file_with_retry "$token_key_file" "${worker_root}/.spotify-token-encryption-key"
 deploy_private_file_with_retry "deploy/analytify-security.conf" "${worker_root}/.analytify-nginx-security-${deploy_commit_sha}.conf"
 deploy_with_retry "scripts/install-nginx-security.sh" "${worker_root}/install-nginx-security.sh" false
+deploy_with_retry "scripts/inject-nginx-security-include.mjs" "${worker_root}/inject-nginx-security-include.mjs" false
 
 echo "Installing and syntax-checking the versioned nginx security policy..."
 $ssh_command "$remote" "chmod 700 '${worker_root}/install-nginx-security.sh' && '${worker_root}/install-nginx-security.sh' '${worker_root}/.analytify-nginx-security-${deploy_commit_sha}.conf'"
