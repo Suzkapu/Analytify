@@ -1,9 +1,16 @@
 import { describe, expect, it, vi } from "vitest";
 import { CompareParticipant, ComparePlaylist, CompareTrack } from './compare-room.models';
-import { CompareRoomCoordinatorService } from './compare-room-coordinator.service';
+import { CompareRoomCoordinatorService, resolveQrCodeApi } from './compare-room-coordinator.service';
 import { PlaylistIntersectionService } from './playlist-intersection.service';
 
 describe('CompareRoomCoordinatorService', () => {
+    it('resolves QR generation from both ESM and CommonJS lazy-import shapes', () => {
+        const toDataURL = vi.fn().mockName('toDataURL');
+
+        expect(resolveQrCodeApi({ toDataURL } as any).toDataURL).toBe(toDataURL);
+        expect(resolveQrCodeApi({ default: { toDataURL } } as any).toDataURL).toBe(toDataURL);
+    });
+
     it('lets the host cancel a claimed join before the participant finishes joining', async () => {
         const transport = {
             send: vi.fn().mockName('send').mockResolvedValue(undefined),

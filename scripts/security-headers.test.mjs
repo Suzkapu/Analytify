@@ -17,6 +17,9 @@ test('versioned nginx configuration supplies the required browser defenses', () 
   assert.doesNotMatch(nginx, /server_tokens off;/);
   assert.doesNotMatch(nginx, /script-src[^;]*'unsafe-inline'/);
   assert.match(nginx, /frame-ancestors 'none'/);
+  assert.match(nginx, /connect-src[^;]*https:\/\/\*[.]scdn[.]co/);
+  assert.match(nginx, /connect-src[^;]*https:\/\/\*[.]spotifycdn[.]com/);
+  assert.match(nginx, /connect-src[^;]*https:\/\/platform-lookaside[.]fbsbx[.]com/);
   assert.match(deploy, /install-nginx-security[.]sh/);
   assert.match(installer, /nginx -t/);
   assert.match(installer, /restore_previous/);

@@ -15,6 +15,17 @@ import {CompareRoomTransportService} from './compare-room-transport.service';
 import {PlaylistIntersectionService} from './playlist-intersection.service';
 import {MAX_COMPARE_CHUNK_TRACKS, MAX_COMPARE_TRACKS, proposalContentHash} from './compare-room-integrity';
 
+type QrCodeApi = {toDataURL: typeof import('qrcode')['toDataURL']};
+type LazyQrCodeModule = Partial<QrCodeApi> & {default?: Partial<QrCodeApi>};
+
+export function resolveQrCodeApi(module: LazyQrCodeModule): QrCodeApi {
+  const candidate = typeof module.toDataURL === 'function' ? module : module.default;
+  if (!candidate || typeof candidate.toDataURL !== 'function') {
+    throw new Error('QR code generator failed to load.');
+  }
+  return candidate as QrCodeApi;
+}
+
 @Injectable({providedIn: 'root'})
 export class CompareRoomCoordinatorService {
   readonly participants$ = new BehaviorSubject<CompareParticipant[]>([]);
@@ -56,7 +67,7 @@ export class CompareRoomCoordinatorService {
     const joinUrl = `${window.location.origin}/compare-room/join/${this.roomId}` +
       `#invitation=${encodeURIComponent(id)}&secret=${encodeURIComponent(secret)}`;
     // QR generation is only downloaded when the host actually opens an invite slot.
-    const QRCode = await import('qrcode');
+    const QRCode = resolveQrCodeApi(await import('qrcode') as LazyQrCodeModule);
     const invitation: CompareInvitation = {
       id,
       secret,

@@ -7,6 +7,7 @@ export const REQUIRED_HEADERS = {
   'content-security-policy': value => [
     "default-src 'self'", "object-src 'none'", "frame-ancestors 'none'", "script-src 'self'",
     "style-src 'self' 'unsafe-inline'", "connect-src 'self'", 'https://api.spotify.com',
+    'https://*.scdn.co', 'https://*.spotifycdn.com', 'https://platform-lookaside.fbsbx.com',
     'https://tmmhylpexbubyznlizfs.supabase.co', 'wss://tmmhylpexbubyznlizfs.supabase.co'
   ].every(rule => value.includes(rule))
 };
