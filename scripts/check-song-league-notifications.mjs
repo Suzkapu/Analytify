@@ -36,7 +36,10 @@ const contracts = [
   ['new-song delivery excludes its author', songAddedMigration.includes('recipient.user_id <> new.recommender_user_id')],
   ['new-song delivery is idempotent per device', songAddedMigration.includes('unique (recommendation_id, subscription_id)')],
   ['new-song delivery queues after recommendation insert', songAddedMigration.includes('after insert on public.song_league_recommendations')],
-  ['notification manager gates new-song controls by membership', header.includes('*ngIf="notificationSettings.songLeagueMember"') && header.includes('New Song League picks')],
+  ['notification manager gates new-song controls by membership',
+    (header.includes('*ngIf="notificationSettings.songLeagueMember"')
+      || header.includes('@if (notificationSettings.songLeagueMember)'))
+      && header.includes('New Song League picks')],
   ['delivery categories are claimed in parallel', edgeFunction.includes('Promise.all') && edgeFunction.includes('claim_song_league_song_push_deliveries')],
   ['stats requests notify owners by default', statsRequestMigration.includes('stats_access_requests_enabled boolean not null default true')],
   ['stats-request delivery is idempotent per device', statsRequestMigration.includes('unique(request_id, subscription_id)')],
