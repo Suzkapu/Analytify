@@ -17,6 +17,8 @@ describe('UserStatsComponent trends', () => {
     beforeEach(() => {
         vi.useFakeTimers();
         vi.setSystemTime(new Date('2026-08-02T12:00:00'));
+        sessionStorage.clear();
+        localStorage.clear();
         component = new UserStatsComponent(null as any, null as any, null as any, null as any);
         component.selectedSnapshotId = 'current';
     });
@@ -48,7 +50,8 @@ describe('UserStatsComponent trends', () => {
         expect(component.getTrend({ id: 'original-version', name: 'Song', artists: [{ name: 'Artist' }] }, 0, 'tracks')).toEqual({ type: 'same' });
     });
 
-    it('does not mark a returning song as new when it exists in an older snapshot', () => {
+    it('marks a song missing from the selected comparison as new even if it ranked earlier', () => {
+        const returningSong = { name: 'Returning Song', artists: [{ name: 'Artist' }] };
         const older = makeSnapshot('2026-07-29', [
             { name: 'Returning Song', artist: 'Artist' }
         ]);
@@ -57,11 +60,14 @@ describe('UserStatsComponent trends', () => {
         ]);
         component.historyData = [older, comparison];
         component.compareSnapshotId = comparison.timestamp.toString();
+        component.topTracks = [returningSong];
 
-        expect(component.getTrend({ name: 'Returning Song', artists: [{ name: 'Artist' }] }, 0, 'tracks')).toEqual({ type: 'same' });
+        expect(component.getTrend(returningSong, 0, 'tracks')).toEqual({ type: 'new' });
+        component.calculateHotMovers();
+        expect(component.isHotMover(returningSong, 'tracks')).toBe(true);
     });
 
-    it('marks a song as new only when every earlier loaded snapshot confirms no appearance', () => {
+    it('marks a song absent from both the comparison and earlier snapshots as new', () => {
         const older = makeSnapshot('2026-07-29', [
             { name: 'Older Song', artist: 'Artist' }
         ]);
@@ -74,7 +80,7 @@ describe('UserStatsComponent trends', () => {
         expect(component.getTrend({ name: 'Actually New', artists: [{ name: 'Artist' }] }, 0, 'tracks')).toEqual({ type: 'new' });
     });
 
-    it('waits for earlier snapshot details before showing a new marker', () => {
+    it('uses the selected comparison alone when earlier snapshot details are still unloaded', () => {
         const unloaded = makeSnapshot('2026-07-29', [], [], [], false);
         const comparison = makeSnapshot('2026-07-30', [
             { name: 'Different Song', artist: 'Artist' }
@@ -82,7 +88,53 @@ describe('UserStatsComponent trends', () => {
         component.historyData = [unloaded, comparison];
         component.compareSnapshotId = comparison.timestamp.toString();
 
-        expect(component.getTrend({ name: 'Potentially Existing', artists: [{ name: 'Artist' }] }, 0, 'tracks')).toEqual({ type: 'same' });
+        expect(component.getTrend({ name: 'Potentially Existing', artists: [{ name: 'Artist' }] }, 0, 'tracks')).toEqual({ type: 'new' });
+    });
+
+    it('marks an artist missing from the selected comparison as new', () => {
+        const newArtist = { id: 'new-artist', name: 'New Artist' };
+        const comparison = makeSnapshot('2026-07-30', [], [{ id: 'other', name: 'Other Artist' }]);
+        component.historyData = [comparison];
+        component.compareSnapshotId = comparison.timestamp.toString();
+        component.topArtists = [newArtist];
+
+        expect(component.getTrend(newArtist, 0, 'artists')).toEqual({ type: 'new' });
+        component.calculateHotMovers();
+        expect(component.isHotMover(newArtist, 'artists')).toBe(true);
+    });
+
+    it('remembers a manually selected comparison only in session storage', () => {
+        const newest = makeSnapshot('2026-08-01');
+        const chosen = makeSnapshot('2026-07-30');
+        component.historyData = [chosen, newest];
+        component.snapshotOptions = [
+            { id: newest.timestamp.toString(), dateKey: newest.snapshotDate },
+            { id: chosen.timestamp.toString(), dateKey: chosen.snapshotDate }
+        ];
+
+        component.selectCompareSnapshot(chosen.timestamp.toString(), new Event('click'));
+
+        const restored = new UserStatsComponent(null as any, null as any, null as any, null as any);
+        restored.historyData = [chosen, newest];
+        restored.snapshotOptions = component.snapshotOptions;
+        restored.autoSetDefaultCompare();
+        expect(restored.compareSnapshotId).toBe(chosen.timestamp.toString());
+        expect(localStorage.length).toBe(0);
+        expect(sessionStorage.length).toBe(1);
+    });
+
+    it('defaults a fresh session to the latest snapshot before the current date', () => {
+        const older = makeSnapshot('2026-07-30');
+        const latestPrior = makeSnapshot('2026-08-01');
+        component.historyData = [older, latestPrior];
+        component.snapshotOptions = [
+            { id: latestPrior.timestamp.toString(), dateKey: latestPrior.snapshotDate },
+            { id: older.timestamp.toString(), dateKey: older.snapshotDate }
+        ];
+
+        component.autoSetDefaultCompare();
+
+        expect(component.compareSnapshotId).toBe(latestPrior.timestamp.toString());
     });
 
     it('keeps up and down chronological when snapshots are selected in reverse order', () => {

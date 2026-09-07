@@ -144,11 +144,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   private snapshotById = new Map<string, any>();
   private historicalTrackCoverByKey = new Map<string, string>();
   private historicalArtistImageByKey = new Map<string, string>();
-  private priorAppearanceDateKey: string | null = null;
-  private priorAppearanceHasUnloaded = false;
-  private priorAppearanceKeys: Record<StatsCategory, Set<string>> = {
-    tracks: new Set(), artists: new Set(), genres: new Set()
-  };
+  private readonly compareSnapshotSessionKeyPrefix = 'analytify_stats_compare_snapshot';
   /** Used by the regression test to prove UI checks do not rebuild 100-item models. */
   statsViewBuildCount = 0;
 
@@ -817,6 +813,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   selectCompareSnapshot(snapshotId: string, event: Event) {
     event.stopPropagation();
     this.compareSnapshotId = snapshotId;
+    this.rememberCompareSnapshotForSession(snapshotId);
     this.showCompareMenu = false;
     this.calculateHotMovers();
     this.ensureSnapshotLoaded(snapshotId);
@@ -990,18 +987,61 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     return new Date(year, month - 1, 1);
   }
 
-  /** Returns the most recent historical snapshot id that is NOT the currently selected snapshot. */
+  /** Returns the most recent snapshot strictly before the primary snapshot. */
   private getDefaultCompareId(): string {
-    const opts = this.getCompareOptions();
-    return opts.length > 0 ? opts[0].id : '';
+    const selectedDateKey = this.getSnapshotDateKey(this.selectedSnapshotId);
+    return this.getCompareOptions()
+      .filter(option => {
+        const optionDateKey = this.getSnapshotOptionDateKey(option);
+        return !!selectedDateKey && !!optionDateKey && optionDateKey < selectedDateKey;
+      })
+      .sort((left, right) =>
+        (this.getSnapshotOptionDateKey(right) || '').localeCompare(this.getSnapshotOptionDateKey(left) || '')
+      )[0]?.id || '';
   }
 
   /** Auto-selects the most appropriate comparison snapshot if none is currently set. */
   autoSetDefaultCompare() {
     if (this.compareSnapshotId) return; // already set, don't overwrite
-    this.compareSnapshotId = this.getDefaultCompareId();
+    const rememberedId = this.readCompareSnapshotForSession();
+    const rememberedIsAvailable = rememberedId
+      ? this.getCompareOptions().some(option => option.id === rememberedId)
+      : false;
+    this.compareSnapshotId = rememberedIsAvailable ? rememberedId! : this.getDefaultCompareId();
+    if (rememberedId && !rememberedIsAvailable) {
+      this.clearRememberedCompareSnapshot();
+    }
     if (this.compareSnapshotId) {
       this.ensureSnapshotLoaded(this.compareSnapshotId);
+    }
+  }
+
+  private get compareSnapshotSessionKey(): string {
+    const userId = this.authService?.getUserId?.() || 'anonymous';
+    return `${this.compareSnapshotSessionKeyPrefix}:${userId}:${this.selectedRange}`;
+  }
+
+  private rememberCompareSnapshotForSession(snapshotId: string): void {
+    try {
+      sessionStorage.setItem(this.compareSnapshotSessionKey, snapshotId);
+    } catch {
+      // Comparisons remain usable when session storage is unavailable.
+    }
+  }
+
+  private readCompareSnapshotForSession(): string | null {
+    try {
+      return sessionStorage.getItem(this.compareSnapshotSessionKey);
+    } catch {
+      return null;
+    }
+  }
+
+  private clearRememberedCompareSnapshot(): void {
+    try {
+      sessionStorage.removeItem(this.compareSnapshotSessionKey);
+    } catch {
+      // Nothing to clear when session storage is unavailable.
     }
   }
 
@@ -1468,15 +1508,12 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     const comparisonDateKey = this.getSnapshotDateKey(this.compareSnapshotId);
 
     if (comparisonIdx === -1) {
-      // "New" is chronological, not just "missing from the chosen comparison".
-      // A returning item, an item from an older selected snapshot, or an item
-      // whose earlier snapshots are still loading must not get a false blue dot.
+      // The chosen comparison is authoritative: an item absent from that older
+      // ranking is new for this comparison, even if it appeared still earlier.
       if (!selectedDateKey || !comparisonDateKey || selectedDateKey <= comparisonDateKey) {
         return { type: 'same' };
       }
-      return this.getPriorAppearance(item, category, selectedDateKey) === 'absent'
-        ? { type: 'new' }
-        : { type: 'same' };
+      return { type: 'new' };
     }
 
     // Always describe movement from the older snapshot to the newer one, even
@@ -1585,35 +1622,6 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     return Number.isFinite(timestamp) ? toDailySnapshotDateKey(timestamp) : null;
   }
 
-  private getPriorAppearance(
-    item: any,
-    category: StatsCategory,
-    selectedDateKey: string
-  ): 'present' | 'absent' | 'unknown' {
-    if (this.priorAppearanceDateKey === selectedDateKey) {
-      const keys = this.priorAppearanceKeys[category];
-      if (this.statsIdentityKeys(item, category).some(key => keys.has(key))) return 'present';
-      return this.priorAppearanceHasUnloaded ? 'unknown' : 'absent';
-    }
-    let hasUnloadedSnapshot = false;
-
-    for (const snapshot of this.historyData) {
-      const snapshotDateKey = snapshot.snapshotDate || toDailySnapshotDateKey(snapshot.timestamp);
-      if (snapshotDateKey >= selectedDateKey) continue;
-
-      if (snapshot.isLoaded !== true) {
-        hasUnloadedSnapshot = true;
-        continue;
-      }
-
-      if (this.findStatsItemIndex(this.getSnapshotItems(snapshot, category), item, category) !== -1) {
-        return 'present';
-      }
-    }
-
-    return hasUnloadedSnapshot ? 'unknown' : 'absent';
-  }
-
   get displayedTracks(): any[] { this.ensureStatsViewModel(); return this.displayedTracksView; }
   get displayedArtists(): any[] { this.ensureStatsViewModel(); return this.displayedArtistsView; }
   get filteredTracks(): any[] { this.ensureStatsViewModel(); return this.filteredTracksView; }
@@ -1709,8 +1717,6 @@ export class UserStatsComponent implements OnInit, OnDestroy {
         if (item && typeof item === 'object') this.artistRankByItem.set(item, index);
       });
 
-      const selectedDateKey = this.getSnapshotDateKey(this.selectedSnapshotId);
-      this.buildPriorAppearanceIndex(selectedDateKey);
       const previousSnapshot = this.getComparisonSnapshot();
       this.displayedTracksView.forEach((item, index) => {
         if (item && typeof item === 'object') {
@@ -1744,27 +1750,6 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   private invalidateStatsView(): void {
     this.statsViewVersion++;
     this.changeDetector?.markForCheck();
-  }
-
-  private buildPriorAppearanceIndex(selectedDateKey: string | null): void {
-    this.priorAppearanceDateKey = selectedDateKey;
-    this.priorAppearanceHasUnloaded = false;
-    this.priorAppearanceKeys = {tracks: new Set(), artists: new Set(), genres: new Set()};
-    if (!selectedDateKey) return;
-
-    for (const snapshot of this.historyData) {
-      const dateKey = snapshot.snapshotDate || toDailySnapshotDateKey(snapshot.timestamp);
-      if (dateKey >= selectedDateKey) continue;
-      if (snapshot.isLoaded !== true) {
-        this.priorAppearanceHasUnloaded = true;
-        continue;
-      }
-      (['tracks', 'artists', 'genres'] as StatsCategory[]).forEach(category => {
-        this.getSnapshotItems(snapshot, category).forEach(item => {
-          this.statsIdentityKeys(item, category).forEach(key => this.priorAppearanceKeys[category].add(key));
-        });
-      });
-    }
   }
 
   onSnapshotChange(event: Event) {
