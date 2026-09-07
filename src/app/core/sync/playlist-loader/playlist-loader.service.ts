@@ -1044,7 +1044,6 @@ export class PlaylistLoaderService {
           trackName.trim() === '' ||
           !hasValidArtists
         ) {
-          console.warn('Skipping unknown/deleted/local track with missing details:', item.track);
           continue;
         }
 

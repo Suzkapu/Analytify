@@ -24,7 +24,7 @@
       @if (participant) {
         <div class="profile-row">
           @if (participant.imageUrl) {
-            <img [src]="participant.imageUrl" alt="">
+            <img [src]="participant.imageUrl" appImageFallback alt="">
           }
           @if (!participant.imageUrl) {
             <div class="profile-placeholder"><i class="pi pi-user"></i></div>

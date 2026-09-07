@@ -126,7 +126,7 @@
             <a [routerLink]="['/stats', request.ownerUserId]" class="share-card stats-user-card">
               <span class="stats-avatar">
                 @if (request.ownerImageUrl) {
-                  <img [src]="request.ownerImageUrl" alt="">
+                  <img [src]="request.ownerImageUrl" appImageFallback alt="">
                 }
                 @if (!request.ownerImageUrl) {
                   <i class="pi pi-user"></i>
@@ -264,7 +264,7 @@
             @if (selectedStatsOwner; as user) {
               <span class="stats-picker-avatar">
                 @if (user.imageUrl) {
-                  <img [src]="user.imageUrl" alt="">
+                  <img [src]="user.imageUrl" appImageFallback alt="">
                 }
                 @if (!user.imageUrl) {
                   <i class="pi pi-user"></i>
@@ -358,7 +358,7 @@
             (click)="selectStatsOwner(user)">
             <span class="stats-picker-avatar">
               @if (user.imageUrl) {
-                <img [src]="user.imageUrl" alt="">
+                <img [src]="user.imageUrl" appImageFallback alt="">
               }
               @if (!user.imageUrl) {
                 <i class="pi pi-user"></i>
@@ -447,7 +447,7 @@
         <span class="stats-picker-avatar">
           @if (request.viewerRole === 'owner' ? request.viewerImageUrl : request.ownerImageUrl) {
             <img
-              [src]="request.viewerRole === 'owner' ? request.viewerImageUrl : request.ownerImageUrl" alt="">
+              [src]="request.viewerRole === 'owner' ? request.viewerImageUrl : request.ownerImageUrl" appImageFallback alt="">
           }
           @if (!(request.viewerRole === 'owner' ? request.viewerImageUrl : request.ownerImageUrl)) {
             <i class="pi pi-user"></i>

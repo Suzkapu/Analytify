@@ -61,7 +61,7 @@
               <header>
                 <span class="admin-avatar" (click)="toggleUserExpanded(user.userId)" style="cursor: pointer;">
                   @if (user.profilePicUrl) {
-                    <img [src]="user.profilePicUrl" alt="">
+                    <img [src]="user.profilePicUrl" appImageFallback alt="">
                   }
                   @if (!user.profilePicUrl) {
                     <i class="pi pi-user"></i>

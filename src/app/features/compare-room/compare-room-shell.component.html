@@ -65,7 +65,7 @@
             <article class="participant-card" [class.ready]="participant.status === 'ready'">
               <div class="participant-header">
                 @if (participant.imageUrl) {
-                  <img [src]="participant.imageUrl" alt="">
+                  <img [src]="participant.imageUrl" appImageFallback alt="">
                 }
                 @if (!participant.imageUrl) {
                   <div class="participant-avatar"><i class="pi pi-user"></i></div>

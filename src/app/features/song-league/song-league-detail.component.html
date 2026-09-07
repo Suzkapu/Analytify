@@ -144,7 +144,7 @@
                 class="standing-row" (click)="openBreakdown(standing)">
                 <span class="standing-place">{{ index + 1 }}</span>
                 @if (standing.imageUrl) {
-                  <img [src]="standing.imageUrl" alt="">
+                  <img [src]="standing.imageUrl" appImageFallback alt="">
                 }
                 @if (!standing.imageUrl) {
                   <span class="standing-avatar"><i class="pi pi-user"></i></span>
