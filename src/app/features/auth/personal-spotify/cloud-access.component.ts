@@ -9,21 +9,27 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
       <i class="pi pi-cloud-upload hero-icon"></i>
       <span class="eyebrow">Optional cloud access</span>
       <h1>{{ enableBackup ? 'Enable Cloud Backup' : 'Enable this workspace feature' }}</h1>
-      <p *ngIf="!enableBackup">Analytify will create an anonymous collaboration identity containing only your verified Spotify ID, display name, and profile image. It does not upload listening data or store a Spotify refresh token.</p>
-      <p *ngIf="enableBackup">Cloud Backup adds your selected listening snapshots and an encrypted Spotify refresh token so opted-in scheduled features can run while this browser is closed.</p>
+      @if (!enableBackup) {
+        <p>Analytify will create an anonymous collaboration identity containing only your verified Spotify ID, display name, and profile image. It does not upload listening data or store a Spotify refresh token.</p>
+      }
+      @if (enableBackup) {
+        <p>Cloud Backup adds your selected listening snapshots and an encrypted Spotify refresh token so opted-in scheduled features can run while this browser is closed.</p>
+      }
       <ul>
         <li>No email address, phone number, password, or recovery identity is requested.</li>
         <li>Your Spotify Client Secret is never requested or stored.</li>
         <li>The identity is bound to this browser and cannot be recovered after you clear its data.</li>
       </ul>
       <p class="warning"><i class="pi pi-exclamation-triangle"></i> Logging out or clearing this browser will permanently delete the anonymous cloud identity and its linked data.</p>
-      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+      @if (errorMessage) {
+        <p class="error">{{ errorMessage }}</p>
+      }
       <div class="actions">
         <button type="button" class="secondary" (click)="cancel()">Not now</button>
         <button type="button" class="primary" (click)="confirm()" [disabled]="working"><i class="pi" [ngClass]="working ? 'pi-spin pi-spinner' : 'pi-cloud'"></i>{{ working ? 'Enabling…' : 'I understand, enable' }}</button>
       </div>
     </section></main>
-  `,
+    `,
     styles: [`
     .cloud-page { min-height: 100vh; display: grid; place-items: center; padding: 20px; box-sizing: border-box; background: var(--color-bg); }
     section { width: min(620px, 100%); box-sizing: border-box; padding: clamp(26px, 5vw, 48px); border: 1px solid var(--color-border-strong); border-radius: var(--radius-xl); background: var(--color-surface-raised); color: var(--color-text); }

@@ -4,20 +4,20 @@
   </a>
 
   <section class="callback-card" aria-live="polite">
-    <ng-container *ngIf="!errorMessage">
+    @if (!errorMessage) {
       <span class="callback-icon"><i class="pi pi-spin pi-spinner"></i></span>
       <span class="page-eyebrow">Secure Spotify connection</span>
       <h1>Finishing your sign-in</h1>
       <p>{{ loadingMessage }}</p>
       <div class="callback-progress" aria-hidden="true"><span></span></div>
-    </ng-container>
-    
-    <ng-container *ngIf="errorMessage">
+    }
+
+    @if (errorMessage) {
       <span class="callback-icon error"><i class="pi pi-exclamation-triangle"></i></span>
       <span class="page-eyebrow error-text">Authentication error</span>
       <h1>We could not sign you in</h1>
       <p class="callback-error-message">{{ errorMessage }}</p>
       <a routerLink="/" class="callback-back-button"><i class="pi pi-arrow-left"></i> Back to login</a>
-    </ng-container>
+    }
   </section>
 </main>

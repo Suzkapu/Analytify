@@ -6,331 +6,383 @@
       </button>
     </div>
 
-    <header class="page-hero artists-top-bar" *ngIf="!isLoading && artists.length !== 0">
-      <div>
-        <span class="page-eyebrow">Playlist explorer</span>
-        <h1>{{ viewStyle === 'artists' ? 'Artists' : (viewStyle === 'songs' ? 'Songs' : 'Albums') }}</h1>
-        <p>Move between the artists, tracks, and albums contained in this playlist.</p>
-      </div>
-    </header>
+    @if (!isLoading && artists.length !== 0) {
+      <header class="page-hero artists-top-bar">
+        <div>
+          <span class="page-eyebrow">Playlist explorer</span>
+          <h1>{{ viewStyle === 'artists' ? 'Artists' : (viewStyle === 'songs' ? 'Songs' : 'Albums') }}</h1>
+          <p>Move between the artists, tracks, and albums contained in this playlist.</p>
+        </div>
+      </header>
+    }
 
-    <section class="artists-header-container page-toolbar" *ngIf="!isLoading && artists.length !== 0"
-      aria-label="Playlist view controls">
-      <div class="artists-controls-bar" [class.context-view]="viewStyle === 'albums' && !!selectedAlbum">
-    <div class="controls-left">
-      <!-- Search Input (Artists View) -->
-      <label class="search-container" *ngIf="viewStyle === 'artists'">
-        <span class="sr-only">Search artists</span><i class="pi pi-search"></i>
-        <input (input)="filterArtists()" [(ngModel)]="searchText" class="search-input"
-          placeholder="Search artists" type="search" />
-      </label>
-      <!-- Search Input (Songs View) -->
-      <label class="search-container" *ngIf="viewStyle === 'songs'">
-        <span class="sr-only">Search songs or artists</span><i class="pi pi-search"></i>
-        <input (input)="filterAndSortTracks()" [(ngModel)]="trackSearchText" class="search-input"
-          placeholder="Search songs or artists" type="search" />
-      </label>
-      <label class="search-container" *ngIf="viewStyle === 'albums' && !selectedAlbum">
-        <span class="sr-only">Search albums or artists</span><i class="pi pi-search"></i>
-        <input (input)="filterAlbums()" [(ngModel)]="albumSearchText" class="search-input"
-          placeholder="Search albums or artists" type="search" />
-      </label>
-    </div>
-    
-    <div class="controls-right">
-      <div class="view-switcher" role="group" aria-label="Choose playlist view">
-      <button (click)="viewStyle = 'artists'" class="p-button p-button-outlined p-button-secondary"
-        [class.is-active]="viewStyle === 'artists'" [attr.aria-pressed]="viewStyle === 'artists'"
-        title="View Artists">
-        <i class="pi pi-user"></i> Artists
-      </button>
-      <button (click)="viewStyle = 'songs'" class="p-button p-button-outlined p-button-secondary"
-        [class.is-active]="viewStyle === 'songs'" [attr.aria-pressed]="viewStyle === 'songs'"
-        title="View Songs">
-        <i class="pi pi-music"></i> Songs
-      </button>
-      <button (click)="viewStyle = 'albums'; closeAlbumDetails()" class="p-button p-button-outlined p-button-secondary"
-        [class.is-active]="viewStyle === 'albums'" [attr.aria-pressed]="viewStyle === 'albums'"
-        title="View Albums">
-        <i class="pi pi-clone"></i> Albums
-      </button>
-      </div>
-
-      <!-- Sort Toggle Button (Artists View) -->
-      <div class="sort-control">
-      <button *ngIf="viewStyle === 'artists'" (click)="sortArtistsByTracks()" class="p-button p-button-outlined p-button-secondary"
-        [class.is-active]="sortOrder !== 'none'"
-        title="Sort artists by song count">
+    @if (!isLoading && artists.length !== 0) {
+      <section class="artists-header-container page-toolbar"
+        aria-label="Playlist view controls">
+        <div class="artists-controls-bar" [class.context-view]="viewStyle === 'albums' && !!selectedAlbum">
+          <div class="controls-left">
+            <!-- Search Input (Artists View) -->
+            @if (viewStyle === 'artists') {
+              <label class="search-container">
+                <span class="sr-only">Search artists</span><i class="pi pi-search"></i>
+                <input (input)="filterArtists()" [(ngModel)]="searchText" class="search-input"
+                  placeholder="Search artists" type="search" />
+              </label>
+            }
+            <!-- Search Input (Songs View) -->
+            @if (viewStyle === 'songs') {
+              <label class="search-container">
+                <span class="sr-only">Search songs or artists</span><i class="pi pi-search"></i>
+                <input (input)="filterAndSortTracks()" [(ngModel)]="trackSearchText" class="search-input"
+                  placeholder="Search songs or artists" type="search" />
+              </label>
+            }
+            @if (viewStyle === 'albums' && !selectedAlbum) {
+              <label class="search-container">
+                <span class="sr-only">Search albums or artists</span><i class="pi pi-search"></i>
+                <input (input)="filterAlbums()" [(ngModel)]="albumSearchText" class="search-input"
+                  placeholder="Search albums or artists" type="search" />
+              </label>
+            }
+          </div>
+          <div class="controls-right">
+            <div class="view-switcher" role="group" aria-label="Choose playlist view">
+              <button (click)="viewStyle = 'artists'" class="p-button p-button-outlined p-button-secondary"
+                [class.is-active]="viewStyle === 'artists'" [attr.aria-pressed]="viewStyle === 'artists'"
+                title="View Artists">
+                <i class="pi pi-user"></i> Artists
+              </button>
+              <button (click)="viewStyle = 'songs'" class="p-button p-button-outlined p-button-secondary"
+                [class.is-active]="viewStyle === 'songs'" [attr.aria-pressed]="viewStyle === 'songs'"
+                title="View Songs">
+                <i class="pi pi-music"></i> Songs
+              </button>
+              <button (click)="viewStyle = 'albums'; closeAlbumDetails()" class="p-button p-button-outlined p-button-secondary"
+                [class.is-active]="viewStyle === 'albums'" [attr.aria-pressed]="viewStyle === 'albums'"
+                title="View Albums">
+                <i class="pi pi-clone"></i> Albums
+              </button>
+            </div>
+            <!-- Sort Toggle Button (Artists View) -->
+            <div class="sort-control">
+              @if (viewStyle === 'artists') {
+                <button (click)="sortArtistsByTracks()" class="p-button p-button-outlined p-button-secondary"
+                  [class.is-active]="sortOrder !== 'none'"
+                  title="Sort artists by song count">
         <i class="pi" [ngClass]="{
           'pi-sort-alt': sortOrder === 'none',
           'pi-sort-amount-down': sortOrder === 'desc',
           'pi-sort-amount-up': sortOrder === 'asc'
         }"></i> Sort By Count
-      </button>
-
-        <button *ngIf="viewStyle === 'albums' && !selectedAlbum" (click)="sortAlbumsByTracks()" class="p-button p-button-outlined p-button-secondary"
-        [class.is-active]="true"
-        title="Sort albums by playlist song count">
+                </button>
+              }
+              @if (viewStyle === 'albums' && !selectedAlbum) {
+                <button (click)="sortAlbumsByTracks()" class="p-button p-button-outlined p-button-secondary"
+                  [class.is-active]="true"
+                  title="Sort albums by playlist song count">
         <i class="pi" [ngClass]="{
           'pi-sort-amount-down': albumSortOrder === 'desc',
           'pi-sort-amount-up': albumSortOrder === 'asc'
         }"></i> Sort By Count
-      </button>
+                </button>
+              }
+              <!-- Custom Togglable Sort Row (Songs View) -->
+              @if (viewStyle === 'songs') {
+                <div class="history-select-container">
+                  <div class="spotify-custom-dropdown" [class.open]="showSortMenu">
+                    <button class="dropdown-trigger-btn" (click)="toggleSortMenu($event)">
+                      <span>Sort by: {{ getSortLabel() }}</span>
+                      <i class="pi pi-list icon-right"></i>
+                    </button>
+                    @if (showSortMenu) {
+                      <div class="dropdown-menu-overlay">
+                        <div class="menu-section-header">Sort by</div>
+                        @for (opt of sortOptions; track opt) {
+                          <div
+                            class="menu-item"
+                            [class.active]="trackSortKey === opt.value"
+                            (click)="selectSortCategory(opt.value, $event)">
+                            <span>{{ opt.label }}</span>
+                            @if (trackSortKey === opt.value) {
+                              <i class="pi" [ngClass]="sortAscending ? 'pi-arrow-up' : 'pi-arrow-down'"></i>
+                            }
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </section>
+    }
 
-
-      <!-- Custom Togglable Sort Row (Songs View) -->
-      <div *ngIf="viewStyle === 'songs'" class="history-select-container">
-        <div class="spotify-custom-dropdown" [class.open]="showSortMenu">
-          <button class="dropdown-trigger-btn" (click)="toggleSortMenu($event)">
-            <span>Sort by: {{ getSortLabel() }}</span>
-            <i class="pi pi-list icon-right"></i>
-          </button>
-          <div class="dropdown-menu-overlay" *ngIf="showSortMenu">
-            <div class="menu-section-header">Sort by</div>
-            <div *ngFor="let opt of sortOptions" 
-                 class="menu-item" 
-                 [class.active]="trackSortKey === opt.value"
-                 (click)="selectSortCategory(opt.value, $event)">
-              <span>{{ opt.label }}</span>
-              <i *ngIf="trackSortKey === opt.value" class="pi" [ngClass]="sortAscending ? 'pi-arrow-up' : 'pi-arrow-down'"></i>
+    <!-- Real-Time Dual Progress Bars Panel -->
+    @if (!isLoading && (isLoadingTracks || isLoadingArtists)) {
+      <div class="progress-panel-container"
+        role="status" aria-live="polite">
+        <div class="progress-panel-header">
+          <span class="progress-status-text">
+            <i class="pi pi-spin pi-spinner status-icon"></i>
+            @if (isLoadingTracks && !isLoadingArtists) {
+              <span>Loading playlist tracks...</span>
+            }
+            @if (!isLoadingTracks && isLoadingArtists) {
+              <span>Fetching artist profiles...</span>
+            }
+            @if (isLoadingTracks && isLoadingArtists) {
+              <span>Streaming music data...</span>
+            }
+          </span>
+        </div>
+        <div class="progress-bars-grid">
+          <!-- Songs Loaded Progress -->
+          <div class="progress-bar-wrapper">
+            <div class="progress-label-row">
+              <span class="progress-label"><i class="pi pi-music"></i> Songs Loaded</span>
+              @if (totalTracks > 0) {
+                <span class="progress-value">
+                  {{ loadedTracksCount }} / {{ totalTracks }}
+                </span>
+              } @else {
+                <span class="progress-value">Discovering…</span>
+              }
+            </div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill fill-tracks" [style.width.%]="totalTracks > 0 ? (loadedTracksCount / totalTracks) * 100 : 0"></div>
+            </div>
+          </div>
+          <!-- Artist Details Loaded Progress -->
+          <div class="progress-bar-wrapper">
+            <div class="progress-label-row">
+              <span class="progress-label"><i class="pi pi-user"></i> Artist Profiles Loaded</span>
+              @if (totalUniqueArtists > 0) {
+                <span class="progress-value">
+                  {{ loadedArtistsDetailsCount }} / {{ totalUniqueArtists }}
+                </span>
+              } @else {
+                <span class="progress-value">Discovering…</span>
+              }
+            </div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill fill-artists" [style.width.%]="totalUniqueArtists > 0 ? (loadedArtistsDetailsCount / totalUniqueArtists) * 100 : 0"></div>
             </div>
           </div>
         </div>
       </div>
-      </div>
-    </div>
-      </div>
-    </section>
+    }
 
-<!-- Real-Time Dual Progress Bars Panel -->
-    <div *ngIf="!isLoading && (isLoadingTracks || isLoadingArtists)" class="progress-panel-container"
-      role="status" aria-live="polite">
-  <div class="progress-panel-header">
-    <span class="progress-status-text">
-      <i class="pi pi-spin pi-spinner status-icon"></i>
-      <span *ngIf="isLoadingTracks && !isLoadingArtists">Loading playlist tracks...</span>
-      <span *ngIf="!isLoadingTracks && isLoadingArtists">Fetching artist profiles...</span>
-      <span *ngIf="isLoadingTracks && isLoadingArtists">Streaming music data...</span>
-    </span>
-  </div>
-  <div class="progress-bars-grid">
-    <!-- Songs Loaded Progress -->
-    <div class="progress-bar-wrapper">
-      <div class="progress-label-row">
-        <span class="progress-label"><i class="pi pi-music"></i> Songs Loaded</span>
-        <span class="progress-value" *ngIf="totalTracks > 0; else discoveringSongTotal">
-          {{ loadedTracksCount }} / {{ totalTracks }}
-        </span>
-        <ng-template #discoveringSongTotal><span class="progress-value">Discovering…</span></ng-template>
+    <!-- Cooldown Warning Banner -->
+    @if (cooldownMessage) {
+      <div class="inline-alert warning" role="status">
+        <i class="pi pi-exclamation-triangle"></i>
+        <span>{{ cooldownMessage }}</span>
       </div>
-      <div class="progress-bar-track">
-        <div class="progress-bar-fill fill-tracks" [style.width.%]="totalTracks > 0 ? (loadedTracksCount / totalTracks) * 100 : 0"></div>
-      </div>
-    </div>
-    <!-- Artist Details Loaded Progress -->
-    <div class="progress-bar-wrapper">
-      <div class="progress-label-row">
-        <span class="progress-label"><i class="pi pi-user"></i> Artist Profiles Loaded</span>
-        <span class="progress-value" *ngIf="totalUniqueArtists > 0; else discoveringSongArtists">
-          {{ loadedArtistsDetailsCount }} / {{ totalUniqueArtists }}
-        </span>
-        <ng-template #discoveringSongArtists><span class="progress-value">Discovering…</span></ng-template>
-      </div>
-      <div class="progress-bar-track">
-        <div class="progress-bar-fill fill-artists" [style.width.%]="totalUniqueArtists > 0 ? (loadedArtistsDetailsCount / totalUniqueArtists) * 100 : 0"></div>
-      </div>
-    </div>
-  </div>
-    </div>
+    }
 
-<!-- Cooldown Warning Banner -->
-    <div *ngIf="cooldownMessage" class="inline-alert warning" role="status">
-  <i class="pi pi-exclamation-triangle"></i>
-  <span>{{ cooldownMessage }}</span>
-    </div>
+    <!-- Animated Loading Progress Indicator -->
+    @if (isLoading) {
+      <app-page-state [loading]="true" icon="pi-spinner" title="Analyzing playlist songs…">
+        @if (totalTracks > 0) {
+          <div class="loading-count">
+            {{ loadedTracksCount }} of {{ totalTracks }} songs loaded
+          </div>
+        } @else {
+          <div class="loading-count">Finding cached playlist data…</div>
+        }
+        @if (totalTracks > 0) {
+          <div class="loading-progress-track">
+            <div [style.width.%]="totalTracks > 0 ? (loadedTracksCount / totalTracks) * 100 : 0"
+            class="loading-progress-fill"></div>
+          </div>
+        }
+      </app-page-state>
+    }
 
-<!-- Animated Loading Progress Indicator -->
-    <app-page-state *ngIf="isLoading" [loading]="true" icon="pi-spinner" title="Analyzing playlist songs…">
-  <div *ngIf="totalTracks > 0; else discoveringSongs" class="loading-count">
-    {{ loadedTracksCount }} of {{ totalTracks }} songs loaded
-  </div>
-  <ng-template #discoveringSongs>
-    <div class="loading-count">Finding cached playlist data…</div>
-  </ng-template>
-  <div *ngIf="totalTracks > 0" class="loading-progress-track">
-    <div [style.width.%]="totalTracks > 0 ? (loadedTracksCount / totalTracks) * 100 : 0"
-      class="loading-progress-fill"></div>
-  </div>
-    </app-page-state>
-
-    <app-page-state *ngIf="!isLoading && artists.length === 0" class="no-artists" icon="pi-users"
-      title="No artists found"
+    @if (!isLoading && artists.length === 0) {
+      <app-page-state class="no-artists" icon="pi-users"
+        title="No artists found"
       message="This playlist does not contain any available artist data."></app-page-state>
+    }
 
-<!-- Main Content -->
-<ng-container *ngIf="!isLoading">
-  <!-- Artists View Grid -->
-  <div *ngIf="viewStyle === 'artists'" class="card-container">
-    <ng-container *ngFor="let artist of filteredArtists.slice(0, displayedArtistsCount); trackBy: trackArtistItem">
-      <div class="item-card">
-        <div class="card-content">
-          <div class="card-info">
-            <img
-              [src]="artist.images && artist.images[2] ? artist.images[2].url : (artist.images && artist.images[0] ? artist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png')"
-              (error)="onArtistImageError(artist, $event)"
-              alt="Artist Image"
-              class="artist-image" loading="lazy" decoding="async">
-            <div class="artist-details">
-              <h2 class="artist-name-text">
-                {{ artist.name }}</h2>
+    <!-- Main Content -->
+    @if (!isLoading) {
+      <!-- Artists View Grid -->
+      @if (viewStyle === 'artists') {
+        <div class="card-container">
+          @for (artist of filteredArtists.slice(0, displayedArtistsCount); track trackArtistItem($index, artist)) {
+            <div class="item-card">
+              <div class="card-content">
+                <div class="card-info">
+                  <img
+                    [src]="artist.images && artist.images[2] ? artist.images[2].url : (artist.images && artist.images[0] ? artist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png')"
+                    (error)="onArtistImageError(artist, $event)"
+                    alt="Artist Image"
+                    class="artist-image" loading="lazy" decoding="async">
+                  <div class="artist-details">
+                    <h2 class="artist-name-text">
+                    {{ artist.name }}</h2>
+                  </div>
+                </div>
+                <div class="group-left">
+                  <h3 class="track-count">
+                    {{ artist.tracks.length }} {{ artist.tracks.length === 1 ? 'song' : 'songs' }}
+                  </h3>
+                  <button type="button" class="p-button" (click)="artistDetails(artist.id)">Details</button>
+                </div>
+              </div>
             </div>
+          }
+        </div>
+      }
+      <!-- Songs View Listing -->
+      @if (viewStyle === 'songs') {
+        <div class="card-container songs-list-view">
+          <!-- Songs List Grid -->
+          @if (filteredTracks.length === 0) {
+            <div class="no-songs-found">
+              <i class="pi pi-info-circle"></i> No songs found matching your search.
+            </div>
+          }
+          @if (filteredTracks.length > 0) {
+            <div class="analysis-tracks-grid">
+              @for (track of filteredTracks.slice(0, displayedTracksCount); track trackSongItem(idx, track); let idx = $index) {
+                <div class="track-row-card">
+                  <div class="track-index">{{ idx + 1 }}</div>
+                  <button type="button" class="spotify-artwork-link"
+                    [disabled]="!track.external_urls?.spotify"
+                    [attr.aria-label]="'Open ' + track.name + ' on Spotify'"
+                    title="Open on Spotify"
+                    (click)="openTrackClick(track.external_urls?.spotify); $event.stopPropagation()">
+                    <img [src]="track.album?.images && track.album.images[0] ? track.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
+                      [alt]="track.name + ' cover'" class="track-cover" loading="lazy" decoding="async">
+                  </button>
+                  <div class="track-info">
+                    <span class="track-title">{{ track.name }}</span>
+                    <span class="track-artist">
+                      @for (a of track.artists; track a; let last = $last) {
+                        <span>
+                          {{ a.name }}{{ !last ? ', ' : '' }}
+                        </span>
+                      }
+                    </span>
+                  </div>
+                  <div class="track-meta">
+                    @if (track.explicit) {
+                      <span class="explicit-badge">E</span>
+                    }
+                    <span class="release-year" title="Release Date">
+                      <i class="pi pi-calendar"></i> {{ getYearFromDate(track.album?.release_date) }}
+                    </span>
+                    <span class="track-duration">
+                      <i class="pi pi-clock"></i> {{ formatDurationShort(track.duration_ms) }}
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+      <!-- Albums View -->
+      @if (viewStyle === 'albums' && selectedAlbum) {
+        <section class="card-container album-detail-view">
+          <button class="album-detail-back" type="button" (click)="closeAlbumDetails()">
+            <i class="pi pi-arrow-left"></i> Back to albums
+          </button>
+          <header class="album-detail-header">
+            <button class="album-detail-cover-link spotify-artwork-link" type="button"
+              [disabled]="!selectedAlbum.spotifyUrl"
+              [attr.aria-label]="'Open ' + selectedAlbum.name + ' on Spotify'"
+              title="Open album on Spotify"
+              (click)="openTrackClick(selectedAlbum.spotifyUrl)">
+              <img [src]="selectedAlbum.imageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
+                [alt]="selectedAlbum.name + ' cover'">
+            </button>
+            <div class="album-detail-title">
+              <span class="album-detail-eyebrow">Songs in this playlist</span>
+              <h2>{{ selectedAlbum.name }}</h2>
+              <p>{{ selectedAlbum.artists.join(', ') || 'Unknown artist' }}</p>
+              <span>{{ selectedAlbum.trackCount }} {{ selectedAlbum.trackCount === 1 ? 'song' : 'songs' }}</span>
+            </div>
+          </header>
+          <div class="analysis-tracks-grid album-detail-tracks">
+            @for (track of selectedAlbum.tracks; track trackSongItem(idx, track); let idx = $index) {
+              <div class="track-row-card">
+                <div class="track-index">{{ idx + 1 }}</div>
+                <button type="button" class="spotify-artwork-link"
+                  [disabled]="!track.external_urls?.spotify"
+                  [attr.aria-label]="'Open ' + track.name + ' on Spotify'"
+                  title="Open on Spotify"
+                  (click)="openTrackClick(track.external_urls?.spotify); $event.stopPropagation()">
+                  <img [src]="track.album?.images?.[0]?.url || selectedAlbum.imageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
+                    [alt]="track.name + ' cover'" class="track-cover" loading="lazy" decoding="async">
+                </button>
+                <div class="track-info">
+                  <span class="track-title">{{ track.name }}</span>
+                  <span class="track-artist">
+                    @for (artist of track.artists; track artist; let last = $last) {
+                      {{ artist.name }}{{ last ? '' : ', ' }}
+                    }
+                  </span>
+                </div>
+                <div class="track-meta">
+                  @if (track.explicit) {
+                    <span class="explicit-badge">E</span>
+                  }
+                  <span class="track-duration"><i class="pi pi-clock"></i> {{ formatDurationShort(track.duration_ms) }}</span>
+                </div>
+              </div>
+            }
           </div>
-          <div class="group-left">
-            <h3 class="track-count">
-              {{ artist.tracks.length }} {{ artist.tracks.length === 1 ? 'song' : 'songs' }}
-            </h3>
-            <button type="button" class="p-button" (click)="artistDetails(artist.id)">Details</button>
-          </div>
+        </section>
+      }
+      @if (viewStyle === 'albums' && !selectedAlbum) {
+        <div class="card-container album-grid">
+          @if (filteredAlbums.length === 0) {
+            <div class="no-songs-found album-empty-state">
+              <i class="pi pi-info-circle"></i>
+              @if (playlistAlbums.length > 0) {
+                No albums found matching your search.
+              } @else {
+                Album details are not available in the current playlist cache yet.
+              }
+            </div>
+          }
+          @for (album of filteredAlbums.slice(0, displayedAlbumsCount); track trackAlbumItem($index, album)) {
+            <article
+              class="album-card"
+              role="button"
+              tabindex="0"
+              [attr.aria-label]="'Show songs from ' + album.name"
+              (keydown)="onAlbumCardKeydown($event, album)"
+              (click)="openAlbumDetails(album)">
+              <button class="album-cover-link spotify-artwork-link" type="button"
+                [disabled]="!album.spotifyUrl"
+                [attr.aria-label]="'Open ' + album.name + ' on Spotify'"
+                title="Open album on Spotify"
+                (click)="openTrackClick(album.spotifyUrl); $event.stopPropagation()">
+                <img [src]="album.imageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
+                  [alt]="album.name + ' cover'" class="album-cover" loading="lazy" decoding="async">
+              </button>
+              <span class="album-name">{{ album.name }}</span>
+              <span class="album-artists">{{ album.artists.join(', ') || 'Unknown artist' }}</span>
+              <span class="album-meta">
+                {{ album.trackCount }} {{ playlistId === 'fav'
+                ? (album.trackCount === 1 ? 'liked song' : 'liked songs')
+                : (album.trackCount === 1 ? 'song' : 'songs') }}
+                @if (album.releaseDate) {
+                  · {{ getYearFromDate(album.releaseDate) }}
+                }
+                · {{ formatDurationShort(album.durationMs) }}
+              </span>
+            </article>
+          }
         </div>
-      </div>
-    </ng-container>
-  </div>
-
-  <!-- Songs View Listing -->
-  <div *ngIf="viewStyle === 'songs'" class="card-container songs-list-view">
-
-
-    <!-- Songs List Grid -->
-    <div *ngIf="filteredTracks.length === 0" class="no-songs-found">
-      <i class="pi pi-info-circle"></i> No songs found matching your search.
-    </div>
-
-    <div *ngIf="filteredTracks.length > 0" class="analysis-tracks-grid">
-      <div *ngFor="let track of filteredTracks.slice(0, displayedTracksCount); let idx = index; trackBy: trackSongItem" class="track-row-card">
-        
-        <div class="track-index">{{ idx + 1 }}</div>
-        
-        <button type="button" class="spotify-artwork-link"
-          [disabled]="!track.external_urls?.spotify"
-          [attr.aria-label]="'Open ' + track.name + ' on Spotify'"
-          title="Open on Spotify"
-          (click)="openTrackClick(track.external_urls?.spotify); $event.stopPropagation()">
-          <img [src]="track.album?.images && track.album.images[0] ? track.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
-            [alt]="track.name + ' cover'" class="track-cover" loading="lazy" decoding="async">
-        </button>
-        
-        <div class="track-info">
-          <span class="track-title">{{ track.name }}</span>
-          <span class="track-artist">
-            <span *ngFor="let a of track.artists; let last = last">
-              {{ a.name }}{{ !last ? ', ' : '' }}
-            </span>
-          </span>
-        </div>
-        
-        <div class="track-meta">
-          <span *ngIf="track.explicit" class="explicit-badge">E</span>
-          
-          <span class="release-year" title="Release Date">
-            <i class="pi pi-calendar"></i> {{ getYearFromDate(track.album?.release_date) }}
-          </span>
-          
-          <span class="track-duration">
-            <i class="pi pi-clock"></i> {{ formatDurationShort(track.duration_ms) }}
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Albums View -->
-  <section *ngIf="viewStyle === 'albums' && selectedAlbum" class="card-container album-detail-view">
-    <button class="album-detail-back" type="button" (click)="closeAlbumDetails()">
-      <i class="pi pi-arrow-left"></i> Back to albums
-    </button>
-
-    <header class="album-detail-header">
-      <button class="album-detail-cover-link spotify-artwork-link" type="button"
-        [disabled]="!selectedAlbum.spotifyUrl"
-        [attr.aria-label]="'Open ' + selectedAlbum.name + ' on Spotify'"
-        title="Open album on Spotify"
-        (click)="openTrackClick(selectedAlbum.spotifyUrl)">
-        <img [src]="selectedAlbum.imageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
-          [alt]="selectedAlbum.name + ' cover'">
-      </button>
-      <div class="album-detail-title">
-        <span class="album-detail-eyebrow">Songs in this playlist</span>
-        <h2>{{ selectedAlbum.name }}</h2>
-        <p>{{ selectedAlbum.artists.join(', ') || 'Unknown artist' }}</p>
-        <span>{{ selectedAlbum.trackCount }} {{ selectedAlbum.trackCount === 1 ? 'song' : 'songs' }}</span>
-      </div>
-    </header>
-
-    <div class="analysis-tracks-grid album-detail-tracks">
-      <div *ngFor="let track of selectedAlbum.tracks; let idx = index; trackBy: trackSongItem" class="track-row-card">
-        <div class="track-index">{{ idx + 1 }}</div>
-        <button type="button" class="spotify-artwork-link"
-          [disabled]="!track.external_urls?.spotify"
-          [attr.aria-label]="'Open ' + track.name + ' on Spotify'"
-          title="Open on Spotify"
-          (click)="openTrackClick(track.external_urls?.spotify); $event.stopPropagation()">
-          <img [src]="track.album?.images?.[0]?.url || selectedAlbum.imageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
-            [alt]="track.name + ' cover'" class="track-cover" loading="lazy" decoding="async">
-        </button>
-        <div class="track-info">
-          <span class="track-title">{{ track.name }}</span>
-          <span class="track-artist">
-            <ng-container *ngFor="let artist of track.artists; let last = last">
-              {{ artist.name }}{{ last ? '' : ', ' }}
-            </ng-container>
-          </span>
-        </div>
-        <div class="track-meta">
-          <span *ngIf="track.explicit" class="explicit-badge">E</span>
-          <span class="track-duration"><i class="pi pi-clock"></i> {{ formatDurationShort(track.duration_ms) }}</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div *ngIf="viewStyle === 'albums' && !selectedAlbum" class="card-container album-grid">
-    <div *ngIf="filteredAlbums.length === 0" class="no-songs-found album-empty-state">
-      <i class="pi pi-info-circle"></i>
-      <ng-container *ngIf="playlistAlbums.length > 0; else unavailableAlbumMetadata">
-        No albums found matching your search.
-      </ng-container>
-      <ng-template #unavailableAlbumMetadata>
-        Album details are not available in the current playlist cache yet.
-      </ng-template>
-    </div>
-
-    <article *ngFor="let album of filteredAlbums.slice(0, displayedAlbumsCount); trackBy: trackAlbumItem"
-      class="album-card"
-      role="button"
-      tabindex="0"
-      [attr.aria-label]="'Show songs from ' + album.name"
-      (keydown)="onAlbumCardKeydown($event, album)"
-      (click)="openAlbumDetails(album)">
-      <button class="album-cover-link spotify-artwork-link" type="button"
-        [disabled]="!album.spotifyUrl"
-        [attr.aria-label]="'Open ' + album.name + ' on Spotify'"
-        title="Open album on Spotify"
-        (click)="openTrackClick(album.spotifyUrl); $event.stopPropagation()">
-        <img [src]="album.imageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
-          [alt]="album.name + ' cover'" class="album-cover" loading="lazy" decoding="async">
-      </button>
-      <span class="album-name">{{ album.name }}</span>
-      <span class="album-artists">{{ album.artists.join(', ') || 'Unknown artist' }}</span>
-      <span class="album-meta">
-        {{ album.trackCount }} {{ playlistId === 'fav'
-          ? (album.trackCount === 1 ? 'liked song' : 'liked songs')
-          : (album.trackCount === 1 ? 'song' : 'songs') }}
-        <ng-container *ngIf="album.releaseDate"> · {{ getYearFromDate(album.releaseDate) }}</ng-container>
-        · {{ formatDurationShort(album.durationMs) }}
-      </span>
-    </article>
-  </div>
-</ng-container>
+      }
+    }
 
   </div>
 </main>

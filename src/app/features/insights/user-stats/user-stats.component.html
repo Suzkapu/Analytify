@@ -4,12 +4,20 @@
     <div>
       <span class="page-eyebrow">{{ isSpyMode ? 'Spy mode · approved access' : 'Personal listening' }}</span>
       <h1>{{ isSpyMode ? ((spyDisplayName || 'Shared') + ' top listening') : 'Your top listening' }}</h1>
-      <p *ngIf="!isSpyMode">See the songs, artists, and genres shaping your Spotify profile—and how they change over time.</p>
-      <p *ngIf="isSpyMode">A read-only view shared with you by this user<span *ngIf="spySnapshotDate"> · saved {{ spySnapshotDate | date:'mediumDate' }}</span>.</p>
-      <small *ngIf="isRefreshingStats && !isSpyMode" class="page-sync-state" role="status">
-        <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
-        Refreshing this range in parallel while cached stats remain visible…
-      </small>
+      @if (!isSpyMode) {
+        <p>See the songs, artists, and genres shaping your Spotify profile—and how they change over time.</p>
+      }
+      @if (isSpyMode) {
+        <p>A read-only view shared with you by this user@if (spySnapshotDate) {
+          <span> · saved {{ spySnapshotDate | date:'mediumDate' }}</span>
+        }.</p>
+      }
+      @if (isRefreshingStats && !isSpyMode) {
+        <small class="page-sync-state" role="status">
+          <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+          Refreshing this range in parallel while cached stats remain visible…
+        </small>
+      }
     </div>
   </header>
 
@@ -23,107 +31,120 @@
         <!-- Time Range Toggles -->
         <div class="time-range-toggles">
           <button (click)="changeRange('short_term')"
-            [class.active]="selectedRange === 'short_term'" [attr.aria-pressed]="selectedRange === 'short_term'">4 weeks</button>
+          [class.active]="selectedRange === 'short_term'" [attr.aria-pressed]="selectedRange === 'short_term'">4 weeks</button>
           <button (click)="changeRange('medium_term')"
-            [class.active]="selectedRange === 'medium_term'" [attr.aria-pressed]="selectedRange === 'medium_term'">6 months</button>
+          [class.active]="selectedRange === 'medium_term'" [attr.aria-pressed]="selectedRange === 'medium_term'">6 months</button>
           <button (click)="changeRange('long_term')"
-            [class.active]="selectedRange === 'long_term'" [attr.aria-pressed]="selectedRange === 'long_term'">1 year</button>
+          [class.active]="selectedRange === 'long_term'" [attr.aria-pressed]="selectedRange === 'long_term'">1 year</button>
         </div>
 
         <!-- Snapshot comparison calendars -->
-        <div class="history-select-container" *ngIf="snapshotOptions.length > 0">
-          <div class="spotify-custom-dropdown" [class.open]="showHistoryMenu"
-            [class.active]="selectedSnapshotId !== 'current'">
-            <button class="dropdown-trigger-btn" (click)="toggleHistoryMenu($event)"
-              [attr.aria-expanded]="showHistoryMenu" aria-haspopup="dialog" aria-controls="stats-history-calendar">
-              <span>{{ getSelectedSnapshotLabel() }}</span>
-              <i class="pi pi-calendar icon-right"></i>
-            </button>
-            <div id="stats-history-calendar" class="dropdown-menu-overlay compare-calendar-popover"
-              *ngIf="showHistoryMenu" role="dialog" aria-label="Choose the primary stats date"
-              (click)="$event.stopPropagation()">
-              <div class="compare-calendar-heading">
-                <div>
-                  <span class="menu-section-header">View snapshot</span>
-                  <strong>{{ historyCalendarMonthLabel }}</strong>
+        @if (snapshotOptions.length > 0) {
+          <div class="history-select-container">
+            <div class="spotify-custom-dropdown" [class.open]="showHistoryMenu"
+              [class.active]="selectedSnapshotId !== 'current'">
+              <button class="dropdown-trigger-btn" (click)="toggleHistoryMenu($event)"
+                [attr.aria-expanded]="showHistoryMenu" aria-haspopup="dialog" aria-controls="stats-history-calendar">
+                <span>{{ getSelectedSnapshotLabel() }}</span>
+                <i class="pi pi-calendar icon-right"></i>
+              </button>
+              @if (showHistoryMenu) {
+                <div id="stats-history-calendar" class="dropdown-menu-overlay compare-calendar-popover"
+                  role="dialog" aria-label="Choose the primary stats date"
+                  (click)="$event.stopPropagation()">
+                  <div class="compare-calendar-heading">
+                    <div>
+                      <span class="menu-section-header">View snapshot</span>
+                      <strong>{{ historyCalendarMonthLabel }}</strong>
+                    </div>
+                    <div class="compare-calendar-navigation" aria-label="Available snapshot months">
+                      <button type="button" (click)="navigateHistoryCalendar(-1, $event)"
+                        [disabled]="!canNavigateHistoryCalendar(-1)" aria-label="Previous available month">
+                        <i class="pi pi-chevron-left"></i>
+                      </button>
+                      <button type="button" (click)="navigateHistoryCalendar(1, $event)"
+                        [disabled]="!canNavigateHistoryCalendar(1)" aria-label="Next available month">
+                        <i class="pi pi-chevron-right"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="compare-calendar-weekdays" aria-hidden="true">
+                    @for (weekday of compareCalendarWeekdays; track weekday) {
+                      <span>{{ weekday }}</span>
+                    }
+                  </div>
+                  <div class="compare-calendar-grid">
+                    @for (day of historyCalendarDays; track day) {
+                      @if (!day) {
+                        <span class="compare-calendar-spacer" aria-hidden="true"></span>
+                      }
+                      @if (day) {
+                        <button type="button" class="compare-calendar-day"
+                          [class.is-available]="day.isAvailable" [class.is-selected]="day.isSelected"
+                          [class.is-today]="day.isToday" [disabled]="!day.isAvailable"
+                          [attr.aria-label]="day.ariaLabel" [attr.aria-pressed]="day.isSelected"
+                          (click)="selectHistoryCalendarDay(day, $event)">
+                          {{ day.dayNumber }}
+                        </button>
+                      }
+                    }
+                  </div>
                 </div>
-                <div class="compare-calendar-navigation" aria-label="Available snapshot months">
-                  <button type="button" (click)="navigateHistoryCalendar(-1, $event)"
-                    [disabled]="!canNavigateHistoryCalendar(-1)" aria-label="Previous available month">
-                    <i class="pi pi-chevron-left"></i>
-                  </button>
-                  <button type="button" (click)="navigateHistoryCalendar(1, $event)"
-                    [disabled]="!canNavigateHistoryCalendar(1)" aria-label="Next available month">
-                    <i class="pi pi-chevron-right"></i>
-                  </button>
+              }
+            </div>
+            <span class="compare-vs-text">vs</span>
+            <div class="spotify-custom-dropdown" [class.open]="showCompareMenu" [class.active]="compareSnapshotId !== ''">
+              <button class="dropdown-trigger-btn" (click)="toggleCompareMenu($event)"
+                [attr.aria-expanded]="showCompareMenu" aria-haspopup="dialog" aria-controls="stats-compare-calendar">
+                <span>{{ getCompareSnapshotLabel() }}</span>
+                <i class="pi pi-calendar icon-right"></i>
+              </button>
+              @if (showCompareMenu) {
+                <div id="stats-compare-calendar" class="dropdown-menu-overlay compare-calendar-popover"
+                  role="dialog" aria-label="Choose a date to compare against"
+                  (click)="$event.stopPropagation()">
+                  <div class="compare-calendar-heading">
+                    <div>
+                      <span class="menu-section-header">Compare against</span>
+                      <strong>{{ compareCalendarMonthLabel }}</strong>
+                    </div>
+                    <div class="compare-calendar-navigation" aria-label="Available snapshot months">
+                      <button type="button" (click)="navigateCompareCalendar(-1, $event)"
+                        [disabled]="!canNavigateCompareCalendar(-1)" aria-label="Previous available month">
+                        <i class="pi pi-chevron-left"></i>
+                      </button>
+                      <button type="button" (click)="navigateCompareCalendar(1, $event)"
+                        [disabled]="!canNavigateCompareCalendar(1)" aria-label="Next available month">
+                        <i class="pi pi-chevron-right"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="compare-calendar-weekdays" aria-hidden="true">
+                    @for (weekday of compareCalendarWeekdays; track weekday) {
+                      <span>{{ weekday }}</span>
+                    }
+                  </div>
+                  <div class="compare-calendar-grid">
+                    @for (day of compareCalendarDays; track day) {
+                      @if (!day) {
+                        <span class="compare-calendar-spacer" aria-hidden="true"></span>
+                      }
+                      @if (day) {
+                        <button type="button" class="compare-calendar-day"
+                          [class.is-available]="day.isAvailable" [class.is-selected]="day.isSelected"
+                          [class.is-today]="day.isToday" [disabled]="!day.isAvailable"
+                          [attr.aria-label]="day.ariaLabel" [attr.aria-pressed]="day.isSelected"
+                          (click)="selectCompareCalendarDay(day, $event)">
+                          {{ day.dayNumber }}
+                        </button>
+                      }
+                    }
+                  </div>
                 </div>
-              </div>
-
-              <div class="compare-calendar-weekdays" aria-hidden="true">
-                <span *ngFor="let weekday of compareCalendarWeekdays">{{ weekday }}</span>
-              </div>
-              <div class="compare-calendar-grid">
-                <ng-container *ngFor="let day of historyCalendarDays">
-                  <span *ngIf="!day" class="compare-calendar-spacer" aria-hidden="true"></span>
-                  <button *ngIf="day" type="button" class="compare-calendar-day"
-                    [class.is-available]="day.isAvailable" [class.is-selected]="day.isSelected"
-                    [class.is-today]="day.isToday" [disabled]="!day.isAvailable"
-                    [attr.aria-label]="day.ariaLabel" [attr.aria-pressed]="day.isSelected"
-                    (click)="selectHistoryCalendarDay(day, $event)">
-                    {{ day.dayNumber }}
-                  </button>
-                </ng-container>
-              </div>
+              }
             </div>
           </div>
-
-          <span class="compare-vs-text">vs</span>
-
-          <div class="spotify-custom-dropdown" [class.open]="showCompareMenu" [class.active]="compareSnapshotId !== ''">
-            <button class="dropdown-trigger-btn" (click)="toggleCompareMenu($event)"
-              [attr.aria-expanded]="showCompareMenu" aria-haspopup="dialog" aria-controls="stats-compare-calendar">
-              <span>{{ getCompareSnapshotLabel() }}</span>
-              <i class="pi pi-calendar icon-right"></i>
-            </button>
-            <div id="stats-compare-calendar" class="dropdown-menu-overlay compare-calendar-popover"
-              *ngIf="showCompareMenu" role="dialog" aria-label="Choose a date to compare against"
-              (click)="$event.stopPropagation()">
-              <div class="compare-calendar-heading">
-                <div>
-                  <span class="menu-section-header">Compare against</span>
-                  <strong>{{ compareCalendarMonthLabel }}</strong>
-                </div>
-                <div class="compare-calendar-navigation" aria-label="Available snapshot months">
-                  <button type="button" (click)="navigateCompareCalendar(-1, $event)"
-                    [disabled]="!canNavigateCompareCalendar(-1)" aria-label="Previous available month">
-                    <i class="pi pi-chevron-left"></i>
-                  </button>
-                  <button type="button" (click)="navigateCompareCalendar(1, $event)"
-                    [disabled]="!canNavigateCompareCalendar(1)" aria-label="Next available month">
-                    <i class="pi pi-chevron-right"></i>
-                  </button>
-                </div>
-              </div>
-
-              <div class="compare-calendar-weekdays" aria-hidden="true">
-                <span *ngFor="let weekday of compareCalendarWeekdays">{{ weekday }}</span>
-              </div>
-              <div class="compare-calendar-grid">
-                <ng-container *ngFor="let day of compareCalendarDays">
-                  <span *ngIf="!day" class="compare-calendar-spacer" aria-hidden="true"></span>
-                  <button *ngIf="day" type="button" class="compare-calendar-day"
-                    [class.is-available]="day.isAvailable" [class.is-selected]="day.isSelected"
-                    [class.is-today]="day.isToday" [disabled]="!day.isAvailable"
-                    [attr.aria-label]="day.ariaLabel" [attr.aria-pressed]="day.isSelected"
-                    (click)="selectCompareCalendarDay(day, $event)">
-                    {{ day.dayNumber }}
-                  </button>
-                </ng-container>
-              </div>
-
-            </div>
-          </div>
-        </div>
+        }
       </div>
     </div>
 
@@ -163,10 +184,12 @@
             (ngModelChange)="onStatsSearchChange($event)"
             [placeholder]="selectedCategory === 'tracks' ? 'Search Top 100 songs or artists' : (selectedCategory === 'artists' ? 'Search Top Artists' : 'Search Top Genres')"
             [attr.aria-label]="selectedCategory === 'tracks' ? 'Search Top 100 songs or artists' : (selectedCategory === 'artists' ? 'Search Top Artists' : 'Search Top Genres')">
-          <button *ngIf="isStatsSearchActive" type="button" class="stats-search-clear"
-            (click)="clearStatsSearch()" aria-label="Clear statistics search" title="Clear search">
-            <i class="pi pi-times" aria-hidden="true"></i>
-          </button>
+          @if (isStatsSearchActive) {
+            <button type="button" class="stats-search-clear"
+              (click)="clearStatsSearch()" aria-label="Clear statistics search" title="Clear search">
+              <i class="pi pi-times" aria-hidden="true"></i>
+            </button>
+          }
         </div>
         <button type="button" class="stats-past-toggle" [class.is-active]="includePastStatsSearch"
           [attr.aria-pressed]="includePastStatsSearch"
@@ -180,245 +203,319 @@
   </div>
 
   <!-- Loading State -->
-  <app-page-state *ngIf="isLoading" [loading]="true" [compact]="true" icon="pi-spinner"
+  @if (isLoading) {
+    <app-page-state [loading]="true" [compact]="true" icon="pi-spinner"
     [title]="isSpyMode ? 'Loading shared Spotify insights…' : 'Loading your Spotify insights…'"></app-page-state>
-  <app-page-state *ngIf="sharedStatsError && !isLoading" [compact]="true" icon="pi-lock"
+  }
+  @if (sharedStatsError && !isLoading) {
+    <app-page-state [compact]="true" icon="pi-lock"
     title="Shared stats unavailable" [message]="sharedStatsError"></app-page-state>
+  }
 
   <!-- Loaded Views -->
-  <div *ngIf="!isLoading">
-    <p class="stats-interaction-hint">
-      <i class="pi pi-chart-line" aria-hidden="true"></i>
-      Select any song, artist, or genre to view its history.
-    </p>
-
-    <section *ngIf="includePastStatsSearch && statsSearchQuery.trim().length >= 2 && selectedSnapshotId === 'current' && !isSpyMode"
-      class="past-stats-results" aria-live="polite">
-      <div class="past-stats-heading">
-        <span><i class="pi pi-history"></i></span>
-        <div>
-          <strong>Past rankings</strong>
-        </div>
-        <i *ngIf="isSearchingPastStats" class="pi pi-spin pi-spinner"></i>
-      </div>
-      <p *ngIf="pastStatsSearchError" class="past-stats-message">{{ pastStatsSearchError }}</p>
-      <p *ngIf="!isSearchingPastStats && !pastStatsSearchError && pastTopResults.length === 0"
-        class="past-stats-message">No former ranking matches this search.</p>
-      <div *ngIf="pastTopResults.length" class="past-stats-grid">
-        <button *ngFor="let item of pastTopResults" type="button" class="past-stats-card"
-          [attr.aria-label]="'View position history for ' + item.name"
-          title="View history graph" (click)="openPastTopResult(item)">
-          <img *ngIf="item.imageUrl" [src]="item.imageUrl" alt="" loading="lazy" decoding="async">
-          <span *ngIf="!item.imageUrl" class="past-stats-placeholder"><i class="pi" [ngClass]="item.kind === 'genre' ? 'pi-tags' : 'pi-music'"></i></span>
-          <span class="past-stats-copy">
-            <strong>{{ item.name }}</strong><small *ngIf="item.subtitle">{{ item.subtitle }}</small>
-          </span>
-          <i class="pi pi-chart-line" aria-hidden="true"></i>
-        </button>
-      </div>
-    </section>
-
+  @if (!isLoading) {
+    <div>
+      <p class="stats-interaction-hint">
+        <i class="pi pi-chart-line" aria-hidden="true"></i>
+        Select any song, artist, or genre to view its history.
+      </p>
+      @if (includePastStatsSearch && statsSearchQuery.trim().length >= 2 && selectedSnapshotId === 'current' && !isSpyMode) {
+        <section
+          class="past-stats-results" aria-live="polite">
+          <div class="past-stats-heading">
+            <span><i class="pi pi-history"></i></span>
+            <div>
+              <strong>Past rankings</strong>
+            </div>
+            @if (isSearchingPastStats) {
+              <i class="pi pi-spin pi-spinner"></i>
+            }
+          </div>
+          @if (pastStatsSearchError) {
+            <p class="past-stats-message">{{ pastStatsSearchError }}</p>
+          }
+          @if (!isSearchingPastStats && !pastStatsSearchError && pastTopResults.length === 0) {
+            <p
+            class="past-stats-message">No former ranking matches this search.</p>
+          }
+          @if (pastTopResults.length) {
+            <div class="past-stats-grid">
+              @for (item of pastTopResults; track item) {
+                <button type="button" class="past-stats-card"
+                  [attr.aria-label]="'View position history for ' + item.name"
+                  title="View history graph" (click)="openPastTopResult(item)">
+                  @if (item.imageUrl) {
+                    <img [src]="item.imageUrl" alt="" loading="lazy" decoding="async">
+                  }
+                  @if (!item.imageUrl) {
+                    <span class="past-stats-placeholder"><i class="pi" [ngClass]="item.kind === 'genre' ? 'pi-tags' : 'pi-music'"></i></span>
+                  }
+                  <span class="past-stats-copy">
+                    <strong>{{ item.name }}</strong>@if (item.subtitle) {
+                    <small>{{ item.subtitle }}</small>
+                  }
+                </span>
+                <i class="pi pi-chart-line" aria-hidden="true"></i>
+              </button>
+            }
+          </div>
+        }
+      </section>
+    }
     <!-- Category 1: Top 100 Songs -->
-    <div *ngIf="selectedCategory === 'tracks'">
-      <div *ngIf="displayedTracks.length === 0" style="color: #999; text-align: center; padding: 40px 0;">
-        <span *ngIf="isSnapshotLoading()"><i class="pi pi-spin pi-spinner" style="margin-right: 8px;"></i>Loading
-          snapshot details...</span>
-        <span *ngIf="!isSnapshotLoading()">No top tracks found for this period.</span>
-      </div>
-      <div *ngIf="displayedTracks.length > 0 && filteredTracks.length === 0" class="stats-search-empty" role="status">
-        <i class="pi pi-search" aria-hidden="true"></i>
-        <strong>Not in your Top 100</strong>
-        <span>No song or artist matches “{{ statsSearchQuery.trim() }}” in this period.</span>
-        <button type="button" (click)="clearStatsSearch()">Clear search</button>
-      </div>
-      <div class="stats-tracks-grid" *ngIf="filteredTracks.length > 0">
-
-        <div *ngFor="let track of filteredTracks; let idx = index; trackBy: trackStatItem" class="track-row-card"
-          role="button" tabindex="0" title="View history graph"
-          [attr.aria-label]="'View history for ' + track.name"
-          (keydown)="onTrendCardKeydown($event, track, 'tracks')"
-          (click)="openTrendPopup(track, 'tracks')">
-          <div class="track-index" [class.is-hot-mover]="isHotMover(track, 'tracks')"
-            [class.is-high-debut]="isHighDebutHotSong(track)" style="position: relative;">
-            <span class="number-wrapper">
-              <svg *ngIf="isHotMover(track, 'tracks')" class="hot-mover-flame"
-                [class.is-high-debut]="isHighDebutHotSong(track)" viewBox="0 0 24 24" fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                [attr.aria-label]="isHighDebutHotSong(track) ? 'Hot new Top 10 debut' : 'Hot rising song'">
-                <path
-                  d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
-                  [attr.fill]="'url(#flameGradientTrack-' + idx + ')'" />
-                <path
-                  d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
-                  transform="matrix(0.65 0 0 0.65 4.2 5.5)"
-                  [attr.fill]="'url(#flameInnerGradientTrack-' + idx + ')'" />
-                <defs>
-                  <linearGradient [attr.id]="'flameGradientTrack-' + idx" x1="12" y1="3" x2="12" y2="21"
-                    gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" [attr.stop-color]="isHighDebutHotSong(track) ? '#0066ff' : '#ff3d00'" />
-                    <stop offset="50%" [attr.stop-color]="isHighDebutHotSong(track) ? '#00bfff' : '#ff9100'" />
-                    <stop offset="100%" [attr.stop-color]="isHighDebutHotSong(track) ? '#8be9ff' : '#ffea00'"
-                      stop-opacity="0.1" />
-                  </linearGradient>
-                  <linearGradient [attr.id]="'flameInnerGradientTrack-' + idx" x1="12" y1="3" x2="12" y2="21"
-                    gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" [attr.stop-color]="isHighDebutHotSong(track) ? '#d9f8ff' : '#ffea00'" />
-                    <stop offset="100%" [attr.stop-color]="isHighDebutHotSong(track) ? '#0077ff' : '#ff5500'"
-                      stop-opacity="0.4" />
-                  </linearGradient>
-                </defs>
-              </svg>
-              <span class="index-number-text">{{ getStatsRankIndex(track, 'tracks') + 1 }}</span>
-            </span>
-            <ng-container *ngIf="getTrend(track, getStatsRankIndex(track, 'tracks'), 'tracks') as trend">
-              <span *ngIf="trend.type === 'up'" class="rank-trend-inline trend-up-color"
-                title="Moved up by {{ trend.diff }} places">
-                <i class="pi pi-caret-up"></i>
-              </span>
-              <span *ngIf="trend.type === 'down'" class="rank-trend-inline trend-down-color"
-                title="Moved down by {{ trend.diff }} places">
-                <i class="pi pi-caret-down"></i>
-              </span>
-              <span *ngIf="trend.type === 'new'" class="new-entry-dot" title="First appearance in saved stats"></span>
-            </ng-container>
-          </div>
-          <button type="button" class="spotify-artwork-link"
-            [disabled]="!getTrackUrl(track)"
-            [attr.aria-label]="'Open ' + track.name + ' on Spotify'"
-            title="Open on Spotify"
-            (click)="$event.stopPropagation(); openTrackClick(getTrackUrl(track))">
-            <img [src]="getTrackCover(track)"
-              [alt]="track.name + ' cover'" class="track-cover" loading="lazy" decoding="async">
-          </button>
-          <div class="track-info">
-            <span class="track-title">{{ track.name }}</span>
-            <span class="track-artist">{{ getTrackArtist(track) }}</span>
-          </div>
-          <div class="track-meta">
-            <span *ngIf="track.explicit" class="explicit-badge">E</span>
-            <span class="trend-open-cue" aria-hidden="true">
-              <i class="pi pi-chart-line"></i>
-              <span>History</span>
-            </span>
-          </div>
+    @if (selectedCategory === 'tracks') {
+      <div>
+        @if (displayedTracks.length === 0) {
+          <div style="color: #999; text-align: center; padding: 40px 0;">
+            @if (isSnapshotLoading()) {
+              <span><i class="pi pi-spin pi-spinner" style="margin-right: 8px;"></i>Loading
+            snapshot details...</span>
+          }
+          @if (!isSnapshotLoading()) {
+            <span>No top tracks found for this period.</span>
+          }
         </div>
-
-        <!-- Create Playlist Action Button -->
-        <div class="stats-create-playlist-action">
-          <span *ngIf="playlistCreationSuccessMessage" class="success-text">
-            <i class="pi pi-check-circle"></i> {{ playlistCreationSuccessMessage }}
-          </span>
-          <button (click)="createTopPlaylist()" class="p-button" [disabled]="isCreatingPlaylist"
-            >
-            <i class="pi" [class.pi-spin]="isCreatingPlaylist" [class.pi-spinner]="isCreatingPlaylist"
+      }
+      @if (displayedTracks.length > 0 && filteredTracks.length === 0) {
+        <div class="stats-search-empty" role="status">
+          <i class="pi pi-search" aria-hidden="true"></i>
+          <strong>Not in your Top 100</strong>
+          <span>No song or artist matches “{{ statsSearchQuery.trim() }}” in this period.</span>
+          <button type="button" (click)="clearStatsSearch()">Clear search</button>
+        </div>
+      }
+      @if (filteredTracks.length > 0) {
+        <div class="stats-tracks-grid">
+          @for (track of filteredTracks; track trackStatItem(idx, track); let idx = $index) {
+            <div class="track-row-card"
+              role="button" tabindex="0" title="View history graph"
+              [attr.aria-label]="'View history for ' + track.name"
+              (keydown)="onTrendCardKeydown($event, track, 'tracks')"
+              (click)="openTrendPopup(track, 'tracks')">
+              <div class="track-index" [class.is-hot-mover]="isHotMover(track, 'tracks')"
+                [class.is-high-debut]="isHighDebutHotSong(track)" style="position: relative;">
+                <span class="number-wrapper">
+                  @if (isHotMover(track, 'tracks')) {
+                    <svg class="hot-mover-flame"
+                      [class.is-high-debut]="isHighDebutHotSong(track)" viewBox="0 0 24 24" fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      [attr.aria-label]="isHighDebutHotSong(track) ? 'Hot new Top 10 debut' : 'Hot rising song'">
+                      <path
+                        d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
+                        [attr.fill]="'url(#flameGradientTrack-' + idx + ')'" />
+                      <path
+                        d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
+                        transform="matrix(0.65 0 0 0.65 4.2 5.5)"
+                        [attr.fill]="'url(#flameInnerGradientTrack-' + idx + ')'" />
+                      <defs>
+                        <linearGradient [attr.id]="'flameGradientTrack-' + idx" x1="12" y1="3" x2="12" y2="21"
+                          gradientUnits="userSpaceOnUse">
+                          <stop offset="0%" [attr.stop-color]="isHighDebutHotSong(track) ? '#0066ff' : '#ff3d00'" />
+                          <stop offset="50%" [attr.stop-color]="isHighDebutHotSong(track) ? '#00bfff' : '#ff9100'" />
+                          <stop offset="100%" [attr.stop-color]="isHighDebutHotSong(track) ? '#8be9ff' : '#ffea00'"
+                            stop-opacity="0.1" />
+                        </linearGradient>
+                        <linearGradient [attr.id]="'flameInnerGradientTrack-' + idx" x1="12" y1="3" x2="12" y2="21"
+                          gradientUnits="userSpaceOnUse">
+                          <stop offset="0%" [attr.stop-color]="isHighDebutHotSong(track) ? '#d9f8ff' : '#ffea00'" />
+                          <stop offset="100%" [attr.stop-color]="isHighDebutHotSong(track) ? '#0077ff' : '#ff5500'"
+                            stop-opacity="0.4" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  }
+                  <span class="index-number-text">{{ getStatsRankIndex(track, 'tracks') + 1 }}</span>
+                </span>
+                @if (getTrend(track, getStatsRankIndex(track, 'tracks'), 'tracks'); as trend) {
+                  @if (trend.type === 'up') {
+                    <span class="rank-trend-inline trend-up-color"
+                      title="Moved up by {{ trend.diff }} places">
+                      <i class="pi pi-caret-up"></i>
+                    </span>
+                  }
+                  @if (trend.type === 'down') {
+                    <span class="rank-trend-inline trend-down-color"
+                      title="Moved down by {{ trend.diff }} places">
+                      <i class="pi pi-caret-down"></i>
+                    </span>
+                  }
+                  @if (trend.type === 'new') {
+                    <span class="new-entry-dot" title="First appearance in saved stats"></span>
+                  }
+                }
+              </div>
+              <button type="button" class="spotify-artwork-link"
+                [disabled]="!getTrackUrl(track)"
+                [attr.aria-label]="'Open ' + track.name + ' on Spotify'"
+                title="Open on Spotify"
+                (click)="$event.stopPropagation(); openTrackClick(getTrackUrl(track))">
+                <img [src]="getTrackCover(track)"
+                  [alt]="track.name + ' cover'" class="track-cover" loading="lazy" decoding="async">
+              </button>
+              <div class="track-info">
+                <span class="track-title">{{ track.name }}</span>
+                <span class="track-artist">{{ getTrackArtist(track) }}</span>
+              </div>
+              <div class="track-meta">
+                @if (track.explicit) {
+                  <span class="explicit-badge">E</span>
+                }
+                <span class="trend-open-cue" aria-hidden="true">
+                  <i class="pi pi-chart-line"></i>
+                  <span>History</span>
+                </span>
+              </div>
+            </div>
+          }
+          <!-- Create Playlist Action Button -->
+          <div class="stats-create-playlist-action">
+            @if (playlistCreationSuccessMessage) {
+              <span class="success-text">
+                <i class="pi pi-check-circle"></i> {{ playlistCreationSuccessMessage }}
+              </span>
+            }
+            <button (click)="createTopPlaylist()" class="p-button" [disabled]="isCreatingPlaylist"
+              >
+              <i class="pi" [class.pi-spin]="isCreatingPlaylist" [class.pi-spinner]="isCreatingPlaylist"
               [class.pi-plus-circle]="!isCreatingPlaylist"></i>
-            {{ isCreatingPlaylist ? 'Creating...' : 'Create Playlist' }}
-          </button>
+              {{ isCreatingPlaylist ? 'Creating...' : 'Create Playlist' }}
+            </button>
+          </div>
         </div>
-      </div>
+      }
     </div>
-
-    <!-- Category 2: Top Artists -->
-    <div *ngIf="selectedCategory === 'artists'">
-      <div *ngIf="displayedArtists.length === 0" style="color: #999; text-align: center; padding: 40px 0;">
-        <span *ngIf="isSnapshotLoading()"><i class="pi pi-spin pi-spinner" style="margin-right: 8px;"></i>Loading
+  }
+  <!-- Category 2: Top Artists -->
+  @if (selectedCategory === 'artists') {
+    <div>
+      @if (displayedArtists.length === 0) {
+        <div style="color: #999; text-align: center; padding: 40px 0;">
+          @if (isSnapshotLoading()) {
+            <span><i class="pi pi-spin pi-spinner" style="margin-right: 8px;"></i>Loading
           snapshot details...</span>
-        <span *ngIf="!isSnapshotLoading()">No top artists found for this period.</span>
+        }
+        @if (!isSnapshotLoading()) {
+          <span>No top artists found for this period.</span>
+        }
       </div>
-      <div *ngIf="displayedArtists.length > 0 && filteredArtists.length === 0" class="stats-search-empty" role="status">
+    }
+    @if (displayedArtists.length > 0 && filteredArtists.length === 0) {
+      <div class="stats-search-empty" role="status">
         <i class="pi pi-search" aria-hidden="true"></i>
         <strong>Not in your Top Artists</strong>
         <span>No artist matches “{{ statsSearchQuery.trim() }}” in this period.</span>
         <button type="button" (click)="clearStatsSearch()">Clear search</button>
       </div>
-      <div *ngIf="filteredArtists.length > 0" class="stats-artists-grid">
-        <div *ngFor="let artist of filteredArtists; let idx = index; trackBy: trackStatItem" class="artist-grid-card"
-          role="button" tabindex="0" title="View history graph"
-          [attr.aria-label]="'View history for ' + artist.name"
-          (keydown)="onTrendCardKeydown($event, artist, 'artists')"
-          (click)="openTrendPopup(artist, 'artists')">
-          <div class="artist-avatar-container">
-            <button type="button" class="spotify-artwork-link spotify-artist-link"
-              [disabled]="!getArtistUrl(artist)"
-              [attr.aria-label]="'Open ' + artist.name + ' on Spotify'"
-              title="Open on Spotify"
-              (click)="$event.stopPropagation(); openArtistClick(getArtistUrl(artist))">
-              <img [src]="getArtistImage(artist)" [alt]="artist.name + ' photo'"
-                class="artist-avatar" loading="lazy" decoding="async">
-            </button>
-            <div class="artist-rank-badge" [class.is-hot-mover]="isHotMover(artist, 'artists')"
-              [class.is-high-debut]="isHighDebutHotArtist(artist)"
-              [class.is-new]="getTrend(artist, getStatsRankIndex(artist, 'artists'), 'artists').type === 'new'"
-              [class.has-trend]="getTrend(artist, getStatsRankIndex(artist, 'artists'), 'artists').type === 'up' || getTrend(artist, getStatsRankIndex(artist, 'artists'), 'artists').type === 'down'"
-              [attr.title]="getTrend(artist, getStatsRankIndex(artist, 'artists'), 'artists').type === 'new' ? 'First appearance in saved stats' : null">
-              <span class="number-wrapper">
-                <svg *ngIf="isHotMover(artist, 'artists')" class="hot-mover-flame"
-                  [class.is-high-debut]="isHighDebutHotArtist(artist)" viewBox="0 0 24 24" fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  [attr.aria-label]="isHighDebutHotArtist(artist) ? 'Hot new Top 10 artist debut' : 'Hot rising artist'">
-                  <path
-                    d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
-                    [attr.fill]="'url(#flameGradientArtist-' + idx + ')'" />
-                  <path
-                    d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
-                    transform="matrix(0.65 0 0 0.65 4.2 5.5)"
-                    [attr.fill]="'url(#flameInnerGradientArtist-' + idx + ')'" />
-                  <defs>
-                    <linearGradient [attr.id]="'flameGradientArtist-' + idx" x1="12" y1="3" x2="12" y2="21"
-                      gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" [attr.stop-color]="isHighDebutHotArtist(artist) ? '#0066ff' : '#ff3d00'" />
-                      <stop offset="50%" [attr.stop-color]="isHighDebutHotArtist(artist) ? '#00bfff' : '#ff9100'" />
-                      <stop offset="100%" [attr.stop-color]="isHighDebutHotArtist(artist) ? '#8be9ff' : '#ffea00'"
-                        stop-opacity="0.1" />
-                    </linearGradient>
-                    <linearGradient [attr.id]="'flameInnerGradientArtist-' + idx" x1="12" y1="3" x2="12" y2="21"
-                      gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" [attr.stop-color]="isHighDebutHotArtist(artist) ? '#d9f8ff' : '#ffea00'" />
-                      <stop offset="100%" [attr.stop-color]="isHighDebutHotArtist(artist) ? '#0077ff' : '#ff5500'"
-                        stop-opacity="0.4" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <span class="index-number-text">{{ getStatsRankIndex(artist, 'artists') + 1 }}</span>
-              </span>
-              <ng-container *ngIf="getTrend(artist, getStatsRankIndex(artist, 'artists'), 'artists') as trend">
-                <span *ngIf="trend.type === 'up'" class="rank-trend-inline trend-up-color"
-                  title="Moved up by {{ trend.diff }} places">
-                  <i class="pi pi-caret-up"></i>
+    }
+    @if (filteredArtists.length > 0) {
+      <div class="stats-artists-grid">
+        @for (artist of filteredArtists; track trackStatItem(idx, artist); let idx = $index) {
+          <div class="artist-grid-card"
+            role="button" tabindex="0" title="View history graph"
+            [attr.aria-label]="'View history for ' + artist.name"
+            (keydown)="onTrendCardKeydown($event, artist, 'artists')"
+            (click)="openTrendPopup(artist, 'artists')">
+            <div class="artist-avatar-container">
+              <button type="button" class="spotify-artwork-link spotify-artist-link"
+                [disabled]="!getArtistUrl(artist)"
+                [attr.aria-label]="'Open ' + artist.name + ' on Spotify'"
+                title="Open on Spotify"
+                (click)="$event.stopPropagation(); openArtistClick(getArtistUrl(artist))">
+                <img [src]="getArtistImage(artist)" [alt]="artist.name + ' photo'"
+                  class="artist-avatar" loading="lazy" decoding="async">
+              </button>
+              <div class="artist-rank-badge" [class.is-hot-mover]="isHotMover(artist, 'artists')"
+                [class.is-high-debut]="isHighDebutHotArtist(artist)"
+                [class.is-new]="getTrend(artist, getStatsRankIndex(artist, 'artists'), 'artists').type === 'new'"
+                [class.has-trend]="getTrend(artist, getStatsRankIndex(artist, 'artists'), 'artists').type === 'up' || getTrend(artist, getStatsRankIndex(artist, 'artists'), 'artists').type === 'down'"
+                [attr.title]="getTrend(artist, getStatsRankIndex(artist, 'artists'), 'artists').type === 'new' ? 'First appearance in saved stats' : null">
+                <span class="number-wrapper">
+                  @if (isHotMover(artist, 'artists')) {
+                    <svg class="hot-mover-flame"
+                      [class.is-high-debut]="isHighDebutHotArtist(artist)" viewBox="0 0 24 24" fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      [attr.aria-label]="isHighDebutHotArtist(artist) ? 'Hot new Top 10 artist debut' : 'Hot rising artist'">
+                      <path
+                        d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
+                        [attr.fill]="'url(#flameGradientArtist-' + idx + ')'" />
+                      <path
+                        d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
+                        transform="matrix(0.65 0 0 0.65 4.2 5.5)"
+                        [attr.fill]="'url(#flameInnerGradientArtist-' + idx + ')'" />
+                      <defs>
+                        <linearGradient [attr.id]="'flameGradientArtist-' + idx" x1="12" y1="3" x2="12" y2="21"
+                          gradientUnits="userSpaceOnUse">
+                          <stop offset="0%" [attr.stop-color]="isHighDebutHotArtist(artist) ? '#0066ff' : '#ff3d00'" />
+                          <stop offset="50%" [attr.stop-color]="isHighDebutHotArtist(artist) ? '#00bfff' : '#ff9100'" />
+                          <stop offset="100%" [attr.stop-color]="isHighDebutHotArtist(artist) ? '#8be9ff' : '#ffea00'"
+                            stop-opacity="0.1" />
+                        </linearGradient>
+                        <linearGradient [attr.id]="'flameInnerGradientArtist-' + idx" x1="12" y1="3" x2="12" y2="21"
+                          gradientUnits="userSpaceOnUse">
+                          <stop offset="0%" [attr.stop-color]="isHighDebutHotArtist(artist) ? '#d9f8ff' : '#ffea00'" />
+                          <stop offset="100%" [attr.stop-color]="isHighDebutHotArtist(artist) ? '#0077ff' : '#ff5500'"
+                            stop-opacity="0.4" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  }
+                  <span class="index-number-text">{{ getStatsRankIndex(artist, 'artists') + 1 }}</span>
                 </span>
-                <span *ngIf="trend.type === 'down'" class="rank-trend-inline trend-down-color"
-                  title="Moved down by {{ trend.diff }} places">
-                  <i class="pi pi-caret-down"></i>
-                </span>
-              </ng-container>
+                @if (getTrend(artist, getStatsRankIndex(artist, 'artists'), 'artists'); as trend) {
+                  @if (trend.type === 'up') {
+                    <span class="rank-trend-inline trend-up-color"
+                      title="Moved up by {{ trend.diff }} places">
+                      <i class="pi pi-caret-up"></i>
+                    </span>
+                  }
+                  @if (trend.type === 'down') {
+                    <span class="rank-trend-inline trend-down-color"
+                      title="Moved down by {{ trend.diff }} places">
+                      <i class="pi pi-caret-down"></i>
+                    </span>
+                  }
+                }
+              </div>
             </div>
+            <h4 class="artist-name">{{ artist.name }}</h4>
+            <span class="trend-open-cue" aria-hidden="true">
+              <i class="pi pi-chart-line"></i>
+              <span>History</span>
+            </span>
           </div>
-          <h4 class="artist-name">{{ artist.name }}</h4>
-          <span class="trend-open-cue" aria-hidden="true">
-            <i class="pi pi-chart-line"></i>
-            <span>History</span>
-          </span>
-        </div>
+        }
       </div>
+    }
+  </div>
+}
+<!-- Category 3: Top Genres -->
+@if (selectedCategory === 'genres') {
+  <div>
+    @if (displayedGenres.length === 0) {
+      <div style="color: #999; text-align: center; padding: 40px 0;">
+        @if (isSnapshotLoading()) {
+          <span><i class="pi pi-spin pi-spinner" style="margin-right: 8px;"></i>Loading
+        snapshot details...</span>
+      }
+      @if (!isSnapshotLoading()) {
+        <span>No genre data available for this period.</span>
+      }
     </div>
-
-    <!-- Category 3: Top Genres -->
-    <div *ngIf="selectedCategory === 'genres'">
-      <div *ngIf="displayedGenres.length === 0" style="color: #999; text-align: center; padding: 40px 0;">
-        <span *ngIf="isSnapshotLoading()"><i class="pi pi-spin pi-spinner" style="margin-right: 8px;"></i>Loading
-          snapshot details...</span>
-        <span *ngIf="!isSnapshotLoading()">No genre data available for this period.</span>
-      </div>
-      <div *ngIf="displayedGenres.length > 0 && filteredGenres.length === 0" class="stats-search-empty" role="status">
-        <i class="pi pi-search" aria-hidden="true"></i>
-        <strong>Not in your Top Genres</strong>
-        <span>No genre matches “{{ statsSearchQuery.trim() }}” in this period.</span>
-        <button type="button" (click)="clearStatsSearch()">Clear search</button>
-      </div>
-      <div *ngIf="filteredGenres.length > 0" class="genre-stats-card">
-        <h3>Genres</h3>
-        <div class="genres-list-container">
-          <div *ngFor="let genre of filteredGenres" class="genre-row card-clickable"
+  }
+  @if (displayedGenres.length > 0 && filteredGenres.length === 0) {
+    <div class="stats-search-empty" role="status">
+      <i class="pi pi-search" aria-hidden="true"></i>
+      <strong>Not in your Top Genres</strong>
+      <span>No genre matches “{{ statsSearchQuery.trim() }}” in this period.</span>
+      <button type="button" (click)="clearStatsSearch()">Clear search</button>
+    </div>
+  }
+  @if (filteredGenres.length > 0) {
+    <div class="genre-stats-card">
+      <h3>Genres</h3>
+      <div class="genres-list-container">
+        @for (genre of filteredGenres; track genre) {
+          <div class="genre-row card-clickable"
             role="button" tabindex="0" title="View history graph"
             [attr.aria-label]="'View history for ' + genre.name"
             (keydown)="onTrendCardKeydown($event, genre, 'genres')"
@@ -426,32 +523,38 @@
             <div class="genre-row-header">
               <span class="genre-name">
                 <span class="genre-rank">{{ genre.rank }}.</span> {{ genre.name }}
-                <ng-container *ngIf="genre.hasCompare">
-                  <span *ngIf="genre.trendType === 'up'" class="rank-trend-inline trend-up-color"
-                    title="Rank moved up by {{ genre.rankDiff }} places" style="margin-left: 8px;">
-                    <i class="pi pi-caret-up"></i>
-                    <span class="trend-diff-num">{{ genre.rankDiff }}</span>
-                  </span>
-                  <span *ngIf="genre.trendType === 'down'" class="rank-trend-inline trend-down-color"
-                    title="Rank moved down by {{ genre.rankDiff }} places" style="margin-left: 8px;">
-                    <i class="pi pi-caret-down"></i>
-                    <span class="trend-diff-num">{{ genre.rankDiff }}</span>
-                  </span>
-                  <span *ngIf="genre.trendType === 'new'" class="new-genre-badge"
-                    title="First appearance in saved stats" style="margin-left: 8px;">
-                    NEW
-                  </span>
-                </ng-container>
+                @if (genre.hasCompare) {
+                  @if (genre.trendType === 'up') {
+                    <span class="rank-trend-inline trend-up-color"
+                      title="Rank moved up by {{ genre.rankDiff }} places" style="margin-left: 8px;">
+                      <i class="pi pi-caret-up"></i>
+                      <span class="trend-diff-num">{{ genre.rankDiff }}</span>
+                    </span>
+                  }
+                  @if (genre.trendType === 'down') {
+                    <span class="rank-trend-inline trend-down-color"
+                      title="Rank moved down by {{ genre.rankDiff }} places" style="margin-left: 8px;">
+                      <i class="pi pi-caret-down"></i>
+                      <span class="trend-diff-num">{{ genre.rankDiff }}</span>
+                    </span>
+                  }
+                  @if (genre.trendType === 'new') {
+                    <span class="new-genre-badge"
+                      title="First appearance in saved stats" style="margin-left: 8px;">
+                      NEW
+                    </span>
+                  }
+                }
               </span>
               <span class="genre-row-meta">
                 <span class="genre-percentage">
                   {{ genre.percentage < 1 ? '<1' : genre.percentage }}%
-                  <ng-container *ngIf="genre.hasCompare && genre.percentageDiff !== 0">
+                  @if (genre.hasCompare && genre.percentageDiff !== 0) {
                     <span class="percentage-diff-badge" [class.positive]="genre.percentageDiff > 0"
                       [class.negative]="genre.percentageDiff < 0">
                       {{ genre.percentageDiff > 0 ? '+' : '' }}{{ genre.percentageDiff }}%
                     </span>
-                  </ng-container>
+                  }
                 </span>
                 <span class="trend-open-cue" aria-hidden="true">
                   <i class="pi pi-chart-line"></i>
@@ -460,141 +563,151 @@
               </span>
             </div>
             <div class="progress-bar-container">
-              <div *ngIf="genre.hasCompare && genre.percentageDiff < 0"
+              @if (genre.hasCompare && genre.percentageDiff < 0) {
+                <div
                 [style.width.%]="genre.prevPercentageSimple" class="progress-bar-fill-lost"></div>
+              }
               <div [style.width.%]="genre.percentage_simple" class="progress-bar-fill"
-                [class.is-increased]="genre.hasCompare && genre.percentageDiff > 0"></div>
-              <div *ngIf="genre.hasCompare && genre.percentageDiff > 0"
+              [class.is-increased]="genre.hasCompare && genre.percentageDiff > 0"></div>
+              @if (genre.hasCompare && genre.percentageDiff > 0) {
+                <div
                 [style.width.%]="genre.prevPercentageSimple" class="progress-bar-fill-previous"></div>
+              }
             </div>
           </div>
-        </div>
+        }
       </div>
     </div>
-
-  </div>
+  }
+</div>
+}
+</div>
+}
 
 
 
 </div>
 
 <!-- Trend Graph Popup Modal -->
-<div class="trend-modal-overlay" *ngIf="showTrendPopup" (click)="closeTrendPopup()">
-  <div class="trend-modal-card" (click)="$event.stopPropagation()">
-    <button class="trend-modal-close-btn" (click)="closeTrendPopup($event)">&times;</button>
-
-    <div class="trend-modal-header">
-      <img *ngIf="trendPopupCategory !== 'genres'"
-        [src]="trendPopupCategory === 'tracks' ? getTrackCover(trendPopupItem) : getArtistImage(trendPopupItem)"
-        [class.artist-round]="trendPopupCategory === 'artists'" alt="Cover Image" class="trend-modal-cover">
-
-      <div *ngIf="trendPopupCategory === 'genres'" class="genre-trend-avatar">
-        <i class="pi pi-tags"></i>
-      </div>
-
-      <div class="trend-modal-info">
-        <h3>{{ trendPopupItem.name }}</h3>
-        <p>{{ trendPopupCategory === 'tracks' ? getTrackArtist(trendPopupItem) :
+@if (showTrendPopup) {
+  <div class="trend-modal-overlay" (click)="closeTrendPopup()">
+    <div class="trend-modal-card" (click)="$event.stopPropagation()">
+      <button class="trend-modal-close-btn" (click)="closeTrendPopup($event)">&times;</button>
+      <div class="trend-modal-header">
+        @if (trendPopupCategory !== 'genres') {
+          <img
+            [src]="trendPopupCategory === 'tracks' ? getTrackCover(trendPopupItem) : getArtistImage(trendPopupItem)"
+            [class.artist-round]="trendPopupCategory === 'artists'" alt="Cover Image" class="trend-modal-cover">
+        }
+        @if (trendPopupCategory === 'genres') {
+          <div class="genre-trend-avatar">
+            <i class="pi pi-tags"></i>
+          </div>
+        }
+        <div class="trend-modal-info">
+          <h3>{{ trendPopupItem.name }}</h3>
+          <p>{{ trendPopupCategory === 'tracks' ? getTrackArtist(trendPopupItem) :
           trendPopupCategory === 'artists' ? 'Artist' : 'Top Genre' }}</p>
-      </div>
-    </div>
-
-    <div class="trend-modal-divider"></div>
-
-    <div class="trend-modal-content">
-      <h4 style="margin: 0 0 16px 0; font-size: 1.1rem; color: #ffffff; display: flex; align-items: center; gap: 8px;">
-        <i class="pi pi-chart-line" style="color: #1db954;"></i> Rank Position History
-      </h4>
-
-      <div class="popup-chart-container">
-        <!-- Loading spinner -->
-        <div *ngIf="isLoadingTrendData"
-          style="text-align: center; padding: 40px 10px; color: #b3b3b3; display: flex; flex-direction: column; align-items: center; gap: 12px;">
-          <i class="pi pi-spin pi-spinner" style="font-size: 2.5rem; color: #1db954;"></i>
-          <span>Loading historical data...</span>
         </div>
-
-        <ng-container *ngIf="!isLoadingTrendData">
-          <!-- If not enough history data -->
-          <div *ngIf="trendPopupPoints.length < 2" style="text-align: center; padding: 30px 10px; color: #b3b3b3;">
-            <i class="pi pi-info-circle"
-              style="font-size: 2rem; color: #1db954; margin-bottom: 12px; display: block;"></i>
-            <span>Not enough historical data to generate a chart yet. History data is recorded once daily when you visit
-              your personal stats.</span>
-          </div>
-
-          <!-- If we have at least 2 data points -->
-          <div *ngIf="trendPopupPoints.length >= 2">
-            <div class="svg-container" style="position: relative; width: 100%; height: 200px;">
-              <svg viewBox="0 0 500 200" style="width: 100%; height: 100%; display: block; overflow: visible;">
-                <defs>
-                  <linearGradient id="popupGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#1db954" stop-opacity="0.25" />
-                    <stop offset="100%" stop-color="#1db954" stop-opacity="0" />
-                  </linearGradient>
-                </defs>
-
-                <!-- Chart grid lines -->
-                <line x1="30" y1="30" x2="470" y2="30" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3,3" />
-                <line x1="30" y1="100" x2="470" y2="100" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3,3" />
-                <line x1="30" y1="170" x2="470" y2="170" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3,3" />
-
-                <!-- Y-axis labels (Rank 1 at top, Max Rank at bottom) -->
-                <text x="15" y="34" fill="#888" font-size="10" text-anchor="end">#1</text>
-                <text x="15" y="104" fill="#888" font-size="10" text-anchor="end">
-                  {{ trendPopupCategory === 'tracks' ? '#50' : trendPopupCategory === 'artists' ? '#25' : '#8' }}
-                </text>
-                <text x="15" y="174" fill="#888" font-size="10" text-anchor="end">
-                  {{ trendPopupCategory === 'tracks' ? '#100' : trendPopupCategory === 'artists' ? '#50' : '#15' }}
-                </text>
-
-                <!-- Chart Area Path Fill -->
-                <path [attr.d]="getPopupSvgFillPath()" fill="url(#popupGrad)" />
-
-                <!-- Chart Line Path -->
-                <path [attr.d]="getPopupSvgPath()" fill="none" stroke="#1ed760" stroke-width="3"
-                  stroke-linecap="round" />
-
-                <!-- Dots & Rank Text over dots -->
-                <g *ngFor="let pt of trendPopupPoints; let idx = index">
-                  <!-- Visible Circle Dot (scaled or highlighted on hover) -->
-                  <circle
-                    *ngIf="visibleLabelIndices.has(idx) || trendPopupPoints.length <= 25 || idx === hoveredPointIndex"
-                    [attr.cx]="30 + (idx / (trendPopupPoints.length - 1)) * 440"
-                    [attr.cy]="30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : trendPopupCategory === 'artists' ? 50 : 15) - 1)) * 140"
-                    [attr.r]="(trendPopupPoints.length > 25 && idx !== hoveredPointIndex) ? 3.5 : 5" fill="#ffffff"
-                    [attr.stroke]="idx === hoveredPointIndex ? '#1ed760' : '#1db954'" stroke-width="2">
-                  </circle>
-
-                  <!-- Rank text (shown if milestone or hovered) -->
-                  <text *ngIf="visibleLabelIndices.has(idx) || idx === hoveredPointIndex"
-                    [attr.x]="30 + (idx / (trendPopupPoints.length - 1)) * 440"
-                    [attr.y]="(30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : trendPopupCategory === 'artists' ? 50 : 15) - 1)) * 140) - 10"
-                    fill="#ffffff" [style.font-weight]="idx === hoveredPointIndex ? '800' : '700'"
-                    [style.font-size]="idx === hoveredPointIndex ? '11px' : '10px'" text-anchor="middle">
-                    #{{ pt.rank }}
-                  </text>
-
-                  <!-- Date label below the graph (shown if milestone or hovered) -->
-                  <text *ngIf="visibleLabelIndices.has(idx) || idx === hoveredPointIndex"
-                    [attr.x]="30 + (idx / (trendPopupPoints.length - 1)) * 440" y="192"
-                    [attr.fill]="idx === hoveredPointIndex ? '#1ed760' : '#888'" font-size="9"
-                    [style.font-weight]="idx === hoveredPointIndex ? '700' : 'normal'" text-anchor="middle">
-                    {{ pt.date }}
-                  </text>
-
-                  <!-- Invisible larger hover target circle for easy trigger -->
-                  <circle [attr.cx]="30 + (idx / (trendPopupPoints.length - 1)) * 440"
-                    [attr.cy]="30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : trendPopupCategory === 'artists' ? 50 : 15) - 1)) * 140"
-                    r="15" fill="transparent" (mouseenter)="hoveredPointIndex = idx"
-                    (mouseleave)="hoveredPointIndex = null">
-                  </circle>
-                </g>
-              </svg>
+      </div>
+      <div class="trend-modal-divider"></div>
+      <div class="trend-modal-content">
+        <h4 style="margin: 0 0 16px 0; font-size: 1.1rem; color: #ffffff; display: flex; align-items: center; gap: 8px;">
+          <i class="pi pi-chart-line" style="color: #1db954;"></i> Rank Position History
+        </h4>
+        <div class="popup-chart-container">
+          <!-- Loading spinner -->
+          @if (isLoadingTrendData) {
+            <div
+              style="text-align: center; padding: 40px 10px; color: #b3b3b3; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+              <i class="pi pi-spin pi-spinner" style="font-size: 2.5rem; color: #1db954;"></i>
+              <span>Loading historical data...</span>
             </div>
-          </div>
-        </ng-container>
+          }
+          @if (!isLoadingTrendData) {
+            <!-- If not enough history data -->
+            @if (trendPopupPoints.length < 2) {
+              <div style="text-align: center; padding: 30px 10px; color: #b3b3b3;">
+                <i class="pi pi-info-circle"
+                style="font-size: 2rem; color: #1db954; margin-bottom: 12px; display: block;"></i>
+                <span>Not enough historical data to generate a chart yet. History data is recorded once daily when you visit
+                your personal stats.</span>
+              </div>
+            }
+            <!-- If we have at least 2 data points -->
+            @if (trendPopupPoints.length >= 2) {
+              <div>
+                <div class="svg-container" style="position: relative; width: 100%; height: 200px;">
+                  <svg viewBox="0 0 500 200" style="width: 100%; height: 100%; display: block; overflow: visible;">
+                    <defs>
+                      <linearGradient id="popupGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#1db954" stop-opacity="0.25" />
+                        <stop offset="100%" stop-color="#1db954" stop-opacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <!-- Chart grid lines -->
+                    <line x1="30" y1="30" x2="470" y2="30" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3,3" />
+                    <line x1="30" y1="100" x2="470" y2="100" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3,3" />
+                    <line x1="30" y1="170" x2="470" y2="170" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3,3" />
+                    <!-- Y-axis labels (Rank 1 at top, Max Rank at bottom) -->
+                    <text x="15" y="34" fill="#888" font-size="10" text-anchor="end">#1</text>
+                    <text x="15" y="104" fill="#888" font-size="10" text-anchor="end">
+                      {{ trendPopupCategory === 'tracks' ? '#50' : trendPopupCategory === 'artists' ? '#25' : '#8' }}
+                    </text>
+                    <text x="15" y="174" fill="#888" font-size="10" text-anchor="end">
+                      {{ trendPopupCategory === 'tracks' ? '#100' : trendPopupCategory === 'artists' ? '#50' : '#15' }}
+                    </text>
+                    <!-- Chart Area Path Fill -->
+                    <path [attr.d]="getPopupSvgFillPath()" fill="url(#popupGrad)" />
+                    <!-- Chart Line Path -->
+                    <path [attr.d]="getPopupSvgPath()" fill="none" stroke="#1ed760" stroke-width="3"
+                      stroke-linecap="round" />
+                    <!-- Dots & Rank Text over dots -->
+                    @for (pt of trendPopupPoints; track pt; let idx = $index) {
+                      <g>
+                        <!-- Visible Circle Dot (scaled or highlighted on hover) -->
+                        @if (visibleLabelIndices.has(idx) || trendPopupPoints.length <= 25 || idx === hoveredPointIndex) {
+                          <circle
+                            [attr.cx]="30 + (idx / (trendPopupPoints.length - 1)) * 440"
+                            [attr.cy]="30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : trendPopupCategory === 'artists' ? 50 : 15) - 1)) * 140"
+                            [attr.r]="(trendPopupPoints.length > 25 && idx !== hoveredPointIndex) ? 3.5 : 5" fill="#ffffff"
+                            [attr.stroke]="idx === hoveredPointIndex ? '#1ed760' : '#1db954'" stroke-width="2">
+                          </circle>
+                        }
+                        <!-- Rank text (shown if milestone or hovered) -->
+                        @if (visibleLabelIndices.has(idx) || idx === hoveredPointIndex) {
+                          <text
+                            [attr.x]="30 + (idx / (trendPopupPoints.length - 1)) * 440"
+                            [attr.y]="(30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : trendPopupCategory === 'artists' ? 50 : 15) - 1)) * 140) - 10"
+                            fill="#ffffff" [style.font-weight]="idx === hoveredPointIndex ? '800' : '700'"
+                            [style.font-size]="idx === hoveredPointIndex ? '11px' : '10px'" text-anchor="middle">
+                            #{{ pt.rank }}
+                          </text>
+                        }
+                        <!-- Date label below the graph (shown if milestone or hovered) -->
+                        @if (visibleLabelIndices.has(idx) || idx === hoveredPointIndex) {
+                          <text
+                            [attr.x]="30 + (idx / (trendPopupPoints.length - 1)) * 440" y="192"
+                            [attr.fill]="idx === hoveredPointIndex ? '#1ed760' : '#888'" font-size="9"
+                            [style.font-weight]="idx === hoveredPointIndex ? '700' : 'normal'" text-anchor="middle">
+                            {{ pt.date }}
+                          </text>
+                        }
+                        <!-- Invisible larger hover target circle for easy trigger -->
+                        <circle [attr.cx]="30 + (idx / (trendPopupPoints.length - 1)) * 440"
+                          [attr.cy]="30 + ((pt.rank - 1) / ((trendPopupCategory === 'tracks' ? 100 : trendPopupCategory === 'artists' ? 50 : 15) - 1)) * 140"
+                          r="15" fill="transparent" (mouseenter)="hoveredPointIndex = idx"
+                          (mouseleave)="hoveredPointIndex = null">
+                        </circle>
+                      </g>
+                    }
+                  </svg>
+                </div>
+              </div>
+            }
+          }
+        </div>
       </div>
     </div>
   </div>
-</div>
+}

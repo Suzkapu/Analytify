@@ -1,8 +1,12 @@
 <header class="shared-section-heading">
   <span class="section-icon" aria-hidden="true"><i class="pi" [ngClass]="icon"></i></span>
   <div>
-    <span *ngIf="eyebrow" class="page-eyebrow">{{ eyebrow }}</span>
+    @if (eyebrow) {
+      <span class="page-eyebrow">{{ eyebrow }}</span>
+    }
     <h2>{{ title }}</h2>
-    <p *ngIf="description">{{ description }}</p>
+    @if (description) {
+      <p>{{ description }}</p>
+    }
   </div>
 </header>

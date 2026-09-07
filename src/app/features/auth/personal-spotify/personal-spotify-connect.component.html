@@ -40,11 +40,15 @@
       </li>
     </ol>
 
-    <div class="migration-note" *ngIf="auth.isAuthenticated()">
-      <i class="pi pi-shield"></i>
-      <span>Spotify will need to return the same Spotify ID as your current profile. Your existing cloud data will otherwise remain untouched.</span>
-    </div>
-    <p class="error-message" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
+    @if (auth.isAuthenticated()) {
+      <div class="migration-note">
+        <i class="pi pi-shield"></i>
+        <span>Spotify will need to return the same Spotify ID as your current profile. Your existing cloud data will otherwise remain untouched.</span>
+      </div>
+    }
+    @if (errorMessage) {
+      <p class="error-message" role="alert">{{ errorMessage }}</p>
+    }
     <div class="actions">
       <button type="button" class="secondary" (click)="cancel()">Cancel</button>
       <button type="button" class="primary" (click)="connect()" [disabled]="connecting || clientId.trim().length !== 32">

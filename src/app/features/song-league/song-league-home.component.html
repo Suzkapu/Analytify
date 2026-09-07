@@ -13,90 +13,114 @@
       </button>
     </header>
 
-    <section *ngIf="!auth.isBackupActive()" class="league-notice warning">
-      <i class="pi pi-cloud"></i>
-      <div>
-        <strong>Cloud Backup is required</strong>
-        <p>Enable it from your profile menu so daily Top Songs can verify recommendations and points.</p>
-      </div>
-    </section>
-
-    <section *ngIf="!allowLeagueCreation && !isAdmin" class="league-notice warning">
-      <i class="pi pi-pause"></i>
-      <div><strong>New leagues are paused</strong><p>An administrator has temporarily disabled new Song League creation.</p></div>
-    </section>
-
-    <section *ngIf="showCreateForm" class="league-create-card">
-      <div>
-        <span class="league-eyebrow">New private group</span>
-        <h2>Name your league</h2>
-        <p>The league uses your current timezone for the Friday submission window.</p>
-      </div>
-      <form (ngSubmit)="createLeague()">
-        <label>
-          <span>League name</span>
-          <input type="text" name="leagueName" [(ngModel)]="leagueName" maxlength="80"
-            placeholder="Friday Finds" [disabled]="isCreating" autofocus>
-        </label>
-        <label>
-          <span>Member capacity</span>
-          <input type="number" name="memberCapacity" [(ngModel)]="memberCapacity" min="2" max="50"
-            [disabled]="isCreating" placeholder="5">
-          <small>Includes you · between 2 and 50 players</small>
-        </label>
-        <div class="league-form-actions">
-          <button type="button" class="league-secondary" (click)="showCreateForm = false" [disabled]="isCreating">Cancel</button>
-          <button type="submit" class="league-primary" [disabled]="!leagueName.trim() || isCreating || memberCapacity < 2 || memberCapacity > 50">
-            <i class="pi" [ngClass]="isCreating ? 'pi-spin pi-spinner' : 'pi-users'"></i>
-            {{ isCreating ? 'Creating…' : 'Create league' }}
-          </button>
+    @if (!auth.isBackupActive()) {
+      <section class="league-notice warning">
+        <i class="pi pi-cloud"></i>
+        <div>
+          <strong>Cloud Backup is required</strong>
+          <p>Enable it from your profile menu so daily Top Songs can verify recommendations and points.</p>
         </div>
-      </form>
-    </section>
+      </section>
+    }
 
-    <section *ngIf="inviteUrl" class="league-invite-ready" role="status">
-      <div>
-        <span class="league-eyebrow">League created</span>
-        <h2>Invite your friends</h2>
-        <p>This private link is shown once. Members must use their normal Analytify login and enable Cloud Backup.</p>
-      </div>
-      <div class="league-invite-field">
-        <input [value]="inviteUrl" readonly aria-label="Song League invitation URL">
-        <button type="button" (click)="copyInvite()"><i class="pi" [ngClass]="inviteCopied ? 'pi-check' : 'pi-copy'"></i>{{ inviteCopied ? 'Copied' : 'Copy' }}</button>
-      </div>
-      <button type="button" class="league-primary" (click)="openCreatedLeague()">Open league <i class="pi pi-arrow-right"></i></button>
-    </section>
+    @if (!allowLeagueCreation && !isAdmin) {
+      <section class="league-notice warning">
+        <i class="pi pi-pause"></i>
+        <div><strong>New leagues are paused</strong><p>An administrator has temporarily disabled new Song League creation.</p></div>
+      </section>
+    }
 
-    <div *ngIf="errorMessage" class="league-notice error" role="alert">
-      <i class="pi pi-exclamation-circle"></i><span>{{ errorMessage }}</span>
-    </div>
+    @if (showCreateForm) {
+      <section class="league-create-card">
+        <div>
+          <span class="league-eyebrow">New private group</span>
+          <h2>Name your league</h2>
+          <p>The league uses your current timezone for the Friday submission window.</p>
+        </div>
+        <form (ngSubmit)="createLeague()">
+          <label>
+            <span>League name</span>
+            <input type="text" name="leagueName" [(ngModel)]="leagueName" maxlength="80"
+              placeholder="Friday Finds" [disabled]="isCreating" autofocus>
+          </label>
+          <label>
+            <span>Member capacity</span>
+            <input type="number" name="memberCapacity" [(ngModel)]="memberCapacity" min="2" max="50"
+              [disabled]="isCreating" placeholder="5">
+            <small>Includes you · between 2 and 50 players</small>
+          </label>
+          <div class="league-form-actions">
+            <button type="button" class="league-secondary" (click)="showCreateForm = false" [disabled]="isCreating">Cancel</button>
+            <button type="submit" class="league-primary" [disabled]="!leagueName.trim() || isCreating || memberCapacity < 2 || memberCapacity > 50">
+              <i class="pi" [ngClass]="isCreating ? 'pi-spin pi-spinner' : 'pi-users'"></i>
+              {{ isCreating ? 'Creating…' : 'Create league' }}
+            </button>
+          </div>
+        </form>
+      </section>
+    }
+
+    @if (inviteUrl) {
+      <section class="league-invite-ready" role="status">
+        <div>
+          <span class="league-eyebrow">League created</span>
+          <h2>Invite your friends</h2>
+          <p>This private link is shown once. Members must use their normal Analytify login and enable Cloud Backup.</p>
+        </div>
+        <div class="league-invite-field">
+          <input [value]="inviteUrl" readonly aria-label="Song League invitation URL">
+          <button type="button" (click)="copyInvite()"><i class="pi" [ngClass]="inviteCopied ? 'pi-check' : 'pi-copy'"></i>{{ inviteCopied ? 'Copied' : 'Copy' }}</button>
+        </div>
+        <button type="button" class="league-primary" (click)="openCreatedLeague()">Open league <i class="pi pi-arrow-right"></i></button>
+      </section>
+    }
+
+    @if (errorMessage) {
+      <div class="league-notice error" role="alert">
+        <i class="pi pi-exclamation-circle"></i><span>{{ errorMessage }}</span>
+      </div>
+    }
 
     <section class="league-list-section">
       <div class="league-section-heading">
         <div><span class="league-eyebrow">Your groups</span><h2>Active leagues</h2></div>
         <span class="league-count" [attr.aria-busy]="isLoading">
-          <i *ngIf="isLoading" class="pi pi-spin pi-spinner" aria-label="Loading league count"></i>
-          <ng-container *ngIf="!isLoading">{{ leagues.length }}</ng-container>
+          @if (isLoading) {
+            <i class="pi pi-spin pi-spinner" aria-label="Loading league count"></i>
+          }
+          @if (!isLoading) {
+            {{ leagues.length }}
+          }
         </span>
       </div>
 
-      <div *ngIf="isLoading" class="league-state"><i class="pi pi-spin pi-spinner"></i><p>Loading leagues…</p></div>
-      <div *ngIf="!isLoading && leagues.length === 0" class="league-empty">
-        <i class="pi pi-star"></i>
-        <strong>No leagues yet</strong>
-        <p>Create one or open an invitation from a friend.</p>
-      </div>
-      <div *ngIf="!isLoading && leagues.length" class="league-grid">
-        <a *ngFor="let league of leagues; trackBy: trackLeague" [routerLink]="['/song-league', league.id]" class="league-card">
-          <div class="league-card-icon"><i class="pi pi-chart-line"></i></div>
-          <div>
-            <span>{{ league.timezone }}</span>
-            <h3>{{ league.name }} <small *ngIf="league.isDemo">Demo</small></h3>
-            <p>Hosted by {{ league.ownerDisplayName }}</p>
-          </div>
-          <i class="pi pi-chevron-right"></i>
-        </a>
-      </div>
+      @if (isLoading) {
+        <div class="league-state"><i class="pi pi-spin pi-spinner"></i><p>Loading leagues…</p></div>
+      }
+      @if (!isLoading && leagues.length === 0) {
+        <div class="league-empty">
+          <i class="pi pi-star"></i>
+          <strong>No leagues yet</strong>
+          <p>Create one or open an invitation from a friend.</p>
+        </div>
+      }
+      @if (!isLoading && leagues.length) {
+        <div class="league-grid">
+          @for (league of leagues; track trackLeague($index, league)) {
+            <a [routerLink]="['/song-league', league.id]" class="league-card">
+              <div class="league-card-icon"><i class="pi pi-chart-line"></i></div>
+              <div>
+                <span>{{ league.timezone }}</span>
+                <h3>{{ league.name }} @if (league.isDemo) {
+                  <small>Demo</small>
+                }</h3>
+                <p>Hosted by {{ league.ownerDisplayName }}</p>
+              </div>
+              <i class="pi pi-chevron-right"></i>
+            </a>
+          }
+        </div>
+      }
     </section>
 
     <app-song-league-rules></app-song-league-rules>

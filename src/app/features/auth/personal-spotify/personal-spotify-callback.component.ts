@@ -8,10 +8,14 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
     <main class="callback-page"><section>
       <i class="pi" [ngClass]="errorMessage ? 'pi-exclamation-triangle error' : 'pi-spin pi-spinner'"></i>
       <h1>{{ errorMessage ? 'Spotify connection failed' : 'Connecting your personal Spotify app…' }}</h1>
-      <p *ngIf="errorMessage">{{ errorMessage }}</p>
-      <a *ngIf="errorMessage" routerLink="/spotify/connect">Return to setup</a>
+      @if (errorMessage) {
+        <p>{{ errorMessage }}</p>
+      }
+      @if (errorMessage) {
+        <a routerLink="/spotify/connect">Return to setup</a>
+      }
     </section></main>
-  `,
+    `,
     styles: [`
     .callback-page { min-height: 100vh; display: grid; place-items: center; padding: 1rem; box-sizing: border-box; background: var(--color-bg); color: var(--color-text); text-align: center; }
     section { max-width: 560px; padding: 2rem; } i { color: var(--color-accent); font-size: 3rem; } i.error { color: #ff7474; }

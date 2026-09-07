@@ -1,16 +1,19 @@
 <header class="app-header" [class.has-mobile-back]="showMobileBackButton">
-  <div class="app-header-sync-progressbar" *ngIf="authService.isSyncing" [style.width.%]="authService.syncProgress"></div>
+  @if (authService.isSyncing) {
+    <div class="app-header-sync-progressbar" [style.width.%]="authService.syncProgress"></div>
+  }
   <div class="header-shell">
     <div class="header-left">
-      <button
-        *ngIf="showMobileBackButton"
-        type="button"
-        class="mobile-header-back"
-        title="Go back"
-        aria-label="Go back"
-        (click)="mobileBack.emit()">
-        <i class="pi pi-arrow-left" aria-hidden="true"></i>
-      </button>
+      @if (showMobileBackButton) {
+        <button
+          type="button"
+          class="mobile-header-back"
+          title="Go back"
+          aria-label="Go back"
+          (click)="mobileBack.emit()">
+          <i class="pi pi-arrow-left" aria-hidden="true"></i>
+        </button>
+      }
       <a class="header-logo" routerLink="/playlists" aria-label="Analytify home">
         <img src="assets/Analytify-96.webp" width="48" height="48" alt="">
         <span class="logo-text">Analytify</span>
@@ -33,9 +36,11 @@
       </nav>
     </div>
     <div class="header-center">
-      <span *ngIf="mobileTitle" class="mobile-page-title" role="heading" aria-level="1" [title]="mobileTitle">
-        {{ mobileTitle }}
-      </span>
+      @if (mobileTitle) {
+        <span class="mobile-page-title" role="heading" aria-level="1" [title]="mobileTitle">
+          {{ mobileTitle }}
+        </span>
+      }
     </div>
     <div class="header-right">
       <div class="workspace-launcher-container">
@@ -47,273 +52,326 @@
           <i class="pi pi-chevron-down workspace-launcher-chevron" aria-hidden="true"></i>
         </button>
 
-        <div class="profile-settings-dropdown workspace-launcher-dropdown" *ngIf="showWorkspaceDropdown" role="menu">
-          <span class="dropdown-header">Explore together</span>
-          <a routerLink="/compare-room" class="dropdown-item workspace-launcher-item" role="menuitem">
-            <i class="pi pi-users"></i>
-            <span class="workspace-item-copy"><strong>Compare playlists</strong><small>Find music you share with friends</small></span>
-          </a>
-          <a routerLink="/shared-playlists" class="dropdown-item workspace-launcher-item" role="menuitem">
-            <i class="pi pi-share-alt"></i>
-            <span class="workspace-item-copy"><strong>Private sharing</strong><small>Share playlists and approved stats</small></span>
-          </a>
-          <a routerLink="/song-league" class="dropdown-item workspace-launcher-item" role="menuitem">
-            <i class="pi pi-star"></i>
-            <span class="workspace-item-copy"><strong>Song League</strong><small>Play the Friday recommendation game</small></span>
-          </a>
-          <ng-container *ngIf="isAdmin">
-            <div class="dropdown-divider" aria-hidden="true"></div>
-            <span class="dropdown-header">Administration</span>
-            <a routerLink="/admin" class="dropdown-item workspace-launcher-item" role="menuitem">
-              <i class="pi pi-shield"></i>
-              <span class="workspace-item-copy"><strong>Admin</strong><small>Manage the site and synchronization</small></span>
+        @if (showWorkspaceDropdown) {
+          <div class="profile-settings-dropdown workspace-launcher-dropdown" role="menu">
+            <span class="dropdown-header">Explore together</span>
+            <a routerLink="/compare-room" class="dropdown-item workspace-launcher-item" role="menuitem">
+              <i class="pi pi-users"></i>
+              <span class="workspace-item-copy"><strong>Compare playlists</strong><small>Find music you share with friends</small></span>
             </a>
-          </ng-container>
-        </div>
+            <a routerLink="/shared-playlists" class="dropdown-item workspace-launcher-item" role="menuitem">
+              <i class="pi pi-share-alt"></i>
+              <span class="workspace-item-copy"><strong>Private sharing</strong><small>Share playlists and approved stats</small></span>
+            </a>
+            <a routerLink="/song-league" class="dropdown-item workspace-launcher-item" role="menuitem">
+              <i class="pi pi-star"></i>
+              <span class="workspace-item-copy"><strong>Song League</strong><small>Play the Friday recommendation game</small></span>
+            </a>
+            @if (isAdmin) {
+              <div class="dropdown-divider" aria-hidden="true"></div>
+              <span class="dropdown-header">Administration</span>
+              <a routerLink="/admin" class="dropdown-item workspace-launcher-item" role="menuitem">
+                <i class="pi pi-shield"></i>
+                <span class="workspace-item-copy"><strong>Admin</strong><small>Manage the site and synchronization</small></span>
+              </a>
+            }
+          </div>
+        }
       </div>
 
       <div class="user-profile-container">
         <button type="button" class="user-profile-header" (click)="toggleSettingsDropdown($event)"
           title="Open profile menu" aria-label="Open profile menu" [attr.aria-expanded]="showSettingsDropdown"
           aria-haspopup="menu">
-          <img *ngIf="profilePicUrl" [src]="profilePicUrl" (error)="onProfileImageError()" alt="" class="profile-img">
-          <span *ngIf="!profilePicUrl" class="profile-placeholder" aria-hidden="true">
-            <i class="pi pi-user"></i>
-          </span>
+          @if (profilePicUrl) {
+            <img [src]="profilePicUrl" (error)="onProfileImageError()" alt="" class="profile-img">
+          }
+          @if (!profilePicUrl) {
+            <span class="profile-placeholder" aria-hidden="true">
+              <i class="pi pi-user"></i>
+            </span>
+          }
         </button>
 
-        <div class="profile-settings-dropdown" *ngIf="showSettingsDropdown" role="menu">
-          <span class="dropdown-header">Data &amp; account</span>
-          <div class="dropdown-item toggle-item" (click)="$event.stopPropagation()">
-            <i class="pi pi-cloud"></i>
-            <span>Cloud backup</span>
-            <label class="switch" title="Toggle cloud backup">
-              <input type="checkbox" [checked]="authService.isBackupActive()" (change)="onBackupToggle($event)"
-                aria-label="Cloud backup">
-              <span class="slider round"></span>
-            </label>
+        @if (showSettingsDropdown) {
+          <div class="profile-settings-dropdown" role="menu">
+            <span class="dropdown-header">Data &amp; account</span>
+            <div class="dropdown-item toggle-item" (click)="$event.stopPropagation()">
+              <i class="pi pi-cloud"></i>
+              <span>Cloud backup</span>
+              <label class="switch" title="Toggle cloud backup">
+                <input type="checkbox" [checked]="authService.isBackupActive()" (change)="onBackupToggle($event)"
+                  aria-label="Cloud backup">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            @if (hasCollaborationIdentity) {
+              <div class="dropdown-item toggle-item" (click)="$event.stopPropagation()"
+                title="Allow other registered users to find you by display-name search and request Stats access">
+                <i class="pi pi-eye"></i>
+                <span>Stats requests</span>
+                <label class="switch" title="Toggle Stats request discoverability">
+                  <input type="checkbox" [checked]="statsDiscoverable"
+                    [disabled]="isSavingStatsDiscoverability" (change)="onStatsDiscoverabilityToggle($event)"
+                    aria-label="Allow Stats access requests">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            }
+            <button (click)="openNotificationSettings()" class="dropdown-item" role="menuitem">
+              <i class="pi pi-bell"></i><span>Notifications</span>
+            </button>
+            @if (hasScheduledSpotifyAccess) {
+              <button (click)="removeScheduledSpotifyAccess()"
+                class="dropdown-item" role="menuitem" [disabled]="isRemovingScheduledAccess"
+                title="Deletes the encrypted refresh credential; collaboration access remains available">
+                <i class="pi pi-clock"></i><span>{{ isRemovingScheduledAccess ? 'Removing scheduled access…' : 'Remove scheduled Spotify access' }}</span>
+              </button>
+            }
+            <button (click)="logout()" class="dropdown-item" role="menuitem">
+              <i class="pi pi-sign-out"></i><span>Log out</span>
+            </button>
+            <div class="dropdown-divider"></div>
+            <a href="https://www.spotify.com/account/apps/" target="_blank" rel="noopener noreferrer"
+              class="dropdown-item" role="menuitem">
+              <i class="pi pi-external-link"></i><span>Manage Spotify access</span>
+            </a>
+            <button (click)="openClearDataModal()" class="dropdown-item danger" role="menuitem">
+              <i class="pi pi-trash"></i><span>Clear data</span>
+            </button>
           </div>
-          <div *ngIf="hasCollaborationIdentity" class="dropdown-item toggle-item" (click)="$event.stopPropagation()"
-            title="Allow other registered users to find you by display-name search and request Stats access">
-            <i class="pi pi-eye"></i>
-            <span>Stats requests</span>
-            <label class="switch" title="Toggle Stats request discoverability">
-              <input type="checkbox" [checked]="statsDiscoverable"
-                [disabled]="isSavingStatsDiscoverability" (change)="onStatsDiscoverabilityToggle($event)"
-                aria-label="Allow Stats access requests">
-              <span class="slider round"></span>
-            </label>
-          </div>
-          <button (click)="openNotificationSettings()" class="dropdown-item" role="menuitem">
-            <i class="pi pi-bell"></i><span>Notifications</span>
-          </button>
-          <button *ngIf="hasScheduledSpotifyAccess" (click)="removeScheduledSpotifyAccess()"
-            class="dropdown-item" role="menuitem" [disabled]="isRemovingScheduledAccess"
-            title="Deletes the encrypted refresh credential; collaboration access remains available">
-            <i class="pi pi-clock"></i><span>{{ isRemovingScheduledAccess ? 'Removing scheduled access…' : 'Remove scheduled Spotify access' }}</span>
-          </button>
-          <button (click)="logout()" class="dropdown-item" role="menuitem">
-            <i class="pi pi-sign-out"></i><span>Log out</span>
-          </button>
-          <div class="dropdown-divider"></div>
-          <a href="https://www.spotify.com/account/apps/" target="_blank" rel="noopener noreferrer"
-            class="dropdown-item" role="menuitem">
-            <i class="pi pi-external-link"></i><span>Manage Spotify access</span>
-          </a>
-          <button (click)="openClearDataModal()" class="dropdown-item danger" role="menuitem">
-            <i class="pi pi-trash"></i><span>Clear data</span>
-          </button>
-        </div>
+        }
       </div>
     </div>
   </div>
 </header>
 
-<div class="confirm-modal-overlay" *ngIf="showNotificationSettingsModal" (click)="closeNotificationSettings()">
-  <section class="confirm-modal-card notification-settings-modal" role="dialog" aria-modal="true"
-    aria-labelledby="notification-settings-title" aria-describedby="notification-settings-description"
-    appAccessibleDialog (modalEscape)="closeNotificationSettings()" (click)="$event.stopPropagation()">
-    <button type="button" class="notification-modal-close" appModalInitialFocus (click)="closeNotificationSettings()"
+@if (showNotificationSettingsModal) {
+  <div class="confirm-modal-overlay" (click)="closeNotificationSettings()">
+    <section class="confirm-modal-card notification-settings-modal" role="dialog" aria-modal="true"
+      aria-labelledby="notification-settings-title" aria-describedby="notification-settings-description"
+      appAccessibleDialog (modalEscape)="closeNotificationSettings()" (click)="$event.stopPropagation()">
+      <button type="button" class="notification-modal-close" appModalInitialFocus (click)="closeNotificationSettings()"
       [disabled]="isSavingNotificationSettings" aria-label="Close notification settings">×</button>
-    <div class="confirm-modal-icon"><i class="pi pi-bell"></i></div>
-    <h3 id="notification-settings-title" class="confirm-modal-title">Notifications</h3>
-    <p id="notification-settings-description" class="confirm-modal-text">Choose which updates Analytify may send to your installed PWA. More categories can be added here later.</p>
-
-    <div *ngIf="isLoadingNotificationSettings" class="notification-settings-loading" role="status">
-      <i class="pi pi-spin pi-spinner"></i> Loading notification settings…
-    </div>
-    <div *ngIf="!isLoadingNotificationSettings" class="notification-category-list">
-      <label class="notification-category-row">
-        <span class="notification-category-icon"><i class="pi pi-star"></i></span>
-        <span class="notification-category-copy">
-          <strong>Song League pick windows</strong>
-          <small>Receive a reminder when Friday picks open in one of your leagues.</small>
-          <em *ngIf="notificationSettings.active">Enabled on this device</em>
-          <em *ngIf="notificationSettings.permission === 'granted' && notificationSettings.deviceSubscribed && !notificationSettings.songLeagueEnabled">Ready on this device</em>
-          <em *ngIf="!notificationSettings.installedPwa">Install Analytify as an app for the most reliable delivery.</em>
-          <em *ngIf="notificationSettings.permission === 'denied'" class="notification-denied">Blocked in browser settings</em>
-        </span>
-        <span class="switch" title="Toggle Song League notifications">
-          <input type="checkbox" [checked]="notificationSettings.active"
-            [disabled]="isSavingNotificationSettings || (!notificationSettings.supported && !notificationSettings.songLeagueEnabled) || (notificationSettings.permission === 'denied' && !notificationSettings.songLeagueEnabled)"
-            (change)="toggleSongLeagueNotifications($event)" aria-label="Song League notifications">
-          <span class="slider round"></span>
-        </span>
-      </label>
-      <label *ngIf="notificationSettings.songLeagueMember" class="notification-category-row">
-        <span class="notification-category-icon"><i class="pi pi-volume-up"></i></span>
-        <span class="notification-category-copy">
-          <strong>New Song League picks</strong>
-          <small>Get notified when another member adds a song to one of your leagues.</small>
-          <em *ngIf="notificationSettings.songAddedActive">Enabled on this device</em>
-          <em *ngIf="notificationSettings.permission === 'granted' && notificationSettings.deviceSubscribed && !notificationSettings.songLeagueSongAddedEnabled">Off by default</em>
-          <em *ngIf="notificationSettings.permission === 'denied'" class="notification-denied">Blocked in browser settings</em>
-        </span>
-        <span class="switch" title="Toggle new Song League pick notifications">
-          <input type="checkbox" [checked]="notificationSettings.songAddedActive"
-            [disabled]="isSavingNotificationSettings || (!notificationSettings.supported && !notificationSettings.songLeagueSongAddedEnabled) || (notificationSettings.permission === 'denied' && !notificationSettings.songLeagueSongAddedEnabled)"
-            (change)="toggleSongAddedNotifications($event)" aria-label="New Song League pick notifications">
-          <span class="slider round"></span>
-        </span>
-      </label>
-
-      <label class="notification-category-row">
-        <span class="notification-category-icon"><i class="pi pi-eye"></i></span>
-        <span class="notification-category-copy">
-          <strong>Stats access requests</strong>
-          <small>Know when another registered user asks to view your stats</small>
-          <em *ngIf="notificationSettings.statsAccessActive">Enabled on this device</em>
-          <em *ngIf="notificationSettings.permission === 'granted' && notificationSettings.deviceSubscribed && !notificationSettings.statsAccessRequestsEnabled">Turned off</em>
-          <em *ngIf="notificationSettings.permission === 'denied'" class="notification-denied">Blocked in browser settings</em>
-        </span>
-        <span class="switch" title="Toggle stats access request notifications">
-          <input type="checkbox" [checked]="notificationSettings.statsAccessActive"
-            [disabled]="isSavingNotificationSettings || (!notificationSettings.supported && !notificationSettings.statsAccessRequestsEnabled) || (notificationSettings.permission === 'denied' && !notificationSettings.statsAccessRequestsEnabled)"
-            (change)="toggleStatsAccessNotifications($event)" aria-label="Stats access request notifications">
-          <span class="slider"></span>
-        </span>
-      </label>
-    </div>
-    <p *ngIf="notificationError" class="notification-settings-error" role="alert">{{ notificationError }}</p>
-    <div class="confirm-modal-actions">
-      <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel"
+      <div class="confirm-modal-icon"><i class="pi pi-bell"></i></div>
+      <h3 id="notification-settings-title" class="confirm-modal-title">Notifications</h3>
+      <p id="notification-settings-description" class="confirm-modal-text">Choose which updates Analytify may send to your installed PWA. More categories can be added here later.</p>
+      @if (isLoadingNotificationSettings) {
+        <div class="notification-settings-loading" role="status">
+          <i class="pi pi-spin pi-spinner"></i> Loading notification settings…
+        </div>
+      }
+      @if (!isLoadingNotificationSettings) {
+        <div class="notification-category-list">
+          <label class="notification-category-row">
+            <span class="notification-category-icon"><i class="pi pi-star"></i></span>
+            <span class="notification-category-copy">
+              <strong>Song League pick windows</strong>
+              <small>Receive a reminder when Friday picks open in one of your leagues.</small>
+              @if (notificationSettings.active) {
+                <em>Enabled on this device</em>
+              }
+              @if (notificationSettings.permission === 'granted' && notificationSettings.deviceSubscribed && !notificationSettings.songLeagueEnabled) {
+                <em>Ready on this device</em>
+              }
+              @if (!notificationSettings.installedPwa) {
+                <em>Install Analytify as an app for the most reliable delivery.</em>
+              }
+              @if (notificationSettings.permission === 'denied') {
+                <em class="notification-denied">Blocked in browser settings</em>
+              }
+            </span>
+            <span class="switch" title="Toggle Song League notifications">
+              <input type="checkbox" [checked]="notificationSettings.active"
+                [disabled]="isSavingNotificationSettings || (!notificationSettings.supported && !notificationSettings.songLeagueEnabled) || (notificationSettings.permission === 'denied' && !notificationSettings.songLeagueEnabled)"
+                (change)="toggleSongLeagueNotifications($event)" aria-label="Song League notifications">
+              <span class="slider round"></span>
+            </span>
+          </label>
+          @if (notificationSettings.songLeagueMember) {
+            <label class="notification-category-row">
+              <span class="notification-category-icon"><i class="pi pi-volume-up"></i></span>
+              <span class="notification-category-copy">
+                <strong>New Song League picks</strong>
+                <small>Get notified when another member adds a song to one of your leagues.</small>
+                @if (notificationSettings.songAddedActive) {
+                  <em>Enabled on this device</em>
+                }
+                @if (notificationSettings.permission === 'granted' && notificationSettings.deviceSubscribed && !notificationSettings.songLeagueSongAddedEnabled) {
+                  <em>Off by default</em>
+                }
+                @if (notificationSettings.permission === 'denied') {
+                  <em class="notification-denied">Blocked in browser settings</em>
+                }
+              </span>
+              <span class="switch" title="Toggle new Song League pick notifications">
+                <input type="checkbox" [checked]="notificationSettings.songAddedActive"
+                  [disabled]="isSavingNotificationSettings || (!notificationSettings.supported && !notificationSettings.songLeagueSongAddedEnabled) || (notificationSettings.permission === 'denied' && !notificationSettings.songLeagueSongAddedEnabled)"
+                  (change)="toggleSongAddedNotifications($event)" aria-label="New Song League pick notifications">
+                <span class="slider round"></span>
+              </span>
+            </label>
+          }
+          <label class="notification-category-row">
+            <span class="notification-category-icon"><i class="pi pi-eye"></i></span>
+            <span class="notification-category-copy">
+              <strong>Stats access requests</strong>
+              <small>Know when another registered user asks to view your stats</small>
+              @if (notificationSettings.statsAccessActive) {
+                <em>Enabled on this device</em>
+              }
+              @if (notificationSettings.permission === 'granted' && notificationSettings.deviceSubscribed && !notificationSettings.statsAccessRequestsEnabled) {
+                <em>Turned off</em>
+              }
+              @if (notificationSettings.permission === 'denied') {
+                <em class="notification-denied">Blocked in browser settings</em>
+              }
+            </span>
+            <span class="switch" title="Toggle stats access request notifications">
+              <input type="checkbox" [checked]="notificationSettings.statsAccessActive"
+                [disabled]="isSavingNotificationSettings || (!notificationSettings.supported && !notificationSettings.statsAccessRequestsEnabled) || (notificationSettings.permission === 'denied' && !notificationSettings.statsAccessRequestsEnabled)"
+                (change)="toggleStatsAccessNotifications($event)" aria-label="Stats access request notifications">
+              <span class="slider"></span>
+            </span>
+          </label>
+        </div>
+      }
+      @if (notificationError) {
+        <p class="notification-settings-error" role="alert">{{ notificationError }}</p>
+      }
+      <div class="confirm-modal-actions">
+        <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel"
         (click)="closeNotificationSettings()" [disabled]="isSavingNotificationSettings">Done</button>
-    </div>
-  </section>
-</div>
+      </div>
+    </section>
+  </div>
+}
 
 <!-- Clear Data Selection Modal -->
-<div class="confirm-modal-overlay" *ngIf="showClearDataModal" (click)="closeClearDataModal()">
-  <div class="confirm-modal-card selection-card" role="dialog" aria-modal="true"
-    aria-labelledby="clear-profile-data-title" aria-describedby="clear-profile-data-description"
-    appAccessibleDialog (modalEscape)="closeClearDataModal()" (click)="$event.stopPropagation()">
-    <div class="confirm-modal-icon">
-      <i class="pi pi-trash"></i>
-    </div>
-    <h3 id="clear-profile-data-title" class="confirm-modal-title">Clear Profile Data</h3>
-    <p id="clear-profile-data-description" class="confirm-modal-text selection-copy">
-      Choose what data you would like to clear. Deleting cloud data compliance conforms to GDPR and Spotify Developer Policy.
-    </p>
-    
-    <div class="data-option-cards">
-      <div class="data-option-card" (click)="selectClearLocalData()">
-        <div class="option-header">
-          <i class="pi pi-desktop option-icon"></i>
-          <h4>Clear Local Cache &amp; Logout</h4>
-        </div>
-        <p>Removes all temporary Spotify data, local snapshots, and stored preferences from this browser session, then logs you out.</p>
+@if (showClearDataModal) {
+  <div class="confirm-modal-overlay" (click)="closeClearDataModal()">
+    <div class="confirm-modal-card selection-card" role="dialog" aria-modal="true"
+      aria-labelledby="clear-profile-data-title" aria-describedby="clear-profile-data-description"
+      appAccessibleDialog (modalEscape)="closeClearDataModal()" (click)="$event.stopPropagation()">
+      <div class="confirm-modal-icon">
+        <i class="pi pi-trash"></i>
       </div>
-      
-      <div class="data-option-card danger-option" (click)="selectClearDbData()">
-        <div class="option-header">
-          <i class="pi pi-cloud option-icon danger-text"></i>
-          <h4 class="danger-text">Delete Cloud Backup</h4>
+      <h3 id="clear-profile-data-title" class="confirm-modal-title">Clear Profile Data</h3>
+      <p id="clear-profile-data-description" class="confirm-modal-text selection-copy">
+        Choose what data you would like to clear. Deleting cloud data compliance conforms to GDPR and Spotify Developer Policy.
+      </p>
+      <div class="data-option-cards">
+        <div class="data-option-card" (click)="selectClearLocalData()">
+          <div class="option-header">
+            <i class="pi pi-desktop option-icon"></i>
+            <h4>Clear Local Cache &amp; Logout</h4>
+          </div>
+          <p>Removes all temporary Spotify data, local snapshots, and stored preferences from this browser session, then logs you out.</p>
         </div>
-        <p>Permanently deletes all synced history, saved snapshots, and cached profile data from our cloud database. (Local browser cache is kept).</p>
+        <div class="data-option-card danger-option" (click)="selectClearDbData()">
+          <div class="option-header">
+            <i class="pi pi-cloud option-icon danger-text"></i>
+            <h4 class="danger-text">Delete Cloud Backup</h4>
+          </div>
+          <p>Permanently deletes all synced history, saved snapshots, and cached profile data from our cloud database. (Local browser cache is kept).</p>
+        </div>
       </div>
-    </div>
-    
-    <div class="confirm-modal-actions selection-actions">
-      <button class="confirm-modal-btn confirm-modal-btn-cancel" appModalInitialFocus (click)="closeClearDataModal()">Cancel</button>
+      <div class="confirm-modal-actions selection-actions">
+        <button class="confirm-modal-btn confirm-modal-btn-cancel" appModalInitialFocus (click)="closeClearDataModal()">Cancel</button>
+      </div>
     </div>
   </div>
-</div>
+}
 
 <!-- Local Reset Confirmation Modal -->
-<div class="confirm-modal-overlay" *ngIf="showConfirmLocalDeleteModal" (click)="cancelLocalDelete()">
-  <div class="confirm-modal-card" role="alertdialog" aria-modal="true"
-    aria-labelledby="local-reset-title" aria-describedby="local-reset-description"
-    appAccessibleDialog (modalEscape)="cancelLocalDelete()" (click)="$event.stopPropagation()">
-    <div class="confirm-modal-icon">
-      <i class="pi pi-exclamation-triangle"></i>
-    </div>
-    <h3 id="local-reset-title" class="confirm-modal-title">Confirm Local Reset</h3>
-    <p id="local-reset-description" class="confirm-modal-text">
-      Are you absolutely sure? This will delete all local history caches and snapshots in this browser, and log you out.
-      <ng-container *ngIf="authService.isAnonymousCloudIdentity()"> Your anonymous cloud identity and all data linked to it will also be permanently deleted because it cannot be recovered without this browser.</ng-container>
-      This action is irreversible.
-    </p>
-    <div class="confirm-modal-actions">
-      <button class="confirm-modal-btn confirm-modal-btn-cancel" appModalInitialFocus (click)="cancelLocalDelete()">Cancel</button>
-      <button class="confirm-modal-btn confirm-modal-btn-confirm" (click)="confirmLocalDelete()">Clear and Logout</button>
+@if (showConfirmLocalDeleteModal) {
+  <div class="confirm-modal-overlay" (click)="cancelLocalDelete()">
+    <div class="confirm-modal-card" role="alertdialog" aria-modal="true"
+      aria-labelledby="local-reset-title" aria-describedby="local-reset-description"
+      appAccessibleDialog (modalEscape)="cancelLocalDelete()" (click)="$event.stopPropagation()">
+      <div class="confirm-modal-icon">
+        <i class="pi pi-exclamation-triangle"></i>
+      </div>
+      <h3 id="local-reset-title" class="confirm-modal-title">Confirm Local Reset</h3>
+      <p id="local-reset-description" class="confirm-modal-text">
+        Are you absolutely sure? This will delete all local history caches and snapshots in this browser, and log you out.
+        @if (authService.isAnonymousCloudIdentity()) {
+          Your anonymous cloud identity and all data linked to it will also be permanently deleted because it cannot be recovered without this browser.
+        }
+        This action is irreversible.
+      </p>
+      <div class="confirm-modal-actions">
+        <button class="confirm-modal-btn confirm-modal-btn-cancel" appModalInitialFocus (click)="cancelLocalDelete()">Cancel</button>
+        <button class="confirm-modal-btn confirm-modal-btn-confirm" (click)="confirmLocalDelete()">Clear and Logout</button>
+      </div>
     </div>
   </div>
-</div>
+}
 
 <!-- Anonymous Identity Logout Confirmation -->
-<div class="confirm-modal-overlay" *ngIf="showGuestLogoutConfirmModal" (click)="showGuestLogoutConfirmModal = false">
-  <div class="confirm-modal-card" role="alertdialog" aria-modal="true"
-    aria-labelledby="guest-logout-title" aria-describedby="guest-logout-description"
-    appAccessibleDialog (modalEscape)="showGuestLogoutConfirmModal = false" (click)="$event.stopPropagation()">
-    <div class="confirm-modal-icon danger-icon"><i class="pi pi-exclamation-triangle danger-text"></i></div>
-    <h3 id="guest-logout-title" class="confirm-modal-title danger-text">Delete anonymous cloud identity?</h3>
-    <p id="guest-logout-description" class="confirm-modal-text">This account has no email, password, or recovery identity. Logging out permanently deletes its Cloud Backup, shares, Song League membership, scheduled credentials, and local session.</p>
-    <div class="confirm-modal-actions">
-      <button class="confirm-modal-btn confirm-modal-btn-cancel" appModalInitialFocus (click)="showGuestLogoutConfirmModal = false">Cancel</button>
-      <button class="confirm-modal-btn confirm-modal-btn-confirm danger-btn" (click)="confirmGuestLogout()" [disabled]="isGuestLogoutRunning">
-        <i class="pi pi-spin pi-spinner action-spinner" *ngIf="isGuestLogoutRunning"></i>{{ isGuestLogoutRunning ? 'Deleting…' : 'Delete and Log Out' }}
-      </button>
+@if (showGuestLogoutConfirmModal) {
+  <div class="confirm-modal-overlay" (click)="showGuestLogoutConfirmModal = false">
+    <div class="confirm-modal-card" role="alertdialog" aria-modal="true"
+      aria-labelledby="guest-logout-title" aria-describedby="guest-logout-description"
+      appAccessibleDialog (modalEscape)="showGuestLogoutConfirmModal = false" (click)="$event.stopPropagation()">
+      <div class="confirm-modal-icon danger-icon"><i class="pi pi-exclamation-triangle danger-text"></i></div>
+      <h3 id="guest-logout-title" class="confirm-modal-title danger-text">Delete anonymous cloud identity?</h3>
+      <p id="guest-logout-description" class="confirm-modal-text">This account has no email, password, or recovery identity. Logging out permanently deletes its Cloud Backup, shares, Song League membership, scheduled credentials, and local session.</p>
+      <div class="confirm-modal-actions">
+        <button class="confirm-modal-btn confirm-modal-btn-cancel" appModalInitialFocus (click)="showGuestLogoutConfirmModal = false">Cancel</button>
+        <button class="confirm-modal-btn confirm-modal-btn-confirm danger-btn" (click)="confirmGuestLogout()" [disabled]="isGuestLogoutRunning">
+          @if (isGuestLogoutRunning) {
+            <i class="pi pi-spin pi-spinner action-spinner"></i>
+            }{{ isGuestLogoutRunning ? 'Deleting…' : 'Delete and Log Out' }}
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+  }
 
-<!-- Cloud Permanent Erasure Confirmation Modal -->
-<div class="confirm-modal-overlay" *ngIf="showConfirmDbDeleteModal" (click)="cancelDbDelete()">
-  <div class="confirm-modal-card" role="alertdialog" aria-modal="true"
-    aria-labelledby="database-erasure-title" aria-describedby="database-erasure-description"
-    appAccessibleDialog (modalEscape)="cancelDbDelete()" (click)="$event.stopPropagation()">
-    <div class="confirm-modal-icon danger-icon">
-      <i class="pi pi-cloud danger-text"></i>
+  <!-- Cloud Permanent Erasure Confirmation Modal -->
+  @if (showConfirmDbDeleteModal) {
+    <div class="confirm-modal-overlay" (click)="cancelDbDelete()">
+      <div class="confirm-modal-card" role="alertdialog" aria-modal="true"
+        aria-labelledby="database-erasure-title" aria-describedby="database-erasure-description"
+        appAccessibleDialog (modalEscape)="cancelDbDelete()" (click)="$event.stopPropagation()">
+        <div class="confirm-modal-icon danger-icon">
+          <i class="pi pi-cloud danger-text"></i>
+        </div>
+        <h3 id="database-erasure-title" class="confirm-modal-title danger-text">Confirm Database Erasure</h3>
+        <p id="database-erasure-description" class="confirm-modal-text">
+          Are you absolutely sure? This will permanently delete all your cloud backup data, listening snapshots, playlist-sharing grants, and Song League membership from our servers. Shared catalog metadata such as artist names is retained, but your personal links to it are erased forever. This action is irreversible.
+        </p>
+        <div class="confirm-modal-actions">
+          <button class="confirm-modal-btn confirm-modal-btn-cancel" appModalInitialFocus (click)="cancelDbDelete()">Cancel</button>
+          <button class="confirm-modal-btn confirm-modal-btn-confirm danger-btn" (click)="confirmDbDelete()" [disabled]="isDeletingDbData">
+            @if (isDeletingDbData) {
+              <i class="pi pi-spin pi-spinner action-spinner"></i>
+            }
+            {{ isDeletingDbData ? 'Erasing...' : 'Delete Cloud Data' }}
+          </button>
+        </div>
+      </div>
     </div>
-    <h3 id="database-erasure-title" class="confirm-modal-title danger-text">Confirm Database Erasure</h3>
-    <p id="database-erasure-description" class="confirm-modal-text">
-      Are you absolutely sure? This will permanently delete all your cloud backup data, listening snapshots, playlist-sharing grants, and Song League membership from our servers. Shared catalog metadata such as artist names is retained, but your personal links to it are erased forever. This action is irreversible.
-    </p>
-    <div class="confirm-modal-actions">
-      <button class="confirm-modal-btn confirm-modal-btn-cancel" appModalInitialFocus (click)="cancelDbDelete()">Cancel</button>
-      <button class="confirm-modal-btn confirm-modal-btn-confirm danger-btn" (click)="confirmDbDelete()" [disabled]="isDeletingDbData">
-        <i class="pi pi-spin pi-spinner action-spinner" *ngIf="isDeletingDbData"></i>
-        {{ isDeletingDbData ? 'Erasing...' : 'Delete Cloud Data' }}
-      </button>
-    </div>
-  </div>
-</div>
+  }
 
-<!-- Custom Backup Confirmation Modal -->
-<div class="confirm-modal-overlay" *ngIf="showBackupConfirmModal" (click)="cancelBackupToggle()">
-  <div class="confirm-modal-card" role="dialog" aria-modal="true"
-    aria-labelledby="backup-confirm-title" aria-describedby="backup-confirm-description"
-    appAccessibleDialog (modalEscape)="cancelBackupToggle()" (click)="$event.stopPropagation()">
-    <div class="confirm-modal-icon">
-      <i class="pi pi-database"></i>
+  <!-- Custom Backup Confirmation Modal -->
+  @if (showBackupConfirmModal) {
+    <div class="confirm-modal-overlay" (click)="cancelBackupToggle()">
+      <div class="confirm-modal-card" role="dialog" aria-modal="true"
+        aria-labelledby="backup-confirm-title" aria-describedby="backup-confirm-description"
+        appAccessibleDialog (modalEscape)="cancelBackupToggle()" (click)="$event.stopPropagation()">
+        <div class="confirm-modal-icon">
+          <i class="pi pi-database"></i>
+        </div>
+        <h3 id="backup-confirm-title" class="confirm-modal-title">Enable Cloud Backup</h3>
+        <p id="backup-confirm-description" class="confirm-modal-text">
+          This action will upload your Spotify ID, display name, profile image, listening history, and stats snapshots to a cloud server. Personal-app users receive an anonymous identity with no email, phone number, password, or recovery identity. Its Spotify refresh token is encrypted for scheduled features, and the identity cannot be recovered after this browser is cleared.
+        </p>
+        <div class="confirm-modal-actions">
+          <button class="confirm-modal-btn confirm-modal-btn-cancel" appModalInitialFocus (click)="cancelBackupToggle()">Cancel</button>
+          <button class="confirm-modal-btn confirm-modal-btn-confirm" (click)="confirmBackupToggle()">Proceed</button>
+        </div>
+      </div>
     </div>
-    <h3 id="backup-confirm-title" class="confirm-modal-title">Enable Cloud Backup</h3>
-    <p id="backup-confirm-description" class="confirm-modal-text">
-      This action will upload your Spotify ID, display name, profile image, listening history, and stats snapshots to a cloud server. Personal-app users receive an anonymous identity with no email, phone number, password, or recovery identity. Its Spotify refresh token is encrypted for scheduled features, and the identity cannot be recovered after this browser is cleared.
-    </p>
-    <div class="confirm-modal-actions">
-      <button class="confirm-modal-btn confirm-modal-btn-cancel" appModalInitialFocus (click)="cancelBackupToggle()">Cancel</button>
-      <button class="confirm-modal-btn confirm-modal-btn-confirm" (click)="confirmBackupToggle()">Proceed</button>
-    </div>
-  </div>
-</div>
+  }

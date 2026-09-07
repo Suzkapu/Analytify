@@ -1,24 +1,26 @@
-<div
-  *ngIf="isInitialNavigationLoading"
-  class="app-loading"
-  role="status"
-  aria-live="polite"
-  aria-label="Loading Analytify"
->
-  <img src="assets/Analytify-384.webp" alt="">
-  <div class="app-loading-spinner" aria-hidden="true"></div>
-</div>
+@if (isInitialNavigationLoading) {
+  <div
+    class="app-loading"
+    role="status"
+    aria-live="polite"
+    aria-label="Loading Analytify"
+    >
+    <img src="assets/Analytify-384.webp" alt="">
+    <div class="app-loading-spinner" aria-hidden="true"></div>
+  </div>
+}
 
 <a class="skip-link" href="#app-content">Skip to main content</a>
-<div
-  *ngIf="siteAnnouncement && announcementVisible"
-  class="site-announcement"
-  [class.site-announcement-transient]="!isLandingAnnouncement"
-  role="status"
-  aria-live="polite"
->
-  <i class="pi pi-megaphone" aria-hidden="true"></i><span>{{ siteAnnouncement }}</span>
-</div>
+@if (siteAnnouncement && announcementVisible) {
+  <div
+    class="site-announcement"
+    [class.site-announcement-transient]="!isLandingAnnouncement"
+    role="status"
+    aria-live="polite"
+    >
+    <i class="pi pi-megaphone" aria-hidden="true"></i><span>{{ siteAnnouncement }}</span>
+  </div>
+}
 <div id="app-content" class="app-route-content" tabindex="-1">
   <router-outlet/>
 </div>

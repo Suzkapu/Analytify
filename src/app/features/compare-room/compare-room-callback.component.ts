@@ -7,14 +7,22 @@ import {TransientParticipantAuthService} from '@core/compare-room/transient-part
     template: `
     <main class="compare-callback">
       <section>
-        <i *ngIf="!errorMessage" class="pi pi-spin pi-spinner"></i>
-        <i *ngIf="errorMessage" class="pi pi-exclamation-triangle error"></i>
+        @if (!errorMessage) {
+          <i class="pi pi-spin pi-spinner"></i>
+        }
+        @if (errorMessage) {
+          <i class="pi pi-exclamation-triangle error"></i>
+        }
         <h1>{{ errorMessage ? 'Spotify connection failed' : 'Connecting your Spotify account…' }}</h1>
-        <p *ngIf="errorMessage">{{ errorMessage }}</p>
-        <a *ngIf="errorMessage" routerLink="/compare-room">Return to Compare Room</a>
+        @if (errorMessage) {
+          <p>{{ errorMessage }}</p>
+        }
+        @if (errorMessage) {
+          <a routerLink="/compare-room">Return to Compare Room</a>
+        }
       </section>
     </main>
-  `,
+    `,
     styles: [`
     .compare-callback { min-height: 100vh; display: grid; place-items: center; padding: 1rem; box-sizing: border-box; background: #090b0a; color: white; text-align: center; }
     section { max-width: 520px; padding: 2rem; }

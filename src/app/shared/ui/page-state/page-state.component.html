@@ -7,7 +7,11 @@
   <span class="shared-page-state-icon" aria-hidden="true">
     <i class="pi" [ngClass]="[icon, loading ? 'pi-spin' : '']"></i>
   </span>
-  <h2 *ngIf="title">{{ title }}</h2>
-  <p *ngIf="message">{{ message }}</p>
+  @if (title) {
+    <h2>{{ title }}</h2>
+  }
+  @if (message) {
+    <p>{{ message }}</p>
+  }
   <ng-content></ng-content>
 </section>

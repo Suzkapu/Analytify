@@ -1,19 +1,23 @@
-<app-header *ngIf="isLoggedIn" mobileTitle="Legal &amp; Privacy"></app-header>
+@if (isLoggedIn) {
+  <app-header mobileTitle="Legal &amp; Privacy"></app-header>
+}
 
-<header *ngIf="!isLoggedIn" class="app-header legal-public-header">
-  <div class="header-shell legal-header-shell">
-    <div class="header-left">
-      <a class="header-logo" routerLink="/" aria-label="Analytify home">
-        <img src="assets/Analytify-384.webp" alt="">
-        <span class="logo-text">Analytify</span>
-      </a>
+@if (!isLoggedIn) {
+  <header class="app-header legal-public-header">
+    <div class="header-shell legal-header-shell">
+      <div class="header-left">
+        <a class="header-logo" routerLink="/" aria-label="Analytify home">
+          <img src="assets/Analytify-384.webp" alt="">
+          <span class="logo-text">Analytify</span>
+        </a>
+      </div>
+      <div class="header-center">
+        <span class="mobile-page-title" role="heading" aria-level="1">Legal &amp; Privacy</span>
+      </div>
+      <div class="header-right"></div>
     </div>
-    <div class="header-center">
-      <span class="mobile-page-title" role="heading" aria-level="1">Legal &amp; Privacy</span>
-    </div>
-    <div class="header-right"></div>
-  </div>
-</header>
+  </header>
+}
 
 <div class="legal-wrapper">
   <!-- Glowing background elements for aesthetic premium depth -->
@@ -43,24 +47,24 @@
 
       <article class="legal-card">
 
-      <section class="legal-section" id="impressum">
-        <h2>
-          <i class="pi pi-info-circle"></i>
-          Impressum (Legal Notice)
-        </h2>
-        <p class="legal-meta-text">Information according to §5 ECG:</p>
-        <div class="address-card">
-          <p class="name">Simon Praher</p>
-          <p class="street">Hartl 1</p>
-          <p class="city">4312 Ried in der Riedmark, Austria</p>
-        </div>
+        <section class="legal-section" id="impressum">
+          <h2>
+            <i class="pi pi-info-circle"></i>
+            Impressum (Legal Notice)
+          </h2>
+          <p class="legal-meta-text">Information according to §5 ECG:</p>
+          <div class="address-card">
+            <p class="name">Simon Praher</p>
+            <p class="street">Hartl 1</p>
+            <p class="city">4312 Ried in der Riedmark, Austria</p>
+          </div>
 
-        <div class="contact-info">
-          <h3>Contact</h3>
-          <p><strong>Email: </strong> <a href="mailto:analytify.taking893@aleeas.com"
-              class="legal-link">analytify.taking893&#64;aleeas.com</a></p>
+          <div class="contact-info">
+            <h3>Contact</h3>
+            <p><strong>Email: </strong> <a href="mailto:analytify.taking893@aleeas.com"
+          class="legal-link">analytify.taking893&#64;aleeas.com</a></p>
           <p><strong>GitHub: </strong> <a href="https://github.com/Suzkapu/Analytify" target="_blank" rel="noopener noreferrer"
-              class="legal-link"><i class="pi pi-github"></i> Suzkapu/Analytify</a></p>
+          class="legal-link"><i class="pi pi-github"></i> Suzkapu/Analytify</a></p>
         </div>
 
         <p class="purpose">
@@ -97,39 +101,39 @@
           <li>
             <i class="pi pi-trash text-muted"></i>
             <span><strong>Right to Erasure (GDPR Article 17):</strong> You can completely erase all your data at any time:
-              <br>• <strong>Cloud Data:</strong> Click the profile icon, select <strong>Clear Data</strong>, and choose <strong>Delete Cloud Backup</strong> to permanently wipe all synced history, snapshots, and caches from our database.
-              <br>• <strong>Local Cache &amp; Logout:</strong> Select <strong>Clear Local Cache &amp; Logout</strong> to wipe browser data and terminate the session. For an anonymous cloud identity this also permanently deletes the identity and its linked server data because no recovery identity exists.
-              <br>• <strong>Revoke App Access:</strong> Click the "Revoke App Access" link in the profile settings dropdown to manage permissions directly on the Spotify Apps dashboard.
-            </span>
-          </li>
-        </ul>
-      </section>
+            <br>• <strong>Cloud Data:</strong> Click the profile icon, select <strong>Clear Data</strong>, and choose <strong>Delete Cloud Backup</strong> to permanently wipe all synced history, snapshots, and caches from our database.
+            <br>• <strong>Local Cache &amp; Logout:</strong> Select <strong>Clear Local Cache &amp; Logout</strong> to wipe browser data and terminate the session. For an anonymous cloud identity this also permanently deletes the identity and its linked server data because no recovery identity exists.
+            <br>• <strong>Revoke App Access:</strong> Click the "Revoke App Access" link in the profile settings dropdown to manage permissions directly on the Spotify Apps dashboard.
+          </span>
+        </li>
+      </ul>
+    </section>
 
-      <div class="section-divider"></div>
+    <div class="section-divider"></div>
 
-      <!-- Section 3: Terms & Disclaimers -->
-      <section class="legal-section" id="terms">
-        <h2>
-          <i class="pi pi-exclamation-triangle"></i>
-          Terms of Service &amp; Disclaimers
-        </h2>
-        <ol class="legal-ordered-list">
-          <li>
-            This is an unofficial application powered by the Spotify API. All album artwork, artist names, and song
-            metadata are copyrighted by their respective owners.
-          </li>
-          <li>
-            Under Section V, Clause 12 of the Spotify Developer Terms, the developer disclaims all implied warranties
-            regarding the reliability, suitability, or accuracy of the Spotify Platform, Service, and Content.
-          </li>
-          <li>
-            Spotify is a third-party beneficiary of these terms and is entitled to directly enforce them.
-          </li>
-        </ol>
-      </section>
-      </article>
-    </div>
-  </div>
+    <!-- Section 3: Terms & Disclaimers -->
+    <section class="legal-section" id="terms">
+      <h2>
+        <i class="pi pi-exclamation-triangle"></i>
+        Terms of Service &amp; Disclaimers
+      </h2>
+      <ol class="legal-ordered-list">
+        <li>
+          This is an unofficial application powered by the Spotify API. All album artwork, artist names, and song
+          metadata are copyrighted by their respective owners.
+        </li>
+        <li>
+          Under Section V, Clause 12 of the Spotify Developer Terms, the developer disclaims all implied warranties
+          regarding the reliability, suitability, or accuracy of the Spotify Platform, Service, and Content.
+        </li>
+        <li>
+          Spotify is a third-party beneficiary of these terms and is entitled to directly enforce them.
+        </li>
+      </ol>
+    </section>
+  </article>
+</div>
+</div>
 </div>
 
 <app-footer></app-footer>

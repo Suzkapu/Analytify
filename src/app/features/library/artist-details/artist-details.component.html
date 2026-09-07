@@ -4,51 +4,59 @@
   </button>
 </div>
 
-<app-page-state *ngIf="isLoadingArtist" [loading]="true" [compact]="true" icon="pi-spinner"
-  title="Loading artist details…"
+@if (isLoadingArtist) {
+  <app-page-state [loading]="true" [compact]="true" icon="pi-spinner"
+    title="Loading artist details…"
   message="Checking the playlist cache and saved artist data first."></app-page-state>
+}
 
-<app-page-state *ngIf="!isLoadingArtist && artistLoadError" [compact]="true" tone="danger"
+@if (!isLoadingArtist && artistLoadError) {
+  <app-page-state [compact]="true" tone="danger"
   icon="pi-exclamation-circle" title="Artist unavailable" [message]="artistLoadError"></app-page-state>
+}
 
-<main *ngIf="!isLoadingArtist && !artistLoadError" class="details-container">
-  <article class="artist-profile-card">
-    <header class="profile-header">
-      <button type="button" class="artist-open-button spotify-artwork-link" (click)="openArtistClick()"
-        [disabled]="!getArtistSpotifyUrl()" [attr.aria-label]="'Open ' + (artist.name || 'artist') + ' on Spotify'">
-        <img alt="" class="profile-image"
-          decoding="async"
-          [src]="artist.images && artist.images[0] ? artist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" />
-      </button>
-      <div class="artist-heading-copy">
-        <span class="page-eyebrow">Artist details</span>
-        <h1 class="name">{{ artist.name }}</h1>
-        <p>{{ tracks.length }} {{ tracks.length === 1 ? 'song' : 'songs' }} from this artist in your playlist</p>
-      </div>
-    </header>
-
-    <section class="artist-tracks-section" aria-labelledby="artist-tracks-title">
-      <div class="section-heading">
-        <div>
-          <span class="page-eyebrow">Playlist selection</span>
-          <h2 id="artist-tracks-title">Songs in this playlist</h2>
-        </div>
-        <span class="track-total">{{ tracks.length }}</span>
-      </div>
-
-      <div class="track-grid">
-        <button *ngFor="let track of tracks" type="button" class="track-row-card spotify-destination"
-          [disabled]="!track.external_urls?.spotify" (click)="openTrackClick(track.external_urls?.spotify)">
-          <img alt="" class="track-image"
-            loading="lazy" decoding="async"
-            [src]="track.album?.images && track.album?.images[0] ? track.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" />
-          <span class="track-copy">
-            <strong class="track-name">{{ track.name }}</strong>
-            <small *ngIf="track.explicit" class="explicit-badge">Explicit</small>
-          </span>
-          <i class="pi pi-external-link" aria-hidden="true"></i>
+@if (!isLoadingArtist && !artistLoadError) {
+  <main class="details-container">
+    <article class="artist-profile-card">
+      <header class="profile-header">
+        <button type="button" class="artist-open-button spotify-artwork-link" (click)="openArtistClick()"
+          [disabled]="!getArtistSpotifyUrl()" [attr.aria-label]="'Open ' + (artist.name || 'artist') + ' on Spotify'">
+          <img alt="" class="profile-image"
+            decoding="async"
+            [src]="artist.images && artist.images[0] ? artist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" />
         </button>
-      </div>
-    </section>
-  </article>
-</main>
+        <div class="artist-heading-copy">
+          <span class="page-eyebrow">Artist details</span>
+          <h1 class="name">{{ artist.name }}</h1>
+          <p>{{ tracks.length }} {{ tracks.length === 1 ? 'song' : 'songs' }} from this artist in your playlist</p>
+        </div>
+      </header>
+      <section class="artist-tracks-section" aria-labelledby="artist-tracks-title">
+        <div class="section-heading">
+          <div>
+            <span class="page-eyebrow">Playlist selection</span>
+            <h2 id="artist-tracks-title">Songs in this playlist</h2>
+          </div>
+          <span class="track-total">{{ tracks.length }}</span>
+        </div>
+        <div class="track-grid">
+          @for (track of tracks; track track) {
+            <button type="button" class="track-row-card spotify-destination"
+              [disabled]="!track.external_urls?.spotify" (click)="openTrackClick(track.external_urls?.spotify)">
+              <img alt="" class="track-image"
+                loading="lazy" decoding="async"
+                [src]="track.album?.images && track.album?.images[0] ? track.album.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" />
+              <span class="track-copy">
+                <strong class="track-name">{{ track.name }}</strong>
+                @if (track.explicit) {
+                  <small class="explicit-badge">Explicit</small>
+                }
+              </span>
+              <i class="pi pi-external-link" aria-hidden="true"></i>
+            </button>
+          }
+        </div>
+      </section>
+    </article>
+  </main>
+}

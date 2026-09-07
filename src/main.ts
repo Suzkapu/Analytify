@@ -1,3 +1,4 @@
+import { provideZoneChangeDetection } from "@angular/core";
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
 import {AppModule} from './app/app.module';
@@ -14,6 +15,6 @@ window.addEventListener('unhandledrejection', event => {
 });
 
 diagnostics.step('Starting Angular application');
-platformBrowserDynamic().bootstrapModule(AppModule)
+platformBrowserDynamic().bootstrapModule(AppModule, { applicationProviders: [provideZoneChangeDetection()], })
   .then(() => diagnostics.success('Angular application started'))
   .catch(err => diagnostics.error('Angular application failed to start', err));

@@ -1,157 +1,201 @@
 
 <main class="app-page playlists-page">
   <div class="page-shell">
-    <header class="page-hero playlists-top-bar" *ngIf="playlists.length !== 0">
-      <div>
-        <span class="page-eyebrow">Your Spotify library</span>
-        <div class="playlists-heading-line">
-          <h1>Your playlists</h1>
-          <span class="playlist-count-chip"
-            [attr.aria-label]="playlists.length + ' ' + (playlists.length === 1 ? 'playlist' : 'playlists')">
-            <strong>{{ playlists.length }}</strong>
-            <span>{{ playlists.length === 1 ? 'playlist' : 'playlists' }}</span>
-          </span>
+    @if (playlists.length !== 0) {
+      <header class="page-hero playlists-top-bar">
+        <div>
+          <span class="page-eyebrow">Your Spotify library</span>
+          <div class="playlists-heading-line">
+            <h1>Your playlists</h1>
+            <span class="playlist-count-chip"
+              [attr.aria-label]="playlists.length + ' ' + (playlists.length === 1 ? 'playlist' : 'playlists')">
+              <strong>{{ playlists.length }}</strong>
+              <span>{{ playlists.length === 1 ? 'playlist' : 'playlists' }}</span>
+            </span>
+          </div>
+          <p>Explore the songs inside a playlist, uncover its listening profile, or combine several into one.</p>
+          @if (isRefreshingPlaylists) {
+            <small class="page-sync-state" role="status">
+              <i class="pi pi-spin pi-spinner"></i> Checking Spotify for updates…
+            </small>
+          }
         </div>
-        <p>Explore the songs inside a playlist, uncover its listening profile, or combine several into one.</p>
-        <small *ngIf="isRefreshingPlaylists" class="page-sync-state" role="status">
-          <i class="pi pi-spin pi-spinner"></i> Checking Spotify for updates…
-        </small>
-      </div>
-    </header>
+      </header>
+    }
 
-    <section class="page-toolbar playlists-controls-bar" *ngIf="playlists.length !== 0" aria-label="Playlist controls">
-      <div class="controls-left">
-        <label class="search-container">
-          <span class="sr-only">Search playlists</span>
-          <i class="pi pi-search" aria-hidden="true"></i>
-          <input (input)="filterPlaylists()" [(ngModel)]="searchText" class="search-input"
-            placeholder="Search your playlists" type="search" />
-        </label>
-      </div>
-      <div class="controls-right">
-        <button (click)="toggleMergeSelectionMode()" class="p-button merge-toggle-button"
-          [class.p-button-outlined]="!isMergeSelectionMode"
-          [class.p-button-secondary]="!isMergeSelectionMode"
-          [disabled]="isCreatingMergedPlaylist"
-          [attr.aria-label]="isMergeSelectionMode ? 'Cancel playlist merge' : 'Merge playlists'"
-          [title]="isMergeSelectionMode ? 'Cancel playlist merge' : 'Select multiple playlists and combine all unique songs'">
-          <i class="pi" aria-hidden="true" [ngClass]="isMergeSelectionMode ? 'pi-times' : 'pi-clone'"></i>
-          <span class="merge-toggle-label">{{ isMergeSelectionMode ? 'Cancel merge' : 'Merge' }}</span>
-        </button>
-        <button *ngIf="savedPlaylistCount > 0" type="button" (click)="toggleSavedPlaylists()"
-          class="p-button p-button-outlined p-button-secondary saved-toggle-button"
-          [class.saved-visible]="showSavedPlaylists"
-          [attr.aria-pressed]="showSavedPlaylists"
-          [title]="showSavedPlaylists ? 'Hide playlists you saved from other Spotify users' : 'Show playlists you saved from other Spotify users'">
-          <i class="pi pi-bookmark"></i>
-          <span>{{ showSavedPlaylists ? 'Hide saved' : 'Show saved' }}</span>
-          <small>{{ savedPlaylistCount }}</small>
-        </button>
-        <button (click)="sortPlaylistsByTracks()"
-          class="p-button p-button-outlined p-button-secondary sort-playlists-button"
-          [class.is-active]="isSortedByCount" title="Sort playlists by song count">
+    @if (playlists.length !== 0) {
+      <section class="page-toolbar playlists-controls-bar" aria-label="Playlist controls">
+        <div class="controls-left">
+          <label class="search-container">
+            <span class="sr-only">Search playlists</span>
+            <i class="pi pi-search" aria-hidden="true"></i>
+            <input (input)="filterPlaylists()" [(ngModel)]="searchText" class="search-input"
+              placeholder="Search your playlists" type="search" />
+          </label>
+        </div>
+        <div class="controls-right">
+          <button (click)="toggleMergeSelectionMode()" class="p-button merge-toggle-button"
+            [class.p-button-outlined]="!isMergeSelectionMode"
+            [class.p-button-secondary]="!isMergeSelectionMode"
+            [disabled]="isCreatingMergedPlaylist"
+            [attr.aria-label]="isMergeSelectionMode ? 'Cancel playlist merge' : 'Merge playlists'"
+            [title]="isMergeSelectionMode ? 'Cancel playlist merge' : 'Select multiple playlists and combine all unique songs'">
+            <i class="pi" aria-hidden="true" [ngClass]="isMergeSelectionMode ? 'pi-times' : 'pi-clone'"></i>
+            <span class="merge-toggle-label">{{ isMergeSelectionMode ? 'Cancel merge' : 'Merge' }}</span>
+          </button>
+          @if (savedPlaylistCount > 0) {
+            <button type="button" (click)="toggleSavedPlaylists()"
+              class="p-button p-button-outlined p-button-secondary saved-toggle-button"
+              [class.saved-visible]="showSavedPlaylists"
+              [attr.aria-pressed]="showSavedPlaylists"
+              [title]="showSavedPlaylists ? 'Hide playlists you saved from other Spotify users' : 'Show playlists you saved from other Spotify users'">
+              <i class="pi pi-bookmark"></i>
+              <span>{{ showSavedPlaylists ? 'Hide saved' : 'Show saved' }}</span>
+              <small>{{ savedPlaylistCount }}</small>
+            </button>
+          }
+          <button (click)="sortPlaylistsByTracks()"
+            class="p-button p-button-outlined p-button-secondary sort-playlists-button"
+            [class.is-active]="isSortedByCount" title="Sort playlists by song count">
           <i class="pi" [ngClass]="{
             'pi-sort-alt': sortOrder === 'none',
             'pi-sort-amount-down': sortOrder === 'desc',
             'pi-sort-amount-up': sortOrder === 'asc'
           }"></i>
-          <span class="sort-label-desktop">Song count</span>
-          <span class="sort-label-mobile">Sort</span>
-        </button>
-      </div>
-    </section>
+            <span class="sort-label-desktop">Song count</span>
+            <span class="sort-label-mobile">Sort</span>
+          </button>
+        </div>
+      </section>
+    }
 
-    <section *ngIf="isMergeSelectionMode" class="merge-composer" aria-live="polite">
-  <div class="merge-composer-copy">
-    <span class="merge-eyebrow">Combine without duplicates</span>
-    <h3>Select at least two playlists</h3>
-    <p>{{ selectedPlaylistIds.size }} selected · every unique song will be added once</p>
-    <div *ngIf="selectedPlaylists.length" class="selected-playlist-chips">
-      <button *ngFor="let playlist of selectedPlaylists" type="button" (click)="togglePlaylistSelection(playlist)"
-        [disabled]="isCreatingMergedPlaylist" title="Remove from selection">
-        {{ playlist.name }} <span>×</span>
-      </button>
-    </div>
-  </div>
-  <label class="merge-name-field">
-    <span>New playlist name</span>
-    <input type="text" maxlength="100" [ngModel]="mergedPlaylistName"
-      (ngModelChange)="onMergedPlaylistNameChange($event)" placeholder="Merged Playlist">
-  </label>
-  <div class="merge-composer-actions">
-    <button type="button" class="merge-create-button" (click)="createMergedPlaylist()"
-      [disabled]="selectedPlaylistIds.size < 2 || !mergedPlaylistName.trim() || isCreatingMergedPlaylist">
-      <i class="pi" [ngClass]="isCreatingMergedPlaylist ? 'pi-spin pi-spinner' : 'pi-spotify'"></i>
-      {{ isCreatingMergedPlaylist ? 'Creating…' : 'Create on Spotify' }}
-    </button>
-    <small *ngIf="mergeProgress">{{ mergeProgress }}</small>
-    <small *ngIf="mergeError" class="merge-error">{{ mergeError }}</small>
-  </div>
-    </section>
+    @if (isMergeSelectionMode) {
+      <section class="merge-composer" aria-live="polite">
+        <div class="merge-composer-copy">
+          <span class="merge-eyebrow">Combine without duplicates</span>
+          <h3>Select at least two playlists</h3>
+          <p>{{ selectedPlaylistIds.size }} selected · every unique song will be added once</p>
+          @if (selectedPlaylists.length) {
+            <div class="selected-playlist-chips">
+              @for (playlist of selectedPlaylists; track playlist) {
+                <button type="button" (click)="togglePlaylistSelection(playlist)"
+                  [disabled]="isCreatingMergedPlaylist" title="Remove from selection">
+                  {{ playlist.name }} <span>×</span>
+                </button>
+              }
+            </div>
+          }
+        </div>
+        <label class="merge-name-field">
+          <span>New playlist name</span>
+          <input type="text" maxlength="100" [ngModel]="mergedPlaylistName"
+            (ngModelChange)="onMergedPlaylistNameChange($event)" placeholder="Merged Playlist">
+        </label>
+        <div class="merge-composer-actions">
+          <button type="button" class="merge-create-button" (click)="createMergedPlaylist()"
+            [disabled]="selectedPlaylistIds.size < 2 || !mergedPlaylistName.trim() || isCreatingMergedPlaylist">
+            <i class="pi" [ngClass]="isCreatingMergedPlaylist ? 'pi-spin pi-spinner' : 'pi-spotify'"></i>
+            {{ isCreatingMergedPlaylist ? 'Creating…' : 'Create on Spotify' }}
+          </button>
+          @if (mergeProgress) {
+            <small>{{ mergeProgress }}</small>
+          }
+          @if (mergeError) {
+            <small class="merge-error">{{ mergeError }}</small>
+          }
+        </div>
+      </section>
+    }
 
-    <section *ngIf="mergeResult" class="merge-success" [class.merge-failure]="!mergeResult.success" role="status">
-  <i class="pi" [ngClass]="mergeResult.success ? 'pi-check-circle' : 'pi-exclamation-circle'"></i>
-  <div>
-    <strong *ngIf="mergeResult.success">“{{ mergeResult.playlistName }}” is ready</strong>
-    <strong *ngIf="!mergeResult.success">Spotify could not finish “{{ mergeResult.playlistName }}”</strong>
-    <span *ngIf="mergeResult.success">{{ mergeResult.addedTracks }} unique songs were added to your private Spotify playlist.</span>
-    <span *ngIf="!mergeResult.success">{{ mergeResult.addedTracks }} songs were added before the error. {{ mergeResult.error }}</span>
-  </div>
-  <a *ngIf="mergeResult.playlistUrl" class="spotify-text-link spotify-destination"
-    [href]="mergeResult.playlistUrl | safeSpotifyUrl:'playlist'" target="_blank" rel="noopener noreferrer">Inspect in Spotify</a>
-  <button type="button" (click)="dismissMergeResult()" aria-label="Dismiss success message">×</button>
-    </section>
+    @if (mergeResult) {
+      <section class="merge-success" [class.merge-failure]="!mergeResult.success" role="status">
+        <i class="pi" [ngClass]="mergeResult.success ? 'pi-check-circle' : 'pi-exclamation-circle'"></i>
+        <div>
+          @if (mergeResult.success) {
+            <strong>“{{ mergeResult.playlistName }}” is ready</strong>
+          }
+          @if (!mergeResult.success) {
+            <strong>Spotify could not finish “{{ mergeResult.playlistName }}”</strong>
+          }
+          @if (mergeResult.success) {
+            <span>{{ mergeResult.addedTracks }} unique songs were added to your private Spotify playlist.</span>
+          }
+          @if (!mergeResult.success) {
+            <span>{{ mergeResult.addedTracks }} songs were added before the error. {{ mergeResult.error }}</span>
+          }
+        </div>
+        @if (mergeResult.playlistUrl) {
+          <a class="spotify-text-link spotify-destination"
+          [href]="mergeResult.playlistUrl | safeSpotifyUrl:'playlist'" target="_blank" rel="noopener noreferrer">Inspect in Spotify</a>
+        }
+        <button type="button" (click)="dismissMergeResult()" aria-label="Dismiss success message">×</button>
+      </section>
+    }
 
-    <app-page-state *ngIf="isLoadingPlaylists && playlists.length === 0" class="no-playlists"
-      [loading]="true" icon="pi-spinner" title="Loading your playlists…"
+    @if (isLoadingPlaylists && playlists.length === 0) {
+      <app-page-state class="no-playlists"
+        [loading]="true" icon="pi-spinner" title="Loading your playlists…"
       message="Checking your local cache and saved Spotify library."></app-page-state>
+    }
 
-    <app-page-state *ngIf="!isLoadingPlaylists && playlists.length === 0" class="no-playlists" icon="pi-list"
-      title="No playlists found"
+    @if (!isLoadingPlaylists && playlists.length === 0) {
+      <app-page-state class="no-playlists" icon="pi-list"
+        title="No playlists found"
       message="Your Spotify playlists will appear here once they are available."></app-page-state>
+    }
 
     <section class="card-container playlists-grid" aria-label="Your playlists">
-  <ng-container *ngFor="let playlist of filteredPlaylists; trackBy: trackPlaylist">
-    <div class="item-card" [class.merge-mode]="isMergeSelectionMode"
-      [class.merge-selected]="isPlaylistSelected(playlist.id)"
-      [class.saved-playlist-card]="isSavedPlaylist(playlist)">
-      <div class="card-content">
-        <button *ngIf="isMergeSelectionMode" type="button" class="playlist-select-button"
-          (click)="togglePlaylistSelection(playlist)" [disabled]="isCreatingMergedPlaylist"
-          [attr.aria-pressed]="isPlaylistSelected(playlist.id)"
-          [attr.aria-label]="(isPlaylistSelected(playlist.id) ? 'Remove ' : 'Select ') + playlist.name">
-          <i class="pi" [ngClass]="isPlaylistSelected(playlist.id) ? 'pi-check' : 'pi-plus'"></i>
-        </button>
-        <div class="card-info">
-          <div class="image-box">
-            <img
-              [src]="playlist.images && playlist.images[0] ? playlist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
-              loading="lazy" decoding="async"
-              alt="Playlist Image">
+      @for (playlist of filteredPlaylists; track trackPlaylist($index, playlist)) {
+        <div class="item-card" [class.merge-mode]="isMergeSelectionMode"
+          [class.merge-selected]="isPlaylistSelected(playlist.id)"
+          [class.saved-playlist-card]="isSavedPlaylist(playlist)">
+          <div class="card-content">
+            @if (isMergeSelectionMode) {
+              <button type="button" class="playlist-select-button"
+                (click)="togglePlaylistSelection(playlist)" [disabled]="isCreatingMergedPlaylist"
+                [attr.aria-pressed]="isPlaylistSelected(playlist.id)"
+                [attr.aria-label]="(isPlaylistSelected(playlist.id) ? 'Remove ' : 'Select ') + playlist.name">
+                <i class="pi" [ngClass]="isPlaylistSelected(playlist.id) ? 'pi-check' : 'pi-plus'"></i>
+              </button>
+            }
+            <div class="card-info">
+              <div class="image-box">
+                <img
+                  [src]="playlist.images && playlist.images[0] ? playlist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
+                  loading="lazy" decoding="async"
+                  alt="Playlist Image">
+              </div>
+              <div class="playlist-details">
+                @if (isSavedPlaylist(playlist)) {
+                  <span class="saved-playlist-badge">
+                    <i class="pi pi-bookmark"></i> Saved@if (playlist.owner?.display_name) {
+                    <span> from {{ playlist.owner.display_name }}</span>
+                  }
+                </span>
+              }
+              <h2>{{ playlist.name }}</h2>
+              @if (playlist.tracks) {
+                <p class="song-count">
+                  {{ playlist.tracks.total }} {{ playlist.tracks.total === 1 ? 'song' : 'songs' }}
+                </p>
+              }
+              <p class="description">{{ playlist.description }}</p>
+            </div>
           </div>
-          <div class="playlist-details">
-            <span *ngIf="isSavedPlaylist(playlist)" class="saved-playlist-badge">
-              <i class="pi pi-bookmark"></i> Saved<span *ngIf="playlist.owner?.display_name"> from {{ playlist.owner.display_name }}</span>
-            </span>
-            <h2>{{ playlist.name }}</h2>
-            <p class="song-count" *ngIf="playlist.tracks">
-              {{ playlist.tracks.total }} {{ playlist.tracks.total === 1 ? 'song' : 'songs' }}
-            </p>
-            <p class="description">{{ playlist.description }}</p>
-          </div>
-        </div>
-        <div class="card-actions" *ngIf="!isMergeSelectionMode">
-          <button (click)="viewSongs(playlist.id)" class="p-button playlist-card-action">
-            <i class="pi pi-list"></i><span>Explore</span>
-          </button>
-          <button (click)="viewAnalysis(playlist.id)"
-            class="p-button p-button-outlined p-button-secondary playlist-card-action">
-            <i class="pi pi-chart-bar"></i><span>Analyze</span>
-          </button>
+          @if (!isMergeSelectionMode) {
+            <div class="card-actions">
+              <button (click)="viewSongs(playlist.id)" class="p-button playlist-card-action">
+                <i class="pi pi-list"></i><span>Explore</span>
+              </button>
+              <button (click)="viewAnalysis(playlist.id)"
+                class="p-button p-button-outlined p-button-secondary playlist-card-action">
+                <i class="pi pi-chart-bar"></i><span>Analyze</span>
+              </button>
+            </div>
+          }
         </div>
       </div>
-    </div>
-  </ng-container>
-    </section>
-  </div>
+    }
+  </section>
+</div>
 </main>
