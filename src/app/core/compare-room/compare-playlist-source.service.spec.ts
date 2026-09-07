@@ -1,10 +1,11 @@
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import {TestBed} from '@angular/core/testing';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {ComparePlaylist} from './compare-room.models';
 import {ComparePlaylistSourceService} from './compare-playlist-source.service';
 import {PlaylistLoaderService} from '@core/sync/playlist-loader/playlist-loader.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ComparePlaylistSourceService', () => {
   let service: ComparePlaylistSourceService;
@@ -35,20 +36,22 @@ describe('ComparePlaylistSourceService', () => {
     );
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
-        {provide: SpotifyAuthService, useValue: auth},
-        {provide: PlaylistLoaderService, useValue: playlistLoader},
+    imports: [],
+    providers: [
+        { provide: SpotifyAuthService, useValue: auth },
+        { provide: PlaylistLoaderService, useValue: playlistLoader },
         {
-          provide: StorageService,
-          useValue: {
-            initFromDB: () => Promise.resolve(),
-            getItem: (key: string) => values[key] ?? null,
-            restoreItemsFromCloud: jasmine.createSpy('restoreItemsFromCloud').and.resolveTo(0)
-          }
-        }
-      ]
-    });
+            provide: StorageService,
+            useValue: {
+                initFromDB: () => Promise.resolve(),
+                getItem: (key: string) => values[key] ?? null,
+                restoreItemsFromCloud: jasmine.createSpy('restoreItemsFromCloud').and.resolveTo(0)
+            }
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+});
     service = TestBed.inject(ComparePlaylistSourceService);
     http = TestBed.inject(HttpTestingController);
   });

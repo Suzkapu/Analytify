@@ -9,9 +9,10 @@ import {openSpotifyUrl} from '@core/navigation/spotify-url';
 const console = createScopedLogger('Listening History');
 
 @Component({
-  selector: 'app-listening-history',
-  templateUrl: './listening-history.component.html',
-  styleUrls: ['./listening-history.component.scss']
+    selector: 'app-listening-history',
+    templateUrl: './listening-history.component.html',
+    styleUrls: ['./listening-history.component.scss'],
+    standalone: false
 })
 export class ListeningHistoryComponent implements OnInit {
 

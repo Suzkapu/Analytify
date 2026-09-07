@@ -1,9 +1,10 @@
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import {fakeAsync, flushMicrotasks, TestBed} from '@angular/core/testing';
 import {environment} from '@env/environment';
 import {CompareTrack} from './compare-room.models';
 import {ParticipantSpotifyService} from './participant-spotify.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ParticipantSpotifyService', () => {
   let service: ParticipantSpotifyService;
@@ -13,15 +14,15 @@ describe('ParticipantSpotifyService', () => {
   beforeEach(() => {
     storage = new Map<string, string>();
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [{
-        provide: StorageService,
-        useValue: {
-          getItem: (key: string) => storage.get(key) ?? null,
-          setItem: (key: string, value: string) => storage.set(key, value)
-        }
-      }]
-    });
+    imports: [],
+    providers: [{
+            provide: StorageService,
+            useValue: {
+                getItem: (key: string) => storage.get(key) ?? null,
+                setItem: (key: string, value: string) => storage.set(key, value)
+            }
+        }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
     service = TestBed.inject(ParticipantSpotifyService);
     http = TestBed.inject(HttpTestingController);
   });

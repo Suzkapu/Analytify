@@ -3,9 +3,10 @@ import { Location } from '@angular/common';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 
 @Component({
-  selector: 'app-legal',
-  templateUrl: './legal.component.html',
-  styleUrls: ['./legal.component.scss']
+    selector: 'app-legal',
+    templateUrl: './legal.component.html',
+    styleUrls: ['./legal.component.scss'],
+    standalone: false
 })
 export class LegalComponent {
   constructor(

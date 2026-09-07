@@ -1,9 +1,10 @@
 import {Component} from '@angular/core';
 
 @Component({
-  selector: 'app-song-league-rules',
-  templateUrl: './song-league-rules.component.html',
-  styleUrls: ['./song-league-rules.component.scss']
+    selector: 'app-song-league-rules',
+    templateUrl: './song-league-rules.component.html',
+    styleUrls: ['./song-league-rules.component.scss'],
+    standalone: false
 })
 export class SongLeagueRulesComponent {
   isOpen = false;

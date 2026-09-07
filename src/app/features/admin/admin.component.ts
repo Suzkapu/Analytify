@@ -5,9 +5,10 @@ import {AdminService} from '@core/admin/admin.service';
 import {AdminOperationalHealth, AdminSyncRun, AdminUserSyncSettings, SiteSettings, SyncTaskKey} from '@core/admin/admin.models';
 
 @Component({
-  selector: 'app-admin',
-  templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss']
+    selector: 'app-admin',
+    templateUrl: './admin.component.html',
+    styleUrls: ['./admin.component.scss'],
+    standalone: false
 })
 export class AdminComponent implements OnInit {
   siteSettings: SiteSettings = {announcement: '', allowSongLeagueCreation: true};

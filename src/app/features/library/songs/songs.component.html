@@ -21,18 +21,18 @@
       <!-- Search Input (Artists View) -->
       <label class="search-container" *ngIf="viewStyle === 'artists'">
         <span class="sr-only">Search artists</span><i class="pi pi-search"></i>
-        <input (input)="filterArtists()" [(ngModel)]="searchText" class="search-input" pInputText
+        <input (input)="filterArtists()" [(ngModel)]="searchText" class="search-input"
           placeholder="Search artists" type="search" />
       </label>
       <!-- Search Input (Songs View) -->
       <label class="search-container" *ngIf="viewStyle === 'songs'">
         <span class="sr-only">Search songs or artists</span><i class="pi pi-search"></i>
-        <input (input)="filterAndSortTracks()" [(ngModel)]="trackSearchText" class="search-input" pInputText
+        <input (input)="filterAndSortTracks()" [(ngModel)]="trackSearchText" class="search-input"
           placeholder="Search songs or artists" type="search" />
       </label>
       <label class="search-container" *ngIf="viewStyle === 'albums' && !selectedAlbum">
         <span class="sr-only">Search albums or artists</span><i class="pi pi-search"></i>
-        <input (input)="filterAlbums()" [(ngModel)]="albumSearchText" class="search-input" pInputText
+        <input (input)="filterAlbums()" [(ngModel)]="albumSearchText" class="search-input"
           placeholder="Search albums or artists" type="search" />
       </label>
     </div>
@@ -189,7 +189,7 @@
             <h3 class="track-count">
               {{ artist.tracks.length }} {{ artist.tracks.length === 1 ? 'song' : 'songs' }}
             </h3>
-            <p-button (click)="artistDetails(artist.id)" label="Details" />
+            <button type="button" class="p-button" (click)="artistDetails(artist.id)">Details</button>
           </div>
         </div>
       </div>

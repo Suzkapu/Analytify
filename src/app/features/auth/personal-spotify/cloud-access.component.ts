@@ -3,8 +3,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 
 @Component({
-  selector: 'app-cloud-access',
-  template: `
+    selector: 'app-cloud-access',
+    template: `
     <main class="cloud-page"><section>
       <i class="pi pi-cloud-upload hero-icon"></i>
       <span class="eyebrow">Optional cloud access</span>
@@ -24,7 +24,7 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
       </div>
     </section></main>
   `,
-  styles: [`
+    styles: [`
     .cloud-page { min-height: 100vh; display: grid; place-items: center; padding: 20px; box-sizing: border-box; background: var(--color-bg); }
     section { width: min(620px, 100%); box-sizing: border-box; padding: clamp(26px, 5vw, 48px); border: 1px solid var(--color-border-strong); border-radius: var(--radius-xl); background: var(--color-surface-raised); color: var(--color-text); }
     .hero-icon { color: var(--color-accent); font-size: 2.5rem; } .eyebrow { display: block; margin-top: 18px; color: var(--color-accent); font-size: .75rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
@@ -32,7 +32,8 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
     .warning { padding: 12px; border: 1px solid rgba(255,190,70,.3); border-radius: 12px; background: rgba(255,190,70,.08); } .warning i { margin-right: 8px; color: #ffbe46; }
     .error { color: #ff7474; } .actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; } button { min-height: 46px; border-radius: var(--radius-pill); padding: 0 18px; font: inherit; font-weight: 800; cursor: pointer; }
     .secondary { border: 1px solid var(--color-border-strong); background: transparent; color: var(--color-text); } .primary { border: 0; background: var(--color-accent); color: var(--color-accent-contrast); } button:disabled { opacity: .55; } button i { margin-right: 7px; }
-  `]
+  `],
+    standalone: false
 })
 export class CloudAccessComponent implements OnInit {
   returnUrl = '/playlists';

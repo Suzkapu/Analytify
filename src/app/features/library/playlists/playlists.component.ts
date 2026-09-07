@@ -13,8 +13,9 @@ import {PlaylistLoaderService} from '@core/sync/playlist-loader/playlist-loader.
 const console = createScopedLogger('Playlists');
 
 @Component({
-  selector: 'app-playlists', templateUrl: './playlists.component.html', styleUrls: ['./playlists.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-playlists', templateUrl: './playlists.component.html', styleUrls: ['./playlists.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class PlaylistsComponent {
   playlists: any[] = [];

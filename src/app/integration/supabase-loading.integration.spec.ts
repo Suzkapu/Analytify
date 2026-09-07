@@ -1,5 +1,5 @@
 import {NO_ERRORS_SCHEMA} from '@angular/core';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -16,6 +16,7 @@ import {UserStatsComponent} from '@features/insights/user-stats/user-stats.compo
 import {PlaylistsComponent} from '@features/library/playlists/playlists.component';
 import {environment} from '@env/environment';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 const karmaArgs = ((window as any).__karma__?.config?.args || []) as string[];
 const integrationMarker = karmaArgs.indexOf('--analytify-supabase-integration');
@@ -61,30 +62,32 @@ integrationDescribe('real Supabase-first playlist and stats loading', () => {
     auth.isTokenExpired.and.returnValue(false);
 
     TestBed.configureTestingModule({
-      imports: [FormsModule, HttpClientTestingModule],
-      declarations: [PlaylistsComponent, UserStatsComponent],
-      providers: [
+    declarations: [PlaylistsComponent, UserStatsComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [FormsModule],
+    providers: [
         SupabaseService,
         StorageService,
         SpotifyDataService,
-        {provide: SpotifyAuthService, useValue: auth},
-        {provide: ActivatedRoute, useValue: {params: EMPTY}},
-        {provide: Router, useValue: jasmine.createSpyObj<Router>('Router', ['navigate'])},
+        { provide: SpotifyAuthService, useValue: auth },
+        { provide: ActivatedRoute, useValue: { params: EMPTY } },
+        { provide: Router, useValue: jasmine.createSpyObj<Router>('Router', ['navigate']) },
         {
-          provide: ComparePlaylistSourceService,
-          useValue: jasmine.createSpyObj<ComparePlaylistSourceService>('ComparePlaylistSourceService', ['loadMainTracks'])
+            provide: ComparePlaylistSourceService,
+            useValue: jasmine.createSpyObj<ComparePlaylistSourceService>('ComparePlaylistSourceService', ['loadMainTracks'])
         },
         {
-          provide: ParticipantSpotifyService,
-          useValue: jasmine.createSpyObj<ParticipantSpotifyService>('ParticipantSpotifyService', ['createPlaylist'])
+            provide: ParticipantSpotifyService,
+            useValue: jasmine.createSpyObj<ParticipantSpotifyService>('ParticipantSpotifyService', ['createPlaylist'])
         },
         {
-          provide: PlaylistLoaderService,
-          useValue: jasmine.createSpyObj<PlaylistLoaderService>('PlaylistLoaderService', ['recordPortfolioMetadata'])
-        }
-      ],
-      schemas: [NO_ERRORS_SCHEMA]
-    });
+            provide: PlaylistLoaderService,
+            useValue: jasmine.createSpyObj<PlaylistLoaderService>('PlaylistLoaderService', ['recordPortfolioMetadata'])
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+});
 
     supabase = TestBed.inject(SupabaseService);
     supabase.client = createClient(supabaseUrl, supabaseAnonKey, {

@@ -10,9 +10,10 @@ import {PlaylistShareAutoSyncService, PlaylistShareSpotifyUpdate} from '@core/sh
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
 
 @Component({
-  selector: 'app-shared-playlist-detail',
-  templateUrl: './shared-playlist-detail.component.html',
-  styleUrls: ['./shared-playlist-detail.component.scss']
+    selector: 'app-shared-playlist-detail',
+    templateUrl: './shared-playlist-detail.component.html',
+    styleUrls: ['./shared-playlist-detail.component.scss'],
+    standalone: false
 })
 export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
   share: PlaylistShare | null = null;

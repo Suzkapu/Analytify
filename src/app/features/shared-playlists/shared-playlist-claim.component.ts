@@ -3,9 +3,10 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
 
 @Component({
-  selector: 'app-shared-playlist-claim',
-  templateUrl: './shared-playlist-claim.component.html',
-  styleUrls: ['./shared-playlist-claim.component.scss']
+    selector: 'app-shared-playlist-claim',
+    templateUrl: './shared-playlist-claim.component.html',
+    styleUrls: ['./shared-playlist-claim.component.scss'],
+    standalone: false
 })
 export class SharedPlaylistClaimComponent implements OnInit {
   isClaiming = true;

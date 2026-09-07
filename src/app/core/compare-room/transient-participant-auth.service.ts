@@ -1,4 +1,4 @@
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
 import {CompareRoomAuthRequest, SpotifyTransientSession} from './compare-room.models';

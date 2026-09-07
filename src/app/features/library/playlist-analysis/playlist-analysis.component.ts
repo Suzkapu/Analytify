@@ -10,10 +10,11 @@ import {openSpotifyUrl} from '@core/navigation/spotify-url';
 const console = createScopedLogger('Playlist Analysis');
 
 @Component({
-  selector: 'app-playlist-analysis',
-  templateUrl: './playlist-analysis.component.html',
-  styleUrls: ['./playlist-analysis.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-playlist-analysis',
+    templateUrl: './playlist-analysis.component.html',
+    styleUrls: ['./playlist-analysis.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
   playlistId: string = '';

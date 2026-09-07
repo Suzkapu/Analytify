@@ -3,8 +3,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {TransientParticipantAuthService} from '@core/compare-room/transient-participant-auth.service';
 
 @Component({
-  selector: 'app-compare-room-callback',
-  template: `
+    selector: 'app-compare-room-callback',
+    template: `
     <main class="compare-callback">
       <section>
         <i *ngIf="!errorMessage" class="pi pi-spin pi-spinner"></i>
@@ -15,14 +15,15 @@ import {TransientParticipantAuthService} from '@core/compare-room/transient-part
       </section>
     </main>
   `,
-  styles: [`
+    styles: [`
     .compare-callback { min-height: 100vh; display: grid; place-items: center; padding: 1rem; box-sizing: border-box; background: #090b0a; color: white; text-align: center; }
     section { max-width: 520px; padding: 2rem; }
     i { color: #1ed760; font-size: 3rem; }
     i.error { color: #ff7474; }
     p { color: #a1aaa4; line-height: 1.5; }
     a { color: #1ed760; font-weight: 700; }
-  `]
+  `],
+    standalone: false
 })
 export class CompareRoomCallbackComponent implements OnInit {
   errorMessage = '';

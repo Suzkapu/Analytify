@@ -46,10 +46,11 @@ function compareCalendarWeekdays(): string[] {
 }
 
 @Component({
-  selector: 'app-user-stats',
-  templateUrl: './user-stats.component.html',
-  styleUrls: ['./user-stats.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-user-stats',
+    templateUrl: './user-stats.component.html',
+    styleUrls: ['./user-stats.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class UserStatsComponent implements OnInit, OnDestroy {
   selectedRange: string = 'short_term'; // 'short_term', 'medium_term', 'long_term'

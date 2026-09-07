@@ -18,9 +18,10 @@ import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {firstValueFrom, Subscription} from 'rxjs';
 
 @Component({
-  selector: 'app-compare-room-shell',
-  templateUrl: './compare-room-shell.component.html',
-  styleUrls: ['./compare-room-shell.component.scss']
+    selector: 'app-compare-room-shell',
+    templateUrl: './compare-room-shell.component.html',
+    styleUrls: ['./compare-room-shell.component.scss'],
+    standalone: false
 })
 export class CompareRoomShellComponent implements OnInit, OnDestroy {
   participants: CompareParticipant[] = [];

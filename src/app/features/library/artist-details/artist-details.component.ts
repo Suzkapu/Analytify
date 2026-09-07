@@ -11,9 +11,10 @@ import {distinctUntilChanged, firstValueFrom, map, Subscription} from 'rxjs';
 const console = createScopedLogger('Artist Details');
 
 @Component({
-  selector: 'app-artist-details',
-  templateUrl: './artist-details.component.html',
-  styleUrls: ['./artist-details.component.scss'],
+    selector: 'app-artist-details',
+    templateUrl: './artist-details.component.html',
+    styleUrls: ['./artist-details.component.scss'],
+    standalone: false
 })
 export class ArtistDetailsComponent implements OnDestroy {
   artist: any = {};

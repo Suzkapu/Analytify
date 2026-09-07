@@ -14,9 +14,10 @@ import {TransientParticipantAuthService} from '@core/compare-room/transient-part
 import {filter, Subscription, take} from 'rxjs';
 
 @Component({
-  selector: 'app-compare-room-join',
-  templateUrl: './compare-room-join.component.html',
-  styleUrls: ['./compare-room-join.component.scss']
+    selector: 'app-compare-room-join',
+    templateUrl: './compare-room-join.component.html',
+    styleUrls: ['./compare-room-join.component.scss'],
+    standalone: false
 })
 export class CompareRoomJoinComponent implements OnInit, OnDestroy {
   stage: 'invited' | 'joining' | 'selecting' | 'loading' | 'ready' | 'review' | 'saving' | 'complete' | 'error' = 'invited';

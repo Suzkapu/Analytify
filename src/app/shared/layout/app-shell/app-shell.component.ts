@@ -4,8 +4,9 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {filter, startWith, Subscription} from 'rxjs';
 
 @Component({
-  selector: 'app-shell',
-  templateUrl: './app-shell.component.html'
+    selector: 'app-shell',
+    templateUrl: './app-shell.component.html',
+    standalone: false
 })
 export class AppShellComponent implements OnInit, OnDestroy {
   mobileTitle = 'Analytify';

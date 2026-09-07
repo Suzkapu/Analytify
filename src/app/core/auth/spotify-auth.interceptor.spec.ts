@@ -1,4 +1,4 @@
-import {HttpContext, HttpErrorResponse, HttpHandler, HttpRequest, HttpResponse} from '@angular/common/http';
+import { HttpContext, HttpErrorResponse, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
 import {firstValueFrom, of, throwError} from 'rxjs';
 import {SpotifyAuthInterceptor} from './spotify-auth.interceptor';
 import {SpotifyAuthService} from './spotify-auth.service';

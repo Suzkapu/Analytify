@@ -14,9 +14,10 @@ import {PlaylistShareAutoSyncService} from '@core/sharing/playlist-share-auto-sy
 const console = createScopedLogger('Shared Playlists');
 
 @Component({
-  selector: 'app-shared-playlists',
-  templateUrl: './shared-playlists.component.html',
-  styleUrls: ['./shared-playlists.component.scss']
+    selector: 'app-shared-playlists',
+    templateUrl: './shared-playlists.component.html',
+    styleUrls: ['./shared-playlists.component.scss'],
+    standalone: false
 })
 export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   @ViewChild('statsUserPickerTrigger') private statsUserPickerTrigger?: ElementRef<HTMLButtonElement>;

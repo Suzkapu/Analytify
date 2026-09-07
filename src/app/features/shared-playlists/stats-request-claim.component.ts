@@ -3,9 +3,10 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 
 @Component({
-  selector: 'app-stats-request-claim',
-  templateUrl: './stats-request-claim.component.html',
-  styleUrls: ['./shared-playlist-claim.component.scss']
+    selector: 'app-stats-request-claim',
+    templateUrl: './stats-request-claim.component.html',
+    styleUrls: ['./shared-playlist-claim.component.scss'],
+    standalone: false
 })
 export class StatsRequestClaimComponent implements OnInit {
   isOpening = true;

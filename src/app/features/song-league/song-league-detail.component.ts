@@ -17,8 +17,9 @@ import {
 } from '@core/notifications/push-notification.service';
 
 @Component({
-  selector: 'app-song-league-detail',
-  templateUrl: './song-league-detail.component.html'
+    selector: 'app-song-league-detail',
+    templateUrl: './song-league-detail.component.html',
+    standalone: false
 })
 export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   dashboard: SongLeagueDashboard | null = null;

@@ -2,8 +2,6 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
-import {ButtonModule} from 'primeng/button';
-import {InputTextModule} from 'primeng/inputtext';
 import {MetricCardComponent} from './ui/metric-card/metric-card.component';
 import {PageStateComponent} from './ui/page-state/page-state.component';
 import {SectionHeadingComponent} from './ui/section-heading/section-heading.component';
@@ -13,9 +11,7 @@ import {AccessibleDialogDirective} from './ui/accessible-dialog.directive';
 const SHARED_MODULES = [
   CommonModule,
   FormsModule,
-  RouterModule,
-  ButtonModule,
-  InputTextModule
+  RouterModule
 ];
 
 @NgModule({

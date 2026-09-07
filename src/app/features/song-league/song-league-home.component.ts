@@ -8,8 +8,9 @@ import {SiteSettingsService} from '@core/settings/site-settings.service';
 import {AdminService} from '@core/admin/admin.service';
 
 @Component({
-  selector: 'app-song-league-home',
-  templateUrl: './song-league-home.component.html'
+    selector: 'app-song-league-home',
+    templateUrl: './song-league-home.component.html',
+    standalone: false
 })
 export class SongLeagueHomeComponent implements OnInit {
   leagues: SongLeague[] = [];

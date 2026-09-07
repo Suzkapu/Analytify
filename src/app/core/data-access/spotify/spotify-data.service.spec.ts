@@ -1,9 +1,10 @@
 import {fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import {SpotifyDataService} from './spotify-data.service';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {firstValueFrom, of, Subject, throwError} from 'rxjs';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('SpotifyDataService', () => {
   let service: SpotifyDataService;
@@ -11,12 +12,14 @@ describe('SpotifyDataService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
+    imports: [],
+    providers: [
         { provide: SpotifyAuthService, useValue: {} },
-        { provide: StorageService, useValue: { getItem: () => null, setItem: jasmine.createSpy('setItem') } }
-      ]
-    });
+        { provide: StorageService, useValue: { getItem: () => null, setItem: jasmine.createSpy('setItem') } },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+});
     service = TestBed.inject(SpotifyDataService);
     http = TestBed.inject(HttpTestingController);
   });

@@ -3,7 +3,7 @@ import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing'
 import {AccessibleDialogDirective} from './accessible-dialog.directive';
 
 @Component({
-  template: `
+    template: `
     <button id="trigger" (click)="open = true">Open</button>
     <main id="page">Page content</main>
     <section *ngIf="open" appAccessibleDialog role="dialog" aria-modal="true"
@@ -12,7 +12,8 @@ import {AccessibleDialogDirective} from './accessible-dialog.directive';
       <button id="safe" appModalInitialFocus (click)="open = false">Cancel</button>
       <button id="last">Last</button>
     </section>
-  `
+  `,
+    standalone: false
 })
 class TestHostComponent {
   open = false;

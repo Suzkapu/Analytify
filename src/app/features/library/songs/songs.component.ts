@@ -11,10 +11,11 @@ import {openSpotifyUrl} from '@core/navigation/spotify-url';
 const console = createScopedLogger('Songs');
 
 @Component({
-  selector: 'app-songs',
-  templateUrl: './songs.component.html',
-  styleUrls: ['./songs.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-songs',
+    templateUrl: './songs.component.html',
+    styleUrls: ['./songs.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class SongsComponent implements OnInit, OnDestroy {
   artists: any[] = [];

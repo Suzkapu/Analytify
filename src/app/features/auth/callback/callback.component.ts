@@ -7,9 +7,10 @@ import {createScopedLogger} from '@core/diagnostics/app-logger';
 const console = createScopedLogger('Login Callback');
 
 @Component({
-  selector: 'app-callback',
-  templateUrl: './callback.component.html',
-  styleUrls: ['./callback.component.scss']
+    selector: 'app-callback',
+    templateUrl: './callback.component.html',
+    styleUrls: ['./callback.component.scss'],
+    standalone: false
 })
 export class CallbackComponent implements OnInit {
   errorMessage: string | null = null;

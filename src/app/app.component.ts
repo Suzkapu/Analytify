@@ -17,9 +17,10 @@ const navigationLog = createScopedLogger('Navigation');
 const ANNOUNCEMENT_AUTO_HIDE_MS = 5000;
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    standalone: false
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
   title = 'Spotify Artists Stats';

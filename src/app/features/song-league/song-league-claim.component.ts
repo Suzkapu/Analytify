@@ -5,8 +5,9 @@ import {SongLeagueService} from '@core/song-league/song-league.service';
 import {PushNotificationService} from '@core/notifications/push-notification.service';
 
 @Component({
-  selector: 'app-song-league-claim',
-  templateUrl: './song-league-claim.component.html'
+    selector: 'app-song-league-claim',
+    templateUrl: './song-league-claim.component.html',
+    standalone: false
 })
 export class SongLeagueClaimComponent implements OnInit {
   isJoining = true;

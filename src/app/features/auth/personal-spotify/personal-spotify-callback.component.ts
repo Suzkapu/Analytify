@@ -3,8 +3,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 
 @Component({
-  selector: 'app-personal-spotify-callback',
-  template: `
+    selector: 'app-personal-spotify-callback',
+    template: `
     <main class="callback-page"><section>
       <i class="pi" [ngClass]="errorMessage ? 'pi-exclamation-triangle error' : 'pi-spin pi-spinner'"></i>
       <h1>{{ errorMessage ? 'Spotify connection failed' : 'Connecting your personal Spotify app…' }}</h1>
@@ -12,11 +12,12 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
       <a *ngIf="errorMessage" routerLink="/spotify/connect">Return to setup</a>
     </section></main>
   `,
-  styles: [`
+    styles: [`
     .callback-page { min-height: 100vh; display: grid; place-items: center; padding: 1rem; box-sizing: border-box; background: var(--color-bg); color: var(--color-text); text-align: center; }
     section { max-width: 560px; padding: 2rem; } i { color: var(--color-accent); font-size: 3rem; } i.error { color: #ff7474; }
     p { color: var(--color-text-muted); line-height: 1.5; } a { color: var(--color-accent); font-weight: 800; }
-  `]
+  `],
+    standalone: false
 })
 export class PersonalSpotifyCallbackComponent implements OnInit {
   errorMessage = '';

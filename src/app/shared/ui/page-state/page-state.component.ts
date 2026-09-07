@@ -1,10 +1,11 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
 @Component({
-  selector: 'app-page-state',
-  templateUrl: './page-state.component.html',
-  styleUrls: ['./page-state.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-page-state',
+    templateUrl: './page-state.component.html',
+    styleUrls: ['./page-state.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PageStateComponent {
   @Input() icon = 'pi-info-circle';

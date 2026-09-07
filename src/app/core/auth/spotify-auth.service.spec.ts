@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { SpotifyAuthService } from './spotify-auth.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {firstValueFrom} from 'rxjs';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('SpotifyAuthService', () => {
   let service: SpotifyAuthService;
@@ -52,18 +53,20 @@ describe('SpotifyAuthService', () => {
       updateBackupActive: jasmine.createSpy('updateBackupActive').and.resolveTo()
     };
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
+    imports: [],
+    providers: [
         {
-          provide: StorageService,
-          useValue: storage
+            provide: StorageService,
+            useValue: storage
         },
         {
-          provide: SupabaseService,
-          useValue: supabaseService
-        }
-      ]
-    });
+            provide: SupabaseService,
+            useValue: supabaseService
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+});
     service = TestBed.inject(SpotifyAuthService);
     http = TestBed.inject(HttpTestingController);
   });

@@ -1,10 +1,11 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
 @Component({
-  selector: 'app-metric-card',
-  templateUrl: './metric-card.component.html',
-  styleUrls: ['./metric-card.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-metric-card',
+    templateUrl: './metric-card.component.html',
+    styleUrls: ['./metric-card.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MetricCardComponent {
   @Input() icon = 'pi-chart-bar';

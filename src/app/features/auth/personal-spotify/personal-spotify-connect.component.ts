@@ -4,9 +4,10 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {environment} from '@env/environment';
 
 @Component({
-  selector: 'app-personal-spotify-connect',
-  templateUrl: './personal-spotify-connect.component.html',
-  styleUrls: ['./personal-spotify-connect.component.scss']
+    selector: 'app-personal-spotify-connect',
+    templateUrl: './personal-spotify-connect.component.html',
+    styleUrls: ['./personal-spotify-connect.component.scss'],
+    standalone: false
 })
 export class PersonalSpotifyConnectComponent implements OnInit {
   readonly callbackUri = environment.personalSpotifyRedirectUri;
