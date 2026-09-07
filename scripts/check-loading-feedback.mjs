@@ -20,7 +20,9 @@ const playlistLoader = read('src/app/core/sync/playlist-loader/playlist-loader.s
 
 const checks = [
   ['shared metrics expose a loading input', metricTs.includes('@Input() loading = false')],
-  ['pending metrics do not render a final-looking value', metricHtml.includes('*ngIf="!loading"') && metricHtml.includes('metric-loading')],
+  ['pending metrics do not render a final-looking value',
+    (metricHtml.includes('*ngIf="!loading"') || metricHtml.includes('@if (!loading)'))
+      && metricHtml.includes('metric-loading')],
   ['metric feedback adds no timers or data work', !/(setTimeout|setInterval|requestAnimationFrame|subscribe\()/.test(metricTs + metricHtml)],
   ['playlist analysis starts in a loading state', analysisTs.includes('isLoading: boolean = true')],
   ['playlist analysis handles unknown totals', analysisHtml.includes('Finding cached playlist data…') && analysisHtml.includes('[loading]="isAnalysisPending"')],
@@ -32,7 +34,10 @@ const checks = [
   ['stale stats stay visible while refreshing', statsTs.includes('isRefreshingStats') && statsHtml.includes('cached stats remain visible')],
   ['listening history starts in a loading state', historyTs.includes('isLoadingRecentlyPlayed: boolean = true')],
   ['artist details expose cache lookup progress', artistTs.includes('isLoadingArtist = true') && artistHtml.includes('Loading artist details…')],
-  ['Song League count does not flash zero while loading', leagueHtml.includes('[attr.aria-busy]="isLoading"') && leagueHtml.includes('*ngIf="!isLoading">{{ leagues.length }}')],
+  ['Song League count does not flash zero while loading',
+    leagueHtml.includes('[attr.aria-busy]="isLoading"')
+      && (leagueHtml.includes('*ngIf="!isLoading">{{ leagues.length }}')
+        || /@if\s*\(!isLoading\)\s*\{\s*\{\{\s*leagues\.length\s*\}\}/.test(leagueHtml))],
   ['current stats API requests remain parallel', statsTs.includes('forkJoin({')],
   ['current stats still start before deferred history', statsTs.indexOf('void this.loadStats()') < statsTs.indexOf('this.scheduleHistoryLoad()')],
   ['playlist pagination remains bounded and parallel', playlistLoader.includes('}, 4),')]

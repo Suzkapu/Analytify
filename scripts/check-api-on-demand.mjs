@@ -35,7 +35,9 @@ const checks = [
   ['Scheduled worker skips tasks that are not due', scheduler.includes('state?.next_run_at') && scheduler.includes('> now.getTime()) continue;')],
   ['Manual worker runs only atomically claimed queued jobs',
     scheduler.includes("rpc('claim_sync_jobs'") && syncJobLeases.includes("where run.status = 'queued'")],
-  ['Supabase loading integration uses the real cloud query', integration.includes("spyOn(supabase, 'loadUserCache').and.callThrough()")],
+  ['Supabase loading integration uses the real cloud query',
+    integration.includes("vi.spyOn(supabase, 'loadUserCache')")
+      || integration.includes("spyOn(supabase, 'loadUserCache').and.callThrough()")],
   ['Supabase loading integration renders both playlist and stats fixtures', integration.includes("toContain('CI Cloud Playlist')") && integration.includes("toContain('CI Supabase Song')")],
   ['Supabase loading integration rejects Spotify HTTP calls', integration.includes('http.expectNone(request => request.url.startsWith(environment.spotifyUrl))')],
   ['GitHub Actions starts the isolated Supabase stack', workflow.includes('supabase start --workdir integration')],

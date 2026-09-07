@@ -12,8 +12,8 @@ const component = readFileSync(
 const checks = [
   ['primary side renders a calendar dialog', template.includes('id="stats-history-calendar"')],
   ['comparison side renders a calendar dialog', template.includes('id="stats-compare-calendar"')],
-  ['primary calendar uses snapshot availability days', template.includes('let day of historyCalendarDays')],
-  ['comparison calendar uses snapshot availability days', template.includes('let day of compareCalendarDays')],
+  ['primary calendar uses snapshot availability days', /(?:let\s+day\s+of|@for\s*\(day\s+of)\s*historyCalendarDays/.test(template)],
+  ['comparison calendar uses snapshot availability days', /(?:let\s+day\s+of|@for\s*\(day\s+of)\s*compareCalendarDays/.test(template)],
   ['calendar legend is removed', !template.includes('compare-calendar-legend')],
   ['saved-snapshot help text is removed', !template.includes('Only saved snapshots can be selected')],
   ['comparison options exclude the primary snapshot', component.includes("this.snapshotOptions.filter(opt => opt.id !== this.selectedSnapshotId)")],

@@ -17,7 +17,7 @@ const checks = [
   ['current-page exclusion', component.includes('currentIds')],
   ['accessible result status', template.includes('past-stats-results') && template.includes('aria-live="polite"')],
   ['past matches open position history', template.includes('(click)="openPastTopResult(item)"') && component.includes('openPastTopResult(item: PastTopItem)')],
-  ['past matches are buttons, not external links', template.includes('<button *ngFor="let item of pastTopResults"') && !template.includes('[href]="item.spotifyUrl || null"')],
+  ['past matches are buttons, not external links', template.includes('<button type="button" class="past-stats-card"') && !template.includes('[href]="item.spotifyUrl || null"')],
   ['past cards omit aggregate summary text', !template.includes('Best #{{ item.bestRank }}') && !template.includes('last seen {{ item.lastSeen }}')],
   ['past search is explicitly opt-in', component.includes('includePastStatsSearch = false') && component.includes('togglePastStatsSearch()')],
   ['genres use the same search and opt-in controls', template.includes("'Search Top Genres'") && component.includes("this.selectedCategory === 'genres'")],

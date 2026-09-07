@@ -22,8 +22,8 @@ test('verification is secret-free and production secrets are environment scoped'
 });
 
 test('verified build is handed to a serialized cancelable production job', () => {
-  assert.match(workflow, /actions\/upload-artifact@v4/);
-  assert.match(workflow, /actions\/download-artifact@v4/);
+  assert.match(workflow, /actions\/upload-artifact@[0-9a-f]{40}/);
+  assert.match(workflow, /actions\/download-artifact@[0-9a-f]{40}/);
   assert.match(workflow, /group: analytify-production\s*\n\s+cancel-in-progress: true/);
   assert.match(workflow, /DEPLOY_COMMIT_SHA: \$\{\{ github\.sha \}\}/);
   assert.match(workflow, /EXPECTED_COMMIT_SHA: \$\{\{ github\.sha \}\}/);
