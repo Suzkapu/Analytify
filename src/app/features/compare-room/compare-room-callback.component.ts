@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TransientParticipantAuthService} from '@core/compare-room/transient-participant-auth.service';
 
@@ -31,6 +31,7 @@ import {TransientParticipantAuthService} from '@core/compare-room/transient-part
     p { color: #a1aaa4; line-height: 1.5; }
     a { color: #1ed760; font-weight: 700; }
   `],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CompareRoomCallbackComponent implements OnInit {

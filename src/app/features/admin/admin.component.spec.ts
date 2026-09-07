@@ -1,197 +1,200 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {Router} from '@angular/router';
-import {NO_ERRORS_SCHEMA} from '@angular/core';
+import { beforeEach, describe, expect, it, type MockedObject, vi } from "vitest";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-import {AdminService} from '@core/admin/admin.service';
-import {AdminComponent} from './admin.component';
+import { AdminService } from '@core/admin/admin.service';
+import { AdminComponent } from './admin.component';
 
 describe('AdminComponent', () => {
-  let component: AdminComponent;
-  let fixture: ComponentFixture<AdminComponent>;
-  let adminService: jasmine.SpyObj<AdminService>;
-  let router: jasmine.SpyObj<Router>;
+    let component: AdminComponent;
+    let fixture: ComponentFixture<AdminComponent>;
+    let adminService: any;
+    let router: any;
 
-  beforeEach(async () => {
-    adminService = jasmine.createSpyObj<AdminService>('AdminService', [
-      'loadSiteSettings',
-      'listUsers',
-      'listRuns',
-      'loadOperationalHealth',
-      'updateSiteSettings',
-      'updateUser',
-      'enqueueUser',
-      'createDemoLeague',
-      'sendTestNotification'
-    ]);
+    beforeEach(async () => {
+        adminService = {
+            loadSiteSettings: vi.fn().mockName("AdminService.loadSiteSettings"),
+            listUsers: vi.fn().mockName("AdminService.listUsers"),
+            listRuns: vi.fn().mockName("AdminService.listRuns"),
+            loadOperationalHealth: vi.fn().mockName("AdminService.loadOperationalHealth"),
+            updateSiteSettings: vi.fn().mockName("AdminService.updateSiteSettings"),
+            updateUser: vi.fn().mockName("AdminService.updateUser"),
+            enqueueUser: vi.fn().mockName("AdminService.enqueueUser"),
+            createDemoLeague: vi.fn().mockName("AdminService.createDemoLeague"),
+            sendTestNotification: vi.fn().mockName("AdminService.sendTestNotification")
+        };
 
-    adminService.loadSiteSettings.and.resolveTo({announcement: '', allowSongLeagueCreation: true});
-    adminService.listUsers.and.resolveTo([]);
-    adminService.listRuns.and.resolveTo([
-      {
-        id: 'run-1',
-        userId: 'user-1',
-        displayName: 'Test User',
-        taskKey: 'listening_history',
-        status: 'succeeded',
-        triggerType: 'scheduled',
-        requestedAt: '2026-09-05T08:00:00Z',
-        startedAt: '2026-09-05T08:00:01Z',
-        finishedAt: '2026-09-05T08:00:05Z',
-        error: null,
-        details: {}
-      }
-    ]);
-    adminService.loadOperationalHealth.and.resolveTo({
-      syncQueueDepth: 0, oldestSyncQueueAgeSeconds: 0,
-      notificationQueueDepth: 0, oldestNotificationQueueAgeSeconds: 0, expiredLeases: 0,
-      lastSuccessByFeature: {}, releases: {supabase: 'same', worker: 'same'}, alerts: []
+        adminService.loadSiteSettings.mockResolvedValue({ announcement: '', allowSongLeagueCreation: true });
+        adminService.listUsers.mockResolvedValue([]);
+        adminService.listRuns.mockResolvedValue([
+            {
+                id: 'run-1',
+                userId: 'user-1',
+                displayName: 'Test User',
+                taskKey: 'listening_history',
+                status: 'succeeded',
+                triggerType: 'scheduled',
+                requestedAt: '2026-09-05T08:00:00Z',
+                startedAt: '2026-09-05T08:00:01Z',
+                finishedAt: '2026-09-05T08:00:05Z',
+                error: null,
+                details: {}
+            }
+        ]);
+        adminService.loadOperationalHealth.mockResolvedValue({
+            syncQueueDepth: 0, oldestSyncQueueAgeSeconds: 0,
+            notificationQueueDepth: 0, oldestNotificationQueueAgeSeconds: 0, expiredLeases: 0,
+            lastSuccessByFeature: {}, releases: { supabase: 'same', worker: 'same' }, alerts: []
+        });
+
+        router = {
+            navigate: vi.fn().mockName("Router.navigate")
+        };
+
+        await TestBed.configureTestingModule({
+            declarations: [AdminComponent],
+            providers: [
+                { provide: AdminService, useValue: adminService },
+                { provide: Router, useValue: router }
+            ],
+            schemas: [NO_ERRORS_SCHEMA]
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(AdminComponent);
+        component = fixture.componentInstance;
     });
 
-    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
+    it('keeps Recent runs (Audit trail) collapsed by default', async () => {
+        expect(component.isRunsCollapsed).toBe(true);
 
-    await TestBed.configureTestingModule({
-      declarations: [AdminComponent],
-      providers: [
-        {provide: AdminService, useValue: adminService},
-        {provide: Router, useValue: router}
-      ],
-      schemas: [NO_ERRORS_SCHEMA]
-    }).compileComponents();
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
 
-    fixture = TestBed.createComponent(AdminComponent);
-    component = fixture.componentInstance;
-  });
+        expect(component.isRunsCollapsed).toBe(true);
+        const runsContent = fixture.nativeElement.querySelector('#admin-runs-content');
+        expect(runsContent).toBeNull();
 
-  it('keeps Recent runs (Audit trail) collapsed by default', async () => {
-    expect(component.isRunsCollapsed).toBeTrue();
-
-    fixture.detectChanges();
-    await fixture.whenStable();
-    fixture.detectChanges();
-
-    expect(component.isRunsCollapsed).toBeTrue();
-    const runsContent = fixture.nativeElement.querySelector('#admin-runs-content');
-    expect(runsContent).toBeNull();
-
-    const runsPanel = fixture.nativeElement.querySelector('.runs-panel');
-    expect(runsPanel).not.toBeNull();
-    expect(runsPanel.classList).toContain('collapsed');
-  });
-
-  it('loads operational health in parallel and reports release drift', async () => {
-    adminService.loadOperationalHealth.and.resolveTo({
-      syncQueueDepth: 51, oldestSyncQueueAgeSeconds: 901,
-      notificationQueueDepth: 12, oldestNotificationQueueAgeSeconds: 90, expiredLeases: 1,
-      lastSuccessByFeature: {}, releases: {supabase: 'one', worker: 'two'},
-      alerts: [{key: 'sync-backlog', severity: 'warning', message: 'Sync backlog is old.', firstSeenAt: '', lastSeenAt: ''}]
+        const runsPanel = fixture.nativeElement.querySelector('.runs-panel');
+        expect(runsPanel).not.toBeNull();
+        expect(runsPanel.classList).toContain('collapsed');
     });
-    fixture.detectChanges();
-    await fixture.whenStable();
-    fixture.detectChanges();
 
-    expect(component.releaseIsConsistent).toBeFalse();
-    expect(fixture.nativeElement.querySelector('.operations-panel').textContent).toContain('Sync backlog is old.');
-    expect(adminService.loadOperationalHealth).toHaveBeenCalledTimes(1);
-  });
+    it('loads operational health in parallel and reports release drift', async () => {
+        adminService.loadOperationalHealth.mockResolvedValue({
+            syncQueueDepth: 51, oldestSyncQueueAgeSeconds: 901,
+            notificationQueueDepth: 12, oldestNotificationQueueAgeSeconds: 90, expiredLeases: 1,
+            lastSuccessByFeature: {}, releases: { supabase: 'one', worker: 'two' },
+            alerts: [{ key: 'sync-backlog', severity: 'warning', message: 'Sync backlog is old.', firstSeenAt: '', lastSeenAt: '' }]
+        });
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
 
-  it('requires every deployed component before reporting a matched release', () => {
-    component.operationalHealth.releases = {
-      supabase: 'abc',
-      worker: 'abc',
-      'edge:spotify-credentials': 'abc',
-      'edge:song-league-playlist-sync': 'abc'
-    };
-    expect(component.releaseIsConsistent).toBeFalse();
-    component.operationalHealth.releases['edge:song-league-notifications'] = 'abc';
-    expect(component.releaseIsConsistent).toBeTrue();
-    component.operationalHealth.releases['worker'] = 'different';
-    expect(component.releaseIsConsistent).toBeFalse();
-  });
+        expect(component.releaseIsConsistent).toBe(false);
+        expect(fixture.nativeElement.querySelector('.operations-panel').textContent).toContain('Sync backlog is old.');
+        expect(adminService.loadOperationalHealth).toHaveBeenCalledTimes(1);
+    });
 
-  it('expands and collapses Recent runs when toggled', async () => {
-    fixture.detectChanges();
-    await fixture.whenStable();
-    fixture.detectChanges();
+    it('requires every deployed component before reporting a matched release', () => {
+        component.operationalHealth.releases = {
+            supabase: 'abc',
+            worker: 'abc',
+            'edge:spotify-credentials': 'abc',
+            'edge:song-league-playlist-sync': 'abc'
+        };
+        expect(component.releaseIsConsistent).toBe(false);
+        component.operationalHealth.releases['edge:song-league-notifications'] = 'abc';
+        expect(component.releaseIsConsistent).toBe(true);
+        component.operationalHealth.releases['worker'] = 'different';
+        expect(component.releaseIsConsistent).toBe(false);
+    });
 
-    component.toggleRunsCollapsed();
-    fixture.detectChanges();
+    it('expands and collapses Recent runs when toggled', async () => {
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
 
-    expect(component.isRunsCollapsed).toBeFalse();
-    let runsContent = fixture.nativeElement.querySelector('#admin-runs-content');
-    expect(runsContent).not.toBeNull();
-    expect(runsContent.textContent).toContain('Listening history');
+        component.toggleRunsCollapsed();
+        fixture.detectChanges();
 
-    component.toggleRunsCollapsed();
-    fixture.detectChanges();
+        expect(component.isRunsCollapsed).toBe(false);
+        let runsContent = fixture.nativeElement.querySelector('#admin-runs-content');
+        expect(runsContent).not.toBeNull();
+        expect(runsContent.textContent).toContain('Listening history');
 
-    expect(component.isRunsCollapsed).toBeTrue();
-    runsContent = fixture.nativeElement.querySelector('#admin-runs-content');
-    expect(runsContent).toBeNull();
-  });
+        component.toggleRunsCollapsed();
+        fixture.detectChanges();
 
-  it('keeps user schedule cards collapsed by default and extends them on toggle', async () => {
-    adminService.listUsers.and.resolveTo([
-      {
-        userId: 'user-1',
-        spotifyId: 'spotify-user-1',
-        displayName: 'Alice',
-        profilePicUrl: '',
-        backupActive: true,
-        hasRefreshToken: true,
-        enabled: true,
-        timezone: 'Europe/Vienna',
-        historyEnabled: true,
-        historyIntervalMinutes: 60,
-        historyIntervalUnit: 'minutes',
-        shortTermEnabled: true,
-        shortTermIntervalHours: 24,
-        shortTermIntervalUnit: 'hours',
-        mediumTermEnabled: false,
-        mediumTermIntervalHours: 168,
-        mediumTermIntervalUnit: 'hours',
-        longTermEnabled: false,
-        longTermIntervalHours: 168,
-        longTermIntervalUnit: 'hours',
-        songLeaguePlaylistsEnabled: true,
-        songLeaguePlaylistFridaysOnly: true,
-        songLeaguePlaylistIntervalMinutes: 60,
-        songLeaguePlaylistIntervalUnit: 'minutes',
-        sharedPlaylistsEnabled: false,
-        sharedPlaylistIntervalMinutes: 60,
-        sharedPlaylistIntervalUnit: 'minutes',
-        lastSuccessAt: null,
-        lastError: null
-      }
-    ]);
+        expect(component.isRunsCollapsed).toBe(true);
+        runsContent = fixture.nativeElement.querySelector('#admin-runs-content');
+        expect(runsContent).toBeNull();
+    });
 
-    fixture.detectChanges();
-    await fixture.whenStable();
-    fixture.detectChanges();
+    it('keeps user schedule cards collapsed by default and extends them on toggle', async () => {
+        adminService.listUsers.mockResolvedValue([
+            {
+                userId: 'user-1',
+                spotifyId: 'spotify-user-1',
+                displayName: 'Alice',
+                profilePicUrl: '',
+                backupActive: true,
+                hasRefreshToken: true,
+                enabled: true,
+                timezone: 'Europe/Vienna',
+                historyEnabled: true,
+                historyIntervalMinutes: 60,
+                historyIntervalUnit: 'minutes',
+                shortTermEnabled: true,
+                shortTermIntervalHours: 24,
+                shortTermIntervalUnit: 'hours',
+                mediumTermEnabled: false,
+                mediumTermIntervalHours: 168,
+                mediumTermIntervalUnit: 'hours',
+                longTermEnabled: false,
+                longTermIntervalHours: 168,
+                longTermIntervalUnit: 'hours',
+                songLeaguePlaylistsEnabled: true,
+                songLeaguePlaylistFridaysOnly: true,
+                songLeaguePlaylistIntervalMinutes: 60,
+                songLeaguePlaylistIntervalUnit: 'minutes',
+                sharedPlaylistsEnabled: false,
+                sharedPlaylistIntervalMinutes: 60,
+                sharedPlaylistIntervalUnit: 'minutes',
+                lastSuccessAt: null,
+                lastError: null
+            }
+        ]);
 
-    expect(component.isUserExpanded('user-1')).toBeFalse();
-    let settings = fixture.nativeElement.querySelector('.user-card-settings');
-    expect(settings).toBeNull();
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
 
-    const userCard = fixture.nativeElement.querySelector('.admin-user-card');
-    expect(userCard.textContent).toContain('Alice');
-    expect(userCard.textContent).toContain('spotify-user-1');
-    expect(userCard.textContent).toContain('3 tasks enabled');
+        expect(component.isUserExpanded('user-1')).toBe(false);
+        let settings = fixture.nativeElement.querySelector('.user-card-settings');
+        expect(settings).toBeNull();
 
-    component.toggleUserExpanded('user-1');
-    fixture.detectChanges();
+        const userCard = fixture.nativeElement.querySelector('.admin-user-card');
+        expect(userCard.textContent).toContain('Alice');
+        expect(userCard.textContent).toContain('spotify-user-1');
+        expect(userCard.textContent).toContain('3 tasks enabled');
 
-    expect(component.isUserExpanded('user-1')).toBeTrue();
-    settings = fixture.nativeElement.querySelector('.user-card-settings');
-    expect(settings).not.toBeNull();
-    expect(settings.textContent).toContain('Timezone');
-    expect(settings.textContent).toContain('Listening history');
-    expect(settings.textContent).toContain('Short-term stats');
+        component.toggleUserExpanded('user-1');
+        fixture.detectChanges();
 
-    component.toggleUserExpanded('user-1');
-    fixture.detectChanges();
+        expect(component.isUserExpanded('user-1')).toBe(true);
+        settings = fixture.nativeElement.querySelector('.user-card-settings');
+        expect(settings).not.toBeNull();
+        expect(settings.textContent).toContain('Timezone');
+        expect(settings.textContent).toContain('Listening history');
+        expect(settings.textContent).toContain('Short-term stats');
 
-    expect(component.isUserExpanded('user-1')).toBeFalse();
-    settings = fixture.nativeElement.querySelector('.user-card-settings');
-    expect(settings).toBeNull();
-  });
+        component.toggleUserExpanded('user-1');
+        fixture.detectChanges();
+
+        expect(component.isUserExpanded('user-1')).toBe(false);
+        settings = fixture.nativeElement.querySelector('.user-card-settings');
+        expect(settings).toBeNull();
+    });
 });

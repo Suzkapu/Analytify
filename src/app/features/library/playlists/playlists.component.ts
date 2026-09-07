@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SpotifyDataService} from "@core/data-access/spotify/spotify-data.service";
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
@@ -15,6 +15,7 @@ const console = createScopedLogger('Playlists');
 @Component({
     selector: 'app-playlists', templateUrl: './playlists.component.html', styleUrls: ['./playlists.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PlaylistsComponent {

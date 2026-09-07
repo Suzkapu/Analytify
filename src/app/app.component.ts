@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, NgZone, OnDestroy} from '@angular/core';
+import {AfterViewInit, Component, NgZone, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
 import {SwUpdate, VersionReadyEvent} from '@angular/service-worker';
 import {
   NavigationCancel,
@@ -20,6 +20,7 @@ const ANNOUNCEMENT_AUTO_HIDE_MS = 5000;
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AppComponent implements AfterViewInit, OnDestroy {

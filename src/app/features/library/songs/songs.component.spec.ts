@@ -1,185 +1,183 @@
+import { beforeEach, describe, expect, it, type Mock, vi } from "vitest";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ComponentFixture, fakeAsync, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
-import {ActivatedRoute, Router} from '@angular/router';
-import {EMPTY, Subject} from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute, Router } from '@angular/router';
+import { EMPTY, Subject } from 'rxjs';
 import { SongsComponent } from './songs.component';
-import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
-import {StorageService} from '@core/data-access/storage/storage.service';
-import {PlaylistLoaderService, PlaylistLoadTask} from '@core/sync/playlist-loader/playlist-loader.service';
-import {ImageHealingService} from '@core/sync/image-healing/image-healing.service';
+import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
+import { StorageService } from '@core/data-access/storage/storage.service';
+import { PlaylistLoaderService, PlaylistLoadTask } from '@core/sync/playlist-loader/playlist-loader.service';
+import { ImageHealingService } from '@core/sync/image-healing/image-healing.service';
 
 describe('SongsComponent', () => {
-  let component: SongsComponent;
-  let fixture: ComponentFixture<SongsComponent>;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [SongsComponent],
-      providers: [
-        { provide: ActivatedRoute, useValue: { params: EMPTY } },
-        { provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } },
-        { provide: SpotifyAuthService, useValue: {} },
-        {
-          provide: StorageService,
-          useValue: { setItem: jasmine.createSpy('setItem') }
-        },
-        { provide: PlaylistLoaderService, useValue: {} },
-        { provide: ImageHealingService, useValue: {} }
-      ],
-      schemas: [NO_ERRORS_SCHEMA]
+    beforeEach(() => {
+        vi.useFakeTimers({ advanceTimeDelta: 1, shouldAdvanceTime: true });
     });
-    fixture = TestBed.createComponent(SongsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('starts a shared Spotify task on the first open when cloud restore is slow', fakeAsync(() => {
-    const params = new Subject<Record<string, string>>();
-    const storage = {
-      getItem: jasmine.createSpy('getItem').and.returnValue(null),
-      removeItem: jasmine.createSpy('removeItem'),
-      restoreItemsFromCloud: jasmine.createSpy('restoreItemsFromCloud')
-        .and.returnValue(new Promise<number>(() => {}))
-    };
-    const auth = {
-      getUserId: () => 'user',
-      isBackupActive: () => true,
-      isAuthenticated: () => true,
-      ensureInitialSync: () => Promise.resolve()
-    };
-    const task = new PlaylistLoadTask('playlist');
-    task.isLoadingTracks = true;
-    task.isLoadingArtists = true;
-    task.emitUpdate();
-    const loader = {
-      readSourceManifest: () => null,
-      isPlaylistSourceDirty: () => false,
-      isCachedPlaylistComplete: () => false,
-      resolveExpectedPlaylistTotal: () => 0,
-      getLoadingTask: () => undefined,
-      sourceManifestKey: () => 'manifest',
-      startLoadingTask: jasmine.createSpy('startLoadingTask').and.returnValue(task)
-    };
-    const firstOpen = new SongsComponent(
-      {params} as any,
-      {navigate: jasmine.createSpy('navigate')} as any,
-      auth as any,
-      storage as any,
-      loader as any,
-      {} as any,
-      {runOutsideAngular: (callback: () => void) => callback()} as any
-    );
-
-    params.next({id: 'playlist'});
-    flushMicrotasks();
-
-    expect(firstOpen.isLoading).toBeTrue();
-    expect(loader.startLoadingTask).not.toHaveBeenCalled();
-
-    tick(750);
-    flushMicrotasks();
-
-    expect(loader.startLoadingTask).toHaveBeenCalledTimes(1);
-    expect(loader.startLoadingTask).toHaveBeenCalledWith('user', 'playlist', false, true);
-    firstOpen.ngOnDestroy();
-  }));
-
-  it('sorts albums by playlist song count in both directions', () => {
-    component.playlistAlbums = [
-      { name: 'Two', artists: [], trackCount: 2 },
-      { name: 'Ten', artists: [], trackCount: 10 },
-      { name: 'Five', artists: [], trackCount: 5 }
-    ];
-
-    component.albumSortOrder = 'desc';
-    component.filterAlbums();
-    expect(component.filteredAlbums.map(album => album.trackCount)).toEqual([10, 5, 2]);
-
-    component.albumSortOrder = 'asc';
-    component.filterAlbums();
-    expect(component.filteredAlbums.map(album => album.trackCount)).toEqual([2, 5, 10]);
-  });
-
-  it('keeps the playlist tracks belonging to each album', () => {
-    component.playlistTracks = [
-      { id: 'one', name: 'One', duration_ms: 1000, album: { id: 'album-a', name: 'Album A' } },
-      { id: 'two', name: 'Two', duration_ms: 2000, album: { id: 'album-a', name: 'Album A' } },
-      { id: 'three', name: 'Three', duration_ms: 3000, album: { id: 'album-b', name: 'Album B' } }
-    ];
-
-    component.updatePlaylistAlbums();
-
-    const album = component.playlistAlbums.find(item => item.id === 'album-a');
-    expect(album.trackCount).toBe(2);
-    expect(album.tracks.map((track: any) => track.id)).toEqual(['one', 'two']);
-  });
-
-  it('builds album details from cached tracks even when the album id is absent', () => {
-    component.playlistTracks = [{
-      id: 'cached-track',
-      name: 'Cached Track',
-      duration_ms: 123000,
-      artists: [{id: 'artist', name: 'Artist'}],
-      album: {name: 'Cache Album', images: [{url: 'cache.jpg'}]}
-    }];
-
-    component.updatePlaylistAlbums();
-
-    expect(component.playlistAlbums.length).toBe(1);
-    expect(component.playlistAlbums[0]).toEqual(jasmine.objectContaining({
-      id: null,
-      name: 'Cache Album',
-      imageUrl: 'cache.jpg',
-      spotifyUrl: null,
-      trackCount: 1
-    }));
-    expect(component.playlistAlbums[0].tracks[0].id).toBe('cached-track');
-  });
-
-  it('opens and closes the in-app album songs view', () => {
-    const scrollTo = spyOn(window, 'scrollTo') as jasmine.Spy;
-    spyOn(window, 'requestAnimationFrame').and.callFake(callback => {
-      callback(0);
-      return 1;
+    afterEach(() => {
+        vi.useRealTimers();
     });
-    const album = {
-      id: 'album-a',
-      tracks: [
-        { id: 'later', playlist_index: 2 },
-        { id: 'first', playlist_index: 1 }
-      ]
-    };
+    let component: SongsComponent;
+    let fixture: ComponentFixture<SongsComponent>;
 
-    component.openAlbumDetails(album);
-    expect(component.selectedAlbum.tracks.map((track: any) => track.id)).toEqual(['first', 'later']);
-    expect(scrollTo).toHaveBeenCalledWith({top: 0, behavior: 'auto'});
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            declarations: [SongsComponent],
+            providers: [
+                { provide: ActivatedRoute, useValue: { params: EMPTY } },
+                { provide: Router, useValue: { navigate: vi.fn().mockName('navigate') } },
+                { provide: SpotifyAuthService, useValue: {} },
+                {
+                    provide: StorageService,
+                    useValue: { setItem: vi.fn().mockName('setItem') }
+                },
+                { provide: PlaylistLoaderService, useValue: {} },
+                { provide: ImageHealingService, useValue: {} }
+            ],
+            schemas: [NO_ERRORS_SCHEMA]
+        });
+        fixture = TestBed.createComponent(SongsComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-    component.closeAlbumDetails();
-    expect(component.selectedAlbum).toBeNull();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 
-  it('keeps the album drill-down inside the shared page shell', () => {
-    component.isLoading = false;
-    component.artists = [{id: 'artist-a'}];
-    component.viewStyle = 'albums';
-    component.selectedAlbum = {
-      id: 'album-a',
-      name: 'Album A',
-      artists: ['Artist A'],
-      trackCount: 0,
-      tracks: [],
-      spotifyUrl: null,
-      imageUrl: null
-    };
-    fixture.detectChanges();
+    it('starts a shared Spotify task on the first open when cloud restore is slow', async () => {
+        const params = new Subject<Record<string, string>>();
+        const storage = {
+            getItem: vi.fn().mockName('getItem').mockReturnValue(null),
+            removeItem: vi.fn().mockName('removeItem'),
+            restoreItemsFromCloud: vi.fn().mockName('restoreItemsFromCloud').mockReturnValue(new Promise<number>(() => { }))
+        };
+        const auth = {
+            getUserId: () => 'user',
+            isBackupActive: () => true,
+            isAuthenticated: () => true,
+            ensureInitialSync: () => Promise.resolve()
+        };
+        const task = new PlaylistLoadTask('playlist');
+        task.isLoadingTracks = true;
+        task.isLoadingArtists = true;
+        task.emitUpdate();
+        const loader = {
+            readSourceManifest: () => null,
+            isPlaylistSourceDirty: () => false,
+            isCachedPlaylistComplete: () => false,
+            resolveExpectedPlaylistTotal: () => 0,
+            getLoadingTask: () => undefined,
+            sourceManifestKey: () => 'manifest',
+            startLoadingTask: vi.fn().mockName('startLoadingTask').mockReturnValue(task)
+        };
+        const firstOpen = new SongsComponent({ params } as any, { navigate: vi.fn().mockName('navigate') } as any, auth as any, storage as any, loader as any, {} as any, { runOutsideAngular: (callback: () => void) => callback() } as any);
 
-    const element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelector('.page-shell > .page-back-row')).not.toBeNull();
-    expect(element.querySelector('.artists-controls-bar.context-view')).not.toBeNull();
-    expect(element.querySelector('.page-shell > .album-detail-view')).not.toBeNull();
-  });
+        params.next({ id: 'playlist' });
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(firstOpen.isLoading).toBe(true);
+        expect(loader.startLoadingTask).not.toHaveBeenCalled();
+
+        await vi.advanceTimersByTimeAsync(750);
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(loader.startLoadingTask).toHaveBeenCalledTimes(1);
+        expect(loader.startLoadingTask).toHaveBeenCalledWith('user', 'playlist', false, true);
+        firstOpen.ngOnDestroy();
+    });
+
+    it('sorts albums by playlist song count in both directions', () => {
+        component.playlistAlbums = [
+            { name: 'Two', artists: [], trackCount: 2 },
+            { name: 'Ten', artists: [], trackCount: 10 },
+            { name: 'Five', artists: [], trackCount: 5 }
+        ];
+
+        component.albumSortOrder = 'desc';
+        component.filterAlbums();
+        expect(component.filteredAlbums.map(album => album.trackCount)).toEqual([10, 5, 2]);
+
+        component.albumSortOrder = 'asc';
+        component.filterAlbums();
+        expect(component.filteredAlbums.map(album => album.trackCount)).toEqual([2, 5, 10]);
+    });
+
+    it('keeps the playlist tracks belonging to each album', () => {
+        component.playlistTracks = [
+            { id: 'one', name: 'One', duration_ms: 1000, album: { id: 'album-a', name: 'Album A' } },
+            { id: 'two', name: 'Two', duration_ms: 2000, album: { id: 'album-a', name: 'Album A' } },
+            { id: 'three', name: 'Three', duration_ms: 3000, album: { id: 'album-b', name: 'Album B' } }
+        ];
+
+        component.updatePlaylistAlbums();
+
+        const album = component.playlistAlbums.find(item => item.id === 'album-a');
+        expect(album.trackCount).toBe(2);
+        expect(album.tracks.map((track: any) => track.id)).toEqual(['one', 'two']);
+    });
+
+    it('builds album details from cached tracks even when the album id is absent', () => {
+        component.playlistTracks = [{
+                id: 'cached-track',
+                name: 'Cached Track',
+                duration_ms: 123000,
+                artists: [{ id: 'artist', name: 'Artist' }],
+                album: { name: 'Cache Album', images: [{ url: 'cache.jpg' }] }
+            }];
+
+        component.updatePlaylistAlbums();
+
+        expect(component.playlistAlbums.length).toBe(1);
+        expect(component.playlistAlbums[0]).toEqual(expect.objectContaining({
+            id: null,
+            name: 'Cache Album',
+            imageUrl: 'cache.jpg',
+            spotifyUrl: null,
+            trackCount: 1
+        }));
+        expect(component.playlistAlbums[0].tracks[0].id).toBe('cached-track');
+    });
+
+    it('opens and closes the in-app album songs view', () => {
+        const scrollTo = vi.spyOn(window, 'scrollTo').mockReturnValue(undefined) as Mock;
+        vi.spyOn(window, 'requestAnimationFrame').mockImplementation(callback => {
+            callback(0);
+            return 1;
+        });
+        const album = {
+            id: 'album-a',
+            tracks: [
+                { id: 'later', playlist_index: 2 },
+                { id: 'first', playlist_index: 1 }
+            ]
+        };
+
+        component.openAlbumDetails(album);
+        expect(component.selectedAlbum.tracks.map((track: any) => track.id)).toEqual(['first', 'later']);
+        expect(scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'auto' });
+
+        component.closeAlbumDetails();
+        expect(component.selectedAlbum).toBeNull();
+    });
+
+    it('keeps the album drill-down inside the shared page shell', () => {
+        component.isLoading = false;
+        component.artists = [{ id: 'artist-a' }];
+        component.viewStyle = 'albums';
+        component.selectedAlbum = {
+            id: 'album-a',
+            name: 'Album A',
+            artists: ['Artist A'],
+            trackCount: 0,
+            tracks: [],
+            spotifyUrl: null,
+            imageUrl: null
+        };
+        fixture.detectChanges();
+
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelector('.page-shell > .page-back-row')).not.toBeNull();
+        expect(element.querySelector('.artists-controls-bar.context-view')).not.toBeNull();
+        expect(element.querySelector('.page-shell > .album-detail-view')).not.toBeNull();
+    });
 });

@@ -1,158 +1,166 @@
-import {TestBed} from '@angular/core/testing';
-import {SupabaseService} from '@core/data-access/supabase/supabase.service';
-import {StatsSharingService} from './stats-sharing.service';
+import { beforeEach, describe, expect, it, type Mock, vi } from "vitest";
+import { TestBed } from '@angular/core/testing';
+import { SupabaseService } from '@core/data-access/supabase/supabase.service';
+import { StatsSharingService } from './stats-sharing.service';
 
 describe('StatsSharingService', () => {
-  let service: StatsSharingService;
-  let rpc: jasmine.Spy;
-  let channel: any;
-  let changeHandler: (() => void) | null;
-  let removeChannel: jasmine.Spy;
+    let service: StatsSharingService;
+    let rpc: Mock;
+    let channel: any;
+    let changeHandler: (() => void) | null;
+    let removeChannel: Mock;
 
-  beforeEach(() => {
-    rpc = jasmine.createSpy('rpc');
-    changeHandler = null;
-    channel = {
-      on: jasmine.createSpy('on').and.callFake((_event: string, _filter: any, handler: () => void) => {
-        changeHandler = handler;
-        return channel;
-      }),
-      subscribe: jasmine.createSpy('subscribe').and.returnValue(null)
-    };
-    channel.subscribe.and.returnValue(channel);
-    removeChannel = jasmine.createSpy('removeChannel').and.resolveTo('ok');
+    beforeEach(() => {
+        rpc = vi.fn().mockName('rpc');
+        changeHandler = null;
+        channel = {
+            on: vi.fn().mockName('on').mockImplementation((_event: string, _filter: any, handler: () => void) => {
+                changeHandler = handler;
+                return channel;
+            }),
+            subscribe: vi.fn().mockName('subscribe').mockReturnValue(null)
+        };
+        channel.subscribe.mockReturnValue(channel);
+        removeChannel = vi.fn().mockName('removeChannel').mockResolvedValue('ok');
 
-    TestBed.configureTestingModule({
-      providers: [
-        StatsSharingService,
-        {
-          provide: SupabaseService,
-          useValue: {client: {rpc, channel: () => channel, removeChannel}}
-        }
-      ]
-    });
-    service = TestBed.inject(StatsSharingService);
-  });
-
-  it('lists registered users with their per-viewer request state', async () => {
-    rpc.and.resolveTo({data: [{
-      user_id: 'owner-id', display_name: 'Owner', image_url: 'owner.jpg',
-      request_id: 'request-id', request_status: 'approved'
-    }], error: null});
-
-    const users = await service.listAvailableUsers('Owner');
-
-    expect(rpc).toHaveBeenCalledOnceWith('search_stats_shareable_users', {p_query: 'Owner'});
-    expect(users).toEqual([{
-      userId: 'owner-id', displayName: 'Owner', imageUrl: 'owner.jpg',
-      requestId: 'request-id', requestStatus: 'approved'
-    }]);
-  });
-
-  it('never downloads a directory for blank or short searches', async () => {
-    expect(await service.listAvailableUsers('')).toEqual([]);
-    expect(await service.listAvailableUsers('ab')).toEqual([]);
-    expect(rpc).not.toHaveBeenCalled();
-  });
-
-  it('manages discoverability, blocks, and reports through guarded RPCs', async () => {
-    rpc.and.callFake((name: string, args?: any) => Promise.resolve({
-      data: name === 'set_stats_discovery_setting' ? args.p_enabled : true,
-      error: null
-    }));
-
-    expect(await service.getDiscoverability()).toBeTrue();
-    expect(await service.setDiscoverability(false)).toBeFalse();
-    await service.blockUser('blocked-user');
-    await service.reportUser('reported-user', ' spam request ');
-
-    expect(rpc.calls.allArgs()).toEqual([
-      ['get_stats_discovery_setting'],
-      ['set_stats_discovery_setting', {p_enabled: false}],
-      ['block_stats_user', {p_user_id: 'blocked-user'}],
-      ['report_stats_user', {p_user_id: 'reported-user', p_reason: 'spam request'}]
-    ]);
-  });
-
-  it('requests, approves, declines, and revokes access only through guarded RPCs', async () => {
-    rpc.and.resolveTo({data: 'request-id', error: null});
-
-    await expectAsync(service.requestAccess('owner-id')).toBeResolvedTo('request-id');
-    await service.respondToRequest('request-id', true);
-    await service.respondToRequest('request-id', false);
-    await service.revokeAccess('request-id');
-
-    expect(rpc.calls.allArgs()).toEqual([
-      ['request_stats_access', {p_owner_user_id: 'owner-id'}],
-      ['answer_stats_access_request', {p_request_id: 'request-id', p_decision: 'approved'}],
-      ['answer_stats_access_request', {p_request_id: 'request-id', p_decision: 'declined'}],
-      ['revoke_stats_access', {p_request_id: 'request-id'}]
-    ]);
-  });
-
-  it('creates and claims a one-recipient stats request link through guarded RPCs', async () => {
-    rpc.and.resolveTo({data: 'invite-id', error: null});
-
-    const invite = await service.createAccessInvite();
-    expect(invite.inviteId).toBe('invite-id');
-    expect(invite.claimToken.length).toBe(64);
-    expect(invite.claimUrl).toContain('/shared-playlists/stats-request/');
-    expect(rpc).toHaveBeenCalledWith('create_stats_access_invite', {
-      p_claim_token: invite.claimToken
+        TestBed.configureTestingModule({
+            providers: [
+                StatsSharingService,
+                {
+                    provide: SupabaseService,
+                    useValue: { client: { rpc, channel: () => channel, removeChannel } }
+                }
+            ]
+        });
+        service = TestBed.inject(StatsSharingService);
     });
 
-    rpc.and.resolveTo({data: 'request-id', error: null});
-    await expectAsync(service.claimAccessInvite('private-token')).toBeResolvedTo('request-id');
-    expect(rpc).toHaveBeenCalledWith('claim_stats_access_invite', {
-      p_claim_token: 'private-token'
+    it('lists registered users with their per-viewer request state', async () => {
+        rpc.mockResolvedValue({ data: [{
+                    user_id: 'owner-id', display_name: 'Owner', image_url: 'owner.jpg',
+                    request_id: 'request-id', request_status: 'approved'
+                }], error: null });
+
+        const users = await service.listAvailableUsers('Owner');
+
+        expect(rpc).toHaveBeenCalledTimes(1);
+
+        expect(rpc).toHaveBeenCalledWith('search_stats_shareable_users', { p_query: 'Owner' });
+        expect(users).toEqual([{
+                userId: 'owner-id', displayName: 'Owner', imageUrl: 'owner.jpg',
+                requestId: 'request-id', requestStatus: 'approved'
+            }]);
     });
-  });
 
-  it('maps access records with the role returned for the current user', async () => {
-    rpc.and.resolveTo({data: [{
-      id: 'request-id', owner_user_id: 'owner-id', viewer_user_id: 'viewer-id',
-      owner_display_name: 'Owner', owner_image_url: '', viewer_display_name: 'Viewer', viewer_image_url: '',
-      status: 'pending', requested_at: '2026-09-01T10:00:00Z', responded_at: null,
-      revoked_at: null, updated_at: '2026-09-01T10:00:00Z', viewer_role: 'owner'
-    }], error: null});
-
-    const requests = await service.listAccessRequests();
-
-    expect(rpc).toHaveBeenCalledOnceWith('list_stats_access_requests');
-    expect(requests[0]).toEqual(jasmine.objectContaining({
-      id: 'request-id', status: 'pending', viewerRole: 'owner'
-    }));
-  });
-
-  it('loads another user snapshot only through the consent-aware RPC', async () => {
-    rpc.and.resolveTo({data: {
-      ownerDisplayName: 'Owner', snapshotDate: '2026-09-01',
-      topTracks: [{id: 'track'}], topArtists: [{id: 'artist'}],
-      topGenres: [{name: 'indie', weight: 8}, {name: 'pop', weight: 2}]
-    }, error: null});
-
-    const snapshot = await service.loadSharedStats('owner-id', 'short_term');
-
-    expect(rpc).toHaveBeenCalledOnceWith('get_shared_stats_snapshot', {
-      p_owner_user_id: 'owner-id', p_range: 'short_term'
+    it('never downloads a directory for blank or short searches', async () => {
+        expect(await service.listAvailableUsers('')).toEqual([]);
+        expect(await service.listAvailableUsers('ab')).toEqual([]);
+        expect(rpc).not.toHaveBeenCalled();
     });
-    expect(snapshot?.topGenres).toEqual([
-      {name: 'indie', count: 8, percentage: 8},
-      {name: 'pop', count: 2, percentage: 2}
-    ]);
-  });
 
-  it('subscribes to access changes and removes its realtime channel', () => {
-    const onChange = jasmine.createSpy('onChange');
-    const unsubscribe = service.subscribeToAccessChanges(onChange);
+    it('manages discoverability, blocks, and reports through guarded RPCs', async () => {
+        rpc.mockImplementation((name: string, args?: any) => Promise.resolve({
+            data: name === 'set_stats_discovery_setting' ? args.p_enabled : true,
+            error: null
+        }));
 
-    expect(channel.on).toHaveBeenCalledWith('postgres_changes', jasmine.objectContaining({
-      event: '*', schema: 'public', table: 'stats_access_requests'
-    }), jasmine.any(Function));
-    changeHandler?.();
-    expect(onChange).toHaveBeenCalledTimes(1);
+        expect(await service.getDiscoverability()).toBe(true);
+        expect(await service.setDiscoverability(false)).toBe(false);
+        await service.blockUser('blocked-user');
+        await service.reportUser('reported-user', ' spam request ');
 
-    unsubscribe();
-    expect(removeChannel).toHaveBeenCalledOnceWith(channel);
-  });
+        expect(vi.mocked(rpc).mock.calls).toEqual([
+            ['get_stats_discovery_setting'],
+            ['set_stats_discovery_setting', { p_enabled: false }],
+            ['block_stats_user', { p_user_id: 'blocked-user' }],
+            ['report_stats_user', { p_user_id: 'reported-user', p_reason: 'spam request' }]
+        ]);
+    });
+
+    it('requests, approves, declines, and revokes access only through guarded RPCs', async () => {
+        rpc.mockResolvedValue({ data: 'request-id', error: null });
+
+        await expect(service.requestAccess('owner-id')).resolves.toEqual('request-id');
+        await service.respondToRequest('request-id', true);
+        await service.respondToRequest('request-id', false);
+        await service.revokeAccess('request-id');
+
+        expect(vi.mocked(rpc).mock.calls).toEqual([
+            ['request_stats_access', { p_owner_user_id: 'owner-id' }],
+            ['answer_stats_access_request', { p_request_id: 'request-id', p_decision: 'approved' }],
+            ['answer_stats_access_request', { p_request_id: 'request-id', p_decision: 'declined' }],
+            ['revoke_stats_access', { p_request_id: 'request-id' }]
+        ]);
+    });
+
+    it('creates and claims a one-recipient stats request link through guarded RPCs', async () => {
+        rpc.mockResolvedValue({ data: 'invite-id', error: null });
+
+        const invite = await service.createAccessInvite();
+        expect(invite.inviteId).toBe('invite-id');
+        expect(invite.claimToken.length).toBe(64);
+        expect(invite.claimUrl).toContain('/shared-playlists/stats-request/');
+        expect(rpc).toHaveBeenCalledWith('create_stats_access_invite', {
+            p_claim_token: invite.claimToken
+        });
+
+        rpc.mockResolvedValue({ data: 'request-id', error: null });
+        await expect(service.claimAccessInvite('private-token')).resolves.toEqual('request-id');
+        expect(rpc).toHaveBeenCalledWith('claim_stats_access_invite', {
+            p_claim_token: 'private-token'
+        });
+    });
+
+    it('maps access records with the role returned for the current user', async () => {
+        rpc.mockResolvedValue({ data: [{
+                    id: 'request-id', owner_user_id: 'owner-id', viewer_user_id: 'viewer-id',
+                    owner_display_name: 'Owner', owner_image_url: '', viewer_display_name: 'Viewer', viewer_image_url: '',
+                    status: 'pending', requested_at: '2026-09-01T10:00:00Z', responded_at: null,
+                    revoked_at: null, updated_at: '2026-09-01T10:00:00Z', viewer_role: 'owner'
+                }], error: null });
+
+        const requests = await service.listAccessRequests();
+
+        expect(rpc).toHaveBeenCalledTimes(1);
+
+        expect(rpc).toHaveBeenCalledWith('list_stats_access_requests');
+        expect(requests[0]).toEqual(expect.objectContaining({
+            id: 'request-id', status: 'pending', viewerRole: 'owner'
+        }));
+    });
+
+    it('loads another user snapshot only through the consent-aware RPC', async () => {
+        rpc.mockResolvedValue({ data: {
+                ownerDisplayName: 'Owner', snapshotDate: '2026-09-01',
+                topTracks: [{ id: 'track' }], topArtists: [{ id: 'artist' }],
+                topGenres: [{ name: 'indie', weight: 8 }, { name: 'pop', weight: 2 }]
+            }, error: null });
+
+        const snapshot = await service.loadSharedStats('owner-id', 'short_term');
+
+        expect(rpc).toHaveBeenCalledTimes(1);
+
+        expect(rpc).toHaveBeenCalledWith('get_shared_stats_snapshot', {
+            p_owner_user_id: 'owner-id', p_range: 'short_term'
+        });
+        expect(snapshot?.topGenres).toEqual([
+            { name: 'indie', count: 8, percentage: 8 },
+            { name: 'pop', count: 2, percentage: 2 }
+        ]);
+    });
+
+    it('subscribes to access changes and removes its realtime channel', () => {
+        const onChange = vi.fn().mockName('onChange');
+        const unsubscribe = service.subscribeToAccessChanges(onChange);
+
+        expect(channel.on).toHaveBeenCalledWith('postgres_changes', expect.objectContaining({
+            event: '*', schema: 'public', table: 'stats_access_requests'
+        }), expect.any(Function));
+        changeHandler?.();
+        expect(onChange).toHaveBeenCalledTimes(1);
+
+        unsubscribe();
+        expect(removeChannel).toHaveBeenCalledTimes(1);
+        expect(removeChannel).toHaveBeenCalledWith(channel);
+    });
 });

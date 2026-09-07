@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {distinctUntilChanged, firstValueFrom, map, Subscription} from 'rxjs';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
@@ -13,6 +13,7 @@ import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
     selector: 'app-shared-playlist-detail',
     templateUrl: './shared-playlist-detail.component.html',
     styleUrls: ['./shared-playlist-detail.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {

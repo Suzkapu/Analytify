@@ -1,4 +1,4 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
 import {SpotifyDataService} from "@core/data-access/spotify/spotify-data.service";
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {StorageService} from "@core/data-access/storage/storage.service";
@@ -14,6 +14,7 @@ const console = createScopedLogger('Artist Details');
     selector: 'app-artist-details',
     templateUrl: './artist-details.component.html',
     styleUrls: ['./artist-details.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ArtistDetailsComponent implements OnDestroy {

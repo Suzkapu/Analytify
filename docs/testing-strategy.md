@@ -4,14 +4,14 @@ CI keeps the fast source-pattern diagnostics while release verification also exe
 
 | Risk | Executed boundary |
 | --- | --- |
-| Browser workflows, cancellation, stale responses, and fault fallbacks | Angular/Jasmine in Chrome Headless |
+| Browser workflows, cancellation, stale responses, and fault fallbacks | Angular/Vitest in isolated jsdom environments |
 | Queue concurrency, leases, provider faults, and task cancellation | Node's test runner against sync-worker modules |
 | Edge authorization, request validation, and push delivery failures | Deno tests with mocked provider boundaries |
 | RLS, grants, quotas, compare-and-swap writes, and concurrent database state | PgTAP after rebuilding every migration from an empty database |
 | Supabase-first browser loading | Angular integration tests against an isolated local Supabase stack |
 | Release activation and rollback policy | Node tests around deployment scripts |
 
-The browser coverage baseline is ratcheted in `karma.ci.conf.cjs`. A change may raise those four values; it must not lower them. CI publishes HTML and LCOV coverage together with the exact Node, npm, Deno, and Chrome versions for 14 days.
+The browser coverage baseline is ratcheted by `scripts/check-coverage-thresholds.mjs`. A change may raise those four values; it must not lower them. CI publishes HTML and LCOV coverage together with the exact Node, npm, Deno, and Chrome versions for 14 days.
 
 ## Critical-path burn-down
 

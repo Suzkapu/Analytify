@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {environment} from '@env/environment';
@@ -7,6 +7,7 @@ import {environment} from '@env/environment';
     selector: 'app-personal-spotify-connect',
     templateUrl: './personal-spotify-connect.component.html',
     styleUrls: ['./personal-spotify-connect.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PersonalSpotifyConnectComponent implements OnInit {

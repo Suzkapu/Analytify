@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CompareGuestPlaylistSourceService} from '@core/compare-room/compare-guest-playlist-source.service';
 import {CompareRoomGuestService} from '@core/compare-room/compare-room-guest.service';
@@ -17,6 +17,7 @@ import {filter, Subscription, take} from 'rxjs';
     selector: 'app-compare-room-join',
     templateUrl: './compare-room-join.component.html',
     styleUrls: ['./compare-room-join.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CompareRoomJoinComponent implements OnInit, OnDestroy {

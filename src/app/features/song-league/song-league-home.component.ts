@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
@@ -10,6 +10,7 @@ import {AdminService} from '@core/admin/admin.service';
 @Component({
     selector: 'app-song-league-home',
     templateUrl: './song-league-home.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SongLeagueHomeComponent implements OnInit {

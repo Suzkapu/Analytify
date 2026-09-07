@@ -244,7 +244,7 @@
                 }
               </div>
               @if (participant.result?.playlistUrl) {
-                <a [href]="participant.result?.playlistUrl | safeSpotifyUrl:'playlist'" target="_blank" rel="noopener noreferrer">Open in Spotify</a>
+                <a [href]="$safeNavigationMigration(participant.result?.playlistUrl) | safeSpotifyUrl:'playlist'" target="_blank" rel="noopener noreferrer">Open in Spotify</a>
               }
             </article>
           }

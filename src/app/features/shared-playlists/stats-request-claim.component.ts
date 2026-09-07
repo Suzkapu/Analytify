@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 
@@ -6,6 +6,7 @@ import {StatsSharingService} from '@core/sharing/stats-sharing.service';
     selector: 'app-stats-request-claim',
     templateUrl: './stats-request-claim.component.html',
     styleUrls: ['./shared-playlist-claim.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class StatsRequestClaimComponent implements OnInit {

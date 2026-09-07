@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {Location} from '@angular/common';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {filter, startWith, Subscription} from 'rxjs';
@@ -6,6 +6,7 @@ import {filter, startWith, Subscription} from 'rxjs';
 @Component({
     selector: 'app-shell',
     templateUrl: './app-shell.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AppShellComponent implements OnInit, OnDestroy {

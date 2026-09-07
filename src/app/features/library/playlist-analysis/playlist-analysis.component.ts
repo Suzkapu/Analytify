@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { SpotifyAuthService } from "@core/auth/spotify-auth.service";
 import { StorageService } from "@core/data-access/storage/storage.service";
@@ -14,6 +14,7 @@ const console = createScopedLogger('Playlist Analysis');
     templateUrl: './playlist-analysis.component.html',
     styleUrls: ['./playlist-analysis.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PlaylistAnalysisComponent implements OnInit, OnDestroy {

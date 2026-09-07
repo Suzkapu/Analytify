@@ -1,51 +1,51 @@
-import {of} from 'rxjs';
-import {ListeningHistoryComponent} from './listening-history.component';
+import { beforeEach, describe, expect, it, type Mock, vi } from "vitest";
+import { of } from 'rxjs';
+import { ListeningHistoryComponent } from './listening-history.component';
 
 describe('ListeningHistoryComponent', () => {
-  let storage: Map<string, string>;
-  let spotify: {getRecentlyPlayed: jasmine.Spy};
-  let component: ListeningHistoryComponent;
+    let storage: Map<string, string>;
+    let spotify: {
+        getRecentlyPlayed: Mock;
+    };
+    let component: ListeningHistoryComponent;
 
-  beforeEach(() => {
-    storage = new Map<string, string>();
-    spotify = {getRecentlyPlayed: jasmine.createSpy('getRecentlyPlayed').and.returnValue(of({items: []}))};
-    component = new ListeningHistoryComponent(
-      spotify as any,
-      {
-        getUserId: () => 'user',
-        getSupabaseUserId: () => null,
-        isBackupActive: () => false
-      } as any,
-      {
-        getItem: (key: string) => storage.get(key) ?? null,
-        setItem: (key: string, value: string) => storage.set(key, value)
-      } as any,
-      null as any
-    );
-  });
+    beforeEach(() => {
+        storage = new Map<string, string>();
+        spotify = { getRecentlyPlayed: vi.fn().mockName('getRecentlyPlayed').mockReturnValue(of({ items: [] })) };
+        component = new ListeningHistoryComponent(spotify as any, {
+            getUserId: () => 'user',
+            getSupabaseUserId: () => null,
+            isBackupActive: () => false
+        } as any, {
+            getItem: (key: string) => storage.get(key) ?? null,
+            setItem: (key: string, value: string) => storage.set(key, value)
+        } as any, null as any);
+    });
 
-  it('uses the newest cached play as the Spotify after cursor', async () => {
-    const playedAt = '2026-08-08T10:00:00.000Z';
-    storage.set('user_recently_played', JSON.stringify([{played_at: playedAt, track: {id: 'track'}}]));
+    it('uses the newest cached play as the Spotify after cursor', async () => {
+        const playedAt = '2026-08-08T10:00:00.000Z';
+        storage.set('user_recently_played', JSON.stringify([{ played_at: playedAt, track: { id: 'track' } }]));
 
-    await component.loadRecentlyPlayed();
+        await component.loadRecentlyPlayed();
 
-    expect(spotify.getRecentlyPlayed).toHaveBeenCalledOnceWith(50, new Date(playedAt).getTime());
-  });
+        expect(spotify.getRecentlyPlayed).toHaveBeenCalledTimes(1);
 
-  it('shows loading immediately instead of an empty history state', () => {
-    expect(component.isLoadingRecentlyPlayed).toBeTrue();
-  });
+        expect(spotify.getRecentlyPlayed).toHaveBeenCalledWith(50, new Date(playedAt).getTime());
+    });
 
-  it('skips Spotify when history was checked in the last five minutes', async () => {
-    storage.set('user_recently_played', JSON.stringify([{
-      played_at: '2026-08-08T10:00:00.000Z',
-      track: {id: 'track'}
-    }]));
-    storage.set('user_recently_played_lastChecked', Date.now().toString());
+    it('shows loading immediately instead of an empty history state', () => {
+        expect(component.isLoadingRecentlyPlayed).toBe(true);
+    });
 
-    await component.loadRecentlyPlayed();
+    it('skips Spotify when history was checked in the last five minutes', async () => {
+        storage.set('user_recently_played', JSON.stringify([{
+                played_at: '2026-08-08T10:00:00.000Z',
+                track: { id: 'track' }
+            }]));
+        storage.set('user_recently_played_lastChecked', Date.now().toString());
 
-    expect(spotify.getRecentlyPlayed).not.toHaveBeenCalled();
-  });
+        await component.loadRecentlyPlayed();
+
+        expect(spotify.getRecentlyPlayed).not.toHaveBeenCalled();
+    });
 });

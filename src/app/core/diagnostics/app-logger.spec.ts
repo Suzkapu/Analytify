@@ -1,43 +1,48 @@
-import {createScopedLogger} from './app-logger';
+import { describe, expect, it, vi } from "vitest";
+import { createScopedLogger } from './app-logger';
 
 describe('app logger', () => {
-  it('adds an ordered Analytify prefix, scope, and level', () => {
-    const output = spyOn(globalThis.console, 'info');
-    const logger = createScopedLogger('Navigation');
+    it('adds an ordered Analytify prefix, scope, and level', () => {
+        const output = vi.spyOn(globalThis.console, 'info').mockReturnValue(undefined);
+        const logger = createScopedLogger('Navigation');
 
-    logger.step('Opening page', {url: '/playlists'});
+        logger.step('Opening page', { url: '/playlists' });
 
-    expect(output).toHaveBeenCalled();
-    const [prefix, message, details] = output.calls.mostRecent().args;
-    expect(prefix).toMatch(/^\[Analytify\]\[\d{4}\]\[\+\d+ms\]\[Navigation\]\[STEP\]$/);
-    expect(message).toBe('Opening page');
-    expect(details).toEqual({url: '/playlists'});
-  });
-
-  it('redacts credentials and OAuth values from diagnostic details', () => {
-    const output = spyOn(globalThis.console, 'error');
-    const logger = createScopedLogger('Authentication');
-
-    logger.error('Callback failed at https://app.test/callback?code=private-code', {
-      accessToken: 'private-token',
-      safeStatus: 401
+        expect(output).toHaveBeenCalled();
+        const [prefix, message, details] = vi.mocked(output).mock.lastCall!;
+        expect(prefix).toMatch(/^\[Analytify\]\[\d{4}\]\[\+\d+ms\]\[Navigation\]\[STEP\]$/);
+        expect(message).toBe('Opening page');
+        expect(details).toEqual({ url: '/playlists' });
     });
 
-    const [, message, details] = output.calls.mostRecent().args;
-    expect(message).toContain('code=[REDACTED]');
-    expect(message).not.toContain('private-code');
-    expect(details).toEqual({accessToken: '[REDACTED]', safeStatus: 401});
-  });
+    it('redacts credentials and OAuth values from diagnostic details', () => {
+        const output = vi.spyOn(globalThis.console, 'error').mockReturnValue(undefined);
+        const logger = createScopedLogger('Authentication');
 
-  it('keeps error names, messages, and stacks available for debugging', () => {
-    const output = spyOn(globalThis.console, 'warn');
-    const logger = createScopedLogger('Storage');
+        logger.error('Callback failed at https://app.test/callback?code=private-code', {
+            accessToken: 'private-token',
+            safeStatus: 401
+        });
 
-    logger.warn('Read failed', new Error('IndexedDB unavailable'));
+        const [, message, details] = vi.mocked(output).mock.lastCall!;
+        expect(message).toContain('code=[REDACTED]');
+        expect(message).not.toContain('private-code');
+        expect(details).toEqual({ accessToken: '[REDACTED]', safeStatus: 401 });
+    });
 
-    const details = output.calls.mostRecent().args[2] as {name: string; message: string; stack?: string};
-    expect(details.name).toBe('Error');
-    expect(details.message).toBe('IndexedDB unavailable');
-    expect(details.stack).toContain('IndexedDB unavailable');
-  });
+    it('keeps error names, messages, and stacks available for debugging', () => {
+        const output = vi.spyOn(globalThis.console, 'warn').mockReturnValue(undefined);
+        const logger = createScopedLogger('Storage');
+
+        logger.warn('Read failed', new Error('IndexedDB unavailable'));
+
+        const details = vi.mocked(output).mock.lastCall![2] as {
+            name: string;
+            message: string;
+            stack?: string;
+        };
+        expect(details.name).toBe('Error');
+        expect(details.message).toBe('IndexedDB unavailable');
+        expect(details.stack).toContain('IndexedDB unavailable');
+    });
 });

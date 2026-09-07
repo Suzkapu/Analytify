@@ -1,4 +1,4 @@
-import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {distinctUntilChanged, map, Subscription} from 'rxjs';
 
@@ -19,6 +19,7 @@ import {
 @Component({
     selector: 'app-song-league-detail',
     templateUrl: './song-league-detail.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SongLeagueDetailComponent implements OnInit, OnDestroy {

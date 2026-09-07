@@ -1,113 +1,112 @@
+import { beforeEach, describe, expect, it, type MockedObject, vi } from "vitest";
 import { HttpContext, HttpErrorResponse, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
-import {firstValueFrom, of, throwError} from 'rxjs';
-import {SpotifyAuthInterceptor} from './spotify-auth.interceptor';
-import {SpotifyAuthService} from './spotify-auth.service';
-import {TRANSIENT_SPOTIFY_REQUEST} from '@core/compare-room/spotify-request-context';
+import { firstValueFrom, of, throwError } from 'rxjs';
+import { SpotifyAuthInterceptor } from './spotify-auth.interceptor';
+import { SpotifyAuthService } from './spotify-auth.service';
+import { TRANSIENT_SPOTIFY_REQUEST } from '@core/compare-room/spotify-request-context';
 
 describe('SpotifyAuthInterceptor', () => {
-  let auth: jasmine.SpyObj<SpotifyAuthService>;
-  let interceptor: SpotifyAuthInterceptor;
+    let auth: any;
+    let interceptor: SpotifyAuthInterceptor;
 
-  beforeEach(() => {
-    auth = jasmine.createSpyObj<SpotifyAuthService>('SpotifyAuthService', [
-      'isAuthenticated',
-      'isTokenExpired',
-      'getAccessToken',
-      'refreshToken',
-      'loginWithSupabase',
-      'renewSpotifyAuthorization'
-    ]);
-    auth.isAuthenticated.and.returnValue(true);
-    auth.isTokenExpired.and.returnValue(false);
-    auth.getAccessToken.and.returnValue('cached-token');
-    auth.refreshToken.and.returnValue(of({ access_token: 'refreshed-token' }));
-    auth.loginWithSupabase.and.resolveTo();
-    auth.renewSpotifyAuthorization.and.resolveTo();
-    interceptor = new SpotifyAuthInterceptor(auth);
-  });
-
-  it('passes non-Spotify requests through unchanged', async () => {
-    const request = new HttpRequest('GET', 'https://example.com/data');
-    let received: HttpRequest<any> | undefined;
-    const next = handlerFor(req => {
-      received = req;
-      return of(new HttpResponse({ status: 200 }));
+    beforeEach(() => {
+        auth = {
+            isAuthenticated: vi.fn().mockName("SpotifyAuthService.isAuthenticated"),
+            isTokenExpired: vi.fn().mockName("SpotifyAuthService.isTokenExpired"),
+            getAccessToken: vi.fn().mockName("SpotifyAuthService.getAccessToken"),
+            refreshToken: vi.fn().mockName("SpotifyAuthService.refreshToken"),
+            loginWithSupabase: vi.fn().mockName("SpotifyAuthService.loginWithSupabase"),
+            renewSpotifyAuthorization: vi.fn().mockName("SpotifyAuthService.renewSpotifyAuthorization")
+        };
+        auth.isAuthenticated.mockReturnValue(true);
+        auth.isTokenExpired.mockReturnValue(false);
+        auth.getAccessToken.mockReturnValue('cached-token');
+        auth.refreshToken.mockReturnValue(of({ access_token: 'refreshed-token' }));
+        auth.loginWithSupabase.mockResolvedValue(undefined);
+        auth.renewSpotifyAuthorization.mockResolvedValue(undefined);
+        interceptor = new SpotifyAuthInterceptor(auth);
     });
 
-    await firstValueFrom(interceptor.intercept(request, next));
+    it('passes non-Spotify requests through unchanged', async () => {
+        const request = new HttpRequest('GET', 'https://example.com/data');
+        let received: HttpRequest<any> | undefined;
+        const next = handlerFor(req => {
+            received = req;
+            return of(new HttpResponse({ status: 200 }));
+        });
 
-    expect(received).toBe(request);
-    expect(auth.getAccessToken).not.toHaveBeenCalled();
-  });
+        await firstValueFrom(interceptor.intercept(request, next));
 
-  it('adds the cached Spotify token and language preference', async () => {
-    const request = new HttpRequest('GET', 'https://api.spotify.com/v1/me');
-    let received: HttpRequest<any> | undefined;
-    const next = handlerFor(req => {
-      received = req;
-      return of(new HttpResponse({ status: 200 }));
+        expect(received).toBe(request);
+        expect(auth.getAccessToken).not.toHaveBeenCalled();
     });
 
-    await firstValueFrom(interceptor.intercept(request, next));
+    it('adds the cached Spotify token and language preference', async () => {
+        const request = new HttpRequest('GET', 'https://api.spotify.com/v1/me');
+        let received: HttpRequest<any> | undefined;
+        const next = handlerFor(req => {
+            received = req;
+            return of(new HttpResponse({ status: 200 }));
+        });
 
-    expect(received?.headers.get('Authorization')).toBe('Bearer cached-token');
-    expect(received?.headers.get('Accept-Language')).toContain('en-GB');
-  });
+        await firstValueFrom(interceptor.intercept(request, next));
 
-  it('preserves an isolated Compare Room participant token', async () => {
-    const request = new HttpRequest('GET', 'https://api.spotify.com/v1/me', {
-      headers: undefined,
-      context: new HttpContext().set(TRANSIENT_SPOTIFY_REQUEST, true)
-    }).clone({setHeaders: {Authorization: 'Bearer guest-token'}});
-    let received: HttpRequest<any> | undefined;
-    const next = handlerFor(req => {
-      received = req;
-      return of(new HttpResponse({status: 200}));
+        expect(received?.headers.get('Authorization')).toBe('Bearer cached-token');
+        expect(received?.headers.get('Accept-Language')).toContain('en-GB');
     });
 
-    await firstValueFrom(interceptor.intercept(request, next));
+    it('preserves an isolated Compare Room participant token', async () => {
+        const request = new HttpRequest('GET', 'https://api.spotify.com/v1/me', {
+            headers: undefined,
+            context: new HttpContext().set(TRANSIENT_SPOTIFY_REQUEST, true)
+        }).clone({ setHeaders: { Authorization: 'Bearer guest-token' } });
+        let received: HttpRequest<any> | undefined;
+        const next = handlerFor(req => {
+            received = req;
+            return of(new HttpResponse({ status: 200 }));
+        });
 
-    expect(received?.headers.get('Authorization')).toBe('Bearer guest-token');
-    expect(received?.context.get(TRANSIENT_SPOTIFY_REQUEST)).toBeFalse();
-    expect(auth.getAccessToken).not.toHaveBeenCalled();
-  });
+        await firstValueFrom(interceptor.intercept(request, next));
 
-  it('refreshes once after a 401 and retries with the new token', async () => {
-    const request = new HttpRequest('GET', 'https://api.spotify.com/v1/me');
-    const received: HttpRequest<any>[] = [];
-    const unauthorized = new HttpErrorResponse({ status: 401 });
-    const next = handlerFor(req => {
-      received.push(req);
-      return received.length === 1
-        ? throwError(() => unauthorized)
-        : of(new HttpResponse({ status: 200 }));
+        expect(received?.headers.get('Authorization')).toBe('Bearer guest-token');
+        expect(received?.context.get(TRANSIENT_SPOTIFY_REQUEST)).toBe(false);
+        expect(auth.getAccessToken).not.toHaveBeenCalled();
     });
 
-    await firstValueFrom(interceptor.intercept(request, next));
+    it('refreshes once after a 401 and retries with the new token', async () => {
+        const request = new HttpRequest('GET', 'https://api.spotify.com/v1/me');
+        const received: HttpRequest<any>[] = [];
+        const unauthorized = new HttpErrorResponse({ status: 401 });
+        const next = handlerFor(req => {
+            received.push(req);
+            return received.length === 1
+                ? throwError(() => unauthorized)
+                : of(new HttpResponse({ status: 200 }));
+        });
 
-    expect(auth.refreshToken).toHaveBeenCalledTimes(1);
-    expect(received.length).toBe(2);
-    expect(received[1].headers.get('Authorization')).toBe('Bearer refreshed-token');
-  });
+        await firstValueFrom(interceptor.intercept(request, next));
 
-  it('refreshes an expired token before sending the request', async () => {
-    auth.isTokenExpired.and.returnValue(true);
-    const request = new HttpRequest('GET', 'https://api.spotify.com/v1/me');
-    let received: HttpRequest<any> | undefined;
-    const next = handlerFor(req => {
-      received = req;
-      return of(new HttpResponse({ status: 200 }));
+        expect(auth.refreshToken).toHaveBeenCalledTimes(1);
+        expect(received.length).toBe(2);
+        expect(received[1].headers.get('Authorization')).toBe('Bearer refreshed-token');
     });
 
-    await firstValueFrom(interceptor.intercept(request, next));
+    it('refreshes an expired token before sending the request', async () => {
+        auth.isTokenExpired.mockReturnValue(true);
+        const request = new HttpRequest('GET', 'https://api.spotify.com/v1/me');
+        let received: HttpRequest<any> | undefined;
+        const next = handlerFor(req => {
+            received = req;
+            return of(new HttpResponse({ status: 200 }));
+        });
 
-    expect(received?.headers.get('Authorization')).toBe('Bearer refreshed-token');
-    expect(auth.refreshToken).toHaveBeenCalledTimes(1);
-  });
+        await firstValueFrom(interceptor.intercept(request, next));
 
-  function handlerFor(
-    handle: (request: HttpRequest<any>) => ReturnType<HttpHandler['handle']>
-  ): HttpHandler {
-    return { handle } as HttpHandler;
-  }
+        expect(received?.headers.get('Authorization')).toBe('Bearer refreshed-token');
+        expect(auth.refreshToken).toHaveBeenCalledTimes(1);
+    });
+
+    function handlerFor(handle: (request: HttpRequest<any>) => ReturnType<HttpHandler['handle']>): HttpHandler {
+        return { handle } as HttpHandler;
+    }
 });

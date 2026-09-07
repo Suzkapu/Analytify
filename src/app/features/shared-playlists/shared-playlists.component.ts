@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {firstValueFrom} from 'rxjs';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-source.service';
@@ -17,6 +17,7 @@ const console = createScopedLogger('Shared Playlists');
     selector: 'app-shared-playlists',
     templateUrl: './shared-playlists.component.html',
     styleUrls: ['./shared-playlists.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SharedPlaylistsComponent implements OnInit, OnDestroy {

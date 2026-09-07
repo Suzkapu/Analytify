@@ -1,946 +1,814 @@
-import {UserStatsComponent} from './user-stats.component';
-import {NEVER, of, Subject} from 'rxjs';
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { UserStatsComponent } from './user-stats.component';
+import { NEVER, of, Subject } from 'rxjs';
 
 describe('UserStatsComponent trends', () => {
-  let component: UserStatsComponent;
+    let component: UserStatsComponent;
 
-  const makeSnapshot = (
-    date: string,
-    topTracks: any[] = [],
-    topArtists: any[] = [],
-    topGenres: any[] = [],
-    isLoaded: boolean | 'loading' = true
-  ) => ({
-    timestamp: new Date(`${date}T12:00:00`).getTime(),
-    snapshotDate: date,
-    topTracks,
-    topArtists,
-    topGenres,
-    isLoaded
-  });
-
-  beforeEach(() => {
-    jasmine.clock().install();
-    jasmine.clock().mockDate(new Date('2026-08-02T12:00:00'));
-    component = new UserStatsComponent(
-      null as any,
-      null as any,
-      null as any,
-      null as any
-    );
-    component.selectedSnapshotId = 'current';
-  });
-
-  afterEach(() => {
-    jasmine.clock().uninstall();
-  });
-
-  it('matches local and cloud track shapes instead of marking an existing song as new', () => {
-    const previous = makeSnapshot('2026-07-30', [
-      {name: 'Other song', artist: 'Other artist'},
-      {name: '  Shared Song ', artists: [{name: 'The Artist'}]}
-    ]);
-    component.historyData = [previous];
-    component.compareSnapshotId = previous.timestamp.toString();
-
-    const trend = component.getTrend(
-      {name: 'shared song', artist: ' the artist '},
-      0,
-      'tracks'
-    );
-
-    expect(trend).toEqual({type: 'up', diff: 1});
-  });
-
-  it('matches relinked Spotify tracks by either known id', () => {
-    const previous = makeSnapshot('2026-07-30', [
-      {id: 'market-version', linked_from: {id: 'original-version'}, name: 'Song', artists: [{name: 'Artist'}]}
-    ]);
-    component.historyData = [previous];
-    component.compareSnapshotId = previous.timestamp.toString();
-
-    expect(component.getTrend(
-      {id: 'original-version', name: 'Song', artists: [{name: 'Artist'}]},
-      0,
-      'tracks'
-    )).toEqual({type: 'same'});
-  });
-
-  it('does not mark a returning song as new when it exists in an older snapshot', () => {
-    const older = makeSnapshot('2026-07-29', [
-      {name: 'Returning Song', artist: 'Artist'}
-    ]);
-    const comparison = makeSnapshot('2026-07-30', [
-      {name: 'Different Song', artist: 'Artist'}
-    ]);
-    component.historyData = [older, comparison];
-    component.compareSnapshotId = comparison.timestamp.toString();
-
-    expect(component.getTrend(
-      {name: 'Returning Song', artists: [{name: 'Artist'}]},
-      0,
-      'tracks'
-    )).toEqual({type: 'same'});
-  });
-
-  it('marks a song as new only when every earlier loaded snapshot confirms no appearance', () => {
-    const older = makeSnapshot('2026-07-29', [
-      {name: 'Older Song', artist: 'Artist'}
-    ]);
-    const comparison = makeSnapshot('2026-07-30', [
-      {name: 'Different Song', artist: 'Artist'}
-    ]);
-    component.historyData = [older, comparison];
-    component.compareSnapshotId = comparison.timestamp.toString();
-
-    expect(component.getTrend(
-      {name: 'Actually New', artists: [{name: 'Artist'}]},
-      0,
-      'tracks'
-    )).toEqual({type: 'new'});
-  });
-
-  it('waits for earlier snapshot details before showing a new marker', () => {
-    const unloaded = makeSnapshot('2026-07-29', [], [], [], false);
-    const comparison = makeSnapshot('2026-07-30', [
-      {name: 'Different Song', artist: 'Artist'}
-    ]);
-    component.historyData = [unloaded, comparison];
-    component.compareSnapshotId = comparison.timestamp.toString();
-
-    expect(component.getTrend(
-      {name: 'Potentially Existing', artists: [{name: 'Artist'}]},
-      0,
-      'tracks'
-    )).toEqual({type: 'same'});
-  });
-
-  it('keeps up and down chronological when snapshots are selected in reverse order', () => {
-    const selected = makeSnapshot('2026-07-30', [
-      ...Array.from({length: 9}, (_, index) => ({name: `Song ${index}`, artist: 'Artist'})),
-      {id: 'moving-song', name: 'Moving Song', artist: 'Artist'}
-    ]);
-    component.historyData = [selected];
-    component.selectedSnapshotId = selected.timestamp.toString();
-    component.compareSnapshotId = 'current';
-    component.topTracks = [
-      {name: 'Other Song', artists: [{name: 'Artist'}]},
-      {id: 'moving-song', name: 'Moving Song', artists: [{name: 'Artist'}]}
-    ];
-
-    expect(component.getTrend(selected.topTracks[9], 9, 'tracks'))
-      .toEqual({type: 'up', diff: 8});
-  });
-
-  it('uses the same normalized identity rules for artists and genres', () => {
-    const previous = makeSnapshot(
-      '2026-07-30',
-      [],
-      [{name: 'Other'}, {name: 'Massive Attack'}],
-      ['Other Genre', 'Alternative Rock']
-    );
-    component.historyData = [previous];
-    component.compareSnapshotId = previous.timestamp.toString();
-
-    expect(component.getTrend({name: ' massive  attack '}, 0, 'artists'))
-      .toEqual({type: 'up', diff: 1});
-    expect(component.getTrend({name: 'alternative rock'}, 0, 'genres'))
-      .toEqual({type: 'up', diff: 1});
-  });
-
-  it('builds a 100-item immutable view once across repeated render bindings', () => {
-    const tracks = Array.from({length: 100}, (_, index) => ({
-      id: `track-${index}`, name: `Track ${index}`, artists: [{name: `Artist ${index}`}]
-    }));
-    const comparison = makeSnapshot('2026-07-30', [...tracks].reverse());
-    component.topTracks = tracks;
-    component.historyData = [comparison];
-    component.compareSnapshotId = comparison.timestamp.toString();
-
-    const firstRender = component.filteredTracks;
-    firstRender.forEach(track => {
-      component.getStatsRankIndex(track, 'tracks');
-      component.getTrend(track, component.getStatsRankIndex(track, 'tracks'), 'tracks');
-      component.getTrend(track, component.getStatsRankIndex(track, 'tracks'), 'tracks');
+    const makeSnapshot = (date: string, topTracks: any[] = [], topArtists: any[] = [], topGenres: any[] = [], isLoaded: boolean | 'loading' = true) => ({
+        timestamp: new Date(`${date}T12:00:00`).getTime(),
+        snapshotDate: date,
+        topTracks,
+        topArtists,
+        topGenres,
+        isLoaded
     });
 
-    expect(firstRender.length).toBe(100);
-    expect(component.filteredTracks).toBe(firstRender);
-    expect(component.statsViewBuildCount).toBe(1);
-
-    component.onStatsSearchChange('Track 9');
-    expect(component.filteredTracks.length).toBe(11);
-    expect(component.statsViewBuildCount).toBe(2);
-  });
-
-  it('uses OnPush change detection for the precomputed stats view', () => {
-    expect((UserStatsComponent as any).ɵcmp.onPush).toBeTrue();
-  });
-
-  it('keeps medium and long-term stats fresh for seven days', () => {
-    const sixDaysAgo = Date.now() - 6 * 24 * 60 * 60 * 1000;
-    const eightDaysAgo = Date.now() - 8 * 24 * 60 * 60 * 1000;
-
-    expect(component.isCacheExpired(String(sixDaysAgo), 'medium_term')).toBeFalse();
-    expect(component.isCacheExpired(String(sixDaysAgo), 'long_term')).toBeFalse();
-    expect(component.isCacheExpired(String(eightDaysAgo), 'medium_term')).toBeTrue();
-  });
-
-  it('starts current stats first and defers history without waiting for account hydration', () => {
-    const auth = {
-      isAuthenticated: () => true,
-      ensureInitialSync: () => new Promise<void>(() => {}),
-      isBackupActive: () => false
-    };
-    const immediateComponent = new UserStatsComponent(
-      null as any,
-      auth as any,
-      null as any,
-      null as any
-    );
-    const loadHistory = spyOn(immediateComponent, 'loadHistoryData');
-    const loadStats = spyOn(immediateComponent, 'loadStats').and.resolveTo();
-
-    immediateComponent.ngOnInit();
-
-    expect(loadStats).toHaveBeenCalledTimes(1);
-    expect(loadHistory).not.toHaveBeenCalled();
-
-    jasmine.clock().tick(500);
-
-    expect(loadHistory).toHaveBeenCalledTimes(1);
-  });
-
-  it('treats a route without a snapshot as the current user stats page', () => {
-    const routedComponent = new UserStatsComponent(
-      null as any,
-      null as any,
-      null as any,
-      null as any,
-      {} as any,
-      null as any
-    );
-
-    expect(routedComponent.isSpyMode).toBeFalse();
-  });
-
-  it('loads an approved user through the consent service without calling Spotify or local history', async () => {
-    const spotify = {
-      getUserTopArtists: jasmine.createSpy('getUserTopArtists'),
-      getUserTopTracks: jasmine.createSpy('getUserTopTracks')
-    };
-    const storage = {getStatsHistory: jasmine.createSpy('getStatsHistory')};
-    const statsSharing = {
-      loadSharedStats: jasmine.createSpy('loadSharedStats').and.resolveTo({
-        ownerUserId: 'owner-id', ownerDisplayName: 'Stats Owner', ownerImageUrl: '',
-        snapshotDate: '2026-08-01', topTracks: [{id: 'track'}],
-        topArtists: [{id: 'artist'}], topGenres: [{name: 'indie', count: 4, percentage: 40}]
-      })
-    };
-    const spyComponent = new UserStatsComponent(
-      spotify as any,
-      {} as any,
-      storage as any,
-      {} as any,
-      {snapshot: {paramMap: {get: () => 'owner-id'}}} as any,
-      statsSharing as any
-    );
-
-    await spyComponent.loadStats();
-
-    expect(statsSharing.loadSharedStats).toHaveBeenCalledOnceWith('owner-id', 'short_term');
-    expect(spyComponent.spyDisplayName).toBe('Stats Owner');
-    expect(spyComponent.topTracks).toEqual([{id: 'track'}]);
-    expect(spotify.getUserTopTracks).not.toHaveBeenCalled();
-    expect(storage.getStatsHistory).not.toHaveBeenCalled();
-  });
-
-  it('never falls back to the viewer data when shared stats access is unavailable', async () => {
-    const spotify = {getUserTopTracks: jasmine.createSpy('getUserTopTracks')};
-    const statsSharing = {
-      loadSharedStats: jasmine.createSpy('loadSharedStats').and.rejectWith(new Error('Stats access is not approved.'))
-    };
-    const spyComponent = new UserStatsComponent(
-      spotify as any,
-      {} as any,
-      {} as any,
-      {} as any,
-      {snapshot: {paramMap: {get: () => 'owner-id'}}} as any,
-      statsSharing as any
-    );
-
-    await spyComponent.loadStats();
-
-    expect(spyComponent.sharedStatsError).toBe('Stats access is not approved.');
-    expect(spyComponent.topTracks).toEqual([]);
-    expect(spotify.getUserTopTracks).not.toHaveBeenCalled();
-  });
-
-  it('keeps shared user B visible when shared user A resolves later', async () => {
-    const paramMap = new Subject<any>();
-    const pending = new Map<string, (snapshot: any) => void>();
-    const routedComponent = new UserStatsComponent(
-      {} as any,
-      {} as any,
-      {} as any,
-      {} as any,
-      {paramMap, snapshot: {paramMap: {get: () => ''}}} as any,
-      {loadSharedStats: (id: string) => new Promise(resolve => pending.set(id, resolve))} as any
-    );
-    routedComponent.ngOnInit();
-    paramMap.next({get: () => 'owner-a'});
-    paramMap.next({get: () => 'owner-b'});
-
-    pending.get('owner-b')?.({
-      ownerUserId: 'owner-b', ownerDisplayName: 'Owner B', ownerImageUrl: '', snapshotDate: '2026-08-02',
-      topTracks: [{id: 'b'}], topArtists: [], topGenres: []
+    beforeEach(() => {
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date('2026-08-02T12:00:00'));
+        component = new UserStatsComponent(null as any, null as any, null as any, null as any);
+        component.selectedSnapshotId = 'current';
     });
-    await Promise.resolve();
-    await Promise.resolve();
-    pending.get('owner-a')?.({
-      ownerUserId: 'owner-a', ownerDisplayName: 'Owner A', ownerImageUrl: '', snapshotDate: '2026-08-01',
-      topTracks: [{id: 'a'}], topArtists: [], topGenres: []
+
+    afterEach(() => {
+        vi.useRealTimers();
     });
-    await Promise.resolve();
-    await Promise.resolve();
-
-    expect(routedComponent.spyDisplayName).toBe('Owner B');
-    expect(routedComponent.topTracks).toEqual([{id: 'b'}]);
-    routedComponent.ngOnDestroy();
-  });
-
-  it('highlights only dates that have comparison snapshots', () => {
-    const julyOne = makeSnapshot('2026-07-01');
-    const julyFifteen = makeSnapshot('2026-07-15');
-    component.historyData = [julyOne, julyFifteen];
-    component.snapshotOptions = [julyFifteen, julyOne].map(snapshot => ({
-      id: snapshot.timestamp.toString(),
-      label: snapshot.snapshotDate,
-      dateKey: snapshot.snapshotDate
-    }));
-
-    component.updateSnapshotGroups();
-
-    const days = component.compareCalendarDays.filter(day => !!day) as any[];
-    expect(days.filter(day => day.isAvailable).map(day => day.dateKey)).toEqual([
-      '2026-07-01',
-      '2026-07-15'
-    ]);
-    expect(days.find(day => day.dateKey === '2026-07-02').isAvailable).toBeFalse();
-  });
-
-  it('jumps between months that contain available snapshots', () => {
-    const may = makeSnapshot('2026-05-10');
-    const july = makeSnapshot('2026-07-20');
-    component.historyData = [may, july];
-    component.snapshotOptions = [july, may].map(snapshot => ({
-      id: snapshot.timestamp.toString(),
-      label: snapshot.snapshotDate,
-      dateKey: snapshot.snapshotDate
-    }));
-    component.compareSnapshotId = july.timestamp.toString();
-    component.updateSnapshotGroups();
-
-    expect(component.compareCalendarMonth.getMonth()).toBe(6);
-    expect(component.canNavigateCompareCalendar(-1)).toBeTrue();
-
-    component.navigateCompareCalendar(-1, new Event('click'));
-
-    expect(component.compareCalendarMonth.getMonth()).toBe(4);
-    expect(component.canNavigateCompareCalendar(-1)).toBeFalse();
-    expect(component.canNavigateCompareCalendar(1)).toBeTrue();
-  });
-
-  it('ignores unavailable calendar days and selects an available date through the existing lazy path', () => {
-    const snapshot = makeSnapshot('2026-07-15');
-    component.historyData = [snapshot];
-    component.snapshotOptions = [{
-      id: snapshot.timestamp.toString(),
-      label: snapshot.snapshotDate,
-      dateKey: snapshot.snapshotDate
-    }];
-    component.showCompareMenu = true;
-    component.updateSnapshotGroups();
-    const days = component.compareCalendarDays.filter(day => !!day) as any[];
-    const unavailable = days.find(day => day.dateKey === '2026-07-14');
-    const available = days.find(day => day.dateKey === '2026-07-15');
-    const ensureSnapshotLoaded = spyOn(component, 'ensureSnapshotLoaded');
-
-    component.selectCompareCalendarDay(unavailable, new Event('click'));
-    expect(component.compareSnapshotId).toBe('');
-    expect(ensureSnapshotLoaded).not.toHaveBeenCalled();
-
-    component.selectCompareCalendarDay(available, new Event('click'));
-    expect(component.compareSnapshotId).toBe(snapshot.timestamp.toString());
-    expect(component.showCompareMenu).toBeFalse();
-    expect(ensureSnapshotLoaded).toHaveBeenCalledOnceWith(snapshot.timestamp.toString());
-  });
-
-  it('offers Today but excludes the primary historical snapshot from comparison', () => {
-    const primary = makeSnapshot('2026-07-15');
-    const older = makeSnapshot('2026-06-15');
-    component.historyData = [older, primary];
-    component.snapshotOptions = [primary, older].map(snapshot => ({
-      id: snapshot.timestamp.toString(),
-      label: snapshot.snapshotDate,
-      dateKey: snapshot.snapshotDate
-    }));
-    component.selectedSnapshotId = primary.timestamp.toString();
-    component.compareSnapshotId = 'current';
-
-    component.updateSnapshotGroups();
-
-    const allAvailableDays = component.getCompareOptions();
-    expect(allAvailableDays.map(option => option.id)).toContain('current');
-    expect(allAvailableDays.map(option => option.id)).not.toContain(primary.timestamp.toString());
-    expect(component.compareCalendarDays.some(day => !!day?.isToday && day.isAvailable && day.optionId === 'current')).toBeTrue();
-  });
-
-  it('offers Today and saved snapshots in the primary calendar', () => {
-    const snapshot = makeSnapshot('2026-07-15');
-    component.historyData = [snapshot];
-    component.snapshotOptions = [{
-      id: snapshot.timestamp.toString(),
-      label: snapshot.snapshotDate,
-      dateKey: snapshot.snapshotDate
-    }];
-
-    component.updateSnapshotGroups();
-
-    expect(component.historyCalendarDays.some(day =>
-      !!day?.isToday && day.isAvailable && day.isSelected && day.optionId === 'current'
-    )).toBeTrue();
-    expect(component.canNavigateHistoryCalendar(-1)).toBeTrue();
-
-    component.navigateHistoryCalendar(-1, new Event('click'));
-
-    expect(component.historyCalendarDays.some(day =>
-      day?.dateKey === '2026-07-15' && day.isAvailable && day.optionId === snapshot.timestamp.toString()
-    )).toBeTrue();
-  });
-
-  it('selects the primary calendar date and rebuilds comparison options without that date', () => {
-    const primary = makeSnapshot('2026-07-15');
-    const older = makeSnapshot('2026-06-15');
-    component.historyData = [older, primary];
-    component.snapshotOptions = [primary, older].map(snapshot => ({
-      id: snapshot.timestamp.toString(),
-      label: snapshot.snapshotDate,
-      dateKey: snapshot.snapshotDate
-    }));
-    component.updateSnapshotGroups();
-    component.navigateHistoryCalendar(-1, new Event('click'));
-    const selectedDay = component.historyCalendarDays.find(day => day?.dateKey === '2026-07-15') as any;
-    const ensureSnapshotLoaded = spyOn(component, 'ensureSnapshotLoaded');
-
-    component.selectHistoryCalendarDay(selectedDay, new Event('click'));
-
-    expect(component.selectedSnapshotId).toBe(primary.timestamp.toString());
-    expect(component.compareSnapshotId).toBe(older.timestamp.toString());
-    expect(component.getCompareOptions().map(option => option.id)).not.toContain(primary.timestamp.toString());
-    expect(component.showHistoryMenu).toBeFalse();
-    expect(ensureSnapshotLoaded).toHaveBeenCalledWith(primary.timestamp.toString());
-    expect(ensureSnapshotLoaded).toHaveBeenCalledWith(older.timestamp.toString());
-  });
-
-  it('navigates the primary and comparison calendars independently', () => {
-    const may = makeSnapshot('2026-05-10');
-    const july = makeSnapshot('2026-07-20');
-    component.historyData = [may, july];
-    component.snapshotOptions = [july, may].map(snapshot => ({
-      id: snapshot.timestamp.toString(),
-      label: snapshot.snapshotDate,
-      dateKey: snapshot.snapshotDate
-    }));
-    component.compareSnapshotId = july.timestamp.toString();
-    component.updateSnapshotGroups();
-
-    component.navigateHistoryCalendar(-1, new Event('click'));
-    expect(component.historyCalendarMonth.getMonth()).toBe(6);
-    expect(component.compareCalendarMonth.getMonth()).toBe(6);
-
-    component.navigateCompareCalendar(-1, new Event('click'));
-    expect(component.historyCalendarMonth.getMonth()).toBe(6);
-    expect(component.compareCalendarMonth.getMonth()).toBe(4);
-  });
-
-  it('keeps complete stale current stats visible while its parallel refresh is pending', async () => {
-    const values: Record<string, string> = {
-      'user_stats_short_term_tracks': JSON.stringify([{id: 'cached-track'}]),
-      'user_stats_short_term_artists': JSON.stringify([{id: 'cached-artist'}]),
-      'user_stats_short_term_genres': JSON.stringify([{name: 'cached-genre'}]),
-      'user_stats_short_term_lastUpdated': '1'
-    };
-    const spotify = {
-      getUserTopArtists: jasmine.createSpy('getUserTopArtists').and.returnValue(NEVER),
-      getUserTopTracks: jasmine.createSpy('getUserTopTracks').and.returnValue(NEVER)
-    };
-    const staleComponent = new UserStatsComponent(
-      spotify as any,
-      {
-        getUserId: () => 'user',
-        getSupabaseUserId: () => null,
-        isBackupActive: () => false
-      } as any,
-      {getItem: (key: string) => values[key] ?? null} as any,
-      null as any
-    );
-
-    await staleComponent.loadStats();
-
-    expect(staleComponent.topTracks.map(track => track.id)).toEqual(['cached-track']);
-    expect(staleComponent.topArtists.map(artist => artist.id)).toEqual(['cached-artist']);
-    expect(staleComponent.topGenres.map(genre => genre.name)).toEqual(['cached-genre']);
-    expect(staleComponent.isLoading).toBeFalse();
-    expect(staleComponent.isRefreshingStats).toBeTrue();
-    expect(spotify.getUserTopArtists).toHaveBeenCalledTimes(1);
-    expect(spotify.getUserTopTracks).toHaveBeenCalledTimes(3);
-  });
-
-  it('rebuilds a missing genre cache from cached top artists', async () => {
-    const values: Record<string, string> = {
-      'user_stats_short_term_tracks': JSON.stringify([{id: 'cached-track'}]),
-      'user_stats_short_term_artists': JSON.stringify([{id: 'artist', genres: ['indie rock']}]),
-      'user_stats_short_term_lastUpdated': Date.now().toString()
-    };
-    const cachedComponent = new UserStatsComponent(
-      {} as any,
-      {getUserId: () => 'user', getSupabaseUserId: () => null, isBackupActive: () => false} as any,
-      {getItem: (key: string) => values[key] ?? null, setItem: jasmine.createSpy('setItem')} as any,
-      null as any
-    );
-
-    await cachedComponent.loadStats();
-
-    expect(cachedComponent.topGenres.map(genre => genre.name)).toEqual(['indie rock']);
-  });
-
-  it('lazily hydrates artist profiles when a personal-app Top Artists response has no genres', async () => {
-    const values: Record<string, string> = {};
-    const spotify = {
-      getUserTopArtists: jasmine.createSpy('getUserTopArtists')
-        .and.returnValue(of({items: [{id: 'artist', name: 'Artist', genres: []}]})),
-      getUserTopTracks: jasmine.createSpy('getUserTopTracks').and.returnValue(of({items: []})),
-      getArtistsByIds: jasmine.createSpy('getArtistsByIds')
-        .and.returnValue(of({artists: [{id: 'artist', genres: ['indie rock']}]}))
-    };
-    const genreComponent = new UserStatsComponent(
-      spotify as any,
-      {getUserId: () => 'user', getSupabaseUserId: () => null, isBackupActive: () => false} as any,
-      {
-        getItem: (key: string) => values[key] ?? null,
-        setItem: (key: string, value: string) => values[key] = value,
-        getStatsHistory: () => Promise.resolve([]),
-        saveStatsHistory: () => Promise.resolve()
-      } as any,
-      null as any
-    );
-    await genreComponent.loadStats();
-    await Promise.resolve();
-
-    expect(spotify.getArtistsByIds).toHaveBeenCalledOnceWith(['artist']);
-    expect(genreComponent.topGenres.map(genre => genre.name)).toEqual(['indie rock']);
-  });
-
-  it('repairs fresh cached stats with missing genres immediately', async () => {
-    const values: Record<string, string> = {
-      'user_stats_short_term_tracks': JSON.stringify([{id: 'track'}]),
-      'user_stats_short_term_artists': JSON.stringify([{id: 'artist', genres: []}]),
-      'user_stats_short_term_genres': JSON.stringify([]),
-      'user_stats_short_term_lastUpdated': Date.now().toString()
-    };
-    const spotify = {
-      getArtistsByIds: jasmine.createSpy('getArtistsByIds')
-        .and.returnValue(of({artists: [{id: 'artist', genres: ['indie rock']}]})),
-      getUserTopArtists: jasmine.createSpy('getUserTopArtists'),
-      getUserTopTracks: jasmine.createSpy('getUserTopTracks')
-    };
-    const cachedComponent = new UserStatsComponent(
-      spotify as any,
-      {getUserId: () => 'user', getSupabaseUserId: () => null, isBackupActive: () => false} as any,
-      {
-        getItem: (key: string) => values[key] ?? null,
-        setItem: (key: string, value: string) => values[key] = value,
-        getStatsHistory: () => Promise.resolve([]),
-        saveStatsHistory: () => Promise.resolve()
-      } as any,
-      null as any
-    );
-
-    await cachedComponent.loadStats();
-
-    expect(spotify.getArtistsByIds).toHaveBeenCalledOnceWith(['artist']);
-    expect(spotify.getUserTopArtists).not.toHaveBeenCalled();
-    expect(cachedComponent.topGenres.map(genre => genre.name)).toEqual(['indie rock']);
-  });
-
-  it('loads one item trend instead of every historical Top list', async () => {
-    const supabase = {
-      loadStatsItemTrend: jasmine.createSpy('loadStatsItemTrend').and.resolveTo([{
-        timestamp: new Date('2026-08-01T12:00:00').getTime(),
-        snapshotDate: '2026-08-01',
-        rank: 4
-      }]),
-      loadAllStatsSnapshots: jasmine.createSpy('loadAllStatsSnapshots')
-    };
-    const trendComponent = new UserStatsComponent(
-      null as any,
-      {
-        getSupabaseUserId: () => 'user-id',
-        isBackupActive: () => true
-      } as any,
-      null as any,
-      supabase as any
-    );
-    trendComponent.historyData = [makeSnapshot('2026-08-01', [], [], [], false)];
-
-    await trendComponent.openTrendPopup({id: 'track-id', name: 'Track'}, 'tracks');
-
-    expect(supabase.loadStatsItemTrend).toHaveBeenCalledOnceWith(
-      'user-id',
-      'short_term',
-      'tracks',
-      ['track-id']
-    );
-    expect(supabase.loadAllStatsSnapshots).not.toHaveBeenCalled();
-    expect(trendComponent.trendPopupPoints.map(point => point.rank)).toEqual([4]);
-  });
-
-  it('opens a past search result in the position-history graph without preloaded snapshots', async () => {
-    const supabase = {
-      loadStatsItemTrend: jasmine.createSpy('loadStatsItemTrend').and.resolveTo([{
-        timestamp: new Date('2026-07-15T12:00:00').getTime(),
-        snapshotDate: '2026-07-15',
-        rank: 12
-      }])
-    };
-    const trendComponent = new UserStatsComponent(
-      null as any,
-      {getSupabaseUserId: () => 'user-id', isBackupActive: () => true} as any,
-      null as any,
-      supabase as any
-    );
-    const result = {
-      kind: 'track' as const,
-      id: 'past-track',
-      name: 'Past Track',
-      subtitle: 'Past Artist',
-      imageUrl: 'cover.jpg',
-      spotifyUrl: 'https://open.spotify.com/track/past-track',
-      bestRank: 12,
-      firstSeen: '2026-07-15',
-      lastSeen: '2026-07-15',
-      appearances: 1
-    };
-
-    trendComponent.openPastTopResult(result);
-    await Promise.resolve();
-
-    expect(supabase.loadStatsItemTrend).toHaveBeenCalledOnceWith(
-      'user-id',
-      'short_term',
-      'tracks',
-      ['past-track']
-    );
-    expect(trendComponent.showTrendPopup).toBeTrue();
-    expect(trendComponent.trendPopupItem).toBe(result);
-    expect(trendComponent.trendPopupPoints.map(point => point.rank)).toEqual([12]);
-    expect(trendComponent.getTrackArtist(result)).toBe('Past Artist');
-    expect(trendComponent.getTrackCover(result)).toBe('cover.jpg');
-  });
-
-  it('treats a genuinely new Top 10 song as a blue-flame hot debut', () => {
-    const previous = makeSnapshot('2026-08-01', [
-      {id: 'older-track', name: 'Older Track', artists: [{name: 'Artist'}]}
-    ]);
-    component.historyData = [previous];
-    component.compareSnapshotId = previous.timestamp.toString();
-    component.topTracks = Array.from({length: 11}, (_, index) => ({
-      id: `new-${index}`,
-      name: `New Song ${index}`,
-      artists: [{name: 'Artist'}]
-    }));
-
-    component.calculateHotMovers();
-
-    expect(component.isHotMover(component.topTracks[0], 'tracks')).toBeTrue();
-    expect(component.isHighDebutHotSong(component.topTracks[0])).toBeTrue();
-    expect(component.isHighDebutHotSong(component.topTracks[9])).toBeTrue();
-    expect(component.isHotMover(component.topTracks[10], 'tracks')).toBeFalse();
-    expect(component.isHighDebutHotSong(component.topTracks[10])).toBeFalse();
-  });
-
-  it('treats a genuinely new Top 10 artist as a blue-flame hot debut', () => {
-    const previous = makeSnapshot(
-      '2026-08-01',
-      [],
-      [{id: 'older-artist', name: 'Older Artist'}]
-    );
-    component.historyData = [previous];
-    component.compareSnapshotId = previous.timestamp.toString();
-    component.topArtists = Array.from({length: 11}, (_, index) => ({
-      id: `new-artist-${index}`,
-      name: `New Artist ${index}`
-    }));
-
-    component.calculateHotMovers();
-
-    expect(component.isHotMover(component.topArtists[0], 'artists')).toBeTrue();
-    expect(component.isHighDebutHotArtist(component.topArtists[0])).toBeTrue();
-    expect(component.isHighDebutHotArtist(component.topArtists[9])).toBeTrue();
-    expect(component.isHotMover(component.topArtists[10], 'artists')).toBeFalse();
-    expect(component.isHighDebutHotArtist(component.topArtists[10])).toBeFalse();
-  });
-
-  it('shares one ten-entry flame pool between high debuts and rising movers', () => {
-    component.topTracks = Array.from({length: 12}, (_, index) => ({
-      id: `candidate-${index}`,
-      name: `Candidate ${index}`,
-      artists: [{name: 'Artist'}],
-      testTrend: index < 6
-        ? {type: 'new' as const}
-        : {type: 'up' as const, diff: 100 - index}
-    }));
-    spyOn(component, 'getTrend').and.callFake((item: any) => item.testTrend);
-    component.historyData = [makeSnapshot('2026-08-01')];
-
-    component.calculateHotMovers();
-
-    expect(component.hotMoverTracks.size).toBe(10);
-    expect(component.highDebutTracks.size).toBe(6);
-    expect(component.isHotMover(component.topTracks[9], 'tracks')).toBeTrue();
-    expect(component.isHotMover(component.topTracks[10], 'tracks')).toBeFalse();
-  });
-
-  it('scores a new entry from below rank 100 so it can displace a slower existing mover', () => {
-    component.topTracks = [
-      {
-        id: 'new-number-one',
-        name: 'New Number One',
-        artists: [{name: 'Artist'}],
-        testTrend: {type: 'new' as const}
-      },
-      ...Array.from({length: 10}, (_, index) => ({
-        id: `existing-${index}`,
-        name: `Existing ${index}`,
-        artists: [{name: 'Artist'}],
-        testTrend: {type: 'up' as const, diff: 99 - index}
-      }))
-    ];
-    spyOn(component, 'getTrend').and.callFake((item: any) => item.testTrend);
-    component.historyData = [makeSnapshot('2026-08-01')];
-
-    component.calculateHotMovers();
-
-    expect(component.isHotMover(component.topTracks[0], 'tracks')).toBeTrue();
-    expect(component.isHotMover(component.topTracks[10], 'tracks')).toBeFalse();
-  });
-
-  it('opens item history with both keyboard activation keys', () => {
-    const item = {id: 'keyboard-track', name: 'Keyboard Track'};
-    const openTrendPopup = spyOn(component, 'openTrendPopup').and.resolveTo();
-    const enterEvent = new KeyboardEvent('keydown', {key: 'Enter', cancelable: true});
-    const spaceEvent = new KeyboardEvent('keydown', {key: ' ', cancelable: true});
-
-    component.onTrendCardKeydown(enterEvent, item, 'tracks');
-    component.onTrendCardKeydown(spaceEvent, item, 'tracks');
-
-    expect(openTrendPopup).toHaveBeenCalledTimes(2);
-    expect(openTrendPopup).toHaveBeenCalledWith(item, 'tracks');
-    expect(enterEvent.defaultPrevented).toBeTrue();
-    expect(spaceEvent.defaultPrevented).toBeTrue();
-  });
-
-  it('ignores unrelated keys on history cards', () => {
-    const openTrendPopup = spyOn(component, 'openTrendPopup').and.resolveTo();
-
-    component.onTrendCardKeydown(
-      new KeyboardEvent('keydown', {key: 'ArrowDown'}),
-      {name: 'Track'},
-      'tracks'
-    );
-
-    expect(openTrendPopup).not.toHaveBeenCalled();
-  });
-
-  it('searches Top Songs by song or artist while preserving the real rank', () => {
-    component.topTracks = [
-      {id: 'first', name: 'First Song', artists: [{name: 'Someone Else'}]},
-      {id: 'wanted', name: 'Midnight City', artists: [{name: 'M83'}]},
-      {id: 'third', name: 'Third Song', artists: [{name: 'Another Artist'}]}
-    ];
-
-    component.statsSearchQuery = 'm83';
-
-    expect(component.filteredTracks.map(track => track.id)).toEqual(['wanted']);
-    expect(component.getStatsRankIndex(component.filteredTracks[0], 'tracks')).toBe(1);
-
-    component.statsSearchQuery = 'midnight';
-    expect(component.filteredTracks.map(track => track.id)).toEqual(['wanted']);
-  });
-
-  it('deduplicates tracks with matching title and artist so the same song does not reappear', () => {
-    const rawTracks = [
-      {id: 'track-1', name: 'Светлана!', artists: [{name: 'NEXTIME'}]},
-      {id: 'track-60', name: 'jonglieren', artists: [{name: '$OHO BANI'}]},
-      {id: 'track-61', name: 'Светлана!', artists: [{name: 'NEXTIME'}]},
-      {id: 'track-62', name: 'The greatest - Techno', artists: [{name: 'Naisak'}]}
-    ];
-
-    component.topTracks = rawTracks;
-
-    expect(component.displayedTracks.map(t => t.id)).toEqual(['track-1', 'track-60', 'track-62']);
-    expect(component.displayedTracks.length).toBe(3);
-  });
-
-  it('correctly reports rank indices for each displayed track without collapsing to earlier matches', () => {
-    const track1 = {id: 'track-1', name: 'Song A', artists: [{name: 'Artist A'}]};
-    const track2 = {id: 'track-2', name: 'Song B', artists: [{name: 'Artist B'}]};
-    const track3 = {id: 'track-3', name: 'Song C', artists: [{name: 'Artist C'}]};
-
-    component.topTracks = [track1, track2, track3];
-
-    expect(component.getStatsRankIndex(track1, 'tracks')).toBe(0);
-    expect(component.getStatsRankIndex(track2, 'tracks')).toBe(1);
-    expect(component.getStatsRankIndex(track3, 'tracks')).toBe(2);
-  });
-
-
-  it('searches Top Artists case-insensitively and can clear the query', () => {
-    component.topArtists = [
-      {id: 'one', name: 'Massive Attack'},
-      {id: 'two', name: 'Portishead'}
-    ];
-    component.statsSearchQuery = 'PORTIS';
-
-    expect(component.filteredArtists.map(artist => artist.id)).toEqual(['two']);
-    expect(component.isStatsSearchActive).toBeTrue();
-
-    component.clearStatsSearch();
-    expect(component.filteredArtists.length).toBe(2);
-    expect(component.isStatsSearchActive).toBeFalse();
-  });
-
-  it('searches Top Genres case-insensitively', () => {
-    component.topGenres = [
-      {name: 'Alternative Rock', count: 8, percentage: 40},
-      {name: 'Dream Pop', count: 5, percentage: 25}
-    ];
-    component.statsSearchQuery = 'DREAM';
-
-    expect(component.filteredGenres.map(genre => genre.name)).toEqual(['Dream Pop']);
-    expect(component.filteredGenres[0].rank).toBe(2);
-  });
-
-  it('searches Supabase lazily for former songs and excludes a live current match', async () => {
-    const searchPastTopItems = jasmine.createSpy('searchPastTopItems').and.resolveTo([
-      {kind: 'track', id: 'current', name: 'Still here', subtitle: '', imageUrl: '', spotifyUrl: '', bestRank: 1, firstSeen: '2026-01-01', lastSeen: '2026-02-01', appearances: 2},
-      {kind: 'track', id: 'former', name: 'Gone song', subtitle: 'Artist', imageUrl: '', spotifyUrl: '', bestRank: 7, firstSeen: '2026-01-01', lastSeen: '2026-03-01', appearances: 4}
-    ]);
-    const historicalComponent = new UserStatsComponent(
-      null as any,
-      {getSupabaseUserId: () => 'user-id', isBackupActive: () => true} as any,
-      null as any,
-      {searchPastTopItems} as any
-    );
-    historicalComponent.topTracks = [{id: 'current'}];
-    historicalComponent.selectedCategory = 'tracks';
-
-    await historicalComponent.searchPastStats('gone');
-
-    expect(searchPastTopItems).toHaveBeenCalledOnceWith('short_term', 'track', 'gone');
-    expect(historicalComponent.pastTopResults.map(item => item.id)).toEqual(['former']);
-  });
-
-  it('searches Supabase lazily for former genres and excludes a current genre', async () => {
-    const searchPastTopItems = jasmine.createSpy('searchPastTopItems').and.resolveTo([
-      {kind: 'genre', id: 'dream pop', name: 'dream pop'},
-      {kind: 'genre', id: 'trip hop', name: 'trip hop'}
-    ]);
-    const historicalComponent = new UserStatsComponent(
-      null as any,
-      {getSupabaseUserId: () => 'user-id', isBackupActive: () => true} as any,
-      null as any,
-      {searchPastTopItems} as any
-    );
-    historicalComponent.topGenres = [{name: 'Dream Pop', count: 4, percentage: 20}];
-    historicalComponent.selectedCategory = 'genres';
-
-    await historicalComponent.searchPastStats('hop');
-
-    expect(searchPastTopItems).toHaveBeenCalledOnceWith('short_term', 'genre', 'hop');
-    expect(historicalComponent.pastTopResults.map(item => item.id)).toEqual(['trip hop']);
-  });
-
-  it('opens a former genre in the position-history graph', async () => {
-    const loadStatsItemTrend = jasmine.createSpy('loadStatsItemTrend').and.resolveTo([{
-      timestamp: new Date('2026-07-15T12:00:00').getTime(), snapshotDate: '2026-07-15', rank: 6
-    }]);
-    const historicalComponent = new UserStatsComponent(
-      null as any,
-      {getSupabaseUserId: () => 'user-id', isBackupActive: () => true} as any,
-      null as any,
-      {loadStatsItemTrend} as any
-    );
-    const genre = {kind: 'genre' as const, id: 'trip hop', name: 'trip hop'} as any;
-
-    historicalComponent.openPastTopResult(genre);
-    await Promise.resolve();
-
-    expect(loadStatsItemTrend).toHaveBeenCalledOnceWith(
-      'user-id', 'short_term', 'genres', ['trip hop']
-    );
-    expect(historicalComponent.trendPopupCategory).toBe('genres');
-  });
-
-  it('keeps past search off by default and starts it only when toggled on', () => {
-    const searchPastTopItems = jasmine.createSpy('searchPastTopItems').and.resolveTo([]);
-    const historicalComponent = new UserStatsComponent(
-      null as any,
-      {getSupabaseUserId: () => 'user-id', isBackupActive: () => true} as any,
-      null as any,
-      {searchPastTopItems} as any
-    );
-
-    historicalComponent.onStatsSearchChange('former');
-    jasmine.clock().tick(300);
-    expect(historicalComponent.includePastStatsSearch).toBeFalse();
-    expect(searchPastTopItems).not.toHaveBeenCalled();
-
-    historicalComponent.togglePastStatsSearch();
-    jasmine.clock().tick(300);
-    expect(historicalComponent.includePastStatsSearch).toBeTrue();
-    expect(searchPastTopItems).toHaveBeenCalledOnceWith('short_term', 'track', 'former');
-  });
-
-  it('clears and cancels historical results when past search is turned off', () => {
-    component.includePastStatsSearch = true;
-    component.statsSearchQuery = 'former';
-    component.pastTopResults = [{
-      kind: 'artist', id: 'former', name: 'Former', subtitle: '', imageUrl: '', spotifyUrl: '',
-      bestRank: 3, firstSeen: '2026-01-01', lastSeen: '2026-02-01', appearances: 2
-    }];
-    component.isSearchingPastStats = true;
-
-    component.togglePastStatsSearch();
-
-    expect(component.includePastStatsSearch).toBeFalse();
-    expect(component.pastTopResults).toEqual([]);
-    expect(component.isSearchingPastStats).toBeFalse();
-  });
-
-  it('explains that cloud history is required without querying Supabase', async () => {
-    const searchPastTopItems = jasmine.createSpy('searchPastTopItems');
-    const localComponent = new UserStatsComponent(
-      null as any,
-      {getSupabaseUserId: () => null, isBackupActive: () => false} as any,
-      null as any,
-      {searchPastTopItems} as any
-    );
-
-    await localComponent.searchPastStats('older');
-
-    expect(searchPastTopItems).not.toHaveBeenCalled();
-    expect(localComponent.pastStatsSearchError).toContain('Cloud Backup');
-  });
+
+    it('matches local and cloud track shapes instead of marking an existing song as new', () => {
+        const previous = makeSnapshot('2026-07-30', [
+            { name: 'Other song', artist: 'Other artist' },
+            { name: '  Shared Song ', artists: [{ name: 'The Artist' }] }
+        ]);
+        component.historyData = [previous];
+        component.compareSnapshotId = previous.timestamp.toString();
+
+        const trend = component.getTrend({ name: 'shared song', artist: ' the artist ' }, 0, 'tracks');
+
+        expect(trend).toEqual({ type: 'up', diff: 1 });
+    });
+
+    it('matches relinked Spotify tracks by either known id', () => {
+        const previous = makeSnapshot('2026-07-30', [
+            { id: 'market-version', linked_from: { id: 'original-version' }, name: 'Song', artists: [{ name: 'Artist' }] }
+        ]);
+        component.historyData = [previous];
+        component.compareSnapshotId = previous.timestamp.toString();
+
+        expect(component.getTrend({ id: 'original-version', name: 'Song', artists: [{ name: 'Artist' }] }, 0, 'tracks')).toEqual({ type: 'same' });
+    });
+
+    it('does not mark a returning song as new when it exists in an older snapshot', () => {
+        const older = makeSnapshot('2026-07-29', [
+            { name: 'Returning Song', artist: 'Artist' }
+        ]);
+        const comparison = makeSnapshot('2026-07-30', [
+            { name: 'Different Song', artist: 'Artist' }
+        ]);
+        component.historyData = [older, comparison];
+        component.compareSnapshotId = comparison.timestamp.toString();
+
+        expect(component.getTrend({ name: 'Returning Song', artists: [{ name: 'Artist' }] }, 0, 'tracks')).toEqual({ type: 'same' });
+    });
+
+    it('marks a song as new only when every earlier loaded snapshot confirms no appearance', () => {
+        const older = makeSnapshot('2026-07-29', [
+            { name: 'Older Song', artist: 'Artist' }
+        ]);
+        const comparison = makeSnapshot('2026-07-30', [
+            { name: 'Different Song', artist: 'Artist' }
+        ]);
+        component.historyData = [older, comparison];
+        component.compareSnapshotId = comparison.timestamp.toString();
+
+        expect(component.getTrend({ name: 'Actually New', artists: [{ name: 'Artist' }] }, 0, 'tracks')).toEqual({ type: 'new' });
+    });
+
+    it('waits for earlier snapshot details before showing a new marker', () => {
+        const unloaded = makeSnapshot('2026-07-29', [], [], [], false);
+        const comparison = makeSnapshot('2026-07-30', [
+            { name: 'Different Song', artist: 'Artist' }
+        ]);
+        component.historyData = [unloaded, comparison];
+        component.compareSnapshotId = comparison.timestamp.toString();
+
+        expect(component.getTrend({ name: 'Potentially Existing', artists: [{ name: 'Artist' }] }, 0, 'tracks')).toEqual({ type: 'same' });
+    });
+
+    it('keeps up and down chronological when snapshots are selected in reverse order', () => {
+        const selected = makeSnapshot('2026-07-30', [
+            ...Array.from({ length: 9 }, (_, index) => ({ name: `Song ${index}`, artist: 'Artist' })),
+            { id: 'moving-song', name: 'Moving Song', artist: 'Artist' }
+        ]);
+        component.historyData = [selected];
+        component.selectedSnapshotId = selected.timestamp.toString();
+        component.compareSnapshotId = 'current';
+        component.topTracks = [
+            { name: 'Other Song', artists: [{ name: 'Artist' }] },
+            { id: 'moving-song', name: 'Moving Song', artists: [{ name: 'Artist' }] }
+        ];
+
+        expect(component.getTrend(selected.topTracks[9], 9, 'tracks'))
+            .toEqual({ type: 'up', diff: 8 });
+    });
+
+    it('uses the same normalized identity rules for artists and genres', () => {
+        const previous = makeSnapshot('2026-07-30', [], [{ name: 'Other' }, { name: 'Massive Attack' }], ['Other Genre', 'Alternative Rock']);
+        component.historyData = [previous];
+        component.compareSnapshotId = previous.timestamp.toString();
+
+        expect(component.getTrend({ name: ' massive  attack ' }, 0, 'artists'))
+            .toEqual({ type: 'up', diff: 1 });
+        expect(component.getTrend({ name: 'alternative rock' }, 0, 'genres'))
+            .toEqual({ type: 'up', diff: 1 });
+    });
+
+    it('builds a 100-item immutable view once across repeated render bindings', () => {
+        const tracks = Array.from({ length: 100 }, (_, index) => ({
+            id: `track-${index}`, name: `Track ${index}`, artists: [{ name: `Artist ${index}` }]
+        }));
+        const comparison = makeSnapshot('2026-07-30', [...tracks].reverse());
+        component.topTracks = tracks;
+        component.historyData = [comparison];
+        component.compareSnapshotId = comparison.timestamp.toString();
+
+        const firstRender = component.filteredTracks;
+        firstRender.forEach(track => {
+            component.getStatsRankIndex(track, 'tracks');
+            component.getTrend(track, component.getStatsRankIndex(track, 'tracks'), 'tracks');
+            component.getTrend(track, component.getStatsRankIndex(track, 'tracks'), 'tracks');
+        });
+
+        expect(firstRender.length).toBe(100);
+        expect(component.filteredTracks).toBe(firstRender);
+        expect(component.statsViewBuildCount).toBe(1);
+
+        component.onStatsSearchChange('Track 9');
+        expect(component.filteredTracks.length).toBe(11);
+        expect(component.statsViewBuildCount).toBe(2);
+    });
+
+    it('uses OnPush change detection for the precomputed stats view', () => {
+        expect((UserStatsComponent as any).ɵcmp.onPush).toBe(true);
+    });
+
+    it('keeps medium and long-term stats fresh for seven days', () => {
+        const sixDaysAgo = Date.now() - 6 * 24 * 60 * 60 * 1000;
+        const eightDaysAgo = Date.now() - 8 * 24 * 60 * 60 * 1000;
+
+        expect(component.isCacheExpired(String(sixDaysAgo), 'medium_term')).toBe(false);
+        expect(component.isCacheExpired(String(sixDaysAgo), 'long_term')).toBe(false);
+        expect(component.isCacheExpired(String(eightDaysAgo), 'medium_term')).toBe(true);
+    });
+
+    it('starts current stats first and defers history without waiting for account hydration', () => {
+        const auth = {
+            isAuthenticated: () => true,
+            ensureInitialSync: () => new Promise<void>(() => { }),
+            isBackupActive: () => false
+        };
+        const immediateComponent = new UserStatsComponent(null as any, auth as any, null as any, null as any);
+        const loadHistory = vi.spyOn(immediateComponent, 'loadHistoryData').mockReturnValue(undefined);
+        const loadStats = vi.spyOn(immediateComponent, 'loadStats').mockResolvedValue(undefined);
+
+        immediateComponent.ngOnInit();
+
+        expect(loadStats).toHaveBeenCalledTimes(1);
+        expect(loadHistory).not.toHaveBeenCalled();
+
+        vi.advanceTimersByTime(500);
+
+        expect(loadHistory).toHaveBeenCalledTimes(1);
+    });
+
+    it('treats a route without a snapshot as the current user stats page', () => {
+        const routedComponent = new UserStatsComponent(null as any, null as any, null as any, null as any, {} as any, null as any);
+
+        expect(routedComponent.isSpyMode).toBe(false);
+    });
+
+    it('loads an approved user through the consent service without calling Spotify or local history', async () => {
+        const spotify = {
+            getUserTopArtists: vi.fn().mockName('getUserTopArtists'),
+            getUserTopTracks: vi.fn().mockName('getUserTopTracks')
+        };
+        const storage = { getStatsHistory: vi.fn().mockName('getStatsHistory') };
+        const statsSharing = {
+            loadSharedStats: vi.fn().mockName('loadSharedStats').mockResolvedValue({
+                ownerUserId: 'owner-id', ownerDisplayName: 'Stats Owner', ownerImageUrl: '',
+                snapshotDate: '2026-08-01', topTracks: [{ id: 'track' }],
+                topArtists: [{ id: 'artist' }], topGenres: [{ name: 'indie', count: 4, percentage: 40 }]
+            })
+        };
+        const spyComponent = new UserStatsComponent(spotify as any, {} as any, storage as any, {} as any, { snapshot: { paramMap: { get: () => 'owner-id' } } } as any, statsSharing as any);
+
+        await spyComponent.loadStats();
+
+        expect(statsSharing.loadSharedStats).toHaveBeenCalledTimes(1);
+
+        expect(statsSharing.loadSharedStats).toHaveBeenCalledWith('owner-id', 'short_term');
+        expect(spyComponent.spyDisplayName).toBe('Stats Owner');
+        expect(spyComponent.topTracks).toEqual([{ id: 'track' }]);
+        expect(spotify.getUserTopTracks).not.toHaveBeenCalled();
+        expect(storage.getStatsHistory).not.toHaveBeenCalled();
+    });
+
+    it('never falls back to the viewer data when shared stats access is unavailable', async () => {
+        const spotify = { getUserTopTracks: vi.fn().mockName('getUserTopTracks') };
+        const statsSharing = {
+            loadSharedStats: vi.fn().mockName('loadSharedStats').mockRejectedValue(new Error('Stats access is not approved.'))
+        };
+        const spyComponent = new UserStatsComponent(spotify as any, {} as any, {} as any, {} as any, { snapshot: { paramMap: { get: () => 'owner-id' } } } as any, statsSharing as any);
+
+        await spyComponent.loadStats();
+
+        expect(spyComponent.sharedStatsError).toBe('Stats access is not approved.');
+        expect(spyComponent.topTracks).toEqual([]);
+        expect(spotify.getUserTopTracks).not.toHaveBeenCalled();
+    });
+
+    it('keeps shared user B visible when shared user A resolves later', async () => {
+        const paramMap = new Subject<any>();
+        const pending = new Map<string, (snapshot: any) => void>();
+        const routedComponent = new UserStatsComponent({} as any, {} as any, {} as any, {} as any, { paramMap, snapshot: { paramMap: { get: () => '' } } } as any, { loadSharedStats: (id: string) => new Promise(resolve => pending.set(id, resolve)) } as any);
+        routedComponent.ngOnInit();
+        paramMap.next({ get: () => 'owner-a' });
+        paramMap.next({ get: () => 'owner-b' });
+
+        pending.get('owner-b')?.({
+            ownerUserId: 'owner-b', ownerDisplayName: 'Owner B', ownerImageUrl: '', snapshotDate: '2026-08-02',
+            topTracks: [{ id: 'b' }], topArtists: [], topGenres: []
+        });
+        await Promise.resolve();
+        await Promise.resolve();
+        pending.get('owner-a')?.({
+            ownerUserId: 'owner-a', ownerDisplayName: 'Owner A', ownerImageUrl: '', snapshotDate: '2026-08-01',
+            topTracks: [{ id: 'a' }], topArtists: [], topGenres: []
+        });
+        await Promise.resolve();
+        await Promise.resolve();
+
+        expect(routedComponent.spyDisplayName).toBe('Owner B');
+        expect(routedComponent.topTracks).toEqual([{ id: 'b' }]);
+        routedComponent.ngOnDestroy();
+    });
+
+    it('highlights only dates that have comparison snapshots', () => {
+        const julyOne = makeSnapshot('2026-07-01');
+        const julyFifteen = makeSnapshot('2026-07-15');
+        component.historyData = [julyOne, julyFifteen];
+        component.snapshotOptions = [julyFifteen, julyOne].map(snapshot => ({
+            id: snapshot.timestamp.toString(),
+            label: snapshot.snapshotDate,
+            dateKey: snapshot.snapshotDate
+        }));
+
+        component.updateSnapshotGroups();
+
+        const days = component.compareCalendarDays.filter(day => !!day) as any[];
+        expect(days.filter(day => day.isAvailable).map(day => day.dateKey)).toEqual([
+            '2026-07-01',
+            '2026-07-15'
+        ]);
+        expect(days.find(day => day.dateKey === '2026-07-02').isAvailable).toBe(false);
+    });
+
+    it('jumps between months that contain available snapshots', () => {
+        const may = makeSnapshot('2026-05-10');
+        const july = makeSnapshot('2026-07-20');
+        component.historyData = [may, july];
+        component.snapshotOptions = [july, may].map(snapshot => ({
+            id: snapshot.timestamp.toString(),
+            label: snapshot.snapshotDate,
+            dateKey: snapshot.snapshotDate
+        }));
+        component.compareSnapshotId = july.timestamp.toString();
+        component.updateSnapshotGroups();
+
+        expect(component.compareCalendarMonth.getMonth()).toBe(6);
+        expect(component.canNavigateCompareCalendar(-1)).toBe(true);
+
+        component.navigateCompareCalendar(-1, new Event('click'));
+
+        expect(component.compareCalendarMonth.getMonth()).toBe(4);
+        expect(component.canNavigateCompareCalendar(-1)).toBe(false);
+        expect(component.canNavigateCompareCalendar(1)).toBe(true);
+    });
+
+    it('ignores unavailable calendar days and selects an available date through the existing lazy path', () => {
+        const snapshot = makeSnapshot('2026-07-15');
+        component.historyData = [snapshot];
+        component.snapshotOptions = [{
+                id: snapshot.timestamp.toString(),
+                label: snapshot.snapshotDate,
+                dateKey: snapshot.snapshotDate
+            }];
+        component.showCompareMenu = true;
+        component.updateSnapshotGroups();
+        const days = component.compareCalendarDays.filter(day => !!day) as any[];
+        const unavailable = days.find(day => day.dateKey === '2026-07-14');
+        const available = days.find(day => day.dateKey === '2026-07-15');
+        const ensureSnapshotLoaded = vi.spyOn(component, 'ensureSnapshotLoaded').mockReturnValue(undefined);
+
+        component.selectCompareCalendarDay(unavailable, new Event('click'));
+        expect(component.compareSnapshotId).toBe('');
+        expect(ensureSnapshotLoaded).not.toHaveBeenCalled();
+
+        component.selectCompareCalendarDay(available, new Event('click'));
+        expect(component.compareSnapshotId).toBe(snapshot.timestamp.toString());
+        expect(component.showCompareMenu).toBe(false);
+        expect(ensureSnapshotLoaded).toHaveBeenCalledTimes(1);
+        expect(ensureSnapshotLoaded).toHaveBeenCalledWith(snapshot.timestamp.toString());
+    });
+
+    it('offers Today but excludes the primary historical snapshot from comparison', () => {
+        const primary = makeSnapshot('2026-07-15');
+        const older = makeSnapshot('2026-06-15');
+        component.historyData = [older, primary];
+        component.snapshotOptions = [primary, older].map(snapshot => ({
+            id: snapshot.timestamp.toString(),
+            label: snapshot.snapshotDate,
+            dateKey: snapshot.snapshotDate
+        }));
+        component.selectedSnapshotId = primary.timestamp.toString();
+        component.compareSnapshotId = 'current';
+
+        component.updateSnapshotGroups();
+
+        const allAvailableDays = component.getCompareOptions();
+        expect(allAvailableDays.map(option => option.id)).toContain('current');
+        expect(allAvailableDays.map(option => option.id)).not.toContain(primary.timestamp.toString());
+        expect(component.compareCalendarDays.some(day => !!day?.isToday && day.isAvailable && day.optionId === 'current')).toBe(true);
+    });
+
+    it('offers Today and saved snapshots in the primary calendar', () => {
+        const snapshot = makeSnapshot('2026-07-15');
+        component.historyData = [snapshot];
+        component.snapshotOptions = [{
+                id: snapshot.timestamp.toString(),
+                label: snapshot.snapshotDate,
+                dateKey: snapshot.snapshotDate
+            }];
+
+        component.updateSnapshotGroups();
+
+        expect(component.historyCalendarDays.some(day => !!day?.isToday && day.isAvailable && day.isSelected && day.optionId === 'current')).toBe(true);
+        expect(component.canNavigateHistoryCalendar(-1)).toBe(true);
+
+        component.navigateHistoryCalendar(-1, new Event('click'));
+
+        expect(component.historyCalendarDays.some(day => day?.dateKey === '2026-07-15' && day.isAvailable && day.optionId === snapshot.timestamp.toString())).toBe(true);
+    });
+
+    it('selects the primary calendar date and rebuilds comparison options without that date', () => {
+        const primary = makeSnapshot('2026-07-15');
+        const older = makeSnapshot('2026-06-15');
+        component.historyData = [older, primary];
+        component.snapshotOptions = [primary, older].map(snapshot => ({
+            id: snapshot.timestamp.toString(),
+            label: snapshot.snapshotDate,
+            dateKey: snapshot.snapshotDate
+        }));
+        component.updateSnapshotGroups();
+        component.navigateHistoryCalendar(-1, new Event('click'));
+        const selectedDay = component.historyCalendarDays.find(day => day?.dateKey === '2026-07-15') as any;
+        const ensureSnapshotLoaded = vi.spyOn(component, 'ensureSnapshotLoaded').mockReturnValue(undefined);
+
+        component.selectHistoryCalendarDay(selectedDay, new Event('click'));
+
+        expect(component.selectedSnapshotId).toBe(primary.timestamp.toString());
+        expect(component.compareSnapshotId).toBe(older.timestamp.toString());
+        expect(component.getCompareOptions().map(option => option.id)).not.toContain(primary.timestamp.toString());
+        expect(component.showHistoryMenu).toBe(false);
+        expect(ensureSnapshotLoaded).toHaveBeenCalledWith(primary.timestamp.toString());
+        expect(ensureSnapshotLoaded).toHaveBeenCalledWith(older.timestamp.toString());
+    });
+
+    it('navigates the primary and comparison calendars independently', () => {
+        const may = makeSnapshot('2026-05-10');
+        const july = makeSnapshot('2026-07-20');
+        component.historyData = [may, july];
+        component.snapshotOptions = [july, may].map(snapshot => ({
+            id: snapshot.timestamp.toString(),
+            label: snapshot.snapshotDate,
+            dateKey: snapshot.snapshotDate
+        }));
+        component.compareSnapshotId = july.timestamp.toString();
+        component.updateSnapshotGroups();
+
+        component.navigateHistoryCalendar(-1, new Event('click'));
+        expect(component.historyCalendarMonth.getMonth()).toBe(6);
+        expect(component.compareCalendarMonth.getMonth()).toBe(6);
+
+        component.navigateCompareCalendar(-1, new Event('click'));
+        expect(component.historyCalendarMonth.getMonth()).toBe(6);
+        expect(component.compareCalendarMonth.getMonth()).toBe(4);
+    });
+
+    it('keeps complete stale current stats visible while its parallel refresh is pending', async () => {
+        const values: Record<string, string> = {
+            'user_stats_short_term_tracks': JSON.stringify([{ id: 'cached-track' }]),
+            'user_stats_short_term_artists': JSON.stringify([{ id: 'cached-artist' }]),
+            'user_stats_short_term_genres': JSON.stringify([{ name: 'cached-genre' }]),
+            'user_stats_short_term_lastUpdated': '1'
+        };
+        const spotify = {
+            getUserTopArtists: vi.fn().mockName('getUserTopArtists').mockReturnValue(NEVER),
+            getUserTopTracks: vi.fn().mockName('getUserTopTracks').mockReturnValue(NEVER)
+        };
+        const staleComponent = new UserStatsComponent(spotify as any, {
+            getUserId: () => 'user',
+            getSupabaseUserId: () => null,
+            isBackupActive: () => false
+        } as any, { getItem: (key: string) => values[key] ?? null } as any, null as any);
+
+        await staleComponent.loadStats();
+
+        expect(staleComponent.topTracks.map(track => track.id)).toEqual(['cached-track']);
+        expect(staleComponent.topArtists.map(artist => artist.id)).toEqual(['cached-artist']);
+        expect(staleComponent.topGenres.map(genre => genre.name)).toEqual(['cached-genre']);
+        expect(staleComponent.isLoading).toBe(false);
+        expect(staleComponent.isRefreshingStats).toBe(true);
+        expect(spotify.getUserTopArtists).toHaveBeenCalledTimes(1);
+        expect(spotify.getUserTopTracks).toHaveBeenCalledTimes(3);
+    });
+
+    it('rebuilds a missing genre cache from cached top artists', async () => {
+        const values: Record<string, string> = {
+            'user_stats_short_term_tracks': JSON.stringify([{ id: 'cached-track' }]),
+            'user_stats_short_term_artists': JSON.stringify([{ id: 'artist', genres: ['indie rock'] }]),
+            'user_stats_short_term_lastUpdated': Date.now().toString()
+        };
+        const cachedComponent = new UserStatsComponent({} as any, { getUserId: () => 'user', getSupabaseUserId: () => null, isBackupActive: () => false } as any, { getItem: (key: string) => values[key] ?? null, setItem: vi.fn().mockName('setItem') } as any, null as any);
+
+        await cachedComponent.loadStats();
+
+        expect(cachedComponent.topGenres.map(genre => genre.name)).toEqual(['indie rock']);
+    });
+
+    it('lazily hydrates artist profiles when a personal-app Top Artists response has no genres', async () => {
+        const values: Record<string, string> = {};
+        const spotify = {
+            getUserTopArtists: vi.fn().mockName('getUserTopArtists').mockReturnValue(of({ items: [{ id: 'artist', name: 'Artist', genres: [] }] })),
+            getUserTopTracks: vi.fn().mockName('getUserTopTracks').mockReturnValue(of({ items: [] })),
+            getArtistsByIds: vi.fn().mockName('getArtistsByIds').mockReturnValue(of({ artists: [{ id: 'artist', genres: ['indie rock'] }] }))
+        };
+        const genreComponent = new UserStatsComponent(spotify as any, { getUserId: () => 'user', getSupabaseUserId: () => null, isBackupActive: () => false } as any, {
+            getItem: (key: string) => values[key] ?? null,
+            setItem: (key: string, value: string) => values[key] = value,
+            getStatsHistory: () => Promise.resolve([]),
+            saveStatsHistory: () => Promise.resolve()
+        } as any, null as any);
+        await genreComponent.loadStats();
+        await Promise.resolve();
+
+        expect(spotify.getArtistsByIds).toHaveBeenCalledTimes(1);
+
+        expect(spotify.getArtistsByIds).toHaveBeenCalledWith(['artist']);
+        expect(genreComponent.topGenres.map(genre => genre.name)).toEqual(['indie rock']);
+    });
+
+    it('repairs fresh cached stats with missing genres immediately', async () => {
+        const values: Record<string, string> = {
+            'user_stats_short_term_tracks': JSON.stringify([{ id: 'track' }]),
+            'user_stats_short_term_artists': JSON.stringify([{ id: 'artist', genres: [] }]),
+            'user_stats_short_term_genres': JSON.stringify([]),
+            'user_stats_short_term_lastUpdated': Date.now().toString()
+        };
+        const spotify = {
+            getArtistsByIds: vi.fn().mockName('getArtistsByIds').mockReturnValue(of({ artists: [{ id: 'artist', genres: ['indie rock'] }] })),
+            getUserTopArtists: vi.fn().mockName('getUserTopArtists'),
+            getUserTopTracks: vi.fn().mockName('getUserTopTracks')
+        };
+        const cachedComponent = new UserStatsComponent(spotify as any, { getUserId: () => 'user', getSupabaseUserId: () => null, isBackupActive: () => false } as any, {
+            getItem: (key: string) => values[key] ?? null,
+            setItem: (key: string, value: string) => values[key] = value,
+            getStatsHistory: () => Promise.resolve([]),
+            saveStatsHistory: () => Promise.resolve()
+        } as any, null as any);
+
+        await cachedComponent.loadStats();
+
+        expect(spotify.getArtistsByIds).toHaveBeenCalledTimes(1);
+
+        expect(spotify.getArtistsByIds).toHaveBeenCalledWith(['artist']);
+        expect(spotify.getUserTopArtists).not.toHaveBeenCalled();
+        expect(cachedComponent.topGenres.map(genre => genre.name)).toEqual(['indie rock']);
+    });
+
+    it('loads one item trend instead of every historical Top list', async () => {
+        const supabase = {
+            loadStatsItemTrend: vi.fn().mockName('loadStatsItemTrend').mockResolvedValue([{
+                    timestamp: new Date('2026-08-01T12:00:00').getTime(),
+                    snapshotDate: '2026-08-01',
+                    rank: 4
+                }]),
+            loadAllStatsSnapshots: vi.fn().mockName('loadAllStatsSnapshots')
+        };
+        const trendComponent = new UserStatsComponent(null as any, {
+            getSupabaseUserId: () => 'user-id',
+            isBackupActive: () => true
+        } as any, null as any, supabase as any);
+        trendComponent.historyData = [makeSnapshot('2026-08-01', [], [], [], false)];
+
+        await trendComponent.openTrendPopup({ id: 'track-id', name: 'Track' }, 'tracks');
+
+        expect(supabase.loadStatsItemTrend).toHaveBeenCalledTimes(1);
+
+        expect(supabase.loadStatsItemTrend).toHaveBeenCalledWith('user-id', 'short_term', 'tracks', ['track-id']);
+        expect(supabase.loadAllStatsSnapshots).not.toHaveBeenCalled();
+        expect(trendComponent.trendPopupPoints.map(point => point.rank)).toEqual([4]);
+    });
+
+    it('opens a past search result in the position-history graph without preloaded snapshots', async () => {
+        const supabase = {
+            loadStatsItemTrend: vi.fn().mockName('loadStatsItemTrend').mockResolvedValue([{
+                    timestamp: new Date('2026-07-15T12:00:00').getTime(),
+                    snapshotDate: '2026-07-15',
+                    rank: 12
+                }])
+        };
+        const trendComponent = new UserStatsComponent(null as any, { getSupabaseUserId: () => 'user-id', isBackupActive: () => true } as any, null as any, supabase as any);
+        const result = {
+            kind: 'track' as const,
+            id: 'past-track',
+            name: 'Past Track',
+            subtitle: 'Past Artist',
+            imageUrl: 'cover.jpg',
+            spotifyUrl: 'https://open.spotify.com/track/past-track',
+            bestRank: 12,
+            firstSeen: '2026-07-15',
+            lastSeen: '2026-07-15',
+            appearances: 1
+        };
+
+        trendComponent.openPastTopResult(result);
+        await Promise.resolve();
+
+        expect(supabase.loadStatsItemTrend).toHaveBeenCalledTimes(1);
+
+        expect(supabase.loadStatsItemTrend).toHaveBeenCalledWith('user-id', 'short_term', 'tracks', ['past-track']);
+        expect(trendComponent.showTrendPopup).toBe(true);
+        expect(trendComponent.trendPopupItem).toBe(result);
+        expect(trendComponent.trendPopupPoints.map(point => point.rank)).toEqual([12]);
+        expect(trendComponent.getTrackArtist(result)).toBe('Past Artist');
+        expect(trendComponent.getTrackCover(result)).toBe('cover.jpg');
+    });
+
+    it('treats a genuinely new Top 10 song as a blue-flame hot debut', () => {
+        const previous = makeSnapshot('2026-08-01', [
+            { id: 'older-track', name: 'Older Track', artists: [{ name: 'Artist' }] }
+        ]);
+        component.historyData = [previous];
+        component.compareSnapshotId = previous.timestamp.toString();
+        component.topTracks = Array.from({ length: 11 }, (_, index) => ({
+            id: `new-${index}`,
+            name: `New Song ${index}`,
+            artists: [{ name: 'Artist' }]
+        }));
+
+        component.calculateHotMovers();
+
+        expect(component.isHotMover(component.topTracks[0], 'tracks')).toBe(true);
+        expect(component.isHighDebutHotSong(component.topTracks[0])).toBe(true);
+        expect(component.isHighDebutHotSong(component.topTracks[9])).toBe(true);
+        expect(component.isHotMover(component.topTracks[10], 'tracks')).toBe(false);
+        expect(component.isHighDebutHotSong(component.topTracks[10])).toBe(false);
+    });
+
+    it('treats a genuinely new Top 10 artist as a blue-flame hot debut', () => {
+        const previous = makeSnapshot('2026-08-01', [], [{ id: 'older-artist', name: 'Older Artist' }]);
+        component.historyData = [previous];
+        component.compareSnapshotId = previous.timestamp.toString();
+        component.topArtists = Array.from({ length: 11 }, (_, index) => ({
+            id: `new-artist-${index}`,
+            name: `New Artist ${index}`
+        }));
+
+        component.calculateHotMovers();
+
+        expect(component.isHotMover(component.topArtists[0], 'artists')).toBe(true);
+        expect(component.isHighDebutHotArtist(component.topArtists[0])).toBe(true);
+        expect(component.isHighDebutHotArtist(component.topArtists[9])).toBe(true);
+        expect(component.isHotMover(component.topArtists[10], 'artists')).toBe(false);
+        expect(component.isHighDebutHotArtist(component.topArtists[10])).toBe(false);
+    });
+
+    it('shares one ten-entry flame pool between high debuts and rising movers', () => {
+        component.topTracks = Array.from({ length: 12 }, (_, index) => ({
+            id: `candidate-${index}`,
+            name: `Candidate ${index}`,
+            artists: [{ name: 'Artist' }],
+            testTrend: index < 6
+                ? { type: 'new' as const }
+                : { type: 'up' as const, diff: 100 - index }
+        }));
+        vi.spyOn(component, 'getTrend').mockImplementation((item: any) => item.testTrend);
+        component.historyData = [makeSnapshot('2026-08-01')];
+
+        component.calculateHotMovers();
+
+        expect(component.hotMoverTracks.size).toBe(10);
+        expect(component.highDebutTracks.size).toBe(6);
+        expect(component.isHotMover(component.topTracks[9], 'tracks')).toBe(true);
+        expect(component.isHotMover(component.topTracks[10], 'tracks')).toBe(false);
+    });
+
+    it('scores a new entry from below rank 100 so it can displace a slower existing mover', () => {
+        component.topTracks = [
+            {
+                id: 'new-number-one',
+                name: 'New Number One',
+                artists: [{ name: 'Artist' }],
+                testTrend: { type: 'new' as const }
+            },
+            ...Array.from({ length: 10 }, (_, index) => ({
+                id: `existing-${index}`,
+                name: `Existing ${index}`,
+                artists: [{ name: 'Artist' }],
+                testTrend: { type: 'up' as const, diff: 99 - index }
+            }))
+        ];
+        vi.spyOn(component, 'getTrend').mockImplementation((item: any) => item.testTrend);
+        component.historyData = [makeSnapshot('2026-08-01')];
+
+        component.calculateHotMovers();
+
+        expect(component.isHotMover(component.topTracks[0], 'tracks')).toBe(true);
+        expect(component.isHotMover(component.topTracks[10], 'tracks')).toBe(false);
+    });
+
+    it('opens item history with both keyboard activation keys', () => {
+        const item = { id: 'keyboard-track', name: 'Keyboard Track' };
+        const openTrendPopup = vi.spyOn(component, 'openTrendPopup').mockResolvedValue(undefined);
+        const enterEvent = new KeyboardEvent('keydown', { key: 'Enter', cancelable: true });
+        const spaceEvent = new KeyboardEvent('keydown', { key: ' ', cancelable: true });
+
+        component.onTrendCardKeydown(enterEvent, item, 'tracks');
+        component.onTrendCardKeydown(spaceEvent, item, 'tracks');
+
+        expect(openTrendPopup).toHaveBeenCalledTimes(2);
+        expect(openTrendPopup).toHaveBeenCalledWith(item, 'tracks');
+        expect(enterEvent.defaultPrevented).toBe(true);
+        expect(spaceEvent.defaultPrevented).toBe(true);
+    });
+
+    it('ignores unrelated keys on history cards', () => {
+        const openTrendPopup = vi.spyOn(component, 'openTrendPopup').mockResolvedValue(undefined);
+
+        component.onTrendCardKeydown(new KeyboardEvent('keydown', { key: 'ArrowDown' }), { name: 'Track' }, 'tracks');
+
+        expect(openTrendPopup).not.toHaveBeenCalled();
+    });
+
+    it('searches Top Songs by song or artist while preserving the real rank', () => {
+        component.topTracks = [
+            { id: 'first', name: 'First Song', artists: [{ name: 'Someone Else' }] },
+            { id: 'wanted', name: 'Midnight City', artists: [{ name: 'M83' }] },
+            { id: 'third', name: 'Third Song', artists: [{ name: 'Another Artist' }] }
+        ];
+
+        component.statsSearchQuery = 'm83';
+
+        expect(component.filteredTracks.map(track => track.id)).toEqual(['wanted']);
+        expect(component.getStatsRankIndex(component.filteredTracks[0], 'tracks')).toBe(1);
+
+        component.statsSearchQuery = 'midnight';
+        expect(component.filteredTracks.map(track => track.id)).toEqual(['wanted']);
+    });
+
+    it('deduplicates tracks with matching title and artist so the same song does not reappear', () => {
+        const rawTracks = [
+            { id: 'track-1', name: 'Светлана!', artists: [{ name: 'NEXTIME' }] },
+            { id: 'track-60', name: 'jonglieren', artists: [{ name: '$OHO BANI' }] },
+            { id: 'track-61', name: 'Светлана!', artists: [{ name: 'NEXTIME' }] },
+            { id: 'track-62', name: 'The greatest - Techno', artists: [{ name: 'Naisak' }] }
+        ];
+
+        component.topTracks = rawTracks;
+
+        expect(component.displayedTracks.map(t => t.id)).toEqual(['track-1', 'track-60', 'track-62']);
+        expect(component.displayedTracks.length).toBe(3);
+    });
+
+    it('correctly reports rank indices for each displayed track without collapsing to earlier matches', () => {
+        const track1 = { id: 'track-1', name: 'Song A', artists: [{ name: 'Artist A' }] };
+        const track2 = { id: 'track-2', name: 'Song B', artists: [{ name: 'Artist B' }] };
+        const track3 = { id: 'track-3', name: 'Song C', artists: [{ name: 'Artist C' }] };
+
+        component.topTracks = [track1, track2, track3];
+
+        expect(component.getStatsRankIndex(track1, 'tracks')).toBe(0);
+        expect(component.getStatsRankIndex(track2, 'tracks')).toBe(1);
+        expect(component.getStatsRankIndex(track3, 'tracks')).toBe(2);
+    });
+
+
+    it('searches Top Artists case-insensitively and can clear the query', () => {
+        component.topArtists = [
+            { id: 'one', name: 'Massive Attack' },
+            { id: 'two', name: 'Portishead' }
+        ];
+        component.statsSearchQuery = 'PORTIS';
+
+        expect(component.filteredArtists.map(artist => artist.id)).toEqual(['two']);
+        expect(component.isStatsSearchActive).toBe(true);
+
+        component.clearStatsSearch();
+        expect(component.filteredArtists.length).toBe(2);
+        expect(component.isStatsSearchActive).toBe(false);
+    });
+
+    it('searches Top Genres case-insensitively', () => {
+        component.topGenres = [
+            { name: 'Alternative Rock', count: 8, percentage: 40 },
+            { name: 'Dream Pop', count: 5, percentage: 25 }
+        ];
+        component.statsSearchQuery = 'DREAM';
+
+        expect(component.filteredGenres.map(genre => genre.name)).toEqual(['Dream Pop']);
+        expect(component.filteredGenres[0].rank).toBe(2);
+    });
+
+    it('searches Supabase lazily for former songs and excludes a live current match', async () => {
+        const searchPastTopItems = vi.fn().mockName('searchPastTopItems').mockResolvedValue([
+            { kind: 'track', id: 'current', name: 'Still here', subtitle: '', imageUrl: '', spotifyUrl: '', bestRank: 1, firstSeen: '2026-01-01', lastSeen: '2026-02-01', appearances: 2 },
+            { kind: 'track', id: 'former', name: 'Gone song', subtitle: 'Artist', imageUrl: '', spotifyUrl: '', bestRank: 7, firstSeen: '2026-01-01', lastSeen: '2026-03-01', appearances: 4 }
+        ]);
+        const historicalComponent = new UserStatsComponent(null as any, { getSupabaseUserId: () => 'user-id', isBackupActive: () => true } as any, null as any, { searchPastTopItems } as any);
+        historicalComponent.topTracks = [{ id: 'current' }];
+        historicalComponent.selectedCategory = 'tracks';
+
+        await historicalComponent.searchPastStats('gone');
+
+        expect(searchPastTopItems).toHaveBeenCalledTimes(1);
+
+        expect(searchPastTopItems).toHaveBeenCalledWith('short_term', 'track', 'gone');
+        expect(historicalComponent.pastTopResults.map(item => item.id)).toEqual(['former']);
+    });
+
+    it('searches Supabase lazily for former genres and excludes a current genre', async () => {
+        const searchPastTopItems = vi.fn().mockName('searchPastTopItems').mockResolvedValue([
+            { kind: 'genre', id: 'dream pop', name: 'dream pop' },
+            { kind: 'genre', id: 'trip hop', name: 'trip hop' }
+        ]);
+        const historicalComponent = new UserStatsComponent(null as any, { getSupabaseUserId: () => 'user-id', isBackupActive: () => true } as any, null as any, { searchPastTopItems } as any);
+        historicalComponent.topGenres = [{ name: 'Dream Pop', count: 4, percentage: 20 }];
+        historicalComponent.selectedCategory = 'genres';
+
+        await historicalComponent.searchPastStats('hop');
+
+        expect(searchPastTopItems).toHaveBeenCalledTimes(1);
+
+        expect(searchPastTopItems).toHaveBeenCalledWith('short_term', 'genre', 'hop');
+        expect(historicalComponent.pastTopResults.map(item => item.id)).toEqual(['trip hop']);
+    });
+
+    it('opens a former genre in the position-history graph', async () => {
+        const loadStatsItemTrend = vi.fn().mockName('loadStatsItemTrend').mockResolvedValue([{
+                timestamp: new Date('2026-07-15T12:00:00').getTime(), snapshotDate: '2026-07-15', rank: 6
+            }]);
+        const historicalComponent = new UserStatsComponent(null as any, { getSupabaseUserId: () => 'user-id', isBackupActive: () => true } as any, null as any, { loadStatsItemTrend } as any);
+        const genre = { kind: 'genre' as const, id: 'trip hop', name: 'trip hop' } as any;
+
+        historicalComponent.openPastTopResult(genre);
+        await Promise.resolve();
+
+        expect(loadStatsItemTrend).toHaveBeenCalledTimes(1);
+
+        expect(loadStatsItemTrend).toHaveBeenCalledWith('user-id', 'short_term', 'genres', ['trip hop']);
+        expect(historicalComponent.trendPopupCategory).toBe('genres');
+    });
+
+    it('keeps past search off by default and starts it only when toggled on', () => {
+        const searchPastTopItems = vi.fn().mockName('searchPastTopItems').mockResolvedValue([]);
+        const historicalComponent = new UserStatsComponent(null as any, { getSupabaseUserId: () => 'user-id', isBackupActive: () => true } as any, null as any, { searchPastTopItems } as any);
+
+        historicalComponent.onStatsSearchChange('former');
+        vi.advanceTimersByTime(300);
+        expect(historicalComponent.includePastStatsSearch).toBe(false);
+        expect(searchPastTopItems).not.toHaveBeenCalled();
+
+        historicalComponent.togglePastStatsSearch();
+        vi.advanceTimersByTime(300);
+        expect(historicalComponent.includePastStatsSearch).toBe(true);
+        expect(searchPastTopItems).toHaveBeenCalledTimes(1);
+        expect(searchPastTopItems).toHaveBeenCalledWith('short_term', 'track', 'former');
+    });
+
+    it('clears and cancels historical results when past search is turned off', () => {
+        component.includePastStatsSearch = true;
+        component.statsSearchQuery = 'former';
+        component.pastTopResults = [{
+                kind: 'artist', id: 'former', name: 'Former', subtitle: '', imageUrl: '', spotifyUrl: '',
+                bestRank: 3, firstSeen: '2026-01-01', lastSeen: '2026-02-01', appearances: 2
+            }];
+        component.isSearchingPastStats = true;
+
+        component.togglePastStatsSearch();
+
+        expect(component.includePastStatsSearch).toBe(false);
+        expect(component.pastTopResults).toEqual([]);
+        expect(component.isSearchingPastStats).toBe(false);
+    });
+
+    it('explains that cloud history is required without querying Supabase', async () => {
+        const searchPastTopItems = vi.fn().mockName('searchPastTopItems');
+        const localComponent = new UserStatsComponent(null as any, { getSupabaseUserId: () => null, isBackupActive: () => false } as any, null as any, { searchPastTopItems } as any);
+
+        await localComponent.searchPastStats('older');
+
+        expect(searchPastTopItems).not.toHaveBeenCalled();
+        expect(localComponent.pastStatsSearchError).toContain('Cloud Backup');
+    });
 });

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {SongLeagueService} from '@core/song-league/song-league.service';
@@ -7,6 +7,7 @@ import {PushNotificationService} from '@core/notifications/push-notification.ser
 @Component({
     selector: 'app-song-league-claim',
     templateUrl: './song-league-claim.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SongLeagueClaimComponent implements OnInit {

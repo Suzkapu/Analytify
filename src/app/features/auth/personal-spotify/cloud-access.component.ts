@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 
@@ -39,6 +39,7 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
     .error { color: #ff7474; } .actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; } button { min-height: 46px; border-radius: var(--radius-pill); padding: 0 18px; font: inherit; font-weight: 800; cursor: pointer; }
     .secondary { border: 1px solid var(--color-border-strong); background: transparent; color: var(--color-text); } .primary { border: 0; background: var(--color-accent); color: var(--color-accent-contrast); } button:disabled { opacity: .55; } button i { margin-right: 7px; }
   `],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CloudAccessComponent implements OnInit {

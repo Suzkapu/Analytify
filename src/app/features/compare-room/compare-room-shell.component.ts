@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {Router} from '@angular/router';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-source.service';
@@ -21,6 +21,7 @@ import {firstValueFrom, Subscription} from 'rxjs';
     selector: 'app-compare-room-shell',
     templateUrl: './compare-room-shell.component.html',
     styleUrls: ['./compare-room-shell.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CompareRoomShellComponent implements OnInit, OnDestroy {

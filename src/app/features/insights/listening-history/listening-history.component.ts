@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectionStrategy } from '@angular/core';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
@@ -12,6 +12,7 @@ const console = createScopedLogger('Listening History');
     selector: 'app-listening-history',
     templateUrl: './listening-history.component.html',
     styleUrls: ['./listening-history.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ListeningHistoryComponent implements OnInit {

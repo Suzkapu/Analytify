@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
 
@@ -6,6 +6,7 @@ import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
     selector: 'app-shared-playlist-claim',
     templateUrl: './shared-playlist-claim.component.html',
     styleUrls: ['./shared-playlist-claim.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SharedPlaylistClaimComponent implements OnInit {

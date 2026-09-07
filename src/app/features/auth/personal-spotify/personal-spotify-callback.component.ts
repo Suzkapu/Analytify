@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 
@@ -21,6 +21,7 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
     section { max-width: 560px; padding: 2rem; } i { color: var(--color-accent); font-size: 3rem; } i.error { color: #ff7474; }
     p { color: var(--color-text-muted); line-height: 1.5; } a { color: var(--color-accent); font-weight: 800; }
   `],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PersonalSpotifyCallbackComponent implements OnInit {

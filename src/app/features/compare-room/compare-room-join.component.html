@@ -108,7 +108,7 @@
       <h1>Could not continue</h1>
       <p>{{ errorMessage }}</p>
       @if (saveResult?.playlistUrl) {
-        <a class="spotify-button" [href]="saveResult?.playlistUrl | safeSpotifyUrl:'playlist'" target="_blank" rel="noopener noreferrer">Open partial playlist</a>
+        <a class="spotify-button" [href]="$safeNavigationMigration(saveResult?.playlistUrl) | safeSpotifyUrl:'playlist'" target="_blank" rel="noopener noreferrer">Open partial playlist</a>
       }
       <button type="button" class="leave-button" (click)="leave()">Leave room</button>
     }

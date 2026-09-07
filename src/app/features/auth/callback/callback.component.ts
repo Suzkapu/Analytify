@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AuthReturnUrlService} from '@core/auth/auth-return-url.service';
@@ -10,6 +10,7 @@ const console = createScopedLogger('Login Callback');
     selector: 'app-callback',
     templateUrl: './callback.component.html',
     styleUrls: ['./callback.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CallbackComponent implements OnInit {

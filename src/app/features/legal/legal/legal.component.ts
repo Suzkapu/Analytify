@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Location } from '@angular/common';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 
@@ -6,6 +6,7 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
     selector: 'app-legal',
     templateUrl: './legal.component.html',
     styleUrls: ['./legal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class LegalComponent {

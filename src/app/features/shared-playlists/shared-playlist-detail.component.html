@@ -35,7 +35,7 @@
           </button>
           @if (download?.spotifyPlaylistUrl) {
             <a class="spotify-text-link spotify-destination"
-            [href]="download?.spotifyPlaylistUrl | safeSpotifyUrl:'playlist'" target="_blank" rel="noopener noreferrer">Open Spotify copy</a>
+            [href]="$safeNavigationMigration(download?.spotifyPlaylistUrl) | safeSpotifyUrl:'playlist'" target="_blank" rel="noopener noreferrer">Open Spotify copy</a>
           }
           @if (download) {
             <small>Updates automatically while you are logged in to Analytify.</small>

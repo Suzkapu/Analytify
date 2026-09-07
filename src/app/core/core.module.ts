@@ -1,5 +1,5 @@
 import {APP_INITIALIZER, NgModule, Optional, SkipSelf} from '@angular/core';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 import {SpotifyAuthInterceptor} from '@core/auth/spotify-auth.interceptor';
 import {StorageService} from '@core/data-access/storage/storage.service';
@@ -20,7 +20,7 @@ export function initializeStorage(storageService: StorageService) {
             deps: [StorageService],
             multi: true
         },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withXhr(), withInterceptorsFromDi())
     ] })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule | null) {
