@@ -18,7 +18,7 @@ describe('SpotifyAuthService', () => {
 
     async function requestAfterMicrotasks(url: string) {
         for (let attempt = 0; attempt < 10; attempt += 1) {
-            const requests = http.match(url);
+            const requests = http.match(request => request.url === url);
             if (requests.length > 0) {
                 expect(requests.length).toBe(1);
                 return requests[0];
@@ -176,7 +176,7 @@ describe('SpotifyAuthService', () => {
         expect(await service.recoverUsableSession()).toBe(true);
         expect(values['spotifyAccessToken']).toBe('recovered-token');
         expect(service.isTokenExpired()).toBe(false);
-        expect(http.match('https://api.spotify.com/v1/me').length).toBe(0);
+        expect(http.match(request => request.url === 'https://api.spotify.com/v1/me').length).toBe(0);
     });
 
     it('exchanges a personal-app PKCE code and stores a local-only Spotify identity', async () => {
