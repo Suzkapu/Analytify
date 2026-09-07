@@ -131,7 +131,8 @@ begin
   insert into public.operational_alerts as existing(alert_key, severity, message, first_seen_at, last_seen_at, resolved_at)
   select finding.alert_key, finding.severity, finding.message, v_now, v_now, null
   from jsonb_to_recordset(v_findings) as finding(alert_key text, severity text, message text)
-  on conflict (alert_key) do update set severity = excluded.severity, message = excluded.message,
+  on conflict on constraint operational_alerts_pkey do update
+    set severity = excluded.severity, message = excluded.message,
     last_seen_at = v_now, resolved_at = null;
 
   return query
