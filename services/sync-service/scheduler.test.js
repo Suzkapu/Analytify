@@ -146,3 +146,19 @@ test('surfaces atomic completion persistence errors', async () => {
   }}});
   await assert.rejects(quiet(() => scheduler.runJob(job)), /completion unavailable/);
 });
+
+test('emits only alerts the database marks due after its cooldown', async () => {
+  const {scheduler} = harness({rpcResults: {monitor_operational_health: {data: [
+    {alert_key: 'sync-backlog', severity: 'warning', message: 'Queue is old.'}
+  ], error: null}}});
+  const original = console.warn;
+  const warnings = [];
+  console.warn = message => warnings.push(message);
+  try {
+    const alerts = await scheduler.evaluateOperationalHealth();
+    assert.equal(alerts.length, 1);
+    assert.deepEqual(warnings, ['[Operations][warning] Queue is old.']);
+  } finally {
+    console.warn = original;
+  }
+});

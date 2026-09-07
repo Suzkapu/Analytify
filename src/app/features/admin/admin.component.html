@@ -11,6 +11,19 @@
     <section *ngIf="isLoading" class="admin-loading"><i class="pi pi-spin pi-spinner"></i><span>Loading private controls…</span></section>
 
     <ng-container *ngIf="!isLoading">
+      <section class="admin-panel operations-panel">
+        <div class="admin-section-heading"><div><span>Operations</span><h2>Runtime health</h2><p>Queue health, leases, active alerts, and deployed release identity.</p></div><i class="pi pi-chart-line"></i></div>
+        <div class="operations-metrics">
+          <span><strong>{{ operationalHealth.syncQueueDepth }}</strong> sync queued</span>
+          <span><strong>{{ operationalHealth.oldestSyncQueueAgeSeconds }}s</strong> oldest sync</span>
+          <span><strong>{{ operationalHealth.notificationQueueDepth }}</strong> notifications queued</span>
+          <span><strong>{{ operationalHealth.oldestNotificationQueueAgeSeconds }}s</strong> oldest notification</span>
+          <span [class.metric-error]="operationalHealth.expiredLeases"><strong>{{ operationalHealth.expiredLeases }}</strong> expired leases</span>
+          <span [class.metric-error]="!releaseIsConsistent"><strong>{{ releaseIsConsistent ? 'Matched' : 'Mismatch' }}</strong> release</span>
+        </div>
+        <div *ngFor="let alert of operationalHealth.alerts" class="admin-notice error" role="alert"><i class="pi pi-exclamation-triangle"></i>{{ alert.message }}</div>
+      </section>
+
       <section class="admin-panel site-settings-panel">
         <div class="admin-section-heading"><div><span>Website</span><h2>Site settings</h2></div><i class="pi pi-sliders-h"></i></div>
         <label class="admin-field wide"><span>Announcement banner</span><textarea [(ngModel)]="siteSettings.announcement" maxlength="500" rows="3" placeholder="Leave empty to hide the banner"></textarea><small>{{ siteSettings.announcement.length }}/500</small></label>

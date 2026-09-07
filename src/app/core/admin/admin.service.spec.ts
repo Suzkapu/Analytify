@@ -55,6 +55,25 @@ describe('AdminService', () => {
     });
   });
 
+  it('maps queue, lease, feature, release, and alert health', async () => {
+    rpc.and.resolveTo({data: {
+      syncQueueDepth: 7, oldestSyncQueueAgeSeconds: 83,
+      notificationQueueDepth: 4, oldestNotificationQueueAgeSeconds: 42, expiredLeases: 1,
+      lastSuccessByFeature: {listening_history: 'now'}, releases: {worker: 'abc'},
+      alerts: [{key: 'expired-sync-leases', severity: 'critical', message: 'Lease expired.'}]
+    }, error: null});
+
+    const health = await service.loadOperationalHealth();
+
+    expect(rpc).toHaveBeenCalledWith('admin_operational_health');
+    expect(health.syncQueueDepth).toBe(7);
+    expect(health.notificationQueueDepth).toBe(4);
+    expect(health.expiredLeases).toBe(1);
+    expect(health.lastSuccessByFeature.listening_history).toBe('now');
+    expect(health.releases['worker']).toBe('abc');
+    expect(health.alerts[0].severity).toBe('critical');
+  });
+
   it('loads the persisted interval unit for every scheduled task', async () => {
     rpc.and.callFake((name: string) => Promise.resolve({data: name === 'admin_list_schedule_status' ? [{
       user_id: 'user-1', next_effective_run_at: '2026-09-11T08:00:00Z', manual_job_retained: true

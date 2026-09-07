@@ -45,12 +45,16 @@ const probes = [
   },
   {
     label: 'Supabase release identity',
-    url: `${supabaseUrl}/rest/v1/deployment_revisions?component=eq.supabase&select=commit_sha`,
+    url: `${supabaseUrl}/rest/v1/deployment_revisions?component=in.(supabase,edge:spotify-credentials,edge:song-league-playlist-sync,edge:song-league-notifications,worker)&select=component,commit_sha`,
     options: {headers: supabaseHeaders},
     validate: async response => {
       if (!response.ok) return false;
       const revisions = await response.json();
-      return revisions.length === 1 && revisions[0]?.commit_sha === expectedCommitSha;
+      const expectedComponents = ['supabase', 'edge:spotify-credentials', 'edge:song-league-playlist-sync',
+        'edge:song-league-notifications', 'worker'];
+      return expectedComponents.every(component => revisions.some(
+        revision => revision.component === component && revision.commit_sha === expectedCommitSha
+      ));
     }
   },
   ...['sync_user_settings', 'spotify_credentials'].map(table => ({
@@ -64,6 +68,7 @@ const probes = [
     url: `${supabaseUrl}/functions/v1/${functionName}`,
     options: {method: 'POST', headers: supabaseHeaders, body: '{}'},
     validate: async response => response.status !== 404 && response.status < 500
+      && response.headers.get('x-analytify-commit') === expectedCommitSha
   }))
 ];
 

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
-import {AdminSyncRun, AdminUserSyncSettings, SiteSettings, SyncTaskKey} from './admin.models';
+import {AdminOperationalHealth, AdminSyncRun, AdminUserSyncSettings, SiteSettings, SyncTaskKey} from './admin.models';
 
 @Injectable({providedIn: 'root'})
 export class AdminService {
@@ -154,6 +154,22 @@ export class AdminService {
       error: row.error || null,
       details: row.details || {}
     }));
+  }
+
+  async loadOperationalHealth(): Promise<AdminOperationalHealth> {
+    const {data, error} = await this.supabase.client.rpc('admin_operational_health');
+    if (error) throw error;
+    const value = data || {};
+    return {
+      syncQueueDepth: Number(value.syncQueueDepth || 0),
+      oldestSyncQueueAgeSeconds: Number(value.oldestSyncQueueAgeSeconds || 0),
+      notificationQueueDepth: Number(value.notificationQueueDepth || 0),
+      oldestNotificationQueueAgeSeconds: Number(value.oldestNotificationQueueAgeSeconds || 0),
+      expiredLeases: Number(value.expiredLeases || 0),
+      lastSuccessByFeature: value.lastSuccessByFeature || {},
+      releases: value.releases || {},
+      alerts: value.alerts || []
+    };
   }
 
   async createDemoLeague(name: string, timezone: string): Promise<string> {

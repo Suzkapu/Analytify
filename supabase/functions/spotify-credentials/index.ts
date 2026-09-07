@@ -17,7 +17,10 @@ const corsHeaders = {
 };
 
 function json(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), {status, headers: {...corsHeaders, 'Content-Type': 'application/json'}});
+  return new Response(JSON.stringify(body), {status, headers: {
+    ...corsHeaders, 'Content-Type': 'application/json',
+    'X-Analytify-Commit': Deno.env.get('DEPLOYMENT_COMMIT_SHA') || 'development'
+  }});
 }
 
 function requiredEnvironment(name: string): string {

@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {AdminService} from '@core/admin/admin.service';
-import {AdminSyncRun, AdminUserSyncSettings, SiteSettings, SyncTaskKey} from '@core/admin/admin.models';
+import {AdminOperationalHealth, AdminSyncRun, AdminUserSyncSettings, SiteSettings, SyncTaskKey} from '@core/admin/admin.models';
 
 @Component({
   selector: 'app-admin',
@@ -13,6 +13,11 @@ export class AdminComponent implements OnInit {
   siteSettings: SiteSettings = {announcement: '', allowSongLeagueCreation: true};
   users: AdminUserSyncSettings[] = [];
   runs: AdminSyncRun[] = [];
+  operationalHealth: AdminOperationalHealth = {
+    syncQueueDepth: 0, oldestSyncQueueAgeSeconds: 0,
+    notificationQueueDepth: 0, oldestNotificationQueueAgeSeconds: 0, expiredLeases: 0,
+    lastSuccessByFeature: {}, releases: {}, alerts: []
+  };
   isRunsCollapsed = true;
   expandedUsers = new Set<string>();
   isLoading = true;
@@ -36,8 +41,9 @@ export class AdminComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
     try {
-      [this.siteSettings, this.users, this.runs] = await Promise.all([
-        this.admin.loadSiteSettings(), this.admin.listUsers(), this.admin.listRuns()
+      [this.siteSettings, this.users, this.runs, this.operationalHealth] = await Promise.all([
+        this.admin.loadSiteSettings(), this.admin.listUsers(), this.admin.listRuns(),
+        this.admin.loadOperationalHealth()
       ]);
     } catch (error) {
       this.errorMessage = this.describeError(error, 'The admin dashboard could not be loaded.');
@@ -173,6 +179,15 @@ export class AdminComponent implements OnInit {
       song_league_playlists: 'League playlists',
       shared_playlists: 'Shared playlists'
     } as Record<SyncTaskKey, string>)[task];
+  }
+
+  get releaseIsConsistent(): boolean {
+    const expectedComponents = [
+      'supabase', 'worker', 'edge:spotify-credentials',
+      'edge:song-league-playlist-sync', 'edge:song-league-notifications'
+    ];
+    const commits = expectedComponents.map(component => this.operationalHealth.releases[component]).filter(Boolean);
+    return commits.length === expectedComponents.length && new Set(commits).size === 1;
   }
 
   trackUser(_: number, user: AdminUserSyncSettings): string { return user.userId; }

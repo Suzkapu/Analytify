@@ -83,6 +83,7 @@ supabase secrets set \
   "SPOTIFY_TOKEN_ENCRYPTION_KEY=${SPOTIFY_TOKEN_ENCRYPTION_KEY}" \
   "SPOTIFY_TOKEN_ENCRYPTION_KEYS=${token_keys_json}" \
   "SPOTIFY_TOKEN_ENCRYPTION_WRITE_VERSION=${token_write_version}" \
+  "DEPLOYMENT_COMMIT_SHA=${deploy_commit_sha}" \
   "WEB_PUSH_VAPID_PUBLIC_KEY=${WEB_PUSH_VAPID_PUBLIC_KEY}" \
   "WEB_PUSH_VAPID_PRIVATE_KEY=${WEB_PUSH_VAPID_PRIVATE_KEY}" \
   --project-ref "$SUPABASE_PROJECT_REF"
@@ -96,7 +97,7 @@ supabase functions deploy song-league-notifications \
   --project-ref "$SUPABASE_PROJECT_REF" \
   --use-api
 
-deployment_revision_sql="insert into public.deployment_revisions(component, commit_sha, deployed_at) values ('supabase', '${deploy_commit_sha}', now()) on conflict (component) do update set commit_sha = excluded.commit_sha, deployed_at = excluded.deployed_at;"
+deployment_revision_sql="insert into public.deployment_revisions(component, commit_sha, deployed_at) values ('supabase', '${deploy_commit_sha}', now()), ('edge:spotify-credentials', '${deploy_commit_sha}', now()), ('edge:song-league-playlist-sync', '${deploy_commit_sha}', now()), ('edge:song-league-notifications', '${deploy_commit_sha}', now()) on conflict (component) do update set commit_sha = excluded.commit_sha, deployed_at = excluded.deployed_at;"
 curl --fail-with-body --silent --show-error \
   --request POST \
   --header "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \

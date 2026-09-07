@@ -16,6 +16,7 @@ describe('AdminComponent', () => {
       'loadSiteSettings',
       'listUsers',
       'listRuns',
+      'loadOperationalHealth',
       'updateSiteSettings',
       'updateUser',
       'enqueueUser',
@@ -40,6 +41,11 @@ describe('AdminComponent', () => {
         details: {}
       }
     ]);
+    adminService.loadOperationalHealth.and.resolveTo({
+      syncQueueDepth: 0, oldestSyncQueueAgeSeconds: 0,
+      notificationQueueDepth: 0, oldestNotificationQueueAgeSeconds: 0, expiredLeases: 0,
+      lastSuccessByFeature: {}, releases: {supabase: 'same', worker: 'same'}, alerts: []
+    });
 
     router = jasmine.createSpyObj<Router>('Router', ['navigate']);
 
@@ -70,6 +76,36 @@ describe('AdminComponent', () => {
     const runsPanel = fixture.nativeElement.querySelector('.runs-panel');
     expect(runsPanel).not.toBeNull();
     expect(runsPanel.classList).toContain('collapsed');
+  });
+
+  it('loads operational health in parallel and reports release drift', async () => {
+    adminService.loadOperationalHealth.and.resolveTo({
+      syncQueueDepth: 51, oldestSyncQueueAgeSeconds: 901,
+      notificationQueueDepth: 12, oldestNotificationQueueAgeSeconds: 90, expiredLeases: 1,
+      lastSuccessByFeature: {}, releases: {supabase: 'one', worker: 'two'},
+      alerts: [{key: 'sync-backlog', severity: 'warning', message: 'Sync backlog is old.', firstSeenAt: '', lastSeenAt: ''}]
+    });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(component.releaseIsConsistent).toBeFalse();
+    expect(fixture.nativeElement.querySelector('.operations-panel').textContent).toContain('Sync backlog is old.');
+    expect(adminService.loadOperationalHealth).toHaveBeenCalledTimes(1);
+  });
+
+  it('requires every deployed component before reporting a matched release', () => {
+    component.operationalHealth.releases = {
+      supabase: 'abc',
+      worker: 'abc',
+      'edge:spotify-credentials': 'abc',
+      'edge:song-league-playlist-sync': 'abc'
+    };
+    expect(component.releaseIsConsistent).toBeFalse();
+    component.operationalHealth.releases['edge:song-league-notifications'] = 'abc';
+    expect(component.releaseIsConsistent).toBeTrue();
+    component.operationalHealth.releases['worker'] = 'different';
+    expect(component.releaseIsConsistent).toBeFalse();
   });
 
   it('expands and collapses Recent runs when toggled', async () => {

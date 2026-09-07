@@ -7,7 +7,7 @@ const {createTaskRegistry} = require('./task-registry');
 const {createScheduler} = require('./scheduler');
 const {createCredentialStore} = require('./credential-store');
 const {createPushDispatcher} = require('./push-dispatcher');
-const {createHealthServer} = require('./health-server');
+const {createHealthServer, deployedCommit} = require('./health-server');
 
 async function createService() {
   const config = loadConfig();
@@ -15,6 +15,10 @@ async function createService() {
     auth: {persistSession: false, autoRefreshToken: false},
     realtime: {transport: ws}
   });
+  const {error: releaseError} = await supabase.from('deployment_revisions').upsert({
+    component: 'worker', commit_sha: deployedCommit(), deployed_at: new Date().toISOString()
+  }, {onConflict: 'component'});
+  if (releaseError) throw releaseError;
   const spotify = createSpotifyClient(config);
   const credentials = createCredentialStore({
     supabase,

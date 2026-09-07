@@ -60,3 +60,14 @@ export interface AdminSyncRun {
   error: string | null;
   details: Record<string, unknown>;
 }
+
+export interface AdminOperationalHealth {
+  syncQueueDepth: number;
+  oldestSyncQueueAgeSeconds: number;
+  notificationQueueDepth: number;
+  oldestNotificationQueueAgeSeconds: number;
+  expiredLeases: number;
+  lastSuccessByFeature: Partial<Record<SyncTaskKey, string>>;
+  releases: Record<string, string>;
+  alerts: Array<{key: string; severity: 'warning' | 'critical'; message: string; firstSeenAt: string; lastSeenAt: string}>;
+}

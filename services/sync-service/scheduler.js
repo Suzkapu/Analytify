@@ -195,11 +195,24 @@ function createScheduler({supabase, config, tasks, credentials, pushDispatcher})
     }
   }
 
+  async function evaluateOperationalHealth() {
+    const {data: alerts, error} = await supabase.rpc('monitor_operational_health');
+    if (error) throw error;
+    const dueAlerts = Array.isArray(alerts) ? alerts : [];
+    for (const alert of dueAlerts) console.warn(`[Operations][${alert.severity}] ${alert.message}`);
+    return dueAlerts;
+  }
+
   async function runPass() {
     try {
       await pushDispatcher.dispatchDue(new Date());
     } catch (error) {
       console.error(`[Push] Song League notification pass failed: ${String(error.message || error)}`);
+    }
+    try {
+      await evaluateOperationalHealth();
+    } catch (error) {
+      console.error(`[Operations] Health evaluation failed: ${String(error.message || error)}`);
     }
     await reconcileAdmins();
     const queued = await enqueueDueJobs();
@@ -208,7 +221,7 @@ function createScheduler({supabase, config, tasks, credentials, pushDispatcher})
     return {queued, processed: jobs.length};
   }
 
-  return {workerId, reconcileAdmins, enqueueDueJobs, claimQueuedJobs, runJob, runPass};
+  return {workerId, reconcileAdmins, enqueueDueJobs, claimQueuedJobs, runJob, evaluateOperationalHealth, runPass};
 }
 
 module.exports = {createScheduler, isJobAllowed};
