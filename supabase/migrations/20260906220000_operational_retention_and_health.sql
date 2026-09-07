@@ -175,6 +175,7 @@ end; $$;
 revoke all on function private.cleanup_operational_history() from public;
 revoke all on function public.monitor_operational_health() from public, anon, authenticated;
 revoke all on function public.admin_operational_health() from public, anon;
+grant usage on schema private to service_role;
 grant execute on function private.cleanup_operational_history() to service_role;
 grant execute on function public.monitor_operational_health() to service_role;
 grant execute on function public.admin_operational_health() to authenticated;
