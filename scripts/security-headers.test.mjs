@@ -7,6 +7,7 @@ const nginx = readFileSync('deploy/analytify-security.conf', 'utf8');
 const deploy = readFileSync('scripts/deploy.sh', 'utf8');
 const installer = readFileSync('scripts/install-nginx-security.sh', 'utf8');
 const liveVerification = readFileSync('scripts/verify-live-deployment.mjs', 'utf8');
+const serviceWorker = JSON.parse(readFileSync('ngsw-config.json', 'utf8'));
 
 test('versioned nginx configuration supplies the required browser defenses', () => {
   const headers = new Headers();
@@ -34,4 +35,8 @@ test('live validation reports missing or weakened headers', () => {
   assert.ok(invalidSecurityHeaders(headers).includes('content-security-policy'));
   assert.ok(invalidSecurityHeaders(headers).includes('strict-transport-security'));
   assert.ok(invalidSecurityHeaders(headers).includes('server-version'));
+});
+
+test('online PWA navigations refresh response security headers from the server', () => {
+  assert.equal(serviceWorker.navigationRequestStrategy, 'freshness');
 });
