@@ -44,4 +44,8 @@ const policy = await readFile(path.join(root, 'docs', 'supply-chain-policy.md'),
 assert.match(policy, /Owner \| Expiry/);
 assert.match(policy, /2026-12-31/);
 
+const securityPolicy = await readFile(path.join(root, 'SECURITY.md'), 'utf8');
+assert.match(securityPolicy, /private vulnerability reporting/i);
+assert.match(securityPolicy, /acknowledge a report within seven days/i);
+
 console.log(`Supply-chain policy check passed (${workflowNames.length} workflows, immutable action pins).`);
