@@ -143,6 +143,18 @@ describe('SongLeagueDetailComponent notifications', () => {
         expect(component.dashboard?.league.maxMembers).toBe(12);
     });
 
+    it('keeps the owner invite action accessible when mobile hides its text label', async () => {
+        fixture.detectChanges();
+        await fixture.whenStable();
+        component.currentUserId = 'owner';
+        fixture.detectChanges();
+
+        const invite = fixture.nativeElement.querySelector('.invite-button') as HTMLButtonElement;
+        expect(invite.getAttribute('aria-label')).toBe('Invite a member');
+        expect(invite.querySelector('span')?.textContent).toBe('Invite');
+        expect(invite.querySelector('.pi-user-plus')).toBeTruthy();
+    });
+
     it('keeps league B and its subscription when league A resolves later', async () => {
         const paramMap = new Subject<any>();
         const pending = new Map<string, (dashboard: any) => void>();

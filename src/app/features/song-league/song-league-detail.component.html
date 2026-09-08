@@ -30,8 +30,8 @@
           </span>
         </div>
         @if (isOwner && !data.league.isDemo) {
-          <button type="button" class="league-secondary invite-button" (click)="createInvite()" [disabled]="isCreatingInvite">
-            <i class="pi" [ngClass]="isCreatingInvite ? 'pi-spin pi-spinner' : 'pi-user-plus'"></i> Invite
+          <button type="button" class="league-secondary invite-button" (click)="createInvite()" [disabled]="isCreatingInvite" aria-label="Invite a member">
+            <i class="pi" [ngClass]="isCreatingInvite ? 'pi-spin pi-spinner' : 'pi-user-plus'"></i><span>Invite</span>
           </button>
         }
       </header>
