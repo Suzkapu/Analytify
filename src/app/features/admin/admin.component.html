@@ -2,7 +2,7 @@
 <main class="admin-page">
   <div class="admin-shell">
     <header class="admin-hero">
-      <div><span>Private control plane</span><h1>Analytify Admin</h1><p>Website controls, per-user background synchronization, and safe demo tools.</p></div>
+      <div><span>Administration</span><h1>Analytify Admin</h1><p>Website settings, background updates, health checks, and test tools.</p></div>
       <button type="button" class="admin-secondary" (click)="load()" [disabled]="isLoading"><i class="pi pi-refresh" [class.pi-spin]="isLoading"></i> Refresh</button>
     </header>
 
@@ -13,7 +13,7 @@
       <div class="admin-notice success" role="status"><i class="pi pi-check-circle"></i>{{ successMessage }}</div>
     }
     @if (isLoading) {
-      <section class="admin-loading"><i class="pi pi-spin pi-spinner"></i><span>Loading private controls…</span></section>
+      <section class="admin-loading"><i class="pi pi-spin pi-spinner"></i><span>Loading admin settings…</span></section>
     }
 
     @if (!isLoading) {
@@ -47,7 +47,7 @@
         <button type="button" class="admin-primary" (click)="saveSiteSettings()" [disabled]="isSavingSite"><i class="pi" [ngClass]="isSavingSite ? 'pi-spin pi-spinner' : 'pi-save'"></i>{{ isSavingSite ? 'Saving…' : 'Save website settings' }}</button>
       </section>
       <section class="admin-panel demo-panel">
-        <div class="admin-section-heading"><div><span>Song League lab</span><h2>Play against demo bots</h2><p>Creates a disposable league with three synthetic opponents, recommendations, and scores.</p></div><i class="pi pi-bolt"></i></div>
+        <div class="admin-section-heading"><div><span>Song League test</span><h2>Create a demo league</h2><p>Adds three test players, songs, and scores so the league UI can be checked.</p></div><i class="pi pi-bolt"></i></div>
         <div class="demo-controls"><input type="text" [(ngModel)]="demoName" maxlength="80" aria-label="Demo league name"><button type="button" class="admin-primary" (click)="createDemoLeague()" [disabled]="isCreatingDemo"><i class="pi" [ngClass]="isCreatingDemo ? 'pi-spin pi-spinner' : 'pi-play'"></i>{{ isCreatingDemo ? 'Creating…' : 'Create playable demo' }}</button></div>
       </section>
       <section class="admin-panel notification-test-panel">
@@ -63,7 +63,7 @@
         <small class="notification-test-hint">Enable notifications from Data &amp; account on this device before testing.</small>
       </section>
       <section class="admin-users-section">
-        <div class="admin-section-heading"><div><span>Reusable sync service</span><h2>User schedules</h2><p>Every enabled data source is an independent task with its own interval.</p></div><span class="admin-count">{{ users.length }}</span></div>
+        <div class="admin-section-heading"><div><span>Background updates</span><h2>User schedules</h2><p>Choose which data is updated and how often for each user.</p></div><span class="admin-count">{{ users.length }}</span></div>
         <div class="admin-user-grid">
           @for (user of users; track trackUser($index, user)) {
             <article class="admin-user-card" [class.disabled]="!user.enabled" [class.expanded]="isUserExpanded(user.userId)">

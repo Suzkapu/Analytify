@@ -5,7 +5,7 @@
       <span class="page-eyebrow">{{ isSpyMode ? 'Spy mode · approved access' : 'Personal listening' }}</span>
       <h1>{{ isSpyMode ? ((spyDisplayName || 'Shared') + ' top listening') : 'Your top listening' }}</h1>
       @if (!isSpyMode) {
-        <p>See the songs, artists, and genres shaping your Spotify profile—and how they change over time.</p>
+        <p>See your top songs, artists, and genres, and how their rankings change.</p>
       }
       @if (isSpyMode) {
         <p>A read-only view shared with you by this user@if (spySnapshotDate) {

@@ -53,5 +53,9 @@ describe('LoginPageComponent', () => {
         expect(element.querySelector('a.personal-app-button')).not.toBeNull();
         expect(element.querySelector('a.compare-room-button')).toBeNull();
         expect(element.textContent).not.toContain('Open a Compare Room');
+        expect(element.textContent).toContain('See what you listen to.');
+        expect(element.textContent).toContain('Browse playlists, check your top songs');
+        expect(element.textContent).toContain('Stored on this device');
+        expect(element.textContent).not.toContain('focused dashboard');
     });
 });
