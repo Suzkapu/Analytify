@@ -18,6 +18,8 @@ require_value SPOTIFY_CLIENT_SECRET
 require_value SPOTIFY_TOKEN_ENCRYPTION_KEY
 require_value WEB_PUSH_VAPID_PUBLIC_KEY
 require_value WEB_PUSH_VAPID_PRIVATE_KEY
+require_value EDGE_ALLOWED_ORIGINS
+require_value RATE_LIMIT_HASH_KEY
 
 if [[ ! "$SUPABASE_PROJECT_REF" =~ ^[a-z0-9]{20}$ ]]; then
   echo "Supabase deployment configuration error: SUPABASE_PROJECT_REF is invalid." >&2
@@ -44,6 +46,16 @@ fi
 
 if [[ ! "$WEB_PUSH_VAPID_PRIVATE_KEY" =~ ^[A-Za-z0-9_-]{43}$ ]]; then
   echo "Supabase deployment configuration error: WEB_PUSH_VAPID_PRIVATE_KEY is invalid." >&2
+  exit 1
+fi
+
+if [[ "$EDGE_ALLOWED_ORIGINS" == *"*"* || "$EDGE_ALLOWED_ORIGINS" != *"https://analytify.dynv6.net"* ]]; then
+  echo "Supabase deployment configuration error: EDGE_ALLOWED_ORIGINS must be an explicit production allowlist." >&2
+  exit 1
+fi
+
+if (( ${#RATE_LIMIT_HASH_KEY} < 32 )); then
+  echo "Supabase deployment configuration error: RATE_LIMIT_HASH_KEY must contain at least 32 characters." >&2
   exit 1
 fi
 
@@ -86,6 +98,8 @@ supabase secrets set \
   "DEPLOYMENT_COMMIT_SHA=${deploy_commit_sha}" \
   "WEB_PUSH_VAPID_PUBLIC_KEY=${WEB_PUSH_VAPID_PUBLIC_KEY}" \
   "WEB_PUSH_VAPID_PRIVATE_KEY=${WEB_PUSH_VAPID_PRIVATE_KEY}" \
+  "EDGE_ALLOWED_ORIGINS=${EDGE_ALLOWED_ORIGINS}" \
+  "RATE_LIMIT_HASH_KEY=${RATE_LIMIT_HASH_KEY}" \
   --project-ref "$SUPABASE_PROJECT_REF"
 supabase functions deploy spotify-credentials \
   --project-ref "$SUPABASE_PROJECT_REF" \

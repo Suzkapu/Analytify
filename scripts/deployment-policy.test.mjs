@@ -74,3 +74,12 @@ test('Oracle identity is pinned and verified before Supabase can mutate producti
   assert.ok(oraclePreflight > 0 && oraclePreflight < supabaseMutation);
   assert.match(workflow, /DEPLOY_SSH_KNOWN_HOSTS: \$\{\{ secrets\.ORACLE_SSH_KNOWN_HOSTS \}\}/);
 });
+
+test('Edge request controls are configured through production-scoped secrets', () => {
+  assert.match(workflow, /EDGE_ALLOWED_ORIGINS: https:\/\/analytify\.dynv6\.net/);
+  assert.match(workflow, /RATE_LIMIT_HASH_KEY: \$\{\{ secrets\.RATE_LIMIT_HASH_KEY \}\}/);
+  assert.match(supabaseScript, /require_value EDGE_ALLOWED_ORIGINS/);
+  assert.match(supabaseScript, /require_value RATE_LIMIT_HASH_KEY/);
+  assert.match(supabaseScript, /"EDGE_ALLOWED_ORIGINS=\$\{EDGE_ALLOWED_ORIGINS\}"/);
+  assert.match(supabaseScript, /"RATE_LIMIT_HASH_KEY=\$\{RATE_LIMIT_HASH_KEY\}"/);
+});

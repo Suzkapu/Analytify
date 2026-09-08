@@ -9,19 +9,18 @@ import {
   spotifyProfileMatches
 } from './profile-verification.ts';
 import {boundedFetch} from '../_shared/bounded-fetch.ts';
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS'
-};
-
-function json(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), {status, headers: {
-    ...corsHeaders, 'Content-Type': 'application/json',
-    'X-Analytify-Commit': Deno.env.get('DEPLOYMENT_COMMIT_SHA') || 'development'
-  }});
-}
+import {
+  bearerToken,
+  boundedJsonBody,
+  enforceRateLimit,
+  logInternalError,
+  PublicRequestError,
+  publicError,
+  publicJson,
+  requestContext,
+  requireAllowedOrigin,
+  validatePreflight
+} from '../_shared/request-security.ts';
 
 function requiredEnvironment(name: string): string {
   const value = Deno.env.get(name)?.trim();
@@ -84,21 +83,35 @@ async function spotifyProfile(accessToken: string): Promise<any> {
 }
 
 Deno.serve(async (request: Request) => {
-  if (request.method === 'OPTIONS') return new Response('ok', {headers: corsHeaders});
-  if (request.method !== 'POST') return json({error: 'Method not allowed.'}, 405);
-
+  const context = requestContext(request);
+  const json = (body: unknown, status = 200) => publicJson(context, body, status);
   try {
+    if (request.method === 'OPTIONS') {
+      validatePreflight(request, context);
+      return new Response(null, {status: 204, headers: context.corsHeaders});
+    }
+    if (request.method !== 'POST') {
+      throw new PublicRequestError(405, 'method_not_allowed', 'Only POST requests are supported.');
+    }
     const supabaseUrl = requiredEnvironment('SUPABASE_URL');
     const serviceRoleKey = requiredEnvironment('SUPABASE_SERVICE_ROLE_KEY');
-    const authorization = request.headers.get('Authorization') || '';
-    const jwt = authorization.replace(/^Bearer\s+/i, '');
-    if (!jwt) return json({error: 'Authentication is required.'}, 401);
-
     const admin = createClient(supabaseUrl, serviceRoleKey, {auth: {persistSession: false, autoRefreshToken: false}});
+    await enforceRateLimit(admin, request, 'spotify-credentials:client', null, 30, 60);
+    requireAllowedOrigin(context);
+    const jwt = bearerToken(request);
     const {data: identity, error: identityError} = await admin.auth.getUser(jwt);
-    if (identityError || !identity.user) return json({error: 'The session is no longer valid.'}, 401);
+    if (identityError || !identity.user) {
+      throw new PublicRequestError(401, 'session_invalid', 'The session is no longer valid.');
+    }
+    await enforceRateLimit(admin, request, 'spotify-credentials:user', identity.user.id, 20, 60);
 
-    const body = await request.json().catch(() => ({}));
+    const body = await boundedJsonBody(request, 16 * 1024);
+    const allowedFields = new Set([
+      'action', 'profileUserId', 'connectionMode', 'clientId', 'accessToken', 'refreshToken', 'spotifyId'
+    ]);
+    if (Object.keys(body).some(field => !allowedFields.has(field))) {
+      return json({error: 'The credential request contains unsupported fields.'}, 400);
+    }
     const action = body?.action;
     const profileUserId = typeof body?.profileUserId === 'string' ? body.profileUserId : '';
     if (!isUuid(profileUserId) || ![identity.user.id, devProfileId(identity.user.id)].includes(profileUserId)) {
@@ -125,17 +138,22 @@ Deno.serve(async (request: Request) => {
       return json({ok: true});
     }
 
-    if (!['profile', 'store'].includes(action)) return json({error: 'Unsupported credential action.'}, 400);
-    const connectionMode = body?.connectionMode;
+    if (typeof action !== 'string' || action.length > 32 || !['profile', 'store'].includes(action)) {
+      return json({error: 'Unsupported credential action.'}, 400);
+    }
+    const connectionMode = body?.connectionMode === 'hosted' || body?.connectionMode === 'personal_pkce'
+      ? body.connectionMode
+      : null;
     const clientId = typeof body?.clientId === 'string' ? body.clientId.trim() : null;
     const accessToken = typeof body?.accessToken === 'string' ? body.accessToken : '';
     const submittedRefreshToken = typeof body?.refreshToken === 'string' ? body.refreshToken : '';
     const requestedSpotifyId = typeof body?.spotifyId === 'string' ? body.spotifyId : '';
-    if (action === 'store' && !['hosted', 'personal_pkce'].includes(connectionMode)) return json({error: 'Invalid connection mode.'}, 400);
+    if (action === 'store' && !connectionMode) return json({error: 'Invalid connection mode.'}, 400);
     if (action === 'store' && connectionMode === 'personal_pkce' && !/^[A-Za-z0-9]{32}$/.test(clientId || '')) {
       return json({error: 'A valid Spotify Client ID is required.'}, 400);
     }
-    if (!accessToken) return json({error: 'A Spotify access token is required.'}, 400);
+    if (!accessToken || accessToken.length > 4096) return json({error: 'A valid Spotify access token is required.'}, 400);
+    if (requestedSpotifyId.length > 256) return json({error: 'The Spotify profile ID is invalid.'}, 400);
     if (action === 'store' && (!submittedRefreshToken || submittedRefreshToken.length > 4096)) {
       return json({error: 'Spotify credentials are incomplete.'}, 400);
     }
@@ -144,7 +162,7 @@ Deno.serve(async (request: Request) => {
     const currentProfileIds = spotifyProfileIds(currentProfile);
     let verifiedRefresh: {accessToken: string; refreshToken: string} | null = null;
     if (action === 'store') {
-      verifiedRefresh = await accessTokenFromRefreshToken(submittedRefreshToken, connectionMode, clientId);
+      verifiedRefresh = await accessTokenFromRefreshToken(submittedRefreshToken, connectionMode!, clientId);
       const refreshProfile = await spotifyProfile(verifiedRefresh.accessToken);
       const refreshProfileIds = spotifyProfileIds(refreshProfile);
       if (!currentProfileIds.some(value => refreshProfileIds.includes(value))) {
@@ -209,6 +227,10 @@ Deno.serve(async (request: Request) => {
         : null
     });
   } catch (error) {
-    return json({error: error instanceof Error ? error.message : 'Credential operation failed.'}, 500);
+    if (error instanceof PublicRequestError) return publicError(context, error);
+    logInternalError(context, 'spotify credential operation', error);
+    return publicError(context, new PublicRequestError(
+      500, 'credential_operation_failed', 'The credential operation could not be completed. Please try again.'
+    ));
   }
 });

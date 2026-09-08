@@ -6,27 +6,24 @@ import {
   StoredSpotifyCredential
 } from '../_shared/spotify-credential-crypto.ts';
 import {boundedFetch} from '../_shared/bounded-fetch.ts';
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS'
-};
+import {
+  bearerToken,
+  boundedJsonBody,
+  enforceRateLimit,
+  isTrustedServiceToken,
+  logInternalError,
+  PublicRequestError,
+  publicError,
+  publicJson,
+  requestContext,
+  requireAllowedOrigin,
+  validatePreflight
+} from '../_shared/request-security.ts';
 
 class SpotifyHttpError extends Error {
   constructor(public status: number, message: string) {
     super(message);
   }
-}
-
-function json(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: {
-      ...corsHeaders, 'Content-Type': 'application/json',
-      'X-Analytify-Commit': Deno.env.get('DEPLOYMENT_COMMIT_SHA') || 'development'
-    }
-  });
 }
 
 function requiredEnvironment(name: string): string {
@@ -116,44 +113,53 @@ async function replacePrivatePlaylist(
   });
 }
 
-function getJwtRole(jwt: string): string | null {
-  try {
-    const parts = jwt.split('.');
-    if (parts.length < 2) return null;
-    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
-    const payload = JSON.parse(atob(base64));
-    return typeof payload?.role === 'string' ? payload.role : null;
-  } catch {
-    return null;
-  }
-}
-
 Deno.serve(async (request: Request) => {
-  if (request.method === 'OPTIONS') return new Response('ok', {headers: corsHeaders});
-  if (request.method !== 'POST') return json({error: 'Method not allowed.'}, 405);
-
+  const context = requestContext(request);
+  const json = (body: unknown, status = 200) => publicJson(context, body, status);
   try {
+    if (request.method === 'OPTIONS') {
+      validatePreflight(request, context);
+      return new Response(null, {status: 204, headers: context.corsHeaders});
+    }
+    if (request.method !== 'POST') {
+      throw new PublicRequestError(405, 'method_not_allowed', 'Only POST requests are supported.');
+    }
     const supabaseUrl = requiredEnvironment('SUPABASE_URL');
     const serviceRoleKey = requiredEnvironment('SUPABASE_SERVICE_ROLE_KEY');
     const spotifyClientId = requiredEnvironment('SPOTIFY_CLIENT_ID');
     const spotifyClientSecret = requiredEnvironment('SPOTIFY_CLIENT_SECRET');
     const encryptionKeyRing = spotifyCredentialKeyRingFromEnvironment();
-    const authorization = request.headers.get('Authorization') || '';
-    const jwt = authorization.replace(/^Bearer\s+/i, '');
-    if (!jwt) return json({error: 'Authentication is required.'}, 401);
-
-    const body = await request.json().catch(() => ({}));
-    const leagueId = typeof body?.leagueId === 'string' ? body.leagueId : '';
-    const createForCurrentUser = body?.createForCurrentUser === true;
-    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(leagueId)) {
-      return json({error: 'A valid Song League ID is required.'}, 400);
-    }
-
     const admin = createClient(supabaseUrl, serviceRoleKey, {
       auth: {persistSession: false, autoRefreshToken: false}
     });
+    await enforceRateLimit(admin, request, 'playlist-sync:client', null, 40, 60);
+    const jwt = bearerToken(request);
+    const isServiceRole = isTrustedServiceToken(jwt, serviceRoleKey);
+    requireAllowedOrigin(context, isServiceRole);
+    await enforceRateLimit(
+      admin, request, 'playlist-sync:caller', isServiceRole ? 'trusted-worker' : jwt, isServiceRole ? 240 : 12, 60
+    );
+    const body = await boundedJsonBody(request, 2 * 1024);
+    const allowedFields = new Set(['leagueId', 'createForCurrentUser', 'allMembers', 'userId']);
+    if (Object.keys(body).some(field => !allowedFields.has(field))) {
+      return json({error: 'The playlist request contains unsupported fields.'}, 400);
+    }
+    const leagueId = typeof body?.leagueId === 'string' ? body.leagueId : '';
+    const createForCurrentUser = body?.createForCurrentUser === true;
+    if (body?.createForCurrentUser !== undefined && typeof body.createForCurrentUser !== 'boolean') {
+      return json({error: 'The create-playlist option is invalid.'}, 400);
+    }
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(leagueId)) {
+      return json({error: 'A valid Song League ID is required.'}, 400);
+    }
+    if (body?.userId !== undefined && (
+      typeof body.userId !== 'string' ||
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(body.userId)
+    )) return json({error: 'A valid user ID is required.'}, 400);
+    if (body?.allMembers !== undefined && typeof body.allMembers !== 'boolean') {
+      return json({error: 'The all-members option is invalid.'}, 400);
+    }
 
-    const isServiceRole = jwt === serviceRoleKey || getJwtRole(jwt) === 'service_role';
     let callerUserId: string | null = null;
 
     if (!isServiceRole) {
@@ -176,31 +182,7 @@ Deno.serve(async (request: Request) => {
       if (membershipError) throw membershipError;
       if (!membership) return json({error: 'You are not an active member of this Song League.'}, 403);
 
-      // Per-member rate limit (5-second window)
-      const {data: userPlaylist} = await admin
-        .from('song_league_playlists')
-        .select('last_synced_at, last_error')
-        .eq('league_id', leagueId)
-        .eq('user_id', callerUserId)
-        .maybeSingle();
-
-      if (userPlaylist?.last_synced_at && !userPlaylist.last_error) {
-        const elapsedMs = Date.now() - new Date(userPlaylist.last_synced_at).getTime();
-        if (elapsedMs < 5000) {
-          const retryAfter = Math.max(1, Math.ceil((5000 - elapsedMs) / 1000));
-          return new Response(
-            JSON.stringify({error: 'Rate limit exceeded. Please wait a few seconds before syncing again.'}),
-            {
-              status: 429,
-              headers: {
-                ...corsHeaders,
-                'Content-Type': 'application/json',
-                'Retry-After': String(retryAfter)
-              }
-            }
-          );
-        }
-      }
+      await enforceRateLimit(admin, request, 'playlist-sync:user', callerUserId, 6, 60);
     }
 
     const leaseToken = crypto.randomUUID();
@@ -365,7 +347,10 @@ Deno.serve(async (request: Request) => {
             }
             finalResults.push({userId: member.user_id, success: true, skipped: false});
           } catch (error) {
-            const message = error instanceof Error ? error.message : 'Playlist synchronization failed.';
+            logInternalError(context, `playlist sync member ${member.user_id}`, error);
+            const message = error instanceof Error && error.message.startsWith('Reconnect Spotify')
+              ? error.message
+              : 'This playlist could not be updated. Please try again later.';
             finalResults.push({userId: member.user_id, success: false, error: message, skipped: false});
           }
         }
@@ -399,6 +384,10 @@ Deno.serve(async (request: Request) => {
       }
     }
   } catch (error) {
-    return json({error: error instanceof Error ? error.message : 'Playlist synchronization failed.'}, 500);
+    if (error instanceof PublicRequestError) return publicError(context, error);
+    logInternalError(context, 'playlist synchronization', error);
+    return publicError(context, new PublicRequestError(
+      500, 'playlist_sync_failed', 'Playlist synchronization could not be completed. Please try again.'
+    ));
   }
 });

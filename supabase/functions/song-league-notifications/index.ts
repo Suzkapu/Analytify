@@ -5,25 +5,21 @@ import {
   deliverSongLeaguePush,
   type Delivery
 } from './delivery-state.ts';
+import {
+  bearerToken,
+  boundedJsonBody,
+  enforceRateLimit,
+  isTrustedServiceToken,
+  logInternalError,
+  PublicRequestError,
+  publicError,
+  publicJson,
+  requestContext,
+  requireAllowedOrigin,
+  validatePreflight
+} from '../_shared/request-security.ts';
 
 type PushDevice = {id: string; endpoint: string; p256dh: string; auth: string};
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Max-Age': '86400',
-  'Vary': 'Origin'
-};
-
-function json(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: {
-      'Content-Type': 'application/json', 'Cache-Control': 'no-store', ...corsHeaders,
-      'X-Analytify-Commit': Deno.env.get('DEPLOYMENT_COMMIT_SHA') || 'development'
-    }
-  });
-}
 
 function required(name: string): string {
   const value = Deno.env.get(name)?.trim() || '';
@@ -58,9 +54,16 @@ async function mapConcurrently<T, R>(items: T[], concurrency: number, work: (ite
 }
 
 Deno.serve(async request => {
-  if (request.method === 'OPTIONS') return new Response(null, {status: 204, headers: corsHeaders});
-  if (request.method !== 'POST') return json({error: 'Method not allowed.'}, 405);
+  const context = requestContext(request);
+  const json = (body: unknown, status = 200) => publicJson(context, body, status);
   try {
+    if (request.method === 'OPTIONS') {
+      validatePreflight(request, context);
+      return new Response(null, {status: 204, headers: context.corsHeaders});
+    }
+    if (request.method !== 'POST') {
+      throw new PublicRequestError(405, 'method_not_allowed', 'Only POST requests are supported.');
+    }
     const supabaseUrl = required('SUPABASE_URL');
     const serviceRoleKey = required('SUPABASE_SERVICE_ROLE_KEY');
     const vapidPublicKey = required('WEB_PUSH_VAPID_PUBLIC_KEY');
@@ -71,16 +74,32 @@ Deno.serve(async request => {
       privateKey: vapidPrivateKey
     };
 
-    const authorization = request.headers.get('Authorization') || '';
-    const token = authorization.replace(/^Bearer\s+/i, '');
     const admin = createClient(supabaseUrl, serviceRoleKey, {
       auth: {persistSession: false, autoRefreshToken: false}
     });
-    const body = await request.json().catch(() => ({}));
+    await enforceRateLimit(admin, request, 'notifications:client', null, 40, 60);
+    const token = bearerToken(request);
+    const trustedWorker = isTrustedServiceToken(token, serviceRoleKey);
+    requireAllowedOrigin(context, trustedWorker);
+    await enforceRateLimit(
+      admin, request, 'notifications:caller', trustedWorker ? 'trusted-worker' : token, trustedWorker ? 240 : 12, 60
+    );
+    const body = await boundedJsonBody(request, 2 * 1024);
+    const allowedFields = new Set(['action', 'now']);
+    if (Object.keys(body).some(field => !allowedFields.has(field))) {
+      return json({error: 'The notification request contains unsupported fields.'}, 400);
+    }
+    if (body.action !== undefined && (typeof body.action !== 'string' || body.action.length > 32)) {
+      return json({error: 'The notification action is invalid.'}, 400);
+    }
+    if (body.action !== undefined && body.action !== 'test') {
+      return json({error: 'The notification action is unsupported.'}, 400);
+    }
 
     if (body?.action === 'test') {
       const {data: identity, error: identityError} = await admin.auth.getUser(token);
       if (identityError || !identity.user) return json({error: 'Authentication is required.'}, 401);
+      await enforceRateLimit(admin, request, 'notifications:admin', identity.user.id, 5, 60);
       const {data: adminRow, error: adminError} = await admin.from('app_admins')
         .select('user_id').eq('user_id', identity.user.id).maybeSingle();
       if (adminError) throw adminError;
@@ -112,10 +131,11 @@ Deno.serve(async request => {
       return json({ok: true, sent});
     }
 
-    if (token !== serviceRoleKey) return json({error: 'Trusted worker access is required.'}, 403);
-    const requestedNow = typeof body?.now === 'string' && !Number.isNaN(Date.parse(body.now))
-      ? new Date(body.now).toISOString()
-      : new Date().toISOString();
+    if (!trustedWorker) return json({error: 'Trusted worker access is required.'}, 403);
+    if (body.now !== undefined && (
+      typeof body.now !== 'string' || body.now.length > 64 || Number.isNaN(Date.parse(body.now))
+    )) return json({error: 'The requested notification time is invalid.'}, 400);
+    const requestedNow = typeof body.now === 'string' ? new Date(body.now).toISOString() : new Date().toISOString();
     const {data: queued, error: queueError} = await admin.rpc('queue_song_league_pick_notifications', {
       p_now: requestedNow
     });
@@ -167,7 +187,10 @@ Deno.serve(async request => {
     const failed = outcomes.length - sent;
     return json({ok: failed === 0, queued: Number(queued || 0), sent, failed});
   } catch (error) {
-    console.error('Song League notification delivery failed:', error);
-    return json({error: (error as Error)?.message || 'Push notification delivery failed.'}, 500);
+    if (error instanceof PublicRequestError) return publicError(context, error);
+    logInternalError(context, 'Song League notification delivery', error);
+    return publicError(context, new PublicRequestError(
+      500, 'notification_delivery_failed', 'Notification delivery could not be completed. Please try again.'
+    ));
   }
 });

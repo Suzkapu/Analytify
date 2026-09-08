@@ -21,6 +21,7 @@ env:
   SUPABASE_URL: https://tmmhylpexbubyznlizfs.supabase.co
   SUPABASE_PUBLISHABLE_KEY: sb_publishable_hMg6wOlMTQai9ipA4ZlxzQ_rawnrTD-
   WEB_PUSH_VAPID_PUBLIC_KEY: BIpszothnaePO-LGeIvE4x7AEKMr2YdiyuJZWjkMIlHqPe1Tp3WE79_otTv_C_pQ2C9JwfsnlqcoQn0aVEVcANA
+  EDGE_ALLOWED_ORIGINS: https://analytify.dynv6.net,http://localhost:4200,http://127.0.0.1:4200
 
 jobs:
   verify:
@@ -250,6 +251,7 @@ jobs:
           SPOTIFY_TOKEN_ENCRYPTION_KEYS: ${{ secrets.SPOTIFY_TOKEN_ENCRYPTION_KEYS }}
           SPOTIFY_TOKEN_ENCRYPTION_WRITE_VERSION: ${{ secrets.SPOTIFY_TOKEN_ENCRYPTION_WRITE_VERSION }}
           WEB_PUSH_VAPID_PRIVATE_KEY: ${{ secrets.WEB_PUSH_VAPID_PRIVATE_KEY }}
+          RATE_LIMIT_HASH_KEY: ${{ secrets.RATE_LIMIT_HASH_KEY }}
         run: bash scripts/deploy-supabase.sh
 
       - name: Reject superseded deployment before Oracle mutation
