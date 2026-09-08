@@ -69,5 +69,16 @@ export interface AdminOperationalHealth {
   expiredLeases: number;
   lastSuccessByFeature: Partial<Record<SyncTaskKey, string>>;
   releases: Record<string, string>;
+  workerRuntime: {
+    state: 'healthy' | 'starting' | 'stale' | 'stopped' | 'never_observed';
+    startedAt: string | null;
+    lastHeartbeatAt: string | null;
+    secondsSinceHeartbeat: number | null;
+    lastPassStartedAt: string | null;
+    lastPassSucceededAt: string | null;
+    lastFailureAt: string | null;
+    lastError: string | null;
+    commitSha: string | null;
+  };
   alerts: Array<{key: string; severity: 'warning' | 'critical'; message: string; firstSeenAt: string; lastSeenAt: string}>;
 }

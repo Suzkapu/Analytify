@@ -18,7 +18,11 @@ export class AdminComponent implements OnInit {
   operationalHealth: AdminOperationalHealth = {
     syncQueueDepth: 0, oldestSyncQueueAgeSeconds: 0,
     notificationQueueDepth: 0, oldestNotificationQueueAgeSeconds: 0, expiredLeases: 0,
-    lastSuccessByFeature: {}, releases: {}, alerts: []
+    lastSuccessByFeature: {}, releases: {},
+    workerRuntime: {
+      state: 'never_observed', startedAt: null, lastHeartbeatAt: null, secondsSinceHeartbeat: null,
+      lastPassStartedAt: null, lastPassSucceededAt: null, lastFailureAt: null, lastError: null, commitSha: null
+    }, alerts: []
   };
   isRunsCollapsed = true;
   expandedUsers = new Set<string>();
@@ -190,6 +194,32 @@ export class AdminComponent implements OnInit {
     ];
     const commits = expectedComponents.map(component => this.operationalHealth.releases[component]).filter(Boolean);
     return commits.length === expectedComponents.length && new Set(commits).size === 1;
+  }
+
+  get workerStateLabel(): string {
+    const state = this.operationalHealth.workerRuntime?.state || 'never_observed';
+    return ({
+      healthy: 'Worker healthy',
+      starting: 'Worker starting',
+      stale: 'Worker heartbeat stale',
+      stopped: 'Worker stopped',
+      never_observed: 'Worker never observed'
+    } as const)[state];
+  }
+
+  get workerStateIsProblem(): boolean {
+    return ['stale', 'stopped', 'never_observed'].includes(
+      this.operationalHealth.workerRuntime?.state || 'never_observed'
+    );
+  }
+
+  releaseLabel(component: string): string {
+    return ({
+      supabase: 'Supabase schema', worker: 'Sync worker',
+      'edge:spotify-credentials': 'Spotify credentials',
+      'edge:song-league-playlist-sync': 'League playlist sync',
+      'edge:song-league-notifications': 'League notifications'
+    } as Record<string, string>)[component] || component;
   }
 
   trackUser(_: number, user: AdminUserSyncSettings): string { return user.userId; }

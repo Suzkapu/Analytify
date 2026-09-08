@@ -45,7 +45,13 @@ describe('AdminComponent', () => {
         adminService.loadOperationalHealth.mockResolvedValue({
             syncQueueDepth: 0, oldestSyncQueueAgeSeconds: 0,
             notificationQueueDepth: 0, oldestNotificationQueueAgeSeconds: 0, expiredLeases: 0,
-            lastSuccessByFeature: {}, releases: { supabase: 'same', worker: 'same' }, alerts: []
+            lastSuccessByFeature: {}, releases: { supabase: 'same', worker: 'same' },
+            workerRuntime: {
+                state: 'healthy', startedAt: '2026-09-08T08:00:00Z',
+                lastHeartbeatAt: '2026-09-08T08:01:00Z', secondsSinceHeartbeat: 5,
+                lastPassStartedAt: '2026-09-08T08:00:40Z', lastPassSucceededAt: '2026-09-08T08:00:50Z',
+                lastFailureAt: null, lastError: null, commitSha: 'same'
+            }, alerts: []
         });
 
         router = {
@@ -109,6 +115,49 @@ describe('AdminComponent', () => {
         expect(component.releaseIsConsistent).toBe(true);
         component.operationalHealth.releases['worker'] = 'different';
         expect(component.releaseIsConsistent).toBe(false);
+    });
+
+    it('renders healthy idle runtime separately from empty queue metrics and lists component releases', async () => {
+        adminService.loadOperationalHealth.mockResolvedValue({
+            syncQueueDepth: 0, oldestSyncQueueAgeSeconds: 0,
+            notificationQueueDepth: 0, oldestNotificationQueueAgeSeconds: 0, expiredLeases: 0,
+            lastSuccessByFeature: {},
+            releases: {
+                supabase: 'abcdef123456', worker: 'abcdef123456',
+                'edge:spotify-credentials': 'abcdef123456',
+                'edge:song-league-playlist-sync': 'abcdef123456',
+                'edge:song-league-notifications': 'abcdef123456'
+            },
+            workerRuntime: {
+                state: 'healthy', startedAt: '2026-09-08T08:00:00Z',
+                lastHeartbeatAt: '2026-09-08T08:01:00Z', secondsSinceHeartbeat: 5,
+                lastPassStartedAt: '2026-09-08T08:00:40Z', lastPassSucceededAt: '2026-09-08T08:00:50Z',
+                lastFailureAt: null, lastError: null, commitSha: 'abcdef123456'
+            }, alerts: []
+        });
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const text = fixture.nativeElement.querySelector('.operations-panel').textContent;
+        expect(text).toContain('Worker healthy');
+        expect(text).toContain('No sync backlog');
+        expect(text).toContain('Spotify credentials');
+        expect(text).toContain('abcdef12');
+    });
+
+    it('renders stale and never-observed worker states as unavailable health, not healthy zeroes', () => {
+        component.operationalHealth.workerRuntime = {
+            state: 'stale', startedAt: null, lastHeartbeatAt: '2026-09-08T08:00:00Z',
+            secondsSinceHeartbeat: 600, lastPassStartedAt: null, lastPassSucceededAt: null,
+            lastFailureAt: null, lastError: null, commitSha: null
+        };
+        expect(component.workerStateLabel).toBe('Worker heartbeat stale');
+        expect(component.workerStateIsProblem).toBe(true);
+
+        component.operationalHealth.workerRuntime.state = 'never_observed';
+        expect(component.workerStateLabel).toBe('Worker never observed');
     });
 
     it('expands and collapses Recent runs when toggled', async () => {

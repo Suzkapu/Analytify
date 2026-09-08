@@ -8,6 +8,7 @@ const {createScheduler} = require('./scheduler');
 const {createCredentialStore} = require('./credential-store');
 const {createPushDispatcher} = require('./push-dispatcher');
 const {createHealthServer, deployedCommit} = require('./health-server');
+const {createWorkerRuntimeHealth} = require('./worker-runtime-health');
 
 async function createService() {
   const config = loadConfig();
@@ -19,6 +20,8 @@ async function createService() {
     component: 'worker', commit_sha: deployedCommit(), deployed_at: new Date().toISOString()
   }, {onConflict: 'component'});
   if (releaseError) throw releaseError;
+  const runtime = createWorkerRuntimeHealth({supabase, commit: deployedCommit()});
+  await runtime.start();
   const spotify = createSpotifyClient(config);
   const credentials = createCredentialStore({
     supabase,
@@ -37,7 +40,7 @@ async function createService() {
   }
   const tasks = createTaskRegistry({supabase, spotify});
   const scheduler = createScheduler({supabase, config, tasks, credentials, pushDispatcher});
-  return {config, scheduler};
+  return {config, scheduler, runtime};
 }
 
 async function main(argv = process.argv.slice(2)) {
@@ -53,7 +56,14 @@ async function main(argv = process.argv.slice(2)) {
     await health.close();
     throw error;
   }
-  const {config, scheduler} = service;
+  const {config, scheduler, runtime} = service;
+  try {
+    await runtime.markReady();
+  } catch (error) {
+    health.recordFailure(error);
+    await health.close();
+    throw error;
+  }
   let stopping = false;
   process.once('SIGINT', () => { stopping = true; });
   process.once('SIGTERM', () => { stopping = true; });
@@ -61,12 +71,19 @@ async function main(argv = process.argv.slice(2)) {
   do {
     const startedAt = Date.now();
     try {
+      await runtime.recordPassStarted();
       const result = await scheduler.runPass();
       health.recordPass();
+      await runtime.recordPassSucceeded();
       console.log(`[Sync service] Pass complete: ${result.queued} queued, ${result.processed} processed.`);
     } catch (error) {
       console.error('[Sync service] Pass failed:', error);
       health.recordFailure(error);
+      try {
+        await runtime.recordFailure(error);
+      } catch (runtimeError) {
+        console.error('[Sync service] Could not persist worker failure:', runtimeError);
+      }
       if (!watch) throw error;
     }
     if (!watch || stopping) break;
@@ -74,7 +91,11 @@ async function main(argv = process.argv.slice(2)) {
     const waitMs = Math.max(1_000, config.pollSeconds * 1_000 - elapsed);
     await new Promise(resolve => setTimeout(resolve, waitMs));
   } while (!stopping);
-  await health.close();
+  try {
+    await runtime.stop();
+  } finally {
+    await health.close();
+  }
 }
 
 if (require.main === module) {

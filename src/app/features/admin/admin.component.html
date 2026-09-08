@@ -20,13 +20,22 @@
       <section class="admin-panel operations-panel">
         <div class="admin-section-heading"><div><span>Operations</span><h2>Runtime health</h2><p>Queue health, leases, active alerts, and deployed release identity.</p></div><i class="pi pi-chart-line"></i></div>
         <div class="operations-metrics">
-          <span><strong>{{ operationalHealth.syncQueueDepth }}</strong> sync queued</span>
+          <span><strong>{{ operationalHealth.syncQueueDepth || 'No' }}</strong> {{ operationalHealth.syncQueueDepth ? 'sync queued' : 'sync backlog' }}</span>
           <span><strong>{{ operationalHealth.oldestSyncQueueAgeSeconds }}s</strong> oldest sync</span>
           <span><strong>{{ operationalHealth.notificationQueueDepth }}</strong> notifications queued</span>
           <span><strong>{{ operationalHealth.oldestNotificationQueueAgeSeconds }}s</strong> oldest notification</span>
           <span [class.metric-error]="operationalHealth.expiredLeases"><strong>{{ operationalHealth.expiredLeases }}</strong> expired leases</span>
           <span [class.metric-error]="!releaseIsConsistent"><strong>{{ releaseIsConsistent ? 'Matched' : 'Mismatch' }}</strong> release</span>
+          <span [class.metric-error]="workerStateIsProblem"><strong>{{ workerStateLabel }}</strong>{{ operationalHealth.workerRuntime?.secondsSinceHeartbeat == null ? 'No heartbeat recorded' : operationalHealth.workerRuntime.secondsSinceHeartbeat + 's since heartbeat' }}</span>
         </div>
+        <div class="release-grid" aria-label="Deployed component releases">
+          @for (release of operationalHealth.releases | keyvalue; track release.key) {
+            <span><small>{{ releaseLabel(release.key) }}</small><code>{{ release.value | slice:0:8 }}</code></span>
+          }
+        </div>
+        @if (operationalHealth.workerRuntime?.lastError) {
+          <div class="admin-notice error" role="alert"><i class="pi pi-exclamation-triangle"></i>{{ operationalHealth.workerRuntime.lastError }}</div>
+        }
         @for (alert of operationalHealth.alerts; track alert) {
           <div class="admin-notice error" role="alert"><i class="pi pi-exclamation-triangle"></i>{{ alert.message }}</div>
         }

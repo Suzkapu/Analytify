@@ -65,6 +65,12 @@ describe('AdminService', () => {
                 syncQueueDepth: 7, oldestSyncQueueAgeSeconds: 83,
                 notificationQueueDepth: 4, oldestNotificationQueueAgeSeconds: 42, expiredLeases: 1,
                 lastSuccessByFeature: { listening_history: 'now' }, releases: { worker: 'abc' },
+                workerRuntime: {
+                    state: 'healthy', startedAt: '2026-09-08T08:00:00Z',
+                    lastHeartbeatAt: '2026-09-08T08:01:00Z', secondsSinceHeartbeat: 5,
+                    lastPassStartedAt: '2026-09-08T08:00:50Z', lastPassSucceededAt: '2026-09-08T08:00:55Z',
+                    lastFailureAt: null, lastError: null, commitSha: 'abc'
+                },
                 alerts: [{ key: 'expired-sync-leases', severity: 'critical', message: 'Lease expired.' }]
             }, error: null });
 
@@ -76,7 +82,22 @@ describe('AdminService', () => {
         expect(health.expiredLeases).toBe(1);
         expect(health.lastSuccessByFeature.listening_history).toBe('now');
         expect(health.releases['worker']).toBe('abc');
+        expect(health.workerRuntime.state).toBe('healthy');
+        expect(health.workerRuntime.secondsSinceHeartbeat).toBe(5);
         expect(health.alerts[0].severity).toBe('critical');
+    });
+
+    it('distinguishes a worker that has never been observed from numeric zero metrics', async () => {
+        rpc.mockResolvedValue({data: {
+                syncQueueDepth: 0, oldestSyncQueueAgeSeconds: 0,
+                notificationQueueDepth: 0, oldestNotificationQueueAgeSeconds: 0, expiredLeases: 0,
+                lastSuccessByFeature: {}, releases: {}, alerts: []
+            }, error: null});
+
+        const health = await service.loadOperationalHealth();
+
+        expect(health.workerRuntime.state).toBe('never_observed');
+        expect(health.workerRuntime.lastHeartbeatAt).toBeNull();
     });
 
     it('loads the persisted interval unit for every scheduled task', async () => {

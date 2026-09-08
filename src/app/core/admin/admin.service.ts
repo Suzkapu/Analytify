@@ -160,6 +160,7 @@ export class AdminService {
     const {data, error} = await this.supabase.client.rpc('admin_operational_health');
     if (error) throw error;
     const value = data || {};
+    const workerRuntime = value.workerRuntime || {};
     return {
       syncQueueDepth: Number(value.syncQueueDepth || 0),
       oldestSyncQueueAgeSeconds: Number(value.oldestSyncQueueAgeSeconds || 0),
@@ -168,6 +169,18 @@ export class AdminService {
       expiredLeases: Number(value.expiredLeases || 0),
       lastSuccessByFeature: value.lastSuccessByFeature || {},
       releases: value.releases || {},
+      workerRuntime: {
+        state: workerRuntime.state || 'never_observed',
+        startedAt: workerRuntime.startedAt || null,
+        lastHeartbeatAt: workerRuntime.lastHeartbeatAt || null,
+        secondsSinceHeartbeat: workerRuntime.secondsSinceHeartbeat == null
+          ? null : Number(workerRuntime.secondsSinceHeartbeat),
+        lastPassStartedAt: workerRuntime.lastPassStartedAt || null,
+        lastPassSucceededAt: workerRuntime.lastPassSucceededAt || null,
+        lastFailureAt: workerRuntime.lastFailureAt || null,
+        lastError: workerRuntime.lastError || null,
+        commitSha: workerRuntime.commitSha || null
+      },
       alerts: value.alerts || []
     };
   }
