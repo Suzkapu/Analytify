@@ -1883,22 +1883,18 @@ export class UserStatsComponent implements OnInit, OnDestroy {
         : this.topGenres;
     const currentRankIdx = this.findStatsItemIndex(currentList, item, category);
 
-    // Only append "Now" if we haven't already saved a snapshot today
-    const now = new Date();
-    const cutoff = new Date(now);
-    cutoff.setHours(1, 0, 0, 0); // 1:00 AM today
-    if (now.getTime() < cutoff.getTime()) {
-      cutoff.setDate(cutoff.getDate() - 1);
-    }
-    const lastSnap = this.historyData[this.historyData.length - 1];
-    const hasTodaySnapshot = lastSnap && lastSnap.timestamp >= cutoff.getTime();
-
-    if (!hasTodaySnapshot && currentRankIdx !== -1) {
-      pointsByDate.set('current', {
-        date: 'Now',
+    const currentTimestamp = Date.now();
+    const currentDateKey = toDailySnapshotDateKey(currentTimestamp);
+    const savedCurrentDayPoint = pointsByDate.get(currentDateKey);
+    if (currentRankIdx !== -1) {
+      pointsByDate.set(currentDateKey, {
+        date: savedCurrentDayPoint?.date || 'Now',
         rank: currentRankIdx + 1,
-        timestamp: Date.now()
+        timestamp: currentTimestamp
       });
+    } else if (savedCurrentDayPoint) {
+      // Current data is the freshest effective snapshot for this local day.
+      pointsByDate.delete(currentDateKey);
     }
 
     this.trendPopupPoints = Array.from(pointsByDate.values())

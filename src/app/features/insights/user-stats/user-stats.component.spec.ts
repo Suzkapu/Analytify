@@ -822,6 +822,23 @@ describe('UserStatsComponent trends', () => {
         expect(historicalComponent.trendPopupCategory).toBe('genres');
     });
 
+    it('uses one current ranking point when todays snapshot is not last in history order', () => {
+        const track = {id: 'track', name: 'Track', artists: [{name: 'Artist'}]};
+        component.trendPopupItem = track;
+        component.trendPopupCategory = 'tracks';
+        component.topTracks = [track];
+        component.historyData = [
+            makeSnapshot('2026-08-02', [track]),
+            makeSnapshot('2026-08-01', [track])
+        ];
+
+        component.calculateTrendPoints();
+
+        expect(component.trendPopupPoints).toHaveLength(2);
+        expect(component.trendPopupPoints.map(point => point.date)).not.toContain('Now');
+        expect(component.trendPopupPoints.at(-1)?.rank).toBe(1);
+    });
+
     it('keeps past search off by default and starts it only when toggled on', () => {
         const searchPastTopItems = vi.fn().mockName('searchPastTopItems').mockResolvedValue([]);
         const historicalComponent = new UserStatsComponent(null as any, { getSupabaseUserId: () => 'user-id', isBackupActive: () => true } as any, null as any, { searchPastTopItems } as any);
