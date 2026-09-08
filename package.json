@@ -21,7 +21,7 @@
     "stats-sharing:check": "node scripts/check-stats-sharing.mjs",
     "stats-history-search:check": "node scripts/check-stats-history-search.mjs",
     "loading-feedback:check": "node scripts/check-loading-feedback.mjs",
-    "accessibility:check": "node scripts/check-accessible-dialogs.mjs",
+    "accessibility:check": "node scripts/check-accessible-dialogs.mjs && node --test scripts/interaction-cursor.test.mjs",
     "performance:check": "node scripts/check-performance-contracts.mjs",
     "api-usage:check": "node scripts/check-api-on-demand.mjs",
     "admin:check": "node scripts/check-admin-control-plane.mjs && node --test scripts/operational-policy.test.mjs",

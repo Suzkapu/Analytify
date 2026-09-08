@@ -163,6 +163,24 @@ select {
   touch-action: manipulation;
 }
 
+/* Keep interaction affordances consistent across lazy feature styles. Text
+   inputs retain their editing cursor and disabled controls never look active. */
+:where(a[href], button, select, input[type='button'], input[type='submit'], input[type='reset'],
+  input[type='checkbox'], input[type='radio'], [role='button'], label:has(input[type='checkbox'], input[type='radio'])) {
+  cursor: pointer !important;
+}
+
+:where(button, select, input)[disabled],
+:where([role='button'])[aria-disabled='true'],
+label:has(input:disabled) {
+  cursor: not-allowed !important;
+}
+
+:where(input:not([type]), input[type='text'], input[type='search'], input[type='email'],
+  input[type='password'], input[type='url'], input[type='tel'], input[type='number'], textarea) {
+  cursor: text !important;
+}
+
 /* Glassmorphism Header */
 .app-header {
   display: flex;
