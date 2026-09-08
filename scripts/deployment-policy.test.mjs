@@ -29,6 +29,22 @@ test('verified build is handed to a serialized cancelable production job', () =>
   assert.match(workflow, /EXPECTED_COMMIT_SHA: \$\{\{ github\.sha \}\}/);
 });
 
+test('the exact tested worker is digested and deployed without registry access', () => {
+  assert.match(workflow, /Assemble and retest the exact production worker/);
+  assert.match(workflow, /npm run sync-service:check/);
+  assert.match(workflow, /npm sbom --prefix services\/sync-service --omit=dev --sbom-format=cyclonedx/);
+  assert.match(workflow, /sha256sum analytify-worker\.tar\.gz analytify-worker\.cdx\.json/);
+  assert.match(workflow, /name: analytify-worker-\$\{\{ github\.sha \}\}/);
+  assert.match(workflow, /sha256sum --check analytify-worker\.sha256/);
+  assert.match(workflow, /WORKER_ARTIFACT_DIR: \$\{\{ github\.workspace \}\}/);
+  assert.doesNotMatch(deployScript, /npm (?:ci|install)/);
+});
+
+test('CI declares and installs one exact package-manager release', () => {
+  assert.match(workflow, /NPM_VERSION: 12\.0\.2/);
+  assert.match(workflow, /npm install --global "npm@\$\{NPM_VERSION\}"/);
+});
+
 test('production waits for same-commit advisory and CodeQL gates', () => {
   assert.match(workflow, /security-advisories:[\s\S]*npm audit --audit-level=high/);
   assert.match(workflow, /codeql:[\s\S]*github\/codeql-action\/analyze@[0-9a-f]{40}/);

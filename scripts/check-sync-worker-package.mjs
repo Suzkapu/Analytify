@@ -10,8 +10,13 @@ const deploy = readFileSync('scripts/deploy.sh', 'utf8');
 assert.equal(lock.lockfileVersion, 3, 'worker must use a current npm lockfile');
 assert.match(
   deploy,
-  /cd '\$\{worker_release\}' && npm ci --omit=dev --ignore-scripts/,
-  'production must install the locked worker tree with npm ci'
+  /deploy_with_retry "\$\{worker_artifact_dir\}\/" "\$\{worker_release\}\/" true/,
+  'production must deploy the verified worker artifact'
+);
+assert.doesNotMatch(
+  deploy,
+  /remote_command_with_retry[^\n]*npm (?:ci|install)/,
+  'production must not resolve worker dependencies on the server'
 );
 
 for (const dependency of Object.keys(manifest.dependencies || {})) {

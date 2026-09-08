@@ -37,7 +37,7 @@ ADMIN_SPOTIFY_IDS
 3. Enable Anonymous Sign-Ins in Supabase Authentication for personal-app cloud opt-in.
 4. Install `/etc/analytify-sync.env` on the Oracle host with the Supabase service-role and Spotify application values. The checked-in systemd unit reads this protected file.
 5. Permit the deployment account to install/restart only `analytify-sync.service` through passwordless sudo.
-6. Push the release. The deployment gate applies pending migrations, builds immutable web and worker directories, runs `npm ci --omit=dev` from the worker lockfile, atomically switches both `current` targets, and checks their exact commit SHA. A failed readiness check restores both prior targets.
+6. Push the release. CI prunes and retests the exact production worker tree, publishes it with a SHA-256 digest and CycloneDX SBOM, and production deploys that verified artifact without contacting the package registry. The gate then atomically switches both `current` targets and checks their exact commit SHA. A failed readiness check restores both prior targets.
 7. Stop the old daily-pull cron entry. The deployed systemd service is now the sole long-running worker.
 
 The deployed service binds its readiness endpoint to `127.0.0.1:8787/health` and reports the worker commit SHA, startup state, latest successful pass, and latest error. It is intentionally unavailable from the public network.

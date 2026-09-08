@@ -14,6 +14,7 @@ permissions:
 
 env:
   # These values are public application configuration, not credentials.
+  NPM_VERSION: 12.0.2
   DEPLOY_HOST: analytify.dynv6.net
   SUPABASE_PROJECT_REF: tmmhylpexbubyznlizfs
   SPOTIFY_CLIENT_ID: 9b03c8eb85dd4df483c3ae097e6c39f0
@@ -33,6 +34,9 @@ jobs:
         with:
           node-version: '24.15.0'
           cache: 'npm'
+
+      - name: Use the pinned npm release
+        run: npm install --global "npm@${NPM_VERSION}"
 
       - name: Set up Deno
         uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
@@ -54,6 +58,16 @@ jobs:
 
       - name: Verify tests and production build
         run: npm run verify:ci
+
+      - name: Assemble and retest the exact production worker
+        run: |
+          npm prune --prefix services/sync-service --omit=dev --ignore-scripts
+          printf '%s\n' "$GITHUB_SHA" > services/sync-service/.deployed-commit
+          npm run sync-service:check
+          npm sbom --prefix services/sync-service --omit=dev --sbom-format=cyclonedx > analytify-worker.cdx.json
+          tar --sort=name --mtime='UTC 1970-01-01' --owner=0 --group=0 --numeric-owner \
+            -czf analytify-worker.tar.gz -C services sync-service
+          sha256sum analytify-worker.tar.gz analytify-worker.cdx.json > analytify-worker.sha256
 
       - name: Publish browser coverage and runtime manifest
         if: always()
@@ -116,6 +130,17 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+      - name: Store verified production worker
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: analytify-worker-${{ github.sha }}
+          path: |
+            analytify-worker.tar.gz
+            analytify-worker.cdx.json
+            analytify-worker.sha256
+          if-no-files-found: error
+          retention-days: 14
+
   security-advisories:
     runs-on: ubuntu-latest
     steps:
@@ -127,6 +152,9 @@ jobs:
         with:
           node-version: '24.15.0'
           cache: npm
+
+      - name: Use the pinned npm release
+        run: npm install --global "npm@${NPM_VERSION}"
 
       - name: Install locked dependencies
         run: |
@@ -186,6 +214,21 @@ jobs:
           name: analytify-web-${{ github.sha }}
           path: dist/spoti-front
 
+      - name: Restore the exact production worker
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: analytify-worker-${{ github.sha }}
+          path: .verified-worker
+
+      - name: Verify and extract the production worker
+        run: |
+          cd .verified-worker
+          sha256sum --check analytify-worker.sha256
+          mkdir extracted
+          tar -xzf analytify-worker.tar.gz -C extracted
+          test "$(cat extracted/sync-service/.deployed-commit)" = "$GITHUB_SHA"
+          test -d extracted/sync-service/node_modules
+
       - name: Reject superseded deployment before Supabase mutation
         run: bash scripts/assert-deployment-freshness.sh "$GITHUB_REF" "$GITHUB_SHA"
 
@@ -226,6 +269,7 @@ jobs:
           SPOTIFY_TOKEN_ENCRYPTION_WRITE_VERSION: ${{ secrets.SPOTIFY_TOKEN_ENCRYPTION_WRITE_VERSION }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SERVICE_ROLE_KEY }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          WORKER_ARTIFACT_DIR: ${{ github.workspace }}/.verified-worker/extracted/sync-service
         run: bash scripts/deploy.sh
 
       - name: Verify every live component runs the intended commit

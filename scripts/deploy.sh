@@ -15,6 +15,7 @@ require_value DEPLOY_USER
 require_value DEPLOY_TARGET
 require_value DEPLOY_SSH_KEY
 require_value DEPLOY_SSH_KNOWN_HOSTS
+require_value WORKER_ARTIFACT_DIR
 require_value ADMIN_SPOTIFY_IDS
 require_value SPOTIFY_TOKEN_ENCRYPTION_KEY
 require_value SUPABASE_URL
@@ -106,6 +107,16 @@ if [[ ! "$deploy_commit_sha" =~ ^[0-9a-f]{40}$ ]]; then
 fi
 deploy_ref="${DEPLOY_REF:-${GITHUB_REF:-refs/heads/main}}"
 bash "$(dirname "$0")/assert-deployment-freshness.sh" "$deploy_ref" "$deploy_commit_sha"
+worker_artifact_dir="${WORKER_ARTIFACT_DIR%/}"
+if [[ ! -d "$worker_artifact_dir/node_modules" || ! -f "$worker_artifact_dir/package-lock.json" ]]; then
+  echo "Deployment configuration error: WORKER_ARTIFACT_DIR is not an assembled worker runtime." >&2
+  exit 1
+fi
+worker_artifact_commit="$(tr -d '[:space:]' < "$worker_artifact_dir/.deployed-commit" 2>/dev/null || true)"
+if [[ "$worker_artifact_commit" != "$deploy_commit_sha" ]]; then
+  echo "Deployment configuration error: worker artifact commit does not match DEPLOY_COMMIT_SHA." >&2
+  exit 1
+fi
 ssh_command="ssh -p ${deploy_port} -i ${key_file} -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=${known_hosts_file} -o GlobalKnownHostsFile=/dev/null -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3"
 remote="${DEPLOY_USER}@${DEPLOY_HOST}"
 target_root="${DEPLOY_TARGET%/}"
@@ -200,15 +211,12 @@ if [[ -n "$deploy_commit_sha" ]]; then
     printf '{"commit":"%s","deployedAt":"%s"}\n' "$deploy_commit_sha" "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" > "dist/spoti-front/version.json"
     printf '%s\n' "$deploy_commit_sha" > "dist/spoti-front/.deployed-commit"
   fi
-  if [[ -d "services/sync-service" ]]; then
-    printf '%s\n' "$deploy_commit_sha" > "services/sync-service/.deployed-commit"
-  fi
 fi
 
 echo "Preparing immutable release directories on Oracle Server..."
 remote_command_with_retry "mkdir -p '${web_release}' && sudo -n install -d -o '${DEPLOY_USER}' -m 0750 '${worker_root}' '${worker_root}/releases'"
 deploy_with_retry "dist/spoti-front/" "${web_release}/" true
-deploy_with_retry "services/sync-service/" "${worker_release}/" true
+deploy_with_retry "${worker_artifact_dir}/" "${worker_release}/" true
 deploy_private_file_with_retry "$allowlist_file" "${worker_root}/.admin-spotify-ids"
 deploy_private_file_with_retry "$token_key_file" "${worker_root}/.spotify-token-encryption-key"
 deploy_private_file_with_retry "$token_keys_file" "${worker_root}/.spotify-token-encryption-keys"
@@ -218,9 +226,6 @@ deploy_with_retry "scripts/inject-nginx-security-include.mjs" "${worker_root}/in
 
 echo "Installing and syntax-checking the versioned nginx security policy..."
 remote_command_with_retry "chmod 700 '${worker_root}/install-nginx-security.sh' && '${worker_root}/install-nginx-security.sh' '${worker_root}/.analytify-nginx-security-${deploy_commit_sha}.conf'"
-
-echo "Installing the worker's production dependencies..."
-remote_command_with_retry "cd '${worker_release}' && npm ci --omit=dev --ignore-scripts"
 
 sed \
   -e "s|@@DEPLOY_USER@@|${DEPLOY_USER}|g" \
