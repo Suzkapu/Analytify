@@ -15,6 +15,7 @@ const claim = readFileSync('src/app/features/song-league/song-league-claim.compo
 const webPushSource = readFileSync('supabase/functions/song-league-notifications/web-push.ts', 'utf8');
 const boundedFetchSource = readFileSync('supabase/functions/_shared/bounded-fetch.ts', 'utf8');
 const pushEndpointSource = readFileSync('supabase/functions/song-league-notifications/push-endpoint.ts', 'utf8');
+const requestSecuritySource = readFileSync('supabase/functions/_shared/request-security.ts', 'utf8');
 
 const contracts = [
   ['explicit opt-in default', migration.includes('song_league_enabled boolean not null default false')],
@@ -24,7 +25,9 @@ const contracts = [
   ['timezone-aware Friday opening', migration.includes('p_now at time zone league.timezone')],
   ['concurrent delivery claiming', migration.includes('for update skip locked')],
   ['expired subscription cleanup', (edgeFunction + deliveryState).includes('[404, 410]') && deliveryState.includes("from('push_subscriptions')") && deliveryState.includes('.delete()')],
-  ['browser preflight support', edgeFunction.includes("request.method === 'OPTIONS'") && edgeFunction.includes('Access-Control-Allow-Origin')],
+  ['browser preflight support', edgeFunction.includes("request.method === 'OPTIONS'")
+    && edgeFunction.includes('validatePreflight(request, context)')
+    && requestSecuritySource.includes('Access-Control-Allow-Origin')],
   ['PWA notification deep link', edgeFunction.includes("operation: 'openWindow'")],
   ['trusted worker dispatch', dispatcher.includes("invoke('song-league-notifications'")],
   ['Data & account manager', header.includes('notification-settings-modal') && header.includes('Song League')],
