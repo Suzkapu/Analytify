@@ -53,7 +53,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isGuestLogoutRunning = false;
   isLoadingNotificationSettings = false;
   isSavingNotificationSettings = false;
-  isRemovingScheduledAccess = false;
+  dataDeletionError = '';
   statsDiscoverable = false;
   isSavingStatsDiscoverability = false;
   notificationError = '';
@@ -334,23 +334,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  get hasScheduledSpotifyAccess(): boolean {
-    return this.authService.hasScheduledSpotifyAccess?.() ?? false;
-  }
-
-  async removeScheduledSpotifyAccess(): Promise<void> {
-    if (this.isRemovingScheduledAccess) return;
-    this.isRemovingScheduledAccess = true;
-    try {
-      await this.authService.disableScheduledSpotifyAccess();
-    } catch (error) {
-      console.error('Failed to remove scheduled Spotify access:', error);
-      alert('Scheduled Spotify access could not be removed. Please try again.');
-    } finally {
-      this.isRemovingScheduledAccess = false;
-    }
-  }
-
   get hasCollaborationIdentity(): boolean {
     return this.authService.hasCloudIdentity?.() ?? false;
   }
@@ -390,6 +373,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   openClearDataModal() {
     this.showSettingsDropdown = false;
+    this.dataDeletionError = '';
     this.showClearDataModal = true;
   }
 
@@ -473,6 +457,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   selectClearDbData() {
     this.showClearDataModal = false;
+    this.dataDeletionError = '';
     this.showConfirmDbDeleteModal = true;
   }
 
@@ -481,7 +466,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   cancelDbDelete() {
+    if (this.isDeletingDbData) return;
     this.showConfirmDbDeleteModal = false;
+    this.dataDeletionError = '';
   }
 
   async confirmLocalDelete() {
@@ -498,31 +485,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
   async confirmDbDelete() {
     const supabaseUserId = this.authService.getSupabaseUserId();
     if (!supabaseUserId) {
-      alert('You must be logged in to delete database data.');
-      this.showConfirmDbDeleteModal = false;
+      this.dataDeletionError = 'You must be logged in to delete cloud data.';
       return;
     }
 
     this.isDeletingDbData = true;
+    this.dataDeletionError = '';
+    let cloudDataDeleted = false;
     try {
       await this.supabaseService.deleteUserProfileData(supabaseUserId);
-      this.storageService.setItem(`${supabaseUserId}_backup_active`, 'false');
-      this.storageService.removeItem(`${supabaseUserId}_last_synced_at`);
-      this.isDeletingDbData = false;
+      cloudDataDeleted = true;
+      await this.authService.logout();
       this.showConfirmDbDeleteModal = false;
-      alert('All cloud backup data connected to your profile has been permanently deleted from the database.');
-      
-      // If we are currently on the stats/playlists page, reload or refresh view
-      if (this.router.url.includes('/stats')) {
-        window.location.reload();
-      } else {
-        this.router.navigate(['/stats']);
-      }
+      await this.router.navigate(['/login']);
     } catch (err) {
       console.error('Failed to delete cloud backup data:', err);
+      this.dataDeletionError = cloudDataDeleted
+        ? 'Your cloud data was deleted, but sign-out did not finish. Try again to finish signing out.'
+        : 'Cloud data could not be deleted. Nothing on this device was changed; please try again.';
+    } finally {
       this.isDeletingDbData = false;
-      this.showConfirmDbDeleteModal = false;
-      alert('Failed to delete cloud backup data. Please try again.');
     }
   }
 

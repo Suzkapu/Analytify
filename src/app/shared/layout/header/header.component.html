@@ -121,13 +121,6 @@
             <button (click)="openNotificationSettings()" class="dropdown-item" role="menuitem">
               <i class="pi pi-bell"></i><span>Notifications</span>
             </button>
-            @if (hasScheduledSpotifyAccess) {
-              <button (click)="removeScheduledSpotifyAccess()"
-                class="dropdown-item" role="menuitem" [disabled]="isRemovingScheduledAccess"
-                title="Deletes the encrypted refresh credential; collaboration access remains available">
-                <i class="pi pi-clock"></i><span>{{ isRemovingScheduledAccess ? 'Removing scheduled access…' : 'Remove scheduled Spotify access' }}</span>
-              </button>
-            }
             <button (click)="logout()" class="dropdown-item" role="menuitem">
               <i class="pi pi-sign-out"></i><span>Log out</span>
             </button>
@@ -256,9 +249,9 @@
       <div class="confirm-modal-icon">
         <i class="pi pi-trash"></i>
       </div>
-      <h3 id="clear-profile-data-title" class="confirm-modal-title">Clear Profile Data</h3>
+      <h3 id="clear-profile-data-title" class="confirm-modal-title">Clear data</h3>
       <p id="clear-profile-data-description" class="confirm-modal-text selection-copy">
-        Choose what data you would like to clear. Deleting cloud data compliance conforms to GDPR and Spotify Developer Policy.
+        Choose what to remove. Analytify schedules only the data required by features you choose, such as joining a league, enabling history, or sharing a playlist.
       </p>
       <div class="data-option-cards">
         <div class="data-option-card" (click)="selectClearLocalData()">
@@ -271,9 +264,9 @@
         <div class="data-option-card danger-option" (click)="selectClearDbData()">
           <div class="option-header">
             <i class="pi pi-cloud option-icon danger-text"></i>
-            <h4 class="danger-text">Delete Cloud Backup</h4>
+            <h4 class="danger-text">Delete cloud data and leave shared features</h4>
           </div>
-          <p>Permanently deletes all synced history, saved snapshots, and cached profile data from our cloud database. (Local browser cache is kept).</p>
+          <p>Removes scheduled Spotify access and cloud data, leaves leagues, revokes shares and stats access, then logs you out. Local playlist caches stay on this device.</p>
         </div>
       </div>
       <div class="confirm-modal-actions selection-actions">
@@ -338,17 +331,20 @@
         <div class="confirm-modal-icon danger-icon">
           <i class="pi pi-cloud danger-text"></i>
         </div>
-        <h3 id="database-erasure-title" class="confirm-modal-title danger-text">Confirm Database Erasure</h3>
+        <h3 id="database-erasure-title" class="confirm-modal-title danger-text">Delete cloud data and leave shared features?</h3>
         <p id="database-erasure-description" class="confirm-modal-text">
-          Are you absolutely sure? This will permanently delete all your cloud backup data, listening snapshots, playlist-sharing grants, and Song League membership from our servers. Shared catalog metadata such as artist names is retained, but your personal links to it are erased forever. This action is irreversible.
+          This permanently deletes your cloud backup, listening snapshots, scheduled Spotify credential, notification devices, playlist shares, and stats access. You will leave Song Leagues; leagues you own and their history will close. Shared catalog details such as artist names remain, but their link to you is removed. You will be logged out after deletion. This cannot be undone.
         </p>
+        @if (dataDeletionError) {
+          <p class="notification-settings-error" role="alert">{{ dataDeletionError }}</p>
+        }
         <div class="confirm-modal-actions">
           <button class="confirm-modal-btn confirm-modal-btn-cancel" appModalInitialFocus (click)="cancelDbDelete()">Cancel</button>
           <button class="confirm-modal-btn confirm-modal-btn-confirm danger-btn" (click)="confirmDbDelete()" [disabled]="isDeletingDbData">
             @if (isDeletingDbData) {
               <i class="pi pi-spin pi-spinner action-spinner"></i>
             }
-            {{ isDeletingDbData ? 'Erasing...' : 'Delete Cloud Data' }}
+            {{ isDeletingDbData ? 'Deleting…' : 'Delete cloud data and leave' }}
           </button>
         </div>
       </div>

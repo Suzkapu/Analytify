@@ -21,6 +21,8 @@ describe('HeaderComponent entry points', () => {
     let storageService: any;
     let spotifyDataService: any;
     let statsSharing: any;
+    let authService: any;
+    let supabaseService: any;
 
     beforeEach(() => {
         backupActive = true;
@@ -40,23 +42,30 @@ describe('HeaderComponent entry points', () => {
         };
         statsSharing.getDiscoverability.mockResolvedValue(false);
         statsSharing.setDiscoverability.mockImplementation(async (enabled: boolean) => enabled);
+        authService = {
+            isSyncing: false,
+            syncProgress: 0,
+            getUserId: () => 'registered-user',
+            getSupabaseUserId: () => '68000000-0000-4000-8000-000000000001',
+            isBackupActive: () => backupActive,
+            isAnonymousCloudIdentity: () => false,
+            hasCloudIdentity: () => true,
+            hasScheduledSpotifyAccess: () => true,
+            logout: vi.fn().mockName('logout').mockResolvedValue(undefined)
+        };
+        supabaseService = {
+            deleteUserProfileData: vi.fn().mockName('deleteUserProfileData').mockResolvedValue(undefined),
+            loadUserProfile: vi.fn().mockName('loadUserProfile').mockResolvedValue(null)
+        };
         TestBed.configureTestingModule({
             declarations: [HeaderComponent],
             providers: [
                 {
                     provide: SpotifyAuthService,
-                    useValue: {
-                        isSyncing: false,
-                        syncProgress: 0,
-                        getUserId: () => 'registered-user',
-                        getSupabaseUserId: () => null,
-                        isBackupActive: () => backupActive,
-                        hasCloudIdentity: () => true,
-                        hasScheduledSpotifyAccess: () => false
-                    }
+                    useValue: authService
                 },
                 { provide: StorageService, useValue: storageService },
-                { provide: SupabaseService, useValue: {} },
+                { provide: SupabaseService, useValue: supabaseService },
                 { provide: SpotifyDataService, useValue: spotifyDataService },
                 { provide: PlaylistShareAutoSyncService, useValue: { start: vi.fn().mockName('start') } },
                 { provide: StatsSharingService, useValue: statsSharing },
@@ -257,6 +266,59 @@ describe('HeaderComponent entry points', () => {
         const songPickRow = Array.from(dialog.querySelectorAll('.notification-category-row'))
             .find((row: any) => row.textContent?.includes('New Song League picks')) as HTMLElement | undefined;
         expect(songPickRow?.querySelector('.notification-category-icon .pi-volume-up')).not.toBeNull();
+    });
+
+    it('offers scheduled-access removal only through the guided cloud deletion flow', () => {
+        component.showSettingsDropdown = true;
+        fixture.detectChanges();
+        expect(fixture.nativeElement.textContent).not.toContain('Remove scheduled Spotify access');
+
+        component.openClearDataModal();
+        fixture.detectChanges();
+        const dialog = fixture.nativeElement.querySelector('.selection-card') as HTMLElement;
+        expect(dialog.textContent).toContain('Delete cloud data and leave shared features');
+        expect(dialog.textContent).toContain('schedules only the data required');
+        expect(supabaseService.deleteUserProfileData).not.toHaveBeenCalled();
+    });
+
+    it('cancels cloud deletion without changing server or local session state', () => {
+        component.selectClearDbData();
+        component.cancelDbDelete();
+
+        expect(component.showConfirmDbDeleteModal).toBe(false);
+        expect(supabaseService.deleteUserProfileData).not.toHaveBeenCalled();
+        expect(authService.logout).not.toHaveBeenCalled();
+    });
+
+    it('deletes cloud collaboration data before logging out', async () => {
+        component.selectClearDbData();
+        await component.confirmDbDelete();
+
+        expect(supabaseService.deleteUserProfileData).toHaveBeenCalledWith('68000000-0000-4000-8000-000000000001');
+        expect(authService.logout).toHaveBeenCalledTimes(1);
+        expect(TestBed.inject(Router).navigate).toHaveBeenCalledWith(['/login']);
+        expect(component.showConfirmDbDeleteModal).toBe(false);
+    });
+
+    it('keeps the confirmation recoverable when cloud deletion fails', async () => {
+        supabaseService.deleteUserProfileData.mockRejectedValueOnce(new Error('database unavailable'));
+        component.selectClearDbData();
+        await component.confirmDbDelete();
+
+        expect(authService.logout).not.toHaveBeenCalled();
+        expect(component.showConfirmDbDeleteModal).toBe(true);
+        expect(component.dataDeletionError).toContain('Nothing on this device was changed');
+    });
+
+    it('reports a partial failure accurately when deletion succeeds but logout fails', async () => {
+        authService.logout.mockRejectedValueOnce(new Error('sign-out unavailable'));
+        component.selectClearDbData();
+        await component.confirmDbDelete();
+
+        expect(supabaseService.deleteUserProfileData).toHaveBeenCalledTimes(1);
+        expect(component.showConfirmDbDeleteModal).toBe(true);
+        expect(component.dataDeletionError).toContain('cloud data was deleted');
+        expect(TestBed.inject(Router).navigate).not.toHaveBeenCalledWith(['/login']);
     });
 
     it('keeps Stats discoverability separate and off until explicitly enabled', async () => {
