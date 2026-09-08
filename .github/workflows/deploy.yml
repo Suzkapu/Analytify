@@ -189,6 +189,13 @@ jobs:
       - name: Reject superseded deployment before Supabase mutation
         run: bash scripts/assert-deployment-freshness.sh "$GITHUB_REF" "$GITHUB_SHA"
 
+      - name: Verify pinned Oracle SSH identity before any mutation
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          DEPLOY_SSH_KNOWN_HOSTS: ${{ secrets.ORACLE_SSH_KNOWN_HOSTS }}
+          DEPLOY_USER: ${{ secrets.REMOTE_USER }}
+        run: bash scripts/preflight-oracle-ssh.sh
+
       - name: Deploy Supabase schema and functions
         env:
           DEPLOY_COMMIT_SHA: ${{ github.sha }}
@@ -210,6 +217,7 @@ jobs:
           DEPLOY_COMMIT_SHA: ${{ github.sha }}
           DEPLOY_REF: ${{ github.ref }}
           DEPLOY_SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          DEPLOY_SSH_KNOWN_HOSTS: ${{ secrets.ORACLE_SSH_KNOWN_HOSTS }}
           DEPLOY_USER: ${{ secrets.REMOTE_USER }}
           DEPLOY_TARGET: ${{ secrets.TARGET_DIR }}
           ADMIN_SPOTIFY_IDS: ${{ secrets.ADMIN_SPOTIFY_IDS }}

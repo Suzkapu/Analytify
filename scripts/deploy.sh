@@ -14,6 +14,7 @@ require_value DEPLOY_HOST
 require_value DEPLOY_USER
 require_value DEPLOY_TARGET
 require_value DEPLOY_SSH_KEY
+require_value DEPLOY_SSH_KNOWN_HOSTS
 require_value ADMIN_SPOTIFY_IDS
 require_value SPOTIFY_TOKEN_ENCRYPTION_KEY
 require_value SUPABASE_URL
@@ -43,15 +44,31 @@ fi
 
 runner_temp="${RUNNER_TEMP:-/tmp}"
 key_file="$(mktemp "${runner_temp%/}/analytify-deploy-key.XXXXXX")"
+known_hosts_file="$(mktemp "${runner_temp%/}/analytify-known-hosts.XXXXXX")"
 allowlist_file="$(mktemp "${runner_temp%/}/analytify-admin-spotify-ids.XXXXXX")"
 token_key_file="$(mktemp "${runner_temp%/}/analytify-token-encryption-key.XXXXXX")"
 token_keys_file="$(mktemp "${runner_temp%/}/analytify-token-encryption-keys.XXXXXX")"
 service_file="$(mktemp "${runner_temp%/}/analytify-sync-service.XXXXXX")"
 worker_environment_file="$(mktemp "${runner_temp%/}/analytify-sync-environment.XXXXXX")"
-trap 'rm -f "$key_file" "$allowlist_file" "$token_key_file" "$token_keys_file" "$service_file" "$worker_environment_file"' EXIT
+trap 'rm -f "$key_file" "$known_hosts_file" "$allowlist_file" "$token_key_file" "$token_keys_file" "$service_file" "$worker_environment_file"' EXIT
 
 printf '%s\n' "$DEPLOY_SSH_KEY" | tr -d '\r' > "$key_file"
 chmod 600 "$key_file"
+
+printf '%s\n' "$DEPLOY_SSH_KNOWN_HOSTS" | tr -d '\r' > "$known_hosts_file"
+chmod 600 "$known_hosts_file"
+if ! ssh-keygen -l -f "$known_hosts_file" >/dev/null 2>&1; then
+  echo "Deployment configuration error: DEPLOY_SSH_KNOWN_HOSTS is not a valid known_hosts file." >&2
+  exit 1
+fi
+known_host_lookup="$DEPLOY_HOST"
+if [[ "$deploy_port" != "22" ]]; then
+  known_host_lookup="[${DEPLOY_HOST}]:${deploy_port}"
+fi
+if ! ssh-keygen -F "$known_host_lookup" -f "$known_hosts_file" >/dev/null; then
+  echo "Deployment configuration error: no pinned SSH key exists for ${known_host_lookup}." >&2
+  exit 1
+fi
 
 normalized_admin_ids="$(printf '%s' "$ADMIN_SPOTIFY_IDS" | tr -d '[:space:]')"
 if [[ ! "$normalized_admin_ids" =~ ^[A-Za-z0-9._-]+(,[A-Za-z0-9._-]+)*$ ]]; then
@@ -89,7 +106,7 @@ if [[ ! "$deploy_commit_sha" =~ ^[0-9a-f]{40}$ ]]; then
 fi
 deploy_ref="${DEPLOY_REF:-${GITHUB_REF:-refs/heads/main}}"
 bash "$(dirname "$0")/assert-deployment-freshness.sh" "$deploy_ref" "$deploy_commit_sha"
-ssh_command="ssh -p ${deploy_port} -i ${key_file} -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3"
+ssh_command="ssh -p ${deploy_port} -i ${key_file} -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=${known_hosts_file} -o GlobalKnownHostsFile=/dev/null -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3"
 remote="${DEPLOY_USER}@${DEPLOY_HOST}"
 target_root="${DEPLOY_TARGET%/}"
 release_root="$(dirname "${target_root}")/analytify-releases"

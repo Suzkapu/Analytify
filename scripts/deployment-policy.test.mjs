@@ -44,3 +44,16 @@ test('each deployment script checks freshness before its first remote mutation',
   const supabaseMutation = supabaseScript.indexOf('supabase link');
   assert.ok(supabaseGate > 0 && supabaseGate < supabaseMutation);
 });
+
+test('Oracle identity is pinned and verified before Supabase can mutate production', () => {
+  assert.doesNotMatch(workflow, /StrictHostKeyChecking=accept-new/);
+  assert.doesNotMatch(deployScript, /StrictHostKeyChecking=accept-new/);
+  assert.match(deployScript, /StrictHostKeyChecking=yes/);
+  assert.match(deployScript, /UserKnownHostsFile=/);
+  assert.match(deployScript, /require_value DEPLOY_SSH_KNOWN_HOSTS/);
+
+  const oraclePreflight = workflow.indexOf('Verify pinned Oracle SSH identity before any mutation');
+  const supabaseMutation = workflow.indexOf('Deploy Supabase schema and functions');
+  assert.ok(oraclePreflight > 0 && oraclePreflight < supabaseMutation);
+  assert.match(workflow, /DEPLOY_SSH_KNOWN_HOSTS: \$\{\{ secrets\.ORACLE_SSH_KNOWN_HOSTS \}\}/);
+});
