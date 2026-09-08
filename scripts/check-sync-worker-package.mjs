@@ -18,6 +18,11 @@ assert.doesNotMatch(
   /remote_command_with_retry[^\n]*npm (?:ci|install)/,
   'production must not resolve worker dependencies on the server'
 );
+assert.doesNotMatch(
+  deploy,
+  /--exclude=\/?node_modules/,
+  'deployment must not strip dependencies from the verified worker artifact'
+);
 
 for (const dependency of Object.keys(manifest.dependencies || {})) {
   const lockedVersion = lock.packages?.[`node_modules/${dependency}`]?.version;

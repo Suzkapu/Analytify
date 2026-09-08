@@ -38,6 +38,7 @@ test('the exact tested worker is digested and deployed without registry access',
   assert.match(workflow, /sha256sum --check analytify-worker\.sha256/);
   assert.match(workflow, /WORKER_ARTIFACT_DIR: \$\{\{ github\.workspace \}\}/);
   assert.doesNotMatch(deployScript, /npm (?:ci|install)/);
+  assert.doesNotMatch(deployScript, /--exclude=\/?node_modules/);
 });
 
 test('CI declares and installs one exact package-manager release', () => {

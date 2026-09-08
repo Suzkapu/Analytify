@@ -152,7 +152,6 @@ deploy_with_retry() {
     --compress
     --human-readable
     --itemize-changes
-    --exclude=/node_modules/
     --rsh="$ssh_command"
   )
 
