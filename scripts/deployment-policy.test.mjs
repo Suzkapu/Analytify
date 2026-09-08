@@ -29,6 +29,12 @@ test('verified build is handed to a serialized cancelable production job', () =>
   assert.match(workflow, /EXPECTED_COMMIT_SHA: \$\{\{ github\.sha \}\}/);
 });
 
+test('production waits for same-commit advisory and CodeQL gates', () => {
+  assert.match(workflow, /security-advisories:[\s\S]*npm audit --audit-level=high/);
+  assert.match(workflow, /codeql:[\s\S]*github\/codeql-action\/analyze@[0-9a-f]{40}/);
+  assert.match(workflow, /deploy-production:\s*\n\s+needs: \[verify, security-advisories, codeql\]/);
+});
+
 test('each deployment script checks freshness before its first remote mutation', () => {
   const oracleGate = deployScript.indexOf('assert-deployment-freshness.sh');
   const oracleMutation = deployScript.indexOf('mkdir -p');
