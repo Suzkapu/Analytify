@@ -50,8 +50,41 @@
       }
       @if (inviteUrl) {
         <section class="league-inline-invite">
-          <div><strong>New invitation ready</strong><span>Creating another invitation revokes the previous one.</span></div>
+          <div><strong>New invitation ready</strong><span>Other active links stay valid until they expire or you revoke them.</span></div>
           <div><input [value]="inviteUrl" readonly><button type="button" (click)="copyInvite()"><i class="pi" [ngClass]="inviteCopied ? 'pi-check' : 'pi-copy'"></i>{{ inviteCopied ? 'Copied' : 'Copy' }}</button></div>
+        </section>
+      }
+      @if (isOwner && !data.league.isDemo) {
+        <section class="league-invite-manager" aria-labelledby="active-invites-title">
+          <header>
+            <div><strong id="active-invites-title">Active invitations</strong><small>Links contain the secret only when first created. It is never shown here again.</small></div>
+            <button type="button" class="league-secondary" (click)="revokeAllInvites()"
+              [disabled]="isLoadingInvites || isRevokingAllInvites || activeInvites.length === 0">
+              <i class="pi" [ngClass]="isRevokingAllInvites ? 'pi-spin pi-spinner' : 'pi-ban'"></i>Revoke all
+            </button>
+          </header>
+          @if (isLoadingInvites) {
+            <p class="league-invite-empty"><i class="pi pi-spin pi-spinner"></i> Loading invitations…</p>
+          } @else if (activeInvites.length === 0) {
+            <p class="league-invite-empty">No active invitation links.</p>
+          } @else {
+            <div class="league-invite-list">
+              @for (invite of activeInvites; track invite.id) {
+                <article>
+                  <i class="pi pi-link"></i>
+                  <div>
+                    <strong>Created {{ formatInviteDate(invite.createdAt) }}</strong>
+                    <small>Expires {{ formatInviteDate(invite.expiresAt) }} · {{ invite.usagePolicy === 'one_time' ? 'One use' : 'Reusable' }} · {{ invite.useCount }} {{ invite.useCount === 1 ? 'use' : 'uses' }}</small>
+                    <small>Last used: {{ formatInviteDate(invite.lastUsedAt) }}</small>
+                  </div>
+                  <button type="button" class="league-secondary" (click)="revokeInvite(invite.id)"
+                    [disabled]="!!revokingInviteId || isRevokingAllInvites">
+                    <i class="pi" [ngClass]="revokingInviteId === invite.id ? 'pi-spin pi-spinner' : 'pi-ban'"></i>Revoke
+                  </button>
+                </article>
+              }
+            </div>
+          }
         </section>
       }
       @if (errorMessage) {

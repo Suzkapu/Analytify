@@ -84,8 +84,17 @@ export interface SongLeagueDashboard {
 
 export interface CreatedSongLeague {
   leagueId: string;
-  inviteToken: string;
   inviteUrl: string;
+}
+
+export interface SongLeagueInvite {
+  id: string;
+  createdAt: string;
+  expiresAt: string;
+  usagePolicy: 'one_time' | 'multi_use';
+  useCount: number;
+  maxUses: number | null;
+  lastUsedAt: string | null;
 }
 
 export interface SongLeagueTrack {

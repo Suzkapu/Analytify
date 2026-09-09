@@ -4,6 +4,7 @@ import {distinctUntilChanged, map, Subscription} from 'rxjs';
 
 import {
   SongLeagueDashboard,
+  SongLeagueInvite,
   SongLeaguePlaylist,
   SongLeagueRecommendation,
   SongLeagueScoreBreakdown,
@@ -48,8 +49,13 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   isCreatingPlaylist = false;
 
   inviteUrl = '';
+  newInviteId = '';
   inviteCopied = false;
   isCreatingInvite = false;
+  activeInvites: SongLeagueInvite[] = [];
+  isLoadingInvites = false;
+  revokingInviteId = '';
+  isRevokingAllInvites = false;
   memberLimit = 5;
   isSavingMemberLimit = false;
   showDeleteLeagueModal = false;
@@ -97,6 +103,8 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     this.successMessage = '';
     this.playlistWarning = '';
     this.inviteUrl = '';
+    this.newInviteId = '';
+    this.activeInvites = [];
     this.selectedStanding = null;
     try {
       const [currentUserId, notificationSettings] = await Promise.all([
@@ -107,6 +115,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
       if (!this.isCurrentLeague(leagueId, generation)) return;
       this.currentUserId = currentUserId;
       if (notificationSettings) this.notificationSettings = notificationSettings;
+      if (this.isOwner) await this.loadActiveInvites();
       this.unsubscribeLeague = this.songLeague.subscribeToLeague(leagueId, () => void this.reloadLive());
     } catch (error) {
       if (!this.isCurrentLeague(leagueId, generation)) return;
@@ -254,11 +263,66 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     try {
       const invitation = await this.songLeague.createInvite(this.leagueId);
       this.inviteUrl = invitation.url;
+      this.newInviteId = invitation.id;
+      await this.loadActiveInvites();
     } catch (error) {
       this.errorMessage = this.describeError(error, 'A new invitation could not be created.');
     } finally {
       this.isCreatingInvite = false;
     }
+  }
+
+  async loadActiveInvites(): Promise<void> {
+    if (!this.leagueId || !this.isOwner || this.isLoadingInvites) return;
+    this.isLoadingInvites = true;
+    try {
+      this.activeInvites = await this.songLeague.listActiveInvites(this.leagueId);
+    } catch (error) {
+      this.errorMessage = this.describeError(error, 'Active invitations could not be loaded.');
+    } finally {
+      this.isLoadingInvites = false;
+    }
+  }
+
+  async revokeInvite(inviteId: string): Promise<void> {
+    if (!this.isOwner || this.revokingInviteId) return;
+    this.revokingInviteId = inviteId;
+    this.errorMessage = '';
+    try {
+      await this.songLeague.revokeInvite(inviteId);
+      this.activeInvites = this.activeInvites.filter(invite => invite.id !== inviteId);
+      if (this.newInviteId === inviteId) {
+        this.newInviteId = '';
+        this.inviteUrl = '';
+      }
+      this.successMessage = 'Invitation revoked.';
+    } catch (error) {
+      this.errorMessage = this.describeError(error, 'The invitation could not be revoked.');
+    } finally {
+      this.revokingInviteId = '';
+    }
+  }
+
+  async revokeAllInvites(): Promise<void> {
+    if (!this.isOwner || this.isRevokingAllInvites || this.activeInvites.length === 0) return;
+    this.isRevokingAllInvites = true;
+    this.errorMessage = '';
+    try {
+      const revoked = await this.songLeague.revokeAllInvites(this.leagueId);
+      this.activeInvites = [];
+      this.newInviteId = '';
+      this.inviteUrl = '';
+      this.successMessage = `${revoked} active ${revoked === 1 ? 'invitation' : 'invitations'} revoked.`;
+    } catch (error) {
+      this.errorMessage = this.describeError(error, 'Active invitations could not be revoked.');
+    } finally {
+      this.isRevokingAllInvites = false;
+    }
+  }
+
+  formatInviteDate(value: string | null): string {
+    if (!value) return 'Never';
+    return new Intl.DateTimeFormat(undefined, {dateStyle: 'medium', timeStyle: 'short'}).format(new Date(value));
   }
 
   async saveMemberLimit(): Promise<void> {

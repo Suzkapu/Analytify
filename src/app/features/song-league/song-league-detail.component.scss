@@ -71,6 +71,31 @@
   button { min-height: 42px; padding: 0 12px; display: flex; align-items: center; gap: 6px; border: 0; background: rgba(30, 215, 96, 0.13); color: #73eb9c; font-weight: 800; cursor: pointer; }
 }
 
+.league-invite-manager {
+  margin: 16px 0;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+  > header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  > header > div { min-width: 0; }
+  strong, small { display: block; }
+  small { margin-top: 3px; color: #8f9a92; }
+}
+.league-invite-list { margin-top: 12px; display: grid; gap: 8px; }
+.league-invite-list article {
+  padding: 11px 12px;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 11px;
+  background: rgba(0,0,0,.12);
+  > i { color: #1ed760; }
+}
+.league-invite-empty { margin: 12px 0 0; color: #8f9a92; }
+
 .picks-status-badge {
   width: fit-content;
   margin-top: 14px;
@@ -307,6 +332,9 @@
 }
 
 @media (max-width: 768px) {
+  .league-invite-manager > header { align-items: stretch; flex-direction: column; }
+  .league-invite-list article { grid-template-columns: 24px minmax(0, 1fr); }
+  .league-invite-list article > button { grid-column: 1 / -1; justify-content: center; }
   .league-member-limit { grid-template-columns: 40px minmax(0, 1fr) 76px; }
   .league-member-limit > button { grid-column: 1 / -1; width: 100%; }
   .league-notification-control { grid-template-columns: 38px minmax(0, 1fr); }

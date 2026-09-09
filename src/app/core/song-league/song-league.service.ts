@@ -8,6 +8,7 @@ import {
   CreatedSongLeague,
   SongLeague,
   SongLeagueDashboard,
+  SongLeagueInvite,
   SongLeagueMember,
   SongLeaguePlaylist,
   SongLeagueRecommendation,
@@ -50,12 +51,12 @@ export class SongLeagueService {
     const leagueId = String(data || '');
     if (!leagueId) throw new Error('Supabase did not return a Song League ID.');
     this.pendingLeagueCreation = null;
-    return {leagueId, inviteToken: pending.inviteToken, inviteUrl: this.inviteUrl(pending.inviteToken)};
+    return {leagueId, inviteUrl: this.inviteUrl(pending.inviteToken)};
   }
 
-  async createInvite(leagueId: string, expiresInHours = 168): Promise<{token: string; url: string}> {
+  async createInvite(leagueId: string, expiresInHours = 168): Promise<{id: string; url: string}> {
     const token = this.createToken();
-    const {error} = await this.supabase.client.rpc('rotate_song_league_invite', {
+    const {data, error} = await this.supabase.client.rpc('rotate_song_league_invite', {
       p_league_id: leagueId,
       p_invite_token: token,
       p_expires_in_hours: expiresInHours,
@@ -63,12 +64,36 @@ export class SongLeagueService {
       p_max_uses: null
     });
     if (error) throw error;
-    return {token, url: this.inviteUrl(token)};
+    const inviteId = String(data || '');
+    if (!inviteId) throw new Error('Supabase did not return a Song League invitation ID.');
+    return {id: inviteId, url: this.inviteUrl(token)};
+  }
+
+  async listActiveInvites(leagueId: string): Promise<SongLeagueInvite[]> {
+    const {data, error} = await this.supabase.client.rpc('list_song_league_invites', {p_league_id: leagueId});
+    if (error) throw error;
+    return (data || []).map((row: any) => ({
+      id: row.invite_id,
+      createdAt: row.created_at,
+      expiresAt: row.expires_at,
+      usagePolicy: row.usage_policy,
+      useCount: Number(row.use_count || 0),
+      maxUses: row.max_uses === null ? null : Number(row.max_uses),
+      lastUsedAt: row.last_used_at || null
+    }));
   }
 
   async revokeInvite(inviteId: string): Promise<void> {
     const {error} = await this.supabase.client.rpc('revoke_song_league_invite', {p_invite_id: inviteId});
     if (error) throw error;
+  }
+
+  async revokeAllInvites(leagueId: string): Promise<number> {
+    const {data, error} = await this.supabase.client.rpc('revoke_all_song_league_invites', {
+      p_league_id: leagueId
+    });
+    if (error) throw error;
+    return Number(data || 0);
   }
 
   async approveRejoin(leagueId: string, userId: string): Promise<void> {

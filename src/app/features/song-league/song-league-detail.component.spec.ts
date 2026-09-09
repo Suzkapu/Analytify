@@ -39,7 +39,11 @@ describe('SongLeagueDetailComponent notifications', () => {
             isFridayInTimezone: vi.fn().mockName("SongLeagueService.isFridayInTimezone"),
             submitRecommendation: vi.fn().mockName("SongLeagueService.submitRecommendation"),
             syncWeeklyPlaylists: vi.fn().mockName("SongLeagueService.syncWeeklyPlaylists"),
-            setMemberLimit: vi.fn().mockName("SongLeagueService.setMemberLimit")
+            setMemberLimit: vi.fn().mockName("SongLeagueService.setMemberLimit"),
+            createInvite: vi.fn().mockName("SongLeagueService.createInvite"),
+            listActiveInvites: vi.fn().mockName("SongLeagueService.listActiveInvites"),
+            revokeInvite: vi.fn().mockName("SongLeagueService.revokeInvite"),
+            revokeAllInvites: vi.fn().mockName("SongLeagueService.revokeAllInvites")
         };
         songLeague.currentUserId.mockResolvedValue('member');
         songLeague.loadDashboard.mockResolvedValue({
@@ -59,6 +63,10 @@ describe('SongLeagueDetailComponent notifications', () => {
         songLeague.submitRecommendation.mockResolvedValue('recommendation');
         songLeague.syncWeeklyPlaylists.mockResolvedValue(undefined);
         songLeague.setMemberLimit.mockResolvedValue(12);
+        songLeague.createInvite.mockResolvedValue({id: 'invite', url: 'https://example.com/join/secret'});
+        songLeague.listActiveInvites.mockResolvedValue([]);
+        songLeague.revokeInvite.mockResolvedValue(undefined);
+        songLeague.revokeAllInvites.mockResolvedValue(2);
 
         TestBed.configureTestingModule({
             imports: [SharedModule],
@@ -153,6 +161,35 @@ describe('SongLeagueDetailComponent notifications', () => {
         expect(invite.getAttribute('aria-label')).toBe('Invite a member');
         expect(invite.querySelector('span')?.textContent).toBe('Invite');
         expect(invite.querySelector('.pi-user-plus')).toBeTruthy();
+    });
+
+    it('loads token-free active invitations for the owner and can revoke one or all', async () => {
+        const songLeague = TestBed.inject(SongLeagueService) as any;
+        songLeague.currentUserId.mockResolvedValue('owner');
+        songLeague.listActiveInvites.mockResolvedValue([{
+            id: 'invite-a', createdAt: '2026-09-01T10:00:00Z', expiresAt: '2026-09-08T10:00:00Z',
+            usagePolicy: 'multi_use', useCount: 2, maxUses: null, lastUsedAt: '2026-09-02T10:00:00Z'
+        }, {
+            id: 'invite-b', createdAt: '2026-09-03T10:00:00Z', expiresAt: '2026-09-10T10:00:00Z',
+            usagePolicy: 'one_time', useCount: 0, maxUses: 1, lastUsedAt: null
+        }]);
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const manager = fixture.nativeElement.querySelector('.league-invite-manager') as HTMLElement;
+        expect(songLeague.listActiveInvites).toHaveBeenCalledWith('league');
+        expect(manager.textContent).toContain('Active invitations');
+        expect(manager.textContent).not.toContain('https://example.com/join/secret');
+
+        await component.revokeInvite('invite-a');
+        expect(songLeague.revokeInvite).toHaveBeenCalledWith('invite-a');
+        expect(component.activeInvites.map(invite => invite.id)).toEqual(['invite-b']);
+
+        await component.revokeAllInvites();
+        expect(songLeague.revokeAllInvites).toHaveBeenCalledWith('league');
+        expect(component.activeInvites).toEqual([]);
     });
 
     it('keeps league B and its subscription when league A resolves later', async () => {

@@ -66,6 +66,7 @@ describe('SongLeagueService', () => {
         expect(parameters.p_max_members).toBe(5);
         expect(created.leagueId).toBe('league-id');
         expect(created.inviteUrl).toContain(`/song-league/join/${parameters.p_invite_token}`);
+        expect(created).not.toHaveProperty('inviteToken');
     });
 
     it('creates custom capacity, owner membership, and invitation through one atomic RPC', async () => {
@@ -121,6 +122,23 @@ describe('SongLeagueService', () => {
         await service.revokeInvite('invite-id');
         expect(rpc).toHaveBeenCalledTimes(1);
         expect(rpc).toHaveBeenCalledWith('revoke_song_league_invite', { p_invite_id: 'invite-id' });
+    });
+
+    it('lists only token-free invitation metadata and revokes all through owner RPCs', async () => {
+        rpc.mockResolvedValueOnce({data: [{
+            invite_id: 'invite-id', created_at: '2026-09-01T00:00:00Z', expires_at: '2026-09-08T00:00:00Z',
+            usage_policy: 'multi_use', use_count: 2, max_uses: null, last_used_at: '2026-09-02T00:00:00Z'
+        }], error: null}).mockResolvedValueOnce({data: 1, error: null});
+
+        const invitations = await service.listActiveInvites('league-id');
+        const revoked = await service.revokeAllInvites('league-id');
+
+        expect(invitations).toEqual([expect.objectContaining({id: 'invite-id', useCount: 2})]);
+        expect(invitations[0]).not.toHaveProperty('token');
+        expect(invitations[0]).not.toHaveProperty('tokenHash');
+        expect(revoked).toBe(1);
+        expect(rpc).toHaveBeenNthCalledWith(1, 'list_song_league_invites', {p_league_id: 'league-id'});
+        expect(rpc).toHaveBeenNthCalledWith(2, 'revoke_all_song_league_invites', {p_league_id: 'league-id'});
     });
 
     it('records explicit owner approval before a departed member rejoins', async () => {
