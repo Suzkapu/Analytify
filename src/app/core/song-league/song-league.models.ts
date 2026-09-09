@@ -9,6 +9,7 @@ export interface SongLeague {
   maxMembers: number;
   isDemo: boolean;
   createdAt: string;
+  closedAt?: string | null;
 }
 
 export interface SongLeagueMember {
@@ -18,6 +19,7 @@ export interface SongLeagueMember {
   displayName: string;
   imageUrl: string;
   joinedAt: string;
+  leftAt?: string | null;
 }
 
 export interface SongLeagueStanding extends SongLeagueMember {
@@ -95,6 +97,16 @@ export interface SongLeagueInvite {
   useCount: number;
   maxUses: number | null;
   lastUsedAt: string | null;
+}
+
+export interface SongLeagueLifecycleEvent {
+  id: string;
+  action: 'member_left' | 'member_removed' | 'ownership_transferred' | 'league_closed';
+  actorUserId: string;
+  actorDisplayName: string;
+  subjectUserId: string | null;
+  subjectDisplayName: string | null;
+  occurredAt: string;
 }
 
 export interface SongLeagueTrack {

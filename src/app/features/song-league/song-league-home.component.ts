@@ -15,6 +15,7 @@ import {AdminService} from '@core/admin/admin.service';
 })
 export class SongLeagueHomeComponent implements OnInit {
   leagues: SongLeague[] = [];
+  closedLeagues: SongLeague[] = [];
   isLoading = true;
   isCreating = false;
   showCreateForm = false;
@@ -53,7 +54,10 @@ export class SongLeagueHomeComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
     try {
-      this.leagues = await this.songLeague.listLeagues();
+      [this.leagues, this.closedLeagues] = await Promise.all([
+        this.songLeague.listLeagues(),
+        this.songLeague.listLeagues(true)
+      ]);
     } catch (error) {
       this.errorMessage = this.describeError(error, 'Your Song Leagues could not be loaded.');
     } finally {

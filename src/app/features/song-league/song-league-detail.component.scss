@@ -142,6 +142,53 @@
   color: #4de17f;
 }
 
+.league-notice.closed { border-color: rgba(130, 148, 136, .24); background: rgba(130, 148, 136, .07); }
+
+.league-member-manager, .league-lifecycle-history {
+  margin-top: 22px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .025);
+}
+.league-member-list { display: grid; gap: 8px; }
+.league-member-list article {
+  min-height: 58px;
+  padding: 8px 10px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, .12);
+}
+.league-member-list img, .league-member-list .standing-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
+.league-member-list .standing-avatar { display: grid; place-items: center; background: rgba(255, 255, 255, .07); }
+.league-member-list strong, .league-member-list small { display: block; }
+.league-member-list small { margin-top: 2px; color: #7f8b82; }
+.league-danger-secondary {
+  min-height: 40px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid rgba(255, 82, 82, .24);
+  border-radius: 10px;
+  background: rgba(255, 82, 82, .05);
+  color: #ef9198;
+  font: inherit;
+  font-size: .78rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+.league-lifecycle-history > p { color: #87928a; }
+.league-lifecycle-history > div:not(.league-section-heading) { padding: 9px 4px; display: flex; align-items: center; gap: 10px; border-top: 1px solid rgba(255,255,255,.06); }
+.league-lifecycle-history > div > i { color: #68dd8f; }
+.league-lifecycle-history strong, .league-lifecycle-history small { display: block; }
+.league-lifecycle-history small { margin-top: 2px; color: #748078; }
+.league-lifecycle-warning p { margin: 0; }
+
 .friday-composer-panel {
   margin-top: 22px;
   padding: 16px;
@@ -332,6 +379,8 @@
 }
 
 @media (max-width: 768px) {
+  .league-member-list article { grid-template-columns: 42px minmax(0, 1fr); }
+  .league-member-list article > button { width: 100%; }
   .league-invite-manager > header { align-items: stretch; flex-direction: column; }
   .league-invite-list article { grid-template-columns: 24px minmax(0, 1fr); }
   .league-invite-list article > button { grid-column: 1 / -1; justify-content: center; }

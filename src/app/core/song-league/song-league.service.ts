@@ -9,6 +9,7 @@ import {
   SongLeague,
   SongLeagueDashboard,
   SongLeagueInvite,
+  SongLeagueLifecycleEvent,
   SongLeagueMember,
   SongLeaguePlaylist,
   SongLeagueRecommendation,
@@ -103,6 +104,22 @@ export class SongLeagueService {
     if (error) throw error;
   }
 
+  async listLifecycleEvents(leagueId: string): Promise<SongLeagueLifecycleEvent[]> {
+    const {data, error} = await this.supabase.client.rpc('list_song_league_lifecycle_events', {
+      p_league_id: leagueId
+    });
+    if (error) throw error;
+    return (data || []).map((row: any) => ({
+      id: row.event_id,
+      action: row.action,
+      actorUserId: row.actor_user_id,
+      actorDisplayName: row.actor_display_name,
+      subjectUserId: row.subject_user_id || null,
+      subjectDisplayName: row.subject_display_name || null,
+      occurredAt: row.occurred_at
+    }));
+  }
+
   async setMemberLimit(leagueId: string, maxMembers: number): Promise<number> {
     const {data, error} = await this.supabase.client.rpc('set_song_league_member_limit', {
       p_league_id: leagueId,
@@ -132,34 +149,52 @@ export class SongLeagueService {
     if (error) throw error;
   }
 
+  async removeMember(leagueId: string, userId: string): Promise<void> {
+    const {error} = await this.supabase.client.rpc('remove_song_league_member', {
+      p_league_id: leagueId, p_user_id: userId
+    });
+    if (error) throw error;
+  }
+
+  async transferOwnership(leagueId: string, userId: string): Promise<void> {
+    const {error} = await this.supabase.client.rpc('transfer_song_league_ownership', {
+      p_league_id: leagueId, p_new_owner_user_id: userId
+    });
+    if (error) throw error;
+  }
+
   async deleteLeague(leagueId: string): Promise<void> {
     const {error} = await this.supabase.client.rpc('delete_song_league', {p_league_id: leagueId});
     if (error) throw error;
   }
 
-  async listLeagues(): Promise<SongLeague[]> {
-    const {data, error} = await this.supabase.client
+  async listLeagues(closed = false): Promise<SongLeague[]> {
+    let query = this.supabase.client
       .from('song_leagues')
-      .select('*')
-      .is('closed_at', null)
-      .order('created_at', {ascending: false});
+      .select('*');
+    query = closed ? query.not('closed_at', 'is', null) : query.is('closed_at', null);
+    const {data, error} = await query.order('created_at', {ascending: false});
     if (error) throw error;
     return (data || []).map(row => this.mapLeague(row));
   }
 
   async loadDashboard(leagueId: string): Promise<SongLeagueDashboard> {
-    const [leagueResult, memberResult, recommendationResult, playlistResult] = await Promise.all([
-      this.supabase.client.from('song_leagues').select('*').eq('id', leagueId).maybeSingle(),
-      this.supabase.client.from('song_league_members').select('*')
-        .eq('league_id', leagueId).is('left_at', null).order('joined_at', {ascending: true}),
-      this.supabase.client.from('song_league_recommendations').select('*')
-        .eq('league_id', leagueId).gte('scoring_ends_at', new Date().toISOString())
-        .order('submitted_at', {ascending: false}),
+    const leagueResult = await this.supabase.client.from('song_leagues').select('*').eq('id', leagueId).maybeSingle();
+    if (leagueResult.error) throw leagueResult.error;
+    if (!leagueResult.data) throw new Error('This Song League is unavailable.');
+    const isClosed = !!leagueResult.data.closed_at;
+    let memberQuery = this.supabase.client.from('song_league_members').select('*').eq('league_id', leagueId);
+    let recommendationQuery = this.supabase.client.from('song_league_recommendations').select('*').eq('league_id', leagueId);
+    if (!isClosed) {
+      memberQuery = memberQuery.is('left_at', null);
+      recommendationQuery = recommendationQuery.gte('scoring_ends_at', new Date().toISOString());
+    }
+    const [memberResult, recommendationResult, playlistResult] = await Promise.all([
+      memberQuery.order('joined_at', {ascending: true}),
+      recommendationQuery.order('submitted_at', {ascending: false}),
       this.supabase.client.from('song_league_playlists').select('*')
         .eq('league_id', leagueId).order('updated_at', {ascending: false})
     ]);
-    if (leagueResult.error) throw leagueResult.error;
-    if (!leagueResult.data) throw new Error('This Song League is unavailable.');
     if (memberResult.error) throw memberResult.error;
     if (recommendationResult.error) throw recommendationResult.error;
     if (playlistResult.error) throw playlistResult.error;
@@ -419,7 +454,8 @@ export class SongLeagueService {
       playlistRevision: Number(row.playlist_revision || 0),
       maxMembers: Number(row.max_members || 5),
       isDemo: !!row.is_demo,
-      createdAt: row.created_at
+      createdAt: row.created_at,
+      closedAt: row.closed_at || null
     };
   }
 
@@ -430,7 +466,8 @@ export class SongLeagueService {
       role: row.role,
       displayName: row.display_name,
       imageUrl: row.image_url || '',
-      joinedAt: row.joined_at
+      joinedAt: row.joined_at,
+      leftAt: row.left_at || null
     };
   }
 

@@ -123,6 +123,24 @@
       }
     </section>
 
+    @if (!isLoading && closedLeagues.length) {
+      <section class="league-list-section">
+        <div class="league-section-heading">
+          <div><span class="league-eyebrow">Read-only history</span><h2>Closed leagues</h2></div>
+          <span class="league-count">{{ closedLeagues.length }}</span>
+        </div>
+        <div class="league-grid">
+          @for (league of closedLeagues; track trackLeague($index, league)) {
+            <a [routerLink]="['/song-league', league.id]" class="league-card">
+              <div class="league-card-icon"><i class="pi pi-lock"></i></div>
+              <div><span>Closed {{ league.closedAt | date:'mediumDate' }}</span><h3>{{ league.name }}</h3><p>View standings and song history</p></div>
+              <i class="pi pi-chevron-right"></i>
+            </a>
+          }
+        </div>
+      </section>
+    }
+
     <app-song-league-rules></app-song-league-rules>
   </div>
 </main>

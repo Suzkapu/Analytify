@@ -149,6 +149,32 @@ describe('SongLeagueService', () => {
         });
     });
 
+    it('uses owner-only lifecycle RPCs and maps the immutable activity log', async () => {
+        rpc.mockResolvedValueOnce({data: null, error: null})
+            .mockResolvedValueOnce({data: null, error: null})
+            .mockResolvedValueOnce({data: null, error: null})
+            .mockResolvedValueOnce({data: [{
+                event_id: 'event-id', action: 'member_removed', actor_user_id: 'owner',
+                actor_display_name: 'Owner', subject_user_id: 'member', subject_display_name: 'Member',
+                occurred_at: '2026-09-09T12:00:00Z'
+            }], error: null});
+
+        await service.leaveLeague('league-id');
+        await service.removeMember('league-id', 'member-id');
+        await service.transferOwnership('league-id', 'member-id');
+        const events = await service.listLifecycleEvents('league-id');
+
+        expect(rpc).toHaveBeenNthCalledWith(1, 'leave_song_league', {p_league_id: 'league-id'});
+        expect(rpc).toHaveBeenNthCalledWith(2, 'remove_song_league_member', {
+            p_league_id: 'league-id', p_user_id: 'member-id'
+        });
+        expect(rpc).toHaveBeenNthCalledWith(3, 'transfer_song_league_ownership', {
+            p_league_id: 'league-id', p_new_owner_user_id: 'member-id'
+        });
+        expect(rpc).toHaveBeenNthCalledWith(4, 'list_song_league_lifecycle_events', {p_league_id: 'league-id'});
+        expect(events).toEqual([expect.objectContaining({id: 'event-id', subjectDisplayName: 'Member'})]);
+    });
+
     it('updates the per-league member limit through the owner-only RPC', async () => {
         rpc.mockResolvedValue({ data: 12, error: null });
 

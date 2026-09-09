@@ -5,6 +5,8 @@ import {distinctUntilChanged, map, Subscription} from 'rxjs';
 import {
   SongLeagueDashboard,
   SongLeagueInvite,
+  SongLeagueLifecycleEvent,
+  SongLeagueMember,
   SongLeaguePlaylist,
   SongLeagueRecommendation,
   SongLeagueScoreBreakdown,
@@ -58,6 +60,12 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   isRevokingAllInvites = false;
   memberLimit = 5;
   isSavingMemberLimit = false;
+  lifecycleEvents: SongLeagueLifecycleEvent[] = [];
+  isLoadingLifecycle = false;
+  showLifecycleModal = false;
+  lifecycleAction: 'leave' | 'remove' | 'transfer' | 'close' | null = null;
+  lifecycleTarget: SongLeagueMember | null = null;
+  isApplyingLifecycle = false;
   showDeleteLeagueModal = false;
   isDeletingLeague = false;
   selectedStanding: SongLeagueStanding | null = null;
@@ -105,6 +113,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     this.inviteUrl = '';
     this.newInviteId = '';
     this.activeInvites = [];
+    this.lifecycleEvents = [];
     this.selectedStanding = null;
     try {
       const [currentUserId, notificationSettings] = await Promise.all([
@@ -115,8 +124,13 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
       if (!this.isCurrentLeague(leagueId, generation)) return;
       this.currentUserId = currentUserId;
       if (notificationSettings) this.notificationSettings = notificationSettings;
-      if (this.isOwner) await this.loadActiveInvites();
-      this.unsubscribeLeague = this.songLeague.subscribeToLeague(leagueId, () => void this.reloadLive());
+      await Promise.all([
+        this.isOwner ? this.loadActiveInvites() : Promise.resolve(),
+        this.loadLifecycleEvents()
+      ]);
+      if (!this.isClosed) {
+        this.unsubscribeLeague = this.songLeague.subscribeToLeague(leagueId, () => void this.reloadLive());
+      }
     } catch (error) {
       if (!this.isCurrentLeague(leagueId, generation)) return;
       this.errorMessage = this.describeError(error, 'The Song League could not be opened.');
@@ -154,7 +168,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
       if (!this.isCurrentLeague(leagueId, generation)) return;
       this.dashboard = dashboard;
       this.memberLimit = dashboard.league.maxMembers;
-      if (!this.memberReady && !dashboard.league.isDemo) {
+      if (!this.memberReady && !dashboard.league.isDemo && !dashboard.league.closedAt) {
         await this.songLeague.ensureMemberReadyForLeague(
           leagueId,
           dashboard.league.timezone
@@ -347,6 +361,83 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  async loadLifecycleEvents(): Promise<void> {
+    if (!this.leagueId || this.isLoadingLifecycle) return;
+    this.isLoadingLifecycle = true;
+    try {
+      this.lifecycleEvents = await this.songLeague.listLifecycleEvents(this.leagueId);
+    } catch (error) {
+      this.errorMessage = this.describeError(error, 'League activity could not be loaded.');
+    } finally {
+      this.isLoadingLifecycle = false;
+    }
+  }
+
+  openLifecycleModal(
+    action: 'leave' | 'remove' | 'transfer' | 'close',
+    target: SongLeagueMember | null = null
+  ): void {
+    if (this.isClosed || (action !== 'leave' && !this.isOwner)) return;
+    this.lifecycleAction = action;
+    this.lifecycleTarget = target;
+    this.showLifecycleModal = true;
+  }
+
+  closeLifecycleModal(): void {
+    if (this.isApplyingLifecycle) return;
+    this.showLifecycleModal = false;
+    this.lifecycleAction = null;
+    this.lifecycleTarget = null;
+  }
+
+  async confirmLifecycleAction(): Promise<void> {
+    if (!this.lifecycleAction || this.isApplyingLifecycle) return;
+    const action = this.lifecycleAction;
+    const target = this.lifecycleTarget;
+    this.isApplyingLifecycle = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+    try {
+      if (action === 'leave') {
+        await this.songLeague.leaveLeague(this.leagueId);
+        this.showLifecycleModal = false;
+        await this.router.navigate(['/song-league']);
+        return;
+      }
+      if (action === 'remove' && target) {
+        await this.songLeague.removeMember(this.leagueId, target.userId);
+        this.successMessage = `${target.displayName} was removed from the league.`;
+      } else if (action === 'transfer' && target) {
+        await this.songLeague.transferOwnership(this.leagueId, target.userId);
+        this.successMessage = `${target.displayName} is now the league owner.`;
+      } else if (action === 'close') {
+        await this.songLeague.closeLeague(this.leagueId);
+        this.unsubscribeLeague?.();
+        this.unsubscribeLeague = null;
+        this.successMessage = 'The league is closed. Its history is now read-only.';
+      }
+      this.showLifecycleModal = false;
+      this.lifecycleAction = null;
+      this.lifecycleTarget = null;
+      await this.load(true);
+      await this.loadLifecycleEvents();
+    } catch (error) {
+      this.showLifecycleModal = false;
+      this.errorMessage = this.describeError(error, 'The league could not be changed.');
+    } finally {
+      this.isApplyingLifecycle = false;
+    }
+  }
+
+  lifecycleLabel(event: SongLeagueLifecycleEvent): string {
+    switch (event.action) {
+      case 'member_left': return `${event.subjectDisplayName || 'A member'} left`;
+      case 'member_removed': return `${event.actorDisplayName} removed ${event.subjectDisplayName || 'a member'}`;
+      case 'ownership_transferred': return `${event.actorDisplayName} transferred ownership to ${event.subjectDisplayName || 'a member'}`;
+      case 'league_closed': return `${event.actorDisplayName} closed the league`;
+    }
+  }
+
   async createWeeklyPlaylist(): Promise<void> {
     if (this.isCreatingPlaylist) return;
     this.isCreatingPlaylist = true;
@@ -457,6 +548,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   }
 
   get isPickOpen(): boolean {
+    if (this.isClosed) return false;
     return this.dashboard?.league.isDemo
       ? !this.alreadySubmittedDemoPick
       : this.isFriday && !this.alreadySubmittedToday;
@@ -469,6 +561,10 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
 
   get isOwner(): boolean {
     return this.dashboard?.league.ownerUserId === this.currentUserId;
+  }
+
+  get isClosed(): boolean {
+    return !!this.dashboard?.league.closedAt;
   }
 
   get selectedTrackImage(): string {

@@ -43,7 +43,12 @@ describe('SongLeagueDetailComponent notifications', () => {
             createInvite: vi.fn().mockName("SongLeagueService.createInvite"),
             listActiveInvites: vi.fn().mockName("SongLeagueService.listActiveInvites"),
             revokeInvite: vi.fn().mockName("SongLeagueService.revokeInvite"),
-            revokeAllInvites: vi.fn().mockName("SongLeagueService.revokeAllInvites")
+            revokeAllInvites: vi.fn().mockName("SongLeagueService.revokeAllInvites"),
+            listLifecycleEvents: vi.fn().mockName("SongLeagueService.listLifecycleEvents"),
+            leaveLeague: vi.fn().mockName("SongLeagueService.leaveLeague"),
+            closeLeague: vi.fn().mockName("SongLeagueService.closeLeague"),
+            removeMember: vi.fn().mockName("SongLeagueService.removeMember"),
+            transferOwnership: vi.fn().mockName("SongLeagueService.transferOwnership")
         };
         songLeague.currentUserId.mockResolvedValue('member');
         songLeague.loadDashboard.mockResolvedValue({
@@ -52,7 +57,7 @@ describe('SongLeagueDetailComponent notifications', () => {
                 ownerDisplayName: 'Owner', ownerImageUrl: '', playlistRevision: 0, maxMembers: 5, isDemo: false,
                 createdAt: '2026-09-01T00:00:00Z'
             },
-            members: [{ leagueId: 'league', userId: 'member', role: 'member', displayName: 'Member', imageUrl: '', joinedAt: 'now' }],
+            members: [{ leagueId: 'league', userId: 'member', role: 'member', displayName: 'Member', imageUrl: '', joinedAt: '2026-09-01T00:00:00Z' }],
             standings: [], recommendations: [], playlists: [], breakdownByRecommender: new Map()
         });
         songLeague.subscribeToLeague.mockReturnValue(vi.fn().mockName('unsubscribe'));
@@ -67,6 +72,11 @@ describe('SongLeagueDetailComponent notifications', () => {
         songLeague.listActiveInvites.mockResolvedValue([]);
         songLeague.revokeInvite.mockResolvedValue(undefined);
         songLeague.revokeAllInvites.mockResolvedValue(2);
+        songLeague.listLifecycleEvents.mockResolvedValue([]);
+        songLeague.leaveLeague.mockResolvedValue(undefined);
+        songLeague.closeLeague.mockResolvedValue(undefined);
+        songLeague.removeMember.mockResolvedValue(undefined);
+        songLeague.transferOwnership.mockResolvedValue(undefined);
 
         TestBed.configureTestingModule({
             imports: [SharedModule],
@@ -192,6 +202,53 @@ describe('SongLeagueDetailComponent notifications', () => {
         expect(component.activeInvites).toEqual([]);
     });
 
+    it('confirms member departure only after explaining its retained history and stopped automation', async () => {
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        component.openLifecycleModal('leave');
+        fixture.detectChanges();
+        const dialog = fixture.nativeElement.querySelector('[aria-labelledby="league-lifecycle-title"]') as HTMLElement;
+        expect(dialog.textContent).toContain('existing points and songs stay');
+        expect(dialog.textContent).toContain('playlist updates, and notifications stop');
+
+        await component.confirmLifecycleAction();
+        const songLeague = TestBed.inject(SongLeagueService) as any;
+        expect(songLeague.leaveLeague).toHaveBeenCalledWith('league');
+        expect(TestBed.inject(Router).navigate).toHaveBeenCalledWith(['/song-league']);
+    });
+
+    it('lets owners remove members, transfer ownership, and close into read-only history', async () => {
+        const songLeague = TestBed.inject(SongLeagueService) as any;
+        songLeague.currentUserId.mockResolvedValue('owner');
+        songLeague.loadDashboard.mockResolvedValue({
+            ...dashboard('league'),
+            league: {...dashboard('league').league, isDemo: false},
+            members: [
+                {leagueId: 'league', userId: 'owner', role: 'owner', displayName: 'Owner', imageUrl: '', joinedAt: '2026-09-01T00:00:00Z'},
+                {leagueId: 'league', userId: 'member', role: 'member', displayName: 'Member', imageUrl: '', joinedAt: '2026-09-01T00:00:00Z'}
+            ]
+        });
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const member = component.dashboard!.members[1];
+
+        component.openLifecycleModal('remove', member);
+        await component.confirmLifecycleAction();
+        expect(songLeague.removeMember).toHaveBeenCalledWith('league', 'member');
+
+        component.openLifecycleModal('transfer', member);
+        await component.confirmLifecycleAction();
+        expect(songLeague.transferOwnership).toHaveBeenCalledWith('league', 'member');
+
+        component.currentUserId = 'owner';
+        component.dashboard!.league.ownerUserId = 'owner';
+        component.openLifecycleModal('close');
+        await component.confirmLifecycleAction();
+        expect(songLeague.closeLeague).toHaveBeenCalledWith('league');
+    });
+
     it('keeps league B and its subscription when league A resolves later', async () => {
         const paramMap = new Subject<any>();
         const pending = new Map<string, (dashboard: any) => void>();
@@ -217,7 +274,7 @@ describe('SongLeagueDetailComponent notifications', () => {
     function dashboard(id: string): any {
         return {
             league: { id, ownerUserId: 'owner', name: id, timezone: 'Europe/Vienna', ownerDisplayName: 'Owner',
-                ownerImageUrl: '', playlistRevision: 0, maxMembers: 5, isDemo: true, createdAt: 'now' },
+                ownerImageUrl: '', playlistRevision: 0, maxMembers: 5, isDemo: true, createdAt: '2026-09-01T00:00:00Z' },
             members: [], standings: [], recommendations: [], playlists: [], breakdownByRecommender: new Map()
         };
     }
