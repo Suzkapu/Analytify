@@ -99,6 +99,27 @@ export class CompareRoomTransportService {
     if (error) throw error;
   }
 
+  async touchPresence(): Promise<void> {
+    if (!this.roomId) return;
+    const {error} = await this.supabase.client.rpc('touch_compare_room_presence', {p_room_id: this.roomId});
+    if (error) throw error;
+  }
+
+  async reconcileParticipants(): Promise<string[]> {
+    if (!this.roomId) return [];
+    const {data, error} = await this.supabase.client.rpc('reconcile_compare_room_participants', {
+      p_room_id: this.roomId
+    });
+    if (error) throw error;
+    return (data || []).map((row: {participant_id: string}) => row.participant_id);
+  }
+
+  async leaveRoom(): Promise<void> {
+    if (!this.roomId) return;
+    const {error} = await this.supabase.client.rpc('leave_compare_room', {p_room_id: this.roomId});
+    if (error) throw error;
+  }
+
   async disconnect(): Promise<void> {
     if (!this.channel) {
       this.roomId = '';

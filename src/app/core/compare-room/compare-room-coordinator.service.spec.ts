@@ -4,6 +4,48 @@ import { CompareRoomCoordinatorService, resolveQrCodeApi } from './compare-room-
 import { PlaylistIntersectionService } from './playlist-intersection.service';
 
 describe('CompareRoomCoordinatorService', () => {
+    it('removes a departed guest, frees the claimed invitation, and invalidates the proposal with a reason', () => {
+        const transport = { send: vi.fn().mockName('send').mockResolvedValue(undefined) };
+        const coordinator = new CompareRoomCoordinatorService(transport as any, new PlaylistIntersectionService());
+        const guest = participant('guest', 'Guest', [playlist('guest')], ['a']);
+        coordinator.participants$.next([participant('host', 'Host', [playlist('host')], ['a']), guest]);
+        coordinator.invitations$.next([{
+            id: 'guest-invite', secret: 'secret', joinUrl: 'https://example.com/join', qrDataUrl: '', claimedBy: guest.id
+        }]);
+        coordinator.proposal$.next({
+            id: 'proposal', contentHash: 'a'.repeat(64), name: 'Shared', description: '', tracks: [track('a')],
+            trackCount: 1, participantNames: ['Host', 'Guest']
+        });
+        (coordinator as any).acceptedParticipantIds.add(guest.id);
+
+        (coordinator as any).handleMessage({
+            type: 'participant-left', participantId: guest.id, reason: 'disconnected'
+        });
+
+        expect(coordinator.participants$.value.map(item => item.id)).toEqual(['host']);
+        expect(coordinator.invitations$.value).toEqual([]);
+        expect(coordinator.proposal$.value).toBeNull();
+        expect(coordinator.error$.value).toBe('Guest disconnected. The playlist proposal was cancelled.');
+        expect(transport.send).not.toHaveBeenCalled();
+    });
+
+    it('reconciles stale guests without overlapping host sweeps', async () => {
+        let release!: (ids: string[]) => void;
+        const transport = {
+            reconcileParticipants: vi.fn().mockName('reconcileParticipants').mockReturnValue(
+                new Promise<string[]>(resolve => release = resolve)
+            )
+        };
+        const coordinator = new CompareRoomCoordinatorService(transport as any, new PlaylistIntersectionService());
+
+        const first = (coordinator as any).reconcileParticipants();
+        const second = (coordinator as any).reconcileParticipants();
+        release([]);
+        await Promise.all([first, second]);
+
+        expect(transport.reconcileParticipants).toHaveBeenCalledTimes(1);
+    });
+
     it('resolves QR generation from both ESM and CommonJS lazy-import shapes', () => {
         const toDataURL = vi.fn().mockName('toDataURL');
 

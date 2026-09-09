@@ -122,9 +122,10 @@ export type CompareRoomMessage =
   | {type: 'participant-state'; participant: CompareParticipant}
   | {type: 'participant-track-chunk'; participantId: string; tracks: CompareTrack[]}
   | {type: 'participant-tracks-complete'; participant: CompareParticipant; total: number}
+  | {type: 'participant-left'; participantId: string; reason: 'left' | 'disconnected'}
   | {type: 'remove-participant'; participantId: string}
   | {type: 'merge-proposal'; proposal: CompareMergeProposal}
-  | {type: 'merge-proposal-cancelled'}
+  | {type: 'merge-proposal-cancelled'; reason?: string}
   | {type: 'proposal-approval'; participantId: string; proposalId: string; contentHash: string}
   | {type: 'create-playlist-start'; proposal: CompareMergeProposal}
   | {type: 'create-playlist-track-chunk'; proposalId: string; tracks: CompareTrack[]}

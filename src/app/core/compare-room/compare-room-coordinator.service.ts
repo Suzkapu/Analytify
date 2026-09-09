@@ -38,6 +38,8 @@ export class CompareRoomCoordinatorService {
   private acceptedParticipantIds = new Set<string>();
   private participantTrackBuffers = new Map<string, CompareTrack[]>();
   private hostSenderId = '';
+  private presenceTimer: number | null = null;
+  private reconciliationRunning = false;
 
   constructor(
     private transport: CompareRoomTransportService,
@@ -54,6 +56,7 @@ export class CompareRoomCoordinatorService {
     this.hostSenderId = this.randomToken(18);
     await this.transport.createRoom(this.roomId, this.hostSenderId);
     await this.transport.connect(this.roomId, envelope => this.handleMessage(envelope.message));
+    this.startPresenceReconciliation();
     if (mainParticipant) {
       this.acceptedParticipantIds.add(mainParticipant.id);
       this.participants$.next([mainParticipant]);
@@ -216,14 +219,13 @@ export class CompareRoomCoordinatorService {
     this.acceptedParticipantIds.delete(participantId);
     this.participantTrackBuffers.delete(participantId);
     this.participants$.next(this.participants$.value.filter(item => item.id !== participantId));
-    this.invitations$.next(this.invitations$.value.map(invitation =>
-      invitation.claimedBy === participantId ? {...invitation, claimedBy: undefined} : invitation
-    ));
+    this.invitations$.next(this.invitations$.value.filter(invitation => invitation.claimedBy !== participantId));
     this.invalidateProposal();
     await this.transport.send({type: 'remove-participant', participantId});
   }
 
   async closeRoom(): Promise<void> {
+    this.stopPresenceReconciliation();
     if (this.roomId) {
       await this.transport.closeRoom().catch(() => {});
     }
@@ -238,6 +240,11 @@ export class CompareRoomCoordinatorService {
       invitation.claimedBy = message.participantId;
       this.invitations$.next([...this.invitations$.value]);
       this.acceptedParticipantIds.add(message.participantId);
+      return;
+    }
+
+    if (message.type === 'participant-left') {
+      this.handleParticipantDeparture(message.participantId, message.reason);
       return;
     }
 
@@ -279,6 +286,9 @@ export class CompareRoomCoordinatorService {
         this.upsertParticipant({...message.participant, tracks: bufferedTracks, status: 'ready'});
       }
       this.invalidateProposal();
+    } else if (message.type === 'merge-proposal-cancelled') {
+      this.invalidateProposal(false);
+      if (message.reason) this.error$.next(message.reason);
     } else if (message.type === 'proposal-approval') {
       const participant = this.participants$.value.find(item => item.id === message.participantId);
       if (participant && this.proposal$.value?.id === message.proposalId &&
@@ -352,7 +362,7 @@ export class CompareRoomCoordinatorService {
     return `${modeLabel} for ${participantNames.join(', ')} · ${resultTrackCount} unique tracks · Created with Analytify.`.slice(0, 300);
   }
 
-  private invalidateProposal(): void {
+  private invalidateProposal(notifyGuests = true): void {
     const hadProposal = !!this.proposal$.value;
     this.proposal$.next(null);
     this.sharedTracks$.next([]);
@@ -362,8 +372,48 @@ export class CompareRoomCoordinatorService {
       approvedProposalHash: undefined,
       result: undefined
     })));
-    if (hadProposal) {
+    if (hadProposal && notifyGuests) {
       void this.transport.send({type: 'merge-proposal-cancelled'}).catch(error => this.reportError(error));
+    }
+  }
+
+  private handleParticipantDeparture(participantId: string, reason: 'left' | 'disconnected'): void {
+    const participant = this.participants$.value.find(item => item.id === participantId);
+    this.acceptedParticipantIds.delete(participantId);
+    this.participantTrackBuffers.delete(participantId);
+    this.participants$.next(this.participants$.value.filter(item => item.id !== participantId));
+    this.invitations$.next(this.invitations$.value.filter(invitation => invitation.claimedBy !== participantId));
+    const hadProposal = !!this.proposal$.value;
+    this.invalidateProposal(false);
+    if (participant) {
+      const action = reason === 'left' ? 'left the room' : 'disconnected';
+      this.error$.next(`${participant.displayName} ${action}.${hadProposal ? ' The playlist proposal was cancelled.' : ''}`);
+    }
+  }
+
+  private startPresenceReconciliation(): void {
+    this.stopPresenceReconciliation();
+    void this.transport.touchPresence().catch(error => this.reportError(error));
+    this.presenceTimer = window.setInterval(() => {
+      void this.transport.touchPresence().catch(error => this.reportError(error));
+      void this.reconcileParticipants();
+    }, 15_000);
+  }
+
+  private stopPresenceReconciliation(): void {
+    if (this.presenceTimer !== null) window.clearInterval(this.presenceTimer);
+    this.presenceTimer = null;
+  }
+
+  private async reconcileParticipants(): Promise<void> {
+    if (this.reconciliationRunning) return;
+    this.reconciliationRunning = true;
+    try {
+      await this.transport.reconcileParticipants();
+    } catch (error) {
+      this.reportError(error);
+    } finally {
+      this.reconciliationRunning = false;
     }
   }
 
@@ -372,6 +422,7 @@ export class CompareRoomCoordinatorService {
   }
 
   private resetState(): void {
+    this.stopPresenceReconciliation();
     this.roomId = '';
     this.hostSenderId = '';
     this.acceptedParticipantIds.clear();

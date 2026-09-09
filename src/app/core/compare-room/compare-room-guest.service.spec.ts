@@ -4,6 +4,58 @@ import { proposalContentHash } from './compare-room-integrity';
 import { CompareMergeProposal, CompareTrack } from './compare-room.models';
 
 describe('CompareRoomGuestService', () => {
+    it('publishes an explicit leave before disconnecting', async () => {
+        const transport = {
+            leaveRoom: vi.fn().mockName('leaveRoom').mockResolvedValue(undefined),
+            disconnect: vi.fn().mockName('disconnect').mockResolvedValue(undefined)
+        };
+        const guest = new CompareRoomGuestService(transport as any);
+        (guest as any).participantId = 'participant-123456';
+
+        await guest.leave();
+
+        expect(transport.leaveRoom).toHaveBeenCalledTimes(1);
+        expect(transport.disconnect).toHaveBeenCalledTimes(1);
+        expect(transport.leaveRoom.mock.invocationCallOrder[0]).toBeLessThan(
+            transport.disconnect.mock.invocationCallOrder[0]
+        );
+    });
+
+    it('keeps presence alive while connected and stops after leaving', async () => {
+        vi.useFakeTimers();
+        const transport = {
+            claimInvitation: vi.fn().mockName('claimInvitation').mockResolvedValue(undefined),
+            connect: vi.fn().mockName('connect').mockResolvedValue(undefined),
+            touchPresence: vi.fn().mockName('touchPresence').mockResolvedValue(undefined),
+            leaveRoom: vi.fn().mockName('leaveRoom').mockResolvedValue(undefined),
+            disconnect: vi.fn().mockName('disconnect').mockResolvedValue(undefined)
+        };
+        const guest = new CompareRoomGuestService(transport as any);
+
+        await guest.join('room-123456789012', 'invite-123', 'secret-long-enough-for-test');
+        await vi.advanceTimersByTimeAsync(30_000);
+        expect(transport.touchPresence).toHaveBeenCalled();
+
+        await guest.leave();
+        const touches = transport.touchPresence.mock.calls.length;
+        await vi.advanceTimersByTimeAsync(60_000);
+        expect(transport.touchPresence).toHaveBeenCalledTimes(touches);
+        vi.useRealTimers();
+    });
+
+    it('invalidates a guest proposal when another participant departs', () => {
+        const guest = new CompareRoomGuestService({} as any);
+        const activeProposal = proposal();
+        guest.proposal$.next(activeProposal);
+
+        (guest as any).handleMessage({
+            type: 'participant-left', participantId: 'another-participant', reason: 'left'
+        });
+
+        expect(guest.proposal$.value).toBeNull();
+        expect(guest.error$.value).toBe('A participant left the room. The playlist proposal was cancelled.');
+    });
+
     it('does not create a playlist when approved proposal content is substituted', async () => {
         const transport = { send: vi.fn().mockName('send').mockResolvedValue(undefined) };
         const guest = new CompareRoomGuestService(transport as any);

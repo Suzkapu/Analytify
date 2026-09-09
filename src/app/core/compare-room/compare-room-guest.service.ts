@@ -21,6 +21,8 @@ export class CompareRoomGuestService {
   private participantId = '';
   private createProposalBuffer: CompareMergeProposal | null = null;
   private consumedProposalIds = new Set<string>();
+  private heartbeatTimer: number | null = null;
+  private heartbeatFailures = 0;
 
   constructor(private transport: CompareRoomTransportService) {}
 
@@ -29,6 +31,7 @@ export class CompareRoomGuestService {
     this.participantId = this.randomToken(18);
     await this.transport.claimInvitation(roomId, invitationId, invitationSecret, this.participantId);
     await this.transport.connect(roomId, envelope => this.handleMessage(envelope.message));
+    this.startHeartbeat();
     this.accepted$.next(true);
     return this.participantId;
   }
@@ -71,12 +74,29 @@ export class CompareRoomGuestService {
   }
 
   async leave(): Promise<void> {
-    await this.transport.disconnect();
-    this.reset();
+    this.stopHeartbeat();
+    try {
+      await this.transport.leaveRoom();
+    } catch {
+      // A lost connection can prevent the explicit event; the host heartbeat
+      // reconciler is the durable fallback and must not trap the guest here.
+    } finally {
+      await this.transport.disconnect();
+      this.reset();
+    }
   }
 
   private handleMessage(message: CompareRoomMessage): void {
-    if (message.type === 'merge-proposal') {
+    if (message.type === 'participant-left') {
+      this.proposal$.next(null);
+      this.createProposalBuffer = null;
+      if (message.participantId === this.participantId) {
+        this.removed$.next(true);
+      } else {
+        const action = message.reason === 'left' ? 'left the room' : 'disconnected';
+        this.error$.next(`A participant ${action}. The playlist proposal was cancelled.`);
+      }
+    } else if (message.type === 'merge-proposal') {
       this.proposal$.next(message.proposal);
     } else if (message.type === 'merge-proposal-cancelled') {
       this.proposal$.next(null);
@@ -101,6 +121,7 @@ export class CompareRoomGuestService {
   }
 
   private reset(): void {
+    this.stopHeartbeat();
     this.participantId = '';
     this.accepted$.next(false);
     this.proposal$.next(null);
@@ -110,6 +131,32 @@ export class CompareRoomGuestService {
     this.error$.next(null);
     this.createProposalBuffer = null;
     this.consumedProposalIds.clear();
+    this.heartbeatFailures = 0;
+  }
+
+  private startHeartbeat(): void {
+    this.stopHeartbeat();
+    void this.pulsePresence();
+    this.heartbeatTimer = window.setInterval(() => {
+      void this.pulsePresence();
+    }, 10_000);
+  }
+
+  private stopHeartbeat(): void {
+    if (this.heartbeatTimer !== null) window.clearInterval(this.heartbeatTimer);
+    this.heartbeatTimer = null;
+  }
+
+  private async pulsePresence(): Promise<void> {
+    try {
+      await this.transport.touchPresence();
+      this.heartbeatFailures = 0;
+    } catch (error) {
+      this.heartbeatFailures += 1;
+      if (this.accepted$.value && this.heartbeatFailures >= 3) {
+        this.error$.next(error instanceof Error ? error.message : 'The Compare Room connection was interrupted.');
+      }
+    }
   }
 
   private async commitCreateProposal(proposalId: string): Promise<void> {
