@@ -175,37 +175,68 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
     this.isDownloading = true;
     this.errorMessage = '';
     this.saveResult = null;
+    const share = this.share;
+    const expectedAppliedRevision = this.download?.appliedRevision || 0;
+    let leaseToken: string | null = null;
     try {
+      leaseToken = await this.sharing.claimDownloadSync(
+        share.id,
+        share.revision,
+        expectedAppliedRevision
+      );
+      if (!leaseToken) {
+        throw new Error('This Spotify copy is already being updated. Wait a moment, then try again.');
+      }
       const accessToken = await this.getUsableAccessToken();
-      const description = `Shared by ${this.share.ownerDisplayName} through Analytify. Share ID: ${this.share.id}`.slice(0, 300);
+      const description = `Shared by ${share.ownerDisplayName} through Analytify. Share ID: ${share.id}`.slice(0, 300);
       const result = await this.spotify.syncPlaylist(
         accessToken,
         this.download?.spotifyPlaylistId || null,
         this.download?.spotifyPlaylistUrl || null,
-        sharedPlaylistSpotifyName(this.share.playlistName, this.share.ownerDisplayName),
+        sharedPlaylistSpotifyName(share.playlistName, share.ownerDisplayName),
         description,
-        this.tracks
+        this.tracks,
+        undefined,
+        {
+          operationId: `shared:${share.id}`,
+          accountId: this.auth.getUserId() || '',
+          fingerprint: `shared:${share.id}`
+        }
       );
       this.saveResult = result;
-      if (result.playlistId) {
-        await this.sharing.recordDownload(
-          this.share.id,
-          result.playlistId,
-          result.playlistUrl || '',
-          result.success ? this.share.revision : (this.download?.appliedRevision || 0)
-        );
+      if (!result.success || !result.playlistId) {
+        throw new Error(result.error || 'Spotify could not finish updating the playlist.');
       }
-      if (!result.success) throw new Error(result.error || 'Spotify could not finish updating the playlist.');
+      const completed = await this.sharing.completeDownloadSync(
+        share.id,
+        share.revision,
+        expectedAppliedRevision,
+        leaseToken,
+        result.playlistId,
+        result.playlistUrl || ''
+      );
+      if (!completed) {
+        this.saveResult = {
+          ...result,
+          success: false,
+          error: 'The shared playlist changed while Spotify was updating. Try again to apply the latest version.'
+        };
+        throw new Error('The shared playlist changed while Spotify was updating. Try again to apply the latest version.');
+      }
+      leaseToken = null;
       this.download = {
-        shareId: this.share.id,
-        spotifyPlaylistId: result.playlistId || '',
+        shareId: share.id,
+        spotifyPlaylistId: result.playlistId,
         spotifyPlaylistUrl: result.playlistUrl || '',
-        appliedRevision: this.share.revision,
+        appliedRevision: share.revision,
         updatedAt: new Date().toISOString()
       };
     } catch (error) {
       this.errorMessage = (error as any)?.message || 'The Spotify playlist could not be updated.';
     } finally {
+      if (leaseToken) {
+        await this.sharing.releaseDownloadSync(share.id, leaseToken).catch(() => {});
+      }
       this.isDownloading = false;
     }
   }

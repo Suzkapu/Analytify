@@ -25,6 +25,9 @@ describe('SharedPlaylistDetailComponent', () => {
             loadShareTracks: vi.fn().mockName("PlaylistSharingService.loadShareTracks"),
             calculateStats: vi.fn().mockName("PlaylistSharingService.calculateStats"),
             recordDownload: vi.fn().mockName("PlaylistSharingService.recordDownload"),
+            claimDownloadSync: vi.fn().mockName("PlaylistSharingService.claimDownloadSync"),
+            completeDownloadSync: vi.fn().mockName("PlaylistSharingService.completeDownloadSync"),
+            releaseDownloadSync: vi.fn().mockName("PlaylistSharingService.releaseDownloadSync"),
             subscribeToShareChanges: vi.fn().mockName("PlaylistSharingService.subscribeToShareChanges")
         };
         unsubscribeShareChanges = vi.fn().mockName('unsubscribeShareChanges');
@@ -55,6 +58,9 @@ describe('SharedPlaylistDetailComponent', () => {
             tracks: 1, artists: 1, albums: 0, durationMs: 0, explicitTracks: 0, topArtists: [], topAlbums: []
         });
         sharing.recordDownload.mockResolvedValue(undefined);
+        sharing.claimDownloadSync.mockResolvedValue('lease-token');
+        sharing.completeDownloadSync.mockResolvedValue(true);
+        sharing.releaseDownloadSync.mockResolvedValue(undefined);
         spotify.syncPlaylist.mockResolvedValue({
             success: true,
             playlistName: 'Shared party',
@@ -70,7 +76,7 @@ describe('SharedPlaylistDetailComponent', () => {
                 { provide: Router, useValue: { navigate: vi.fn().mockName('navigate') } },
                 {
                     provide: SpotifyAuthService,
-                    useValue: { getAccessToken: () => 'token', isTokenExpired: () => false, refreshToken: vi.fn() }
+                    useValue: { getAccessToken: () => 'token', getUserId: () => 'spotify-user', isTokenExpired: () => false, refreshToken: vi.fn() }
                 },
                 { provide: ParticipantSpotifyService, useValue: spotify },
                 { provide: PlaylistSharingService, useValue: sharing },
@@ -91,8 +97,72 @@ describe('SharedPlaylistDetailComponent', () => {
 
         await component.downloadOrUpdate();
 
-        expect(spotify.syncPlaylist).toHaveBeenCalledWith('token', 'existing', 'spotify-url', 'Shared party · from Owner', expect.stringContaining('Share ID: share-id'), expect.any(Array));
-        expect(sharing.recordDownload).toHaveBeenCalledWith('share-id', 'existing', 'spotify-url', 2);
+        expect(spotify.syncPlaylist).toHaveBeenCalledWith(
+            'token', 'existing', 'spotify-url', 'Shared party · from Owner',
+            expect.stringContaining('Share ID: share-id'), expect.any(Array), undefined,
+            { operationId: 'shared:share-id', accountId: 'spotify-user', fingerprint: 'shared:share-id' }
+        );
+        expect(sharing.claimDownloadSync).toHaveBeenCalledWith('share-id', 2, 1);
+        expect(sharing.completeDownloadSync).toHaveBeenCalledWith(
+            'share-id', 2, 1, 'lease-token', 'existing', 'spotify-url'
+        );
+        expect(sharing.recordDownload).not.toHaveBeenCalled();
+        expect(component.download?.appliedRevision).toBe(2);
+    });
+
+    it('keeps a failed first download recoverable and releases its lease', async () => {
+        sharing.loadShareMetadata.mockResolvedValue({
+            share: share(2), download: null, viewerRole: 'recipient'
+        });
+        spotify.syncPlaylist.mockResolvedValue({
+            success: false,
+            playlistName: 'Shared party',
+            playlistId: 'partial-playlist',
+            playlistUrl: 'partial-url',
+            addedTracks: 100,
+            error: 'Second batch failed'
+        });
+        await component.load();
+
+        await component.downloadOrUpdate();
+
+        expect(sharing.claimDownloadSync).toHaveBeenCalledWith('share-id', 2, 0);
+        expect(sharing.completeDownloadSync).not.toHaveBeenCalled();
+        expect(sharing.releaseDownloadSync).toHaveBeenCalledWith('share-id', 'lease-token');
+        expect(component.saveResult?.playlistId).toBe('partial-playlist');
+        expect(component.errorMessage).toContain('Second batch failed');
+    });
+
+    it('does not call Spotify when another writer owns the first-download lease', async () => {
+        sharing.loadShareMetadata.mockResolvedValue({
+            share: share(2), download: null, viewerRole: 'recipient'
+        });
+        sharing.claimDownloadSync.mockResolvedValue(null);
+        await component.load();
+
+        await component.downloadOrUpdate();
+
+        expect(spotify.syncPlaylist).not.toHaveBeenCalled();
+        expect(component.errorMessage).toContain('already being updated');
+    });
+
+    it('retries the same shared destination when mapping completion is interrupted', async () => {
+        sharing.loadShareMetadata.mockResolvedValue({share: share(2), download: null, viewerRole: 'recipient'});
+        sharing.completeDownloadSync.mockResolvedValueOnce(false).mockResolvedValueOnce(true);
+        spotify.syncPlaylist.mockResolvedValue({
+            success: true, playlistName: 'Shared party', playlistId: 'recovered-playlist',
+            playlistUrl: 'spotify-url', addedTracks: 1
+        });
+        await component.load();
+
+        await component.downloadOrUpdate();
+        const firstOperation = vi.mocked(spotify.syncPlaylist).mock.calls[0][7];
+        expect(component.saveResult?.success).toBe(false);
+        expect(component.errorMessage).toContain('changed while Spotify was updating');
+
+        await component.downloadOrUpdate();
+        expect(vi.mocked(spotify.syncPlaylist).mock.calls[1][7]).toEqual(firstOperation);
+        expect(component.download?.spotifyPlaylistId).toBe('recovered-playlist');
         expect(component.download?.appliedRevision).toBe(2);
     });
 

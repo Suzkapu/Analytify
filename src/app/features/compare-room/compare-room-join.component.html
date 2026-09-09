@@ -110,6 +110,11 @@
       @if (saveResult?.playlistUrl) {
         <a class="spotify-button" [href]="$safeNavigationMigration(saveResult?.playlistUrl) | safeSpotifyUrl:'playlist'" target="_blank" rel="noopener noreferrer">Open partial playlist</a>
       }
+      @if (saveResult && !saveResult.success && proposal && hasApproved) {
+        <button type="button" class="spotify-button" (click)="retryPlaylist()">
+          <i class="pi pi-refresh"></i> Retry same playlist
+        </button>
+      }
       <button type="button" class="leave-button" (click)="leave()">Leave room</button>
     }
   </section>

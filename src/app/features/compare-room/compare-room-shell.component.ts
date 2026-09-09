@@ -214,19 +214,44 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
       await this.coordinator.executeProposal();
       const mainParticipant = this.participants.find(item => item.isMainProfile);
       if (mainParticipant) {
-        const result = await this.spotify.createPlaylist(
-          await this.getMainAccessToken(),
-          this.proposal.name,
-          this.proposal.descriptionsByParticipant?.[mainParticipant.id] || this.proposal.description,
-          this.proposal.tracks
-        );
-        this.coordinator.setLocalSaveResult(mainParticipant.id, result);
+        await this.saveMainPlaylist(mainParticipant);
       }
     } catch (error) {
       this.errorMessage = this.describeError(error);
     } finally {
       this.isExecuting = false;
     }
+  }
+
+  async retryMainPlaylist(): Promise<void> {
+    if (!this.proposal || this.isExecuting) return;
+    const mainParticipant = this.participants.find(item => item.isMainProfile && item.result?.success === false);
+    if (!mainParticipant) return;
+    this.isExecuting = true;
+    this.errorMessage = '';
+    try {
+      await this.saveMainPlaylist(mainParticipant);
+    } catch (error) {
+      this.errorMessage = this.describeError(error);
+    } finally {
+      this.isExecuting = false;
+    }
+  }
+
+  private async saveMainPlaylist(mainParticipant: CompareParticipant): Promise<void> {
+    if (!this.proposal) return;
+    const result = await this.spotify.createPlaylist(
+      await this.getMainAccessToken(),
+      this.proposal.name,
+      this.proposal.descriptionsByParticipant?.[mainParticipant.id] || this.proposal.description,
+      this.proposal.tracks,
+      {
+        operationId: `compare:${this.coordinator.currentRoomId}:${this.proposal.id}:${mainParticipant.spotifyUserId}`,
+        accountId: mainParticipant.spotifyUserId,
+        fingerprint: this.proposal.contentHash
+      }
+    );
+    this.coordinator.setLocalSaveResult(mainParticipant.id, result);
   }
 
   async startAnother(): Promise<void> {

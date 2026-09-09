@@ -227,7 +227,11 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
     try {
       const token = await this.transientAuth.getAccessToken();
       const description = proposal.descriptionsByParticipant?.[this.participant.id] || proposal.description;
-      this.saveResult = await this.spotify.createPlaylist(token, proposal.name, description, proposal.tracks);
+      this.saveResult = await this.spotify.createPlaylist(token, proposal.name, description, proposal.tracks, {
+        operationId: `compare:${this.roomId}:${proposal.id}:${this.participant.spotifyUserId}`,
+        accountId: this.participant.spotifyUserId,
+        fingerprint: proposal.contentHash
+      });
     } catch (error) {
       this.saveResult = {
         success: false,
@@ -239,6 +243,12 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
     await this.guest.publishSaveResult(this.saveResult).catch(() => {});
     this.stage = this.saveResult.success ? 'complete' : 'error';
     if (!this.saveResult.success) this.errorMessage = this.saveResult.error || 'Playlist creation failed.';
+  }
+
+  retryPlaylist(): void {
+    if (this.stage !== 'error' || !this.proposal || !this.hasApproved || !this.participant) return;
+    this.errorMessage = '';
+    void this.createPlaylist(this.proposal);
   }
 
   private fail(message: string): void {

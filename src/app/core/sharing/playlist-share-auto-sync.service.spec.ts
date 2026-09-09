@@ -19,6 +19,7 @@ describe('PlaylistShareAutoSyncService', () => {
             isAuthenticated: vi.fn().mockName("SpotifyAuthService.isAuthenticated"),
             ensureInitialSync: vi.fn().mockName("SpotifyAuthService.ensureInitialSync"),
             getSupabaseUserId: vi.fn().mockName("SpotifyAuthService.getSupabaseUserId"),
+            getUserId: vi.fn().mockName("SpotifyAuthService.getUserId"),
             getAccessToken: vi.fn().mockName("SpotifyAuthService.getAccessToken"),
             isTokenExpired: vi.fn().mockName("SpotifyAuthService.isTokenExpired"),
             refreshToken: vi.fn().mockName("SpotifyAuthService.refreshToken"),
@@ -40,6 +41,7 @@ describe('PlaylistShareAutoSyncService', () => {
         auth.isAuthenticated.mockReturnValue(true);
         auth.ensureInitialSync.mockResolvedValue(undefined);
         auth.getSupabaseUserId.mockReturnValue('supabase-user');
+        auth.getUserId.mockReturnValue('spotify-user');
         auth.getAccessToken.mockReturnValue('spotify-token');
         auth.isTokenExpired.mockReturnValue(false);
         sharing.listReceivedShares.mockResolvedValue([]);
@@ -102,7 +104,11 @@ describe('PlaylistShareAutoSyncService', () => {
 
         await service.syncNow();
 
-        expect(spotify.syncPlaylist).toHaveBeenCalledWith('spotify-token', 'existing-playlist', 'spotify-url', 'Shared party · from Owner', expect.stringContaining('Share ID: received-share'), [track('new-song')], expect.any(AbortSignal));
+        expect(spotify.syncPlaylist).toHaveBeenCalledWith(
+            'spotify-token', 'existing-playlist', 'spotify-url', 'Shared party · from Owner',
+            expect.stringContaining('Share ID: received-share'), [track('new-song')], expect.any(AbortSignal),
+            { operationId: 'shared:received-share', accountId: 'spotify-user', fingerprint: 'shared:received-share' }
+        );
         expect(sharing.claimDownloadSync).toHaveBeenCalledWith('received-share', 3, 2);
         expect(sharing.completeDownloadSync).toHaveBeenCalledWith('received-share', 3, 2, 'lease-token', 'existing-playlist', 'spotify-url');
         expect(update).toHaveBeenCalledWith({ shareId: 'received-share', revision: 3, success: true });

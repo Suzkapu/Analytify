@@ -374,11 +374,19 @@
                 <i class="pi pi-check-circle"></i> {{ playlistCreationSuccessMessage }}
               </span>
             }
+            @if (playlistCreationError) {
+              <span class="error-text" role="alert">
+                <i class="pi pi-exclamation-circle"></i> {{ playlistCreationError }}
+                @if (playlistCreationResult?.playlistUrl) {
+                  <a [href]="playlistCreationResult?.playlistUrl | safeSpotifyUrl:'playlist'" target="_blank" rel="noopener noreferrer">Open partial playlist</a>
+                }
+              </span>
+            }
             <button (click)="createTopPlaylist()" class="p-button" [disabled]="isCreatingPlaylist"
               >
               <i class="pi" [class.pi-spin]="isCreatingPlaylist" [class.pi-spinner]="isCreatingPlaylist"
               [class.pi-plus-circle]="!isCreatingPlaylist"></i>
-              {{ isCreatingPlaylist ? 'Creating...' : 'Create Playlist' }}
+              {{ isCreatingPlaylist ? 'Creating...' : (playlistCreationError ? 'Retry same playlist' : 'Create Playlist') }}
             </button>
           </div>
         </div>

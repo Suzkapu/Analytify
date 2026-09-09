@@ -53,4 +53,50 @@ describe('CompareRoomShellComponent', () => {
             Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalWidth });
         }
     });
+
+    it('retries only the failed host playlist with the same proposal operation', async () => {
+        const failedHost = {
+            id: 'host-participant', spotifyUserId: 'host-user', displayName: 'Host', imageUrl: '',
+            status: 'error', tracks: [], isMainProfile: true,
+            result: {success: false, playlistName: 'Shared', addedTracks: 100, error: 'Batch failed'}
+        };
+        const successfulGuest = {
+            id: 'guest', spotifyUserId: 'guest-user', displayName: 'Guest', imageUrl: '',
+            status: 'complete', tracks: [], result: {success: true, playlistName: 'Shared', addedTracks: 150}
+        };
+        const setLocalSaveResult = vi.fn().mockName('setLocalSaveResult');
+        const coordinator = {
+            participants$: new BehaviorSubject<any[]>([failedHost, successfulGuest]),
+            invitations$: new BehaviorSubject<any[]>([]), sharedTracks$: new BehaviorSubject<any[]>([]),
+            proposal$: new BehaviorSubject<any>(null), error$: new BehaviorSubject<string>(''),
+            currentRoomId: 'room-id', setLocalSaveResult
+        };
+        const auth = {
+            isAuthenticated: () => true, isTokenExpired: () => false,
+            getAccessToken: () => 'host-token'
+        };
+        const createPlaylist = vi.fn().mockName('createPlaylist').mockResolvedValue({
+            success: true, playlistName: 'Shared', playlistId: 'same-playlist', addedTracks: 150
+        });
+        const component = new CompareRoomShellComponent(
+            coordinator as any, auth as any, {} as any, {createPlaylist} as any,
+            {} as any, {} as any, {} as any
+        );
+        component.participants = [failedHost as any, successfulGuest as any];
+        component.proposal = {
+            id: 'proposal-id', contentHash: 'content-hash', name: 'Shared', description: 'Description',
+            descriptionsByParticipant: {}, tracks: [], trackCount: 0, mode: 'union', participantStats: [],
+            participantNames: ['Host', 'Guest']
+        };
+
+        await component.retryMainPlaylist();
+
+        expect(createPlaylist).toHaveBeenCalledTimes(1);
+        expect(createPlaylist.mock.calls[0][4]).toEqual({
+            operationId: 'compare:room-id:proposal-id:host-user',
+            accountId: 'host-user', fingerprint: 'content-hash'
+        });
+        expect(setLocalSaveResult).toHaveBeenCalledWith('host-participant', expect.objectContaining({success: true}));
+        expect(successfulGuest.result.success).toBe(true);
+    });
 });

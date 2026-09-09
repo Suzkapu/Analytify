@@ -128,7 +128,12 @@ export class PlaylistShareAutoSyncService {
           sharedPlaylistSpotifyName(details.share.playlistName, details.share.ownerDisplayName),
           description,
           details.tracks,
-          generation.signal
+          generation.signal,
+          {
+            operationId: `shared:${details.share.id}`,
+            accountId: this.auth.getUserId() || '',
+            fingerprint: `shared:${details.share.id}`
+          }
         );
         if (!this.sessionLifecycle.isCurrent(generation)) {
           await this.sharing.releaseDownloadSync(share.id, leaseToken);

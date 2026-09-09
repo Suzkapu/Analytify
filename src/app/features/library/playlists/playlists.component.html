@@ -95,7 +95,7 @@
           <button type="button" class="merge-create-button" (click)="createMergedPlaylist()"
             [disabled]="selectedPlaylistIds.size < 2 || !mergedPlaylistName.trim() || isCreatingMergedPlaylist">
             <i class="pi" [ngClass]="isCreatingMergedPlaylist ? 'pi-spin pi-spinner' : 'pi-spotify'"></i>
-            {{ isCreatingMergedPlaylist ? 'Creating…' : 'Create on Spotify' }}
+            {{ isCreatingMergedPlaylist ? 'Creating…' : (mergeResult && !mergeResult.success ? 'Resume same playlist' : 'Create on Spotify') }}
           </button>
           @if (mergeProgress) {
             <small>{{ mergeProgress }}</small>

@@ -246,6 +246,11 @@
               @if (participant.result?.playlistUrl) {
                 <a [href]="$safeNavigationMigration(participant.result?.playlistUrl) | safeSpotifyUrl:'playlist'" target="_blank" rel="noopener noreferrer">Open in Spotify</a>
               }
+              @if (participant.isMainProfile && participant.result && !participant.result.success) {
+                <button type="button" (click)="retryMainPlaylist()" [disabled]="isExecuting">
+                  <i class="pi pi-refresh"></i> Retry my playlist
+                </button>
+              }
             </article>
           }
         </div>

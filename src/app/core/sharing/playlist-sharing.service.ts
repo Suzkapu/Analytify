@@ -403,7 +403,7 @@ export class PlaylistSharingService {
   private mapDownload(row: any): PlaylistShareDownload {
     return {
       shareId: row.share_id,
-      spotifyPlaylistId: row.spotify_playlist_id,
+      spotifyPlaylistId: row.spotify_playlist_id || null,
       spotifyPlaylistUrl: row.spotify_playlist_url || '',
       appliedRevision: Number(row.applied_revision || 0),
       updatedAt: row.updated_at

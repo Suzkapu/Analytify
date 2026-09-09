@@ -35,6 +35,7 @@ export class PlaylistsComponent {
   mergeError = '';
   mergeResult: CompareSaveResult | null = null;
   private currentSpotifyProfileId = '';
+  private pendingMergeOperation: {fingerprint: string; operationId: string} | null = null;
   private playlistLoadSequence = 0;
   private readonly cloudPriorityWindowMs = 750;
 
@@ -435,11 +436,26 @@ export class PlaylistsComponent {
 
       this.mergeProgress = `Creating “${playlistName}” with ${mergedTracks.length} unique songs…`;
       const description = this.createMergedPlaylistDescription(selectedPlaylists);
+      const operationFingerprint = this.playlistOperationFingerprint(
+        playlistName,
+        mergedTracks.map(track => track.id)
+      );
+      if (this.pendingMergeOperation?.fingerprint !== operationFingerprint) {
+        this.pendingMergeOperation = {
+          fingerprint: operationFingerprint,
+          operationId: `merge:${crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`}`
+        };
+      }
       const saveResult = await this.participantSpotify.createPlaylist(
         accessToken,
         playlistName,
         description,
-        mergedTracks
+        mergedTracks,
+        {
+          operationId: this.pendingMergeOperation.operationId,
+          accountId: spotifyUserId,
+          fingerprint: operationFingerprint
+        }
       );
       if (!saveResult.success) {
         // Spotify may have created the playlist before one of the 100-track
@@ -449,6 +465,7 @@ export class PlaylistsComponent {
       }
 
       this.mergeResult = saveResult;
+      this.pendingMergeOperation = null;
       this.addMergedPlaylistToView(saveResult, playlistName, description, spotifyUserId);
       this.isMergeSelectionMode = false;
       this.selectedPlaylistIds.clear();
@@ -466,6 +483,16 @@ export class PlaylistsComponent {
 
   dismissMergeResult(): void {
     this.mergeResult = null;
+  }
+
+  private playlistOperationFingerprint(name: string, trackIds: string[]): string {
+    const value = JSON.stringify([name, trackIds]);
+    let hash = 2166136261;
+    for (let index = 0; index < value.length; index++) {
+      hash ^= value.charCodeAt(index);
+      hash = Math.imul(hash, 16777619);
+    }
+    return (hash >>> 0).toString(16);
   }
 
   viewSongs(playlistId: string) {

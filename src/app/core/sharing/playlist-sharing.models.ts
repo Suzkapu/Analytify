@@ -21,7 +21,8 @@ export interface PlaylistShare {
 
 export interface PlaylistShareDownload {
   shareId: string;
-  spotifyPlaylistId: string;
+  /** Null while the first Spotify copy is reserved but not yet completed. */
+  spotifyPlaylistId: string | null;
   spotifyPlaylistUrl: string;
   appliedRevision: number;
   updatedAt: string;

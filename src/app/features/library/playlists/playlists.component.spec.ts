@@ -273,6 +273,42 @@ describe('PlaylistsComponent', () => {
         expect(component.playlists.map(playlist => playlist.id)).toEqual(['merged', 'one', 'two']);
     });
 
+    it('resumes a failed merge with the same operation and clears selection only after success', async () => {
+        component.playlists = [
+            { id: 'one', name: 'One', tracks: { total: 1 } },
+            { id: 'two', name: 'Two', tracks: { total: 1 } }
+        ];
+        comparePlaylistSource.loadMainTracks.mockImplementation(async (playlist: any) => ({
+            source: 'local' as const,
+            tracks: [compareTrack(playlist.id, 1)]
+        }));
+        participantSpotify.createPlaylist
+            .mockResolvedValueOnce({
+                success: false, playlistName: 'Recovery Merge', playlistId: 'partial',
+                playlistUrl: 'https://open.spotify.com/playlist/partial', addedTracks: 100,
+                error: 'Second batch failed'
+            })
+            .mockResolvedValueOnce({
+                success: true, playlistName: 'Recovery Merge', playlistId: 'partial',
+                playlistUrl: 'https://open.spotify.com/playlist/partial', addedTracks: 2
+            });
+        component.toggleMergeSelectionMode();
+        component.togglePlaylistSelection(component.playlists[0]);
+        component.togglePlaylistSelection(component.playlists[1]);
+        component.onMergedPlaylistNameChange('Recovery Merge');
+
+        await component.createMergedPlaylist();
+        const firstOperation = vi.mocked(participantSpotify.createPlaylist).mock.calls[0][4];
+        expect(component.selectedPlaylistIds.size).toBe(2);
+        expect(component.mergeResult?.playlistId).toBe('partial');
+
+        await component.createMergedPlaylist();
+        const retryOperation = vi.mocked(participantSpotify.createPlaylist).mock.calls[1][4];
+        expect(retryOperation).toEqual(firstOperation);
+        expect(component.selectedPlaylistIds.size).toBe(0);
+        expect(component.mergeResult?.success).toBe(true);
+    });
+
     function compareTrack(id: string, playlistIndex: number) {
         return {
             id,

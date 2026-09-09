@@ -880,4 +880,41 @@ describe('UserStatsComponent trends', () => {
         expect(searchPastTopItems).not.toHaveBeenCalled();
         expect(localComponent.pastStatsSearchError).toContain('Cloud Backup');
     });
+
+    it('retries a partial Top Stats playlist with the same operation and starts fresh after success', async () => {
+        const createPlaylist = vi.fn().mockName('ParticipantSpotifyService.createPlaylist')
+            .mockResolvedValueOnce({
+                success: false, playlistName: 'Top Tracks - Last 4 Weeks',
+                playlistId: 'partial', playlistUrl: 'partial-url', addedTracks: 50,
+                error: 'Spotify interrupted the write'
+            })
+            .mockResolvedValue({
+                success: true, playlistName: 'Top Tracks - Last 4 Weeks',
+                playlistId: 'partial', playlistUrl: 'partial-url', addedTracks: 1
+            });
+        const auth = {
+            getAccessToken: () => 'token', isTokenExpired: () => false,
+            getUserId: () => 'spotify-user', refreshToken: vi.fn()
+        };
+        const playlistComponent = new UserStatsComponent(
+            null as any, auth as any, null as any, null as any,
+            undefined, undefined, undefined, {createPlaylist} as any
+        );
+        playlistComponent.topTracks = [{
+            id: 'track', uri: 'spotify:track:track', name: 'Track',
+            artists: [{id: 'artist', name: 'Artist'}], album: {name: 'Album', images: []}
+        }];
+
+        await playlistComponent.createTopPlaylist();
+        const failedOperation = createPlaylist.mock.calls[0][4];
+        expect(playlistComponent.playlistCreationResult?.playlistId).toBe('partial');
+        expect(playlistComponent.playlistCreationError).toContain('interrupted');
+
+        await playlistComponent.createTopPlaylist();
+        expect(createPlaylist.mock.calls[1][4]).toEqual(failedOperation);
+        expect(playlistComponent.playlistCreationSuccessMessage).toContain('ready on Spotify');
+
+        await playlistComponent.createTopPlaylist();
+        expect(createPlaylist.mock.calls[2][4].operationId).not.toBe(failedOperation.operationId);
+    });
 });

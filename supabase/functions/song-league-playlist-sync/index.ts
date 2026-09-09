@@ -7,6 +7,11 @@ import {
 } from '../_shared/spotify-credential-crypto.ts';
 import {boundedFetch} from '../_shared/bounded-fetch.ts';
 import {
+  matchingOwnedPlaylist,
+  playlistDescription,
+  playlistTrackBatches
+} from './recovery.ts';
+import {
   bearerToken,
   boundedJsonBody,
   enforceRateLimit,
@@ -96,6 +101,22 @@ async function createPrivatePlaylist(
   return {id: created.id, url: created.external_urls?.spotify || ''};
 }
 
+async function findOwnedPlaylistByMarker(
+  accessToken: string,
+  operationMarker: string,
+  spotifyUserId: string
+): Promise<{id: string; url: string} | null> {
+  // Spotify returns a user's most recently added playlists first. Twenty pages
+  // covers 1,000 destinations while keeping a corrupt response bounded.
+  for (let offset = 0; offset < 1_000; offset += 50) {
+    const page = await spotifyRequest(`/me/playlists?limit=50&offset=${offset}`, accessToken);
+    const recovered = matchingOwnedPlaylist(page, operationMarker, spotifyUserId);
+    if (recovered) return recovered;
+    if (!page?.next || !Array.isArray(page?.items) || page.items.length < 50) return null;
+  }
+  return null;
+}
+
 async function replacePrivatePlaylist(
   accessToken: string,
   playlistId: string,
@@ -107,10 +128,17 @@ async function replacePrivatePlaylist(
     method: 'PUT',
     body: JSON.stringify({name, description, public: false})
   });
+  const batches = playlistTrackBatches(trackUris);
   await spotifyRequest(`/playlists/${encodeURIComponent(playlistId)}/items`, accessToken, {
     method: 'PUT',
-    body: JSON.stringify({uris: trackUris.slice(0, 100)})
+    body: JSON.stringify({uris: batches[0]})
   });
+  for (const batch of batches.slice(1)) {
+    await spotifyRequest(`/playlists/${encodeURIComponent(playlistId)}/items`, accessToken, {
+      method: 'POST',
+      body: JSON.stringify({uris: batch})
+    });
+  }
 }
 
 Deno.serve(async (request: Request) => {
@@ -223,7 +251,7 @@ Deno.serve(async (request: Request) => {
           {data: credentialRows, error: credentialError},
           {data: mappings, error: mappingError}
         ] = await Promise.all([
-          admin.from('users').select('id, spotify_refresh_token').in('id', userIds),
+          admin.from('users').select('id, spotify_id, spotify_refresh_token').in('id', userIds),
           admin.from('spotify_credentials').select('*').in('user_id', userIds),
           admin.from('song_league_playlists').select('*').eq('league_id', leagueId)
         ]);
@@ -250,7 +278,7 @@ Deno.serve(async (request: Request) => {
         }
 
         const name = playlistName(payload.league_name);
-        const description = `This Friday's Song League picks for ${payload.league_name}. Private and refreshed automatically by Analytify.`.slice(0, 300);
+        const baseDescription = `This Friday's Song League picks for ${payload.league_name}. Private and refreshed automatically by Analytify.`;
         const trackUris = Array.isArray(payload.track_uris) ? payload.track_uris : [];
         finalRevision = Number(payload.playlist_revision || 0);
         finalResults = [];
@@ -262,6 +290,7 @@ Deno.serve(async (request: Request) => {
           const expectedAppliedRevision = Number(mapping?.last_synced_revision || 0);
           let playlistId = mapping?.spotify_playlist_id || '';
           let playlistUrl = mapping?.spotify_playlist_url || '';
+          let reservationCreated = false;
 
           // Skip already-applied playlist revisions without calling Spotify APIs
           if (
@@ -275,6 +304,35 @@ Deno.serve(async (request: Request) => {
           }
 
           try {
+            // Refresh the league-wide lease before each member and atomically
+            // reserve the nullable mapping before any Spotify side effect.
+            const {data: renewed, error: renewError} = await admin.rpc(
+              'claim_song_league_playlist_sync',
+              {p_league_id: leagueId, p_lease_token: leaseToken}
+            );
+            if (renewError) throw renewError;
+            if (!renewed) throw new Error('The playlist synchronization lease was lost.');
+
+            const {data: reservationRows, error: reservationError} = await admin.rpc(
+              'reserve_song_league_playlist_sync',
+              {
+                p_league_id: leagueId,
+                p_user_id: member.user_id,
+                p_expected_source_revision: finalRevision,
+                p_expected_applied_revision: expectedAppliedRevision,
+                p_expected_round_id: payload.round_id || null,
+                p_lease_token: leaseToken
+              }
+            );
+            if (reservationError) throw reservationError;
+            const reservation = Array.isArray(reservationRows) ? reservationRows[0] : reservationRows;
+            if (!reservation?.operation_marker) {
+              throw new Error('Song League picks changed before the Spotify playlist update started.');
+            }
+            reservationCreated = true;
+            playlistId = reservation.spotify_playlist_id || '';
+            playlistUrl = reservation.spotify_playlist_url || '';
+
             const storedCredential: any = credentialById.get(member.user_id);
             let connectionMode: 'hosted' | 'personal_pkce' = 'hosted';
             let personalClientId: string | null = null;
@@ -313,6 +371,24 @@ Deno.serve(async (request: Request) => {
               if (plaintextClearError) throw plaintextClearError;
             }
 
+            const description = playlistDescription(baseDescription, reservation.operation_marker);
+            if (!playlistId) {
+              let spotifyUserId = typeof profile?.spotify_id === 'string' ? profile.spotify_id : '';
+              if (!spotifyUserId || spotifyUserId.startsWith('pending:')) {
+                const currentSpotifyProfile = await spotifyRequest('/me', token.accessToken);
+                spotifyUserId = typeof currentSpotifyProfile?.id === 'string' ? currentSpotifyProfile.id : '';
+              }
+              if (!spotifyUserId) throw new Error('Spotify did not return the connected account identity.');
+              const recovered = await findOwnedPlaylistByMarker(
+                token.accessToken,
+                reservation.operation_marker,
+                spotifyUserId
+              );
+              if (recovered) {
+                playlistId = recovered.id;
+                playlistUrl = recovered.url;
+              }
+            }
             if (!playlistId) {
               const created = await createPrivatePlaylist(token.accessToken, name, description);
               playlistId = created.id;
@@ -351,6 +427,19 @@ Deno.serve(async (request: Request) => {
             const message = error instanceof Error && error.message.startsWith('Reconnect Spotify')
               ? error.message
               : 'This playlist could not be updated. Please try again later.';
+            if (reservationCreated) {
+              try {
+                await admin.rpc('record_song_league_playlist_sync_failure', {
+                  p_league_id: leagueId,
+                  p_user_id: member.user_id,
+                  p_expected_applied_revision: expectedAppliedRevision,
+                  p_lease_token: leaseToken,
+                  p_last_error: message
+                });
+              } catch (failureError) {
+                logInternalError(context, `playlist sync failure state ${member.user_id}`, failureError);
+              }
+            }
             finalResults.push({userId: member.user_id, success: false, error: message, skipped: false});
           }
         }

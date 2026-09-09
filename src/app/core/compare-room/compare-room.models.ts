@@ -76,7 +76,32 @@ export interface CompareSaveResult {
   playlistUrl?: string;
   playlistId?: string;
   addedTracks: number;
+  operationId?: string;
+  operationFingerprint?: string;
+  recovery?: ComparePlaylistRecovery;
   error?: string;
+}
+
+export interface ComparePlaylistSaveOptions {
+  /** Stable ID supplied by a workflow when it already has one (for example, a proposal ID). */
+  operationId?: string;
+  /** Spotify account ID, when the caller already resolved it. */
+  accountId?: string;
+  /** Caller-owned content/version fingerprint, when one exists. */
+  fingerprint?: string;
+  signal?: AbortSignal;
+}
+
+export interface ComparePlaylistOperation {
+  operationId: string;
+  accountId: string;
+  fingerprint: string;
+}
+
+export interface ComparePlaylistRecovery {
+  source: 'created' | 'local-mapping' | 'spotify-discovery' | 'stale-mapping-recreated';
+  recovered: boolean;
+  stalePlaylistId?: string;
 }
 
 export interface CompareMergeProposal {
