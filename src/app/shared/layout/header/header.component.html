@@ -147,13 +147,14 @@
 @if (showSyncTaskStatusModal) {
   <div class="confirm-modal-overlay" (click)="closeSyncTaskStatus()">
     <section class="confirm-modal-card notification-settings-modal" role="dialog" aria-modal="true"
-      aria-labelledby="sync-task-status-title" appAccessibleDialog (modalEscape)="closeSyncTaskStatus()"
+      aria-labelledby="sync-task-status-title" aria-describedby="sync-task-status-description"
+      appAccessibleDialog (modalEscape)="closeSyncTaskStatus()"
       (click)="$event.stopPropagation()">
       <button type="button" class="notification-modal-close" appModalInitialFocus
         (click)="closeSyncTaskStatus()" aria-label="Close automatic data use">×</button>
       <div class="confirm-modal-icon"><i class="pi pi-clock"></i></div>
       <h3 id="sync-task-status-title" class="confirm-modal-title">Automatic data use</h3>
-      <p class="confirm-modal-text">Analytify runs only the tasks required by features you use, plus any optional schedules enabled by an administrator.</p>
+      <p id="sync-task-status-description" class="confirm-modal-text">Analytify runs only the tasks required by features you use, plus any optional schedules enabled by an administrator.</p>
       @if (isLoadingSyncTaskStatus) {
         <div class="notification-settings-loading" role="status"><i class="pi pi-spin pi-spinner"></i> Loading…</div>
       } @else {
