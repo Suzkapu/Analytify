@@ -61,24 +61,44 @@ describe('SongLeagueService', () => {
 
         expect(vi.mocked(rpc).mock.lastCall![0]).toBe('create_song_league');
         expect(parameters.p_invite_token.length).toBe(64);
+        expect(parameters.p_idempotency_key.length).toBe(64);
         expect(parameters.p_timezone).toBe('Europe/Vienna');
+        expect(parameters.p_max_members).toBe(5);
         expect(created.leagueId).toBe('league-id');
         expect(created.inviteUrl).toContain(`/song-league/join/${parameters.p_invite_token}`);
     });
 
-    it('sets custom member capacity on creation when specified', async () => {
-        rpc.mockResolvedValue({ data: 2, error: null });
+    it('creates custom capacity, owner membership, and invitation through one atomic RPC', async () => {
+        rpc.mockResolvedValue({ data: 'league-id', error: null });
         const created = await service.createLeague('Two Player Duel', 'Europe/Vienna', 2);
 
-        expect(created.leagueId).toBe('2');
-        expect(vi.mocked(rpc).mock.calls.map(args => args[0])).toEqual([
-            'create_song_league',
-            'set_song_league_member_limit'
-        ]);
-        expect(vi.mocked(rpc).mock.lastCall![1]).toEqual({
-            p_league_id: '2',
-            p_max_members: 2
-        });
+        expect(created.leagueId).toBe('league-id');
+        expect(rpc).toHaveBeenCalledTimes(1);
+        expect(vi.mocked(rpc).mock.lastCall![1].p_max_members).toBe(2);
+    });
+
+    it('reuses the same creation and invite keys after an uncertain request failure', async () => {
+        rpc.mockResolvedValueOnce({data: null, error: new Error('response lost')})
+            .mockResolvedValueOnce({data: 'existing-league', error: null});
+
+        await expect(service.createLeague('Retry League', 'Europe/Vienna', 5)).rejects.toThrow('response lost');
+        const first = vi.mocked(rpc).mock.calls[0][1];
+        const created = await service.createLeague('Retry League', 'Europe/Vienna', 5);
+        const retry = vi.mocked(rpc).mock.calls[1][1];
+
+        expect(retry.p_idempotency_key).toBe(first.p_idempotency_key);
+        expect(retry.p_invite_token).toBe(first.p_invite_token);
+        expect(created.leagueId).toBe('existing-league');
+    });
+
+    it('starts a new creation attempt after a confirmed success', async () => {
+        await service.createLeague('Repeatable Name', 'Europe/Vienna', 5);
+        const first = vi.mocked(rpc).mock.calls[0][1];
+        await service.createLeague('Repeatable Name', 'Europe/Vienna', 5);
+        const second = vi.mocked(rpc).mock.calls[1][1];
+
+        expect(second.p_idempotency_key).not.toBe(first.p_idempotency_key);
+        expect(second.p_invite_token).not.toBe(first.p_invite_token);
     });
 
     it('creates independent invitation tokens when more players are invited', async () => {

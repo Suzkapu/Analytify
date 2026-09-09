@@ -22,6 +22,7 @@ export class SongLeagueService {
     refreshed: boolean;
     snapshotDate: string;
   }>>();
+  private pendingLeagueCreation: {fingerprint: string; inviteToken: string; idempotencyKey: string} | null = null;
 
   constructor(
     private supabase: SupabaseService,
@@ -29,19 +30,27 @@ export class SongLeagueService {
   ) {}
 
   async createLeague(name: string, timezone: string, maxMembers = 5): Promise<CreatedSongLeague> {
-    const inviteToken = this.createToken();
+    const normalizedName = name.trim();
+    const fingerprint = JSON.stringify([normalizedName, timezone, maxMembers]);
+    const pending = this.pendingLeagueCreation?.fingerprint === fingerprint
+      ? this.pendingLeagueCreation
+      : {fingerprint, inviteToken: this.createToken(), idempotencyKey: this.createToken()};
+    this.pendingLeagueCreation = pending;
     const {data, error} = await this.supabase.client.rpc('create_song_league', {
-      p_name: name,
+      p_name: normalizedName,
       p_timezone: timezone,
-      p_invite_token: inviteToken
+      p_max_members: maxMembers,
+      p_invite_token: pending.inviteToken,
+      p_invite_expires_in_hours: 168,
+      p_invite_usage_policy: 'multi_use',
+      p_invite_max_uses: null,
+      p_idempotency_key: pending.idempotencyKey
     });
     if (error) throw error;
     const leagueId = String(data || '');
     if (!leagueId) throw new Error('Supabase did not return a Song League ID.');
-    if (maxMembers && maxMembers >= 2 && maxMembers <= 50 && maxMembers !== 5) {
-      await this.setMemberLimit(leagueId, maxMembers);
-    }
-    return {leagueId, inviteToken, inviteUrl: this.inviteUrl(inviteToken)};
+    this.pendingLeagueCreation = null;
+    return {leagueId, inviteToken: pending.inviteToken, inviteUrl: this.inviteUrl(pending.inviteToken)};
   }
 
   async createInvite(leagueId: string, expiresInHours = 168): Promise<{token: string; url: string}> {
