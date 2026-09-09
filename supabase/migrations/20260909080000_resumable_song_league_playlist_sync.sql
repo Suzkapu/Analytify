@@ -12,12 +12,12 @@ set operation_marker = encode(extensions.digest(
 where operation_marker is null;
 
 alter table public.song_league_playlists
-  alter column operation_marker set not null,
   add constraint song_league_playlists_operation_marker_format
-    check (operation_marker ~ '^[0-9a-f]{64}$');
+    check (operation_marker is null or operation_marker ~ '^[0-9a-f]{64}$');
 
 create unique index song_league_playlists_operation_marker_key
-  on public.song_league_playlists(operation_marker);
+  on public.song_league_playlists(operation_marker)
+  where operation_marker is not null;
 
 create function public.reserve_song_league_playlist_sync(
   p_league_id uuid,
