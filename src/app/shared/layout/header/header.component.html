@@ -121,6 +121,11 @@
             <button (click)="openNotificationSettings()" class="dropdown-item" role="menuitem">
               <i class="pi pi-bell"></i><span>Notifications</span>
             </button>
+            @if (hasCollaborationIdentity) {
+              <button (click)="openSyncTaskStatus()" class="dropdown-item" role="menuitem">
+                <i class="pi pi-clock"></i><span>Automatic data use</span>
+              </button>
+            }
             <button (click)="logout()" class="dropdown-item" role="menuitem">
               <i class="pi pi-sign-out"></i><span>Log out</span>
             </button>
@@ -138,6 +143,42 @@
     </div>
   </div>
 </header>
+
+@if (showSyncTaskStatusModal) {
+  <div class="confirm-modal-overlay" (click)="closeSyncTaskStatus()">
+    <section class="confirm-modal-card notification-settings-modal" role="dialog" aria-modal="true"
+      aria-labelledby="sync-task-status-title" appAccessibleDialog (modalEscape)="closeSyncTaskStatus()"
+      (click)="$event.stopPropagation()">
+      <button type="button" class="notification-modal-close" appModalInitialFocus
+        (click)="closeSyncTaskStatus()" aria-label="Close automatic data use">×</button>
+      <div class="confirm-modal-icon"><i class="pi pi-clock"></i></div>
+      <h3 id="sync-task-status-title" class="confirm-modal-title">Automatic data use</h3>
+      <p class="confirm-modal-text">Analytify runs only the tasks required by features you use, plus any optional schedules enabled by an administrator.</p>
+      @if (isLoadingSyncTaskStatus) {
+        <div class="notification-settings-loading" role="status"><i class="pi pi-spin pi-spinner"></i> Loading…</div>
+      } @else {
+        <div class="notification-category-list">
+          @for (task of syncTaskStatus; track task.task_key) {
+            <div class="notification-category-row">
+              <span class="notification-category-icon"><i class="pi" [class.pi-check]="task.effective_active"
+                [class.pi-minus]="!task.effective_active"></i></span>
+              <span class="notification-category-copy">
+                <strong>{{ syncTaskLabel(task.task_key) }}</strong>
+                <small>{{ task.effective_active ? 'Active' : 'Not scheduled' }}</small>
+                @for (reason of task.reasons; track reason) { <em>{{ reason }}</em> }
+                @if (task.optional_enabled && !task.feature_required) { <em>Optional administrator schedule</em> }
+              </span>
+            </div>
+          }
+        </div>
+      }
+      @if (syncTaskStatusError) { <p class="notification-settings-error" role="alert">{{ syncTaskStatusError }}</p> }
+      <div class="confirm-modal-actions">
+        <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel" (click)="closeSyncTaskStatus()">Done</button>
+      </div>
+    </section>
+  </div>
+}
 
 @if (showNotificationSettingsModal) {
   <div class="confirm-modal-overlay" (click)="closeNotificationSettings()">

@@ -65,6 +65,22 @@ test('rejects an automatic job disabled after it was queued', () => {
   }), false);
 });
 
+test('runs only the short-term task required by active league membership', () => {
+  const required = {enabled: false, short_term_enabled: false, short_term_required: true};
+  assert.equal(isJobAllowed({task_key: 'stats_short_term', trigger_type: 'scheduled'}, required), true);
+  assert.equal(isJobAllowed({task_key: 'stats_medium_term', trigger_type: 'scheduled'}, required), false);
+  assert.equal(isJobAllowed({task_key: 'stats_long_term', trigger_type: 'scheduled'}, required), false);
+});
+
+test('keeps feature-required playlist work distinct from admin optional switches', () => {
+  assert.equal(isJobAllowed({task_key: 'shared_playlists', trigger_type: 'scheduled'}, {
+    enabled: false, shared_playlists_enabled: false, shared_playlists_required: true
+  }), true);
+  assert.equal(isJobAllowed({task_key: 'song_league_playlists', trigger_type: 'scheduled'}, {
+    enabled: false, song_league_playlists_enabled: false, song_league_playlists_required: false
+  }, new Date('2026-09-04T12:00:00.000Z')), false);
+});
+
 test('retains explicitly queued manual work after automatic scheduling is disabled', () => {
   assert.equal(isJobAllowed({task_key: 'stats_short_term', trigger_type: 'manual'}, {
     enabled: false, short_term_enabled: false

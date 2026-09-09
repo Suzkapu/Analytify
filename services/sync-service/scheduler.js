@@ -4,9 +4,9 @@ const {randomUUID} = require('node:crypto');
 function isJobAllowed(job, settings, now = new Date()) {
   if (job.trigger_type !== 'scheduled') return true;
   const definition = TASK_DEFINITIONS[job.task_key];
+  const featureRequired = !!definition?.requiredField && settings[definition.requiredField] === true;
   return !!definition
-    && settings.enabled === true
-    && settings[definition.enabledField] === true
+    && (featureRequired || (settings.enabled === true && settings[definition.enabledField] === true))
     && isScheduledTaskAllowed(job.task_key, settings, now);
 }
 
@@ -42,8 +42,8 @@ function createScheduler({supabase, config, tasks, credentials, pushDispatcher})
   }
 
   async function enqueueDueJobs(now = new Date()) {
-    const {data: settingsRows, error: settingsError} = await supabase.from('sync_user_settings')
-      .select('*').eq('enabled', true);
+    const {data: settingsRows, error: settingsError} = await supabase.from('sync_user_settings').select('*')
+      .or('enabled.eq.true,short_term_required.eq.true,song_league_playlists_required.eq.true,shared_playlists_required.eq.true');
     if (settingsError) throw settingsError;
     if (!settingsRows?.length) return 0;
     const userIds = settingsRows.map(settings => settings.user_id);
@@ -67,7 +67,8 @@ function createScheduler({supabase, config, tasks, credentials, pushDispatcher})
       const user = userById.get(settings.user_id);
       if (!user?.backup_active || (!user.spotify_refresh_token && !credentialUserIds.has(user.id))) continue;
       for (const [taskKey, definition] of Object.entries(TASK_DEFINITIONS)) {
-        if (!settings[definition.enabledField]) continue;
+        const featureRequired = !!definition.requiredField && settings[definition.requiredField] === true;
+        if (!featureRequired && !(settings.enabled && settings[definition.enabledField])) continue;
         if (!isScheduledTaskAllowed(taskKey, settings, now)) continue;
         const state = stateByKey.get(`${settings.user_id}:${taskKey}`);
         if (state?.next_run_at && new Date(state.next_run_at).getTime() > now.getTime()) continue;

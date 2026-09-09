@@ -7,17 +7,19 @@ const {isFridayInTimezone} = require('./date-utils');
 
 const TASK_DEFINITIONS = {
   listening_history: {enabledField: 'history_enabled', intervalField: 'history_interval_minutes', unitField: 'history_interval_unit', defaultUnit: 'minutes'},
-  stats_short_term: {enabledField: 'short_term_enabled', intervalField: 'short_term_interval_hours', unitField: 'short_term_interval_unit', defaultUnit: 'hours'},
+  stats_short_term: {enabledField: 'short_term_enabled', requiredField: 'short_term_required', intervalField: 'short_term_interval_hours', unitField: 'short_term_interval_unit', defaultUnit: 'hours'},
   stats_medium_term: {enabledField: 'medium_term_enabled', intervalField: 'medium_term_interval_hours', unitField: 'medium_term_interval_unit', defaultUnit: 'hours'},
   stats_long_term: {enabledField: 'long_term_enabled', intervalField: 'long_term_interval_hours', unitField: 'long_term_interval_unit', defaultUnit: 'hours'},
   song_league_playlists: {
     enabledField: 'song_league_playlists_enabled',
+    requiredField: 'song_league_playlists_required',
     fridayOnlyField: 'song_league_playlist_fridays_only',
     intervalField: 'song_league_playlist_interval_minutes',
     unitField: 'song_league_playlist_interval_unit', defaultUnit: 'minutes'
   },
   shared_playlists: {
     enabledField: 'shared_playlists_enabled',
+    requiredField: 'shared_playlists_required',
     intervalField: 'shared_playlist_interval_minutes',
     unitField: 'shared_playlist_interval_unit', defaultUnit: 'minutes'
   }

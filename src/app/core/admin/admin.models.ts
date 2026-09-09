@@ -45,6 +45,7 @@ export interface AdminUserSyncSettings {
   lastError: string | null;
   nextEffectiveRunAt?: string | null;
   manualJobRetained?: boolean;
+  requiredTasks?: Partial<Record<SyncTaskKey, string>>;
 }
 
 export interface AdminSyncRun {

@@ -135,13 +135,17 @@ export class AdminComponent implements OnInit {
 
   enabledTasksCount(user: AdminUserSyncSettings): number {
     return [
-      user.historyEnabled,
-      user.shortTermEnabled,
-      user.mediumTermEnabled,
-      user.longTermEnabled,
-      user.songLeaguePlaylistsEnabled,
-      user.sharedPlaylistsEnabled
+      user.enabled && user.historyEnabled,
+      (user.enabled && user.shortTermEnabled) || !!user.requiredTasks?.stats_short_term,
+      user.enabled && user.mediumTermEnabled,
+      user.enabled && user.longTermEnabled,
+      (user.enabled && user.songLeaguePlaylistsEnabled) || !!user.requiredTasks?.song_league_playlists,
+      (user.enabled && user.sharedPlaylistsEnabled) || !!user.requiredTasks?.shared_playlists
     ].filter(Boolean).length;
+  }
+
+  requiredReason(user: AdminUserSyncSettings, task: SyncTaskKey): string | null {
+    return user.requiredTasks?.[task] || null;
   }
 
   async createDemoLeague(): Promise<void> {

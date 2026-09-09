@@ -55,7 +55,8 @@ describe('HeaderComponent entry points', () => {
         };
         supabaseService = {
             deleteUserProfileData: vi.fn().mockName('deleteUserProfileData').mockResolvedValue(undefined),
-            loadUserProfile: vi.fn().mockName('loadUserProfile').mockResolvedValue(null)
+            loadUserProfile: vi.fn().mockName('loadUserProfile').mockResolvedValue(null),
+            client: { rpc: vi.fn().mockName('rpc').mockResolvedValue({data: [], error: null}) }
         };
         TestBed.configureTestingModule({
             declarations: [HeaderComponent],
@@ -101,6 +102,22 @@ describe('HeaderComponent entry points', () => {
         const menu = fixture.nativeElement.querySelector('.user-profile-container .profile-settings-dropdown') as HTMLElement;
         expect(menu.textContent).not.toContain('personal Spotify app');
         expect(menu.querySelector('.pi-key')).toBeNull();
+    });
+
+    it('shows why automatic data tasks are active for the signed-in user', async () => {
+        supabaseService.client.rpc.mockResolvedValue({data: [{
+            task_key: 'stats_short_term', optional_enabled: false,
+            feature_required: true, effective_active: true,
+            reasons: ['Active because you are in a Song League']
+        }], error: null});
+
+        await component.openSyncTaskStatus();
+        fixture.detectChanges();
+
+        expect(supabaseService.client.rpc).toHaveBeenCalledWith('get_my_sync_task_status');
+        const modal = fixture.nativeElement.querySelector('[aria-labelledby="sync-task-status-title"]');
+        expect(modal.textContent).toContain('Short-term stats');
+        expect(modal.textContent).toContain('Active because you are in a Song League');
     });
 
     it('keeps a transiently failing avatar cached for a later retry', async () => {

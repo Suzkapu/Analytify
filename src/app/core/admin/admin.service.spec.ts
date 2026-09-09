@@ -124,6 +124,19 @@ describe('AdminService', () => {
         expect(user.manualJobRetained).toBe(true);
     });
 
+    it('maps feature-required task reasons separately from optional admin schedules', async () => {
+        rpc.mockImplementation((name: string) => Promise.resolve({data:
+            name === 'admin_list_users' ? [{user_id: 'user-1', spotify_id: 'spotify-1', display_name: 'Listener'}] :
+            name === 'admin_list_required_sync_reasons' ? [{
+                user_id: 'user-1', required_tasks: {stats_short_term: 'Required by active Song League membership'}
+            }] : [], error: null}));
+
+        const [user] = await service.listUsers();
+
+        expect(user.requiredTasks?.stats_short_term).toBe('Required by active Song League membership');
+        expect(user.shortTermEnabled).toBe(false);
+    });
+
     it('saves all selected interval units with the schedule values', async () => {
         const user = {
             userId: 'user-1', spotifyId: 'spotify-1', displayName: 'Listener', profilePicUrl: '',

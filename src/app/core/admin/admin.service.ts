@@ -52,13 +52,20 @@ export class AdminService {
   }
 
   async listUsers(): Promise<AdminUserSyncSettings[]> {
-    const [{data, error}, {data: statusData, error: statusError}] = await Promise.all([
+    const [
+      {data, error},
+      {data: statusData, error: statusError},
+      {data: requiredData, error: requiredError}
+    ] = await Promise.all([
       this.supabase.client.rpc('admin_list_users'),
-      this.supabase.client.rpc('admin_list_schedule_status')
+      this.supabase.client.rpc('admin_list_schedule_status'),
+      this.supabase.client.rpc('admin_list_required_sync_reasons')
     ]);
     if (error) throw error;
     if (statusError) throw statusError;
+    if (requiredError) throw requiredError;
     const statusByUser = new Map((statusData || []).map((row: any) => [row.user_id, row]));
+    const requiredByUser = new Map((requiredData || []).map((row: any) => [row.user_id, row.required_tasks || {}]));
     return (data || []).map((row: any) => ({
       userId: row.user_id,
       spotifyId: row.spotify_id,
@@ -90,7 +97,8 @@ export class AdminService {
       lastSuccessAt: row.last_success_at || null,
       lastError: row.last_error || null,
       nextEffectiveRunAt: (statusByUser.get(row.user_id) as any)?.next_effective_run_at || null,
-      manualJobRetained: !!(statusByUser.get(row.user_id) as any)?.manual_job_retained
+      manualJobRetained: !!(statusByUser.get(row.user_id) as any)?.manual_job_retained,
+      requiredTasks: (requiredByUser.get(row.user_id) as Partial<Record<SyncTaskKey, string>>) || {}
     }));
   }
 
@@ -125,11 +133,11 @@ export class AdminService {
   async enqueueUser(settings: AdminUserSyncSettings): Promise<number> {
     const tasks: SyncTaskKey[] = [];
     if (settings.historyEnabled) tasks.push('listening_history');
-    if (settings.shortTermEnabled) tasks.push('stats_short_term');
+    if (settings.shortTermEnabled || settings.requiredTasks?.stats_short_term) tasks.push('stats_short_term');
     if (settings.mediumTermEnabled) tasks.push('stats_medium_term');
     if (settings.longTermEnabled) tasks.push('stats_long_term');
-    if (settings.songLeaguePlaylistsEnabled) tasks.push('song_league_playlists');
-    if (settings.sharedPlaylistsEnabled) tasks.push('shared_playlists');
+    if (settings.songLeaguePlaylistsEnabled || settings.requiredTasks?.song_league_playlists) tasks.push('song_league_playlists');
+    if (settings.sharedPlaylistsEnabled || settings.requiredTasks?.shared_playlists) tasks.push('shared_playlists');
     const {data, error} = await this.supabase.client.rpc('admin_enqueue_sync', {
       p_user_id: settings.userId,
       p_task_keys: tasks
