@@ -75,7 +75,8 @@ select ok(not (select active from public.compare_room_members
   where room_id = 'room_presence_12345678' and user_id = '35100000-0000-4000-8000-000000000003'),
   'explicit leave immediately frees the member slot');
 select is((select payload->>'reason' from public.compare_room_messages
-  where room_id = 'room_presence_12345678' and payload->>'participantId' = 'guest_leaving_123456789'),
+  where room_id = 'room_presence_12345678' and payload->>'type' = 'participant-left'
+    and payload->>'participantId' = 'guest_leaving_123456789'),
   'left', 'explicit leave records a distinct user-facing reason');
 
 select * from finish();
