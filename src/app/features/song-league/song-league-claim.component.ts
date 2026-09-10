@@ -2,6 +2,7 @@ import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {SongLeagueService} from '@core/song-league/song-league.service';
+import {SongLeagueRejoinRequest} from '@core/song-league/song-league.models';
 import {PushNotificationService} from '@core/notifications/push-notification.service';
 
 @Component({
@@ -16,7 +17,11 @@ export class SongLeagueClaimComponent implements OnInit {
   isEnablingNotifications = false;
   errorMessage = '';
   notificationError = '';
+  rejoinRequest: SongLeagueRejoinRequest | null = null;
+  canRequestRejoin = false;
+  isRequestingRejoin = false;
   private joinedLeagueId = '';
+  private inviteToken = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -26,9 +31,34 @@ export class SongLeagueClaimComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    const token = this.route.snapshot.paramMap.get('token') || '';
+    this.inviteToken = this.route.snapshot.paramMap.get('token') || '';
+    await this.tryJoin();
+  }
+
+  async requestRejoin(): Promise<void> {
+    if (this.isRequestingRejoin) return;
+    this.isRequestingRejoin = true;
+    this.errorMessage = '';
     try {
-      const leagueId = await this.songLeague.claimLeague(token);
+      this.rejoinRequest = await this.songLeague.requestRejoin(this.inviteToken);
+      this.canRequestRejoin = false;
+    } catch (error) {
+      this.errorMessage = (error as any)?.message || 'The rejoin request could not be sent.';
+    } finally {
+      this.isRequestingRejoin = false;
+    }
+  }
+
+  async retryJoin(): Promise<void> {
+    if (this.isJoining) return;
+    this.isJoining = true;
+    this.errorMessage = '';
+    await this.tryJoin();
+  }
+
+  private async tryJoin(): Promise<void> {
+    try {
+      const leagueId = await this.songLeague.claimLeague(this.inviteToken);
       this.joinedLeagueId = leagueId;
       const settings = await this.pushNotifications.loadSettings().catch(() => null);
       if (settings?.supported && !settings.active) {
@@ -39,6 +69,10 @@ export class SongLeagueClaimComponent implements OnInit {
       await this.openLeague();
     } catch (error) {
       this.errorMessage = (error as any)?.message || 'This Song League invitation is invalid or unavailable.';
+      if (this.errorMessage.includes('owner must approve')) {
+        this.rejoinRequest = await this.songLeague.getMyRejoinRequest(this.inviteToken).catch(() => null);
+        this.canRequestRejoin = !this.rejoinRequest || ['declined', 'expired', 'joined'].includes(this.rejoinRequest.status);
+      }
       this.isJoining = false;
     }
   }

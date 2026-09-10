@@ -1,14 +1,33 @@
 <main class="song-league-page league-claim-page">
   <section class="league-claim-card">
     <div class="league-claim-icon"><i class="pi" [ngClass]="isJoining ? 'pi-spin pi-spinner' : 'pi-exclamation-circle'"></i></div>
-    <h1>{{ isJoining ? 'Joining Song League…' : 'Could not join league' }}</h1>
+    <h1>{{ isJoining ? 'Joining Song League…' : rejoinRequest ? 'Rejoin ' + rejoinRequest.leagueName : canRequestRejoin ? 'Rejoin approval needed' : 'Could not join league' }}</h1>
     @if (isJoining) {
       <p>Checking the private invitation and your Cloud Backup status.</p>
     }
     @if (!isJoining) {
-      <p>{{ errorMessage }}</p>
+      @if (rejoinRequest?.status === 'pending') {
+        <p>Your request is waiting for the owner. It expires {{ rejoinRequest?.requestExpiresAt | date:'medium' }}.</p>
+      } @else if (rejoinRequest?.status === 'approved') {
+        <p>The owner approved your request. Rejoin before {{ rejoinRequest?.approvalExpiresAt | date:'medium' }}.</p>
+      } @else if (rejoinRequest?.status === 'declined') {
+        <p>The owner declined the previous request. You can send a new one.</p>
+      } @else if (rejoinRequest?.status === 'expired') {
+        <p>The previous request or approval expired. You can request again.</p>
+      } @else {
+        <p>{{ errorMessage }}</p>
+      }
     }
-    @if (!isJoining) {
+    @if (!isJoining && canRequestRejoin) {
+      <button type="button" class="league-primary" (click)="requestRejoin()" [disabled]="isRequestingRejoin">
+        <i class="pi" [ngClass]="isRequestingRejoin ? 'pi-spin pi-spinner' : 'pi-send'"></i>
+        {{ isRequestingRejoin ? 'Sending…' : 'Request to rejoin' }}
+      </button>
+    }
+    @if (!isJoining && rejoinRequest?.status === 'approved') {
+      <button type="button" class="league-primary" (click)="retryJoin()"><i class="pi pi-sign-in"></i>Rejoin now</button>
+    }
+    @if (!isJoining && !canRequestRejoin && rejoinRequest?.status !== 'approved') {
       <a routerLink="/song-league" class="league-primary">Go to Song League</a>
     }
   </section>

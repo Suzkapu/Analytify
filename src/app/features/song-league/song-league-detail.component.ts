@@ -9,6 +9,7 @@ import {
   SongLeagueMember,
   SongLeaguePlaylist,
   SongLeagueRecommendation,
+  SongLeagueRejoinRequest,
   SongLeagueScoreBreakdown,
   SongLeagueStanding,
   SongLeagueTrack
@@ -66,6 +67,9 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   lifecycleAction: 'leave' | 'remove' | 'transfer' | 'close' | null = null;
   lifecycleTarget: SongLeagueMember | null = null;
   isApplyingLifecycle = false;
+  rejoinRequests: SongLeagueRejoinRequest[] = [];
+  isLoadingRejoinRequests = false;
+  respondingRejoinId = '';
   showDeleteLeagueModal = false;
   isDeletingLeague = false;
   selectedStanding: SongLeagueStanding | null = null;
@@ -114,6 +118,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     this.newInviteId = '';
     this.activeInvites = [];
     this.lifecycleEvents = [];
+    this.rejoinRequests = [];
     this.selectedStanding = null;
     try {
       const [currentUserId, notificationSettings] = await Promise.all([
@@ -126,6 +131,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
       if (notificationSettings) this.notificationSettings = notificationSettings;
       await Promise.all([
         this.isOwner ? this.loadActiveInvites() : Promise.resolve(),
+        this.isOwner ? this.loadRejoinRequests() : Promise.resolve(),
         this.loadLifecycleEvents()
       ]);
       if (!this.isClosed) {
@@ -370,6 +376,35 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
       this.errorMessage = this.describeError(error, 'League activity could not be loaded.');
     } finally {
       this.isLoadingLifecycle = false;
+    }
+  }
+
+  async loadRejoinRequests(): Promise<void> {
+    if (!this.leagueId || !this.isOwner || this.isClosed || this.isLoadingRejoinRequests) return;
+    this.isLoadingRejoinRequests = true;
+    try {
+      this.rejoinRequests = await this.songLeague.listRejoinRequests(this.leagueId);
+    } catch (error) {
+      this.errorMessage = this.describeError(error, 'Rejoin requests could not be loaded.');
+    } finally {
+      this.isLoadingRejoinRequests = false;
+    }
+  }
+
+  async respondToRejoin(request: SongLeagueRejoinRequest, decision: 'approved' | 'declined'): Promise<void> {
+    if (!this.isOwner || request.status !== 'pending' || this.respondingRejoinId) return;
+    this.respondingRejoinId = request.id;
+    this.errorMessage = '';
+    try {
+      await this.songLeague.respondToRejoinRequest(request.id, decision);
+      this.successMessage = decision === 'approved'
+        ? `${request.displayName} can use an invitation to rejoin for the next 24 hours.`
+        : `${request.displayName}’s rejoin request was declined.`;
+      await this.loadRejoinRequests();
+    } catch (error) {
+      this.errorMessage = this.describeError(error, 'The rejoin request could not be updated.');
+    } finally {
+      this.respondingRejoinId = '';
     }
   }
 

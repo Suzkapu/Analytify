@@ -109,6 +109,20 @@ export interface SongLeagueLifecycleEvent {
   occurredAt: string;
 }
 
+export interface SongLeagueRejoinRequest {
+  id: string;
+  leagueId: string;
+  leagueName: string;
+  userId: string;
+  displayName: string;
+  imageUrl: string;
+  status: 'pending' | 'approved' | 'declined' | 'expired' | 'joined';
+  requestedAt: string;
+  requestExpiresAt: string;
+  respondedAt: string | null;
+  approvalExpiresAt: string | null;
+}
+
 export interface SongLeagueTrack {
   id: string;
   name: string;

@@ -17,9 +17,13 @@ describe('SongLeagueClaimComponent notification prompt', () => {
 
     beforeEach(() => {
         const songLeague = {
-            claimLeague: vi.fn().mockName("SongLeagueService.claimLeague")
+            claimLeague: vi.fn().mockName("SongLeagueService.claimLeague"),
+            getMyRejoinRequest: vi.fn().mockName("SongLeagueService.getMyRejoinRequest"),
+            requestRejoin: vi.fn().mockName("SongLeagueService.requestRejoin")
         };
         songLeague.claimLeague.mockResolvedValue('league-1');
+        songLeague.getMyRejoinRequest.mockResolvedValue(null);
+        songLeague.requestRejoin.mockResolvedValue(rejoinRequest('pending'));
         notifications = {
             loadSettings: vi.fn().mockName("PushNotificationService.loadSettings"),
             setSongLeagueEnabled: vi.fn().mockName("PushNotificationService.setSongLeagueEnabled")
@@ -104,4 +108,45 @@ describe('SongLeagueClaimComponent notification prompt', () => {
         expect(router.navigate).toHaveBeenCalledTimes(1);
         expect(router.navigate).toHaveBeenCalledWith(['/song-league', 'league-1'], { replaceUrl: true });
     });
+
+    it('offers a deliberate rejoin request after the server identifies a departed member', async () => {
+        const songLeague = TestBed.inject(SongLeagueService) as any;
+        songLeague.claimLeague.mockRejectedValue(new Error('The league owner must approve this user before they can rejoin.'));
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(component.canRequestRejoin).toBe(true);
+        expect(fixture.nativeElement.textContent).toContain('Request to rejoin');
+
+        await component.requestRejoin();
+        expect(songLeague.requestRejoin).toHaveBeenCalledWith('invite-token');
+        expect(component.rejoinRequest?.status).toBe('pending');
+        expect(component.canRequestRejoin).toBe(false);
+    });
+
+    it('shows pending and approved expiry, and retries the same invite only after approval', async () => {
+        const songLeague = TestBed.inject(SongLeagueService) as any;
+        songLeague.claimLeague.mockRejectedValueOnce(new Error('The league owner must approve this user before they can rejoin.'));
+        songLeague.getMyRejoinRequest.mockResolvedValue(rejoinRequest('approved'));
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.textContent).toContain('Rejoin before');
+        songLeague.claimLeague.mockResolvedValueOnce('league-1');
+        await component.retryJoin();
+        expect(songLeague.claimLeague).toHaveBeenCalledTimes(2);
+    });
+
+    function rejoinRequest(status: 'pending' | 'approved' | 'declined' | 'expired'): any {
+        return {
+            id: 'request-1', leagueId: 'league-1', leagueName: 'Friday Finds', userId: 'member',
+            displayName: 'Member', imageUrl: '', status, requestedAt: '2026-09-10T08:00:00Z',
+            requestExpiresAt: '2026-09-17T08:00:00Z', respondedAt: status === 'pending' ? null : '2026-09-10T09:00:00Z',
+            approvalExpiresAt: status === 'approved' ? '2026-09-11T09:00:00Z' : null
+        };
+    }
 });

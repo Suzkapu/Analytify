@@ -144,7 +144,7 @@
 
 .league-notice.closed { border-color: rgba(130, 148, 136, .24); background: rgba(130, 148, 136, .07); }
 
-.league-member-manager, .league-lifecycle-history {
+.league-member-manager, .league-lifecycle-history, .league-rejoin-manager {
   margin-top: 22px;
   padding: 18px;
   border: 1px solid rgba(255, 255, 255, .09);
@@ -152,6 +152,21 @@
   background: rgba(255, 255, 255, .025);
 }
 .league-member-list { display: grid; gap: 8px; }
+.league-rejoin-list { display: grid; gap: 8px; }
+.league-rejoin-list article {
+  padding: 9px 10px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, .12);
+}
+.league-rejoin-list img, .league-rejoin-list .standing-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
+.league-rejoin-list .standing-avatar { display: grid; place-items: center; background: rgba(255,255,255,.07); }
+.league-rejoin-list strong, .league-rejoin-list small { display: block; }
+.league-rejoin-list small { margin-top: 3px; color: #839087; }
+.league-rejoin-empty { margin: 4px 0 0; color: #78857c; }
 .league-member-list article {
   min-height: 58px;
   padding: 8px 10px;
@@ -381,6 +396,8 @@
 @media (max-width: 768px) {
   .league-member-list article { grid-template-columns: 42px minmax(0, 1fr); }
   .league-member-list article > button { width: 100%; }
+  .league-rejoin-list article { grid-template-columns: 42px minmax(0, 1fr); }
+  .league-rejoin-list article > button { width: 100%; }
   .league-invite-manager > header { align-items: stretch; flex-direction: column; }
   .league-invite-list article { grid-template-columns: 24px minmax(0, 1fr); }
   .league-invite-list article > button { grid-column: 1 / -1; justify-content: center; }

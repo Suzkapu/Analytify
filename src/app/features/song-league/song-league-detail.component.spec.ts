@@ -48,7 +48,9 @@ describe('SongLeagueDetailComponent notifications', () => {
             leaveLeague: vi.fn().mockName("SongLeagueService.leaveLeague"),
             closeLeague: vi.fn().mockName("SongLeagueService.closeLeague"),
             removeMember: vi.fn().mockName("SongLeagueService.removeMember"),
-            transferOwnership: vi.fn().mockName("SongLeagueService.transferOwnership")
+            transferOwnership: vi.fn().mockName("SongLeagueService.transferOwnership"),
+            listRejoinRequests: vi.fn().mockName("SongLeagueService.listRejoinRequests"),
+            respondToRejoinRequest: vi.fn().mockName("SongLeagueService.respondToRejoinRequest")
         };
         songLeague.currentUserId.mockResolvedValue('member');
         songLeague.loadDashboard.mockResolvedValue({
@@ -77,6 +79,8 @@ describe('SongLeagueDetailComponent notifications', () => {
         songLeague.closeLeague.mockResolvedValue(undefined);
         songLeague.removeMember.mockResolvedValue(undefined);
         songLeague.transferOwnership.mockResolvedValue(undefined);
+        songLeague.listRejoinRequests.mockResolvedValue([]);
+        songLeague.respondToRejoinRequest.mockResolvedValue(undefined);
 
         TestBed.configureTestingModule({
             imports: [SharedModule],
@@ -247,6 +251,32 @@ describe('SongLeagueDetailComponent notifications', () => {
         component.openLifecycleModal('close');
         await component.confirmLifecycleAction();
         expect(songLeague.closeLeague).toHaveBeenCalledWith('league');
+    });
+
+    it('shows owners pending rejoin requests with approve and decline actions', async () => {
+        const songLeague = TestBed.inject(SongLeagueService) as any;
+        songLeague.currentUserId.mockResolvedValue('owner');
+        songLeague.loadDashboard.mockResolvedValue({
+            ...dashboard('league'),
+            league: {...dashboard('league').league, isDemo: false},
+            members: [{leagueId: 'league', userId: 'owner', role: 'owner', displayName: 'Owner', imageUrl: '', joinedAt: '2026-09-01T00:00:00Z'}]
+        });
+        const request = {
+            id: 'request', leagueId: 'league', leagueName: 'Friday Finds', userId: 'departed',
+            displayName: 'Departed member', imageUrl: '', status: 'pending' as const, requestedAt: '2026-09-10T08:00:00Z',
+            requestExpiresAt: '2026-09-17T08:00:00Z', respondedAt: null, approvalExpiresAt: null
+        };
+        songLeague.listRejoinRequests.mockResolvedValue([request]);
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const manager = fixture.nativeElement.querySelector('.league-rejoin-manager') as HTMLElement;
+        expect(manager.textContent).toContain('Departed member');
+        expect(manager.textContent).toContain('Approve');
+        await component.respondToRejoin(request, 'approved');
+        expect(songLeague.respondToRejoinRequest).toHaveBeenCalledWith('request', 'approved');
     });
 
     it('keeps league B and its subscription when league A resolves later', async () => {

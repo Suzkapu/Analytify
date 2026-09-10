@@ -93,6 +93,38 @@
           }
         </section>
       }
+      @if (isOwner && !data.league.isDemo && !isClosed) {
+        <section class="league-rejoin-manager" aria-labelledby="rejoin-requests-title">
+          <div class="league-section-heading">
+            <div><span class="league-eyebrow">Membership requests</span><h2 id="rejoin-requests-title">Rejoin requests</h2></div>
+            <button type="button" class="league-secondary" (click)="loadRejoinRequests()" [disabled]="isLoadingRejoinRequests">
+              <i class="pi" [ngClass]="isLoadingRejoinRequests ? 'pi-spin pi-spinner' : 'pi-refresh'"></i>Refresh
+            </button>
+          </div>
+          @if (!isLoadingRejoinRequests && rejoinRequests.length === 0) { <p class="league-rejoin-empty">No rejoin requests.</p> }
+          <div class="league-rejoin-list">
+            @for (request of rejoinRequests; track request.id) {
+              <article>
+                @if (request.imageUrl) { <img [src]="request.imageUrl" appImageFallback alt=""> }
+                @if (!request.imageUrl) { <span class="standing-avatar"><i class="pi pi-user"></i></span> }
+                <div>
+                  <strong>{{ request.displayName }}</strong>
+                  <small>
+                    @if (request.status === 'pending') { Pending until {{ request.requestExpiresAt | date:'medium' }} }
+                    @if (request.status === 'approved') { Approved · invitation retry available until {{ request.approvalExpiresAt | date:'medium' }} }
+                    @if (request.status === 'declined') { Declined {{ request.respondedAt | date:'medium' }} }
+                    @if (request.status === 'expired') { Expired · the member can request again }
+                  </small>
+                </div>
+                @if (request.status === 'pending') {
+                  <button type="button" class="league-secondary" (click)="respondToRejoin(request, 'approved')" [disabled]="!!respondingRejoinId"><i class="pi pi-check"></i>Approve</button>
+                  <button type="button" class="league-danger-secondary" (click)="respondToRejoin(request, 'declined')" [disabled]="!!respondingRejoinId"><i class="pi pi-times"></i>Decline</button>
+                }
+              </article>
+            }
+          </div>
+        </section>
+      }
       @if (errorMessage) {
         <div class="league-notice error" role="alert"><i class="pi pi-exclamation-circle"></i><span>{{ errorMessage }}</span></div>
       }

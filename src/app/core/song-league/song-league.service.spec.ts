@@ -149,6 +149,33 @@ describe('SongLeagueService', () => {
         });
     });
 
+    it('maps rejoin status and sends owner decisions through narrow RPCs', async () => {
+        const row = {
+            request_id: 'request-id', league_id: 'league-id', league_name: 'Friday Finds', user_id: 'member-id',
+            display_name: 'Member', image_url: '', status: 'pending', requested_at: '2026-09-10T08:00:00Z',
+            request_expires_at: '2026-09-17T08:00:00Z', responded_at: null, approval_expires_at: null
+        };
+        rpc.mockResolvedValueOnce({data: [row], error: null})
+            .mockResolvedValueOnce({data: [row], error: null})
+            .mockResolvedValueOnce({data: [row], error: null})
+            .mockResolvedValueOnce({data: null, error: null});
+
+        const requested = await service.requestRejoin('secret');
+        const current = await service.getMyRejoinRequest('secret');
+        const ownerList = await service.listRejoinRequests('league-id');
+        await service.respondToRejoinRequest('request-id', 'approved');
+
+        expect(requested).toEqual(expect.objectContaining({id: 'request-id', status: 'pending'}));
+        expect(current?.requestExpiresAt).toBe('2026-09-17T08:00:00Z');
+        expect(ownerList).toHaveLength(1);
+        expect(rpc).toHaveBeenNthCalledWith(1, 'request_song_league_rejoin', {p_invite_token: 'secret'});
+        expect(rpc).toHaveBeenNthCalledWith(2, 'get_my_song_league_rejoin_request', {p_invite_token: 'secret'});
+        expect(rpc).toHaveBeenNthCalledWith(3, 'list_song_league_rejoin_requests', {p_league_id: 'league-id'});
+        expect(rpc).toHaveBeenNthCalledWith(4, 'respond_song_league_rejoin_request', {
+            p_request_id: 'request-id', p_decision: 'approved'
+        });
+    });
+
     it('uses owner-only lifecycle RPCs and maps the immutable activity log', async () => {
         rpc.mockResolvedValueOnce({data: null, error: null})
             .mockResolvedValueOnce({data: null, error: null})

@@ -13,6 +13,7 @@ import {
   SongLeagueMember,
   SongLeaguePlaylist,
   SongLeagueRecommendation,
+  SongLeagueRejoinRequest,
   SongLeagueScoreBreakdown,
   SongLeagueStanding,
   SongLeagueTrack
@@ -100,6 +101,40 @@ export class SongLeagueService {
   async approveRejoin(leagueId: string, userId: string): Promise<void> {
     const {error} = await this.supabase.client.rpc('approve_song_league_rejoin', {
       p_league_id: leagueId, p_user_id: userId
+    });
+    if (error) throw error;
+  }
+
+  async requestRejoin(token: string): Promise<SongLeagueRejoinRequest> {
+    const {data, error} = await this.supabase.client.rpc('request_song_league_rejoin', {
+      p_invite_token: token
+    });
+    if (error) throw error;
+    const row = Array.isArray(data) ? data[0] : data;
+    if (!row) throw new Error('The rejoin request could not be created.');
+    return this.mapRejoinRequest(row);
+  }
+
+  async getMyRejoinRequest(token: string): Promise<SongLeagueRejoinRequest | null> {
+    const {data, error} = await this.supabase.client.rpc('get_my_song_league_rejoin_request', {
+      p_invite_token: token
+    });
+    if (error) throw error;
+    const row = Array.isArray(data) ? data[0] : data;
+    return row ? this.mapRejoinRequest(row) : null;
+  }
+
+  async listRejoinRequests(leagueId: string): Promise<SongLeagueRejoinRequest[]> {
+    const {data, error} = await this.supabase.client.rpc('list_song_league_rejoin_requests', {
+      p_league_id: leagueId
+    });
+    if (error) throw error;
+    return (data || []).map((row: any) => this.mapRejoinRequest(row));
+  }
+
+  async respondToRejoinRequest(requestId: string, decision: 'approved' | 'declined'): Promise<void> {
+    const {error} = await this.supabase.client.rpc('respond_song_league_rejoin_request', {
+      p_request_id: requestId, p_decision: decision
     });
     if (error) throw error;
   }
@@ -468,6 +503,22 @@ export class SongLeagueService {
       imageUrl: row.image_url || '',
       joinedAt: row.joined_at,
       leftAt: row.left_at || null
+    };
+  }
+
+  private mapRejoinRequest(row: any): SongLeagueRejoinRequest {
+    return {
+      id: row.request_id,
+      leagueId: row.league_id,
+      leagueName: row.league_name,
+      userId: row.user_id,
+      displayName: row.display_name,
+      imageUrl: row.image_url || '',
+      status: row.status,
+      requestedAt: row.requested_at,
+      requestExpiresAt: row.request_expires_at,
+      respondedAt: row.responded_at || null,
+      approvalExpiresAt: row.approval_expires_at || null
     };
   }
 
