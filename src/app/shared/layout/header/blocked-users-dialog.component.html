@@ -1,0 +1,45 @@
+<div class="confirm-modal-overlay" (click)="close()">
+  <section class="confirm-modal-card notification-settings-modal" role="dialog" aria-modal="true"
+    aria-labelledby="blocked-users-title" aria-describedby="blocked-users-description"
+    appAccessibleDialog (modalEscape)="close()" (click)="$event.stopPropagation()">
+    <button type="button" class="notification-modal-close" appModalInitialFocus
+      (click)="close()" [disabled]="isUnblocking" aria-label="Close blocked users">×</button>
+    <div class="confirm-modal-icon"><i class="pi pi-ban"></i></div>
+    <h3 id="blocked-users-title" class="confirm-modal-title">Blocked users</h3>
+    <p id="blocked-users-description" class="confirm-modal-text">Blocked people cannot find you or request your stats. Unblocking only makes future searches and requests possible.</p>
+
+    @if (isLoading) {
+      <div class="notification-settings-loading" role="status"><i class="pi pi-spin pi-spinner"></i> Loading blocked users…</div>
+    } @else if (blockedUsers.length === 0) {
+      <p class="blocked-users-empty">You have not blocked anyone.</p>
+    } @else {
+      <div class="blocked-users-list">
+        @for (user of blockedUsers; track user.userId) {
+          <article>
+            @if (user.imageUrl) { <img [src]="user.imageUrl" alt=""> }
+            @else { <span class="blocked-user-avatar"><i class="pi pi-user"></i></span> }
+            <span><strong>{{ user.displayName }}</strong><small>Blocked {{ user.blockedAt | date:'mediumDate' }}</small></span>
+            <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel"
+              (click)="unblockCandidate = user" [disabled]="isUnblocking">Unblock</button>
+          </article>
+        }
+      </div>
+    }
+
+    @if (unblockCandidate) {
+      <div class="blocked-user-confirm" role="alertdialog" aria-labelledby="unblock-user-title">
+        <strong id="unblock-user-title">Unblock {{ unblockCandidate.displayName }}?</strong>
+        <p>They may find you and send a new request. Previous access stays revoked.</p>
+        <div class="confirm-modal-actions">
+          <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel" (click)="unblockCandidate = null" [disabled]="isUnblocking">Cancel</button>
+          <button type="button" class="confirm-modal-btn confirm-modal-btn-confirm" (click)="confirmUnblock()" [disabled]="isUnblocking">{{ isUnblocking ? 'Unblocking…' : 'Unblock' }}</button>
+        </div>
+      </div>
+    }
+
+    @if (error) { <p class="notification-settings-error" role="alert">{{ error }}</p> }
+    <div class="confirm-modal-actions">
+      <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel" (click)="close()" [disabled]="isUnblocking">Done</button>
+    </div>
+  </section>
+</div>

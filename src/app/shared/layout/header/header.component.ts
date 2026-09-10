@@ -1,11 +1,10 @@
-import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Optional, Output, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ComponentRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Optional, Output, ChangeDetectionStrategy, ViewChild, ViewContainerRef} from '@angular/core';
 import { Router } from '@angular/router';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import {StatsSharingService} from '@core/sharing/stats-sharing.service';
-import {BlockedStatsUser} from '@core/sharing/stats-sharing.models';
 import {firstValueFrom} from 'rxjs';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {AdminService} from '@core/admin/admin.service';
@@ -42,6 +41,7 @@ type SyncTaskStatus = {
 })
 
 export class HeaderComponent implements OnInit, OnDestroy {
+  @ViewChild('dynamicDialog', {read: ViewContainerRef}) private dynamicDialog!: ViewContainerRef;
   @Input() mobileTitle = '';
   @Input() showMobileBackButton = false;
   @Output() mobileBack = new EventEmitter<void>();
@@ -59,7 +59,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   showGuestLogoutConfirmModal = false;
   showNotificationSettingsModal = false;
   showSyncTaskStatusModal = false;
-  showBlockedUsersModal = false;
   isDeletingDbData = false;
   isGuestLogoutRunning = false;
   isLoadingNotificationSettings = false;
@@ -71,11 +70,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   syncTaskStatus: SyncTaskStatus[] = [];
   syncTaskStatusError = '';
   isLoadingSyncTaskStatus = false;
-  isLoadingBlockedUsers = false;
-  isUnblockingUser = false;
-  blockedUsers: BlockedStatsUser[] = [];
-  unblockCandidate: BlockedStatsUser | null = null;
-  blockedUsersError = '';
+  private blockedUsersDialogRef: ComponentRef<unknown> | null = null;
   private profileRetryTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly profileRetryDelays = [1_000, 5_000, 30_000];
   notificationSettings: PushNotificationSettings = {
@@ -120,6 +115,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.profileRetryTimer) clearTimeout(this.profileRetryTimer);
     this.profileRetryTimer = null;
+    this.blockedUsersDialogRef?.destroy();
+    this.blockedUsersDialogRef = null;
   }
 
 
@@ -427,40 +424,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   async openBlockedUsers(): Promise<void> {
-    if (!this.statsSharing) return;
+    if (!this.statsSharing || this.blockedUsersDialogRef) return;
     this.showSettingsDropdown = false;
-    this.showBlockedUsersModal = true;
-    this.isLoadingBlockedUsers = true;
-    this.blockedUsersError = '';
-    try {
-      this.blockedUsers = await this.statsSharing.listBlockedUsers();
-    } catch (error) {
-      this.blockedUsersError = (error as any)?.message || 'Blocked users could not be loaded.';
-    } finally {
-      this.isLoadingBlockedUsers = false;
-    }
-  }
-
-  closeBlockedUsers(): void {
-    if (this.isUnblockingUser) return;
-    this.showBlockedUsersModal = false;
-    this.unblockCandidate = null;
-  }
-
-  async confirmUnblock(): Promise<void> {
-    if (!this.statsSharing || !this.unblockCandidate || this.isUnblockingUser) return;
-    this.isUnblockingUser = true;
-    this.blockedUsersError = '';
-    const user = this.unblockCandidate;
-    try {
-      await this.statsSharing.unblockUser(user.userId);
-      this.blockedUsers = this.blockedUsers.filter(item => item.userId !== user.userId);
-      this.unblockCandidate = null;
-    } catch (error) {
-      this.blockedUsersError = (error as any)?.message || 'This user could not be unblocked.';
-    } finally {
-      this.isUnblockingUser = false;
-    }
+    const {BlockedUsersDialogComponent} = await import('./blocked-users-dialog.component');
+    const reference = this.dynamicDialog.createComponent(BlockedUsersDialogComponent);
+    this.blockedUsersDialogRef = reference;
+    const subscription = reference.instance.closed.subscribe(() => {
+      subscription.unsubscribe();
+      reference.destroy();
+      if (this.blockedUsersDialogRef === reference) this.blockedUsersDialogRef = null;
+    });
+    reference.changeDetectorRef.detectChanges();
   }
 
   closeSyncTaskStatus(): void {

@@ -295,6 +295,7 @@ describe('HeaderComponent entry points', () => {
         }]);
 
         await component.openBlockedUsers();
+        await fixture.whenStable();
         fixture.detectChanges();
         const dialog = fixture.nativeElement.querySelector('[aria-labelledby="blocked-users-title"]') as HTMLElement;
         expect(dialog.textContent).toContain('Blocked person');
@@ -305,9 +306,13 @@ describe('HeaderComponent entry points', () => {
         expect(statsSharing.unblockUser).not.toHaveBeenCalled();
         expect(dialog.textContent).toContain('Previous access stays revoked');
 
-        await component.confirmUnblock();
+        const confirmButton = Array.from(dialog.querySelectorAll('.blocked-user-confirm button'))
+            .find((button: any) => button.textContent.trim() === 'Unblock') as HTMLButtonElement;
+        confirmButton.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
         expect(statsSharing.unblockUser).toHaveBeenCalledWith('blocked-user');
-        expect(component.blockedUsers).toEqual([]);
+        expect(dialog.textContent).toContain('You have not blocked anyone');
     });
 
     it('offers scheduled-access removal only through the guided cloud deletion flow', () => {

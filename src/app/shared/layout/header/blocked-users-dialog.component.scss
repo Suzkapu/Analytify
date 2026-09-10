@@ -1,0 +1,15 @@
+.blocked-users-empty { color: #8d9890; text-align: center; }
+.blocked-users-list { display: grid; gap: 8px; }
+.blocked-users-list article { padding: 10px; display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; align-items: center; gap: 10px; border-radius: 12px; background: rgba(255, 255, 255, .035); }
+.blocked-users-list img, .blocked-user-avatar { width: 42px; height: 42px; border-radius: 50%; }
+.blocked-users-list img { object-fit: cover; }
+.blocked-user-avatar { display: grid; place-items: center; background: rgba(255, 255, 255, .07); color: #929c94; }
+.blocked-users-list strong, .blocked-users-list small { display: block; }
+.blocked-users-list small { margin-top: 3px; color: #78837b; }
+.blocked-user-confirm { margin-top: 12px; padding: 14px; border: 1px solid rgba(255, 190, 80, .22); border-radius: 12px; background: rgba(255, 190, 80, .06); }
+.blocked-user-confirm p { color: #9ba49d; }
+
+@media (max-width: 520px) {
+  .blocked-users-list article { grid-template-columns: 42px minmax(0, 1fr); }
+  .blocked-users-list article > button { grid-column: 1 / -1; }
+}
