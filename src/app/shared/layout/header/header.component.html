@@ -122,6 +122,9 @@
               <i class="pi pi-bell"></i><span>Notifications</span>
             </button>
             @if (hasCollaborationIdentity) {
+              <button (click)="openBlockedUsers()" class="dropdown-item" role="menuitem">
+                <i class="pi pi-ban"></i><span>Blocked users</span>
+              </button>
               <button (click)="openSyncTaskStatus()" class="dropdown-item" role="menuitem">
                 <i class="pi pi-clock"></i><span>Automatic data use</span>
               </button>
@@ -143,6 +146,49 @@
     </div>
   </div>
 </header>
+
+@if (showBlockedUsersModal) {
+  <div class="confirm-modal-overlay" (click)="closeBlockedUsers()">
+    <section class="confirm-modal-card notification-settings-modal" role="dialog" aria-modal="true"
+      aria-labelledby="blocked-users-title" aria-describedby="blocked-users-description"
+      appAccessibleDialog (modalEscape)="closeBlockedUsers()" (click)="$event.stopPropagation()">
+      <button type="button" class="notification-modal-close" appModalInitialFocus
+        (click)="closeBlockedUsers()" [disabled]="isUnblockingUser" aria-label="Close blocked users">×</button>
+      <div class="confirm-modal-icon"><i class="pi pi-ban"></i></div>
+      <h3 id="blocked-users-title" class="confirm-modal-title">Blocked users</h3>
+      <p id="blocked-users-description" class="confirm-modal-text">Blocked people cannot find you or request your stats. Unblocking only makes future searches and requests possible.</p>
+      @if (isLoadingBlockedUsers) {
+        <div class="notification-settings-loading" role="status"><i class="pi pi-spin pi-spinner"></i> Loading blocked users…</div>
+      } @else if (blockedUsers.length === 0) {
+        <p class="blocked-users-empty">You have not blocked anyone.</p>
+      } @else {
+        <div class="blocked-users-list">
+          @for (user of blockedUsers; track user.userId) {
+            <article>
+              @if (user.imageUrl) { <img [src]="user.imageUrl" alt=""> }
+              @else { <span class="blocked-user-avatar"><i class="pi pi-user"></i></span> }
+              <span><strong>{{ user.displayName }}</strong><small>Blocked {{ user.blockedAt | date:'mediumDate' }}</small></span>
+              <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel"
+                (click)="unblockCandidate = user" [disabled]="isUnblockingUser">Unblock</button>
+            </article>
+          }
+        </div>
+      }
+      @if (unblockCandidate) {
+        <div class="blocked-user-confirm" role="alertdialog" aria-labelledby="unblock-user-title">
+          <strong id="unblock-user-title">Unblock {{ unblockCandidate.displayName }}?</strong>
+          <p>They may find you and send a new request. Previous access stays revoked.</p>
+          <div class="confirm-modal-actions">
+            <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel" (click)="unblockCandidate = null" [disabled]="isUnblockingUser">Cancel</button>
+            <button type="button" class="confirm-modal-btn confirm-modal-btn-confirm" (click)="confirmUnblock()" [disabled]="isUnblockingUser">{{ isUnblockingUser ? 'Unblocking…' : 'Unblock' }}</button>
+          </div>
+        </div>
+      }
+      @if (blockedUsersError) { <p class="notification-settings-error" role="alert">{{ blockedUsersError }}</p> }
+      <div class="confirm-modal-actions"><button type="button" class="confirm-modal-btn confirm-modal-btn-cancel" (click)="closeBlockedUsers()" [disabled]="isUnblockingUser">Done</button></div>
+    </section>
+  </div>
+}
 
 @if (showSyncTaskStatusModal) {
   <div class="confirm-modal-overlay" (click)="closeSyncTaskStatus()">

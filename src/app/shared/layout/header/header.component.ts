@@ -5,6 +5,7 @@ import { StorageService } from '@core/data-access/storage/storage.service';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import {StatsSharingService} from '@core/sharing/stats-sharing.service';
+import {BlockedStatsUser} from '@core/sharing/stats-sharing.models';
 import {firstValueFrom} from 'rxjs';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {AdminService} from '@core/admin/admin.service';
@@ -58,6 +59,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   showGuestLogoutConfirmModal = false;
   showNotificationSettingsModal = false;
   showSyncTaskStatusModal = false;
+  showBlockedUsersModal = false;
   isDeletingDbData = false;
   isGuestLogoutRunning = false;
   isLoadingNotificationSettings = false;
@@ -69,6 +71,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   syncTaskStatus: SyncTaskStatus[] = [];
   syncTaskStatusError = '';
   isLoadingSyncTaskStatus = false;
+  isLoadingBlockedUsers = false;
+  isUnblockingUser = false;
+  blockedUsers: BlockedStatsUser[] = [];
+  unblockCandidate: BlockedStatsUser | null = null;
+  blockedUsersError = '';
   private profileRetryTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly profileRetryDelays = [1_000, 5_000, 30_000];
   notificationSettings: PushNotificationSettings = {
@@ -416,6 +423,43 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.syncTaskStatusError = (error as any)?.message || 'Automatic data use could not be loaded.';
     } finally {
       this.isLoadingSyncTaskStatus = false;
+    }
+  }
+
+  async openBlockedUsers(): Promise<void> {
+    if (!this.statsSharing) return;
+    this.showSettingsDropdown = false;
+    this.showBlockedUsersModal = true;
+    this.isLoadingBlockedUsers = true;
+    this.blockedUsersError = '';
+    try {
+      this.blockedUsers = await this.statsSharing.listBlockedUsers();
+    } catch (error) {
+      this.blockedUsersError = (error as any)?.message || 'Blocked users could not be loaded.';
+    } finally {
+      this.isLoadingBlockedUsers = false;
+    }
+  }
+
+  closeBlockedUsers(): void {
+    if (this.isUnblockingUser) return;
+    this.showBlockedUsersModal = false;
+    this.unblockCandidate = null;
+  }
+
+  async confirmUnblock(): Promise<void> {
+    if (!this.statsSharing || !this.unblockCandidate || this.isUnblockingUser) return;
+    this.isUnblockingUser = true;
+    this.blockedUsersError = '';
+    const user = this.unblockCandidate;
+    try {
+      await this.statsSharing.unblockUser(user.userId);
+      this.blockedUsers = this.blockedUsers.filter(item => item.userId !== user.userId);
+      this.unblockCandidate = null;
+    } catch (error) {
+      this.blockedUsersError = (error as any)?.message || 'This user could not be unblocked.';
+    } finally {
+      this.isUnblockingUser = false;
     }
   }
 

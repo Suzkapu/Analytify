@@ -8,6 +8,13 @@ export interface StatsShareableUser {
   requestStatus: StatsAccessStatus | null;
 }
 
+export interface BlockedStatsUser {
+  userId: string;
+  displayName: string;
+  imageUrl: string;
+  blockedAt: string;
+}
+
 export interface StatsAccessRequest {
   id: string;
   ownerUserId: string;

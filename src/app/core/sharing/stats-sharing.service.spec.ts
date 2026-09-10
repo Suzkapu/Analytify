@@ -77,6 +77,24 @@ describe('StatsSharingService', () => {
         ]);
     });
 
+    it('lists and unblocks users without restoring access client-side', async () => {
+        rpc.mockResolvedValueOnce({data: [{
+            user_id: 'blocked-user', display_name: 'Blocked person', image_url: 'avatar.jpg',
+            blocked_at: '2026-09-10T08:00:00Z'
+        }], error: null}).mockResolvedValueOnce({data: null, error: null});
+
+        await expect(service.listBlockedUsers()).resolves.toEqual([{
+            userId: 'blocked-user', displayName: 'Blocked person', imageUrl: 'avatar.jpg',
+            blockedAt: '2026-09-10T08:00:00Z'
+        }]);
+        await service.unblockUser('blocked-user');
+
+        expect(vi.mocked(rpc).mock.calls).toEqual([
+            ['list_blocked_stats_users'],
+            ['unblock_stats_user', {p_user_id: 'blocked-user'}]
+        ]);
+    });
+
     it('requests, approves, declines, and revokes access only through guarded RPCs', async () => {
         rpc.mockResolvedValue({ data: 'request-id', error: null });
 

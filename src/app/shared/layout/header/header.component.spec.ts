@@ -38,10 +38,14 @@ describe('HeaderComponent entry points', () => {
         spotifyDataService.getCurrentUser.mockReturnValue(of({ images: [] }));
         statsSharing = {
             getDiscoverability: vi.fn().mockName("StatsSharingService.getDiscoverability"),
-            setDiscoverability: vi.fn().mockName("StatsSharingService.setDiscoverability")
+            setDiscoverability: vi.fn().mockName("StatsSharingService.setDiscoverability"),
+            listBlockedUsers: vi.fn().mockName("StatsSharingService.listBlockedUsers"),
+            unblockUser: vi.fn().mockName("StatsSharingService.unblockUser")
         };
         statsSharing.getDiscoverability.mockResolvedValue(false);
         statsSharing.setDiscoverability.mockImplementation(async (enabled: boolean) => enabled);
+        statsSharing.listBlockedUsers.mockResolvedValue([]);
+        statsSharing.unblockUser.mockResolvedValue(undefined);
         authService = {
             isSyncing: false,
             syncProgress: 0,
@@ -283,6 +287,27 @@ describe('HeaderComponent entry points', () => {
         const songPickRow = Array.from(dialog.querySelectorAll('.notification-category-row'))
             .find((row: any) => row.textContent?.includes('New Song League picks')) as HTMLElement | undefined;
         expect(songPickRow?.querySelector('.notification-category-icon .pi-volume-up')).not.toBeNull();
+    });
+
+    it('lists blocked users and requires confirmation before unblocking', async () => {
+        statsSharing.listBlockedUsers.mockResolvedValue([{
+            userId: 'blocked-user', displayName: 'Blocked person', imageUrl: '', blockedAt: '2026-09-10T08:00:00Z'
+        }]);
+
+        await component.openBlockedUsers();
+        fixture.detectChanges();
+        const dialog = fixture.nativeElement.querySelector('[aria-labelledby="blocked-users-title"]') as HTMLElement;
+        expect(dialog.textContent).toContain('Blocked person');
+
+        const unblockButton = Array.from(dialog.querySelectorAll('button')).find((button: any) => button.textContent.trim() === 'Unblock') as HTMLButtonElement;
+        unblockButton.click();
+        fixture.detectChanges();
+        expect(statsSharing.unblockUser).not.toHaveBeenCalled();
+        expect(dialog.textContent).toContain('Previous access stays revoked');
+
+        await component.confirmUnblock();
+        expect(statsSharing.unblockUser).toHaveBeenCalledWith('blocked-user');
+        expect(component.blockedUsers).toEqual([]);
     });
 
     it('offers scheduled-access removal only through the guided cloud deletion flow', () => {
