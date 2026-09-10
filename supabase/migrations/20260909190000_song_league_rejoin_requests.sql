@@ -42,12 +42,12 @@ begin
   perform pg_advisory_xact_lock(hashtextextended('league-rejoin:' || v_invite.league_id::text || ':' || v_user_id::text, 0));
   select * into v_profile from public.users where id = v_user_id;
   if not found or not v_profile.backup_active then raise exception 'Enable Cloud Backup before requesting to rejoin.'; end if;
-  if not exists (select 1 from public.song_league_members where league_id = v_invite.league_id
-    and user_id = v_user_id and left_at is not null) then
+  if not exists (select 1 from public.song_league_members member where member.league_id = v_invite.league_id
+    and member.user_id = v_user_id and member.left_at is not null) then
     raise exception 'Only a departed member can request to rejoin this league.';
   end if;
-  if exists (select 1 from public.song_league_members where league_id = v_invite.league_id
-    and user_id = v_user_id and left_at is null) then raise exception 'You are already a member of this league.'; end if;
+  if exists (select 1 from public.song_league_members member where member.league_id = v_invite.league_id
+    and member.user_id = v_user_id and member.left_at is null) then raise exception 'You are already a member of this league.'; end if;
   insert into public.song_league_rejoin_requests(league_id, user_id, status, requested_at,
     request_expires_at, responded_at, approval_expires_at)
   values (v_invite.league_id, v_user_id, 'pending', now(), now() + interval '7 days', null, null)
@@ -58,8 +58,8 @@ begin
     in ('declined', 'expired', 'joined')
   returning * into v_request;
   if v_request.id is null then
-    select * into v_request from public.song_league_rejoin_requests
-      where league_id = v_invite.league_id and user_id = v_user_id;
+    select request.* into v_request from public.song_league_rejoin_requests request
+      where request.league_id = v_invite.league_id and request.user_id = v_user_id;
   end if;
   select league.name into v_name from public.song_leagues league where league.id = v_invite.league_id;
   return query select v_request.id, v_request.league_id, v_name, v_request.user_id,
