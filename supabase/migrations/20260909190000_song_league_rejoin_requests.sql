@@ -51,7 +51,8 @@ begin
   insert into public.song_league_rejoin_requests(league_id, user_id, status, requested_at,
     request_expires_at, responded_at, approval_expires_at)
   values (v_invite.league_id, v_user_id, 'pending', now(), now() + interval '7 days', null, null)
-  on conflict (league_id, user_id) do update set status = 'pending', requested_at = now(),
+  on conflict on constraint song_league_rejoin_requests_league_id_user_id_key
+  do update set status = 'pending', requested_at = now(),
     request_expires_at = now() + interval '7 days', responded_at = null, approval_expires_at = null
   where private.song_league_rejoin_status(song_league_rejoin_requests.status,
     song_league_rejoin_requests.request_expires_at, song_league_rejoin_requests.approval_expires_at)
