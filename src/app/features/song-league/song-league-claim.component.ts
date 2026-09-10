@@ -12,7 +12,7 @@ import {PushNotificationService} from '@core/notifications/push-notification.ser
     standalone: false
 })
 export class SongLeagueClaimComponent implements OnInit {
-  isJoining = true;
+  joinState: 'joining' | 'joined' | 'error' = 'joining';
   showNotificationPrompt = false;
   isEnablingNotifications = false;
   errorMessage = '';
@@ -50,8 +50,8 @@ export class SongLeagueClaimComponent implements OnInit {
   }
 
   async retryJoin(): Promise<void> {
-    if (this.isJoining) return;
-    this.isJoining = true;
+    if (this.joinState === 'joining') return;
+    this.joinState = 'joining';
     this.errorMessage = '';
     await this.tryJoin();
   }
@@ -60,9 +60,9 @@ export class SongLeagueClaimComponent implements OnInit {
     try {
       const leagueId = await this.songLeague.claimLeague(this.inviteToken);
       this.joinedLeagueId = leagueId;
+      this.joinState = 'joined';
       const settings = await this.pushNotifications.loadSettings().catch(() => null);
-      if (settings?.supported && !settings.active) {
-        this.isJoining = false;
+      if (settings?.supported && settings.permission !== 'denied' && !settings.active) {
         this.showNotificationPrompt = true;
         return;
       }
@@ -73,7 +73,7 @@ export class SongLeagueClaimComponent implements OnInit {
         this.rejoinRequest = await this.songLeague.getMyRejoinRequest(this.inviteToken).catch(() => null);
         this.canRequestRejoin = !this.rejoinRequest || ['declined', 'expired', 'joined'].includes(this.rejoinRequest.status);
       }
-      this.isJoining = false;
+      this.joinState = 'error';
     }
   }
 

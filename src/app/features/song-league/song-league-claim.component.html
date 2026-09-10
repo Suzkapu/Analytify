@@ -1,11 +1,14 @@
 <main class="song-league-page league-claim-page">
   <section class="league-claim-card">
-    <div class="league-claim-icon"><i class="pi" [ngClass]="isJoining ? 'pi-spin pi-spinner' : 'pi-exclamation-circle'"></i></div>
-    <h1>{{ isJoining ? 'Joining Song League…' : rejoinRequest ? 'Rejoin ' + rejoinRequest.leagueName : canRequestRejoin ? 'Rejoin approval needed' : 'Could not join league' }}</h1>
-    @if (isJoining) {
+    <div class="league-claim-icon"><i class="pi" [ngClass]="joinState === 'joining' ? 'pi-spin pi-spinner' : joinState === 'joined' ? 'pi-check-circle' : 'pi-exclamation-circle'"></i></div>
+    <h1>{{ joinState === 'joining' ? 'Joining Song League…' : joinState === 'joined' ? 'League joined' : rejoinRequest ? 'Rejoin ' + rejoinRequest.leagueName : canRequestRejoin ? 'Rejoin approval needed' : 'Could not join league' }}</h1>
+    @if (joinState === 'joining') {
       <p>Checking the private invitation and your Cloud Backup status.</p>
     }
-    @if (!isJoining) {
+    @if (joinState === 'joined') {
+      <p>Opening your Song League…</p>
+    }
+    @if (joinState === 'error') {
       @if (rejoinRequest?.status === 'pending') {
         <p>Your request is waiting for the owner. It expires {{ rejoinRequest?.requestExpiresAt | date:'medium' }}.</p>
       } @else if (rejoinRequest?.status === 'approved') {
@@ -18,16 +21,16 @@
         <p>{{ errorMessage }}</p>
       }
     }
-    @if (!isJoining && canRequestRejoin) {
+    @if (joinState === 'error' && canRequestRejoin) {
       <button type="button" class="league-primary" (click)="requestRejoin()" [disabled]="isRequestingRejoin">
         <i class="pi" [ngClass]="isRequestingRejoin ? 'pi-spin pi-spinner' : 'pi-send'"></i>
         {{ isRequestingRejoin ? 'Sending…' : 'Request to rejoin' }}
       </button>
     }
-    @if (!isJoining && rejoinRequest?.status === 'approved') {
+    @if (joinState === 'error' && rejoinRequest?.status === 'approved') {
       <button type="button" class="league-primary" (click)="retryJoin()"><i class="pi pi-sign-in"></i>Rejoin now</button>
     }
-    @if (!isJoining && !canRequestRejoin && rejoinRequest?.status !== 'approved') {
+    @if (joinState === 'error' && !canRequestRejoin && rejoinRequest?.status !== 'approved') {
       <a routerLink="/song-league" class="league-primary">Go to Song League</a>
     }
   </section>

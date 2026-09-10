@@ -64,7 +64,43 @@ describe('SongLeagueClaimComponent notification prompt', () => {
         const dialog = fixture.nativeElement.querySelector('.league-notification-prompt') as HTMLElement;
         expect(dialog).not.toBeNull();
         expect(dialog.textContent).toContain('Enable pick notifications?');
+        expect(component.joinState).toBe('joined');
+        expect(fixture.nativeElement.querySelector('.league-claim-card').textContent).toContain('League joined');
+        expect(fixture.nativeElement.querySelector('.league-claim-card').textContent).not.toContain('Could not join league');
         expect(router.navigate).not.toHaveBeenCalled();
+    });
+
+    it('opens the joined league without prompting when notifications are unavailable', async () => {
+        notifications.loadSettings.mockResolvedValue({
+            supported: false, installedPwa: false, permission: 'unavailable',
+            deviceSubscribed: false, songLeagueEnabled: false, songLeagueSongAddedEnabled: false,
+            songLeagueMember: true, statsAccessRequestsEnabled: true,
+            active: false, songAddedActive: false, statsAccessActive: false
+        });
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(component.joinState).toBe('joined');
+        expect(fixture.nativeElement.querySelector('.league-notification-prompt')).toBeNull();
+        expect(router.navigate).toHaveBeenCalledWith(['/song-league', 'league-1'], { replaceUrl: true });
+    });
+
+    it('opens the joined league without prompting when browser permission is denied', async () => {
+        notifications.loadSettings.mockResolvedValue({
+            supported: true, installedPwa: true, permission: 'denied',
+            deviceSubscribed: false, songLeagueEnabled: false, songLeagueSongAddedEnabled: false,
+            songLeagueMember: true, statsAccessRequestsEnabled: true,
+            active: false, songAddedActive: false, statsAccessActive: false
+        });
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(component.joinState).toBe('joined');
+        expect(fixture.nativeElement.querySelector('.league-notification-prompt')).toBeNull();
+        expect(notifications.setSongLeagueEnabled).not.toHaveBeenCalled();
+        expect(router.navigate).toHaveBeenCalledWith(['/song-league', 'league-1'], { replaceUrl: true });
     });
 
     it('enables notifications from the explicit prompt action and opens the league', async () => {
@@ -105,6 +141,7 @@ describe('SongLeagueClaimComponent notification prompt', () => {
         fixture.detectChanges();
 
         expect(fixture.nativeElement.querySelector('.league-notification-prompt')).toBeNull();
+        expect(component.joinState).toBe('joined');
         expect(router.navigate).toHaveBeenCalledTimes(1);
         expect(router.navigate).toHaveBeenCalledWith(['/song-league', 'league-1'], { replaceUrl: true });
     });
