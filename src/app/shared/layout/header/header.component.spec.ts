@@ -295,6 +295,7 @@ describe('HeaderComponent entry points', () => {
         }]);
 
         await component.openBlockedUsers();
+        fixture.detectChanges();
         await fixture.whenStable();
         fixture.detectChanges();
         const dialog = fixture.nativeElement.querySelector('[aria-labelledby="blocked-users-title"]') as HTMLElement;

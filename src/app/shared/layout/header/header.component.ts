@@ -1,4 +1,4 @@
-import {Component, ComponentRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Optional, Output, ChangeDetectionStrategy, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Optional, Output, ChangeDetectionStrategy, ViewChild, ViewContainerRef} from '@angular/core';
 import { Router } from '@angular/router';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
@@ -70,7 +70,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   syncTaskStatus: SyncTaskStatus[] = [];
   syncTaskStatusError = '';
   isLoadingSyncTaskStatus = false;
-  private blockedUsersDialogRef: ComponentRef<unknown> | null = null;
   private profileRetryTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly profileRetryDelays = [1_000, 5_000, 30_000];
   notificationSettings: PushNotificationSettings = {
@@ -115,8 +114,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.profileRetryTimer) clearTimeout(this.profileRetryTimer);
     this.profileRetryTimer = null;
-    this.blockedUsersDialogRef?.destroy();
-    this.blockedUsersDialogRef = null;
   }
 
 
@@ -424,17 +421,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   async openBlockedUsers(): Promise<void> {
-    if (!this.statsSharing || this.blockedUsersDialogRef) return;
+    if (!this.statsSharing || this.dynamicDialog.length) return;
     this.showSettingsDropdown = false;
     const {BlockedUsersDialogComponent} = await import('./blocked-users-dialog.component');
     const reference = this.dynamicDialog.createComponent(BlockedUsersDialogComponent);
-    this.blockedUsersDialogRef = reference;
-    const subscription = reference.instance.closed.subscribe(() => {
-      subscription.unsubscribe();
-      reference.destroy();
-      if (this.blockedUsersDialogRef === reference) this.blockedUsersDialogRef = null;
-    });
-    reference.changeDetectorRef.detectChanges();
+    reference.instance.closed.subscribe(() => this.dynamicDialog.clear());
   }
 
   closeSyncTaskStatus(): void {
