@@ -123,6 +123,22 @@ describe('SongLeagueDetailComponent notifications', () => {
         expect(songLeague.ensureMemberReadyForLeague).toHaveBeenCalledWith('league', 'Europe/Vienna');
     });
 
+    it('coalesces realtime roster and league lifecycle bursts into one dashboard refresh', async () => {
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const songLeague = TestBed.inject(SongLeagueService) as any;
+        const onChange = songLeague.subscribeToLeague.mock.calls[0][1];
+        songLeague.loadDashboard.mockClear();
+
+        onChange();
+        onChange();
+        onChange();
+        await flushAsyncWork();
+
+        expect(songLeague.loadDashboard).toHaveBeenCalledTimes(1);
+        expect(songLeague.loadDashboard).toHaveBeenCalledWith('league');
+    });
+
     it('rechecks today\'s stats immediately before locking a recommendation', async () => {
         fixture.detectChanges();
         await fixture.whenStable();

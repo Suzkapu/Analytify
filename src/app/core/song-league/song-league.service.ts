@@ -331,6 +331,12 @@ export class SongLeagueService {
       .on('postgres_changes', {
         event: '*', schema: 'public', table: 'song_league_playlists', filter: `league_id=eq.${leagueId}`
       }, onChange)
+      .on('postgres_changes', {
+        event: '*', schema: 'public', table: 'song_league_members', filter: `league_id=eq.${leagueId}`
+      }, onChange)
+      .on('postgres_changes', {
+        event: '*', schema: 'public', table: 'song_leagues', filter: `id=eq.${leagueId}`
+      }, onChange)
       .subscribe();
     return () => { void this.supabase.client.removeChannel(channel); };
   }

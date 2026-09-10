@@ -15,6 +15,8 @@ describe('SongLeagueService', () => {
     let loadLatestStatsSnapshot: Mock;
     let saveStatsSnapshot: Mock;
     let spotify: any;
+    let channel: any;
+    let removeChannel: Mock;
 
     beforeEach(() => {
         rpc = vi.fn().mockName('rpc').mockResolvedValue({ data: 'league-id', error: null });
@@ -30,6 +32,13 @@ describe('SongLeagueService', () => {
         };
         spotify.searchTracks.mockReturnValue(of({ tracks: { items: [track()] } }));
         spotify.getSingleTrack.mockReturnValue(of(track()));
+        channel = {
+            on: vi.fn().mockName('channel.on'),
+            subscribe: vi.fn().mockName('channel.subscribe')
+        };
+        channel.on.mockReturnValue(channel);
+        channel.subscribe.mockReturnValue(channel);
+        removeChannel = vi.fn().mockName('removeChannel').mockResolvedValue(undefined);
 
         TestBed.configureTestingModule({
             providers: [
@@ -46,13 +55,34 @@ describe('SongLeagueService', () => {
                             functions: { invoke },
                             auth: { getUser: vi.fn().mockName('getUser').mockResolvedValue({
                                     data: { user: { id: 'member-id' } }, error: null
-                                }) }
+                                }) },
+                            channel: vi.fn().mockName('channel').mockReturnValue(channel),
+                            removeChannel
                         }
                     }
                 }
             ]
         });
         service = TestBed.inject(SongLeagueService);
+    });
+
+    it('streams recommendation, score, playlist, roster, and league lifecycle changes', () => {
+        const onChange = vi.fn();
+        const unsubscribe = service.subscribeToLeague('league-id', onChange);
+
+        expect(channel.on.mock.calls.map((call: any[]) => call[1])).toEqual([
+            expect.objectContaining({event: '*', table: 'song_league_recommendations', filter: 'league_id=eq.league-id'}),
+            expect.objectContaining({event: '*', table: 'song_league_score_events', filter: 'league_id=eq.league-id'}),
+            expect.objectContaining({event: '*', table: 'song_league_playlists', filter: 'league_id=eq.league-id'}),
+            expect.objectContaining({event: '*', table: 'song_league_members', filter: 'league_id=eq.league-id'}),
+            expect.objectContaining({event: '*', table: 'song_leagues', filter: 'id=eq.league-id'})
+        ]);
+        for (const call of channel.on.mock.calls) call[2]();
+        expect(onChange).toHaveBeenCalledTimes(5);
+        expect(channel.subscribe).toHaveBeenCalledTimes(1);
+
+        unsubscribe();
+        expect(removeChannel).toHaveBeenCalledWith(channel);
     });
 
     it('creates a private high-entropy invitation without persisting the raw token in the client model', async () => {

@@ -77,6 +77,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   private leagueId = '';
   private unsubscribeLeague: (() => void) | null = null;
   private reloadPending = false;
+  private reloadScheduled = false;
   private memberReady = false;
   private destroyed = false;
   private loadGeneration = 0;
@@ -110,6 +111,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.isReloading = false;
     this.reloadPending = false;
+    this.reloadScheduled = false;
     this.memberReady = false;
     this.errorMessage = '';
     this.successMessage = '';
@@ -135,7 +137,10 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
         this.loadLifecycleEvents()
       ]);
       if (!this.isClosed) {
-        this.unsubscribeLeague = this.songLeague.subscribeToLeague(leagueId, () => void this.reloadLive());
+        this.unsubscribeLeague = this.songLeague.subscribeToLeague(
+          leagueId,
+          () => this.scheduleLiveReload(leagueId, generation)
+        );
       }
     } catch (error) {
       if (!this.isCurrentLeague(leagueId, generation)) return;
@@ -174,6 +179,10 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
       if (!this.isCurrentLeague(leagueId, generation)) return;
       this.dashboard = dashboard;
       this.memberLimit = dashboard.league.maxMembers;
+      if (dashboard.league.closedAt && this.unsubscribeLeague) {
+        this.unsubscribeLeague();
+        this.unsubscribeLeague = null;
+      }
       if (!this.memberReady && !dashboard.league.isDemo && !dashboard.league.closedAt) {
         await this.songLeague.ensureMemberReadyForLeague(
           leagueId,
@@ -643,6 +652,15 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     } finally {
       this.isReloading = false;
     }
+  }
+
+  private scheduleLiveReload(leagueId: string, generation: number): void {
+    if (this.reloadScheduled || !this.isCurrentLeague(leagueId, generation)) return;
+    this.reloadScheduled = true;
+    queueMicrotask(() => {
+      this.reloadScheduled = false;
+      if (this.isCurrentLeague(leagueId, generation)) void this.reloadLive();
+    });
   }
 
   private isCurrentLeague(leagueId: string, generation: number): boolean {
