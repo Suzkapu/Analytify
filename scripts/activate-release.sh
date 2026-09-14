@@ -73,6 +73,10 @@ if [[ "$worker_ok" != true ]]; then
   exit 1
 fi
 
+# Keep the checked-in service sandbox measurable on the actual deployment host.
+# This also fails activation if a newly introduced unit directive is invalid.
+systemd-analyze security --no-pager analytify-sync.service
+
 web_ok=false
 for _attempt in 1 2 3 4 5 6; do
   web_sha="$(curl --fail --silent --max-time 8 "${app_url}/version.json" \

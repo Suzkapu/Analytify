@@ -21,6 +21,9 @@ test('versioned nginx configuration supplies the required browser defenses', () 
   assert.match(nginx, /connect-src[^;]*https:\/\/\*[.]scdn[.]co/);
   assert.match(nginx, /connect-src[^;]*https:\/\/\*[.]spotifycdn[.]com/);
   assert.match(nginx, /connect-src[^;]*https:\/\/platform-lookaside[.]fbsbx[.]com/);
+  assert.match(nginx, /Cross-Origin-Opener-Policy\s+"same-origin"\s+always/);
+  assert.match(nginx, /Cross-Origin-Resource-Policy\s+"same-origin"\s+always/);
+  assert.doesNotMatch(nginx, /Cross-Origin-Embedder-Policy/);
   assert.match(deploy, /install-nginx-security[.]sh/);
   assert.match(installer, /nginx -t/);
   assert.match(installer, /restore_previous/);
@@ -34,6 +37,8 @@ test('live validation reports missing or weakened headers', () => {
   const headers = new Headers({'X-Content-Type-Options': 'nosniff', Server: 'nginx/1.24.0'});
   assert.ok(invalidSecurityHeaders(headers).includes('content-security-policy'));
   assert.ok(invalidSecurityHeaders(headers).includes('strict-transport-security'));
+  assert.ok(invalidSecurityHeaders(headers).includes('cross-origin-opener-policy'));
+  assert.ok(invalidSecurityHeaders(headers).includes('cross-origin-resource-policy'));
   assert.ok(invalidSecurityHeaders(headers).includes('server-version'));
 });
 

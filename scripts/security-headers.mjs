@@ -4,6 +4,8 @@ export const REQUIRED_HEADERS = {
   'x-frame-options': value => value.toUpperCase() === 'DENY',
   'referrer-policy': value => value.toLowerCase() === 'strict-origin-when-cross-origin',
   'permissions-policy': value => ['camera=()', 'geolocation=()', 'microphone=()'].every(rule => value.includes(rule)),
+  'cross-origin-opener-policy': value => value.toLowerCase() === 'same-origin',
+  'cross-origin-resource-policy': value => value.toLowerCase() === 'same-origin',
   'content-security-policy': value => [
     "default-src 'self'", "object-src 'none'", "frame-ancestors 'none'", "script-src 'self'",
     "style-src 'self' 'unsafe-inline'", "connect-src 'self'", 'https://api.spotify.com',

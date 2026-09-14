@@ -21,6 +21,40 @@ test('worker keeps home directories private and deploys from var lib', () => {
   assert.match(deploy, /sudo -n install -d -o '\$\{DEPLOY_USER\}' -m 0750/);
 });
 
+test('worker service applies compatible process, kernel, device, and capability confinement', () => {
+  for (const directive of [
+    'UMask=0077',
+    'PrivateDevices=true',
+    'ProtectClock=true',
+    'ProtectControlGroups=true',
+    'ProtectHostname=true',
+    'ProtectKernelLogs=true',
+    'ProtectKernelModules=true',
+    'ProtectKernelTunables=true',
+    'ProtectProc=invisible',
+    'ProcSubset=pid',
+    'RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6',
+    'RestrictRealtime=true',
+    'RestrictSUIDSGID=true',
+    'LockPersonality=true',
+    'RemoveIPC=true',
+    'CapabilityBoundingSet=',
+    'AmbientCapabilities=',
+    'SystemCallArchitectures=native'
+  ]) {
+    assert.match(service, new RegExp(`^${directive.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}$`, 'm'));
+  }
+  assert.doesNotMatch(service, /^PrivateNetwork=true$/m);
+  assert.doesNotMatch(service, /^MemoryDenyWriteExecute=true$/m);
+});
+
+test('activation audits the installed worker sandbox after its health check passes', () => {
+  const healthCheck = activation.indexOf('if [[ "$worker_ok" != true ]]');
+  const sandboxAudit = activation.indexOf('systemd-analyze security --no-pager analytify-sync.service');
+  assert.ok(healthCheck >= 0);
+  assert.ok(sandboxAudit > healthCheck);
+});
+
 test('remote control commands retry transient DNS and transport failures', () => {
   const deploy = readFileSync(new URL('./deploy.sh', import.meta.url), 'utf8');
   assert.match(deploy, /remote_command_with_retry\(\)/);
