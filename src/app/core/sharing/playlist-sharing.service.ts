@@ -207,6 +207,13 @@ export class PlaylistSharingService {
     if (error) throw error;
   }
 
+  async removeReceivedShare(shareId: string): Promise<void> {
+    const {error} = await this.supabase.client.rpc('remove_received_playlist_share', {
+      p_share_id: shareId
+    });
+    if (error) throw error;
+  }
+
   async recordDownload(
     shareId: string,
     spotifyPlaylistId: string,

@@ -114,6 +114,16 @@ describe('PlaylistSharingService', () => {
         }));
     });
 
+    it('removes only the current recipient association through its dedicated RPC', async () => {
+        rpc.mockResolvedValue({data: null, error: null});
+
+        await service.removeReceivedShare('share-id');
+
+        expect(rpc).toHaveBeenCalledWith('remove_received_playlist_share', {
+            p_share_id: 'share-id'
+        });
+    });
+
     it('deduplicates cached tracks and derives playlist statistics without Spotify calls', () => {
         const tracks = service.normalizeCachedTracks([
             { tracks: [{ ...cachedTrack('shared', 2), artists: [{ id: 'a', name: 'A' }, { id: 'b', name: 'B' }] }] },

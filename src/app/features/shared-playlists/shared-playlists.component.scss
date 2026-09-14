@@ -77,6 +77,39 @@
   > i { color: var(--color-accent); }
 }
 
+.received-share-card {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  overflow: hidden;
+
+  .share-card { border: 0; border-radius: 0; background: transparent; }
+  &:hover { border-color: var(--color-border-strong); background: var(--color-surface-raised); }
+}
+
+.received-share-remove {
+  min-height: 40px;
+  margin-right: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
+  padding: 0 11px;
+  background: transparent;
+  color: var(--color-danger);
+  font: inherit;
+  font-size: .72rem;
+  font-weight: 800;
+}
+.received-share-remove:hover:not(:disabled) { background: var(--color-danger-soft); }
+.received-share-remove:disabled { opacity: .45; cursor: not-allowed; }
+.remove-received-share-modal { max-width: 500px; }
+
 .owner-section { margin-top: 46px; }
 .share-publishing-notice { display: flex; align-items: center; gap: 8px; margin: 12px 0 0; padding: 10px 12px; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-raised); color: var(--color-text-muted); font-size: 0.8rem; line-height: 1.45; i { color: var(--color-accent); } }
 .owner-share-row { display: grid; grid-template-columns: 62px minmax(0, 1fr) auto; gap: 14px; align-items: center; margin-top: 9px; padding: 13px; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); &.revoked { opacity: 0.55; } img { width: 62px; height: 62px; border-radius: 9px; object-fit: cover; } h3 { margin: 4px 0 2px; } p { margin: 0; color: var(--color-text-subtle); font-size: 0.78rem; } }
@@ -303,6 +336,8 @@
 
 @media (max-width: 480px) {
   .share-card { grid-template-columns: 58px minmax(0, 1fr) auto; gap: 10px; img { width: 58px; height: 58px; } }
+  .received-share-card { grid-template-columns: minmax(0, 1fr); }
+  .received-share-remove { margin: 0 12px 12px; justify-content: center; }
   .owner-share-actions { flex-direction: column; }
   .share-mode-picker { grid-template-columns: 1fr; }
 }

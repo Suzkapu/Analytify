@@ -28,6 +28,7 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   availablePlaylists: ComparePlaylist[] = [];
   isLoading = true;
   busyShareId = '';
+  receivedShareRemovalRequest: PlaylistShare | null = null;
   errorMessage = '';
   successMessage = '';
   isShareDialogOpen = false;
@@ -517,6 +518,31 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
       await this.sharing.revokeShare(share.id);
       this.successMessage = `Access to “${share.playlistName}” was revoked.`;
       await this.reload(true);
+    } catch (error) {
+      this.errorMessage = this.describeError(error);
+    } finally {
+      this.busyShareId = '';
+    }
+  }
+
+  openReceivedShareRemoval(share: PlaylistShare): void {
+    if (!this.busyShareId) this.receivedShareRemovalRequest = share;
+  }
+
+  closeReceivedShareRemoval(): void {
+    if (!this.busyShareId) this.receivedShareRemovalRequest = null;
+  }
+
+  async confirmReceivedShareRemoval(): Promise<void> {
+    const share = this.receivedShareRemovalRequest;
+    if (!share || this.busyShareId) return;
+    this.busyShareId = share.id;
+    this.errorMessage = '';
+    try {
+      await this.sharing.removeReceivedShare(share.id);
+      this.receivedShares = this.receivedShares.filter(item => item.id !== share.id);
+      this.receivedShareRemovalRequest = null;
+      this.successMessage = `“${share.playlistName}” was removed from your shared playlists.`;
     } catch (error) {
       this.errorMessage = this.describeError(error);
     } finally {

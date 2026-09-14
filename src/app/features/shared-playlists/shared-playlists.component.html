@@ -46,15 +46,21 @@
       @if (receivedShares.length) {
         <div class="share-grid">
           @for (share of receivedShares; track trackShare($index, share)) {
-            <a [routerLink]="['/shared-playlists', share.id]" class="share-card">
-              <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="" loading="lazy" decoding="async">
-              <div>
-                <span class="card-label">Shared with you</span>
-                <h3>{{ receivedPlaylistName(share) }}</h3>
-                <p>{{ share.trackCount }} songs · revision {{ share.revision }}</p>
-              </div>
-              <i class="pi pi-chevron-right"></i>
-            </a>
+            <article class="received-share-card">
+              <a [routerLink]="['/shared-playlists', share.id]" class="share-card">
+                <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="" loading="lazy" decoding="async">
+                <div>
+                  <span class="card-label">Shared with you</span>
+                  <h3>{{ receivedPlaylistName(share) }}</h3>
+                  <p>{{ share.trackCount }} songs · revision {{ share.revision }}</p>
+                </div>
+                <i class="pi pi-chevron-right"></i>
+              </a>
+              <button type="button" class="received-share-remove" (click)="openReceivedShareRemoval(share)"
+                [disabled]="!!busyShareId" [attr.aria-label]="'Remove ' + share.playlistName + ' from my shared playlists'">
+                <i class="pi pi-times"></i><span>Remove</span>
+              </button>
+            </article>
           }
         </div>
       }
@@ -87,7 +93,7 @@
           <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="" loading="lazy" decoding="async">
           <div class="owner-share-copy">
             <span class="status-pill" [class.revoked]="share.revokedAt">
-              {{ share.revokedAt ? 'Revoked' : (share.recipientUserId ? 'Claimed' : 'Waiting for recipient') }}
+              {{ share.revokedAt ? 'Revoked' : (share.recipientUserId ? 'Claimed' : (share.acceptedAt ? 'Removed by recipient' : 'Waiting for recipient')) }}
             </span>
             <h3>{{ share.playlistName }}</h3>
             <p>{{ share.trackCount }} songs · revision {{ share.revision }}@if (share.recipientDisplayName) {
@@ -192,6 +198,31 @@
     }
   }
 </main>
+
+@if (receivedShareRemovalRequest; as share) {
+  <div class="share-modal-overlay" (click)="closeReceivedShareRemoval()">
+    <section class="share-modal remove-received-share-modal" role="alertdialog" aria-modal="true"
+      aria-labelledby="remove-received-share-title" aria-describedby="remove-received-share-description"
+      appAccessibleDialog (modalEscape)="closeReceivedShareRemoval()" (click)="$event.stopPropagation()">
+      <button type="button" class="share-modal-close" (click)="closeReceivedShareRemoval()"
+        [disabled]="!!busyShareId" aria-label="Keep shared playlist">×</button>
+      <div class="share-modal-icon revoke-icon"><i class="pi pi-folder-minus"></i></div>
+      <span class="eyebrow">Remove shared playlist</span>
+      <h2 id="remove-received-share-title">Remove “{{ share.playlistName }}”?</h2>
+      <p id="remove-received-share-description">It will disappear from Analytify and stop receiving updates. Your Spotify copy will remain unchanged.</p>
+      <p>The old claim link is retired. The owner can share a fresh link with you later.</p>
+      <div class="share-modal-actions">
+        <button type="button" class="share-secondary" appModalInitialFocus (click)="closeReceivedShareRemoval()"
+          [disabled]="!!busyShareId">Keep playlist</button>
+        <button type="button" class="stats-revoke-confirm" (click)="confirmReceivedShareRemoval()"
+          [disabled]="!!busyShareId">
+          <i class="pi" [ngClass]="busyShareId ? 'pi-spin pi-spinner' : 'pi-times'"></i>
+          {{ busyShareId ? 'Removing…' : 'Remove' }}
+        </button>
+      </div>
+    </section>
+  </div>
+}
 
 @if (isShareDialogOpen) {
   <div class="share-modal-overlay" (click)="closeShareDialog()">

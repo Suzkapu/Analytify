@@ -27,7 +27,8 @@ describe('SharedPlaylistsComponent', () => {
             subscribeToShareChanges: vi.fn().mockName("PlaylistSharingService.subscribeToShareChanges"),
             createShare: vi.fn().mockName("PlaylistSharingService.createShare"),
             refreshShare: vi.fn().mockName("PlaylistSharingService.refreshShare"),
-            revokeShare: vi.fn().mockName("PlaylistSharingService.revokeShare")
+            revokeShare: vi.fn().mockName("PlaylistSharingService.revokeShare"),
+            removeReceivedShare: vi.fn().mockName("PlaylistSharingService.removeReceivedShare")
         };
         auth = {
             isBackupActive: vi.fn().mockName("SpotifyAuthService.isBackupActive"),
@@ -61,6 +62,7 @@ describe('SharedPlaylistsComponent', () => {
             claimToken: 'token',
             claimUrl: 'https://analytify.app/shared-playlists/claim/token'
         });
+        sharing.removeReceivedShare.mockResolvedValue(undefined);
         auth.isBackupActive.mockReturnValue(true);
         auth.getAccessToken.mockReturnValue('access-token');
         auth.isTokenExpired.mockReturnValue(false);
@@ -424,6 +426,48 @@ describe('SharedPlaylistsComponent', () => {
 
         expect(sharing.revokeShare).not.toHaveBeenCalled();
         expect(component.busyShareId).toBe('');
+    });
+
+    it('requires custom confirmation before removing a received share and explains Spotify copies', async () => {
+        const received = {
+            id: 'received-share', playlistName: 'Party', ownerDisplayName: 'Owner',
+            playlistImageUrl: '', trackCount: 2, revision: 1
+        } as any;
+        sharing.listReceivedShares.mockResolvedValue([received]);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const removeButton = Array.from(fixture.nativeElement.querySelectorAll('.received-share-card button'))
+            .find((button: any) => button.textContent.includes('Remove')) as HTMLButtonElement;
+        removeButton.click();
+        fixture.detectChanges();
+
+        const dialog = fixture.nativeElement.querySelector('.remove-received-share-modal') as HTMLElement;
+        expect(dialog.textContent).toContain('Your Spotify copy will remain');
+        expect(dialog.textContent).toContain('fresh link');
+        expect(sharing.removeReceivedShare).not.toHaveBeenCalled();
+
+        await component.confirmReceivedShareRemoval();
+
+        expect(sharing.removeReceivedShare).toHaveBeenCalledWith('received-share');
+        expect(component.receivedShares).toEqual([]);
+        expect(component.receivedShareRemovalRequest).toBeNull();
+    });
+
+    it('shows the owner when a former recipient removed their association', async () => {
+        sharing.listOwnedShares.mockResolvedValue([{
+            id: 'removed-share', playlistName: 'Party', playlistImageUrl: '', trackCount: 2, revision: 1,
+            recipientUserId: null, recipientDisplayName: 'Former friend', acceptedAt: '2026-09-10T10:00:00Z',
+            revokedAt: null
+        }]);
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.querySelector('.owner-share-row .status-pill').textContent)
+            .toContain('Removed by recipient');
     });
 
     it('includes the owner in a received playlist name', () => {
