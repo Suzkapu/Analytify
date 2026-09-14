@@ -67,9 +67,11 @@ select is((select track_uris from retention_payload),
   array['spotify:track:retention-current', 'spotify:track:retention-week-one',
         'spotify:track:retention-week-three']::text[],
   'current and still-scoring prior recommendations are ordered newest first');
-select ok(not ('spotify:track:retention-expired' = any((select track_uris from retention_payload))),
+select ok(array_position((select track_uris from retention_payload),
+  'spotify:track:retention-expired') is null,
   'the oldest recommendation rolls off when the next four-round playlist window starts');
-select ok(not ('spotify:track:retention-future' = any((select track_uris from retention_payload))),
+select ok(array_position((select track_uris from retention_payload),
+  'spotify:track:retention-future') is null,
   'future recommendations cannot leak into the current playlist');
 select is((select cardinality(track_uris) from retention_payload), 3,
   'duplicate Spotify track URIs are emitted only once');
