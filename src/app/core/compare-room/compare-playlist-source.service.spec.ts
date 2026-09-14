@@ -63,13 +63,20 @@ describe('ComparePlaylistSourceService', () => {
                 images: [{ url: 'party.jpg' }],
                 tracks: { total: 750 },
                 owner: { id: 'main-user', display_name: 'Main user' }
+            },
+            {
+                id: 'shared-copy',
+                name: 'Shared with me',
+                images: [],
+                tracks: {total: 12},
+                owner: {id: 'friend', display_name: 'Friend'}
             }
         ]);
 
         const result = await service.loadMainPlaylists('host-token', 'main-user');
 
-        expect(result.map(playlist => playlist.id)).toEqual(['fav', 'party']);
-        expect(result.map(playlist => playlist.total)).toEqual([4200, 750]);
+        expect(result.map(playlist => playlist.id)).toEqual(['fav', 'party', 'shared-copy']);
+        expect(result.map(playlist => playlist.total)).toEqual([4200, 750, 12]);
         expect(auth.ensureInitialSync).not.toHaveBeenCalled();
         http.expectNone(() => true);
     });

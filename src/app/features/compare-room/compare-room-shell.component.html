@@ -72,27 +72,35 @@
                 }
                 <div>
                   <strong>{{ participant.displayName }}</strong>
-                  <span>{{ participant.isMainProfile ? 'Main profile' : 'Joined by QR' }}</span>
+                  <span>{{ participant.isMainProfile ? 'Your playlist group ' + participant.localSlotNumber : 'Joined by link' }}</span>
                 </div>
                 <span class="status-pill" [attr.data-status]="participant.status">{{ participant.status }}</span>
               </div>
               @if (participant.isMainProfile) {
                 <div class="playlist-field">
                   <span>Select one or more playlists</span>
-                  <input class="playlist-search" type="search" [(ngModel)]="mainPlaylistQuery" placeholder="Search your playlists…" [disabled]="participant.status === 'loading'">
-                  <div class="playlist-options" role="group" aria-label="Select playlists to contribute">
-                    @for (playlist of filteredMainPlaylists; track playlist) {
-                      <label>
-                        <input type="checkbox" [checked]="isMainPlaylistSelected(playlist.id)" [disabled]="participant.status === 'loading'" (change)="toggleMainPlaylist(playlist.id, $any($event.target).checked)">
-                        <span>{{ playlist.name }}</span>
-                        <small>{{ playlist.total }} songs</small>
-                      </label>
-                    }
-                  </div>
-                  <button type="button" class="selection-button" (click)="applyMainPlaylistSelection()" [disabled]="mainSelectedPlaylistIds.length === 0 || participant.status === 'loading'">
-                    <i class="pi" [ngClass]="participant.status === 'loading' ? 'pi-spin pi-spinner' : 'pi-check'"></i>
-                    Use {{ mainSelectedPlaylistIds.length }} selected {{ mainSelectedPlaylistIds.length === 1 ? 'playlist' : 'playlists' }}
-                  </button>
+                  @if (!mainPlaylistsLoaded) {
+                    <button type="button" class="selection-button" (click)="loadMainPlaylistChoices()" [disabled]="isLoadingMainPlaylists">
+                      <i class="pi" [ngClass]="isLoadingMainPlaylists ? 'pi-spin pi-spinner' : 'pi-list'"></i>
+                      {{ isLoadingMainPlaylists ? 'Loading playlists…' : 'Choose playlists' }}
+                    </button>
+                  } @else {
+                    <input class="playlist-search" type="search" [ngModel]="mainPlaylistQuery(participant.id)"
+                      (ngModelChange)="setMainPlaylistQuery(participant.id, $event)" placeholder="Search your playlists…" [disabled]="participant.status === 'loading'">
+                    <div class="playlist-options" role="group" [attr.aria-label]="'Select playlists for group ' + participant.localSlotNumber">
+                      @for (playlist of filteredMainPlaylists(participant.id); track playlist) {
+                        <label>
+                          <input type="checkbox" [checked]="isMainPlaylistSelected(participant.id, playlist.id)" [disabled]="participant.status === 'loading'" (change)="toggleMainPlaylist(participant.id, playlist.id, $any($event.target).checked)">
+                          <span>{{ playlist.name }}</span>
+                          <small>{{ playlist.total }} songs</small>
+                        </label>
+                      }
+                    </div>
+                    <button type="button" class="selection-button" (click)="applyMainPlaylistSelection(participant.id)" [disabled]="mainSelectionIds(participant.id).length === 0 || participant.status === 'loading'">
+                      <i class="pi" [ngClass]="participant.status === 'loading' ? 'pi-spin pi-spinner' : 'pi-check'"></i>
+                      Use {{ mainSelectionIds(participant.id).length }} selected {{ mainSelectionIds(participant.id).length === 1 ? 'playlist' : 'playlists' }}
+                    </button>
+                  }
                 </div>
               }
               @if (participantPlaylists(participant).length) {
@@ -117,6 +125,9 @@
               @if (participant.error) {
                 <p class="participant-error">{{ participant.error }}</p>
               }
+              @if (participant.isMainProfile && (participant.localSlotNumber || 1) > 1) {
+                <button type="button" class="remove-link" (click)="removeLocalSlot(participant.id)">Remove this group</button>
+              }
               @if (!participant.isMainProfile) {
                 <button type="button" class="remove-link" (click)="removeParticipant(participant.id)">Remove participant</button>
               }
@@ -140,6 +151,11 @@
                     <i class="pi" [ngClass]="copiedInvitationId === invitation.id ? 'pi-check' : 'pi-copy'"></i>
                     {{ copiedInvitationId === invitation.id ? 'Link copied' : 'Copy link' }}
                   </button>
+                  @if (enteredAuthenticated) {
+                    <button type="button" class="copy-button" (click)="joinInvitationYourself(invitation)">
+                      <i class="pi pi-user-plus"></i> Join myself
+                    </button>
+                  }
                 </div>
               } @else {
                 <i class="pi pi-spin pi-spinner invitation-spinner"></i>

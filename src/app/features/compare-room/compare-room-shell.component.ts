@@ -30,8 +30,8 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
   sharedTracks: CompareTrack[] = [];
   proposal: CompareMergeProposal | null = null;
   mainPlaylists: ComparePlaylist[] = [];
-  mainSelectedPlaylistIds: string[] = [];
-  mainPlaylistQuery = '';
+  mainPlaylistsLoaded = false;
+  isLoadingMainPlaylists = false;
   mainParticipantId = '';
   mergeMode: CompareMergeMode = 'intersection';
   playlistName = '';
@@ -45,6 +45,9 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
   private mainAccessToken = '';
+  private mainPlaylistsPromise: Promise<void> | null = null;
+  private selectedPlaylistIdsByParticipant = new Map<string, string[]>();
+  private playlistQueriesByParticipant = new Map<string, string>();
 
   constructor(
     public coordinator: CompareRoomCoordinatorService,
@@ -81,12 +84,9 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
           imageUrl: profile.images?.[0]?.url || '',
           status: 'selecting',
           tracks: [],
-          isMainProfile: true
+          isMainProfile: true,
+          localSlotNumber: 1
         };
-        this.mainPlaylists = await this.source.loadMainPlaylists(
-          this.mainAccessToken,
-          this.auth.getUserId() || profile.id
-        );
       }
       await this.coordinator.createRoom(mainParticipant);
       const initialInvitations = mainParticipant ? 1 : 2;
@@ -100,19 +100,43 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleMainPlaylist(playlistId: string, checked: boolean): void {
-    this.mainSelectedPlaylistIds = checked
-      ? [...this.mainSelectedPlaylistIds, playlistId]
-      : this.mainSelectedPlaylistIds.filter(id => id !== playlistId);
+  async loadMainPlaylistChoices(): Promise<void> {
+    if (this.mainPlaylistsLoaded) return;
+    if (this.mainPlaylistsPromise) return this.mainPlaylistsPromise;
+    const participant = this.participants.find(item => item.isMainProfile);
+    if (!participant) return;
+    this.isLoadingMainPlaylists = true;
+    this.mainPlaylistsPromise = (async () => {
+      try {
+        this.mainPlaylists = await this.source.loadMainPlaylists(
+          await this.getMainAccessToken(),
+          this.auth.getUserId() || participant.spotifyUserId
+        );
+        this.mainPlaylistsLoaded = true;
+      } catch (error) {
+        this.errorMessage = this.describeError(error);
+      } finally {
+        this.isLoadingMainPlaylists = false;
+        this.mainPlaylistsPromise = null;
+      }
+    })();
+    return this.mainPlaylistsPromise;
   }
 
-  isMainPlaylistSelected(playlistId: string): boolean {
-    return this.mainSelectedPlaylistIds.includes(playlistId);
+  toggleMainPlaylist(participantId: string, playlistId: string, checked: boolean): void {
+    const selected = this.mainSelectionIds(participantId);
+    this.selectedPlaylistIdsByParticipant.set(participantId, checked
+      ? [...selected, playlistId]
+      : selected.filter(id => id !== playlistId));
   }
 
-  async applyMainPlaylistSelection(): Promise<void> {
-    const participant = this.participants.find(item => item.id === this.mainParticipantId);
-    const playlists = this.mainSelectedPlaylistIds
+  isMainPlaylistSelected(participantId: string, playlistId: string): boolean {
+    return this.mainSelectionIds(participantId).includes(playlistId);
+  }
+
+  async applyMainPlaylistSelection(participantId: string): Promise<void> {
+    const participant = this.participants.find(item => item.id === participantId && item.isMainProfile);
+    const playlists = this.mainSelectionIds(participantId)
       .map(id => this.mainPlaylists.find(item => item.id === id))
       .filter((playlist): playlist is ComparePlaylist => !!playlist);
     if (!participant || playlists.length === 0) return;
@@ -162,6 +186,33 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     } finally {
       this.isAddingParticipant = false;
     }
+  }
+
+  async joinInvitationYourself(invitation: CompareInvitation): Promise<void> {
+    const main = this.participants.find(item => item.isMainProfile);
+    if (!main || invitation.claimedBy) return;
+    try {
+      await this.coordinator.cancelInvitation(invitation.id);
+      const localSlotNumber = this.participants.filter(item => item.isMainProfile).length + 1;
+      this.coordinator.addLocalParticipant({
+        id: this.randomId(),
+        spotifyUserId: main.spotifyUserId,
+        displayName: main.displayName,
+        imageUrl: main.imageUrl,
+        status: 'selecting',
+        tracks: [],
+        isMainProfile: true,
+        localSlotNumber
+      });
+    } catch (error) {
+      this.errorMessage = this.describeError(error);
+    }
+  }
+
+  removeLocalSlot(participantId: string): void {
+    this.selectedPlaylistIdsByParticipant.delete(participantId);
+    this.playlistQueriesByParticipant.delete(participantId);
+    this.coordinator.removeLocalParticipant(participantId);
   }
 
   removeParticipant(participantId: string): void {
@@ -251,7 +302,9 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
         fingerprint: this.proposal.contentHash
       }
     );
-    this.coordinator.setLocalSaveResult(mainParticipant.id, result);
+    this.participants
+      .filter(participant => participant.isMainProfile && participant.spotifyUserId === mainParticipant.spotifyUserId)
+      .forEach(participant => this.coordinator.setLocalSaveResult(participant.id, result));
   }
 
   async startAnother(): Promise<void> {
@@ -316,8 +369,20 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     return this.proposal?.participantStats?.find(stats => stats.participantId === participantId);
   }
 
-  get filteredMainPlaylists(): ComparePlaylist[] {
-    const query = this.mainPlaylistQuery.trim().toLocaleLowerCase();
+  mainSelectionIds(participantId: string): string[] {
+    return this.selectedPlaylistIdsByParticipant.get(participantId) || [];
+  }
+
+  mainPlaylistQuery(participantId: string): string {
+    return this.playlistQueriesByParticipant.get(participantId) || '';
+  }
+
+  setMainPlaylistQuery(participantId: string, query: string): void {
+    this.playlistQueriesByParticipant.set(participantId, query);
+  }
+
+  filteredMainPlaylists(participantId: string): ComparePlaylist[] {
+    const query = this.mainPlaylistQuery(participantId).trim().toLocaleLowerCase();
     if (!query) return this.mainPlaylists;
     return this.mainPlaylists.filter(playlist => playlist.name.toLocaleLowerCase().includes(query));
   }

@@ -13,7 +13,7 @@
               <span>{{ playlists.length === 1 ? 'playlist' : 'playlists' }}</span>
             </span>
           </div>
-          <p>Open a playlist, see a quick summary, or combine several into one.</p>
+          <p>Open a playlist or see a quick summary. Use Compare Room to compare or combine playlist groups.</p>
           @if (isRefreshingPlaylists) {
             <small class="page-sync-state" role="status">
               <i class="pi pi-spin pi-spinner"></i> Checking Spotify for updates…
@@ -34,15 +34,6 @@
           </label>
         </div>
         <div class="controls-right">
-          <button (click)="toggleMergeSelectionMode()" class="p-button merge-toggle-button"
-            [class.p-button-outlined]="!isMergeSelectionMode"
-            [class.p-button-secondary]="!isMergeSelectionMode"
-            [disabled]="isCreatingMergedPlaylist"
-            [attr.aria-label]="isMergeSelectionMode ? 'Cancel playlist merge' : 'Merge playlists'"
-            [title]="isMergeSelectionMode ? 'Cancel playlist merge' : 'Select multiple playlists and combine all unique songs'">
-            <i class="pi" aria-hidden="true" [ngClass]="isMergeSelectionMode ? 'pi-times' : 'pi-clone'"></i>
-            <span class="merge-toggle-label">{{ isMergeSelectionMode ? 'Cancel merge' : 'Merge' }}</span>
-          </button>
           @if (savedPlaylistCount > 0) {
             <button type="button" (click)="toggleSavedPlaylists()"
               class="p-button p-button-outlined p-button-secondary saved-toggle-button"
@@ -69,69 +60,6 @@
       </section>
     }
 
-    @if (isMergeSelectionMode) {
-      <section class="merge-composer" aria-live="polite">
-        <div class="merge-composer-copy">
-          <span class="merge-eyebrow">Combine without duplicates</span>
-          <h3>Select at least two playlists</h3>
-          <p>{{ selectedPlaylistIds.size }} selected · every unique song will be added once</p>
-          @if (selectedPlaylists.length) {
-            <div class="selected-playlist-chips">
-              @for (playlist of selectedPlaylists; track playlist) {
-                <button type="button" (click)="togglePlaylistSelection(playlist)"
-                  [disabled]="isCreatingMergedPlaylist" title="Remove from selection">
-                  {{ playlist.name }} <span>×</span>
-                </button>
-              }
-            </div>
-          }
-        </div>
-        <label class="merge-name-field">
-          <span>New playlist name</span>
-          <input type="text" maxlength="100" [ngModel]="mergedPlaylistName"
-            (ngModelChange)="onMergedPlaylistNameChange($event)" placeholder="Merged Playlist">
-        </label>
-        <div class="merge-composer-actions">
-          <button type="button" class="merge-create-button" (click)="createMergedPlaylist()"
-            [disabled]="selectedPlaylistIds.size < 2 || !mergedPlaylistName.trim() || isCreatingMergedPlaylist">
-            <i class="pi" [ngClass]="isCreatingMergedPlaylist ? 'pi-spin pi-spinner' : 'pi-spotify'"></i>
-            {{ isCreatingMergedPlaylist ? 'Creating…' : (mergeResult && !mergeResult.success ? 'Resume same playlist' : 'Create on Spotify') }}
-          </button>
-          @if (mergeProgress) {
-            <small>{{ mergeProgress }}</small>
-          }
-          @if (mergeError) {
-            <small class="merge-error">{{ mergeError }}</small>
-          }
-        </div>
-      </section>
-    }
-
-    @if (mergeResult) {
-      <section class="merge-success" [class.merge-failure]="!mergeResult.success" role="status">
-        <i class="pi" [ngClass]="mergeResult.success ? 'pi-check-circle' : 'pi-exclamation-circle'"></i>
-        <div>
-          @if (mergeResult.success) {
-            <strong>“{{ mergeResult.playlistName }}” is ready</strong>
-          }
-          @if (!mergeResult.success) {
-            <strong>Spotify could not finish “{{ mergeResult.playlistName }}”</strong>
-          }
-          @if (mergeResult.success) {
-            <span>{{ mergeResult.addedTracks }} unique songs were added to your private Spotify playlist.</span>
-          }
-          @if (!mergeResult.success) {
-            <span>{{ mergeResult.addedTracks }} songs were added before the error. {{ mergeResult.error }}</span>
-          }
-        </div>
-        @if (mergeResult.playlistUrl) {
-          <a class="spotify-text-link spotify-destination"
-          [href]="mergeResult.playlistUrl | safeSpotifyUrl:'playlist'" target="_blank" rel="noopener noreferrer">Inspect in Spotify</a>
-        }
-        <button type="button" (click)="dismissMergeResult()" aria-label="Dismiss success message">×</button>
-      </section>
-    }
-
     @if (isLoadingPlaylists && playlists.length === 0) {
       <app-page-state class="no-playlists"
         [loading]="true" icon="pi-spinner" title="Loading your playlists…"
@@ -146,18 +74,8 @@
 
     <section class="card-container playlists-grid" aria-label="Your playlists">
       @for (playlist of filteredPlaylists; track trackPlaylist($index, playlist)) {
-        <div class="item-card" [class.merge-mode]="isMergeSelectionMode"
-          [class.merge-selected]="isPlaylistSelected(playlist.id)"
-          [class.saved-playlist-card]="isSavedPlaylist(playlist)">
+        <div class="item-card" [class.saved-playlist-card]="isSavedPlaylist(playlist)">
           <div class="card-content">
-            @if (isMergeSelectionMode) {
-              <button type="button" class="playlist-select-button"
-                (click)="togglePlaylistSelection(playlist)" [disabled]="isCreatingMergedPlaylist"
-                [attr.aria-pressed]="isPlaylistSelected(playlist.id)"
-                [attr.aria-label]="(isPlaylistSelected(playlist.id) ? 'Remove ' : 'Select ') + playlist.name">
-                <i class="pi" [ngClass]="isPlaylistSelected(playlist.id) ? 'pi-check' : 'pi-plus'"></i>
-              </button>
-            }
             <div class="card-info">
               <div class="image-box">
                 <img
@@ -182,17 +100,15 @@
               <p class="description">{{ playlist.description }}</p>
             </div>
           </div>
-          @if (!isMergeSelectionMode) {
-            <div class="card-actions">
-              <button (click)="viewSongs(playlist.id)" class="p-button playlist-card-action">
-                <i class="pi pi-list"></i><span>Explore</span>
-              </button>
-              <button (click)="viewAnalysis(playlist.id)"
-                class="p-button p-button-outlined p-button-secondary playlist-card-action">
-                <i class="pi pi-chart-bar"></i><span>Analyze</span>
-              </button>
-            </div>
-          }
+          <div class="card-actions">
+            <button (click)="viewSongs(playlist.id)" class="p-button playlist-card-action">
+              <i class="pi pi-list"></i><span>Explore</span>
+            </button>
+            <button (click)="viewAnalysis(playlist.id)"
+              class="p-button p-button-outlined p-button-secondary playlist-card-action">
+              <i class="pi pi-chart-bar"></i><span>Analyze</span>
+            </button>
+          </div>
         </div>
       </div>
     }

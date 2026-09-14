@@ -107,6 +107,22 @@ export class CompareRoomCoordinatorService {
     this.invalidateProposal();
   }
 
+  addLocalParticipant(participant: CompareParticipant): void {
+    if (!participant.isMainProfile || this.participants$.value.some(item => item.id === participant.id)) return;
+    this.acceptedParticipantIds.add(participant.id);
+    this.upsertParticipant(participant);
+    this.invalidateProposal();
+  }
+
+  removeLocalParticipant(participantId: string): void {
+    const participant = this.participants$.value.find(item => item.id === participantId);
+    if (!participant?.isMainProfile || (participant.localSlotNumber || 1) <= 1) return;
+    this.acceptedParticipantIds.delete(participantId);
+    this.participantTrackBuffers.delete(participantId);
+    this.participants$.next(this.participants$.value.filter(item => item.id !== participantId));
+    this.invalidateProposal();
+  }
+
   getReadyParticipants(): CompareParticipant[] {
     return this.participants$.value.filter(participant =>
       participant.status === 'ready' && this.selectedPlaylists(participant).length > 0
@@ -250,15 +266,8 @@ export class CompareRoomCoordinatorService {
 
     if (message.type === 'participant-state') {
       if (!this.acceptedParticipantIds.has(message.participant.id)) return;
-      const duplicateAccount = this.participants$.value.find(participant =>
-        participant.id !== message.participant.id &&
-        participant.spotifyUserId === message.participant.spotifyUserId
-      );
-      if (duplicateAccount) {
-        void this.removeParticipant(message.participant.id).catch(error => this.reportError(error));
-        this.error$.next(`${duplicateAccount.displayName} is already in this room.`);
-        return;
-      }
+      // Participant IDs identify comparison slots. Spotify identities may
+      // intentionally repeat when one account contributes separate groups.
     } else if ('participantId' in message && !this.acceptedParticipantIds.has(message.participantId)) {
       return;
     }

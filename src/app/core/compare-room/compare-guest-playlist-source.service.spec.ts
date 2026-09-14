@@ -132,6 +132,22 @@ describe('CompareGuestPlaylistSourceService', () => {
         expect(result.tracks.map(item => item.id)).toEqual(['a', 'shared', 'b']);
     });
 
+    it('loads independent guest playlist selections in parallel', async () => {
+        const releases: Array<() => void> = [];
+        spotify.getPlaylistTracks.mockImplementation(() => new Promise<CompareTrack[]>(resolve => {
+            releases.push(() => resolve([track(String(releases.length))]));
+        }));
+
+        const loading = service.loadSelection([
+            {id: 'one', name: 'One', imageUrl: '', total: 1, ownerName: ''},
+            {id: 'two', name: 'Two', imageUrl: '', total: 1, ownerName: ''},
+            {id: 'three', name: 'Three', imageUrl: '', total: 1, ownerName: ''}
+        ], 'guest-token', 'guest-user');
+        await vi.waitFor(() => expect(spotify.getPlaylistTracks).toHaveBeenCalledTimes(3));
+        releases.forEach(release => release());
+        await expect(loading).resolves.toMatchObject({source: 'spotify'});
+    });
+
     function track(id: string): CompareTrack {
         return {
             id,

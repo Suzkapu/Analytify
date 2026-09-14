@@ -7,8 +7,6 @@ import { PlaylistsComponent } from './playlists.component';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
-import { ComparePlaylistSourceService } from '@core/compare-room/compare-playlist-source.service';
-import { ParticipantSpotifyService } from '@core/compare-room/participant-spotify.service';
 import { PlaylistLoaderService } from '@core/sync/playlist-loader/playlist-loader.service';
 import { SharedModule } from '@shared/shared.module';
 
@@ -18,8 +16,6 @@ describe('PlaylistsComponent', () => {
     let spotifyDataService: any;
     let authService: any;
     let storageService: any;
-    let comparePlaylistSource: any;
-    let participantSpotify: any;
     let playlistLoader: any;
     let storage: Map<string, string>;
 
@@ -45,12 +41,6 @@ describe('PlaylistsComponent', () => {
             setItem: vi.fn().mockName("StorageService.setItem"),
             restoreItemsFromCloud: vi.fn().mockName("StorageService.restoreItemsFromCloud")
         };
-        comparePlaylistSource = {
-            loadMainTracks: vi.fn().mockName("ComparePlaylistSourceService.loadMainTracks")
-        };
-        participantSpotify = {
-            createPlaylist: vi.fn().mockName("ParticipantSpotifyService.createPlaylist")
-        };
         playlistLoader = {
             recordPortfolioMetadata: vi.fn().mockName("PlaylistLoaderService.recordPortfolioMetadata")
         };
@@ -73,8 +63,6 @@ describe('PlaylistsComponent', () => {
                 { provide: SpotifyDataService, useValue: spotifyDataService },
                 { provide: SpotifyAuthService, useValue: authService },
                 { provide: StorageService, useValue: storageService },
-                { provide: ComparePlaylistSourceService, useValue: comparePlaylistSource },
-                { provide: ParticipantSpotifyService, useValue: participantSpotify },
                 { provide: PlaylistLoaderService, useValue: playlistLoader }
             ],
             schemas: [NO_ERRORS_SCHEMA]
@@ -113,8 +101,7 @@ describe('PlaylistsComponent', () => {
         expect(element.querySelector('.page-hero h1')?.textContent).toContain('Your playlists');
         expect(element.querySelector('.playlist-count-chip')?.getAttribute('aria-label')).toBe('1 playlist');
         expect(element.querySelector('.page-toolbar input[type="search"]')).not.toBeNull();
-        expect(element.querySelector('.merge-toggle-button')?.getAttribute('aria-label')).toBe('Merge playlists');
-        expect(element.querySelector('.merge-toggle-button .merge-toggle-label')?.textContent).toContain('Merge');
+        expect(element.querySelector('.merge-toggle-button')).toBeNull();
         const cardActions = Array.from(element.querySelectorAll('.item-card .card-actions button'));
         expect(cardActions.length).toBe(2);
         expect(cardActions.every(button => button.classList.contains('playlist-card-action'))).toBe(true);
@@ -242,83 +229,4 @@ describe('PlaylistsComponent', () => {
         expect(cards[1].getBoundingClientRect().height).toBeCloseTo(compactHeight, 0);
     });
 
-    it('merges multiple selected playlists without duplicate tracks', async () => {
-        component.playlists = [
-            { id: 'one', name: 'One', tracks: { total: 2 } },
-            { id: 'two', name: 'Two', tracks: { total: 2 } }
-        ];
-        comparePlaylistSource.loadMainTracks.mockImplementation(async (playlist: any) => ({
-            source: 'local' as const,
-            tracks: playlist.id === 'one'
-                ? [compareTrack('a', 1), compareTrack('shared', 2)]
-                : [compareTrack('shared', 1), compareTrack('b', 2)]
-        }));
-        participantSpotify.createPlaylist.mockResolvedValue({
-            success: true,
-            playlistName: 'My Merge',
-            playlistId: 'merged',
-            playlistUrl: 'https://open.spotify.com/playlist/merged',
-            addedTracks: 3
-        });
-
-        component.toggleMergeSelectionMode();
-        component.togglePlaylistSelection(component.playlists[0]);
-        component.togglePlaylistSelection(component.playlists[1]);
-        component.onMergedPlaylistNameChange('My Merge');
-        await component.createMergedPlaylist();
-
-        const createdTracks = vi.mocked(participantSpotify.createPlaylist).mock.lastCall![3];
-        expect(createdTracks.map((track: any) => track.id)).toEqual(['a', 'shared', 'b']);
-        expect(component.mergeResult?.playlistId).toBe('merged');
-        expect(component.playlists.map(playlist => playlist.id)).toEqual(['merged', 'one', 'two']);
-    });
-
-    it('resumes a failed merge with the same operation and clears selection only after success', async () => {
-        component.playlists = [
-            { id: 'one', name: 'One', tracks: { total: 1 } },
-            { id: 'two', name: 'Two', tracks: { total: 1 } }
-        ];
-        comparePlaylistSource.loadMainTracks.mockImplementation(async (playlist: any) => ({
-            source: 'local' as const,
-            tracks: [compareTrack(playlist.id, 1)]
-        }));
-        participantSpotify.createPlaylist
-            .mockResolvedValueOnce({
-                success: false, playlistName: 'Recovery Merge', playlistId: 'partial',
-                playlistUrl: 'https://open.spotify.com/playlist/partial', addedTracks: 100,
-                error: 'Second batch failed'
-            })
-            .mockResolvedValueOnce({
-                success: true, playlistName: 'Recovery Merge', playlistId: 'partial',
-                playlistUrl: 'https://open.spotify.com/playlist/partial', addedTracks: 2
-            });
-        component.toggleMergeSelectionMode();
-        component.togglePlaylistSelection(component.playlists[0]);
-        component.togglePlaylistSelection(component.playlists[1]);
-        component.onMergedPlaylistNameChange('Recovery Merge');
-
-        await component.createMergedPlaylist();
-        const firstOperation = vi.mocked(participantSpotify.createPlaylist).mock.calls[0][4];
-        expect(component.selectedPlaylistIds.size).toBe(2);
-        expect(component.mergeResult?.playlistId).toBe('partial');
-
-        await component.createMergedPlaylist();
-        const retryOperation = vi.mocked(participantSpotify.createPlaylist).mock.calls[1][4];
-        expect(retryOperation).toEqual(firstOperation);
-        expect(component.selectedPlaylistIds.size).toBe(0);
-        expect(component.mergeResult?.success).toBe(true);
-    });
-
-    function compareTrack(id: string, playlistIndex: number) {
-        return {
-            id,
-            uri: `spotify:track:${id}`,
-            name: id,
-            artists: [{ id: 'artist', name: 'Artist' }],
-            albumName: 'Album',
-            imageUrl: '',
-            spotifyUrl: '',
-            playlistIndex
-        };
-    }
 });

@@ -3,6 +3,7 @@ import {StorageService} from '@core/data-access/storage/storage.service';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {ComparePlaylist, CompareTrack} from './compare-room.models';
 import {ParticipantSpotifyService} from './participant-spotify.service';
+import {mapWithConcurrency} from '@core/performance/async-load';
 
 type GuestDataSource = 'local' | 'cloud' | 'spotify';
 
@@ -118,8 +119,12 @@ export class CompareGuestPlaylistSourceService {
     const tracks: CompareTrack[] = [];
     const seen = new Set<string>();
     const sources = new Set<GuestDataSource>();
-    for (const playlist of playlists) {
-      const result = await this.loadTracks(playlist, accessToken, spotifyProfileId);
+    const results = await mapWithConcurrency(
+      playlists,
+      playlist => this.loadTracks(playlist, accessToken, spotifyProfileId),
+      3
+    );
+    for (const result of results) {
       sources.add(result.source);
       result.tracks.forEach(track => {
         if (seen.has(track.id)) return;

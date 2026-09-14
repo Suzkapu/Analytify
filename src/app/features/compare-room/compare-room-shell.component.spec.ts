@@ -10,7 +10,9 @@ describe('CompareRoomShellComponent', () => {
             sharedTracks$: new BehaviorSubject<any[]>([]),
             proposal$: new BehaviorSubject<any>(null),
             error$: new BehaviorSubject<string>(''),
-            createRoom: vi.fn().mockName('createRoom').mockResolvedValue(undefined),
+            createRoom: vi.fn().mockName('createRoom').mockImplementation(async (participant: any) => {
+                coordinator.participants$.next(participant ? [participant] : []);
+            }),
             addInvitation: vi.fn().mockName('addInvitation').mockResolvedValue(undefined)
         };
         const auth = {
@@ -44,6 +46,8 @@ describe('CompareRoomShellComponent', () => {
                 displayName: 'Mobile host',
                 isMainProfile: true
             }));
+            expect(source.loadMainPlaylists).not.toHaveBeenCalled();
+            await component.loadMainPlaylistChoices();
             expect(source.loadMainPlaylists).toHaveBeenCalledWith('host-token', 'host-user');
             expect(spotify.getProfile).not.toHaveBeenCalled();
             expect(coordinator.addInvitation).toHaveBeenCalledTimes(1);
@@ -52,6 +56,68 @@ describe('CompareRoomShellComponent', () => {
         finally {
             Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalWidth });
         }
+    });
+
+    it('turns an invite into another local playlist group for the same account', async () => {
+        const host = {
+            id: 'host-one', spotifyUserId: 'same-account', displayName: 'Host', imageUrl: '',
+            status: 'selecting', tracks: [], isMainProfile: true, localSlotNumber: 1
+        };
+        const cancelInvitation = vi.fn().mockResolvedValue(undefined);
+        const addLocalParticipant = vi.fn();
+        const coordinator = {
+            participants$: new BehaviorSubject<any[]>([host]), invitations$: new BehaviorSubject<any[]>([]),
+            sharedTracks$: new BehaviorSubject<any[]>([]), proposal$: new BehaviorSubject<any>(null),
+            error$: new BehaviorSubject<string>(''), cancelInvitation, addLocalParticipant
+        };
+        const auth = {isAuthenticated: () => true};
+        const component = new CompareRoomShellComponent(
+            coordinator as any, auth as any, {} as any, {} as any, {} as any, {} as any, {} as any
+        );
+        component.participants = [host as any];
+        const invitation = {id: 'invite', secret: 'secret', joinUrl: 'https://example.test', qrDataUrl: ''};
+
+        await component.joinInvitationYourself(invitation as any);
+
+        expect(cancelInvitation).toHaveBeenCalledWith('invite');
+        expect(addLocalParticipant).toHaveBeenCalledWith(expect.objectContaining({
+            spotifyUserId: 'same-account', isMainProfile: true, localSlotNumber: 2, status: 'selecting'
+        }));
+    });
+
+    it('creates one Spotify result for repeated local slots and completes every local card', async () => {
+        const slots = [
+            {id: 'slot-one', spotifyUserId: 'host-user', displayName: 'Host', imageUrl: '', status: 'saving', tracks: [], isMainProfile: true},
+            {id: 'slot-two', spotifyUserId: 'host-user', displayName: 'Host', imageUrl: '', status: 'saving', tracks: [], isMainProfile: true}
+        ];
+        const setLocalSaveResult = vi.fn();
+        const coordinator = {
+            participants$: new BehaviorSubject<any[]>(slots), invitations$: new BehaviorSubject<any[]>([]),
+            sharedTracks$: new BehaviorSubject<any[]>([]), proposal$: new BehaviorSubject<any>(null),
+            error$: new BehaviorSubject<string>(''), currentRoomId: 'room-id', setLocalSaveResult,
+            executeProposal: vi.fn().mockResolvedValue(undefined)
+        };
+        const auth = {
+            isAuthenticated: () => true, isTokenExpired: () => false,
+            getAccessToken: () => 'host-token'
+        };
+        const createPlaylist = vi.fn().mockResolvedValue({
+            success: true, playlistName: 'Compared', playlistId: 'result', addedTracks: 3
+        });
+        const component = new CompareRoomShellComponent(
+            coordinator as any, auth as any, {} as any, {createPlaylist} as any,
+            {} as any, {} as any, {} as any
+        );
+        component.participants = slots as any;
+        component.proposal = {
+            id: 'proposal', contentHash: 'hash', name: 'Compared', description: 'Groups',
+            tracks: [], trackCount: 0, participantNames: ['Host', 'Host']
+        };
+
+        await component.execute();
+
+        expect(createPlaylist).toHaveBeenCalledTimes(1);
+        expect(setLocalSaveResult.mock.calls.map(call => call[0])).toEqual(['slot-one', 'slot-two']);
     });
 
     it('retries only the failed host playlist with the same proposal operation', async () => {

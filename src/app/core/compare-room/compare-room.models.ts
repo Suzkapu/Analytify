@@ -49,6 +49,8 @@ export interface CompareParticipant {
   approvedProposalHash?: string;
   result?: CompareSaveResult;
   isMainProfile?: boolean;
+  /** One browser/account can contribute several independent playlist groups. */
+  localSlotNumber?: number;
   error?: string;
 }
 

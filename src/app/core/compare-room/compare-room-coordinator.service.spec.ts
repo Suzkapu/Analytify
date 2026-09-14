@@ -4,6 +4,23 @@ import { CompareRoomCoordinatorService, resolveQrCodeApi } from './compare-room-
 import { PlaylistIntersectionService } from './playlist-intersection.service';
 
 describe('CompareRoomCoordinatorService', () => {
+    it('keeps multiple local slots from the same Spotify account as distinct comparison groups', () => {
+        const transport = { send: vi.fn().mockName('send').mockResolvedValue(undefined) };
+        const coordinator = new CompareRoomCoordinatorService(transport as any, new PlaylistIntersectionService());
+        const first = participant('host-a', 'Host', [playlist('first')], ['a', 'shared']);
+        const second = participant('host-b', 'Host', [playlist('second')], ['b', 'shared']);
+        first.spotifyUserId = 'same-account';
+        second.spotifyUserId = 'same-account';
+        first.isMainProfile = true;
+        second.isMainProfile = true;
+
+        coordinator.addLocalParticipant(first);
+        coordinator.addLocalParticipant(second);
+
+        expect(coordinator.participants$.value.map(item => item.id)).toEqual(['host-a', 'host-b']);
+        expect(coordinator.canPrepareResult()).toBe(true);
+    });
+
     it('removes a departed guest, frees the claimed invitation, and invalidates the proposal with a reason', () => {
         const transport = { send: vi.fn().mockName('send').mockResolvedValue(undefined) };
         const coordinator = new CompareRoomCoordinatorService(transport as any, new PlaylistIntersectionService());
