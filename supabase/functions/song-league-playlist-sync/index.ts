@@ -297,7 +297,8 @@ Deno.serve(async (request: Request) => {
             playlistId &&
             !mapping?.last_error &&
             Number(mapping?.last_synced_revision || 0) >= finalRevision &&
-            (mapping?.last_synced_round_id || null) === (payload.round_id || null)
+            (mapping?.last_synced_round_id || null) === (payload.round_id || null) &&
+            (mapping?.last_synced_window_start || null) === (payload.playlist_window_start || null)
           ) {
             finalResults.push({userId: member.user_id, success: true, skipped: true});
             continue;
