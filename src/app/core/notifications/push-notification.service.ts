@@ -80,7 +80,7 @@ export class PushNotificationService {
           subscription = await this.swPush.requestSubscription({
             serverPublicKey: environment.vapidPublicKey
           });
-        } catch (error) {
+        } catch {
           // Some browsers finish registration before resolving (or reject a
           // duplicate request). Reconcile the actual PushManager state before
           // reporting a failure to somebody who already granted access.

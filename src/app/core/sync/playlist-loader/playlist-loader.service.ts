@@ -359,7 +359,7 @@ export class PlaylistLoaderService {
       try {
         const parsedArtists = JSON.parse(storedArtists);
         cachedArtists = Array.isArray(parsedArtists) ? parsedArtists : [];
-      } catch (e) {}
+      } catch {}
     }
 
     if (task.mode === 'full' && isDailyFullSync) {
@@ -393,7 +393,7 @@ export class PlaylistLoaderService {
         try {
           const parsedArtists = JSON.parse(storedArtists);
           task.artists = Array.isArray(parsedArtists) ? parsedArtists : [];
-        } catch (e) {}
+        } catch {}
       }
       task.trackIndexCounter = 0;
     } else {
@@ -694,7 +694,7 @@ export class PlaylistLoaderService {
     mergeTracks: boolean = true
   ) {
     cachedArtists.forEach(cachedArtist => {
-      let existingArtist = targetArray.find(a => a.id === cachedArtist.id);
+      const existingArtist = targetArray.find(a => a.id === cachedArtist.id);
       
       if (mergeTracks) {
         const tracksToMerge = cachedArtist.tracks || [];
@@ -718,7 +718,7 @@ export class PlaylistLoaderService {
               existingArtist.tracks = [];
             }
             mappedTracks.forEach((track: any) => {
-              let hasTrack = existingArtist.tracks.some((t: any) => t.id === track.id);
+              const hasTrack = existingArtist.tracks.some((t: any) => t.id === track.id);
               if (!hasTrack) {
                 existingArtist.tracks.push(track);
               }
@@ -1054,8 +1054,8 @@ export class PlaylistLoaderService {
           playlist_index: item.track.playlist_index || sourceIndex
         };
         
-        for (let artist of item.track.artists || []) {
-          let existingArtist = targetArray.find(a => a.id === artist.id);
+        for (const artist of item.track.artists || []) {
+          const existingArtist = targetArray.find(a => a.id === artist.id);
           if (!existingArtist) {
             // Create a new artist copy to avoid mutating frozen response objects
             const artistCopy = {
@@ -1067,7 +1067,7 @@ export class PlaylistLoaderService {
             if (!existingArtist.tracks) {
               existingArtist.tracks = [];
             }
-            let existingTrack = existingArtist.tracks.find((t: { id: any }) => t.id === trackCopy.id);
+            const existingTrack = existingArtist.tracks.find((t: { id: any }) => t.id === trackCopy.id);
             if (!existingTrack) {
               existingArtist.tracks.push(trackCopy);
             }

@@ -191,7 +191,7 @@ describe('HeaderComponent entry points', () => {
         expect(component.profilePicUrl).toBeNull();
         expect(storageService.removeItem).not.toHaveBeenCalledWith('registered-user_profile_pic');
         expect(spotifyDataService.getCurrentUser).not.toHaveBeenCalled();
-        online;
+        expect(online).toBeDefined();
     });
 
     it('stops retrying after the bounded retry limit', async () => {

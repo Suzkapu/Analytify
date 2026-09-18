@@ -435,7 +435,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
           isCacheIncomplete = true;
           return;
         }
-      } catch (e) {
+      } catch {
         isCacheIncomplete = true;
         return;
       }
@@ -2081,7 +2081,6 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     const height = 200;
     const padding = 30;
     
-    const points = this.trendPopupPoints;
     const firstX = padding;
     const lastX = width - padding;
     const bottomY = height - padding;

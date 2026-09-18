@@ -104,7 +104,7 @@ export class PlaylistsComponent {
               favPlaylist.tracks.total = storedAmount;
               updated = true;
             }
-          } catch (e) {}
+          } catch {}
         }
 
         if (updated) {

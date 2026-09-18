@@ -26,7 +26,7 @@
           <span><strong>{{ operationalHealth.oldestNotificationQueueAgeSeconds }}s</strong> oldest notification</span>
           <span [class.metric-error]="operationalHealth.expiredLeases"><strong>{{ operationalHealth.expiredLeases }}</strong> expired leases</span>
           <span [class.metric-error]="!releaseIsConsistent"><strong>{{ releaseIsConsistent ? 'Matched' : 'Mismatch' }}</strong> release</span>
-          <span [class.metric-error]="workerStateIsProblem"><strong>{{ workerStateLabel }}</strong>{{ operationalHealth.workerRuntime?.secondsSinceHeartbeat == null ? 'No heartbeat recorded' : operationalHealth.workerRuntime.secondsSinceHeartbeat + 's since heartbeat' }}</span>
+          <span [class.metric-error]="workerStateIsProblem"><strong>{{ workerStateLabel }}</strong>{{ operationalHealth.workerRuntime?.secondsSinceHeartbeat === null || operationalHealth.workerRuntime?.secondsSinceHeartbeat === undefined ? 'No heartbeat recorded' : operationalHealth.workerRuntime.secondsSinceHeartbeat + 's since heartbeat' }}</span>
         </div>
         <div class="release-grid" aria-label="Deployed component releases">
           @for (release of operationalHealth.releases | keyvalue; track release.key) {

@@ -47,6 +47,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install pinned accessibility browser
+        run: npx playwright install --with-deps chromium
+
       - name: Install locked sync-worker dependencies
         run: npm ci --prefix services/sync-service --ignore-scripts
 
@@ -59,6 +62,9 @@ jobs:
 
       - name: Verify tests and production build
         run: npm run verify:ci
+
+      - name: Verify real-browser accessibility and responsive behavior
+        run: npm run accessibility:browser
 
       - name: Assemble and retest the exact production worker
         run: |
@@ -77,6 +83,8 @@ jobs:
           name: analytify-test-evidence-${{ github.sha }}
           path: |
             coverage/SpotiFront
+            playwright-report
+            test-results
             test-runtime-versions.txt
           if-no-files-found: warn
           retention-days: 14

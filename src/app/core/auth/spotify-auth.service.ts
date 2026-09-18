@@ -318,7 +318,7 @@ export class SpotifyAuthService {
     await this.unlinkCurrentPushDevice();
     try {
       await this.supabaseService.client.auth.signOut({ scope: 'local' });
-    } catch (e) {
+    } catch {
       // Ignore errors — we just want to clear local state
     }
   }
@@ -355,8 +355,6 @@ export class SpotifyAuthService {
             this.storageService.setItem('spotifyUserId', spotifyId);
             this.storageService.setItem('supabaseUserId', session.user.id);
 
-            const displayName = session.user.user_metadata?.['full_name'] || session.user.user_metadata?.['name'] || null;
-            const profilePicUrl = session.user.user_metadata?.['avatar_url'] || null;
             this.initialSyncPromise = this.sessionLifecycle.track((async () => {
               try {
                 await this.registerCloudProfile().catch(error => {
@@ -412,8 +410,6 @@ export class SpotifyAuthService {
             this.storageService.setItem('spotifyUserId', spotifyId);
             this.storageService.setItem('supabaseUserId', session.user.id);
 
-            const displayName = session.user.user_metadata?.['full_name'] || session.user.user_metadata?.['name'] || null;
-            const profilePicUrl = session.user.user_metadata?.['avatar_url'] || null;
             this.initialSyncPromise = this.sessionLifecycle.track((async () => {
               try {
                 await this.registerCloudProfile().catch(error => {
@@ -825,7 +821,8 @@ export class SpotifyAuthService {
       throw new Error('Sign in with Spotify before enabling cloud features.');
     }
 
-    let {data: {session}, error: sessionError} = await this.supabaseService.client.auth.getSession();
+    const {data: {session: existingSession}, error: sessionError} = await this.supabaseService.client.auth.getSession();
+    let session = existingSession;
     if (sessionError) throw sessionError;
     if (!session) {
       const anonymousResult = await this.supabaseService.client.auth.signInAnonymously();
