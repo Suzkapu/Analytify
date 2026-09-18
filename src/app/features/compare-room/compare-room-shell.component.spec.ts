@@ -85,6 +85,31 @@ describe('CompareRoomShellComponent', () => {
         }));
     });
 
+    it('reuses a removed local group number instead of duplicating an existing number', async () => {
+        const groups = [
+            {id: 'one', spotifyUserId: 'same-account', displayName: 'Host', imageUrl: '', status: 'ready', tracks: [], isMainProfile: true, localSlotNumber: 1},
+            {id: 'three', spotifyUserId: 'same-account', displayName: 'Host', imageUrl: '', status: 'selecting', tracks: [], isMainProfile: true, localSlotNumber: 3}
+        ];
+        const addLocalParticipant = vi.fn();
+        const coordinator = {
+            participants$: new BehaviorSubject<any[]>(groups), invitations$: new BehaviorSubject<any[]>([]),
+            sharedTracks$: new BehaviorSubject<any[]>([]), proposal$: new BehaviorSubject<any>(null),
+            error$: new BehaviorSubject<string>(''), cancelInvitation: vi.fn().mockResolvedValue(undefined),
+            addLocalParticipant
+        };
+        const component = new CompareRoomShellComponent(
+            coordinator as any, {isAuthenticated: () => true} as any, {} as any, {} as any,
+            {} as any, {} as any, {} as any
+        );
+        component.participants = groups as any;
+
+        await component.joinInvitationYourself({
+            id: 'replacement', secret: 'secret', joinUrl: 'https://example.test', qrDataUrl: ''
+        });
+
+        expect(addLocalParticipant).toHaveBeenCalledWith(expect.objectContaining({localSlotNumber: 2}));
+    });
+
     it('creates one Spotify result for repeated local slots and completes every local card', async () => {
         const slots = [
             {id: 'slot-one', spotifyUserId: 'host-user', displayName: 'Host', imageUrl: '', status: 'saving', tracks: [], isMainProfile: true},

@@ -193,7 +193,7 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     if (!main || invitation.claimedBy) return;
     try {
       await this.coordinator.cancelInvitation(invitation.id);
-      const localSlotNumber = this.participants.filter(item => item.isMainProfile).length + 1;
+      const localSlotNumber = this.nextLocalSlotNumber();
       this.coordinator.addLocalParticipant({
         id: this.randomId(),
         spotifyUserId: main.spotifyUserId,
@@ -207,6 +207,16 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     } catch (error) {
       this.errorMessage = this.describeError(error);
     }
+  }
+
+  private nextLocalSlotNumber(): number {
+    const usedNumbers = new Set(this.participants
+      .filter(item => item.isMainProfile)
+      .map(item => item.localSlotNumber)
+      .filter((value): value is number => typeof value === 'number' && value > 0));
+    let candidate = 1;
+    while (usedNumbers.has(candidate)) candidate += 1;
+    return candidate;
   }
 
   removeLocalSlot(participantId: string): void {
