@@ -137,6 +137,45 @@ describe('UserStatsComponent trends', () => {
         expect(component.compareSnapshotId).toBe(latestPrior.timestamp.toString());
     });
 
+    it('replaces a provisional local default when a newer prior cloud snapshot arrives', () => {
+        const localOlder = makeSnapshot('2026-07-30');
+        const cloudLatestPrior = makeSnapshot('2026-08-01');
+        component.historyData = [localOlder];
+        component.snapshotOptions = [
+            { id: localOlder.timestamp.toString(), dateKey: localOlder.snapshotDate }
+        ];
+        component.autoSetDefaultCompare();
+        expect(component.compareSnapshotId).toBe(localOlder.timestamp.toString());
+
+        component.historyData = [localOlder, cloudLatestPrior];
+        component.snapshotOptions = [
+            { id: cloudLatestPrior.timestamp.toString(), dateKey: cloudLatestPrior.snapshotDate },
+            { id: localOlder.timestamp.toString(), dateKey: localOlder.snapshotDate }
+        ];
+        component.autoSetDefaultCompare(true);
+
+        expect(component.compareSnapshotId).toBe(cloudLatestPrior.timestamp.toString());
+    });
+
+    it('does not replace a manual session comparison when cloud metadata arrives', () => {
+        const chosen = makeSnapshot('2026-07-30');
+        const cloudLatestPrior = makeSnapshot('2026-08-01');
+        component.historyData = [chosen];
+        component.snapshotOptions = [
+            { id: chosen.timestamp.toString(), dateKey: chosen.snapshotDate }
+        ];
+        component.selectCompareSnapshot(chosen.timestamp.toString(), new Event('click'));
+
+        component.historyData = [chosen, cloudLatestPrior];
+        component.snapshotOptions = [
+            { id: cloudLatestPrior.timestamp.toString(), dateKey: cloudLatestPrior.snapshotDate },
+            { id: chosen.timestamp.toString(), dateKey: chosen.snapshotDate }
+        ];
+        component.autoSetDefaultCompare(true);
+
+        expect(component.compareSnapshotId).toBe(chosen.timestamp.toString());
+    });
+
     it('keeps up and down chronological when snapshots are selected in reverse order', () => {
         const selected = makeSnapshot('2026-07-30', [
             ...Array.from({ length: 9 }, (_, index) => ({ name: `Song ${index}`, artist: 'Artist' })),

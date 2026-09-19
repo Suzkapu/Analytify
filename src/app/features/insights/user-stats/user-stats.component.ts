@@ -1041,9 +1041,12 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   }
 
   /** Auto-selects the most appropriate comparison snapshot if none is currently set. */
-  autoSetDefaultCompare() {
-    if (this.compareSnapshotId) return; // already set, don't overwrite
+  autoSetDefaultCompare(refreshAutomaticSelection = false) {
     const rememberedId = this.readCompareSnapshotForSession();
+    // Local history is rendered before cloud metadata arrives. Once that cloud
+    // list has been reconciled, refresh only the provisional automatic choice;
+    // an explicit choice remembered for this tab must never be overwritten.
+    if (this.compareSnapshotId && (!refreshAutomaticSelection || rememberedId)) return;
     const rememberedIsAvailable = rememberedId
       ? this.getCompareOptions().some(option => option.id === rememberedId)
       : false;
@@ -1505,6 +1508,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
             if (localUpdated) {
               await loadLocal();
               if (!isCurrentLoad()) return;
+              this.autoSetDefaultCompare(true);
+              this.calculateHotMovers();
             }
 
             // Full snapshot payloads stay lazy. Only the selected and compare
