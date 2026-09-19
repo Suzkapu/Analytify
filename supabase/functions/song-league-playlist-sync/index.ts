@@ -251,7 +251,7 @@ Deno.serve(async (request: Request) => {
           {data: credentialRows, error: credentialError},
           {data: mappings, error: mappingError}
         ] = await Promise.all([
-          admin.from('users').select('id, spotify_id, spotify_refresh_token').in('id', userIds),
+          admin.from('users').select('id, spotify_refresh_token').in('id', userIds),
           admin.from('spotify_credentials').select('*').in('user_id', userIds),
           admin.from('song_league_playlists').select('*').eq('league_id', leagueId)
         ]);
@@ -374,11 +374,13 @@ Deno.serve(async (request: Request) => {
 
             const description = playlistDescription(baseDescription, reservation.operation_marker);
             if (!playlistId) {
-              let spotifyUserId = typeof profile?.spotify_id === 'string' ? profile.spotify_id : '';
-              if (!spotifyUserId || spotifyUserId.startsWith('pending:')) {
-                const currentSpotifyProfile = await spotifyRequest('/me', token.accessToken);
-                spotifyUserId = typeof currentSpotifyProfile?.id === 'string' ? currentSpotifyProfile.id : '';
-              }
+              // Playlist ownership uses Spotify's public profile ID, which is
+              // verified from the refreshed credential instead of trusting an
+              // internal/cloud profile key.
+              const currentSpotifyProfile = await spotifyRequest('/me', token.accessToken);
+              const spotifyUserId = typeof currentSpotifyProfile?.id === 'string'
+                ? currentSpotifyProfile.id
+                : '';
               if (!spotifyUserId) throw new Error('Spotify did not return the connected account identity.');
               const recovered = await findOwnedPlaylistByMarker(
                 token.accessToken,

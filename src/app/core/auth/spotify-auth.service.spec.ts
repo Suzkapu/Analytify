@@ -352,6 +352,35 @@ describe('SpotifyAuthService', () => {
         expect(values['cloudIdentityReady']).toBeUndefined();
     });
 
+    it('shows the safe Edge Function reason and correlation reference for personal cloud setup', async () => {
+        values['spotifyConnectionMode'] = 'personal_pkce';
+        values['personalSpotifyClientId'] = '12345678901234567890123456789012';
+        values['spotifyAccessToken'] = 'personal-access';
+        values['spotifyRefreshToken'] = 'personal-refresh';
+        values['spotifyTokenExpiresAt'] = String(Date.now() + 3600000);
+        values['spotifyUserId'] = 'personal-user';
+        authClient.signInAnonymously.mockResolvedValue({
+            data: {session: {user: {id: '11111111-1111-4111-8111-111111111111', is_anonymous: true}}},
+            error: null
+        });
+        supabaseService.client.functions.invoke.mockResolvedValue({
+            data: null,
+            error: {
+                message: 'Edge Function returned a non-2xx status code',
+                context: new Response(JSON.stringify({
+                    error: 'Spotify could not verify this connection.',
+                    code: 'credential_operation_failed',
+                    correlationId: '1f18baab-a929-4e86-9e93-f6c68b50a872'
+                }), {status: 500, headers: {'Content-Type': 'application/json'}})
+            }
+        });
+
+        await expect(service.enableCloudIdentity()).rejects.toThrowError(
+            'Spotify could not verify this connection. (reference 1f18baab-a929-4e86-9e93-f6c68b50a872)'
+        );
+        expect(values['collaborationIdentityReady']).toBeUndefined();
+    });
+
     it('enables Cloud Sync after registering a personal-app credential', async () => {
         values['spotifyConnectionMode'] = 'personal_pkce';
         values['personalSpotifyClientId'] = '12345678901234567890123456789012';

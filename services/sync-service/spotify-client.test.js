@@ -41,3 +41,30 @@ test('parses seconds and dates from Retry-After', () => {
   assert.equal(retryAfterMilliseconds('3', 0), 3000);
   assert.equal(retryAfterMilliseconds('Thu, 01 Jan 1970 00:00:04 GMT', 1000), 3000);
 });
+
+test('refreshes a personal-app credential with its public client ID and no client secret', async () => {
+  let requestBody = '';
+  const saveRefreshToken = test.mock.fn();
+  const client = createSpotifyClient({
+    spotifyClientId: 'hosted-client',
+    spotifyClientSecret: 'must-not-leak'
+  }, {
+    fetch: async (_url, options) => {
+      requestBody = String(options.body || '');
+      return response(200, JSON.stringify({access_token: 'personal-access', refresh_token: 'rotated-refresh'}));
+    }
+  });
+
+  const token = await client.accessToken({
+    connectionMode: 'personal_pkce',
+    clientId: '12345678901234567890123456789012',
+    refreshToken: 'personal-refresh',
+    saveRefreshToken
+  });
+
+  assert.equal(token, 'personal-access');
+  assert.match(requestBody, /client_id=12345678901234567890123456789012/);
+  assert.doesNotMatch(requestBody, /client_secret|must-not-leak/);
+  assert.equal(saveRefreshToken.mock.callCount(), 1);
+  assert.equal(saveRefreshToken.mock.calls[0].arguments[0], 'rotated-refresh');
+});

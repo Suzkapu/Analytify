@@ -64,7 +64,9 @@ describe('CompareGuestPlaylistSourceService', () => {
         supabase.client.auth.getSession.mockResolvedValue({
             data: { session: { user: { id: 'supabase-guest', user_metadata: { provider_id: 'guest-user' } } } }
         });
-        supabase.loadUserProfile.mockResolvedValue({ spotify_id: 'guest-user' });
+        supabase.loadUserProfile.mockResolvedValue({
+            spotify_id: 'personal:supabase-user', verified_spotify_id: 'guest-user'
+        });
         supabase.checkBackupActive.mockResolvedValue(true);
         supabase.loadUserCache.mockImplementation(async (_: string, keys: string[]) => {
             const rows: Array<{

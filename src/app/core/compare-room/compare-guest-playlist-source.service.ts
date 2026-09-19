@@ -157,7 +157,7 @@ export class CompareGuestPlaylistSourceService {
 
     let sessionSpotifyId = session.user.user_metadata?.['provider_id'] || null;
     const profile = await this.supabase.loadUserProfile(session.user.id);
-    sessionSpotifyId = profile?.spotify_id || sessionSpotifyId;
+    sessionSpotifyId = profile?.verified_spotify_id || profile?.spotify_id || sessionSpotifyId;
     if (!this.sameSpotifyAccount(sessionSpotifyId, spotifyProfileId)) {
       return localAccountMatches && storedSpotifyId
         ? {spotifyUserId: storedSpotifyId, supabaseUserId: null, cloudBackupActive: false}

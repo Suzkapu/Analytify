@@ -4,7 +4,9 @@ import {
   spotifyCredentialKeyRingFromEnvironment
 } from '../_shared/spotify-credential-crypto.ts';
 import {
+  conflictingProfileBlocksRegistration,
   existingProfileAcceptsVerifiedIdentity,
+  personalCloudProfileId,
   spotifyProfileIds,
   spotifyProfileMatches
 } from './profile-verification.ts';
@@ -190,11 +192,17 @@ Deno.serve(async (request: Request) => {
     const {data: conflictingProfile, error: conflictError} = await admin.from('users')
       .select('id').in('spotify_id', conflictingSpotifyIds).neq('id', profileUserId).limit(1).maybeSingle();
     if (conflictError) throw conflictError;
-    if (conflictingProfile) return json({error: 'This Spotify ID already belongs to another Analytify profile.'}, 409);
+    if (conflictingProfile && conflictingProfileBlocksRegistration(!!identity.user.is_anonymous)) {
+      return json({error: 'This Spotify ID already belongs to another Analytify profile.'}, 409);
+    }
 
+    const storedSpotifyId = identity.user.is_anonymous
+      ? personalCloudProfileId(profileUserId)
+      : finalSpotifyId;
     const {error: profileSaveError} = await admin.from('users').upsert({
       id: profileUserId,
-      spotify_id: finalSpotifyId,
+      spotify_id: storedSpotifyId,
+      verified_spotify_id: finalSpotifyId,
       display_name: currentProfile.display_name || 'Spotify User',
       profile_pic_url: safeProfileImageUrl(currentProfile.images?.[0]?.url)
     }, {onConflict: 'id'});

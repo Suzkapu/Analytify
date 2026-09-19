@@ -28,7 +28,8 @@ describe('CompareRoomShellComponent', () => {
         const spotify = { getProfile: vi.fn().mockName('getProfile') };
         const storage = { getItem: vi.fn().mockName('getItem').mockReturnValue(null) };
         const supabase = { loadUserProfile: vi.fn().mockName('loadUserProfile').mockResolvedValue({
-                spotify_id: 'host-user',
+                spotify_id: 'personal:supabase-user',
+                verified_spotify_id: 'host-user',
                 display_name: 'Mobile host',
                 profile_pic_url: null
             }) };

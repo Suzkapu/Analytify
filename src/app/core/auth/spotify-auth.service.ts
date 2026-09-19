@@ -5,6 +5,7 @@ import {Observable, throwError, Subject, from, defer, firstValueFrom} from 'rxjs
 import {tap, catchError, shareReplay, switchMap, finalize} from 'rxjs/operators';
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
+import {describeEdgeFunctionError} from '@core/data-access/supabase/edge-function-error';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {PersonalSpotifyAuthRequest, SpotifyConnectionMode} from './spotify-auth.models';
 import {TRANSIENT_SPOTIFY_REQUEST} from '@core/compare-room/spotify-request-context';
@@ -862,7 +863,9 @@ export class SpotifyAuthService {
     const {error} = await this.supabaseService.client.functions.invoke('spotify-credentials', {
       body: {action: 'delete_credentials', profileUserId}
     });
-    if (error) throw new Error(`Cloud credential deletion failed: ${error.message}`);
+    if (error) throw new Error(await describeEdgeFunctionError(
+      error, 'Cloud credential deletion failed. Please try again.'
+    ));
     this.storageService.removeItem(this.cloudIdentityReadyKey);
   }
 
@@ -1023,7 +1026,9 @@ export class SpotifyAuthService {
         spotifyId: spotifyId || spotifyProfile.account_id || spotifyProfile.id
       }
     });
-    if (error) throw new Error(`Collaboration profile registration failed: ${error.message}`);
+    if (error) throw new Error(await describeEdgeFunctionError(
+      error, 'Collaboration profile registration failed. Please try again.'
+    ));
     this.storageService.setItem(this.collaborationIdentityReadyKey, 'true', false);
   }
 
@@ -1078,7 +1083,9 @@ export class SpotifyAuthService {
         spotifyId: override?.spotifyId || this.getUserId() || spotifyProfile.id
       }
     });
-    if (error) throw new Error(`Cloud credential registration failed: ${error.message}`);
+    if (error) throw new Error(await describeEdgeFunctionError(
+      error, 'Cloud credential registration failed. Please reconnect Spotify and try again.'
+    ));
     const rotatedRefreshToken = typeof data?.rotatedRefreshToken === 'string' && data.rotatedRefreshToken
       ? data.rotatedRefreshToken
       : null;
@@ -1095,7 +1102,9 @@ export class SpotifyAuthService {
     const {error} = await this.supabaseService.client.functions.invoke('spotify-credentials', {
       body: {action: 'delete_account', profileUserId}
     });
-    if (error) throw new Error(`Anonymous cloud account deletion failed: ${error.message}`);
+    if (error) throw new Error(await describeEdgeFunctionError(
+      error, 'Anonymous cloud account deletion failed. Please try again.'
+    ));
   }
 
   private async loadCurrentSpotifyProfile(): Promise<any> {

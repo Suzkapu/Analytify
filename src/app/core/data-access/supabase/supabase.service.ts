@@ -131,7 +131,7 @@ export class SupabaseService {
     try {
       const { data, error } = await this.client
         .from('users')
-        .select('spotify_id, display_name, profile_pic_url')
+        .select('spotify_id, verified_spotify_id, display_name, profile_pic_url')
         .eq('id', supabaseUserId)
         .maybeSingle();
       if (error) throw error;

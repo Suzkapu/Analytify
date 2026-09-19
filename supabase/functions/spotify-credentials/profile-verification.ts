@@ -20,5 +20,20 @@ export function existingProfileAcceptsVerifiedIdentity(
 ): boolean {
   return existingSpotifyId === profileUserId
     || existingSpotifyId === `pending:${profileUserId}`
+    || existingSpotifyId === personalCloudProfileId(profileUserId)
     || spotifyProfileMatches(verifiedProfile, existingSpotifyId);
+}
+
+export function personalCloudProfileId(profileUserId: string): string {
+  return `personal:${profileUserId}`;
+}
+
+/**
+ * Hosted Supabase identities stay unique, while a browser-bound anonymous
+ * identity may represent the same server-verified Spotify account. This lets
+ * personal-PKCE users opt into cloud features without taking over or mutating
+ * an existing hosted account.
+ */
+export function conflictingProfileBlocksRegistration(isAnonymousIdentity: boolean): boolean {
+  return !isAnonymousIdentity;
 }

@@ -460,7 +460,7 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     const storedProfile = supabaseUserId
       ? await this.supabase.loadUserProfile(supabaseUserId)
       : null;
-    const spotifyUserId = storedProfile?.spotify_id || cachedUserId.replace(/_dev$/, '');
+    const spotifyUserId = storedProfile?.verified_spotify_id || storedProfile?.spotify_id || cachedUserId.replace(/_dev$/, '');
     if (!spotifyUserId) throw new Error('The main Spotify profile is unavailable.');
     return {
       id: spotifyUserId,
