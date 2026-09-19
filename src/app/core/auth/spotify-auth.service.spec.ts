@@ -6,6 +6,7 @@ import { StorageService } from '@core/data-access/storage/storage.service';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import { firstValueFrom } from 'rxjs';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { CURRENT_TERMS_VERSION, TermsAcceptanceService } from '@core/legal/terms-acceptance.service';
 
 describe('SpotifyAuthService', () => {
     let service: SpotifyAuthService;
@@ -63,6 +64,17 @@ describe('SpotifyAuthService', () => {
                 {
                     provide: SupabaseService,
                     useValue: supabaseService
+                },
+                {
+                    provide: TermsAcceptanceService,
+                    useValue: {
+                        assertCurrentAcceptance: vi.fn().mockName('assertCurrentAcceptance'),
+                        acceptCurrent: vi.fn().mockName('acceptCurrent').mockReturnValue({
+                            version: CURRENT_TERMS_VERSION,
+                            acceptedAt: '2026-09-19T00:00:00.000Z',
+                            sessionId: '11111111-1111-4111-8111-111111111111'
+                        })
+                    }
                 },
                 provideHttpClient(withXhr(), withInterceptorsFromDi()),
                 provideHttpClientTesting()

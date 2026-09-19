@@ -4,13 +4,14 @@ import {environment} from '@env/environment';
 import {CompareRoomAuthRequest, SpotifyTransientSession} from './compare-room.models';
 import {firstValueFrom} from 'rxjs';
 import {COMPARE_ROOM_SPOTIFY_SCOPES} from '@env/spotify-scopes';
+import {TermsAcceptanceService} from '@core/legal/terms-acceptance.service';
 
 @Injectable({providedIn: 'root'})
 export class TransientParticipantAuthService {
   private readonly requestKey = 'analytify_compare_auth_request';
   private session: SpotifyTransientSession | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private termsAcceptance: TermsAcceptanceService) {}
 
   hasSession(): boolean {
     return !!this.session;
@@ -48,6 +49,7 @@ export class TransientParticipantAuthService {
   }
 
   async startAuthorization(returnUrl: string): Promise<void> {
+    this.termsAcceptance.assertCurrentAcceptance();
     const clientId = this.spotifyClientId();
     const verifier = this.randomUrlSafeString(64);
     const challenge = await this.createChallenge(verifier);
@@ -73,6 +75,7 @@ export class TransientParticipantAuthService {
   }
 
   async handleCallback(code: string, state: string): Promise<string> {
+    this.termsAcceptance.assertCurrentAcceptance();
     const rawRequest = sessionStorage.getItem(this.requestKey);
     if (!rawRequest) {
       throw new Error('The Compare Room authorization request is missing or expired.');

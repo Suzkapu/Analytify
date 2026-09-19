@@ -10,7 +10,12 @@
       <span class="eyebrow">You have been invited</span>
       <h1>Bring your playlists</h1>
       <p>Connect Spotify and choose one or more playlists. The host can find shared songs or combine everything without duplicates.</p>
-      <button type="button" class="spotify-button" (click)="connectSpotify()"><i class="pi pi-spotify"></i> Continue with Spotify</button>
+      <label class="terms-acceptance">
+        <input type="checkbox" [(ngModel)]="termsAccepted">
+        <span>I agree to the <a routerLink="/legal" fragment="terms">Terms</a> and acknowledge the <a routerLink="/legal" fragment="privacy">Privacy Notice</a>.</span>
+      </label>
+      <button type="button" class="spotify-button" (click)="connectSpotify()" [disabled]="!termsAccepted"><i class="pi pi-spotify"></i> Continue with Spotify</button>
+      @if (errorMessage) { <p class="inline-error" role="alert">{{ errorMessage }}</p> }
       <small>Your temporary login is cleared when this room ends.</small>
     }
 

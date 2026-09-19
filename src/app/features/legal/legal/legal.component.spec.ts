@@ -41,4 +41,21 @@ describe('LegalComponent', () => {
         expect(fixture.nativeElement.querySelector('app-header')).toBeNull();
         expect(fixture.nativeElement.querySelector('.legal-public-header')).not.toBeNull();
     });
+
+    it('publishes the versioned Spotify-required end-user protections before login', () => {
+        fixture = TestBed.createComponent(LegalComponent);
+        fixture.detectChanges();
+        const text = (fixture.nativeElement as HTMLElement).textContent || '';
+
+        expect(text).toContain('analytify-eula-2026-09-19');
+        expect(text).toContain('merchantability');
+        expect(text).toContain('fitness for a particular purpose');
+        expect(text).toContain('non-infringement');
+        expect(text).toContain('must not modify');
+        expect(text).toContain('must not decompile');
+        expect(text).toContain('solely responsible');
+        expect(text).toContain('third-party beneficiary');
+        expect(text).toContain('Section V.11');
+        expect(text).not.toContain('Clause 12');
+    });
 });

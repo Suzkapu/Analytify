@@ -129,6 +129,23 @@
 
 .login-card-body { margin-top: 26px; }
 
+.terms-acceptance {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  margin-bottom: 6px;
+  color: var(--color-text-muted);
+  font-size: .82rem;
+  line-height: 1.45;
+
+  input { width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--color-accent); }
+  a { color: var(--color-accent); font-weight: 800; }
+}
+
+.terms-version { display: block; margin: 0 0 16px 30px; color: var(--color-text-subtle); font-size: .68rem; }
+.login-error { margin: 12px 0 0; color: var(--color-danger, #ff7474); font-size: .8rem; line-height: 1.4; }
+
 .login-spotify-button,
 .personal-app-button {
   width: 100%;
@@ -150,9 +167,13 @@
   color: var(--color-text);
   background: var(--color-accent-soft);
   transition: background var(--motion-fast), border-color var(--motion-fast);
+  cursor: pointer;
 
   &:hover { background: var(--color-surface-hover); border-color: var(--color-accent); }
 }
+
+.login-spotify-button:disabled,
+.personal-app-button:disabled { opacity: .48; cursor: not-allowed; box-shadow: none; }
 
 .personal-app-note {
   margin: 8px 0 0;

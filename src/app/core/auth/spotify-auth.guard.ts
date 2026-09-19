@@ -5,6 +5,7 @@ import { StorageService } from '@core/data-access/storage/storage.service';
 import { firstValueFrom } from 'rxjs';
 import {AuthReturnUrlService} from './auth-return-url.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {TermsAcceptanceService} from '@core/legal/terms-acceptance.service';
 
 const console = createScopedLogger('Authentication Guard');
 
@@ -16,9 +17,16 @@ export const spotifyAuthGuard = async (
   const storageService = inject(StorageService);
   const router = inject(Router);
   const returnUrl = inject(AuthReturnUrlService);
+  const terms = inject(TermsAcceptanceService);
 
   // Wait for StorageService to finish loading from IndexedDB
   await storageService.initFromDB();
+
+  if (!terms.hasCurrentAcceptance()) {
+    returnUrl.remember(state?.url);
+    await router.navigate(['/login']);
+    return false;
+  }
 
   // Restore either a local personal-app refresh token or the hosted Supabase session.
   if (!authService.isAuthenticated()) {

@@ -12,6 +12,7 @@ import {
 import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.service';
 import {TransientParticipantAuthService} from '@core/compare-room/transient-participant-auth.service';
 import {filter, Subscription, take} from 'rxjs';
+import {TermsAcceptanceService} from '@core/legal/terms-acceptance.service';
 
 @Component({
     selector: 'app-compare-room-join',
@@ -31,6 +32,7 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
   errorMessage = '';
   hasApproved = false;
   playlistDataSource: 'local' | 'cloud' | 'spotify' | null = null;
+  termsAccepted = false;
 
   private roomId = '';
   private invitationId = '';
@@ -45,10 +47,12 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
     private transientAuth: TransientParticipantAuthService,
     private guest: CompareRoomGuestService,
     private spotify: ParticipantSpotifyService,
-    private source: CompareGuestPlaylistSourceService
+    private source: CompareGuestPlaylistSourceService,
+    private terms: TermsAcceptanceService
   ) {}
 
   ngOnInit(): void {
+    this.termsAccepted = this.terms.hasCurrentAcceptance();
     this.roomId = this.route.snapshot.paramMap.get('roomId') || '';
     const fragment = new URLSearchParams(this.route.snapshot.fragment || '');
     this.invitationId = fragment.get('invitation') || '';
@@ -86,6 +90,11 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
   }
 
   async connectSpotify(): Promise<void> {
+    if (!this.termsAccepted) {
+      this.errorMessage = 'Accept the Terms and Privacy Notice before connecting Spotify.';
+      return;
+    }
+    this.terms.acceptCurrent();
     this.stage = 'joining';
     try {
       await this.transientAuth.startAuthorization(this.router.url);

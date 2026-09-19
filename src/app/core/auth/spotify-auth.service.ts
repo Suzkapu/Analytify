@@ -9,6 +9,7 @@ import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {PersonalSpotifyAuthRequest, SpotifyConnectionMode} from './spotify-auth.models';
 import {TRANSIENT_SPOTIFY_REQUEST} from '@core/compare-room/spotify-request-context';
 import {SessionLifecycleService} from './session-lifecycle.service';
+import {CURRENT_TERMS_VERSION, TermsAcceptanceService} from '@core/legal/terms-acceptance.service';
 
 const console = createScopedLogger('Authentication');
 
@@ -66,7 +67,8 @@ export class SpotifyAuthService {
     private storageService: StorageService,
     private supabaseService: SupabaseService,
     private http: HttpClient,
-    private sessionLifecycle: SessionLifecycleService
+    private sessionLifecycle: SessionLifecycleService,
+    private termsAcceptance: TermsAcceptanceService
   ) {
     this.storageService.initFromDB().then(async () => {
       // The callback owns the one-time PKCE code exchange. Starting session
@@ -108,6 +110,7 @@ export class SpotifyAuthService {
   }
 
   async loginWithSupabase(promptConsent: boolean = true): Promise<any> {
+    this.termsAcceptance.assertCurrentAcceptance();
     if (promptConsent) {
       // A user-initiated login must not inherit a Supabase session whose
       // Spotify provider token has expired or was never persisted.
@@ -171,6 +174,7 @@ export class SpotifyAuthService {
   }
 
   async startPersonalAppAuthorization(clientId: string, returnUrl = '/playlists'): Promise<void> {
+    this.termsAcceptance.assertCurrentAcceptance();
     const normalizedClientId = clientId.trim();
     if (!/^[a-zA-Z0-9]{32}$/.test(normalizedClientId)) {
       throw new Error('Enter the 32-character Client ID from your Spotify Developer app.');
@@ -206,6 +210,7 @@ export class SpotifyAuthService {
   }
 
   async handlePersonalAppCallback(code: string, state: string): Promise<string> {
+    this.termsAcceptance.assertCurrentAcceptance();
     let generation = this.sessionLifecycle.capture();
     const rawRequest = sessionStorage.getItem(this.personalRequestKey);
     if (!rawRequest) {
@@ -300,6 +305,10 @@ export class SpotifyAuthService {
     }
     this.initialSyncPromise = null;
 
+    if (this.getSupabaseUserId()) {
+      await this.recordTermsAcceptance('personal_pkce');
+    }
+
     return request.returnUrl;
   }
 
@@ -374,6 +383,10 @@ export class SpotifyAuthService {
           }
         }
       }),
+      switchMap(async result => {
+        await this.recordTermsAcceptance('hosted');
+        return result;
+      }),
       catchError(err => {
         console.error('Error exchanging code for session:', err);
         return throwError(() => err);
@@ -430,6 +443,10 @@ export class SpotifyAuthService {
         } else {
           throw new Error('No active session found.');
         }
+      }),
+      switchMap(async result => {
+        await this.recordTermsAcceptance('hosted');
+        return result;
       }),
       catchError(err => {
         console.error('Error handling callback session:', err);
@@ -841,8 +858,19 @@ export class SpotifyAuthService {
 
     this.storageService.setItem('supabaseUserId', session.user.id, false);
     this.storageService.setItem(this.anonymousCloudKey, session.user.is_anonymous ? 'true' : 'false', false);
+    await this.recordTermsAcceptance('personal_pkce');
     await this.registerCloudProfile();
     this.initialSyncPromise = null;
+  }
+
+  private async recordTermsAcceptance(connectionMode: 'hosted' | 'personal_pkce'): Promise<void> {
+    const acceptance = this.termsAcceptance.acceptCurrent();
+    const {error} = await this.supabaseService.client.rpc('accept_current_terms', {
+      p_terms_version: CURRENT_TERMS_VERSION,
+      p_acceptance_session_id: acceptance.sessionId,
+      p_connection_mode: connectionMode
+    });
+    if (error) throw error;
   }
 
   async enableScheduledSpotifyAccess(): Promise<void> {

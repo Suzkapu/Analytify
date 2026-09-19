@@ -2,6 +2,7 @@ import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {environment} from '@env/environment';
+import {TermsAcceptanceService} from '@core/legal/terms-acceptance.service';
 
 @Component({
     selector: 'app-personal-spotify-connect',
@@ -17,16 +18,19 @@ export class PersonalSpotifyConnectComponent implements OnInit {
   copied = false;
   connecting = false;
   returnUrl = '/playlists';
+  termsAccepted = false;
 
   constructor(
     public auth: SpotifyAuthService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private terms: TermsAcceptanceService
   ) {}
 
   ngOnInit(): void {
     this.clientId = this.auth.getPersonalSpotifyClientId();
     this.returnUrl = this.safeReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl'));
+    this.termsAccepted = this.terms.hasCurrentAcceptance();
   }
 
   async copyCallback(): Promise<void> {
@@ -43,6 +47,8 @@ export class PersonalSpotifyConnectComponent implements OnInit {
     this.errorMessage = '';
     this.connecting = true;
     try {
+      if (!this.termsAccepted) throw new Error('Accept the Terms and Privacy Notice before connecting Spotify.');
+      this.terms.acceptCurrent();
       await this.auth.startPersonalAppAuthorization(this.clientId, this.returnUrl);
     } catch (error) {
       this.errorMessage = error instanceof Error ? error.message : 'Spotify authorization could not be started.';
@@ -58,4 +64,3 @@ export class PersonalSpotifyConnectComponent implements OnInit {
     return value?.startsWith('/') && !value.startsWith('//') ? value : '/playlists';
   }
 }
-

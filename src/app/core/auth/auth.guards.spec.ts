@@ -7,12 +7,14 @@ import { spotifyAuthGuard } from './spotify-auth.guard';
 import { SpotifyAuthService } from './spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { AuthReturnUrlService } from './auth-return-url.service';
+import { TermsAcceptanceService } from '@core/legal/terms-acceptance.service';
 
 describe('authentication guards', () => {
     let auth: any;
     let storage: any;
     let router: any;
     let returnUrl: any;
+    let terms: any;
 
     beforeEach(() => {
         auth = {
@@ -37,6 +39,7 @@ describe('authentication guards', () => {
             consume: vi.fn().mockName("AuthReturnUrlService.consume")
         };
         returnUrl.consume.mockReturnValue('/playlists');
+        terms = {hasCurrentAcceptance: vi.fn().mockName('hasCurrentAcceptance').mockReturnValue(true)};
 
         storage.initFromDB.mockResolvedValue(undefined);
         auth.restoreSessionFromSupabase.mockResolvedValue(false);
@@ -53,7 +56,8 @@ describe('authentication guards', () => {
                 { provide: SpotifyAuthService, useValue: auth },
                 { provide: StorageService, useValue: storage },
                 { provide: Router, useValue: router },
-                { provide: AuthReturnUrlService, useValue: returnUrl }
+                { provide: AuthReturnUrlService, useValue: returnUrl },
+                { provide: TermsAcceptanceService, useValue: terms }
             ]
         });
     });
@@ -119,5 +123,19 @@ describe('authentication guards', () => {
         expect(auth.recoverUsableSession).toHaveBeenCalled();
         expect(router.navigate).not.toHaveBeenCalled();
         expect(allowed).toBe(true);
+    });
+
+    it('returns an existing session to login when a material terms revision needs acceptance', async () => {
+        auth.isAuthenticated.mockReturnValue(true);
+        terms.hasCurrentAcceptance.mockReturnValue(false);
+
+        const protectedAllowed = await TestBed.runInInjectionContext(() => spotifyAuthGuard(undefined, {url: '/stats'} as any));
+        const loginAllowed = await TestBed.runInInjectionContext(() => redirectLoggedInGuard());
+
+        expect(protectedAllowed).toBe(false);
+        expect(returnUrl.remember).toHaveBeenCalledWith('/stats');
+        expect(router.navigate).toHaveBeenCalledWith(['/login']);
+        expect(loginAllowed).toBe(true);
+        expect(router.navigateByUrl).not.toHaveBeenCalled();
     });
 });

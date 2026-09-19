@@ -4,6 +4,7 @@ import { SpotifyAuthService } from './spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import {AuthReturnUrlService} from './auth-return-url.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {TermsAcceptanceService} from '@core/legal/terms-acceptance.service';
 
 const console = createScopedLogger('Login Redirect Guard');
 
@@ -12,6 +13,7 @@ export const redirectLoggedInGuard = async () => {
   const storageService = inject(StorageService);
   const router = inject(Router);
   const returnUrl = inject(AuthReturnUrlService);
+  const terms = inject(TermsAcceptanceService);
 
   // Wait for StorageService to finish loading from IndexedDB
   await storageService.initFromDB();
@@ -25,10 +27,12 @@ export const redirectLoggedInGuard = async () => {
     }
   }
 
-  if (authService.isAuthenticated()) {
+  if (authService.isAuthenticated() && terms.hasCurrentAcceptance()) {
     router.navigateByUrl(returnUrl.consume());
     return false;
   }
+
+  if (authService.isAuthenticated()) return true;
 
   return true;
 };

@@ -6,6 +6,8 @@ import { LoginPageComponent } from './login-page.component';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { AuthReturnUrlService } from '@core/auth/auth-return-url.service';
+import { TermsAcceptanceService } from '@core/legal/terms-acceptance.service';
+import { FormsModule } from '@angular/forms';
 
 describe('LoginPageComponent', () => {
     let component: LoginPageComponent;
@@ -14,6 +16,7 @@ describe('LoginPageComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [LoginPageComponent],
+            imports: [FormsModule],
             providers: [
                 {
                     provide: SpotifyAuthService,
@@ -27,7 +30,11 @@ describe('LoginPageComponent', () => {
                     provide: Router,
                     useValue: { navigate: vi.fn().mockName('navigate'), navigateByUrl: vi.fn().mockName('navigateByUrl') }
                 },
-                { provide: AuthReturnUrlService, useValue: { consume: () => '/playlists' } }
+                { provide: AuthReturnUrlService, useValue: { consume: () => '/playlists' } },
+                {
+                    provide: TermsAcceptanceService,
+                    useValue: {hasCurrentAcceptance: () => false, acceptCurrent: vi.fn().mockName('acceptCurrent')}
+                }
             ],
             schemas: [NO_ERRORS_SCHEMA]
         });
@@ -50,12 +57,24 @@ describe('LoginPageComponent', () => {
         expect(element.querySelector('.login-intro > .login-brand')).toBeNull();
         expect(element.querySelector('.login-card-icon')).toBeNull();
         expect(element.querySelector('button.login-spotify-button')).not.toBeNull();
-        expect(element.querySelector('a.personal-app-button')).not.toBeNull();
+        expect(element.querySelector('button.personal-app-button')).not.toBeNull();
         expect(element.querySelector('a.compare-room-button')).toBeNull();
         expect(element.textContent).not.toContain('Open a Compare Room');
         expect(element.textContent).toContain('See what you listen to.');
         expect(element.textContent).toContain('Browse playlists, check your top songs');
         expect(element.textContent).toContain('Stored on this device');
         expect(element.textContent).not.toContain('focused dashboard');
+    });
+
+    it('keeps every Spotify authorization entry point disabled until terms are accepted', () => {
+        const element: HTMLElement = fixture.nativeElement;
+        expect((element.querySelector('.login-spotify-button') as HTMLButtonElement).disabled).toBe(true);
+        expect((element.querySelector('.personal-app-button') as HTMLButtonElement).disabled).toBe(true);
+
+        component.termsAccepted = true;
+        fixture.detectChanges();
+
+        expect((element.querySelector('.login-spotify-button') as HTMLButtonElement).disabled).toBe(false);
+        expect((element.querySelector('.personal-app-button') as HTMLButtonElement).disabled).toBe(false);
     });
 });

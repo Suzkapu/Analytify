@@ -57,6 +57,9 @@ input:focus { outline: 2px solid var(--color-accent-border); border-color: var(-
 .migration-note { display: flex; gap: 10px; margin-bottom: 18px; padding: 12px; border: 1px solid var(--color-accent-border); border-radius: 12px; background: var(--color-accent-soft); color: var(--color-text-muted); font-size: .8rem; line-height: 1.45; }
 .migration-note i { color: var(--color-accent); }
 .error-message { color: var(--color-danger, #ff7474); font-size: .86rem; }
+.terms-acceptance { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 10px; align-items: start; margin: 18px 0; color: var(--color-text-muted); font-size: .82rem; line-height: 1.45; }
+.terms-acceptance input { width: 18px; height: 18px; min-height: 0; margin: 1px 0 0; padding: 0; accent-color: var(--color-accent); }
+.terms-acceptance a { color: var(--color-accent); font-weight: 800; }
 .actions { display: flex; justify-content: flex-end; gap: 10px; }
 .actions button { min-height: 46px; border-radius: var(--radius-pill); padding: 0 18px; font: inherit; font-weight: 800; cursor: pointer; }
 .actions .secondary { border: 1px solid var(--color-border-strong); background: transparent; color: var(--color-text); }
@@ -72,4 +75,3 @@ input:focus { outline: 2px solid var(--color-accent-border); border-color: var(-
   .actions { flex-direction: column-reverse; }
   .actions button { width: 100%; }
 }
-

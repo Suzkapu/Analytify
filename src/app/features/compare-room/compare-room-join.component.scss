@@ -14,6 +14,11 @@
 .spotify-button { color: #071109; background: #1ed760; margin-top: 1.5rem; }
 .leave-button { color: #fff; background: rgba(255,255,255,.08); margin-top: .7rem; }
 .spotify-button:disabled { opacity: .55; cursor: wait; }
+.terms-acceptance { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: .6rem; align-items: start; margin-top: 1.2rem; color: #a1aaa4; text-align: left; font-size: .78rem; line-height: 1.45; }
+.terms-acceptance input { width: 18px; height: 18px; margin: 1px 0 0; accent-color: #1ed760; }
+.terms-acceptance a { color: #1ed760; font-weight: 800; }
+.terms-acceptance + .spotify-button:disabled { cursor: not-allowed; }
+.inline-error { margin: .75rem 0 0; color: #ff8b8b !important; font-size: .78rem; }
 .big-spinner { color: #1ed760; font-size: 3rem; }
 .profile-row { display: flex; align-items: center; text-align: left; gap: .8rem; padding-bottom: 1.1rem; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,.08); }
 .profile-row img, .profile-placeholder { width: 48px; height: 48px; object-fit: cover; border-radius: 50%; }

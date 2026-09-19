@@ -24,14 +24,6 @@ type ProfileImageCacheMetadata = {
   nextRetryAt: number;
 };
 
-type SyncTaskStatus = {
-  task_key: string;
-  optional_enabled: boolean;
-  feature_required: boolean;
-  effective_active: boolean;
-  reasons: string[];
-};
-
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
@@ -58,7 +50,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   showBackupConfirmModal = false;
   showGuestLogoutConfirmModal = false;
   showNotificationSettingsModal = false;
-  showSyncTaskStatusModal = false;
   isDeletingDbData = false;
   isGuestLogoutRunning = false;
   isLoadingNotificationSettings = false;
@@ -67,9 +58,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   statsDiscoverable = false;
   isSavingStatsDiscoverability = false;
   notificationError = '';
-  syncTaskStatus: SyncTaskStatus[] = [];
-  syncTaskStatusError = '';
-  isLoadingSyncTaskStatus = false;
   private profileRetryTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly profileRetryDelays = [1_000, 5_000, 30_000];
   notificationSettings: PushNotificationSettings = {
@@ -405,19 +393,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   async openSyncTaskStatus(): Promise<void> {
+    if (this.dynamicDialog.length) return;
     this.showSettingsDropdown = false;
-    this.showSyncTaskStatusModal = true;
-    this.isLoadingSyncTaskStatus = true;
-    this.syncTaskStatusError = '';
-    try {
-      const {data, error} = await this.supabaseService.client.rpc('get_my_sync_task_status');
-      if (error) throw error;
-      this.syncTaskStatus = (data || []) as SyncTaskStatus[];
-    } catch (error) {
-      this.syncTaskStatusError = (error as any)?.message || 'Automatic data use could not be loaded.';
-    } finally {
-      this.isLoadingSyncTaskStatus = false;
-    }
+    const {SyncTaskStatusDialogComponent} = await import('./sync-task-status-dialog.component');
+    const reference = this.dynamicDialog.createComponent(SyncTaskStatusDialogComponent);
+    reference.instance.closed.subscribe(() => this.dynamicDialog.clear());
   }
 
   async openBlockedUsers(): Promise<void> {
@@ -426,21 +406,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const {BlockedUsersDialogComponent} = await import('./blocked-users-dialog.component');
     const reference = this.dynamicDialog.createComponent(BlockedUsersDialogComponent);
     reference.instance.closed.subscribe(() => this.dynamicDialog.clear());
-  }
-
-  closeSyncTaskStatus(): void {
-    this.showSyncTaskStatusModal = false;
-  }
-
-  syncTaskLabel(taskKey: string): string {
-    return ({
-      listening_history: 'Listening history',
-      stats_short_term: 'Short-term stats',
-      stats_medium_term: 'Medium-term stats',
-      stats_long_term: 'Long-term stats',
-      song_league_playlists: 'Weekly league playlists',
-      shared_playlists: 'Shared playlists'
-    } as Record<string, string>)[taskKey] || taskKey;
   }
 
   closeNotificationSettings(): void {

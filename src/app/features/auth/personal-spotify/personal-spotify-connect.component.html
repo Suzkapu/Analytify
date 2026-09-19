@@ -49,9 +49,13 @@
     @if (errorMessage) {
       <p class="error-message" role="alert">{{ errorMessage }}</p>
     }
+    <label class="terms-acceptance">
+      <input type="checkbox" [(ngModel)]="termsAccepted">
+      <span>I agree to the <a routerLink="/legal" fragment="terms">Terms</a> and acknowledge the <a routerLink="/legal" fragment="privacy">Privacy Notice</a>.</span>
+    </label>
     <div class="actions">
       <button type="button" class="secondary" (click)="cancel()">Cancel</button>
-      <button type="button" class="primary" (click)="connect()" [disabled]="connecting || clientId.trim().length !== 32">
+      <button type="button" class="primary" (click)="connect()" [disabled]="connecting || !termsAccepted || clientId.trim().length !== 32">
         <i class="pi" [ngClass]="connecting ? 'pi-spin pi-spinner' : 'pi-spotify'"></i>
         {{ connecting ? 'Opening Spotify…' : (auth.isAuthenticated() ? 'Reconnect with this app' : 'Connect with Spotify') }}
       </button>

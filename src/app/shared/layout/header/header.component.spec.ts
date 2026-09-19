@@ -117,6 +117,8 @@ describe('HeaderComponent entry points', () => {
 
         await component.openSyncTaskStatus();
         fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
 
         expect(supabaseService.client.rpc).toHaveBeenCalledWith('get_my_sync_task_status');
         const modal = fixture.nativeElement.querySelector('[aria-labelledby="sync-task-status-title"]');

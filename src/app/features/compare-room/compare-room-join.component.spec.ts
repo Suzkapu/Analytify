@@ -16,6 +16,7 @@ describe('CompareRoomJoinComponent playlist recovery', () => {
       {getAccessToken: vi.fn().mockResolvedValue('token')} as any,
       {publishSaveResult} as any,
       {createPlaylist} as any,
+      {} as any,
       {} as any
     );
     (component as any).roomId = 'room-id';
