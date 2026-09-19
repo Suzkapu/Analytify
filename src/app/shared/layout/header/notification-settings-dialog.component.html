@@ -1,0 +1,87 @@
+<div class="confirm-modal-overlay" (click)="close()">
+  <section class="confirm-modal-card notification-settings-modal" role="dialog" aria-modal="true"
+    aria-labelledby="notification-settings-title" aria-describedby="notification-settings-description"
+    appAccessibleDialog (modalEscape)="close()" (click)="$event.stopPropagation()">
+    <button type="button" class="notification-modal-close" appModalInitialFocus (click)="close()"
+      [disabled]="saving" aria-label="Close notification settings">×</button>
+    <div class="confirm-modal-icon"><i class="pi pi-bell"></i></div>
+    <h3 id="notification-settings-title" class="confirm-modal-title">Notifications</h3>
+    <p id="notification-settings-description" class="confirm-modal-text">Choose which updates Analytify may send to your installed PWA. More categories can be added here later.</p>
+    @if (loading) {
+      <div class="notification-settings-loading" role="status"><i class="pi pi-spin pi-spinner"></i> Loading notification settings…</div>
+    } @else {
+      @if (settings.deviceState === 'permission-required') {
+        <p class="notification-device-status">Notification permission has not been granted for this device.</p>
+      }
+      @if (settings.deviceState === 'subscription-missing') {
+        <p class="notification-device-status">Browser permission is available, but this device is not registered for push delivery.</p>
+      }
+      @if (settings.deviceState === 'server-only') {
+        <p class="notification-device-status">Notifications are registered on another or stale device, not this one.</p>
+      }
+      @if (settings.deviceState === 'denied') {
+        <p class="notification-device-status notification-denied">Notifications are blocked or their temporary permission expired. Change this in browser settings.</p>
+      }
+      @if (settings.deviceState === 'unsupported') {
+        <p class="notification-device-status">Push notifications are unavailable in this browser or installation.</p>
+      }
+      <div class="notification-category-list">
+        <label class="notification-category-row">
+          <span class="notification-category-icon"><i class="pi pi-star"></i></span>
+          <span class="notification-category-copy">
+            <strong>Song League pick windows</strong>
+            <small>Receive a reminder when Friday picks open in one of your leagues.</small>
+            @if (settings.active) { <em>Enabled on this device</em> }
+            @if (settings.permission === 'granted' && settings.deviceSubscribed && !settings.songLeagueEnabled) { <em>Ready on this device</em> }
+            @if (!settings.installedPwa) { <em>Install Analytify as an app for the most reliable delivery.</em> }
+            @if (settings.permission === 'denied') { <em class="notification-denied">Blocked in browser settings</em> }
+          </span>
+          <span class="switch" title="Toggle Song League notifications">
+            <input type="checkbox" [checked]="settings.active"
+              [disabled]="saving || (!settings.supported && !settings.songLeagueEnabled) || (settings.permission === 'denied' && !settings.songLeagueEnabled)"
+              (change)="toggleSongLeague($event)" aria-label="Song League notifications">
+            <span class="slider round"></span>
+          </span>
+        </label>
+        @if (settings.songLeagueMember) {
+          <label class="notification-category-row">
+            <span class="notification-category-icon"><i class="pi pi-volume-up"></i></span>
+            <span class="notification-category-copy">
+              <strong>New Song League picks</strong>
+              <small>Get notified when another member adds a song to one of your leagues.</small>
+              @if (settings.songAddedActive) { <em>Enabled on this device</em> }
+              @if (settings.permission === 'granted' && settings.deviceSubscribed && !settings.songLeagueSongAddedEnabled) { <em>Off by default</em> }
+              @if (settings.permission === 'denied') { <em class="notification-denied">Blocked in browser settings</em> }
+            </span>
+            <span class="switch" title="Toggle new Song League pick notifications">
+              <input type="checkbox" [checked]="settings.songAddedActive"
+                [disabled]="saving || (!settings.supported && !settings.songLeagueSongAddedEnabled) || (settings.permission === 'denied' && !settings.songLeagueSongAddedEnabled)"
+                (change)="toggleSongAdded($event)" aria-label="New Song League pick notifications">
+              <span class="slider round"></span>
+            </span>
+          </label>
+        }
+        <label class="notification-category-row">
+          <span class="notification-category-icon"><i class="pi pi-eye"></i></span>
+          <span class="notification-category-copy">
+            <strong>Stats access requests</strong>
+            <small>Know when another registered user asks to view your stats</small>
+            @if (settings.statsAccessActive) { <em>Enabled on this device</em> }
+            @if (settings.permission === 'granted' && settings.deviceSubscribed && !settings.statsAccessRequestsEnabled) { <em>Turned off</em> }
+            @if (settings.permission === 'denied') { <em class="notification-denied">Blocked in browser settings</em> }
+          </span>
+          <span class="switch" title="Toggle stats access request notifications">
+            <input type="checkbox" [checked]="settings.statsAccessActive"
+              [disabled]="saving || (!settings.supported && !settings.statsAccessRequestsEnabled) || (settings.permission === 'denied' && !settings.statsAccessRequestsEnabled)"
+              (change)="toggleStatsAccess($event)" aria-label="Stats access request notifications">
+            <span class="slider"></span>
+          </span>
+        </label>
+      </div>
+    }
+    @if (error) { <p class="notification-settings-error" role="alert">{{ error }}</p> }
+    <div class="confirm-modal-actions">
+      <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel" (click)="close()" [disabled]="saving">Done</button>
+    </div>
+  </section>
+</div>

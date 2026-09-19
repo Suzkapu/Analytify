@@ -10,6 +10,9 @@ export interface PushNotificationSettings {
   installedPwa: boolean;
   permission: NotificationPermission | 'unavailable';
   deviceSubscribed: boolean;
+  deviceRegistered: boolean;
+  registeredDeviceCount: number;
+  deviceState: 'unsupported' | 'denied' | 'permission-required' | 'subscription-missing' | 'server-only' | 'registered';
   songLeagueEnabled: boolean;
   songLeagueSongAddedEnabled: boolean;
   songLeagueMember: boolean;
@@ -27,11 +30,14 @@ export class PushNotificationService {
   ) {}
 
   async loadSettings(): Promise<PushNotificationSettings> {
-    const [preferenceResult, subscription, permission] = await Promise.all([
-      this.supabase.client.rpc('get_notification_preferences'),
+    const [subscription, permission] = await Promise.all([
       this.currentSubscription(),
       this.currentPermission()
     ]);
+    const endpoint = subscription?.endpoint || subscription?.toJSON().endpoint || null;
+    const preferenceResult = await this.supabase.client.rpc('get_notification_settings', {
+      p_endpoint: endpoint
+    });
     if (preferenceResult.error) throw preferenceResult.error;
     const row = Array.isArray(preferenceResult.data)
       ? preferenceResult.data[0]
@@ -40,13 +46,17 @@ export class PushNotificationService {
     const songLeagueSongAddedEnabled = !!row?.song_league_song_added_enabled;
     const songLeagueMember = !!row?.song_league_member;
     const statsAccessRequestsEnabled = row?.stats_access_requests_enabled !== false;
+    let deviceRegistered = !!row?.device_registered;
+    let registeredDeviceCount = Number(row?.registered_device_count || 0);
     if ((songLeagueEnabled || songLeagueSongAddedEnabled || statsAccessRequestsEnabled)
-      && subscription && permission === 'granted') {
+      && subscription && permission === 'granted' && !deviceRegistered) {
       await this.registerDevice(subscription);
+      deviceRegistered = true;
+      registeredDeviceCount = Math.max(1, registeredDeviceCount);
     }
     return this.settings(
       songLeagueEnabled, songLeagueSongAddedEnabled, songLeagueMember, statsAccessRequestsEnabled,
-      !!subscription, permission
+      !!subscription, deviceRegistered, registeredDeviceCount, permission
     );
   }
 
@@ -114,6 +124,9 @@ export class PushNotificationService {
     return {
       ...settings,
       deviceSubscribed: true,
+      deviceRegistered: true,
+      registeredDeviceCount: Math.max(1, settings.registeredDeviceCount),
+      deviceState: 'registered',
       active: settings.songLeagueEnabled && settings.permission === 'granted',
       songAddedActive: settings.songLeagueSongAddedEnabled && settings.permission === 'granted',
       statsAccessActive: settings.statsAccessRequestsEnabled && settings.permission === 'granted'
@@ -124,7 +137,10 @@ export class PushNotificationService {
     if (!this.swPush.isEnabled) return null;
     if (typeof navigator !== 'undefined' && navigator.serviceWorker) {
       try {
-        const registration = await navigator.serviceWorker.getRegistration();
+        let registration = await navigator.serviceWorker.getRegistration();
+        if (!registration && navigator.serviceWorker.controller) {
+          registration = await navigator.serviceWorker.ready;
+        }
         const subscription = await registration?.pushManager?.getSubscription();
         if (subscription) return subscription;
       } catch {
@@ -171,20 +187,36 @@ export class PushNotificationService {
     songLeagueMember: boolean,
     statsAccessRequestsEnabled: boolean,
     deviceSubscribed: boolean,
+    deviceRegistered: boolean,
+    registeredDeviceCount: number,
     permission: NotificationPermission | 'unavailable'
   ): PushNotificationSettings {
+    const deviceState = !this.swPush.isEnabled || permission === 'unavailable'
+      ? 'unsupported'
+      : permission === 'denied'
+        ? 'denied'
+        : permission !== 'granted'
+          ? 'permission-required'
+          : deviceSubscribed && deviceRegistered
+            ? 'registered'
+            : deviceSubscribed
+              ? 'subscription-missing'
+              : registeredDeviceCount > 0 ? 'server-only' : 'subscription-missing';
     return {
       supported: this.swPush.isEnabled,
       installedPwa: this.isInstalledPwa(),
       permission,
       deviceSubscribed,
+      deviceRegistered,
+      registeredDeviceCount,
+      deviceState,
       songLeagueEnabled,
       songLeagueSongAddedEnabled,
       songLeagueMember,
       statsAccessRequestsEnabled,
-      active: songLeagueEnabled && deviceSubscribed && permission === 'granted',
-      songAddedActive: songLeagueSongAddedEnabled && deviceSubscribed && permission === 'granted',
-      statsAccessActive: statsAccessRequestsEnabled && deviceSubscribed && permission === 'granted'
+      active: songLeagueEnabled && deviceSubscribed && deviceRegistered && permission === 'granted',
+      songAddedActive: songLeagueSongAddedEnabled && deviceSubscribed && deviceRegistered && permission === 'granted',
+      statsAccessActive: statsAccessRequestsEnabled && deviceSubscribed && deviceRegistered && permission === 'granted'
     };
   }
 

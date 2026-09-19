@@ -276,7 +276,8 @@ describe('HeaderComponent entry points', () => {
             .find((item: any) => item.textContent?.includes('Notifications')) as HTMLButtonElement;
         expect(button).toBeDefined();
 
-        button.click();
+        await component.openNotificationSettings();
+        fixture.detectChanges();
         await fixture.whenStable();
         fixture.detectChanges();
 

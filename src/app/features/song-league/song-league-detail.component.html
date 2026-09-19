@@ -143,7 +143,7 @@
               <small>On for your registered PWA devices</small>
             }
             @if (!songLeagueNotificationsActive && notificationSettings.supported && notificationSettings.permission !== 'denied') {
-              <small>Get a reminder on this device when Friday picks open</small>
+              <small>{{ notificationSettings.songLeagueEnabled ? 'Enabled elsewhere; register this device for reminders' : 'Get a reminder on this device when Friday picks open' }}</small>
             }
             @if (notificationSettings.permission === 'denied') {
               <small>Blocked or expired in browser settings</small>
@@ -160,7 +160,7 @@
             [disabled]="isSavingNotifications || (!notificationSettings.supported && !notificationSettings.songLeagueEnabled) || (notificationSettings.permission === 'denied' && !notificationSettings.songLeagueEnabled)"
             (click)="toggleSongLeagueNotifications()">
             <i class="pi" [ngClass]="isSavingNotifications ? 'pi-spin pi-spinner' : songLeagueNotificationsActive ? 'pi-bell-slash' : 'pi-bell'"></i>
-            {{ isSavingNotifications ? 'Saving…' : songLeagueNotificationsActive ? 'Turn off' : 'Notify me' }}
+            {{ songLeagueNotificationAction }}
           </button>
         </section>
       }

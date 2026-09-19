@@ -21,13 +21,15 @@ describe('SongLeagueDetailComponent notifications', () => {
         };
         notifications.loadSettings.mockResolvedValue({
             supported: true, installedPwa: true, permission: 'granted',
-            deviceSubscribed: true, songLeagueEnabled: true, songLeagueSongAddedEnabled: false,
+            deviceSubscribed: true, deviceRegistered: true, registeredDeviceCount: 1, deviceState: 'registered',
+            songLeagueEnabled: true, songLeagueSongAddedEnabled: false,
             songLeagueMember: true, statsAccessRequestsEnabled: true,
             active: true, songAddedActive: false, statsAccessActive: true
         });
         notifications.setSongLeagueEnabled.mockResolvedValue({
             supported: true, installedPwa: true, permission: 'granted',
-            deviceSubscribed: true, songLeagueEnabled: false, songLeagueSongAddedEnabled: false,
+            deviceSubscribed: true, deviceRegistered: true, registeredDeviceCount: 1, deviceState: 'registered',
+            songLeagueEnabled: false, songLeagueSongAddedEnabled: false,
             songLeagueMember: true, statsAccessRequestsEnabled: true,
             active: false, songAddedActive: false, statsAccessActive: true
         });
@@ -95,6 +97,34 @@ describe('SongLeagueDetailComponent notifications', () => {
         });
         fixture = TestBed.createComponent(SongLeagueDetailComponent);
         component = fixture.componentInstance;
+    });
+
+    it('offers to enable this device instead of saying Notify me when the category is already enabled elsewhere', async () => {
+        notifications.loadSettings.mockResolvedValue({
+            supported: true, installedPwa: true, permission: 'granted',
+            deviceSubscribed: false, deviceRegistered: false, registeredDeviceCount: 1, deviceState: 'server-only',
+            songLeagueEnabled: true, songLeagueSongAddedEnabled: false,
+            songLeagueMember: true, statsAccessRequestsEnabled: true,
+            active: false, songAddedActive: false, statsAccessActive: false
+        });
+        notifications.setSongLeagueEnabled.mockResolvedValue({
+            supported: true, installedPwa: true, permission: 'granted',
+            deviceSubscribed: true, deviceRegistered: true, registeredDeviceCount: 2, deviceState: 'registered',
+            songLeagueEnabled: true, songLeagueSongAddedEnabled: false,
+            songLeagueMember: true, statsAccessRequestsEnabled: true,
+            active: true, songAddedActive: false, statsAccessActive: true
+        });
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const button = fixture.nativeElement.querySelector('.league-notification-control button') as HTMLButtonElement;
+        expect(button.textContent).toContain('Enable here');
+        expect(button.textContent).not.toContain('Notify me');
+
+        await component.toggleSongLeagueNotifications();
+        expect(notifications.setSongLeagueEnabled).toHaveBeenCalledWith(true);
     });
 
     it('loads notification preferences in parallel and exposes an in-league off switch', async () => {

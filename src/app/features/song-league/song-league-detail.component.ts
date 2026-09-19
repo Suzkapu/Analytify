@@ -38,7 +38,8 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   isSavingNotifications = false;
   notificationSettings: PushNotificationSettings = {
     supported: false, installedPwa: false, permission: 'unavailable',
-    deviceSubscribed: false, songLeagueEnabled: false,
+    deviceSubscribed: false, deviceRegistered: false, registeredDeviceCount: 0, deviceState: 'unsupported',
+    songLeagueEnabled: false,
     songLeagueSongAddedEnabled: false, songLeagueMember: false,
     statsAccessRequestsEnabled: true,
     active: false, songAddedActive: false, statsAccessActive: false
@@ -207,13 +208,22 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     return this.notificationSettings.active;
   }
 
+  get songLeagueNotificationAction(): string {
+    if (this.isSavingNotifications) return 'Saving…';
+    if (this.songLeagueNotificationsActive) return 'Turn off';
+    return this.notificationSettings.songLeagueEnabled ? 'Enable here' : 'Notify me';
+  }
+
   async toggleSongLeagueNotifications(): Promise<void> {
     if (this.isSavingNotifications) return;
     this.isSavingNotifications = true;
     this.notificationMessage = '';
     try {
       this.notificationSettings = await this.pushNotifications.loadSettings();
-      const enabled = !this.notificationSettings.active;
+      const canActivateThisDevice = this.notificationSettings.supported
+        && this.notificationSettings.permission !== 'denied';
+      const enabled = !this.notificationSettings.songLeagueEnabled
+        || (!this.notificationSettings.active && canActivateThisDevice);
       this.notificationSettings = await this.pushNotifications.setSongLeagueEnabled(enabled);
       this.notificationMessage = enabled
         ? 'Pick-opening notifications are enabled on this device.'

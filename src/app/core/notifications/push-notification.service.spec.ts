@@ -12,6 +12,8 @@ describe('PushNotificationService', () => {
     let requestSubscription: Mock;
     let browserSubscription: PushSubscription | null;
     let permissionState: PermissionState;
+    let registeredEndpoint: string | null;
+    let swPush: {isEnabled: boolean; subscription: ReturnType<typeof defer>; requestSubscription: Mock};
     let preferences: {
         song_league_enabled: boolean;
         song_league_song_added_enabled: boolean;
@@ -28,6 +30,7 @@ describe('PushNotificationService', () => {
 
     beforeEach(() => {
         browserSubscription = null;
+        registeredEndpoint = null;
         permissionState = 'granted';
         preferences = {
             song_league_enabled: false,
@@ -49,15 +52,24 @@ describe('PushNotificationService', () => {
                     preferences.stats_access_requests_enabled = parameters.p_enabled;
                 }
             }
-            return { data: name === 'get_notification_preferences' ? [preferences] : null, error: null };
+            if (name === 'upsert_push_subscription') registeredEndpoint = parameters.p_endpoint;
+            return {
+                data: name === 'get_notification_settings' ? [{
+                    ...preferences,
+                    device_registered: !!parameters?.p_endpoint && parameters.p_endpoint === registeredEndpoint,
+                    registered_device_count: registeredEndpoint ? 1 : 0
+                }] : null,
+                error: null
+            };
         });
         requestSubscription = vi.fn().mockName('requestSubscription').mockResolvedValue(subscription);
+        swPush = {isEnabled: true, subscription: defer(() => of(browserSubscription)), requestSubscription};
         TestBed.configureTestingModule({
             providers: [
                 PushNotificationService,
                 {
                     provide: SwPush,
-                    useValue: { isEnabled: true, subscription: defer(() => of(browserSubscription)), requestSubscription }
+                    useValue: swPush
                 },
                 { provide: SupabaseService, useValue: { client: { rpc } } }
             ]
@@ -72,6 +84,8 @@ describe('PushNotificationService', () => {
 
         expect(requestSubscription).not.toHaveBeenCalled();
         expect(settings.deviceSubscribed).toBe(true);
+        expect(settings.deviceRegistered).toBe(true);
+        expect(settings.deviceState).toBe('registered');
         expect(rpc).toHaveBeenCalledWith('upsert_push_subscription', expect.any(Object));
     });
 
@@ -98,6 +112,7 @@ describe('PushNotificationService', () => {
         expect(settings.deviceSubscribed).toBe(true);
         expect(settings.permission).toBe('default');
         expect(settings.active).toBe(false);
+        expect(settings.deviceState).toBe('permission-required');
     });
 
     it('registers the current PWA device before enabling Song League notifications', async () => {
@@ -115,6 +130,59 @@ describe('PushNotificationService', () => {
         });
         expect(settings.songLeagueEnabled).toBe(true);
         expect(settings.deviceSubscribed).toBe(true);
+        expect(settings.deviceRegistered).toBe(true);
+    });
+
+    it('does not request permission again after the browser denied it', async () => {
+        permissionState = 'denied';
+
+        await expect(service.setSongLeagueEnabled(true)).rejects.toThrow(/blocked/i);
+
+        expect(requestSubscription).not.toHaveBeenCalled();
+        const settings = await service.loadSettings();
+        expect(settings.deviceState).toBe('denied');
+    });
+
+    it('distinguishes a server-only registration from this browser device', async () => {
+        registeredEndpoint = 'https://push.example/other-device';
+        preferences.song_league_enabled = true;
+
+        const settings = await service.loadSettings();
+
+        expect(settings.registeredDeviceCount).toBe(1);
+        expect(settings.deviceRegistered).toBe(false);
+        expect(settings.deviceState).toBe('server-only');
+        expect(settings.active).toBe(false);
+    });
+
+    it('distinguishes granted permission without a local subscription', async () => {
+        const settings = await service.loadSettings();
+
+        expect(settings.permission).toBe('granted');
+        expect(settings.deviceState).toBe('subscription-missing');
+        expect(settings.active).toBe(false);
+    });
+
+    it('reports an unsupported browser without requesting permission', async () => {
+        swPush.isEnabled = false;
+
+        const settings = await service.loadSettings();
+
+        expect(settings.supported).toBe(false);
+        expect(settings.deviceState).toBe('unsupported');
+        expect(requestSubscription).not.toHaveBeenCalled();
+    });
+
+    it('repairs a missing server registration for the current PushSubscription idempotently', async () => {
+        browserSubscription = subscription;
+        preferences.song_league_enabled = true;
+
+        const first = await service.loadSettings();
+        const second = await service.loadSettings();
+
+        expect(first.active).toBe(true);
+        expect(second.active).toBe(true);
+        expect(rpc.mock.calls.filter(([name]) => name === 'upsert_push_subscription')).toHaveLength(1);
     });
 
     it('turns off Song League delivery without deleting the device subscription needed by future categories', async () => {

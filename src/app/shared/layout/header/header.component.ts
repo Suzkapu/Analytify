@@ -8,10 +8,6 @@ import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 import {firstValueFrom} from 'rxjs';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {AdminService} from '@core/admin/admin.service';
-import {
-  PushNotificationService,
-  PushNotificationSettings
-} from '@core/notifications/push-notification.service';
 
 const console = createScopedLogger('Profile and Settings');
 
@@ -49,30 +45,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   showConfirmDbDeleteModal = false;
   showBackupConfirmModal = false;
   showGuestLogoutConfirmModal = false;
-  showNotificationSettingsModal = false;
   isDeletingDbData = false;
   isGuestLogoutRunning = false;
-  isLoadingNotificationSettings = false;
-  isSavingNotificationSettings = false;
   dataDeletionError = '';
   statsDiscoverable = false;
   isSavingStatsDiscoverability = false;
-  notificationError = '';
   private profileRetryTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly profileRetryDelays = [1_000, 5_000, 30_000];
-  notificationSettings: PushNotificationSettings = {
-    supported: false,
-    installedPwa: false,
-    permission: 'unavailable',
-    deviceSubscribed: false,
-    songLeagueEnabled: false,
-    songLeagueSongAddedEnabled: false,
-    songLeagueMember: false,
-    statsAccessRequestsEnabled: true,
-    active: false,
-    songAddedActive: false,
-    statsAccessActive: false
-  };
 
   constructor(
     public authService: SpotifyAuthService,
@@ -80,7 +59,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private supabaseService: SupabaseService,
     private spotifyDataService: SpotifyDataService,
     private adminService: AdminService,
-    private pushNotifications: PushNotificationService,
     private router: Router,
     @Optional() private statsSharing?: StatsSharingService
   ) {}
@@ -379,17 +357,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   async openNotificationSettings(): Promise<void> {
+    if (this.dynamicDialog.length) return;
     this.showSettingsDropdown = false;
-    this.showNotificationSettingsModal = true;
-    this.isLoadingNotificationSettings = true;
-    this.notificationError = '';
-    try {
-      this.notificationSettings = await this.pushNotifications.loadSettings();
-    } catch (error) {
-      this.notificationError = (error as any)?.message || 'Notification settings could not be loaded.';
-    } finally {
-      this.isLoadingNotificationSettings = false;
-    }
+    const {NotificationSettingsDialogComponent} = await import('./notification-settings-dialog.component');
+    const reference = this.dynamicDialog.createComponent(NotificationSettingsDialogComponent);
+    reference.instance.closed.subscribe(() => this.dynamicDialog.clear());
   }
 
   async openSyncTaskStatus(): Promise<void> {
@@ -406,61 +378,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const {BlockedUsersDialogComponent} = await import('./blocked-users-dialog.component');
     const reference = this.dynamicDialog.createComponent(BlockedUsersDialogComponent);
     reference.instance.closed.subscribe(() => this.dynamicDialog.clear());
-  }
-
-  closeNotificationSettings(): void {
-    if (this.isSavingNotificationSettings) return;
-    this.showNotificationSettingsModal = false;
-  }
-
-  @HostListener('window:focus')
-  refreshOpenNotificationSettings(): void {
-    if (!this.showNotificationSettingsModal || this.isSavingNotificationSettings) return;
-    void this.pushNotifications.loadSettings().then(settings => {
-      this.notificationSettings = settings;
-    }).catch(() => undefined);
-  }
-
-  async toggleSongLeagueNotifications(event: Event): Promise<void> {
-    const enabled = (event.target as HTMLInputElement).checked;
-    this.isSavingNotificationSettings = true;
-    this.notificationError = '';
-    try {
-      this.notificationSettings = await this.pushNotifications.loadSettings();
-      this.notificationSettings = await this.pushNotifications.setSongLeagueEnabled(enabled);
-    } catch (error) {
-      this.notificationError = (error as any)?.message || 'The notification setting could not be changed.';
-    } finally {
-      this.isSavingNotificationSettings = false;
-    }
-  }
-
-  async toggleSongAddedNotifications(event: Event): Promise<void> {
-    const enabled = (event.target as HTMLInputElement).checked;
-    this.isSavingNotificationSettings = true;
-    this.notificationError = '';
-    try {
-      this.notificationSettings = await this.pushNotifications.loadSettings();
-      this.notificationSettings = await this.pushNotifications.setSongLeagueSongAddedEnabled(enabled);
-    } catch (error) {
-      this.notificationError = (error as any)?.message || 'The notification setting could not be changed.';
-    } finally {
-      this.isSavingNotificationSettings = false;
-    }
-  }
-
-  async toggleStatsAccessNotifications(event: Event): Promise<void> {
-    const enabled = (event.target as HTMLInputElement).checked;
-    this.isSavingNotificationSettings = true;
-    this.notificationError = '';
-    try {
-      this.notificationSettings = await this.pushNotifications.loadSettings();
-      this.notificationSettings = await this.pushNotifications.setStatsAccessRequestsEnabled(enabled);
-    } catch (error) {
-      this.notificationError = (error as any)?.message || 'The notification setting could not be changed.';
-    } finally {
-      this.isSavingNotificationSettings = false;
-    }
   }
 
   closeClearDataModal() {

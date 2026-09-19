@@ -63,7 +63,7 @@ describe('SongLeagueClaimComponent notification prompt', () => {
 
         const dialog = fixture.nativeElement.querySelector('.league-notification-prompt') as HTMLElement;
         expect(dialog).not.toBeNull();
-        expect(dialog.textContent).toContain('Enable pick notifications?');
+        expect(dialog.textContent).toContain('Enable pick notifications on this device?');
         expect(component.joinState).toBe('joined');
         expect(fixture.nativeElement.querySelector('.league-claim-card').textContent).toContain('League joined');
         expect(fixture.nativeElement.querySelector('.league-claim-card').textContent).not.toContain('Could not join league');
