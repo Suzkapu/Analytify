@@ -53,6 +53,28 @@ async function loadSharedPlaylistSource(spotify, accessToken, playlistId) {
 
 function createSharedPlaylistsTask({supabase, spotify}) {
 
+  async function appendUploadChunks(uploadId, tracks) {
+    for (let offset = 0; offset < tracks.length;) {
+      let end = offset;
+      let encodedBytes = 2;
+      while (end < tracks.length && end - offset < 250) {
+        const trackBytes = Buffer.byteLength(JSON.stringify(tracks[end]), 'utf8');
+        const nextBytes = encodedBytes + trackBytes + (end === offset ? 0 : 1);
+        if (nextBytes > 450_000) break;
+        encodedBytes = nextBytes;
+        end++;
+      }
+      if (end === offset) throw new Error('A playlist song is too large to share.');
+      const {error} = await supabase.rpc('append_playlist_share_upload_chunk', {
+        p_upload_id: uploadId,
+        p_offset: offset,
+        p_tracks: tracks.slice(offset, end)
+      });
+      if (error) throw error;
+      offset = end;
+    }
+  }
+
   async function refreshOwnedShares(user, accessToken) {
     const {data: shares, error} = await supabase.from('playlist_shares').select('*')
       .eq('owner_user_id', user.id).is('revoked_at', null);
@@ -67,16 +89,21 @@ function createSharedPlaylistsTask({supabase, spotify}) {
     for (const [sourceId, sourceShares] of bySource) {
       const playlist = await loadSharedPlaylistSource(spotify, accessToken, sourceId);
       for (const share of sourceShares) {
-        const {data: published, error: publishError} = await supabase.rpc(
-          'refresh_playlist_share_from_worker',
+        const {data: uploadId, error: beginError} = await supabase.rpc(
+          'begin_playlist_share_refresh_upload',
           {
             p_share_id: share.id,
             p_expected_revision: Number(share.revision || 1),
             p_playlist_name: playlist.name,
             p_playlist_description: playlist.description,
-            p_playlist_image_url: playlist.imageUrl,
-            p_tracks: playlist.tracks
+            p_playlist_image_url: playlist.imageUrl
           }
+        );
+        if (beginError) throw beginError;
+        await appendUploadChunks(uploadId, playlist.tracks);
+        const {data: published, error: publishError} = await supabase.rpc(
+          'commit_playlist_share_refresh_upload',
+          {p_upload_id: uploadId, p_expected_track_count: playlist.tracks.length}
         );
         if (publishError) throw publishError;
         if (published) refreshed++;

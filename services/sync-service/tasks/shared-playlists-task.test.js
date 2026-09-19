@@ -75,7 +75,7 @@ function queryReturning(data) {
   return query;
 }
 
-test('worker source publication uses revision compare-and-set instead of direct table writes', async () => {
+test('worker source publication stages bounded chunks before one revision compare-and-set commit', async () => {
   const rpcCalls = [];
   const share = {
     id: 'share', source_playlist_id: 'source', revision: 4,
@@ -85,7 +85,7 @@ test('worker source publication uses revision compare-and-set instead of direct 
     from: table => queryReturning(table === 'playlist_shares' ? [share] : []),
     rpc: async (name, parameters) => {
       rpcCalls.push({name, parameters});
-      return {data: true, error: null};
+      return {data: name === 'begin_playlist_share_refresh_upload' ? 'upload-id' : true, error: null};
     }
   };
   const spotify = {
@@ -99,9 +99,40 @@ test('worker source publication uses revision compare-and-set instead of direct 
     user: {id: 'owner', spotify_credential: {}}
   });
 
-  assert.equal(rpcCalls[0].name, 'refresh_playlist_share_from_worker');
+  assert.equal(rpcCalls[0].name, 'begin_playlist_share_refresh_upload');
   assert.equal(rpcCalls[0].parameters.p_expected_revision, 4);
-  assert.equal(rpcCalls[0].parameters.p_tracks[0].id, 'one');
+  assert.equal(rpcCalls[1].name, 'append_playlist_share_upload_chunk');
+  assert.equal(rpcCalls[1].parameters.p_tracks[0].id, 'one');
+  assert.equal(rpcCalls[2].name, 'commit_playlist_share_refresh_upload');
+  assert.equal(rpcCalls[2].parameters.p_expected_track_count, 1);
+});
+
+test('worker uploads a maximum playlist in bounded resumable chunks', async () => {
+  const rpcCalls = [];
+  const tracks = Array.from({length: 5000}, (_, index) => savedTrack(`track-${index}`, `artist-${index}`, 'Album'));
+  const supabase = {
+    from: table => queryReturning(table === 'playlist_shares'
+      ? [{id: 'share', source_playlist_id: 'source', revision: 1}]
+      : []),
+    rpc: async (name, parameters) => {
+      rpcCalls.push({name, parameters});
+      return {data: name === 'begin_playlist_share_refresh_upload' ? 'upload-id' : true, error: null};
+    }
+  };
+  const spotify = {
+    accessToken: async () => 'token',
+    api: async path => path === '/playlists/source'
+      ? {name: 'Maximum', description: '', images: []}
+      : {items: tracks, next: null}
+  };
+
+  await createSharedPlaylistsTask({supabase, spotify})({user: {id: 'owner', spotify_credential: {}}});
+
+  const chunks = rpcCalls.filter(call => call.name === 'append_playlist_share_upload_chunk');
+  assert.equal(chunks.length, 20);
+  assert.ok(chunks.every(call => call.parameters.p_tracks.length <= 250));
+  assert.deepEqual(chunks.map(call => call.parameters.p_offset), Array.from({length: 20}, (_, index) => index * 250));
+  assert.equal(rpcCalls.at(-1).parameters.p_expected_track_count, 5000);
 });
 
 test('out-of-order recipient completion is rejected and releases its lease', async () => {

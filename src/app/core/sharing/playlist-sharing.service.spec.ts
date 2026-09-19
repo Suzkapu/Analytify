@@ -65,11 +65,16 @@ describe('PlaylistSharingService', () => {
             tracks: [track('one', 1)]
         });
 
-        const rpcArguments = vi.mocked(rpc).mock.lastCall![1];
-        expect(vi.mocked(rpc).mock.lastCall![0]).toBe('create_playlist_share');
-        expect(rpcArguments.p_claim_token.length).toBe(64);
+        const beginCall = vi.mocked(rpc).mock.calls.find(call => call[0] === 'begin_playlist_share_create_upload')!;
+        expect(beginCall[1].p_claim_token.length).toBe(64);
+        expect(rpc).toHaveBeenCalledWith('append_playlist_share_upload_chunk', expect.objectContaining({
+            p_upload_id: 'share-id', p_offset: 0
+        }));
+        expect(rpc).toHaveBeenCalledWith('commit_playlist_share_create_upload', {
+            p_upload_id: 'share-id', p_expected_track_count: 1
+        });
         expect(created.shareId).toBe('share-id');
-        expect(created.claimUrl).toContain(`/shared-playlists/claim/${rpcArguments.p_claim_token}`);
+        expect(created.claimUrl).toContain(`/shared-playlists/claim/${beginCall[1].p_claim_token}`);
     });
 
     it('binds recipient synchronization to an opaque lease and exact revisions', async () => {
@@ -108,10 +113,33 @@ describe('PlaylistSharingService', () => {
         };
 
         expect(await service.refreshShare('share-id', 5, publication)).toBe(6);
-        expect(rpc).toHaveBeenCalledWith('refresh_playlist_share', expect.objectContaining({
+        expect(rpc).toHaveBeenCalledWith('begin_playlist_share_refresh_upload', expect.objectContaining({
             p_share_id: 'share-id',
             p_expected_revision: 5
         }));
+        expect(rpc).toHaveBeenCalledWith('commit_playlist_share_refresh_upload', {
+            p_upload_id: '6', p_expected_track_count: 1
+        });
+    });
+
+    it('uploads large playlist snapshots in bounded chunks before one atomic commit', async () => {
+        rpc.mockImplementation((name: string) => Promise.resolve({
+            data: name.startsWith('begin_') ? 'upload-id' : name.startsWith('commit_') ? 8 : 250,
+            error: null
+        }));
+        const tracks = Array.from({length: 501}, (_, index) => track(`track-${index}`, index + 1));
+
+        expect(await service.refreshShare('share-id', 7, {
+            sourcePlaylistId: 'source', playlistName: 'Large', playlistDescription: '', playlistImageUrl: '', tracks
+        })).toBe(8);
+
+        const chunks = vi.mocked(rpc).mock.calls.filter(call => call[0] === 'append_playlist_share_upload_chunk');
+        expect(chunks.map(call => [call[1].p_offset, call[1].p_tracks.length])).toEqual([
+            [0, 250], [250, 250], [500, 1]
+        ]);
+        expect(rpc).toHaveBeenLastCalledWith('commit_playlist_share_refresh_upload', {
+            p_upload_id: 'upload-id', p_expected_track_count: 501
+        });
     });
 
     it('removes only the current recipient association through its dedicated RPC', async () => {

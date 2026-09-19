@@ -20,15 +20,22 @@ export class PlaylistSharingService {
   async createShare(publication: PlaylistSharePublication): Promise<CreatedPlaylistShare> {
     const token = this.createClaimToken();
     const profile = await this.loadCurrentProfile();
-    const {data, error} = await this.supabase.client.rpc('create_playlist_share', {
+    const {data: uploadData, error: uploadError} = await this.supabase.client.rpc('begin_playlist_share_create_upload', {
       p_source_playlist_id: publication.sourcePlaylistId,
       p_playlist_name: publication.playlistName,
       p_playlist_description: publication.playlistDescription,
       p_playlist_image_url: publication.playlistImageUrl,
       p_owner_display_name: profile.displayName,
       p_owner_image_url: profile.imageUrl,
-      p_claim_token: token,
-      p_tracks: publication.tracks
+      p_claim_token: token
+    });
+    if (uploadError) throw uploadError;
+    const uploadId = String(uploadData || '');
+    if (!uploadId) throw new Error('Supabase did not start the playlist upload.');
+    await this.appendUploadChunks(uploadId, publication.tracks);
+    const {data, error} = await this.supabase.client.rpc('commit_playlist_share_create_upload', {
+      p_upload_id: uploadId,
+      p_expected_track_count: publication.tracks.length
     });
     if (error) throw error;
     const shareId = String(data || '');
@@ -171,16 +178,55 @@ export class PlaylistSharingService {
     expectedRevision: number,
     publication: PlaylistSharePublication
   ): Promise<number> {
-    const {data, error} = await this.supabase.client.rpc('refresh_playlist_share', {
+    const {data: uploadData, error: uploadError} = await this.supabase.client.rpc('begin_playlist_share_refresh_upload', {
       p_share_id: shareId,
       p_expected_revision: expectedRevision,
       p_playlist_name: publication.playlistName,
       p_playlist_description: publication.playlistDescription,
-      p_playlist_image_url: publication.playlistImageUrl,
-      p_tracks: publication.tracks
+      p_playlist_image_url: publication.playlistImageUrl
+    });
+    if (uploadError) throw uploadError;
+    const uploadId = String(uploadData || '');
+    if (!uploadId) throw new Error('Supabase did not start the playlist upload.');
+    await this.appendUploadChunks(uploadId, publication.tracks);
+    const {data, error} = await this.supabase.client.rpc('commit_playlist_share_refresh_upload', {
+      p_upload_id: uploadId,
+      p_expected_track_count: publication.tracks.length
     });
     if (error) throw error;
     return Number(data || 0);
+  }
+
+  private async appendUploadChunks(uploadId: string, tracks: CompareTrack[]): Promise<void> {
+    for (const chunk of this.chunkTracks(tracks)) {
+      const {error} = await this.supabase.client.rpc('append_playlist_share_upload_chunk', {
+        p_upload_id: uploadId,
+        p_offset: chunk.offset,
+        p_tracks: chunk.tracks
+      });
+      if (error) throw error;
+    }
+  }
+
+  private chunkTracks(tracks: CompareTrack[]): Array<{offset: number; tracks: CompareTrack[]}> {
+    const chunks: Array<{offset: number; tracks: CompareTrack[]}> = [];
+    const encoder = new TextEncoder();
+    let offset = 0;
+    while (offset < tracks.length) {
+      let end = offset;
+      let encodedBytes = 2;
+      while (end < tracks.length && end - offset < 250) {
+        const trackBytes = encoder.encode(JSON.stringify(tracks[end])).byteLength;
+        const nextBytes = encodedBytes + trackBytes + (end === offset ? 0 : 1);
+        if (nextBytes > 450_000) break;
+        encodedBytes = nextBytes;
+        end++;
+      }
+      if (end === offset) throw new Error('A playlist song is too large to share.');
+      chunks.push({offset, tracks: tracks.slice(offset, end)});
+      offset = end;
+    }
+    return chunks;
   }
 
   subscribeToShareChanges(onChange: () => void, shareId?: string): () => void {
