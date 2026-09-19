@@ -240,6 +240,12 @@ export class PlaylistSharingService {
     const channel = this.supabase.client
       .channel(`playlist-share-updates:${suffix}`)
       .on('postgres_changes', postgresFilter, () => onChange())
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'playlist_share_revocations',
+        ...(shareId ? {filter: `share_id=eq.${shareId}`} : {})
+      }, () => onChange())
       .subscribe();
     return () => {
       void this.supabase.client.removeChannel(channel);

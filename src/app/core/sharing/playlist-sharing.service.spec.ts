@@ -178,6 +178,12 @@ describe('PlaylistSharingService', () => {
             table: 'playlist_shares',
             filter: 'id=eq.share-id'
         }), expect.any(Function));
+        expect(channelOn).toHaveBeenCalledWith('postgres_changes', expect.objectContaining({
+            event: 'INSERT',
+            schema: 'public',
+            table: 'playlist_share_revocations',
+            filter: 'share_id=eq.share-id'
+        }), expect.any(Function));
         expect(channelSubscribe).toHaveBeenCalledTimes(1);
 
         postgresChangeHandler?.();

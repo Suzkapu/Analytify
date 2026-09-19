@@ -470,6 +470,18 @@ describe('SharedPlaylistsComponent', () => {
             .toContain('Removed by recipient');
     });
 
+    it('reloads shares after an offline recipient returns', async () => {
+        await fixture.whenStable();
+        sharing.listReceivedShares.mockClear();
+        sharing.listOwnedShares.mockClear();
+
+        window.dispatchEvent(new Event('online'));
+        await fixture.whenStable();
+
+        expect(sharing.listReceivedShares).toHaveBeenCalledTimes(1);
+        expect(sharing.listOwnedShares).toHaveBeenCalledTimes(1);
+    });
+
     it('includes the owner in a received playlist name', () => {
         expect(component.receivedPlaylistName({
             playlistName: 'Party',

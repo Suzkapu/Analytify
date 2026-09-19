@@ -87,6 +87,16 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     });
   }
 
+  @HostListener('window:focus')
+  onWindowFocus(): void {
+    if (!this.destroyed) this.reloadSilently();
+  }
+
+  @HostListener('window:online')
+  onWindowOnline(): void {
+    if (!this.destroyed) this.reloadSilently();
+  }
+
   ngOnDestroy(): void {
     this.destroyed = true;
     this.unsubscribeFromShareChanges?.();
