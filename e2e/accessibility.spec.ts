@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import {expect, Page, test} from '@playwright/test';
+import {CURRENT_TERMS_VERSION} from '../src/app/core/legal/terms-acceptance.service';
 
 const seriousOrCritical = ['serious', 'critical'];
 
@@ -15,7 +16,7 @@ async function expectNoBlockingAxeViolations(page: Page): Promise<void> {
 
 async function seedAuthenticatedBrowser(page: Page): Promise<void> {
   await page.goto('/login');
-  await page.evaluate(async () => {
+  await page.evaluate(async termsVersion => {
     await new Promise<void>((resolve, reject) => {
       const request = indexedDB.open('AnalytifyDB', 3);
       request.onupgradeneeded = () => {
@@ -36,11 +37,15 @@ async function seedAuthenticatedBrowser(page: Page): Promise<void> {
         store.put({key: 'spotifyTokenExpiresAt', value: String(Date.now() + 3_600_000)});
         store.put({key: 'spotifyUserId', value: 'e2e-user'});
         store.put({key: 'spotifyConnectionMode', value: 'hosted'});
+        store.put({
+          key: 'termsAcceptance',
+          value: `${termsVersion}|2026-09-19T00:00:00.000Z|11111111-1111-4111-8111-111111111111`
+        });
         transaction.oncomplete = () => { db.close(); resolve(); };
         transaction.onerror = () => reject(transaction.error);
       };
     });
-  });
+  }, CURRENT_TERMS_VERSION);
 }
 
 async function mockSpotify(page: Page): Promise<void> {
