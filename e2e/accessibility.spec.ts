@@ -85,6 +85,57 @@ test('logged-out home is keyboard reachable, zoom-safe, and WCAG 2.2 AA clean', 
   await expectNoBlockingAxeViolations(page);
 });
 
+test('current terms acceptance survives a new page load in a first-party cookie', async ({page}) => {
+  const acceptedAt = '2026-09-21T08:00:00.000Z';
+  const sessionId = '22222222-2222-4222-8222-222222222222';
+  await page.context().addCookies([{
+    name: 'analytify_terms_acceptance',
+    value: encodeURIComponent(`${CURRENT_TERMS_VERSION}|${acceptedAt}|${sessionId}`),
+    url: 'http://127.0.0.1:4200',
+    sameSite: 'Lax'
+  }]);
+
+  await page.goto('/login');
+  await expect(page.getByRole('checkbox')).toBeChecked();
+  await page.reload();
+  await expect(page.getByRole('checkbox')).toBeChecked();
+});
+
+test('an acceptance saved by the previous IndexedDB layout is migrated on startup', async ({page}) => {
+  await page.route('**/__terms_migration_seed__', route => route.fulfill({
+    contentType: 'text/html',
+    body: '<!doctype html><title>Storage migration seed</title>'
+  }));
+  await page.goto('/__terms_migration_seed__');
+  await page.evaluate(async termsVersion => {
+    await new Promise<void>((resolve, reject) => {
+      const request = indexedDB.open('AnalytifyDB', 3);
+      request.onupgradeneeded = () => {
+        const db = request.result;
+        db.createObjectStore('appData', {keyPath: 'key'});
+        db.createObjectStore('featureData', {keyPath: 'key'});
+        const history = db.createObjectStore('statsHistory', {keyPath: 'id', autoIncrement: true});
+        history.createIndex('by_user_range', ['userId', 'range']);
+      };
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => {
+        const db = request.result;
+        const transaction = db.transaction('featureData', 'readwrite');
+        transaction.objectStore('featureData').put({
+          key: 'termsAcceptance',
+          value: `${termsVersion}|2026-09-21T08:00:00.000Z|33333333-3333-4333-8333-333333333333`
+        });
+        transaction.oncomplete = () => { db.close(); resolve(); };
+        transaction.onerror = () => reject(transaction.error);
+      };
+    });
+  }, CURRENT_TERMS_VERSION);
+
+  await page.goto('/login');
+  await expect(page.getByRole('checkbox')).toBeChecked();
+  await expect.poll(() => page.evaluate(() => document.cookie)).toContain('analytify_terms_acceptance=');
+});
+
 test('authenticated playlists route is responsive and WCAG 2.2 AA clean', async ({page}) => {
   await mockSpotify(page);
   await seedAuthenticatedBrowser(page);

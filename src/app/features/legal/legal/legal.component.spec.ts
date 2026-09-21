@@ -56,6 +56,8 @@ describe('LegalComponent', () => {
         expect(text).toContain('solely responsible');
         expect(text).toContain('third-party beneficiary');
         expect(text).toContain('Section V.11');
+        expect(text).toContain('Strictly Necessary Cookie');
+        expect(text).toContain('not used for analytics');
         expect(text).not.toContain('Clause 12');
     });
 });

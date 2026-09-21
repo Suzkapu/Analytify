@@ -172,6 +172,7 @@ describe('StorageService', () => {
     it('classifies auth metadata separately from route-owned feature payloads', () => {
         expect((service as any).isBootstrapMetadataKey('spotifyRefreshToken')).toBe(true);
         expect((service as any).isBootstrapMetadataKey('cloud-user_backup_active')).toBe(true);
+        expect((service as any).isBootstrapMetadataKey('termsAcceptance')).toBe(true);
         expect((service as any).isBootstrapMetadataKey('spotify-user_playlists')).toBe(false);
         expect((service as any).isBootstrapMetadataKey('spotify-user_playlist-id')).toBe(false);
     });

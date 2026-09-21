@@ -12,7 +12,7 @@ const console = createScopedLogger('Local Storage');
 export class StorageService {
   /** Primary synchronous read layer – always in sync with IndexedDB */
   private inMemoryCache = new Map<string, string>();
-  private readonly databaseVersion = 3;
+  private readonly databaseVersion = 4;
   private readonly statsUserRangeIndex = 'by_user_range';
   private readonly metadataStore = 'appData';
   private readonly featureStore = 'featureData';
@@ -59,6 +59,17 @@ export class StorageService {
           ? event.target.transaction.objectStore(this.featureStore)
           : db.createObjectStore(this.featureStore, {keyPath: 'key'});
         const metadataStore = event.target.transaction.objectStore(this.metadataStore);
+        // Version 4 moves the legal acceptance record into the startup-sized
+        // metadata store. Older releases accidentally treated it as a lazy
+        // feature payload, so route guards could not see it after reopening.
+        if (event.oldVersion < 4) {
+          const termsRequest = featureStore.get('termsAcceptance');
+          termsRequest.onsuccess = () => {
+            if (!termsRequest.result) return;
+            metadataStore.put(termsRequest.result);
+            featureStore.delete('termsAcceptance');
+          };
+        }
         const cursorRequest = metadataStore.openCursor();
         cursorRequest.onsuccess = (cursorEvent: any) => {
           const cursor: IDBCursorWithValue | null = cursorEvent.target.result;
@@ -434,6 +445,7 @@ export class StorageService {
       'spotifyAccessToken', 'spotifyRefreshToken', 'spotifyTokenExpiresAt',
       'spotifyUserId', 'supabaseUserId', 'spotifyConnectionMode',
       'personalSpotifyClientId', 'anonymousCloudIdentity', 'collaborationIdentityReady', 'cloudIdentityReady',
+      'termsAcceptance',
       'analytify_personal_spotify_auth_request', 'analytify_compare_auth_request',
       'analytifyAuthReturnUrl', 'spotify_rate_limit_until', 'spotifyRetryAfter'
     ]);
