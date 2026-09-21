@@ -20,8 +20,8 @@ select lives_ok(
   $$ select public.update_my_sync_schedule_preference('stats_short_term', true, 1, 'days') $$,
   'the exact administrator limit is accepted'
 );
-select ok((select short_term_enabled and enabled from public.sync_user_settings
-  where user_id = '81000000-0000-4000-8000-000000000001'),
+select ok((select optional_enabled and effective_active from public.get_my_sync_task_status()
+  where task_key = 'stats_short_term'),
   'the personal choice persists for the verified profile');
 select throws_ok(
   $$ select public.update_my_sync_schedule_preference('shared_playlists', false, 1, 'days') $$,
@@ -43,7 +43,7 @@ select lives_ok(
   $$ select public.admin_update_sync_schedule_policy('stats_short_term', true, 2, 'days') $$,
   'an administrator can make a personal limit slower');
 select ok((select short_term_interval_hours = 2880 and short_term_interval_unit = 'minutes'
-  from public.sync_user_settings where user_id = '81000000-0000-4000-8000-000000000001'),
+  from public.admin_list_users() where user_id = '81000000-0000-4000-8000-000000000001'),
   'an existing faster choice is constrained immediately');
 select lives_ok(
   $$ select public.admin_update_sync_schedule_policy('listening_history', false, 2, 'hours') $$,
