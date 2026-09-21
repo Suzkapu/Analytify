@@ -18,7 +18,7 @@ async function seedAuthenticatedBrowser(page: Page): Promise<void> {
   await page.goto('/login');
   await page.evaluate(async termsVersion => {
     await new Promise<void>((resolve, reject) => {
-      const request = indexedDB.open('AnalytifyDB', 3);
+      const request = indexedDB.open('AnalytifyDB', 4);
       request.onupgradeneeded = () => {
         const db = request.result;
         if (!db.objectStoreNames.contains('appData')) db.createObjectStore('appData', {keyPath: 'key'});
