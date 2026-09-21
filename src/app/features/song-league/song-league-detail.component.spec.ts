@@ -127,6 +127,37 @@ describe('SongLeagueDetailComponent notifications', () => {
         expect(notifications.setSongLeagueEnabled).toHaveBeenCalledWith(true);
     });
 
+    it('opens Spotify from the recommendation cover without a separate text link', async () => {
+        const songLeague = TestBed.inject(SongLeagueService) as any;
+        songLeague.loadDashboard.mockResolvedValue({
+            league: {
+                id: 'league', ownerUserId: 'owner', name: 'Friday Finds', timezone: 'Europe/Vienna',
+                ownerDisplayName: 'Owner', ownerImageUrl: '', playlistRevision: 0, maxMembers: 5, isDemo: false,
+                createdAt: '2026-09-01T00:00:00Z'
+            },
+            members: [{ leagueId: 'league', userId: 'member', role: 'member', displayName: 'Member', imageUrl: '', joinedAt: '2026-09-01T00:00:00Z' }],
+            standings: [], playlists: [], breakdownByRecommender: new Map(),
+            recommendations: [{
+                id: 'recommendation', leagueId: 'league', roundId: 'round', recommenderUserId: 'member',
+                trackId: 'track', recordingKey: 'track', isrc: null, trackName: 'rockstarshit · bonus',
+                artistNames: 'LUIS', albumName: 'Album', imageUrl: 'https://i.scdn.co/image/cover',
+                spotifyUrl: 'https://open.spotify.com/track/1234567890123456789012',
+                submittedAt: '2026-09-01T00:00:00Z', scoringStartsAt: '2026-09-01T00:00:00Z',
+                scoringEndsAt: '2026-10-01T00:00:00Z'
+            }]
+        });
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const coverLink = fixture.nativeElement.querySelector('.active-song-art-link') as HTMLAnchorElement;
+        expect(coverLink).not.toBeNull();
+        expect(coverLink.getAttribute('aria-label')).toContain('Open rockstarshit · bonus by LUIS in Spotify');
+        expect(coverLink.querySelector('img')).not.toBeNull();
+        expect(fixture.nativeElement.textContent).not.toContain('Open in Spotify');
+    });
+
     it('loads notification preferences in parallel and exposes an in-league off switch', async () => {
         fixture.detectChanges();
         await fixture.whenStable();

@@ -260,22 +260,25 @@
           <div class="active-song-grid">
             @for (recommendation of data.recommendations; track trackRecommendation($index, recommendation)) {
               <article class="active-song-card">
-                <div class="active-song-art">
-                  @if (recommendation.imageUrl) {
-                    <img [src]="recommendation.imageUrl" alt="">
-                  }
-                  @if (!recommendation.imageUrl) {
-                    <span><i class="pi pi-music"></i></span>
-                  }
-                  <em>{{ recommendationStatus(recommendation) }}</em>
-                </div>
+                @if (recommendation.spotifyUrl) {
+                  <a class="active-song-art active-song-art-link"
+                    [href]="recommendation.spotifyUrl | safeSpotifyUrl:'track'" target="_blank" rel="noopener noreferrer"
+                    [attr.aria-label]="'Open ' + recommendation.trackName + ' by ' + recommendation.artistNames + ' in Spotify'">
+                    @if (recommendation.imageUrl) { <img [src]="recommendation.imageUrl" [alt]="recommendation.trackName + ' cover'"> }
+                    @if (!recommendation.imageUrl) { <span><i class="pi pi-music"></i></span> }
+                    <em>{{ recommendationStatus(recommendation) }}</em>
+                  </a>
+                } @else {
+                  <div class="active-song-art">
+                    @if (recommendation.imageUrl) { <img [src]="recommendation.imageUrl" [alt]="recommendation.trackName + ' cover'"> }
+                    @if (!recommendation.imageUrl) { <span><i class="pi pi-music"></i></span> }
+                    <em>{{ recommendationStatus(recommendation) }}</em>
+                  </div>
+                }
                 <div class="active-song-copy">
                   <span>Recommended by {{ recommenderName(recommendation.recommenderUserId) }}</span>
                   <h3>{{ recommendation.trackName }}</h3>
                   <p>{{ recommendation.artistNames }}</p>
-                  @if (recommendation.spotifyUrl) {
-                    <a [href]="recommendation.spotifyUrl | safeSpotifyUrl:'track'" target="_blank" rel="noopener noreferrer"><i class="pi pi-spotify"></i> Open in Spotify</a>
-                  }
                 </div>
                 <div class="active-song-score"><strong>{{ recommendationPoints(recommendation.id) | number }}</strong><span>points</span></div>
                 <div class="listener-position-list">
