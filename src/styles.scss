@@ -2567,6 +2567,48 @@ button {
   .notification-denied { color: var(--color-danger); }
 }
 
+.sync-preference-toggle {
+  margin-top: 9px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--color-text);
+  font-size: .78rem;
+
+  input { accent-color: var(--color-accent); }
+}
+
+.sync-interval-control {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-muted);
+  font-size: .76rem;
+
+  input, select {
+    height: 32px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 8px;
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+  input { width: 70px; padding: 0 7px; }
+  select { padding: 0 7px; }
+}
+
+.notification-category-action {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-accent);
+  cursor: pointer;
+
+  &:disabled { cursor: default; opacity: .5; }
+}
+
 .notification-settings-error {
   margin: 10px 0 0;
   color: var(--color-danger);

@@ -24,6 +24,11 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 .admin-field textarea { padding: 11px; resize: vertical; }
 .admin-field small { color: #68736b; text-align: right; }
 .site-settings-panel > .admin-primary { margin-top: 16px; }
+.policy-grid { display: grid; gap: 8px; margin-top: 16px; }
+.policy-row { display: grid; grid-template-columns: minmax(160px,1fr) auto 90px 105px auto; align-items: center; gap: 8px; padding: 10px; border-radius: 10px; background: rgba(255,255,255,.025); }
+.policy-row strong, .policy-row small { display: block; }
+.policy-row small { margin-top: 3px; color: #727d75; }
+.policy-row input[type=number], .policy-row select { height: 34px; border: 1px solid rgba(255,255,255,.12); border-radius: 7px; background: #090d0a; color: #fff; padding: 0 7px; }
 .admin-switch-row { margin-top: 14px; padding: 13px; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-radius: 12px; background: rgba(255,255,255,.025); }
 .admin-switch-row strong, .admin-switch-row small { display: block; }
 .admin-switch-row small { margin-top: 3px; color: #7f8a82; }
@@ -92,4 +97,4 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 .runs-count { color: #7f8a82; font-size: .95rem; font-weight: normal; margin-left: 6px; }
 .runs-panel.collapsed .admin-section-heading { margin-bottom: 0; }
 @media (max-width: 850px) { .admin-user-grid { grid-template-columns: 1fr; } }
-@media (max-width: 600px) { .admin-page { padding: 24px 12px 60px; }.admin-hero { align-items: stretch; flex-direction: column; }.admin-panel { padding: 16px; }.operations-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); }.demo-controls { grid-template-columns: 1fr; }.admin-user-card footer { flex-direction: column; }.admin-user-card footer button { width: 100%; }.run-list article { grid-template-columns: 30px minmax(0,1fr); }.run-list b { grid-column: 2; }.admin-switch-row { align-items: start; } }
+@media (max-width: 600px) { .admin-page { padding: 24px 12px 60px; }.admin-hero { align-items: stretch; flex-direction: column; }.admin-panel { padding: 16px; }.operations-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); }.demo-controls { grid-template-columns: 1fr; }.policy-row { grid-template-columns: 1fr auto; }.policy-row > input[type=number], .policy-row > select { width: 100%; }.admin-user-card footer { flex-direction: column; }.admin-user-card footer button { width: 100%; }.run-list article { grid-template-columns: 30px minmax(0,1fr); }.run-list b { grid-column: 2; }.admin-switch-row { align-items: start; } }

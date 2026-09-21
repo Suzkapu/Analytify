@@ -8,6 +8,13 @@ export type SyncTaskKey =
 
 export type SyncIntervalUnit = 'minutes' | 'hours' | 'days';
 
+export interface SyncSchedulePolicy {
+  taskKey: Exclude<SyncTaskKey, 'song_league_playlists' | 'shared_playlists'>;
+  available: boolean;
+  intervalValue: number;
+  intervalUnit: SyncIntervalUnit;
+}
+
 export interface SiteSettings {
   announcement: string;
   allowSongLeagueCreation: boolean;

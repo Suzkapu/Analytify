@@ -6,7 +6,7 @@
       (click)="closed.emit()" aria-label="Close automatic data use">×</button>
     <div class="confirm-modal-icon"><i class="pi pi-clock"></i></div>
     <h3 id="sync-task-status-title" class="confirm-modal-title">Automatic data use</h3>
-    <p id="sync-task-status-description" class="confirm-modal-text">Analytify runs only the tasks required by features you use, plus any optional schedules enabled by an administrator.</p>
+    <p id="sync-task-status-description" class="confirm-modal-text">Choose your personal update schedule. Feature-required playlist and league updates stay automatic.</p>
     @if (loading) {
       <div class="notification-settings-loading" role="status"><i class="pi pi-spin pi-spinner"></i> Loading…</div>
     } @else {
@@ -19,8 +19,33 @@
               <strong>{{ label(task.task_key) }}</strong>
               <small>{{ task.effective_active ? 'Active' : 'Not scheduled' }}</small>
               @for (reason of task.reasons; track reason) { <em>{{ reason }}</em> }
-              @if (task.optional_enabled && !task.feature_required) { <em>Optional administrator schedule</em> }
+              @if (task.editable && task.policy_available) {
+                <label class="sync-preference-toggle">
+                  <input type="checkbox" [(ngModel)]="task.optional_enabled">
+                  <span>Update automatically</span>
+                </label>
+                <span class="sync-interval-control">
+                  <span>Every</span>
+                  <input type="number" [(ngModel)]="task.interval_value"
+                    [min]="minimumFor(task, task.interval_unit)" max="10080"
+                    [attr.aria-label]="label(task.task_key) + ' interval'">
+                  <select [(ngModel)]="task.interval_unit" [attr.aria-label]="label(task.task_key) + ' interval unit'">
+                    <option value="minutes">minutes</option>
+                    <option value="hours">hours</option>
+                    <option value="days">days</option>
+                  </select>
+                </span>
+                <small>Admin limit: no faster than every {{ task.minimum_interval_minutes }} minutes</small>
+              }
             </span>
+            @if (task.editable && task.policy_available) {
+              <button type="button" class="notification-category-action" (click)="save(task)"
+                [disabled]="savingTask !== null" [attr.aria-label]="'Save ' + label(task.task_key)">
+                <i class="pi" [ngClass]="savingTask === task.task_key ? 'pi-spin pi-spinner' : 'pi-save'"></i>
+              </button>
+            } @else if (!task.editable) {
+              <i class="pi pi-lock" aria-label="Controlled by this feature"></i>
+            }
           </div>
         }
       </div>

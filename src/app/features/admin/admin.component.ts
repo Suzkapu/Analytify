@@ -2,7 +2,7 @@ import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {AdminService} from '@core/admin/admin.service';
-import {AdminOperationalHealth, AdminSyncRun, AdminUserSyncSettings, SiteSettings, SyncTaskKey} from '@core/admin/admin.models';
+import {AdminOperationalHealth, AdminSyncRun, AdminUserSyncSettings, SiteSettings, SyncSchedulePolicy, SyncTaskKey} from '@core/admin/admin.models';
 
 @Component({
     selector: 'app-admin',
@@ -14,6 +14,7 @@ import {AdminOperationalHealth, AdminSyncRun, AdminUserSyncSettings, SiteSetting
 export class AdminComponent implements OnInit {
   siteSettings: SiteSettings = {announcement: '', allowSongLeagueCreation: true};
   users: AdminUserSyncSettings[] = [];
+  schedulePolicies: SyncSchedulePolicy[] = [];
   runs: AdminSyncRun[] = [];
   operationalHealth: AdminOperationalHealth = {
     syncQueueDepth: 0, oldestSyncQueueAgeSeconds: 0,
@@ -28,6 +29,7 @@ export class AdminComponent implements OnInit {
   expandedUsers = new Set<string>();
   isLoading = true;
   isSavingSite = false;
+  savingPolicies = new Set<string>();
   isRefreshingRuns = false;
   savingUsers = new Set<string>();
   queueingUsers = new Set<string>();
@@ -47,14 +49,30 @@ export class AdminComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
     try {
-      [this.siteSettings, this.users, this.runs, this.operationalHealth] = await Promise.all([
+      [this.siteSettings, this.users, this.runs, this.operationalHealth, this.schedulePolicies] = await Promise.all([
         this.admin.loadSiteSettings(), this.admin.listUsers(), this.admin.listRuns(),
-        this.admin.loadOperationalHealth()
+        this.admin.loadOperationalHealth(), this.admin.loadSyncSchedulePolicy()
       ]);
     } catch (error) {
       this.errorMessage = this.describeError(error, 'The admin dashboard could not be loaded.');
     } finally {
       this.isLoading = false;
+    }
+  }
+
+  async saveSchedulePolicy(policy: SyncSchedulePolicy): Promise<void> {
+    if (this.savingPolicies.has(policy.taskKey)) return;
+    this.savingPolicies.add(policy.taskKey);
+    this.clearMessages();
+    try {
+      await this.admin.updateSyncSchedulePolicy(policy);
+      this.schedulePolicies = await this.admin.loadSyncSchedulePolicy();
+      this.users = await this.admin.listUsers();
+      this.successMessage = `${this.taskLabel(policy.taskKey)} limit saved.`;
+    } catch (error) {
+      this.errorMessage = this.describeError(error, 'The schedule limit could not be saved.');
+    } finally {
+      this.savingPolicies.delete(policy.taskKey);
     }
   }
 

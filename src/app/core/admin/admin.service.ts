@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
-import {AdminOperationalHealth, AdminSyncRun, AdminUserSyncSettings, SiteSettings, SyncTaskKey} from './admin.models';
+import {AdminOperationalHealth, AdminSyncRun, AdminUserSyncSettings, SiteSettings, SyncSchedulePolicy, SyncTaskKey} from './admin.models';
 
 @Injectable({providedIn: 'root'})
 export class AdminService {
@@ -47,6 +47,27 @@ export class AdminService {
     const {error} = await this.supabase.client.rpc('admin_update_site_settings', {
       p_announcement: settings.announcement,
       p_allow_song_league_creation: settings.allowSongLeagueCreation
+    });
+    if (error) throw error;
+  }
+
+  async loadSyncSchedulePolicy(): Promise<SyncSchedulePolicy[]> {
+    const {data, error} = await this.supabase.client.rpc('admin_list_sync_schedule_policy');
+    if (error) throw error;
+    return (data || []).map((row: any) => ({
+      taskKey: row.task_key,
+      available: row.available !== false,
+      intervalValue: Number(row.minimum_interval_minutes || 1),
+      intervalUnit: 'minutes'
+    }));
+  }
+
+  async updateSyncSchedulePolicy(policy: SyncSchedulePolicy): Promise<void> {
+    const {error} = await this.supabase.client.rpc('admin_update_sync_schedule_policy', {
+      p_task_key: policy.taskKey,
+      p_available: policy.available,
+      p_interval_value: policy.intervalValue,
+      p_interval_unit: policy.intervalUnit
     });
     if (error) throw error;
   }

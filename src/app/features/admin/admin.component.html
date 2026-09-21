@@ -62,8 +62,29 @@
         </button>
         <small class="notification-test-hint">Enable notifications from Data &amp; account on this device before testing.</small>
       </section>
+      <section class="admin-panel schedule-policy-panel">
+        <div class="admin-section-heading">
+          <div><span>Personal updates</span><h2>Schedule limits</h2><p>Users may choose the same interval or a slower one. League and shared-playlist jobs remain feature-controlled.</p></div>
+          <i class="pi pi-clock"></i>
+        </div>
+        <div class="policy-grid">
+          @for (policy of schedulePolicies; track policy.taskKey) {
+            <div class="policy-row">
+              <span><strong>{{ taskLabel(policy.taskKey) }}</strong><small>Fastest permitted interval</small></span>
+              @if (policy.taskKey === 'listening_history') {
+                <label class="compact-switch" title="Allow Listening History schedules">
+                  <input type="checkbox" [(ngModel)]="policy.available" aria-label="Allow Listening History schedules"><span></span>
+                </label>
+              }
+              <input type="number" [(ngModel)]="policy.intervalValue" min="1" max="10080" [attr.aria-label]="taskLabel(policy.taskKey) + ' minimum interval'">
+              <select [(ngModel)]="policy.intervalUnit" [attr.aria-label]="taskLabel(policy.taskKey) + ' interval unit'"><option value="minutes">minutes</option><option value="hours">hours</option><option value="days">days</option></select>
+              <button type="button" class="admin-secondary" (click)="saveSchedulePolicy(policy)" [disabled]="savingPolicies.has(policy.taskKey)"><i class="pi pi-save"></i> Save</button>
+            </div>
+          }
+        </div>
+      </section>
       <section class="admin-users-section">
-        <div class="admin-section-heading"><div><span>Background updates</span><h2>User schedules</h2><p>Optional admin schedules are separate from the minimum updates required by features each user chose.</p></div><span class="admin-count">{{ users.length }}</span></div>
+        <div class="admin-section-heading"><div><span>Background updates</span><h2>User schedules</h2><p>Inspect personal choices and feature-required work. Users manage their own optional schedules.</p></div><span class="admin-count">{{ users.length }}</span></div>
         <div class="admin-user-grid">
           @for (user of users; track trackUser($index, user)) {
             <article class="admin-user-card" [class.disabled]="enabledTasksCount(user) === 0" [class.expanded]="isUserExpanded(user.userId)">

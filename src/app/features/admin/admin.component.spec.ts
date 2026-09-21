@@ -18,6 +18,8 @@ describe('AdminComponent', () => {
             listUsers: vi.fn().mockName("AdminService.listUsers"),
             listRuns: vi.fn().mockName("AdminService.listRuns"),
             loadOperationalHealth: vi.fn().mockName("AdminService.loadOperationalHealth"),
+            loadSyncSchedulePolicy: vi.fn().mockName("AdminService.loadSyncSchedulePolicy"),
+            updateSyncSchedulePolicy: vi.fn().mockName("AdminService.updateSyncSchedulePolicy"),
             updateSiteSettings: vi.fn().mockName("AdminService.updateSiteSettings"),
             updateUser: vi.fn().mockName("AdminService.updateUser"),
             enqueueUser: vi.fn().mockName("AdminService.enqueueUser"),
@@ -53,6 +55,9 @@ describe('AdminComponent', () => {
                 lastFailureAt: null, lastError: null, commitSha: 'same'
             }, alerts: []
         });
+        adminService.loadSyncSchedulePolicy.mockResolvedValue([
+            { taskKey: 'listening_history', available: true, intervalValue: 60, intervalUnit: 'minutes' }
+        ]);
 
         router = {
             navigate: vi.fn().mockName("Router.navigate")
@@ -85,6 +90,21 @@ describe('AdminComponent', () => {
         const runsPanel = fixture.nativeElement.querySelector('.runs-panel');
         expect(runsPanel).not.toBeNull();
         expect(runsPanel.classList).toContain('collapsed');
+    });
+
+    it('lets administrators set the fastest personal interval and disable listening history', async () => {
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const policy = component.schedulePolicies[0];
+        policy.available = false;
+        policy.intervalValue = 2;
+        policy.intervalUnit = 'hours';
+        await component.saveSchedulePolicy(policy);
+
+        expect(adminService.updateSyncSchedulePolicy).toHaveBeenCalledWith(policy);
+        expect(fixture.nativeElement.querySelector('.schedule-policy-panel').textContent).toContain('Schedule limits');
     });
 
     it('loads operational health in parallel and reports release drift', async () => {

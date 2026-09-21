@@ -35,7 +35,7 @@ set local role authenticated;
 select set_config('request.jwt.claim.role', 'authenticated', true);
 select set_config('request.jwt.claim.sub', '64000000-0000-4000-8000-000000000001', true);
 
-select lives_ok($$ select pg_temp.apply_schedule(true, 2, 'hours') $$,
+select lives_ok($$ select pg_temp.apply_schedule(true, 7, 'days') $$,
   'enabling a schedule atomically initializes every task state');
 set local role service_role;
 select is((select count(*) from public.sync_task_state
