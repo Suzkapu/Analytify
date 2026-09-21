@@ -247,6 +247,11 @@ export class AdminComponent implements OnInit {
   trackUser(_: number, user: AdminUserSyncSettings): string { return user.userId; }
   trackRun(_: number, run: AdminSyncRun): string { return run.id; }
 
+  runWarnings(run: AdminSyncRun): string[] {
+    const warnings = run.details?.['warnings'];
+    return Array.isArray(warnings) ? warnings.filter((warning): warning is string => typeof warning === 'string') : [];
+  }
+
   private clearMessages(): void {
     this.successMessage = '';
     this.errorMessage = '';

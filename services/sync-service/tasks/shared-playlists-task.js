@@ -1,5 +1,9 @@
 const {randomUUID} = require('crypto');
 
+const MAX_SHARED_TRACKS = 5000;
+const MAX_UPLOAD_CHUNK_TRACKS = 250;
+const MAX_UPLOAD_CHUNK_BYTES = 450_000;
+
 function normalizeTrack(entry, index) {
   const track = entry?.item || entry?.track || entry;
   if (!track?.id || track.type === 'episode') return null;
@@ -27,51 +31,81 @@ async function loadSharedPlaylistSource(spotify, accessToken, playlistId) {
   const metadata = isLikedSongs
     ? null
     : await spotify.api(`/playlists/${encodeURIComponent(playlistId)}`, accessToken);
-  const entries = [];
+  const tracks = [];
+  const seen = new Set();
+  let exceedsShareLimit = false;
   for (let offset = 0; ; offset += pageSize) {
     const pathname = isLikedSongs
       ? `/me/tracks?limit=${pageSize}&offset=${offset}`
       : `/playlists/${encodeURIComponent(playlistId)}/items?limit=${pageSize}&offset=${offset}`;
     const page = await spotify.api(pathname, accessToken);
-    entries.push(...(page?.items || []));
-    if (!page?.next) break;
+    for (const entry of page?.items || []) {
+      const track = normalizeTrack(entry, tracks.length);
+      if (!track || seen.has(track.id)) continue;
+      seen.add(track.id);
+      tracks.push({...track, playlistIndex: tracks.length + 1});
+      if (tracks.length > MAX_SHARED_TRACKS) {
+        exceedsShareLimit = true;
+        break;
+      }
+    }
+    if (exceedsShareLimit || !page?.next) break;
   }
-  const seen = new Set();
-  const tracks = entries.map(normalizeTrack).filter(track => {
-    if (!track || seen.has(track.id)) return false;
-    seen.add(track.id);
-    return true;
-  }).map((track, index) => ({...track, playlistIndex: index + 1}));
   return {
     name: isLikedSongs ? 'Favourite Tracks' : metadata?.name || 'Shared playlist',
     description: metadata?.description || '',
     imageUrl: metadata?.images?.[0]?.url || '',
     preservePublishedMetadata: isLikedSongs,
-    tracks
+    tracks: exceedsShareLimit ? [] : tracks,
+    exceedsShareLimit
   };
+}
+
+function buildUploadChunks(tracks) {
+  const chunks = [];
+  for (let offset = 0; offset < tracks.length;) {
+    let end = offset;
+    let encodedBytes = 2;
+    while (end < tracks.length && end - offset < MAX_UPLOAD_CHUNK_TRACKS) {
+      const trackBytes = Buffer.byteLength(JSON.stringify(tracks[end]), 'utf8');
+      const nextBytes = encodedBytes + trackBytes + (end === offset ? 0 : 1);
+      if (nextBytes > MAX_UPLOAD_CHUNK_BYTES) break;
+      encodedBytes = nextBytes;
+      end++;
+    }
+    if (end === offset) throw new Error('A playlist song is too large to share.');
+    chunks.push({offset, tracks: tracks.slice(offset, end), encodedBytes});
+    offset = end;
+  }
+  return chunks;
 }
 
 function createSharedPlaylistsTask({supabase, spotify}) {
 
+  async function loadPublishedTracks(shareId) {
+    const rows = [];
+    const pageSize = 1000;
+    for (let offset = 0; ; offset += pageSize) {
+      const {data, error} = await supabase.from('playlist_share_tracks')
+        .select('position, track').eq('share_id', shareId).order('position', {ascending: true})
+        .range(offset, offset + pageSize - 1);
+      if (error) throw error;
+      rows.push(...(data || []));
+      if ((data || []).length < pageSize) return rows;
+    }
+  }
+
   async function appendUploadChunks(uploadId, tracks) {
-    for (let offset = 0; offset < tracks.length;) {
-      let end = offset;
-      let encodedBytes = 2;
-      while (end < tracks.length && end - offset < 250) {
-        const trackBytes = Buffer.byteLength(JSON.stringify(tracks[end]), 'utf8');
-        const nextBytes = encodedBytes + trackBytes + (end === offset ? 0 : 1);
-        if (nextBytes > 450_000) break;
-        encodedBytes = nextBytes;
-        end++;
-      }
-      if (end === offset) throw new Error('A playlist song is too large to share.');
+    if (tracks.length > MAX_SHARED_TRACKS) {
+      throw new Error(`Shared playlists are limited to ${MAX_SHARED_TRACKS} songs.`);
+    }
+    for (const chunk of buildUploadChunks(tracks)) {
       const {error} = await supabase.rpc('append_playlist_share_upload_chunk', {
         p_upload_id: uploadId,
-        p_offset: offset,
-        p_tracks: tracks.slice(offset, end)
+        p_offset: chunk.offset,
+        p_tracks: chunk.tracks
       });
       if (error) throw error;
-      offset = end;
     }
   }
 
@@ -86,8 +120,13 @@ function createSharedPlaylistsTask({supabase, spotify}) {
       bySource.set(share.source_playlist_id, group);
     });
     let refreshed = 0;
+    const warnings = [];
     for (const [sourceId, sourceShares] of bySource) {
       const playlist = await loadSharedPlaylistSource(spotify, accessToken, sourceId);
+      if (playlist.exceedsShareLimit) {
+        warnings.push(`${playlist.name} has more than ${MAX_SHARED_TRACKS} songs. Its previous shared version was kept.`);
+        continue;
+      }
       for (const share of sourceShares) {
         const {data: uploadId, error: beginError} = await supabase.rpc(
           'begin_playlist_share_refresh_upload',
@@ -109,7 +148,7 @@ function createSharedPlaylistsTask({supabase, spotify}) {
         if (published) refreshed++;
       }
     }
-    return refreshed;
+    return {refreshed, warnings};
   }
 
   async function updateReceivedCopies(user, accessToken) {
@@ -137,10 +176,8 @@ function createSharedPlaylistsTask({supabase, spotify}) {
       });
       if (claimError) throw claimError;
       if (!claimed) continue;
-      const {data: rows, error: trackError} = await supabase.from('playlist_share_tracks')
-        .select('position, track').eq('share_id', share.id).order('position', {ascending: true});
       try {
-        if (trackError) throw trackError;
+        const rows = await loadPublishedTracks(share.id);
         const uris = (rows || []).map(row => row.track?.uri || (row.track?.id ? `spotify:track:${row.track.id}` : '')).filter(Boolean);
         const name = `Analytify · ${share.playlist_name} · from ${share.owner_display_name}`.slice(0, 100);
         const description = `Shared by ${share.owner_display_name} through Analytify. Share ID: ${share.id}`.slice(0, 300);
@@ -179,11 +216,13 @@ function createSharedPlaylistsTask({supabase, spotify}) {
 
   return async function runSharedPlaylistsTask({user}) {
     const accessToken = await spotify.accessToken(user.spotify_credential);
+    const owned = await refreshOwnedShares(user, accessToken);
     return {
-      refreshedSources: await refreshOwnedShares(user, accessToken),
-      updatedCopies: await updateReceivedCopies(user, accessToken)
+      refreshedSources: owned.refreshed,
+      updatedCopies: await updateReceivedCopies(user, accessToken),
+      warnings: owned.warnings
     };
   };
 }
 
-module.exports = {createSharedPlaylistsTask, loadSharedPlaylistSource};
+module.exports = {createSharedPlaylistsTask, loadSharedPlaylistSource, buildUploadChunks};

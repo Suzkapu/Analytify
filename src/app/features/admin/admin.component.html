@@ -187,6 +187,8 @@
                 @for (run of runs; track trackRun($index, run)) {
                   <article><span class="run-status" [ngClass]="run.status"><i class="pi" [ngClass]="run.status === 'running' ? 'pi-spin pi-spinner' : run.status === 'succeeded' ? 'pi-check' : run.status === 'failed' ? 'pi-times' : 'pi-clock'"></i></span><div><strong>{{ taskLabel(run.taskKey) }}</strong><small>{{ run.displayName }} · {{ run.triggerType }} · {{ run.requestedAt | date:'short' }}</small>@if (run.error) {
                   <em>{{ run.error }}</em>
+                  } @for (warning of runWarnings(run); track warning) {
+                    <em class="run-warning">{{ warning }}</em>
                   }</div><b>{{ run.status }}</b></article>
                 }
               </div>

@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(13);
+select plan(15);
 
 insert into auth.users(id, email) values
   ('51000000-0000-4000-8000-000000000001', 'chunk-owner@example.test');
@@ -12,6 +12,17 @@ select set_config('request.jwt.claim.sub', '51000000-0000-4000-8000-000000000001
 select public.begin_playlist_share_create_upload(
   'large-source', 'Large playlist', '', '', 'Owner', '', repeat('c', 64)
 ) as upload_id \gset create_
+
+select throws_ok(format(
+  'select public.append_playlist_share_upload_chunk(%L, 5000, ''[{"id":"over-total"}]''::jsonb)', :'create_upload_id'
+), 'P0001', 'Playlist upload chunks are limited to 250 tracks, 500 KB, and 5000 total tracks.',
+  'a chunk cannot extend beyond the total playlist limit');
+select throws_ok(format(
+  'select public.append_playlist_share_upload_chunk(%L, 0, %L::jsonb)', :'create_upload_id',
+  (select jsonb_agg(jsonb_build_object('id', 'large-' || item, 'padding', repeat('x', 26000)))
+   from generate_series(1, 20) item)::text
+), 'P0001', 'Playlist upload chunks are limited to 250 tracks, 500 KB, and 5000 total tracks.',
+  'serialized byte size is enforced independently from track count');
 
 select is(public.append_playlist_share_upload_chunk(
   :'create_upload_id', 0,

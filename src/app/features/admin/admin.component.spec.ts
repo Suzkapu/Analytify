@@ -123,6 +123,17 @@ describe('AdminComponent', () => {
         expect(adminService.loadOperationalHealth).toHaveBeenCalledTimes(1);
     });
 
+    it('surfaces non-destructive shared-playlist limit warnings from successful runs', () => {
+        const run = {
+            ...component.runs[0],
+            details: {warnings: ['Favourite Tracks has more than 5000 songs. Its previous shared version was kept.']}
+        };
+
+        expect(component.runWarnings(run)).toEqual([
+            'Favourite Tracks has more than 5000 songs. Its previous shared version was kept.'
+        ]);
+    });
+
     it('requires every deployed component before reporting a matched release', () => {
         component.operationalHealth.releases = {
             supabase: 'abc',

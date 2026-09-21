@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const {createSharedPlaylistsTask, loadSharedPlaylistSource} = require('./shared-playlists-task');
+const {createSharedPlaylistsTask, loadSharedPlaylistSource, buildUploadChunks} = require('./shared-playlists-task');
 
 function savedTrack(id, artistId, albumName) {
   return {
@@ -70,6 +70,7 @@ function queryReturning(data) {
     in() { return query; },
     is() { return query; },
     order() { return query; },
+    range() { return query; },
     then(resolve) { return Promise.resolve({data, error: null}).then(resolve); }
   };
   return query;
@@ -135,6 +136,47 @@ test('worker uploads a maximum playlist in bounded resumable chunks', async () =
   assert.equal(rpcCalls.at(-1).parameters.p_expected_track_count, 5000);
 });
 
+test('worker keeps every serialized upload chunk below both database limits', () => {
+  const tracks = Array.from({length: 80}, (_, index) => ({
+    id: `track-${index}`, name: `Track ${index}`, padding: 'ü'.repeat(10_000)
+  }));
+
+  const chunks = buildUploadChunks(tracks);
+
+  assert.ok(chunks.length > 1);
+  assert.ok(chunks.every(chunk => chunk.tracks.length <= 250));
+  assert.ok(chunks.every(chunk => Buffer.byteLength(JSON.stringify(chunk.tracks), 'utf8') <= 450_000));
+  assert.deepEqual(chunks.map(chunk => chunk.offset), chunks.map((_, index) =>
+    chunks.slice(0, index).reduce((total, chunk) => total + chunk.tracks.length, 0)));
+});
+
+test('worker preserves the published snapshot when a source exceeds the total limit', async () => {
+  const rpcCalls = [];
+  const tracks = Array.from({length: 5001}, (_, index) => savedTrack(`track-${index}`, `artist-${index}`, 'Album'));
+  const supabase = {
+    from: table => queryReturning(table === 'playlist_shares'
+      ? [{id: 'share', source_playlist_id: 'source', revision: 9}]
+      : []),
+    rpc: async (name, parameters) => {
+      rpcCalls.push({name, parameters});
+      return {data: true, error: null};
+    }
+  };
+  const spotify = {
+    accessToken: async () => 'token',
+    api: async path => path === '/playlists/source'
+      ? {name: 'Too large', description: '', images: []}
+      : {items: tracks, next: null}
+  };
+
+  const result = await createSharedPlaylistsTask({supabase, spotify})({user: {id: 'owner', spotify_credential: {}}});
+
+  assert.equal(result.refreshedSources, 0);
+  assert.match(result.warnings[0], /previous shared version was kept/);
+  assert.equal(rpcCalls.some(call => call.name === 'begin_playlist_share_refresh_upload'), false);
+  assert.equal(rpcCalls.some(call => call.name === 'commit_playlist_share_refresh_upload'), false);
+});
+
 test('out-of-order recipient completion is rejected and releases its lease', async () => {
   const calls = [];
   const received = {
@@ -181,4 +223,52 @@ test('out-of-order recipient completion is rejected and releases its lease', asy
   assert.equal(claim.parameters.p_expected_applied_revision, 2);
   assert.equal(complete.parameters.p_lease_token, claim.parameters.p_lease_token);
   assert.ok(calls.some(call => call.name === 'release_playlist_share_sync'));
+});
+
+test('recipient refresh loads every published track beyond the default row limit', async () => {
+  const rows = Array.from({length: 1205}, (_, index) => ({
+    position: index, track: {id: `track-${index}`, uri: `spotify:track:track-${index}`}
+  }));
+  const ranges = [];
+  const spotifyCalls = [];
+  const received = {id: 'share', revision: 4, playlist_name: 'Large', owner_display_name: 'Owner', revoked_at: null};
+  const download = {
+    share_id: 'share', recipient_user_id: 'recipient', applied_revision: 3,
+    spotify_playlist_id: 'spotify-playlist', spotify_playlist_url: ''
+  };
+  const supabase = {
+    from(table) {
+      if (table === 'playlist_share_downloads') return queryReturning([download]);
+      if (table === 'playlist_share_tracks') {
+        const query = {
+          select() { return query; }, eq() { return query; }, order() { return query; },
+          range(start, end) {
+            ranges.push([start, end]);
+            return Promise.resolve({data: rows.slice(start, end + 1), error: null});
+          }
+        };
+        return query;
+      }
+      const query = queryReturning([]);
+      query.in = () => queryReturning([received]);
+      return query;
+    },
+    rpc: async name => ({
+      data: name === 'claim_playlist_share_sync' || name === 'complete_playlist_share_sync', error: null
+    })
+  };
+  const spotify = {
+    accessToken: async () => 'token',
+    api: async (path, _token, options) => { spotifyCalls.push({path, options}); return {}; }
+  };
+
+  const result = await createSharedPlaylistsTask({supabase, spotify})({user: {id: 'recipient', spotify_credential: {}}});
+
+  assert.equal(result.updatedCopies, 1);
+  assert.deepEqual(ranges, [[0, 999], [1000, 1999]]);
+  const uploadedUris = spotifyCalls
+    .filter(call => call.path.endsWith('/items'))
+    .flatMap(call => JSON.parse(call.options.body).uris);
+  assert.equal(uploadedUris.length, 1205);
+  assert.equal(uploadedUris.at(-1), 'spotify:track:track-1204');
 });
