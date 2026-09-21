@@ -191,4 +191,43 @@ describe('CompareRoomShellComponent', () => {
         expect(setLocalSaveResult).toHaveBeenCalledWith('host-participant', expect.objectContaining({success: true}));
         expect(successfulGuest.result.success).toBe(true);
     });
+
+    it('adds, deduplicates, selects and removes a linked public playlist for one local group', async () => {
+        const host = {
+            id: 'host', spotifyUserId: 'host-user', displayName: 'Host', imageUrl: '',
+            status: 'selecting', tracks: [], isMainProfile: true, localSlotNumber: 1
+        };
+        const coordinator = {
+            participants$: new BehaviorSubject<any[]>([host]), invitations$: new BehaviorSubject<any[]>([]),
+            sharedTracks$: new BehaviorSubject<any[]>([]), proposal$: new BehaviorSubject<any>(null),
+            error$: new BehaviorSubject<string>('')
+        };
+        const auth = {
+            isAuthenticated: () => true, isTokenExpired: () => false,
+            getAccessToken: () => 'host-token', getUserId: () => 'host-user'
+        };
+        const linked = {
+            id: '37i9dQZF1DXcBWIGoYBM5M', name: 'Public mix', imageUrl: '', total: 20,
+            ownerName: 'Curator', isPublicLink: true
+        };
+        const spotify = {getPublicPlaylist: vi.fn().mockResolvedValue(linked)};
+        const component = new CompareRoomShellComponent(
+            coordinator as any, auth as any, {} as any, spotify as any, {} as any, {} as any, {} as any
+        );
+        component.participants = [host as any];
+        component.mainPlaylistsLoaded = true;
+        component.setPublicPlaylistReference('host', 'spotify:playlist:37i9dQZF1DXcBWIGoYBM5M');
+
+        await component.addPublicPlaylist('host');
+        component.setPublicPlaylistReference('host', 'spotify:playlist:37i9dQZF1DXcBWIGoYBM5M');
+        await component.addPublicPlaylist('host');
+
+        expect(component.availableMainPlaylists('host')).toEqual([linked]);
+        expect(component.mainSelectionIds('host')).toEqual([linked.id]);
+        expect(spotify.getPublicPlaylist).toHaveBeenCalledTimes(2);
+
+        component.removePublicPlaylist('host', linked.id);
+        expect(component.availableMainPlaylists('host')).toEqual([]);
+        expect(component.mainSelectionIds('host')).toEqual([]);
+    });
 });

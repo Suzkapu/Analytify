@@ -48,6 +48,10 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
   private mainPlaylistsPromise: Promise<void> | null = null;
   private selectedPlaylistIdsByParticipant = new Map<string, string[]>();
   private playlistQueriesByParticipant = new Map<string, string>();
+  private publicPlaylistReferencesByParticipant = new Map<string, string>();
+  private publicPlaylistsByParticipant = new Map<string, ComparePlaylist[]>();
+  private publicPlaylistMessagesByParticipant = new Map<string, string>();
+  private loadingPublicPlaylistParticipants = new Set<string>();
 
   constructor(
     public coordinator: CompareRoomCoordinatorService,
@@ -137,7 +141,7 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
   async applyMainPlaylistSelection(participantId: string): Promise<void> {
     const participant = this.participants.find(item => item.id === participantId && item.isMainProfile);
     const playlists = this.mainSelectionIds(participantId)
-      .map(id => this.mainPlaylists.find(item => item.id === id))
+      .map(id => this.availableMainPlaylists(participantId).find(item => item.id === id))
       .filter((playlist): playlist is ComparePlaylist => !!playlist);
     if (!participant || playlists.length === 0) return;
     const loadingParticipant: CompareParticipant = {
@@ -222,6 +226,10 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
   removeLocalSlot(participantId: string): void {
     this.selectedPlaylistIdsByParticipant.delete(participantId);
     this.playlistQueriesByParticipant.delete(participantId);
+    this.publicPlaylistReferencesByParticipant.delete(participantId);
+    this.publicPlaylistsByParticipant.delete(participantId);
+    this.publicPlaylistMessagesByParticipant.delete(participantId);
+    this.loadingPublicPlaylistParticipants.delete(participantId);
     this.coordinator.removeLocalParticipant(participantId);
   }
 
@@ -391,10 +399,66 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     this.playlistQueriesByParticipant.set(participantId, query);
   }
 
+  publicPlaylistReference(participantId: string): string {
+    return this.publicPlaylistReferencesByParticipant.get(participantId) || '';
+  }
+
+  setPublicPlaylistReference(participantId: string, reference: string): void {
+    this.publicPlaylistReferencesByParticipant.set(participantId, reference);
+    this.publicPlaylistMessagesByParticipant.delete(participantId);
+  }
+
+  publicPlaylistMessage(participantId: string): string {
+    return this.publicPlaylistMessagesByParticipant.get(participantId) || '';
+  }
+
+  isAddingPublicPlaylist(participantId: string): boolean {
+    return this.loadingPublicPlaylistParticipants.has(participantId);
+  }
+
+  async addPublicPlaylist(participantId: string): Promise<void> {
+    const reference = this.publicPlaylistReference(participantId);
+    if (!reference.trim() || this.loadingPublicPlaylistParticipants.has(participantId)) return;
+    this.loadingPublicPlaylistParticipants.add(participantId);
+    this.publicPlaylistMessagesByParticipant.delete(participantId);
+    try {
+      const playlist = await this.spotify.getPublicPlaylist(reference, await this.getMainAccessToken());
+      const libraryPlaylist = this.mainPlaylists.find(item => item.id === playlist.id);
+      const linked = this.publicPlaylistsByParticipant.get(participantId) || [];
+      if (!libraryPlaylist && !linked.some(item => item.id === playlist.id)) {
+        this.publicPlaylistsByParticipant.set(participantId, [...linked, playlist]);
+      }
+      if (!this.isMainPlaylistSelected(participantId, playlist.id)) {
+        this.toggleMainPlaylist(participantId, playlist.id, true);
+      }
+      this.publicPlaylistReferencesByParticipant.set(participantId, '');
+      this.publicPlaylistMessagesByParticipant.set(
+        participantId,
+        libraryPlaylist ? 'This playlist was already in your library and is now selected.' : 'Public playlist added.'
+      );
+    } catch (error) {
+      this.publicPlaylistMessagesByParticipant.set(participantId, this.describeError(error));
+    } finally {
+      this.loadingPublicPlaylistParticipants.delete(participantId);
+    }
+  }
+
+  removePublicPlaylist(participantId: string, playlistId: string): void {
+    const linked = this.publicPlaylistsByParticipant.get(participantId) || [];
+    this.publicPlaylistsByParticipant.set(participantId, linked.filter(item => item.id !== playlistId));
+    this.toggleMainPlaylist(participantId, playlistId, false);
+    this.publicPlaylistMessagesByParticipant.delete(participantId);
+  }
+
+  availableMainPlaylists(participantId: string): ComparePlaylist[] {
+    return [...this.mainPlaylists, ...(this.publicPlaylistsByParticipant.get(participantId) || [])];
+  }
+
   filteredMainPlaylists(participantId: string): ComparePlaylist[] {
     const query = this.mainPlaylistQuery(participantId).trim().toLocaleLowerCase();
-    if (!query) return this.mainPlaylists;
-    return this.mainPlaylists.filter(playlist => playlist.name.toLocaleLowerCase().includes(query));
+    const playlists = this.availableMainPlaylists(participantId);
+    if (!query) return playlists;
+    return playlists.filter(playlist => playlist.name.toLocaleLowerCase().includes(query));
   }
 
   get readyCount(): number {

@@ -31,6 +31,9 @@ export interface ComparePlaylist {
   total: number;
   ownerName: string;
   isLikedSongs?: boolean;
+  /** A read-only public playlist added by pasting its Spotify link. */
+  isPublicLink?: boolean;
+  spotifyUrl?: string;
   snapshotId?: string;
 }
 

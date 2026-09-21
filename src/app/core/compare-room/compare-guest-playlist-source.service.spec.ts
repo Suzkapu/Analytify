@@ -98,6 +98,22 @@ describe('CompareGuestPlaylistSourceService', () => {
         expect(spotify.getPlaylistTracks).not.toHaveBeenCalled();
     });
 
+    it('bypasses device and cloud caches for a linked public playlist', async () => {
+        values['spotifyUserId'] = 'guest-user';
+        values['guest-user_linked'] = JSON.stringify([{tracks: [{id: 'stale'}]}]);
+        spotify.getPlaylistTracks.mockResolvedValue([track('live')]);
+        const playlist: ComparePlaylist = {
+            id: 'linked', name: 'Linked mix', imageUrl: '', total: 1,
+            ownerName: 'Curator', isPublicLink: true
+        };
+
+        const result = await service.loadTracks(playlist, 'guest-token', 'guest-user');
+
+        expect(result).toEqual({tracks: [track('live')], source: 'spotify'});
+        expect(storage.initFromDB).not.toHaveBeenCalled();
+        expect(supabase.loadUserCache).not.toHaveBeenCalled();
+    });
+
     it('does not read another Analytify account cache on the guest device', async () => {
         values['spotifyUserId'] = 'different-user';
         supabase.client.auth.getSession.mockResolvedValue({

@@ -26,6 +26,9 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
   playlists: ComparePlaylist[] = [];
   selectedPlaylistIds: string[] = [];
   playlistQuery = '';
+  publicPlaylistReference = '';
+  publicPlaylistMessage = '';
+  isAddingPublicPlaylist = false;
   participant: CompareParticipant | null = null;
   proposal: CompareMergeProposal | null = null;
   saveResult: CompareSaveResult | null = null;
@@ -111,6 +114,33 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
 
   isPlaylistSelected(playlistId: string): boolean {
     return this.selectedPlaylistIds.includes(playlistId);
+  }
+
+  async addPublicPlaylist(): Promise<void> {
+    if (!this.publicPlaylistReference.trim() || this.isAddingPublicPlaylist) return;
+    this.isAddingPublicPlaylist = true;
+    this.publicPlaylistMessage = '';
+    try {
+      const token = await this.transientAuth.getAccessToken();
+      const playlist = await this.spotify.getPublicPlaylist(this.publicPlaylistReference, token);
+      const existing = this.playlists.find(item => item.id === playlist.id);
+      if (!existing) this.playlists = [...this.playlists, playlist];
+      if (!this.isPlaylistSelected(playlist.id)) this.togglePlaylist(playlist.id, true);
+      this.publicPlaylistReference = '';
+      this.publicPlaylistMessage = existing
+        ? 'This playlist was already available and is now selected.'
+        : 'Public playlist added.';
+    } catch (error) {
+      this.publicPlaylistMessage = this.describeError(error);
+    } finally {
+      this.isAddingPublicPlaylist = false;
+    }
+  }
+
+  removePublicPlaylist(playlistId: string): void {
+    this.playlists = this.playlists.filter(item => item.id !== playlistId || !item.isPublicLink);
+    this.togglePlaylist(playlistId, false);
+    this.publicPlaylistMessage = '';
   }
 
   async applyPlaylistSelection(): Promise<void> {

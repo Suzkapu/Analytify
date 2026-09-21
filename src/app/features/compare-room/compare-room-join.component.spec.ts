@@ -2,6 +2,28 @@ import {describe, expect, it, vi} from 'vitest';
 import {CompareRoomJoinComponent} from './compare-room-join.component';
 
 describe('CompareRoomJoinComponent playlist recovery', () => {
+  it('adds and removes a public playlist without changing owned playlist entries', async () => {
+    const linked: any = {
+      id: 'linked', name: 'Linked mix', imageUrl: '', total: 10, ownerName: 'Curator', isPublicLink: true
+    };
+    const spotify = {getPublicPlaylist: vi.fn().mockResolvedValue(linked)};
+    const component = new CompareRoomJoinComponent(
+      {} as any, {} as any,
+      {getAccessToken: vi.fn().mockResolvedValue('token')} as any,
+      {} as any, spotify as any, {} as any, {} as any
+    );
+    component.playlists = [{id: 'owned', name: 'Mine', imageUrl: '', total: 2, ownerName: 'Me'}];
+    component.publicPlaylistReference = 'spotify:playlist:37i9dQZF1DXcBWIGoYBM5M';
+
+    await component.addPublicPlaylist();
+
+    expect(component.playlists.map(item => item.id)).toEqual(['owned', 'linked']);
+    expect(component.selectedPlaylistIds).toEqual(['linked']);
+    component.removePublicPlaylist('linked');
+    expect(component.playlists.map(item => item.id)).toEqual(['owned']);
+    expect(component.selectedPlaylistIds).toEqual([]);
+  });
+
   it('retries the approved proposal with the same stable operation and republishes only its result', async () => {
     const proposal: any = {
       id: 'proposal-id', contentHash: 'content-hash', name: 'Shared', description: 'Description',

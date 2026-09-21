@@ -3,11 +3,26 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { environment } from '@env/environment';
 import { CompareTrack } from './compare-room.models';
-import { ParticipantSpotifyService } from './participant-spotify.service';
+import { ParticipantSpotifyService, parsePublicSpotifyPlaylistReference } from './participant-spotify.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 describe('ParticipantSpotifyService', () => {
+    it('accepts only direct Spotify playlist references', () => {
+        const id = '37i9dQZF1DXcBWIGoYBM5M';
+        expect(parsePublicSpotifyPlaylistReference(`spotify:playlist:${id}`)).toBe(id);
+        expect(parsePublicSpotifyPlaylistReference(`https://open.spotify.com/playlist/${id}?si=abc123`)).toBe(id);
+        [
+            `http://open.spotify.com/playlist/${id}`,
+            `https://user@open.spotify.com/playlist/${id}`,
+            `https://open.spotify.com/track/${id}`,
+            `https://open.spotify.com/playlist/${id}/redirect`,
+            `https://evil.example/playlist/${id}`,
+            `https://open.spotify.com/playlist/${id}?redirect=https://evil.example`,
+            `spotify:album:${id}`
+        ].forEach(value => expect(() => parsePublicSpotifyPlaylistReference(value)).toThrow());
+    });
+
     beforeEach(() => {
         vi.useFakeTimers({ advanceTimeDelta: 1, shouldAdvanceTime: true });
     });
@@ -36,6 +51,38 @@ describe('ParticipantSpotifyService', () => {
 
     afterEach(() => http.verify());
 
+    it('loads public playlist metadata read-only and marks the linked source', async () => {
+        const id = '37i9dQZF1DXcBWIGoYBM5M';
+        let result: any;
+        void service.getPublicPlaylist(`https://open.spotify.com/playlist/${id}`, 'guest-token')
+            .then(value => result = value);
+
+        const request = http.expectOne(req => req.url.startsWith(`${environment.spotifyUrl}/playlists/${id}`));
+        expect(request.request.method).toBe('GET');
+        expect(request.request.headers.get('Authorization')).toBe('Bearer guest-token');
+        request.flush({
+            id, type: 'playlist', public: true, name: 'Public mix', description: '',
+            images: [{url: 'cover.jpg'}], items: {total: 75}, owner: {display_name: 'Curator'},
+            snapshot_id: 'snapshot', external_urls: {spotify: `https://open.spotify.com/playlist/${id}`}
+        });
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(result).toEqual(expect.objectContaining({
+            id, name: 'Public mix', total: 75, ownerName: 'Curator', isPublicLink: true
+        }));
+    });
+
+    it('does not accept a private playlist as a linked public source', async () => {
+        const id = '37i9dQZF1DXcBWIGoYBM5M';
+        let failure: unknown;
+        void service.getPublicPlaylist(`spotify:playlist:${id}`, 'guest-token').catch(error => failure = error);
+        http.expectOne(req => req.url.startsWith(`${environment.spotifyUrl}/playlists/${id}`)).flush({
+            id, type: 'playlist', public: false, name: 'Private'
+        });
+        await vi.advanceTimersByTimeAsync(0);
+        expect((failure as Error).message).toContain('not public');
+    });
+
     it('lists Liked Songs plus owned and collaborative playlists only', async () => {
         let result: any[] | undefined;
         void service.getPlaylists('guest-token', 'me').then(value => result = value);
@@ -53,6 +100,25 @@ describe('ParticipantSpotifyService', () => {
 
         expect(result?.map(item => item.id)).toEqual(['fav', 'owned', 'collab']);
         expect(result?.[0].total).toBe(0);
+    });
+
+    it('paginates every linked playlist track and removes duplicate Spotify tracks', async () => {
+        const playlist: any = {
+            id: '37i9dQZF1DXcBWIGoYBM5M', name: 'Public mix', imageUrl: '', total: 52,
+            ownerName: 'Curator', isPublicLink: true
+        };
+        let result: CompareTrack[] | undefined;
+        void service.getPlaylistTracks(playlist, 'guest-token').then(value => result = value);
+
+        const first = http.expectOne(`${environment.spotifyUrl}/playlists/${playlist.id}/items?limit=50&offset=0`);
+        first.flush({total: 52, items: Array.from({length: 50}, (_, index) => spotifyEntry(`track-${index}`))});
+        await vi.advanceTimersByTimeAsync(0);
+        const second = http.expectOne(`${environment.spotifyUrl}/playlists/${playlist.id}/items?limit=50&offset=50`);
+        second.flush({total: 52, items: [spotifyEntry('track-49'), spotifyEntry('track-50')]});
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(result).toHaveLength(51);
+        expect(result?.at(-1)?.id).toBe('track-50');
     });
 
     it('creates a private playlist and adds tracks in batches of one hundred', async () => {
@@ -308,6 +374,16 @@ describe('ParticipantSpotifyService', () => {
             imageUrl: '',
             spotifyUrl: '',
             playlistIndex: Number(id) + 1
+        };
+    }
+
+    function spotifyEntry(id: string): any {
+        return {
+            item: {
+                id, type: 'track', uri: `spotify:track:${id}`, name: id,
+                artists: [{id: 'artist', name: 'Artist'}], album: {name: 'Album', images: []},
+                external_urls: {spotify: `https://open.spotify.com/track/${id}`}
+            }
         };
     }
 });

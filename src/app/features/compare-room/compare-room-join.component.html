@@ -43,13 +43,31 @@
         <div class="playlist-select">
           <span>Playlists or Liked Songs</span>
           <input class="playlist-search" type="search" [(ngModel)]="playlistQuery" placeholder="Search your playlists…" [disabled]="stage === 'loading'">
+          <div class="public-playlist-adder">
+            <input type="url" [(ngModel)]="publicPlaylistReference" placeholder="Paste a public Spotify playlist link…"
+              [disabled]="stage === 'loading' || isAddingPublicPlaylist" (keydown.enter)="addPublicPlaylist()">
+            <button type="button" (click)="addPublicPlaylist()"
+              [disabled]="!publicPlaylistReference.trim() || stage === 'loading' || isAddingPublicPlaylist">
+              <i class="pi" [ngClass]="isAddingPublicPlaylist ? 'pi-spin pi-spinner' : 'pi-link'"></i>
+              Add link
+            </button>
+          </div>
+          @if (publicPlaylistMessage) { <p class="public-playlist-message" role="status">{{ publicPlaylistMessage }}</p> }
           <div class="playlist-options" role="group" aria-label="Select playlists to contribute">
-            @for (playlist of filteredPlaylists; track playlist) {
-              <label>
-                <input type="checkbox" [checked]="isPlaylistSelected(playlist.id)" [disabled]="stage === 'loading'" (change)="togglePlaylist(playlist.id, $any($event.target).checked)">
-                <span>{{ playlist.name }}</span>
-                <small>{{ playlist.total }} songs</small>
-              </label>
+            @for (playlist of filteredPlaylists; track playlist.id) {
+              <div class="playlist-option-row">
+                <label>
+                  <input type="checkbox" [checked]="isPlaylistSelected(playlist.id)" [disabled]="stage === 'loading'" (change)="togglePlaylist(playlist.id, $any($event.target).checked)">
+                  <span>{{ playlist.name }} @if (playlist.isPublicLink) { <em>Linked</em> }</span>
+                  <small>{{ playlist.total }} songs</small>
+                </label>
+                @if (playlist.isPublicLink) {
+                  <button type="button" class="remove-public-playlist" (click)="removePublicPlaylist(playlist.id)"
+                    [disabled]="stage === 'loading'" [attr.aria-label]="'Remove linked playlist ' + playlist.name">
+                    <i class="pi pi-times"></i>
+                  </button>
+                }
+              </div>
             }
           </div>
           <button type="button" class="spotify-button selection-button" (click)="applyPlaylistSelection()" [disabled]="selectedPlaylistIds.length === 0 || stage === 'loading'">

@@ -106,6 +106,22 @@ describe('ComparePlaylistSourceService', () => {
         http.expectNone(() => true);
     });
 
+    it('always loads a linked public playlist read-only from Spotify instead of account cache', async () => {
+        values['main-user_37i9dQZF1DXcBWIGoYBM5M'] = JSON.stringify([{tracks: [{id: 'stale'}]}]);
+        const playlist: ComparePlaylist = {
+            id: '37i9dQZF1DXcBWIGoYBM5M', name: 'Linked mix', imageUrl: '', total: 0,
+            ownerName: 'Curator', isPublicLink: true
+        };
+        const loading = service.loadMainTracks(playlist, 'host-token', 'main-user');
+        const request = http.expectOne(req => req.url.includes('/playlists/37i9dQZF1DXcBWIGoYBM5M/items'));
+        expect(request.request.method).toBe('GET');
+        request.flush({total: 0, items: []});
+
+        await expect(loading).resolves.toEqual({tracks: [], source: 'spotify'});
+        expect(playlistLoader.recordPlaylistMetadata).not.toHaveBeenCalled();
+        expect(auth.ensureInitialSync).not.toHaveBeenCalled();
+    });
+
     it('uses the hydrated Supabase cache before requesting playlist tracks from Spotify', async () => {
         auth.ensureInitialSync.mockImplementation(async () => {
             values['main-user_cloud-playlist'] = JSON.stringify([{

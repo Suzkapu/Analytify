@@ -69,6 +69,9 @@ export class CompareGuestPlaylistSourceService {
     accessToken: string,
     spotifyProfileId: string
   ): Promise<{tracks: CompareTrack[]; source: GuestDataSource}> {
+    if (playlist.isPublicLink) {
+      return {tracks: await this.spotify.getPlaylistTracks(playlist, accessToken), source: 'spotify'};
+    }
     const context = await this.resolveContext(spotifyProfileId);
     if (!context) {
       return {tracks: await this.spotify.getPlaylistTracks(playlist, accessToken), source: 'spotify'};

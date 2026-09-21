@@ -45,6 +45,9 @@ export class ComparePlaylistSourceService {
     accessToken: string,
     spotifyUserId: string
   ): Promise<{tracks: CompareTrack[]; source: 'local' | 'cloud' | 'spotify'}> {
+    if (playlist.isPublicLink) {
+      return {tracks: await this.spotify.getPlaylistTracks(playlist, accessToken), source: 'spotify'};
+    }
     const storageKey = `${spotifyUserId}_${playlist.id}`;
     await this.storage.hydrateItems?.([storageKey]);
     if (!await this.reconcileKnownChange(spotifyUserId, playlist)) {

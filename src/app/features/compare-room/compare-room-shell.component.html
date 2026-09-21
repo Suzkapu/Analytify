@@ -87,13 +87,36 @@
                   } @else {
                     <input class="playlist-search" type="search" [ngModel]="mainPlaylistQuery(participant.id)"
                       (ngModelChange)="setMainPlaylistQuery(participant.id, $event)" placeholder="Search your playlists…" [disabled]="participant.status === 'loading'">
+                    <div class="public-playlist-adder">
+                      <input type="url" [ngModel]="publicPlaylistReference(participant.id)"
+                        (ngModelChange)="setPublicPlaylistReference(participant.id, $event)"
+                        placeholder="Paste a public Spotify playlist link…"
+                        [disabled]="participant.status === 'loading' || isAddingPublicPlaylist(participant.id)"
+                        (keydown.enter)="addPublicPlaylist(participant.id)">
+                      <button type="button" (click)="addPublicPlaylist(participant.id)"
+                        [disabled]="!publicPlaylistReference(participant.id).trim() || participant.status === 'loading' || isAddingPublicPlaylist(participant.id)">
+                        <i class="pi" [ngClass]="isAddingPublicPlaylist(participant.id) ? 'pi-spin pi-spinner' : 'pi-link'"></i>
+                        Add link
+                      </button>
+                    </div>
+                    @if (publicPlaylistMessage(participant.id)) {
+                      <p class="public-playlist-message" role="status">{{ publicPlaylistMessage(participant.id) }}</p>
+                    }
                     <div class="playlist-options" role="group" [attr.aria-label]="'Select playlists for group ' + participant.localSlotNumber">
-                      @for (playlist of filteredMainPlaylists(participant.id); track playlist) {
-                        <label>
-                          <input type="checkbox" [checked]="isMainPlaylistSelected(participant.id, playlist.id)" [disabled]="participant.status === 'loading'" (change)="toggleMainPlaylist(participant.id, playlist.id, $any($event.target).checked)">
-                          <span>{{ playlist.name }}</span>
-                          <small>{{ playlist.total }} songs</small>
-                        </label>
+                      @for (playlist of filteredMainPlaylists(participant.id); track playlist.id) {
+                        <div class="playlist-option-row">
+                          <label>
+                            <input type="checkbox" [checked]="isMainPlaylistSelected(participant.id, playlist.id)" [disabled]="participant.status === 'loading'" (change)="toggleMainPlaylist(participant.id, playlist.id, $any($event.target).checked)">
+                            <span>{{ playlist.name }} @if (playlist.isPublicLink) { <em>Linked</em> }</span>
+                            <small>{{ playlist.total }} songs</small>
+                          </label>
+                          @if (playlist.isPublicLink) {
+                            <button type="button" class="remove-public-playlist" (click)="removePublicPlaylist(participant.id, playlist.id)"
+                              [disabled]="participant.status === 'loading'" [attr.aria-label]="'Remove linked playlist ' + playlist.name">
+                              <i class="pi pi-times"></i>
+                            </button>
+                          }
+                        </div>
                       }
                     </div>
                     <button type="button" class="selection-button" (click)="applyMainPlaylistSelection(participant.id)" [disabled]="mainSelectionIds(participant.id).length === 0 || participant.status === 'loading'">

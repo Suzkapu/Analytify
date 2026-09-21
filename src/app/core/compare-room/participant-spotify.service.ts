@@ -14,12 +14,61 @@ import {
 import {TRANSIENT_SPOTIFY_REQUEST} from './spotify-request-context';
 import {StorageService} from '@core/data-access/storage/storage.service';
 
+const SPOTIFY_PLAYLIST_ID = /^[A-Za-z0-9]{22}$/;
+
+export function parsePublicSpotifyPlaylistReference(value: string): string {
+  const input = value.trim();
+  const uriMatch = /^spotify:playlist:([A-Za-z0-9]{22})$/.exec(input);
+  if (uriMatch) return uriMatch[1];
+
+  let url: URL;
+  try {
+    url = new URL(input);
+  } catch {
+    throw new Error('Paste a valid Spotify playlist link or URI.');
+  }
+  const path = url.pathname.split('/').filter(Boolean);
+  const hasOnlyShareParameter = [...url.searchParams.keys()].every(key => key === 'si');
+  if (
+    url.protocol !== 'https:' || url.hostname !== 'open.spotify.com' || url.port ||
+    url.username || url.password || url.hash || path.length !== 2 || path[0] !== 'playlist' ||
+    !SPOTIFY_PLAYLIST_ID.test(path[1]) || !hasOnlyShareParameter
+  ) {
+    throw new Error('Only direct open.spotify.com playlist links and Spotify playlist URIs are supported.');
+  }
+  return path[1];
+}
+
 @Injectable({providedIn: 'root'})
 export class ParticipantSpotifyService {
   constructor(private http: HttpClient, private storage: StorageService) {}
 
   async getProfile(accessToken: string): Promise<any> {
     return this.get<any>('/me', accessToken);
+  }
+
+  async getPublicPlaylist(reference: string, accessToken: string): Promise<ComparePlaylist> {
+    const playlistId = parsePublicSpotifyPlaylistReference(reference);
+    let playlist: any;
+    try {
+      playlist = await this.get<any>(
+        `/playlists/${encodeURIComponent(playlistId)}?fields=id,name,description,images,items.total,owner.display_name,owner.id,public,snapshot_id,type,external_urls.spotify`,
+        accessToken
+      );
+    } catch (error) {
+      if (error instanceof HttpErrorResponse && (error.status === 403 || error.status === 404)) {
+        throw new Error('That playlist is private, deleted, or unavailable for this Spotify account.');
+      }
+      throw new Error(this.describeError(error));
+    }
+    if (playlist?.id !== playlistId || playlist?.type !== 'playlist' || playlist?.public !== true) {
+      throw new Error('That Spotify playlist is not public or is no longer available.');
+    }
+    return {
+      ...this.normalizePlaylist(playlist),
+      isPublicLink: true,
+      spotifyUrl: playlist.external_urls?.spotify || `https://open.spotify.com/playlist/${playlistId}`
+    };
   }
 
   async getPlaylists(accessToken: string, spotifyUserId: string): Promise<ComparePlaylist[]> {
