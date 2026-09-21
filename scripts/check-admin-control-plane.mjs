@@ -13,6 +13,7 @@ const fridayPlaylistMigration = readFileSync('supabase/migrations/20260903220000
 const adminTemplate = readFileSync('src/app/features/admin/admin.component.html', 'utf8');
 const scheduler = readFileSync('services/sync-service/scheduler.js', 'utf8');
 const deterministicScheduleMigration = readFileSync('supabase/migrations/20260906170000_deterministic_sync_schedule_updates.sql', 'utf8');
+const personalScheduleMigration = readFileSync('supabase/migrations/20260921200000_user_sync_schedule_preferences.sql', 'utf8');
 
 const checks = [
   ['admin migration defines the control-plane RPCs', migration.includes('admin_update_sync_user') && migration.includes('admin_list_sync_runs')],
@@ -33,7 +34,11 @@ const checks = [
   ['worker registers all three stats ranges', ['stats_short_term', 'stats_medium_term', 'stats_long_term'].every(key => registry.includes(key))],
   ['worker registers both playlist purposes', ['shared_playlists', 'song_league_playlists'].every(key => registry.includes(key))],
   ['every schedule supports minutes, hours, and days',
-    (adminTemplate.match(/<option value="minutes">minutes<\/option><option value="hours">hours<\/option><option value="days">days<\/option>/g) || []).length === 6],
+    (adminTemplate.match(/<option value="minutes">minutes<\/option><option value="hours">hours<\/option><option value="days">days<\/option>/g) || []).length >= 6],
+  ['personal schedules are constrained server-side while feature jobs remain locked',
+    personalScheduleMigration.includes('update_my_sync_schedule_preference')
+      && personalScheduleMigration.includes('minimum_interval_minutes')
+      && personalScheduleMigration.includes("p_task_key not in ('listening_history', 'stats_short_term', 'stats_medium_term', 'stats_long_term')")],
   ['schedule units are persisted and validated',
     ['history_interval_unit', 'short_term_interval_unit', 'medium_term_interval_unit', 'long_term_interval_unit',
       'song_league_playlist_interval_unit', 'shared_playlist_interval_unit'].every(field => intervalUnitsMigration.includes(field))
