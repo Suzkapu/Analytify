@@ -90,3 +90,22 @@ export interface AdminOperationalHealth {
   };
   alerts: Array<{key: string; severity: 'warning' | 'critical'; message: string; firstSeenAt: string; lastSeenAt: string}>;
 }
+
+export interface AdminModerationReport {
+  reportId: string;
+  receiptCode: string;
+  category: 'user_safety' | 'illegal_content';
+  status: 'submitted' | 'under_review' | 'resolved_action' | 'resolved_no_action' | 'appealed';
+  reporterName: string;
+  affectedName: string;
+  reason: string;
+  contentUrl: string;
+  outcome: string;
+  decisionReason: string;
+  reporterNotice: string;
+  affectedNotice: string;
+  appealReason: string;
+  createdAt: string;
+  resolvedAt: string | null;
+  appealedAt: string | null;
+}

@@ -163,4 +163,25 @@ describe('AdminService', () => {
         expect(parameters.p_song_league_playlist_interval_unit).toBe('hours');
         expect(parameters.p_shared_playlist_interval_unit).toBe('minutes');
     });
+
+    it('maps the private moderation inbox and saves a reasoned decision', async () => {
+        rpc.mockResolvedValueOnce({data: [{
+            report_id: 'report-id', receipt_code: 'AR-123', category: 'user_safety', status: 'submitted',
+            reporter_name: 'Reporter', affected_name: 'Affected', reason: 'Spam', content_url: null,
+            outcome: null, decision_reason: null, reporter_notice: null, affected_notice: null,
+            appeal_reason: null, created_at: '2026-09-22T10:00:00Z', resolved_at: null, appealed_at: null
+        }], error: null}).mockResolvedValueOnce({data: null, error: null});
+
+        const [report] = await service.listModerationReports();
+        report.status = 'resolved_no_action';
+        report.outcome = 'no_violation';
+        report.decisionReason = 'No policy breach found.';
+        report.reporterNotice = 'The review is complete.';
+        report.affectedNotice = 'No action was taken.';
+        await service.updateModerationReport(report);
+
+        expect(rpc).toHaveBeenLastCalledWith('admin_update_moderation_report', expect.objectContaining({
+            p_report_id: 'report-id', p_status: 'resolved_no_action', p_outcome: 'no_violation'
+        }));
+    });
 });

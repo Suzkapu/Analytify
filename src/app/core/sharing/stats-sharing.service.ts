@@ -4,6 +4,8 @@ import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {
   CreatedStatsAccessInvite,
   BlockedStatsUser,
+  ModerationCase,
+  ModerationReceipt,
   SharedStatsSnapshot,
   StatsAccessRequest,
   StatsAccessStatus,
@@ -65,9 +67,41 @@ export class StatsSharingService {
     if (error) throw error;
   }
 
-  async reportUser(userId: string, reason: string): Promise<void> {
-    const {error} = await this.supabase.client.rpc('report_stats_user', {
+  async reportUser(userId: string, reason: string): Promise<ModerationReceipt> {
+    const {data, error} = await this.supabase.client.rpc('report_stats_user_v2', {
       p_user_id: userId,
+      p_reason: reason.trim(),
+      p_category: 'user_safety',
+      p_content_url: null
+    });
+    if (error) throw error;
+    const row = data?.[0];
+    if (!row?.report_id || !row?.receipt_code) throw new Error('The report receipt could not be created.');
+    return {reportId: row.report_id, receiptCode: row.receipt_code, status: row.status};
+  }
+
+  async listModerationCases(): Promise<ModerationCase[]> {
+    const {data, error} = await this.supabase.client.rpc('list_my_moderation_cases');
+    if (error) throw error;
+    return (data || []).map((row: any) => ({
+      reportId: row.report_id,
+      receiptCode: row.receipt_code,
+      viewerRole: row.viewer_role,
+      category: row.category,
+      status: row.status,
+      reason: row.reason || '',
+      outcome: row.outcome || '',
+      decisionReason: row.decision_reason || '',
+      notice: row.notice || '',
+      createdAt: row.created_at,
+      resolvedAt: row.resolved_at || null,
+      appealedAt: row.appealed_at || null
+    }));
+  }
+
+  async appealModerationCase(reportId: string, reason: string): Promise<void> {
+    const {error} = await this.supabase.client.rpc('appeal_moderation_report', {
+      p_report_id: reportId,
       p_reason: reason.trim()
     });
     if (error) throw error;

@@ -40,7 +40,7 @@
       "purpose": "Consent-based stats access, invitations, notification delivery, blocks and abuse review.",
       "retention": "Approved access and blocks remain until revoked/unblocked; expired invitations and declined/revoked requests expire after 30 days; reviewed reports after 180 days; pending reports remain for review.",
       "erasure": "Participant actions remove access; nightly cleanup removes policy-expired state; account deletion cascades participant records.",
-      "relations": ["public.stats_access_requests", "public.stats_access_invites", "public.stats_access_push_deliveries", "public.stats_user_blocks", "public.stats_user_reports"]
+      "relations": ["public.stats_access_requests", "public.stats_access_invites", "public.stats_access_push_deliveries", "public.stats_user_blocks", "public.stats_user_reports", "public.moderation_report_events"]
     },
     {
       "id": "song-leagues",

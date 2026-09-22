@@ -60,21 +60,46 @@ describe('StatsSharingService', () => {
 
     it('manages discoverability, blocks, and reports through guarded RPCs', async () => {
         rpc.mockImplementation((name: string, args?: any) => Promise.resolve({
-            data: name === 'set_stats_discovery_setting' ? args.p_enabled : true,
+            data: name === 'set_stats_discovery_setting' ? args.p_enabled
+                : name === 'report_stats_user_v2' ? [{report_id: 'report-id', receipt_code: 'AR-123', status: 'submitted'}]
+                : true,
             error: null
         }));
 
         expect(await service.getDiscoverability()).toBe(true);
         expect(await service.setDiscoverability(false)).toBe(false);
         await service.blockUser('blocked-user');
-        await service.reportUser('reported-user', ' spam request ');
+        await expect(service.reportUser('reported-user', ' spam request ')).resolves.toEqual({
+            reportId: 'report-id', receiptCode: 'AR-123', status: 'submitted'
+        });
 
         expect(vi.mocked(rpc).mock.calls).toEqual([
             ['get_stats_discovery_setting'],
             ['set_stats_discovery_setting', { p_enabled: false }],
             ['block_stats_user', { p_user_id: 'blocked-user' }],
-            ['report_stats_user', { p_user_id: 'reported-user', p_reason: 'spam request' }]
+            ['report_stats_user_v2', {
+                p_user_id: 'reported-user', p_reason: 'spam request',
+                p_category: 'user_safety', p_content_url: null
+            }]
         ]);
+    });
+
+    it('shows private moderation notices and sends an appeal through guarded RPCs', async () => {
+        rpc.mockResolvedValueOnce({data: [{
+            report_id: 'report-id', receipt_code: 'AR-123', viewer_role: 'affected',
+            category: 'user_safety', status: 'resolved_action', reason: null,
+            outcome: 'warning', decision_reason: 'Rule breach', notice: 'Please stop.',
+            created_at: '2026-09-22T10:00:00Z', resolved_at: '2026-09-22T11:00:00Z', appealed_at: null
+        }], error: null}).mockResolvedValueOnce({data: null, error: null});
+
+        const cases = await service.listModerationCases();
+        expect(cases[0].viewerRole).toBe('affected');
+        expect(cases[0].reason).toBe('');
+        await service.appealModerationCase('report-id', ' Please reconsider ');
+
+        expect(rpc).toHaveBeenLastCalledWith('appeal_moderation_report', {
+            p_report_id: 'report-id', p_reason: 'Please reconsider'
+        });
     });
 
     it('lists and unblocks users without restoring access client-side', async () => {

@@ -2,7 +2,7 @@ import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {AdminService} from '@core/admin/admin.service';
-import {AdminOperationalHealth, AdminSyncRun, AdminUserSyncSettings, SiteSettings, SyncSchedulePolicy, SyncTaskKey} from '@core/admin/admin.models';
+import {AdminModerationReport, AdminOperationalHealth, AdminSyncRun, AdminUserSyncSettings, SiteSettings, SyncSchedulePolicy, SyncTaskKey} from '@core/admin/admin.models';
 
 @Component({
     selector: 'app-admin',
@@ -16,6 +16,7 @@ export class AdminComponent implements OnInit {
   users: AdminUserSyncSettings[] = [];
   schedulePolicies: SyncSchedulePolicy[] = [];
   runs: AdminSyncRun[] = [];
+  moderationReports: AdminModerationReport[] = [];
   operationalHealth: AdminOperationalHealth = {
     syncQueueDepth: 0, oldestSyncQueueAgeSeconds: 0,
     notificationQueueDepth: 0, oldestNotificationQueueAgeSeconds: 0, expiredLeases: 0,
@@ -33,6 +34,7 @@ export class AdminComponent implements OnInit {
   isRefreshingRuns = false;
   savingUsers = new Set<string>();
   queueingUsers = new Set<string>();
+  savingModerationReports = new Set<string>();
   demoName = 'Admin Demo League';
   isCreatingDemo = false;
   isSendingTestNotification = false;
@@ -49,9 +51,9 @@ export class AdminComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
     try {
-      [this.siteSettings, this.users, this.runs, this.operationalHealth, this.schedulePolicies] = await Promise.all([
+      [this.siteSettings, this.users, this.runs, this.operationalHealth, this.schedulePolicies, this.moderationReports] = await Promise.all([
         this.admin.loadSiteSettings(), this.admin.listUsers(), this.admin.listRuns(),
-        this.admin.loadOperationalHealth(), this.admin.loadSyncSchedulePolicy()
+        this.admin.loadOperationalHealth(), this.admin.loadSyncSchedulePolicy(), this.admin.listModerationReports()
       ]);
     } catch (error) {
       this.errorMessage = this.describeError(error, 'The admin dashboard could not be loaded.');
@@ -132,6 +134,21 @@ export class AdminComponent implements OnInit {
       this.errorMessage = this.describeError(error, 'Recent synchronization runs could not be loaded.');
     } finally {
       this.isRefreshingRuns = false;
+    }
+  }
+
+  async saveModerationReport(report: AdminModerationReport): Promise<void> {
+    if (this.savingModerationReports.has(report.reportId)) return;
+    this.savingModerationReports.add(report.reportId);
+    this.clearMessages();
+    try {
+      await this.admin.updateModerationReport(report);
+      this.moderationReports = await this.admin.listModerationReports();
+      this.successMessage = `${report.receiptCode} updated and recorded in the audit trail.`;
+    } catch (error) {
+      this.errorMessage = this.describeError(error, 'The report decision could not be saved.');
+    } finally {
+      this.savingModerationReports.delete(report.reportId);
     }
   }
 

@@ -6,7 +6,7 @@ Analytify keeps data only while it has a stated product, safety, or operational 
 
 - Listening history, stats history, approved stats access, active playlist shares, blocks, and league history are **not** removed merely because they are old or an account appears inactive.
 - An account with no synchronization activity for 730 days is reported only as an operator review candidate. It is never auto-deleted.
-- Nightly cleanup removes expired technical state, collaboration tombstones after their documented grace period, reviewed reports after 180 days, and Spotify catalog rows only when no history, snapshot, ranking, or league record references them.
+- Nightly cleanup removes expired technical state, collaboration tombstones after their documented grace period, resolved moderation reports and their audit events after 180 days, and Spotify catalog rows only when no history, snapshot, ranking, or league record references them.
 - Pending abuse reports remain until reviewed. Blocks remain until the blocker removes them or the account is deleted.
 - Closed leagues remain until their owner explicitly deletes them, preserving historical results.
 

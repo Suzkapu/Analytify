@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
-import {AdminOperationalHealth, AdminSyncRun, AdminUserSyncSettings, SiteSettings, SyncSchedulePolicy, SyncTaskKey} from './admin.models';
+import {AdminModerationReport, AdminOperationalHealth, AdminSyncRun, AdminUserSyncSettings, SiteSettings, SyncSchedulePolicy, SyncTaskKey} from './admin.models';
 
 @Injectable({providedIn: 'root'})
 export class AdminService {
@@ -183,6 +183,41 @@ export class AdminService {
       error: row.error || null,
       details: row.details || {}
     }));
+  }
+
+  async listModerationReports(): Promise<AdminModerationReport[]> {
+    const {data, error} = await this.supabase.client.rpc('admin_list_moderation_reports', {p_status: null});
+    if (error) throw error;
+    return (data || []).map((row: any) => ({
+      reportId: row.report_id,
+      receiptCode: row.receipt_code,
+      category: row.category,
+      status: row.status,
+      reporterName: row.reporter_name,
+      affectedName: row.affected_name,
+      reason: row.reason,
+      contentUrl: row.content_url || '',
+      outcome: row.outcome || '',
+      decisionReason: row.decision_reason || '',
+      reporterNotice: row.reporter_notice || '',
+      affectedNotice: row.affected_notice || '',
+      appealReason: row.appeal_reason || '',
+      createdAt: row.created_at,
+      resolvedAt: row.resolved_at || null,
+      appealedAt: row.appealed_at || null
+    }));
+  }
+
+  async updateModerationReport(report: AdminModerationReport): Promise<void> {
+    const {error} = await this.supabase.client.rpc('admin_update_moderation_report', {
+      p_report_id: report.reportId,
+      p_status: report.status,
+      p_outcome: report.outcome || null,
+      p_decision_reason: report.decisionReason || null,
+      p_reporter_notice: report.reporterNotice || null,
+      p_affected_notice: report.affectedNotice || null
+    });
+    if (error) throw error;
   }
 
   async loadOperationalHealth(): Promise<AdminOperationalHealth> {

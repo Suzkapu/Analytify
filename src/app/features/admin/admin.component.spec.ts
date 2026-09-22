@@ -17,6 +17,7 @@ describe('AdminComponent', () => {
             loadSiteSettings: vi.fn().mockName("AdminService.loadSiteSettings"),
             listUsers: vi.fn().mockName("AdminService.listUsers"),
             listRuns: vi.fn().mockName("AdminService.listRuns"),
+            listModerationReports: vi.fn().mockName("AdminService.listModerationReports"),
             loadOperationalHealth: vi.fn().mockName("AdminService.loadOperationalHealth"),
             loadSyncSchedulePolicy: vi.fn().mockName("AdminService.loadSyncSchedulePolicy"),
             updateSyncSchedulePolicy: vi.fn().mockName("AdminService.updateSyncSchedulePolicy"),
@@ -24,7 +25,8 @@ describe('AdminComponent', () => {
             updateUser: vi.fn().mockName("AdminService.updateUser"),
             enqueueUser: vi.fn().mockName("AdminService.enqueueUser"),
             createDemoLeague: vi.fn().mockName("AdminService.createDemoLeague"),
-            sendTestNotification: vi.fn().mockName("AdminService.sendTestNotification")
+            sendTestNotification: vi.fn().mockName("AdminService.sendTestNotification"),
+            updateModerationReport: vi.fn().mockName("AdminService.updateModerationReport")
         };
 
         adminService.loadSiteSettings.mockResolvedValue({ announcement: '', allowSongLeagueCreation: true });
@@ -58,6 +60,7 @@ describe('AdminComponent', () => {
         adminService.loadSyncSchedulePolicy.mockResolvedValue([
             { taskKey: 'listening_history', available: true, intervalValue: 60, intervalUnit: 'minutes' }
         ]);
+        adminService.listModerationReports.mockResolvedValue([]);
 
         router = {
             navigate: vi.fn().mockName("Router.navigate")

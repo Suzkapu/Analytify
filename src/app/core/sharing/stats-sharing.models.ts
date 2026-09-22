@@ -15,6 +15,26 @@ export interface BlockedStatsUser {
   blockedAt: string;
 }
 
+export type ModerationStatus = 'submitted' | 'under_review' | 'resolved_action' | 'resolved_no_action' | 'appealed';
+
+export interface ModerationReceipt {
+  reportId: string;
+  receiptCode: string;
+  status: ModerationStatus;
+}
+
+export interface ModerationCase extends ModerationReceipt {
+  viewerRole: 'reporter' | 'affected';
+  category: 'user_safety' | 'illegal_content';
+  reason: string;
+  outcome: string;
+  decisionReason: string;
+  notice: string;
+  createdAt: string;
+  resolvedAt: string | null;
+  appealedAt: string | null;
+}
+
 export interface StatsAccessRequest {
   id: string;
   ownerUserId: string;

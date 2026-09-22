@@ -6,7 +6,7 @@ import {ComparePlaylist} from '@core/compare-room/compare-room.models';
 import {PlaylistShare, PlaylistSharePublication} from '@core/sharing/playlist-sharing.models';
 import {sharedPlaylistName} from '@core/sharing/playlist-sharing-names';
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
-import {StatsAccessRequest, StatsShareableUser} from '@core/sharing/stats-sharing.models';
+import {ModerationCase, StatsAccessRequest, StatsShareableUser} from '@core/sharing/stats-sharing.models';
 import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {PlaylistShareAutoSyncService} from '@core/sharing/playlist-share-auto-sync.service';
@@ -57,6 +57,9 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   moderationRequest: StatsAccessRequest | null = null;
   moderationReason = '';
   isModeratingStatsUser = false;
+  moderationCases: ModerationCase[] = [];
+  appealDrafts: Record<string, string> = {};
+  appealingReportId = '';
 
   private unsubscribeFromShareChanges: (() => void) | null = null;
   private unsubscribeFromStatsChanges: (() => void) | null = null;
@@ -113,10 +116,11 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
       this.errorMessage = '';
     }
     try {
-      [this.receivedShares, this.ownedShares, this.statsAccessRequests] = await Promise.all([
+      [this.receivedShares, this.ownedShares, this.statsAccessRequests, this.moderationCases] = await Promise.all([
         this.sharing.listReceivedShares(),
         this.sharing.listOwnedShares(),
-        this.statsSharing.listAccessRequests()
+        this.statsSharing.listAccessRequests(),
+        this.statsSharing.listModerationCases()
       ]);
       this.selectNextConsentRequest();
     } catch (error) {
@@ -425,15 +429,36 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     }
     this.isModeratingStatsUser = true;
     try {
-      if (report) await this.statsSharing.reportUser(otherUserId, this.moderationReason);
-      else await this.statsSharing.blockUser(otherUserId);
-      this.successMessage = `${otherName} was blocked${report ? ' and reported' : ''}.`;
+      if (report) {
+        const receipt = await this.statsSharing.reportUser(otherUserId, this.moderationReason);
+        this.successMessage = `${otherName} was blocked and reported. Receipt ${receipt.receiptCode}.`;
+      } else {
+        await this.statsSharing.blockUser(otherUserId);
+        this.successMessage = `${otherName} was blocked.`;
+      }
       this.moderationRequest = null;
       await this.reload(true);
     } catch (error) {
       this.errorMessage = this.describeError(error);
     } finally {
       this.isModeratingStatsUser = false;
+    }
+  }
+
+  async appealModerationCase(moderationCase: ModerationCase): Promise<void> {
+    const reason = (this.appealDrafts[moderationCase.reportId] || '').trim();
+    if (reason.length < 3 || this.appealingReportId) return;
+    this.appealingReportId = moderationCase.reportId;
+    this.errorMessage = '';
+    try {
+      await this.statsSharing.appealModerationCase(moderationCase.reportId, reason);
+      this.successMessage = `Appeal sent for ${moderationCase.receiptCode}.`;
+      delete this.appealDrafts[moderationCase.reportId];
+      await this.reload(true);
+    } catch (error) {
+      this.errorMessage = this.describeError(error);
+    } finally {
+      this.appealingReportId = '';
     }
   }
 

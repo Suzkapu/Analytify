@@ -83,6 +83,36 @@
           }
         </div>
       </section>
+      <section class="admin-panel moderation-panel">
+        <div class="admin-section-heading">
+          <div><span>Safety</span><h2>Report inbox</h2><p>Review user reports, record a reason, and send separate notices to both people.</p></div>
+          <span class="admin-count">{{ moderationReports.length }}</span>
+        </div>
+        @if (!moderationReports.length) {
+          <div class="admin-empty">No reports are waiting for review.</div>
+        }
+        <div class="moderation-admin-list">
+          @for (report of moderationReports; track report.reportId) {
+            <article class="moderation-admin-card" [class.priority]="report.status === 'appealed' || report.status === 'submitted'">
+              <header>
+                <div><strong>{{ report.receiptCode }}</strong><small>{{ report.reporterName }} reported {{ report.affectedName }} · {{ report.createdAt | date:'medium' }}</small></div>
+                <span>{{ report.status.replaceAll('_', ' ') }}</span>
+              </header>
+              <p>{{ report.reason }}</p>
+              @if (report.contentUrl) {<a [href]="report.contentUrl" target="_blank" rel="noopener noreferrer">Open reported content</a>}
+              @if (report.appealReason) {<div class="admin-notice appeal"><i class="pi pi-replay"></i><span><strong>Appeal</strong><br>{{ report.appealReason }}</span></div>}
+              <div class="moderation-decision-grid">
+                <label class="admin-field"><span>Status</span><select [(ngModel)]="report.status"><option value="under_review">Under review</option><option value="resolved_action">Resolved with action</option><option value="resolved_no_action">Resolved without action</option></select></label>
+                <label class="admin-field"><span>Outcome</span><select [(ngModel)]="report.outcome"><option value="">Choose outcome</option><option value="warning">Warning</option><option value="access_revoked">Access revoked</option><option value="no_violation">No violation</option><option value="outside_scope">Outside scope</option></select></label>
+                <label class="admin-field wide"><span>Decision reason</span><textarea [(ngModel)]="report.decisionReason" maxlength="1000" rows="2"></textarea></label>
+                <label class="admin-field"><span>Reporter notice</span><textarea [(ngModel)]="report.reporterNotice" maxlength="1000" rows="2"></textarea></label>
+                <label class="admin-field"><span>Affected-user notice</span><textarea [(ngModel)]="report.affectedNotice" maxlength="1000" rows="2"></textarea></label>
+              </div>
+              <button type="button" class="admin-primary" (click)="saveModerationReport(report)" [disabled]="savingModerationReports.has(report.reportId)"><i class="pi pi-save"></i> Save review</button>
+            </article>
+          }
+        </div>
+      </section>
       <section class="admin-users-section">
         <div class="admin-section-heading"><div><span>Background updates</span><h2>User schedules</h2><p>Inspect personal choices and feature-required work. Users manage their own optional schedules.</p></div><span class="admin-count">{{ users.length }}</span></div>
         <div class="admin-user-grid">

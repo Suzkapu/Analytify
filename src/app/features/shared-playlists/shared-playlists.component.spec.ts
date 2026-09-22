@@ -44,13 +44,15 @@ describe('SharedPlaylistsComponent', () => {
         statsSharing = {
             listAvailableUsers: vi.fn().mockName("StatsSharingService.listAvailableUsers"),
             listAccessRequests: vi.fn().mockName("StatsSharingService.listAccessRequests"),
+            listModerationCases: vi.fn().mockName("StatsSharingService.listModerationCases"),
             subscribeToAccessChanges: vi.fn().mockName("StatsSharingService.subscribeToAccessChanges"),
             requestAccess: vi.fn().mockName("StatsSharingService.requestAccess"),
             createAccessInvite: vi.fn().mockName("StatsSharingService.createAccessInvite"),
             respondToRequest: vi.fn().mockName("StatsSharingService.respondToRequest"),
             revokeAccess: vi.fn().mockName("StatsSharingService.revokeAccess"),
             blockUser: vi.fn().mockName("StatsSharingService.blockUser"),
-            reportUser: vi.fn().mockName("StatsSharingService.reportUser")
+            reportUser: vi.fn().mockName("StatsSharingService.reportUser"),
+            appealModerationCase: vi.fn().mockName("StatsSharingService.appealModerationCase")
         };
         unsubscribe = vi.fn().mockName('unsubscribe');
         startAutoSync = vi.fn().mockName('start');
@@ -79,6 +81,7 @@ describe('SharedPlaylistsComponent', () => {
         source.loadMainTracks.mockResolvedValue({ source: 'local', tracks: [track('song')] });
         statsSharing.listAvailableUsers.mockResolvedValue([]);
         statsSharing.listAccessRequests.mockResolvedValue([]);
+        statsSharing.listModerationCases.mockResolvedValue([]);
         statsSharing.subscribeToAccessChanges.mockReturnValue(vi.fn().mockName('unsubscribeStats'));
         statsSharing.requestAccess.mockResolvedValue('request-id');
         statsSharing.createAccessInvite.mockResolvedValue({
@@ -89,7 +92,8 @@ describe('SharedPlaylistsComponent', () => {
         statsSharing.respondToRequest.mockResolvedValue(undefined);
         statsSharing.revokeAccess.mockResolvedValue(undefined);
         statsSharing.blockUser.mockResolvedValue(undefined);
-        statsSharing.reportUser.mockResolvedValue(undefined);
+        statsSharing.reportUser.mockResolvedValue({reportId: 'report-id', receiptCode: 'AR-123', status: 'submitted'});
+        statsSharing.appealModerationCase.mockResolvedValue(undefined);
 
         TestBed.configureTestingModule({
             declarations: [SharedPlaylistsComponent],
@@ -318,6 +322,7 @@ describe('SharedPlaylistsComponent', () => {
         expect(statsSharing.reportUser).toHaveBeenCalledWith('viewer-id', 'Repeated unwanted requests');
         expect(component.moderationRequest).toBeNull();
         expect(component.successMessage).toContain('blocked and reported');
+        expect(component.successMessage).toContain('AR-123');
     });
 
     it('opens a custom consent popup for the oldest pending request and records agreement', async () => {
