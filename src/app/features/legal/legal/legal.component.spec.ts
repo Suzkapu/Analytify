@@ -47,7 +47,7 @@ describe('LegalComponent', () => {
         fixture.detectChanges();
         const text = (fixture.nativeElement as HTMLElement).textContent || '';
 
-        expect(text).toContain('analytify-eula-2026-09-19');
+        expect(text).toContain('analytify-eula-2026-09-22');
         expect(text).toContain('merchantability');
         expect(text).toContain('fitness for a particular purpose');
         expect(text).toContain('non-infringement');
@@ -56,8 +56,14 @@ describe('LegalComponent', () => {
         expect(text).toContain('solely responsible');
         expect(text).toContain('third-party beneficiary');
         expect(text).toContain('Section V.11');
-        expect(text).toContain('Strictly Necessary Cookie');
-        expect(text).toContain('not used for analytics');
+        expect(text).toContain('No ads or tracking');
+        expect(text).toContain('Version: 2026-09-22');
+        expect(text).toContain('What is processed and why');
+        expect(text).toContain('Where the data comes from');
+        expect(text).toContain('normally within one month');
+        expect(text).toContain('Austrian Data Protection Authority');
+        expect(text).toContain('Automated results, not automated decisions');
+        expect(text).toContain('International transfers and provider details');
         expect(text).not.toContain('Clause 12');
     });
 });

@@ -79,38 +79,143 @@
       <section class="legal-section" id="privacy">
         <h2>
           <i class="pi pi-shield"></i>
-          Privacy Policy &amp; Data Handling (GDPR &amp; Spotify Compliance)
+          Privacy Notice
         </h2>
-        <ul class="legal-list">
-          <li>
-            <i class="pi pi-desktop text-muted"></i>
-            <span><strong>Local Data:</strong> By default, data retrieved from the Spotify API is stored locally in your browser to authenticate your session and render metrics. Personal Spotify app users can use Playlists, Stats, History, and analysis without creating a cloud identity.</span>
-          </li>
-          <li>
-            <i class="pi pi-check-circle text-muted"></i>
-            <span><strong>Strictly Necessary Cookie:</strong> After you accept the current Terms, Analytify stores the accepted version, time, and a random acceptance ID in one first-party cookie for up to one year. It prevents the same Terms prompt on every visit and is not used for analytics, advertising, or cross-site tracking. Clearing local data removes it; a materially updated Terms version must be accepted again.</span>
-          </li>
-          <li>
-            <i class="pi pi-key text-muted"></i>
-            <span><strong>Personal Spotify Apps:</strong> You may provide your public Spotify Client ID and authorize with PKCE. Analytify never requests a Spotify Client Secret, email address, phone number, password, or recovery identity. The Spotify ID, display name, and profile image returned by Spotify are used to identify the local profile.</span>
-          </li>
-          <li>
-            <i class="pi pi-cloud text-muted"></i>
-            <span><strong>Cloud Features (Optional):</strong> Read-only collaboration uses a minimal Supabase identity containing your verified Spotify ID, display name, and profile image, but no listening data or refresh token. Cloud Backup stores only the listening data and snapshots you choose to sync. An encrypted Spotify refresh token is added only when you enable backup or another unattended scheduled feature, and can be removed separately. Personal-app users receive an anonymous, browser-bound Supabase identity with no email or phone; it cannot be recovered after browser data is cleared.</span>
-          </li>
-          <li>
-            <i class="pi pi-bell text-muted"></i>
-            <span><strong>Push Notifications (Optional):</strong> If you enable a notification category, Analytify stores the Web Push endpoint and encryption keys created by that PWA device. Song League uses them only for the categories you select, such as announcing that a Friday pick window opened or that another member added a song. You can disable each category at any time from Song League or <strong>Data &amp; account → Notifications</strong>; clearing cloud data deletes every registered device endpoint.</span>
-          </li>
-          <li>
-            <i class="pi pi-trash text-muted"></i>
-            <span><strong>Right to Erasure (GDPR Article 17):</strong> You can completely erase all your data at any time:
-            <br>• <strong>Cloud Data:</strong> Click the profile icon, select <strong>Clear Data</strong>, and choose <strong>Delete Cloud Backup</strong> to permanently wipe all synced history, snapshots, and caches from our database.
-            <br>• <strong>Local Cache &amp; Logout:</strong> Select <strong>Clear Local Cache &amp; Logout</strong> to wipe browser data and terminate the session. For an anonymous cloud identity this also permanently deletes the identity and its linked server data because no recovery identity exists.
-            <br>• <strong>Revoke App Access:</strong> Click the "Revoke App Access" link in the profile settings dropdown to manage permissions directly on the Spotify Apps dashboard.
-          </span>
-        </li>
-      </ul>
+        <p class="legal-meta-text"><strong>Version:</strong> 2026-09-22 · Effective 22 September 2026</p>
+        <p>
+          Simon Praher, at the address and email shown in the Legal Notice above, is the controller for Analytify.
+          No data protection officer has been appointed because Analytify does not carry out processing that requires one.
+          This notice applies before you connect Spotify and whenever you use Analytify.
+        </p>
+
+        <div class="privacy-summary">
+          <i class="pi pi-eye-slash" aria-hidden="true"></i>
+          <p><strong>No ads or tracking.</strong> Analytify does not use advertising, analytics, fingerprinting, social plugins, or cross-site tracking. A fresh logged-out visit creates no account, feature, stats, or tracking record.</p>
+        </div>
+
+        <h3>What is processed and why</h3>
+        <p class="legal-meta-text">Each card describes one processing activity. “Contract” means GDPR Article 6(1)(b); “legitimate interests” means Article 6(1)(f).</p>
+
+        <div class="privacy-activities">
+          <section class="privacy-activity">
+            <h4>Open the website and keep it secure</h4>
+            <dl>
+              <div><dt>Data and source</dt><dd>IP address, request time, requested path, response status, browser/device information, and security errors, sent by your device.</dd></div>
+              <div><dt>Purpose and legal basis</dt><dd>Deliver and update the website, diagnose failures, and prevent abuse. Contract; and legitimate interests in reliable, secure operation.</dd></div>
+              <div><dt>Recipients and transfers</dt><dd>The Oracle-hosted web server and operator. Your browser obtains Spotify artwork directly from Spotify's content delivery network. Those providers may process data outside the EEA under their published transfer safeguards.</dd></div>
+              <div><dt>Retention</dt><dd>Application caches remain until the browser or service worker clears them. Server security and access logs are kept only for the operational period needed to diagnose incidents and are then deleted or rotated.</dd></div>
+              <div><dt>Required?</dt><dd>Basic request data is required to deliver the site. No advertising or analytics identifier is required or created.</dd></div>
+            </dl>
+          </section>
+
+          <section class="privacy-activity">
+            <h4>Connect Spotify and show your library, stats, and history</h4>
+            <dl>
+              <div><dt>Data and source</dt><dd>Spotify user ID, display name, profile image, access/refresh tokens, playlists and saved tracks, recently played items, top songs, artists and genres, and related Spotify catalog metadata. Spotify supplies this after you authorize Analytify. For a personal Spotify app, you also provide its public Client ID; Analytify never requests its Client Secret.</dd></div>
+              <div><dt>Purpose and legal basis</dt><dd>Authenticate your Spotify connection and provide the pages and comparisons you request. Contract.</dd></div>
+              <div><dt>Recipients and transfers</dt><dd>Spotify's API/CDN and your browser. Hosted authentication and token operations also use Supabase and the Oracle worker. Spotify and Supabase may use locations outside the EEA with their stated safeguards.</dd></div>
+              <div><dt>Retention</dt><dd>Local records remain until you clear local data or sign out. Access tokens expire according to Spotify; refresh credentials remain until revoked, disconnected, or deleted. Local history remains until you delete it.</dd></div>
+              <div><dt>Required?</dt><dd>A Spotify connection and the requested Spotify data are required for these features. Cloud Backup is not required.</dd></div>
+            </dl>
+          </section>
+
+          <section class="privacy-activity">
+            <h4>Cloud identity, backup, and scheduled updates</h4>
+            <dl>
+              <div><dt>Data and source</dt><dd>Verified Spotify ID, display name and image; a Supabase account ID; selected snapshots, history and feature caches; schedule settings and run status; and, only for unattended updates, an encrypted Spotify refresh token. The data comes from you, your browser, Spotify, and scheduled task results.</dd></div>
+              <div><dt>Purpose and legal basis</dt><dd>Provide the cloud, recovery, and scheduled features you explicitly enable. Contract. Security audit records are also processed under legitimate interests.</dd></div>
+              <div><dt>Recipients and transfers</dt><dd>Supabase hosts authentication/database functions; the Oracle worker performs scheduled jobs; Spotify receives refresh and data requests. International transfers depend on those providers' contractual safeguards.</dd></div>
+              <div><dt>Retention</dt><dd>Account-linked data remains until you delete Cloud Backup or the account. The unattended credential can be removed separately. Successful/cancelled task logs are kept 30 days; failed logs are redacted after 30 days and deleted after 90 days.</dd></div>
+              <div><dt>Required?</dt><dd>Optional. A personal-app cloud identity is anonymous and browser-bound: no email, phone, password, or recovery identity is requested.</dd></div>
+            </dl>
+          </section>
+
+          <section class="privacy-activity">
+            <h4>Playlist sharing, stats access, and Compare Rooms</h4>
+            <dl>
+              <div><dt>Data and source</dt><dd>Your profile, selected playlist metadata and tracks, selected stats/snapshots, invitations, access decisions, room membership, and public-playlist links. Data comes from you, Spotify, and the people who invite or share with you.</dd></div>
+              <div><dt>Purpose and legal basis</dt><dd>Share only with the people you select and run requested comparisons. Contract.</dd></div>
+              <div><dt>Recipients and transfers</dt><dd>The selected participants, Supabase, Oracle, and Spotify when a playlist must be read. Do not share a link with someone who should not receive it.</dd></div>
+              <div><dt>Retention</dt><dd>Claimed shares remain until revoked or removed; unclaimed share links expire after 7 days and revoked share tombstones after 30 days. Compare Rooms expire after 12 hours; invitations after 30 minutes; expired/revoked room records are deleted within 30 days.</dd></div>
+              <div><dt>Required?</dt><dd>Optional. The selected content and participant identity are required only for that sharing or comparison.</dd></div>
+            </dl>
+          </section>
+
+          <section class="privacy-activity">
+            <h4>Song League</h4>
+            <dl>
+              <div><dt>Data and source</dt><dd>Member profile, league role, invitations, recommendations, Spotify song/catalog details, rankings, points, playlist state, and activity times. This comes from members, Spotify, and the ranking calculation.</dd></div>
+              <div><dt>Purpose and legal basis</dt><dd>Run the league, calculate standings, and maintain requested league playlists. Contract.</dd></div>
+              <div><dt>Recipients and transfers</dt><dd>Other members of that league, Supabase, Oracle, and Spotify for song and playlist operations.</dd></div>
+              <div><dt>Retention</dt><dd>League history remains until the owner deletes the league or account deletion removes the member link. Recommendations can remain in the generated playlist for their four-week active window. Invite links normally expire after 7 days.</dd></div>
+              <div><dt>Required?</dt><dd>Optional. Profile, recommendation, and scoring data are required only while participating.</dd></div>
+            </dl>
+          </section>
+
+          <section class="privacy-activity">
+            <h4>Optional notifications</h4>
+            <dl>
+              <div><dt>Data and source</dt><dd>Notification preferences, device push endpoint and encryption keys, delivery state, and redacted provider errors, supplied by your browser and the delivery service.</dd></div>
+              <div><dt>Purpose and legal basis</dt><dd>Send only the notification categories you enable. Consent under Article 6(1)(a).</dd></div>
+              <div><dt>Recipients and transfers</dt><dd>Supabase/Oracle and the browser's Web Push provider, which may process the endpoint outside the EEA under its safeguards.</dd></div>
+              <div><dt>Retention</dt><dd>Subscription data remains until you disable notifications, clear cloud data, or the provider invalidates it. Sent delivery records remain 30 days; failed records are redacted after 30 days and deleted after 90 days.</dd></div>
+              <div><dt>Required?</dt><dd>No. Withdrawing consent stops future notifications and does not affect earlier lawful processing.</dd></div>
+            </dl>
+          </section>
+
+          <section class="privacy-activity">
+            <h4>Reports, support, and legal requests</h4>
+            <dl>
+              <div><dt>Data and source</dt><dd>Reporter and reported profile IDs, reason, free-text details, timestamps, related service records, and correspondence. It comes from you, another user, service records, or an authorized authority.</dd></div>
+              <div><dt>Purpose and legal basis</dt><dd>Review misuse, protect users, answer requests, establish or defend claims, and comply with law. Legitimate interests; and legal obligation under Article 6(1)(c) where applicable.</dd></div>
+              <div><dt>Recipients and transfers</dt><dd>The operator and, only where necessary, advisers, courts, or competent authorities.</dd></div>
+              <div><dt>Retention</dt><dd>Until the report/request is resolved, then only as long as necessary for documented legal obligations or possible claims. Unneeded free text and attachments should be removed during review.</dd></div>
+              <div><dt>Required?</dt><dd>Optional unless information is legally required. Without enough detail, a report or rights request may be impossible to verify or resolve.</dd></div>
+            </dl>
+          </section>
+
+          <section class="privacy-activity">
+            <h4>Terms acceptance and browser storage</h4>
+            <dl>
+              <div><dt>Data and source</dt><dd>Accepted version, acceptance time, random acceptance ID, tab-flow state, local feature data, and same-origin PWA cache, created by your interaction with Analytify.</dd></div>
+              <div><dt>Purpose and legal basis</dt><dd>Record the agreement, complete requested flows, preserve local features, and update the app safely. Contract; legal obligation where proof of terms is required; and legitimate interests in reliable operation.</dd></div>
+              <div><dt>Recipients and transfers</dt><dd>Your browser and the operator only. There are no advertising or analytics recipients.</dd></div>
+              <div><dt>Retention</dt><dd>The terms cookie lasts up to one year. Tab state lasts for the tab session. IndexedDB and the PWA cache remain until the app or user clears them.</dd></div>
+              <div><dt>Required?</dt><dd>The terms record and technical storage are required for the requested service. See the browser-storage policy linked below for the exact inventory.</dd></div>
+            </dl>
+          </section>
+        </div>
+
+        <h3>Where the data comes from</h3>
+        <p>You provide data directly through your choices and messages. Spotify provides account, listening, playlist, and catalog data after authorization. Other Analytify users provide data when they invite you, share with you, include you in a league, request access, or file a report. Analytify also creates technical status, ranking, and security records while providing those features.</p>
+
+        <h3>Your choices and rights</h3>
+        <ul class="rights-list">
+          <li><strong>Access and a copy:</strong> ask what personal data is processed and receive a copy.</li>
+          <li><strong>Correction:</strong> correct inaccurate data or complete incomplete data.</li>
+          <li><strong>Deletion:</strong> delete local data, Cloud Backup, sharing access, scheduled credentials, or your account from <strong>Data &amp; account</strong>, or ask the operator.</li>
+          <li><strong>Restriction:</strong> ask that processing be limited while a dispute is checked.</li>
+          <li><strong>Portability:</strong> receive data you provided in a structured, commonly used, machine-readable format where Article 20 applies.</li>
+          <li><strong>Object:</strong> object to processing based on legitimate interests. Analytify will stop unless compelling grounds or legal claims require it.</li>
+          <li><strong>Withdraw consent:</strong> disable notification categories at any time. Withdrawal does not undo earlier lawful processing.</li>
+        </ul>
+        <p>
+          Send a rights request to <a class="legal-link" href="mailto:analytify.taking893@aleeas.com">analytify.taking893&#64;aleeas.com</a>.
+          Enough information may be requested to verify that the data belongs to you. Analytify will respond without undue delay and normally within one month; a complex request may be extended by up to two further months with an explanation.
+          You may also complain to the <a class="legal-link" href="https://dsb.gv.at/eingabe-an-die-dsb/beschwerde" target="_blank" rel="noopener noreferrer">Austrian Data Protection Authority</a>, Barichgasse 40–42, 1030 Vienna, <a class="legal-link" href="mailto:dsb@dsb.gv.at">dsb&#64;dsb.gv.at</a>.
+        </p>
+
+        <h3>Automated results, not automated decisions</h3>
+        <p>Analytify automatically calculates listening trends, playlist comparisons, Song League rankings, and scores from the selected Spotify data and league rules. These are entertainment/information results. They do not produce legal or similarly significant effects, and Analytify does not use solely automated decision-making of the kind described in GDPR Article 22.</p>
+
+        <h3>International transfers and provider details</h3>
+        <p>Spotify, Supabase, Oracle, and a device's Web Push provider are separate providers involved only where described above. Some may process data outside the EEA. Analytify relies on the provider's applicable adequacy route or contractual safeguards, including EU Standard Contractual Clauses where used. Provider locations and safeguards can change; see <a class="legal-link" href="https://www.spotify.com/legal/privacy-policy/" target="_blank" rel="noopener noreferrer">Spotify's Privacy Policy</a> and <a class="legal-link" href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">Supabase's Privacy Policy</a>, or ask the operator for the current safeguard relevant to your data.</p>
+
+        <h3>Deleting data and changing this notice</h3>
+        <p>Use <strong>Data &amp; account</strong> to clear local data, delete cloud data, remove unattended Spotify access, and manage notifications. Revoking Spotify access stops future API access but does not itself erase data already stored by Analytify. Shared catalog facts such as artist and song names may remain after account deletion, but the link to your identity is removed.</p>
+        <p>Material changes receive a new version and require acknowledgement before a new Spotify connection or authorization. Smaller clarifications are published here with a new effective date. The previous legal version remains identifiable in the repository history.</p>
+
+        <p class="privacy-policy-link"><a class="legal-link" href="https://github.com/Suzkapu/Analytify/blob/main/docs/browser-storage-policy.md" target="_blank" rel="noopener noreferrer"><i class="pi pi-external-link"></i> Exact browser-storage inventory and no-banner policy</a></p>
     </section>
 
     <div class="section-divider"></div>
@@ -121,7 +226,7 @@
         <i class="pi pi-exclamation-triangle"></i>
         Terms of Service &amp; Disclaimers
       </h2>
-      <p class="legal-meta-text"><strong>Analytify EULA version:</strong> analytify-eula-2026-09-19 · Effective 19 September 2026</p>
+      <p class="legal-meta-text"><strong>Analytify EULA and Privacy Notice version:</strong> analytify-eula-2026-09-22 · Effective 22 September 2026</p>
       <p>By affirmatively accepting these terms and connecting Spotify, you enter into this end-user licence agreement with the operator identified above.</p>
       <ol class="legal-ordered-list">
         <li>
