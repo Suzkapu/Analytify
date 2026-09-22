@@ -53,6 +53,13 @@ assert.match(policy, /Major upgrades are review tasks/);
 
 const securityPolicy = await readFile(path.join(root, 'SECURITY.md'), 'utf8');
 assert.match(securityPolicy, /private vulnerability reporting/i);
-assert.match(securityPolicy, /acknowledge a report within seven days/i);
+assert.match(securityPolicy, /acknowledge a report within seven (?:calendar )?days/i);
+assert.match(securityPolicy, /False positives and accepted risk/);
+assert.match(securityPolicy, /target containment within 72 hours/);
+
+const repositoryControls = await readFile(path.join(root, 'docs', 'repository-security-controls.md'), 'utf8');
+assert.match(repositoryControls, /secret-scanning push protection/);
+assert.match(repositoryControls, /Dependabot automatic security updates/);
+assert.match(repositoryControls, /treated\s+as unavailable/);
 
 console.log(`Supply-chain policy check passed (${workflowNames.length} workflows, immutable action pins).`);
