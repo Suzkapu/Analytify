@@ -1,4 +1,4 @@
-import {createClient} from 'npm:@supabase/supabase-js@2.108.1';
+import {createClient} from 'npm:@supabase/supabase-js@2.116.0';
 import {sendWebPush} from './web-push.ts';
 import {
   deleteExpiredPushSubscription,

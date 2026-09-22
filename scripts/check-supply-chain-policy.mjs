@@ -33,6 +33,12 @@ assert.doesNotMatch(
 const dependabot = await readFile(path.join(root, '.github', 'dependabot.yml'), 'utf8');
 assert.match(dependabot, /package-ecosystem:\s*npm/g);
 assert.match(dependabot, /package-ecosystem:\s*github-actions/);
+assert.doesNotMatch(dependabot, /version-update:semver-major/, 'major updates must remain visible for explicit review');
+
+const currencyWorkflow = await readFile(path.join(workflowsDir, 'dependency-currency.yml'), 'utf8');
+assert.match(currencyWorkflow, /schedule:/);
+assert.match(currencyWorkflow, /issues:\s*write/);
+assert.match(currencyWorkflow, /check-edge-dependency-currency\.mjs --online/);
 
 const security = await readFile(path.join(workflowsDir, 'security.yml'), 'utf8');
 assert.match(security, /dependency-review-action/);
@@ -43,6 +49,7 @@ assert.match(security, /npm sbom --sbom-format=cyclonedx/);
 const policy = await readFile(path.join(root, 'docs', 'supply-chain-policy.md'), 'utf8');
 assert.match(policy, /Owner \| Expiry/);
 assert.match(policy, /2026-12-31/);
+assert.match(policy, /Major upgrades are review tasks/);
 
 const securityPolicy = await readFile(path.join(root, 'SECURITY.md'), 'utf8');
 assert.match(securityPolicy, /private vulnerability reporting/i);

@@ -15,10 +15,6 @@ updates:
         update-types:
           - minor
           - patch
-    ignore:
-      - dependency-name: "*"
-        update-types:
-          - version-update:semver-major
 
   - package-ecosystem: npm
     directory: /services/sync-service
@@ -35,10 +31,6 @@ updates:
         update-types:
           - minor
           - patch
-    ignore:
-      - dependency-name: "*"
-        update-types:
-          - version-update:semver-major
 
   - package-ecosystem: github-actions
     directory: /
@@ -52,7 +44,3 @@ updates:
       routine-action-updates:
         patterns:
           - "*"
-    ignore:
-      - dependency-name: "*"
-        update-types:
-          - version-update:semver-major
