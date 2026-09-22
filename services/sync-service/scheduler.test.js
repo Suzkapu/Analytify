@@ -166,15 +166,27 @@ test('surfaces atomic completion persistence errors', async () => {
 test('emits only alerts the database marks due after its cooldown', async () => {
   const {scheduler} = harness({rpcResults: {monitor_operational_health: {data: [
     {alert_key: 'sync-backlog', severity: 'warning', message: 'Queue is old.'}
+  ], error: null}, monitor_data_retention_health: {data: [
+    {alert_key: 'data-retention-cleanup', severity: 'critical', message: 'Cleanup is stale.'}
   ], error: null}}});
   const original = console.warn;
   const warnings = [];
   console.warn = message => warnings.push(message);
   try {
     const alerts = await scheduler.evaluateOperationalHealth();
-    assert.equal(alerts.length, 1);
-    assert.deepEqual(warnings, ['[Operations][warning] Queue is old.']);
+    assert.equal(alerts.length, 2);
+    assert.deepEqual(warnings, [
+      '[Operations][warning] Queue is old.',
+      '[Operations][critical] Cleanup is stale.'
+    ]);
   } finally {
     console.warn = original;
   }
+});
+
+test('fails health evaluation when retention monitoring is unavailable', async () => {
+  const {scheduler} = harness({rpcResults: {monitor_data_retention_health: {
+    data: null, error: new Error('retention monitor unavailable')
+  }}});
+  await assert.rejects(() => scheduler.evaluateOperationalHealth(), /retention monitor unavailable/);
 });

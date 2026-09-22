@@ -197,9 +197,14 @@ function createScheduler({supabase, config, tasks, credentials, pushDispatcher})
   }
 
   async function evaluateOperationalHealth() {
-    const {data: alerts, error} = await supabase.rpc('monitor_operational_health');
-    if (error) throw error;
-    const dueAlerts = Array.isArray(alerts) ? alerts : [];
+    const [operations, retention] = await Promise.all([
+      supabase.rpc('monitor_operational_health'),
+      supabase.rpc('monitor_data_retention_health')
+    ]);
+    if (operations.error) throw operations.error;
+    if (retention.error) throw retention.error;
+    const dueAlerts = [operations.data, retention.data]
+      .flatMap(alerts => Array.isArray(alerts) ? alerts : []);
     for (const alert of dueAlerts) console.warn(`[Operations][${alert.severity}] ${alert.message}`);
     return dueAlerts;
   }

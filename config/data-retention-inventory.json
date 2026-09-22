@@ -1,0 +1,94 @@
+{
+  "version": "2026-09-22",
+  "reviewCadenceDays": 90,
+  "resources": [
+    {
+      "id": "identity-and-preferences",
+      "owner": "Application operator",
+      "purpose": "Account identity, consent, credentials, notification choices and per-user synchronization state.",
+      "retention": "For the account lifetime; credentials are replaced on reconnect and deleted with the account.",
+      "erasure": "Explicit account deletion cascades through user-owned rows. Terms evidence is deleted with the account.",
+      "relations": ["public.users", "public.terms_acceptances", "public.spotify_credentials", "public.notification_preferences", "public.push_subscriptions", "public.sync_user_settings", "public.sync_task_state", "public.listening_history_checkpoints"]
+    },
+    {
+      "id": "listening-and-stats-history",
+      "owner": "User",
+      "purpose": "Display listening history, rankings and changes over time.",
+      "retention": "Until the user deletes the corresponding data or account; inactivity alone never authorizes deletion.",
+      "erasure": "Delete-data controls and account deletion remove the user's rows by cascading foreign keys.",
+      "relations": ["public.listening_history", "public.listening_history_default", "public.user_cache", "public.stats_snapshots", "public.stats_snapshot_tracks", "public.stats_snapshot_artists", "public.stats_snapshot_genres", "public.user_top_tracks_history", "public.user_top_artists_history"]
+    },
+    {
+      "id": "spotify-catalog",
+      "owner": "Application operator",
+      "purpose": "Shared Spotify metadata needed to render user history, statistics and leagues without duplicating catalog rows.",
+      "retention": "Referenced rows remain; unreferenced tracks, albums and artists are removed after 90 days. Unreferenced genres are removed nightly.",
+      "erasure": "Nightly cleanup deletes only rows with no history, snapshot, ranking or league reference.",
+      "relations": ["public.artists", "public.genres", "public.albums", "public.album_artists", "public.tracks", "public.track_artists", "public.catalog_write_versions"]
+    },
+    {
+      "id": "playlist-sharing",
+      "owner": "Sharing user",
+      "purpose": "Publish a playlist snapshot to an intended recipient and track safe refresh/download/revocation state.",
+      "retention": "Active claimed shares remain until revoked or an account is deleted; unclaimed shares expire after 7 days; revoked payloads expire after 30 days.",
+      "erasure": "Revocation removes recipient access immediately and scheduled cleanup removes expired payloads and tombstones.",
+      "relations": ["public.playlist_shares", "public.playlist_share_tracks", "public.playlist_share_downloads", "public.playlist_share_revocations"]
+    },
+    {
+      "id": "stats-sharing-and-safety",
+      "owner": "Participants and application operator",
+      "purpose": "Consent-based stats access, invitations, notification delivery, blocks and abuse review.",
+      "retention": "Approved access and blocks remain until revoked/unblocked; expired invitations and declined/revoked requests expire after 30 days; reviewed reports after 180 days; pending reports remain for review.",
+      "erasure": "Participant actions remove access; nightly cleanup removes policy-expired state; account deletion cascades participant records.",
+      "relations": ["public.stats_access_requests", "public.stats_access_invites", "public.stats_access_push_deliveries", "public.stats_user_blocks", "public.stats_user_reports"]
+    },
+    {
+      "id": "song-leagues",
+      "owner": "League owner and members",
+      "purpose": "Operate leagues, rounds, recommendations, scoring, playlists, invitations and optional notifications.",
+      "retention": "League history remains until owner deletion so past scores and recommendations remain available. Expired invite/rejoin state is removed after a 30-day grace period; delivery logs follow the operational log policy.",
+      "erasure": "League deletion cascades league content; leaving removes membership access but preserves score integrity; account deletion applies database cascades.",
+      "relations": ["public.song_leagues", "public.song_league_members", "public.song_league_rounds", "public.song_league_round_members", "public.song_league_recommendations", "public.song_league_recommendation_audience", "public.song_league_score_events", "public.song_league_lifecycle_events", "public.song_league_playlists", "public.song_league_invites", "public.song_league_rejoin_requests", "public.song_league_rejoin_approvals", "public.song_league_push_deliveries", "public.song_league_song_push_deliveries"]
+    },
+    {
+      "id": "compare-rooms",
+      "owner": "Room participants",
+      "purpose": "Temporarily compare or merge selected playlists and exchange room proposals/messages.",
+      "retention": "Uploads are short-lived; expired or revoked rooms and participant content are removed after 30 days.",
+      "erasure": "Room revocation blocks access immediately; existing room cleanup removes the room graph after its grace period.",
+      "relations": ["public.compare_rooms", "public.compare_room_members", "public.compare_room_invitations", "public.compare_room_uploads", "public.compare_room_proposals", "public.compare_room_approvals", "public.compare_room_messages"]
+    },
+    {
+      "id": "operations-and-administration",
+      "owner": "Application operator",
+      "purpose": "Configuration, administration, deployment state, job execution, health, audit and aggregate cleanup monitoring.",
+      "retention": "Configuration remains until replaced. Successful/cancelled job logs are 30 days, failures and resolved alerts are 90 days, credential audit is 90 days, successful retention summaries are 90 days.",
+      "erasure": "Scheduled operational and retention jobs redact error details and delete expired logs; records contain identifiers only where needed for incident diagnosis.",
+      "relations": ["public.app_admins", "public.site_settings", "public.sync_schedule_policy", "public.song_league_demo_bots", "public.sync_job_runs", "public.operational_alerts", "public.deployment_revisions", "public.worker_runtime_health", "public.spotify_credential_rotation_audit", "public.retention_cleanup_runs"]
+    },
+    {
+      "id": "private-transient-state",
+      "owner": "Application operator",
+      "purpose": "Rate limiting, bounded chunk uploads and short synchronization leases.",
+      "retention": "Rate limits 2 days, uploads and upload tracks 1 hour, expired leases 1 day.",
+      "erasure": "Automated cleanup deletes expired rows; no user-facing history depends on them.",
+      "relations": ["private.edge_request_limits", "private.playlist_share_uploads", "private.playlist_share_upload_tracks", "private.song_league_playlist_sync_leases"]
+    },
+    {
+      "id": "browser-storage",
+      "owner": "User device",
+      "purpose": "Session continuity, offline application assets and explicitly enabled local Spotify data.",
+      "retention": "As defined in config/browser-storage-inventory.json; session-only state ends with the tab and persistent state remains until logout/delete-data/browser removal.",
+      "erasure": "The application's logout and delete-data actions clear scoped browser records; users can also clear site data.",
+      "relations": ["browser.cookies", "browser.localStorage", "browser.sessionStorage", "browser.indexedDB", "browser.cacheStorage"]
+    },
+    {
+      "id": "provider-backups",
+      "owner": "Application operator and infrastructure providers",
+      "purpose": "Encrypted disaster recovery after infrastructure failure.",
+      "retention": "Maximum 30-day rolling retention; no backup is used as an application archive.",
+      "erasure": "Live data is inaccessible immediately after deletion and ages out of encrypted backups within 30 days. A disaster restore must reapply deletion records before normal access resumes.",
+      "relations": ["backup.supabase-postgres", "backup.oracle-host"]
+    }
+  ]
+}
