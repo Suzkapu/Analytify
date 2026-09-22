@@ -10,14 +10,14 @@ set local role authenticated;
 select set_config('request.jwt.claim.role', 'authenticated', true);
 select set_config('request.jwt.claim.sub', '52000000-0000-4000-8000-000000000001', true);
 select lives_ok($$ select public.accept_current_terms(
-  'analytify-eula-2026-09-19', '52000000-0000-4000-8000-000000000010', 'hosted'
+  'analytify-eula-2026-09-22', '52000000-0000-4000-8000-000000000010', 'hosted'
 ) $$, 'the current EULA can be accepted');
 select is((select count(*) from public.terms_acceptances where user_id = auth.uid()), 1::bigint,
   'acceptance is bound to the authenticated identity');
 select ok((select accepted_at <= now() from public.terms_acceptances where user_id = auth.uid()),
   'the server records its own acceptance timestamp');
 select lives_ok($$ select public.accept_current_terms(
-  'analytify-eula-2026-09-19', '52000000-0000-4000-8000-000000000011', 'hosted'
+  'analytify-eula-2026-09-22', '52000000-0000-4000-8000-000000000011', 'hosted'
 ) $$, 'retries are idempotent');
 select is((select count(*) from public.terms_acceptances where user_id = auth.uid()), 1::bigint,
   'a retry cannot create duplicate evidence');
