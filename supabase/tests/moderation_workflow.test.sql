@@ -22,6 +22,7 @@ update public.users set spotify_id = 'moderation-admin', display_name = 'Reviewe
   where id = 'a1000000-0000-4000-8000-000000000003';
 insert into public.app_admins(user_id) values ('a1000000-0000-4000-8000-000000000003');
 create temporary table moderation_test_case(report_id uuid, receipt_code text, status text);
+grant all on table moderation_test_case to authenticated;
 
 set local role authenticated;
 select set_config('request.jwt.claim.role', 'authenticated', true);
