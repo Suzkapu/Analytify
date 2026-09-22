@@ -200,18 +200,14 @@
       <section class="share-section moderation-cases-section">
         <div class="section-heading">
           <div><span class="eyebrow">Safety</span><h2>Reports &amp; decisions</h2></div>
-          <span>{{ moderationCases.length }}</span>
         </div>
         <div class="moderation-case-list">
           @for (moderationCase of moderationCases; track moderationCase.reportId) {
             <article class="moderation-case-card">
               <header>
-                <div><strong>{{ moderationCase.receiptCode }}</strong><small>{{ moderationCase.createdAt | date:'medium' }}</small></div>
+                <strong>{{ moderationCase.receiptCode }}</strong>
                 <span class="status-pill" [class.revoked]="moderationCase.status === 'resolved_action'">{{ moderationCase.status.replaceAll('_', ' ') }}</span>
               </header>
-              @if (moderationCase.viewerRole === 'reporter') {
-                <p>{{ moderationCase.reason }}</p>
-              }
               @if (moderationCase.notice) {
                 <p class="moderation-notice">{{ moderationCase.notice }}</p>
               }
@@ -225,8 +221,7 @@
                 </label>
                 <button type="button" class="secondary" (click)="appealModerationCase(moderationCase)"
                   [disabled]="appealingReportId === moderationCase.reportId || (appealDrafts[moderationCase.reportId] || '').trim().length < 3">
-                  <i class="pi" [ngClass]="appealingReportId === moderationCase.reportId ? 'pi-spin pi-spinner' : 'pi-replay'"></i>
-                  {{ appealingReportId === moderationCase.reportId ? 'Sending…' : 'Send appeal' }}
+                  Send appeal
                 </button>
               }
             </article>

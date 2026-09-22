@@ -87,13 +87,9 @@ export class StatsSharingService {
       reportId: row.report_id,
       receiptCode: row.receipt_code,
       viewerRole: row.viewer_role,
-      category: row.category,
       status: row.status,
-      reason: row.reason || '',
-      outcome: row.outcome || '',
       decisionReason: row.decision_reason || '',
       notice: row.notice || '',
-      createdAt: row.created_at,
       resolvedAt: row.resolved_at || null,
       appealedAt: row.appealed_at || null
     }));

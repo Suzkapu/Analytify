@@ -94,7 +94,7 @@ describe('StatsSharingService', () => {
 
         const cases = await service.listModerationCases();
         expect(cases[0].viewerRole).toBe('affected');
-        expect(cases[0].reason).toBe('');
+        expect(cases[0].notice).toBe('Please stop.');
         await service.appealModerationCase('report-id', ' Please reconsider ');
 
         expect(rpc).toHaveBeenLastCalledWith('appeal_moderation_report', {

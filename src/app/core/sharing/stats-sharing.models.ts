@@ -25,12 +25,8 @@ export interface ModerationReceipt {
 
 export interface ModerationCase extends ModerationReceipt {
   viewerRole: 'reporter' | 'affected';
-  category: 'user_safety' | 'illegal_content';
-  reason: string;
-  outcome: string;
   decisionReason: string;
   notice: string;
-  createdAt: string;
   resolvedAt: string | null;
   appealedAt: string | null;
 }
