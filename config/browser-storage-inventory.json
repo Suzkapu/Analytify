@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-09-22",
+  "bannerRequired": false,
+  "legalBasis": {
+    "jurisdiction": "Austria",
+    "rule": "TKG 2021 § 165(3), strictly necessary storage for a service explicitly requested by the user",
+    "source": "https://ris.bka.gv.at/NormDokument.wxe?Abfrage=Bundesnormen&Gesetzesnummer=20011678&Paragraf=165"
+  },
+  "prohibitedWithoutPriorConsent": [
+    "analytics",
+    "advertising",
+    "fingerprinting",
+    "social plugins",
+    "A/B testing"
+  ],
+  "storage": [
+    {
+      "mechanism": "cookie",
+      "identifiers": ["analytify_terms_acceptance"],
+      "owner": "TermsAcceptanceService",
+      "purpose": "Remember the accepted Terms and Privacy Notice version so the user is not asked on every visit.",
+      "duration": "365 days, or until the user clears site data",
+      "trigger": "Written only after the user checks the terms box or an existing valid first-party acceptance is restored.",
+      "strictlyNecessary": true,
+      "automaticOnLoggedOutVisit": false
+    },
+    {
+      "mechanism": "localStorage",
+      "identifiers": ["sb-<Supabase project reference>-auth-token"],
+      "owner": "Supabase Auth client",
+      "purpose": "Keep the collaboration/cloud session that the user explicitly enabled.",
+      "duration": "Until sign-out, session expiry, account/data deletion, or browser site-data deletion",
+      "trigger": "Created only after a user starts a Supabase-backed sign-in or cloud/collaboration flow.",
+      "strictlyNecessary": true,
+      "automaticOnLoggedOutVisit": false
+    },
+    {
+      "mechanism": "IndexedDB",
+      "identifiers": ["AnalytifyDB/appData", "AnalytifyDB/featureData", "AnalytifyDB/statsHistory"],
+      "owner": "StorageService",
+      "purpose": "Store credentials and legal metadata, requested feature caches, and the user's local stats history.",
+      "duration": "Until sign-out/data deletion or browser site-data deletion; feature records follow the retention controls described in the Privacy Notice.",
+      "trigger": "The empty database schema is initialized at startup; records are added only by a user-requested feature, sign-in, or terms acceptance.",
+      "strictlyNecessary": true,
+      "automaticOnLoggedOutVisit": true
+    },
+    {
+      "mechanism": "sessionStorage",
+      "identifiers": [
+        "analytify_last_chunk_reload",
+        "analytifyAuthReturnUrl",
+        "analytify_personal_spotify_auth_request",
+        "analytify_compare_auth_request",
+        "analytify_stats_compare_snapshot:<user>:<range>"
+      ],
+      "owner": "App recovery, authentication, compare-room, and stats components",
+      "purpose": "Complete the current navigation/authentication flow, prevent reload loops, and keep a chosen comparison point for this tab only.",
+      "duration": "Current browser tab session; individual flow values are removed when consumed",
+      "trigger": "Written only when the corresponding user flow runs or a broken app chunk needs one recovery reload.",
+      "strictlyNecessary": true,
+      "automaticOnLoggedOutVisit": false
+    },
+    {
+      "mechanism": "Cache Storage",
+      "identifiers": ["ngsw:<origin>:*"],
+      "owner": "Angular service worker",
+      "purpose": "Deliver and safely update the same-origin application shell and static assets.",
+      "duration": "Managed by the service worker and removed when site data or the service worker is cleared",
+      "trigger": "Production application visit; no API response, Spotify image, analytics, or cross-origin resource is configured for caching.",
+      "strictlyNecessary": true,
+      "automaticOnLoggedOutVisit": true
+    },
+    {
+      "mechanism": "serviceWorker",
+      "identifiers": ["ngsw-worker.js", "optional Web Push subscription"],
+      "owner": "AppModule and PushNotificationService",
+      "purpose": "Install/update the application and, only after opt-in, deliver requested notifications.",
+      "duration": "Until site-data/service-worker deletion; push subscriptions last until disabled or invalidated",
+      "trigger": "The worker registers in production; Web Push subscription requires the user's notification action and browser permission.",
+      "strictlyNecessary": true,
+      "automaticOnLoggedOutVisit": true
+    }
+  ],
+  "approvedApiFiles": {
+    "cookie": [
+      "src/app/core/auth/spotify-auth.service.ts",
+      "src/app/core/legal/terms-acceptance.service.ts"
+    ],
+    "localStorage": [],
+    "sessionStorage": [
+      "src/app/app.component.ts",
+      "src/app/core/auth/auth-return-url.service.ts",
+      "src/app/core/auth/spotify-auth.service.ts",
+      "src/app/core/compare-room/transient-participant-auth.service.ts",
+      "src/app/features/insights/user-stats/user-stats.component.ts"
+    ],
+    "indexedDB": ["src/app/core/data-access/storage/storage.service.ts"],
+    "serviceWorker": [
+      "src/app/app.module.ts",
+      "src/app/core/auth/spotify-auth.service.ts",
+      "src/app/core/notifications/push-notification.service.ts"
+    ],
+    "cacheStorage": []
+  },
+  "thirdPartyScripts": []
+}

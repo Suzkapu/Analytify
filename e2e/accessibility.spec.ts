@@ -85,6 +85,53 @@ test('logged-out home is keyboard reachable, zoom-safe, and WCAG 2.2 AA clean', 
   await expectNoBlockingAxeViolations(page);
 });
 
+test('fresh logged-out visit contains no account, feature, stats, or tracking data', async ({page}) => {
+  await page.goto('/login');
+  await expect(page.getByRole('heading', {name: 'See what you listen to.'})).toBeVisible();
+
+  const state = await page.evaluate(async () => {
+    const databaseNames = typeof indexedDB.databases === 'function'
+      ? (await indexedDB.databases()).map(database => database.name).filter(Boolean)
+      : [];
+    const recordCounts: Record<string, number> = {};
+
+    if (databaseNames.includes('AnalytifyDB')) {
+      await new Promise<void>((resolve, reject) => {
+        const request = indexedDB.open('AnalytifyDB');
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => {
+          const database = request.result;
+          const stores = Array.from(database.objectStoreNames);
+          if (stores.length === 0) {
+            database.close();
+            resolve();
+            return;
+          }
+          const transaction = database.transaction(stores, 'readonly');
+          for (const storeName of stores) {
+            const count = transaction.objectStore(storeName).count();
+            count.onsuccess = () => { recordCounts[storeName] = count.result; };
+          }
+          transaction.oncomplete = () => { database.close(); resolve(); };
+          transaction.onerror = () => reject(transaction.error);
+        };
+      });
+    }
+
+    return {
+      cookie: document.cookie,
+      localStorageKeys: Object.keys(localStorage),
+      sessionStorageKeys: Object.keys(sessionStorage),
+      recordCounts
+    };
+  });
+
+  expect(state.cookie).toBe('');
+  expect(state.localStorageKeys).toEqual([]);
+  expect(state.sessionStorageKeys).toEqual([]);
+  expect(Object.values(state.recordCounts).every(count => count === 0)).toBe(true);
+});
+
 test('current terms acceptance survives a new page load in a first-party cookie', async ({page}) => {
   const acceptedAt = '2026-09-21T08:00:00.000Z';
   const sessionId = '22222222-2222-4222-8222-222222222222';
