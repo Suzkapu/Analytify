@@ -31,7 +31,8 @@ insert into moderation_test_case
 select * from public.report_stats_user_v2(
   'a1000000-0000-4000-8000-000000000002', 'Repeated unwanted messages', 'user_safety', null
 );
-select like((select receipt_code from moderation_test_case), 'AR-%', 'reporter receives a stable receipt');
+select ok((select receipt_code like 'AR-%' from moderation_test_case),
+  'reporter receives a stable receipt');
 select is((select status from moderation_test_case), 'submitted', 'new report enters the submitted queue');
 select is((select count(*) from public.list_my_moderation_cases()), 1::bigint,
   'reporter can retrieve their receipt');
