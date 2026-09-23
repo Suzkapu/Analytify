@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {StorageService} from '@core/data-access/storage/storage.service';
 
-export const CURRENT_TERMS_VERSION = 'analytify-eula-2026-09-22';
+export const CURRENT_TERMS_VERSION = 'analytify-eula-2026-09-23';
 
 export interface TermsAcceptance {
   version: string;
