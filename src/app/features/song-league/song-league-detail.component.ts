@@ -15,6 +15,8 @@ import {
   SongLeagueTrack
 } from '@core/song-league/song-league.models';
 import {SongLeagueService} from '@core/song-league/song-league.service';
+import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
+import {StorageService} from '@core/data-access/storage/storage.service';
 import {
   PushNotificationService,
   PushNotificationSettings
@@ -88,7 +90,9 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private songLeague: SongLeagueService,
-    private pushNotifications: PushNotificationService
+    private pushNotifications: PushNotificationService,
+    private auth: SpotifyAuthService,
+    private storage: StorageService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -131,6 +135,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
       ]);
       if (!this.isCurrentLeague(leagueId, generation)) return;
       this.currentUserId = currentUserId;
+      this.applyCurrentUserProfileImage();
       if (notificationSettings) this.notificationSettings = notificationSettings;
       await Promise.all([
         this.isOwner ? this.loadActiveInvites() : Promise.resolve(),
@@ -179,6 +184,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
       const dashboard = await this.songLeague.loadDashboard(leagueId);
       if (!this.isCurrentLeague(leagueId, generation)) return;
       this.dashboard = dashboard;
+      this.applyCurrentUserProfileImage();
       this.memberLimit = dashboard.league.maxMembers;
       if (dashboard.league.closedAt && this.unsubscribeLeague) {
         this.unsubscribeLeague();
@@ -562,7 +568,22 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
 
   breakdownRowsForSelected(): SongLeagueScoreBreakdown[] {
     if (!this.dashboard || !this.selectedStanding) return [];
-    return this.dashboard.breakdownByRecommender.get(this.selectedStanding.userId) || [];
+    return (this.dashboard.breakdownByRecommender.get(this.selectedStanding.userId) || [])
+      .filter(row => row.totalPoints > 0);
+  }
+
+  private applyCurrentUserProfileImage(): void {
+    if (!this.dashboard || !this.currentUserId) return;
+    const spotifyId = this.auth.getUserId();
+    const currentImage = spotifyId ? this.storage.getItem(`${spotifyId}_profile_pic`) : null;
+    if (!currentImage) return;
+    const member = this.dashboard.members.find(item => item.userId === this.currentUserId);
+    if (member) member.imageUrl = currentImage;
+    const standing = this.dashboard.standings.find(item => item.userId === this.currentUserId);
+    if (standing) standing.imageUrl = currentImage;
+    if (this.dashboard.league.ownerUserId === this.currentUserId) {
+      this.dashboard.league.ownerImageUrl = currentImage;
+    }
   }
 
   recommendationPoints(recommendationId: string): number {

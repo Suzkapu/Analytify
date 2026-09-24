@@ -8,6 +8,8 @@ import { Subject } from 'rxjs';
 import { PushNotificationService } from '@core/notifications/push-notification.service';
 import { SongLeagueService } from '@core/song-league/song-league.service';
 import { SongLeagueDetailComponent } from './song-league-detail.component';
+import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
+import { StorageService } from '@core/data-access/storage/storage.service';
 
 describe('SongLeagueDetailComponent notifications', () => {
     let fixture: ComponentFixture<SongLeagueDetailComponent>;
@@ -91,7 +93,9 @@ describe('SongLeagueDetailComponent notifications', () => {
                 { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => 'league' } } } },
                 { provide: Router, useValue: { navigate: vi.fn().mockName('navigate') } },
                 { provide: SongLeagueService, useValue: songLeague },
-                { provide: PushNotificationService, useValue: notifications }
+                { provide: PushNotificationService, useValue: notifications },
+                { provide: SpotifyAuthService, useValue: {getUserId: () => 'spotify-member'} },
+                { provide: StorageService, useValue: {getItem: () => null} }
             ],
             schemas: [NO_ERRORS_SCHEMA]
         });
@@ -125,6 +129,34 @@ describe('SongLeagueDetailComponent notifications', () => {
 
         await component.toggleSongLeagueNotifications();
         expect(notifications.setSongLeagueEnabled).toHaveBeenCalledWith(true);
+    });
+
+    it('uses the current cached profile image for the signed-in league member', () => {
+        const storage = TestBed.inject(StorageService) as any;
+        storage.getItem = vi.fn().mockReturnValue('https://i.scdn.co/image/current');
+        component.currentUserId = 'member';
+        component.dashboard = {
+            league: {ownerUserId: 'owner'},
+            members: [{userId: 'member', imageUrl: 'https://i.scdn.co/image/stale'}],
+            standings: [{userId: 'member', imageUrl: 'https://i.scdn.co/image/stale'}]
+        } as any;
+
+        (component as any).applyCurrentUserProfileImage();
+
+        expect(component.dashboard!.members[0].imageUrl).toBe('https://i.scdn.co/image/current');
+        expect(component.dashboard!.standings[0].imageUrl).toBe('https://i.scdn.co/image/current');
+    });
+
+    it('shows only score rows that produced points in the all-time audit', () => {
+        component.selectedStanding = {userId: 'member'} as any;
+        component.dashboard = {
+            breakdownByRecommender: new Map([['member', [
+                {recommendationId: 'zero', totalPoints: 0},
+                {recommendationId: 'winner', totalPoints: 70}
+            ]]])
+        } as any;
+
+        expect(component.breakdownRowsForSelected().map(row => row.recommendationId)).toEqual(['winner']);
     });
 
     it('opens Spotify from the recommendation cover without a separate text link', async () => {
@@ -362,7 +394,11 @@ describe('SongLeagueDetailComponent notifications', () => {
         const songLeague = TestBed.inject(SongLeagueService) as any;
         songLeague.loadDashboard.mockImplementation((id: string) => new Promise(resolve => pending.set(id, resolve)));
         songLeague.subscribeToLeague.mockClear();
-        const routed = new SongLeagueDetailComponent({ paramMap, snapshot: { paramMap: { get: () => '' } } } as any, TestBed.inject(Router), songLeague, notifications);
+        const routed = new SongLeagueDetailComponent(
+            { paramMap, snapshot: { paramMap: { get: () => '' } } } as any,
+            TestBed.inject(Router), songLeague, notifications,
+            TestBed.inject(SpotifyAuthService), TestBed.inject(StorageService)
+        );
         void routed.ngOnInit();
         paramMap.next({ get: () => 'league-a' });
         paramMap.next({ get: () => 'league-b' });

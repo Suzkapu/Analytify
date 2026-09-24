@@ -261,10 +261,13 @@ app-playlist-analysis {
     }
   }
 
+  @media (max-width: 1280px) {
+    .metrics-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
   @media (max-width: 860px) {
     .analysis-sections,
     .frequency-sections { grid-template-columns: minmax(0, 1fr); }
-    .metrics-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
 
   @media (max-width: 768px) {
