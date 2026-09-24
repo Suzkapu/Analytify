@@ -150,7 +150,7 @@ test('worker keeps every serialized upload chunk below both database limits', ()
     chunks.slice(0, index).reduce((total, chunk) => total + chunk.tracks.length, 0)));
 });
 
-test('worker preserves the published snapshot when a source exceeds the total limit', async () => {
+test('worker refreshes a source larger than the former total limit', async () => {
   const rpcCalls = [];
   const tracks = Array.from({length: 5001}, (_, index) => savedTrack(`track-${index}`, `artist-${index}`, 'Album'));
   const supabase = {
@@ -171,10 +171,13 @@ test('worker preserves the published snapshot when a source exceeds the total li
 
   const result = await createSharedPlaylistsTask({supabase, spotify})({user: {id: 'owner', spotify_credential: {}}});
 
-  assert.equal(result.refreshedSources, 0);
-  assert.match(result.warnings[0], /previous shared version was kept/);
-  assert.equal(rpcCalls.some(call => call.name === 'begin_playlist_share_refresh_upload'), false);
-  assert.equal(rpcCalls.some(call => call.name === 'commit_playlist_share_refresh_upload'), false);
+  assert.equal(result.refreshedSources, 1);
+  assert.deepEqual(result.warnings, []);
+  const chunks = rpcCalls.filter(call => call.name === 'append_playlist_share_upload_chunk');
+  assert.equal(chunks.length, 21);
+  assert.equal(chunks.at(-1).parameters.p_offset, 5000);
+  assert.equal(rpcCalls.at(-1).name, 'commit_playlist_share_refresh_upload');
+  assert.equal(rpcCalls.at(-1).parameters.p_expected_track_count, 5001);
 });
 
 test('out-of-order recipient completion is rejected and releases its lease', async () => {

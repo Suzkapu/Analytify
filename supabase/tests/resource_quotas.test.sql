@@ -10,13 +10,14 @@ set local role authenticated;
 select set_config('request.jwt.claim.role', 'authenticated', true);
 select set_config('request.jwt.claim.sub', '32000000-0000-4000-8000-000000000001', true);
 
-select throws_ok($$ select public.create_playlist_share(
+select lives_ok($$ select public.create_playlist_share(
   'playlist', 'Too many', '', '', 'Owner', '', '12345678901234567890123456789012',
   (select jsonb_agg(jsonb_build_object('id', item)) from generate_series(1, 5001) item)
-) $$, 'P0001', 'Shared playlists are limited to 5000 tracks.',
-  'oversized arrays are rejected within the bounded statement timeout');
-select is((select count(*) from public.playlist_shares where owner_user_id = auth.uid()), 0::bigint,
-  'oversized playlist input creates no share or child rows');
+) $$, 'playlist snapshots can exceed 5000 tracks');
+select is((select count(*) from public.playlist_share_tracks where share_id = (
+  select id from public.playlist_shares where owner_user_id = auth.uid() and playlist_name = 'Too many'
+)), 5001::bigint, 'every song beyond the former limit is stored');
+delete from public.playlist_shares where owner_user_id = auth.uid();
 select throws_ok($$ select public.create_playlist_share(
   'playlist', 'Huge object', '', '', 'Owner', '', '22345678901234567890123456789012',
   jsonb_build_array(jsonb_build_object('id', 'track', 'padding', repeat('x', 33000)))

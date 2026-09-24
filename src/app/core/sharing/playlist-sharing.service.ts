@@ -15,11 +15,9 @@ import {
 
 @Injectable({providedIn: 'root'})
 export class PlaylistSharingService {
-  private readonly maximumSharedTracks = 5000;
   constructor(private supabase: SupabaseService) {}
 
   async createShare(publication: PlaylistSharePublication): Promise<CreatedPlaylistShare> {
-    this.assertSupportedTrackCount(publication.tracks);
     const token = this.createClaimToken();
     const profile = await this.loadCurrentProfile();
     const {data: uploadData, error: uploadError} = await this.supabase.client.rpc('begin_playlist_share_create_upload', {
@@ -180,7 +178,6 @@ export class PlaylistSharingService {
     expectedRevision: number,
     publication: PlaylistSharePublication
   ): Promise<number> {
-    this.assertSupportedTrackCount(publication.tracks);
     const {data: uploadData, error: uploadError} = await this.supabase.client.rpc('begin_playlist_share_refresh_upload', {
       p_share_id: shareId,
       p_expected_revision: expectedRevision,
@@ -208,12 +205,6 @@ export class PlaylistSharingService {
         p_tracks: chunk.tracks
       });
       if (error) throw error;
-    }
-  }
-
-  private assertSupportedTrackCount(tracks: CompareTrack[]): void {
-    if (tracks.length > this.maximumSharedTracks) {
-      throw new Error(`Shared playlists are limited to ${this.maximumSharedTracks} songs. The existing shared version was not changed.`);
     }
   }
 

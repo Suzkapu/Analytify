@@ -1,6 +1,5 @@
 const {randomUUID} = require('crypto');
 
-const MAX_SHARED_TRACKS = 5000;
 const MAX_UPLOAD_CHUNK_TRACKS = 250;
 const MAX_UPLOAD_CHUNK_BYTES = 450_000;
 
@@ -33,7 +32,6 @@ async function loadSharedPlaylistSource(spotify, accessToken, playlistId) {
     : await spotify.api(`/playlists/${encodeURIComponent(playlistId)}`, accessToken);
   const tracks = [];
   const seen = new Set();
-  let exceedsShareLimit = false;
   for (let offset = 0; ; offset += pageSize) {
     const pathname = isLikedSongs
       ? `/me/tracks?limit=${pageSize}&offset=${offset}`
@@ -44,20 +42,15 @@ async function loadSharedPlaylistSource(spotify, accessToken, playlistId) {
       if (!track || seen.has(track.id)) continue;
       seen.add(track.id);
       tracks.push({...track, playlistIndex: tracks.length + 1});
-      if (tracks.length > MAX_SHARED_TRACKS) {
-        exceedsShareLimit = true;
-        break;
-      }
     }
-    if (exceedsShareLimit || !page?.next) break;
+    if (!page?.next) break;
   }
   return {
     name: isLikedSongs ? 'Favourite Tracks' : metadata?.name || 'Shared playlist',
     description: metadata?.description || '',
     imageUrl: metadata?.images?.[0]?.url || '',
     preservePublishedMetadata: isLikedSongs,
-    tracks: exceedsShareLimit ? [] : tracks,
-    exceedsShareLimit
+    tracks
   };
 }
 
@@ -96,9 +89,6 @@ function createSharedPlaylistsTask({supabase, spotify}) {
   }
 
   async function appendUploadChunks(uploadId, tracks) {
-    if (tracks.length > MAX_SHARED_TRACKS) {
-      throw new Error(`Shared playlists are limited to ${MAX_SHARED_TRACKS} songs.`);
-    }
     for (const chunk of buildUploadChunks(tracks)) {
       const {error} = await supabase.rpc('append_playlist_share_upload_chunk', {
         p_upload_id: uploadId,
@@ -123,10 +113,6 @@ function createSharedPlaylistsTask({supabase, spotify}) {
     const warnings = [];
     for (const [sourceId, sourceShares] of bySource) {
       const playlist = await loadSharedPlaylistSource(spotify, accessToken, sourceId);
-      if (playlist.exceedsShareLimit) {
-        warnings.push(`${playlist.name} has more than ${MAX_SHARED_TRACKS} songs. Its previous shared version was kept.`);
-        continue;
-      }
       for (const share of sourceShares) {
         const {data: uploadId, error: beginError} = await supabase.rpc(
           'begin_playlist_share_refresh_upload',

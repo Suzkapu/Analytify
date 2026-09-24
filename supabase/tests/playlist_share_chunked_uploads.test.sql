@@ -13,15 +13,17 @@ select public.begin_playlist_share_create_upload(
   'large-source', 'Large playlist', '', '', 'Owner', '', repeat('c', 64)
 ) as upload_id \gset create_
 
-select throws_ok(format(
-  'select public.append_playlist_share_upload_chunk(%L, 5000, ''[{"id":"over-total"}]''::jsonb)', :'create_upload_id'
-), 'P0001', 'Playlist upload chunks are limited to 250 tracks, 500 KB, and 5000 total tracks.',
-  'a chunk cannot extend beyond the total playlist limit');
+select public.begin_playlist_share_create_upload(
+  'beyond-source', 'Beyond old limit', '', '', 'Owner', '', repeat('d', 64)
+) as upload_id \gset beyond_
+select is(public.append_playlist_share_upload_chunk(
+  :'beyond_upload_id', 5000, '[{"id":"over-former-limit"}]'::jsonb
+), 1, 'a chunk can extend beyond the former total playlist limit');
 select throws_ok(format(
   'select public.append_playlist_share_upload_chunk(%L, 0, %L::jsonb)', :'create_upload_id',
   (select jsonb_agg(jsonb_build_object('id', 'large-' || item, 'padding', repeat('x', 26000)))
    from generate_series(1, 20) item)::text
-), 'P0001', 'Playlist upload chunks are limited to 250 tracks, 500 KB, and 5000 total tracks.',
+), 'P0001', 'Playlist upload chunks are limited to 250 tracks and 500 KB.',
   'serialized byte size is enforced independently from track count');
 
 select is(public.append_playlist_share_upload_chunk(

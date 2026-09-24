@@ -142,14 +142,19 @@ describe('PlaylistSharingService', () => {
         });
     });
 
-    it('rejects an over-limit publication before staging data and preserves the previous share', async () => {
+    it('uploads playlists larger than the former 5000-song limit in bounded chunks', async () => {
         const tracks = Array.from({length: 5001}, (_, index) => track(`track-${index}`, index + 1));
 
-        await expect(service.refreshShare('share-id', 7, {
-            sourcePlaylistId: 'source', playlistName: 'Too large', playlistDescription: '', playlistImageUrl: '', tracks
-        })).rejects.toThrowError('Shared playlists are limited to 5000 songs. The existing shared version was not changed.');
+        await service.refreshShare('share-id', 7, {
+            sourcePlaylistId: 'source', playlistName: 'Very large', playlistDescription: '', playlistImageUrl: '', tracks
+        });
 
-        expect(rpc).not.toHaveBeenCalled();
+        const chunks = vi.mocked(rpc).mock.calls.filter(call => call[0] === 'append_playlist_share_upload_chunk');
+        expect(chunks).toHaveLength(21);
+        expect(chunks.at(-1)?.[1]).toMatchObject({p_offset: 5000, p_tracks: [tracks[5000]]});
+        expect(rpc).toHaveBeenLastCalledWith('commit_playlist_share_refresh_upload', {
+            p_upload_id: 'share-id', p_expected_track_count: 5001
+        });
     });
 
     it('removes only the current recipient association through its dedicated RPC', async () => {
