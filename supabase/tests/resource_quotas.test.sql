@@ -17,7 +17,11 @@ select lives_ok($$ select public.create_playlist_share(
 select is((select count(*) from public.playlist_share_tracks where share_id = (
   select id from public.playlist_shares where owner_user_id = auth.uid() and playlist_name = 'Too many'
 )), 5001::bigint, 'every song beyond the former limit is stored');
+reset role;
 delete from public.playlist_shares where owner_user_id = auth.uid();
+set local role authenticated;
+select set_config('request.jwt.claim.role', 'authenticated', true);
+select set_config('request.jwt.claim.sub', '32000000-0000-4000-8000-000000000001', true);
 select throws_ok($$ select public.create_playlist_share(
   'playlist', 'Huge object', '', '', 'Owner', '', '22345678901234567890123456789012',
   jsonb_build_array(jsonb_build_object('id', 'track', 'padding', repeat('x', 33000)))

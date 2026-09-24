@@ -122,6 +122,7 @@ select lives_ok($$ select public.send_compare_room_creation_message(
   'room_1234567890_secure',
   '{"type":"create-playlist-commit","proposalId":"proposal_independent_02"}'
 ) $$, 'create-for-everyone commits after the guest delivery');
+reset role;
 select is((select count(*) from public.compare_room_proposal_deliveries
   where room_id = 'room_1234567890_secure' and proposal_id = 'proposal_independent_02'), 2::bigint,
   'individual and create-for-everyone delivery states coexist');
