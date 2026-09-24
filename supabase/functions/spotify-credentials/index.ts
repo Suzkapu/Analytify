@@ -176,7 +176,7 @@ Deno.serve(async (request: Request) => {
     }
 
     const {data: existingProfile, error: profileError} = await admin.from('users')
-      .select('id, spotify_id').eq('id', profileUserId).maybeSingle();
+      .select('id, spotify_id, verified_spotify_id').eq('id', profileUserId).maybeSingle();
     if (profileError) throw profileError;
     if (existingProfile && !existingProfileAcceptsVerifiedIdentity(
       existingProfile.spotify_id, profileUserId, currentProfile
@@ -184,6 +184,19 @@ Deno.serve(async (request: Request) => {
       return json({error: 'This Spotify account does not match the existing Analytify profile.'}, 409);
     }
     const finalSpotifyId = requestedSpotifyId || currentProfile.account_id || currentProfile.id;
+    if (existingProfile?.verified_spotify_id && existingProfile.verified_spotify_id !== finalSpotifyId) {
+      return json({error: 'This Spotify account does not match the verified Analytify profile.'}, 409);
+    }
+    const {error: mergeError} = await admin.rpc('merge_verified_spotify_profile', {
+      p_target_user_id: profileUserId,
+      p_verified_spotify_id: finalSpotifyId
+    });
+    if (mergeError) {
+      if (mergeError.code === '21000' || mergeError.code === '23505' || mergeError.code === '23514') {
+        return json({error: 'This Spotify account has cloud data that requires reviewed account recovery.'}, 409);
+      }
+      throw mergeError;
+    }
     const conflictingSpotifyIds = Array.from(new Set([
       finalSpotifyId,
       ...currentProfileIds,
@@ -199,12 +212,21 @@ Deno.serve(async (request: Request) => {
     const storedSpotifyId = identity.user.is_anonymous
       ? personalCloudProfileId(profileUserId)
       : finalSpotifyId;
+    const {data: mergedProfile, error: mergedProfileError} = await admin.from('users')
+      .select('display_name, profile_pic_url').eq('id', profileUserId).single();
+    if (mergedProfileError) throw mergedProfileError;
+    const verifiedDisplayName = typeof currentProfile.display_name === 'string'
+      && currentProfile.display_name.trim() && currentProfile.display_name !== 'Spotify User'
+      ? currentProfile.display_name.trim()
+      : mergedProfile.display_name || 'Spotify User';
+    const verifiedImage = safeProfileImageUrl(currentProfile.images?.[0]?.url)
+      || mergedProfile.profile_pic_url || null;
     const {error: profileSaveError} = await admin.from('users').upsert({
       id: profileUserId,
       spotify_id: storedSpotifyId,
       verified_spotify_id: finalSpotifyId,
-      display_name: currentProfile.display_name || 'Spotify User',
-      profile_pic_url: safeProfileImageUrl(currentProfile.images?.[0]?.url)
+      display_name: verifiedDisplayName,
+      profile_pic_url: verifiedImage
     }, {onConflict: 'id'});
     if (profileSaveError) throw profileSaveError;
     if (action === 'profile') return json({ok: true, spotifyId: finalSpotifyId});
