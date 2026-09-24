@@ -48,6 +48,7 @@ describe('SharedPlaylistsComponent', () => {
             subscribeToAccessChanges: vi.fn().mockName("StatsSharingService.subscribeToAccessChanges"),
             requestAccess: vi.fn().mockName("StatsSharingService.requestAccess"),
             createAccessInvite: vi.fn().mockName("StatsSharingService.createAccessInvite"),
+            createShareInvite: vi.fn().mockName("StatsSharingService.createShareInvite"),
             respondToRequest: vi.fn().mockName("StatsSharingService.respondToRequest"),
             revokeAccess: vi.fn().mockName("StatsSharingService.revokeAccess"),
             blockUser: vi.fn().mockName("StatsSharingService.blockUser"),
@@ -88,6 +89,11 @@ describe('SharedPlaylistsComponent', () => {
             inviteId: 'invite-id',
             claimToken: 'stats-token',
             claimUrl: 'https://analytify.app/shared-playlists/stats-request/stats-token'
+        });
+        statsSharing.createShareInvite.mockResolvedValue({
+            inviteId: 'share-invite-id',
+            claimToken: 'share-token',
+            claimUrl: 'https://analytify.app/shared-playlists/stats-share/share-token'
         });
         statsSharing.respondToRequest.mockResolvedValue(undefined);
         statsSharing.revokeAccess.mockResolvedValue(undefined);
@@ -235,62 +241,25 @@ describe('SharedPlaylistsComponent', () => {
         expect(component.successMessage).toContain('Stats Owner');
     });
 
-    it('uses a themed stats-user picker with readable request states', async () => {
-        statsSharing.listAvailableUsers.mockResolvedValue([
-            { userId: 'available', displayName: 'New listener', imageUrl: '', requestId: null, requestStatus: null },
-            { userId: 'approved', displayName: 'Already sharing', imageUrl: '', requestId: 'request', requestStatus: 'approved' }
-        ]);
+    it('offers share and request links without a registered-user search', async () => {
         await component.openShareDialog();
         await component.selectShareMode('stats');
-        component.availableStatsUsers = [
-            { userId: 'available', displayName: 'New listener', imageUrl: '', requestId: null, requestStatus: null },
-            { userId: 'approved', displayName: 'Already sharing', imageUrl: '', requestId: 'request', requestStatus: 'approved' }
-        ];
         fixture.detectChanges();
 
-        expect(fixture.nativeElement.querySelector('.stats-user-picker select')).toBeNull();
-        (fixture.nativeElement.querySelector('.stats-user-picker-trigger') as HTMLButtonElement).click();
-        component.availableStatsUsers = [
-            { userId: 'available', displayName: 'New listener', imageUrl: '', requestId: null, requestStatus: null },
-            { userId: 'approved', displayName: 'Already sharing', imageUrl: '', requestId: 'request', requestStatus: 'approved' }
-        ];
-        fixture.detectChanges();
-        const options = Array.from(fixture.nativeElement.querySelectorAll('.stats-user-picker-option')) as HTMLButtonElement[];
-
-        expect(options[1].disabled).toBe(true);
-        expect(options[1].textContent).toContain('Already shared');
-        options[0].click();
-        fixture.detectChanges();
-        expect(component.selectedStatsOwnerId).toBe('available');
-        expect(fixture.nativeElement.querySelector('.stats-user-picker-menu')).toBeNull();
+        expect(fixture.nativeElement.querySelector('[aria-label="Search registered users"]')).toBeNull();
+        expect(fixture.nativeElement.textContent).toContain('Share my stats');
+        expect(fixture.nativeElement.textContent).toContain('Request their stats');
     });
 
-    it('searches registered users inside a viewport overlay without expanding the modal', async () => {
-        vi.useFakeTimers();
-        statsSharing.listAvailableUsers.mockResolvedValue([
-            { userId: 'one', displayName: 'Alice Listener', imageUrl: '', requestId: null, requestStatus: null },
-            { userId: 'two', displayName: 'Bob Beats', imageUrl: '', requestId: null, requestStatus: null }
-        ]);
+    it('creates a private link for sharing the current user stats', async () => {
         await component.openShareDialog();
         await component.selectShareMode('stats');
+        await component.createStatsShareLink();
         fixture.detectChanges();
 
-        (fixture.nativeElement.querySelector('.stats-user-picker-trigger') as HTMLButtonElement).click();
-        fixture.detectChanges();
-        const menu = fixture.nativeElement.querySelector('.stats-user-picker-menu') as HTMLElement;
-        expect(getComputedStyle(menu).position).toBe('fixed');
-
-        component.onStatsUserSearchChange('bob');
-        vi.advanceTimersByTime(300);
-        await Promise.resolve();
-        await Promise.resolve();
-        fixture.detectChanges();
-        const options = Array.from(menu.querySelectorAll('.stats-user-picker-option')) as HTMLElement[];
-        expect(options.length).toBe(1);
-        expect(options[0].textContent).toContain('Bob Beats');
-        expect(statsSharing.listAvailableUsers).toHaveBeenCalledTimes(1);
-        expect(statsSharing.listAvailableUsers).toHaveBeenCalledWith('bob');
-        vi.useRealTimers();
+        expect(statsSharing.createShareInvite).toHaveBeenCalledTimes(1);
+        expect(component.statsShareLink).toContain('/shared-playlists/stats-share/share-token');
+        expect(fixture.nativeElement.querySelector('[aria-label="Private stats share link"]')).not.toBeNull();
     });
 
     it('creates a private link that opens the recipient stats consent flow', async () => {
@@ -303,7 +272,7 @@ describe('SharedPlaylistsComponent', () => {
         expect(statsSharing.createAccessInvite).toHaveBeenCalledTimes(1);
         expect(component.statsRequestLink).toContain('/shared-playlists/stats-request/stats-token');
         expect(fixture.nativeElement.querySelector('[aria-label="Private stats request link"]')).not.toBeNull();
-        expect(fixture.nativeElement.textContent).toContain('accept or decline window');
+        expect(fixture.nativeElement.textContent).toContain('accept or decline');
     });
 
     it('blocks and reports a Stats requester through the custom privacy dialog', async () => {

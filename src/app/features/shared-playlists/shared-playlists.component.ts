@@ -49,6 +49,8 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   isCreatingStatsLink = false;
   statsRequestLink = '';
   statsRequestLinkCopied = false;
+  statsShareLink = '';
+  statsShareLinkCopied = false;
   statsPickerMenuStyle: Record<string, string> = {};
   consentRequest: StatsAccessRequest | null = null;
   consentError = '';
@@ -176,6 +178,8 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     this.shareLink = '';
     this.statsRequestLink = '';
     this.statsRequestLinkCopied = false;
+    this.statsShareLink = '';
+    this.statsShareLinkCopied = false;
     this.shareError = '';
     this.shareLinkCopied = false;
   }
@@ -221,6 +225,8 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     this.shareLink = '';
     this.statsRequestLink = '';
     this.statsRequestLinkCopied = false;
+    this.statsShareLink = '';
+    this.statsShareLinkCopied = false;
     this.shareError = '';
     this.shareLinkCopied = false;
   }
@@ -332,11 +338,36 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     }
   }
 
+  async createStatsShareLink(): Promise<void> {
+    if (this.isCreatingStatsLink) return;
+    this.isCreatingStatsLink = true;
+    this.shareError = '';
+    try {
+      const created = await this.statsSharing.createShareInvite();
+      this.statsShareLink = created.claimUrl;
+      this.statsShareLinkCopied = false;
+    } catch (error) {
+      this.shareError = this.describeError(error);
+    } finally {
+      this.isCreatingStatsLink = false;
+    }
+  }
+
   async copyStatsRequestLink(): Promise<void> {
     if (!this.statsRequestLink) return;
     try {
       await navigator.clipboard.writeText(this.statsRequestLink);
       this.statsRequestLinkCopied = true;
+    } catch {
+      this.shareError = 'Clipboard access is unavailable. Select and copy the link manually.';
+    }
+  }
+
+  async copyStatsShareLink(): Promise<void> {
+    if (!this.statsShareLink) return;
+    try {
+      await navigator.clipboard.writeText(this.statsShareLink);
+      this.statsShareLinkCopied = true;
     } catch {
       this.shareError = 'Clipboard access is unavailable. Select and copy the link manually.';
     }

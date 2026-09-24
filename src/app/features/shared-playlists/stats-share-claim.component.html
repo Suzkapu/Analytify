@@ -1,0 +1,18 @@
+<main class="claim-page">
+  <section class="claim-card">
+    <i class="pi" [ngClass]="isLoading ? 'pi-spin pi-spinner' : (preview ? 'pi-eye' : 'pi-eye-slash')"></i>
+    <span>Private stats share</span>
+    <h1>{{ isLoading ? 'Opening the stats share…' : (preview ? preview.displayName + ' wants to share stats with you' : 'This share is unavailable') }}</h1>
+    @if (preview) {
+      <p>Accept to view their saved Spotify stats. You can remove access later.</p>
+      <div class="claim-actions">
+        <button type="button" (click)="respond(false)" [disabled]="isResponding">Decline</button>
+        <button type="button" class="primary" (click)="respond(true)" [disabled]="isResponding">
+          {{ isResponding ? 'Saving…' : 'Accept' }}
+        </button>
+      </div>
+    }
+    @if (errorMessage) { <p role="alert">{{ errorMessage }}</p> }
+    @if (!isLoading && !preview) { <a routerLink="/shared-playlists">Go to Private Sharing</a> }
+  </section>
+</main>

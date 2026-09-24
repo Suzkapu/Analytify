@@ -154,6 +154,24 @@ describe('StatsSharingService', () => {
         });
     });
 
+    it('creates, previews, accepts, and declines a stats share link through guarded RPCs', async () => {
+        rpc.mockResolvedValueOnce({data: 'invite-id', error: null});
+        const invite = await service.createShareInvite();
+        expect(invite.claimUrl).toContain('/shared-playlists/stats-share/');
+        expect(rpc).toHaveBeenLastCalledWith('create_stats_share_invite', {p_claim_token: invite.claimToken});
+
+        rpc.mockResolvedValueOnce({data: {kind: 'share', displayName: 'Owner', imageUrl: '', expiresAt: 'later'}, error: null});
+        await expect(service.previewAccessInvite('token')).resolves.toEqual(expect.objectContaining({kind: 'share', displayName: 'Owner'}));
+        rpc.mockResolvedValueOnce({data: 'request-id', error: null});
+        await expect(service.acceptShareInvite('token')).resolves.toBe('request-id');
+        rpc.mockResolvedValueOnce({data: true, error: null});
+        await service.declineShareInvite('other-token');
+
+        expect(rpc).toHaveBeenCalledWith('preview_stats_access_invite', {p_claim_token: 'token'});
+        expect(rpc).toHaveBeenCalledWith('accept_stats_share_invite', {p_claim_token: 'token'});
+        expect(rpc).toHaveBeenCalledWith('decline_stats_share_invite', {p_claim_token: 'other-token'});
+    });
+
     it('maps access records with the role returned for the current user', async () => {
         rpc.mockResolvedValue({ data: [{
                     id: 'request-id', owner_user_id: 'owner-id', viewer_user_id: 'viewer-id',

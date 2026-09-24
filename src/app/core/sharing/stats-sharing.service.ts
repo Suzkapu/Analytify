@@ -8,6 +8,7 @@ import {
   ModerationReceipt,
   SharedStatsSnapshot,
   StatsAccessRequest,
+  StatsAccessInvitePreview,
   StatsAccessStatus,
   StatsShareableUser
 } from './stats-sharing.models';
@@ -146,6 +147,50 @@ export class StatsSharingService {
       claimToken: token,
       claimUrl: `${environment.appUrl.replace(/\/$/, '')}/shared-playlists/stats-request/${encodeURIComponent(token)}`
     };
+  }
+
+  async createShareInvite(): Promise<CreatedStatsAccessInvite> {
+    const token = this.createClaimToken();
+    const {data, error} = await this.supabase.client.rpc('create_stats_share_invite', {
+      p_claim_token: token
+    });
+    if (error) throw error;
+    const inviteId = String(data || '');
+    if (!inviteId) throw new Error('The stats share link could not be created.');
+    return {
+      inviteId,
+      claimToken: token,
+      claimUrl: `${environment.appUrl.replace(/\/$/, '')}/shared-playlists/stats-share/${encodeURIComponent(token)}`
+    };
+  }
+
+  async previewAccessInvite(token: string): Promise<StatsAccessInvitePreview> {
+    const {data, error} = await this.supabase.client.rpc('preview_stats_access_invite', {
+      p_claim_token: token
+    });
+    if (error) throw error;
+    if (!data?.kind) throw new Error('This stats link is unavailable.');
+    return {
+      kind: data.kind,
+      displayName: data.displayName || 'Spotify user',
+      imageUrl: data.imageUrl || '',
+      expiresAt: data.expiresAt
+    };
+  }
+
+  async acceptShareInvite(token: string): Promise<string> {
+    const {data, error} = await this.supabase.client.rpc('accept_stats_share_invite', {
+      p_claim_token: token
+    });
+    if (error) throw error;
+    return String(data || '');
+  }
+
+  async declineShareInvite(token: string): Promise<void> {
+    const {error} = await this.supabase.client.rpc('decline_stats_share_invite', {
+      p_claim_token: token
+    });
+    if (error) throw error;
   }
 
   async claimAccessInvite(token: string): Promise<string> {

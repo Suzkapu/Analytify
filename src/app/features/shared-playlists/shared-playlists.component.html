@@ -266,16 +266,16 @@
       [disabled]="isCreatingShare || isRequestingStats || isCreatingStatsLink" aria-label="Close">×</button>
       <div class="share-modal-icon"><i class="pi" [ngClass]="shareMode === 'stats' ? 'pi-eye' : 'pi-share-alt'"></i></div>
       <span class="eyebrow">Revocable, private access</span>
-      <h2 id="share-dialog-title">{{ shareMode === 'playlist' ? 'Share a playlist' : (shareMode === 'stats' ? 'Request stats access' : 'What do you want to share?') }}</h2>
+      <h2 id="share-dialog-title">{{ shareMode === 'playlist' ? 'Share a playlist' : (shareMode === 'stats' ? 'Private stats links' : 'What do you want to share?') }}</h2>
       <div id="share-dialog-description">
         @if (!shareMode) {
-          <p>Share a playlist or request stats access.</p>
+          <p>Share a playlist or exchange stats access with a private link.</p>
         }
         @if (shareMode === 'playlist' && !shareLink) {
           <p>Choose a playlist to share privately.</p>
         }
-        @if (shareMode === 'stats' && !statsRequestLink) {
-          <p>Choose a user or create a request link. They must accept.</p>
+        @if (shareMode === 'stats' && !statsRequestLink && !statsShareLink) {
+          <p>Choose whether to share your stats or ask to view theirs. The person opening the link must consent.</p>
         }
       </div>
       @if (!shareMode) {
@@ -285,7 +285,7 @@
             <span>{{ canCreateShares ? 'Create a private playlist link' : 'Requires Cloud Backup' }}</span>
           </button>
           <button type="button" (click)="selectShareMode('stats')">
-            <i class="pi pi-eye"></i><strong>Stats</strong><span>Ask a user for explicit access</span>
+            <i class="pi pi-eye"></i><strong>Stats</strong><span>Create a private share or request link</span>
           </button>
         </div>
       }
@@ -317,42 +317,17 @@
           class="share-picker-empty">No playlists are available to share.</p>
         }
       }
-      @if (shareMode === 'stats' && !statsRequestLink) {
-        <div class="share-playlist-picker stats-user-picker" (keydown.escape)="isStatsUserPickerOpen = false">
-          <span id="stats-user-picker-label">Registered user</span>
-          <button #statsUserPickerTrigger type="button" class="stats-user-picker-trigger"
-            aria-haspopup="listbox" [attr.aria-expanded]="isStatsUserPickerOpen"
-            aria-labelledby="stats-user-picker-label stats-user-picker-value"
-            [disabled]="isLoadingStatsUsers || isRequestingStats"
-            (click)="toggleStatsUserPicker()">
-            @if (selectedStatsOwner; as user) {
-              <span class="stats-picker-avatar">
-                @if (user.imageUrl) {
-                  <img [src]="user.imageUrl" appImageFallback alt="">
-                }
-                @if (!user.imageUrl) {
-                  <i class="pi pi-user"></i>
-                }
-              </span>
-              <span class="stats-picker-copy" id="stats-user-picker-value">
-                <strong>{{ user.displayName }}</strong>
-                <small>{{ statsUserStatusLabel(user) }}</small>
-              </span>
-            } @else {
-              <span class="stats-picker-avatar placeholder"><i class="pi" [ngClass]="isLoadingStatsUsers ? 'pi-spin pi-spinner' : 'pi-users'"></i></span>
-              <span class="stats-picker-copy" id="stats-user-picker-value">
-                <strong>{{ isLoadingStatsUsers ? 'Loading users…' : 'Select a user' }}</strong>
-                <small>{{ isLoadingStatsUsers ? 'Checking registered accounts' : 'Choose who you want to ask' }}</small>
-              </span>
-            }
-            <i class="pi picker-chevron" [ngClass]="isStatsUserPickerOpen ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+      @if (shareMode === 'stats' && !statsRequestLink && !statsShareLink) {
+        <div class="share-mode-picker stats-link-kind-picker">
+          <button type="button" (click)="createStatsShareLink()" [disabled]="isCreatingStatsLink || !canCreateShares">
+            <i class="pi pi-eye"></i><strong>Share my stats</strong>
+            <span>{{ canCreateShares ? 'They accept before they can view your stats' : 'Requires Cloud Backup' }}</span>
+          </button>
+          <button type="button" (click)="createStatsRequestLink()" [disabled]="isCreatingStatsLink">
+            <i class="pi pi-send"></i><strong>Request their stats</strong>
+            <span>They decide whether to give you access</span>
           </button>
         </div>
-        @if (!isLoadingStatsUsers && availableStatsUsers.length === 0 && !shareError) {
-          <p class="share-picker-empty">
-            Search at least 3 characters, or create a private request link.
-          </p>
-        }
       }
       @if (statsRequestLink) {
         <p class="share-ready-copy">Send this link to the person. They can accept or decline when it opens.</p>
@@ -361,6 +336,16 @@
           <button type="button" (click)="copyStatsRequestLink()">
             <i class="pi" [ngClass]="statsRequestLinkCopied ? 'pi-check' : 'pi-copy'"></i>
             <span>{{ statsRequestLinkCopied ? 'Copied' : 'Copy' }}</span>
+          </button>
+        </div>
+      }
+      @if (statsShareLink) {
+        <p class="share-ready-copy">Send this link to the person. They can accept or decline access to your stats.</p>
+        <div class="share-link-field">
+          <input [value]="statsShareLink" readonly aria-label="Private stats share link">
+          <button type="button" (click)="copyStatsShareLink()">
+            <i class="pi" [ngClass]="statsShareLinkCopied ? 'pi-check' : 'pi-copy'"></i>
+            <span>{{ statsShareLinkCopied ? 'Copied' : 'Copy' }}</span>
           </button>
         </div>
       }
@@ -385,66 +370,12 @@
             <span>{{ isCreatingShare ? 'Publishing snapshot…' : 'Create private link' }}</span>
           </button>
         }
-        @if (shareMode === 'stats' && !statsRequestLink) {
-          <button type="button" class="share-primary" (click)="requestStatsAccess()"
-            [disabled]="!selectedStatsOwnerId || isLoadingStatsUsers || isRequestingStats">
-            <i class="pi" [ngClass]="isRequestingStats ? 'pi-spin pi-spinner' : 'pi-send'"></i>
-            <span>{{ isRequestingStats ? 'Sending request…' : 'Request stats access' }}</span>
-          </button>
-        }
-        @if (shareMode === 'stats' && !statsRequestLink) {
-          <button type="button" class="stats-link-button"
-            (click)="createStatsRequestLink()" [disabled]="isCreatingStatsLink || isRequestingStats">
-            <i class="pi" [ngClass]="isCreatingStatsLink ? 'pi-spin pi-spinner' : 'pi-link'"></i>
-            {{ isCreatingStatsLink ? 'Creating link…' : 'Request via link' }}
-          </button>
-        }
         <button type="button" class="share-secondary" (click)="closeShareDialog()"
           [disabled]="isCreatingShare || isRequestingStats || isCreatingStatsLink">
-          {{ shareLink || statsRequestLink ? 'Done' : 'Cancel' }}
+          {{ shareLink || statsRequestLink || statsShareLink ? 'Done' : 'Cancel' }}
         </button>
       </div>
     </section>
-    @if (isStatsUserPickerOpen) {
-      <div class="stats-user-picker-menu" role="listbox"
-        aria-labelledby="stats-user-picker-label" [ngStyle]="statsPickerMenuStyle"
-        (click)="$event.stopPropagation()" (keydown.escape)="closeStatsUserPicker()">
-        <label class="stats-user-search">
-          <i class="pi pi-search"></i>
-          <input [ngModel]="statsUserSearch" (ngModelChange)="onStatsUserSearchChange($event)" type="search" autocomplete="off"
-            placeholder="Search users" aria-label="Search registered users">
-        </label>
-        @for (user of filteredStatsUsers; track trackStatsUser($index, user)) {
-          <button type="button"
-            class="stats-user-picker-option" role="option"
-            [attr.aria-selected]="selectedStatsOwnerId === user.userId"
-            [disabled]="user.requestStatus === 'pending' || user.requestStatus === 'approved'"
-            (click)="selectStatsOwner(user)">
-            <span class="stats-picker-avatar">
-              @if (user.imageUrl) {
-                <img [src]="user.imageUrl" appImageFallback alt="">
-              }
-              @if (!user.imageUrl) {
-                <i class="pi pi-user"></i>
-              }
-            </span>
-            <span class="stats-picker-copy">
-              <strong>{{ user.displayName }}</strong>
-              <small>{{ statsUserStatusLabel(user) }}</small>
-            </span>
-            @if (selectedStatsOwnerId === user.userId) {
-              <i class="pi pi-check picker-selected"></i>
-            }
-          </button>
-        }
-        @if (statsUserSearch.trim().length < 3) {
-          <p class="stats-user-search-empty">Type at least 3 characters</p>
-        }
-        @if (statsUserSearch.trim().length >= 3 && !isLoadingStatsUsers && filteredStatsUsers.length === 0) {
-          <p class="stats-user-search-empty">No matching discoverable users</p>
-        }
-      </div>
-    }
   </div>
 }
 

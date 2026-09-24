@@ -53,6 +53,13 @@ export interface CreatedStatsAccessInvite {
   claimUrl: string;
 }
 
+export interface StatsAccessInvitePreview {
+  kind: 'request' | 'share';
+  displayName: string;
+  imageUrl: string;
+  expiresAt: string;
+}
+
 export interface SharedStatsSnapshot {
   ownerUserId: string;
   ownerDisplayName: string;

@@ -5,13 +5,15 @@ import {SharedPlaylistsComponent} from './shared-playlists.component';
 import {SharedPlaylistDetailComponent} from './shared-playlist-detail.component';
 import {SharedPlaylistClaimComponent} from './shared-playlist-claim.component';
 import {StatsRequestClaimComponent} from './stats-request-claim.component';
+import {StatsShareClaimComponent} from './stats-share-claim.component';
 
 @NgModule({
   declarations: [
     SharedPlaylistsComponent,
     SharedPlaylistDetailComponent,
     SharedPlaylistClaimComponent,
-    StatsRequestClaimComponent
+    StatsRequestClaimComponent,
+    StatsShareClaimComponent
   ],
   imports: [
     SharedModule,
@@ -19,6 +21,7 @@ import {StatsRequestClaimComponent} from './stats-request-claim.component';
       {path: '', pathMatch: 'full', component: SharedPlaylistsComponent},
       {path: 'claim/:token', component: SharedPlaylistClaimComponent},
       {path: 'stats-request/:token', component: StatsRequestClaimComponent},
+      {path: 'stats-share/:token', component: StatsShareClaimComponent},
       {path: ':id', component: SharedPlaylistDetailComponent}
     ])
   ]
