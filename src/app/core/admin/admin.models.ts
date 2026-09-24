@@ -55,6 +55,13 @@ export interface AdminUserSyncSettings {
   requiredTasks?: Partial<Record<SyncTaskKey, string>>;
 }
 
+export interface PendingProfileReview {
+  eligible: boolean;
+  spotifyId: string;
+  createdAt: string;
+  blockers: string[];
+}
+
 export interface AdminSyncRun {
   id: string;
   userId: string;

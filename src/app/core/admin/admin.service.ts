@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
-import {AdminModerationReport, AdminOperationalHealth, AdminSyncRun, AdminUserSyncSettings, SiteSettings, SyncSchedulePolicy, SyncTaskKey} from './admin.models';
+import {AdminModerationReport, AdminOperationalHealth, AdminSyncRun, AdminUserSyncSettings, PendingProfileReview, SiteSettings, SyncSchedulePolicy, SyncTaskKey} from './admin.models';
 
 @Injectable({providedIn: 'root'})
 export class AdminService {
@@ -147,6 +147,24 @@ export class AdminService {
       p_shared_playlists_enabled: settings.sharedPlaylistsEnabled,
       p_shared_playlist_interval_minutes: settings.sharedPlaylistIntervalMinutes,
       p_shared_playlist_interval_unit: settings.sharedPlaylistIntervalUnit
+    });
+    if (error) throw error;
+  }
+
+  async reviewPendingProfile(userId: string): Promise<PendingProfileReview> {
+    const {data, error} = await this.supabase.client.rpc('admin_review_pending_spotify_profile', {p_user_id: userId});
+    if (error) throw error;
+    return {
+      eligible: data?.eligible === true,
+      spotifyId: String(data?.spotifyId || ''),
+      createdAt: String(data?.createdAt || ''),
+      blockers: Array.isArray(data?.blockers) ? data.blockers.filter((value: unknown) => typeof value === 'string') : []
+    };
+  }
+
+  async deleteReviewedPendingProfile(userId: string, expectedSpotifyId: string): Promise<void> {
+    const {error} = await this.supabase.client.rpc('admin_delete_reviewed_pending_spotify_profile', {
+      p_user_id: userId, p_expected_spotify_id: expectedSpotifyId
     });
     if (error) throw error;
   }

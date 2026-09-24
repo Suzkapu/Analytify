@@ -8,6 +8,7 @@ Analytify keeps data only while it has a stated product, safety, or operational 
 - An account with no synchronization activity for 730 days is reported only as an operator review candidate. It is never auto-deleted.
 - Nightly cleanup removes expired technical state, collaboration tombstones after their documented grace period, resolved moderation reports and their audit events after 180 days, and Spotify catalog rows only when no history, snapshot, ranking, or league record references them.
 - Successful identity-merge audit records are retained for 180 days, then removed nightly. Failed or ambiguous merges roll back and never create a misleading success record.
+- Reviewed pending-profile cleanup records retain only the deleted identifier, pending identity, reviewer and timestamp for 180 days. Cleanup is refused whenever user data, credentials, verification, or an active registration is found.
 - Pending abuse reports remain until reviewed. Blocks remain until the blocker removes them or the account is deleted.
 - Closed leagues remain until their owner explicitly deletes them, preserving historical results.
 

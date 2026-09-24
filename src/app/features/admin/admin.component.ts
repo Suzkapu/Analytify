@@ -34,6 +34,7 @@ export class AdminComponent implements OnInit {
   isRefreshingRuns = false;
   savingUsers = new Set<string>();
   queueingUsers = new Set<string>();
+  reviewingUsers = new Set<string>();
   savingModerationReports = new Set<string>();
   demoName = 'Admin Demo League';
   isCreatingDemo = false;
@@ -122,6 +123,31 @@ export class AdminComponent implements OnInit {
       this.errorMessage = this.describeError(error, `Tasks for ${user.displayName} could not be queued.`);
     } finally {
       this.queueingUsers.delete(user.userId);
+    }
+  }
+
+  isIncompleteProfile(user: AdminUserSyncSettings): boolean {
+    return user.spotifyId.startsWith('pending:');
+  }
+
+  async reviewIncompleteProfile(user: AdminUserSyncSettings): Promise<void> {
+    if (this.reviewingUsers.has(user.userId)) return;
+    this.reviewingUsers.add(user.userId);
+    this.clearMessages();
+    try {
+      const review = await this.admin.reviewPendingProfile(user.userId);
+      if (!review.eligible) {
+        this.errorMessage = `This incomplete registration was kept: ${review.blockers.join(' ')}`;
+        return;
+      }
+      if (!window.confirm(`Delete the reviewed incomplete registration ${review.spotifyId}? No linked data or credentials were found.`)) return;
+      await this.admin.deleteReviewedPendingProfile(user.userId, review.spotifyId);
+      this.users = await this.admin.listUsers();
+      this.successMessage = 'The reviewed incomplete registration was deleted.';
+    } catch (error) {
+      this.errorMessage = this.describeError(error, 'The incomplete registration could not be reviewed.');
+    } finally {
+      this.reviewingUsers.delete(user.userId);
     }
   }
 

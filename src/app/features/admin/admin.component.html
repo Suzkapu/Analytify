@@ -128,7 +128,7 @@
                   }
                 </span>
                 <div class="user-card-title" (click)="toggleUserExpanded(user.userId)" style="cursor: pointer;">
-                  <h3>{{ user.displayName }}</h3>
+                  <h3>{{ isIncompleteProfile(user) ? 'Incomplete registration' : user.displayName }}</h3>
                   <p>{{ user.spotifyId }}</p>
                 </div>
                 <div class="user-header-actions" (click)="$event.stopPropagation()">
@@ -145,6 +145,9 @@
                 </div>
               </header>
               <div class="user-health">
+                @if (isIncompleteProfile(user)) {
+                  <span class="user-summary-badge"><i class="pi pi-exclamation-triangle"></i> Pending Spotify verification</span>
+                }
                 <span [class.ok]="user.backupActive">
                   <i class="pi" [ngClass]="user.backupActive ? 'pi-cloud' : 'pi-cloud-upload'"></i>
                   {{ user.backupActive ? 'Cloud Backup on' : 'Cloud Backup off' }}
@@ -184,6 +187,9 @@
                     <p class="user-error">{{ user.lastError }}</p>
                   }
                   <footer><button type="button" class="admin-secondary" (click)="saveUser(user)" [disabled]="isUserBusy(user.userId)"><i class="pi pi-save"></i> Save</button><button type="button" class="admin-primary" (click)="runUserNow(user)" [disabled]="isUserBusy(user.userId) || !user.backupActive || !user.hasRefreshToken"><i class="pi pi-play"></i> Run enabled tasks</button></footer>
+                  @if (isIncompleteProfile(user)) {
+                    <footer><button type="button" class="admin-secondary danger" (click)="reviewIncompleteProfile(user)" [disabled]="reviewingUsers.has(user.userId)"><i class="pi pi-search"></i> Review incomplete registration</button></footer>
+                  }
                 </div>
               }
             </article>

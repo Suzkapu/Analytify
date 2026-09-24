@@ -23,6 +23,8 @@ describe('AdminComponent', () => {
             updateSyncSchedulePolicy: vi.fn().mockName("AdminService.updateSyncSchedulePolicy"),
             updateSiteSettings: vi.fn().mockName("AdminService.updateSiteSettings"),
             updateUser: vi.fn().mockName("AdminService.updateUser"),
+            reviewPendingProfile: vi.fn().mockName("AdminService.reviewPendingProfile"),
+            deleteReviewedPendingProfile: vi.fn().mockName("AdminService.deleteReviewedPendingProfile"),
             enqueueUser: vi.fn().mockName("AdminService.enqueueUser"),
             createDemoLeague: vi.fn().mockName("AdminService.createDemoLeague"),
             sendTestNotification: vi.fn().mockName("AdminService.sendTestNotification"),
@@ -279,5 +281,44 @@ describe('AdminComponent', () => {
         expect(component.isUserExpanded('user-1')).toBe(false);
         settings = fixture.nativeElement.querySelector('.user-card-settings');
         expect(settings).toBeNull();
+    });
+
+    it('labels pending profiles and deletes them only after a clean review and confirmation', async () => {
+        const pending = {
+            userId: 'pending-user', spotifyId: 'pending:pending-user', displayName: 'Spotify User', profilePicUrl: '',
+            backupActive: false, hasRefreshToken: false, enabled: false, timezone: 'Europe/Vienna',
+            historyEnabled: false, historyIntervalMinutes: 60, historyIntervalUnit: 'minutes',
+            shortTermEnabled: false, shortTermIntervalHours: 24, shortTermIntervalUnit: 'hours',
+            mediumTermEnabled: false, mediumTermIntervalHours: 168, mediumTermIntervalUnit: 'hours',
+            longTermEnabled: false, longTermIntervalHours: 168, longTermIntervalUnit: 'hours',
+            songLeaguePlaylistsEnabled: false, songLeaguePlaylistFridaysOnly: true,
+            songLeaguePlaylistIntervalMinutes: 60, songLeaguePlaylistIntervalUnit: 'minutes',
+            sharedPlaylistsEnabled: false, sharedPlaylistIntervalMinutes: 60,
+            sharedPlaylistIntervalUnit: 'minutes', lastSuccessAt: null, lastError: null
+        } as any;
+        adminService.listUsers.mockResolvedValueOnce([pending]).mockResolvedValueOnce([]);
+        adminService.reviewPendingProfile.mockResolvedValue({
+            eligible: true, spotifyId: pending.spotifyId, createdAt: '2026-09-01T00:00:00Z', blockers: []
+        });
+        vi.spyOn(window, 'confirm').mockReturnValue(true);
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(fixture.nativeElement.textContent).toContain('Incomplete registration');
+
+        await component.reviewIncompleteProfile(pending);
+        expect(adminService.deleteReviewedPendingProfile).toHaveBeenCalledWith(pending.userId, pending.spotifyId);
+        expect(component.users).toEqual([]);
+    });
+
+    it('keeps an incomplete profile when the server review finds linked data', async () => {
+        const pending = {userId: 'pending-user', spotifyId: 'pending:pending-user'} as any;
+        adminService.reviewPendingProfile.mockResolvedValue({
+            eligible: false, spotifyId: pending.spotifyId, createdAt: '', blockers: ['stats_snapshots contains 1 linked record.']
+        });
+        await component.reviewIncompleteProfile(pending);
+        expect(adminService.deleteReviewedPendingProfile).not.toHaveBeenCalled();
+        expect(component.errorMessage).toContain('was kept');
     });
 });
