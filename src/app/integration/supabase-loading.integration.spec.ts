@@ -18,6 +18,7 @@ import { PlaylistsComponent } from '@features/library/playlists/playlists.compon
 import { environment } from '@env/environment';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import {SafeSpotifyUrlPipe} from '@shared/pipes/safe-spotify-url.pipe';
 
 const supabaseUrl = process.env['SUPABASE_INTEGRATION_URL'] || '';
 const supabaseAnonKey = process.env['SUPABASE_INTEGRATION_ANON_KEY'] || '';
@@ -60,7 +61,7 @@ integrationDescribe('real Supabase-first playlist and stats loading', () => {
         auth.isTokenExpired.mockReturnValue(false);
 
         TestBed.configureTestingModule({
-            declarations: [PlaylistsComponent, UserStatsComponent],
+            declarations: [PlaylistsComponent, UserStatsComponent, SafeSpotifyUrlPipe],
             schemas: [NO_ERRORS_SCHEMA],
             imports: [FormsModule],
             providers: [
