@@ -64,7 +64,7 @@
       "purpose": "Configuration, administration, deployment state, job execution, health, audit and aggregate cleanup monitoring.",
       "retention": "Configuration remains until replaced. Successful/cancelled job logs are 30 days, failures and resolved alerts are 90 days, credential audit is 90 days, successful retention summaries are 90 days.",
       "erasure": "Scheduled operational and retention jobs redact error details and delete expired logs; records contain identifiers only where needed for incident diagnosis.",
-      "relations": ["public.app_admins", "public.site_settings", "public.sync_schedule_policy", "public.song_league_demo_bots", "public.sync_job_runs", "public.operational_alerts", "public.deployment_revisions", "public.worker_runtime_health", "public.spotify_credential_rotation_audit", "public.retention_cleanup_runs"]
+      "relations": ["public.app_admins", "public.site_settings", "public.sync_schedule_policy", "public.song_league_demo_bots", "public.sync_job_runs", "public.operational_alerts", "public.deployment_revisions", "public.worker_runtime_health", "public.spotify_credential_rotation_audit", "public.spotify_identity_merge_audit", "public.retention_cleanup_runs"]
     },
     {
       "id": "private-transient-state",

@@ -122,3 +122,29 @@ $$;
 
 revoke all on function public.merge_verified_spotify_profile(uuid, text) from public, anon, authenticated;
 grant execute on function public.merge_verified_spotify_profile(uuid, text) to service_role;
+
+create or replace function private.cleanup_spotify_identity_merge_audit()
+returns integer
+language plpgsql
+security definer
+set search_path = public, private, pg_temp
+as $$
+declare v_deleted integer;
+begin
+  delete from public.spotify_identity_merge_audit
+  where merged_at < now() - interval '180 days';
+  get diagnostics v_deleted = row_count;
+  return v_deleted;
+end;
+$$;
+revoke all on function private.cleanup_spotify_identity_merge_audit() from public, anon, authenticated;
+grant execute on function private.cleanup_spotify_identity_merge_audit() to service_role;
+
+select cron.schedule(
+  'analytify-identity-merge-audit-retention',
+  '52 3 * * *',
+  $cron$select private.cleanup_spotify_identity_merge_audit();$cron$
+)
+where not exists (
+  select 1 from cron.job where jobname = 'analytify-identity-merge-audit-retention'
+);
