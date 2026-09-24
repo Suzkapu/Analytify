@@ -37,6 +37,30 @@ test('stores refresh tokens as AES-GCM ciphertext and decrypts them only in memo
   assert.equal(credential.connectionMode, 'personal_pkce');
 });
 
+test('removes encrypted and legacy refresh credentials together', async () => {
+  const calls = [];
+  const supabase = {
+    from(table) {
+      return {
+        delete() { return {async eq(column, value) {
+          calls.push({table, operation: 'delete', column, value}); return {error: null};
+        }}; },
+        update(value) { return {async eq(column, id) {
+          calls.push({table, operation: 'update', value, column, id}); return {error: null};
+        }}; }
+      };
+    }
+  };
+  const store = createCredentialStore({supabase, encryptionKey: randomBytes(32).toString('base64')});
+
+  await store.remove('user-one');
+
+  assert.deepEqual(calls, [
+    {table: 'spotify_credentials', operation: 'delete', column: 'user_id', value: 'user-one'},
+    {table: 'users', operation: 'update', value: {spotify_refresh_token: null}, column: 'id', id: 'user-one'}
+  ]);
+});
+
 function memoryCredentials(rows) {
   return {
     from(table) {

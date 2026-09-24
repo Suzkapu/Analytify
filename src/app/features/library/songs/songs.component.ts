@@ -747,7 +747,15 @@ export class SongsComponent implements OnInit, OnDestroy {
   }
 
   openTrackClick(url: string) {
+    openSpotifyUrl(url, {expectedType: 'track'});
+  }
+
+  openAlbumClick(url: string) {
     openSpotifyUrl(url, {expectedType: 'album'});
+  }
+
+  openArtistClick(url: string) {
+    openSpotifyUrl(url, {expectedType: 'artist'});
   }
 
   trackArtistItem(index: number, artist: any): string | number {

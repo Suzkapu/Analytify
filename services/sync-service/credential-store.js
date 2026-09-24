@@ -105,6 +105,14 @@ function createCredentialStore({supabase, encryptionKey, encryptionKeys, writeKe
     return materialize(userId, {connection_mode: 'hosted', client_id: null}, legacyRefreshToken);
   }
 
+  async function remove(userId) {
+    const {error: credentialError} = await supabase.from('spotify_credentials').delete().eq('user_id', userId);
+    if (credentialError) throw credentialError;
+    const {error: legacyError} = await supabase.from('users')
+      .update({spotify_refresh_token: null}).eq('id', userId);
+    if (legacyError) throw legacyError;
+  }
+
   async function migrateAllLegacy() {
     const {data: rows, error} = await supabase.from('users')
       .select('id, spotify_refresh_token').not('spotify_refresh_token', 'is', null);
@@ -165,7 +173,7 @@ function createCredentialStore({supabase, encryptionKey, encryptionKeys, writeKe
     return {examined: (rows || []).length, rotated, failed};
   }
 
-  return {get, save, migrateAllLegacy, rotateCredential, rotatePending, writeKeyVersion: keyRing.writeVersion};
+  return {get, save, remove, migrateAllLegacy, rotateCredential, rotatePending, writeKeyVersion: keyRing.writeVersion};
 }
 
 module.exports = {createCredentialStore, normalizeKeyRing};

@@ -241,22 +241,29 @@
           @if (pastTopResults.length) {
             <div class="past-stats-grid">
               @for (item of pastTopResults; track item) {
-                <button type="button" class="past-stats-card"
-                  [attr.aria-label]="'View position history for ' + item.name"
-                  title="View history graph" (click)="openPastTopResult(item)">
+                <div class="past-stats-card">
                   @if (item.imageUrl) {
-                    <img [src]="item.imageUrl" alt="" loading="lazy" decoding="async">
+                    <a class="spotify-artwork-link spotify-destination"
+                      [href]="item.spotifyUrl | safeSpotifyUrl:(item.kind === 'track' ? 'track' : 'artist')"
+                      target="_blank" rel="noopener noreferrer"
+                      [attr.aria-label]="'Open ' + item.name + ' on Spotify'" title="Open on Spotify">
+                      <img [src]="item.imageUrl" [alt]="item.name" loading="lazy" decoding="async">
+                    </a>
                   }
                   @if (!item.imageUrl) {
                     <span class="past-stats-placeholder"><i class="pi" [ngClass]="item.kind === 'genre' ? 'pi-tags' : 'pi-music'"></i></span>
                   }
-                  <span class="past-stats-copy">
-                    <strong>{{ item.name }}</strong>@if (item.subtitle) {
-                    <small>{{ item.subtitle }}</small>
-                  }
-                </span>
-                <i class="pi pi-chart-line" aria-hidden="true"></i>
-              </button>
+                  <button type="button" class="past-stats-history-action"
+                    [attr.aria-label]="'View position history for ' + item.name"
+                    title="View history graph" (click)="openPastTopResult(item)">
+                    <span class="past-stats-copy">
+                      <strong>{{ item.name }}</strong>@if (item.subtitle) {
+                      <small>{{ item.subtitle }}</small>
+                    }
+                    </span>
+                    <i class="pi pi-chart-line" aria-hidden="true"></i>
+                  </button>
+                </div>
             }
           </div>
         }
@@ -603,9 +610,14 @@
       <button class="trend-modal-close-btn" (click)="closeTrendPopup($event)">&times;</button>
       <div class="trend-modal-header">
         @if (trendPopupCategory !== 'genres') {
-          <img
-            [src]="trendPopupCategory === 'tracks' ? getTrackCover(trendPopupItem) : getArtistImage(trendPopupItem)"
-            [class.artist-round]="trendPopupCategory === 'artists'" alt="Cover Image" class="trend-modal-cover">
+          <a class="spotify-artwork-link spotify-destination"
+            [href]="(trendPopupCategory === 'tracks' ? getTrackUrl(trendPopupItem) : getArtistUrl(trendPopupItem)) | safeSpotifyUrl:(trendPopupCategory === 'tracks' ? 'track' : 'artist')"
+            target="_blank" rel="noopener noreferrer"
+            [attr.aria-label]="'Open ' + trendPopupItem.name + ' on Spotify'" title="Open on Spotify">
+            <img
+              [src]="trendPopupCategory === 'tracks' ? getTrackCover(trendPopupItem) : getArtistImage(trendPopupItem)"
+              [class.artist-round]="trendPopupCategory === 'artists'" [alt]="trendPopupItem.name" class="trend-modal-cover">
+          </a>
         }
         @if (trendPopupCategory === 'genres') {
           <div class="genre-trend-avatar">

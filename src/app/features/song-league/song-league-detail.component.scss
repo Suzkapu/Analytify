@@ -246,13 +246,14 @@
   border-radius: 14px;
   background: #101612;
 
-  button { width: 100%; min-height: 62px; padding: 7px; display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; align-items: center; gap: 10px; border: 0; border-radius: 10px; background: transparent; color: inherit; text-align: left; cursor: pointer; }
-  button:hover { background: rgba(255, 255, 255, 0.055); }
+  .league-search-result { min-height: 62px; padding: 7px; display: grid; grid-template-columns: 48px minmax(0, 1fr); align-items: center; gap: 10px; border-radius: 10px; }
+  .league-search-result:hover { background: rgba(255, 255, 255, 0.055); }
+  .league-search-result > button { min-width: 0; min-height: 48px; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; }
   img { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; }
   span, strong, small { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   strong { color: #fff; }
   small { margin-top: 3px; color: #8b968e; }
-  > button > i { color: #4ee17f; }
+  .league-search-result > button > i { color: #4ee17f; }
 }
 
 .selected-league-track {

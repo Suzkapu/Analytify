@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {environment} from "@env/environment";
-import { HttpClient, HttpContext, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import {Observable, throwError, Subject, from, defer, firstValueFrom} from 'rxjs';
 import {tap, catchError, shareReplay, switchMap, finalize} from 'rxjs/operators';
 import {StorageService} from '@core/data-access/storage/storage.service';
@@ -10,6 +10,7 @@ import {PersonalSpotifyAuthRequest, SpotifyConnectionMode} from './spotify-auth.
 import {TRANSIENT_SPOTIFY_REQUEST} from '@core/compare-room/spotify-request-context';
 import {SessionLifecycleService} from './session-lifecycle.service';
 import {CURRENT_TERMS_VERSION, TermsAcceptanceService} from '@core/legal/terms-acceptance.service';
+import {HOSTED_SPOTIFY_SCOPES, PLAYLIST_WRITE_SPOTIFY_SCOPES} from '@env/spotify-scopes';
 
 const console = createScopedLogger('Authentication');
 
@@ -46,6 +47,8 @@ export class SpotifyAuthService {
   private readonly connectionModeKey = 'spotifyConnectionMode';
   private readonly personalClientIdKey = 'personalSpotifyClientId';
   private readonly personalRequestKey = 'analytify_personal_spotify_auth_request';
+  private readonly pendingScopesKey = 'analytify_spotify_pending_scopes';
+  private readonly grantedScopesKey = 'spotifyGrantedScopes';
   private readonly anonymousCloudKey = 'anonymousCloudIdentity';
   private readonly collaborationIdentityReadyKey = 'collaborationIdentityReady';
   // Kept under its historical storage name so existing encrypted-credential
@@ -109,7 +112,10 @@ export class SpotifyAuthService {
     return this.storageService.getItem(this.storageKey);
   }
 
-  async loginWithSupabase(promptConsent: boolean = true): Promise<any> {
+  async loginWithSupabase(
+    promptConsent: boolean = true,
+    requestedScopes: readonly string[] = HOSTED_SPOTIFY_SCOPES
+  ): Promise<any> {
     this.termsAcceptance.assertCurrentAcceptance();
     if (promptConsent) {
       // A user-initiated login must not inherit a Supabase session whose
@@ -120,6 +126,7 @@ export class SpotifyAuthService {
       this.clearSpotifyCredentials();
     }
     this.storageService.setItem(this.connectionModeKey, 'hosted', false);
+    sessionStorage.setItem(this.pendingScopesKey, this.normalizeScopes(requestedScopes).join(' '));
     const queryParams: any = {
       access_type: 'offline'
     };
@@ -130,7 +137,7 @@ export class SpotifyAuthService {
       provider: 'spotify',
       options: {
         redirectTo: environment.spotifyRedirectUri,
-        scopes: environment.spotifyScopes,
+        scopes: this.normalizeScopes(requestedScopes).join(' '),
         queryParams
       }
     });
@@ -173,7 +180,11 @@ export class SpotifyAuthService {
     return this.storageService.getItem(this.anonymousCloudKey) === 'true';
   }
 
-  async startPersonalAppAuthorization(clientId: string, returnUrl = '/playlists'): Promise<void> {
+  async startPersonalAppAuthorization(
+    clientId: string,
+    returnUrl = '/playlists',
+    requestedScopes: readonly string[] = HOSTED_SPOTIFY_SCOPES
+  ): Promise<void> {
     this.termsAcceptance.assertCurrentAcceptance();
     const normalizedClientId = clientId.trim();
     if (!/^[a-zA-Z0-9]{32}$/.test(normalizedClientId)) {
@@ -186,6 +197,7 @@ export class SpotifyAuthService {
       state: this.randomUrlSafeString(32),
       verifier,
       returnUrl: this.safeInternalReturnUrl(returnUrl),
+      scopes: this.normalizeScopes(requestedScopes),
       expectedSpotifyId: this.normalizedSpotifyId(this.getUserId()),
       createdAt: Date.now()
     };
@@ -196,7 +208,7 @@ export class SpotifyAuthService {
       response_type: 'code',
       client_id: normalizedClientId,
       redirect_uri: environment.personalSpotifyRedirectUri,
-      scope: environment.spotifyScopes,
+      scope: request.scopes.join(' '),
       state: request.state,
       code_challenge_method: 'S256',
       code_challenge: challenge,
@@ -234,6 +246,9 @@ export class SpotifyAuthService {
     if (!/^[a-zA-Z0-9]{32}$/.test(request.clientId)) {
       throw new Error('The saved Spotify Client ID is invalid.');
     }
+    const requestedScopes = request.scopes?.length
+      ? this.normalizeScopes(request.scopes)
+      : [...HOSTED_SPOTIFY_SCOPES];
 
     const tokenBody = new HttpParams()
       .set('client_id', request.clientId)
@@ -291,6 +306,7 @@ export class SpotifyAuthService {
     this.storageService.setItem(this.personalClientIdKey, request.clientId, false);
     this.setUserId(effectiveSpotifyId);
     this.storeSpotifyTokenResponse(token, false);
+    this.rememberGrantedScopes(token.scope || requestedScopes.join(' '));
     const localSpotifyId = this.getUserId() || effectiveSpotifyId;
     const profileImage = profile.images?.[0]?.url || '';
     this.storageService.setItem(`${localSpotifyId}_profile_pic`, profileImage, false);
@@ -313,13 +329,29 @@ export class SpotifyAuthService {
   }
 
   async renewSpotifyAuthorization(returnUrl = '/playlists'): Promise<void> {
+    const scopes = this.currentGrantedScopes();
     if (this.isPersonalAppConnection()) {
       const clientId = this.getPersonalSpotifyClientId();
       if (!clientId) throw new Error('Reconnect your personal Spotify app from the login page.');
-      await this.startPersonalAppAuthorization(clientId, returnUrl);
+      await this.startPersonalAppAuthorization(clientId, returnUrl, scopes);
       return;
     }
-    await this.loginWithSupabase(false);
+    await this.loginWithSupabase(false, scopes);
+  }
+
+  hasSpotifyScope(scope: string): boolean {
+    return this.currentGrantedScopes().includes(scope);
+  }
+
+  async requestPlaylistWriteAuthorization(returnUrl = '/playlists'): Promise<void> {
+    const scopes = this.normalizeScopes([...this.currentGrantedScopes(), ...PLAYLIST_WRITE_SPOTIFY_SCOPES]);
+    if (this.isPersonalAppConnection()) {
+      const clientId = this.getPersonalSpotifyClientId();
+      if (!clientId) throw new Error('Reconnect your personal Spotify app from the login page.');
+      await this.startPersonalAppAuthorization(clientId, returnUrl, scopes);
+      return;
+    }
+    await this.loginWithSupabase(false, scopes);
   }
 
   /** Clears stale Supabase session state — call before re-initiating login after a server_error */
@@ -350,6 +382,8 @@ export class SpotifyAuthService {
           }
           this.storageService.setItem(this.storageKey, session.provider_token);
           this.storageService.setItem(this.connectionModeKey, 'hosted', false);
+          this.rememberGrantedScopes(sessionStorage.getItem(this.pendingScopesKey) || environment.spotifyScopes);
+          sessionStorage.removeItem(this.pendingScopesKey);
           if (session.provider_refresh_token) {
             this.storageService.setItem('spotifyRefreshToken', session.provider_refresh_token);
           }
@@ -409,6 +443,8 @@ export class SpotifyAuthService {
           }
           this.storageService.setItem(this.storageKey, session.provider_token);
           this.storageService.setItem(this.connectionModeKey, 'hosted', false);
+          this.rememberGrantedScopes(sessionStorage.getItem(this.pendingScopesKey) || environment.spotifyScopes);
+          sessionStorage.removeItem(this.pendingScopesKey);
           if (session.provider_refresh_token) {
             this.storageService.setItem('spotifyRefreshToken', session.provider_refresh_token);
           }
@@ -556,6 +592,12 @@ export class SpotifyAuthService {
         {headers: new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'})}
       ).pipe(
         tap(response => this.storeSpotifyTokenResponse(response, true, generation)),
+        catchError(error => {
+          if (!this.isTerminalSpotifyRefreshError(error)) return throwError(() => error);
+          return from(this.handleTerminalSpotifyRefresh()).pipe(
+            switchMap(() => throwError(() => new Error('Spotify authorization expired. Reconnect Spotify.')))
+          );
+        }),
         finalize(() => this.refreshObservable = null),
         shareReplay(1)
       );
@@ -623,6 +665,36 @@ export class SpotifyAuthService {
     this.storageService.setItem('spotifyTokenExpiresAt', expiresAt.toString());
   }
 
+  private isTerminalSpotifyRefreshError(error: unknown): boolean {
+    if (!(error instanceof HttpErrorResponse) || error.status !== 400) return false;
+    const body = error.error;
+    if (body && typeof body === 'object') return body.error === 'invalid_grant';
+    if (typeof body !== 'string') return false;
+    try {
+      return JSON.parse(body)?.error === 'invalid_grant';
+    } catch {
+      return /\binvalid_grant\b/i.test(body);
+    }
+  }
+
+  private async handleTerminalSpotifyRefresh(): Promise<void> {
+    const profileUserId = this.getSupabaseUserId();
+    const hadScheduledAccess = this.hasScheduledSpotifyAccess();
+    this.storageService.removeItem(this.storageKey);
+    this.storageService.removeItem('spotifyRefreshToken');
+    this.storageService.removeItem('spotifyTokenExpiresAt');
+    this.storageService.removeItem(this.cloudIdentityReadyKey);
+    if (!profileUserId || !hadScheduledAccess) return;
+    try {
+      await this.invokeCredentialFunction(
+        {action: 'delete_credentials', profileUserId},
+        'Expired cloud credential cleanup failed.'
+      );
+    } catch (error) {
+      console.warn('The expired cloud Spotify credential could not be removed immediately.', error);
+    }
+  }
+
   private assertCurrentSession(generation: {id: number; signal: AbortSignal}): void {
     if (!this.sessionLifecycle.isCurrent(generation)) {
       throw new DOMException('Session ended.', 'AbortError');
@@ -637,6 +709,7 @@ export class SpotifyAuthService {
     this.storageService.removeItem('supabaseUserId');
     this.storageService.removeItem(this.connectionModeKey);
     this.storageService.removeItem(this.personalClientIdKey);
+    this.storageService.removeItem(this.grantedScopesKey);
     this.storageService.removeItem(this.anonymousCloudKey);
     this.storageService.removeItem(this.collaborationIdentityReadyKey);
     this.storageService.removeItem(this.cloudIdentityReadyKey);
@@ -647,6 +720,20 @@ export class SpotifyAuthService {
     if (typeof window === 'undefined') return false;
     return window.location.pathname.endsWith('/callback') &&
       new URLSearchParams(window.location.search).has('code');
+  }
+
+  private normalizeScopes(scopes: readonly string[]): string[] {
+    return Array.from(new Set(scopes.map(scope => scope.trim()).filter(Boolean))).sort();
+  }
+
+  private currentGrantedScopes(): string[] {
+    const stored = this.storageService.getItem(this.grantedScopesKey);
+    return this.normalizeScopes((stored || environment.spotifyScopes).split(/\s+/));
+  }
+
+  private rememberGrantedScopes(scopes: string): void {
+    const normalized = this.normalizeScopes(scopes.split(/\s+/));
+    this.storageService.setItem(this.grantedScopesKey, normalized.join(' '), false);
   }
 
   isTokenExpired(): boolean {

@@ -171,6 +171,22 @@ describe('SpotifyAuthService', () => {
         expect(values['spotifyAccessToken']).toBeUndefined();
         expect(values['spotifyRefreshToken']).toBeUndefined();
         expect(authClient.signInWithOAuth).toHaveBeenCalled();
+        const scopes = authClient.signInWithOAuth.mock.lastCall[0].options.scopes.split(' ');
+        expect(scopes).not.toContain('playlist-modify-private');
+    });
+
+    it('requests private-playlist write access incrementally without clearing the current session', async () => {
+        values['spotifyConnectionMode'] = 'hosted';
+        values['spotifyGrantedScopes'] = 'playlist-read-private user-read-private';
+
+        await service.requestPlaylistWriteAuthorization('/compare-room/room-one');
+
+        expect(authClient.signOut).not.toHaveBeenCalled();
+        const options = authClient.signInWithOAuth.mock.lastCall[0].options;
+        expect(options.redirectTo).toContain('/callback');
+        expect(options.scopes.split(' ')).toEqual([
+            'playlist-modify-private', 'playlist-read-private', 'user-read-private'
+        ]);
     });
 
     it('recovers a usable Spotify session before a callback error is shown', async () => {
@@ -197,6 +213,7 @@ describe('SpotifyAuthService', () => {
             state: 'expected-state',
             verifier: 'pkce-verifier',
             returnUrl: '/stats',
+            scopes: ['user-read-private'],
             expectedSpotifyId: null,
             createdAt: Date.now()
         }));
@@ -218,6 +235,7 @@ describe('SpotifyAuthService', () => {
         expect(await result).toBe('/stats');
         expect(values['spotifyConnectionMode']).toBe('personal_pkce');
         expect(values['personalSpotifyClientId']).toBe('12345678901234567890123456789012');
+        expect(values['spotifyGrantedScopes']).toBe('user-read-private');
         expect(values['spotifyUserId']).toContain('stable-personal-account');
         expect(values[`${service.getUserId()}_spotify_profile_id`]).toBe('personal-user');
         expect(values['spotifyRefreshToken']).toBe('personal-refresh');
@@ -325,6 +343,34 @@ describe('SpotifyAuthService', () => {
 
         expect((await refreshed).access_token).toBe('new-personal-token');
         expect(values['spotifyAccessToken']).toBe('new-personal-token');
+    });
+
+    it('discards terminal personal-app credentials and preserves the reconnect identity', async () => {
+        values['spotifyConnectionMode'] = 'personal_pkce';
+        values['personalSpotifyClientId'] = '12345678901234567890123456789012';
+        values['spotifyAccessToken'] = 'expired-access';
+        values['spotifyRefreshToken'] = 'expired-refresh';
+        values['spotifyTokenExpiresAt'] = '1';
+        values['spotifyUserId'] = 'spotify-user';
+        values['supabaseUserId'] = '11111111-1111-4111-8111-111111111111';
+        values['cloudIdentityReady'] = 'true';
+
+        const refreshed = firstValueFrom(service.refreshToken());
+        http.expectOne('https://accounts.spotify.com/api/token').flush(
+            {error: 'invalid_grant', error_description: 'Refresh token revoked'},
+            {status: 400, statusText: 'Bad Request'}
+        );
+
+        await expect(refreshed).rejects.toThrow('Spotify authorization expired. Reconnect Spotify.');
+        expect(values['spotifyAccessToken']).toBeUndefined();
+        expect(values['spotifyRefreshToken']).toBeUndefined();
+        expect(values['spotifyTokenExpiresAt']).toBeUndefined();
+        expect(values['cloudIdentityReady']).toBeUndefined();
+        expect(values['spotifyUserId']).toBe('spotify-user');
+        expect(values['personalSpotifyClientId']).toBe('12345678901234567890123456789012');
+        expect(supabaseService.client.functions.invoke).toHaveBeenCalledWith('spotify-credentials', {
+            body: {action: 'delete_credentials', profileUserId: '11111111-1111-4111-8111-111111111111'}
+        });
     });
 
     it('creates one email-free anonymous identity only when cloud access is enabled', async () => {

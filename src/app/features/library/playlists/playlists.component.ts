@@ -27,6 +27,12 @@ export class PlaylistsComponent {
   private playlistLoadSequence = 0;
   private readonly cloudPriorityWindowMs = 750;
 
+  spotifyPlaylistUrl(playlist: any): string {
+    if (playlist?.external_urls?.spotify) return playlist.external_urls.spotify;
+    const id = String(playlist?.id || '').trim();
+    return /^[A-Za-z0-9]{10,}$/.test(id) ? `https://open.spotify.com/playlist/${id}` : '';
+  }
+
   constructor(
     private route: ActivatedRoute, 
     private router: Router, 

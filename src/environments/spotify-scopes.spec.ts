@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { COMPARE_ROOM_SPOTIFY_SCOPES, HOSTED_SPOTIFY_SCOPES } from './spotify-scopes';
+import { COMPARE_ROOM_SPOTIFY_SCOPES, HOSTED_SPOTIFY_SCOPES, PLAYLIST_WRITE_SPOTIFY_SCOPES } from './spotify-scopes';
 
 describe('Spotify OAuth scope policy', () => {
     it('keeps the hosted application on the reviewed least-privilege scope set', () => {
@@ -9,9 +9,10 @@ describe('Spotify OAuth scope policy', () => {
             'user-read-recently-played',
             'playlist-read-private',
             'playlist-read-collaborative',
-            'playlist-modify-private',
             'user-library-read'
         ]);
+        expect(PLAYLIST_WRITE_SPOTIFY_SCOPES).toEqual(['playlist-modify-private']);
+        expect(HOSTED_SPOTIFY_SCOPES as readonly string[]).not.toContain('playlist-modify-private');
         expect(HOSTED_SPOTIFY_SCOPES as readonly string[]).not.toContain('playlist-modify-public');
     });
 

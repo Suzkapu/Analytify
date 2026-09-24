@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
+import {from, Observable, throwError} from 'rxjs';
 import {switchMap, catchError} from 'rxjs/operators';
 import {SpotifyAuthService} from './spotify-auth.service';
 import {TRANSIENT_SPOTIFY_REQUEST} from '@core/compare-room/spotify-request-context';
@@ -57,6 +57,16 @@ export class SpotifyAuthInterceptor implements HttpInterceptor {
 
     return next.handle(clonedReq).pipe(
       catchError((err) => {
+        if (err instanceof HttpErrorResponse && err.status === 403
+          && !['GET', 'HEAD'].includes(req.method.toUpperCase())
+          && !this.authService.hasSpotifyScope('playlist-modify-private')) {
+          const returnUrl = window.location.pathname + window.location.search;
+          return from(this.authService.requestPlaylistWriteAuthorization(returnUrl)).pipe(
+            switchMap(() => throwError(() => new Error(
+              'Spotify needs permission to update private playlists. Finish reconnecting, then try this action again.'
+            )))
+          );
+        }
         if (!(err instanceof HttpErrorResponse) || err.status !== 401) {
           return throwError(() => err);
         }

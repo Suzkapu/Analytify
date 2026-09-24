@@ -63,6 +63,9 @@ describe('LoginPageComponent', () => {
         expect(element.textContent).toContain('See what you listen to.');
         expect(element.textContent).toContain('Browse playlists, check your top songs');
         expect(element.textContent).toContain('Stored on this device');
+        expect(element.textContent).toContain('saved songs and playlists, top songs and artists, and recently played songs');
+        expect(element.textContent).toContain('playlist write access only');
+        expect(element.textContent).toContain('never reads your password or payment details');
         expect(element.textContent).not.toContain('focused dashboard');
     });
 

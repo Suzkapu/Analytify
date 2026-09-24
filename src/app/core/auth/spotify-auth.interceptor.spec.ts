@@ -16,7 +16,9 @@ describe('SpotifyAuthInterceptor', () => {
             getAccessToken: vi.fn().mockName("SpotifyAuthService.getAccessToken"),
             refreshToken: vi.fn().mockName("SpotifyAuthService.refreshToken"),
             loginWithSupabase: vi.fn().mockName("SpotifyAuthService.loginWithSupabase"),
-            renewSpotifyAuthorization: vi.fn().mockName("SpotifyAuthService.renewSpotifyAuthorization")
+            renewSpotifyAuthorization: vi.fn().mockName("SpotifyAuthService.renewSpotifyAuthorization"),
+            hasSpotifyScope: vi.fn().mockName('SpotifyAuthService.hasSpotifyScope').mockReturnValue(true),
+            requestPlaylistWriteAuthorization: vi.fn().mockName('SpotifyAuthService.requestPlaylistWriteAuthorization').mockResolvedValue(undefined)
         };
         auth.isAuthenticated.mockReturnValue(true);
         auth.isTokenExpired.mockReturnValue(false);
@@ -104,6 +106,17 @@ describe('SpotifyAuthInterceptor', () => {
 
         expect(received?.headers.get('Authorization')).toBe('Bearer refreshed-token');
         expect(auth.refreshToken).toHaveBeenCalledTimes(1);
+    });
+
+    it('requests private-playlist write access only after Spotify rejects a mutation for missing scope', async () => {
+        auth.hasSpotifyScope.mockReturnValue(false);
+        const forbidden = new HttpErrorResponse({status: 403});
+        const request = new HttpRequest('POST', 'https://api.spotify.com/v1/users/me/playlists', {});
+        const next = handlerFor(() => throwError(() => forbidden));
+
+        await expect(firstValueFrom(interceptor.intercept(request, next))).rejects.toThrow(/Finish reconnecting/);
+
+        expect(auth.requestPlaylistWriteAuthorization).toHaveBeenCalledWith(window.location.pathname + window.location.search);
     });
 
     function handlerFor(handle: (request: HttpRequest<any>) => ReturnType<HttpHandler['handle']>): HttpHandler {

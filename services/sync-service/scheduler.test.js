@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const {createScheduler, isJobAllowed} = require('./scheduler');
 
 function harness({handler, userResult, settingsResult, rpcResults = {}, heartbeatIntervalMs} = {}) {
-  const rpcCalls = [], taskStateWrites = [];
+  const rpcCalls = [], taskStateWrites = [], removedCredentials = [];
   const supabase = {
     async rpc(name, args) {
       rpcCalls.push({name, args});
@@ -30,10 +30,10 @@ function harness({handler, userResult, settingsResult, rpcResults = {}, heartbea
     config: {workerId: '00000000-0000-4000-8000-000000000001', maxJobsPerPass: 4,
       leaseSeconds: 30, heartbeatIntervalMs},
     tasks: {stats_short_term: handler || (async () => ({updated: 1}))},
-    credentials: {get: async () => 'stored-credential'},
+    credentials: {get: async () => 'stored-credential', remove: async userId => removedCredentials.push(userId)},
     pushDispatcher: {dispatchDue: async () => ({})}
   });
-  return {scheduler, rpcCalls, taskStateWrites};
+  return {scheduler, rpcCalls, taskStateWrites, removedCredentials};
 }
 
 async function quiet(work) {
@@ -121,6 +121,20 @@ test('records handler failures through the atomic completion boundary', async ()
   assert.equal(completions.length, 1);
   assert.equal(completions[0].args.p_status, 'failed');
   assert.equal(completions[0].args.p_last_error, 'handler failed');
+});
+
+test('discards invalid Spotify credentials and stops scheduling retries', async () => {
+  const terminal = Object.assign(new Error('Spotify request failed (400)'), {kind: 'credential_invalid'});
+  const {scheduler, rpcCalls, removedCredentials} = harness({handler: async () => { throw terminal; }});
+
+  await quiet(() => scheduler.runJob(job));
+
+  assert.deepEqual(removedCredentials, ['user-1']);
+  const completion = rpcCalls.find(call => call.name === 'complete_sync_job');
+  assert.equal(completion.args.p_status, 'failed');
+  assert.equal(completion.args.p_next_run_at, null);
+  assert.equal(completion.args.p_last_error, 'Spotify authorization expired. Reconnect Spotify to resume automatic updates.');
+  assert.deepEqual(completion.args.p_details, {terminal: true, reconnectRequired: true});
 });
 
 test('cancels a claimed automatic job when its task was disabled after enqueue', async () => {

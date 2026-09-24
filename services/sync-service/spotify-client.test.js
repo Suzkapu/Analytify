@@ -68,3 +68,18 @@ test('refreshes a personal-app credential with its public client ID and no clien
   assert.equal(saveRefreshToken.mock.callCount(), 1);
   assert.equal(saveRefreshToken.mock.calls[0].arguments[0], 'rotated-refresh');
 });
+
+test('classifies invalid_grant refresh responses as terminal credentials without retrying', async () => {
+  let calls = 0;
+  const client = createSpotifyClient({spotifyClientId: 'hosted', spotifyClientSecret: 'secret'}, {
+    fetch: async () => {
+      calls += 1;
+      return response(400, JSON.stringify({error: 'invalid_grant', error_description: 'Refresh token revoked'}));
+    }
+  });
+
+  await assert.rejects(client.accessToken({
+    connectionMode: 'hosted', refreshToken: 'expired', saveRefreshToken: async () => {}
+  }), error => error.kind === 'credential_invalid');
+  assert.equal(calls, 1);
+});

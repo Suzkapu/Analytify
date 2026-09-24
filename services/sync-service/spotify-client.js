@@ -10,6 +10,15 @@ class ExternalRequestError extends Error {
   }
 }
 
+function spotifyErrorCode(text) {
+  try {
+    const parsed = JSON.parse(text || '{}');
+    return typeof parsed?.error === 'string' ? parsed.error : null;
+  } catch {
+    return null;
+  }
+}
+
 function retryAfterMilliseconds(value, now = Date.now()) {
   if (!value) return null;
   const seconds = Number(value);
@@ -66,11 +75,15 @@ function createSpotifyClient(config, dependencies = {}) {
       if (response) {
         const text = await response.text();
         if (response.ok) return text ? JSON.parse(text) : null;
-        const kind = TRANSIENT_STATUSES.has(response.status) ? 'transient' : 'permanent';
+        const tokenGrantExpired = url === 'https://accounts.spotify.com/api/token'
+          && response.status === 400 && spotifyErrorCode(text) === 'invalid_grant';
+        const kind = tokenGrantExpired
+          ? 'credential_invalid'
+          : (TRANSIENT_STATUSES.has(response.status) ? 'transient' : 'permanent');
         lastError = new ExternalRequestError(`Spotify request failed (${response.status}): ${text || response.statusText}`, {
           kind, status: response.status
         });
-        if (kind === 'permanent' || !retryableMethod || attempt === maxAttempts) throw lastError;
+        if (kind !== 'transient' || !retryableMethod || attempt === maxAttempts) throw lastError;
         lastError.retryAfterMs = retryAfterMilliseconds(response.headers.get('retry-after'), now());
       }
       const exponentialMs = Math.min(10_000, 500 * (2 ** (attempt - 1)));
@@ -108,4 +121,4 @@ function createSpotifyClient(config, dependencies = {}) {
   return {request, accessToken, api};
 }
 
-module.exports = {createSpotifyClient, ExternalRequestError, retryAfterMilliseconds};
+module.exports = {createSpotifyClient, ExternalRequestError, retryAfterMilliseconds, spotifyErrorCode};

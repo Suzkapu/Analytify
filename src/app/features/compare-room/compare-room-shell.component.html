@@ -129,7 +129,14 @@
               @if (participantPlaylists(participant).length) {
                 <div class="selected-playlist">
                   @if (participantPlaylists(participant)[0].imageUrl) {
-                    <img [src]="participantPlaylists(participant)[0].imageUrl" alt="">
+                    <a class="spotify-artwork-link spotify-destination"
+                      [href]="participantPlaylists(participant)[0].spotifyUrl | safeSpotifyUrl:'playlist'"
+                      target="_blank" rel="noopener noreferrer"
+                      [attr.aria-label]="'Open ' + participantPlaylists(participant)[0].name + ' on Spotify'"
+                      title="Open on Spotify">
+                      <img [src]="participantPlaylists(participant)[0].imageUrl"
+                        [alt]="participantPlaylists(participant)[0].name + ' cover'">
+                    </a>
                   }
                   @if (!participantPlaylists(participant)[0].imageUrl) {
                     <div class="playlist-placeholder"><i class="pi pi-list"></i></div>

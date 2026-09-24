@@ -179,20 +179,30 @@ function createScheduler({supabase, config, tasks, credentials, pushDispatcher})
         lastError: null
       }, details || {});
     } catch (error) {
-      const message = String(error.message || error).slice(0, 1000);
+      const credentialInvalid = error?.kind === 'credential_invalid';
+      if (credentialInvalid && user?.id) {
+        try {
+          await credentials.remove(user.id);
+        } catch (removalError) {
+          console.error(`[Sync][job:${job.id}] Failed to discard an invalid Spotify credential: ${removalError.message || removalError}`);
+        }
+      }
+      const message = credentialInvalid
+        ? 'Spotify authorization expired. Reconnect Spotify to resume automatic updates.'
+        : String(error.message || error).slice(0, 1000);
       const failedAt = new Date();
       let retryDelay = 300_000;
       try {
         retryDelay = Math.min(3_600_000, intervalMilliseconds(job.task_key, settings));
       } catch {}
-      const retryAt = new Date(failedAt.getTime() + retryDelay);
+      const retryAt = credentialInvalid ? null : new Date(failedAt.getTime() + retryDelay);
       console.error(`[Sync][job:${job.id}] ${job.task_key} failed for ${user.display_name}: ${message}`);
       await completeJob(job, 'failed', {
         lastStartedAt: startedAt,
         lastSuccessAt: null,
-        nextRunAt: retryAt.toISOString(),
+        nextRunAt: retryAt?.toISOString() || null,
         lastError: message
-      });
+      }, credentialInvalid ? {terminal: true, reconnectRequired: true} : {});
     }
   }
 

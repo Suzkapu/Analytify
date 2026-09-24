@@ -269,13 +269,13 @@
       <h2 id="share-dialog-title">{{ shareMode === 'playlist' ? 'Share a playlist' : (shareMode === 'stats' ? 'Request stats access' : 'What do you want to share?') }}</h2>
       <div id="share-dialog-description">
         @if (!shareMode) {
-          <p>Choose whether to publish a playlist snapshot or ask another registered user to let you view their saved stats.</p>
+          <p>Share a playlist or request stats access.</p>
         }
         @if (shareMode === 'playlist' && !shareLink) {
-          <p>Select one of your playlists. Analytify loads its cached songs first and creates a private link for one recipient.</p>
+          <p>Choose a playlist to share privately.</p>
         }
         @if (shareMode === 'stats' && !statsRequestLink) {
-          <p>Search for a registered user, or create a private request link. They must agree before their stats become visible to you.</p>
+          <p>Choose a user or create a request link. They must accept.</p>
         }
       </div>
       @if (!shareMode) {
@@ -355,7 +355,7 @@
         }
       }
       @if (statsRequestLink) {
-        <p class="share-ready-copy">Send this private link to the person whose stats you want to request. When they open it, Analytify will show the accept or decline window.</p>
+        <p class="share-ready-copy">Send this link to the person. They can accept or decline when it opens.</p>
         <div class="share-link-field">
           <input [value]="statsRequestLink" readonly aria-label="Private stats request link">
           <button type="button" (click)="copyStatsRequestLink()">
@@ -365,7 +365,7 @@
         </div>
       }
       @if (shareLink) {
-        <p class="share-ready-copy">Copy this link now. For security, Analytify stores only its hash and cannot show the same link again. The link expires after seven days if nobody claims it.</p>
+        <p class="share-ready-copy">Copy this one-time link now. It expires after seven days.</p>
         <div class="share-link-field">
           <input [value]="shareLink" readonly aria-label="Private playlist share link">
           <button type="button" (click)="copyShareLink()">

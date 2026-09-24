@@ -17,7 +17,12 @@
 
   @if (!isLoading && share) {
     <header class="playlist-hero">
-      <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="" decoding="async">
+      <a class="playlist-hero-cover spotify-artwork-link"
+        [href]="('https://open.spotify.com/playlist/' + share.sourcePlaylistId) | safeSpotifyUrl:'playlist'"
+        target="_blank" rel="noopener noreferrer" aria-label="Open source playlist on Spotify">
+        <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
+          [alt]="displayPlaylistName + ' cover'" decoding="async">
+      </a>
       <div class="hero-copy">
         <span class="eyebrow">{{ isRecipient ? 'Private playlist access' : 'Shared by you' }}</span>
         <h1>{{ displayPlaylistName }}</h1>

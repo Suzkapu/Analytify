@@ -5,7 +5,7 @@ export interface PersonalSpotifyAuthRequest {
   state: string;
   verifier: string;
   returnUrl: string;
+  scopes: string[];
   expectedSpotifyId: string | null;
   createdAt: number;
 }
-

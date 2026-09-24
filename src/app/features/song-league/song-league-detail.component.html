@@ -182,20 +182,32 @@
             @if (searchResults.length) {
               <div class="league-search-results">
                 @for (track of searchResults; track trackSearch($index, track)) {
-                  <button type="button" (click)="selectTrack(track)">
+                  <div class="league-search-result">
                     @if (track.album.images?.[0]?.url) {
-                      <img [src]="track.album.images[0].url" alt="">
+                      <a class="spotify-artwork-link spotify-destination"
+                        [href]="track.external_urls?.spotify | safeSpotifyUrl:'track'" target="_blank"
+                        rel="noopener noreferrer" [attr.aria-label]="'Open ' + track.name + ' on Spotify'"
+                        title="Open on Spotify">
+                        <img [src]="track.album.images[0].url" [alt]="track.name + ' cover'">
+                      </a>
                     }
-                    <span><strong>{{ track.name }}</strong><small>{{ track.artists.length ? track.artists[0].name : 'Unknown artist' }} · {{ track.album.name }}</small></span>
-                    <i class="pi pi-plus"></i>
-                  </button>
+                    <button type="button" (click)="selectTrack(track)">
+                      <span><strong>{{ track.name }}</strong><small>{{ track.artists.length ? track.artists[0].name : 'Unknown artist' }} · {{ track.album.name }}</small></span>
+                      <i class="pi pi-plus"></i>
+                    </button>
+                  </div>
                 }
               </div>
             }
             @if (selectedTrack; as track) {
               <article class="selected-league-track">
                 @if (selectedTrackImage) {
-                  <img [src]="selectedTrackImage" alt="">
+                  <a class="spotify-artwork-link spotify-destination"
+                    [href]="track.external_urls?.spotify | safeSpotifyUrl:'track'" target="_blank"
+                    rel="noopener noreferrer" [attr.aria-label]="'Open ' + track.name + ' on Spotify'"
+                    title="Open on Spotify">
+                    <img [src]="selectedTrackImage" [alt]="track.name + ' cover'">
+                  </a>
                 }
                 <div><span>Ready to validate</span><strong>{{ track.name }}</strong><small>{{ track.artists.length ? track.artists[0].name : 'Unknown artist' }} · this choice locks immediately</small></div>
                 <button type="button" class="league-primary" (click)="submitRecommendation()" [disabled]="isSubmitting">
@@ -365,7 +377,11 @@
           @for (row of breakdownRowsForSelected(); track trackBreakdown($index, row)) {
             <div class="breakdown-row">
               <span class="breakdown-song">@if (row.imageUrl) {
-                <img [src]="row.imageUrl" alt="">
+                <a class="spotify-artwork-link spotify-destination"
+                  [href]="row.spotifyUrl | safeSpotifyUrl:'track'" target="_blank" rel="noopener noreferrer"
+                  [attr.aria-label]="'Open ' + row.trackName + ' on Spotify'" title="Open on Spotify">
+                  <img [src]="row.imageUrl" [alt]="row.trackName + ' cover'">
+                </a>
                 }<span><strong>{{ row.trackName }}</strong><small>{{ row.artistNames }}</small></span></span>
                 <span>{{ row.listenerDisplayName }}</span>
                 <span>{{ row.latestRank === null ? 'Not ranked' : '#' + row.latestRank + ' of ' + row.latestListSize }}</span>
