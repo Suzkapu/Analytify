@@ -241,29 +241,24 @@
           @if (pastTopResults.length) {
             <div class="past-stats-grid">
               @for (item of pastTopResults; track item) {
-                <div class="past-stats-card">
+                <button type="button" class="past-stats-card"
+                  [attr.aria-label]="'View position history for ' + item.name"
+                  title="View history graph" (click)="openPastTopResult(item)">
                   @if (item.imageUrl) {
-                    <a class="spotify-artwork-link spotify-destination"
-                      [href]="item.spotifyUrl | safeSpotifyUrl:(item.kind === 'track' ? 'track' : 'artist')"
-                      target="_blank" rel="noopener noreferrer"
-                      [attr.aria-label]="'Open ' + item.name + ' on Spotify'" title="Open on Spotify">
-                      <img [src]="item.imageUrl" [alt]="item.name" loading="lazy" decoding="async">
-                    </a>
+                    <img [src]="item.imageUrl" [alt]="item.name" loading="lazy" decoding="async">
                   }
                   @if (!item.imageUrl) {
                     <span class="past-stats-placeholder"><i class="pi" [ngClass]="item.kind === 'genre' ? 'pi-tags' : 'pi-music'"></i></span>
                   }
-                  <button type="button" class="past-stats-history-action"
-                    [attr.aria-label]="'View position history for ' + item.name"
-                    title="View history graph" (click)="openPastTopResult(item)">
+                  <span class="past-stats-history-action">
                     <span class="past-stats-copy">
                       <strong>{{ item.name }}</strong>@if (item.subtitle) {
                       <small>{{ item.subtitle }}</small>
                     }
                     </span>
                     <i class="pi pi-chart-line" aria-hidden="true"></i>
-                  </button>
-                </div>
+                  </span>
+                </button>
             }
           </div>
         }

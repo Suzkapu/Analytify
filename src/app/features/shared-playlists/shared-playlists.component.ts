@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {firstValueFrom} from 'rxjs';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-source.service';
@@ -6,7 +6,7 @@ import {ComparePlaylist} from '@core/compare-room/compare-room.models';
 import {PlaylistShare, PlaylistSharePublication} from '@core/sharing/playlist-sharing.models';
 import {sharedPlaylistName} from '@core/sharing/playlist-sharing-names';
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
-import {ModerationCase, StatsAccessRequest, StatsShareableUser} from '@core/sharing/stats-sharing.models';
+import {ModerationCase, StatsAccessRequest} from '@core/sharing/stats-sharing.models';
 import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {PlaylistShareAutoSyncService} from '@core/sharing/playlist-share-auto-sync.service';
@@ -21,8 +21,6 @@ const console = createScopedLogger('Shared Playlists');
     standalone: false
 })
 export class SharedPlaylistsComponent implements OnInit, OnDestroy {
-  @ViewChild('statsUserPickerTrigger') private statsUserPickerTrigger?: ElementRef<HTMLButtonElement>;
-
   receivedShares: PlaylistShare[] = [];
   ownedShares: PlaylistShare[] = [];
   availablePlaylists: ComparePlaylist[] = [];
@@ -39,19 +37,12 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   shareError = '';
   shareLinkCopied = false;
   shareMode: 'playlist' | 'stats' | null = null;
-  availableStatsUsers: StatsShareableUser[] = [];
   statsAccessRequests: StatsAccessRequest[] = [];
-  selectedStatsOwnerId = '';
-  statsUserSearch = '';
-  isStatsUserPickerOpen = false;
-  isLoadingStatsUsers = false;
-  isRequestingStats = false;
   isCreatingStatsLink = false;
   statsRequestLink = '';
   statsRequestLinkCopied = false;
   statsShareLink = '';
   statsShareLinkCopied = false;
-  statsPickerMenuStyle: Record<string, string> = {};
   consentRequest: StatsAccessRequest | null = null;
   consentError = '';
   statsRevocationRequest: StatsAccessRequest | null = null;
@@ -68,8 +59,6 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   private silentReloadPromise: Promise<void> | null = null;
   private dismissedConsentRequestIds = new Set<string>();
   private destroyed = false;
-  private statsSearchTimer: ReturnType<typeof setTimeout> | null = null;
-  private statsSearchSequence = 0;
 
   constructor(
     private sharing: PlaylistSharingService,
@@ -108,8 +97,6 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     this.unsubscribeFromShareChanges = null;
     this.unsubscribeFromStatsChanges?.();
     this.unsubscribeFromStatsChanges = null;
-    if (this.statsSearchTimer) clearTimeout(this.statsSearchTimer);
-    this.statsSearchTimer = null;
   }
 
   async reload(silent = false): Promise<void> {
@@ -144,16 +131,6 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     return this.availablePlaylists.find(playlist => playlist.id === this.selectedPlaylistId) || null;
   }
 
-  get selectedStatsOwner(): StatsShareableUser | null {
-    return this.availableStatsUsers.find(user => user.userId === this.selectedStatsOwnerId) || null;
-  }
-
-  get filteredStatsUsers(): StatsShareableUser[] {
-    const query = this.statsUserSearch.trim().toLocaleLowerCase();
-    if (!query) return this.availableStatsUsers;
-    return this.availableStatsUsers.filter(user => user.displayName.toLocaleLowerCase().includes(query));
-  }
-
   get approvedStatsAccess(): StatsAccessRequest[] {
     return this.statsAccessRequests.filter(request => request.viewerRole === 'viewer' && request.status === 'approved');
   }
@@ -171,10 +148,7 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     this.shareMode = null;
     this.isLoadingSharePlaylists = false;
     this.availablePlaylists = [];
-    this.availableStatsUsers = [];
     this.selectedPlaylistId = '';
-    this.selectedStatsOwnerId = '';
-    this.statsUserSearch = '';
     this.shareLink = '';
     this.statsRequestLink = '';
     this.statsRequestLinkCopied = false;
@@ -188,10 +162,6 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     this.shareMode = mode;
     this.shareError = '';
     if (mode === 'stats') {
-      this.availableStatsUsers = [];
-      this.selectedStatsOwnerId = '';
-      this.statsUserSearch = '';
-      this.isStatsUserPickerOpen = false;
       return;
     }
 
@@ -213,15 +183,11 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   }
 
   closeShareDialog(): void {
-    if (this.isCreatingShare || this.isRequestingStats || this.isCreatingStatsLink) return;
+    if (this.isCreatingShare || this.isCreatingStatsLink) return;
     this.isShareDialogOpen = false;
     this.shareMode = null;
     this.availablePlaylists = [];
-    this.availableStatsUsers = [];
     this.selectedPlaylistId = '';
-    this.selectedStatsOwnerId = '';
-    this.statsUserSearch = '';
-    this.isStatsUserPickerOpen = false;
     this.shareLink = '';
     this.statsRequestLink = '';
     this.statsRequestLinkCopied = false;
@@ -229,97 +195,6 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     this.statsShareLinkCopied = false;
     this.shareError = '';
     this.shareLinkCopied = false;
-  }
-
-  async requestStatsAccess(): Promise<void> {
-    if (this.isRequestingStats) return;
-    const owner = this.selectedStatsOwner;
-    if (!owner) {
-      this.shareError = 'Select a registered user whose stats you want to view.';
-      return;
-    }
-    this.isRequestingStats = true;
-    this.shareError = '';
-    try {
-      await this.statsSharing.requestAccess(owner.userId);
-      this.successMessage = `Your stats request was sent to ${owner.displayName}.`;
-      this.isRequestingStats = false;
-      this.closeShareDialog();
-      await this.reload(true);
-    } catch (error) {
-      this.shareError = this.describeError(error);
-    } finally {
-      this.isRequestingStats = false;
-    }
-  }
-
-  toggleStatsUserPicker(): void {
-    if (this.isLoadingStatsUsers || this.isRequestingStats) return;
-    this.isStatsUserPickerOpen = !this.isStatsUserPickerOpen;
-    if (this.isStatsUserPickerOpen) {
-      this.statsUserSearch = '';
-      this.availableStatsUsers = [];
-      setTimeout(() => this.updateStatsPickerMenuPosition());
-    }
-  }
-
-  onStatsUserSearchChange(query: string): void {
-    this.statsUserSearch = query;
-    this.selectedStatsOwnerId = '';
-    if (this.statsSearchTimer) clearTimeout(this.statsSearchTimer);
-    this.statsSearchTimer = null;
-    const normalized = query.trim();
-    const sequence = ++this.statsSearchSequence;
-    if (normalized.length < 3) {
-      this.availableStatsUsers = [];
-      this.isLoadingStatsUsers = false;
-      return;
-    }
-    this.isLoadingStatsUsers = true;
-    this.statsSearchTimer = setTimeout(async () => {
-      this.statsSearchTimer = null;
-      try {
-        const users = await this.statsSharing.listAvailableUsers(normalized);
-        if (sequence !== this.statsSearchSequence || this.destroyed) return;
-        this.availableStatsUsers = users;
-        this.shareError = '';
-      } catch (error) {
-        if (sequence === this.statsSearchSequence) this.shareError = this.describeError(error);
-      } finally {
-        if (sequence === this.statsSearchSequence) this.isLoadingStatsUsers = false;
-      }
-    }, 300);
-  }
-
-  selectStatsOwner(user: StatsShareableUser): void {
-    if (user.requestStatus === 'pending' || user.requestStatus === 'approved') return;
-    this.selectedStatsOwnerId = user.userId;
-    this.isStatsUserPickerOpen = false;
-  }
-
-  closeStatsUserPicker(): void {
-    this.isStatsUserPickerOpen = false;
-  }
-
-  @HostListener('window:resize')
-  updateStatsPickerMenuPosition(): void {
-    if (!this.isStatsUserPickerOpen || !this.statsUserPickerTrigger) return;
-    const rect = this.statsUserPickerTrigger.nativeElement.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    const margin = 12;
-    const gap = 7;
-    const below = viewportHeight - rect.bottom - margin - gap;
-    const above = rect.top - margin - gap;
-    const maxHeight = Math.max(140, Math.min(300, Math.max(below, above)));
-    const top = below >= 180 || below >= above
-      ? rect.bottom + gap
-      : Math.max(margin, rect.top - gap - maxHeight);
-    this.statsPickerMenuStyle = {
-      top: `${Math.round(top)}px`,
-      left: `${Math.round(rect.left)}px`,
-      width: `${Math.round(rect.width)}px`,
-      maxHeight: `${Math.round(maxHeight)}px`
-    };
   }
 
   async createStatsRequestLink(): Promise<void> {
@@ -330,7 +205,6 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
       const created = await this.statsSharing.createAccessInvite();
       this.statsRequestLink = created.claimUrl;
       this.statsRequestLinkCopied = false;
-      this.closeStatsUserPicker();
     } catch (error) {
       this.shareError = this.describeError(error);
     } finally {
@@ -373,15 +247,6 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     }
   }
 
-  statsUserStatusLabel(user: StatsShareableUser): string {
-    switch (user.requestStatus) {
-      case 'approved': return 'Already shared';
-      case 'pending': return 'Awaiting reply';
-      case 'declined': return 'Declined · request again';
-      case 'revoked': return 'Revoked · request again';
-      default: return 'Available to request';
-    }
-  }
 
   async respondToStatsRequest(approve: boolean): Promise<void> {
     const request = this.consentRequest;
@@ -628,9 +493,6 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     return playlist.id;
   }
 
-  trackStatsUser(_: number, user: StatsShareableUser): string {
-    return user.userId;
-  }
 
   private reloadSilently(): void {
     if (this.silentReloadPromise) return;

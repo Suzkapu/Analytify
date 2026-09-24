@@ -221,26 +221,6 @@ describe('SharedPlaylistsComponent', () => {
         expect(component.shareLink).toContain('/shared-playlists/claim/token');
     });
 
-    it('lets a user select stats access and request one registered user', async () => {
-        statsSharing.listAvailableUsers.mockResolvedValue([{
-                userId: 'owner-id', displayName: 'Stats Owner', imageUrl: '',
-                requestId: null, requestStatus: null
-            }]);
-
-        await component.openShareDialog();
-        await component.selectShareMode('stats');
-        component.availableStatsUsers = [{
-                userId: 'owner-id', displayName: 'Stats Owner', imageUrl: '', requestId: null, requestStatus: null
-            }];
-        component.selectedStatsOwnerId = 'owner-id';
-        await component.requestStatsAccess();
-
-        expect(statsSharing.requestAccess).toHaveBeenCalledTimes(1);
-
-        expect(statsSharing.requestAccess).toHaveBeenCalledWith('owner-id');
-        expect(component.successMessage).toContain('Stats Owner');
-    });
-
     it('offers share and request links without a registered-user search', async () => {
         await component.openShareDialog();
         await component.selectShareMode('stats');

@@ -263,7 +263,7 @@
       aria-labelledby="share-dialog-title" aria-describedby="share-dialog-description"
       appAccessibleDialog (modalEscape)="closeShareDialog()">
       <button type="button" class="share-modal-close" appModalInitialFocus (click)="closeShareDialog()"
-      [disabled]="isCreatingShare || isRequestingStats || isCreatingStatsLink" aria-label="Close">×</button>
+      [disabled]="isCreatingShare || isCreatingStatsLink" aria-label="Close">×</button>
       <div class="share-modal-icon"><i class="pi" [ngClass]="shareMode === 'stats' ? 'pi-eye' : 'pi-share-alt'"></i></div>
       <span class="eyebrow">Revocable, private access</span>
       <h2 id="share-dialog-title">{{ shareMode === 'playlist' ? 'Share a playlist' : (shareMode === 'stats' ? 'Private stats links' : 'What do you want to share?') }}</h2>
@@ -371,7 +371,7 @@
           </button>
         }
         <button type="button" class="share-secondary" (click)="closeShareDialog()"
-          [disabled]="isCreatingShare || isRequestingStats || isCreatingStatsLink">
+          [disabled]="isCreatingShare || isCreatingStatsLink">
           {{ shareLink || statsRequestLink || statsShareLink ? 'Done' : 'Cancel' }}
         </button>
       </div>
