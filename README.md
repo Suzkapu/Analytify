@@ -11,17 +11,14 @@ Analytify is a personal Spotify library viewer. It helps you browse large playli
 - **Playlist explorer:** search and sort playlists, songs, artists, and albums; merge playlists; and open tracks in Spotify.
 - **Playlist summaries:** see song, artist, album, duration, and explicit-track counts plus top artists and albums.
 - **Listening statistics (currently unavailable):** the implementation can show top songs, artists, genres, and history, but production access is disabled unless Spotify gives a written policy determination covering it.
-- **Daily history:** compare saved snapshots and follow the position history of current or former rankings.
-- **Listening history:** review recently played music when history collection is enabled.
-- **Private sharing:** share a revocable playlist snapshot or ask a specific person for read-only access to their saved statistics.
+- **Private sharing:** share a revocable playlist snapshot with a specific person and remove their access later.
 - **Compare Room and Song League (currently unavailable):** these tools remain disabled unless Spotify gives a written policy determination covering them.
-- **Song League:** join a private group, recommend a song during the Friday window, and follow its score in other members' short-term Top Songs.
 
 ## Your data
 
-Previously loaded music is cached in your browser so the app can reopen it quickly. Cloud Backup is optional for ordinary playlist and statistics viewing. Features that need shared or scheduled data explain what they require before enabling it.
+Previously loaded music is cached in your browser so the app can reopen it quickly. Cloud Backup is optional for ordinary playlist viewing. Features that need shared or scheduled data explain what they require before enabling it.
 
-You can clear the local cache or delete your cloud data from **Data & account**. Playlist and statistics access can be revoked from **Private sharing**. Analytify never asks for a Spotify Client Secret.
+You can clear the local cache or delete your cloud data from **Data & account**. Playlist access can be revoked from **Private sharing**. Analytify never asks for a Spotify Client Secret.
 
 If your Spotify account is not allowed on Analytify's hosted Spotify app, choose **Use your own Spotify app**. This uses your public Client ID with Spotify's PKCE login. The session stays local unless you choose a cloud-backed feature.
 
