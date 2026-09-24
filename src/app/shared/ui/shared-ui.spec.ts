@@ -29,7 +29,10 @@ describe('shared UI segments', () => {
         fixture.detectChanges();
 
         expect(fixture.nativeElement.querySelector('small').textContent).toContain('Artists');
-        expect(fixture.nativeElement.querySelector('strong').textContent).toContain('444');
+        const value = fixture.nativeElement.querySelector('.metric-value') as HTMLElement;
+        expect(value.textContent).toContain('444');
+        expect(getComputedStyle(value).whiteSpace).toBe('normal');
+        expect(getComputedStyle(value).textOverflow).not.toBe('ellipsis');
     });
 
     it('replaces a pending metric with its real value immediately when loading completes', () => {

@@ -3,7 +3,7 @@
   <span class="metric-copy">
     <small>{{ label }}</small>
     @if (!loading) {
-      <strong>{{ value }}</strong>
+      <strong class="metric-value">{{ value }}</strong>
     }
     @if (loading) {
       <span class="metric-loading" role="status">
