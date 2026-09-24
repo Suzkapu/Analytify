@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(9);
+select plan(10);
 
 insert into auth.users(id, email, is_anonymous) values
   ('51000000-0000-4000-8000-000000000001', 'hosted-merge@example.test', false),

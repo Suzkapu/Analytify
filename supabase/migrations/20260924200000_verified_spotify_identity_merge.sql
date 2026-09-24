@@ -28,6 +28,7 @@ declare
   v_target public.users%rowtype;
   v_source public.users%rowtype;
   v_candidate_count integer;
+  v_source_user_id uuid;
   v_reference record;
   v_changed integer;
   v_moved integer := 0;
@@ -50,9 +51,15 @@ begin
     raise exception 'The target profile is verified for another Spotify account.' using errcode = '23514';
   end if;
 
-  select count(*), min(id) into v_candidate_count, source_user_id
+  select count(*) into v_candidate_count
   from public.users
   where verified_spotify_id = v_verified_id and id <> p_target_user_id;
+
+  select id into v_source_user_id
+  from public.users
+  where verified_spotify_id = v_verified_id and id <> p_target_user_id
+  order by id
+  limit 1;
 
   if v_candidate_count = 0 then
     update public.users set verified_spotify_id = v_verified_id where id = p_target_user_id;
@@ -64,7 +71,7 @@ begin
       using errcode = '21000';
   end if;
 
-  select * into v_source from public.users where id = source_user_id for update;
+  select * into v_source from public.users where id = v_source_user_id for update;
   if v_source.verified_spotify_id is distinct from v_verified_id then
     raise exception 'The source profile is no longer verified for this Spotify account.' using errcode = '40001';
   end if;
@@ -95,7 +102,7 @@ begin
     execute format('update %I.%I set %I = $1 where %I = $2',
       v_reference.schema_name, v_reference.table_name,
       v_reference.column_name, v_reference.column_name)
-      using p_target_user_id, source_user_id;
+      using p_target_user_id, v_source_user_id;
     get diagnostics v_changed = row_count;
     v_moved := v_moved + v_changed;
   end loop;
@@ -111,12 +118,12 @@ begin
       spotify_refresh_token = coalesce(spotify_refresh_token, v_source.spotify_refresh_token)
   where id = p_target_user_id;
 
-  delete from public.users where id = source_user_id;
+  delete from public.users where id = v_source_user_id;
   insert into public.spotify_identity_merge_audit(
     verified_spotify_id, source_user_id, target_user_id, moved_references
-  ) values (v_verified_id, source_user_id, p_target_user_id, v_moved);
+  ) values (v_verified_id, v_source_user_id, p_target_user_id, v_moved);
 
-  return query select true, source_user_id, v_moved;
+  return query select true, v_source_user_id, v_moved;
 end;
 $$;
 
