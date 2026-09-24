@@ -94,6 +94,17 @@ export class CompareRoomTransportService {
     if (error) throw error;
   }
 
+  async sendCreation(message: Extract<CompareRoomMessage, {type:
+    'create-playlist-start' | 'create-playlist-track-chunk' | 'create-playlist-commit'}>): Promise<void> {
+    if (!this.channel || !this.roomId) throw new Error('The Compare Room is not connected.');
+    assertCompareMessageBounds(message);
+    const {error} = await this.supabase.client.rpc('send_compare_room_creation_message', {
+      p_room_id: this.roomId,
+      p_message: message
+    });
+    if (error) throw error;
+  }
+
   async closeRoom(): Promise<void> {
     const {error} = await this.supabase.client.rpc('close_compare_room', {p_room_id: this.roomId});
     if (error) throw error;

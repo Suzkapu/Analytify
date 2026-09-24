@@ -261,9 +261,16 @@
               @if (!awaitingApprovals.length) {
                 <span class="approved"><i class="pi pi-check-circle"></i> Everyone approved</span>
               }
+              @if (mainParticipant; as participant) {
+                <button type="button" class="secondary-button" (click)="createForHost()"
+                  [disabled]="isExecuting || participant.result?.success">
+                  <i class="pi" [ngClass]="isExecuting ? 'pi-spin pi-spinner' : participant.result?.success ? 'pi-check' : 'pi-spotify'"></i>
+                  {{ participant.result?.success ? 'Created for me' : 'Create for me' }}
+                </button>
+              }
               <button type="button" class="primary-button" (click)="execute()" [disabled]="!coordinator.allParticipantsApproved() || isExecuting">
                 <i class="pi" [ngClass]="isExecuting ? 'pi-spin pi-spinner' : 'pi-spotify'"></i>
-                Create for everyone
+              Create for everyone
               </button>
             </div>
           </section>

@@ -103,8 +103,8 @@
           </p>
         }
         <button type="button" class="spotify-button" (click)="approve()" [disabled]="hasApproved">
-          <i class="pi" [ngClass]="hasApproved ? 'pi-check' : 'pi-thumbs-up'"></i>
-          {{ hasApproved ? 'Approved — waiting for host' : 'Approve playlist creation' }}
+          <i class="pi" [ngClass]="hasApproved ? 'pi-spin pi-spinner' : 'pi-spotify'"></i>
+          {{ hasApproved ? 'Preparing your playlist…' : 'Create for me' }}
         </button>
       }
     }

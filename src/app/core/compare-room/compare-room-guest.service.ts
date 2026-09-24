@@ -101,8 +101,10 @@ export class CompareRoomGuestService {
     } else if (message.type === 'merge-proposal-cancelled') {
       this.proposal$.next(null);
     } else if (message.type === 'create-playlist-start') {
+      if (message.targetParticipantId && message.targetParticipantId !== this.participantId) return;
       this.createProposalBuffer = {...message.proposal, tracks: []};
     } else if (message.type === 'create-playlist-track-chunk') {
+      if (message.targetParticipantId && message.targetParticipantId !== this.participantId) return;
       if (this.createProposalBuffer?.id === message.proposalId) {
         if (this.createProposalBuffer.tracks.length + message.tracks.length > MAX_COMPARE_TRACKS) {
           this.createProposalBuffer = null;
@@ -112,6 +114,7 @@ export class CompareRoomGuestService {
         this.createProposalBuffer.tracks.push(...message.tracks);
       }
     } else if (message.type === 'create-playlist-commit') {
+      if (message.targetParticipantId && message.targetParticipantId !== this.participantId) return;
       void this.commitCreateProposal(message.proposalId);
     } else if (message.type === 'remove-participant' && message.participantId === this.participantId) {
       this.removed$.next(true);
@@ -162,8 +165,8 @@ export class CompareRoomGuestService {
   private async commitCreateProposal(proposalId: string): Promise<void> {
     const proposal = this.createProposalBuffer;
     this.createProposalBuffer = null;
-    if (!proposal || proposal.id !== proposalId || proposal.tracks.length !== proposal.trackCount ||
-      this.consumedProposalIds.has(proposalId)) {
+    if (this.consumedProposalIds.has(proposalId)) return;
+    if (!proposal || proposal.id !== proposalId || proposal.tracks.length !== proposal.trackCount) {
       this.error$.next('Some shared tracks were lost or replayed before playlist creation. Ask the host to try again.');
       return;
     }

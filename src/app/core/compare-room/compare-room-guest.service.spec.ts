@@ -71,7 +71,7 @@ describe('CompareRoomGuestService', () => {
         expect(guest.error$.value).toContain('changed after you approved it');
     });
 
-    it('rejects a replayed create commit', async () => {
+    it('silently ignores a replay sent after this participant already created the proposal', async () => {
         const guest = new CompareRoomGuestService({ send: vi.fn().mockName('send').mockResolvedValue(undefined) } as any);
         const approved = proposal();
         approved.contentHash = await proposalContentHash(approved);
@@ -82,7 +82,29 @@ describe('CompareRoomGuestService', () => {
             await (guest as any).commitCreateProposal(approved.id);
         }
 
-        expect(guest.error$.value).toContain('lost or replayed');
+        expect(guest.error$.value).toBeNull();
+        expect((guest as any).consumedProposalIds.size).toBe(1);
+    });
+
+    it('ignores playlist delivery messages targeted at another participant', async () => {
+        const guest = new CompareRoomGuestService({send: vi.fn().mockResolvedValue(undefined)} as any);
+        (guest as any).participantId = 'mine';
+        const approved = proposal();
+        approved.contentHash = await proposalContentHash(approved);
+
+        (guest as any).handleMessage({
+            type: 'create-playlist-start', proposal: {...approved, tracks: []}, targetParticipantId: 'other'
+        });
+        (guest as any).handleMessage({
+            type: 'create-playlist-track-chunk', proposalId: approved.id, tracks: approved.tracks,
+            targetParticipantId: 'other'
+        });
+        (guest as any).handleMessage({
+            type: 'create-playlist-commit', proposalId: approved.id, targetParticipantId: 'other'
+        });
+
+        expect(guest.createRequest$.value).toBeNull();
+        expect(guest.error$.value).toBeNull();
     });
 
     function proposal(): CompareMergeProposal {

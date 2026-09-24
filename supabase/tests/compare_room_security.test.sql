@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(16);
+select plan(27);
 
 insert into auth.users(id, email) values
   ('35000000-0000-4000-8000-000000000001', 'compare-host@example.test'),
@@ -87,6 +87,50 @@ select throws_ok($$ select public.send_compare_room_message(
     'tracks', (select jsonb_agg('{}'::jsonb) from generate_series(1, 101)))
 ) $$, 'P0001', 'Track chunks are limited to 100 tracks.',
   'oversized host chunks are rejected before broadcast');
+
+select lives_ok($$ select public.send_compare_room_message(
+  'room_1234567890_secure',
+  '{"type":"merge-proposal","proposal":{"id":"proposal_independent_02","contentHash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","trackCount":1,"tracks":[]}}'
+) $$, 'the host can publish another proposal after an earlier execution');
+select set_config('request.jwt.claim.sub', '35000000-0000-4000-8000-000000000002', true);
+select lives_ok($$ select public.send_compare_room_message(
+  'room_1234567890_secure',
+  '{"type":"proposal-approval","participantId":"guest_1234567890_secure","proposalId":"proposal_independent_02","contentHash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}'
+) $$, 'the guest approves the independent proposal');
+select set_config('request.jwt.claim.sub', '35000000-0000-4000-8000-000000000001', true);
+select lives_ok($$ select public.send_compare_room_creation_message(
+  'room_1234567890_secure',
+  '{"type":"create-playlist-start","targetParticipantId":"guest_1234567890_secure","proposal":{"id":"proposal_independent_02","contentHash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","trackCount":1,"tracks":[]}}'
+) $$, 'an approved guest can start their own delivery');
+select lives_ok($$ select public.send_compare_room_creation_message(
+  'room_1234567890_secure',
+  '{"type":"create-playlist-track-chunk","targetParticipantId":"guest_1234567890_secure","proposalId":"proposal_independent_02","tracks":[{}]}'
+) $$, 'the guest delivery accepts its bounded track chunk');
+select lives_ok($$ select public.send_compare_room_creation_message(
+  'room_1234567890_secure',
+  '{"type":"create-playlist-commit","targetParticipantId":"guest_1234567890_secure","proposalId":"proposal_independent_02"}'
+) $$, 'the guest delivery commits independently');
+select lives_ok($$ select public.send_compare_room_creation_message(
+  'room_1234567890_secure',
+  '{"type":"create-playlist-start","proposal":{"id":"proposal_independent_02","contentHash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","trackCount":1,"tracks":[]}}'
+) $$, 'the host can still start create-for-everyone');
+select lives_ok($$ select public.send_compare_room_creation_message(
+  'room_1234567890_secure',
+  '{"type":"create-playlist-track-chunk","proposalId":"proposal_independent_02","tracks":[{}]}'
+) $$, 'create-for-everyone keeps separate delivery progress');
+select lives_ok($$ select public.send_compare_room_creation_message(
+  'room_1234567890_secure',
+  '{"type":"create-playlist-commit","proposalId":"proposal_independent_02"}'
+) $$, 'create-for-everyone commits after the guest delivery');
+select is((select count(*) from public.compare_room_proposal_deliveries
+  where room_id = 'room_1234567890_secure' and proposal_id = 'proposal_independent_02'), 2::bigint,
+  'individual and create-for-everyone delivery states coexist');
+select is((select count(*) from public.compare_room_messages
+  where room_id = 'room_1234567890_secure' and payload->>'targetParticipantId' = 'guest_1234567890_secure'), 3::bigint,
+  'targeted creation messages are addressed only to that guest');
+select is((select count(*) from public.compare_room_messages
+  where room_id = 'room_1234567890_secure' and payload->>'type' = 'create-playlist-commit'), 2::bigint,
+  'individual and create-for-everyone commits remain auditable');
 
 select * from finish();
 rollback;

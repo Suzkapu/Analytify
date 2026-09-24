@@ -292,6 +292,23 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     }
   }
 
+  get mainParticipant(): CompareParticipant | null {
+    return this.participants.find(item => item.isMainProfile) || null;
+  }
+
+  async createForHost(): Promise<void> {
+    if (!this.proposal || this.isExecuting || !this.mainParticipant || this.mainParticipant.result?.success) return;
+    this.isExecuting = true;
+    this.errorMessage = '';
+    try {
+      await this.saveMainPlaylist(this.mainParticipant);
+    } catch (error) {
+      this.errorMessage = this.describeError(error);
+    } finally {
+      this.isExecuting = false;
+    }
+  }
+
   async retryMainPlaylist(): Promise<void> {
     if (!this.proposal || this.isExecuting) return;
     const mainParticipant = this.participants.find(item => item.isMainProfile && item.result?.success === false);

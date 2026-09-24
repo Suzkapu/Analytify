@@ -137,6 +137,33 @@ describe('CompareRoomCoordinatorService', () => {
         expect(unionProposal?.descriptionsByParticipant?.['guest']).toContain('All-songs merge');
     });
 
+    it('delivers an approved proposal only to the participant who approved it', async () => {
+        const transport = {
+            send: vi.fn().mockResolvedValue(undefined),
+            sendCreation: vi.fn().mockResolvedValue(undefined)
+        };
+        const coordinator = new CompareRoomCoordinatorService(transport as any, new PlaylistIntersectionService());
+        const guest = participant('guest', 'Guest', [playlist('guest')], ['shared']);
+        coordinator.participants$.next([
+            participant('host', 'Host', [playlist('host')], ['shared']), guest
+        ]);
+        (coordinator as any).acceptedParticipantIds.add('guest');
+        const activeProposal = await coordinator.prepareProposal();
+
+        (coordinator as any).handleMessage({
+            type: 'proposal-approval', participantId: 'guest', proposalId: activeProposal!.id,
+            contentHash: activeProposal!.contentHash
+        });
+        await new Promise<void>(resolve => setTimeout(resolve, 0));
+
+        expect(transport.sendCreation).toHaveBeenCalledWith(expect.objectContaining({
+            type: 'create-playlist-start', targetParticipantId: 'guest'
+        }));
+        expect(transport.sendCreation).toHaveBeenLastCalledWith({
+            type: 'create-playlist-commit', proposalId: activeProposal!.id, targetParticipantId: 'guest'
+        });
+    });
+
     function participant(id: string, displayName: string, playlists: ComparePlaylist[], trackIds: string[]): CompareParticipant {
         return {
             id,

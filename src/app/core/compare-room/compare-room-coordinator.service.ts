@@ -208,15 +208,22 @@ export class CompareRoomCoordinatorService {
       status: 'saving',
       result: undefined
     })));
-    await this.transport.send({type: 'create-playlist-start', proposal: {...proposal, tracks: []}});
+    await this.deliverProposal(proposal);
+  }
+
+  private async deliverProposal(proposal: CompareMergeProposal, targetParticipantId?: string): Promise<void> {
+    await this.transport.sendCreation({
+      type: 'create-playlist-start', proposal: {...proposal, tracks: []}, targetParticipantId
+    });
     for (let index = 0; index < proposal.tracks.length; index += MAX_COMPARE_CHUNK_TRACKS) {
-      await this.transport.send({
+      await this.transport.sendCreation({
         type: 'create-playlist-track-chunk',
         proposalId: proposal.id,
-        tracks: proposal.tracks.slice(index, index + MAX_COMPARE_CHUNK_TRACKS)
+        tracks: proposal.tracks.slice(index, index + MAX_COMPARE_CHUNK_TRACKS),
+        targetParticipantId
       });
     }
-    await this.transport.send({type: 'create-playlist-commit', proposalId: proposal.id});
+    await this.transport.sendCreation({type: 'create-playlist-commit', proposalId: proposal.id, targetParticipantId});
   }
 
   setLocalSaveResult(participantId: string, result: CompareSaveResult): void {
@@ -307,6 +314,8 @@ export class CompareRoomCoordinatorService {
           approvedProposalId: message.proposalId,
           approvedProposalHash: message.contentHash
         });
+        void this.deliverProposal(this.proposal$.value, message.participantId)
+          .catch(error => this.reportError(error));
       }
     } else if (message.type === 'save-result') {
       this.setLocalSaveResult(message.participantId, message.result);
