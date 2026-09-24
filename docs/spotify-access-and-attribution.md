@@ -1,5 +1,9 @@
 # Spotify access, attribution, and reconnect policy
 
+## Restricted features decision
+
+Spotify Developer Policy effective 15 May 2025 was reviewed on 24 September 2026. No written Spotify determination approving derived listening statistics, listening-history analysis, playlist comparisons, or Song League is recorded. Those features are therefore disabled in both hosted and personal-client-ID browser flows, their top/history OAuth scopes are not requested, and their scheduled worker tasks are cancelled by default. Re-enabling them requires a recorded written Spotify determination, a source change to the browser compliance gate, and the matching protected worker approval reference. A policy page, developer dashboard access, or personal Client ID is not approval.
+
 Last reviewed: 23 September 2026
 
 Analytify is an unofficial Spotify Web API client. The login page explains the requested data before either hosted OAuth or personal-app PKCE begins. Spotify metadata and artwork must retain Spotify's supplied text and imagery, appear with the global **Powered by Spotify** attribution, and link to the applicable `open.spotify.com` object wherever Spotify supplies an object URL.

@@ -1,7 +1,8 @@
-const {TASK_DEFINITIONS, intervalMilliseconds, isScheduledTaskAllowed} = require('./task-registry');
+const {TASK_DEFINITIONS, intervalMilliseconds, isPolicyApprovedTask, isScheduledTaskAllowed} = require('./task-registry');
 const {randomUUID} = require('node:crypto');
 
-function isJobAllowed(job, settings, now = new Date()) {
+function isJobAllowed(job, settings, now = new Date(), approvalReference = 'unspecified-caller') {
+  if (!isPolicyApprovedTask(job.task_key, approvalReference)) return false;
   if (job.trigger_type !== 'scheduled') return true;
   const definition = TASK_DEFINITIONS[job.task_key];
   const featureRequired = !!definition?.requiredField && settings[definition.requiredField] === true;
@@ -11,6 +12,12 @@ function isJobAllowed(job, settings, now = new Date()) {
 }
 
 function createScheduler({supabase, config, tasks, credentials, pushDispatcher}) {
+  // loadConfig always owns this field. Keeping omitted-field compatibility
+  // prevents older embedded/test callers from changing semantics silently;
+  // an explicitly empty production value remains fail-closed.
+  const approvalReference = Object.prototype.hasOwnProperty.call(
+    config, 'spotifyRestrictedFeaturesApprovalReference'
+  ) ? config.spotifyRestrictedFeaturesApprovalReference : 'unspecified-caller';
   const workerId = config.workerId || randomUUID();
   const leaseSeconds = Math.max(30, Math.min(900, Number(config.leaseSeconds) || 120));
   const heartbeatIntervalMs = Number(config.heartbeatIntervalMs)
@@ -67,6 +74,7 @@ function createScheduler({supabase, config, tasks, credentials, pushDispatcher})
       const user = userById.get(settings.user_id);
       if (!user?.backup_active || (!user.spotify_refresh_token && !credentialUserIds.has(user.id))) continue;
       for (const [taskKey, definition] of Object.entries(TASK_DEFINITIONS)) {
+        if (!isPolicyApprovedTask(taskKey, approvalReference)) continue;
         const featureRequired = !!definition.requiredField && settings[definition.requiredField] === true;
         if (!featureRequired && !(settings.enabled && settings[definition.enabledField])) continue;
         if (!isScheduledTaskAllowed(taskKey, settings, now)) continue;
@@ -148,11 +156,13 @@ function createScheduler({supabase, config, tasks, credentials, pushDispatcher})
       settings = loadedSettings;
       const handler = tasks[job.task_key];
       if (!handler) throw new Error(`No handler registered for ${job.task_key}.`);
-      if (!isJobAllowed(job, settings) || !user.backup_active) {
+      if (!isJobAllowed(job, settings, new Date(), approvalReference) || !user.backup_active) {
         await completeJob(job, 'cancelled', {}, {
           reason: !user.backup_active
             ? 'Cloud Backup was disabled after this automatic job was queued.'
-            : 'This automatic task is no longer eligible under the current schedule.'
+            : !isPolicyApprovedTask(job.task_key, approvalReference)
+              ? 'This Spotify-dependent feature is disabled pending written Spotify approval.'
+              : 'This automatic task is no longer eligible under the current schedule.'
         });
         return;
       }

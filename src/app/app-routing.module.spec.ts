@@ -4,6 +4,7 @@ import { redirectLoggedInGuard } from '@core/auth/redirect-logged-in.guard';
 import { spotifyAuthGuard } from '@core/auth/spotify-auth.guard';
 import { adminGuard } from '@core/admin/admin.guard';
 import { AppShellComponent } from '@shared/layout/app-shell/app-shell.component';
+import { spotifyRestrictedFeatureGuard } from '@core/compliance/spotify-policy-gate';
 
 describe('application routes', () => {
     const shell = APP_ROUTES.find(route => route.component === AppShellComponent)!;
@@ -76,12 +77,18 @@ describe('application routes', () => {
         });
     });
 
-    it('keeps callback, personal Spotify setup, legal, and Compare Room routes public', () => {
-        ['callback', 'spotify', 'legal', 'compare-room', 'compare-room/callback', 'compare-room/join/:roomId'].forEach(path => {
+    it('keeps callback, personal Spotify setup, and legal routes public', () => {
+        ['callback', 'spotify', 'legal'].forEach(path => {
             const route = APP_ROUTES.find(candidate => candidate.path === path);
             expect(route?.canActivate).toBeUndefined();
             expect(route?.loadChildren).toEqual(expect.any(Function));
         });
+    });
+
+    it('policy-gates Stats, History, Compare Room, and Song League', () => {
+        for (const path of ['stats', 'history', 'song-league', 'compare-room', 'compare-room/callback', 'compare-room/join/:roomId']) {
+            expect(routeByPath(path)?.canActivate).toContain(spotifyRestrictedFeatureGuard);
+        }
     });
 
     it('loads Compare Room host, guest join, and callback as independent route chunks', () => {

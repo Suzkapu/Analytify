@@ -16,6 +16,7 @@ const console = createScopedLogger('Playlists');
     standalone: false
 })
 export class PlaylistsComponent {
+  readonly spotifyPolicyNotice: boolean;
   playlists: any[] = [];
   filteredPlaylists: any[] = [];
   searchText: string = '';
@@ -41,6 +42,7 @@ export class PlaylistsComponent {
     private storageService: StorageService,
     private playlistLoaderService: PlaylistLoaderService
   ) {
+    this.spotifyPolicyNotice = this.route.snapshot?.queryParamMap?.get('notice') === 'spotify-policy-restricted';
     this.route.params.subscribe(async () => {
       const userId = this.authService.getUserId() || 'anonymous';
       this.sortOrder = (this.storageService.getItem(`${userId}_playlists_sortOrder`) as 'asc' | 'desc' | 'none') || 'none';

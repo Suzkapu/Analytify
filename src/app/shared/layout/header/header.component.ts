@@ -8,6 +8,7 @@ import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 import {firstValueFrom} from 'rxjs';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {AdminService} from '@core/admin/admin.service';
+import {SPOTIFY_RESTRICTED_FEATURES_ENABLED} from '@core/compliance/spotify-policy-gate';
 
 const console = createScopedLogger('Profile and Settings');
 
@@ -29,6 +30,7 @@ type ProfileImageCacheMetadata = {
 })
 
 export class HeaderComponent implements OnInit, OnDestroy {
+  readonly restrictedFeaturesEnabled = SPOTIFY_RESTRICTED_FEATURES_ENABLED;
   @ViewChild('dynamicDialog', {read: ViewContainerRef}) private dynamicDialog!: ViewContainerRef;
   @Input() mobileTitle = '';
   @Input() showMobileBackButton = false;

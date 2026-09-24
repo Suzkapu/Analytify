@@ -4,11 +4,11 @@
     <div>
       <span class="page-eyebrow">Shared with permission</span>
       <h1>Private sharing</h1>
-      <p>Share a playlist, ask to view someone's saved stats, or revoke access.</p>
+      <p>Share a playlist privately or revoke access.</p>
     </div>
     <button type="button" class="open-share-menu-button" (click)="openShareDialog()">
       <i class="pi pi-share-alt"></i>
-      <span>Share or request access</span>
+      <span>Share a playlist</span>
     </button>
   </header>
 
@@ -114,7 +114,7 @@
         </article>
       }
     </section>
-    <section class="share-section stats-access-section">
+    @if (restrictedFeaturesEnabled) {<section class="share-section stats-access-section">
       <div class="section-heading">
         <div><span class="eyebrow">Spy mode</span><h2>Stats you can view</h2></div>
         <span>{{ approvedStatsAccess.length }}</span>
@@ -228,7 +228,7 @@
           }
         </div>
       </section>
-    }
+    }}
   }
 </main>
 
@@ -269,7 +269,7 @@
       <h2 id="share-dialog-title">{{ shareMode === 'playlist' ? 'Share a playlist' : (shareMode === 'stats' ? 'Private stats links' : 'What do you want to share?') }}</h2>
       <div id="share-dialog-description">
         @if (!shareMode) {
-          <p>Share a playlist or exchange stats access with a private link.</p>
+          <p>Share a playlist with a private link.</p>
         }
         @if (shareMode === 'playlist' && !shareLink) {
           <p>Choose a playlist to share privately.</p>
@@ -284,9 +284,9 @@
             <i class="pi pi-list"></i><strong>Playlist</strong>
             <span>{{ canCreateShares ? 'Create a private playlist link' : 'Requires Cloud Backup' }}</span>
           </button>
-          <button type="button" (click)="selectShareMode('stats')">
+          @if (restrictedFeaturesEnabled) {<button type="button" (click)="selectShareMode('stats')">
             <i class="pi pi-eye"></i><strong>Stats</strong><span>Create a private share or request link</span>
-          </button>
+          </button>}
         </div>
       }
       @if (shareMode === 'playlist' && !shareLink) {

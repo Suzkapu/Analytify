@@ -71,6 +71,8 @@ function loadConfig() {
     spotifyClientSecret: required('SPOTIFY_CLIENT_SECRET', process.env.SPOTIFY_CLIENT_SECRET),
     ...credentialKeyConfig(),
     adminSpotifyIds,
+    spotifyRestrictedFeaturesApprovalReference:
+      (process.env.SPOTIFY_RESTRICTED_FEATURES_APPROVAL_REFERENCE || '').trim(),
     pollSeconds: Math.max(15, Number(process.env.SYNC_SERVICE_POLL_SECONDS) || 60),
     maxJobsPerPass: Math.max(1, Math.min(50, Number(process.env.SYNC_SERVICE_MAX_JOBS) || 10))
   };

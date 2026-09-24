@@ -2,7 +2,7 @@
 
 ![Analytify logo](src/assets/icons/icon-128x128.png)
 
-Analytify is a personal Spotify library and statistics viewer. It helps you browse large playlists, see your current top music, follow daily ranking changes, and use a few private tools with friends.
+Analytify is a personal Spotify library viewer. It helps you browse large playlists, inspect their contents, make private copies, and share playlist snapshots with people you choose.
 
 [Open Analytify](https://analytify.dynv6.net)
 
@@ -10,11 +10,11 @@ Analytify is a personal Spotify library and statistics viewer. It helps you brow
 
 - **Playlist explorer:** search and sort playlists, songs, artists, and albums; merge playlists; and open tracks in Spotify.
 - **Playlist summaries:** see song, artist, album, duration, and explicit-track counts plus top artists and albums.
-- **Listening statistics:** view your top 100 songs, artists, and genres for Spotify's 4-week, 6-month, and 1-year ranges.
+- **Listening statistics (currently unavailable):** the implementation can show top songs, artists, genres, and history, but production access is disabled unless Spotify gives a written policy determination covering it.
 - **Daily history:** compare saved snapshots and follow the position history of current or former rankings.
 - **Listening history:** review recently played music when history collection is enabled.
 - **Private sharing:** share a revocable playlist snapshot or ask a specific person for read-only access to their saved statistics.
-- **Compare Room:** invite friends to a temporary room, select a playlist for each person, and find common or unique tracks. Guest Spotify logins are kept in memory only.
+- **Compare Room and Song League (currently unavailable):** these tools remain disabled unless Spotify gives a written policy determination covering them.
 - **Song League:** join a private group, recommend a song during the Friday window, and follow its score in other members' short-term Top Songs.
 
 ## Your data

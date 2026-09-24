@@ -21,6 +21,9 @@ const [
   compareRoom,
   league,
   sharedDetail,
+  policyGate,
+  routes,
+  workerRegistry,
 ] = await Promise.all([
   read('src/environments/spotify-scopes.ts'),
   read('src/app/core/auth/spotify-auth.service.ts'),
@@ -37,11 +40,16 @@ const [
   read('src/app/features/compare-room/compare-room-shell.component.html'),
   read('src/app/features/song-league/song-league-detail.component.html'),
   read('src/app/features/shared-playlists/shared-playlist-detail.component.html'),
+  read('src/app/core/compliance/spotify-policy-gate.ts'),
+  read('src/app/app-routing.module.ts'),
+  read('services/sync-service/task-registry.js'),
 ]);
 
 const baseScopeBlock = scopes.match(/HOSTED_SPOTIFY_SCOPES\s*=\s*\[([\s\S]*?)\]/)?.[1] || '';
 assert.ok(baseScopeBlock, 'hosted Spotify read scopes must stay explicit');
 assert.doesNotMatch(baseScopeBlock, /playlist-modify-private/, 'playlist writes must not be requested at initial login');
+assert.doesNotMatch(baseScopeBlock, /user-top-read|user-read-recently-played/,
+  'disabled derived-metric features must not retain top/history scopes');
 assert.match(scopes, /PLAYLIST_WRITE_SPOTIFY_SCOPES\s*=\s*\['playlist-modify-private'\]/);
 assert.doesNotMatch(scopes, /playlist-modify-public/);
 assert.match(auth, /requestPlaylistWriteAuthorization/);
@@ -50,10 +58,17 @@ assert.match(interceptor, /requestPlaylistWriteAuthorization/);
 for (const page of [login, personalLogin]) {
   assert.match(page, /saved songs/i);
   assert.match(page, /playlists/i);
-  assert.match(page, /top songs/i);
-  assert.match(page, /recently played/i);
   assert.match(page, /write access/i);
+  assert.doesNotMatch(page, /top songs and artists|recently played songs/i);
 }
+
+assert.match(policyGate, /APPROVAL_REFERENCE:\s*string \| null = null/);
+assert.match(routes, /spotifyRestrictedFeatureGuard/);
+for (const task of ['listening_history', 'stats_short_term', 'stats_medium_term', 'stats_long_term', 'song_league_playlists']) {
+  assert.match(workerRegistry, new RegExp(`['"]${task}['"]`));
+}
+assert.match(policy, /No written Spotify determination/);
+assert.match(policy, /disabled in both hosted and personal-client-ID browser flows/);
 
 assert.match(workerClient, /invalid_grant/);
 assert.match(workerClient, /credential_invalid/);

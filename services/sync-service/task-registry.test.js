@@ -1,7 +1,15 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const {TASK_DEFINITIONS, intervalMilliseconds, isScheduledTaskAllowed} = require('./task-registry');
+const {TASK_DEFINITIONS, intervalMilliseconds, isPolicyApprovedTask, isScheduledTaskAllowed} = require('./task-registry');
+
+test('disables metrics and game tasks unless a written Spotify approval reference is configured', () => {
+  for (const task of ['listening_history', 'stats_short_term', 'stats_medium_term', 'stats_long_term', 'song_league_playlists']) {
+    assert.equal(isPolicyApprovedTask(task), false);
+    assert.equal(isPolicyApprovedTask(task, 'spotify-written-determination-2026-01'), true);
+  }
+  assert.equal(isPolicyApprovedTask('shared_playlists'), true);
+});
 
 test('registers every independently configurable synchronization purpose', () => {
   assert.deepEqual(Object.keys(TASK_DEFINITIONS).sort(), [

@@ -25,6 +25,15 @@ const TASK_DEFINITIONS = {
   }
 };
 
+const SPOTIFY_RESTRICTED_TASKS = new Set([
+  'listening_history', 'stats_short_term', 'stats_medium_term',
+  'stats_long_term', 'song_league_playlists'
+]);
+
+function isPolicyApprovedTask(taskKey, approvalReference = '') {
+  return !SPOTIFY_RESTRICTED_TASKS.has(taskKey) || approvalReference.trim().length > 0;
+}
+
 function isScheduledTaskAllowed(taskKey, settings, now = new Date()) {
   const definition = TASK_DEFINITIONS[taskKey];
   if (!definition.fridayOnlyField || settings[definition.fridayOnlyField] === false) return true;
@@ -53,4 +62,4 @@ function createTaskRegistry(dependencies) {
   };
 }
 
-module.exports = {TASK_DEFINITIONS, intervalMilliseconds, isScheduledTaskAllowed, createTaskRegistry};
+module.exports = {TASK_DEFINITIONS, SPOTIFY_RESTRICTED_TASKS, isPolicyApprovedTask, intervalMilliseconds, isScheduledTaskAllowed, createTaskRegistry};

@@ -115,6 +115,22 @@ describe('SharedPlaylistsComponent', () => {
         });
         fixture = TestBed.createComponent(SharedPlaylistsComponent);
         component = fixture.componentInstance;
+        // Existing behavior tests cover the approved-feature branch. Dedicated
+        // compliance tests below assert the production default-off branch.
+        (component as any).restrictedFeaturesEnabled = true;
+    });
+
+    it('does not load or offer stats sharing without written Spotify approval', async () => {
+        (component as any).restrictedFeaturesEnabled = false;
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(statsSharing.listAccessRequests).not.toHaveBeenCalled();
+        expect(statsSharing.subscribeToAccessChanges).not.toHaveBeenCalled();
+        await component.openShareDialog();
+        fixture.detectChanges();
+        expect(fixture.nativeElement.textContent).not.toContain('Share my stats');
     });
 
     it('starts recipient auto-sync only when the sharing workspace is entered', async () => {
@@ -175,14 +191,14 @@ describe('SharedPlaylistsComponent', () => {
         expect(sharing.refreshShare).not.toHaveBeenCalled();
     });
 
-    it('titles the page for both playlist and stats sharing', async () => {
+    it('titles the page for private playlist sharing', async () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
         const heading = fixture.nativeElement.querySelector('h1') as HTMLElement;
         expect(heading.textContent?.trim()).toBe('Private sharing');
         expect(fixture.nativeElement.textContent).toContain('playlist');
-        expect(fixture.nativeElement.textContent).toContain('stats');
+        expect(fixture.nativeElement.textContent).toContain('playlist');
     });
 
     it('starts playlist and stats sharing loads in parallel', async () => {

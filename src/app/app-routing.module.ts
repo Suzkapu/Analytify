@@ -6,6 +6,7 @@ import {spotifyAuthGuard} from '@core/auth/spotify-auth.guard';
 import {adminGuard} from '@core/admin/admin.guard';
 import {cloudIdentityGuard} from '@core/auth/cloud-identity.guard';
 import {AppShellComponent} from '@shared/layout/app-shell/app-shell.component';
+import {spotifyRestrictedFeatureGuard} from '@core/compliance/spotify-policy-gate';
 
 export const APP_ROUTES: Routes = [
   {
@@ -52,11 +53,11 @@ export const APP_ROUTES: Routes = [
         loadChildren: () => import('@features/library/playlist-analysis/playlist-analysis.module').then(module => module.PlaylistAnalysisModule)
       },
       {
-        path: 'stats', data: {mobileTitle: 'Your Top Listening'}, canActivate: [spotifyAuthGuard],
+        path: 'stats', data: {mobileTitle: 'Your Top Listening'}, canActivate: [spotifyAuthGuard, spotifyRestrictedFeatureGuard],
         loadChildren: () => import('@features/insights/user-stats/user-stats.module').then(module => module.UserStatsModule)
       },
       {
-        path: 'history', data: {mobileTitle: 'Recently Played'}, canActivate: [spotifyAuthGuard],
+        path: 'history', data: {mobileTitle: 'Recently Played'}, canActivate: [spotifyAuthGuard, spotifyRestrictedFeatureGuard],
         loadChildren: () => import('@features/insights/listening-history/listening-history.module').then(module => module.ListeningHistoryModule)
       },
       {
@@ -65,7 +66,7 @@ export const APP_ROUTES: Routes = [
       },
       {
         path: 'song-league', data: {cloudBackup: true, mobileTitle: 'Song League'},
-        canActivate: [spotifyAuthGuard, cloudIdentityGuard],
+        canActivate: [spotifyAuthGuard, cloudIdentityGuard, spotifyRestrictedFeatureGuard],
         loadChildren: () => import('@features/song-league/song-league.module').then(module => module.SongLeagueModule)
       },
       {
@@ -83,16 +84,19 @@ export const APP_ROUTES: Routes = [
   },
   {
     path: 'compare-room/callback',
+    canActivate: [spotifyRestrictedFeatureGuard],
     loadChildren: () =>
       import('@features/compare-room/compare-room-callback.module').then(module => module.CompareRoomCallbackModule)
   },
   {
     path: 'compare-room/join/:roomId',
+    canActivate: [spotifyRestrictedFeatureGuard],
     loadChildren: () =>
       import('@features/compare-room/compare-room-join.module').then(module => module.CompareRoomJoinModule)
   },
   {
     path: 'compare-room',
+    canActivate: [spotifyRestrictedFeatureGuard],
     loadChildren: () =>
       import('@features/compare-room/compare-room.module').then(module => module.CompareRoomModule)
   },

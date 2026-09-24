@@ -60,10 +60,12 @@ describe('LoginPageComponent', () => {
         expect(element.querySelector('button.personal-app-button')).not.toBeNull();
         expect(element.querySelector('a.compare-room-button')).toBeNull();
         expect(element.textContent).not.toContain('Open a Compare Room');
-        expect(element.textContent).toContain('See what you listen to.');
-        expect(element.textContent).toContain('Browse playlists, check your top songs');
+        expect(element.textContent).toContain('Explore your playlists.');
+        expect(element.textContent).toContain('Browse, search, share, and organize');
         expect(element.textContent).toContain('Stored on this device');
-        expect(element.textContent).toContain('saved songs and playlists, top songs and artists, and recently played songs');
+        expect(element.textContent).toContain('saved songs, and playlists');
+        expect(element.textContent).not.toContain('top songs and artists');
+        expect(element.textContent).not.toContain('recently played songs');
         expect(element.textContent).toContain('playlist write access only');
         expect(element.textContent).toContain('never reads your password or payment details');
         expect(element.textContent).not.toContain('focused dashboard');

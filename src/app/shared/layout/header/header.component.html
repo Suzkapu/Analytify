@@ -25,14 +25,14 @@
           <i class="pi pi-list" aria-hidden="true"></i>
           <span class="nav-label">Playlists</span>
         </a>
-        <a routerLink="/stats" class="nav-link" routerLinkActive="active-nav">
+        @if (restrictedFeaturesEnabled) {<a routerLink="/stats" class="nav-link" routerLinkActive="active-nav">
           <i class="pi pi-chart-bar" aria-hidden="true"></i>
           <span class="nav-label">Stats</span>
         </a>
         <a routerLink="/history" class="nav-link" routerLinkActive="active-nav">
           <i class="pi pi-history" aria-hidden="true"></i>
           <span class="nav-label">History</span>
-        </a>
+        </a>}
       </nav>
     </div>
     <div class="header-center">
@@ -55,18 +55,18 @@
         @if (showWorkspaceDropdown) {
           <div class="profile-settings-dropdown workspace-launcher-dropdown" role="menu">
             <span class="dropdown-header">Explore together</span>
-            <a routerLink="/compare-room" class="dropdown-item workspace-launcher-item" role="menuitem">
+            @if (restrictedFeaturesEnabled) {<a routerLink="/compare-room" class="dropdown-item workspace-launcher-item" role="menuitem">
               <i class="pi pi-users"></i>
               <span class="workspace-item-copy"><strong>Compare playlists</strong><small>Find music you share with friends</small></span>
-            </a>
+            </a>}
             <a routerLink="/shared-playlists" class="dropdown-item workspace-launcher-item" role="menuitem">
               <i class="pi pi-share-alt"></i>
               <span class="workspace-item-copy"><strong>Private sharing</strong><small>Share playlists and approved stats</small></span>
             </a>
-            <a routerLink="/song-league" class="dropdown-item workspace-launcher-item" role="menuitem">
+            @if (restrictedFeaturesEnabled) {<a routerLink="/song-league" class="dropdown-item workspace-launcher-item" role="menuitem">
               <i class="pi pi-star"></i>
               <span class="workspace-item-copy"><strong>Song League</strong><small>Play the Friday recommendation game</small></span>
-            </a>
+            </a>}
             @if (isAdmin) {
               <div class="dropdown-divider" aria-hidden="true"></div>
               <span class="dropdown-header">Administration</span>
@@ -105,7 +105,7 @@
                 <span class="slider round"></span>
               </label>
             </div>
-            @if (hasCollaborationIdentity) {
+            @if (hasCollaborationIdentity && restrictedFeaturesEnabled) {
               <div class="dropdown-item toggle-item" (click)="$event.stopPropagation()"
                 title="Allow other registered users to find you by display-name search and request Stats access">
                 <i class="pi pi-eye"></i>

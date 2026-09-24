@@ -96,7 +96,20 @@ describe('HeaderComponent entry points', () => {
         });
         fixture = TestBed.createComponent(HeaderComponent);
         component = fixture.componentInstance;
+        // Most entry-point tests exercise the approved branch. The explicit
+        // compliance test below verifies the production default-off branch.
+        (component as any).restrictedFeaturesEnabled = true;
         fixture.detectChanges();
+    });
+
+    it('hides restricted navigation without written Spotify approval', () => {
+        (component as any).restrictedFeaturesEnabled = false;
+        component.showWorkspaceDropdown = true;
+        fixture.detectChanges();
+        const text = fixture.nativeElement.textContent;
+        expect(text).not.toContain('Stats');
+        expect(text).not.toContain('Compare playlists');
+        expect(text).not.toContain('Song League');
     });
 
     it('does not offer personal Spotify app setup in the authenticated profile dropdown', () => {

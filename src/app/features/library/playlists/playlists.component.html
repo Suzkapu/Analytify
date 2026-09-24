@@ -1,6 +1,9 @@
 
 <main class="app-page playlists-page">
   <div class="page-shell">
+    @if (spotifyPolicyNotice) {
+      <div class="page-notice" role="status">This feature is unavailable while Analytify awaits written Spotify policy approval.</div>
+    }
     @if (playlists.length !== 0) {
       <header class="page-hero playlists-top-bar">
         <div>
@@ -13,7 +16,7 @@
               <span>{{ playlists.length === 1 ? 'playlist' : 'playlists' }}</span>
             </span>
           </div>
-          <p>Open a playlist or see a quick summary. Use Compare Room to compare or combine playlist groups.</p>
+          <p>Open a playlist, search its songs, or see a quick summary.</p>
           @if (isRefreshingPlaylists) {
             <small class="page-sync-state" role="status">
               <i class="pi pi-spin pi-spinner"></i> Checking Spotify for updates…

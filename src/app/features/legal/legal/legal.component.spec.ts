@@ -67,6 +67,22 @@ describe('LegalComponent', () => {
         expect(text).toContain('Austrian Data Protection Authority');
         expect(text).toContain('Automated results, not automated decisions');
         expect(text).toContain('International transfers and provider details');
+        expect(text).toContain('does not claim that a DPA, region, or transfer route has been verified');
         expect(text).not.toContain('Clause 12');
+    });
+
+    it('publishes the full Austrian service-provider and media-owner disclosure without relying on an exception', () => {
+        fixture = TestBed.createComponent(LegalComponent);
+        fixture.detectChanges();
+        const text = (fixture.nativeElement as HTMLElement).textContent || '';
+
+        expect(text).toContain('Diensteanbieter and Medieninhaber: Simon Praher');
+        expect(text).toContain('Unternehmensgegenstand / purpose');
+        expect(text).toContain('Company register and register number');
+        expect(text).toContain('Supervisory authority');
+        expect(text).toContain('VAT identification number');
+        expect(text).toContain('Blattlinie');
+        expect(text).toContain('does not rely on the reduced-disclosure exception');
+        expect(text).toContain('independent Austrian legal review');
     });
 });

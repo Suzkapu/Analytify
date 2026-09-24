@@ -5,8 +5,6 @@ describe('Spotify OAuth scope policy', () => {
     it('keeps the hosted application on the reviewed least-privilege scope set', () => {
         expect(HOSTED_SPOTIFY_SCOPES).toEqual([
             'user-read-private',
-            'user-top-read',
-            'user-read-recently-played',
             'playlist-read-private',
             'playlist-read-collaborative',
             'user-library-read'
@@ -14,6 +12,8 @@ describe('Spotify OAuth scope policy', () => {
         expect(PLAYLIST_WRITE_SPOTIFY_SCOPES).toEqual(['playlist-modify-private']);
         expect(HOSTED_SPOTIFY_SCOPES as readonly string[]).not.toContain('playlist-modify-private');
         expect(HOSTED_SPOTIFY_SCOPES as readonly string[]).not.toContain('playlist-modify-public');
+        expect(HOSTED_SPOTIFY_SCOPES as readonly string[]).not.toContain('user-top-read');
+        expect(HOSTED_SPOTIFY_SCOPES as readonly string[]).not.toContain('user-read-recently-played');
     });
 
     it('does not grant temporary Compare Room sessions access to listening history or top items', () => {

@@ -1,7 +1,5 @@
 export const HOSTED_SPOTIFY_SCOPES = [
   'user-read-private',
-  'user-top-read',
-  'user-read-recently-played',
   'playlist-read-private',
   'playlist-read-collaborative',
   'user-library-read'

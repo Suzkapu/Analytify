@@ -10,6 +10,7 @@ import {ModerationCase, StatsAccessRequest} from '@core/sharing/stats-sharing.mo
 import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {PlaylistShareAutoSyncService} from '@core/sharing/playlist-share-auto-sync.service';
+import {SPOTIFY_RESTRICTED_FEATURES_ENABLED} from '@core/compliance/spotify-policy-gate';
 
 const console = createScopedLogger('Shared Playlists');
 
@@ -21,6 +22,7 @@ const console = createScopedLogger('Shared Playlists');
     standalone: false
 })
 export class SharedPlaylistsComponent implements OnInit, OnDestroy {
+  readonly restrictedFeaturesEnabled = SPOTIFY_RESTRICTED_FEATURES_ENABLED;
   receivedShares: PlaylistShare[] = [];
   ownedShares: PlaylistShare[] = [];
   availablePlaylists: ComparePlaylist[] = [];
@@ -76,9 +78,9 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     this.unsubscribeFromShareChanges = this.sharing.subscribeToShareChanges(() => {
       this.reloadSilently();
     });
-    this.unsubscribeFromStatsChanges = this.statsSharing.subscribeToAccessChanges(() => {
-      this.reloadSilently();
-    });
+    if (this.restrictedFeaturesEnabled) {
+      this.unsubscribeFromStatsChanges = this.statsSharing.subscribeToAccessChanges(() => this.reloadSilently());
+    }
   }
 
   @HostListener('window:focus')
@@ -108,8 +110,8 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
       [this.receivedShares, this.ownedShares, this.statsAccessRequests, this.moderationCases] = await Promise.all([
         this.sharing.listReceivedShares(),
         this.sharing.listOwnedShares(),
-        this.statsSharing.listAccessRequests(),
-        this.statsSharing.listModerationCases()
+        this.restrictedFeaturesEnabled ? this.statsSharing.listAccessRequests() : Promise.resolve([]),
+        this.restrictedFeaturesEnabled ? this.statsSharing.listModerationCases() : Promise.resolve([])
       ]);
       this.selectNextConsentRequest();
     } catch (error) {
@@ -159,6 +161,10 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   }
 
   async selectShareMode(mode: 'playlist' | 'stats'): Promise<void> {
+    if (mode === 'stats' && !this.restrictedFeaturesEnabled) {
+      this.shareError = 'Stats sharing is disabled pending written Spotify approval.';
+      return;
+    }
     this.shareMode = mode;
     this.shareError = '';
     if (mode === 'stats') {
