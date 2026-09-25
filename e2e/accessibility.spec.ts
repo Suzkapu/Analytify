@@ -192,13 +192,12 @@ test('authenticated playlists route is responsive and WCAG 2.2 AA clean', async 
   await expectNoBlockingAxeViolations(page);
 });
 
-test('restricted stats route redirects accessibly to the enabled playlists feature', async ({page}) => {
+test('enabled stats route is responsive and WCAG 2.2 AA clean', async ({page}) => {
   await mockSpotify(page);
   await seedAuthenticatedBrowser(page);
   await page.goto('/stats');
-  await expect(page).toHaveURL(/\/playlists\?notice=spotify-policy-restricted$/);
-  await expect(page.getByRole('heading', {name: /^Your playlists$/i}).first()).toBeVisible();
-  await expect(page.getByRole('status')).toContainText('awaits written Spotify policy approval');
+  await expect(page).toHaveURL(/\/stats$/);
+  await expect(page.getByRole('heading', {name: /^Your top listening$/i}).first()).toBeVisible();
   await expectNoBlockingAxeViolations(page);
 });
 
