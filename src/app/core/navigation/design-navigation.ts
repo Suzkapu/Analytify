@@ -1,11 +1,7 @@
-import {InjectionToken} from '@angular/core';
+import {designCommands, DesignVariant} from './design-variant';
 
-export type DesignVariant = 'legacy' | 'new';
-
-export const DESIGN_VARIANT = new InjectionToken<DesignVariant>('Analytify design variant', {
-  providedIn: 'root',
-  factory: () => 'legacy'
-});
+export {DESIGN_VARIANT} from './design-variant';
+export type {DesignVariant} from './design-variant';
 
 export type LogicalRouteId =
   | 'login'
@@ -80,8 +76,7 @@ export function resolveDesignRoute(
     }
     return [value];
   });
-  if (variant === 'new') return ['/new', ...segments];
-  return [`/${segments[0]}`, ...segments.slice(1)];
+  return designCommands(variant, ...segments);
 }
 
 export function designVariantFromUrl(url: string): DesignVariant {

@@ -6,7 +6,8 @@ import { firstValueFrom } from 'rxjs';
 import {AuthReturnUrlService} from './auth-return-url.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {TermsAcceptanceService} from '@core/legal/terms-acceptance.service';
-import {DesignNavigationService} from '@core/navigation/design-navigation.service';
+import {DESIGN_VARIANT, designCommands, designPath, DesignVariant} from '@core/navigation/design-variant';
+import {Router} from '@angular/router';
 
 const console = createScopedLogger('Authentication Guard');
 
@@ -18,14 +19,15 @@ export const spotifyAuthGuard = async (
   const storageService = inject(StorageService);
   const returnUrl = inject(AuthReturnUrlService);
   const terms = inject(TermsAcceptanceService);
-  const navigation = inject(DesignNavigationService);
+  const router = inject(Router);
+  const designVariant = inject<DesignVariant>(DESIGN_VARIANT);
 
   // Wait for StorageService to finish loading from IndexedDB
   await storageService.initFromDB();
 
   if (!terms.hasCurrentAcceptance()) {
     returnUrl.remember(state?.url);
-    await navigation.navigate('login');
+    await router.navigate(designCommands(designVariant, 'login'));
     return false;
   }
 
@@ -48,7 +50,7 @@ export const spotifyAuthGuard = async (
         console.warn('[Guard] Spotify token refresh failed, redirecting to Spotify OAuth for renewal:', err);
         returnUrl.remember(state?.url);
         // Automatically redirect to Spotify OAuth without prompt: 'consent' for immediate login renewal
-        await authService.renewSpotifyAuthorization(state?.url || '/playlists');
+        await authService.renewSpotifyAuthorization(state?.url || designPath(designVariant, 'playlists'));
         return false;
       }
     }
@@ -63,6 +65,6 @@ export const spotifyAuthGuard = async (
 
   // Redirect to login page
   returnUrl.remember(state?.url);
-  navigation.navigate('login');
+  router.navigate(designCommands(designVariant, 'login'));
   return false;
 };

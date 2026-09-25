@@ -6,13 +6,15 @@ import { adminGuard } from '@core/admin/admin.guard';
 import { AppShellComponent } from '@shared/layout/app-shell/app-shell.component';
 import { spotifyRestrictedFeatureGuard } from '@core/compliance/spotify-policy-gate';
 import {DesignV2ShellComponent} from '@shared/layout/design-v2-shell/design-v2-shell.component';
+import {DESIGN_V2_ROUTES} from './design-v2-routing.module';
 import {DESIGN_VARIANT} from '@core/navigation/design-navigation';
 
 describe('application routes', () => {
     const shell = APP_ROUTES.find(route => route.component === AppShellComponent)!;
     const routeByPath = (path: string) => shell.children?.find(route => route.path === path)
         ?? APP_ROUTES.find(route => route.path === path);
-    const modernShell = APP_ROUTES.find(route => route.path === 'new')!;
+    const modernEntry = APP_ROUTES.find(route => route.path === 'new')!;
+    const modernShell = DESIGN_V2_ROUTES[0];
     const modernRouteByPath = (path: string) => modernShell.children?.find(route => route.path === path);
 
     it('preserves every public URL and the fallback route', () => {
@@ -34,6 +36,7 @@ describe('application routes', () => {
     });
 
     it('represents every planned page beneath the parallel v2 shell', () => {
+        expect(modernEntry.loadChildren).toEqual(expect.any(Function));
         expect(modernShell.component).toBe(DesignV2ShellComponent);
         expect(modernShell.children?.map(route => route.path)).toEqual([
             '', 'login', 'callback', 'spotify', 'playlists', 'songs', 'artistDetails',

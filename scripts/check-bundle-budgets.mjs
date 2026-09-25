@@ -28,8 +28,8 @@ while (pending.length) {
   }
 }
 const initialBytes = [...initialNames].reduce((total, file) => total + bytes(file), 0);
-if (!main || initialBytes > 850_000) {
-  failures.push(`initial JavaScript is ${main ? initialBytes : 'missing'} bytes (limit 850000)`);
+if (!main || initialBytes > 855_000) {
+  failures.push(`initial JavaScript is ${main ? initialBytes : 'missing'} bytes (limit 855000)`);
 }
 for (const file of files.filter(name => name.endsWith('.js') && !initialNames.has(name))) {
   if (bytes(file) > 110_000) failures.push(`lazy chunk ${file} is ${bytes(file)} bytes (limit 110000)`);

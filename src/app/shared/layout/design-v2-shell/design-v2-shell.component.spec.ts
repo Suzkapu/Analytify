@@ -7,8 +7,7 @@ import {DesignV2ShellComponent} from './design-v2-shell.component';
 describe('DesignV2ShellComponent', () => {
   it('provides one scoped host for all v2 child routes', async () => {
     await TestBed.configureTestingModule({
-      declarations: [DesignV2ShellComponent],
-      imports: [RouterOutlet],
+      imports: [RouterOutlet, DesignV2ShellComponent],
       providers: [{provide: DESIGN_VARIANT, useValue: 'new'}]
     }).compileComponents();
     const fixture: ComponentFixture<DesignV2ShellComponent> = TestBed.createComponent(DesignV2ShellComponent);
