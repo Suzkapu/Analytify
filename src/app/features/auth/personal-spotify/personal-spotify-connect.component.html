@@ -6,7 +6,7 @@
 
     <span class="eyebrow">Personal Spotify app</span>
     <h1 id="personal-connect-title">Connect without an Analytify account</h1>
-    <p class="lead">Your Spotify session stays in this browser. Analytify does not ask for an email, phone number, password, or Client Secret.</p>
+    <p class="lead">Sign in with your own Spotify app. Your verified Spotify ID restores the same Analytify workspace on your other devices. Analytify does not ask for an email, phone number, password, or Client Secret.</p>
     <p class="field-note">Before Spotify opens: Analytify requests your profile, saved songs, and playlists. Playlist write access is requested only when you choose to create or update a playlist copy.</p>
 
     <ol class="setup-steps">
@@ -32,11 +32,21 @@
       <li>
         <span class="step-number">3</span>
         <div>
-          <h2>Paste the public Client ID</h2>
+          <h2>Enter your Spotify user ID</h2>
+          <label for="personal-spotify-id">Spotify user ID</label>
+          <input id="personal-spotify-id" name="personalSpotifyId" [(ngModel)]="spotifyId" maxlength="255"
+            autocomplete="username" spellcheck="false" placeholder="Your Spotify user ID">
+          <p class="field-note">This is checked against Spotify after login. Typing an ID alone can never open or change its workspace.</p>
+        </div>
+      </li>
+      <li>
+        <span class="step-number">4</span>
+        <div>
+          <h2>Use the saved app or paste a new Client ID</h2>
           <label for="personal-client-id">Spotify Client ID</label>
           <input id="personal-client-id" name="personalClientId" [(ngModel)]="clientId" maxlength="32"
-            autocomplete="off" spellcheck="false" placeholder="32-character Client ID">
-          <p class="field-note">Never paste your Client Secret. Analytify neither needs nor accepts it.</p>
+            autocomplete="off" spellcheck="false" placeholder="Optional when this app was saved before">
+          <p class="field-note">Leave this empty to use the app saved for your verified Spotify ID. Paste a new 32-character Client ID after replacing a deleted app. It is saved only after Spotify verifies the same account. Never paste your Client Secret.</p>
         </div>
       </li>
     </ol>
@@ -56,7 +66,7 @@
     </label>
     <div class="actions">
       <button type="button" class="secondary" (click)="cancel()">Cancel</button>
-      <button type="button" class="primary" (click)="connect()" [disabled]="connecting || !termsAccepted || clientId.trim().length !== 32">
+      <button type="button" class="primary" (click)="connect()" [disabled]="connecting || !termsAccepted || !spotifyId.trim()">
         <i class="pi" [ngClass]="connecting ? 'pi-spin pi-spinner' : 'pi-spotify'"></i>
         {{ connecting ? 'Opening Spotify…' : (auth.isAuthenticated() ? 'Reconnect with this app' : 'Connect with Spotify') }}
       </button>

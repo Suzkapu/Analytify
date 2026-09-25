@@ -38,10 +38,10 @@ Spotify Development Mode limits a developer app to a small allowlist. Requiring 
 - Keep Playlists, Stats, History, and analysis local by default, with no Supabase user creation.
 - Never request a Spotify Client Secret, email address, phone number, password, or recovery identity.
 - Permit Spotify ID, display name, and profile image because they already identify an Analytify profile.
-- Create a browser-bound anonymous Supabase identity only after explicit cloud-feature consent.
+- Create or recover a Supabase identity only after the personal Spotify OAuth callback verifies the claimed Spotify ID; use a non-deliverable internal auth alias instead of requesting an email, phone number, password, or Client Secret.
 - Encrypt scheduled refresh tokens with a server-only AES-256-GCM key and support both hosted and personal-app refresh modes.
 - Allow an authenticated existing profile to switch to a personal Client ID only after Spotify verifies the same Spotify ID.
-- Permanently delete an anonymous cloud identity and its linked data when its unrecoverable browser session is logged out or cleared.
+- Keep personal-app recovery bound to fresh Spotify proof so a saved public Client ID can be used across devices without making the typed Spotify ID an authenticator.
 
 ### Consequences
 

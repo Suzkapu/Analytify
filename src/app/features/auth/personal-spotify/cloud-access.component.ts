@@ -18,9 +18,9 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
       <ul>
         <li>No email address, phone number, password, or recovery identity is requested.</li>
         <li>Your Spotify Client Secret is never requested or stored.</li>
-        <li>The identity is bound to this browser and cannot be recovered after you clear its data.</li>
+        <li>Your verified Spotify ID can restore this workspace on another device; typing the ID without completing Spotify login grants no access.</li>
       </ul>
-      <p class="warning"><i class="pi pi-exclamation-triangle"></i> Logging out or clearing this browser will permanently delete the anonymous cloud identity and its linked data.</p>
+      <p class="warning"><i class="pi pi-exclamation-triangle"></i> Keep access to your Spotify account and personal developer app. Analytify cannot restore the workspace unless Spotify verifies that same account.</p>
       @if (errorMessage) {
         <p class="error">{{ errorMessage }}</p>
       }

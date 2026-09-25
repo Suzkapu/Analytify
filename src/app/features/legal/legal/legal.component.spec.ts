@@ -47,7 +47,7 @@ describe('LegalComponent', () => {
         fixture.detectChanges();
         const text = (fixture.nativeElement as HTMLElement).textContent || '';
 
-        expect(text).toContain('analytify-eula-2026-09-23');
+        expect(text).toContain('analytify-eula-2026-09-25');
         expect(text).toContain('merchantability');
         expect(text).toContain('fitness for a particular purpose');
         expect(text).toContain('non-infringement');
@@ -57,7 +57,7 @@ describe('LegalComponent', () => {
         expect(text).toContain('third-party beneficiary');
         expect(text).toContain('Section V.11');
         expect(text).toContain('No ads or tracking');
-        expect(text).toContain('Version: 2026-09-23');
+        expect(text).toContain('Version: 2026-09-25');
         expect(text).toContain('at least 14 years old');
         expect(text).toContain('does not ask for or store your date of birth');
         expect(text).toContain('stored Spotify credentials are disconnected');

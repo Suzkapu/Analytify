@@ -36,7 +36,8 @@ describe('SpotifyAuthService', () => {
             signOut: vi.fn().mockName('signOut').mockResolvedValue({ error: null }),
             signInWithOAuth: vi.fn().mockName('signInWithOAuth').mockResolvedValue({ data: {}, error: null }),
             signInAnonymously: vi.fn().mockName('signInAnonymously'),
-            exchangeCodeForSession: vi.fn().mockName('exchangeCodeForSession')
+            exchangeCodeForSession: vi.fn().mockName('exchangeCodeForSession'),
+            verifyOtp: vi.fn().mockName('verifyOtp')
         };
         storage = {
             initFromDB: () => Promise.resolve(),
@@ -243,6 +244,18 @@ describe('SpotifyAuthService', () => {
         expect(authClient.signInAnonymously).not.toHaveBeenCalled();
     });
 
+    it('resolves a saved public Client ID for cross-device personal login', async () => {
+        supabaseService.client.functions.invoke.mockResolvedValue({
+            data: {clientId: '12345678901234567890123456789012'}, error: null
+        });
+
+        await expect(service.resolvePersonalSpotifyClientId('stable-account-id'))
+            .resolves.toBe('12345678901234567890123456789012');
+        expect(supabaseService.client.functions.invoke).toHaveBeenCalledWith('spotify-credentials', {
+            body: {action: 'resolve_personal_client', claimedSpotifyId: 'stable-account-id'}
+        });
+    });
+
     it('does not let account A callback data repopulate storage after logout begins', async () => {
         sessionStorage.setItem('analytify_personal_spotify_auth_request', JSON.stringify({
             clientId: '12345678901234567890123456789012',
@@ -313,6 +326,12 @@ describe('SpotifyAuthService', () => {
             clientId: '12345678901234567890123456789012', state: 'expected', verifier: 'verifier',
             returnUrl: '/playlists', expectedSpotifyId: 'existing-user', createdAt: Date.now()
         }));
+        supabaseService.client.functions.invoke.mockResolvedValue({
+            data: {tokenHash: 'verified-login-token', verificationType: 'magiclink'}, error: null
+        });
+        authClient.verifyOtp.mockResolvedValue({
+            data: {session: {user: {id: 'canonical-cloud-user'}}}, error: null
+        });
 
         const callback = service.handlePersonalAppCallback('code', 'expected');
         http.expectOne('https://accounts.spotify.com/api/token')
@@ -328,6 +347,17 @@ describe('SpotifyAuthService', () => {
         expect(await callback).toBe('/playlists');
         expect(values['spotifyUserId']).toBe('existing-user');
         expect(values['spotifyRefreshToken']).toBe('personal-refresh');
+        expect(values['supabaseUserId']).toBe('canonical-cloud-user');
+        expect(authClient.verifyOtp).toHaveBeenCalledWith({
+            token_hash: 'verified-login-token', type: 'magiclink'
+        });
+        expect(supabaseService.client.functions.invoke).toHaveBeenCalledWith('spotify-credentials', {
+            body: expect.objectContaining({
+                action: 'recover_personal_identity',
+                claimedSpotifyId: 'existing-user',
+                clientId: '12345678901234567890123456789012'
+            })
+        });
     });
 
     it('refreshes a personal-app token with the public Client ID and no secret', async () => {

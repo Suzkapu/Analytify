@@ -11,6 +11,7 @@ import {
   spotifyProfileMatches
 } from './profile-verification.ts';
 import {boundedFetch} from '../_shared/bounded-fetch.ts';
+import {personalRecoveryEmail, personalRecoveryMatches, validSpotifyId} from './personal-recovery.ts';
 import {
   bearerToken,
   boundedJsonBody,
@@ -100,6 +101,145 @@ Deno.serve(async (request: Request) => {
     const admin = createClient(supabaseUrl, serviceRoleKey, {auth: {persistSession: false, autoRefreshToken: false}});
     await enforceRateLimit(admin, request, 'spotify-credentials:client', null, 30, 60);
     requireAllowedOrigin(context);
+    const body = await boundedJsonBody(request, 16 * 1024);
+    const allowedFields = new Set([
+      'action', 'profileUserId', 'connectionMode', 'clientId', 'accessToken', 'refreshToken', 'spotifyId',
+      'claimedSpotifyId'
+    ]);
+    if (Object.keys(body).some(field => !allowedFields.has(field))) {
+      return json({error: 'The credential request contains unsupported fields.'}, 400);
+    }
+    const action = body?.action;
+
+    if (action === 'resolve_personal_client') {
+      const claimedSpotifyId = body?.claimedSpotifyId;
+      if (!validSpotifyId(claimedSpotifyId)) {
+        return json({error: 'Enter a valid Spotify user ID.'}, 400);
+      }
+      const {data, error} = await admin.from('personal_spotify_identities')
+        .select('client_id').eq('verified_spotify_id', claimedSpotifyId).maybeSingle();
+      if (error) throw error;
+      return json({clientId: data?.client_id || null});
+    }
+
+    if (action === 'recover_personal_identity') {
+      const claimedSpotifyId = body?.claimedSpotifyId;
+      const clientId = typeof body?.clientId === 'string' ? body.clientId.trim() : '';
+      const accessToken = typeof body?.accessToken === 'string' ? body.accessToken : '';
+      const refreshToken = typeof body?.refreshToken === 'string' ? body.refreshToken : '';
+      if (!validSpotifyId(claimedSpotifyId)) return json({error: 'Enter a valid Spotify user ID.'}, 400);
+      await enforceRateLimit(admin, request, 'spotify-credentials:recovery', claimedSpotifyId, 5, 300);
+      if (!/^[A-Za-z0-9]{32}$/.test(clientId)) return json({error: 'A valid Spotify Client ID is required.'}, 400);
+      if (!accessToken || accessToken.length > 4096 || !refreshToken || refreshToken.length > 4096) {
+        return json({error: 'Spotify credentials are incomplete.'}, 400);
+      }
+
+      const accessProfile = await spotifyProfile(accessToken);
+      const refreshed = await accessTokenFromRefreshToken(refreshToken, 'personal_pkce', clientId);
+      const refreshProfile = await spotifyProfile(refreshed.accessToken);
+      if (!personalRecoveryMatches(accessProfile, refreshProfile, claimedSpotifyId)) {
+        return json({error: 'Spotify returned a different account. No identity or Client ID was changed.'}, 409);
+      }
+
+      const {data: registered, error: registryError} = await admin.from('personal_spotify_identities')
+        .select('auth_user_id').eq('verified_spotify_id', claimedSpotifyId).maybeSingle();
+      if (registryError) throw registryError;
+      const {data: existingProfile, error: existingProfileError} = await admin.from('users')
+        .select('id').eq('verified_spotify_id', claimedSpotifyId).limit(1).maybeSingle();
+      if (existingProfileError) throw existingProfileError;
+
+      const preferredUserId = registered?.auth_user_id || existingProfile?.id || null;
+      let canonicalUserId: string | null = null;
+      let recoveryEmail: string | null = null;
+      if (preferredUserId) {
+        const {data: authRecord} = await admin.auth.admin.getUserById(preferredUserId);
+        if (authRecord?.user?.email) {
+          canonicalUserId = authRecord.user.id;
+          recoveryEmail = authRecord.user.email;
+        } else if (authRecord?.user) {
+          recoveryEmail = await personalRecoveryEmail(claimedSpotifyId);
+          const {data: promoted, error: promotionError} = await admin.auth.admin.updateUserById(
+            authRecord.user.id,
+            {email: recoveryEmail, email_confirm: true}
+          );
+          if (promotionError || !promoted.user) {
+            throw promotionError || new Error('The existing personal identity could not be made recoverable.');
+          }
+          canonicalUserId = promoted.user.id;
+        }
+      }
+      recoveryEmail ||= await personalRecoveryEmail(claimedSpotifyId);
+
+      const {data: link, error: linkError} = await admin.auth.admin.generateLink({
+        type: 'magiclink', email: recoveryEmail
+      });
+      if (linkError || !link.user?.id || !link.properties?.hashed_token) {
+        throw linkError || new Error('The cross-device login session could not be created.');
+      }
+      canonicalUserId ||= link.user.id;
+
+      const {error: mergeError} = await admin.rpc('merge_verified_spotify_profile', {
+        p_target_user_id: canonicalUserId,
+        p_verified_spotify_id: claimedSpotifyId
+      });
+      if (mergeError) {
+        if (mergeError.code === '21000' || mergeError.code === '23505' || mergeError.code === '23514') {
+          return json({error: 'This Spotify account has cloud data that requires reviewed account recovery.'}, 409);
+        }
+        throw mergeError;
+      }
+
+      const verifiedDisplayName = typeof accessProfile.display_name === 'string'
+        && accessProfile.display_name.trim() && accessProfile.display_name !== 'Spotify User'
+        ? accessProfile.display_name.trim() : 'Spotify User';
+      const verifiedImage = safeProfileImageUrl(accessProfile.images?.[0]?.url);
+      const {data: mergedProfile, error: mergedProfileError} = await admin.from('users')
+        .select('display_name, profile_pic_url').eq('id', canonicalUserId).single();
+      if (mergedProfileError) throw mergedProfileError;
+      const {error: profileSaveError} = await admin.from('users').update({
+        spotify_id: claimedSpotifyId,
+        verified_spotify_id: claimedSpotifyId,
+        display_name: verifiedDisplayName === 'Spotify User'
+          ? mergedProfile.display_name || verifiedDisplayName : verifiedDisplayName,
+        profile_pic_url: verifiedImage || mergedProfile.profile_pic_url || null
+      }).eq('id', canonicalUserId);
+      if (profileSaveError) throw profileSaveError;
+
+      const {data: scheduledCredential, error: scheduledCredentialError} = await admin
+        .from('spotify_credentials').select('user_id').eq('user_id', canonicalUserId).maybeSingle();
+      if (scheduledCredentialError) throw scheduledCredentialError;
+      if (scheduledCredential) {
+        const encrypted = await encryptSpotifyRefreshToken(
+          refreshed.refreshToken, spotifyCredentialKeyRingFromEnvironment()
+        );
+        const {error: credentialError} = await admin.from('spotify_credentials').upsert({
+          user_id: canonicalUserId,
+          connection_mode: 'personal_pkce',
+          client_id: clientId,
+          refresh_token_ciphertext: encrypted.ciphertext,
+          refresh_token_nonce: encrypted.nonce,
+          key_version: encrypted.keyVersion,
+          updated_at: new Date().toISOString()
+        }, {onConflict: 'user_id'});
+        if (credentialError) throw credentialError;
+      }
+      const {error: registrySaveError} = await admin.from('personal_spotify_identities').upsert({
+        verified_spotify_id: claimedSpotifyId,
+        client_id: clientId,
+        auth_user_id: canonicalUserId,
+        updated_at: new Date().toISOString()
+      }, {onConflict: 'verified_spotify_id'});
+      if (registrySaveError) throw registrySaveError;
+
+      return json({
+        tokenHash: link.properties.hashed_token,
+        verificationType: link.properties.verification_type,
+        spotifyId: claimedSpotifyId,
+        scheduledAccess: !!scheduledCredential,
+        rotatedRefreshToken: refreshed.refreshToken !== refreshToken ? refreshed.refreshToken : null
+      });
+    }
+
     const jwt = bearerToken(request);
     const {data: identity, error: identityError} = await admin.auth.getUser(jwt);
     if (identityError || !identity.user) {
@@ -107,14 +247,6 @@ Deno.serve(async (request: Request) => {
     }
     await enforceRateLimit(admin, request, 'spotify-credentials:user', identity.user.id, 20, 60);
 
-    const body = await boundedJsonBody(request, 16 * 1024);
-    const allowedFields = new Set([
-      'action', 'profileUserId', 'connectionMode', 'clientId', 'accessToken', 'refreshToken', 'spotifyId'
-    ]);
-    if (Object.keys(body).some(field => !allowedFields.has(field))) {
-      return json({error: 'The credential request contains unsupported fields.'}, 400);
-    }
-    const action = body?.action;
     const profileUserId = typeof body?.profileUserId === 'string' ? body.profileUserId : '';
     if (!isUuid(profileUserId) || ![identity.user.id, devProfileId(identity.user.id)].includes(profileUserId)) {
       return json({error: 'The profile does not belong to this session.'}, 403);

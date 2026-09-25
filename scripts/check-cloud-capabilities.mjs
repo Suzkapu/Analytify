@@ -8,7 +8,8 @@ const checks = [
   ['cloud capabilities are modeled independently', auth.includes('interface CloudCapabilities')
     && auth.includes('scheduledSpotifyAccess: boolean')],
   ['minimal collaboration registration does not submit a refresh token', auth.includes("action: 'profile'")
-    && edge.indexOf("if (action === 'profile') return") < edge.indexOf('const encrypted = await encryptSpotifyRefreshToken(')],
+    && edge.includes("if (action === 'profile') return")
+    && edge.includes('if (scheduledCredential) {')],
   ['unattended credentials require an explicit scheduled capability', auth.includes('enableScheduledSpotifyAccess()')
     && auth.includes('hasScheduledSpotifyAccess()')],
   ['encrypted credentials can be deleted without deleting the identity', auth.includes('disableScheduledSpotifyAccess()')

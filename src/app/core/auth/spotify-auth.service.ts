@@ -183,7 +183,8 @@ export class SpotifyAuthService {
   async startPersonalAppAuthorization(
     clientId: string,
     returnUrl = '/playlists',
-    requestedScopes: readonly string[] = HOSTED_SPOTIFY_SCOPES
+    requestedScopes: readonly string[] = HOSTED_SPOTIFY_SCOPES,
+    claimedSpotifyId: string | null = null
   ): Promise<void> {
     this.termsAcceptance.assertCurrentAcceptance();
     const normalizedClientId = clientId.trim();
@@ -198,7 +199,7 @@ export class SpotifyAuthService {
       verifier,
       returnUrl: this.safeInternalReturnUrl(returnUrl),
       scopes: this.normalizeScopes(requestedScopes),
-      expectedSpotifyId: this.normalizedSpotifyId(this.getUserId()),
+      expectedSpotifyId: this.normalizedSpotifyId(claimedSpotifyId || this.getUserId()),
       createdAt: Date.now()
     };
     const challenge = await this.createPkceChallenge(verifier);
@@ -215,6 +216,20 @@ export class SpotifyAuthService {
       show_dialog: 'true'
     });
     window.location.assign(`${environment.authorizeUrl}?${params.toString()}`);
+  }
+
+  async resolvePersonalSpotifyClientId(spotifyId: string): Promise<string> {
+    const normalizedSpotifyId = this.normalizedSpotifyId(spotifyId.trim());
+    if (!normalizedSpotifyId || !/^[A-Za-z0-9._-]{1,255}$/.test(normalizedSpotifyId)) {
+      throw new Error('Enter your Spotify user ID.');
+    }
+    const data = await this.invokeCredentialFunction({
+      action: 'resolve_personal_client',
+      claimedSpotifyId: normalizedSpotifyId
+    }, 'The saved personal Spotify app could not be checked. Please try again.');
+    return typeof data?.clientId === 'string' && /^[A-Za-z0-9]{32}$/.test(data.clientId)
+      ? data.clientId
+      : '';
   }
 
   clearPendingPersonalAppAuthorization(): void {
@@ -286,7 +301,40 @@ export class SpotifyAuthService {
       generation = this.sessionLifecycle.capture();
     }
 
-    if (this.getSupabaseUserId()) {
+    let recoveredCrossDeviceIdentity = false;
+    if (request.expectedSpotifyId) {
+      const recovery = await this.sessionLifecycle.track(this.invokeCredentialFunction({
+        action: 'recover_personal_identity',
+        clientId: request.clientId,
+        accessToken: token.access_token,
+        refreshToken: token.refresh_token,
+        claimedSpotifyId: request.expectedSpotifyId
+      }, 'The verified personal Spotify login could not be restored. Please try again.'), generation);
+      this.assertCurrentSession(generation);
+      if (!recovery?.tokenHash) throw new Error('The verified personal Spotify login did not return a session.');
+      const verified = await this.sessionLifecycle.track(this.supabaseService.client.auth.verifyOtp({
+        token_hash: recovery.tokenHash,
+        type: 'magiclink'
+      }), generation);
+      this.assertCurrentSession(generation);
+      if (verified.error || !verified.data.session?.user) {
+        throw verified.error || new Error('The verified personal Spotify session could not be opened.');
+      }
+      this.storageService.setItem('supabaseUserId', verified.data.session.user.id, false);
+      this.storageService.setItem(this.anonymousCloudKey, 'false', false);
+      this.storageService.setItem(this.collaborationIdentityReadyKey, 'true', false);
+      if (recovery.scheduledAccess === true) {
+        this.storageService.setItem(this.cloudIdentityReadyKey, 'true', false);
+      } else {
+        this.storageService.removeItem(this.cloudIdentityReadyKey);
+      }
+      if (typeof recovery.rotatedRefreshToken === 'string' && recovery.rotatedRefreshToken) {
+        token.refresh_token = recovery.rotatedRefreshToken;
+      }
+      recoveredCrossDeviceIdentity = true;
+    }
+
+    if (this.getSupabaseUserId() && !recoveredCrossDeviceIdentity) {
       if (this.hasScheduledSpotifyAccess()) {
         const rotatedRefreshToken = await this.sessionLifecycle.track(this.registerCurrentSpotifyCredentials(profile, {
           accessToken: token.access_token,

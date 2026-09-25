@@ -8,7 +8,7 @@
       "purpose": "Account identity, consent, credentials, notification choices and per-user synchronization state.",
       "retention": "For the account lifetime; credentials are replaced on reconnect and deleted with the account.",
       "erasure": "Explicit account deletion cascades through user-owned rows. Terms evidence is deleted with the account.",
-      "relations": ["public.users", "public.terms_acceptances", "public.spotify_credentials", "public.notification_preferences", "public.push_subscriptions", "public.sync_user_settings", "public.sync_task_state", "public.listening_history_checkpoints"]
+      "relations": ["public.users", "public.terms_acceptances", "public.spotify_credentials", "public.personal_spotify_identities", "public.notification_preferences", "public.push_subscriptions", "public.sync_user_settings", "public.sync_task_state", "public.listening_history_checkpoints"]
     },
     {
       "id": "listening-and-stats-history",

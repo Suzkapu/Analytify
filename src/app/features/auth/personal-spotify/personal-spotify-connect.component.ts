@@ -14,6 +14,7 @@ import {TermsAcceptanceService} from '@core/legal/terms-acceptance.service';
 export class PersonalSpotifyConnectComponent implements OnInit {
   readonly callbackUri = environment.personalSpotifyRedirectUri;
   clientId = '';
+  spotifyId = '';
   errorMessage = '';
   copied = false;
   connecting = false;
@@ -29,6 +30,7 @@ export class PersonalSpotifyConnectComponent implements OnInit {
 
   ngOnInit(): void {
     this.clientId = this.auth.getPersonalSpotifyClientId();
+    this.spotifyId = this.auth.getUserId() || '';
     this.returnUrl = this.safeReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl'));
     this.termsAccepted = this.terms.hasCurrentAcceptance();
   }
@@ -48,8 +50,16 @@ export class PersonalSpotifyConnectComponent implements OnInit {
     this.connecting = true;
     try {
       if (!this.termsAccepted) throw new Error('Accept the Terms and Privacy Notice before connecting Spotify.');
+      const claimedSpotifyId = this.spotifyId.trim();
+      if (!claimedSpotifyId) throw new Error('Enter your Spotify user ID.');
+      if (this.clientId.trim().length !== 32) {
+        this.clientId = await this.auth.resolvePersonalSpotifyClientId(claimedSpotifyId);
+      }
+      if (this.clientId.trim().length !== 32) {
+        throw new Error('No saved app was found. Paste the 32-character Client ID from your Spotify Developer app.');
+      }
       this.terms.acceptCurrent();
-      await this.auth.startPersonalAppAuthorization(this.clientId, this.returnUrl);
+      await this.auth.startPersonalAppAuthorization(this.clientId, this.returnUrl, undefined, claimedSpotifyId);
     } catch (error) {
       this.errorMessage = error instanceof Error ? error.message : 'Spotify authorization could not be started.';
       this.connecting = false;
