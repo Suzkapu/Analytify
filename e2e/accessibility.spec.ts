@@ -77,7 +77,7 @@ async function mockSpotify(page: Page): Promise<void> {
 
 test('logged-out home is keyboard reachable, zoom-safe, and WCAG 2.2 AA clean', async ({page}) => {
   await page.goto('/login');
-  await expect(page.getByRole('heading', {name: 'See what you listen to.'})).toBeVisible();
+  await expect(page.getByRole('heading', {name: 'Explore your playlists.'})).toBeVisible();
   await page.keyboard.press('Tab');
   await expect(page.locator(':focus')).toBeVisible();
   await page.evaluate(() => { document.documentElement.style.zoom = '200%'; });
@@ -87,7 +87,7 @@ test('logged-out home is keyboard reachable, zoom-safe, and WCAG 2.2 AA clean', 
 
 test('fresh logged-out visit contains no account, feature, stats, or tracking data', async ({page}) => {
   await page.goto('/login');
-  await expect(page.getByRole('heading', {name: 'See what you listen to.'})).toBeVisible();
+  await expect(page.getByRole('heading', {name: 'Explore your playlists.'})).toBeVisible();
 
   const state = await page.evaluate(async () => {
     const databaseNames = typeof indexedDB.databases === 'function'
@@ -192,12 +192,13 @@ test('authenticated playlists route is responsive and WCAG 2.2 AA clean', async 
   await expectNoBlockingAxeViolations(page);
 });
 
-test('authenticated stats route is responsive and WCAG 2.2 AA clean', async ({page}) => {
+test('restricted stats route redirects accessibly to the enabled playlists feature', async ({page}) => {
   await mockSpotify(page);
   await seedAuthenticatedBrowser(page);
   await page.goto('/stats');
-  await expect(page.getByRole('heading', {name: /^Your top listening$/i}).first()).toBeVisible();
-  await expect(page.getByText('Test Song').first()).toBeVisible();
+  await expect(page).toHaveURL(/\/playlists\?notice=spotify-policy-restricted$/);
+  await expect(page.getByRole('heading', {name: /^Your playlists$/i}).first()).toBeVisible();
+  await expect(page.getByRole('status')).toContainText('awaits written Spotify policy approval');
   await expectNoBlockingAxeViolations(page);
 });
 
