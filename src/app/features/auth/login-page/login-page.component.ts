@@ -5,6 +5,7 @@ import {StorageService} from "@core/data-access/storage/storage.service";
 import {AuthReturnUrlService} from '@core/auth/auth-return-url.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {CURRENT_TERMS_VERSION, TermsAcceptanceService} from '@core/legal/terms-acceptance.service';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 
 const console = createScopedLogger('Login');
 
@@ -25,7 +26,8 @@ export class LoginPageComponent implements OnInit {
     private storageService: StorageService,
     private router: Router,
     private returnUrl: AuthReturnUrlService,
-    private terms: TermsAcceptanceService
+    private terms: TermsAcceptanceService,
+    private navigation: DesignNavigationService
   ) {
   }
 
@@ -33,7 +35,7 @@ export class LoginPageComponent implements OnInit {
     await this.storageService.initFromDB();
     this.termsAccepted = this.terms.hasCurrentAcceptance();
     if (this.authService.isAuthenticated() && this.termsAccepted) {
-      this.router.navigateByUrl(this.returnUrl.consume());
+      this.router.navigateByUrl(this.returnUrl.consume(this.navigation.url('playlists')));
     }
   }
 
@@ -42,6 +44,7 @@ export class LoginPageComponent implements OnInit {
     try {
       if (!this.termsAccepted) throw new Error('Accept the Terms and Privacy Notice before connecting Spotify.');
       this.terms.acceptCurrent();
+      this.returnUrl.remember(this.navigation.url('playlists'));
       await this.authService.loginWithSupabase();
     } catch (err) {
       console.error('Login failed', err);
@@ -56,6 +59,8 @@ export class LoginPageComponent implements OnInit {
       return;
     }
     this.terms.acceptCurrent();
-    void this.router.navigate(['/spotify/connect']);
+    void this.navigation.navigate('spotifyConnect', {}, {
+      queryParams: {returnUrl: this.navigation.url('playlists')}
+    });
   }
 }

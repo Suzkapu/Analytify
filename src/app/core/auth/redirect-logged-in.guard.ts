@@ -5,6 +5,7 @@ import { StorageService } from '@core/data-access/storage/storage.service';
 import {AuthReturnUrlService} from './auth-return-url.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {TermsAcceptanceService} from '@core/legal/terms-acceptance.service';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 
 const console = createScopedLogger('Login Redirect Guard');
 
@@ -14,6 +15,7 @@ export const redirectLoggedInGuard = async () => {
   const router = inject(Router);
   const returnUrl = inject(AuthReturnUrlService);
   const terms = inject(TermsAcceptanceService);
+  const navigation = inject(DesignNavigationService);
 
   // Wait for StorageService to finish loading from IndexedDB
   await storageService.initFromDB();
@@ -28,7 +30,7 @@ export const redirectLoggedInGuard = async () => {
   }
 
   if (authService.isAuthenticated() && terms.hasCurrentAcceptance()) {
-    router.navigateByUrl(returnUrl.consume());
+    router.navigateByUrl(returnUrl.consume(navigation.url('playlists')));
     return false;
   }
 

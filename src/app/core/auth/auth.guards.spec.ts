@@ -8,6 +8,8 @@ import { SpotifyAuthService } from './spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { AuthReturnUrlService } from './auth-return-url.service';
 import { TermsAcceptanceService } from '@core/legal/terms-acceptance.service';
+import {DESIGN_VARIANT} from '@core/navigation/design-navigation';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 
 describe('authentication guards', () => {
     let auth: any;
@@ -137,5 +139,21 @@ describe('authentication guards', () => {
         expect(router.navigate).toHaveBeenCalledWith(['/login']);
         expect(loginAllowed).toBe(true);
         expect(router.navigateByUrl).not.toHaveBeenCalled();
+    });
+
+    it('keeps an unauthenticated v2 route inside the v2 login namespace', async () => {
+        TestBed.overrideProvider(DESIGN_VARIANT, {useValue: 'new'});
+        TestBed.overrideProvider(DesignNavigationService, {
+            useFactory: () => new DesignNavigationService(router, 'new')
+        });
+        auth.isAuthenticated.mockReturnValue(false);
+
+        const allowed = await TestBed.runInInjectionContext(() =>
+            spotifyAuthGuard(undefined, {url: '/new/stats?range=short_term'} as any)
+        );
+
+        expect(returnUrl.remember).toHaveBeenCalledWith('/new/stats?range=short_term');
+        expect(router.navigate).toHaveBeenCalledWith(['/new', 'login']);
+        expect(allowed).toBe(false);
     });
 });

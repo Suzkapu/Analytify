@@ -8,19 +8,25 @@ import { StorageService } from '@core/data-access/storage/storage.service';
 import { AuthReturnUrlService } from '@core/auth/auth-return-url.service';
 import { TermsAcceptanceService } from '@core/legal/terms-acceptance.service';
 import { FormsModule } from '@angular/forms';
+import {DESIGN_VARIANT} from '@core/navigation/design-navigation';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 
 describe('LoginPageComponent', () => {
     let component: LoginPageComponent;
     let fixture: ComponentFixture<LoginPageComponent>;
+    let returnUrl: {consume: ReturnType<typeof vi.fn>; remember: ReturnType<typeof vi.fn>};
+    let auth: {isAuthenticated: ReturnType<typeof vi.fn>; loginWithSupabase: ReturnType<typeof vi.fn>};
 
     beforeEach(() => {
+        returnUrl = {consume: vi.fn().mockReturnValue('/new/playlists'), remember: vi.fn()};
+        auth = {isAuthenticated: vi.fn().mockReturnValue(false), loginWithSupabase: vi.fn().mockResolvedValue(undefined)};
         TestBed.configureTestingModule({
             declarations: [LoginPageComponent],
             imports: [FormsModule],
             providers: [
                 {
                     provide: SpotifyAuthService,
-                    useValue: { isAuthenticated: () => false, loginWithSupabase: () => Promise.resolve() }
+                    useValue: auth
                 },
                 {
                     provide: StorageService,
@@ -30,7 +36,9 @@ describe('LoginPageComponent', () => {
                     provide: Router,
                     useValue: { navigate: vi.fn().mockName('navigate'), navigateByUrl: vi.fn().mockName('navigateByUrl') }
                 },
-                { provide: AuthReturnUrlService, useValue: { consume: () => '/playlists' } },
+                { provide: AuthReturnUrlService, useValue: returnUrl },
+                {provide: DESIGN_VARIANT, useValue: 'new'},
+                DesignNavigationService,
                 {
                     provide: TermsAcceptanceService,
                     useValue: {hasCurrentAcceptance: () => false, acceptCurrent: vi.fn().mockName('acceptCurrent')}
@@ -81,5 +89,22 @@ describe('LoginPageComponent', () => {
 
         expect((element.querySelector('.login-spotify-button') as HTMLButtonElement).disabled).toBe(false);
         expect((element.querySelector('.personal-app-button') as HTMLButtonElement).disabled).toBe(false);
+    });
+
+    it('records a v2 return destination before hosted Spotify authorization', async () => {
+        component.termsAccepted = true;
+        await component.login();
+        expect(returnUrl.remember).toHaveBeenCalledWith('/new/playlists');
+        expect(auth.loginWithSupabase).toHaveBeenCalledTimes(1);
+    });
+
+    it('opens personal Spotify setup inside v2 with a v2 return URL', () => {
+        component.termsAccepted = true;
+        component.openPersonalApp();
+        const router = TestBed.inject(Router);
+        expect(router.navigate).toHaveBeenCalledWith(
+            ['/new', 'spotify', 'connect'],
+            {queryParams: {returnUrl: '/new/playlists'}}
+        );
     });
 });

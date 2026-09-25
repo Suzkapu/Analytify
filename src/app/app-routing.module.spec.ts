@@ -5,11 +5,15 @@ import { spotifyAuthGuard } from '@core/auth/spotify-auth.guard';
 import { adminGuard } from '@core/admin/admin.guard';
 import { AppShellComponent } from '@shared/layout/app-shell/app-shell.component';
 import { spotifyRestrictedFeatureGuard } from '@core/compliance/spotify-policy-gate';
+import {DesignV2ShellComponent} from '@shared/layout/design-v2-shell/design-v2-shell.component';
+import {DESIGN_VARIANT} from '@core/navigation/design-navigation';
 
 describe('application routes', () => {
     const shell = APP_ROUTES.find(route => route.component === AppShellComponent)!;
     const routeByPath = (path: string) => shell.children?.find(route => route.path === path)
         ?? APP_ROUTES.find(route => route.path === path);
+    const modernShell = APP_ROUTES.find(route => route.path === 'new')!;
+    const modernRouteByPath = (path: string) => modernShell.children?.find(route => route.path === path);
 
     it('preserves every public URL and the fallback route', () => {
         const publicPaths = APP_ROUTES.map(route => route.path);
@@ -27,6 +31,28 @@ describe('application routes', () => {
     it('keeps authenticated pages beneath one persistent layout shell', () => {
         expect(shell.children?.length).toBe(9);
         expect(shell.loadChildren).toBeUndefined();
+    });
+
+    it('represents every planned page beneath the parallel v2 shell', () => {
+        expect(modernShell.component).toBe(DesignV2ShellComponent);
+        expect(modernShell.children?.map(route => route.path)).toEqual([
+            '', 'login', 'callback', 'spotify', 'playlists', 'songs', 'artistDetails',
+            'analysis', 'stats', 'history', 'admin', 'song-league', 'shared-playlists',
+            'legal', 'compare-room/callback', 'compare-room/join/:roomId', 'compare-room', '**'
+        ]);
+        for (const path of [
+            'login', 'callback', 'spotify', 'playlists', 'songs', 'artistDetails', 'analysis',
+            'stats', 'history', 'admin', 'song-league', 'shared-playlists',
+            'compare-room/callback', 'compare-room/join/:roomId', 'compare-room', 'legal'
+        ]) expect(modernRouteByPath(path)?.loadChildren).toEqual(expect.any(Function));
+    });
+
+    it('scopes the new route tree to the new design variant', () => {
+        const variantProvider = modernShell.providers?.find(provider =>
+            typeof provider === 'object' && provider !== null && 'provide' in provider
+            && provider.provide === DESIGN_VARIANT
+        );
+        expect(variantProvider).toEqual(expect.objectContaining({useValue: 'new'}));
     });
 
     it('requires both login and administrator authorization for the admin route', () => {

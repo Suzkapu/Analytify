@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {environment} from '@env/environment';
 import {TermsAcceptanceService} from '@core/legal/terms-acceptance.service';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 
 @Component({
     selector: 'app-personal-spotify-connect',
@@ -18,14 +19,15 @@ export class PersonalSpotifyConnectComponent implements OnInit {
   errorMessage = '';
   copied = false;
   connecting = false;
-  returnUrl = '/playlists';
+  returnUrl = '';
   termsAccepted = false;
 
   constructor(
     public auth: SpotifyAuthService,
     private route: ActivatedRoute,
     private router: Router,
-    private terms: TermsAcceptanceService
+    private terms: TermsAcceptanceService,
+    private navigation: DesignNavigationService
   ) {}
 
   ngOnInit(): void {
@@ -67,10 +69,14 @@ export class PersonalSpotifyConnectComponent implements OnInit {
   }
 
   cancel(): void {
-    void this.router.navigateByUrl(this.auth.isAuthenticated() ? this.returnUrl : '/login');
+    void this.router.navigateByUrl(
+      this.auth.isAuthenticated() ? this.returnUrl : this.navigation.url('login')
+    );
   }
 
   private safeReturnUrl(value: string | null): string {
-    return value?.startsWith('/') && !value.startsWith('//') ? value : '/playlists';
+    return value?.startsWith('/') && !value.startsWith('//')
+      ? value
+      : this.navigation.url('playlists');
   }
 }

@@ -1,6 +1,7 @@
 import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 
 @Component({
     selector: 'app-cloud-access',
@@ -43,12 +44,17 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
     standalone: false
 })
 export class CloudAccessComponent implements OnInit {
-  returnUrl = '/playlists';
+  returnUrl = '';
   enableBackup = false;
   working = false;
   errorMessage = '';
 
-  constructor(private route: ActivatedRoute, private router: Router, private auth: SpotifyAuthService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private auth: SpotifyAuthService,
+    private navigation: DesignNavigationService
+  ) {}
 
   ngOnInit(): void {
     this.returnUrl = this.safeReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl'));
@@ -71,9 +77,11 @@ export class CloudAccessComponent implements OnInit {
     }
   }
 
-  cancel(): void { void this.router.navigateByUrl('/playlists'); }
+  cancel(): void { void this.router.navigateByUrl(this.navigation.url('playlists')); }
 
   private safeReturnUrl(value: string | null): string {
-    return value?.startsWith('/') && !value.startsWith('//') ? value : '/playlists';
+    return value?.startsWith('/') && !value.startsWith('//')
+      ? value
+      : this.navigation.url('playlists');
   }
 }

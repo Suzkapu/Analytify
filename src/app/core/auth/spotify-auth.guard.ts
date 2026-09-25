@@ -1,11 +1,12 @@
 import { inject } from '@angular/core';
-import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 import { SpotifyAuthService } from './spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { firstValueFrom } from 'rxjs';
 import {AuthReturnUrlService} from './auth-return-url.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {TermsAcceptanceService} from '@core/legal/terms-acceptance.service';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 
 const console = createScopedLogger('Authentication Guard');
 
@@ -15,16 +16,16 @@ export const spotifyAuthGuard = async (
 ) => {
   const authService = inject(SpotifyAuthService);
   const storageService = inject(StorageService);
-  const router = inject(Router);
   const returnUrl = inject(AuthReturnUrlService);
   const terms = inject(TermsAcceptanceService);
+  const navigation = inject(DesignNavigationService);
 
   // Wait for StorageService to finish loading from IndexedDB
   await storageService.initFromDB();
 
   if (!terms.hasCurrentAcceptance()) {
     returnUrl.remember(state?.url);
-    await router.navigate(['/login']);
+    await navigation.navigate('login');
     return false;
   }
 
@@ -62,6 +63,6 @@ export const spotifyAuthGuard = async (
 
   // Redirect to login page
   returnUrl.remember(state?.url);
-  router.navigate(['/login']);
+  navigation.navigate('login');
   return false;
 };

@@ -24,4 +24,10 @@ describe('AuthReturnUrlService', () => {
         service.remember('//malicious.example');
         expect(service.consume()).toBe('/playlists');
     });
+
+    it('preserves a v2 route with query parameters through one callback', () => {
+        service.remember('/new/stats?range=short_term&compare=2026-09-24');
+        expect(service.consume()).toBe('/new/stats?range=short_term&compare=2026-09-24');
+        expect(service.consume('/new/playlists')).toBe('/new/playlists');
+    });
 });
