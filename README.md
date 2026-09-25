@@ -10,9 +10,9 @@ Analytify is a personal Spotify library viewer. It helps you browse large playli
 
 - **Playlist explorer:** search and sort playlists, songs, artists, and albums; merge playlists; and open tracks in Spotify.
 - **Playlist summaries:** see song, artist, album, duration, and explicit-track counts plus top artists and albums.
-- **Listening statistics (currently unavailable):** the implementation can show top songs, artists, genres, and history, but production access is disabled unless Spotify gives a written policy determination covering it.
+- **Listening statistics:** see top songs, artists, genres, and recently played history, including changes over time.
 - **Private sharing:** share a revocable playlist snapshot with a specific person and remove their access later.
-- **Compare Room and Song League (currently unavailable):** these tools remain disabled unless Spotify gives a written policy determination covering them.
+- **Compare Room and Song League:** compare playlists with friends or run a recurring recommendation game.
 
 ## Your data
 

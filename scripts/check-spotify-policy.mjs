@@ -48,8 +48,10 @@ const [
 const baseScopeBlock = scopes.match(/HOSTED_SPOTIFY_SCOPES\s*=\s*\[([\s\S]*?)\]/)?.[1] || '';
 assert.ok(baseScopeBlock, 'hosted Spotify read scopes must stay explicit');
 assert.doesNotMatch(baseScopeBlock, /playlist-modify-private/, 'playlist writes must not be requested at initial login');
-assert.doesNotMatch(baseScopeBlock, /user-top-read|user-read-recently-played/,
-  'disabled derived-metric features must not retain top/history scopes');
+assert.match(baseScopeBlock, /user-top-read/,
+  'enabled statistics must request Spotify top-item access');
+assert.match(baseScopeBlock, /user-read-recently-played/,
+  'enabled history must request Spotify recently-played access');
 assert.match(scopes, /PLAYLIST_WRITE_SPOTIFY_SCOPES\s*=\s*\['playlist-modify-private'\]/);
 assert.doesNotMatch(scopes, /playlist-modify-public/);
 assert.match(auth, /requestPlaylistWriteAuthorization/);
@@ -59,16 +61,18 @@ for (const page of [login, personalLogin]) {
   assert.match(page, /saved songs/i);
   assert.match(page, /playlists/i);
   assert.match(page, /write access/i);
-  assert.doesNotMatch(page, /top songs and artists|recently played songs/i);
+  assert.match(page, /top songs and artists/i);
+  assert.match(page, /recently played songs/i);
 }
 
-assert.match(policyGate, /APPROVAL_REFERENCE:\s*string \| null = null/);
+assert.match(policyGate, /operator-enabled-pending-spotify-determination-2026-09-25/);
 assert.match(routes, /spotifyRestrictedFeatureGuard/);
 for (const task of ['listening_history', 'stats_short_term', 'stats_medium_term', 'stats_long_term', 'song_league_playlists']) {
   assert.match(workerRegistry, new RegExp(`['"]${task}['"]`));
 }
 assert.match(policy, /No written Spotify determination/);
-assert.match(policy, /disabled in both hosted and personal-client-ID browser flows/);
+assert.match(policy, /operator explicitly chose to make those features available again/);
+assert.match(policy, /not Spotify approval/);
 
 assert.match(workerClient, /invalid_grant/);
 assert.match(workerClient, /credential_invalid/);

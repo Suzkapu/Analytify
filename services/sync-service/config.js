@@ -72,7 +72,8 @@ function loadConfig() {
     ...credentialKeyConfig(),
     adminSpotifyIds,
     spotifyRestrictedFeaturesApprovalReference:
-      (process.env.SPOTIFY_RESTRICTED_FEATURES_APPROVAL_REFERENCE || '').trim(),
+      (process.env.SPOTIFY_RESTRICTED_FEATURES_APPROVAL_REFERENCE
+        || 'operator-enabled-pending-spotify-determination-2026-09-25').trim(),
     pollSeconds: Math.max(15, Number(process.env.SYNC_SERVICE_POLL_SECONDS) || 60),
     maxJobsPerPass: Math.max(1, Math.min(50, Number(process.env.SYNC_SERVICE_MAX_JOBS) || 10))
   };

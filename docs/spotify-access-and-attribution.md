@@ -2,7 +2,7 @@
 
 ## Restricted features decision
 
-Spotify Developer Policy effective 15 May 2025 was reviewed on 24 September 2026. No written Spotify determination approving derived listening statistics, listening-history analysis, playlist comparisons, or Song League is recorded. Those features are therefore disabled in both hosted and personal-client-ID browser flows, their top/history OAuth scopes are not requested, and their scheduled worker tasks are cancelled by default. Re-enabling them requires a recorded written Spotify determination, a source change to the browser compliance gate, and the matching protected worker approval reference. A policy page, developer dashboard access, or personal Client ID is not approval.
+Spotify Developer Policy effective 15 May 2025 was reviewed on 24 September 2026. No written Spotify determination approving derived listening statistics, listening-history analysis, playlist comparisons, or Song League is recorded. On 25 September 2026 the operator explicitly chose to make those features available again in hosted and personal-client-ID flows while issue #96 remains open. This operator decision is not Spotify approval and must not be represented as such. The application requests the corresponding top/history scopes and permits the matching scheduled tasks; a future written Spotify determination or policy decision must be recorded here and in issue #96.
 
 Last reviewed: 23 September 2026
 
