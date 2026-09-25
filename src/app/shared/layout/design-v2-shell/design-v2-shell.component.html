@@ -1,3 +1,88 @@
-<div class="design-v2" data-design-variant="new">
-  <router-outlet></router-outlet>
+<div class="design-v2" data-design-variant="new"
+  [attr.data-page]="pageContext().pageId" [attr.data-ambient]="pageContext().ambientKey">
+  <a class="v2-skip-link" href="#v2-main-content">Skip to main content</a>
+  <div class="v2-ambient" aria-hidden="true"></div>
+
+  <header class="v2-header">
+    <div class="v2-header__inner">
+      <a class="v2-brand" [routerLink]="navigation.commands('playlists')" aria-label="Analytify playlists">
+        <img src="assets/Analytify-96.webp" width="38" height="38" alt="">
+        <span>Analytify</span>
+      </a>
+
+      <nav class="v2-desktop-nav" aria-label="Main navigation">
+        @for (item of primaryNavigation; track item.id) {
+          <a class="v2-nav-link" [routerLink]="linkFor(item)" [class.is-active]="isActive(item)"
+            [attr.aria-current]="isActive(item) ? 'page' : null">
+            <i class="pi {{ item.icon }}" aria-hidden="true"></i>
+            <span>{{ item.label }}</span>
+          </a>
+        }
+      </nav>
+
+      <div class="v2-mobile-title">
+        @if (pageContext().showBack) {
+          <button type="button" class="v2-icon-button" aria-label="Go back" (click)="back()">
+            <i class="pi pi-arrow-left" aria-hidden="true"></i>
+          </button>
+        }
+        <span>{{ pageContext().title }}</span>
+      </div>
+
+      <button type="button" class="v2-tools-button" aria-label="Open social and sharing tools"
+        aria-haspopup="dialog" [attr.aria-expanded]="toolsOpen()" (click)="toggleTools()">
+        <i class="pi pi-th-large" aria-hidden="true"></i>
+        <span>Workspace</span>
+      </button>
+    </div>
+  </header>
+
+  <main #mainContent id="v2-main-content" tabindex="-1" class="v2-main"
+    [class.v2-main--wide]="pageContext().width === 'wide'"
+    [class.v2-main--full]="pageContext().width === 'full'"
+    [attr.aria-label]="pageContext().title + ' content'">
+    <router-outlet></router-outlet>
+  </main>
+
+  <nav class="v2-mobile-nav" aria-label="Primary navigation">
+    @for (item of mobileNavigation; track item.id) {
+      <a class="v2-mobile-nav__link" [routerLink]="linkFor(item)" [class.is-active]="isActive(item)"
+        [attr.aria-current]="isActive(item) ? 'page' : null">
+        <i class="pi {{ item.icon }}" aria-hidden="true"></i>
+        <span>{{ item.label }}</span>
+      </a>
+    }
+  </nav>
+
+  <div class="v2-overlay-host" [class.is-active]="overlayHostActive() || toolsOpen()"
+    [attr.aria-hidden]="overlayHostActive() || toolsOpen() ? null : 'true'">
+    @if (toolsOpen()) {
+      <button type="button" class="v2-overlay-backdrop" aria-label="Close workspace" (click)="closeTools()"></button>
+      <section class="v2-tools-dialog" role="dialog" aria-modal="true" aria-labelledby="v2-tools-title"
+        aria-describedby="v2-tools-description"
+        appAccessibleDialog (modalEscape)="closeTools()">
+        <div class="v2-tools-dialog__heading">
+          <div>
+            <span class="v2-eyebrow">Explore together</span>
+            <h2 id="v2-tools-title">Workspace</h2>
+          </div>
+          <button appModalInitialFocus type="button" class="v2-icon-button" aria-label="Close workspace"
+            (click)="closeTools()">
+            <i class="pi pi-times" aria-hidden="true"></i>
+          </button>
+        </div>
+        <p id="v2-tools-description" class="v2-tools-description">Open a shared Analytify tool.</p>
+        <nav class="v2-tool-links" aria-label="Social and sharing tools">
+          @for (item of toolNavigation; track item.id) {
+            <a [routerLink]="linkFor(item)" (click)="closeTools()">
+              <i class="pi {{ item.icon }}" aria-hidden="true"></i>
+              <span>{{ item.label }}</span>
+              <i class="pi pi-arrow-right" aria-hidden="true"></i>
+            </a>
+          }
+        </nav>
+      </section>
+    }
+    <ng-content select="[design-v2-overlay]"></ng-content>
+  </div>
 </div>

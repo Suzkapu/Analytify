@@ -8,6 +8,7 @@ import { spotifyRestrictedFeatureGuard } from '@core/compliance/spotify-policy-g
 import {DesignV2ShellComponent} from '@shared/layout/design-v2-shell/design-v2-shell.component';
 import {DESIGN_V2_ROUTES} from './design-v2-routing.module';
 import {DESIGN_VARIANT} from '@core/navigation/design-navigation';
+import {DesignSelectivePreloadingStrategy} from '@core/navigation/design-selective-preloading.strategy';
 
 describe('application routes', () => {
     const shell = APP_ROUTES.find(route => route.component === AppShellComponent)!;
@@ -56,6 +57,28 @@ describe('application routes', () => {
             && provider.provide === DESIGN_VARIANT
         );
         expect(variantProvider).toEqual(expect.objectContaining({useValue: 'new'}));
+    });
+
+    it('gives every v2 page a title and semantic shell metadata', () => {
+        const pages = modernShell.children?.filter(route => route.loadChildren) ?? [];
+        expect(pages.length).toBeGreaterThan(0);
+        for (const page of pages) {
+            expect(page.title).toEqual(expect.any(String));
+            expect(page.data).toEqual(expect.objectContaining({
+                pageId: expect.any(String),
+                mobileTitle: expect.any(String),
+                pageWidth: expect.stringMatching(/^(standard|wide|full)$/),
+                ambientKey: expect.any(String),
+                preload: expect.any(Boolean)
+            }));
+        }
+    });
+
+    it('marks only likely next destinations for selective preloading', () => {
+        const preloadPaths = modernShell.children
+            ?.filter(route => route.data?.['preload'] === true)
+            .map(route => route.path);
+        expect(preloadPaths).toEqual(['playlists', 'stats', 'history']);
     });
 
     it('requires both login and administrator authorization for the admin route', () => {
@@ -130,6 +153,7 @@ describe('application routes', () => {
 
     it('restores positions and scrolls URL fragments below the sticky header', () => {
         expect(ROUTER_OPTIONS).toEqual(expect.objectContaining({
+            preloadingStrategy: DesignSelectivePreloadingStrategy,
             scrollPositionRestoration: 'enabled',
             anchorScrolling: 'enabled',
             scrollOffset: [0, 96]

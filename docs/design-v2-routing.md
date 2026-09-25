@@ -17,3 +17,9 @@ Protected-route guards store the complete attempted URL, including its design na
 Feature and data services are shared. During migration, both route trees lazy-load the same feature modules under different shells. Pages gain v2 presentation through the injected variant and shared presentation primitives, not through cloned Spotify or Supabase services.
 
 At cutover, canonical routes can receive the v2 shell and the temporary `/new` tree can become compatibility redirects. Removing `/new` then requires changes only in route configuration and `resolveDesignRoute`; feature components and durable external identifiers remain unchanged.
+
+## Persistent shell and route context
+
+The lazy `DesignV2RoutingModule` mounts one `DesignV2ShellComponent` above every v2 page. Child navigation replaces only the router outlet, so the desktop navigation, mobile header and bottom navigation, ambient host, and overlay host retain their state. The shell owns the single main landmark and skip link and moves focus to that landmark after an in-shell route change.
+
+Desktop and mobile navigation are projections of `DESIGN_V2_NAVIGATION`; neither template owns a second route list. Each user-facing v2 route supplies a document title plus semantic `pageId`, `mobileTitle`, `pageWidth`, and `ambientKey` metadata. Coordinates and decorative values stay in scoped shell styles. Only Playlists, Stats, and History opt into `DesignSelectivePreloadingStrategy`, so adding the v2 namespace does not preload the complete feature tree.

@@ -7,6 +7,7 @@ import {redirectLoggedInGuard} from '@core/auth/redirect-logged-in.guard';
 import {spotifyAuthGuard} from '@core/auth/spotify-auth.guard';
 import {spotifyRestrictedFeatureGuard} from '@core/compliance/spotify-policy-gate';
 import {AppShellComponent} from '@shared/layout/app-shell/app-shell.component';
+import {DesignSelectivePreloadingStrategy} from '@core/navigation/design-selective-preloading.strategy';
 
 const PRODUCT_ROUTES: Routes = [
   {
@@ -97,6 +98,7 @@ export const APP_ROUTES: Routes = [
 ];
 
 export const ROUTER_OPTIONS: ExtraOptions = {
+  preloadingStrategy: DesignSelectivePreloadingStrategy,
   scrollPositionRestoration: 'enabled',
   anchorScrolling: 'enabled',
   scrollOffset: [0, 96]
