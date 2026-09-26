@@ -385,20 +385,12 @@ describe('HeaderComponent entry points', () => {
         expect(TestBed.inject(Router).navigate).not.toHaveBeenCalledWith(['/login']);
     });
 
-    it('keeps Stats discoverability separate and off until explicitly enabled', async () => {
+    it('does not expose the obsolete Stats request discoverability toggle', async () => {
         await fixture.whenStable();
         component.showSettingsDropdown = true;
         fixture.detectChanges();
-        const toggle = fixture.nativeElement.querySelector('input[aria-label="Allow Stats access requests"]') as HTMLInputElement;
-        expect(toggle.checked).toBe(false);
 
-        toggle.checked = true;
-        toggle.dispatchEvent(new Event('change'));
-        await fixture.whenStable();
-
-        expect(statsSharing.setDiscoverability).toHaveBeenCalledTimes(1);
-
-        expect(statsSharing.setDiscoverability).toHaveBeenCalledWith(true);
-        expect(component.statsDiscoverable).toBe(true);
+        expect(fixture.nativeElement.querySelector('input[aria-label="Allow Stats access requests"]')).toBeNull();
+        expect(fixture.nativeElement.textContent).not.toContain('Stats requests');
     });
 });

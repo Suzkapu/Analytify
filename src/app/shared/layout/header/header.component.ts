@@ -50,8 +50,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isDeletingDbData = false;
   isGuestLogoutRunning = false;
   dataDeletionError = '';
-  statsDiscoverable = false;
-  isSavingStatsDiscoverability = false;
   private profileRetryTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly profileRetryDelays = [1_000, 5_000, 30_000];
 
@@ -68,15 +66,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     // Re-check the active Supabase identity so an admin result is never reused
     // after logout when a different user signs in within the same app session.
-    const [, isAdmin, statsDiscoverable] = await Promise.all([
+    const [, isAdmin] = await Promise.all([
       this.loadUserProfile(),
-      this.adminService.isAdmin(),
-      this.authService.hasCloudIdentity?.() && this.statsSharing
-        ? this.statsSharing.getDiscoverability().catch(() => false)
-        : Promise.resolve(false)
+      this.adminService.isAdmin()
     ]);
     this.isAdmin = isAdmin;
-    this.statsDiscoverable = statsDiscoverable;
   }
 
   ngOnDestroy(): void {
@@ -317,25 +311,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   get hasCollaborationIdentity(): boolean {
     return this.authService.hasCloudIdentity?.() ?? false;
-  }
-
-  async onStatsDiscoverabilityToggle(event: Event): Promise<void> {
-    const checkbox = event.target as HTMLInputElement;
-    const previous = this.statsDiscoverable;
-    if (!this.statsSharing || this.isSavingStatsDiscoverability) {
-      checkbox.checked = previous;
-      return;
-    }
-    this.isSavingStatsDiscoverability = true;
-    try {
-      this.statsDiscoverable = await this.statsSharing.setDiscoverability(checkbox.checked);
-    } catch (error) {
-      checkbox.checked = previous;
-      console.error('Failed to update Stats discoverability:', error);
-      alert('Stats discoverability could not be updated. Please try again.');
-    } finally {
-      this.isSavingStatsDiscoverability = false;
-    }
   }
 
   cancelBackupToggle() {
