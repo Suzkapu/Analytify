@@ -1,10 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Optional} from '@angular/core';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {openSpotifyUrl} from '@core/navigation/spotify-url';
+import {groupHistoryByDay, HistoryDayGroup} from '../insights-view-model';
 
 const console = createScopedLogger('Listening History');
 
@@ -18,13 +19,22 @@ const console = createScopedLogger('Listening History');
 export class ListeningHistoryComponent implements OnInit {
 
   recentlyPlayedTracks: any[] = [];
+  historyDayGroups: HistoryDayGroup[] = [];
   isLoadingRecentlyPlayed: boolean = true;
+  recentlyPlayedError = '';
+
+  private setRecentlyPlayedTracks(items: any[]): void {
+    this.recentlyPlayedTracks = items;
+    this.historyDayGroups = groupHistoryByDay(items);
+    this.changeDetector?.markForCheck();
+  }
 
   constructor(
     private spotifyDataService: SpotifyDataService,
     public authService: SpotifyAuthService,
     private storageService: StorageService,
-    private supabaseService: SupabaseService
+    private supabaseService: SupabaseService,
+    @Optional() private changeDetector?: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -38,12 +48,13 @@ export class ListeningHistoryComponent implements OnInit {
 
 
   async loadRecentlyPlayed() {
+    this.recentlyPlayedError = '';
     this.isLoadingRecentlyPlayed = this.recentlyPlayedTracks.length === 0;
     const userId = this.authService.getUserId() || 'anonymous';
     const supabaseUserId = this.authService.getSupabaseUserId();
     const storageKey = `${userId}_recently_played`;
     const lastCheckedKey = `${storageKey}_lastChecked`;
-    await this.storageService.hydrateItems?.([storageKey]);
+    await this.storageService.hydrateItems?.([storageKey, lastCheckedKey]);
 
     // Load existing cache from StorageService
     let cachedTracks: any[] = [];
@@ -71,12 +82,13 @@ export class ListeningHistoryComponent implements OnInit {
       }
     }
 
-    this.recentlyPlayedTracks = cachedTracks;
+    this.setRecentlyPlayedTracks(cachedTracks);
     if (cachedTracks.length > 0) this.isLoadingRecentlyPlayed = false;
 
     const lastChecked = Number(this.storageService.getItem(lastCheckedKey));
     if (cachedTracks.length > 0 && Number.isFinite(lastChecked) && Date.now() - lastChecked < 5 * 60 * 1000) {
       console.log('[History] Using the recently checked cache; skipping a repeated Spotify request.');
+      this.changeDetector?.markForCheck();
       return;
     }
 
@@ -119,7 +131,7 @@ export class ListeningHistoryComponent implements OnInit {
         // Truncate to the most recent 50 tracks
         const finalTracks = mergedTracks.slice(0, 50);
         
-        this.recentlyPlayedTracks = finalTracks;
+        this.setRecentlyPlayedTracks(finalTracks);
         
         // Save back to StorageService
         try {
@@ -137,10 +149,15 @@ export class ListeningHistoryComponent implements OnInit {
         }
         
         this.isLoadingRecentlyPlayed = false;
+        this.changeDetector?.markForCheck();
       },
       error: (err) => {
         console.error('Failed to load recently played tracks:', err);
+        if (this.recentlyPlayedTracks.length === 0) {
+          this.recentlyPlayedError = 'Spotify could not load your recent plays. Try again in a moment.';
+        }
         this.isLoadingRecentlyPlayed = false;
+        this.changeDetector?.markForCheck();
       }
     });
   }
@@ -157,6 +174,11 @@ export class ListeningHistoryComponent implements OnInit {
     const diffHours = Math.floor(diffMins / 60);
     if (diffHours < 24) return `${diffHours}h ago`;
     return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
+
+  playedAtDateTime(dateStr: string): string | null {
+    const date = new Date(dateStr);
+    return Number.isFinite(date.getTime()) ? date.toISOString() : null;
   }
 
   getTrackArtist(track: any): string {

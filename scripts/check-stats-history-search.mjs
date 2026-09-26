@@ -20,7 +20,7 @@ const checks = [
   ['past matches are buttons, not external links', template.includes('<button type="button" class="past-stats-card"') && !template.includes('[href]="item.spotifyUrl || null"')],
   ['past cards omit aggregate summary text', !template.includes('Best #{{ item.bestRank }}') && !template.includes('last seen {{ item.lastSeen }}')],
   ['past search is explicitly opt-in', component.includes('includePastStatsSearch = false') && component.includes('togglePastStatsSearch()')],
-  ['genres use the same search and opt-in controls', template.includes("'Search Top Genres'") && component.includes("this.selectedCategory === 'genres'")],
+  ['genres use the same search and opt-in controls', template.includes('[placeholder]="statsSearchPlaceholder"') && component.includes('statsSearchPlaceholder(this.selectedCategory)')],
   ['former genres are searched server-side', genreMigration.includes("select 'genre'::text") && genreMigration.includes('stats_snapshot_genres')],
   ['current genres are excluded', genreMigration.includes('lower(current_item.genre_name) = lower(item.genre_name)')],
   ['past toggle replaces match count', template.includes('(click)="togglePastStatsSearch()"') && !template.includes('class="stats-search-status"')],

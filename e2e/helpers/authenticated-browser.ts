@@ -38,9 +38,18 @@ export async function seedAuthenticatedBrowser(page: Page): Promise<void> {
           {id: 'playlist-1', name: 'Test Playlist', owner: {id: 'e2e-user'}, images: [], tracks: {total: 1}, description: ''}
         ]);
         const featureStore = transaction.objectStore('featureData');
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+        const recentTracks = JSON.stringify([
+          {played_at: today.toISOString(), track: {id: 'recent-1', name: 'Played today', artists: [{name: 'Test Artist'}], album: {images: []}, external_urls: {spotify: 'https://open.spotify.com/track/recent-1'}}},
+          {played_at: yesterday.toISOString(), track: {id: 'recent-2', name: 'Played yesterday', artists: [{name: 'Test Artist'}], album: {images: []}, external_urls: {spotify: 'https://open.spotify.com/track/recent-2'}}}
+        ]);
         for (const userId of ['e2e-user', 'e2e-user_dev']) {
           featureStore.put({key: `${userId}_playlists`, value: playlists});
+          featureStore.put({key: `${userId}_recently_played`, value: recentTracks});
           store.put({key: `${userId}_playlists_lastUpdated`, value: String(Date.now())});
+          store.put({key: `${userId}_recently_played_lastChecked`, value: String(Date.now())});
           store.put({key: `${userId}_spotify_profile_id`, value: 'e2e-user'});
           store.put({key: `${userId}_spotify_profile_id_verified`, value: 'true'});
           store.put({key: `${userId}_playlists_showSaved`, value: 'true'});
@@ -58,6 +67,20 @@ export async function mockSpotify(page: Page): Promise<void> {
     if (path === '/v1/me') return route.fulfill({json: {id: 'e2e-user', display_name: 'Browser test user', images: []}});
     if (path.includes('/top/artists')) return route.fulfill({json: {items: [{id: 'artist-1', name: 'Test Artist', images: [], genres: ['pop']}], total: 1}});
     if (path.includes('/top/tracks')) return route.fulfill({json: {items: [{id: 'track-1', name: 'Test Song', artists: [{id: 'artist-1', name: 'Test Artist'}], album: {id: 'album-1', name: 'Test Album', images: []}, duration_ms: 180000}], total: 1}});
+    if (path.includes('/me/player/recently-played')) {
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+      const track = (id: string, name: string) => ({
+        id, name, artists: [{id: 'artist-1', name: 'Test Artist'}],
+        album: {id: `album-${id}`, name: 'Test Album', images: []},
+        external_urls: {spotify: `https://open.spotify.com/track/${id}`}
+      });
+      return route.fulfill({json: {items: [
+        {played_at: today.toISOString(), track: track('recent-1', 'Played today')},
+        {played_at: yesterday.toISOString(), track: track('recent-2', 'Played yesterday')}
+      ]}});
+    }
     if (path.includes('/me/playlists')) return route.fulfill({json: {items: [{id: 'playlist-1', name: 'Test Playlist', owner: {id: 'e2e-user'}, images: [], tracks: {total: 1}, description: ''}], total: 1, next: null}});
     if (path.includes('/me/tracks')) return route.fulfill({json: {items: [], total: 0, next: null}});
     return route.fulfill({json: {items: [], total: 0, next: null}});

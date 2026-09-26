@@ -11,6 +11,7 @@ import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 import {openSpotifyUrl} from '@core/navigation/spotify-url';
 import {CompareSaveResult, CompareTrack} from '@core/compare-room/compare-room.models';
 import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.service';
+import {InsightsCategory, rankMovementLabel, statsSearchPlaceholder} from '../insights-view-model';
 
 const console = createScopedLogger('Personal Stats');
 
@@ -25,7 +26,7 @@ function toDailySnapshotDateKey(ts: number): string {
   return `${y}-${m}-${r}`;
 }
 
-type StatsCategory = 'tracks' | 'artists' | 'genres';
+type StatsCategory = InsightsCategory;
 type StatsTrend = { type: 'up' | 'down' | 'same' | 'new'; diff?: number };
 type SnapshotCalendarTarget = 'history' | 'compare';
 type SnapshotCalendarDay = {
@@ -56,7 +57,7 @@ function compareCalendarWeekdays(): string[] {
 })
 export class UserStatsComponent implements OnInit, OnDestroy {
   selectedRange: string = 'short_term'; // 'short_term', 'medium_term', 'long_term'
-  selectedCategory: string = 'tracks'; // 'tracks', 'artists', 'genres'
+  selectedCategory: StatsCategory = 'tracks';
   private _statsSearchQuery = '';
   get statsSearchQuery(): string { return this._statsSearchQuery; }
   set statsSearchQuery(value: string) { this._statsSearchQuery = value; this.invalidateStatsView(); }
@@ -184,6 +185,14 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       ?? '';
   }
 
+  get statsSearchPlaceholder(): string {
+    return statsSearchPlaceholder(this.selectedCategory);
+  }
+
+  movementLabel(trend: StatsTrend): string {
+    return rankMovementLabel(trend);
+  }
+
   get isSpyMode(): boolean {
     return !!this.spyOwnerUserId;
   }
@@ -275,9 +284,22 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     });
   }
 
-  changeCategory(category: string) {
+  changeCategory(category: StatsCategory) {
     this.selectedCategory = category;
     this.schedulePastStatsSearch();
+  }
+
+  onCategoryTabKeydown(event: KeyboardEvent): void {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+    const categories: StatsCategory[] = ['tracks', 'artists', 'genres'];
+    const current = categories.indexOf(this.selectedCategory);
+    const next = event.key === 'Home' ? 0
+      : event.key === 'End' ? categories.length - 1
+      : (current + (event.key === 'ArrowRight' ? 1 : -1) + categories.length) % categories.length;
+    this.changeCategory(categories[next]);
+    const tabs = (event.currentTarget as HTMLElement | null)?.parentElement?.querySelectorAll<HTMLElement>('[role="tab"]');
+    queueMicrotask(() => tabs?.[next]?.focus());
   }
 
   onStatsSearchChange(query: string): void {

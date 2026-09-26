@@ -385,6 +385,7 @@ describe('UserStatsComponent trends', () => {
                 dateKey: snapshot.snapshotDate
             }];
         component.showCompareMenu = true;
+        component.selectedRange = 'medium_term';
         component.updateSnapshotGroups();
         const days = component.compareCalendarDays.filter(day => !!day) as any[];
         const unavailable = days.find(day => day.dateKey === '2026-07-14');
@@ -397,6 +398,7 @@ describe('UserStatsComponent trends', () => {
 
         component.selectCompareCalendarDay(available, new Event('click'));
         expect(component.compareSnapshotId).toBe(snapshot.timestamp.toString());
+        expect(component.selectedRange).toBe('medium_term');
         expect(component.showCompareMenu).toBe(false);
         expect(ensureSnapshotLoaded).toHaveBeenCalledTimes(1);
         expect(ensureSnapshotLoaded).toHaveBeenCalledWith(snapshot.timestamp.toString());
@@ -892,6 +894,29 @@ describe('UserStatsComponent trends', () => {
         expect(historicalComponent.includePastStatsSearch).toBe(true);
         expect(searchPastTopItems).toHaveBeenCalledTimes(1);
         expect(searchPastTopItems).toHaveBeenCalledWith('short_term', 'track', 'former');
+    });
+
+    it('uses category-specific search labels and readable movement labels', () => {
+        expect(component.statsSearchPlaceholder).toBe('Search songs or artists');
+        component.changeCategory('genres');
+        expect(component.statsSearchPlaceholder).toBe('Search genres');
+        expect(component.movementLabel({ type: 'up', diff: 2 })).toBe('↑2');
+        expect(component.movementLabel({ type: 'new' })).toBe('NEW');
+    });
+
+    it('supports arrow-key navigation across the category tabs', async () => {
+        const focus = vi.fn();
+        const event = {
+            key: 'ArrowRight', preventDefault: vi.fn(),
+            currentTarget: { parentElement: { querySelectorAll: () => [{ focus: vi.fn() }, { focus }, { focus: vi.fn() }] } }
+        } as any;
+
+        component.onCategoryTabKeydown(event);
+        await Promise.resolve();
+
+        expect(component.selectedCategory).toBe('artists');
+        expect(event.preventDefault).toHaveBeenCalled();
+        expect(focus).toHaveBeenCalled();
     });
 
     it('clears and cancels historical results when past search is turned off', () => {

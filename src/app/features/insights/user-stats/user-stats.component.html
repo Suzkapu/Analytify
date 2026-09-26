@@ -29,7 +29,9 @@
       <!-- Time Range Toggles and History Selector -->
       <div class="stats-range-controls">
         <!-- Time Range Toggles -->
-        <div class="time-range-toggles">
+        <div class="stats-control-group">
+          <span class="stats-control-label"><span class="label-long">Ranking period</span><span class="label-short">Period</span></span>
+        <div class="time-range-toggles" role="group" aria-label="Ranking period">
           <button (click)="changeRange('short_term')"
           [class.active]="selectedRange === 'short_term'" [attr.aria-pressed]="selectedRange === 'short_term'">4 weeks</button>
           <button (click)="changeRange('medium_term')"
@@ -37,10 +39,12 @@
           <button (click)="changeRange('long_term')"
           [class.active]="selectedRange === 'long_term'" [attr.aria-pressed]="selectedRange === 'long_term'">1 year</button>
         </div>
+        </div>
 
         <!-- Snapshot comparison calendars -->
         @if (snapshotOptions.length > 0) {
           <div class="history-select-container">
+            <span class="stats-control-label ranking-date-label">Ranking date</span>
             <div class="spotify-custom-dropdown" [class.open]="showHistoryMenu"
               [class.active]="selectedSnapshotId !== 'current'">
               <button class="dropdown-trigger-btn" (click)="toggleHistoryMenu($event)"
@@ -74,7 +78,7 @@
                     }
                   </div>
                   <div class="compare-calendar-grid">
-                    @for (day of historyCalendarDays; track day) {
+                    @for (day of historyCalendarDays; track day ? day.dateKey : $index) {
                       @if (!day) {
                         <span class="compare-calendar-spacer" aria-hidden="true"></span>
                       }
@@ -92,7 +96,7 @@
                 </div>
               }
             </div>
-            <span class="compare-vs-text">vs</span>
+            <span class="stats-control-label"><span class="label-long">Compare rankings</span><span class="label-short">Compare</span></span>
             <div class="spotify-custom-dropdown" [class.open]="showCompareMenu" [class.active]="compareSnapshotId !== ''">
               <button class="dropdown-trigger-btn" (click)="toggleCompareMenu($event)"
                 [attr.aria-expanded]="showCompareMenu" aria-haspopup="dialog" aria-controls="stats-compare-calendar">
@@ -125,7 +129,7 @@
                     }
                   </div>
                   <div class="compare-calendar-grid">
-                    @for (day of compareCalendarDays; track day) {
+                    @for (day of compareCalendarDays; track day ? day.dateKey : $index) {
                       @if (!day) {
                         <span class="compare-calendar-spacer" aria-hidden="true"></span>
                       }
@@ -150,29 +154,35 @@
 
     <div class="stats-category-controls">
       <!-- Category Tabs -->
-      <div class="category-tabs">
-        <button (click)="changeCategory('tracks')" class="p-button"
+      <div class="category-tabs" role="tablist" aria-label="Ranking category">
+        <button (click)="changeCategory('tracks')" (keydown)="onCategoryTabKeydown($event)" class="p-button"
           [class.p-button-outlined]="selectedCategory !== 'tracks'"
           [class.p-button-secondary]="selectedCategory !== 'tracks'"
-          [class.is-active]="selectedCategory === 'tracks'" [attr.aria-pressed]="selectedCategory === 'tracks'">
+          role="tab" [attr.aria-selected]="selectedCategory === 'tracks'"
+          [attr.tabindex]="selectedCategory === 'tracks' ? 0 : -1"
+          [class.is-active]="selectedCategory === 'tracks'">
           <i class="pi pi-star-fill"></i>
-          <span class="tab-label-desktop">Top 100 Songs</span>
+          <span class="tab-label-desktop">Songs</span>
           <span class="tab-label-mobile">Songs</span>
         </button>
-        <button (click)="changeCategory('artists')" class="p-button"
+        <button (click)="changeCategory('artists')" (keydown)="onCategoryTabKeydown($event)" class="p-button"
           [class.p-button-outlined]="selectedCategory !== 'artists'"
           [class.p-button-secondary]="selectedCategory !== 'artists'"
-          [class.is-active]="selectedCategory === 'artists'" [attr.aria-pressed]="selectedCategory === 'artists'">
+          role="tab" [attr.aria-selected]="selectedCategory === 'artists'"
+          [attr.tabindex]="selectedCategory === 'artists' ? 0 : -1"
+          [class.is-active]="selectedCategory === 'artists'">
           <i class="pi pi-users"></i>
-          <span class="tab-label-desktop">Top Artists</span>
+          <span class="tab-label-desktop">Artists</span>
           <span class="tab-label-mobile">Artists</span>
         </button>
-        <button (click)="changeCategory('genres')" class="p-button"
+        <button (click)="changeCategory('genres')" (keydown)="onCategoryTabKeydown($event)" class="p-button"
           [class.p-button-outlined]="selectedCategory !== 'genres'"
           [class.p-button-secondary]="selectedCategory !== 'genres'"
-          [class.is-active]="selectedCategory === 'genres'" [attr.aria-pressed]="selectedCategory === 'genres'">
+          role="tab" [attr.aria-selected]="selectedCategory === 'genres'"
+          [attr.tabindex]="selectedCategory === 'genres' ? 0 : -1"
+          [class.is-active]="selectedCategory === 'genres'">
           <i class="pi pi-tags"></i>
-          <span class="tab-label-desktop">Top Genres</span>
+          <span class="tab-label-desktop">Genres</span>
           <span class="tab-label-mobile">Genres</span>
         </button>
       </div>
@@ -182,8 +192,7 @@
           <i class="pi pi-search" aria-hidden="true"></i>
           <input type="search" class="search-input" [ngModel]="statsSearchQuery"
             (ngModelChange)="onStatsSearchChange($event)"
-            [placeholder]="selectedCategory === 'tracks' ? 'Search Top 100 songs or artists' : (selectedCategory === 'artists' ? 'Search Top Artists' : 'Search Top Genres')"
-            [attr.aria-label]="selectedCategory === 'tracks' ? 'Search Top 100 songs or artists' : (selectedCategory === 'artists' ? 'Search Top Artists' : 'Search Top Genres')">
+            [placeholder]="statsSearchPlaceholder" [attr.aria-label]="statsSearchPlaceholder">
           @if (isStatsSearchActive) {
             <button type="button" class="stats-search-clear"
               (click)="clearStatsSearch()" aria-label="Clear statistics search" title="Clear search">
@@ -193,10 +202,10 @@
         </div>
         <button type="button" class="stats-past-toggle" [class.is-active]="includePastStatsSearch"
           [attr.aria-pressed]="includePastStatsSearch"
-          [attr.aria-label]="includePastStatsSearch ? 'Turn past ranking search off' : 'Turn past ranking search on'"
+          [attr.aria-label]="includePastStatsSearch ? 'Turn historical ranking search off' : 'Turn historical ranking search on'"
           (click)="togglePastStatsSearch()">
           <i class="pi pi-history" aria-hidden="true"></i>
-          <span>Past</span>
+          <span>Search past rankings</span>
         </button>
       </div>
     </div>
@@ -225,7 +234,7 @@
           <div class="past-stats-heading">
             <span><i class="pi pi-history"></i></span>
             <div>
-              <strong>Past rankings</strong>
+              <strong>Historical ranking matches</strong>
             </div>
             @if (isSearchingPastStats) {
               <i class="pi pi-spin pi-spinner"></i>
@@ -240,12 +249,12 @@
           }
           @if (pastTopResults.length) {
             <div class="past-stats-grid">
-              @for (item of pastTopResults; track item) {
+              @for (item of pastTopResults; track item.kind + ':' + item.id) {
                 <button type="button" class="past-stats-card"
                   [attr.aria-label]="'View position history for ' + item.name"
                   title="View history graph" (click)="openPastTopResult(item)">
                   @if (item.imageUrl) {
-                    <img [src]="item.imageUrl" [alt]="item.name" loading="lazy" decoding="async">
+                    <img [src]="item.imageUrl" [alt]="item.name" loading="lazy" decoding="async" width="48" height="48">
                   }
                   @if (!item.imageUrl) {
                     <span class="past-stats-placeholder"><i class="pi" [ngClass]="item.kind === 'genre' ? 'pi-tags' : 'pi-music'"></i></span>
@@ -332,17 +341,20 @@
                   @if (trend.type === 'up') {
                     <span class="rank-trend-inline trend-up-color"
                       title="Moved up by {{ trend.diff }} places">
-                      <i class="pi pi-caret-up"></i>
+                      <i class="pi pi-caret-up" aria-hidden="true"></i><span>{{ movementLabel(trend) }}</span>
                     </span>
                   }
                   @if (trend.type === 'down') {
                     <span class="rank-trend-inline trend-down-color"
                       title="Moved down by {{ trend.diff }} places">
-                      <i class="pi pi-caret-down"></i>
+                      <i class="pi pi-caret-down" aria-hidden="true"></i><span>{{ movementLabel(trend) }}</span>
                     </span>
                   }
                   @if (trend.type === 'new') {
-                    <span class="new-entry-dot" title="First appearance in saved stats"></span>
+                    <span class="new-entry-badge" title="First appearance in saved stats">NEW</span>
+                  }
+                  @if (trend.type === 'same') {
+                    <span class="rank-trend-inline trend-same" title="Rank unchanged">—</span>
                   }
                 }
               </div>
@@ -352,7 +364,7 @@
                 title="Open on Spotify"
                 (click)="$event.stopPropagation(); openTrackClick(getTrackUrl(track))">
                 <img [src]="getTrackCover(track)"
-                  [alt]="track.name + ' cover'" class="track-cover" loading="lazy" decoding="async">
+                  [alt]="track.name + ' cover'" class="track-cover" loading="lazy" decoding="async" width="60" height="60">
               </button>
               <div class="track-info">
                 <span class="track-title">{{ track.name }}</span>
@@ -432,7 +444,7 @@
                 title="Open on Spotify"
                 (click)="$event.stopPropagation(); openArtistClick(getArtistUrl(artist))">
                 <img [src]="getArtistImage(artist)" [alt]="artist.name + ' photo'"
-                  class="artist-avatar" loading="lazy" decoding="async">
+                  class="artist-avatar" loading="lazy" decoding="async" width="135" height="135">
               </button>
               <div class="artist-rank-badge" [class.is-hot-mover]="isHotMover(artist, 'artists')"
                 [class.is-high-debut]="isHighDebutHotArtist(artist)"
@@ -475,14 +487,20 @@
                   @if (trend.type === 'up') {
                     <span class="rank-trend-inline trend-up-color"
                       title="Moved up by {{ trend.diff }} places">
-                      <i class="pi pi-caret-up"></i>
+                      <i class="pi pi-caret-up" aria-hidden="true"></i><span>{{ movementLabel(trend) }}</span>
                     </span>
                   }
                   @if (trend.type === 'down') {
                     <span class="rank-trend-inline trend-down-color"
                       title="Moved down by {{ trend.diff }} places">
-                      <i class="pi pi-caret-down"></i>
+                      <i class="pi pi-caret-down" aria-hidden="true"></i><span>{{ movementLabel(trend) }}</span>
                     </span>
+                  }
+                  @if (trend.type === 'new') {
+                    <span class="new-entry-badge" title="First appearance in saved stats">NEW</span>
+                  }
+                  @if (trend.type === 'same') {
+                    <span class="rank-trend-inline trend-same" title="Rank unchanged">—</span>
                   }
                 }
               </div>
@@ -524,7 +542,7 @@
     <div class="genre-stats-card">
       <h3>Genres</h3>
       <div class="genres-list-container">
-        @for (genre of filteredGenres; track genre) {
+        @for (genre of filteredGenres; track genre.name) {
           <div class="genre-row card-clickable"
             role="button" tabindex="0" title="View history graph"
             [attr.aria-label]="'View history for ' + genre.name"
@@ -553,6 +571,9 @@
                       title="First appearance in saved stats" style="margin-left: 8px;">
                       NEW
                     </span>
+                  }
+                  @if (genre.trendType === 'same') {
+                    <span class="rank-trend-inline trend-same" title="Rank unchanged" style="margin-left: 8px;">—</span>
                   }
                 }
               </span>
@@ -601,15 +622,17 @@
 <!-- Trend Graph Popup Modal -->
 @if (showTrendPopup) {
   <div class="trend-modal-overlay" (click)="closeTrendPopup()">
-    <div class="trend-modal-card" (click)="$event.stopPropagation()">
-      <button class="trend-modal-close-btn" (click)="closeTrendPopup($event)">&times;</button>
+    <div class="trend-modal-card" role="dialog" aria-modal="true" aria-labelledby="trend-modal-title"
+      aria-describedby="trend-modal-description" appAccessibleDialog (modalEscape)="closeTrendPopup()"
+      (click)="$event.stopPropagation()">
+      <button class="trend-modal-close-btn" appModalInitialFocus aria-label="Close ranking history" (click)="closeTrendPopup($event)">&times;</button>
       <div class="trend-modal-header">
         @if (trendPopupCategory !== 'genres') {
           <a class="spotify-artwork-link spotify-destination"
             [href]="(trendPopupCategory === 'tracks' ? getTrackUrl(trendPopupItem) : getArtistUrl(trendPopupItem)) | safeSpotifyUrl:(trendPopupCategory === 'tracks' ? 'track' : 'artist')"
             target="_blank" rel="noopener noreferrer"
             [attr.aria-label]="'Open ' + trendPopupItem.name + ' on Spotify'" title="Open on Spotify">
-            <img
+            <img width="72" height="72"
               [src]="trendPopupCategory === 'tracks' ? getTrackCover(trendPopupItem) : getArtistImage(trendPopupItem)"
               [class.artist-round]="trendPopupCategory === 'artists'" [alt]="trendPopupItem.name" class="trend-modal-cover">
           </a>
@@ -620,8 +643,8 @@
           </div>
         }
         <div class="trend-modal-info">
-          <h3>{{ trendPopupItem.name }}</h3>
-          <p>{{ trendPopupCategory === 'tracks' ? getTrackArtist(trendPopupItem) :
+          <h3 id="trend-modal-title">{{ trendPopupItem.name }}</h3>
+          <p id="trend-modal-description">{{ trendPopupCategory === 'tracks' ? getTrackArtist(trendPopupItem) :
           trendPopupCategory === 'artists' ? 'Artist' : 'Top Genre' }}</p>
         </div>
       </div>
@@ -653,7 +676,7 @@
             @if (trendPopupPoints.length >= 2) {
               <div>
                 <div class="svg-container" style="position: relative; width: 100%; height: 200px;">
-                  <svg viewBox="0 0 500 200" style="width: 100%; height: 100%; display: block; overflow: visible;">
+                  <svg aria-hidden="true" viewBox="0 0 500 200" style="width: 100%; height: 100%; display: block; overflow: visible;">
                     <defs>
                       <linearGradient id="popupGrad" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stop-color="#1db954" stop-opacity="0.25" />
@@ -717,6 +740,15 @@
                       </g>
                     }
                   </svg>
+                  <table class="sr-only">
+                    <caption>Rank position history for {{ trendPopupItem.name }}</caption>
+                    <thead><tr><th scope="col">Date</th><th scope="col">Rank</th></tr></thead>
+                    <tbody>
+                      @for (pt of trendPopupPoints; track pt.date + ':' + pt.rank) {
+                        <tr><td>{{ pt.date }}</td><td>{{ pt.rank }}</td></tr>
+                      }
+                    </tbody>
+                  </table>
                 </div>
               </div>
             }

@@ -12,6 +12,30 @@
   flex-wrap: wrap;
 }
 
+.stats-control-group {
+  display: grid;
+  gap: 6px;
+}
+
+.stats-control-label {
+  color: #b3b3b3;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.label-short { display: none; }
+
+@media (max-width: 768px) {
+  .stats-range-controls,
+  .history-select-container { align-items: stretch; }
+  .stats-control-group { width: 100%; }
+  .label-long { display: none; }
+  .label-short { display: inline; }
+  .ranking-date-label { display: none; }
+}
+
 .stats-selectors-row {
   display: flex;
   align-items: center;
@@ -500,15 +524,15 @@
   color: #ff5252 !important;
 }
 
-.new-entry-dot {
-  width: 8px;
-  height: 8px;
-  background-color: #00d2ff;
-  border-radius: 50%;
-  display: inline-block;
-  box-shadow: 0 0 6px rgba(0, 210, 255, 0.8);
-  flex-shrink: 0;
-  vertical-align: middle;
+.trend-same {
+  color: #b3b3b3;
+}
+
+.new-entry-badge {
+  color: #8be9ff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
 }
 
 // Adjust mobile style overrides for track index to match wide track index
