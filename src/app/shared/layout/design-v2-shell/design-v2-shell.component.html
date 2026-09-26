@@ -1,7 +1,7 @@
 <div class="design-v2" data-design-variant="new"
   [attr.data-page]="pageContext().pageId" [attr.data-ambient]="pageContext().ambientKey">
   <a class="v2-skip-link" href="#v2-main-content">Skip to main content</a>
-  <div class="v2-ambient" aria-hidden="true"></div>
+  <app-ambient-background [ambientKey]="pageContext().ambientKey" />
 
   <header class="v2-header">
     <div class="v2-header__inner">

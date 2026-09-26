@@ -9,6 +9,7 @@ import {DESIGN_VARIANT} from '@core/navigation/design-variant';
 import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 import {designV2RouteData} from '@core/navigation/design-v2-route-data';
 import {DesignV2ShellComponent} from './design-v2-shell.component';
+import {AmbientBackgroundComponent} from '@shared/ambient/ambient-background.component';
 
 @Component({standalone: true, template: '<h1>Playlists</h1>'})
 class PlaylistsStubComponent {}
@@ -40,11 +41,16 @@ describe('DesignV2ShellComponent', () => {
   it('keeps one shell instance mounted while child routes change', async () => {
     const harness = await RouterTestingHarness.create('/new/playlists');
     const first = harness.fixture.debugElement.query(By.directive(DesignV2ShellComponent)).componentInstance;
+    const firstAmbient = harness.fixture.debugElement.query(By.directive(AmbientBackgroundComponent)).componentInstance;
+    expect(firstAmbient.state.routeKey()).toBe('library');
 
     await harness.navigateByUrl('/new/stats');
     const second = harness.fixture.debugElement.query(By.directive(DesignV2ShellComponent)).componentInstance;
+    const secondAmbient = harness.fixture.debugElement.query(By.directive(AmbientBackgroundComponent)).componentInstance;
 
     expect(second).toBe(first);
+    expect(secondAmbient).toBe(firstAmbient);
+    expect(secondAmbient.state.routeKey()).toBe('insights');
     expect(second.pageContext()).toEqual(expect.objectContaining({
       pageId: 'stats', title: 'Your Stats', width: 'full', ambientKey: 'insights'
     }));

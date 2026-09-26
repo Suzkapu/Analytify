@@ -12,17 +12,6 @@
   color: #f5f7f5;
 }
 
-.v2-ambient {
-  position: fixed;
-  z-index: -1;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 15% 4%, rgba(28, 221, 116, .12), transparent 31rem),
-    radial-gradient(circle at 88% 28%, rgba(20, 102, 67, .13), transparent 28rem),
-    linear-gradient(180deg, #080d0a 0%, #070a08 100%);
-}
-
 .v2-skip-link {
   position: fixed;
   z-index: 1200;
@@ -121,6 +110,8 @@
 .v2-mobile-nav { display: none; }
 
 .v2-main {
+  position: relative;
+  z-index: 1;
   width: min(100% - (var(--v2-page-gutter) * 2), 1120px);
   min-height: calc(100dvh - var(--v2-header-height));
   margin: 0 auto;

@@ -22,6 +22,7 @@ import {
 } from '@core/navigation/design-v2-navigation.model';
 import {deepestDesignV2RouteData, DesignV2PageWidth} from '@core/navigation/design-v2-route-data';
 import {SharedModule} from '@shared/shared.module';
+import {AmbientBackgroundComponent} from '@shared/ambient/ambient-background.component';
 
 interface DesignV2PageContext {
   pageId: string;
@@ -41,7 +42,7 @@ const DEFAULT_CONTEXT: DesignV2PageContext = {
   styleUrls: ['./design-v2-shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink, RouterOutlet, SharedModule]
+  imports: [RouterLink, RouterOutlet, SharedModule, AmbientBackgroundComponent]
 })
 export class DesignV2ShellComponent implements OnInit, OnDestroy {
   @ViewChild('mainContent') private mainContent?: ElementRef<HTMLElement>;
