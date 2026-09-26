@@ -2,6 +2,11 @@
 @use 'app/features/song-league/song-league-home.component';
 @use 'app/features/song-league/song-league-claim.component';
 @use 'app/features/song-league/song-league-detail.component';
+@use 'app/shared/ui-v2/design-v2-primitives' as design-v2-primitives;
+
+.design-v2 {
+  @include design-v2-primitives.primitives;
+}
 
 app-compare-room-shell,
 app-compare-room-join {

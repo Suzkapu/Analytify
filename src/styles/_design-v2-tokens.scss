@@ -1,0 +1,58 @@
+@mixin tokens {
+  color-scheme: dark;
+
+  /* Semantic colour roles. */
+  --v2-color-background: #070b09;
+  --v2-color-background-raised: #0b100d;
+  --v2-color-surface: #121814;
+  --v2-color-surface-raised: #182019;
+  --v2-color-input: #0d130f;
+  --v2-color-selection: rgba(53, 231, 131, .16);
+  --v2-color-border: rgba(235, 247, 239, .13);
+  --v2-color-border-strong: rgba(235, 247, 239, .24);
+  --v2-color-text: #f5f7f5;
+  --v2-color-text-muted: #a2ada6;
+  --v2-color-text-subtle: #77837b;
+  --v2-color-accent: #35e783;
+  --v2-color-accent-strong: #15c968;
+  --v2-color-accent-ink: #06130b;
+  --v2-color-danger: #ff747d;
+  --v2-color-danger-surface: rgba(255, 116, 125, .12);
+  --v2-color-warning: #ffc85c;
+  --v2-color-warning-surface: rgba(255, 200, 92, .12);
+  --v2-color-info: #77b8ff;
+  --v2-color-info-surface: rgba(119, 184, 255, .12);
+  --v2-color-success: #43e28b;
+  --v2-color-focus: #9fffc8;
+
+  /* A four-point spacing rhythm with named larger steps. */
+  --v2-space-1: 4px;
+  --v2-space-2: 8px;
+  --v2-space-3: 12px;
+  --v2-space-4: 16px;
+  --v2-space-5: 20px;
+  --v2-space-6: 24px;
+  --v2-space-8: 32px;
+  --v2-space-10: 40px;
+  --v2-space-12: 48px;
+  --v2-space-16: 64px;
+
+  --v2-radius-control: 12px;
+  --v2-radius-card: 18px;
+  --v2-radius-panel: 24px;
+  --v2-radius-pill: 999px;
+
+  --v2-width-reading: 720px;
+  --v2-width-form: 640px;
+  --v2-width-default: 1120px;
+  --v2-width-dashboard: 1360px;
+  --v2-width-wide: 1500px;
+
+  --v2-mobile-header-height: 62px;
+  --v2-mobile-nav-height: 66px;
+  --v2-mobile-gutter: 12px;
+  --v2-control-height: 44px;
+  --v2-touch-control-height: 48px;
+  --v2-sheet-radius: 24px;
+  --v2-page-gutter: clamp(16px, 3vw, 40px);
+}

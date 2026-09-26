@@ -1,8 +1,10 @@
+@use '../../../../styles/design-v2-tokens';
+
 :host { display: block; min-height: 100dvh; }
 
 .design-v2 {
+  @include design-v2-tokens.tokens;
   --v2-header-height: 72px;
-  --v2-page-gutter: clamp(16px, 3vw, 40px);
   position: relative;
   min-height: 100dvh;
   isolation: isolate;
