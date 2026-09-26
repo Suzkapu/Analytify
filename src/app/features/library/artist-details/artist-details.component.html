@@ -16,7 +16,7 @@
 }
 
 @if (!isLoadingArtist && !artistLoadError) {
-  <main class="details-container">
+  <div class="details-container" [attr.role]="isDesignV2 ? null : 'main'">
     <article class="artist-profile-card">
       <header class="profile-header">
         <button type="button" class="artist-open-button spotify-artwork-link" (click)="openArtistClick()"
@@ -40,7 +40,7 @@
           <span class="track-total">{{ tracks.length }}</span>
         </div>
         <div class="track-grid">
-          @for (track of tracks; track track) {
+          @for (track of tracks; track track.id || track.uri || $index) {
             <button type="button" class="track-row-card spotify-destination"
               [disabled]="!track.external_urls?.spotify" (click)="openTrackClick($safeNavigationMigration(track.external_urls?.spotify))">
               <img alt="" class="track-image"
@@ -58,5 +58,5 @@
         </div>
       </section>
     </article>
-  </main>
+  </div>
 }

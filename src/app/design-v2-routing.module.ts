@@ -37,25 +37,29 @@ export const DESIGN_V2_ROUTES: Routes = [{
       path: 'playlists', title: 'Your playlists | Analytify',
       data: designV2RouteData('playlists', 'Your Playlists', 'wide', 'library', {preload: true}),
       canActivate: [spotifyAuthGuard],
-      loadChildren: () => import('@features/library/playlists/playlists.module').then(module => module.PlaylistsModule)
+      loadComponent: () => import('@features/library/design-v2/v2-playlists-page.component')
+        .then(module => module.V2PlaylistsPageComponent)
     },
     {
-      path: 'songs', title: 'Playlist songs | Analytify',
+      path: 'songs/:id', title: 'Playlist songs | Analytify',
       data: designV2RouteData('songs', 'Playlist Songs', 'wide', 'library', {mobileBack: true}),
       canActivate: [spotifyAuthGuard],
-      loadChildren: () => import('@features/library/songs/songs.module').then(module => module.SongsModule)
+      loadComponent: () => import('@features/library/design-v2/v2-songs-page.component')
+        .then(module => module.V2SongsPageComponent)
     },
     {
-      path: 'artistDetails', title: 'Artist details | Analytify',
+      path: 'artistDetails/:id', title: 'Artist details | Analytify',
       data: designV2RouteData('artist-details', 'Artist Details', 'standard', 'library', {mobileBack: true}),
       canActivate: [spotifyAuthGuard],
-      loadChildren: () => import('@features/library/artist-details/artist-details.module').then(module => module.ArtistDetailsModule)
+      loadComponent: () => import('@features/library/design-v2/v2-artist-details-page.component')
+        .then(module => module.V2ArtistDetailsPageComponent)
     },
     {
-      path: 'analysis', title: 'Playlist analysis | Analytify',
+      path: 'analysis/:id', title: 'Playlist analysis | Analytify',
       data: designV2RouteData('analysis', 'Playlist Analysis', 'wide', 'library', {mobileBack: true}),
       canActivate: [spotifyAuthGuard],
-      loadChildren: () => import('@features/library/playlist-analysis/playlist-analysis.module').then(module => module.PlaylistAnalysisModule)
+      loadComponent: () => import('@features/library/design-v2/v2-analysis-page.component')
+        .then(module => module.V2AnalysisPageComponent)
     },
     {
       path: 'stats', title: 'Your listening stats | Analytify',

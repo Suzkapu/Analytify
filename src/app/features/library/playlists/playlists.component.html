@@ -1,5 +1,5 @@
 
-<main class="app-page playlists-page">
+<div class="app-page playlists-page" [attr.role]="isDesignV2 ? null : 'main'">
   <div class="page-shell">
     @if (spotifyPolicyNotice) {
       <div class="page-notice" role="status">This feature is unavailable while Analytify awaits written Spotify policy approval.</div>
@@ -32,7 +32,7 @@
           <label class="search-container">
             <span class="sr-only">Search playlists</span>
             <i class="pi pi-search" aria-hidden="true"></i>
-            <input (input)="filterPlaylists()" [(ngModel)]="searchText" class="search-input"
+            <input (input)="onSearchChange()" [(ngModel)]="searchText" class="search-input"
               placeholder="Search your playlists" type="search" />
           </label>
         </div>
@@ -44,19 +44,20 @@
               [attr.aria-pressed]="showSavedPlaylists"
               [title]="showSavedPlaylists ? 'Hide playlists you saved from other Spotify users' : 'Show playlists you saved from other Spotify users'">
               <i class="pi pi-bookmark"></i>
-              <span>{{ showSavedPlaylists ? 'Hide saved' : 'Show saved' }}</span>
+              <span>{{ savedFilterLabel }}</span>
               <small>{{ savedPlaylistCount }}</small>
             </button>
           }
           <button (click)="sortPlaylistsByTracks()"
             class="p-button p-button-outlined p-button-secondary sort-playlists-button"
-            [class.is-active]="isSortedByCount" title="Sort playlists by song count">
+            [class.is-active]="isSortedByCount" [attr.aria-label]="sortDirectionLabel"
+            title="Sort playlists by song count">
           <i class="pi" [ngClass]="{
             'pi-sort-alt': sortOrder === 'none',
             'pi-sort-amount-down': sortOrder === 'desc',
             'pi-sort-amount-up': sortOrder === 'asc'
           }"></i>
-            <span class="sort-label-desktop">Song count</span>
+            <span class="sort-label-desktop">{{ sortDirectionLabel }}</span>
             <span class="sort-label-mobile">Sort</span>
           </button>
         </div>
@@ -75,6 +76,15 @@
       message="Your Spotify playlists will appear here once they are available."></app-page-state>
     }
 
+    @if (!isLoadingPlaylists && playlists.length > 0 && filteredPlaylists.length === 0) {
+      <app-page-state class="no-playlists" icon="pi-search" title="No matching playlists"
+        message="Try another search or clear the active playlist filters.">
+        <button type="button" class="p-button p-button-outlined p-button-secondary" (click)="clearPlaylistFilters()">
+          Clear filters
+        </button>
+      </app-page-state>
+    }
+
     <section class="card-container playlists-grid" aria-label="Your playlists">
       @for (playlist of filteredPlaylists; track trackPlaylist($index, playlist)) {
         <div class="item-card" [class.saved-playlist-card]="isSavedPlaylist(playlist)">
@@ -88,7 +98,7 @@
                   <img
                     [src]="playlist.images && playlist.images[0] ? playlist.images[0].url : 'https://misc.scdn.co/liked-songs/liked-songs-300.png'"
                     loading="lazy" decoding="async"
-                    [alt]="playlist.name + ' cover'">
+                    width="88" height="88" [alt]="playlist.name + ' cover'">
                 </a>
               </div>
               <div class="playlist-details">
@@ -109,17 +119,17 @@
             </div>
           </div>
           <div class="card-actions">
-            <button (click)="viewSongs(playlist.id)" class="p-button playlist-card-action">
-              <i class="pi pi-list"></i><span>Explore</span>
-            </button>
-            <button (click)="viewAnalysis(playlist.id)"
+            <a [routerLink]="songsLink(playlist.id)" class="p-button playlist-card-action">
+              <i class="pi pi-list"></i><span>{{ openActionLabel }}</span>
+            </a>
+            <a [routerLink]="analysisLink(playlist.id)"
               class="p-button p-button-outlined p-button-secondary playlist-card-action">
               <i class="pi pi-chart-bar"></i><span>Analyze</span>
-            </button>
+            </a>
           </div>
         </div>
       </div>
     }
   </section>
 </div>
-</main>
+</div>

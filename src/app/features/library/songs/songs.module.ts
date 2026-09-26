@@ -6,9 +6,12 @@ import {SongsComponent} from './songs.component';
 
 @NgModule({
   declarations: [SongsComponent],
-  imports: [
-    SharedModule,
-    RouterModule.forChild([{path: ':id', component: SongsComponent}])
-  ]
+  imports: [SharedModule],
+  exports: [SongsComponent]
+})
+export class SongsUiModule {}
+
+@NgModule({
+  imports: [SongsUiModule, RouterModule.forChild([{path: ':id', component: SongsComponent}])]
 })
 export class SongsModule {}

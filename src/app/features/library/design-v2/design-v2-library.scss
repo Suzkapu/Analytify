@@ -1,0 +1,54 @@
+@mixin library {
+  .v2-library-feature {
+    min-width: 0;
+
+    .app-page,
+    .details-container { width: 100%; max-width: none; margin: 0; padding: 0; }
+    .page-shell { width: 100%; max-width: none; margin: 0; padding: 0; }
+    .page-back-row,
+    .back-bar-container { display: none; }
+    .page-toolbar { border: 1px solid var(--v2-color-border); border-radius: var(--v2-radius-panel); background: var(--v2-color-background-raised); }
+    .item-card,
+    .artist-profile-card,
+    .stat-card,
+    .analysis-card { border-color: var(--v2-color-border); background: var(--v2-color-surface); }
+    .p-button:not(:disabled),
+    button:not(:disabled),
+    a[href] { cursor: pointer; }
+    .search-input { border-color: var(--v2-color-border-strong); background: var(--v2-color-input); }
+  }
+
+  .v2-library-feature--playlists {
+    .page-hero { display: none; }
+    .playlists-page { padding-top: 0; }
+    .playlist-details h2 {
+      display: -webkit-box;
+      white-space: normal;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
+    .playlist-card-action:first-child {
+      border: 1px solid var(--v2-color-border-strong);
+      color: var(--v2-color-text);
+      background: var(--v2-color-surface-raised);
+    }
+    .playlist-card-action:first-child:hover,
+    .playlist-card-action:first-child:focus-visible { border-color: var(--v2-color-accent); background: var(--v2-color-selection); }
+    .playlist-card-action:last-child { color: var(--v2-color-text-muted); background: transparent; }
+  }
+
+  .v2-library-feature--songs .page-hero { margin-top: 0; }
+
+  @media (max-width: 600px) {
+    .v2-library-feature .page-toolbar { padding: var(--v2-space-2); }
+    .v2-library-feature--playlists .item-card { padding: var(--v2-space-3); }
+  }
+
+  @media (max-width: 360px) {
+    .v2-library-feature--playlists .item-card .card-info { align-items: flex-start; }
+    .v2-library-feature--playlists .item-card .image-box img { width: 64px; height: 64px; }
+    .v2-library-feature--playlists .item-card .card-actions { grid-template-columns: minmax(0, 1fr); }
+    .v2-library-feature .controls-right { flex-wrap: wrap; }
+  }
+}

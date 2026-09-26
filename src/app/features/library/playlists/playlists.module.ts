@@ -6,9 +6,12 @@ import {PlaylistsComponent} from './playlists.component';
 
 @NgModule({
   declarations: [PlaylistsComponent],
-  imports: [
-    SharedModule,
-    RouterModule.forChild([{path: '', component: PlaylistsComponent}])
-  ]
+  imports: [SharedModule],
+  exports: [PlaylistsComponent]
+})
+export class PlaylistsUiModule {}
+
+@NgModule({
+  imports: [PlaylistsUiModule, RouterModule.forChild([{path: '', component: PlaylistsComponent}])]
 })
 export class PlaylistsModule {}

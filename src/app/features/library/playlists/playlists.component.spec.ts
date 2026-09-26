@@ -97,12 +97,12 @@ describe('PlaylistsComponent', () => {
         fixture.detectChanges();
 
         const element: HTMLElement = fixture.nativeElement;
-        expect(element.querySelector('main.playlists-page')).not.toBeNull();
+        expect(element.querySelector('.playlists-page[role="main"]')).not.toBeNull();
         expect(element.querySelector('.page-hero h1')?.textContent).toContain('Your playlists');
         expect(element.querySelector('.playlist-count-chip')?.getAttribute('aria-label')).toBe('1 playlist');
         expect(element.querySelector('.page-toolbar input[type="search"]')).not.toBeNull();
         expect(element.querySelector('.merge-toggle-button')).toBeNull();
-        const cardActions = Array.from(element.querySelectorAll('.item-card .card-actions button'));
+        const cardActions = Array.from(element.querySelectorAll('.item-card .card-actions a'));
         expect(cardActions.length).toBe(2);
         expect(cardActions.every(button => button.classList.contains('playlist-card-action'))).toBe(true);
     });
@@ -208,6 +208,36 @@ describe('PlaylistsComponent', () => {
         component.toggleSavedPlaylists();
         expect(component.filteredPlaylists.map(playlist => playlist.id)).toEqual(['fav', 'owned', 'saved']);
         expect(storage.get('current-user_playlists_showSaved')).toBe('true');
+    });
+
+    it('persists search text and applies the debounced filter', async () => {
+        vi.useFakeTimers();
+        component.playlists = [
+            {id: 'first', name: 'Morning Mix', owner: {id: 'current-user'}, tracks: {total: 2}},
+            {id: 'second', name: 'Night Mix', owner: {id: 'current-user'}, tracks: {total: 3}}
+        ];
+        (component as any).currentSpotifyProfileId = 'current-user';
+        component.searchText = 'night';
+
+        component.onSearchChange();
+        expect(storage.get('current-user_playlists_search')).toBe('night');
+        expect(component.filteredPlaylists).toEqual([]);
+        await vi.advanceTimersByTimeAsync(120);
+        expect(component.filteredPlaylists.map(playlist => playlist.id)).toEqual(['second']);
+        vi.useRealTimers();
+    });
+
+    it('persists each explicit song-count sort direction', () => {
+        component.playlists = [
+            {id: 'small', name: 'Small', owner: {id: 'current-user'}, tracks: {total: 2}},
+            {id: 'large', name: 'Large', owner: {id: 'current-user'}, tracks: {total: 8}}
+        ];
+        (component as any).currentSpotifyProfileId = 'current-user';
+
+        component.sortPlaylistsByTracks();
+        expect(component.sortDirectionLabel).toBe('Song count');
+        expect(component.filteredPlaylists.map(playlist => playlist.id)).toEqual(['large', 'small']);
+        expect(storage.get('current-user_playlists_sortOrder')).toBe('desc');
     });
 
     it('keeps playlist cards at their compact height when saved-owner details are shown', () => {

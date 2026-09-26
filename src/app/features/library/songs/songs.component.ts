@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ViewEncapsulation, HostListener, NgZone, ChangeDetectionStrategy} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewEncapsulation, HostListener, NgZone, ChangeDetectionStrategy, Optional} from '@angular/core';
 import {ActivatedRoute, NavigationExtras, Router} from "@angular/router";
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {StorageService} from "@core/data-access/storage/storage.service";
@@ -7,6 +7,7 @@ import {ImageHealingService} from "@core/sync/image-healing/image-healing.servic
 import {Subscription} from 'rxjs';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {openSpotifyUrl} from '@core/navigation/spotify-url';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 
 const console = createScopedLogger('Songs');
 
@@ -74,7 +75,8 @@ export class SongsComponent implements OnInit, OnDestroy {
     private storageService: StorageService,
     private playlistLoaderService: PlaylistLoaderService,
     private imageHealingService: ImageHealingService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    @Optional() private designNavigation?: DesignNavigationService
   ) {
     this.route.params.subscribe(async (params) => {
       this.playlistId = params['id'];
@@ -433,7 +435,7 @@ export class SongsComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.router.navigate(['/playlists']);
+    return this.designNavigation?.navigate('playlists') ?? this.router.navigate(['/playlists']);
   }
 
   @HostListener('document:click')
@@ -451,8 +453,13 @@ export class SongsComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.router.navigate(['/artistDetails', id], navigationExtras);
+    return this.designNavigation?.navigate('artistDetails', {id}, navigationExtras)
+      ?? this.router.navigate(['/artistDetails', id], navigationExtras);
   }
+
+  get isDesignV2(): boolean { return this.designNavigation?.variant === 'new'; }
+
+  get trackSortDirectionLabel(): string { return this.sortAscending ? 'ascending' : 'descending'; }
 
   onSortOrderChange() {
     const userId = this.authService.getUserId() || 'anonymous';

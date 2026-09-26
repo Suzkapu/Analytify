@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { SpotifyAuthService } from "@core/auth/spotify-auth.service";
 import { StorageService } from "@core/data-access/storage/storage.service";
@@ -6,6 +6,7 @@ import {distinctUntilChanged, map, Subscription} from 'rxjs';
 import { PlaylistLoaderService } from "@core/sync/playlist-loader/playlist-loader.service";
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {openSpotifyUrl} from '@core/navigation/spotify-url';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 
 const console = createScopedLogger('Playlist Analysis');
 
@@ -61,7 +62,8 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     public authService: SpotifyAuthService,
     private router: Router,
     private storageService: StorageService,
-    private playlistLoaderService: PlaylistLoaderService
+    private playlistLoaderService: PlaylistLoaderService,
+    @Optional() private designNavigation?: DesignNavigationService
   ) { }
 
   ngOnInit() {
@@ -510,8 +512,10 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.router.navigate(['/playlists']);
+    return this.designNavigation?.navigate('playlists') ?? this.router.navigate(['/playlists']);
   }
+
+  get isDesignV2(): boolean { return this.designNavigation?.variant === 'new'; }
 
   openTrackClick(url: string) {
     openSpotifyUrl(url, {expectedType: 'track', target: '_self'});

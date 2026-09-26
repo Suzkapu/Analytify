@@ -1,4 +1,4 @@
-<main class="app-page songs-page">
+<div class="app-page songs-page" [attr.role]="isDesignV2 ? null : 'main'">
   <div class="page-shell">
     <div class="page-back-row">
       <button (click)="goBack()" class="back-text-button" title="Back to Playlists">
@@ -90,23 +90,25 @@
               @if (viewStyle === 'songs') {
                 <div class="history-select-container">
                   <div class="spotify-custom-dropdown" [class.open]="showSortMenu">
-                    <button class="dropdown-trigger-btn" (click)="toggleSortMenu($event)">
-                      <span>Sort by: {{ getSortLabel() }}</span>
+                    <button type="button" class="dropdown-trigger-btn" (click)="toggleSortMenu($event)"
+                      aria-haspopup="menu" [attr.aria-expanded]="showSortMenu">
+                      <span>Sort: {{ getSortLabel() }}, {{ trackSortDirectionLabel }}</span>
                       <i class="pi pi-list icon-right"></i>
                     </button>
                     @if (showSortMenu) {
-                      <div class="dropdown-menu-overlay">
+                      <div class="dropdown-menu-overlay" role="menu" aria-label="Sort songs">
                         <div class="menu-section-header">Sort by</div>
-                        @for (opt of sortOptions; track opt) {
-                          <div
+                        @for (opt of sortOptions; track opt.value) {
+                          <button type="button"
                             class="menu-item"
                             [class.active]="trackSortKey === opt.value"
+                            role="menuitemradio" [attr.aria-checked]="trackSortKey === opt.value"
                             (click)="selectSortCategory(opt.value, $event)">
                             <span>{{ opt.label }}</span>
                             @if (trackSortKey === opt.value) {
                               <i class="pi" [ngClass]="sortAscending ? 'pi-arrow-up' : 'pi-arrow-down'"></i>
                             }
-                          </div>
+                          </button>
                         }
                       </div>
                     }
@@ -267,7 +269,7 @@
                   <div class="track-info">
                     <span class="track-title">{{ track.name }}</span>
                     <span class="track-artist">
-                      @for (a of track.artists; track a; let last = $last) {
+                      @for (a of track.artists; track a.id || a.name; let last = $last) {
                         <span>
                           {{ a.name }}{{ !last ? ', ' : '' }}
                         </span>
@@ -328,7 +330,7 @@
                 <div class="track-info">
                   <span class="track-title">{{ track.name }}</span>
                   <span class="track-artist">
-                    @for (artist of track.artists; track artist; let last = $last) {
+                    @for (artist of track.artists; track artist.id || artist.name; let last = $last) {
                       {{ artist.name }}{{ last ? '' : ', ' }}
                     }
                   </span>
@@ -390,4 +392,4 @@
     }
 
   </div>
-</main>
+</div>

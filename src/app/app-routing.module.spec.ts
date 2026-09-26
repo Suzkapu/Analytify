@@ -40,15 +40,18 @@ describe('application routes', () => {
         expect(modernEntry.loadChildren).toEqual(expect.any(Function));
         expect(modernShell.component).toBe(DesignV2ShellComponent);
         expect(modernShell.children?.map(route => route.path)).toEqual([
-            '', 'login', 'callback', 'spotify', 'playlists', 'songs', 'artistDetails',
-            'analysis', 'stats', 'history', 'admin', 'song-league', 'shared-playlists',
+            '', 'login', 'callback', 'spotify', 'playlists', 'songs/:id', 'artistDetails/:id',
+            'analysis/:id', 'stats', 'history', 'admin', 'song-league', 'shared-playlists',
             'legal', 'compare-room/callback', 'compare-room/join/:roomId', 'compare-room', '**'
         ]);
         for (const path of [
-            'login', 'callback', 'spotify', 'playlists', 'songs', 'artistDetails', 'analysis',
+            'login', 'callback', 'spotify', 'playlists', 'songs/:id', 'artistDetails/:id', 'analysis/:id',
             'stats', 'history', 'admin', 'song-league', 'shared-playlists',
             'compare-room/callback', 'compare-room/join/:roomId', 'compare-room', 'legal'
-        ]) expect(modernRouteByPath(path)?.loadChildren).toEqual(expect.any(Function));
+        ]) {
+            const route = modernRouteByPath(path);
+            expect(route?.loadChildren ?? route?.loadComponent).toEqual(expect.any(Function));
+        }
     });
 
     it('scopes the new route tree to the new design variant', () => {
@@ -60,7 +63,7 @@ describe('application routes', () => {
     });
 
     it('gives every v2 page a title and semantic shell metadata', () => {
-        const pages = modernShell.children?.filter(route => route.loadChildren) ?? [];
+        const pages = modernShell.children?.filter(route => route.loadChildren || route.loadComponent) ?? [];
         expect(pages.length).toBeGreaterThan(0);
         for (const page of pages) {
             expect(page.title).toEqual(expect.any(String));
@@ -72,6 +75,14 @@ describe('application routes', () => {
                 preload: expect.any(Boolean)
             }));
         }
+    });
+
+    it('loads each v2 library page through an independent standalone route chunk', () => {
+        const routes = ['playlists', 'songs/:id', 'artistDetails/:id', 'analysis/:id']
+            .map(path => modernRouteByPath(path));
+
+        expect(routes.every(route => typeof route?.loadComponent === 'function')).toBe(true);
+        expect(new Set(routes.map(route => route?.loadComponent)).size).toBe(4);
     });
 
     it('marks only likely next destinations for selective preloading', () => {

@@ -6,9 +6,12 @@ import {ArtistDetailsComponent} from './artist-details.component';
 
 @NgModule({
   declarations: [ArtistDetailsComponent],
-  imports: [
-    SharedModule,
-    RouterModule.forChild([{path: ':id', component: ArtistDetailsComponent}])
-  ]
+  imports: [SharedModule],
+  exports: [ArtistDetailsComponent]
+})
+export class ArtistDetailsUiModule {}
+
+@NgModule({
+  imports: [ArtistDetailsUiModule, RouterModule.forChild([{path: ':id', component: ArtistDetailsComponent}])]
 })
 export class ArtistDetailsModule {}

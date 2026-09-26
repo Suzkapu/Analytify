@@ -6,9 +6,12 @@ import {PlaylistAnalysisComponent} from './playlist-analysis.component';
 
 @NgModule({
   declarations: [PlaylistAnalysisComponent],
-  imports: [
-    SharedModule,
-    RouterModule.forChild([{path: ':id', component: PlaylistAnalysisComponent}])
-  ]
+  imports: [SharedModule],
+  exports: [PlaylistAnalysisComponent]
+})
+export class PlaylistAnalysisUiModule {}
+
+@NgModule({
+  imports: [PlaylistAnalysisUiModule, RouterModule.forChild([{path: ':id', component: PlaylistAnalysisComponent}])]
 })
 export class PlaylistAnalysisModule {}

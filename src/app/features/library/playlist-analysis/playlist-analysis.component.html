@@ -1,5 +1,5 @@
 
-<main class="app-page analysis-page">
+<div class="app-page analysis-page" [attr.role]="isDesignV2 ? null : 'main'">
   <div class="page-shell">
     <div class="page-back-row">
       <button (click)="goBack()" class="back-text-button" title="Back to Playlists">
@@ -114,7 +114,7 @@
             <section class="column-card frequency-card">
               <app-section-heading icon="pi-users" eyebrow="Most frequent" title="Top artists"></app-section-heading>
               <ol class="frequency-list">
-                @for (artist of topArtists; track artist; let rank = $index) {
+                @for (artist of topArtists; track artist.id; let rank = $index) {
                   <li>
                     <span><em>{{ rank + 1 }}.</em> {{ artist.name }}</span><strong>{{ artist.count }}</strong>
                   </li>
@@ -124,7 +124,7 @@
             <section class="column-card frequency-card">
               <app-section-heading icon="pi-clone" eyebrow="Most frequent" title="Top albums"></app-section-heading>
               <ol class="frequency-list">
-                @for (album of topAlbums; track album; let rank = $index) {
+                @for (album of topAlbums; track album.name; let rank = $index) {
                   <li>
                     <span><em>{{ rank + 1 }}.</em> {{ album.name }}</span><strong>{{ album.count }}</strong>
                   </li>
@@ -206,4 +206,4 @@
       </section>
     }
   </div>
-</main>
+</div>

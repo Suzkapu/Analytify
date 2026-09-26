@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ViewEncapsulation, ChangeDetectionStrategy, OnDestroy, Optional, ChangeDetectorRef} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SpotifyDataService} from "@core/data-access/spotify/spotify-data.service";
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
@@ -6,6 +6,7 @@ import {StorageService} from "@core/data-access/storage/storage.service";
 import {firstValueFrom} from 'rxjs';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {PlaylistLoaderService} from '@core/sync/playlist-loader/playlist-loader.service';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 
 const console = createScopedLogger('Playlists');
 
@@ -15,7 +16,7 @@ const console = createScopedLogger('Playlists');
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class PlaylistsComponent {
+export class PlaylistsComponent implements OnDestroy {
   readonly spotifyPolicyNotice: boolean;
   playlists: any[] = [];
   filteredPlaylists: any[] = [];
@@ -27,6 +28,7 @@ export class PlaylistsComponent {
   private currentSpotifyProfileId = '';
   private playlistLoadSequence = 0;
   private readonly cloudPriorityWindowMs = 750;
+  private searchTimer?: ReturnType<typeof setTimeout>;
 
   spotifyPlaylistUrl(playlist: any): string {
     if (playlist?.external_urls?.spotify) return playlist.external_urls.spotify;
@@ -40,13 +42,16 @@ export class PlaylistsComponent {
     private spotifyDataService: SpotifyDataService,
     public authService: SpotifyAuthService,
     private storageService: StorageService,
-    private playlistLoaderService: PlaylistLoaderService
+    private playlistLoaderService: PlaylistLoaderService,
+    @Optional() private designNavigation?: DesignNavigationService,
+    @Optional() private changeDetector?: ChangeDetectorRef
   ) {
     this.spotifyPolicyNotice = this.route.snapshot?.queryParamMap?.get('notice') === 'spotify-policy-restricted';
     this.route.params.subscribe(async () => {
       const userId = this.authService.getUserId() || 'anonymous';
       this.sortOrder = (this.storageService.getItem(`${userId}_playlists_sortOrder`) as 'asc' | 'desc' | 'none') || 'none';
       this.showSavedPlaylists = this.storageService.getItem(`${userId}_playlists_showSaved`) === 'true';
+      this.searchText = this.storageService.getItem(`${userId}_playlists_search`) || '';
       if (this.authService.isAuthenticated()) {
         void this.authService.ensureInitialSync().catch(() => {});
       }
@@ -54,11 +59,18 @@ export class PlaylistsComponent {
     });
   }
 
+  ngOnDestroy(): void {
+    if (this.searchTimer) clearTimeout(this.searchTimer);
+  }
+
   async loadPlaylists() {
     const loadSequence = ++this.playlistLoadSequence;
     const isCurrentLoad = () => loadSequence === this.playlistLoadSequence;
     const finishInitialLoad = () => {
-      if (isCurrentLoad()) this.isLoadingPlaylists = false;
+      if (isCurrentLoad()) {
+        this.isLoadingPlaylists = false;
+        this.changeDetector?.markForCheck();
+      }
     };
     this.isLoadingPlaylists = this.playlists.length === 0;
     const userId = this.authService.getUserId() || 'anonymous';
@@ -122,6 +134,7 @@ export class PlaylistsComponent {
 
       this.filterPlaylists();
       if (this.playlists.length > 0) this.isLoadingPlaylists = false;
+      this.changeDetector?.markForCheck();
     };
 
     const hasCompleteFreshCache = () => {
@@ -268,6 +281,7 @@ export class PlaylistsComponent {
       }
     } finally {
       this.isRefreshingPlaylists = false;
+      this.changeDetector?.markForCheck();
     }
   }
 
@@ -284,7 +298,22 @@ export class PlaylistsComponent {
 
 
   viewAnalysis(playlistId: string) {
-    this.router.navigate(['/analysis', playlistId]);
+    if (this.designNavigation) void this.designNavigation.navigate('analysis', {id: playlistId});
+    else void this.router.navigate(['/analysis', playlistId]);
+  }
+
+  analysisLink(playlistId: string): string[] {
+    return this.designNavigation?.commands('analysis', {id: playlistId}) ?? ['/analysis', playlistId];
+  }
+
+  get isDesignV2(): boolean { return this.designNavigation?.variant === 'new'; }
+  get openActionLabel(): string { return this.isDesignV2 ? 'Open' : 'Explore'; }
+  get savedFilterLabel(): string { return this.isDesignV2 ? 'Saved from others' : (this.showSavedPlaylists ? 'Hide saved' : 'Show saved'); }
+  get sortDirectionLabel(): string {
+    if (!this.isDesignV2) return 'Song count';
+    if (this.sortOrder === 'desc') return 'Song count: highest first';
+    if (this.sortOrder === 'asc') return 'Song count: lowest first';
+    return 'Song count: default order';
   }
 
   get isSortedByCount(): boolean {
@@ -316,6 +345,22 @@ export class PlaylistsComponent {
         return countA - countB;
       });
     }
+  }
+
+  onSearchChange(): void {
+    const userId = this.authService.getUserId() || 'anonymous';
+    this.storageService.setItem(`${userId}_playlists_search`, this.searchText);
+    if (this.searchTimer) clearTimeout(this.searchTimer);
+    this.searchTimer = setTimeout(() => this.filterPlaylists(), 120);
+  }
+
+  clearPlaylistFilters(): void {
+    this.searchText = '';
+    this.showSavedPlaylists = false;
+    const userId = this.authService.getUserId() || 'anonymous';
+    this.storageService.setItem(`${userId}_playlists_search`, '');
+    this.storageService.setItem(`${userId}_playlists_showSaved`, 'false');
+    this.filterPlaylists();
   }
 
   get savedPlaylistCount(): number {
@@ -350,7 +395,12 @@ export class PlaylistsComponent {
   }
 
   viewSongs(playlistId: string) {
-    this.router.navigate(['/songs', playlistId]);
+    if (this.designNavigation) void this.designNavigation.navigate('songs', {id: playlistId});
+    else void this.router.navigate(['/songs', playlistId]);
+  }
+
+  songsLink(playlistId: string): string[] {
+    return this.designNavigation?.commands('songs', {id: playlistId}) ?? ['/songs', playlistId];
   }
 
   private getCachedFavouriteTotal(userId: string, cachedPlaylists: any[]): number {

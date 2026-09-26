@@ -1,4 +1,4 @@
-import {Component, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
+import {Component, OnDestroy, ChangeDetectionStrategy, Optional} from '@angular/core';
 import {SpotifyDataService} from "@core/data-access/spotify/spotify-data.service";
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {StorageService} from "@core/data-access/storage/storage.service";
@@ -7,6 +7,7 @@ import {SupabaseService} from "@core/data-access/supabase/supabase.service";
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {openSpotifyUrl} from '@core/navigation/spotify-url';
 import {distinctUntilChanged, firstValueFrom, map, Subscription} from 'rxjs';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 
 const console = createScopedLogger('Artist Details');
 
@@ -34,7 +35,8 @@ export class ArtistDetailsComponent implements OnDestroy {
     private router: Router,
     public authService: SpotifyAuthService,
     private storageService: StorageService,
-    private supabaseService: SupabaseService
+    private supabaseService: SupabaseService,
+    @Optional() private designNavigation?: DesignNavigationService
   ) {
     this.routeSubscription = this.route.params.pipe(
       map(params => params['id'] || ''),
@@ -195,11 +197,14 @@ export class ArtistDetailsComponent implements OnDestroy {
 
   goBack() {
     if (this.playlistId) {
-      this.router.navigate(['/songs', this.playlistId]);
+      return this.designNavigation?.navigate('songs', {id: this.playlistId})
+        ?? this.router.navigate(['/songs', this.playlistId]);
     } else {
-      this.router.navigate(['/playlists']);
+      return this.designNavigation?.navigate('playlists') ?? this.router.navigate(['/playlists']);
     }
   }
+
+  get isDesignV2(): boolean { return this.designNavigation?.variant === 'new'; }
 
 
 }
