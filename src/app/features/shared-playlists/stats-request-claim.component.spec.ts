@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StatsSharingService } from '@core/sharing/stats-sharing.service';
 import { StatsRequestClaimComponent } from './stats-request-claim.component';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('StatsRequestClaimComponent', () => {
     let fixture: ComponentFixture<StatsRequestClaimComponent>;
@@ -23,7 +24,7 @@ describe('StatsRequestClaimComponent', () => {
 
         TestBed.configureTestingModule({
             declarations: [StatsRequestClaimComponent],
-            imports: [CommonModule],
+            imports: [CommonModule, RouterTestingModule],
             providers: [
                 { provide: StatsSharingService, useValue: statsSharing },
                 { provide: Router, useValue: router },
@@ -41,7 +42,10 @@ describe('StatsRequestClaimComponent', () => {
 
         expect(statsSharing.claimAccessInvite).toHaveBeenCalledWith('private-token');
         expect(router.navigate).toHaveBeenCalledTimes(1);
-        expect(router.navigate).toHaveBeenCalledWith(['/shared-playlists'], { replaceUrl: true });
+        expect(router.navigate).toHaveBeenCalledWith(['/shared-playlists'], {
+            replaceUrl: true,
+            queryParams: {tab: 'stats'}
+        });
     });
 
     it('keeps an invalid link on a helpful error screen', async () => {

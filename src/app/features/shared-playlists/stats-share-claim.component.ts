@@ -42,10 +42,14 @@ export class StatsShareClaimComponent implements OnInit {
     try {
       if (accept) await this.statsSharing.acceptShareInvite(this.token);
       else await this.statsSharing.declineShareInvite(this.token);
-      await this.router.navigate(['/shared-playlists'], {replaceUrl: true});
+      await this.router.navigate(this.sharingCommands(), {replaceUrl: true, queryParams: {tab: 'stats'}});
     } catch (error) {
       this.errorMessage = (error as any)?.message || 'Your answer could not be saved.';
       this.isResponding = false;
     }
+  }
+
+  sharingCommands(): string[] {
+    return this.router.url?.startsWith('/new/') ? ['/new', 'shared-playlists'] : ['/shared-playlists'];
   }
 }

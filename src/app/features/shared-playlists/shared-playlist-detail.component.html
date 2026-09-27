@@ -5,7 +5,7 @@
   </button>
 </div>
 
-<main class="shared-detail-page">
+<div class="shared-detail-page">
   @if (isLoading) {
     <app-page-state [loading]="true" [compact]="true" icon="pi-spinner"
     title="Loading shared playlist…"></app-page-state>
@@ -27,7 +27,7 @@
         <span class="eyebrow">{{ isRecipient ? 'Private playlist access' : 'Shared by you' }}</span>
         <h1>{{ displayPlaylistName }}</h1>
         <p>{{ share.playlistDescription || 'A private playlist shared through Analytify.' }}</p>
-        <small>{{ share.trackCount }} songs · revision {{ share.revision }} · streamed from Supabase</small>
+        <small>{{ share.trackCount }} songs · version {{ share.revision }}</small>
         @if (isTracksLoading) {
           <small role="status">Loading songs… {{ tracks.length }} / {{ share.trackCount }}</small>
         }
@@ -66,14 +66,18 @@
       </div>
     }
     @if (saveResult?.success) {
-      <div class="detail-alert success" role="status"><i class="pi pi-check-circle"></i>The same Spotify playlist now contains revision {{ share.revision }}.</div>
+      <div class="detail-alert success" role="status"><i class="pi pi-check-circle"></i>The same Spotify playlist now contains version {{ share.revision }}.</div>
     }
-    <nav class="detail-tabs" aria-label="Shared playlist views">
-      <button (click)="activeView = 'songs'" [class.active]="activeView === 'songs'"><i class="pi pi-list"></i> Songs</button>
-      <button (click)="activeView = 'stats'" [class.active]="activeView === 'stats'"><i class="pi pi-chart-bar"></i> Stats</button>
+    <nav class="detail-tabs" role="tablist" aria-label="Shared playlist views" (keydown)="onViewTabKeydown($event)">
+      <button id="shared-songs-tab" type="button" role="tab" aria-controls="shared-songs-panel"
+        [attr.aria-selected]="activeView === 'songs'" [attr.tabindex]="activeView === 'songs' ? 0 : -1"
+        (click)="setActiveView('songs')" [class.active]="activeView === 'songs'"><i class="pi pi-list" aria-hidden="true"></i> Songs</button>
+      <button id="shared-stats-tab" type="button" role="tab" aria-controls="shared-stats-panel"
+        [attr.aria-selected]="activeView === 'stats'" [attr.tabindex]="activeView === 'stats' ? 0 : -1"
+        (click)="setActiveView('stats')" [class.active]="activeView === 'stats'"><i class="pi pi-chart-bar" aria-hidden="true"></i> Stats</button>
     </nav>
     @if (activeView === 'songs') {
-      <section class="songs-panel">
+      <section id="shared-songs-panel" class="songs-panel" role="tabpanel" aria-labelledby="shared-songs-tab">
         <label class="track-search"><i class="pi pi-search"></i><input type="search" [(ngModel)]="searchText" (input)="filterTracks()" placeholder="Search songs, artists, or albums"></label>
         <div class="track-row header-row"><span>#</span><span>Title</span><span>Album</span><span>Time</span></div>
         <div class="virtual-track-list" (scroll)="onTrackListScroll($event)">
@@ -97,7 +101,7 @@
         </section>
       }
       @if (activeView === 'stats' && stats) {
-        <section class="stats-panel">
+        <section id="shared-stats-panel" class="stats-panel" role="tabpanel" aria-labelledby="shared-stats-tab">
           <div class="stat-grid">
             <article><span>{{ stats.tracks }}</span><small>Songs</small></article>
             <article><span>{{ stats.artists }}</span><small>Artists</small></article>
@@ -116,4 +120,4 @@
     </section>
   }
 }
-</main>
+</div>

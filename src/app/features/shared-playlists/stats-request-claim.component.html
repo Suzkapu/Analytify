@@ -1,4 +1,4 @@
-<main class="claim-page">
+<div class="claim-page">
   <section class="claim-card">
     <i class="pi" [ngClass]="isOpening ? 'pi-spin pi-spinner' : 'pi-eye-slash'"></i>
     <span>Private stats request</span>
@@ -10,7 +10,7 @@
       <p>{{ errorMessage }}</p>
     }
     @if (!isOpening) {
-      <a routerLink="/shared-playlists">Go to Private Sharing</a>
+      <a [routerLink]="sharingCommands()" [queryParams]="{tab: 'stats'}">Go to Private Sharing</a>
     }
   </section>
-</main>
+</div>

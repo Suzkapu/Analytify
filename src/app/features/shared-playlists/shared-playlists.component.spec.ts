@@ -3,6 +3,8 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
+import {convertToParamMap} from '@angular/router';
+import {Subject} from 'rxjs';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { ComparePlaylistSourceService } from '@core/compare-room/compare-playlist-source.service';
 import { PlaylistSharingService } from '@core/sharing/playlist-sharing.service';
@@ -32,6 +34,7 @@ describe('SharedPlaylistsComponent', () => {
         };
         auth = {
             isBackupActive: vi.fn().mockName("SpotifyAuthService.isBackupActive"),
+            enableBackup: vi.fn().mockName("SpotifyAuthService.enableBackup"),
             getAccessToken: vi.fn().mockName("SpotifyAuthService.getAccessToken"),
             isTokenExpired: vi.fn().mockName("SpotifyAuthService.isTokenExpired"),
             refreshToken: vi.fn().mockName("SpotifyAuthService.refreshToken"),
@@ -67,6 +70,7 @@ describe('SharedPlaylistsComponent', () => {
         });
         sharing.removeReceivedShare.mockResolvedValue(undefined);
         auth.isBackupActive.mockReturnValue(true);
+        auth.enableBackup.mockResolvedValue(undefined);
         auth.getAccessToken.mockReturnValue('access-token');
         auth.isTokenExpired.mockReturnValue(false);
         auth.getUserId.mockReturnValue('spotify-user');
@@ -160,7 +164,7 @@ describe('SharedPlaylistsComponent', () => {
         expect(source.loadMainPlaylists).not.toHaveBeenCalled();
     });
 
-    it('grays out snapshot refresh with an explanation but keeps revoke available when backup is off', async () => {
+    it('grays out publishing with an explanation but keeps revoke available when backup is off', async () => {
         auth.isBackupActive.mockReturnValue(false);
         sharing.listOwnedShares.mockResolvedValue([{
                 id: 'share-id', sourcePlaylistId: 'party', playlistName: 'Party', playlistDescription: '',
@@ -173,7 +177,7 @@ describe('SharedPlaylistsComponent', () => {
         fixture.detectChanges();
 
         const actions = Array.from(fixture.nativeElement.querySelectorAll('.owner-share-actions button')) as HTMLButtonElement[];
-        const refresh = actions.find(button => button.textContent?.includes('Refresh snapshot'));
+        const refresh = actions.find(button => button.textContent?.includes('Publish latest version'));
         const revoke = actions.find(button => button.textContent?.includes('Revoke access'));
         expect(refresh?.disabled).toBe(true);
         expect(refresh?.title).toContain('Enable Cloud Backup');
@@ -199,6 +203,25 @@ describe('SharedPlaylistsComponent', () => {
         expect(heading.textContent?.trim()).toBe('Private sharing');
         expect(fixture.nativeElement.textContent).toContain('playlist');
         expect(fixture.nativeElement.textContent).toContain('playlist');
+    });
+
+    it('restores the v2 Playlists or Stats view from the linkable query state', async () => {
+        const queryParams = new Subject<ReturnType<typeof convertToParamMap>>();
+        Object.defineProperty(component.navigation, 'variant', {value: 'new'});
+        (component as any).route = {queryParamMap: queryParams.asObservable()};
+
+        const initialized = component.ngOnInit();
+        queryParams.next(convertToParamMap({tab: 'stats'}));
+        await initialized;
+
+        expect(component.activeTab).toBe('stats');
+        expect(component.showStatsSections).toBe(true);
+        expect(component.showPlaylistSections).toBe(false);
+
+        queryParams.next(convertToParamMap({tab: 'playlists'}));
+        expect(component.activeTab).toBe('playlists');
+        expect(component.showPlaylistSections).toBe(true);
+        expect(component.showStatsSections).toBe(false);
     });
 
     it('starts playlist and stats sharing loads in parallel', async () => {
@@ -384,18 +407,28 @@ describe('SharedPlaylistsComponent', () => {
             playlistDescription: 'Keep this description',
             playlistImageUrl: 'party.jpg'
         }));
-        expect(component.successMessage).toContain('revision 4');
+        expect(component.successMessage).toContain('version 4');
     });
 
-    it('does not revoke a playlist when its owner cancels the confirmation', async () => {
-        vi.spyOn(window, 'confirm').mockReturnValue(false);
-
-        await component.revokeShare({
+    it('does not revoke a playlist before its owner confirms the consequence dialog', async () => {
+        component.openShareRevocation({
             id: 'share-id', playlistName: 'Party', recipientDisplayName: 'Friend'
         } as any);
 
         expect(sharing.revokeShare).not.toHaveBeenCalled();
+        expect(component.playlistRevocationRequest?.id).toBe('share-id');
         expect(component.busyShareId).toBe('');
+    });
+
+    it('enables Cloud Backup from the recovery dialog', async () => {
+        auth.isBackupActive.mockReturnValue(false);
+        component.openBackupEnableDialog();
+
+        await component.confirmEnableBackup();
+
+        expect(auth.enableBackup).toHaveBeenCalledTimes(1);
+        expect(component.showBackupEnableDialog).toBe(false);
+        expect(component.successMessage).toContain('Cloud Backup is enabled');
     });
 
     it('requires custom confirmation before removing a received share and explains Spotify copies', async () => {

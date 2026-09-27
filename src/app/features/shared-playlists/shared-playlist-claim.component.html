@@ -1,4 +1,4 @@
-<main class="claim-page">
+<div class="claim-page">
   <section class="claim-card">
     <i class="pi" [ngClass]="isClaiming ? 'pi-spin pi-spinner' : 'pi-link'"></i>
     <span>Private playlist invitation</span>
@@ -10,7 +10,7 @@
       <p>{{ errorMessage }}</p>
     }
     @if (!isClaiming) {
-      <a routerLink="/shared-playlists">Go to Private Sharing</a>
+      <a [routerLink]="sharingCommands()">Go to Private Sharing</a>
     }
   </section>
-</main>
+</div>

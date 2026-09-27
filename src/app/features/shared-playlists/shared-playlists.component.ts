@@ -1,5 +1,6 @@
 import {Component, HostListener, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {firstValueFrom} from 'rxjs';
+import {ActivatedRoute} from '@angular/router';
+import {firstValueFrom, Subscription} from 'rxjs';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {ComparePlaylistSourceService} from '@core/compare-room/compare-playlist-source.service';
 import {ComparePlaylist} from '@core/compare-room/compare-room.models';
@@ -11,6 +12,14 @@ import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {PlaylistShareAutoSyncService} from '@core/sharing/playlist-share-auto-sync.service';
 import {SPOTIFY_RESTRICTED_FEATURES_ENABLED} from '@core/compliance/spotify-policy-gate';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
+import {
+  moderationStatusLabel,
+  parseSharingTab,
+  SharingStatusView,
+  SharingTab,
+  statsAccessStatusView
+} from './sharing-view-model';
 
 const console = createScopedLogger('Shared Playlists');
 
@@ -55,23 +64,35 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   moderationCases: ModerationCase[] = [];
   appealDrafts: Record<string, string> = {};
   appealingReportId = '';
+  activeTab: SharingTab = 'playlists';
+  playlistRevocationRequest: PlaylistShare | null = null;
+  showBackupEnableDialog = false;
+  isEnablingBackup = false;
 
   private unsubscribeFromShareChanges: (() => void) | null = null;
   private unsubscribeFromStatsChanges: (() => void) | null = null;
   private silentReloadPromise: Promise<void> | null = null;
   private dismissedConsentRequestIds = new Set<string>();
   private destroyed = false;
+  private readonly subscriptions = new Subscription();
 
   constructor(
     private sharing: PlaylistSharingService,
     private auth: SpotifyAuthService,
     private source: ComparePlaylistSourceService,
     private statsSharing: StatsSharingService,
-    private shareAutoSync: PlaylistShareAutoSyncService
+    private shareAutoSync: PlaylistShareAutoSyncService,
+    readonly navigation: DesignNavigationService,
+    private route: ActivatedRoute
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.destroyed = false;
+    if (this.isDesignV2) {
+      this.subscriptions.add(this.route.queryParamMap.subscribe(params => {
+        this.activeTab = parseSharingTab(params.get('tab'));
+      }));
+    }
     this.shareAutoSync.start();
     await this.reload();
     if (this.destroyed) return;
@@ -95,6 +116,7 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroyed = true;
+    this.subscriptions.unsubscribe();
     this.unsubscribeFromShareChanges?.();
     this.unsubscribeFromShareChanges = null;
     this.unsubscribeFromStatsChanges?.();
@@ -129,6 +151,18 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     return this.auth.isBackupActive();
   }
 
+  get isDesignV2(): boolean {
+    return this.navigation.variant === 'new';
+  }
+
+  get showPlaylistSections(): boolean {
+    return !this.isDesignV2 || this.activeTab === 'playlists';
+  }
+
+  get showStatsSections(): boolean {
+    return !this.isDesignV2 || this.activeTab === 'stats';
+  }
+
   get selectedPlaylist(): ComparePlaylist | null {
     return this.availablePlaylists.find(playlist => playlist.id === this.selectedPlaylistId) || null;
   }
@@ -141,11 +175,15 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     return this.statsAccessRequests.filter(request => request.viewerRole === 'viewer');
   }
 
+  get pendingOrClosedStatsRequests(): StatsAccessRequest[] {
+    return this.statsAccessRequests.filter(request => request.status !== 'approved');
+  }
+
   get grantedStatsAccess(): StatsAccessRequest[] {
     return this.statsAccessRequests.filter(request => request.viewerRole === 'owner' && request.status === 'approved');
   }
 
-  async openShareDialog(): Promise<void> {
+  async openShareDialog(initialMode: 'playlist' | 'stats' | null = null): Promise<void> {
     this.isShareDialogOpen = true;
     this.shareMode = null;
     this.isLoadingSharePlaylists = false;
@@ -158,6 +196,31 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     this.statsShareLinkCopied = false;
     this.shareError = '';
     this.shareLinkCopied = false;
+    if (initialMode) await this.selectShareMode(initialMode);
+  }
+
+  statsStatus(request: StatsAccessRequest): SharingStatusView {
+    return statsAccessStatusView(request.status, request.viewerRole);
+  }
+
+  moderationStatus(status: ModerationCase['status']): string {
+    return moderationStatusLabel(status);
+  }
+
+  sharedPlaylistCommands(share: PlaylistShare): string[] {
+    return this.navigation.commands('sharedPlaylists', {id: share.id});
+  }
+
+  statsCommands(request: StatsAccessRequest): string[] {
+    return this.navigation.commands('stats', {userId: request.ownerUserId});
+  }
+
+  receivedShareMenuItems(share: PlaylistShare) {
+    return [{id: 'remove', label: `Remove ${this.receivedPlaylistName(share)}`, danger: true, disabled: !!this.busyShareId}];
+  }
+
+  onReceivedShareMenuAction(action: string, share: PlaylistShare): void {
+    if (action === 'remove') this.openReceivedShareRemoval(share);
   }
 
   async selectShareMode(mode: 'playlist' | 'stats'): Promise<void> {
@@ -280,6 +343,12 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     } finally {
       this.busyStatsRequestId = '';
     }
+  }
+
+  async respondToSpecificStatsRequest(request: StatsAccessRequest, approve: boolean): Promise<void> {
+    if (request.viewerRole !== 'owner' || request.status !== 'pending' || this.busyStatsRequestId) return;
+    this.consentRequest = request;
+    await this.respondToStatsRequest(approve);
   }
 
   openStatsRevocation(request: StatsAccessRequest): void {
@@ -412,7 +481,7 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   async refreshShare(share: PlaylistShare): Promise<void> {
     if (this.busyShareId) return;
     if (!this.canCreateShares) {
-      this.errorMessage = 'Enable Cloud Backup before refreshing a shared playlist snapshot.';
+      this.errorMessage = 'Enable Cloud Backup before publishing a new playlist version.';
       return;
     }
     this.busyShareId = share.id;
@@ -434,7 +503,7 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
         tracks: result.tracks
       };
       const revision = await this.sharing.refreshShare(share.id, share.revision, publication);
-      this.successMessage = `“${playlist.name}” is published at revision ${revision}.`;
+      this.successMessage = `“${playlist.name}” is published as version ${revision}.`;
       await this.reload(true);
     } catch (error) {
       this.errorMessage = this.describeError(error);
@@ -443,22 +512,52 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     }
   }
 
-  async revokeShare(share: PlaylistShare): Promise<void> {
-    if (this.busyShareId) return;
-    const recipient = share.recipientDisplayName || 'the recipient';
-    if (!window.confirm(`Revoke ${recipient}’s access to “${share.playlistName}”? Their Spotify copy will remain but can no longer update.`)) {
-      return;
-    }
+  openShareRevocation(share: PlaylistShare): void {
+    if (!this.busyShareId) this.playlistRevocationRequest = share;
+  }
+
+  closeShareRevocation(): void {
+    if (!this.busyShareId) this.playlistRevocationRequest = null;
+  }
+
+  async confirmShareRevocation(): Promise<void> {
+    const share = this.playlistRevocationRequest;
+    if (!share || this.busyShareId) return;
     this.busyShareId = share.id;
     this.errorMessage = '';
     try {
       await this.sharing.revokeShare(share.id);
       this.successMessage = `Access to “${share.playlistName}” was revoked.`;
+      this.playlistRevocationRequest = null;
       await this.reload(true);
     } catch (error) {
       this.errorMessage = this.describeError(error);
     } finally {
       this.busyShareId = '';
+    }
+  }
+
+  openBackupEnableDialog(): void {
+    this.showBackupEnableDialog = true;
+  }
+
+  closeBackupEnableDialog(): void {
+    if (!this.isEnablingBackup) this.showBackupEnableDialog = false;
+  }
+
+  async confirmEnableBackup(): Promise<void> {
+    if (this.isEnablingBackup || this.canCreateShares) return;
+    this.isEnablingBackup = true;
+    this.errorMessage = '';
+    try {
+      await this.auth.enableBackup();
+      this.successMessage = 'Cloud Backup is enabled. You can now publish shared playlists and stats.';
+      this.showBackupEnableDialog = false;
+      await this.reload(true);
+    } catch (error) {
+      this.errorMessage = this.describeError(error);
+    } finally {
+      this.isEnablingBackup = false;
     }
   }
 

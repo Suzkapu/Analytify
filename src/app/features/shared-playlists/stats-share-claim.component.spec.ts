@@ -41,7 +41,10 @@ describe('StatsShareClaimComponent', () => {
 
     await component.respond(true);
     expect(sharing.acceptShareInvite).toHaveBeenCalledWith('private-token');
-    expect(router.navigate).toHaveBeenCalledWith(['/shared-playlists'], {replaceUrl: true});
+    expect(router.navigate).toHaveBeenCalledWith(['/shared-playlists'], {
+      replaceUrl: true,
+      queryParams: {tab: 'stats'}
+    });
   });
 
   it('consumes a declined share without granting access', async () => {

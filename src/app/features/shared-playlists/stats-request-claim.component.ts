@@ -23,11 +23,15 @@ export class StatsRequestClaimComponent implements OnInit {
     const token = this.route.snapshot.paramMap.get('token') || '';
     try {
       await this.statsSharing.claimAccessInvite(token);
-      await this.router.navigate(['/shared-playlists'], {replaceUrl: true});
+      await this.router.navigate(this.sharingCommands(), {replaceUrl: true, queryParams: {tab: 'stats'}});
     } catch (error) {
       this.errorMessage = (error as any)?.message
         || 'This stats request link is invalid, expired, or has already been used.';
       this.isOpening = false;
     }
+  }
+
+  sharingCommands(): string[] {
+    return this.router.url?.startsWith('/new/') ? ['/new', 'shared-playlists'] : ['/shared-playlists'];
   }
 }

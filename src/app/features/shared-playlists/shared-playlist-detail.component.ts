@@ -150,6 +150,20 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
     if (resetWindow) this.visibleTrackStart = 0;
   }
 
+  setActiveView(view: 'songs' | 'stats'): void {
+    this.activeView = view;
+  }
+
+  onViewTabKeydown(event: KeyboardEvent): void {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+    const next: 'songs' | 'stats' = event.key === 'ArrowLeft' || event.key === 'Home' ? 'songs' : 'stats';
+    this.activeView = next;
+    const target = (event.currentTarget as HTMLElement | null)?.parentElement
+      ?.querySelector<HTMLElement>(`#shared-${next}-tab`);
+    target?.focus();
+  }
+
   get visibleTracks(): CompareTrack[] {
     return this.filteredTracks.slice(this.visibleTrackStart, this.visibleTrackStart + this.virtualWindowSize);
   }
@@ -242,7 +256,13 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
   }
 
   back(): void {
-    void this.router.navigate(['/shared-playlists']);
+    void this.router.navigate(this.sharingCommands());
+  }
+
+  sharingCommands(): string[] {
+    return this.router.url?.startsWith('/new/')
+      ? ['/new', 'shared-playlists']
+      : ['/shared-playlists'];
   }
 
   get isRecipient(): boolean {
@@ -297,10 +317,10 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
         if (previousRevision > 0 && currentRevision > previousRevision) {
           this.saveResult = null;
           this.liveUpdateMessage = this.download?.appliedRevision === currentRevision
-            ? `Your Spotify copy was automatically updated to revision ${currentRevision}.`
+            ? `Your Spotify copy was automatically updated to version ${currentRevision}.`
             : this.download
-              ? `Live update received: revision ${currentRevision} is being applied to your Spotify copy…`
-            : `Live update received: revision ${currentRevision} is now available.`;
+              ? `Version ${currentRevision} is being applied to your Spotify copy…`
+            : `Version ${currentRevision} is now available.`;
         }
       } while (this.liveReloadPending);
     } finally {
@@ -314,7 +334,7 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
     if (update.success) {
       await this.load(true, update.shareId, generation);
       if (update.shareId !== this.shareId || generation !== this.loadGeneration) return;
-      this.liveUpdateMessage = `Your Spotify copy was automatically updated to revision ${update.revision}.`;
+      this.liveUpdateMessage = `Your Spotify copy was automatically updated to version ${update.revision}.`;
       return;
     }
     this.errorMessage = `${update.error || 'The automatic Spotify update failed.'} You can retry it below.`;

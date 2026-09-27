@@ -260,7 +260,7 @@ describe('SharedPlaylistDetailComponent', () => {
 
         expect(component.share?.revision).toBe(3);
         expect(component.tracks.map(item => item.id)).toEqual(['new-song']);
-        expect(component.liveUpdateMessage).toContain('revision 3');
+        expect(component.liveUpdateMessage).toContain('Version 3');
         expect(component.hasUpdate).toBe(true);
         expect(spotify.syncPlaylist).not.toHaveBeenCalled();
     });
@@ -278,7 +278,7 @@ describe('SharedPlaylistDetailComponent', () => {
         await flushAsyncWork();
 
         expect(component.download?.appliedRevision).toBe(3);
-        expect(component.liveUpdateMessage).toContain('automatically updated to revision 3');
+        expect(component.liveUpdateMessage).toContain('automatically updated to version 3');
     });
 
     it('unsubscribes from live updates when the detail page is destroyed', async () => {

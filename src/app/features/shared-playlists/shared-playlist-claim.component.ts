@@ -23,10 +23,14 @@ export class SharedPlaylistClaimComponent implements OnInit {
     const token = this.route.snapshot.paramMap.get('token') || '';
     try {
       const shareId = await this.sharing.claimShare(token);
-      await this.router.navigate(['/shared-playlists', shareId], {replaceUrl: true});
+      await this.router.navigate([...this.sharingCommands(), shareId], {replaceUrl: true});
     } catch (error) {
       this.errorMessage = (error as any)?.message || 'This share link is invalid, already claimed, or revoked.';
       this.isClaiming = false;
     }
+  }
+
+  sharingCommands(): string[] {
+    return this.router.url?.startsWith('/new/') ? ['/new', 'shared-playlists'] : ['/shared-playlists'];
   }
 }

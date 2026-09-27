@@ -1,4 +1,4 @@
-<main class="claim-page">
+<div class="claim-page">
   <section class="claim-card">
     <i class="pi" [ngClass]="isLoading ? 'pi-spin pi-spinner' : (preview ? 'pi-eye' : 'pi-eye-slash')"></i>
     <span>Private stats share</span>
@@ -13,6 +13,6 @@
       </div>
     }
     @if (errorMessage) { <p role="alert">{{ errorMessage }}</p> }
-    @if (!isLoading && !preview) { <a routerLink="/shared-playlists">Go to Private Sharing</a> }
+    @if (!isLoading && !preview) { <a [routerLink]="sharingCommands()" [queryParams]="{tab: 'stats'}">Go to Private Sharing</a> }
   </section>
-</main>
+</div>

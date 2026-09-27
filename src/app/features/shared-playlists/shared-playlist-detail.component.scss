@@ -18,3 +18,13 @@
 .ranking-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem; article { padding:1.2rem; border-radius:14px; background:rgba(255,255,255,.035); h2 { margin:0 0 .8rem; } ol { margin:0; padding-left:1.5rem; } li { padding:.45rem 0; color:#8f9992; span { color:#fff; } strong { float:right; color:#1ed760; } } } }
 @media(max-width:850px){ .playlist-hero{grid-template-columns:110px minmax(0,1fr); .playlist-hero-cover{width:110px;height:110px}.download-block{grid-column:1/-1;justify-items:start}} }
 @media(max-width:620px){ .shared-detail-page{padding-top:1rem}.playlist-hero{grid-template-columns:82px minmax(0,1fr);gap:1rem;padding:1rem}.playlist-hero .playlist-hero-cover{width:82px;height:82px}.hero-copy h1{font-size:1.7rem}.download-block{grid-column:1/-1;width:100%;button{width:100%}}.track-row{grid-template-columns:34px minmax(0,1fr) 55px}.album-name,.header-row span:nth-child(3){display:none}.stat-grid{grid-template-columns:repeat(2,1fr)}.ranking-grid{grid-template-columns:1fr}.songs-panel,.stats-panel{padding:.6rem}}
+
+:host-context(.design-v2) {
+  min-height: 0;
+  color: var(--color-text);
+  .shared-detail-page { width: 100%; padding-top: 0; }
+  .back-bar-container { margin-bottom: 18px; }
+  .playlist-hero,
+  .songs-panel,
+  .stats-panel { background-color: var(--color-surface); border-color: var(--color-border); }
+}
