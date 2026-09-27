@@ -19,18 +19,18 @@ export const DESIGN_V2_ROUTES: Routes = [{
     {path: '', pathMatch: 'full', redirectTo: 'login'},
     {
       path: 'login', title: 'Sign in | Analytify',
-      data: designV2RouteData('login', 'Sign in', 'form', 'account'),
+      data: designV2RouteData('login', 'Sign in', 'form', 'account', {chromeMode: 'focus'}),
       canActivate: [redirectLoggedInGuard],
       loadChildren: () => import('@features/auth/login-page/login-page.module').then(module => module.LoginPageModule)
     },
     {
       path: 'callback', title: 'Finishing sign in | Analytify',
-      data: designV2RouteData('callback', 'Signing in', 'form', 'account'),
+      data: designV2RouteData('callback', 'Signing in', 'form', 'account', {chromeMode: 'focus'}),
       loadChildren: () => import('@features/auth/callback/callback.module').then(module => module.CallbackModule)
     },
     {
       path: 'spotify', title: 'Spotify setup | Analytify',
-      data: designV2RouteData('spotify', 'Spotify setup', 'form', 'account'),
+      data: designV2RouteData('spotify', 'Spotify setup', 'form', 'account', {chromeMode: 'focus'}),
       loadChildren: () => import('@features/auth/personal-spotify/personal-spotify.module').then(module => module.PersonalSpotifyModule)
     },
     {
@@ -92,18 +92,18 @@ export const DESIGN_V2_ROUTES: Routes = [{
     },
     {
       path: 'legal', title: 'Legal information | Analytify',
-      data: designV2RouteData('legal', 'Legal', 'reading', 'account'),
+      data: designV2RouteData('legal', 'Legal', 'reading', 'account', {chromeMode: 'public'}),
       loadChildren: () => import('@features/legal/legal/legal.module').then(module => module.LegalModule)
     },
     {
       path: 'compare-room/callback', title: 'Joining Compare Room | Analytify',
-      data: designV2RouteData('compare-room-callback', 'Joining room', 'form', 'social'),
+      data: designV2RouteData('compare-room-callback', 'Joining room', 'form', 'social', {chromeMode: 'public'}),
       canActivate: [spotifyRestrictedFeatureGuard],
       loadChildren: () => import('@features/compare-room/compare-room-callback.module').then(module => module.CompareRoomCallbackModule)
     },
     {
       path: 'compare-room/join/:roomId', title: 'Join Compare Room | Analytify',
-      data: designV2RouteData('compare-room-join', 'Join room', 'form', 'social'),
+      data: designV2RouteData('compare-room-join', 'Join room', 'form', 'social', {chromeMode: 'public'}),
       canActivate: [spotifyRestrictedFeatureGuard],
       loadChildren: () => import('@features/compare-room/compare-room-join.module').then(module => module.CompareRoomJoinModule)
     },

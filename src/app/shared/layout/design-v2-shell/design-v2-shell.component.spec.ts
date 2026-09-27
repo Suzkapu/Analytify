@@ -3,7 +3,7 @@ import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {provideRouter} from '@angular/router';
 import {RouterTestingHarness} from '@angular/router/testing';
-import {beforeEach, describe, expect, it} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 
 import {DESIGN_VARIANT} from '@core/navigation/design-variant';
 import {DesignNavigationService} from '@core/navigation/design-navigation.service';
@@ -32,6 +32,10 @@ describe('DesignV2ShellComponent', () => {
           {
             path: 'stats', component: StatsStubComponent, title: 'Stats | Analytify',
             data: designV2RouteData('stats', 'Your Stats', 'full', 'insights', {preload: true})
+          },
+          {
+            path: 'login', component: PlaylistsStubComponent, title: 'Sign in | Analytify',
+            data: designV2RouteData('login', 'Sign in', 'form', 'account', {chromeMode: 'focus'})
           }
         ]
       }])]
@@ -84,6 +88,73 @@ describe('DesignV2ShellComponent', () => {
     harness.fixture.detectChanges();
     expect(shell.toolsOpen()).toBe(false);
     expect(element.querySelector('[role="dialog"]')).toBeNull();
+  });
+
+  it('opens the account hub with a usable profile fallback and all account actions', async () => {
+    const harness = await RouterTestingHarness.create('/new/playlists');
+    const shell = harness.fixture.debugElement.query(By.directive(DesignV2ShellComponent))
+      .componentInstance as DesignV2ShellComponent;
+    shell.profilePicUrl.set(null);
+    shell.toggleAccount();
+    harness.fixture.detectChanges();
+
+    const element = harness.fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('.v2-account-avatar .pi-user')).not.toBeNull();
+    expect(element.querySelector('.v2-account-dialog')?.textContent).toContain('Cloud Backup');
+    expect(element.querySelector('.v2-account-dialog')?.textContent).toContain('Notifications');
+    expect(element.querySelector('.v2-account-dialog')?.textContent).toContain('Manage Spotify access');
+    expect(element.querySelector('.v2-account-dialog')?.textContent).toContain('Clear data');
+  });
+
+  it('uses minimal chrome for focus routes', async () => {
+    const harness = await RouterTestingHarness.create('/new/login');
+    const element = harness.fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('.v2-desktop-nav')).toBeNull();
+    expect(element.querySelector('.v2-mobile-nav')).toBeNull();
+    expect(element.querySelector('.v2-tools-button')).toBeNull();
+    expect(element.querySelector('.v2-account-button')).toBeNull();
+    expect(element.querySelector('.v2-brand')).not.toBeNull();
+  });
+
+  it('uses More consistently and preserves Spotify attribution', async () => {
+    const harness = await RouterTestingHarness.create('/new/playlists');
+    const element = harness.fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('.v2-tools-button')?.textContent?.trim()).toBe('More');
+    expect(element.textContent).not.toContain('Workspace');
+    expect(element.querySelector('.v2-footer')?.textContent).toContain('Powered by Spotify');
+    expect(element.querySelector('.v2-footer')?.textContent).toContain('Legal & privacy');
+  });
+
+  it('routes settings through the shared overlay service', async () => {
+    const harness = await RouterTestingHarness.create('/new/playlists');
+    const shell = harness.fixture.debugElement.query(By.directive(DesignV2ShellComponent))
+      .componentInstance as DesignV2ShellComponent;
+    const open = vi.spyOn(shell.overlays, 'open').mockResolvedValue(null);
+
+    await shell.openNotifications();
+    await shell.openAutomaticUpdates();
+    await shell.openBlockedUsers();
+
+    expect(open).toHaveBeenCalledTimes(3);
+    expect(shell.accountOpen()).toBe(false);
+  });
+
+  it('requires confirmation before enabling backup and clearing local data', async () => {
+    const harness = await RouterTestingHarness.create('/new/playlists');
+    const shell = harness.fixture.debugElement.query(By.directive(DesignV2ShellComponent))
+      .componentInstance as DesignV2ShellComponent;
+    const enable = vi.spyOn(shell.authService, 'enableBackup').mockResolvedValue(undefined);
+    const clear = vi.spyOn(shell.authService, 'clearCacheAndLogout').mockResolvedValue(undefined);
+    shell.requestBackupChange({target: {checked: true}} as unknown as Event);
+    expect(shell.backupConfirmationOpen()).toBe(true);
+    expect(enable).not.toHaveBeenCalled();
+    await shell.enableBackup();
+    expect(enable).toHaveBeenCalledOnce();
+
+    shell.clearDataStep.set('local');
+    await shell.confirmLocalClear();
+    expect(clear).toHaveBeenCalledOnce();
+    expect(shell.clearDataStep()).toBe('none');
   });
 
   it('provides a skip link and one main landmark', async () => {

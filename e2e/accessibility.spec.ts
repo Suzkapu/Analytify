@@ -85,6 +85,15 @@ test('logged-out home is keyboard reachable, zoom-safe, and WCAG 2.2 AA clean', 
   await expectNoBlockingAxeViolations(page);
 });
 
+test('v2 focus routes keep minimal chrome and one skip target', async ({page}) => {
+  await page.goto('/new/login');
+  await expect(page.getByRole('link', {name: 'Analytify playlists'})).toBeVisible();
+  await expect(page.getByRole('navigation', {name: 'Main navigation'})).toHaveCount(0);
+  await expect(page.getByRole('button', {name: 'Open More tools'})).toHaveCount(0);
+  await expect(page.getByRole('link', {name: 'Skip to main content'})).toHaveCount(1);
+  await expectNoBlockingAxeViolations(page);
+});
+
 test('fresh logged-out visit contains no account, feature, stats, or tracking data', async ({page}) => {
   await page.goto('/login');
   await expect(page.getByRole('heading', {name: 'Explore your playlists.'})).toBeVisible();

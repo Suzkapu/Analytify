@@ -1,6 +1,7 @@
 import {Data, Params, Route, UrlSegment} from '@angular/router';
 
 export type DesignV2PageWidth = 'reading' | 'form' | 'default' | 'dashboard' | 'wide' | 'full';
+export type DesignV2ChromeMode = 'app' | 'focus' | 'public';
 
 export interface DesignV2RouteData extends Data {
   pageId: string;
@@ -10,6 +11,7 @@ export interface DesignV2RouteData extends Data {
   preload: boolean;
   mobileBack?: boolean;
   cloudBackup?: boolean;
+  chromeMode?: DesignV2ChromeMode;
 }
 
 export const designV2RouteData = (
@@ -17,7 +19,7 @@ export const designV2RouteData = (
   mobileTitle: string,
   pageWidth: DesignV2PageWidth,
   ambientKey: string,
-  options: Partial<Pick<DesignV2RouteData, 'preload' | 'mobileBack' | 'cloudBackup'>> = {}
+  options: Partial<Pick<DesignV2RouteData, 'preload' | 'mobileBack' | 'cloudBackup' | 'chromeMode'>> = {}
 ): DesignV2RouteData => ({
   pageId,
   mobileTitle,

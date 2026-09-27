@@ -117,4 +117,27 @@ describe('AppComponent', () => {
 
         expect(warn).not.toHaveBeenCalled();
     });
+
+    it('uses only the shell skip link and hides the floating scroll control in Design v2', () => {
+        const fixture = TestBed.createComponent(AppComponent);
+        routerEvents.next(new NavigationEnd(3, '/new/playlists', '/new/playlists'));
+        fixture.componentInstance.showScrollBtn = true;
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.querySelector('.skip-link')).toBeNull();
+        expect(fixture.nativeElement.querySelector('.scroll-to-top-btn.visible')).toBeNull();
+    });
+
+    it('offers accessible reload-now and later actions without a native confirm', () => {
+        const fixture = TestBed.createComponent(AppComponent);
+        fixture.componentInstance.updateReady = true;
+        fixture.detectChanges();
+
+        const notice = fixture.nativeElement.querySelector('.app-update-notice') as HTMLElement;
+        expect(notice.getAttribute('role')).toBe('status');
+        expect(notice.textContent).toContain('Reload now');
+        (notice.querySelector('button') as HTMLButtonElement).click();
+        fixture.detectChanges();
+        expect(fixture.nativeElement.querySelector('.app-update-notice')).toBeNull();
+    });
 });

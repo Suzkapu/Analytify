@@ -30,6 +30,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   siteAnnouncement = '';
   announcementVisible = true;
   isLandingAnnouncement = true;
+  isDesignV2 = false;
+  updateReady = false;
 
   private readonly windowScrollHandler = () => this.onWindowScroll();
   private navigationStartedAt = 0;
@@ -43,6 +45,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private siteSettings: SiteSettingsService
   ) {
     this.isInitialNavigationLoading = !this.router.navigated;
+    this.isDesignV2 = this.isDesignV2Url(this.router.url);
     void this.siteSettings.load().then(settings => {
       this.siteAnnouncement = settings.announcement;
       this.updateAnnouncementVisibility(this.router.url);
@@ -53,6 +56,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         this.navigationStartedAt = performance.now();
         navigationLog.step('Opening page', {url: event.url});
       } else if (event instanceof NavigationEnd) {
+        this.isDesignV2 = this.isDesignV2Url(event.urlAfterRedirects);
         this.updateAnnouncementVisibility(event.urlAfterRedirects);
         navigationLog.success('Page ready', {
           url: event.urlAfterRedirects,
@@ -95,9 +99,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       this.swUpdate.versionUpdates.pipe(
         filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY')
       ).subscribe(() => {
-        if (confirm('A new version of the app is available. Reload the page to load it?')) {
-          window.location.reload();
-        }
+        this.updateReady = true;
       });
     }
   }
@@ -166,5 +168,18 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       top: 0,
       behavior: 'smooth'
     });
+  }
+
+  reloadForUpdate(): void {
+    window.location.reload();
+  }
+
+  dismissUpdate(): void {
+    this.updateReady = false;
+  }
+
+  private isDesignV2Url(url: string): boolean {
+    const path = url.split(/[?#]/, 1)[0];
+    return path === '/new' || path.startsWith('/new/');
   }
 }

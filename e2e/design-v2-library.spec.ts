@@ -51,3 +51,32 @@ test('every v2 library child route retains the shared shell', async ({page}) => 
     await expect(page.locator('main')).toHaveCount(1);
   }
 });
+
+test('account hub is keyboard reachable on desktop and mobile', async ({page}) => {
+  await page.goto('/new/playlists');
+  const account = page.getByRole('button', {name: 'Open account and data settings'});
+  await account.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('dialog', {name: /Browser test user/})).toBeVisible();
+  await expect(page.getByRole('button', {name: 'Notifications'})).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog', {name: /Browser test user/})).toBeHidden();
+
+  await page.setViewportSize({width: 320, height: 800});
+  await account.click();
+  await expect(page.getByRole('dialog', {name: /Browser test user/})).toBeVisible();
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
+  await expectNoBlockingAxeViolations(page);
+});
+
+test('local data clear uses a consequence-first confirmation flow', async ({page}) => {
+  await page.goto('/new/playlists');
+  await page.getByRole('button', {name: 'Open account and data settings'}).click();
+  await page.getByRole('button', {name: 'Clear data'}).click();
+  await expect(page.getByRole('alertdialog', {name: 'What would you like to clear?'})).toBeVisible();
+  await page.getByRole('button', {name: /Clear this browser and log out/}).click();
+  await expect(page.getByRole('alertdialog', {name: 'Clear this browser and log out?'})).toBeVisible();
+  await page.getByRole('button', {name: 'Clear and log out'}).click();
+  await expect(page).toHaveURL(/\/new\/login$/);
+});

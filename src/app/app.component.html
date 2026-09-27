@@ -10,11 +10,14 @@
   </div>
 }
 
-<a class="skip-link" href="#app-content">Skip to main content</a>
+@if (!isDesignV2) {
+  <a class="skip-link" href="#app-content">Skip to main content</a>
+}
 @if (siteAnnouncement && announcementVisible) {
   <div
     class="site-announcement"
     [class.site-announcement-transient]="!isLandingAnnouncement"
+    [class.site-announcement-v2]="isDesignV2"
     role="status"
     aria-live="polite"
     >
@@ -26,7 +29,20 @@
 </div>
 
 <!-- Floating Back to Top Button -->
-<button class="scroll-to-top-btn" (click)="scrollToTop()" [class.visible]="showScrollBtn"
+<button class="scroll-to-top-btn" (click)="scrollToTop()" [class.visible]="showScrollBtn && !isDesignV2"
   title="Back to top" aria-label="Back to top">
   <i class="pi pi-arrow-up"></i>
 </button>
+
+@if (updateReady) {
+  <section class="app-update-notice" role="status" aria-labelledby="app-update-title">
+    <div>
+      <strong id="app-update-title">Analytify is ready to update</strong>
+      <span>Reload when you are ready to use the latest version.</span>
+    </div>
+    <div class="app-update-notice__actions">
+      <button type="button" (click)="dismissUpdate()">Later</button>
+      <button type="button" class="app-update-notice__primary" (click)="reloadForUpdate()">Reload now</button>
+    </div>
+  </section>
+}
