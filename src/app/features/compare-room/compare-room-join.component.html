@@ -1,10 +1,15 @@
-<main class="join-page">
-  <div class="join-brand">
+<div class="join-page">
+  @if (!isDesignV2) {<div class="join-brand">
     <img src="assets/Analytify-96.webp" width="64" height="64" alt="Analytify">
     <span>Analytify Compare Room</span>
-  </div>
+  </div>}
 
   <section class="join-card">
+    <ol class="join-progress" [attr.aria-label]="'Compare progress. Step ' + currentStep + ' of 3'">
+      <li [class.current]="currentStep === 1" [class.complete]="currentStep > 1" [attr.aria-current]="currentStep === 1 ? 'step' : null"><span>1</span> Connect</li>
+      <li [class.current]="currentStep === 2" [class.complete]="currentStep > 2" [attr.aria-current]="currentStep === 2 ? 'step' : null"><span>2</span> Choose playlists</li>
+      <li [class.current]="currentStep === 3" [attr.aria-current]="currentStep === 3 ? 'step' : null"><span>3</span> Compare</li>
+    </ol>
     @if (stage === 'invited') {
       <div class="join-icon"><i class="pi pi-users"></i></div>
       <span class="eyebrow">You have been invited</span>
@@ -12,7 +17,7 @@
       <p>Connect Spotify and choose one or more playlists. The host can find shared songs or combine everything without duplicates.</p>
       <label class="terms-acceptance">
         <input type="checkbox" [(ngModel)]="termsAccepted">
-        <span>I agree to the <a routerLink="/legal" fragment="terms">Terms</a> and acknowledge the <a routerLink="/legal" fragment="privacy">Privacy Notice</a>.</span>
+        <span>I agree to the <a [routerLink]="routeCommands('legal')" fragment="terms">Terms</a> and acknowledge the <a [routerLink]="routeCommands('legal')" fragment="privacy">Privacy Notice</a>.</span>
       </label>
       <button type="button" class="spotify-button" (click)="connectSpotify()" [disabled]="!termsAccepted"><i class="pi pi-spotify"></i> Continue with Spotify</button>
       @if (errorMessage) { <p class="inline-error" role="alert">{{ errorMessage }}</p> }
@@ -78,7 +83,7 @@
         @if (playlistDataSource === 'local' || playlistDataSource === 'cloud') {
           <div class="cache-note">
             <i class="pi pi-bolt"></i>
-            Using your up-to-date Analytify {{ playlistDataSource === 'cloud' ? 'Supabase backup' : 'device cache' }}.
+            Using your saved Analytify playlist data.
           </div>
         }
         @if (stage === 'loading') {
@@ -141,4 +146,4 @@
       <button type="button" class="leave-button" (click)="leave()">Leave room</button>
     }
   </section>
-</main>
+</div>

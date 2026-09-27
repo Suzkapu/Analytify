@@ -16,6 +16,8 @@ import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {firstValueFrom, Subscription} from 'rxjs';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
+import {compareProgressStep, localSelectionLabel, mergeModeView, participantStatusView} from './compare-room-view-model';
 
 @Component({
     selector: 'app-compare-room-shell',
@@ -60,7 +62,8 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     private spotify: ParticipantSpotifyService,
     private router: Router,
     private storage: StorageService,
-    private supabase: SupabaseService
+    private supabase: SupabaseService,
+    readonly navigation: DesignNavigationService = {variant: 'legacy'} as DesignNavigationService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -349,7 +352,7 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
 
   async leaveRoom(): Promise<void> {
     await this.coordinator.closeRoom();
-    await this.router.navigate([this.enteredAuthenticated ? '/playlists' : '/login']);
+    await this.router.navigate(this.navigation.commands(this.enteredAuthenticated ? 'playlists' : 'login'));
   }
 
   async copyInvitation(invitation: CompareInvitation): Promise<void> {
@@ -482,6 +485,26 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     return this.participants.filter(participant => participant.status === 'ready').length;
   }
 
+  get currentStep(): 1 | 2 | 3 {
+    return compareProgressStep(!!this.proposal || this.allFinished, this.readyCount);
+  }
+
+  get isDesignV2(): boolean {
+    return this.navigation.variant === 'new';
+  }
+
+  participantStatus(participant: CompareParticipant) {
+    return participantStatusView(participant.status);
+  }
+
+  participantLabel(participant: CompareParticipant): string {
+    return localSelectionLabel(participant);
+  }
+
+  mergeModeCopy(mode: CompareMergeMode = this.mergeMode) {
+    return mergeModeView(mode);
+  }
+
   get participantSlotCount(): number {
     return this.participants.length + this.visibleInvitations.length;
   }
@@ -500,7 +523,7 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
   }
 
   get allFinished(): boolean {
-    return this.coordinator.isFinished();
+    return this.participants.length > 0 && this.coordinator.isFinished();
   }
 
   ngOnDestroy(): void {

@@ -15,6 +15,7 @@
 
 .compare-room-hero { margin-bottom: 26px; }
 
+
 .public-room-header {
   min-height: var(--header-height);
   box-sizing: border-box;
@@ -162,9 +163,8 @@ button:disabled { cursor: not-allowed; opacity: 0.42; }
   font-weight: 800;
   text-transform: capitalize;
 }
-.status-pill[data-status='ready'],
-.status-pill[data-status='complete'] { color: var(--color-accent) !important; background: var(--color-accent-soft); }
-.status-pill[data-status='error'] { color: #ff7777 !important; background: rgba(255, 82, 82, 0.1); }
+.status-pill[data-tone='success'] { color: var(--color-accent) !important; background: var(--color-accent-soft); }
+.status-pill[data-tone='danger'] { color: #ff7777 !important; background: rgba(255, 82, 82, 0.1); }
 
 .playlist-field {
   display: grid;
@@ -439,6 +439,7 @@ button:disabled { cursor: not-allowed; opacity: 0.42; }
 
   .compare-room-hero { flex-direction: column; align-items: stretch; }
 
+
   .room-security { justify-content: flex-start; }
 
   .room-heading {
@@ -495,6 +496,7 @@ button:disabled { cursor: not-allowed; opacity: 0.42; }
     button { width: 100%; }
   }
 }
+
 
 @media (max-width: 768px) {
   .public-room-header {

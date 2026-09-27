@@ -3499,3 +3499,50 @@ app-legal .back-bar-container { width: min(1040px, calc(100% - 48px)); }
   app-artist-details .back-bar-container,
   app-legal .back-bar-container { width: calc(100% - 24px); }
 }
+app-compare-room-shell .compare-progress {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 28px;
+  padding: 0;
+  list-style: none;
+}
+app-compare-room-shell .compare-progress li {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-subtle);
+  font-size: .78rem;
+  font-weight: 800;
+}
+app-compare-room-shell .compare-progress span {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-surface-raised);
+}
+app-compare-room-shell .compare-progress li.current {
+  border-color: var(--color-accent);
+  color: var(--color-text);
+  background: var(--color-accent-soft);
+}
+app-compare-room-shell .compare-progress li.current span,
+app-compare-room-shell .compare-progress li.complete span {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+}
+.design-v2 app-compare-room-shell { min-height: 0; }
+.design-v2 app-compare-room-shell .compare-room-page { width: 100%; min-height: 0; padding-top: 0; }
+@media (max-width: 820px) {
+  app-compare-room-shell .compare-progress { margin-bottom: 16px; gap: 5px; }
+  app-compare-room-shell .compare-progress li { display: grid; justify-items: center; padding: 8px 3px; text-align: center; font-size: .65rem; }
+  .design-v2 app-compare-room-shell .compare-room-hero h1 { display: none; }
+  .design-v2 app-compare-room-shell .compare-room-hero { margin-bottom: 14px; }
+}

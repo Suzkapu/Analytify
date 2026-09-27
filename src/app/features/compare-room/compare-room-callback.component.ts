@@ -1,11 +1,12 @@
 import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TransientParticipantAuthService} from '@core/compare-room/transient-participant-auth.service';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 
 @Component({
     selector: 'app-compare-room-callback',
     template: `
-    <main class="compare-callback">
+    <div class="compare-callback">
       <section>
         @if (!errorMessage) {
           <i class="pi pi-spin pi-spinner"></i>
@@ -18,10 +19,10 @@ import {TransientParticipantAuthService} from '@core/compare-room/transient-part
           <p>{{ errorMessage }}</p>
         }
         @if (errorMessage) {
-          <a routerLink="/compare-room">Return to Compare Room</a>
+          <a [routerLink]="navigation.commands('compareRoom')">Start a new Compare Room</a>
         }
       </section>
-    </main>
+    </div>
     `,
     styles: [`
     .compare-callback { min-height: 100vh; display: grid; place-items: center; padding: 1rem; box-sizing: border-box; background: #090b0a; color: white; text-align: center; }
@@ -30,6 +31,7 @@ import {TransientParticipantAuthService} from '@core/compare-room/transient-part
     i.error { color: #ff7474; }
     p { color: #a1aaa4; line-height: 1.5; }
     a { color: #1ed760; font-weight: 700; }
+    :host-context(.design-v2) .compare-callback { min-height: min(620px, calc(100vh - 180px)); background: transparent; color: var(--color-text); }
   `],
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
@@ -40,7 +42,10 @@ export class CompareRoomCallbackComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private auth: TransientParticipantAuthService
+    private auth: TransientParticipantAuthService,
+    readonly navigation: DesignNavigationService = {
+      variant: 'legacy', commands: () => ['/compare-room']
+    } as unknown as DesignNavigationService
   ) {}
 
   async ngOnInit(): Promise<void> {

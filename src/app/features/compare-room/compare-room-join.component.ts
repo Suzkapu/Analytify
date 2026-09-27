@@ -13,6 +13,7 @@ import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.
 import {TransientParticipantAuthService} from '@core/compare-room/transient-participant-auth.service';
 import {filter, Subscription, take} from 'rxjs';
 import {TermsAcceptanceService} from '@core/legal/terms-acceptance.service';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 
 @Component({
     selector: 'app-compare-room-join',
@@ -51,8 +52,23 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
     private guest: CompareRoomGuestService,
     private spotify: ParticipantSpotifyService,
     private source: CompareGuestPlaylistSourceService,
-    private terms: TermsAcceptanceService
+    private terms: TermsAcceptanceService,
+    readonly navigation: DesignNavigationService = {variant: 'legacy'} as DesignNavigationService
   ) {}
+
+  get isDesignV2(): boolean {
+    return this.navigation.variant === 'new';
+  }
+
+  get currentStep(): 1 | 2 | 3 {
+    if (['review', 'saving', 'complete'].includes(this.stage) || (this.stage === 'error' && !!this.proposal)) return 3;
+    if (['selecting', 'loading', 'ready'].includes(this.stage)) return 2;
+    return 1;
+  }
+
+  routeCommands(destination: 'legal' | 'login' | 'compareRoom'): string[] {
+    return this.navigation.commands(destination);
+  }
 
   ngOnInit(): void {
     this.termsAccepted = this.terms.hasCurrentAcceptance();
@@ -210,7 +226,7 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
   async leave(): Promise<void> {
     await this.guest.leave();
     this.transientAuth.clear();
-    await this.router.navigate(['/login']);
+    await this.router.navigate(this.routeCommands('login'));
   }
 
   ngOnDestroy(): void {

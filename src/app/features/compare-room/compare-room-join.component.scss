@@ -3,6 +3,11 @@
 .join-brand { display: flex; align-items: center; justify-content: center; gap: 0.65rem; font-weight: 800; color: #d9dfdb; }
 .join-brand img { width: 34px; height: 34px; border-radius: 8px; }
 .join-card { width: min(460px, 100%); margin: auto; padding: 2rem; box-sizing: border-box; text-align: center; background: rgba(24, 28, 25, 0.84); border: 1px solid rgba(255,255,255,.09); border-radius: 25px; box-shadow: 0 25px 70px rgba(0,0,0,.38); }
+.join-progress { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.35rem; margin:0 0 1.5rem; padding:0; list-style:none; color:#7f8982; font-size:.62rem; font-weight:800; }
+.join-progress li { display:grid; gap:.3rem; justify-items:center; }
+.join-progress span { width:24px; height:24px; display:grid; place-items:center; border-radius:50%; background:rgba(255,255,255,.08); }
+.join-progress li.current { color:#fff; }
+.join-progress li.current span, .join-progress li.complete span { background:#1ed760; color:#071109; }
 .join-card h1 { margin: .45rem 0 .8rem; letter-spacing: -.035em; font-size: clamp(1.8rem, 8vw, 2.35rem); }
 .join-card p { color: #a1aaa4; line-height: 1.55; }
 .join-card small { display: block; color: #737c76; margin-top: 1rem; }
@@ -44,3 +49,4 @@
 .loading-note { background: rgba(255,255,255,.05); color: #bec5c0; }
 .ready-note { background: rgba(30,215,96,.1); color: #1ed760; }
 @media (max-width: 520px) { .join-page { padding: 1rem; } .join-card { padding: 1.5rem 1.15rem; } }
+:host-context(.design-v2) { min-height:0; background:transparent; color:var(--color-text); .join-page{min-height:min(680px,calc(100vh - 160px));padding:0}.join-card{background:var(--color-surface);border-color:var(--color-border)} }

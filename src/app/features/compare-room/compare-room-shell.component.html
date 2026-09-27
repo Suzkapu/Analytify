@@ -1,8 +1,8 @@
-@if (enteredAuthenticated) {
+@if (enteredAuthenticated && !isDesignV2) {
   <app-header mobileTitle="Compare Room"></app-header>
 }
 
-@if (!enteredAuthenticated) {
+@if (!enteredAuthenticated && !isDesignV2) {
   <header class="app-header public-room-header">
     <div class="header-shell">
       <div class="header-left">
@@ -22,7 +22,7 @@
   </header>
 }
 
-<main class="compare-room-page">
+<div class="compare-room-page">
   <header class="compare-room-hero page-hero">
     <div>
       <span class="page-eyebrow">Private temporary session</span>
@@ -31,6 +31,12 @@
     </div>
     <span class="room-security"><i class="pi pi-shield"></i> Guest logins are not saved</span>
   </header>
+
+  <ol class="compare-progress" [attr.aria-label]="'Compare progress. Step ' + currentStep + ' of 3'">
+    <li [class.current]="currentStep === 1" [class.complete]="currentStep > 1" [attr.aria-current]="currentStep === 1 ? 'step' : null"><span>1</span> Add people</li>
+    <li [class.current]="currentStep === 2" [class.complete]="currentStep > 2" [attr.aria-current]="currentStep === 2 ? 'step' : null"><span>2</span> Choose playlists</li>
+    <li [class.current]="currentStep === 3" [attr.aria-current]="currentStep === 3 ? 'step' : null"><span>3</span> Compare</li>
+  </ol>
 
   @if (isStarting) {
     <section class="state-card">
@@ -51,7 +57,7 @@
       <section class="room-workspace">
         <div class="room-heading">
           <div>
-            <span class="eyebrow">Room {{ coordinator.currentRoomId | slice:0:8 }}</span>
+            <span class="eyebrow">Private playlist comparison</span>
             <h2>Choose playlists for each person</h2>
             <p>Each participant can contribute one or more playlists, including Liked Songs.</p>
           </div>
@@ -71,10 +77,12 @@
                   <div class="participant-avatar"><i class="pi pi-user"></i></div>
                 }
                 <div>
-                  <strong>{{ participant.displayName }}</strong>
-                  <span>{{ participant.isMainProfile ? 'Your playlist group ' + participant.localSlotNumber : 'Joined by link' }}</span>
+                  <strong>{{ participantLabel(participant) }}</strong>
+                  <span>{{ participant.isMainProfile ? participant.displayName : 'Joined by private link' }}</span>
                 </div>
-                <span class="status-pill" [attr.data-status]="participant.status">{{ participant.status }}</span>
+                @if (participantStatus(participant); as status) {
+                  <span class="status-pill" [attr.data-tone]="status.tone" role="status" aria-live="polite">{{ status.label }}</span>
+                }
               </div>
               @if (participant.isMainProfile) {
                 <div class="playlist-field">
@@ -102,7 +110,7 @@
                     @if (publicPlaylistMessage(participant.id)) {
                       <p class="public-playlist-message" role="status">{{ publicPlaylistMessage(participant.id) }}</p>
                     }
-                    <div class="playlist-options" role="group" [attr.aria-label]="'Select playlists for group ' + participant.localSlotNumber">
+                    <div class="playlist-options" role="group" [attr.aria-label]="'Select playlists for ' + participantLabel(participant)">
                       @for (playlist of filteredMainPlaylists(participant.id); track playlist.id) {
                         <div class="playlist-option-row">
                           <label>
@@ -156,7 +164,7 @@
                 <p class="participant-error">{{ participant.error }}</p>
               }
               @if (participant.isMainProfile && (participant.localSlotNumber || 1) > 1) {
-                <button type="button" class="remove-link" (click)="removeLocalSlot(participant.id)">Remove this group</button>
+                <button type="button" class="remove-link" (click)="removeLocalSlot(participant.id)">Remove this selection</button>
               }
               @if (!participant.isMainProfile) {
                 <button type="button" class="remove-link" (click)="removeParticipant(participant.id)">Remove participant</button>
@@ -183,7 +191,7 @@
                   </button>
                   @if (enteredAuthenticated) {
                     <button type="button" class="copy-button" (click)="joinInvitationYourself(invitation)">
-                      <i class="pi pi-user-plus"></i> Join myself
+                      <i class="pi pi-user-plus"></i> Add another selection for me
                     </button>
                   }
                 </div>
@@ -199,22 +207,22 @@
         <section class="merge-panel">
           <div class="merge-icon"><i class="pi pi-clone"></i></div>
           <div class="merge-copy">
-            <span class="eyebrow">{{ mergeMode === 'intersection' ? 'Exact matches' : 'Complete collection' }}</span>
-            <h2>{{ mergeMode === 'intersection' ? 'Songs everyone has' : 'All songs from everyone' }}</h2>
-            <p>{{ readyCount }} of {{ participantSlotCount }} participant slots ready</p>
+            <span class="eyebrow">Step 3 · Compare</span>
+            <h2>{{ mergeModeCopy().label }}</h2>
+            <p role="status" aria-live="polite">{{ readyCount }} of {{ participantSlotCount }} selections ready</p>
           </div>
           <div class="merge-mode-picker" role="radiogroup" aria-label="Merge mode">
             <label [class.active]="mergeMode === 'intersection'">
               <input type="radio" name="merge-mode" [checked]="mergeMode === 'intersection'" (change)="setMergeMode('intersection')">
-              <span><strong>Shared only</strong><small>Default · in every selection</small></span>
+              <span><strong>{{ mergeModeCopy('intersection').label }}</strong><small>{{ mergeModeCopy('intersection').description }}</small></span>
             </label>
             <label [class.active]="mergeMode === 'union'">
               <input type="radio" name="merge-mode" [checked]="mergeMode === 'union'" (change)="setMergeMode('union')">
-              <span><strong>All songs</strong><small>Combine and remove duplicates</small></span>
+              <span><strong>{{ mergeModeCopy('union').label }}</strong><small>{{ mergeModeCopy('union').description }}</small></span>
             </label>
           </div>
           <button type="button" class="primary-button" (click)="prepareResult()" [disabled]="!coordinator.canPrepareResult() || isPreparing">
-            {{ mergeMode === 'intersection' ? 'Compare shared songs' : 'Merge all songs' }}
+            {{ mergeModeCopy().action }}
           </button>
         </section>
         @if (proposal) {
@@ -314,6 +322,6 @@
       </section>
     }
   }
-</main>
+</div>
 
-<app-footer></app-footer>
+@if (!isDesignV2) { <app-footer></app-footer> }
