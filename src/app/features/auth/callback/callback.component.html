@@ -1,5 +1,5 @@
 <main class="callback-page">
-  <a routerLink="/" class="callback-brand" aria-label="Analytify home">
+  <a [routerLink]="navigation.commands('login')" class="callback-brand" aria-label="Analytify home">
     <img src="assets/Analytify-96.webp" width="48" height="48" alt=""><span>Analytify</span>
   </a>
 
@@ -17,7 +17,7 @@
       <span class="page-eyebrow error-text">Authentication error</span>
       <h1>We could not sign you in</h1>
       <p class="callback-error-message">{{ errorMessage }}</p>
-      <a routerLink="/" class="callback-back-button"><i class="pi pi-arrow-left"></i> Back to login</a>
+      <a [routerLink]="navigation.commands('login')" class="callback-back-button"><i class="pi pi-arrow-left"></i> Back to login</a>
     }
   </section>
 </main>

@@ -35,9 +35,9 @@
       <div class="login-card-body">
         <label class="terms-acceptance">
           <input type="checkbox" [(ngModel)]="termsAccepted">
-          <span>I agree to the <a routerLink="/legal" fragment="terms">Terms</a> and acknowledge the <a routerLink="/legal" fragment="privacy">Privacy Notice</a>.</span>
+          <span>I agree to the <a [routerLink]="navigation.commands('legal')" fragment="terms">Terms</a> and acknowledge the <a [routerLink]="navigation.commands('legal')" fragment="privacy">Privacy Notice</a>.</span>
         </label>
-        <span class="terms-version">Current version: {{ termsVersion }}</span>
+        <details class="terms-version"><summary>Terms version</summary><span>Current version: {{ termsVersion }}</span></details>
 
         <button type="button" (click)="login()" class="login-spotify-button" [disabled]="!termsAccepted">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
@@ -46,11 +46,20 @@
           <span>Continue with Spotify</span>
         </button>
 
-        <button type="button" (click)="openPersonalApp()" class="personal-app-button" [disabled]="!termsAccepted">
-          <i class="pi pi-key" aria-hidden="true"></i>
-          <span>Use your own Spotify app</span>
+        <button type="button" class="advanced-options-button" (click)="showAdvancedOptions = !showAdvancedOptions"
+          [attr.aria-expanded]="showAdvancedOptions" aria-controls="personal-api-options">
+          <span>Advanced options</span><i class="pi pi-chevron-down" aria-hidden="true"></i>
         </button>
-        <p class="personal-app-note">No Analytify account, email, or Client Secret required.</p>
+        @if (showAdvancedOptions) {
+          <div id="personal-api-options" class="personal-api-options">
+            <p>For people who manage their own Spotify developer application.</p>
+            <button type="button" (click)="openPersonalApp()" class="personal-app-button" [disabled]="!termsAccepted">
+              <i class="pi pi-key" aria-hidden="true"></i>
+              <span>Use your own Spotify API application</span>
+            </button>
+            <p class="personal-app-note">No Analytify account, email, or Client Secret required.</p>
+          </div>
+        }
         @if (errorMessage) {
           <p class="login-error" role="alert">{{ errorMessage }}</p>
         }
@@ -60,5 +69,5 @@
     </article>
   </section>
 
-  <app-footer></app-footer>
+  @if (!isDesignV2) { <app-footer></app-footer> }
 </main>

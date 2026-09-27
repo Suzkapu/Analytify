@@ -1,18 +1,19 @@
 import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 
 @Component({
     selector: 'app-personal-spotify-callback',
     template: `
-    <main class="callback-page"><section>
+    <main class="callback-page"><section aria-live="polite">
       <i class="pi" [ngClass]="errorMessage ? 'pi-exclamation-triangle error' : 'pi-spin pi-spinner'"></i>
       <h1>{{ errorMessage ? 'Spotify connection failed' : 'Connecting your personal Spotify app…' }}</h1>
       @if (errorMessage) {
-        <p>{{ errorMessage }}</p>
+        <p role="alert">{{ errorMessage }}</p>
       }
       @if (errorMessage) {
-        <a routerLink="/spotify/connect">Return to setup</a>
+        <a [routerLink]="navigation.commands('spotifyConnect')">Return to setup</a>
       }
     </section></main>
     `,
@@ -27,7 +28,12 @@ import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 export class PersonalSpotifyCallbackComponent implements OnInit {
   errorMessage = '';
 
-  constructor(private route: ActivatedRoute, private router: Router, private auth: SpotifyAuthService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private auth: SpotifyAuthService,
+    readonly navigation: DesignNavigationService
+  ) {}
 
   async ngOnInit(): Promise<void> {
     const error = this.route.snapshot.queryParamMap.get('error');

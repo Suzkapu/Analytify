@@ -3,6 +3,7 @@ import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AuthReturnUrlService} from '@core/auth/auth-return-url.service';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 
 const console = createScopedLogger('Login Callback');
 
@@ -22,7 +23,8 @@ export class CallbackComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private authService: SpotifyAuthService,
-    private returnUrl: AuthReturnUrlService
+    private returnUrl: AuthReturnUrlService,
+    readonly navigation: DesignNavigationService
   ) {
   }
 
@@ -104,7 +106,7 @@ export class CallbackComponent implements OnInit {
   private async resumeRecoveredSession(): Promise<boolean> {
     try {
       if (!await this.authService.recoverUsableSession()) return false;
-      await this.router.navigateByUrl(this.returnUrl.consume());
+      await this.router.navigateByUrl(this.returnUrl.consume(this.navigation.url('playlists')));
       return true;
     } catch (error) {
       console.warn('Existing session recovery failed', error);
@@ -117,7 +119,7 @@ export class CallbackComponent implements OnInit {
     this.loadingMessage = message;
     // Clear any stale Supabase auth state before redirecting
     this.authService.clearSupabaseSession().then(() => {
-      setTimeout(() => this.router.navigate(['/login']), 2000);
+      setTimeout(() => this.router.navigate(this.navigation.commands('login')), 2000);
     });
   }
 }

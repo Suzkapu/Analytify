@@ -6,6 +6,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { LegalComponent } from './legal.component';
+import { DESIGN_VARIANT } from '@core/navigation/design-navigation';
+import { DesignNavigationService } from '@core/navigation/design-navigation.service';
 
 describe('LegalComponent', () => {
     let fixture: ComponentFixture<LegalComponent>;
@@ -19,7 +21,9 @@ describe('LegalComponent', () => {
             imports: [CommonModule, RouterTestingModule],
             providers: [
                 { provide: SpotifyAuthService, useValue: { isAuthenticated: () => authenticated } },
-                { provide: Location, useValue: { back: vi.fn().mockName('back') } }
+                { provide: Location, useValue: { back: vi.fn().mockName('back') } },
+                { provide: DESIGN_VARIANT, useValue: 'legacy' },
+                DesignNavigationService
             ],
             schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();
@@ -40,6 +44,18 @@ describe('LegalComponent', () => {
 
         expect(fixture.nativeElement.querySelector('app-header')).toBeNull();
         expect(fixture.nativeElement.querySelector('.legal-public-header')).not.toBeNull();
+    });
+
+    it('uses the shared reading shell without a duplicate header in Design v2', () => {
+        TestBed.overrideProvider(DESIGN_VARIANT, { useValue: 'new' });
+        fixture = TestBed.createComponent(LegalComponent);
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.querySelector('app-header')).toBeNull();
+        expect(fixture.nativeElement.querySelector('.legal-public-header')).toBeNull();
+        expect(fixture.nativeElement.querySelector('.legal-wrapper')).not.toBeNull();
+        expect(fixture.nativeElement.querySelector('article.legal-card')).not.toBeNull();
+        expect(fixture.componentInstance.navigation.commands('legal')).toEqual(['/new', 'legal']);
     });
 
     it('publishes the versioned Spotify-required end-user protections before login', () => {

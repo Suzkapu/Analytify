@@ -20,6 +20,7 @@ export class LoginPageComponent implements OnInit {
   readonly termsVersion = CURRENT_TERMS_VERSION;
   termsAccepted = false;
   errorMessage = '';
+  showAdvancedOptions = false;
 
   constructor(
     private authService: SpotifyAuthService,
@@ -27,8 +28,12 @@ export class LoginPageComponent implements OnInit {
     private router: Router,
     private returnUrl: AuthReturnUrlService,
     private terms: TermsAcceptanceService,
-    private navigation: DesignNavigationService
+    readonly navigation: DesignNavigationService
   ) {
+  }
+
+  get isDesignV2(): boolean {
+    return this.navigation.variant === 'new';
   }
 
   async ngOnInit() {

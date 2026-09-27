@@ -65,7 +65,8 @@ describe('LoginPageComponent', () => {
         expect(element.querySelector('.login-intro > .login-brand')).toBeNull();
         expect(element.querySelector('.login-card-icon')).toBeNull();
         expect(element.querySelector('button.login-spotify-button')).not.toBeNull();
-        expect(element.querySelector('button.personal-app-button')).not.toBeNull();
+        expect(element.querySelector('button.personal-app-button')).toBeNull();
+        expect(element.querySelector('button.advanced-options-button')).not.toBeNull();
         expect(element.querySelector('a.compare-room-button')).toBeNull();
         expect(element.textContent).not.toContain('Open a Compare Room');
         expect(element.textContent).toContain('Explore your playlists.');
@@ -82,7 +83,10 @@ describe('LoginPageComponent', () => {
     it('keeps every Spotify authorization entry point disabled until terms are accepted', () => {
         const element: HTMLElement = fixture.nativeElement;
         expect((element.querySelector('.login-spotify-button') as HTMLButtonElement).disabled).toBe(true);
+        (element.querySelector('.advanced-options-button') as HTMLButtonElement).click();
+        fixture.detectChanges();
         expect((element.querySelector('.personal-app-button') as HTMLButtonElement).disabled).toBe(true);
+        expect(element.querySelector('.personal-app-button')?.textContent).toContain('Spotify API application');
 
         component.termsAccepted = true;
         fixture.detectChanges();
@@ -100,11 +104,27 @@ describe('LoginPageComponent', () => {
 
     it('opens personal Spotify setup inside v2 with a v2 return URL', () => {
         component.termsAccepted = true;
+        component.showAdvancedOptions = true;
+        fixture.detectChanges();
         component.openPersonalApp();
         const router = TestBed.inject(Router);
         expect(router.navigate).toHaveBeenCalledWith(
             ['/new', 'spotify', 'connect'],
             {queryParams: {returnUrl: '/new/playlists'}}
         );
+    });
+
+    it('keeps terms metadata outside the main consent decision', () => {
+        const details = fixture.nativeElement.querySelector('details.terms-version') as HTMLDetailsElement;
+        expect(details.open).toBe(false);
+        expect(details.querySelector('summary')?.textContent).toContain('Terms version');
+    });
+
+    it('shows a recoverable hosted OAuth error without navigating', async () => {
+        auth.loginWithSupabase.mockRejectedValue(new Error('Spotify is temporarily unavailable'));
+        component.termsAccepted = true;
+        await component.login();
+        fixture.detectChanges();
+        expect(fixture.nativeElement.querySelector('[role="alert"]')?.textContent).toContain('temporarily unavailable');
     });
 });

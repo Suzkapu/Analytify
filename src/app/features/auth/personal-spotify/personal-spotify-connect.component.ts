@@ -27,7 +27,7 @@ export class PersonalSpotifyConnectComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private terms: TermsAcceptanceService,
-    private navigation: DesignNavigationService
+    readonly navigation: DesignNavigationService
   ) {}
 
   ngOnInit(): void {

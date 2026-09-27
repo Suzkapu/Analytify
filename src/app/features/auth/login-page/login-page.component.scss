@@ -143,7 +143,9 @@
   a { color: var(--color-accent); font-weight: 800; }
 }
 
-.terms-version { display: block; margin: 0 0 16px 30px; color: var(--color-text-subtle); font-size: .68rem; }
+.terms-version { margin: 0 0 16px 30px; color: var(--color-text-subtle); font-size: .68rem; }
+.terms-version summary { width: fit-content; cursor: pointer; }
+.terms-version span { display: block; margin-top: 4px; }
 .login-error { margin: 12px 0 0; color: var(--color-danger, #ff7474); font-size: .8rem; line-height: 1.4; }
 
 .login-spotify-button,
@@ -162,7 +164,7 @@
 }
 
 .personal-app-button {
-  margin-top: 12px;
+  margin-top: 8px;
   border: 1px solid var(--color-accent-border);
   color: var(--color-text);
   background: var(--color-accent-soft);
@@ -171,6 +173,11 @@
 
   &:hover { background: var(--color-surface-hover); border-color: var(--color-accent); }
 }
+
+.advanced-options-button { width: 100%; min-height: 44px; margin-top: 12px; padding: 0 14px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--color-border); border-radius: 12px; background: transparent; color: var(--color-text-muted); font: inherit; font-weight: 750; cursor: pointer; }
+.advanced-options-button[aria-expanded='true'] i { transform: rotate(180deg); }
+.personal-api-options { margin-top: 8px; padding: 12px; border: 1px solid var(--color-border); border-radius: 12px; background: rgba(255,255,255,.02); }
+.personal-api-options > p:first-child { margin: 0; color: var(--color-text-muted); font-size: .75rem; line-height: 1.4; }
 
 .login-spotify-button:disabled,
 .personal-app-button:disabled { opacity: .48; cursor: not-allowed; box-shadow: none; }

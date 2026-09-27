@@ -23,7 +23,7 @@ import {DesignNavigationService} from '@core/navigation/design-navigation.servic
       </ul>
       <p class="warning"><i class="pi pi-exclamation-triangle"></i> Keep access to your Spotify account and personal developer app. Analytify cannot restore the workspace unless Spotify verifies that same account.</p>
       @if (errorMessage) {
-        <p class="error">{{ errorMessage }}</p>
+        <p class="error" role="alert">{{ errorMessage }}</p>
       }
       <div class="actions">
         <button type="button" class="secondary" (click)="cancel()">Not now</button>

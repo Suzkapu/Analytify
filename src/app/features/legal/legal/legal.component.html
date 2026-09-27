@@ -1,8 +1,8 @@
-@if (isLoggedIn) {
+@if (isLoggedIn && !isDesignV2) {
   <app-header mobileTitle="Legal &amp; Privacy"></app-header>
 }
 
-@if (!isLoggedIn) {
+@if (!isLoggedIn && !isDesignV2) {
   <header class="app-header legal-public-header">
     <div class="header-shell legal-header-shell">
       <div class="header-left">
@@ -40,9 +40,9 @@
     <div class="legal-layout">
       <nav class="legal-nav" aria-label="On this page">
         <span>On this page</span>
-        <a routerLink="/legal" fragment="impressum"><i class="pi pi-info-circle"></i> Legal notice</a>
-        <a routerLink="/legal" fragment="privacy"><i class="pi pi-shield"></i> Privacy &amp; data</a>
-        <a routerLink="/legal" fragment="terms"><i class="pi pi-file"></i> Terms</a>
+        <a [routerLink]="navigation.commands('legal')" fragment="impressum"><i class="pi pi-info-circle"></i> Legal notice</a>
+        <a [routerLink]="navigation.commands('legal')" fragment="privacy"><i class="pi pi-shield"></i> Privacy &amp; data</a>
+        <a [routerLink]="navigation.commands('legal')" fragment="terms"><i class="pi pi-file"></i> Terms</a>
       </nav>
 
       <article class="legal-card">
