@@ -1,6 +1,6 @@
 import {Data, Params, Route, UrlSegment} from '@angular/router';
 
-export type DesignV2PageWidth = 'standard' | 'wide' | 'full';
+export type DesignV2PageWidth = 'reading' | 'form' | 'default' | 'dashboard' | 'wide' | 'full';
 
 export interface DesignV2RouteData extends Data {
   pageId: string;

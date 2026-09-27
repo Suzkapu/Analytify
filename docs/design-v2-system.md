@@ -1,5 +1,7 @@
 # Analytify Design v2 system
 
+The approved semantic controls and native-first composition rules are documented in [Design v2 native UI patterns](design-v2-native-patterns.md).
+
 Design v2 is scoped below `.design-v2`; its tokens and primitives must not change legacy pages. Feature components provide UI-ready content and react to outputs. Shared UI components do not fetch Spotify or Supabase data, resolve routes, or contain product rules.
 
 ## Tokens

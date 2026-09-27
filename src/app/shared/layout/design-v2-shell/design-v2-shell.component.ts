@@ -33,7 +33,7 @@ interface DesignV2PageContext {
 }
 
 const DEFAULT_CONTEXT: DesignV2PageContext = {
-  pageId: 'analytify', title: 'Analytify', width: 'standard', ambientKey: 'default', showBack: false
+  pageId: 'analytify', title: 'Analytify', width: 'default', ambientKey: 'default', showBack: false
 };
 
 @Component({
@@ -111,7 +111,7 @@ export class DesignV2ShellComponent implements OnInit, OnDestroy {
     this.pageContext.set({
       pageId: typeof data.pageId === 'string' ? data.pageId : DEFAULT_CONTEXT.pageId,
       title: typeof data.mobileTitle === 'string' ? data.mobileTitle : DEFAULT_CONTEXT.title,
-      width: data.pageWidth === 'wide' || data.pageWidth === 'full' ? data.pageWidth : 'standard',
+      width: data.pageWidth ?? DEFAULT_CONTEXT.width,
       ambientKey: typeof data.ambientKey === 'string' ? data.ambientKey : DEFAULT_CONTEXT.ambientKey,
       showBack: data.mobileBack === true
     });

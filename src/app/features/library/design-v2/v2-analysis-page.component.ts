@@ -10,7 +10,7 @@ import {V2ButtonDirective, V2PageComponent} from '@shared/ui-v2';
   imports: [RouterLink, V2ButtonDirective, V2PageComponent, PlaylistAnalysisUiModule],
   template: `
     <v2-page eyebrow="Library" title="Playlist analysis"
-      description="A focused overview of this playlist’s size, timeline, and standout songs." width="dashboard">
+      description="A focused overview of this playlist’s size, timeline, and standout songs.">
       <a v2PageActions v2Button="tertiary" [routerLink]="backLink">
         <i class="pi pi-arrow-left" aria-hidden="true"></i> Back to playlists
       </a>

@@ -39,10 +39,6 @@
 }
 
 .v2-page { width: min(100%, var(--v2-width-default)); margin-inline: auto; }
-.v2-page--reading { max-width: var(--v2-width-reading); }
-.v2-page--form { max-width: var(--v2-width-form); }
-.v2-page--dashboard { max-width: var(--v2-width-dashboard); }
-.v2-page--wide { max-width: var(--v2-width-wide); }
 .v2-page__header { display: flex; align-items: end; justify-content: space-between; gap: var(--v2-space-6); margin-bottom: var(--v2-space-8); }
 .v2-page__copy { min-width: 0; }
 .v2-page__eyebrow { margin: 0 0 var(--v2-space-2); color: var(--v2-color-accent); font-size: .72rem; font-weight: 850; letter-spacing: .13em; text-transform: uppercase; }
@@ -86,7 +82,7 @@
   white-space: nowrap;
   cursor: pointer;
 }
-.v2-tabs button[aria-selected="true"],
+.v2-tabs button[aria-pressed="true"],
 .v2-filter-chips button.is-selected { color: var(--v2-color-accent-ink); background: var(--v2-color-accent); }
 .v2-tabs--segmented { width: fit-content; padding: 3px; border: 1px solid var(--v2-color-border); border-radius: calc(var(--v2-radius-control) + 3px); background: var(--v2-color-background-raised); }
 .v2-tabs button:disabled,
@@ -99,7 +95,7 @@
 .v2-search input { width: 100%; min-height: var(--v2-control-height); padding: 0 44px; border: 1px solid var(--v2-color-border-strong); border-radius: var(--v2-radius-control); color: var(--v2-color-text); background: var(--v2-color-input); font: inherit; }
 .v2-control-description { margin: 0; color: var(--v2-color-text-subtle); font-size: .82rem; }
 .v2-filter-chips { display: flex; flex-wrap: wrap; gap: var(--v2-space-2); margin-top: var(--v2-space-3); }
-.v2-filter-chips button { min-height: 38px; border-color: var(--v2-color-border); border-radius: var(--v2-radius-pill); }
+.v2-filter-chips button { min-height: var(--v2-control-height, 44px); border-color: var(--v2-color-border); border-radius: var(--v2-radius-pill); }
 
 .v2-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--v2-space-2); padding: var(--v2-space-2); border: 1px solid var(--v2-color-border); border-radius: calc(var(--v2-radius-control) + 4px); background: var(--v2-color-background-raised); }
 .v2-state { display: grid; justify-items: center; min-height: 240px; padding: var(--v2-space-8); place-content: center; text-align: center; border: 1px dashed var(--v2-color-border-strong); border-radius: var(--v2-radius-card); }

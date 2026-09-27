@@ -92,4 +92,11 @@ describe('DesignV2ShellComponent', () => {
     expect(element.querySelector('.v2-skip-link')?.getAttribute('href')).toBe('#v2-main-content');
     expect(element.querySelectorAll('main').length).toBe(1);
   });
+
+  it('applies the route width as the only page-width decision', async () => {
+    const harness = await RouterTestingHarness.create('/new/playlists');
+    const main = harness.fixture.nativeElement.querySelector('main') as HTMLElement;
+    expect(main.classList).toContain('v2-main--wide');
+    expect(main.className).not.toContain('standard');
+  });
 });

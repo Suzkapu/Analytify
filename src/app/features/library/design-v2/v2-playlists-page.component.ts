@@ -8,7 +8,7 @@ import {V2PageComponent} from '@shared/ui-v2';
   imports: [V2PageComponent, PlaylistsUiModule],
   template: `
     <v2-page eyebrow="Your Spotify library" title="Your playlists"
-      description="Open a playlist, search its songs, or see a quick summary." width="dashboard">
+      description="Open a playlist, search its songs, or see a quick summary.">
       <div class="v2-library-feature v2-library-feature--playlists"><app-playlists /></div>
     </v2-page>
   `,

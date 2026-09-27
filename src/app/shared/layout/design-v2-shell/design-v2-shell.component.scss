@@ -118,7 +118,11 @@
   padding: clamp(26px, 5vw, 64px) 0 72px;
   outline: none;
 }
-.v2-main--wide { max-width: 1360px; }
+.v2-main--reading { width: min(100% - (var(--v2-page-gutter) * 2), var(--v2-width-reading)); }
+.v2-main--form { width: min(100% - (var(--v2-page-gutter) * 2), var(--v2-width-form)); }
+.v2-main--default { width: min(100% - (var(--v2-page-gutter) * 2), var(--v2-width-default)); }
+.v2-main--dashboard { width: min(100% - (var(--v2-page-gutter) * 2), var(--v2-width-dashboard)); }
+.v2-main--wide { width: min(100% - (var(--v2-page-gutter) * 2), var(--v2-width-wide)); }
 .v2-main--full { width: 100%; max-width: none; padding-inline: var(--v2-page-gutter); }
 .v2-main:focus-visible { box-shadow: inset 0 3px #35e783; }
 

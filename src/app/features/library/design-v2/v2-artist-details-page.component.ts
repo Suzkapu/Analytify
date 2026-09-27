@@ -10,7 +10,7 @@ import {V2ButtonDirective, V2PageComponent} from '@shared/ui-v2';
   imports: [RouterLink, V2ButtonDirective, V2PageComponent, ArtistDetailsUiModule],
   template: `
     <v2-page eyebrow="Library" title="Artist details"
-      description="See the artist and their songs in this playlist." width="default">
+      description="See the artist and their songs in this playlist.">
       <a v2PageActions v2Button="tertiary" [routerLink]="backLink">
         <i class="pi pi-arrow-left" aria-hidden="true"></i> Back to playlists
       </a>

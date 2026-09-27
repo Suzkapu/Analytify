@@ -8,6 +8,7 @@ import {
   HostBinding,
   HostListener,
   Input,
+  OnDestroy,
   Output,
   signal
 } from '@angular/core';
@@ -19,10 +20,9 @@ import {
 } from './design-v2-status';
 
 export type V2ActionVariant = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'icon';
-export type V2PageWidth = 'reading' | 'form' | 'default' | 'dashboard' | 'wide';
 
 @Directive({selector: 'button[v2Button], a[v2Button]', standalone: true})
-export class V2ButtonDirective {
+export class V2ButtonDirective implements OnDestroy {
   @Input() v2Button: V2ActionVariant = 'secondary';
   @Input() loading = false;
   @Input() disabled = false;
@@ -32,21 +32,38 @@ export class V2ButtonDirective {
   }
   @HostBinding('attr.aria-busy') get ariaBusy(): 'true' | null { return this.loading ? 'true' : null; }
   @HostBinding('attr.aria-disabled') get ariaDisabled(): 'true' | null { return this.loading || this.disabled ? 'true' : null; }
-  @HostBinding('attr.disabled') get disabledAttribute(): '' | null { return this.loading || this.disabled ? '' : null; }
+  private readonly captureGuard = (event: Event): void => this.preventLoadingAction(event);
+
+  constructor(private readonly element: ElementRef<HTMLElement>) {
+    this.element.nativeElement.addEventListener('click', this.captureGuard, {capture: true});
+  }
+
+  ngOnDestroy(): void {
+    this.element.nativeElement.removeEventListener('click', this.captureGuard, {capture: true});
+  }
+
+  @HostBinding('attr.disabled') get disabledAttribute(): '' | null {
+    return this.isButton && (this.loading || this.disabled) ? '' : null;
+  }
+  @HostBinding('attr.tabindex') get disabledTabIndex(): '-1' | null {
+    return !this.isButton && (this.loading || this.disabled) ? '-1' : null;
+  }
 
   @HostListener('click', ['$event'])
   preventLoadingAction(event: Event): void {
-    if (!this.loading) return;
+    if (!this.loading && !this.disabled) return;
     event.preventDefault();
     event.stopImmediatePropagation();
   }
+
+  private get isButton(): boolean { return this.element.nativeElement.tagName === 'BUTTON'; }
 }
 
 @Component({
   selector: 'v2-page',
   standalone: true,
   template: `
-    <article class="v2-page" [class]="'v2-page v2-page--' + width">
+    <div class="v2-page">
       <header class="v2-page__header">
         <div class="v2-page__copy">
           @if (eyebrow) { <p class="v2-page__eyebrow">{{ eyebrow }}</p> }
@@ -58,7 +75,7 @@ export class V2ButtonDirective {
       <div class="v2-page__tabs"><ng-content select="[v2PageTabs]" /></div>
       <div class="v2-page__toolbar"><ng-content select="[v2PageToolbar]" /></div>
       <div class="v2-page__sections"><ng-content /></div>
-    </article>
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -66,7 +83,6 @@ export class V2PageComponent {
   @Input({required: true}) title = '';
   @Input() eyebrow = '';
   @Input() description = '';
-  @Input() width: V2PageWidth = 'default';
 }
 
 @Component({
@@ -126,10 +142,10 @@ export interface V2Choice { id: string; label: string; disabled?: boolean; }
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div [class]="'v2-tabs v2-tabs--' + appearance" role="tablist" [attr.aria-label]="label">
+    <div [class]="'v2-tabs v2-tabs--' + appearance" role="group" [attr.aria-label]="label">
       @for (tab of tabs; track tab.id) {
-        <button type="button" role="tab" [id]="id + '-tab-' + tab.id"
-          [attr.aria-selected]="tab.id === selected" [attr.aria-controls]="id + '-panel-' + tab.id"
+        <button type="button" [id]="id + '-choice-' + tab.id"
+          [attr.aria-pressed]="tab.id === selected"
           [tabIndex]="tab.id === selected ? 0 : -1" [disabled]="tab.disabled"
           (click)="select(tab)" (keydown)="onKeydown($event, tab)">{{ tab.label }}</button>
       }
@@ -160,7 +176,7 @@ export class V2TabsComponent {
     const next = event.key === 'Home' ? 0 : event.key === 'End' ? enabled.length - 1
       : (current + (event.key === 'ArrowRight' ? 1 : -1) + enabled.length) % enabled.length;
     this.selectedChange.emit(enabled[next].id);
-    queueMicrotask(() => this.host.nativeElement.querySelectorAll<HTMLElement>('[role="tab"]')[this.tabs.indexOf(enabled[next])]?.focus());
+    queueMicrotask(() => this.host.nativeElement.querySelectorAll<HTMLElement>('.v2-tabs button')[this.tabs.indexOf(enabled[next])]?.focus());
   }
 }
 
@@ -212,7 +228,7 @@ export class V2SearchFiltersComponent {
 @Component({
   selector: 'v2-toolbar',
   standalone: true,
-  template: '<div class="v2-toolbar" role="toolbar" [attr.aria-label]="label"><ng-content /></div>',
+  template: '<div class="v2-toolbar" role="group" [attr.aria-label]="label"><ng-content /></div>',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class V2ToolbarComponent { @Input() label = 'Page tools'; }
@@ -287,7 +303,7 @@ export interface V2MenuItem extends V2Choice { danger?: boolean; }
   template: `
     <div class="v2-overflow">
       <button type="button" v2Button="icon" [attr.aria-label]="label" aria-haspopup="menu"
-        [attr.aria-expanded]="isOpen()" (click)="toggle()"><i class="pi pi-ellipsis-v" aria-hidden="true"></i></button>
+        [attr.aria-expanded]="isOpen()" (click)="toggle()" (keydown)="onTriggerKeydown($event)"><i class="pi pi-ellipsis-v" aria-hidden="true"></i></button>
       @if (isOpen()) {
         <div class="v2-menu" role="menu" (keydown)="onMenuKeydown($event)">
           @for (item of items; track item.id) {
@@ -308,7 +324,15 @@ export class V2OverflowMenuComponent {
 
   constructor(private readonly host: ElementRef<HTMLElement>) {}
 
-  toggle(): void { this.isOpen.update(open => !open); }
+  toggle(): void {
+    if (this.isOpen()) { this.isOpen.set(false); return; }
+    this.openAndFocus(0);
+  }
+  onTriggerKeydown(event: KeyboardEvent): void {
+    if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+    event.preventDefault();
+    this.openAndFocus(event.key === 'ArrowDown' ? 0 : -1);
+  }
   choose(item: V2MenuItem): void {
     if (item.disabled) return;
     this.itemSelected.emit(item.id);
@@ -328,6 +352,13 @@ export class V2OverflowMenuComponent {
   }
   @HostListener('document:keydown.escape') closeFromDocument(): void {
     if (this.isOpen()) { this.isOpen.set(false); this.focusTrigger(); }
+  }
+  private openAndFocus(index: number): void {
+    this.isOpen.set(true);
+    queueMicrotask(() => {
+      const items = Array.from(this.host.nativeElement.querySelectorAll<HTMLButtonElement>('[role="menuitem"]:not(:disabled)'));
+      items[index < 0 ? items.length - 1 : index]?.focus();
+    });
   }
   private focusTrigger(): void { this.host.nativeElement.querySelector<HTMLButtonElement>('[aria-haspopup="menu"]')?.focus(); }
 }

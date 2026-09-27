@@ -70,7 +70,7 @@ describe('application routes', () => {
             expect(page.data).toEqual(expect.objectContaining({
                 pageId: expect.any(String),
                 mobileTitle: expect.any(String),
-                pageWidth: expect.stringMatching(/^(standard|wide|full)$/),
+                pageWidth: expect.stringMatching(/^(reading|form|default|dashboard|wide|full)$/),
                 ambientKey: expect.any(String),
                 preload: expect.any(Boolean)
             }));

@@ -37,9 +37,8 @@
     </div>
   </header>
 
-  <main #mainContent id="v2-main-content" tabindex="-1" class="v2-main"
-    [class.v2-main--wide]="pageContext().width === 'wide'"
-    [class.v2-main--full]="pageContext().width === 'full'"
+  <main #mainContent id="v2-main-content" tabindex="-1"
+    [class]="'v2-main v2-main--' + pageContext().width"
     [attr.aria-label]="pageContext().title + ' content'">
     <router-outlet></router-outlet>
   </main>

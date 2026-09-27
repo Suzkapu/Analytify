@@ -17,7 +17,7 @@ import {
   imports: [...DESIGN_V2_PRIMITIVES],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <v2-page title="Your playlists" eyebrow="Library" description="Choose something to play." width="reading">
+    <v2-page title="Your playlists" eyebrow="Library" description="Choose something to play.">
       <button v2PageActions v2Button="primary">Create</button>
       <v2-tabs v2PageTabs id="page-tabs" [tabs]="tabs" selected="all" />
       <v2-toolbar v2PageToolbar label="Playlist tools"><button v2Button="secondary">Sort</button></v2-toolbar>
@@ -44,10 +44,11 @@ describe('Design v2 presentational primitives', () => {
     const page = fixture.nativeElement.querySelector('.v2-page');
     const skeleton = fixture.nativeElement.querySelector('.v2-skeleton') as HTMLElement;
 
-    expect(page.classList).toContain('v2-page--reading');
+    expect(page.className).toBe('v2-page');
     expect(page.querySelector('h1').textContent).toContain('Your playlists');
     expect(page.querySelector('.v2-page__actions button').textContent).toContain('Create');
-    expect(page.querySelector('[role="toolbar"]').getAttribute('aria-label')).toBe('Playlist tools');
+    expect(page.tagName).toBe('DIV');
+    expect(page.querySelector('.v2-toolbar[role="group"]').getAttribute('aria-label')).toBe('Playlist tools');
     expect(page.querySelector('.v2-card .v2-list-row').textContent).toContain('Playlist row');
     expect(skeleton.style.width).toBe('12rem');
     expect(skeleton.style.height).toBe('2rem');
@@ -62,6 +63,17 @@ describe('Design v2 presentational primitives', () => {
 })
 class ButtonHostComponent {
   loading = false;
+  clicks = 0;
+  recordClick(): void { this.clicks += 1; }
+}
+
+@Component({
+  standalone: true,
+  imports: [V2ButtonDirective],
+  template: '<a href="/danger" v2Button="primary" [disabled]="disabled" (click)="recordClick()">Continue</a>'
+})
+class AnchorButtonHostComponent {
+  disabled = true;
   clicks = 0;
   recordClick(): void { this.clicks += 1; }
 }
@@ -83,6 +95,19 @@ describe('V2ButtonDirective', () => {
     button.click();
     expect(fixture.componentInstance.clicks).toBe(1);
   });
+
+  it('makes a disabled anchor non-focusable and non-activatable', async () => {
+    await TestBed.configureTestingModule({imports: [AnchorButtonHostComponent]}).compileComponents();
+    const fixture = TestBed.createComponent(AnchorButtonHostComponent);
+    fixture.detectChanges();
+    const anchor = fixture.nativeElement.querySelector('a') as HTMLAnchorElement;
+
+    expect(anchor.getAttribute('aria-disabled')).toBe('true');
+    expect(anchor.getAttribute('tabindex')).toBe('-1');
+    expect(anchor.hasAttribute('disabled')).toBe(false);
+    anchor.click();
+    expect(fixture.componentInstance.clicks).toBe(0);
+  });
 });
 
 describe('V2StatusBadgeComponent', () => {
@@ -98,7 +123,7 @@ describe('V2StatusBadgeComponent', () => {
 });
 
 describe('V2TabsComponent', () => {
-  it('exposes tab semantics, skips disabled choices, and supports arrow navigation', async () => {
+  it('uses segmented-button semantics, skips disabled choices, and supports arrow navigation', async () => {
     await TestBed.configureTestingModule({imports: [V2TabsComponent]}).compileComponents();
     const fixture = TestBed.createComponent(V2TabsComponent);
     fixture.componentRef.setInput('id', 'stats');
@@ -112,11 +137,12 @@ describe('V2TabsComponent', () => {
     fixture.componentInstance.selectedChange.subscribe(selected);
     fixture.detectChanges();
 
-    const list = fixture.nativeElement.querySelector('[role="tablist"]');
-    const tabs = fixture.nativeElement.querySelectorAll('[role="tab"]');
+    const list = fixture.nativeElement.querySelector('[role="group"]');
+    const tabs = fixture.nativeElement.querySelectorAll('.v2-tabs button');
     expect(list.getAttribute('aria-label')).toBe('Stats range');
     expect(list.classList).toContain('v2-tabs--segmented');
-    expect(tabs[0].getAttribute('aria-selected')).toBe('true');
+    expect(tabs[0].getAttribute('aria-pressed')).toBe('true');
+    expect(tabs[0].hasAttribute('aria-controls')).toBe(false);
     expect(tabs[1].disabled).toBe(true);
     tabs[0].dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true, cancelable: true}));
     expect(selected).toHaveBeenCalledWith('long');
@@ -273,5 +299,22 @@ describe('V2OverflowMenuComponent', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('[role="menu"]')).toBeNull();
     expect(document.activeElement).toBe(trigger);
+  });
+
+  it('opens from the trigger with arrow keys and focuses the requested enabled edge item', async () => {
+    await TestBed.configureTestingModule({imports: [V2OverflowMenuComponent]}).compileComponents();
+    const fixture = TestBed.createComponent(V2OverflowMenuComponent);
+    fixture.componentRef.setInput('items', [
+      {id: 'locked', label: 'Locked', disabled: true},
+      {id: 'one', label: 'One'},
+      {id: 'two', label: 'Two'}
+    ]);
+    fixture.detectChanges();
+    const trigger = fixture.nativeElement.querySelector('[aria-haspopup="menu"]') as HTMLButtonElement;
+
+    trigger.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowUp', bubbles: true, cancelable: true}));
+    fixture.detectChanges();
+    await Promise.resolve();
+    expect((document.activeElement as HTMLElement).textContent).toContain('Two');
   });
 });
