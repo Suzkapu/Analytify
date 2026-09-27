@@ -22,6 +22,12 @@ describe('SyncTaskStatusDialogComponent', () => {
         effective_active: true, reasons: ['Active because you publish an auto-updating shared playlist'],
         editable: false, interval_value: 60, interval_unit: 'minutes',
         minimum_interval_minutes: 1, policy_available: true
+      },
+      {
+        task_key: 'stats_long_term', optional_enabled: false, feature_required: false,
+        effective_active: false, reasons: ['Unavailable by policy'], editable: true,
+        interval_value: 7, interval_unit: 'days', minimum_interval_minutes: 10080,
+        policy_available: false
       }
     ], error: null});
     await TestBed.configureTestingModule({
@@ -36,9 +42,28 @@ describe('SyncTaskStatusDialogComponent', () => {
   });
 
   it('offers controls only for personal tasks and shows feature tasks as locked', () => {
-    expect(fixture.nativeElement.querySelectorAll('.sync-preference-toggle')).toHaveLength(1);
-    expect(fixture.nativeElement.querySelectorAll('.pi-lock')).toHaveLength(1);
+    expect(fixture.nativeElement.querySelectorAll('.sync-task-editor')).toHaveLength(0);
+    expect(fixture.nativeElement.textContent).toContain('Required');
+    expect(fixture.nativeElement.textContent).toContain('Unavailable');
     expect(component.minimumFor(component.tasks[0], 'hours')).toBe(1);
+    expect(component.minimumLabel(component.tasks[2])).toBe('7 days');
+  });
+
+  it('expands only one editable schedule at a time', () => {
+    const first = component.tasks[0];
+    component.toggleExpanded(first);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll('.sync-task-editor')).toHaveLength(1);
+    expect(fixture.nativeElement.querySelector('.sync-task-editor')?.textContent).toContain('Minimum interval: 1 hour');
+    component.toggleExpanded(first);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll('.sync-task-editor')).toHaveLength(0);
+  });
+
+  it('never opens an editor for required or policy-unavailable tasks', () => {
+    component.toggleExpanded(component.tasks[1]);
+    component.toggleExpanded(component.tasks[2]);
+    expect(component.expandedTask).toBeNull();
   });
 
   it('persists the selected unit and interval through the constrained RPC', async () => {
@@ -52,5 +77,21 @@ describe('SyncTaskStatusDialogComponent', () => {
       p_task_key: 'listening_history', p_enabled: true,
       p_interval_value: 3, p_interval_unit: 'days'
     });
+    expect(component.savedTask).toBe('listening_history');
+  });
+
+  it('associates minimum validation with the interval field and does not save', async () => {
+    const task = component.tasks[0];
+    task.optional_enabled = true;
+    task.interval_value = 0;
+    component.toggleExpanded(task);
+    rpc.mockClear();
+    await component.save(task);
+    fixture.detectChanges();
+    const error = fixture.nativeElement.querySelector('[role="alert"]') as HTMLElement;
+    const input = fixture.nativeElement.querySelector('.sync-interval-fieldset input') as HTMLInputElement;
+    expect(error.textContent).toContain('Choose at least 1 hour');
+    expect(input.getAttribute('aria-describedby')).toBe(error.id);
+    expect(rpc).not.toHaveBeenCalled();
   });
 });

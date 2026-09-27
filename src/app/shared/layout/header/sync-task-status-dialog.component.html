@@ -1,58 +1,76 @@
-<div class="confirm-modal-overlay" (click)="closed.emit()">
-  <section class="confirm-modal-card notification-settings-modal" role="dialog" aria-modal="true"
+<div class="confirm-modal-overlay" (click)="close()">
+  <section class="confirm-modal-card notification-settings-modal settings-sheet" role="dialog" aria-modal="true"
     aria-labelledby="sync-task-status-title" aria-describedby="sync-task-status-description"
-    appAccessibleDialog (modalEscape)="closed.emit()" (click)="$event.stopPropagation()">
-    <button type="button" class="notification-modal-close" appModalInitialFocus
-      (click)="closed.emit()" aria-label="Close automatic data use">×</button>
-    <div class="confirm-modal-icon"><i class="pi pi-clock"></i></div>
-    <h3 id="sync-task-status-title" class="confirm-modal-title">Automatic data use</h3>
-    <p id="sync-task-status-description" class="confirm-modal-text">Choose your personal update schedule. Feature-required playlist and league updates stay automatic.</p>
-    @if (loading) {
-      <div class="notification-settings-loading" role="status"><i class="pi pi-spin pi-spinner"></i> Loading…</div>
-    } @else {
-      <div class="notification-category-list">
-        @for (task of tasks; track task.task_key) {
-          <div class="notification-category-row">
-            <span class="notification-category-icon"><i class="pi" [class.pi-check]="task.effective_active"
-              [class.pi-minus]="!task.effective_active"></i></span>
-            <span class="notification-category-copy">
-              <strong>{{ label(task.task_key) }}</strong>
-              <small>{{ task.effective_active ? 'Active' : 'Not scheduled' }}</small>
-              @for (reason of task.reasons; track reason) { <em>{{ reason }}</em> }
-              @if (task.editable && task.policy_available) {
-                <label class="sync-preference-toggle">
-                  <input type="checkbox" [(ngModel)]="task.optional_enabled">
-                  <span>Update automatically</span>
-                </label>
-                <span class="sync-interval-control">
-                  <span>Every</span>
-                  <input type="number" [(ngModel)]="task.interval_value"
-                    [min]="minimumFor(task, task.interval_unit)" max="10080"
-                    [attr.aria-label]="label(task.task_key) + ' interval'">
-                  <select [(ngModel)]="task.interval_unit" [attr.aria-label]="label(task.task_key) + ' interval unit'">
-                    <option value="minutes">minutes</option>
-                    <option value="hours">hours</option>
-                    <option value="days">days</option>
-                  </select>
-                </span>
-                <small>Admin limit: no faster than every {{ task.minimum_interval_minutes }} minutes</small>
-              }
-            </span>
-            @if (task.editable && task.policy_available) {
-              <button type="button" class="notification-category-action" (click)="save(task)"
-                [disabled]="savingTask !== null" [attr.aria-label]="'Save ' + label(task.task_key)">
-                <i class="pi" [ngClass]="savingTask === task.task_key ? 'pi-spin pi-spinner' : 'pi-save'"></i>
-              </button>
-            } @else if (!task.editable) {
-              <i class="pi pi-lock" aria-label="Controlled by this feature"></i>
-            }
-          </div>
-        }
+    appAccessibleDialog (modalEscape)="close()" (click)="$event.stopPropagation()">
+    <header class="settings-sheet-header">
+      <span><i class="pi pi-refresh"></i></span>
+      <div>
+        <h3 id="sync-task-status-title">Automatic updates</h3>
+        <p id="sync-task-status-description">Choose which personal Spotify data updates in the background.</p>
       </div>
-    }
-    @if (error) { <p class="notification-settings-error" role="alert">{{ error }}</p> }
+      <button type="button" class="notification-modal-close" appModalInitialFocus (click)="close()"
+        [disabled]="!!savingTask" aria-label="Close automatic updates">×</button>
+    </header>
+    <div class="settings-sheet-body">
+      @if (loading) {
+        <div class="notification-settings-loading" role="status"><i class="pi pi-spin pi-spinner"></i> Loading automatic updates…</div>
+      } @else {
+        <div class="sync-task-list">
+          @for (task of tasks; track task.task_key) {
+            <article class="sync-task-row" [class.expanded]="expandedTask === task.task_key">
+              <button type="button" class="sync-task-summary" (click)="toggleExpanded(task)"
+                [disabled]="!stateFor(task).editable"
+                [attr.aria-expanded]="stateFor(task).editable ? expandedTask === task.task_key : null"
+                [attr.aria-controls]="stateFor(task).editable ? 'sync-editor-' + task.task_key : null">
+                <span class="notification-category-icon"><i class="pi" [ngClass]="task.feature_required ? 'pi-lock' : task.effective_active ? 'pi-check' : 'pi-minus'"></i></span>
+                <span class="notification-category-copy">
+                  <strong>{{ label(task.task_key) }}</strong>
+                  <small>{{ stateFor(task).label }} · {{ stateFor(task).detail }}</small>
+                  @if (task.editable) { <em>Minimum interval: {{ minimumLabel(task) }}</em> }
+                  @if (!stateFor(task).editable && task.reasons.length) { <em>{{ task.reasons[0] }}</em> }
+                </span>
+                @if (stateFor(task).editable) { <i class="pi pi-chevron-down" aria-hidden="true"></i> }
+                @else { <span class="sync-required-label">{{ stateFor(task).label }}</span> }
+              </button>
+              @if (expandedTask === task.task_key && stateFor(task).editable) {
+                <div class="sync-task-editor" [id]="'sync-editor-' + task.task_key">
+                  <label class="sync-preference-switch">
+                    <span><strong>Automatic updates</strong><small>{{ task.optional_enabled ? 'On' : 'Off' }}</small></span>
+                    <span class="switch">
+                      <input type="checkbox" [(ngModel)]="task.optional_enabled"
+                        [disabled]="savingTask !== null" [attr.aria-label]="label(task.task_key) + ' automatic updates'">
+                      <span class="slider round"></span>
+                    </span>
+                  </label>
+                  <fieldset class="sync-interval-fieldset" [disabled]="!task.optional_enabled || savingTask !== null">
+                    <legend>Update interval</legend>
+                    <label><span>Every</span><input type="number" [(ngModel)]="task.interval_value"
+                      [min]="minimumFor(task, task.interval_unit)" max="10080"
+                      [attr.aria-describedby]="validationErrors[task.task_key] ? 'sync-error-' + task.task_key : null"></label>
+                    <label><span>Unit</span><select [(ngModel)]="task.interval_unit">
+                      <option value="minutes">minutes</option><option value="hours">hours</option><option value="days">days</option>
+                    </select></label>
+                  </fieldset>
+                  <p class="sync-minimum-copy">Minimum interval: {{ minimumLabel(task) }}</p>
+                  @if (validationErrors[task.task_key]) {
+                    <p class="sync-validation-error" [id]="'sync-error-' + task.task_key" role="alert">{{ validationErrors[task.task_key] }}</p>
+                  }
+                  <div class="sync-save-row">
+                    @if (savedTask === task.task_key) { <span role="status"><i class="pi pi-check"></i> Saved</span> }
+                    <button type="button" class="confirm-modal-btn confirm-modal-btn-confirm" (click)="save(task)" [disabled]="savingTask !== null">
+                      <i class="pi" [ngClass]="savingTask === task.task_key ? 'pi-spin pi-spinner' : 'pi-check'"></i>{{ savingTask === task.task_key ? 'Saving…' : 'Save' }}
+                    </button>
+                  </div>
+                </div>
+              }
+            </article>
+          }
+        </div>
+      }
+      @if (error) { <p class="notification-settings-error" role="alert">{{ error }}</p> }
+    </div>
     <div class="confirm-modal-actions">
-      <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel" (click)="closed.emit()">Done</button>
+      <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel" (click)="close()" [disabled]="!!savingTask">Done</button>
     </div>
   </section>
 </div>

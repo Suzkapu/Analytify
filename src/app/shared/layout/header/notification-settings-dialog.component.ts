@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostListener, OnInit, Output} from '@angular/core';
 import {PushNotificationService, PushNotificationSettings} from '@core/notifications/push-notification.service';
 import {SharedModule} from '../../shared.module';
+import {notificationDeviceStatus} from './settings-sheet-view-model';
 
 @Component({
   selector: 'app-notification-settings-dialog',
@@ -15,6 +16,7 @@ export class NotificationSettingsDialogComponent implements OnInit {
   loading = true;
   saving = false;
   error = '';
+  message = '';
   settings: PushNotificationSettings = {
     supported: false, installedPwa: false, permission: 'unavailable',
     deviceSubscribed: false, deviceRegistered: false, registeredDeviceCount: 0, deviceState: 'unsupported',
@@ -55,6 +57,10 @@ export class NotificationSettingsDialogComponent implements OnInit {
     return this.update(() => this.notifications.setStatsAccessRequestsEnabled((event.target as HTMLInputElement).checked));
   }
 
+  get deviceStatus() {
+    return notificationDeviceStatus(this.settings);
+  }
+
   private async reload(reportError = true): Promise<void> {
     try {
       this.settings = await this.notifications.loadSettings();
@@ -70,9 +76,11 @@ export class NotificationSettingsDialogComponent implements OnInit {
     if (this.saving) return;
     this.saving = true;
     this.error = '';
+    this.message = '';
     try {
       this.settings = await this.notifications.loadSettings();
       this.settings = await action();
+      this.message = 'Notification preferences saved.';
     } catch (error) {
       this.error = (error as {message?: string})?.message || 'The notification setting could not be changed.';
     } finally {
