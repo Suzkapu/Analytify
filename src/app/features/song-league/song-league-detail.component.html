@@ -30,18 +30,46 @@
           </span>
         </div>
         @if (isOwner && !data.league.isDemo) {
-          <button type="button" class="league-secondary invite-button" (click)="createInvite()" [disabled]="isCreatingInvite" aria-label="Invite a member">
-            <i class="pi" [ngClass]="isCreatingInvite ? 'pi-spin pi-spinner' : 'pi-user-plus'"></i><span>Invite</span>
+          <button type="button" class="league-secondary invite-button" (click)="showLeagueSettings = !showLeagueSettings"
+            [attr.aria-expanded]="showLeagueSettings" aria-controls="league-settings" aria-label="League settings">
+            <i class="pi pi-cog"></i><span>League settings</span>
           </button>
         }
       </header>
+      <section class="league-weekly-task" [class.open]="isPickOpen" aria-labelledby="weekly-task-title">
+        <div>
+          <span class="league-eyebrow">{{ weeklyTask.eyebrow }}</span>
+          <h2 id="weekly-task-title">{{ weeklyTask.title }}</h2>
+          <p>{{ weeklyTask.description }}</p>
+        </div>
+        @if (weeklyTask.action) {
+          <button type="button" class="league-primary" (click)="openWeeklyPicks()">
+            <i class="pi pi-music"></i>{{ weeklyTask.action }}
+          </button>
+        }
+      </section>
+      <nav class="league-local-tabs" aria-label="League sections">
+        <button type="button" (click)="activeTab = 'overview'" [class.active]="activeTab === 'overview'" [attr.aria-current]="activeTab === 'overview' ? 'page' : null">Overview</button>
+        <button type="button" (click)="activeTab = 'recommendations'" [class.active]="activeTab === 'recommendations'" [attr.aria-current]="activeTab === 'recommendations' ? 'page' : null">Recommendations</button>
+        <button type="button" (click)="activeTab = 'members'" [class.active]="activeTab === 'members'" [attr.aria-current]="activeTab === 'members' ? 'page' : null">Members</button>
+      </nav>
       @if (isClosed) {
         <section class="league-notice closed" role="status">
           <i class="pi pi-lock"></i>
           <div><strong>This league is closed</strong><p>Standings, songs, and activity remain available as read-only history. Automatic collection, playlists, invitations, and notifications have stopped.</p></div>
         </section>
       }
-      @if (isOwner && !data.league.isDemo && !isClosed) {
+      @if (isOwner && !data.league.isDemo && !isClosed && showLeagueSettings) {
+        <div id="league-settings" class="league-settings" tabindex="-1">
+          <div class="league-section-heading">
+            <div><span class="league-eyebrow">Owner only</span><h2>League settings</h2></div>
+            <div class="league-settings-actions">
+              <button type="button" class="league-secondary" (click)="activeTab = 'members'; showLeagueSettings = false"><i class="pi pi-users"></i>Manage members</button>
+              <button type="button" class="league-secondary" (click)="createInvite()" [disabled]="isCreatingInvite">
+                <i class="pi" [ngClass]="isCreatingInvite ? 'pi-spin pi-spinner' : 'pi-user-plus'"></i>{{ isCreatingInvite ? 'Creating…' : 'Create invite' }}
+              </button>
+            </div>
+          </div>
         <section class="league-member-limit">
           <span><i class="pi pi-users"></i></span>
           <div><strong>Member capacity</strong><small>Includes you · between {{ data.members.length > 2 ? data.members.length : 2 }} and 50</small></div>
@@ -53,6 +81,7 @@
             {{ isSavingMemberLimit ? 'Saving…' : 'Save' }}
           </button>
         </section>
+        </div>
       }
       @if (inviteUrl) {
         <section class="league-inline-invite">
@@ -60,7 +89,7 @@
           <div><input [value]="inviteUrl" readonly><button type="button" (click)="copyInvite()"><i class="pi" [ngClass]="inviteCopied ? 'pi-check' : 'pi-copy'"></i>{{ inviteCopied ? 'Copied' : 'Copy' }}</button></div>
         </section>
       }
-      @if (isOwner && !data.league.isDemo && !isClosed) {
+      @if (isOwner && !data.league.isDemo && !isClosed && showLeagueSettings) {
         <section class="league-invite-manager" aria-labelledby="active-invites-title">
           <header>
             <div><strong id="active-invites-title">Active invitations</strong><small>Links contain the secret only when first created. It is never shown here again.</small></div>
@@ -93,7 +122,7 @@
           }
         </section>
       }
-      @if (isOwner && !data.league.isDemo && !isClosed) {
+      @if (isOwner && !data.league.isDemo && !isClosed && showLeagueSettings) {
         <section class="league-rejoin-manager" aria-labelledby="rejoin-requests-title">
           <div class="league-section-heading">
             <div><span class="league-eyebrow">Membership requests</span><h2 id="rejoin-requests-title">Rejoin requests</h2></div>
@@ -165,7 +194,7 @@
         </section>
       }
       @if (isPickOpen) {
-        <section class="friday-composer-panel">
+        <section id="weekly-picks" class="friday-composer-panel" tabindex="-1">
           <div class="friday-composer-heading">
             <strong>{{ data.league.isDemo ? 'Choose your demo discovery' : 'Choose this week’s discovery' }}</strong>
             <small>{{ data.league.isDemo ? 'The bots will score it immediately' : 'New to most opponents · nobody’s current Top 20' }}</small>
@@ -218,13 +247,14 @@
           </div>
         </section>
       }
+      @if (activeTab === 'overview') {
       <div class="league-dashboard-grid">
         <section class="standings-panel">
           <div class="league-section-heading"><div><span class="league-eyebrow">Permanent score</span><h2>Standings</h2></div><i class="pi pi-star"></i></div>
-          <div class="standing-list">
+          <ol class="standing-list" aria-label="League standings">
             @for (standing of data.standings; track trackStanding(index, standing); let index = $index) {
-              <button type="button"
-                class="standing-row" (click)="openBreakdown(standing)">
+              <li><button type="button" class="standing-row" (click)="openBreakdown(standing)"
+                [attr.aria-label]="(index + 1) + '. ' + standing.displayName + ', ' + standing.totalPoints + ' points, ' + standing.lastSevenDaysPoints + ' in the last 7 days'">
                 <span class="standing-place">{{ index + 1 }}</span>
                 @if (standing.imageUrl) {
                   <img [src]="standing.imageUrl" appImageFallback alt="">
@@ -235,31 +265,43 @@
                 <span class="standing-name"><strong>{{ standing.displayName }}</strong><small>+{{ standing.lastSevenDaysPoints | number }} last 7 days</small></span>
                 <span class="standing-score"><strong>{{ standing.totalPoints | number }}</strong><small>points</small></span>
                 <i class="pi pi-chevron-right"></i>
-              </button>
+              </button></li>
             }
-          </div>
+          </ol>
         </section>
       </div>
-      @if (isOwner && !isClosed && !data.league.isDemo) {
-        <section class="league-member-manager" aria-labelledby="league-members-title">
-          <div class="league-section-heading">
-            <div><span class="league-eyebrow">Owner controls</span><h2 id="league-members-title">Members</h2></div>
-          </div>
+      }
+      @if (activeTab === 'members') {
+        <section class="league-member-summary" aria-labelledby="league-members-summary-title">
+          <div class="league-section-heading"><div><span class="league-eyebrow">{{ data.members.length }} members</span><h2 id="league-members-summary-title">Members</h2></div></div>
           <div class="league-member-list">
             @for (member of data.members; track member.userId) {
-              @if (member.userId !== currentUserId && !member.leftAt) {
+              @if (!member.leftAt) {
                 <article>
                   @if (member.imageUrl) { <img [src]="member.imageUrl" appImageFallback alt=""> }
                   @if (!member.imageUrl) { <span class="standing-avatar"><i class="pi pi-user"></i></span> }
-                  <div><strong>{{ member.displayName }}</strong><small>Joined {{ member.joinedAt | date:'mediumDate' }}</small></div>
-                  <button type="button" class="league-secondary" (click)="openLifecycleModal('transfer', member)"><i class="pi pi-crown"></i>Make owner</button>
-                  <button type="button" class="league-danger-secondary" (click)="openLifecycleModal('remove', member)"><i class="pi pi-user-minus"></i>Remove</button>
+                  <div><strong>{{ member.displayName }} @if (member.role === 'owner') { <small>Owner</small> }</strong><small>Joined {{ member.joinedAt | date:'mediumDate' }}</small></div>
+                  @if (isOwner && member.userId !== currentUserId && !isClosed) {
+                    <div class="league-member-menu">
+                      <button type="button" class="league-icon-button" (click)="toggleMemberMenu(member.userId)"
+                        [attr.aria-expanded]="openMemberMenuId === member.userId" aria-haspopup="menu" [attr.aria-label]="'Actions for ' + member.displayName">
+                        <i class="pi pi-ellipsis-v"></i>
+                      </button>
+                      @if (openMemberMenuId === member.userId) {
+                        <div role="menu">
+                          <button type="button" role="menuitem" (click)="openMemberMenuId = ''; openLifecycleModal('transfer', member)"><i class="pi pi-crown"></i>Make owner</button>
+                          <button type="button" role="menuitem" (click)="openMemberMenuId = ''; openLifecycleModal('remove', member)"><i class="pi pi-user-minus"></i>Remove member</button>
+                        </div>
+                      }
+                    </div>
+                  }
                 </article>
               }
             }
           </div>
         </section>
       }
+      @if (activeTab === 'recommendations' || activeTab === 'overview') {
       <section class="active-songs-section">
         <div class="league-section-heading">
           <div><span class="league-eyebrow">Up to four per member</span><h2>Active recommendations</h2></div>
@@ -278,13 +320,13 @@
                     [attr.aria-label]="'Open ' + recommendation.trackName + ' by ' + recommendation.artistNames + ' in Spotify'">
                     @if (recommendation.imageUrl) { <img [src]="recommendation.imageUrl" [alt]="recommendation.trackName + ' cover'"> }
                     @if (!recommendation.imageUrl) { <span><i class="pi pi-music"></i></span> }
-                    <em>{{ recommendationStatus(recommendation) }}</em>
+                    <em><time [attr.datetime]="recommendation.scoringEndsAt">{{ recommendationStatus(recommendation) }}</time></em>
                   </a>
                 } @else {
                   <div class="active-song-art">
                     @if (recommendation.imageUrl) { <img [src]="recommendation.imageUrl" [alt]="recommendation.trackName + ' cover'"> }
                     @if (!recommendation.imageUrl) { <span><i class="pi pi-music"></i></span> }
-                    <em>{{ recommendationStatus(recommendation) }}</em>
+                    <em><time [attr.datetime]="recommendation.scoringEndsAt">{{ recommendationStatus(recommendation) }}</time></em>
                   </div>
                 }
                 <div class="active-song-copy">
@@ -293,24 +335,38 @@
                   <p>{{ recommendation.artistNames }}</p>
                 </div>
                 <div class="active-song-score"><strong>{{ recommendationPoints(recommendation.id) | number }}</strong><span>points</span></div>
-                <div class="listener-position-list">
-                  @for (row of recommendationRows(recommendation.id); track trackBreakdown($index, row)) {
-                    <div>
-                      <span>{{ row.listenerDisplayName }}</span>
-                      @if (row.latestRank !== null) {
-                        <strong>#{{ row.latestRank }} <small>+{{ row.latestPoints }}</small></strong>
-                      }
-                      @if (row.latestRank === null) {
-                        <strong class="not-ranked">Not ranked <small>+0</small></strong>
-                      }
-                    </div>
-                  }
-                </div>
+                <button type="button" class="recommendation-rankings-toggle" (click)="toggleRecommendation(recommendation.id)"
+                  [attr.aria-expanded]="expandedRecommendationId === recommendation.id">
+                  <span>{{ recommendationParticipationLabel(recommendation.id) }}</span><span>View rankings <i class="pi pi-chevron-down"></i></span>
+                </button>
+                @if (expandedRecommendationId === recommendation.id) {
+                  <div class="listener-position-list">
+                    @for (row of recommendationRows(recommendation.id); track trackBreakdown($index, row)) {
+                      <div><span>{{ row.listenerDisplayName }}</span><strong [class.not-ranked]="row.latestRank === null">{{ recommendationRankingLabel(row) }}</strong></div>
+                    }
+                  </div>
+                }
               </article>
             }
           </div>
         }
       </section>
+      }
+      @if (activeTab === 'overview') {
+        <section class="league-overview-members" aria-labelledby="overview-members-title">
+          <div class="league-section-heading">
+            <div><span class="league-eyebrow">League roster</span><h2 id="overview-members-title">Members</h2></div>
+            <button type="button" class="league-secondary" (click)="activeTab = 'members'">View all</button>
+          </div>
+          <div class="league-member-chips">
+            @for (member of data.members; track member.userId) {
+              @if (!member.leftAt) {
+                <span>@if (member.imageUrl) { <img [src]="member.imageUrl" appImageFallback alt=""> } @else { <i class="pi pi-user"></i> }{{ member.displayName }}</span>
+              }
+            }
+          </div>
+        </section>
+      }
       @if (!data.league.isDemo && !isClosed) {
         <section class="league-playlist-action">
           @if (!currentUserPlaylist?.spotifyPlaylistUrl) {
@@ -330,7 +386,7 @@
         </section>
       }
       <app-song-league-rules></app-song-league-rules>
-      @if (lifecycleEvents.length || isLoadingLifecycle) {
+      @if ((lifecycleEvents.length || isLoadingLifecycle) && showLeagueSettings) {
         <section class="league-lifecycle-history" aria-labelledby="league-activity-title">
           <div class="league-section-heading"><div><span class="league-eyebrow">Audit history</span><h2 id="league-activity-title">League activity</h2></div></div>
           @if (isLoadingLifecycle) { <p><i class="pi pi-spin pi-spinner"></i> Loading activity…</p> }
@@ -339,7 +395,7 @@
           }
         </section>
       }
-      @if (!isClosed && !data.league.isDemo) {
+      @if (!isClosed && !data.league.isDemo && (!isOwner || showLeagueSettings)) {
         <section class="league-admin-actions" aria-label="League administration">
           @if (!isOwner) {
             <button type="button" class="league-danger-secondary" (click)="openLifecycleModal('leave')"><i class="pi pi-sign-out"></i>Leave league</button>
@@ -350,7 +406,7 @@
           }
         </section>
       }
-      @if (isClosed && isOwner) {
+      @if (isClosed && isOwner && showLeagueSettings) {
         <section class="league-admin-actions" aria-label="Closed league administration">
           <button type="button" class="league-delete-button" (click)="openDeleteLeagueModal()"><i class="pi pi-trash"></i>Delete history permanently</button>
         </section>

@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 import {SongLeagueService} from '@core/song-league/song-league.service';
 import {SongLeagueRejoinRequest} from '@core/song-league/song-league.models';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 import {PushNotificationService} from '@core/notifications/push-notification.service';
 
 @Component({
@@ -27,7 +28,12 @@ export class SongLeagueClaimComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private songLeague: SongLeagueService,
-    private pushNotifications: PushNotificationService
+    private pushNotifications: PushNotificationService,
+    readonly navigation: DesignNavigationService = {
+      variant: 'legacy',
+      commands: (_destination: string, parameters: {leagueId?: string} = {}) =>
+        parameters.leagueId ? ['/song-league', parameters.leagueId] : ['/song-league']
+    } as DesignNavigationService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -102,6 +108,6 @@ export class SongLeagueClaimComponent implements OnInit {
 
   private async openLeague(): Promise<void> {
     this.showNotificationPrompt = false;
-    await this.router.navigate(['/song-league', this.joinedLeagueId], {replaceUrl: true});
+    await this.router.navigate(this.navigation.commands('songLeague', {leagueId: this.joinedLeagueId}), {replaceUrl: true});
   }
 }

@@ -31,7 +31,7 @@
       <button type="button" class="league-primary" (click)="retryJoin()"><i class="pi pi-sign-in"></i>Rejoin now</button>
     }
     @if (joinState === 'error' && !canRequestRejoin && rejoinRequest?.status !== 'approved') {
-      <a routerLink="/song-league" class="league-primary">Go to Song League</a>
+      <a [routerLink]="navigation.commands('songLeague')" class="league-primary">Go to Song League</a>
     }
   </section>
 </main>

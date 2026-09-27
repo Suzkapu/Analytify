@@ -274,16 +274,21 @@ describe('SongLeagueDetailComponent notifications', () => {
         expect(component.dashboard?.league.maxMembers).toBe(12);
     });
 
-    it('keeps the owner invite action accessible when mobile hides its text label', async () => {
+    it('keeps owner administration discoverable behind League settings', async () => {
         fixture.detectChanges();
         await fixture.whenStable();
         component.currentUserId = 'owner';
         fixture.detectChanges();
 
         const invite = fixture.nativeElement.querySelector('.invite-button') as HTMLButtonElement;
-        expect(invite.getAttribute('aria-label')).toBe('Invite a member');
-        expect(invite.querySelector('span')?.textContent).toBe('Invite');
-        expect(invite.querySelector('.pi-user-plus')).toBeTruthy();
+        expect(invite.getAttribute('aria-label')).toBe('League settings');
+        expect(invite.querySelector('span')?.textContent).toBe('League settings');
+        expect(invite.querySelector('.pi-cog')).toBeTruthy();
+        expect(fixture.nativeElement.querySelector('#league-settings')).toBeNull();
+
+        invite.click();
+        fixture.detectChanges();
+        expect(fixture.nativeElement.querySelector('#league-settings')).not.toBeNull();
     });
 
     it('loads token-free active invitations for the owner and can revoke one or all', async () => {
@@ -299,6 +304,7 @@ describe('SongLeagueDetailComponent notifications', () => {
 
         fixture.detectChanges();
         await fixture.whenStable();
+        component.showLeagueSettings = true;
         fixture.detectChanges();
 
         const manager = fixture.nativeElement.querySelector('.league-invite-manager') as HTMLElement;
@@ -318,6 +324,7 @@ describe('SongLeagueDetailComponent notifications', () => {
     it('confirms member departure only after explaining its retained history and stopped automation', async () => {
         fixture.detectChanges();
         await fixture.whenStable();
+        component.showLeagueSettings = true;
         fixture.detectChanges();
 
         component.openLifecycleModal('leave');
@@ -379,6 +386,7 @@ describe('SongLeagueDetailComponent notifications', () => {
 
         fixture.detectChanges();
         await fixture.whenStable();
+        component.showLeagueSettings = true;
         fixture.detectChanges();
 
         const manager = fixture.nativeElement.querySelector('.league-rejoin-manager') as HTMLElement;
@@ -386,6 +394,86 @@ describe('SongLeagueDetailComponent notifications', () => {
         expect(manager.textContent).toContain('Approve');
         await component.respondToRejoin(request, 'approved');
         expect(songLeague.respondToRejoinRequest).toHaveBeenCalledWith('request', 'approved');
+    });
+
+    it('puts the weekly task before local overview, recommendations, and members tabs', async () => {
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const task = fixture.nativeElement.querySelector('.league-weekly-task') as HTMLElement;
+        const tabs = fixture.nativeElement.querySelector('.league-local-tabs') as HTMLElement;
+        expect(task.textContent).toContain('Weekly Picks open Friday');
+        expect(task.compareDocumentPosition(tabs) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+        expect(Array.from(tabs.querySelectorAll('button')).map((button: any) => button.textContent.trim()))
+            .toEqual(['Overview', 'Recommendations', 'Members']);
+    });
+
+    it('keeps League settings owner-only', async () => {
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.querySelector('[aria-label="League settings"]')).toBeNull();
+        expect(fixture.nativeElement.querySelector('#league-settings')).toBeNull();
+    });
+
+    it('summarizes recommendation rankings and discloses dash-based details on demand', async () => {
+        fixture.detectChanges();
+        await fixture.whenStable();
+        component.dashboard = {
+            ...dashboard('league'),
+            league: {...dashboard('league').league, isDemo: false},
+            members: [
+                {leagueId: 'league', userId: 'member', role: 'member', displayName: 'Member', imageUrl: '', joinedAt: '2026-09-01T00:00:00Z'},
+                {leagueId: 'league', userId: 'a', role: 'member', displayName: 'Alice', imageUrl: '', joinedAt: '2026-09-01T00:00:00Z'},
+                {leagueId: 'league', userId: 'b', role: 'member', displayName: 'Bob', imageUrl: '', joinedAt: '2026-09-01T00:00:00Z'}
+            ],
+            recommendations: [{
+                id: 'rec', recommenderUserId: 'member', trackName: 'Track', artistNames: 'Artist', imageUrl: '', spotifyUrl: '',
+                scoringStartsAt: '2026-09-01T00:00:00Z', scoringEndsAt: '2099-10-01T00:00:00Z'
+            }],
+            breakdownByRecommender: new Map([['member', [
+                {recommendationId: 'rec', listenerUserId: 'a', listenerDisplayName: 'Alice', latestRank: 4, latestPoints: 97, totalPoints: 97},
+                {recommendationId: 'rec', listenerUserId: 'b', listenerDisplayName: 'Bob', latestRank: null, latestPoints: 0, totalPoints: 0}
+            ]]])
+        } as any;
+        component.activeTab = 'recommendations';
+        fixture.detectChanges();
+
+        const toggle = fixture.nativeElement.querySelector('.recommendation-rankings-toggle') as HTMLButtonElement;
+        expect(toggle.textContent).toContain('1 of 2 members ranked this');
+        expect(fixture.nativeElement.querySelector('.listener-position-list')).toBeNull();
+        toggle.click();
+        fixture.detectChanges();
+        const details = fixture.nativeElement.querySelector('.listener-position-list') as HTMLElement;
+        expect(details.textContent).toContain('#4 · +97');
+        expect(details.textContent).toContain('—');
+        expect(details.textContent).not.toContain('Not ranked +0');
+    });
+
+    it('uses a single APG menu button for owner actions on each member', async () => {
+        fixture.detectChanges();
+        await fixture.whenStable();
+        component.currentUserId = 'owner';
+        component.dashboard = {
+            ...dashboard('league'),
+            league: {...dashboard('league').league, isDemo: false, ownerUserId: 'owner'},
+            members: [
+                {leagueId: 'league', userId: 'owner', role: 'owner', displayName: 'Owner', imageUrl: '', joinedAt: '2026-09-01T00:00:00Z'},
+                {leagueId: 'league', userId: 'member', role: 'member', displayName: 'Member', imageUrl: '', joinedAt: '2026-09-01T00:00:00Z'}
+            ]
+        } as any;
+        component.activeTab = 'members';
+        fixture.detectChanges();
+
+        const trigger = fixture.nativeElement.querySelector('[aria-label="Actions for Member"]') as HTMLButtonElement;
+        expect(trigger.getAttribute('aria-haspopup')).toBe('menu');
+        expect(fixture.nativeElement.querySelector('[role="menu"]')).toBeNull();
+        trigger.click();
+        fixture.detectChanges();
+        expect(Array.from(fixture.nativeElement.querySelectorAll('[role="menuitem"]')).map((item: any) => item.textContent.trim()))
+            .toEqual(['Make owner', 'Remove member']);
     });
 
     it('keeps league B and its subscription when league A resolves later', async () => {

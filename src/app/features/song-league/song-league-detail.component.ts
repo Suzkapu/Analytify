@@ -17,10 +17,12 @@ import {
 import {SongLeagueService} from '@core/song-league/song-league.service';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 import {
   PushNotificationService,
   PushNotificationSettings
 } from '@core/notifications/push-notification.service';
+import {designInviteUrl, rankingLabel, recommendationParticipation, weeklyTaskCopy} from './song-league-view-model';
 
 @Component({
     selector: 'app-song-league-detail',
@@ -76,6 +78,10 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   showDeleteLeagueModal = false;
   isDeletingLeague = false;
   selectedStanding: SongLeagueStanding | null = null;
+  activeTab: 'overview' | 'recommendations' | 'members' = 'overview';
+  showLeagueSettings = false;
+  openMemberMenuId = '';
+  expandedRecommendationId = '';
 
   private leagueId = '';
   private unsubscribeLeague: (() => void) | null = null;
@@ -92,7 +98,12 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     private songLeague: SongLeagueService,
     private pushNotifications: PushNotificationService,
     private auth: SpotifyAuthService,
-    private storage: StorageService
+    private storage: StorageService,
+    readonly navigation: DesignNavigationService = {
+      variant: 'legacy',
+      commands: (_destination: string, parameters: {leagueId?: string} = {}) =>
+        parameters.leagueId ? ['/song-league', parameters.leagueId] : ['/song-league']
+    } as DesignNavigationService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -307,7 +318,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     this.errorMessage = '';
     try {
       const invitation = await this.songLeague.createInvite(this.leagueId);
-      this.inviteUrl = invitation.url;
+      this.inviteUrl = designInviteUrl(invitation.url, this.navigation.variant);
       this.newInviteId = invitation.id;
       await this.loadActiveInvites();
     } catch (error) {
@@ -461,7 +472,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
       if (action === 'leave') {
         await this.songLeague.leaveLeague(this.leagueId);
         this.showLifecycleModal = false;
-        await this.router.navigate(['/song-league']);
+        await this.router.navigate(this.navigation.commands('songLeague'));
         return;
       }
       if (action === 'remove' && target) {
@@ -542,7 +553,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
       this.unsubscribeLeague?.();
       this.unsubscribeLeague = null;
       this.showDeleteLeagueModal = false;
-      await this.router.navigate(['/song-league']);
+      await this.router.navigate(this.navigation.commands('songLeague'));
     } catch (error) {
       this.showDeleteLeagueModal = false;
       this.errorMessage = this.describeError(error, 'The Song League could not be deleted.');
@@ -564,6 +575,41 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     return (this.dashboard.breakdownByRecommender.get(
       this.dashboard.recommendations.find(item => item.id === recommendationId)?.recommenderUserId || ''
     ) || []).filter(row => row.recommendationId === recommendationId);
+  }
+
+  get isDesignV2(): boolean {
+    return this.navigation.variant === 'new';
+  }
+
+  get weeklyTask() {
+    return weeklyTaskCopy({
+      isClosed: this.isClosed,
+      isDemo: !!this.dashboard?.league.isDemo,
+      isPickOpen: this.isPickOpen,
+      alreadySubmitted: this.alreadySubmittedToday || this.alreadySubmittedDemoPick
+    });
+  }
+
+  recommendationParticipationLabel(recommendationId: string): string {
+    const eligibleMembers = Math.max(0, (this.dashboard?.members.filter(member => !member.leftAt).length || 1) - 1);
+    return recommendationParticipation(this.recommendationRows(recommendationId), eligibleMembers).label;
+  }
+
+  recommendationRankingLabel(row: SongLeagueScoreBreakdown): string {
+    return rankingLabel(row);
+  }
+
+  toggleRecommendation(recommendationId: string): void {
+    this.expandedRecommendationId = this.expandedRecommendationId === recommendationId ? '' : recommendationId;
+  }
+
+  toggleMemberMenu(userId: string): void {
+    this.openMemberMenuId = this.openMemberMenuId === userId ? '' : userId;
+  }
+
+  openWeeklyPicks(): void {
+    document.querySelector<HTMLElement>('#weekly-picks')?.focus();
+    document.querySelector<HTMLElement>('#weekly-picks')?.scrollIntoView({behavior: 'smooth', block: 'start'});
   }
 
   breakdownRowsForSelected(): SongLeagueScoreBreakdown[] {
@@ -663,7 +709,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
   }
 
   back(): void {
-    void this.router.navigate(['/song-league']);
+    void this.router.navigate(this.navigation.commands('songLeague'));
   }
 
   private async reloadLive(): Promise<void> {

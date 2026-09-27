@@ -62,6 +62,12 @@ app-compare-room-join {
   app-compare-room-join .public-playlist-adder button { min-height: 44px; }
 }
 
+@media (max-width: 768px) {
+  .app-route-content:has(app-song-league-detail) + .scroll-to-top-btn,
+  .app-route-content:has(app-song-league-home) + .scroll-to-top-btn,
+  .app-route-content:has(app-song-league-claim) + .scroll-to-top-btn { display: none !important; }
+}
+
 :root {
   color-scheme: dark;
   --color-bg: #090c0a;

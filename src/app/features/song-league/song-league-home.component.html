@@ -107,7 +107,7 @@
       @if (!isLoading && leagues.length) {
         <div class="league-grid">
           @for (league of leagues; track trackLeague($index, league)) {
-            <a [routerLink]="['/song-league', league.id]" class="league-card">
+            <a [routerLink]="navigation.commands('songLeague', {leagueId: league.id})" class="league-card">
               <div class="league-card-icon"><i class="pi pi-chart-line"></i></div>
               <div>
                 <span>{{ league.timezone }}</span>
@@ -131,7 +131,7 @@
         </div>
         <div class="league-grid">
           @for (league of closedLeagues; track trackLeague($index, league)) {
-            <a [routerLink]="['/song-league', league.id]" class="league-card">
+            <a [routerLink]="navigation.commands('songLeague', {leagueId: league.id})" class="league-card">
               <div class="league-card-icon"><i class="pi pi-lock"></i></div>
               <div><span>Closed {{ league.closedAt | date:'mediumDate' }}</span><h3>{{ league.name }}</h3><p>View standings and song history</p></div>
               <i class="pi pi-chevron-right"></i>
