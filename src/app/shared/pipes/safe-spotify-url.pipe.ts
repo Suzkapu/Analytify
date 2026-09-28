@@ -3,7 +3,7 @@ import {sanitizeSpotifyUrl, SpotifyEntityType} from '@core/navigation/spotify-ur
 
 @Pipe({
     name: 'safeSpotifyUrl',
-    standalone: true
+    standalone: false
 })
 export class SafeSpotifyUrlPipe implements PipeTransform {
   transform(value: unknown, expectedType?: SpotifyEntityType): string | null {

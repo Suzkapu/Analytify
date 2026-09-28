@@ -1,6 +1,4 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Optional} from '@angular/core';
-import {DatePipe} from '@angular/common';
-import {FormsModule} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {ParticipantSpotifyService} from '@core/compare-room/participant-spotify.service';
@@ -8,13 +6,13 @@ import {SpotifyDataService} from '@core/data-access/spotify/spotify-data.service
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {StatsSharingService} from '@core/sharing/stats-sharing.service';
-import {AccessibleDialogDirective} from '@shared/ui/accessible-dialog.directive';
+import {SharedModule} from '@shared/shared.module';
 import {V2ButtonDirective, V2CardComponent, V2ListRowComponent, V2PageComponent, V2SearchFiltersComponent, V2StateComponent, V2TabsComponent, V2ToolbarComponent} from '@shared/ui-v2';
 import {UserStatsController} from './user-stats.component';
 
 @Component({
   selector: 'app-v2-user-stats', standalone: true,
-  imports: [DatePipe, FormsModule, AccessibleDialogDirective, V2ButtonDirective, V2CardComponent, V2ListRowComponent, V2PageComponent,
+  imports: [SharedModule, V2ButtonDirective, V2CardComponent, V2ListRowComponent, V2PageComponent,
     V2SearchFiltersComponent, V2StateComponent, V2TabsComponent, V2ToolbarComponent],
   template: `
     <v2-page [eyebrow]="isSpyMode ? 'Approved shared access' : 'Personal listening'"

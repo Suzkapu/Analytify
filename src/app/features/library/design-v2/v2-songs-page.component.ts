@@ -1,11 +1,11 @@
 import {ChangeDetectionStrategy, Component, NgZone, Optional} from '@angular/core';
-import {FormsModule} from '@angular/forms';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 import {ImageHealingService} from '@core/sync/image-healing/image-healing.service';
 import {PlaylistLoaderService} from '@core/sync/playlist-loader/playlist-loader.service';
+import {SharedModule} from '@shared/shared.module';
 import {
   V2ButtonDirective, V2CardComponent, V2ListRowComponent, V2PageComponent,
   V2SearchFiltersComponent, V2StateComponent, V2TabsComponent, V2ToolbarComponent
@@ -15,7 +15,7 @@ import {SongsController} from '../songs/songs.component';
 @Component({
   selector: 'app-v2-songs-page',
   standalone: true,
-  imports: [RouterLink, FormsModule, V2ButtonDirective, V2CardComponent, V2ListRowComponent,
+  imports: [RouterLink, SharedModule, V2ButtonDirective, V2CardComponent, V2ListRowComponent,
     V2PageComponent, V2SearchFiltersComponent, V2StateComponent, V2TabsComponent, V2ToolbarComponent],
   template: `
     <v2-page eyebrow="Playlist explorer" [title]="playlistName || 'Playlist contents'"

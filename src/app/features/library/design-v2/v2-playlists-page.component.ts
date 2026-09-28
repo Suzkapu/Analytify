@@ -1,12 +1,11 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Optional} from '@angular/core';
-import {NgClass} from '@angular/common';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {SpotifyDataService} from '@core/data-access/spotify/spotify-data.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 import {PlaylistLoaderService} from '@core/sync/playlist-loader/playlist-loader.service';
-import {SafeSpotifyUrlPipe} from '@shared/pipes/safe-spotify-url.pipe';
+import {SharedModule} from '@shared/shared.module';
 import {
   V2ButtonDirective, V2CardComponent, V2PageComponent, V2SearchFiltersComponent,
   V2StateComponent, V2ToolbarComponent
@@ -16,7 +15,7 @@ import {PlaylistsController} from '../playlists/playlists.component';
 @Component({
   selector: 'app-v2-playlists-page',
   standalone: true,
-  imports: [RouterLink, NgClass, SafeSpotifyUrlPipe, V2ButtonDirective, V2CardComponent, V2PageComponent,
+  imports: [RouterLink, SharedModule, V2ButtonDirective, V2CardComponent, V2PageComponent,
     V2SearchFiltersComponent, V2StateComponent, V2ToolbarComponent],
   template: `
     <v2-page eyebrow="Your Spotify library" title="Your playlists"
