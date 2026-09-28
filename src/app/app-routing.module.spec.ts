@@ -41,12 +41,12 @@ describe('application routes', () => {
         expect(modernShell.component).toBe(DesignV2ShellComponent);
         expect(modernShell.children?.map(route => route.path)).toEqual([
             '', 'login', 'callback', 'spotify', 'playlists', 'songs/:id', 'artistDetails/:id',
-            'analysis/:id', 'stats', 'history', 'admin', 'song-league', 'shared-playlists',
+            'analysis/:id', 'stats/:userId', 'stats', 'history', 'admin', 'song-league', 'shared-playlists',
             'legal', 'compare-room/callback', 'compare-room/join/:roomId', 'compare-room', '**'
         ]);
         for (const path of [
             'login', 'callback', 'spotify', 'playlists', 'songs/:id', 'artistDetails/:id', 'analysis/:id',
-            'stats', 'history', 'admin', 'song-league', 'shared-playlists',
+            'stats/:userId', 'stats', 'history', 'admin', 'song-league', 'shared-playlists',
             'compare-room/callback', 'compare-room/join/:roomId', 'compare-room', 'legal'
         ]) {
             const route = modernRouteByPath(path);

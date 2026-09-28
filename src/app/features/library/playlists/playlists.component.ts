@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation, ChangeDetectionStrategy, OnDestroy, Optional, ChangeDetectorRef} from '@angular/core';
+import {Component, Directive, ViewEncapsulation, ChangeDetectionStrategy, OnDestroy, Optional, ChangeDetectorRef} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SpotifyDataService} from "@core/data-access/spotify/spotify-data.service";
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
@@ -10,13 +10,8 @@ import {DesignNavigationService} from '@core/navigation/design-navigation.servic
 
 const console = createScopedLogger('Playlists');
 
-@Component({
-    selector: 'app-playlists', templateUrl: './playlists.component.html', styleUrls: ['./playlists.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
-})
-export class PlaylistsComponent implements OnDestroy {
+@Directive()
+export class PlaylistsController implements OnDestroy {
   readonly spotifyPolicyNotice: boolean;
   playlists: any[] = [];
   filteredPlaylists: any[] = [];
@@ -442,4 +437,26 @@ export class PlaylistsComponent implements OnDestroy {
     return playlist?.id || playlist?.uri || playlist?.name || String(_index);
   }
 
+}
+
+@Component({
+  selector: 'app-playlists', templateUrl: './playlists.component.html', styleUrls: ['./playlists.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false
+})
+export class PlaylistsComponent extends PlaylistsController {
+  constructor(
+    route: ActivatedRoute,
+    router: Router,
+    spotifyDataService: SpotifyDataService,
+    authService: SpotifyAuthService,
+    storageService: StorageService,
+    playlistLoaderService: PlaylistLoaderService,
+    @Optional() designNavigation?: DesignNavigationService,
+    @Optional() changeDetector?: ChangeDetectorRef
+  ) {
+    super(route, router, spotifyDataService, authService, storageService, playlistLoaderService,
+      designNavigation, changeDetector);
+  }
 }

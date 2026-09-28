@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewEncapsulation, ChangeDetectionStrategy, Optional } from '@angular/core';
+import { Component, Directive, OnInit, OnDestroy, ViewEncapsulation, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { SpotifyAuthService } from "@core/auth/spotify-auth.service";
 import { StorageService } from "@core/data-access/storage/storage.service";
@@ -10,15 +10,8 @@ import {DesignNavigationService} from '@core/navigation/design-navigation.servic
 
 const console = createScopedLogger('Playlist Analysis');
 
-@Component({
-    selector: 'app-playlist-analysis',
-    templateUrl: './playlist-analysis.component.html',
-    styleUrls: ['./playlist-analysis.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
-})
-export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
+@Directive()
+export class PlaylistAnalysisController implements OnInit, OnDestroy {
   playlistId: string = '';
   playlistName: string = '';
   artists: any[] = [];
@@ -88,8 +81,6 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
     this.routeSubscription = null;
     this.unsubscribeFromLoaderTask();
   }
-
-
 
   isCacheExpired(lastUpdatedStr: string | null): boolean {
     if (!lastUpdatedStr) return true;
@@ -520,5 +511,25 @@ export class PlaylistAnalysisComponent implements OnInit, OnDestroy {
   openTrackClick(url: string) {
     openSpotifyUrl(url, {expectedType: 'track', target: '_self'});
   }
+}
 
+@Component({
+  selector: 'app-playlist-analysis',
+  templateUrl: './playlist-analysis.component.html',
+  styleUrls: ['./playlist-analysis.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false
+})
+export class PlaylistAnalysisComponent extends PlaylistAnalysisController {
+  constructor(
+    route: ActivatedRoute,
+    authService: SpotifyAuthService,
+    router: Router,
+    storageService: StorageService,
+    playlistLoaderService: PlaylistLoaderService,
+    @Optional() designNavigation?: DesignNavigationService
+  ) {
+    super(route, authService, router, storageService, playlistLoaderService, designNavigation);
   }
+}

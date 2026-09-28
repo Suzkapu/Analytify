@@ -1,4 +1,4 @@
-import {Component, OnDestroy, ChangeDetectionStrategy, Optional} from '@angular/core';
+import {Component, Directive, OnDestroy, ChangeDetectionStrategy, Optional} from '@angular/core';
 import {SpotifyDataService} from "@core/data-access/spotify/spotify-data.service";
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {StorageService} from "@core/data-access/storage/storage.service";
@@ -11,14 +11,8 @@ import {DesignNavigationService} from '@core/navigation/design-navigation.servic
 
 const console = createScopedLogger('Artist Details');
 
-@Component({
-    selector: 'app-artist-details',
-    templateUrl: './artist-details.component.html',
-    styleUrls: ['./artist-details.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
-})
-export class ArtistDetailsComponent implements OnDestroy {
+@Directive()
+export class ArtistDetailsController implements OnDestroy {
   artist: any = {};
   tracks: any[] = [];
   playlistId: string = '';
@@ -207,4 +201,25 @@ export class ArtistDetailsComponent implements OnDestroy {
   get isDesignV2(): boolean { return this.designNavigation?.variant === 'new'; }
 
 
+}
+
+@Component({
+  selector: 'app-artist-details',
+  templateUrl: './artist-details.component.html',
+  styleUrls: ['./artist-details.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false
+})
+export class ArtistDetailsComponent extends ArtistDetailsController {
+  constructor(
+    route: ActivatedRoute,
+    spotifyDataService: SpotifyDataService,
+    router: Router,
+    authService: SpotifyAuthService,
+    storageService: StorageService,
+    supabaseService: SupabaseService,
+    @Optional() designNavigation?: DesignNavigationService
+  ) {
+    super(route, spotifyDataService, router, authService, storageService, supabaseService, designNavigation);
+  }
 }

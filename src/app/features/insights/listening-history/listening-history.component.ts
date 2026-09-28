@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Optional} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Directive, OnInit, Optional} from '@angular/core';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
@@ -9,14 +9,8 @@ import {groupHistoryByDay, HistoryDayGroup} from '../insights-view-model';
 
 const console = createScopedLogger('Listening History');
 
-@Component({
-    selector: 'app-listening-history',
-    templateUrl: './listening-history.component.html',
-    styleUrls: ['./listening-history.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
-})
-export class ListeningHistoryComponent implements OnInit {
+@Directive()
+export class ListeningHistoryController implements OnInit {
 
   recentlyPlayedTracks: any[] = [];
   historyDayGroups: HistoryDayGroup[] = [];
@@ -192,6 +186,23 @@ export class ListeningHistoryComponent implements OnInit {
   openTrackClick(url: string) {
     openSpotifyUrl(url, {expectedType: 'track'});
   }
+}
 
-
+@Component({
+  selector: 'app-listening-history',
+  templateUrl: './listening-history.component.html',
+  styleUrls: ['./listening-history.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false
+})
+export class ListeningHistoryComponent extends ListeningHistoryController {
+  constructor(
+    spotifyDataService: SpotifyDataService,
+    authService: SpotifyAuthService,
+    storageService: StorageService,
+    supabaseService: SupabaseService,
+    @Optional() changeDetector?: ChangeDetectorRef
+  ) {
+    super(spotifyDataService, authService, storageService, supabaseService, changeDetector);
+  }
 }

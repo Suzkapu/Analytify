@@ -62,16 +62,25 @@ export const DESIGN_V2_ROUTES: Routes = [{
         .then(module => module.V2AnalysisPageComponent)
     },
     {
+      path: 'stats/:userId', title: 'Shared listening stats | Analytify',
+      data: designV2RouteData('stats', 'Shared Top Listening', 'dashboard', 'insights'),
+      canActivate: [spotifyAuthGuard, spotifyRestrictedFeatureGuard],
+      loadComponent: () => import('@features/insights/user-stats/v2-user-stats.component')
+        .then(module => module.V2UserStatsComponent)
+    },
+    {
       path: 'stats', title: 'Your listening stats | Analytify',
       data: designV2RouteData('stats', 'Your Top Listening', 'dashboard', 'insights', {preload: true}),
       canActivate: [spotifyAuthGuard, spotifyRestrictedFeatureGuard],
-      loadChildren: () => import('@features/insights/user-stats/user-stats.module').then(module => module.UserStatsModule)
+      loadComponent: () => import('@features/insights/user-stats/v2-user-stats.component')
+        .then(module => module.V2UserStatsComponent)
     },
     {
       path: 'history', title: 'Recently played | Analytify',
       data: designV2RouteData('history', 'Recently Played', 'dashboard', 'insights', {preload: true}),
       canActivate: [spotifyAuthGuard, spotifyRestrictedFeatureGuard],
-      loadChildren: () => import('@features/insights/listening-history/listening-history.module').then(module => module.ListeningHistoryModule)
+      loadComponent: () => import('@features/insights/listening-history/v2-listening-history.component')
+        .then(module => module.V2ListeningHistoryComponent)
     },
     {
       path: 'admin', title: 'Administration | Analytify',

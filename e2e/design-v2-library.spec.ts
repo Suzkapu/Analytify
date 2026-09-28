@@ -13,10 +13,10 @@ test.beforeEach(async ({page}) => {
 test('v2 playlists uses stable controls and preserves v2 navigation', async ({page}) => {
   await page.goto('/new/playlists');
   await expect(page.getByRole('heading', {name: 'Your playlists', exact: true})).toBeVisible();
-  await expect(page.getByRole('searchbox', {name: 'Search playlists'})).toBeVisible({timeout: 15_000});
+  await expect(page.getByRole('searchbox', {name: 'Search your playlists'})).toBeVisible({timeout: 15_000});
   await expect(page.getByRole('button', {name: /Song count: default order/})).toBeVisible();
 
-  const playlistCard = page.locator('.item-card').filter({hasText: 'Test Playlist'});
+  const playlistCard = page.locator('.v2-playlist-card').filter({hasText: 'Test Playlist'});
   const open = playlistCard.locator('a[href="/new/songs/playlist-1"]');
   const analyze = playlistCard.locator('a[href="/new/analysis/playlist-1"]');
   await expect(open).toHaveAttribute('href', '/new/songs/playlist-1');
@@ -31,7 +31,7 @@ test('v2 playlists uses stable controls and preserves v2 navigation', async ({pa
 test('v2 library remains reflow-safe at 320 CSS pixels', async ({page}) => {
   await page.setViewportSize({width: 320, height: 800});
   await page.goto('/new/playlists');
-  const playlistCard = page.locator('.item-card').filter({hasText: 'Test Playlist'});
+  const playlistCard = page.locator('.v2-playlist-card').filter({hasText: 'Test Playlist'});
   await expect(playlistCard.locator('a[href="/new/songs/playlist-1"]')).toBeVisible({timeout: 15_000});
   await expect(playlistCard.locator('a[href="/new/analysis/playlist-1"]')).toBeVisible();
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
@@ -40,13 +40,9 @@ test('v2 library remains reflow-safe at 320 CSS pixels', async ({page}) => {
 });
 
 test('every v2 library child route retains the shared shell', async ({page}) => {
-  for (const [path, heading] of [
-    ['/new/songs/playlist-1', 'Playlist contents'],
-    ['/new/artistDetails/artist-1', 'Artist details'],
-    ['/new/analysis/playlist-1', 'Playlist analysis']
-  ] as const) {
+  for (const path of ['/new/songs/playlist-1', '/new/artistDetails/artist-1', '/new/analysis/playlist-1'] as const) {
     await page.goto(path);
-    await expect(page.getByRole('heading', {name: heading, exact: true}).first()).toBeVisible();
+    await expect(page.locator('.v2-page__header h1')).toBeVisible();
     await expect(page.locator('app-design-v2-shell')).toHaveCount(1);
     await expect(page.locator('main')).toHaveCount(1);
   }

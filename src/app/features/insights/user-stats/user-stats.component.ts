@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, HostListener, Optional } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Directive, OnInit, OnDestroy, HostListener, Optional } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
@@ -48,14 +48,8 @@ function compareCalendarWeekdays(): string[] {
   });
 }
 
-@Component({
-    selector: 'app-user-stats',
-    templateUrl: './user-stats.component.html',
-    styleUrls: ['./user-stats.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
-})
-export class UserStatsComponent implements OnInit, OnDestroy {
+@Directive()
+export class UserStatsController implements OnInit, OnDestroy {
   selectedRange: string = 'short_term'; // 'short_term', 'medium_term', 'long_term'
   selectedCategory: StatsCategory = 'tracks';
   private _statsSearchQuery = '';
@@ -2265,5 +2259,28 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   onDocumentClick() {
     this.showHistoryMenu = false;
     this.showCompareMenu = false;
+  }
+}
+
+@Component({
+  selector: 'app-user-stats',
+  templateUrl: './user-stats.component.html',
+  styleUrls: ['./user-stats.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
+})
+export class UserStatsComponent extends UserStatsController {
+  constructor(
+    spotifyDataService: SpotifyDataService,
+    authService: SpotifyAuthService,
+    storageService: StorageService,
+    supabaseService: SupabaseService,
+    @Optional() route?: ActivatedRoute,
+    @Optional() statsSharing?: StatsSharingService,
+    @Optional() changeDetector?: ChangeDetectorRef,
+    @Optional() participantSpotify?: ParticipantSpotifyService
+  ) {
+    super(spotifyDataService, authService, storageService, supabaseService, route, statsSharing,
+      changeDetector, participantSpotify);
   }
 }

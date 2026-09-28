@@ -3,11 +3,9 @@
 @use 'app/features/song-league/song-league-claim.component';
 @use 'app/features/song-league/song-league-detail.component';
 @use 'app/shared/ui-v2/design-v2-primitives' as design-v2-primitives;
-@use 'app/features/library/design-v2/design-v2-library' as design-v2-library;
 
 .design-v2 {
   @include design-v2-primitives.primitives;
-  @include design-v2-library.library;
 }
 
 app-compare-room-shell,

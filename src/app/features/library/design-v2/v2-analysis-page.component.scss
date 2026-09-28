@@ -1,0 +1,24 @@
+:host { display: block; }
+.v2-analysis-warning, .v2-analysis-refresh { display: flex; padding: var(--v2-space-3); gap: 9px; border: 1px solid var(--v2-color-border-strong); border-radius: var(--v2-radius-control); }
+.v2-metric-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--v2-space-3); }
+.v2-metric { display: grid; min-width: 0; gap: 6px; }
+.v2-metric i { color: var(--v2-color-accent); font-size: 1.3rem; }
+.v2-metric span { color: var(--v2-color-text-muted); font-size: .7rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.v2-metric strong { overflow: hidden; font-size: clamp(1.25rem, 2vw, 1.8rem); text-overflow: ellipsis; }
+.v2-analysis-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--v2-space-4); }
+.v2-analysis-columns > section { min-width: 0; }
+.v2-frequency-list { display: grid; margin: 0; padding: 0; gap: 8px; list-style: none; }
+.v2-frequency-list li { display: flex; justify-content: space-between; padding: 12px 14px; border: 1px solid var(--v2-color-border); border-radius: var(--v2-radius-control); background: var(--v2-color-surface); }
+.v2-frequency-list span { display: flex; min-width: 0; gap: 10px; }
+.v2-frequency-list em { color: var(--v2-color-accent); font-style: normal; }
+.v2-highlight-list { display: grid; gap: 8px; }
+.v2-highlight { display: grid; grid-template-columns: 58px minmax(0, 1fr) auto; align-items: center; width: 100%; min-height: 76px; padding: 8px; gap: 12px; border: 1px solid var(--v2-color-border); border-radius: var(--v2-radius-control); color: var(--v2-color-text); background: var(--v2-color-surface); text-align: left; }
+.v2-highlight img { width: 58px; height: 58px; border-radius: 9px; object-fit: cover; }
+.v2-highlight span { display: grid; min-width: 0; gap: 2px; }
+.v2-highlight small { color: var(--v2-color-accent); font-weight: 800; }
+.v2-highlight strong, .v2-highlight em { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v2-highlight em { color: var(--v2-color-text-muted); font-size: .78rem; font-style: normal; }
+.v2-highlight b { color: var(--v2-color-text-muted); }
+@media (max-width: 1050px) { .v2-metric-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .v2-analysis-columns { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .v2-metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
