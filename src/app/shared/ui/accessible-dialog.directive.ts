@@ -27,7 +27,7 @@ interface InertState {
 /** Supplies focus containment and background isolation for the app's custom modal surfaces. */
 @Directive({
     selector: '[appAccessibleDialog]',
-    standalone: false
+    standalone: true
 })
 export class AccessibleDialogDirective implements AfterViewInit, OnDestroy {
   @Input() modalEscapeDisabled = false;

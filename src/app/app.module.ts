@@ -1,6 +1,5 @@
 import {NgModule, isDevMode} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ServiceWorkerModule} from '@angular/service-worker';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -12,7 +11,6 @@ import {LayoutModule} from '@shared/layout/layout.module';
   declarations: [AppComponent],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,
     CoreModule,
     LayoutModule,
     AppRoutingModule,

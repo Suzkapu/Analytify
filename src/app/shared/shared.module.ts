@@ -16,8 +16,8 @@ const SHARED_MODULES = [
 ];
 
 @NgModule({
-  imports: SHARED_MODULES,
-  declarations: [MetricCardComponent, PageStateComponent, SectionHeadingComponent, SafeSpotifyUrlPipe, AccessibleDialogDirective, ImageFallbackDirective],
+  imports: [...SHARED_MODULES, SafeSpotifyUrlPipe, AccessibleDialogDirective],
+  declarations: [MetricCardComponent, PageStateComponent, SectionHeadingComponent, ImageFallbackDirective],
   exports: [...SHARED_MODULES, MetricCardComponent, PageStateComponent, SectionHeadingComponent, SafeSpotifyUrlPipe, AccessibleDialogDirective, ImageFallbackDirective]
 })
 export class SharedModule {}
