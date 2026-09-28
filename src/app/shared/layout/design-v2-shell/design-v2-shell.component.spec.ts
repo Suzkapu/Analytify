@@ -83,11 +83,30 @@ describe('DesignV2ShellComponent', () => {
     const element = harness.fixture.nativeElement as HTMLElement;
     expect(element.querySelectorAll('.v2-overlay-host').length).toBe(1);
     expect(element.querySelector('[role="dialog"]')).not.toBeNull();
+    const ambient = harness.fixture.debugElement.query(By.directive(AmbientBackgroundComponent)).componentInstance as AmbientBackgroundComponent;
+    expect(ambient.state.overlayState()).toBe('tools');
 
     document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
     harness.fixture.detectChanges();
     expect(shell.toolsOpen()).toBe(false);
+    expect(ambient.state.overlayState()).toBe('none');
     expect(element.querySelector('[role="dialog"]')).toBeNull();
+  });
+
+  it('keeps the ambient instance through menu navigation and shell-mode changes', async () => {
+    const harness = await RouterTestingHarness.create('/new/playlists');
+    const shell = harness.fixture.debugElement.query(By.directive(DesignV2ShellComponent)).componentInstance as DesignV2ShellComponent;
+    const ambient = harness.fixture.debugElement.query(By.directive(AmbientBackgroundComponent)).componentInstance as AmbientBackgroundComponent;
+    shell.toggleTools();
+    harness.fixture.detectChanges();
+    expect(ambient.state.overlayState()).toBe('tools');
+
+    await harness.navigateByUrl('/new/stats');
+    expect(harness.fixture.debugElement.query(By.directive(AmbientBackgroundComponent)).componentInstance).toBe(ambient);
+    expect(ambient.state.overlayState()).toBe('none');
+    await harness.navigateByUrl('/new/login');
+    expect(harness.fixture.debugElement.query(By.directive(AmbientBackgroundComponent)).componentInstance).toBe(ambient);
+    expect(ambient.state.shellMode()).toBe('focus');
   });
 
   it('opens the account hub with a usable profile fallback and all account actions', async () => {

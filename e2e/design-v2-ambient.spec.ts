@@ -1,5 +1,28 @@
 import AxeBuilder from '@axe-core/playwright';
 import {expect, test} from '@playwright/test';
+import {mockSpotify, seedAuthenticatedBrowser} from './helpers/authenticated-browser';
+
+test('one ambient renderer persists through overlays, routes, and shell modes', async ({page}) => {
+  await mockSpotify(page);
+  await seedAuthenticatedBrowser(page);
+  await page.goto('/new/playlists');
+  const ambient = page.locator('app-ambient-background');
+  await expect(ambient).toHaveCount(1);
+  await ambient.evaluate(element => { (element as HTMLElement & {ambientIdentity?: string}).ambientIdentity = 'persistent'; });
+  const baseIntensity = await ambient.evaluate(element => (element as HTMLElement).style.getPropertyValue('--ambient-intensity'));
+
+  await page.getByRole('button', {name: 'Open More tools'}).click();
+  await expect.poll(() => ambient.evaluate(element => (element as HTMLElement).style.getPropertyValue('--ambient-intensity')))
+    .not.toBe(baseIntensity);
+  await page.getByRole('link', {name: /Compare Room/}).click();
+  await expect(page).toHaveURL(/\/new\/compare-room$/);
+  expect(await ambient.evaluate(element => (element as HTMLElement & {ambientIdentity?: string}).ambientIdentity)).toBe('persistent');
+  await expect(ambient).toHaveCount(1);
+
+  await page.getByRole('link', {name: 'Legal & privacy'}).click();
+  expect(await ambient.evaluate(element => (element as HTMLElement & {ambientIdentity?: string}).ambientIdentity)).toBe('persistent');
+  await expect(page.locator('.design-v2')).toHaveAttribute('data-chrome', 'public');
+});
 
 test('v2 ambient layer is decorative, stable, scroll-responsive, and reflow-safe', async ({page}) => {
   await page.setViewportSize({width: 320, height: 800});

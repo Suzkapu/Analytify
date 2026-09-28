@@ -5,6 +5,8 @@
   --ambient-secondary-y: 42%;
   --ambient-dots-x: 0;
   --ambient-dots-y: 0;
+  --ambient-intensity: 1;
+  --ambient-dot-intensity: 1;
   position: fixed;
   z-index: 0;
   inset: 0;
@@ -16,15 +18,15 @@
 
 :host > span { position: absolute; inset: -12%; pointer-events: none; }
 .ambient-primary {
-  opacity: .48;
+  opacity: calc(.48 * var(--ambient-intensity));
   background: radial-gradient(circle at var(--ambient-primary-x) var(--ambient-primary-y), rgba(42, 219, 118, .23), transparent min(38vw, 34rem));
 }
 .ambient-secondary {
-  opacity: .42;
+  opacity: calc(.42 * var(--ambient-intensity));
   background: radial-gradient(circle at var(--ambient-secondary-x) var(--ambient-secondary-y), rgba(26, 117, 80, .21), transparent min(34vw, 31rem));
 }
 .ambient-dots {
-  opacity: .18;
+  opacity: calc(.18 * var(--ambient-dot-intensity));
   background-image: radial-gradient(circle, rgba(120, 255, 179, .55) 0 1px, transparent 1.5px);
   background-size: 72px 72px;
   transform: translate3d(var(--ambient-dots-x), var(--ambient-dots-y), 0);
@@ -32,8 +34,8 @@
 
 @media (max-width: 760px), (pointer: coarse) {
   .ambient-primary,
-  .ambient-secondary { opacity: .34; }
-  .ambient-dots { opacity: .12; background-size: 88px 88px; }
+  .ambient-secondary { opacity: calc(.34 * var(--ambient-intensity)); }
+  .ambient-dots { opacity: calc(.12 * var(--ambient-dot-intensity)); background-size: 88px 88px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

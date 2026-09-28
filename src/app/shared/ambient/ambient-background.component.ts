@@ -7,7 +7,7 @@ import {
   NgZone,
   OnDestroy
 } from '@angular/core';
-import {AmbientVector, ambientVectorsClose, dampAmbientVector} from './ambient-background.math';
+import {AmbientOverlayState, AmbientShellMode, AmbientVector, ambientVectorsClose, dampAmbientVector} from './ambient-background.math';
 import {AmbientBackgroundState} from './ambient-background.state';
 
 @Component({
@@ -29,8 +29,10 @@ export class AmbientBackgroundComponent implements AfterViewInit, OnDestroy {
 
   @Input() set ambientKey(key: string) {
     this.state.setRouteKey(key);
-    if (this.viewReady) this.scheduleFrame();
+    this.targetChanged();
   }
+  @Input() set overlayState(overlay: AmbientOverlayState) { this.state.setOverlayState(overlay); this.targetChanged(); }
+  @Input() set shellMode(mode: AmbientShellMode) { this.state.setShellMode(mode); this.targetChanged(); }
 
   private readonly scrollHandler = (): void => {
     this.state.setScrollMetrics(window.scrollY, document.documentElement.scrollHeight, window.innerHeight);
@@ -113,6 +115,18 @@ export class AmbientBackgroundComponent implements AfterViewInit, OnDestroy {
     style.setProperty('--ambient-secondary-y', `${(value.secondaryY * 100).toFixed(2)}%`);
     style.setProperty('--ambient-dots-x', `${(value.dotsX * 22).toFixed(2)}px`);
     style.setProperty('--ambient-dots-y', `${(value.dotsY * 22).toFixed(2)}px`);
+    style.setProperty('--ambient-intensity', value.intensity.toFixed(3));
+    style.setProperty('--ambient-dot-intensity', value.dotIntensity.toFixed(3));
+  }
+
+  private targetChanged(): void {
+    if (!this.viewReady) return;
+    if (this.state.reducedMotion()) {
+      this.current = this.state.target();
+      this.render(this.current);
+      return;
+    }
+    this.scheduleFrame();
   }
 
   private cancelFrame(): void {

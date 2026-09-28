@@ -2,7 +2,8 @@
   [attr.data-page]="pageContext().pageId" [attr.data-ambient]="pageContext().ambientKey"
   [attr.data-chrome]="pageContext().chromeMode">
   <a class="v2-skip-link" href="#v2-main-content">Skip to main content</a>
-  <app-ambient-background [ambientKey]="pageContext().ambientKey" />
+  <app-ambient-background [ambientKey]="pageContext().ambientKey"
+    [overlayState]="ambientOverlayState()" [shellMode]="pageContext().chromeMode" />
 
   <header class="v2-header">
     <div class="v2-header__inner">

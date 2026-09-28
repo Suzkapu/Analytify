@@ -1,6 +1,7 @@
 import {
   ambientPhaseForKey,
   ambientTargetForKey,
+  ambientTargetWithInteraction,
   ambientTargetWithScroll,
   ambientVectorsClose,
   dampAmbientValue,
@@ -50,5 +51,18 @@ describe('ambient background math', () => {
     expect(dampAmbientVector(current, target, 16)).not.toEqual(current);
     expect(ambientVectorsClose(target, {...target})).toBe(true);
     expect(ambientVectorsClose(current, target)).toBe(false);
+  });
+
+  it('composes deterministic generic overlay depth and shell mode offsets', () => {
+    const route = ambientTargetForKey('library');
+    const tools = ambientTargetWithInteraction(route, 'tools', 'app');
+    const account = ambientTargetWithInteraction(route, 'account', 'app');
+    const modal = ambientTargetWithInteraction(route, 'modal', 'app');
+    expect(tools).toEqual(ambientTargetWithInteraction(route, 'tools', 'app'));
+    expect(tools.primaryX).toBeLessThan(route.primaryX);
+    expect(account.primaryX).toBeGreaterThan(route.primaryX);
+    expect(modal.intensity).toBeLessThan(tools.intensity);
+    expect(ambientTargetWithInteraction(route, 'none', 'focus').intensity).toBeLessThan(route.intensity);
+    expect(route).toEqual(ambientTargetForKey('library'));
   });
 });

@@ -99,6 +99,20 @@ describe('AmbientBackgroundComponent', () => {
     expect(frames.size).toBe(0);
   });
 
+  it('updates the same renderer for overlay and shell mode interaction', () => {
+    fixture.componentRef.setInput('ambientKey', 'library');
+    fixture.detectChanges();
+    const component = fixture.componentInstance;
+    fixture.componentRef.setInput('overlayState', 'account');
+    fixture.componentRef.setInput('shellMode', 'public');
+    fixture.detectChanges();
+    runFrames(60);
+    expect(fixture.componentInstance).toBe(component);
+    expect(component.state.overlayState()).toBe('account');
+    expect(component.state.shellMode()).toBe('public');
+    expect(Number((fixture.nativeElement as HTMLElement).style.getPropertyValue('--ambient-intensity'))).toBeLessThan(1);
+  });
+
   it('cancels animation while hidden and resumes with one frame when visible', () => {
     fixture.componentRef.setInput('ambientKey', 'library');
     fixture.detectChanges();

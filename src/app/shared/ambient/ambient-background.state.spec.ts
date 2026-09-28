@@ -43,4 +43,22 @@ describe('AmbientBackgroundState', () => {
     state.setVisibility(false);
     expect(state.paused()).toBe(false);
   });
+
+  it('returns smoothly composable route and scroll state after an overlay closes', () => {
+    state.setRouteKey('social');
+    state.setScrollMetrics(500, 2000, 1000);
+    const base = state.target();
+    state.setOverlayState('tools');
+    expect(state.target()).not.toEqual(base);
+    state.setOverlayState('none');
+    expect(state.target()).toEqual(base);
+  });
+
+  it('changes shell mode without replacing the centralized state', () => {
+    const reference = state;
+    state.setShellMode('public');
+    expect(state).toBe(reference);
+    expect(state.shellMode()).toBe('public');
+    expect(state.target().intensity).toBeLessThan(1);
+  });
 });

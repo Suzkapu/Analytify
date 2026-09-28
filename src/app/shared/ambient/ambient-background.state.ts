@@ -1,7 +1,10 @@
 import {computed, Injectable, signal} from '@angular/core';
 import {
   AmbientVector,
+  AmbientOverlayState,
+  AmbientShellMode,
   ambientTargetForKey,
+  ambientTargetWithInteraction,
   ambientTargetWithScroll,
   normalizedScrollProgress
 } from './ambient-background.math';
@@ -13,17 +16,23 @@ export class AmbientBackgroundState {
   private readonly reducedMotionState = signal(false);
   private readonly coarsePointerState = signal(false);
   private readonly pausedState = signal(false);
+  private readonly overlayStateValue = signal<AmbientOverlayState>('none');
+  private readonly shellModeState = signal<AmbientShellMode>('app');
 
   readonly routeKey = this.routeKeyState.asReadonly();
   readonly scrollProgress = this.scrollProgressState.asReadonly();
   readonly reducedMotion = this.reducedMotionState.asReadonly();
   readonly coarsePointer = this.coarsePointerState.asReadonly();
   readonly paused = this.pausedState.asReadonly();
+  readonly overlayState = this.overlayStateValue.asReadonly();
+  readonly shellMode = this.shellModeState.asReadonly();
   readonly routeTarget = computed(() => ambientTargetForKey(this.routeKeyState()));
   readonly target = computed<AmbientVector>(() => {
     const route = this.routeTarget();
-    if (this.reducedMotionState()) return ambientTargetWithScroll(route, .5, 0);
-    return ambientTargetWithScroll(route, this.scrollProgressState(), this.coarsePointerState() ? .35 : 1);
+    const scrolled = this.reducedMotionState()
+      ? ambientTargetWithScroll(route, .5, 0)
+      : ambientTargetWithScroll(route, this.scrollProgressState(), this.coarsePointerState() ? .35 : 1);
+    return ambientTargetWithInteraction(scrolled, this.overlayStateValue(), this.shellModeState());
   });
 
   setRouteKey(key: string): void { this.routeKeyState.set(key.trim() || 'default'); }
@@ -33,4 +42,6 @@ export class AmbientBackgroundState {
   setReducedMotion(reduced: boolean): void { this.reducedMotionState.set(reduced); }
   setCoarsePointer(coarse: boolean): void { this.coarsePointerState.set(coarse); }
   setVisibility(hidden: boolean): void { this.pausedState.set(hidden); }
+  setOverlayState(overlay: AmbientOverlayState): void { this.overlayStateValue.set(overlay); }
+  setShellMode(mode: AmbientShellMode): void { this.shellModeState.set(mode); }
 }

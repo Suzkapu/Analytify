@@ -9,7 +9,8 @@ import {
   AfterViewInit,
   ViewChild,
   ViewContainerRef,
-  signal
+  signal,
+  computed
 } from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet} from '@angular/router';
 import {filter, Subscription} from 'rxjs';
@@ -32,6 +33,7 @@ import {SpotifyDataService} from '@core/data-access/spotify/spotify-data.service
 import {firstValueFrom} from 'rxjs';
 import {DesignV2OverlayService} from './design-v2-overlay.service';
 import {AdminService} from '@core/admin/admin.service';
+import {AmbientOverlayState} from '@shared/ambient/ambient-background.math';
 
 interface DesignV2PageContext {
   pageId: string;
@@ -74,6 +76,13 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
   readonly actionError = signal('');
   readonly actionRunning = signal(false);
   readonly isAdmin = signal(false);
+  readonly ambientOverlayState = computed<AmbientOverlayState>(() => {
+    if (this.clearDataStep() !== 'none' || this.backupConfirmationOpen()) return 'modal';
+    if (this.overlays.active()) return 'settings';
+    if (this.accountOpen()) return 'account';
+    if (this.toolsOpen()) return 'tools';
+    return 'none';
+  });
 
   private readonly subscriptions = new Subscription();
   private hasRenderedRoute = false;

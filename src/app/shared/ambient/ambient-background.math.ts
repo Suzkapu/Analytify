@@ -5,7 +5,12 @@ export interface AmbientVector {
   secondaryY: number;
   dotsX: number;
   dotsY: number;
+  intensity: number;
+  dotIntensity: number;
 }
+
+export type AmbientOverlayState = 'none' | 'tools' | 'account' | 'settings' | 'modal';
+export type AmbientShellMode = 'app' | 'focus' | 'public';
 
 const clamp01 = (value: number): number => Math.min(1, Math.max(0, value));
 
@@ -27,7 +32,9 @@ export const ambientTargetForKey = (key: string): AmbientVector => {
     secondaryX: clamp01(.72 + Math.cos(phase * .83) * .16),
     secondaryY: clamp01(.42 + Math.sin(phase * 1.31) * .16),
     dotsX: Math.sin(phase * .67) * .5,
-    dotsY: Math.cos(phase * .71) * .5
+    dotsY: Math.cos(phase * .71) * .5,
+    intensity: 1,
+    dotIntensity: 1
   };
 };
 
@@ -53,7 +60,30 @@ export const ambientTargetWithScroll = (
     secondaryX: clamp01(route.secondaryX - centered * .045),
     secondaryY: clamp01(route.secondaryY + centered * .07),
     dotsX: route.dotsX + centered * 1.8,
-    dotsY: route.dotsY - centered * 2.4
+    dotsY: route.dotsY - centered * 2.4,
+    intensity: route.intensity,
+    dotIntensity: route.dotIntensity
+  };
+};
+
+/** Generic overlay composition: side and depth are normalized inputs, never page coordinates. */
+export const ambientTargetWithInteraction = (
+  target: AmbientVector,
+  overlay: AmbientOverlayState,
+  shellMode: AmbientShellMode
+): AmbientVector => {
+  const depth = overlay === 'none' ? 0 : overlay === 'modal' || overlay === 'settings' ? 1 : .62;
+  const side = overlay === 'tools' ? -1 : overlay === 'account' ? 1 : 0;
+  const shellIntensity = shellMode === 'app' ? 1 : shellMode === 'public' ? .86 : .76;
+  return {
+    primaryX: clamp01(target.primaryX + side * depth * .025),
+    primaryY: clamp01(target.primaryY + depth * .018),
+    secondaryX: clamp01(target.secondaryX + side * depth * .018),
+    secondaryY: clamp01(target.secondaryY - depth * .024),
+    dotsX: target.dotsX + side * depth * .22,
+    dotsY: target.dotsY + depth * .12,
+    intensity: shellIntensity * (1 - depth * .16),
+    dotIntensity: shellIntensity * (1 - depth * .32)
   };
 };
 
@@ -73,7 +103,9 @@ export const dampAmbientVector = (
   secondaryX: dampAmbientValue(current.secondaryX, target.secondaryX, deltaMs),
   secondaryY: dampAmbientValue(current.secondaryY, target.secondaryY, deltaMs),
   dotsX: dampAmbientValue(current.dotsX, target.dotsX, deltaMs),
-  dotsY: dampAmbientValue(current.dotsY, target.dotsY, deltaMs)
+  dotsY: dampAmbientValue(current.dotsY, target.dotsY, deltaMs),
+  intensity: dampAmbientValue(current.intensity, target.intensity, deltaMs),
+  dotIntensity: dampAmbientValue(current.dotIntensity, target.dotIntensity, deltaMs)
 });
 
 export const ambientVectorsClose = (left: AmbientVector, right: AmbientVector, epsilon = .0005): boolean =>

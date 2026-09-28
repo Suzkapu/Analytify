@@ -167,7 +167,8 @@ describe('application routes', () => {
             preloadingStrategy: DesignSelectivePreloadingStrategy,
             scrollPositionRestoration: 'enabled',
             anchorScrolling: 'enabled',
-            scrollOffset: [0, 96]
+            scrollOffset: [0, 96],
+            enableViewTransitions: true
         }));
     });
 });

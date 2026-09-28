@@ -23,3 +23,5 @@ At cutover, canonical routes can receive the v2 shell and the temporary `/new` t
 The lazy `DesignV2RoutingModule` mounts one `DesignV2ShellComponent` above every v2 page. Child navigation replaces only the router outlet, so the desktop navigation, mobile header and bottom navigation, ambient host, and overlay host retain their state. The shell owns the single main landmark and skip link and moves focus to that landmark after an in-shell route change.
 
 Desktop and mobile navigation are projections of `DESIGN_V2_NAVIGATION`; neither template owns a second route list. Each user-facing v2 route supplies a document title plus semantic `pageId`, `mobileTitle`, `pageWidth`, and `ambientKey` metadata. Coordinates and decorative values stay in scoped shell styles. Only Playlists, Stats, and History opt into `DesignSelectivePreloadingStrategy`, so adding the v2 namespace does not preload the complete feature tree.
+
+The shell's single persistent renderer, semantic interaction state, reduced-motion behavior, native route transitions, and extension rules are documented in [Design v2 ambient background](design-v2-ambient-background.md).
