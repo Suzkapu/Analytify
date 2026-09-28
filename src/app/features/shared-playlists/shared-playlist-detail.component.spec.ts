@@ -300,7 +300,15 @@ describe('SharedPlaylistDetailComponent', () => {
             unsubscribers.set(id || '', unsubscribe);
             return unsubscribe;
         });
-        const routed = new SharedPlaylistDetailComponent({ paramMap, snapshot: { paramMap: { get: () => '' } } } as any, { navigate: vi.fn().mockName('navigate') } as any, TestBed.inject(SpotifyAuthService), sharing, spotify, { start: vi.fn().mockName('start'), spotifyUpdates$: spotifyUpdates.asObservable() } as any);
+        const routed = new SharedPlaylistDetailComponent(
+            { paramMap, snapshot: { paramMap: { get: () => '' } } } as any,
+            { navigate: vi.fn().mockName('navigate') } as any,
+            { commands: () => ['/shared-playlists'] } as any,
+            TestBed.inject(SpotifyAuthService),
+            sharing,
+            spotify,
+            { start: vi.fn().mockName('start'), spotifyUpdates$: spotifyUpdates.asObservable() } as any
+        );
         void routed.ngOnInit();
 
         paramMap.next({ get: () => 'share-a' });

@@ -2,7 +2,7 @@
 
 Analytify runs two complementary accessibility layers on every verified change.
 
-`npm run accessibility:check` checks source-level dialog and pointer contracts. `npm run accessibility:browser` starts the application in Playwright's pinned Chromium build and exercises desktop and mobile viewports. The browser suite scans the logged-out page plus authenticated Playlists and Stats fixtures with axe's WCAG 2.0, 2.1, and 2.2 A/AA rules. Serious and critical violations fail the build. It also verifies keyboard focus, a 200% zoomed layout, and reduced-motion behavior.
+`npm run accessibility:check` checks source-level dialog and pointer contracts. `npm run accessibility:browser` starts the application in Playwright's pinned Chromium build and exercises desktop and mobile viewports. The browser suite scans login, Library, Insights, Private Sharing, Compare Room, Song League, Notifications, and Automatic Updates with axe's WCAG 2.0, 2.1, and 2.2 A/AA rules. Serious and critical violations fail the build. It also verifies keyboard focus and restoration, Escape, 200% text enlargement, 320px/400%-zoom-equivalent reflow, the 320/375/430/500/768/1024/1440 release-width matrix, fixed mobile navigation, and reduced-motion behavior.
 
 Authenticated fixtures contain invented local Spotify data and intercept Spotify API requests. They do not use production credentials, a real Spotify developer key, or personal listening data.
 

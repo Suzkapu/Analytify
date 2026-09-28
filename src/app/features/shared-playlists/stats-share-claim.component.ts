@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {StatsAccessInvitePreview} from '@core/sharing/stats-sharing.models';
 import {StatsSharingService} from '@core/sharing/stats-sharing.service';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 
 @Component({
   selector: 'app-stats-share-claim',
@@ -20,6 +21,7 @@ export class StatsShareClaimComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private designNavigation: DesignNavigationService,
     private statsSharing: StatsSharingService
   ) {}
 
@@ -50,6 +52,6 @@ export class StatsShareClaimComponent implements OnInit {
   }
 
   sharingCommands(): string[] {
-    return this.router.url?.startsWith('/new/') ? ['/new', 'shared-playlists'] : ['/shared-playlists'];
+    return this.designNavigation.commands('sharedPlaylists');
   }
 }

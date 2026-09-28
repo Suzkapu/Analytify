@@ -9,9 +9,9 @@ export async function expectNoBlockingAxeViolations(page: Page): Promise<void> {
     JSON.stringify(result.violations, null, 2)).toEqual([]);
 }
 
-export async function seedAuthenticatedBrowser(page: Page): Promise<void> {
+export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
   await page.goto('/login');
-  await page.evaluate(async termsVersion => {
+  await page.evaluate(async settings => {
     await new Promise<void>((resolve, reject) => {
       const request = indexedDB.open('AnalytifyDB', 4);
       request.onupgradeneeded = () => {
@@ -31,8 +31,11 @@ export async function seedAuthenticatedBrowser(page: Page): Promise<void> {
         store.put({key: 'spotifyAccessToken', value: 'e2e-access-token'});
         store.put({key: 'spotifyTokenExpiresAt', value: String(Date.now() + 3_600_000)});
         store.put({key: 'spotifyUserId', value: 'e2e-user'});
+        if (settings.cloudIdentity) {
+          store.put({key: 'supabaseUserId', value: '11111111-1111-4111-8111-111111111111'});
+        }
         store.put({key: 'spotifyConnectionMode', value: 'hosted'});
-        store.put({key: 'termsAcceptance', value: `${termsVersion}|2026-09-19T00:00:00.000Z|11111111-1111-4111-8111-111111111111`});
+        store.put({key: 'termsAcceptance', value: `${settings.termsVersion}|2026-09-19T00:00:00.000Z|11111111-1111-4111-8111-111111111111`});
         const playlists = JSON.stringify([
           {id: 'fav', name: 'Favourite Tracks', owner: {id: 'e2e-user'}, images: [], tracks: {total: 0}, description: ''},
           {id: 'playlist-1', name: 'Test Playlist', owner: {id: 'e2e-user'}, images: [], tracks: {total: 1}, description: ''}
@@ -58,7 +61,7 @@ export async function seedAuthenticatedBrowser(page: Page): Promise<void> {
         transaction.onerror = () => reject(transaction.error);
       };
     });
-  }, CURRENT_TERMS_VERSION);
+  }, {termsVersion: CURRENT_TERMS_VERSION, cloudIdentity: options.cloudIdentity === true});
 }
 
 export async function mockSpotify(page: Page): Promise<void> {

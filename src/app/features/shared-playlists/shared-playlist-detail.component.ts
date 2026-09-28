@@ -8,6 +8,7 @@ import {PlaylistShare, PlaylistShareDownload, SharedPlaylistStats} from '@core/s
 import {sharedPlaylistName, sharedPlaylistSpotifyName} from '@core/sharing/playlist-sharing-names';
 import {PlaylistShareAutoSyncService, PlaylistShareSpotifyUpdate} from '@core/sharing/playlist-share-auto-sync.service';
 import {PlaylistSharingService} from '@core/sharing/playlist-sharing.service';
+import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 
 @Component({
     selector: 'app-shared-playlist-detail',
@@ -53,6 +54,7 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private designNavigation: DesignNavigationService,
     private auth: SpotifyAuthService,
     private sharing: PlaylistSharingService,
     private spotify: ParticipantSpotifyService,
@@ -260,9 +262,7 @@ export class SharedPlaylistDetailComponent implements OnInit, OnDestroy {
   }
 
   sharingCommands(): string[] {
-    return this.router.url?.startsWith('/new/')
-      ? ['/new', 'shared-playlists']
-      : ['/shared-playlists'];
+    return this.designNavigation.commands('sharedPlaylists');
   }
 
   get isRecipient(): boolean {

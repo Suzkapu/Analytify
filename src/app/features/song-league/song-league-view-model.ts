@@ -1,5 +1,6 @@
 import {SongLeagueScoreBreakdown} from '@core/song-league/song-league.models';
 import {DesignVariant} from '@core/navigation/design-navigation';
+import {designPath} from '@core/navigation/design-variant';
 
 export interface RecommendationParticipation {
   ranked: number;
@@ -45,13 +46,15 @@ export function weeklyTaskCopy(options: {
 
 export function designInviteUrl(url: string, variant: DesignVariant): string {
   if (variant !== 'new') return url;
+  const legacyPrefix = `${designPath('legacy', 'song-league', 'join')}/`;
+  const selectedPrefix = `${designPath(variant, 'song-league', 'join')}/`;
   try {
     const parsed = new URL(url);
-    if (!parsed.pathname.startsWith('/new/') && parsed.pathname.startsWith('/song-league/join/')) {
-      parsed.pathname = `/new${parsed.pathname}`;
+    if (!parsed.pathname.startsWith(selectedPrefix) && parsed.pathname.startsWith(legacyPrefix)) {
+      parsed.pathname = `${selectedPrefix}${parsed.pathname.slice(legacyPrefix.length)}`;
     }
     return parsed.toString();
   } catch {
-    return url.startsWith('/song-league/join/') ? `/new${url}` : url;
+    return url.startsWith(legacyPrefix) ? `${selectedPrefix}${url.slice(legacyPrefix.length)}` : url;
   }
 }
