@@ -10,6 +10,14 @@ insert into auth.users(id, email, is_anonymous) values
   ('55000000-0000-4000-8000-000000000005', null, true),
   ('56000000-0000-4000-8000-000000000006', 'hosted-target@example.test', false);
 
+-- Anonymous auth identities intentionally have no public profile until the
+-- trusted Spotify credential function verifies the account. Model that
+-- verified-function boundary explicitly for merge tests.
+insert into public.users(id, spotify_id, display_name, profile_pic_url) values
+  ('52000000-0000-4000-8000-000000000002', 'pending:52000000-0000-4000-8000-000000000002', 'Spotify User', null),
+  ('54000000-0000-4000-8000-000000000004', 'pending:54000000-0000-4000-8000-000000000004', 'Spotify User', null),
+  ('55000000-0000-4000-8000-000000000005', 'pending:55000000-0000-4000-8000-000000000005', 'Spotify User', null);
+
 update public.users set spotify_id = 'hosted-verified', verified_spotify_id = 'verified-account',
   display_name = 'Strong name', profile_pic_url = 'https://i.scdn.co/image/strong', backup_active = true
 where id = '51000000-0000-4000-8000-000000000001';
