@@ -307,6 +307,15 @@ Deno.serve(async (request: Request) => {
       return json({error: 'The verified Spotify ID does not match the requested profile.'}, 409);
     }
 
+    const finalSpotifyId = requestedSpotifyId || currentProfile.account_id || currentProfile.id;
+    const {error: pendingProfileError} = await admin.from('users').upsert({
+      id: profileUserId,
+      spotify_id: `pending:${profileUserId}`,
+      display_name: 'Spotify User',
+      profile_pic_url: null
+    }, {onConflict: 'id', ignoreDuplicates: true});
+    if (pendingProfileError) throw pendingProfileError;
+
     const {data: existingProfile, error: profileError} = await admin.from('users')
       .select('id, spotify_id, verified_spotify_id').eq('id', profileUserId).maybeSingle();
     if (profileError) throw profileError;
@@ -315,7 +324,6 @@ Deno.serve(async (request: Request) => {
     )) {
       return json({error: 'This Spotify account does not match the existing Analytify profile.'}, 409);
     }
-    const finalSpotifyId = requestedSpotifyId || currentProfile.account_id || currentProfile.id;
     if (existingProfile?.verified_spotify_id && existingProfile.verified_spotify_id !== finalSpotifyId) {
       return json({error: 'This Spotify account does not match the verified Analytify profile.'}, 409);
     }

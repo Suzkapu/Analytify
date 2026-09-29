@@ -3,6 +3,7 @@ import {readFileSync} from 'node:fs';
 const auth = readFileSync('src/app/core/auth/spotify-auth.service.ts', 'utf8');
 const edge = readFileSync('supabase/functions/spotify-credentials/index.ts', 'utf8');
 const access = readFileSync('src/app/features/auth/personal-spotify/cloud-access.component.ts', 'utf8');
+const deferredProfiles = readFileSync('supabase/migrations/20260928030000_defer_anonymous_profile_creation.sql', 'utf8');
 
 const checks = [
   ['cloud capabilities are modeled independently', auth.includes('interface CloudCapabilities')
@@ -15,7 +16,15 @@ const checks = [
   ['encrypted credentials can be deleted without deleting the identity', auth.includes('disableScheduledSpotifyAccess()')
     && edge.includes("action === 'delete_credentials'")],
   ['minimal identity consent explains that listening data and refresh tokens stay local',
-    access.includes('does not upload listening data or store a Spotify refresh token')]
+    access.includes('does not upload listening data or store a Spotify refresh token')],
+  ['anonymous auth identities are not exposed before Spotify verification',
+    deferredProfiles.includes('if coalesce(new.is_anonymous, false) then')
+    && edge.indexOf('const currentProfile = await spotifyProfile(accessToken)')
+      < edge.indexOf("spotify_id: `pending:${profileUserId}`")],
+  ['abandoned pending profiles use audited fail-closed cleanup',
+    deferredProfiles.includes('cleanup_abandoned_pending_profiles')
+    && deferredProfiles.includes('v_has_reference')
+    && deferredProfiles.includes('pending_profile_cleanup_audit')]
 ];
 
 const failures = checks.filter(([, valid]) => !valid).map(([label]) => label);

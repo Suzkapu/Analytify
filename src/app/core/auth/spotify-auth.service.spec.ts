@@ -436,6 +436,11 @@ describe('SpotifyAuthService', () => {
             }) }));
         const body = vi.mocked(supabaseService.client.functions.invoke).mock.lastCall![1].body;
         expect(body.refreshToken).toBeUndefined();
+        expect(vi.mocked(supabaseService.client.functions.invoke).mock.invocationCallOrder.at(-1)!)
+            .toBeLessThan(vi.mocked(rpc).mock.invocationCallOrder.at(-1)!);
+        expect(rpc).toHaveBeenCalledWith('accept_current_terms', expect.objectContaining({
+            p_connection_mode: 'personal_pkce'
+        }));
         expect(values['collaborationIdentityReady']).toBe('true');
         expect(values['cloudIdentityReady']).toBeUndefined();
     });

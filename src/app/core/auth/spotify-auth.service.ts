@@ -973,8 +973,8 @@ export class SpotifyAuthService {
 
     this.storageService.setItem('supabaseUserId', session.user.id, false);
     this.storageService.setItem(this.anonymousCloudKey, session.user.is_anonymous ? 'true' : 'false', false);
-    await this.recordTermsAcceptance('personal_pkce');
     await this.registerCloudProfile();
+    await this.recordTermsAcceptance('personal_pkce');
     this.initialSyncPromise = null;
   }
 

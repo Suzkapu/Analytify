@@ -1,17 +1,26 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(7);
+select plan(10);
 
 insert into auth.users(id, email) values
   ('57000000-0000-4000-8000-000000000007', 'cleanup-admin@example.test'),
   ('58000000-0000-4000-8000-000000000008', 'old-pending@example.test'),
-  ('59000000-0000-4000-8000-000000000009', 'recent-pending@example.test');
+  ('59000000-0000-4000-8000-000000000009', 'recent-pending@example.test'),
+  ('60000000-0000-4000-8000-000000000010', 'abandoned-pending@example.test');
 insert into public.app_admins(user_id) values ('57000000-0000-4000-8000-000000000007');
 update public.users set spotify_id = 'pending:58000000-0000-4000-8000-000000000008',
   created_at = now() - interval '1 hour'
 where id = '58000000-0000-4000-8000-000000000008';
 update public.users set spotify_id = 'pending:59000000-0000-4000-8000-000000000009'
 where id = '59000000-0000-4000-8000-000000000009';
+update public.users set spotify_id = 'pending:60000000-0000-4000-8000-000000000010',
+  created_at = now() - interval '2 hours'
+where id = '60000000-0000-4000-8000-000000000010';
+
+insert into auth.users(id, is_anonymous)
+values ('61000000-0000-4000-8000-000000000011', true);
+select is((select count(*) from public.users where id = '61000000-0000-4000-8000-000000000011'),
+  0::bigint, 'anonymous auth creation does not expose an unverified public profile');
 
 set local role authenticated;
 select set_config('request.jwt.claim.role', 'authenticated', true);
@@ -35,6 +44,13 @@ select lives_ok($$ select public.admin_delete_reviewed_pending_spotify_profile(
   'pending:58000000-0000-4000-8000-000000000008') $$,
   'an administrator can delete the exact registration after a clean review');
 reset role;
+
+set local role service_role;
+select is(private.cleanup_abandoned_pending_profiles(), 1,
+  'automatic cleanup removes exactly the old unlinked pending profile');
+reset role;
+select is((select count(*) from auth.users where id = '59000000-0000-4000-8000-000000000009'),
+  1::bigint, 'automatic cleanup preserves a recent registration');
 
 select is((select count(*) from auth.users where id = '58000000-0000-4000-8000-000000000008'),
   0::bigint, 'cleanup removes the incomplete authentication identity');
