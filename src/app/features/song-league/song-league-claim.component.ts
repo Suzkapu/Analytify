@@ -30,10 +30,9 @@ export class SongLeagueClaimComponent implements OnInit {
     private songLeague: SongLeagueService,
     private pushNotifications: PushNotificationService,
     readonly navigation: DesignNavigationService = {
-      variant: 'legacy',
       commands: (_destination: string, parameters: {leagueId?: string} = {}) =>
         parameters.leagueId ? ['/song-league', parameters.leagueId] : ['/song-league']
-    } as DesignNavigationService
+    } as unknown as DesignNavigationService
   ) {}
 
   async ngOnInit(): Promise<void> {

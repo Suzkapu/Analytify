@@ -1,9 +1,4 @@
 <div class="join-page">
-  @if (!isDesignV2) {<div class="join-brand">
-    <img src="assets/Analytify-96.webp" width="64" height="64" alt="Analytify">
-    <span>Analytify Compare Room</span>
-  </div>}
-
   <section class="join-card">
     <ol class="join-progress" [attr.aria-label]="'Compare progress. Step ' + currentStep + ' of 3'">
       <li [class.current]="currentStep === 1" [class.complete]="currentStep > 1" [attr.aria-current]="currentStep === 1 ? 'step' : null"><span>1</span> Connect</li>

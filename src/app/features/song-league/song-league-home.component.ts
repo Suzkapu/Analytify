@@ -7,7 +7,6 @@ import {SongLeagueService} from '@core/song-league/song-league.service';
 import {SiteSettingsService} from '@core/settings/site-settings.service';
 import {AdminService} from '@core/admin/admin.service';
 import {DesignNavigationService} from '@core/navigation/design-navigation.service';
-import {designInviteUrl} from './song-league-view-model';
 
 @Component({
     selector: 'app-song-league-home',
@@ -37,10 +36,9 @@ export class SongLeagueHomeComponent implements OnInit {
     private admin: AdminService,
     private router: Router,
     readonly navigation: DesignNavigationService = {
-      variant: 'legacy',
       commands: (_destination: string, parameters: {leagueId?: string} = {}) =>
         parameters.leagueId ? ['/song-league', parameters.leagueId] : ['/song-league']
-    } as DesignNavigationService
+    } as unknown as DesignNavigationService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -82,7 +80,7 @@ export class SongLeagueHomeComponent implements OnInit {
       const capacity = Math.trunc(Number(this.memberCapacity)) || 5;
       const boundedCapacity = Math.max(2, Math.min(50, capacity));
       const created = await this.songLeague.createLeague(name, timezone, boundedCapacity);
-      this.inviteUrl = designInviteUrl(created.inviteUrl, this.navigation.variant);
+      this.inviteUrl = created.inviteUrl;
       this.createdLeagueId = created.leagueId;
       this.leagueName = '';
       this.memberCapacity = 5;

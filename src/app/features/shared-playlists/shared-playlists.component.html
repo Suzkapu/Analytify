@@ -7,20 +7,19 @@
       <p>Share playlists and manage private stats access.</p>
     </div>
     @if (showPlaylistSections) {
-    <button type="button" class="open-share-menu-button" (click)="openShareDialog(isDesignV2 ? 'playlist' : null)">
+    <button type="button" class="open-share-menu-button" (click)="openShareDialog('playlist')">
       <i class="pi pi-share-alt"></i>
       <span>Share a playlist</span>
     </button>
     }
-    @if (isDesignV2 && showStatsSections && restrictedFeaturesEnabled) {
+    @if (showStatsSections && restrictedFeaturesEnabled) {
       <button type="button" class="open-share-menu-button" (click)="openShareDialog('stats')">
         <i class="pi pi-eye"></i><span>Share stats access</span>
       </button>
     }
   </header>
 
-  @if (isDesignV2) {
-    <nav class="sharing-tabs" aria-label="Private sharing views">
+  <nav class="sharing-tabs" aria-label="Private sharing views">
       <a [routerLink]="navigation.commands('sharedPlaylists')" [queryParams]="{tab: 'playlists'}"
         [attr.aria-current]="activeTab === 'playlists' ? 'page' : null" [class.is-active]="activeTab === 'playlists'">
         <i class="pi pi-list" aria-hidden="true"></i><span>Playlists</span>
@@ -29,8 +28,7 @@
         [attr.aria-current]="activeTab === 'stats' ? 'page' : null" [class.is-active]="activeTab === 'stats'">
         <i class="pi pi-eye" aria-hidden="true"></i><span>Stats</span>
       </a>
-    </nav>
-  }
+  </nav>
 
   @if (errorMessage) {
     <div class="share-alert error" role="alert">
@@ -81,12 +79,10 @@
                 [disabled]="!!busyShareId" [attr.aria-label]="'Remove ' + share.playlistName + ' from my shared playlists'">
                 <i class="pi pi-times"></i><span>Remove</span>
               </button>
-              @if (isDesignV2) {
-                <v2-overflow-menu class="mobile-share-overflow"
-                  [label]="'More actions for ' + receivedPlaylistName(share)"
-                  [items]="receivedShareMenuItems(share)"
-                  (itemSelected)="onReceivedShareMenuAction($event, share)" />
-              }
+              <v2-overflow-menu class="mobile-share-overflow"
+                [label]="'More actions for ' + receivedPlaylistName(share)"
+                [items]="receivedShareMenuItems(share)"
+                (itemSelected)="onReceivedShareMenuAction($event, share)" />
             </article>
           }
         </div>

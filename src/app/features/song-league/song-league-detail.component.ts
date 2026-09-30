@@ -22,7 +22,7 @@ import {
   PushNotificationService,
   PushNotificationSettings
 } from '@core/notifications/push-notification.service';
-import {designInviteUrl, rankingLabel, recommendationParticipation, weeklyTaskCopy} from './song-league-view-model';
+import {rankingLabel, recommendationParticipation, weeklyTaskCopy} from './song-league-view-model';
 
 @Component({
     selector: 'app-song-league-detail',
@@ -100,10 +100,9 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     private auth: SpotifyAuthService,
     private storage: StorageService,
     readonly navigation: DesignNavigationService = {
-      variant: 'legacy',
       commands: (_destination: string, parameters: {leagueId?: string} = {}) =>
         parameters.leagueId ? ['/song-league', parameters.leagueId] : ['/song-league']
-    } as DesignNavigationService
+    } as unknown as DesignNavigationService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -318,7 +317,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     this.errorMessage = '';
     try {
       const invitation = await this.songLeague.createInvite(this.leagueId);
-      this.inviteUrl = designInviteUrl(invitation.url, this.navigation.variant);
+      this.inviteUrl = invitation.url;
       this.newInviteId = invitation.id;
       await this.loadActiveInvites();
     } catch (error) {
@@ -575,10 +574,6 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     return (this.dashboard.breakdownByRecommender.get(
       this.dashboard.recommendations.find(item => item.id === recommendationId)?.recommenderUserId || ''
     ) || []).filter(row => row.recommendationId === recommendationId);
-  }
-
-  get isDesignV2(): boolean {
-    return this.navigation.variant === 'new';
   }
 
   get weeklyTask() {

@@ -63,7 +63,7 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     private router: Router,
     private storage: StorageService,
     private supabase: SupabaseService,
-    readonly navigation: DesignNavigationService = {variant: 'legacy'} as DesignNavigationService
+    readonly navigation: DesignNavigationService = {commands: () => ['/']} as unknown as DesignNavigationService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -487,10 +487,6 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
 
   get currentStep(): 1 | 2 | 3 {
     return compareProgressStep(!!this.proposal || this.allFinished, this.readyCount);
-  }
-
-  get isDesignV2(): boolean {
-    return this.navigation.variant === 'new';
   }
 
   participantStatus(participant: CompareParticipant) {

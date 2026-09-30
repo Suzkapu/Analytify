@@ -301,11 +301,9 @@ export class PlaylistsController implements OnDestroy {
     return this.designNavigation?.commands('analysis', {id: playlistId}) ?? ['/analysis', playlistId];
   }
 
-  get isDesignV2(): boolean { return this.designNavigation?.variant === 'new'; }
-  get openActionLabel(): string { return this.isDesignV2 ? 'Open' : 'Explore'; }
-  get savedFilterLabel(): string { return this.isDesignV2 ? 'Saved from others' : (this.showSavedPlaylists ? 'Hide saved' : 'Show saved'); }
+  get openActionLabel(): string { return 'Open'; }
+  get savedFilterLabel(): string { return 'Saved from others'; }
   get sortDirectionLabel(): string {
-    if (!this.isDesignV2) return 'Song count';
     if (this.sortOrder === 'desc') return 'Song count: highest first';
     if (this.sortOrder === 'asc') return 'Song count: lowest first';
     return 'Song count: default order';

@@ -12,11 +12,17 @@ test.beforeEach(async ({page}) => {
   await seedAuthenticatedBrowser(page, {cloudIdentity: true});
 });
 
+test('the temporary /new compatibility URL resolves to the canonical route', async ({page}) => {
+  await page.goto('/new/playlists?source=bookmark#library');
+  await expect(page).toHaveURL(/\/playlists\?source=bookmark#library$/);
+  await expect(page.getByRole('heading', {name: 'Your playlists', exact: true})).toBeVisible();
+});
+
 test('the shared shell and representative dense content reflow at every release width', async ({page}) => {
+  await page.goto('/playlists');
+  await expect(page.getByRole('heading', {name: 'Your playlists', exact: true})).toBeVisible();
   for (const width of widths) {
     await page.setViewportSize({width, height: 900});
-    await page.goto('/new/playlists');
-    await expect(page.getByRole('heading', {name: 'Your playlists', exact: true})).toBeVisible();
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow, `${width}px must not overflow horizontally`).toBeLessThanOrEqual(1);
     await expect(page.locator('app-design-v2-shell')).toHaveCount(1);
@@ -25,7 +31,7 @@ test('the shared shell and representative dense content reflow at every release 
 
 test('200% text enlargement preserves the primary task and does not create horizontal overflow', async ({page}) => {
   await page.setViewportSize({width: 768, height: 900});
-  await page.goto('/new/playlists');
+  await page.goto('/playlists');
   await page.evaluate(() => { document.documentElement.style.fontSize = '200%'; });
   await expect(page.getByRole('searchbox', {name: 'Search your playlists'})).toBeVisible();
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
@@ -33,7 +39,7 @@ test('200% text enlargement preserves the primary task and does not create horiz
 });
 
 test('notification and automatic-update sheets restore focus and remain accessible', async ({page}) => {
-  await page.goto('/new/playlists');
+  await page.goto('/playlists');
   const account = page.getByRole('button', {name: 'Open account and data settings'});
   await account.click();
 
@@ -57,7 +63,7 @@ test('notification and automatic-update sheets restore focus and remain accessib
 
 test('mobile fixed navigation does not obscure the last task region', async ({page}) => {
   await page.setViewportSize({width: 320, height: 640});
-  await page.goto('/new/playlists');
+  await page.goto('/playlists');
   const card = page.locator('.v2-playlist-card').last();
   await expect(card).toBeVisible();
   await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));

@@ -97,7 +97,8 @@ describe('PlaylistsComponent', () => {
         fixture.detectChanges();
 
         const element: HTMLElement = fixture.nativeElement;
-        expect(element.querySelector('.playlists-page[role="main"]')).not.toBeNull();
+        expect(element.querySelector('.playlists-page')).not.toBeNull();
+        expect(element.querySelector('.playlists-page[role="main"]')).toBeNull();
         expect(element.querySelector('.page-hero h1')?.textContent).toContain('Your playlists');
         expect(element.querySelector('.playlist-count-chip')?.getAttribute('aria-label')).toBe('1 playlist');
         expect(element.querySelector('.page-toolbar input[type="search"]')).not.toBeNull();
@@ -235,7 +236,7 @@ describe('PlaylistsComponent', () => {
         (component as any).currentSpotifyProfileId = 'current-user';
 
         component.sortPlaylistsByTracks();
-        expect(component.sortDirectionLabel).toBe('Song count');
+        expect(component.sortDirectionLabel).toBe('Song count: highest first');
         expect(component.filteredPlaylists.map(playlist => playlist.id)).toEqual(['large', 'small']);
         expect(storage.get('current-user_playlists_sortOrder')).toBe('desc');
     });

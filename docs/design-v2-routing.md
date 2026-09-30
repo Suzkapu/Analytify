@@ -1,27 +1,25 @@
-# Design v2 routing architecture
+# Canonical product routing
 
-Design v2 is developed under a temporary `/new` route namespace while the existing presentation remains available. The namespace is owned only by the routing and navigation layer.
+Design v2 is the only Analytify presentation. Normal non-prefixed URLs such as `/playlists`, `/stats`, `/history`, `/song-league`, `/shared-playlists`, and `/compare-room` mount one persistent product shell.
 
-## Variant context
+## Route registry
 
-`DESIGN_VARIANT` supplies either `legacy` or `new`. The application root provides the legacy default; the `/new` parent route overrides it for its complete child tree. Components use `DesignNavigationService` and logical destination names instead of inspecting the current URL or writing `/new` paths.
+`resolveDesignRoute` is the single logical registry for login, Spotify setup, Library, Insights, administration, Song League, Private Sharing, Compare Room, and Legal destinations. Feature code uses `DesignNavigationService` rather than inspecting the current URL. Durable room, invite, share, league, and Spotify identifiers are passed through unchanged; query parameters remain Angular `NavigationExtras`.
 
-`resolveDesignRoute` is the single registry for login, Spotify setup, library, insights, administration, Song League, Private Sharing, Compare Room, and Legal destinations. It resolves path parameters without changing durable room, invite, share, or league identifiers. Query parameters stay in Angular `NavigationExtras` and therefore are not mixed into the registry.
+There is no runtime design variant, feature flag, or legacy/v2 presentation branch. `/new/*` is accepted only by the first top-level compatibility matcher. It redirects the complete remaining path to the canonical URL while preserving query parameters and fragments. `newness` and other similarly named paths do not match.
 
-## Authentication returns
+## Authentication and external links
 
-Protected-route guards store the complete attempted URL, including its design namespace and query string. Login records a variant-aware default before OAuth starts. The shared hosted callback consumes that stored URL, while personal-app PKCE stores its validated return URL inside the one-time authorization request. A login begun under `/new` therefore returns to `/new`; a legacy login remains on canonical legacy routes.
+Protected-route guards store the complete attempted URL. Hosted OAuth and personal-app PKCE consume the validated return URL, so canonical links remain canonical and old `/new/*` bookmarks pass through the compatibility redirect. Share, invite, claim, and Compare Room links keep the same tokens and route shapes.
 
-## Migration and removal
+## Persistent shell
 
-Feature and data services are shared. During migration, both route trees lazy-load the same feature modules under different shells. Pages gain v2 presentation through the injected variant and shared presentation primitives, not through cloned Spotify or Supabase services.
+The lazy product routing module mounts one `DesignV2ShellComponent` above every page. Child navigation replaces only its router outlet, preserving desktop navigation, mobile navigation, ambient renderer, and overlay host. The shell owns the single main landmark and skip link and restores focus after an in-shell route change.
 
-At cutover, canonical routes can receive the v2 shell and the temporary `/new` tree can become compatibility redirects. Removing `/new` then requires changes only in route configuration and `resolveDesignRoute`; feature components and durable external identifiers remain unchanged.
+Desktop and mobile navigation project the same `DESIGN_V2_NAVIGATION` model. Each user-facing route supplies a document title plus semantic `pageId`, `mobileTitle`, `pageWidth`, and `ambientKey` metadata. Only Playlists, Stats, and History opt into selective preloading.
 
-## Persistent shell and route context
+## Compatibility retirement
 
-The lazy `DesignV2RoutingModule` mounts one `DesignV2ShellComponent` above every v2 page. Child navigation replaces only the router outlet, so the desktop navigation, mobile header and bottom navigation, ambient host, and overlay host retain their state. The shell owns the single main landmark and skip link and moves focus to that landmark after an in-shell route change.
+Keep the `/new/*` matcher for bookmarked and externally shared migration-era URLs until server access logs show it is no longer needed. Removing it is then one routing-layer deletion; feature components and durable identifiers require no edits.
 
-Desktop and mobile navigation are projections of `DESIGN_V2_NAVIGATION`; neither template owns a second route list. Each user-facing v2 route supplies a document title plus semantic `pageId`, `mobileTitle`, `pageWidth`, and `ambientKey` metadata. Coordinates and decorative values stay in scoped shell styles. Only Playlists, Stats, and History opt into `DesignSelectivePreloadingStrategy`, so adding the v2 namespace does not preload the complete feature tree.
-
-The shell's single persistent renderer, semantic interaction state, reduced-motion behavior, native route transitions, and extension rules are documented in [Design v2 ambient background](design-v2-ambient-background.md).
+The ambient renderer and native-transition rules are documented in [Design v2 ambient background](design-v2-ambient-background.md). Release activation and visual rollback are documented in [Design v2 rollout](design-v2-rollout.md).

@@ -32,10 +32,6 @@ export class LoginPageComponent implements OnInit {
   ) {
   }
 
-  get isDesignV2(): boolean {
-    return this.navigation.variant === 'new';
-  }
-
   async ngOnInit() {
     await this.storageService.initFromDB();
     this.termsAccepted = this.terms.hasCurrentAcceptance();

@@ -29,7 +29,7 @@ for (const section of ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'I1', 'J1
 }
 const requiredSurfaceInventory = [
   'initial navigation loading', 'global announcement', 'update prompt', 'skip links',
-  'back-to-top', 'desktop shell', 'mobile shell', 'global overlay', 'persistent ambient renderer',
+  'desktop shell', 'mobile shell', 'global overlay', 'persistent ambient renderer',
   'Cloud Backup', 'Blocked Users', 'Automatic Updates', 'Manage Spotify access', 'Clear Data chooser',
   'Terms/Privacy acceptance', 'hosted callback', 'personal Spotify', 'Cloud Access setup',
   'Playlists header', 'Songs context/back', 'Artist profile/header', 'Analysis context/back',
@@ -46,6 +46,9 @@ for (const surface of requiredSurfaceInventory) {
 }
 if (/\|\s*(?:Missing|Blocked|TBD)\s*\|/i.test(matrix)) {
   throw new Error('Design v2 parity matrix still contains an unresolved rollout state.');
+}
+if (/temporary (?:feature )?adapter|approved only until #164|#164 removal gate/i.test(matrix)) {
+  throw new Error('Design v2 parity matrix still contains a legacy presentation adapter.');
 }
 const rendererCount = [shell, ...sourceFiles]
   .reduce((count, source) => count + (source.match(/<app-ambient-background\b/g) ?? []).length, 0);

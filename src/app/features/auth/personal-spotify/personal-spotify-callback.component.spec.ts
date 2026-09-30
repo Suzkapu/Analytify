@@ -4,7 +4,6 @@ import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
-import { DESIGN_VARIANT } from '@core/navigation/design-navigation';
 import { DesignNavigationService } from '@core/navigation/design-navigation.service';
 import { PersonalSpotifyCallbackComponent } from './personal-spotify-callback.component';
 
@@ -27,7 +26,6 @@ describe('PersonalSpotifyCallbackComponent', () => {
         { provide: ActivatedRoute, useValue: { snapshot: { get queryParamMap() { return convertToParamMap(query); } } } },
         { provide: Router, useValue: router },
         { provide: SpotifyAuthService, useValue: auth },
-        { provide: DESIGN_VARIANT, useValue: 'new' },
         DesignNavigationService
       ],
       schemas: [NO_ERRORS_SCHEMA]
@@ -40,7 +38,7 @@ describe('PersonalSpotifyCallbackComponent', () => {
     await fixture.whenStable();
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('[role="alert"]')?.textContent).toContain('complete authorization response');
-    expect(fixture.componentInstance.navigation.commands('spotifyConnect')).toEqual(['/new', 'spotify', 'connect']);
+    expect(fixture.componentInstance.navigation.commands('spotifyConnect')).toEqual(['/spotify', 'connect']);
   });
 
   it('finishes the callback and preserves its v2 destination', async () => {

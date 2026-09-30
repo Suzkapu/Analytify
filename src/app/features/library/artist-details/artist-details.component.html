@@ -16,7 +16,7 @@
 }
 
 @if (!isLoadingArtist && !artistLoadError) {
-  <div class="details-container" [attr.role]="isDesignV2 ? null : 'main'">
+  <div class="details-container">
     <article class="artist-profile-card">
       <header class="profile-header">
         <button type="button" class="artist-open-button spotify-artwork-link" (click)="openArtistClick()"

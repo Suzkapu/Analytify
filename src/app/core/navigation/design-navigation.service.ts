@@ -1,8 +1,6 @@
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {NavigationExtras, Router, UrlTree} from '@angular/router';
 import {
-  DESIGN_VARIANT,
-  DesignVariant,
   LogicalRouteId,
   LogicalRouteParameters,
   resolveDesignRoute
@@ -11,12 +9,11 @@ import {
 @Injectable({providedIn: 'root'})
 export class DesignNavigationService {
   constructor(
-    private readonly router: Router,
-    @Inject(DESIGN_VARIANT) readonly variant: DesignVariant
+    private readonly router: Router
   ) {}
 
   commands(destination: LogicalRouteId, parameters: LogicalRouteParameters = {}): string[] {
-    return resolveDesignRoute(this.variant, destination, parameters);
+    return resolveDesignRoute(destination, parameters);
   }
 
   url(destination: LogicalRouteId, parameters: LogicalRouteParameters = {}): string {

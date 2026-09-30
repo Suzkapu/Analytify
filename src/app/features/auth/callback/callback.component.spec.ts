@@ -6,7 +6,6 @@ import { of } from 'rxjs';
 import { CallbackComponent } from './callback.component';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { AuthReturnUrlService } from '@core/auth/auth-return-url.service';
-import { DESIGN_VARIANT } from '@core/navigation/design-navigation';
 import { DesignNavigationService } from '@core/navigation/design-navigation.service';
 
 describe('CallbackComponent', () => {
@@ -47,7 +46,6 @@ describe('CallbackComponent', () => {
                 },
                 { provide: AuthReturnUrlService, useValue: { consume: () => '/playlists' } },
                 { provide: SpotifyAuthService, useValue: auth },
-                { provide: DESIGN_VARIANT, useValue: 'new' },
                 DesignNavigationService
             ],
             schemas: [NO_ERRORS_SCHEMA]

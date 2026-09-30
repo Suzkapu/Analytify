@@ -6,7 +6,6 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { TermsAcceptanceService } from '@core/legal/terms-acceptance.service';
-import { DESIGN_VARIANT } from '@core/navigation/design-navigation';
 import { DesignNavigationService } from '@core/navigation/design-navigation.service';
 import { PersonalSpotifyConnectComponent } from './personal-spotify-connect.component';
 
@@ -36,7 +35,6 @@ describe('PersonalSpotifyConnectComponent', () => {
         { provide: TermsAcceptanceService, useValue: terms },
         { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap({ returnUrl: '/new/stats' }) } } },
         { provide: Router, useValue: router },
-        { provide: DESIGN_VARIANT, useValue: 'new' },
         DesignNavigationService
       ],
       schemas: [NO_ERRORS_SCHEMA]
@@ -74,11 +72,11 @@ describe('PersonalSpotifyConnectComponent', () => {
     expect(fixture.nativeElement.querySelector('#personal-spotify-id')?.getAttribute('aria-describedby')).toBe('personal-connect-error');
   });
 
-  it('rejects an external return URL and cancels to the v2 login', () => {
+  it('rejects an external return URL and cancels to the canonical login', () => {
     const route = TestBed.inject(ActivatedRoute) as any;
     route.snapshot.queryParamMap = convertToParamMap({ returnUrl: '//attacker.example' });
     component.ngOnInit();
     component.cancel();
-    expect(router.navigateByUrl).toHaveBeenCalledWith('/new/login');
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
   });
 });

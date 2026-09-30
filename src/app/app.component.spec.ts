@@ -51,12 +51,12 @@ describe('AppComponent', () => {
         expect(app.title).toEqual('Spotify Artists Stats');
     });
 
-    it('should render the router outlet and scroll button', () => {
+    it('renders only the router outlet at the application root', () => {
         const fixture = TestBed.createComponent(AppComponent);
         fixture.detectChanges();
         const compiled = fixture.nativeElement as HTMLElement;
         expect(compiled.querySelector('router-outlet')).not.toBeNull();
-        expect(compiled.querySelector('.scroll-to-top-btn')).not.toBeNull();
+        expect(compiled.querySelector('.scroll-to-top-btn')).toBeNull();
     });
 
     it('should overlay an announcement without moving the routed page', () => {
@@ -120,8 +120,7 @@ describe('AppComponent', () => {
 
     it('uses only the shell skip link and hides the floating scroll control in Design v2', () => {
         const fixture = TestBed.createComponent(AppComponent);
-        routerEvents.next(new NavigationEnd(3, '/new/playlists', '/new/playlists'));
-        fixture.componentInstance.showScrollBtn = true;
+        routerEvents.next(new NavigationEnd(3, '/playlists', '/playlists'));
         fixture.detectChanges();
 
         expect(fixture.nativeElement.querySelector('.skip-link')).toBeNull();

@@ -450,8 +450,6 @@ export class SongsController implements OnInit, OnDestroy {
       ?? this.router.navigate(['/artistDetails', id], navigationExtras);
   }
 
-  get isDesignV2(): boolean { return this.designNavigation?.variant === 'new'; }
-
   get trackSortDirectionLabel(): string { return this.sortAscending ? 'ascending' : 'descending'; }
 
   onSortOrderChange() {

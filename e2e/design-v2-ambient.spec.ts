@@ -5,7 +5,7 @@ import {mockSpotify, seedAuthenticatedBrowser} from './helpers/authenticated-bro
 test('one ambient renderer persists through overlays, routes, and shell modes', async ({page}) => {
   await mockSpotify(page);
   await seedAuthenticatedBrowser(page);
-  await page.goto('/new/playlists');
+  await page.goto('/playlists');
   const ambient = page.locator('app-ambient-background');
   await expect(ambient).toHaveCount(1);
   await ambient.evaluate(element => { (element as HTMLElement & {ambientIdentity?: string}).ambientIdentity = 'persistent'; });
@@ -15,7 +15,7 @@ test('one ambient renderer persists through overlays, routes, and shell modes', 
   await expect.poll(() => ambient.evaluate(element => (element as HTMLElement).style.getPropertyValue('--ambient-intensity')))
     .not.toBe(baseIntensity);
   await page.getByRole('link', {name: /Compare Room/}).click();
-  await expect(page).toHaveURL(/\/new\/compare-room$/);
+  await expect(page).toHaveURL(/\/compare-room$/);
   expect(await ambient.evaluate(element => (element as HTMLElement & {ambientIdentity?: string}).ambientIdentity)).toBe('persistent');
   await expect(ambient).toHaveCount(1);
 
@@ -26,7 +26,7 @@ test('one ambient renderer persists through overlays, routes, and shell modes', 
 
 test('v2 ambient layer is decorative, stable, scroll-responsive, and reflow-safe', async ({page}) => {
   await page.setViewportSize({width: 320, height: 800});
-  await page.goto('/new/login');
+  await page.goto('/login');
   const ambient = page.locator('app-ambient-background');
   await expect(ambient).toHaveCount(1);
   await expect(ambient).toHaveAttribute('aria-hidden', 'true');
@@ -71,7 +71,7 @@ test('v2 ambient layer is decorative, stable, scroll-responsive, and reflow-safe
 
 test('v2 ambient layer remains static with reduced motion', async ({page}) => {
   await page.emulateMedia({reducedMotion: 'reduce'});
-  await page.goto('/new/login');
+  await page.goto('/login');
   const ambient = page.locator('app-ambient-background');
   const initial = await ambient.evaluate(element => ({
     x: (element as HTMLElement).style.getPropertyValue('--ambient-primary-x'),

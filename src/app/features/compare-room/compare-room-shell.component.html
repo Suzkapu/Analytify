@@ -1,27 +1,3 @@
-@if (enteredAuthenticated && !isDesignV2) {
-  <app-header mobileTitle="Compare Room"></app-header>
-}
-
-@if (!enteredAuthenticated && !isDesignV2) {
-  <header class="app-header public-room-header">
-    <div class="header-shell">
-      <div class="header-left">
-        <button type="button" class="header-logo public-room-brand" (click)="leaveRoom()"
-          aria-label="Leave Compare Room and return to login">
-          <img src="assets/Analytify-96.webp" width="48" height="48" alt="">
-          <span class="logo-text">Analytify</span>
-        </button>
-      </div>
-      <div class="header-center">
-        <span class="mobile-page-title" role="heading" aria-level="1">Compare Room</span>
-      </div>
-      <div class="header-right">
-        <span class="public-room-status"><i class="pi pi-lock"></i> Temporary room</span>
-      </div>
-    </div>
-  </header>
-}
-
 <div class="compare-room-page">
   <header class="compare-room-hero page-hero">
     <div>
@@ -323,5 +299,3 @@
     }
   }
 </div>
-
-@if (!isDesignV2) { <app-footer></app-footer> }

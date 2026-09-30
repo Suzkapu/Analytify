@@ -4,7 +4,6 @@ import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
-import { DESIGN_VARIANT } from '@core/navigation/design-navigation';
 import { DesignNavigationService } from '@core/navigation/design-navigation.service';
 import { CloudAccessComponent } from './cloud-access.component';
 
@@ -28,7 +27,6 @@ describe('CloudAccessComponent', () => {
         { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap({ backup: '1', returnUrl: '/new/song-league' }) } } },
         { provide: Router, useValue: router },
         { provide: SpotifyAuthService, useValue: auth },
-        { provide: DESIGN_VARIANT, useValue: 'new' },
         DesignNavigationService
       ],
       schemas: [NO_ERRORS_SCHEMA]
@@ -54,8 +52,8 @@ describe('CloudAccessComponent', () => {
     expect(fixture.nativeElement.querySelector('.error')?.textContent).toContain('reconnected');
   });
 
-  it('cancels to the v2 playlists route', () => {
+  it('cancels to the canonical playlists route', () => {
     component.cancel();
-    expect(router.navigateByUrl).toHaveBeenCalledWith('/new/playlists');
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/playlists');
   });
 });

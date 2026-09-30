@@ -86,7 +86,7 @@ test('logged-out home is keyboard reachable, zoom-safe, and WCAG 2.2 AA clean', 
 });
 
 test('v2 focus routes keep minimal chrome and one skip target', async ({page}) => {
-  await page.goto('/new/login');
+  await page.goto('/login');
   await expect(page.getByRole('link', {name: 'Analytify playlists'})).toBeVisible();
   await expect(page.getByRole('navigation', {name: 'Main navigation'})).toHaveCount(0);
   await expect(page.getByRole('button', {name: 'Open More tools'})).toHaveCount(0);
@@ -213,9 +213,12 @@ test('enabled stats route is responsive and WCAG 2.2 AA clean', async ({page}) =
 test('critical routes honor reduced-motion preferences', async ({page}) => {
   await page.emulateMedia({reducedMotion: 'reduce'});
   await page.goto('/login');
-  const durations = await page.locator('body *').evaluateAll(elements => elements.flatMap(element => {
+  const offenders = await page.locator('body *').evaluateAll(elements => elements.flatMap(element => {
     const style = getComputedStyle(element);
-    return [style.animationDuration, style.transitionDuration];
+    const durations = [style.animationDuration, style.transitionDuration];
+    return durations.some(duration => duration.split(',').some(value => parseFloat(value) > 0.01))
+      ? [{element: element.tagName.toLowerCase(), className: element.className, durations}]
+      : [];
   }));
-  expect(durations.every(duration => duration.split(',').every(value => parseFloat(value) <= 0.01))).toBe(true);
+  expect(offenders).toEqual([]);
 });

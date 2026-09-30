@@ -9,10 +9,11 @@ import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 import {SharedModule} from '@shared/shared.module';
 import {V2ButtonDirective, V2CardComponent, V2ListRowComponent, V2PageComponent, V2SearchFiltersComponent, V2StateComponent, V2TabsComponent, V2ToolbarComponent} from '@shared/ui-v2';
 import {UserStatsController} from './user-stats.component';
+import {UserStatsUiModule} from './user-stats.module';
 
 @Component({
   selector: 'app-v2-user-stats', standalone: true,
-  imports: [SharedModule, V2ButtonDirective, V2CardComponent, V2ListRowComponent, V2PageComponent,
+  imports: [SharedModule, UserStatsUiModule, V2ButtonDirective, V2CardComponent, V2ListRowComponent, V2PageComponent,
     V2SearchFiltersComponent, V2StateComponent, V2TabsComponent, V2ToolbarComponent],
   template: `
     <v2-page [eyebrow]="isSpyMode ? 'Approved shared access' : 'Personal listening'"

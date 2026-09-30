@@ -1,7 +1,4 @@
-import {designCommands, DesignVariant} from './design-variant';
-
-export {DESIGN_VARIANT} from './design-variant';
-export type {DesignVariant} from './design-variant';
+import {designCommands} from './design-path';
 
 export type LogicalRouteId =
   | 'login'
@@ -61,7 +58,6 @@ const ROUTES: Record<LogicalRouteId, readonly string[]> = {
 };
 
 export function resolveDesignRoute(
-  variant: DesignVariant,
   destination: LogicalRouteId,
   parameters: LogicalRouteParameters = {}
 ): string[] {
@@ -76,9 +72,5 @@ export function resolveDesignRoute(
     }
     return [value];
   });
-  return designCommands(variant, ...segments);
-}
-
-export function designVariantFromUrl(url: string): DesignVariant {
-  return url === '/new' || url.startsWith('/new/') || url.startsWith('/new?') ? 'new' : 'legacy';
+  return designCommands(...segments);
 }

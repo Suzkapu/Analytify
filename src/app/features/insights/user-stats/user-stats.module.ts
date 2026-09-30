@@ -6,8 +6,14 @@ import {UserStatsComponent} from './user-stats.component';
 
 @NgModule({
   declarations: [UserStatsComponent],
+  imports: [SharedModule],
+  exports: [UserStatsComponent]
+})
+export class UserStatsUiModule {}
+
+@NgModule({
   imports: [
-    SharedModule,
+    UserStatsUiModule,
     RouterModule.forChild([
       {path: ':userId', component: UserStatsComponent},
       {path: '', pathMatch: 'full', component: UserStatsComponent}

@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Inject,
   OnDestroy,
   OnInit,
   AfterViewInit,
@@ -15,7 +14,6 @@ import {
 import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet} from '@angular/router';
 import {filter, Subscription} from 'rxjs';
 
-import {DESIGN_VARIANT, DesignVariant} from '@core/navigation/design-variant';
 import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 import {
   DesignV2NavigationItem,
@@ -98,8 +96,7 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
     private readonly spotifyData: SpotifyDataService,
     private readonly supabase: SupabaseService,
     private readonly admin: AdminService,
-    readonly overlays: DesignV2OverlayService,
-    @Inject(DESIGN_VARIANT) readonly designVariant: DesignVariant
+    readonly overlays: DesignV2OverlayService
   ) {}
 
   ngOnInit(): void {

@@ -5,8 +5,6 @@ import {provideRouter} from '@angular/router';
 import {RouterTestingHarness} from '@angular/router/testing';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 
-import {DESIGN_VARIANT} from '@core/navigation/design-variant';
-import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 import {designV2RouteData} from '@core/navigation/design-v2-route-data';
 import {DesignV2ShellComponent} from './design-v2-shell.component';
 import {AmbientBackgroundComponent} from '@shared/ambient/ambient-background.component';
@@ -21,9 +19,8 @@ describe('DesignV2ShellComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideRouter([{
-        path: 'new',
+        path: '',
         component: DesignV2ShellComponent,
-        providers: [{provide: DESIGN_VARIANT, useValue: 'new'}, DesignNavigationService],
         children: [
           {
             path: 'playlists', component: PlaylistsStubComponent, title: 'Playlists | Analytify',
@@ -43,12 +40,12 @@ describe('DesignV2ShellComponent', () => {
   });
 
   it('keeps one shell instance mounted while child routes change', async () => {
-    const harness = await RouterTestingHarness.create('/new/playlists');
+    const harness = await RouterTestingHarness.create('/playlists');
     const first = harness.fixture.debugElement.query(By.directive(DesignV2ShellComponent)).componentInstance;
     const firstAmbient = harness.fixture.debugElement.query(By.directive(AmbientBackgroundComponent)).componentInstance;
     expect(firstAmbient.state.routeKey()).toBe('library');
 
-    await harness.navigateByUrl('/new/stats');
+    await harness.navigateByUrl('/stats');
     const second = harness.fixture.debugElement.query(By.directive(DesignV2ShellComponent)).componentInstance;
     const secondAmbient = harness.fixture.debugElement.query(By.directive(AmbientBackgroundComponent)).componentInstance;
 
@@ -61,7 +58,7 @@ describe('DesignV2ShellComponent', () => {
   });
 
   it('renders desktop and mobile navigation from the same model with semantic active state', async () => {
-    const harness = await RouterTestingHarness.create('/new/stats');
+    const harness = await RouterTestingHarness.create('/stats');
     harness.fixture.detectChanges();
     const element = harness.fixture.nativeElement as HTMLElement;
     const desktop = Array.from(element.querySelectorAll<HTMLElement>('.v2-desktop-nav .v2-nav-link'));
@@ -74,7 +71,7 @@ describe('DesignV2ShellComponent', () => {
   });
 
   it('owns one accessible overlay host and closes the workspace with Escape', async () => {
-    const harness = await RouterTestingHarness.create('/new/playlists');
+    const harness = await RouterTestingHarness.create('/playlists');
     const shell = harness.fixture.debugElement.query(By.directive(DesignV2ShellComponent))
       .componentInstance as DesignV2ShellComponent;
     shell.toggleTools();
@@ -94,23 +91,23 @@ describe('DesignV2ShellComponent', () => {
   });
 
   it('keeps the ambient instance through menu navigation and shell-mode changes', async () => {
-    const harness = await RouterTestingHarness.create('/new/playlists');
+    const harness = await RouterTestingHarness.create('/playlists');
     const shell = harness.fixture.debugElement.query(By.directive(DesignV2ShellComponent)).componentInstance as DesignV2ShellComponent;
     const ambient = harness.fixture.debugElement.query(By.directive(AmbientBackgroundComponent)).componentInstance as AmbientBackgroundComponent;
     shell.toggleTools();
     harness.fixture.detectChanges();
     expect(ambient.state.overlayState()).toBe('tools');
 
-    await harness.navigateByUrl('/new/stats');
+    await harness.navigateByUrl('/stats');
     expect(harness.fixture.debugElement.query(By.directive(AmbientBackgroundComponent)).componentInstance).toBe(ambient);
     expect(ambient.state.overlayState()).toBe('none');
-    await harness.navigateByUrl('/new/login');
+    await harness.navigateByUrl('/login');
     expect(harness.fixture.debugElement.query(By.directive(AmbientBackgroundComponent)).componentInstance).toBe(ambient);
     expect(ambient.state.shellMode()).toBe('focus');
   });
 
   it('opens the account hub with a usable profile fallback and all account actions', async () => {
-    const harness = await RouterTestingHarness.create('/new/playlists');
+    const harness = await RouterTestingHarness.create('/playlists');
     const shell = harness.fixture.debugElement.query(By.directive(DesignV2ShellComponent))
       .componentInstance as DesignV2ShellComponent;
     shell.profilePicUrl.set(null);
@@ -126,7 +123,7 @@ describe('DesignV2ShellComponent', () => {
   });
 
   it('uses minimal chrome for focus routes', async () => {
-    const harness = await RouterTestingHarness.create('/new/login');
+    const harness = await RouterTestingHarness.create('/login');
     const element = harness.fixture.nativeElement as HTMLElement;
     expect(element.querySelector('.v2-desktop-nav')).toBeNull();
     expect(element.querySelector('.v2-mobile-nav')).toBeNull();
@@ -136,7 +133,7 @@ describe('DesignV2ShellComponent', () => {
   });
 
   it('uses More consistently and preserves Spotify attribution', async () => {
-    const harness = await RouterTestingHarness.create('/new/playlists');
+    const harness = await RouterTestingHarness.create('/playlists');
     const element = harness.fixture.nativeElement as HTMLElement;
     expect(element.querySelector('.v2-tools-button')?.textContent?.trim()).toBe('More');
     expect(element.textContent).not.toContain('Workspace');
@@ -145,7 +142,7 @@ describe('DesignV2ShellComponent', () => {
   });
 
   it('routes settings through the shared overlay service', async () => {
-    const harness = await RouterTestingHarness.create('/new/playlists');
+    const harness = await RouterTestingHarness.create('/playlists');
     const shell = harness.fixture.debugElement.query(By.directive(DesignV2ShellComponent))
       .componentInstance as DesignV2ShellComponent;
     const open = vi.spyOn(shell.overlays, 'open').mockResolvedValue(null);
@@ -159,7 +156,7 @@ describe('DesignV2ShellComponent', () => {
   });
 
   it('requires confirmation before enabling backup and clearing local data', async () => {
-    const harness = await RouterTestingHarness.create('/new/playlists');
+    const harness = await RouterTestingHarness.create('/playlists');
     const shell = harness.fixture.debugElement.query(By.directive(DesignV2ShellComponent))
       .componentInstance as DesignV2ShellComponent;
     const enable = vi.spyOn(shell.authService, 'enableBackup').mockResolvedValue(undefined);
@@ -177,14 +174,14 @@ describe('DesignV2ShellComponent', () => {
   });
 
   it('provides a skip link and one main landmark', async () => {
-    const harness = await RouterTestingHarness.create('/new/playlists');
+    const harness = await RouterTestingHarness.create('/playlists');
     const element = harness.fixture.nativeElement as HTMLElement;
     expect(element.querySelector('.v2-skip-link')?.getAttribute('href')).toBe('#v2-main-content');
     expect(element.querySelectorAll('main').length).toBe(1);
   });
 
   it('applies the route width as the only page-width decision', async () => {
-    const harness = await RouterTestingHarness.create('/new/playlists');
+    const harness = await RouterTestingHarness.create('/playlists');
     const main = harness.fixture.nativeElement.querySelector('main') as HTMLElement;
     expect(main.classList).toContain('v2-main--wide');
     expect(main.className).not.toContain('standard');

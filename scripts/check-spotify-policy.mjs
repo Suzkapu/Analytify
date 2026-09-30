@@ -44,6 +44,7 @@ const [
   read('src/app/app-routing.module.ts'),
   read('services/sync-service/task-registry.js'),
 ]);
+const canonicalRoutes = routes + await read('src/app/design-v2-routing.module.ts');
 
 const baseScopeBlock = scopes.match(/HOSTED_SPOTIFY_SCOPES\s*=\s*\[([\s\S]*?)\]/)?.[1] || '';
 assert.ok(baseScopeBlock, 'hosted Spotify read scopes must stay explicit');
@@ -66,7 +67,7 @@ for (const page of [login, personalLogin]) {
 }
 
 assert.match(policyGate, /operator-enabled-pending-spotify-determination-2026-09-25/);
-assert.match(routes, /spotifyRestrictedFeatureGuard/);
+assert.match(canonicalRoutes, /spotifyRestrictedFeatureGuard/);
 for (const task of ['listening_history', 'stats_short_term', 'stats_medium_term', 'stats_long_term', 'song_league_playlists']) {
   assert.match(workerRegistry, new RegExp(`['"]${task}['"]`));
 }

@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {designInviteUrl, rankingLabel, recommendationParticipation, weeklyTaskCopy} from './song-league-view-model';
+import {rankingLabel, recommendationParticipation, weeklyTaskCopy} from './song-league-view-model';
 
 describe('Song League v2 view model', () => {
   it.each([
@@ -26,10 +26,4 @@ describe('Song League v2 view model', () => {
       .toContain('Friday');
   });
 
-  it('keeps invitations inside the selected design without altering their secret', () => {
-    expect(designInviteUrl('https://analytify.example/song-league/join/secret-token', 'new'))
-      .toBe('https://analytify.example/new/song-league/join/secret-token');
-    expect(designInviteUrl('/song-league/join/secret-token', 'new')).toBe('/new/song-league/join/secret-token');
-    expect(designInviteUrl('/song-league/join/secret-token', 'legacy')).toBe('/song-league/join/secret-token');
-  });
 });

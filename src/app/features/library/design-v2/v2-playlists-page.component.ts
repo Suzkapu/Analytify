@@ -11,11 +11,12 @@ import {
   V2StateComponent, V2ToolbarComponent
 } from '@shared/ui-v2';
 import {PlaylistsController} from '../playlists/playlists.component';
+import {PlaylistsUiModule} from '../playlists/playlists.module';
 
 @Component({
   selector: 'app-v2-playlists-page',
   standalone: true,
-  imports: [RouterLink, SharedModule, V2ButtonDirective, V2CardComponent, V2PageComponent,
+  imports: [RouterLink, SharedModule, PlaylistsUiModule, V2ButtonDirective, V2CardComponent, V2PageComponent,
     V2SearchFiltersComponent, V2StateComponent, V2ToolbarComponent],
   template: `
     <v2-page eyebrow="Your Spotify library" title="Your playlists"

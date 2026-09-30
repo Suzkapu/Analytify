@@ -382,6 +382,7 @@ describe('SharedPlaylistsComponent', () => {
 
         fixture.detectChanges();
         await fixture.whenStable();
+        component.activeTab = 'stats';
         fixture.detectChanges();
 
         const statsLink = fixture.nativeElement.querySelector('.stats-user-card') as HTMLAnchorElement;

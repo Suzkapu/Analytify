@@ -6,7 +6,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { LegalComponent } from './legal.component';
-import { DESIGN_VARIANT } from '@core/navigation/design-navigation';
 import { DesignNavigationService } from '@core/navigation/design-navigation.service';
 
 describe('LegalComponent', () => {
@@ -22,32 +21,30 @@ describe('LegalComponent', () => {
             providers: [
                 { provide: SpotifyAuthService, useValue: { isAuthenticated: () => authenticated } },
                 { provide: Location, useValue: { back: vi.fn().mockName('back') } },
-                { provide: DESIGN_VARIANT, useValue: 'legacy' },
                 DesignNavigationService
             ],
             schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();
     });
 
-    it('shows the normal application header when the user is logged in', () => {
+    it('uses the shared shell instead of mounting a second header when logged in', () => {
         authenticated = true;
         fixture = TestBed.createComponent(LegalComponent);
         fixture.detectChanges();
 
-        expect(fixture.nativeElement.querySelector('app-header')).not.toBeNull();
+        expect(fixture.nativeElement.querySelector('app-header')).toBeNull();
         expect(fixture.nativeElement.querySelector('.legal-public-header')).toBeNull();
     });
 
-    it('shows only the public Legal header when the user is logged out', () => {
+    it('uses the shared public shell instead of mounting a second header when logged out', () => {
         fixture = TestBed.createComponent(LegalComponent);
         fixture.detectChanges();
 
         expect(fixture.nativeElement.querySelector('app-header')).toBeNull();
-        expect(fixture.nativeElement.querySelector('.legal-public-header')).not.toBeNull();
+        expect(fixture.nativeElement.querySelector('.legal-public-header')).toBeNull();
     });
 
-    it('uses the shared reading shell without a duplicate header in Design v2', () => {
-        TestBed.overrideProvider(DESIGN_VARIANT, { useValue: 'new' });
+    it('uses the shared reading shell without a duplicate header', () => {
         fixture = TestBed.createComponent(LegalComponent);
         fixture.detectChanges();
 
@@ -55,7 +52,7 @@ describe('LegalComponent', () => {
         expect(fixture.nativeElement.querySelector('.legal-public-header')).toBeNull();
         expect(fixture.nativeElement.querySelector('.legal-wrapper')).not.toBeNull();
         expect(fixture.nativeElement.querySelector('article.legal-card')).not.toBeNull();
-        expect(fixture.componentInstance.navigation.commands('legal')).toEqual(['/new', 'legal']);
+        expect(fixture.componentInstance.navigation.commands('legal')).toEqual(['/legal']);
     });
 
     it('publishes the versioned Spotify-required end-user protections before login', () => {

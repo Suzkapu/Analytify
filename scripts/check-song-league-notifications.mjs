@@ -8,7 +8,8 @@ const statsRequestMigration = readFileSync('supabase/migrations/20260904190000_s
 const edgeFunction = readFileSync('supabase/functions/song-league-notifications/index.ts', 'utf8');
 const deliveryState = readFileSync('supabase/functions/song-league-notifications/delivery-state.ts', 'utf8');
 const dispatcher = readFileSync('services/sync-service/push-dispatcher.js', 'utf8');
-const header = readFileSync('src/app/shared/layout/header/header.component.html', 'utf8');
+const shell = readFileSync('src/app/shared/layout/design-v2-shell/design-v2-shell.component.html', 'utf8')
+  + readFileSync('src/app/shared/layout/design-v2-shell/design-v2-shell.component.ts', 'utf8');
 const notificationManager = readFileSync('src/app/shared/layout/header/notification-settings-dialog.component.html', 'utf8')
   + readFileSync('src/app/shared/layout/header/notification-settings-dialog.component.ts', 'utf8');
 const league = readFileSync('src/app/features/song-league/song-league-detail.component.html', 'utf8');
@@ -33,7 +34,7 @@ const contracts = [
     && requestSecuritySource.includes('Access-Control-Allow-Origin')],
   ['PWA notification deep link', edgeFunction.includes("operation: 'openWindow'")],
   ['trusted worker dispatch', dispatcher.includes("invoke('song-league-notifications'")],
-  ['Data & account manager', header.includes('openNotificationSettings()')
+  ['Data & account manager', shell.includes('openNotifications()')
     && notificationManager.includes('notification-settings-modal') && notificationManager.includes('Song League')],
   ['in-league notification switch', league.includes('league-notification-control')
     && leagueController.includes("return 'Turn off'")],

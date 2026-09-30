@@ -506,8 +506,6 @@ export class PlaylistAnalysisController implements OnInit, OnDestroy {
     return this.designNavigation?.navigate('playlists') ?? this.router.navigate(['/playlists']);
   }
 
-  get isDesignV2(): boolean { return this.designNavigation?.variant === 'new'; }
-
   openTrackClick(url: string) {
     openSpotifyUrl(url, {expectedType: 'track', target: '_self'});
   }

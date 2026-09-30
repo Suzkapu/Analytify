@@ -6,9 +6,12 @@ import {ListeningHistoryComponent} from './listening-history.component';
 
 @NgModule({
   declarations: [ListeningHistoryComponent],
-  imports: [
-    SharedModule,
-    RouterModule.forChild([{path: '', component: ListeningHistoryComponent}])
-  ]
+  imports: [SharedModule],
+  exports: [ListeningHistoryComponent]
+})
+export class ListeningHistoryUiModule {}
+
+@NgModule({
+  imports: [ListeningHistoryUiModule, RouterModule.forChild([{path: '', component: ListeningHistoryComponent}])]
 })
 export class ListeningHistoryModule {}

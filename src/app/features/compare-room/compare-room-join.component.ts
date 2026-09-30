@@ -53,12 +53,8 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
     private spotify: ParticipantSpotifyService,
     private source: CompareGuestPlaylistSourceService,
     private terms: TermsAcceptanceService,
-    readonly navigation: DesignNavigationService = {variant: 'legacy'} as DesignNavigationService
+    readonly navigation: DesignNavigationService = {commands: () => ['/']} as unknown as DesignNavigationService
   ) {}
-
-  get isDesignV2(): boolean {
-    return this.navigation.variant === 'new';
-  }
 
   get currentStep(): 1 | 2 | 3 {
     if (['review', 'saving', 'complete'].includes(this.stage) || (this.stage === 'error' && !!this.proposal)) return 3;

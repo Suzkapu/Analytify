@@ -7,10 +7,11 @@ import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 import {V2ButtonDirective, V2CardComponent, V2ListRowComponent, V2PageComponent, V2SectionHeaderComponent, V2StateComponent} from '@shared/ui-v2';
 import {ArtistDetailsController} from '../artist-details/artist-details.component';
+import {ArtistDetailsUiModule} from '../artist-details/artist-details.module';
 
 @Component({
   selector: 'app-v2-artist-details-page', standalone: true,
-  imports: [RouterLink, V2ButtonDirective, V2CardComponent, V2ListRowComponent, V2PageComponent, V2SectionHeaderComponent, V2StateComponent],
+  imports: [RouterLink, ArtistDetailsUiModule, V2ButtonDirective, V2CardComponent, V2ListRowComponent, V2PageComponent, V2SectionHeaderComponent, V2StateComponent],
   template: `
     <v2-page eyebrow="Library" [title]="artist.name || 'Artist details'" description="See this artist and their songs from the selected playlist.">
       <a v2PageActions v2Button="tertiary" [routerLink]="backLink"><i class="pi pi-arrow-left"></i> Back</a>

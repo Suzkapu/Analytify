@@ -21,10 +21,6 @@ export class LegalComponent {
     return this.authService.isAuthenticated();
   }
 
-  get isDesignV2(): boolean {
-    return this.navigation.variant === 'new';
-  }
-
   goBack(): void {
     this.location.back();
   }

@@ -6,15 +6,12 @@ import {cloudIdentityGuard} from '@core/auth/cloud-identity.guard';
 import {redirectLoggedInGuard} from '@core/auth/redirect-logged-in.guard';
 import {spotifyAuthGuard} from '@core/auth/spotify-auth.guard';
 import {spotifyRestrictedFeatureGuard} from '@core/compliance/spotify-policy-gate';
-import {DESIGN_VARIANT} from '@core/navigation/design-navigation';
-import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 import {designV2RouteData} from '@core/navigation/design-v2-route-data';
 import {DesignV2ShellComponent} from '@shared/layout/design-v2-shell/design-v2-shell.component';
 
 export const DESIGN_V2_ROUTES: Routes = [{
   path: '',
   component: DesignV2ShellComponent,
-  providers: [{provide: DESIGN_VARIANT, useValue: 'new'}, DesignNavigationService],
   children: [
     {path: '', pathMatch: 'full', redirectTo: 'login'},
     {

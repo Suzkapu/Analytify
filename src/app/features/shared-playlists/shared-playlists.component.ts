@@ -88,11 +88,9 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     this.destroyed = false;
-    if (this.isDesignV2) {
-      this.subscriptions.add(this.route.queryParamMap.subscribe(params => {
-        this.activeTab = parseSharingTab(params.get('tab'));
-      }));
-    }
+    this.subscriptions.add(this.route.queryParamMap.subscribe(params => {
+      this.activeTab = parseSharingTab(params.get('tab'));
+    }));
     this.shareAutoSync.start();
     await this.reload();
     if (this.destroyed) return;
@@ -151,16 +149,12 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
     return this.auth.isBackupActive();
   }
 
-  get isDesignV2(): boolean {
-    return this.navigation.variant === 'new';
-  }
-
   get showPlaylistSections(): boolean {
-    return !this.isDesignV2 || this.activeTab === 'playlists';
+    return this.activeTab === 'playlists';
   }
 
   get showStatsSections(): boolean {
-    return !this.isDesignV2 || this.activeTab === 'stats';
+    return this.activeTab === 'stats';
   }
 
   get selectedPlaylist(): ComparePlaylist | null {

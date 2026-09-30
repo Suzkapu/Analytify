@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, NgZone, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
+import {Component, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
 import {SwUpdate, VersionReadyEvent} from '@angular/service-worker';
 import {
   NavigationCancel,
@@ -23,17 +23,14 @@ const ANNOUNCEMENT_AUTO_HIDE_MS = 5000;
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class AppComponent implements AfterViewInit, OnDestroy {
+export class AppComponent implements OnDestroy {
   title = 'Spotify Artists Stats';
-  showScrollBtn = false;
   isInitialNavigationLoading: boolean;
   siteAnnouncement = '';
   announcementVisible = true;
   isLandingAnnouncement = true;
-  isDesignV2 = false;
   updateReady = false;
 
-  private readonly windowScrollHandler = () => this.onWindowScroll();
   private navigationStartedAt = 0;
   private announcementHideTimer?: ReturnType<typeof setTimeout>;
   private transientAnnouncementShown = false;
@@ -41,11 +38,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   constructor(
     private swUpdate: SwUpdate,
     private router: Router,
-    private ngZone: NgZone,
     private siteSettings: SiteSettingsService
   ) {
     this.isInitialNavigationLoading = !this.router.navigated;
-    this.isDesignV2 = this.isDesignV2Url(this.router.url);
     void this.siteSettings.load().then(settings => {
       this.siteAnnouncement = settings.announcement;
       this.updateAnnouncementVisibility(this.router.url);
@@ -56,7 +51,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         this.navigationStartedAt = performance.now();
         navigationLog.step('Opening page', {url: event.url});
       } else if (event instanceof NavigationEnd) {
-        this.isDesignV2 = this.isDesignV2Url(event.urlAfterRedirects);
         this.updateAnnouncementVisibility(event.urlAfterRedirects);
         navigationLog.success('Page ready', {
           url: event.urlAfterRedirects,
@@ -104,15 +98,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  ngAfterViewInit(): void {
-    this.ngZone.runOutsideAngular(() => {
-      window.addEventListener('scroll', this.windowScrollHandler, {passive: true});
-      this.onWindowScroll();
-    });
-  }
-
   ngOnDestroy(): void {
-    window.removeEventListener('scroll', this.windowScrollHandler);
     this.clearAnnouncementHideTimer();
   }
 
@@ -155,21 +141,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  onWindowScroll(): void {
-    const scrollPos = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-    const shouldShow = scrollPos > 300;
-    if (shouldShow !== this.showScrollBtn) {
-      this.ngZone.run(() => this.showScrollBtn = shouldShow);
-    }
-  }
-
-  scrollToTop() {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  }
-
   reloadForUpdate(): void {
     window.location.reload();
   }
@@ -178,8 +149,4 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.updateReady = false;
   }
 
-  private isDesignV2Url(url: string): boolean {
-    const path = url.split(/[?#]/, 1)[0];
-    return path === '/new' || path.startsWith('/new/');
-  }
 }

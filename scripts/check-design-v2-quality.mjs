@@ -39,6 +39,28 @@ const router = readFileSync('src/app/app-routing.module.ts', 'utf8');
 if (!router.includes('enableViewTransitions: true')) {
   throw new Error('Angular native route View Transitions must remain enabled.');
 }
+if (!router.includes('NEW_COMPATIBILITY_MATCHER') || !router.includes('redirectLegacyDesignV2Url')) {
+  throw new Error('The canonical rollout must preserve the routing-layer /new compatibility redirect.');
+}
+
+const applicationSources = filesBelow('src/app').filter(path => /\.(?:ts|html)$/.test(path));
+const legacyVariantSources = applicationSources.filter(path =>
+  /\b(?:DESIGN_VARIANT|DesignVariant|designVariantFromUrl|isDesignV2)\b/.test(readFileSync(path, 'utf8'))
+);
+if (legacyVariantSources.length) {
+  throw new Error(`Canonical UI still contains presentation branching:\n${legacyVariantSources.map(path => `- ${path}`).join('\n')}`);
+}
+for (const removedLegacyFile of [
+  'src/app/shared/layout/app-shell/app-shell.component.ts',
+  'src/app/shared/layout/header/header.component.ts',
+  'src/app/shared/layout/footer/footer.component.ts',
+  'src/app/shared/layout/layout.module.ts'
+]) {
+  if (existsSync(removedLegacyFile)) throw new Error(`Legacy presentation file still exists: ${removedLegacyFile}`);
+}
+if (!existsSync('docs/design-v2-rollout.md')) {
+  throw new Error('Canonical rollout and atomic visual rollback must be documented.');
+}
 
 const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
 for (const gate of ['design-v2-parity:check', 'design-v2-quality:check', 'accessibility:browser', 'build:production']) {
@@ -46,4 +68,3 @@ for (const gate of ['design-v2-parity:check', 'design-v2-quality:check', 'access
 }
 
 console.log(`Design v2 quality contracts cover ${behavioralSources.length} behavioral sources and route isolation.`);
-

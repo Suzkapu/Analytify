@@ -198,9 +198,6 @@ export class ArtistDetailsController implements OnDestroy {
     }
   }
 
-  get isDesignV2(): boolean { return this.designNavigation?.variant === 'new'; }
-
-
 }
 
 @Component({

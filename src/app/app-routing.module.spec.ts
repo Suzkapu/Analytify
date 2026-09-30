@@ -1,174 +1,96 @@
-import { describe, expect, it } from "vitest";
-import { APP_ROUTES, ROUTER_OPTIONS } from './app-routing.module';
-import { redirectLoggedInGuard } from '@core/auth/redirect-logged-in.guard';
-import { spotifyAuthGuard } from '@core/auth/spotify-auth.guard';
-import { adminGuard } from '@core/admin/admin.guard';
-import { AppShellComponent } from '@shared/layout/app-shell/app-shell.component';
-import { spotifyRestrictedFeatureGuard } from '@core/compliance/spotify-policy-gate';
-import {DesignV2ShellComponent} from '@shared/layout/design-v2-shell/design-v2-shell.component';
+import {TestBed} from '@angular/core/testing';
+import {Router, UrlSegment} from '@angular/router';
+import {describe, expect, it, vi} from 'vitest';
+
+import {
+  APP_ROUTES,
+  NEW_COMPATIBILITY_MATCHER,
+  redirectLegacyDesignV2Url,
+  ROUTER_OPTIONS
+} from './app-routing.module';
 import {DESIGN_V2_ROUTES} from './design-v2-routing.module';
-import {DESIGN_VARIANT} from '@core/navigation/design-navigation';
+import {adminGuard} from '@core/admin/admin.guard';
+import {cloudIdentityGuard} from '@core/auth/cloud-identity.guard';
+import {redirectLoggedInGuard} from '@core/auth/redirect-logged-in.guard';
+import {spotifyAuthGuard} from '@core/auth/spotify-auth.guard';
+import {spotifyRestrictedFeatureGuard} from '@core/compliance/spotify-policy-gate';
 import {DesignSelectivePreloadingStrategy} from '@core/navigation/design-selective-preloading.strategy';
+import {DesignV2ShellComponent} from '@shared/layout/design-v2-shell/design-v2-shell.component';
 
-describe('application routes', () => {
-    const shell = APP_ROUTES.find(route => route.component === AppShellComponent)!;
-    const routeByPath = (path: string) => shell.children?.find(route => route.path === path)
-        ?? APP_ROUTES.find(route => route.path === path);
-    const modernEntry = APP_ROUTES.find(route => route.path === 'new')!;
-    const modernShell = DESIGN_V2_ROUTES[0];
-    const modernRouteByPath = (path: string) => modernShell.children?.find(route => route.path === path);
+describe('canonical application routes', () => {
+  const shell = DESIGN_V2_ROUTES[0];
+  const routeByPath = (path: string) => shell.children?.find(route => route.path === path);
 
-    it('preserves every public URL and the fallback route', () => {
-        const publicPaths = APP_ROUTES.map(route => route.path);
-        expect(publicPaths).toContain('login');
-        expect(publicPaths).toContain('compare-room/callback');
-        expect(publicPaths).toContain('compare-room/join/:roomId');
-        expect(publicPaths).toContain('compare-room');
-        expect(publicPaths).toContain('**');
-        expect(shell.children?.map(route => route.path)).toEqual([
-            'playlists', 'songs', 'artistDetails', 'analysis', 'stats', 'history',
-            'admin', 'song-league', 'shared-playlists'
-        ]);
+  it('mounts only the Design v2 route tree at the canonical root', () => {
+    expect(APP_ROUTES).toHaveLength(2);
+    expect(APP_ROUTES[0].matcher).toBe(NEW_COMPATIBILITY_MATCHER);
+    expect(APP_ROUTES[1]).toEqual(expect.objectContaining({path: '', loadChildren: expect.any(Function)}));
+    expect(shell.component).toBe(DesignV2ShellComponent);
+    expect(shell.providers).toBeUndefined();
+  });
+
+  it('keeps every product and public route in the canonical shell', () => {
+    expect(shell.children?.map(route => route.path)).toEqual([
+      '', 'login', 'callback', 'spotify', 'playlists', 'songs/:id', 'artistDetails/:id',
+      'analysis/:id', 'stats/:userId', 'stats', 'history', 'admin', 'song-league', 'shared-playlists',
+      'legal', 'compare-room/callback', 'compare-room/join/:roomId', 'compare-room', '**'
+    ]);
+    for (const route of shell.children?.filter(candidate => candidate.loadChildren || candidate.loadComponent) ?? []) {
+      expect(route.title).toEqual(expect.any(String));
+      expect(route.data).toEqual(expect.objectContaining({
+        pageId: expect.any(String), mobileTitle: expect.any(String),
+        pageWidth: expect.stringMatching(/^(reading|form|default|dashboard|wide|full)$/),
+        ambientKey: expect.any(String), preload: expect.any(Boolean)
+      }));
+    }
+  });
+
+  it('redirects the complete /new compatibility path while preserving query and fragment', () => {
+    const segments = ['new', 'song-league', 'join', 'secret'].map(path => new UrlSegment(path, {}));
+    expect(NEW_COMPATIBILITY_MATCHER(segments, {} as never, {} as never)?.consumed).toEqual(segments);
+    expect(NEW_COMPATIBILITY_MATCHER([new UrlSegment('newness', {})], {} as never, {} as never)).toBeNull();
+
+    const createUrlTree = vi.fn().mockReturnValue({canonical: true});
+    TestBed.configureTestingModule({providers: [{provide: Router, useValue: {createUrlTree}}]});
+    const result = TestBed.runInInjectionContext(() => redirectLegacyDesignV2Url({
+      url: segments,
+      queryParams: {source: 'invite'},
+      fragment: 'details'
+    } as never));
+
+    expect(result).toEqual({canonical: true});
+    expect(createUrlTree).toHaveBeenCalledWith(['/', 'song-league', 'join', 'secret'], {
+      queryParams: {source: 'invite'}, fragment: 'details'
     });
+  });
 
-    it('keeps authenticated pages beneath one persistent layout shell', () => {
-        expect(shell.children?.length).toBe(9);
-        expect(shell.loadChildren).toBeUndefined();
-    });
+  it('keeps library pages independently lazy and preloads likely next destinations only', () => {
+    const library = ['playlists', 'songs/:id', 'artistDetails/:id', 'analysis/:id'].map(routeByPath);
+    expect(library.every(route => typeof route?.loadComponent === 'function')).toBe(true);
+    expect(new Set(library.map(route => route?.loadComponent)).size).toBe(4);
+    expect(shell.children?.filter(route => route.data?.['preload']).map(route => route.path))
+      .toEqual(['playlists', 'stats', 'history']);
+  });
 
-    it('represents every planned page beneath the parallel v2 shell', () => {
-        expect(modernEntry.loadChildren).toEqual(expect.any(Function));
-        expect(modernShell.component).toBe(DesignV2ShellComponent);
-        expect(modernShell.children?.map(route => route.path)).toEqual([
-            '', 'login', 'callback', 'spotify', 'playlists', 'songs/:id', 'artistDetails/:id',
-            'analysis/:id', 'stats/:userId', 'stats', 'history', 'admin', 'song-league', 'shared-playlists',
-            'legal', 'compare-room/callback', 'compare-room/join/:roomId', 'compare-room', '**'
-        ]);
-        for (const path of [
-            'login', 'callback', 'spotify', 'playlists', 'songs/:id', 'artistDetails/:id', 'analysis/:id',
-            'stats/:userId', 'stats', 'history', 'admin', 'song-league', 'shared-playlists',
-            'compare-room/callback', 'compare-room/join/:roomId', 'compare-room', 'legal'
-        ]) {
-            const route = modernRouteByPath(path);
-            expect(route?.loadChildren ?? route?.loadComponent).toEqual(expect.any(Function));
-        }
-    });
+  it('preserves authentication, cloud-identity, admin, and Spotify policy guards', () => {
+    expect(routeByPath('login')?.canActivate).toEqual([redirectLoggedInGuard]);
+    expect(routeByPath('admin')?.canActivate).toEqual([spotifyAuthGuard, adminGuard]);
+    expect(routeByPath('song-league')?.canActivate)
+      .toEqual([spotifyAuthGuard, cloudIdentityGuard, spotifyRestrictedFeatureGuard]);
+    expect(routeByPath('shared-playlists')?.canActivate).toEqual([spotifyAuthGuard, cloudIdentityGuard]);
+    for (const path of ['stats', 'history', 'compare-room', 'compare-room/callback', 'compare-room/join/:roomId']) {
+      expect(routeByPath(path)?.canActivate).toContain(spotifyRestrictedFeatureGuard);
+    }
+  });
 
-    it('scopes the new route tree to the new design variant', () => {
-        const variantProvider = modernShell.providers?.find(provider =>
-            typeof provider === 'object' && provider !== null && 'provide' in provider
-            && provider.provide === DESIGN_VARIANT
-        );
-        expect(variantProvider).toEqual(expect.objectContaining({useValue: 'new'}));
-    });
-
-    it('gives every v2 page a title and semantic shell metadata', () => {
-        const pages = modernShell.children?.filter(route => route.loadChildren || route.loadComponent) ?? [];
-        expect(pages.length).toBeGreaterThan(0);
-        for (const page of pages) {
-            expect(page.title).toEqual(expect.any(String));
-            expect(page.data).toEqual(expect.objectContaining({
-                pageId: expect.any(String),
-                mobileTitle: expect.any(String),
-                pageWidth: expect.stringMatching(/^(reading|form|default|dashboard|wide|full)$/),
-                ambientKey: expect.any(String),
-                preload: expect.any(Boolean)
-            }));
-        }
-    });
-
-    it('loads each v2 library page through an independent standalone route chunk', () => {
-        const routes = ['playlists', 'songs/:id', 'artistDetails/:id', 'analysis/:id']
-            .map(path => modernRouteByPath(path));
-
-        expect(routes.every(route => typeof route?.loadComponent === 'function')).toBe(true);
-        expect(new Set(routes.map(route => route?.loadComponent)).size).toBe(4);
-    });
-
-    it('marks only likely next destinations for selective preloading', () => {
-        const preloadPaths = modernShell.children
-            ?.filter(route => route.data?.['preload'] === true)
-            .map(route => route.path);
-        expect(preloadPaths).toEqual(['playlists', 'stats', 'history']);
-    });
-
-    it('requires both login and administrator authorization for the admin route', () => {
-        const route = routeByPath('admin');
-        expect(route?.loadChildren).toEqual(expect.any(Function));
-        expect(route?.canActivate).toEqual([spotifyAuthGuard, adminGuard]);
-    });
-
-    it('lazy-loads and protects every authenticated feature', () => {
-        const protectedPaths = [
-            'playlists', 'songs', 'artistDetails', 'analysis', 'stats', 'history', 'song-league', 'shared-playlists'
-        ];
-
-        protectedPaths.forEach(path => {
-            const route = routeByPath(path);
-            expect(route?.loadChildren).toEqual(expect.any(Function));
-            expect(route?.canActivate).toContain(spotifyAuthGuard);
-        });
-    });
-
-    it('uses a browser title that covers both private sharing types', () => {
-        const route = routeByPath('shared-playlists');
-
-        expect(route?.title).toBe('Private Sharing | Analytify');
-    });
-
-    it('keeps private sharing and user stats in lazy-loaded feature modules', () => {
-        const privateSharing = routeByPath('shared-playlists');
-        const userStats = routeByPath('stats');
-
-        expect(privateSharing?.component).toBeUndefined();
-        expect(privateSharing?.loadChildren).toEqual(expect.any(Function));
-        expect(userStats?.component).toBeUndefined();
-        expect(userStats?.loadChildren).toEqual(expect.any(Function));
-    });
-
-    it('does not turn database-only private sharing access into a Cloud Backup opt-in', () => {
-        const privateSharing = routeByPath('shared-playlists');
-
-        expect(privateSharing?.data?.['cloudBackup']).toBe(false);
-    });
-
-    it('redirects logged-in users away from both login entry routes', () => {
-        ['', 'login'].forEach(path => {
-            const route = APP_ROUTES.find(candidate => candidate.path === path);
-            expect(route?.canActivate).toEqual([redirectLoggedInGuard]);
-            expect(route?.loadChildren).toEqual(expect.any(Function));
-        });
-    });
-
-    it('keeps callback, personal Spotify setup, and legal routes public', () => {
-        ['callback', 'spotify', 'legal'].forEach(path => {
-            const route = APP_ROUTES.find(candidate => candidate.path === path);
-            expect(route?.canActivate).toBeUndefined();
-            expect(route?.loadChildren).toEqual(expect.any(Function));
-        });
-    });
-
-    it('policy-gates Stats, History, Compare Room, and Song League', () => {
-        for (const path of ['stats', 'history', 'song-league', 'compare-room', 'compare-room/callback', 'compare-room/join/:roomId']) {
-            expect(routeByPath(path)?.canActivate).toContain(spotifyRestrictedFeatureGuard);
-        }
-    });
-
-    it('loads Compare Room host, guest join, and callback as independent route chunks', () => {
-        const routes = ['compare-room', 'compare-room/join/:roomId', 'compare-room/callback']
-            .map(path => APP_ROUTES.find(route => route.path === path));
-
-        expect(routes.every(route => typeof route?.loadChildren === 'function')).toBe(true);
-        expect(new Set(routes.map(route => route?.loadChildren)).size).toBe(3);
-    });
-
-    it('restores positions and scrolls URL fragments below the sticky header', () => {
-        expect(ROUTER_OPTIONS).toEqual(expect.objectContaining({
-            preloadingStrategy: DesignSelectivePreloadingStrategy,
-            scrollPositionRestoration: 'enabled',
-            anchorScrolling: 'enabled',
-            scrollOffset: [0, 96],
-            enableViewTransitions: true
-        }));
-    });
+  it('keeps stable external links and browser routing behavior', () => {
+    expect(routeByPath('shared-playlists')?.title).toBe('Private Sharing | Analytify');
+    expect(routeByPath('shared-playlists')?.data?.['cloudBackup']).toBe(false);
+    expect(routeByPath('compare-room')?.loadChildren).not.toBe(routeByPath('compare-room/join/:roomId')?.loadChildren);
+    expect(ROUTER_OPTIONS).toEqual(expect.objectContaining({
+      preloadingStrategy: DesignSelectivePreloadingStrategy,
+      scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled',
+      scrollOffset: [0, 96], enableViewTransitions: true
+    }));
+  });
 });

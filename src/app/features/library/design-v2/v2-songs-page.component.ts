@@ -11,11 +11,12 @@ import {
   V2SearchFiltersComponent, V2StateComponent, V2TabsComponent, V2ToolbarComponent
 } from '@shared/ui-v2';
 import {SongsController} from '../songs/songs.component';
+import {SongsUiModule} from '../songs/songs.module';
 
 @Component({
   selector: 'app-v2-songs-page',
   standalone: true,
-  imports: [RouterLink, SharedModule, V2ButtonDirective, V2CardComponent, V2ListRowComponent,
+  imports: [RouterLink, SharedModule, SongsUiModule, V2ButtonDirective, V2CardComponent, V2ListRowComponent,
     V2PageComponent, V2SearchFiltersComponent, V2StateComponent, V2TabsComponent, V2ToolbarComponent],
   template: `
     <v2-page eyebrow="Playlist explorer" [title]="playlistName || 'Playlist contents'"

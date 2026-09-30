@@ -5,10 +5,11 @@ import {StorageService} from '@core/data-access/storage/storage.service';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {V2ListRowComponent, V2PageComponent, V2SectionHeaderComponent, V2StateComponent} from '@shared/ui-v2';
 import {ListeningHistoryController} from './listening-history.component';
+import {ListeningHistoryUiModule} from './listening-history.module';
 
 @Component({
   selector: 'app-v2-listening-history', standalone: true,
-  imports: [V2ListRowComponent, V2PageComponent, V2SectionHeaderComponent, V2StateComponent],
+  imports: [ListeningHistoryUiModule, V2ListRowComponent, V2PageComponent, V2SectionHeaderComponent, V2StateComponent],
   template: `
     <v2-page eyebrow="Listening activity" title="Recently played" description="Your latest Spotify plays, ordered from newest to oldest.">
       @if (isLoadingRecentlyPlayed) {
