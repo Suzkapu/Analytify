@@ -56,7 +56,8 @@ describe('LoginPageComponent', () => {
     it('renders hosted and personal-app login without promoting Compare Room', () => {
         const element: HTMLElement = fixture.nativeElement;
 
-        expect(element.querySelector('main.login-wrapper')).not.toBeNull();
+        expect(element.querySelector('.login-wrapper')).not.toBeNull();
+        expect(element.querySelector('main')).toBeNull();
         expect(element.querySelector('.login-shell')).not.toBeNull();
         expect(element.querySelectorAll('.login-benefits li').length).toBe(3);
         expect(element.querySelector('.login-card-header > .login-brand')).not.toBeNull();
