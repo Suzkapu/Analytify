@@ -25,7 +25,6 @@ import {PlaylistsUiModule} from '../playlists/playlists.module';
         <span v2PageActions class="v2-playlist-count" [attr.aria-label]="playlists.length + ' playlists'">{{ playlists.length }} playlists</span>
       }
       @if (isRefreshingPlaylists) { <p class="v2-library-sync" role="status"><i class="pi pi-spin pi-spinner"></i> Checking Spotify for updates…</p> }
-      @if (playlists.length) {
         <v2-toolbar v2PageToolbar label="Playlist controls">
           <v2-search-filters id="v2-playlist-search" label="Search playlists" placeholder="Search your playlists"
             [query]="searchText" [filters]="savedPlaylistCount ? savedFilter : []"
@@ -37,7 +36,6 @@ import {PlaylistsUiModule} from '../playlists/playlists.module';
             {{ sortDirectionLabel }}
           </button>
         </v2-toolbar>
-      }
       @if (spotifyPolicyNotice) { <div class="v2-library-notice" role="status">This feature is unavailable while Analytify awaits written Spotify policy approval.</div> }
       @if (isLoadingPlaylists && !playlists.length) {
         <v2-state kind="loading" title="Loading your playlists…" message="Checking your local cache and saved Spotify library." />

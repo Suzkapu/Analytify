@@ -5,7 +5,7 @@ test('canonical library records navigation and interaction performance evidence'
   await mockSpotify(page);
   await seedAuthenticatedBrowser(page);
   await page.addInitScript(() => {
-    const metrics = {lcp: 0, cls: 0, longTasks: [] as number[], interactions: [] as number[]};
+    const metrics = {lcp: 0, cls: 0, shifts: [] as unknown[], longTasks: [] as number[], interactions: [] as number[]};
     (window as any).__releasePerformance = metrics;
     for (const type of ['largest-contentful-paint', 'layout-shift', 'longtask', 'event']) {
       if (!PerformanceObserver.supportedEntryTypes.includes(type)) continue;
@@ -13,7 +13,14 @@ test('canonical library records navigation and interaction performance evidence'
         for (const entry of list.getEntries()) {
           const item = entry as any;
           if (type === 'largest-contentful-paint') metrics.lcp = entry.startTime;
-          if (type === 'layout-shift' && !item.hadRecentInput) metrics.cls += item.value;
+          if (type === 'layout-shift' && !item.hadRecentInput) {
+            metrics.cls += item.value;
+            metrics.shifts.push({value: item.value, time: entry.startTime,
+              sources: item.sources?.map((source: any) => ({
+                node: source.node?.outerHTML?.slice(0, 300),
+                previousRect: source.previousRect, currentRect: source.currentRect
+              }))});
+          }
           if (type === 'longtask') metrics.longTasks.push(entry.duration);
           if (type === 'event' && item.interactionId) metrics.interactions.push(entry.duration);
         }
