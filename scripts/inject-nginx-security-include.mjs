@@ -1,4 +1,5 @@
 import {readFileSync, writeFileSync} from 'node:fs';
+import {enableApplicationHttp2} from './nginx-http2.mjs';
 
 const [, , inputPath, outputPath] = process.argv;
 if (!inputPath || !outputPath) {
@@ -7,7 +8,7 @@ if (!inputPath || !outputPath) {
 
 const includeDirective = 'include /etc/nginx/snippets/analytify-security.conf;';
 const serverTokensDirective = 'server_tokens off;';
-const source = readFileSync(inputPath, 'utf8');
+const source = enableApplicationHttp2(readFileSync(inputPath, 'utf8'), process.env.ANALYTIFY_NGINX_BUILD_INFO || '');
 const lines = source.split('\n');
 let locations = 0;
 for (let index = 0; index < lines.length; index += 1) {

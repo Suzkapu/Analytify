@@ -31,7 +31,7 @@
     "design-v2-quality:check": "node scripts/check-design-v2-quality.mjs",
     "api-usage:check": "node scripts/check-api-on-demand.mjs",
     "admin:check": "node scripts/check-admin-control-plane.mjs && node --test scripts/operational-policy.test.mjs",
-    "deployment-pipeline:check": "node --test scripts/production-index-validator.test.mjs scripts/activate-release.test.mjs scripts/activate-release-rehearsal.test.mjs scripts/security-headers.test.mjs scripts/inject-nginx-security-include.test.mjs scripts/deployment-freshness.test.mjs scripts/deployment-policy.test.mjs && bash -n scripts/preflight-oracle-ssh.sh",
+    "deployment-pipeline:check": "node --test scripts/production-index-validator.test.mjs scripts/activate-release.test.mjs scripts/activate-release-rehearsal.test.mjs scripts/security-headers.test.mjs scripts/inject-nginx-security-include.test.mjs scripts/nginx-http2.test.mjs scripts/deployment-freshness.test.mjs scripts/deployment-policy.test.mjs && bash -n scripts/preflight-oracle-ssh.sh",
     "supply-chain:check": "node scripts/check-supply-chain-policy.mjs",
     "edge-dependencies:check": "node scripts/check-edge-dependency-currency.mjs",
     "storage-policy:check": "node scripts/check-browser-storage-policy.mjs",
