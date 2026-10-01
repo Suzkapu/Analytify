@@ -27,13 +27,28 @@ test('canonical library records navigation and interaction performance evidence'
       }).observe(type === 'event' ? {type, buffered: true, durationThreshold: 16} : {type, buffered: true});
     }
   });
+  const profiler = await page.context().newCDPSession(page);
+  await profiler.send('Tracing.start', {
+    categories: 'devtools.timeline,blink.user_timing,toplevel,disabled-by-default-devtools.timeline',
+    transferMode: 'ReturnAsStream'
+  });
   await page.goto('/playlists');
   const search = page.getByRole('searchbox', {name: 'Search your playlists'});
   await expect(search).toBeVisible();
   await expect(page.getByText('Test Playlist', {exact: true})).toBeVisible();
+  await page.evaluate(() => performance.mark('library-search-start'));
   await search.fill('Test');
+  await page.evaluate(() => {
+    performance.mark('library-search-end');
+    performance.measure('library-search', 'library-search-start', 'library-search-end');
+    performance.mark('account-dialog-start');
+  });
   await page.getByRole('button', {name: 'Open account and data settings'}).click();
   await page.keyboard.press('Escape');
+  await page.evaluate(() => {
+    performance.mark('account-dialog-end');
+    performance.measure('account-dialog-open-close', 'account-dialog-start', 'account-dialog-end');
+  });
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
   const metrics = await page.evaluate(() => (window as any).__releasePerformance);
   await testInfo.attach('canonical-library-performance.json', {
@@ -41,6 +56,25 @@ test('canonical library records navigation and interaction performance evidence'
       project: testInfo.project.name, browser: 'Chromium', metrics}, null, 2),
     contentType: 'application/json'
   });
+  const finished = new Promise<{stream: string}>(resolve => profiler.once('Tracing.tracingComplete', resolve));
+  await profiler.send('Tracing.end');
+  const {stream} = await finished;
+  const trace: Buffer[] = [];
+  let eof = false;
+  while (!eof) {
+    const chunk = await profiler.send('IO.read', {handle: stream, size: 262144});
+    trace.push(Buffer.from(chunk.data, chunk.base64Encoded ? 'base64' : 'utf8'));
+    eof = chunk.eof;
+  }
+  await profiler.send('IO.close', {handle: stream});
+  await profiler.detach();
+  const traceBody = Buffer.concat(trace);
+  await testInfo.attach('chrome-performance-trace.json', {
+    body: traceBody, contentType: 'application/json'
+  });
+  const events = JSON.parse(traceBody.toString('utf8')).traceEvents as {name: string}[];
+  expect(events.some(event => event.name === 'library-search')).toBe(true);
+  expect(events.some(event => event.name === 'account-dialog-open-close')).toBe(true);
   expect(metrics.cls).toBeLessThanOrEqual(0.1);
   expect(metrics.lcp).toBeGreaterThan(0);
 });
