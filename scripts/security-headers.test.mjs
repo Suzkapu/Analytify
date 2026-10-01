@@ -4,6 +4,15 @@ import {readFileSync} from 'node:fs';
 import {invalidSecurityHeaders} from './security-headers.mjs';
 
 const nginx = readFileSync('deploy/analytify-security.conf', 'utf8');
+
+test('static application assets negotiate gzip without enabling API JSON compression', () => {
+  assert.match(nginx, /^gzip on;$/m);
+  assert.match(nginx, /^gzip_vary on;$/m);
+  assert.match(nginx, /^gzip_min_length 1024;$/m);
+  assert.match(nginx, /^gzip_comp_level 5;$/m);
+  const types = nginx.match(/^gzip_types ([^;]+);$/m)?.[1].split(/\s+/);
+  assert.deepEqual(types, ['text/css', 'application/javascript', 'application/wasm']);
+});
 const deploy = readFileSync('scripts/deploy.sh', 'utf8');
 const installer = readFileSync('scripts/install-nginx-security.sh', 'utf8');
 const liveVerification = readFileSync('scripts/verify-live-deployment.mjs', 'utf8');
