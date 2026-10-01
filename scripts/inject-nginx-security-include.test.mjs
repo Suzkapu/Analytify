@@ -7,14 +7,30 @@ import {join, resolve} from 'node:path';
 
 const injector = resolve('scripts/inject-nginx-security-include.mjs');
 
-function render(source) {
+function render(source, buildInfo = '') {
   const directory = mkdtempSync(join(tmpdir(), 'analytify-nginx-'));
   const input = join(directory, 'site.conf');
   const output = join(directory, 'rendered.conf');
   writeFileSync(input, source);
-  const result = spawnSync(process.execPath, [injector, input, output], {encoding: 'utf8'});
+  const result = spawnSync(process.execPath, [injector, input, output], {
+    encoding: 'utf8', env: {...process.env, ANALYTIFY_NGINX_BUILD_INFO: buildInfo}
+  });
   return {...result, output: result.status === 0 ? readFileSync(output, 'utf8') : ''};
 }
+
+test('the installer renderer combines negotiated HTTP2 with security policy', () => {
+  const result = render(`server {
+  listen 443 ssl;
+  server_name analytify.dynv6.net;
+  location / {
+    try_files $uri /index.html;
+  }
+}
+`, 'nginx version: nginx/1.26.0\nconfigure arguments: --with-http_v2_module');
+  assert.equal(result.status, 0);
+  assert.equal(result.output.match(/http2 on;/g)?.length, 1);
+  assert.equal(result.output.match(/analytify-security[.]conf/g)?.length, 1);
+});
 
 test('security policy is installed in application and internal-redirect locations', () => {
   const result = render(`server {
