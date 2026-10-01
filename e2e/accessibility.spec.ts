@@ -87,6 +87,7 @@ test('logged-out home is keyboard reachable, zoom-safe, and WCAG 2.2 AA clean', 
 
 test('v2 focus routes keep minimal chrome and one skip target', async ({page}) => {
   await page.goto('/login');
+  await expect(page.getByRole('main')).toHaveCount(1);
   await expect(page.getByRole('link', {name: 'Analytify playlists'})).toBeVisible();
   await expect(page.getByRole('navigation', {name: 'Main navigation'})).toHaveCount(0);
   await expect(page.getByRole('button', {name: 'Open More tools'})).toHaveCount(0);
