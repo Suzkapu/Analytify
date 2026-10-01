@@ -1,5 +1,5 @@
 import {existsSync, readFileSync} from 'node:fs';
-import {validateProductionIndex} from './production-index-validator.mjs';
+import {validateProductionIndex, validateInitialModulePreloads} from './production-index-validator.mjs';
 
 const indexPath = 'dist/spoti-front/index.html';
 const html = readFileSync(indexPath, 'utf8');
@@ -9,3 +9,4 @@ const stylesheetCount = validateProductionIndex(
 );
 
 console.log(`Production index check passed (${stylesheetCount} directly active stylesheet link).`);
+console.log(`Initial module preload check passed (${validateInitialModulePreloads(html, asset => existsSync(`dist/spoti-front/${asset}`))} local hints).`);

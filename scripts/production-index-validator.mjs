@@ -21,3 +21,16 @@ export function validateProductionIndex(html, assetExists) {
 
   return stylesheetLinks.length;
 }
+
+export function validateInitialModulePreloads(html, assetExists) {
+  const links = [...html.matchAll(/<link\b[^>]*\brel=["']modulepreload["'][^>]*>/gi)];
+  if (!links.length) throw new Error('Production index is missing initial module preload hints.');
+  const assets = links.map(([link]) => link.match(/\bhref=["']([^"']+)["']/i)?.[1]);
+  for (const asset of assets) {
+    if (!asset || !/^chunk-[\w-]+\.js$/.test(asset) || !assetExists(asset)) {
+      throw new Error(`Invalid initial module preload asset: ${asset || '(no href)'}`);
+    }
+  }
+  if (new Set(assets).size !== assets.length) throw new Error('Duplicate initial module preload hints.');
+  return assets.length;
+}

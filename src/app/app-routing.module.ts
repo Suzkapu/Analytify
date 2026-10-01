@@ -1,6 +1,7 @@
 import {inject, NgModule} from '@angular/core';
 import {ExtraOptions, RedirectFunction, Router, RouterModule, Routes, UrlMatcher} from '@angular/router';
 import {DesignSelectivePreloadingStrategy} from '@core/navigation/design-selective-preloading.strategy';
+import {DESIGN_V2_ROUTES} from './design-v2-routing.module';
 
 export const NEW_COMPATIBILITY_MATCHER: UrlMatcher = segments =>
   segments[0]?.path === 'new' ? {consumed: segments} : null;
@@ -16,11 +17,7 @@ export const APP_ROUTES: Routes = [
     matcher: NEW_COMPATIBILITY_MATCHER,
     redirectTo: redirectLegacyDesignV2Url
   },
-  {
-    path: '',
-    loadChildren: () => import('./design-v2-routing.module')
-      .then(module => module.DesignV2RoutingModule)
-  }
+  ...DESIGN_V2_ROUTES
 ];
 
 export const ROUTER_OPTIONS: ExtraOptions = {

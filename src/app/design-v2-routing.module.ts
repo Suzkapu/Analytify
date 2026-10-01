@@ -1,5 +1,4 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {Routes} from '@angular/router';
 
 import {adminGuard} from '@core/admin/admin.guard';
 import {cloudIdentityGuard} from '@core/auth/cloud-identity.guard';
@@ -122,6 +121,3 @@ export const DESIGN_V2_ROUTES: Routes = [{
     {path: '**', redirectTo: 'login'}
   ]
 }];
-
-@NgModule({imports: [RouterModule.forChild(DESIGN_V2_ROUTES)]})
-export class DesignV2RoutingModule {}

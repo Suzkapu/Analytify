@@ -21,7 +21,10 @@
               "base": "dist/spoti-front",
               "browser": ""
             },
-            "index": "src/index.html",
+            "index": {
+              "input": "src/index.html",
+              "preloadInitial": true
+            },
             "polyfills": [
               "zone.js"
             ],

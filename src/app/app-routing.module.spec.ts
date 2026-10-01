@@ -24,7 +24,8 @@ describe('canonical application routes', () => {
   it('mounts only the Design v2 route tree at the canonical root', () => {
     expect(APP_ROUTES).toHaveLength(2);
     expect(APP_ROUTES[0].matcher).toBe(NEW_COMPATIBILITY_MATCHER);
-    expect(APP_ROUTES[1]).toEqual(expect.objectContaining({path: '', loadChildren: expect.any(Function)}));
+    expect(APP_ROUTES[1]).toBe(shell);
+    expect(APP_ROUTES[1].loadChildren).toBeUndefined();
     expect(shell.component).toBe(DesignV2ShellComponent);
     expect(shell.providers).toBeUndefined();
   });
