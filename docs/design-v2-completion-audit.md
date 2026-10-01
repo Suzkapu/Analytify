@@ -4,7 +4,7 @@ Checked on 2026-10-01. The initiative remains incomplete until the outstanding r
 
 ## Implemented and verified
 
-Issues #152–#163 and #166–#170 are closed. Canonical route implementation is in `f20dd13`; security dependency fixes are in `6c0fedb`, isolated integration ports in `867df6a`, and the login landmark correction in `e94e8a3`.
+Issues #152–#162 and #166–#170 are closed. #163 was reopened after the completion audit because its explicit manual screen-reader and performance release requirements remain unproven; #164 and #165 are also open. Canonical route implementation is in `f20dd13`; security dependency fixes are in `6c0fedb`, isolated integration ports in `867df6a`, and the login landmark correction in `e94e8a3`.
 
 The canonical rollout passed the full local verification gate with 622 unit tests, coverage thresholds, policy/security contracts, type checks, and production bundle budgets. The browser suite passed all 64 desktop/mobile tests. CI for `6c0fedb` independently passed those build/browser checks, security advisories, and CodeQL, then failed before deployment because port 54322 was occupied. The integration configuration now uses 55320–55322.
 
