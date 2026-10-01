@@ -15,7 +15,7 @@ After deployment, verify `/version.json` and worker `/health` both report the ex
 
 ## Atomic visual rollback
 
-The server keeps immutable web and worker release directories. `scripts/activate-release.sh` changes only the `current` symlinks, verifies both health endpoints, and automatically restores the previous web and worker targets if activation fails. Its rollback behavior is covered by `scripts/activate-release.test.mjs` and the deployment-policy test suite.
+The server keeps immutable web and worker release directories. `scripts/activate-release.sh` changes only the `current` symlinks, verifies both health endpoints, and automatically restores the previous web and worker targets if activation fails. `scripts/activate-release-rehearsal.test.mjs` executes the real activation script against disposable release directories and verifies successful activation plus restoration of both previous targets after worker or web health failure. External service/network commands are mocked; this is execution evidence for the filesystem rollback and EXIT trap, not a claim of a production service rehearsal.
 
 For an operator-requested rollback, redeploy the last known-good commit through the same verified workflow or invoke the release activation process with that commit's already-built web and worker directories. Do not reverse database migrations or edit user data for a presentation rollback. Confirm `/version.json`, worker `/health`, login, and one authenticated canonical route after activation.
 
