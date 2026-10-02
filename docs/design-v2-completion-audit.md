@@ -176,3 +176,9 @@ A regression demonstrated that changing the route input inside Angular scheduled
 Full verification passed with 682 unit tests, unchanged per-file coverage allowances, and production index/bundle gates. Lint and all 12 ambient browser cases passed. Independent production inspection still identified `7a6008e0a1a0e418cde371e1622cfdf36360cc1a`, deployed at `2026-10-02T03:06:14Z`, before these follow-ups were pushed.
 
 The user confirmed that no real screen-reader test has been performed and their browser is Brave Origin. That requirement remains explicitly unverified, alongside the outstanding broader performance and real staging-rollback evidence; #163/#164/#165 are not complete.
+
+## Large-playlist incremental rendering evidence (2026-10-02)
+
+A desktop/mobile browser regression seeds a 1,000-song cached playlist and verifies that Songs initially mounts 50 rows, scrolling adds the next 50, and searching finds song 1,000 outside those mounted batches. Three search/clear cycles must restore the exact initial DOM element/row counts. Artwork has reserved dimensions and uses lazy loading. The test attaches its collection size and DOM samples with an explicit mocked-data scope.
+
+All six performance-evidence browser cases and lint passed. This validates existing incremental rendering and full-collection search, not virtualization, bounded DOM after scrolling through an entire playlist, field p75 Core Web Vitals, or representative-hardware latency. Those broader performance requirements remain outstanding. The deployment for `29c75d4` was independently confirmed in progress, not successful, at this checkpoint.
