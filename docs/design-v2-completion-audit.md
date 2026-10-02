@@ -286,3 +286,7 @@ Song League RPCs, auth reads, table reads, and edge-function calls now await rea
 ## Song League realtime readiness (2026-10-02)
 
 Song League realtime now waits internally for client readiness while preserving synchronous cleanup for existing callers. Early cleanup prevents channel creation, repeated cleanup removes only once, and callbacks after disposal are ignored. Initialization/removal failures are explicitly warned. All six targeted Song League service/page/invitation test files passed (63 tests), together with test typechecking and lint. SongLeagueService no longer directly reads the synchronous client. Authentication, Compare Room transport, and SupabaseService internal operations still require migration before dynamic SDK loading; the performance and manual release gates remain incomplete.
+
+## Compare Room RPC readiness (2026-10-02)
+
+Compare Room transport RPCs now await client readiness. Four new service tests verify delayed invitation initialization, failure without revocation, collaboration-session establishment before room creation, and local no-op handling for disconnected presence operations. The targeted service run, test typechecking, and lint passed. Transport connection/channel ownership still needs migration before SDK initialization can be deferred; no completed startup or release gate is claimed.
