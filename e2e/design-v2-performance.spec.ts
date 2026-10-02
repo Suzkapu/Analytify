@@ -46,8 +46,24 @@ test('large cached playlists render incrementally and search the entire collecti
   const initial = await sample();
   expect(initial.artworkWithoutDimensions).toBe(0);
   expect(initial.eagerArtwork).toBe(0);
+  const distantCopy = rows.nth(49).locator('.v2-track-copy');
+  await expect.poll(() => distantCopy.evaluate(element =>
+    element.checkVisibility({contentVisibilityAuto: true}))).toBe(false);
+  const containment = await rows.nth(49).evaluate(element => ({
+    contentVisibility: getComputedStyle(element).contentVisibility,
+    intrinsicSize: getComputedStyle(element).containIntrinsicSize,
+    height: element.getBoundingClientRect().height
+  }));
+  expect(containment.contentVisibility).toBe('auto');
+  expect(containment.intrinsicSize).not.toBe('none');
+  expect(containment.height).toBeGreaterThan(0);
   await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
   await expect(rows).toHaveCount(100);
+  await expect.poll(() => distantCopy.evaluate(element =>
+    element.checkVisibility({contentVisibilityAuto: true}))).toBe(true);
+  const revealedAction = rows.nth(49).getByRole('button', {name: 'Open Large song 0050 on Spotify'});
+  await revealedAction.focus();
+  await expect(revealedAction).toBeFocused();
   await page.evaluate(() => window.scrollTo(0, 0));
   const search = page.getByRole('searchbox', {name: 'Search songs or artists'});
   const samples = [initial, await sample()];
@@ -62,7 +78,7 @@ test('large cached playlists render incrementally and search the entire collecti
     samples.push(current);
   }
   await testInfo.attach('large-playlist-incremental-rendering.json', {
-    body: JSON.stringify({project: testInfo.project.name, collectionSize: 1000,
+    body: JSON.stringify({project: testInfo.project.name, collectionSize: 1000, containment,
       scope: 'mocked local cache; incremental DOM and full-collection search, not virtualization or field performance', samples}, null, 2),
     contentType: 'application/json'
   });
