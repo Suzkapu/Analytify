@@ -1,4 +1,5 @@
 import {invalidSecurityHeaders} from './security-headers.mjs';
+import {hashedMainAsset, hasImmutableAssetCaching, hasMutableMetadataCaching} from './asset-cache-policy.mjs';
 
 const requiredEnvironment = name => {
   const value = process.env[name]?.trim();
@@ -24,14 +25,27 @@ const probes = [
     label: 'Analytify application',
     url: `${appUrl}/`,
     options: {},
-    validate: async response => {
+    validate: async (response, signal) => {
       const invalidHeaders = invalidSecurityHeaders(response.headers);
       if (invalidHeaders.length > 0) {
         console.error(`Live application security headers invalid: ${invalidHeaders.join(', ')}`);
         return false;
       }
-      return response.ok && (await response.text()).includes('<app-root');
+      if (!response.ok || !hasMutableMetadataCaching(response.headers)) return false;
+      const html = await response.text();
+      const asset = hashedMainAsset(html);
+      if (!html.includes('<app-root') || !asset) return false;
+      const script = await fetch(new URL(asset, `${appUrl}/`), {method: 'HEAD', signal});
+      return script.status === 200 && /javascript/i.test(script.headers.get('content-type') || '')
+        && hasImmutableAssetCaching(script.headers) && invalidSecurityHeaders(script.headers).length === 0;
     }
+  },
+  {
+    label: 'Analytify mutable service-worker metadata',
+    url: `${appUrl}/ngsw.json`,
+    options: {},
+    validate: async response => response.ok && hasMutableMetadataCaching(response.headers)
+      && invalidSecurityHeaders(response.headers).length === 0
   },
   {
     label: 'Analytify web release identity',
@@ -40,7 +54,7 @@ const probes = [
     validate: async response => {
       if (!response.ok) return false;
       const revision = await response.json();
-      return revision?.commit === expectedCommitSha;
+      return revision?.commit === expectedCommitSha && hasMutableMetadataCaching(response.headers);
     }
   },
   {
@@ -82,7 +96,7 @@ async function runProbe(probe) {
     try {
       const response = await fetch(probe.url, {...probe.options, signal: controller.signal});
       lastStatus = response.status;
-      if (await probe.validate(response)) return;
+      if (await probe.validate(response, controller.signal)) return;
     } catch (error) {
       lastStatus = error instanceof Error ? error.message : String(error);
     } finally {

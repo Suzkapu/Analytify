@@ -2,6 +2,24 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {invalidSecurityHeaders} from './security-headers.mjs';
+import {hashedMainAsset, hasImmutableAssetCaching, hasMutableMetadataCaching} from './asset-cache-policy.mjs';
+
+test('live cache validation rejects stale metadata and conflicting asset directives', () => {
+  assert.equal(hashedMainAsset('<script type="module" src="main-ABCDEFGH.js"></script>'), 'main-ABCDEFGH.js');
+  for (const src of ['main.js', 'https://evil.test/main-ABCDEFGH.js', '//evil.test/main-ABCDEFGH.js', '../main-ABCDEFGH.js']) {
+    assert.equal(hashedMainAsset(`<script src="${src}"></script>`), null);
+  }
+  const immutable = new Headers({'cache-control': 'public, max-age=31536000, immutable'});
+  assert.equal(hasImmutableAssetCaching(immutable), true);
+  assert.equal(hasMutableMetadataCaching(immutable), false);
+  for (const value of ['', 'public, max-age=60', 'public, max-age=31536000, immutable, no-cache',
+    'private, max-age=31536000, immutable']) {
+    assert.equal(hasImmutableAssetCaching(new Headers({'cache-control': value})), false);
+  }
+  for (const value of ['', 'no-cache', 'no-store', 'max-age=0']) {
+    assert.equal(hasMutableMetadataCaching(new Headers({'cache-control': value})), true);
+  }
+});
 
 const nginx = readFileSync('deploy/analytify-security.conf', 'utf8');
 const cachePolicy = readFileSync('deploy/analytify-asset-cache.conf', 'utf8');
