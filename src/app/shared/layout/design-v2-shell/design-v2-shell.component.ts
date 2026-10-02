@@ -173,12 +173,28 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   requestBackupChange(event: Event): void {
-    const enabled = (event.target as HTMLInputElement).checked;
+    const input = event.target as HTMLInputElement;
+    const enabled = input.checked;
+    input.checked = this.authService.isBackupActive();
+    if (this.actionRunning()) return;
+    this.actionError.set('');
     if (enabled) this.backupConfirmationOpen.set(true);
-    else void this.authService.disableBackup().catch(() => this.actionError.set('Cloud Backup could not be disabled. Try again.'));
+    else void this.disableBackup();
+  }
+
+  private async disableBackup(): Promise<void> {
+    this.actionRunning.set(true);
+    try {
+      await this.authService.disableBackup();
+    } catch {
+      this.actionError.set('Cloud Backup could not be disabled. Try again.');
+    } finally {
+      this.actionRunning.set(false);
+    }
   }
 
   async enableBackup(): Promise<void> {
+    if (this.actionRunning()) return;
     this.actionRunning.set(true);
     this.actionError.set('');
     try {
@@ -234,14 +250,16 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   private async runDestructive(action: () => Promise<unknown>): Promise<void> {
+    if (this.actionRunning()) return;
     this.actionRunning.set(true);
     this.actionError.set('');
     try {
       await action();
+      const navigated = await this.router.navigate(this.navigation.commands('login'));
+      if (!navigated) throw new Error('Navigation was cancelled');
       this.clearDataStep.set('none');
-      await this.router.navigate(this.navigation.commands('login'));
     } catch {
-      this.actionError.set('Nothing else was removed. Please try again.');
+      this.actionError.set('This action did not finish. Some steps may already have completed. Please refresh before trying again.');
     } finally {
       this.actionRunning.set(false);
     }

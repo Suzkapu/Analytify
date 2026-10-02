@@ -1,13 +1,14 @@
 import {Component} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {provideRouter} from '@angular/router';
+import {provideRouter, Router} from '@angular/router';
 import {RouterTestingHarness} from '@angular/router/testing';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 
 import {designV2RouteData} from '@core/navigation/design-v2-route-data';
 import {DesignV2ShellComponent} from './design-v2-shell.component';
 import {AmbientBackgroundComponent} from '@shared/ambient/ambient-background.component';
+import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 
 @Component({standalone: true, template: '<h1>Playlists</h1>'})
 class PlaylistsStubComponent {}
@@ -16,6 +17,107 @@ class PlaylistsStubComponent {}
 class StatsStubComponent {}
 
 describe('DesignV2ShellComponent', () => {
+  async function createShell() {
+    const harness = await RouterTestingHarness.create('/playlists');
+    const shell = harness.fixture.debugElement.query(By.directive(DesignV2ShellComponent)).componentInstance as DesignV2ShellComponent;
+    return {harness, shell};
+  }
+
+  it('restores the authoritative backup switch when enabling is cancelled', async () => {
+    const {shell} = await createShell();
+    vi.spyOn(shell.authService, 'isBackupActive').mockReturnValue(false);
+    const input = document.createElement('input');
+    input.checked = true;
+    shell.requestBackupChange({target: input} as unknown as Event);
+    expect(input.checked).toBe(false);
+    expect(shell.backupConfirmationOpen()).toBe(true);
+    shell.closeConfirmation();
+    expect(shell.backupConfirmationOpen()).toBe(false);
+    expect(input.checked).toBe(false);
+  });
+
+  it('announces failed backup disable in the account dialog and releases its busy state', async () => {
+    const {harness, shell} = await createShell();
+    vi.spyOn(shell.authService, 'isBackupActive').mockReturnValue(true);
+    const disable = vi.spyOn(shell.authService, 'disableBackup').mockRejectedValue(new Error('Offline'));
+    shell.toggleAccount();
+    const input = document.createElement('input');
+    input.checked = false;
+    shell.requestBackupChange({target: input} as unknown as Event);
+    expect(input.checked).toBe(true);
+    expect(shell.actionRunning()).toBe(true);
+    input.checked = true;
+    shell.requestBackupChange({target: input} as unknown as Event);
+    expect(disable).toHaveBeenCalledOnce();
+    expect(shell.backupConfirmationOpen()).toBe(false);
+    await Promise.resolve();
+    harness.fixture.detectChanges();
+    expect(shell.actionRunning()).toBe(false);
+    expect(harness.fixture.nativeElement.querySelector('.v2-account-dialog [role="alert"]')?.textContent)
+      .toContain('Cloud Backup could not be disabled');
+  });
+
+  it('ignores duplicate enable requests until the first confirmation finishes', async () => {
+    const {shell} = await createShell();
+    let finish!: () => void;
+    const enable = vi.spyOn(shell.authService, 'enableBackup').mockImplementation(() => new Promise<void>(resolve => {finish = resolve;}));
+    shell.backupConfirmationOpen.set(true);
+    const pending = shell.enableBackup();
+    await shell.enableBackup();
+    expect(enable).toHaveBeenCalledOnce();
+    expect(shell.backupConfirmationOpen()).toBe(true);
+    finish();
+    await pending;
+    expect(shell.backupConfirmationOpen()).toBe(false);
+    expect(shell.actionRunning()).toBe(false);
+  });
+
+  it('prevents duplicate deletion and disables Back while an action is pending', async () => {
+    const {harness, shell} = await createShell();
+    let finish!: () => void;
+    const clear = vi.spyOn(shell.authService, 'clearCacheAndLogout').mockImplementation(() => new Promise<void>(resolve => {finish = resolve;}));
+    vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    shell.clearDataStep.set('local');
+    const pending = shell.confirmLocalClear();
+    await shell.confirmLocalClear();
+    shell.closeConfirmation();
+    harness.fixture.detectChanges();
+    expect(shell.clearDataStep()).toBe('local');
+    expect(clear).toHaveBeenCalledOnce();
+    const back = Array.from(harness.fixture.nativeElement.querySelectorAll('button'))
+      .find((node: unknown) => (node as HTMLButtonElement).textContent?.trim() === 'Back') as HTMLButtonElement;
+    expect(back.disabled).toBe(true);
+    finish();
+    await pending;
+    expect(shell.actionRunning()).toBe(false);
+    expect(shell.clearDataStep()).toBe('none');
+  });
+
+  it('keeps confirmation and conservative feedback if navigation fails after local clearing', async () => {
+    const {harness, shell} = await createShell();
+    vi.spyOn(shell.authService, 'clearCacheAndLogout').mockResolvedValue(undefined);
+    vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(false);
+    shell.clearDataStep.set('local');
+    await shell.confirmLocalClear();
+    harness.fixture.detectChanges();
+    expect(shell.clearDataStep()).toBe('local');
+    expect(shell.actionError()).toContain('Some steps may already have completed');
+    expect(harness.fixture.nativeElement.querySelector('[role="alert"]')?.textContent).toContain('Some steps may already have completed');
+    expect(shell.actionRunning()).toBe(false);
+  });
+
+  it('does not log out if cloud deletion fails', async () => {
+    const {shell} = await createShell();
+    vi.spyOn(shell.authService, 'getSupabaseUserId').mockReturnValue('cloud-user');
+    const deletion = vi.spyOn(TestBed.inject(SupabaseService), 'deleteUserProfileData').mockRejectedValue(new Error('Deletion failed'));
+    const logout = vi.spyOn(shell.authService, 'logout').mockResolvedValue(undefined);
+    shell.clearDataStep.set('cloud');
+    await shell.confirmCloudClear();
+    expect(deletion).toHaveBeenCalledWith('cloud-user');
+    expect(logout).not.toHaveBeenCalled();
+    expect(shell.clearDataStep()).toBe('cloud');
+    expect(shell.actionError()).toContain('This action did not finish');
+  });
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideRouter([{

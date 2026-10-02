@@ -138,3 +138,17 @@ test('local data clear uses a consequence-first confirmation flow', async ({page
   await page.getByRole('button', {name: 'Clear and log out'}).click();
   await expect(page).toHaveURL(/\/login$/);
 });
+
+test('cancelling backup enable leaves the account switch off', async ({page}) => {
+  await page.goto('/playlists');
+  await page.getByRole('button', {name: 'Open account and data settings'}).click();
+  const backup = page.getByRole('switch', {name: 'Cloud Backup'});
+  await expect(backup).not.toBeChecked();
+  await backup.click();
+  const confirmation = page.getByRole('alertdialog', {name: 'Enable Cloud Backup?'});
+  await expect(confirmation).toBeVisible();
+  await confirmation.getByRole('button', {name: 'Cancel', exact: true}).click();
+  await expect(confirmation).toBeHidden();
+  await expect(backup).not.toBeChecked();
+  await expect(backup).toBeFocused();
+});
