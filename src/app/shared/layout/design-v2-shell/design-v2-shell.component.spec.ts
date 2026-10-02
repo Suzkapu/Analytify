@@ -23,6 +23,67 @@ describe('DesignV2ShellComponent', () => {
     return {harness, shell};
   }
 
+  it('refuses cloud deletion when the cloud identity is unavailable', async () => {
+    const {shell} = await createShell();
+    vi.spyOn(shell.authService, 'getSupabaseUserId').mockReturnValue(null);
+    const deletion = vi.spyOn(TestBed.inject(SupabaseService), 'deleteUserProfileData').mockResolvedValue(undefined);
+    const logout = vi.spyOn(shell.authService, 'logout').mockResolvedValue(undefined);
+    shell.clearDataStep.set('cloud');
+    await shell.confirmCloudClear();
+    expect(deletion).not.toHaveBeenCalled();
+    expect(logout).not.toHaveBeenCalled();
+    expect(shell.clearDataStep()).toBe('cloud');
+    expect(shell.actionError()).toBe('You must be signed in to delete cloud data.');
+  });
+
+  it('deletes only the current cloud identity before logout and navigation', async () => {
+    const {shell} = await createShell();
+    const sequence: string[] = [];
+    vi.spyOn(shell.authService, 'getSupabaseUserId').mockReturnValue('current-user');
+    const deletion = vi.spyOn(TestBed.inject(SupabaseService), 'deleteUserProfileData').mockImplementation(async () => {sequence.push('delete');});
+    vi.spyOn(shell.authService, 'logout').mockImplementation(async () => {sequence.push('logout');});
+    vi.spyOn(TestBed.inject(Router), 'navigate').mockImplementation(async () => {sequence.push('navigate'); return true;});
+    shell.clearDataStep.set('cloud');
+    await shell.confirmCloudClear();
+    expect(deletion).toHaveBeenCalledExactlyOnceWith('current-user');
+    expect(sequence).toEqual(['delete', 'logout', 'navigate']);
+    expect(shell.clearDataStep()).toBe('none');
+  });
+
+  it('executes anonymous logout only after the explicit confirmation', async () => {
+    const {shell} = await createShell();
+    vi.spyOn(shell.authService, 'isAnonymousCloudIdentity').mockReturnValue(true);
+    const logout = vi.spyOn(shell.authService, 'logout').mockResolvedValue(undefined);
+    vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    await shell.requestLogout();
+    expect(logout).not.toHaveBeenCalled();
+    await shell.confirmGuestLogout();
+    expect(logout).toHaveBeenCalledOnce();
+    expect(shell.clearDataStep()).toBe('none');
+  });
+
+  it.each([new Error('Backup unavailable'), 'Unknown rejection'])('preserves backup confirmation after enable failure %s', async error => {
+    const {shell} = await createShell();
+    vi.spyOn(shell.authService, 'enableBackup').mockRejectedValue(error);
+    shell.backupConfirmationOpen.set(true);
+    await shell.enableBackup();
+    expect(shell.backupConfirmationOpen()).toBe(true);
+    expect(shell.actionRunning()).toBe(false);
+    expect(shell.actionError()).toBe(error instanceof Error ? error.message : 'Cloud Backup could not be enabled.');
+    shell.closeConfirmation();
+    expect(shell.backupConfirmationOpen()).toBe(false);
+    expect(shell.actionError()).toBe('');
+  });
+
+  it('falls back to the profile icon when artwork fails', async () => {
+    const {harness, shell} = await createShell();
+    shell.profilePicUrl.set('https://example.com/missing.jpg');
+    shell.profileImageFailed();
+    harness.fixture.detectChanges();
+    expect(shell.profilePicUrl()).toBeNull();
+    expect(harness.fixture.nativeElement.querySelector('.v2-account-button .pi-user')).not.toBeNull();
+  });
+
   it('requires anonymous-account confirmation before logging out', async () => {
     const {shell} = await createShell();
     vi.spyOn(shell.authService, 'isAnonymousCloudIdentity').mockReturnValue(true);
