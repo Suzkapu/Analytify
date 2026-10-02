@@ -136,8 +136,70 @@ describe('AmbientBackgroundComponent', () => {
     fixture.destroy();
     expect(frames.size).toBe(0);
     expect(removeWindow).toHaveBeenCalledWith('scroll', expect.any(Function));
+    expect(removeWindow).toHaveBeenCalledWith('resize', expect.any(Function));
     expect(removeDocument).toHaveBeenCalledWith('visibilitychange', expect.any(Function));
     expect(reduced.removeEventListener).toHaveBeenCalled();
     expect(coarse.removeEventListener).toHaveBeenCalled();
+  });
+
+  it('coalesces a burst of scroll geometry reads into one frame before style writes', () => {
+    fixture.detectChanges();
+    runFrames(60);
+    const order: string[] = [];
+    const height = vi.spyOn(document.documentElement, 'scrollHeight', 'get')
+      .mockImplementation(() => { order.push('read'); return 2400; });
+    vi.spyOn((fixture.nativeElement as HTMLElement).style, 'setProperty')
+      .mockImplementation(() => { order.push('write'); });
+    for (let index = 0; index < 10; index++) window.dispatchEvent(new Event('scroll'));
+    expect(height).not.toHaveBeenCalled();
+    expect(frames.size).toBe(1);
+    runFrames();
+    expect(height).toHaveBeenCalledOnce();
+    expect(order[0]).toBe('read');
+    expect(order.slice(1).every(operation => operation === 'write')).toBe(true);
+    runFrames(10);
+    expect(height).toHaveBeenCalledOnce();
+  });
+
+  it('does not read scroll geometry while hidden and refreshes it once when visible', () => {
+    fixture.detectChanges();
+    runFrames(60);
+    const height = vi.spyOn(document.documentElement, 'scrollHeight', 'get').mockReturnValue(2400);
+    hidden = true;
+    document.dispatchEvent(new Event('visibilitychange'));
+    window.dispatchEvent(new Event('scroll'));
+    window.dispatchEvent(new Event('resize'));
+    expect(height).not.toHaveBeenCalled();
+    expect(frames.size).toBe(0);
+    hidden = false;
+    document.dispatchEvent(new Event('visibilitychange'));
+    expect(frames.size).toBe(1);
+    runFrames();
+    expect(height).toHaveBeenCalledOnce();
+  });
+
+  it('defers geometry under reduced motion until motion is re-enabled', () => {
+    reduced.dispatch(true);
+    fixture.detectChanges();
+    const height = vi.spyOn(document.documentElement, 'scrollHeight', 'get').mockReturnValue(2400);
+    window.dispatchEvent(new Event('scroll'));
+    window.dispatchEvent(new Event('resize'));
+    expect(height).not.toHaveBeenCalled();
+    expect(frames.size).toBe(0);
+    reduced.dispatch(false);
+    expect(frames.size).toBe(1);
+    runFrames();
+    expect(height).toHaveBeenCalledOnce();
+  });
+
+  it('refreshes scroll progress after a resize without requiring a scroll event', () => {
+    fixture.detectChanges();
+    runFrames(60);
+    vi.spyOn(window, 'scrollY', 'get').mockReturnValue(400);
+    vi.spyOn(document.documentElement, 'scrollHeight', 'get').mockReturnValue(2400);
+    vi.stubGlobal('innerHeight', 800);
+    window.dispatchEvent(new Event('resize'));
+    runFrames();
+    expect(fixture.componentInstance.state.scrollProgress()).toBe(.25);
   });
 });

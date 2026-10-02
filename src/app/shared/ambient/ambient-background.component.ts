@@ -23,6 +23,7 @@ export class AmbientBackgroundComponent implements AfterViewInit, OnDestroy {
   private viewReady = false;
   private frameId: number | null = null;
   private lastFrame = 0;
+  private scrollMetricsPending = false;
   private current: AmbientVector;
   private reducedMotionQuery?: MediaQueryList;
   private coarsePointerQuery?: MediaQueryList;
@@ -35,13 +36,13 @@ export class AmbientBackgroundComponent implements AfterViewInit, OnDestroy {
   @Input() set shellMode(mode: AmbientShellMode) { this.state.setShellMode(mode); this.targetChanged(); }
 
   private readonly scrollHandler = (): void => {
-    this.state.setScrollMetrics(window.scrollY, document.documentElement.scrollHeight, window.innerHeight);
+    this.scrollMetricsPending = true;
     this.scheduleFrame();
   };
   private readonly visibilityHandler = (): void => {
     this.state.setVisibility(document.hidden);
     if (document.hidden) this.cancelFrame();
-    else this.scheduleFrame();
+    else this.scrollHandler();
   };
   private readonly reducedMotionHandler = (event: MediaQueryListEvent): void => {
     this.state.setReducedMotion(event.matches);
@@ -49,7 +50,7 @@ export class AmbientBackgroundComponent implements AfterViewInit, OnDestroy {
       this.cancelFrame();
       this.current = this.state.target();
       this.render(this.current);
-    } else this.scheduleFrame();
+    } else this.scrollHandler();
   };
   private readonly coarsePointerHandler = (event: MediaQueryListEvent): void => {
     this.state.setCoarsePointer(event.matches);
@@ -76,6 +77,7 @@ export class AmbientBackgroundComponent implements AfterViewInit, OnDestroy {
       this.reducedMotionQuery.addEventListener('change', this.reducedMotionHandler);
       this.coarsePointerQuery.addEventListener('change', this.coarsePointerHandler);
       window.addEventListener('scroll', this.scrollHandler, {passive: true});
+      window.addEventListener('resize', this.scrollHandler, {passive: true});
       document.addEventListener('visibilitychange', this.visibilityHandler);
       this.current = this.state.target();
       this.render(this.current);
@@ -85,6 +87,7 @@ export class AmbientBackgroundComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.cancelFrame();
     window.removeEventListener('scroll', this.scrollHandler);
+    window.removeEventListener('resize', this.scrollHandler);
     document.removeEventListener('visibilitychange', this.visibilityHandler);
     this.reducedMotionQuery?.removeEventListener('change', this.reducedMotionHandler);
     this.coarsePointerQuery?.removeEventListener('change', this.coarsePointerHandler);
@@ -98,6 +101,10 @@ export class AmbientBackgroundComponent implements AfterViewInit, OnDestroy {
   private animate(time: number): void {
     this.frameId = null;
     if (this.state.paused() || this.state.reducedMotion()) return;
+    if (this.scrollMetricsPending) {
+      this.scrollMetricsPending = false;
+      this.state.setScrollMetrics(window.scrollY, document.documentElement.scrollHeight, window.innerHeight);
+    }
     const delta = this.lastFrame ? time - this.lastFrame : 16;
     this.lastFrame = time;
     const target = this.state.target();

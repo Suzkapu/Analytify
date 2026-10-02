@@ -162,3 +162,9 @@ All 12 ambient/transition browser cases, lint, and production build/index/bundle
 Added a desktop/mobile ranking-history focus check using the real computed outline and row background. It verifies keyboard `:focus-visible`, at least a 2px ring, an opaque adjacent surface, alpha-composited sRGB contrast of at least 3:1, and that outline width/offset fit within the row without clipping. Both samples passed without changing the existing focus color; the previously suspected translucent-ring deficiency was not substantiated on these surfaces. The browser report attaches the measured evidence with its limited scope. This is not an all-controls/states contrast audit, and no broader conformance claim is made.
 
 The complete eight-case Insights browser suite and lint passed after adding the attachment; this follow-up changes only tests and the audit record.
+
+## Coalesced ambient scroll geometry (2026-10-02)
+
+A regression added before the implementation change failed with ten `scrollHeight` reads for ten scroll events. Scroll/resize handlers now only mark metrics pending and schedule the existing single frame. That frame reads geometry once before style writes; interpolation frames reuse it until another event. Visibility restoration and re-enabling motion request fresh metrics, while hidden/reduced-motion events perform no geometry reads. Resize now updates normalized progress without requiring a scroll event, and its listener is removed on destruction.
+
+Four new behavioral unit cases cover burst coalescing/read-before-write order, hidden/visible transitions, reduced-motion restoration, and resize-only progress. Full verification passed with 681 unit tests and unchanged per-file coverage allowances; lint and all 12 ambient browser cases passed. The measured ten-to-one read reduction is not a claim that forced layout, INP, or physical-device jank has been fully profiled or eliminated.
