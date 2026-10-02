@@ -67,6 +67,45 @@ test('v2 Insights reflows at 320 CSS pixels', async ({page}) => {
   }
 });
 
+test('Insights long names and controls reflow across the release matrix and enlarged text', async ({page}, testInfo) => {
+  const title = 'A very long song title with an extended edition and featured artists '.repeat(4);
+  await page.route('https://api.spotify.com/v1/me/top/tracks?*', route => route.fulfill({json: {
+    items: [{id: 'long-track', name: title,
+      artists: [{id: 'artist-1', name: 'A long artist name '.repeat(5)}],
+      album: {id: 'album-1', name: 'Test Album', images: []}, duration_ms: 180000}], total: 1
+  }}));
+  const matrix = [320, 375, 430, 500, 768, 1024, 1440].map(width => ({width, fontSize: '100%'}));
+  matrix.push({width: 320, fontSize: '200%'}, {width: 768, fontSize: '200%'});
+  const evidence: unknown[] = [];
+  for (const path of ['/stats', '/history']) {
+    await page.goto(path);
+    await expect(page.locator('.v2-page')).toBeVisible();
+    for (const {width, fontSize} of matrix) {
+      await page.setViewportSize({width, height: 900});
+      await page.evaluate(size => { document.documentElement.style.fontSize = size; }, fontSize);
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      expect(overflow, `${path} at ${width}px/${fontSize}`).toBeLessThanOrEqual(1);
+      if (path === '/stats') {
+        const history = page.getByRole('button', {name: `View position history for ${title.trim()}`});
+        await expect(history).toBeVisible();
+        const box = await history.boundingBox();
+        expect(box!.width).toBeGreaterThanOrEqual(44);
+        expect(box!.height).toBeGreaterThanOrEqual(44);
+        await expect(page.getByRole('searchbox', {name: 'Search songs or artists'})).toBeVisible();
+      } else {
+        await expect(page.getByText('Played today', {exact: true})).toBeVisible();
+      }
+      evidence.push({path, width, fontSize, overflow});
+    }
+    await page.evaluate(() => { document.documentElement.style.fontSize = '100%'; });
+  }
+  await testInfo.attach('insights-reflow-matrix.json', {
+    body: JSON.stringify({project: testInfo.project.name,
+      scope: 'CSS viewport and text enlargement, not browser zoom or manual screen-reader evidence', evidence}, null, 2),
+    contentType: 'application/json'
+  });
+});
+
 test('ranking history keyboard focus remains visible and meets non-text contrast', async ({page}, testInfo) => {
   await page.goto('/stats');
   const history = page.getByRole('button', {name: 'View position history for Test Song'});

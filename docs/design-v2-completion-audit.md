@@ -186,3 +186,9 @@ All six performance-evidence browser cases and lint passed. This validates exist
 ## Off-screen playlist rendering containment (2026-10-02)
 
 Extended the large-playlist regression to inspect a distant mounted row's actual browser rendering state, not only its CSS declaration. Its child fails `checkVisibility({contentVisibilityAuto: true})` while distant, the row reserves nonzero height with intrinsic sizing, and scrolling reveals that same child. The revealed Spotify control can receive focus. Both desktop/mobile samples and lint passed. This verifies Chromium's native content-visibility behavior on playlist rows; it does not prove all-browser support, screen-reader behavior, reduced DOM memory, or performance on physical hardware.
+
+## Insights responsive long-name matrix (2026-10-02)
+
+Expanded Stats and History reflow checks from the existing 320px sample to 320, 375, 430, 500, 768, 1024, and 1440 CSS pixels, plus 200% root text enlargement at 320 and 768. Stats uses a long repeated song title and artist name; the named history control remains visible and at least 44px in both dimensions, with search available. Both routes must avoid horizontal document overflow at every matrix point. The test attaches route/width/text-size samples and explicitly distinguishes text enlargement from browser zoom and manual assistive-technology testing.
+
+The full ten-case Insights browser suite and lint passed. This covers these rendered states, not every nested overlay or all features. CI run `37030072369` remained in progress, at the isolated Supabase loading-test startup step; CodeQL and advisory jobs had succeeded.
