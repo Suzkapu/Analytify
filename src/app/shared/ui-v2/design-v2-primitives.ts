@@ -13,7 +13,7 @@ import {
   signal
 } from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {SharedModule} from '@shared/shared.module';
+import {AccessibleDialogDirective} from '@shared/ui/accessible-dialog.directive';
 import {
   DesignV2KnownStatus,
   designV2StatusPresentation
@@ -260,7 +260,7 @@ export class V2StateComponent {
 @Component({
   selector: 'v2-modal',
   standalone: true,
-  imports: [SharedModule, V2ButtonDirective],
+  imports: [AccessibleDialogDirective, V2ButtonDirective],
   template: `
     @if (open) {
       <div class="v2-modal-layer">

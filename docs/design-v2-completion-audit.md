@@ -192,3 +192,9 @@ Extended the large-playlist regression to inspect a distant mounted row's actual
 Expanded Stats and History reflow checks from the existing 320px sample to 320, 375, 430, 500, 768, 1024, and 1440 CSS pixels, plus 200% root text enlargement at 320 and 768. Stats uses a long repeated song title and artist name; the named history control remains visible and at least 44px in both dimensions, with search available. Both routes must avoid horizontal document overflow at every matrix point. The test attaches route/width/text-size samples and explicitly distinguishes text enlargement from browser zoom and manual assistive-technology testing.
 
 The full ten-case Insights browser suite and lint passed. This covers these rendered states, not every nested overlay or all features. CI run `37030072369` remained in progress, at the isolated Supabase loading-test startup step; CodeQL and advisory jobs had succeeded.
+
+## Primitive modal dependency isolation (2026-10-02)
+
+The v2 modal now imports the standalone accessibility directive directly instead of the entire shared legacy UI module. A rendered regression dispatches Escape through the actual directive: a locked modal suppresses dismissal, while an unlocked modal emits its close event. All 683 unit tests, coverage gates with unchanged allowances, lint, and the production build/index/bundle checks passed. Initial JavaScript remained 748,313 bytes; this is dependency isolation, not a claimed byte-size improvement.
+
+The user deferred real screen-reader and staging rollback checks until later. Those checks remain missing, not waived. Other broader performance evidence is also still outstanding. The current deployment run was still in progress when checked; queued follow-up commits have not been pushed over it.

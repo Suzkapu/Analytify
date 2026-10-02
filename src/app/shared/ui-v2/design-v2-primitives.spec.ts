@@ -254,6 +254,25 @@ describe('V2ModalComponent', () => {
     expect(closed).not.toHaveBeenCalled();
     expect((fixture.nativeElement.querySelector('.v2-modal > header [aria-label="Close dialog"]') as HTMLButtonElement).disabled).toBe(true);
   });
+
+  it('wires Escape through the directly imported dialog directive and respects closeDisabled', async () => {
+    await TestBed.configureTestingModule({imports: [V2ModalComponent]}).compileComponents();
+    const fixture = TestBed.createComponent(V2ModalComponent);
+    fixture.componentRef.setInput('title', 'Confirm change');
+    fixture.componentRef.setInput('open', true);
+    fixture.componentRef.setInput('closeDisabled', true);
+    const closed = vi.fn();
+    fixture.componentInstance.closed.subscribe(closed);
+    fixture.detectChanges();
+    const lockedEscape = new KeyboardEvent('keydown', {key: 'Escape', bubbles: true, cancelable: true});
+    document.dispatchEvent(lockedEscape);
+    expect(lockedEscape.defaultPrevented).toBe(true);
+    expect(closed).not.toHaveBeenCalled();
+    fixture.componentRef.setInput('closeDisabled', false);
+    fixture.detectChanges();
+    document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true, cancelable: true}));
+    expect(closed).toHaveBeenCalledOnce();
+  });
 });
 
 describe('V2OverflowMenuComponent', () => {
