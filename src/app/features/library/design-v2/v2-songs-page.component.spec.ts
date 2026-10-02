@@ -6,7 +6,29 @@ import {V2SongsPageComponent} from './v2-songs-page.component';
 import {SongsController} from '../songs/songs.component';
 
 describe('V2SongsPageComponent', () => {
-  it('opens album songs in playlist order through a native button', async () => {
+  it.each(['artists', 'songs', 'albums'])('selects %s and closes album details only when leaving albums', view => {
+    const component = Object.create(V2SongsPageComponent.prototype) as V2SongsPageComponent;
+    component.selectedAlbum = {id: 'album'};
+    const close = vi.spyOn(component, 'closeAlbumDetails').mockImplementation(() => {component.selectedAlbum = null;});
+    component.selectView(view);
+    expect(component.viewStyle).toBe(view);
+    expect(close).toHaveBeenCalledTimes(view === 'albums' ? 0 : 1);
+    expect(component.selectedAlbum).toEqual(view === 'albums' ? {id: 'album'} : null);
+  });
+
+  it.each([true, false])('uses the shared default sort direction %s before refiltering', direction => {
+    const component = Object.create(V2SongsPageComponent.prototype) as V2SongsPageComponent;
+    const defaultDirection = vi.spyOn(component, 'getDefaultSortDirection').mockReturnValue(direction);
+    const filter = vi.spyOn(component, 'filterAndSortTracks').mockImplementation(() => {
+      expect(component.trackSortKey).toBe('name');
+      expect(component.sortAscending).toBe(direction);
+    });
+    component.selectSort('name');
+    expect(defaultDirection).toHaveBeenCalledWith('name');
+    expect(filter).toHaveBeenCalledOnce();
+  });
+
+  it.each(['album', undefined])('opens album songs and restores focus with album ID %s', async albumId => {
     await TestBed.configureTestingModule({
       imports: [V2SongsPageComponent],
       providers: [provideRouter([]), {provide: ActivatedRoute, useValue: {params: EMPTY}}]
@@ -18,7 +40,7 @@ describe('V2SongsPageComponent', () => {
     component.isLoading = false;
     component.viewStyle = 'albums';
     component.artists = [{name: 'Artist', tracks: []}];
-    component.filteredAlbums = [{id: 'album', name: 'Album', artists: ['Artist'], tracks: [
+    component.filteredAlbums = [{id: albumId, name: 'Album', artists: ['Artist'], tracks: [
       {id: 'second', name: 'Second song', playlist_index: 2, duration_ms: 120000},
       {id: 'first', name: 'First song', playlist_index: 1, duration_ms: 60000,
         external_urls: {spotify: 'https://open.spotify.com/track/first'}}
