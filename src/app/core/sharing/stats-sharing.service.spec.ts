@@ -9,6 +9,7 @@ describe('StatsSharingService', () => {
     let channel: any;
     let changeHandler: (() => void) | null;
     let removeChannel: Mock;
+    let getClient: Mock;
 
     beforeEach(() => {
         rpc = vi.fn().mockName('rpc');
@@ -22,13 +23,15 @@ describe('StatsSharingService', () => {
         };
         channel.subscribe.mockReturnValue(channel);
         removeChannel = vi.fn().mockName('removeChannel').mockResolvedValue('ok');
+        const client = { rpc, channel: () => channel, removeChannel };
+        getClient = vi.fn().mockResolvedValue(client);
 
         TestBed.configureTestingModule({
             providers: [
                 StatsSharingService,
                 {
                     provide: SupabaseService,
-                    useValue: { client: { rpc, channel: () => channel, removeChannel } }
+                    useValue: { client, getClient }
                 }
             ]
         });
@@ -50,6 +53,23 @@ describe('StatsSharingService', () => {
                 userId: 'owner-id', displayName: 'Owner', imageUrl: 'owner.jpg',
                 requestId: 'request-id', requestStatus: 'approved'
             }]);
+    });
+
+    it('waits for client readiness before loading access requests', async () => {
+        let resolveClient!: (client: any) => void;
+        getClient.mockReturnValue(new Promise(resolve => { resolveClient = resolve; }));
+        rpc.mockResolvedValue({ data: [], error: null });
+        const result = service.listAccessRequests();
+        expect(rpc).not.toHaveBeenCalled();
+        resolveClient({ rpc });
+        await expect(result).resolves.toEqual([]);
+        expect(rpc).toHaveBeenCalledWith('list_stats_access_requests');
+    });
+
+    it('propagates client initialization failures without sending an access request', async () => {
+        getClient.mockRejectedValue(new Error('Client unavailable'));
+        await expect(service.requestAccess('owner-id')).rejects.toThrow('Client unavailable');
+        expect(rpc).not.toHaveBeenCalled();
     });
 
     it('never downloads a directory for blank or short searches', async () => {

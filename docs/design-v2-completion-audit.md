@@ -262,3 +262,7 @@ All 690 unit tests, unchanged coverage gates, lint, and production index/bundle 
 Automatic Updates loading/saving and guest playlist cache identity checks now await client readiness. New regressions verify a save remains pending without an RPC until readiness resolves, initialization failures surface without preference updates, guest session reads wait for readiness, and failed guest initialization does not start Spotify data requests. Existing feature-controlled task locking and mismatched guest-account/cache isolation cases remain covered.
 
 All 694 unit tests, unchanged coverage gates, lint, and production index/bundle checks passed. Initial JavaScript remains 748,506 bytes and the previously recorded warnings remain. SDK construction is still eager while authentication, sharing, league, and realtime consumers await migration; no completed startup optimization is claimed.
+
+## Stats Sharing RPC readiness (2026-10-02)
+
+All StatsSharingService RPC operations now await client readiness. New delayed-readiness and failed-initialization tests prove that access requests are not sent before initialization and that failures propagate without an RPC. All 13 Stats Sharing service tests passed. This step does not defer SDK initialization: its synchronous realtime subscription and other consumers still require migration before the constructor can change. No performance improvement or completion of the remaining release gates is claimed.

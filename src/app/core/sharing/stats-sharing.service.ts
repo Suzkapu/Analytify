@@ -20,7 +20,7 @@ export class StatsSharingService {
   async listAvailableUsers(query: string): Promise<StatsShareableUser[]> {
     const normalized = query.trim();
     if (normalized.length < 3) return [];
-    const {data, error} = await this.supabase.client.rpc('search_stats_shareable_users', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('search_stats_shareable_users', {
       p_query: normalized
     });
     if (error) throw error;
@@ -34,13 +34,13 @@ export class StatsSharingService {
   }
 
   async getDiscoverability(): Promise<boolean> {
-    const {data, error} = await this.supabase.client.rpc('get_stats_discovery_setting');
+    const {data, error} = await (await this.supabase.getClient()).rpc('get_stats_discovery_setting');
     if (error) throw error;
     return data === true;
   }
 
   async setDiscoverability(enabled: boolean): Promise<boolean> {
-    const {data, error} = await this.supabase.client.rpc('set_stats_discovery_setting', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('set_stats_discovery_setting', {
       p_enabled: enabled
     });
     if (error) throw error;
@@ -48,12 +48,12 @@ export class StatsSharingService {
   }
 
   async blockUser(userId: string): Promise<void> {
-    const {error} = await this.supabase.client.rpc('block_stats_user', {p_user_id: userId});
+    const {error} = await (await this.supabase.getClient()).rpc('block_stats_user', {p_user_id: userId});
     if (error) throw error;
   }
 
   async listBlockedUsers(): Promise<BlockedStatsUser[]> {
-    const {data, error} = await this.supabase.client.rpc('list_blocked_stats_users');
+    const {data, error} = await (await this.supabase.getClient()).rpc('list_blocked_stats_users');
     if (error) throw error;
     return (data || []).map((row: any) => ({
       userId: row.user_id,
@@ -64,12 +64,12 @@ export class StatsSharingService {
   }
 
   async unblockUser(userId: string): Promise<void> {
-    const {error} = await this.supabase.client.rpc('unblock_stats_user', {p_user_id: userId});
+    const {error} = await (await this.supabase.getClient()).rpc('unblock_stats_user', {p_user_id: userId});
     if (error) throw error;
   }
 
   async reportUser(userId: string, reason: string): Promise<ModerationReceipt> {
-    const {data, error} = await this.supabase.client.rpc('report_stats_user_v2', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('report_stats_user_v2', {
       p_user_id: userId,
       p_reason: reason.trim(),
       p_category: 'user_safety',
@@ -82,7 +82,7 @@ export class StatsSharingService {
   }
 
   async listModerationCases(): Promise<ModerationCase[]> {
-    const {data, error} = await this.supabase.client.rpc('list_my_moderation_cases');
+    const {data, error} = await (await this.supabase.getClient()).rpc('list_my_moderation_cases');
     if (error) throw error;
     return (data || []).map((row: any) => ({
       reportId: row.report_id,
@@ -97,7 +97,7 @@ export class StatsSharingService {
   }
 
   async appealModerationCase(reportId: string, reason: string): Promise<void> {
-    const {error} = await this.supabase.client.rpc('appeal_moderation_report', {
+    const {error} = await (await this.supabase.getClient()).rpc('appeal_moderation_report', {
       p_report_id: reportId,
       p_reason: reason.trim()
     });
@@ -105,7 +105,7 @@ export class StatsSharingService {
   }
 
   async listAccessRequests(): Promise<StatsAccessRequest[]> {
-    const {data, error} = await this.supabase.client.rpc('list_stats_access_requests');
+    const {data, error} = await (await this.supabase.getClient()).rpc('list_stats_access_requests');
     if (error) throw error;
     return (data || []).map((row: any) => ({
       id: row.id,
@@ -125,7 +125,7 @@ export class StatsSharingService {
   }
 
   async requestAccess(ownerUserId: string): Promise<string> {
-    const {data, error} = await this.supabase.client.rpc('request_stats_access', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('request_stats_access', {
       p_owner_user_id: ownerUserId
     });
     if (error) throw error;
@@ -136,7 +136,7 @@ export class StatsSharingService {
 
   async createAccessInvite(): Promise<CreatedStatsAccessInvite> {
     const token = this.createClaimToken();
-    const {data, error} = await this.supabase.client.rpc('create_stats_access_invite', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('create_stats_access_invite', {
       p_claim_token: token
     });
     if (error) throw error;
@@ -151,7 +151,7 @@ export class StatsSharingService {
 
   async createShareInvite(): Promise<CreatedStatsAccessInvite> {
     const token = this.createClaimToken();
-    const {data, error} = await this.supabase.client.rpc('create_stats_share_invite', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('create_stats_share_invite', {
       p_claim_token: token
     });
     if (error) throw error;
@@ -165,7 +165,7 @@ export class StatsSharingService {
   }
 
   async previewAccessInvite(token: string): Promise<StatsAccessInvitePreview> {
-    const {data, error} = await this.supabase.client.rpc('preview_stats_access_invite', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('preview_stats_access_invite', {
       p_claim_token: token
     });
     if (error) throw error;
@@ -179,7 +179,7 @@ export class StatsSharingService {
   }
 
   async acceptShareInvite(token: string): Promise<string> {
-    const {data, error} = await this.supabase.client.rpc('accept_stats_share_invite', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('accept_stats_share_invite', {
       p_claim_token: token
     });
     if (error) throw error;
@@ -187,14 +187,14 @@ export class StatsSharingService {
   }
 
   async declineShareInvite(token: string): Promise<void> {
-    const {error} = await this.supabase.client.rpc('decline_stats_share_invite', {
+    const {error} = await (await this.supabase.getClient()).rpc('decline_stats_share_invite', {
       p_claim_token: token
     });
     if (error) throw error;
   }
 
   async claimAccessInvite(token: string): Promise<string> {
-    const {data, error} = await this.supabase.client.rpc('claim_stats_access_invite', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('claim_stats_access_invite', {
       p_claim_token: token
     });
     if (error) throw error;
@@ -204,7 +204,7 @@ export class StatsSharingService {
   }
 
   async respondToRequest(requestId: string, approve: boolean): Promise<void> {
-    const {error} = await this.supabase.client.rpc('answer_stats_access_request', {
+    const {error} = await (await this.supabase.getClient()).rpc('answer_stats_access_request', {
       p_request_id: requestId,
       p_decision: approve ? 'approved' : 'declined'
     });
@@ -212,14 +212,14 @@ export class StatsSharingService {
   }
 
   async revokeAccess(requestId: string): Promise<void> {
-    const {error} = await this.supabase.client.rpc('revoke_stats_access', {
+    const {error} = await (await this.supabase.getClient()).rpc('revoke_stats_access', {
       p_request_id: requestId
     });
     if (error) throw error;
   }
 
   async loadSharedStats(ownerUserId: string, range: string): Promise<SharedStatsSnapshot | null> {
-    const {data, error} = await this.supabase.client.rpc('get_shared_stats_snapshot', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('get_shared_stats_snapshot', {
       p_owner_user_id: ownerUserId,
       p_range: range
     });
