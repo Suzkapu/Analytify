@@ -198,3 +198,9 @@ The full ten-case Insights browser suite and lint passed. This covers these rend
 The v2 modal now imports the standalone accessibility directive directly instead of the entire shared legacy UI module. A rendered regression dispatches Escape through the actual directive: a locked modal suppresses dismissal, while an unlocked modal emits its close event. All 683 unit tests, coverage gates with unchanged allowances, lint, and the production build/index/bundle checks passed. Initial JavaScript remained 748,313 bytes; this is dependency isolation, not a claimed byte-size improvement.
 
 The user deferred real screen-reader and staging rollback checks until later. Those checks remain missing, not waived. Other broader performance evidence is also still outstanding. The current deployment run was still in progress when checked; queued follow-up commits have not been pushed over it.
+
+## Verified production release and fresh startup sample (2026-10-02)
+
+Verify/deploy run `37030072369` and supply-chain run `37030072441` both completed successfully for `29c75d4deab8871494aba531bde9d5b5eb489cfc`. Independent `/version.json` inspection reported that commit with deployment time `2026-10-02T16:03:06Z`.
+
+A fresh production login Lighthouse mobile lab sample at `2026-10-02T16:04:24.688Z` returned performance 88, accessibility 100, LCP 3,286.31ms, CLS 0, and TBT 145ms with no run warnings. LCP still exceeds the 2.5-second release target; this is not field p75 or an INP measurement. Diagnostics reported 18 requests, one font, one task over 50ms, and none over 100ms in the sampled trace. Lighthouse identified zero cache lifetime for hashed application assets and `font-display: block` on PrimeIcons. These findings require follow-up investigation; the report's estimated savings are not demonstrated improvements. The temporary raw artifact is `/tmp/analytify-lighthouse-production-29c75d4.json`.
