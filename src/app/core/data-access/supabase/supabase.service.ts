@@ -84,17 +84,18 @@ export class SupabaseService {
   /** Creates an authenticated database identity for collaboration without
    * enabling Cloud Backup or uploading Spotify data. */
   async ensureCollaborationSession(): Promise<string> {
-    const current = await this.client.auth.getSession();
+    const client = await this.getClient();
+    const current = await client.auth.getSession();
     if (current.error) throw current.error;
     let session = current.data.session;
     if (!session) {
-      const signedIn = await this.client.auth.signInAnonymously();
+      const signedIn = await client.auth.signInAnonymously();
       if (signedIn.error || !signedIn.data.session) {
         throw signedIn.error || new Error('Could not create a private collaboration session.');
       }
       session = signedIn.data.session;
     }
-    await this.client.realtime.setAuth(session.access_token);
+    await client.realtime.setAuth(session.access_token);
     return session.user.id;
   }
 
@@ -102,10 +103,10 @@ export class SupabaseService {
    *  Prevents "No API key found" errors caused by expired JWTs during long syncs. */
   private async ensureSession(): Promise<void> {
     try {
-      const { data: { session }, error } = await this.client.auth.getSession();
+      const { data: { session }, error } = await (await this.getClient()).auth.getSession();
       if (error || !session) {
         console.warn('[SupabaseService] Session missing or expired, attempting refresh...');
-        const { error: refreshErr } = await this.client.auth.refreshSession();
+        const { error: refreshErr } = await (await this.getClient()).auth.refreshSession();
         if (refreshErr) {
           console.warn('[SupabaseService] Session refresh failed:', refreshErr.message);
         }
@@ -118,7 +119,7 @@ export class SupabaseService {
   /** Checks if database backup is active for the user */
   async checkBackupActive(supabaseUserId: string): Promise<boolean | null> {
     try {
-      const { data, error } = await this.client
+      const { data, error } = await (await this.getClient())
         .from('users')
         .select('backup_active')
         .eq('id', supabaseUserId)
@@ -134,7 +135,7 @@ export class SupabaseService {
   /** Loads the persisted user profile before the UI falls back to Spotify. */
   async loadUserProfile(supabaseUserId: string): Promise<any | null> {
     try {
-      const { data, error } = await this.client
+      const { data, error } = await (await this.getClient())
         .from('users')
         .select('spotify_id, verified_spotify_id, display_name, profile_pic_url')
         .eq('id', supabaseUserId)
@@ -150,7 +151,7 @@ export class SupabaseService {
   /** Updates database backup status for the user */
   async updateBackupActive(supabaseUserId: string, active: boolean): Promise<void> {
     try {
-      const { error } = await this.client
+      const { error } = await (await this.getClient())
         .from('users')
         .update({ backup_active: active })
         .eq('id', supabaseUserId);
@@ -168,7 +169,7 @@ export class SupabaseService {
    *  keeping non-personal catalog metadata such as tracks and artists. */
   async deleteUserProfileData(supabaseUserId: string): Promise<void> {
     try {
-      const { error } = await this.client
+      const { error } = await (await this.getClient())
         .from('users')
         .delete()
         .eq('id', supabaseUserId);
@@ -215,7 +216,7 @@ export class SupabaseService {
     relationships: any[] = []
   ): Promise<void> {
     if (items.length === 0 && relationships.length === 0) return;
-    const {error} = await this.client.rpc('ingest_spotify_catalog', {
+    const {error} = await (await this.getClient()).rpc('ingest_spotify_catalog', {
       p_kind: kind,
       p_items: items,
       p_relationships: relationships
@@ -236,7 +237,7 @@ export class SupabaseService {
       if (uniqueArtists.length === 0) return;
 
       const artistIds = uniqueArtists.map(a => a.id);
-      const { data: existingArtists, error: existingArtistsError } = await this.client
+      const { data: existingArtists, error: existingArtistsError } = await (await this.getClient())
         .from('artists')
         .select('id, name, image_url, spotify_url')
         .in('id', artistIds);
@@ -285,7 +286,7 @@ export class SupabaseService {
   async loadArtistById(artistId: string): Promise<any | null> {
     if (!artistId) return null;
     try {
-      const { data, error } = await this.client
+      const { data, error } = await (await this.getClient())
         .from('artists')
         .select('id, name, image_url, spotify_url')
         .eq('id', artistId)
@@ -314,7 +315,7 @@ export class SupabaseService {
       const artists: any[] = [];
       for (let offset = 0; offset < uniqueIds.length; offset += 100) {
         const batch = uniqueIds.slice(offset, offset + 100);
-        const { data, error } = await this.client
+        const { data, error } = await (await this.getClient())
           .from('artists')
           .select('id, name, image_url, spotify_url')
           .in('id', batch);
@@ -347,7 +348,7 @@ export class SupabaseService {
       if (uniqueAlbums.length === 0) return;
 
       const albumIds = uniqueAlbums.map(a => a.id);
-      const { data: existingAlbums, error: existingAlbumsError } = await this.client
+      const { data: existingAlbums, error: existingAlbumsError } = await (await this.getClient())
         .from('albums')
         .select('id, name, album_type, total_tracks, release_date, release_date_precision, image_url, spotify_url, restriction_reason, upc, ean')
         .in('id', albumIds);
@@ -414,7 +415,7 @@ export class SupabaseService {
       });
 
       if (artistIds.size > 0) {
-        const { data: existingArtists, error: existingArtistsError } = await this.client
+        const { data: existingArtists, error: existingArtistsError } = await (await this.getClient())
           .from('artists')
           .select('id')
           .in('id', Array.from(artistIds));
@@ -459,7 +460,7 @@ export class SupabaseService {
       if (uniqueTracks.length === 0) return;
 
       const trackIds = uniqueTracks.map(t => t.id);
-      const { data: existingTracks, error: existingTracksError } = await this.client
+      const { data: existingTracks, error: existingTracksError } = await (await this.getClient())
         .from('tracks')
         .select('id, name, album_id, duration_ms, explicit, spotify_url, track_number, disc_number, is_playable, is_local, isrc, restriction_reason')
         .in('id', trackIds);
@@ -481,7 +482,7 @@ export class SupabaseService {
       });
 
       if (albumIds.size > 0) {
-        const { data: existingAlbums, error: existingAlbumsError } = await this.client
+        const { data: existingAlbums, error: existingAlbumsError } = await (await this.getClient())
           .from('albums')
           .select('id')
           .in('id', Array.from(albumIds));
@@ -521,7 +522,7 @@ export class SupabaseService {
       });
 
       if (artistIds.size > 0) {
-        const { data: existingArtists, error: existingArtistsError } = await this.client
+        const { data: existingArtists, error: existingArtistsError } = await (await this.getClient())
           .from('artists')
           .select('id')
           .in('id', Array.from(artistIds));
@@ -651,7 +652,7 @@ export class SupabaseService {
       if (historyRows.length === 0) return;
 
       // 4. Insert listening history
-      const { error } = await this.client
+      const { error } = await (await this.getClient())
         .from('listening_history')
         .upsert(historyRows, {
           onConflict: 'user_id,played_at,track_id',
@@ -673,7 +674,7 @@ export class SupabaseService {
       const startOfToday = new Date();
       startOfToday.setHours(0, 0, 0, 0);
 
-      const { data, error } = await this.client
+      const { data, error } = await (await this.getClient())
         .from('listening_history')
         .select('played_at')
         .eq('user_id', supabaseUserId)
@@ -691,7 +692,7 @@ export class SupabaseService {
   /** Loads recently played tracks from database */
   async loadListeningHistoryFromDB(supabaseUserId: string): Promise<any[]> {
     try {
-      const { data, error } = await this.client
+      const { data, error } = await (await this.getClient())
         .from('listening_history')
         .select(`
           played_at,
@@ -750,7 +751,7 @@ export class SupabaseService {
     maxAgeDays: number
   ): Promise<boolean> {
     try {
-      const { data, error } = await this.client
+      const { data, error } = await (await this.getClient())
         .from('stats_snapshots')
         .select('id')
         .eq('user_id', supabaseUserId)
@@ -773,7 +774,7 @@ export class SupabaseService {
     maxAgeDays: number
   ): Promise<any> {
     try {
-      const { data, error } = await this.client
+      const { data, error } = await (await this.getClient())
         .from('stats_snapshots')
         .select(`
           id, snapshot_date, explicit_percentage, genre_diversity,
@@ -873,7 +874,7 @@ export class SupabaseService {
   ): Promise<PastTopItem[]> {
     const trimmed = query.trim();
     if (trimmed.length < 2) return [];
-    const {data, error} = await this.client.rpc('search_past_top_items', {
+    const {data, error} = await (await this.getClient()).rpc('search_past_top_items', {
       p_range: range,
       p_kind: kind,
       p_query: trimmed,
@@ -897,7 +898,7 @@ export class SupabaseService {
   /** Loads all stats snapshots for a user from database for a specific range */
   async loadAllStatsSnapshots(supabaseUserId: string, range: string): Promise<any[]> {
     try {
-      const { data, error } = await this.client
+      const { data, error } = await (await this.getClient())
         .from('stats_snapshots')
         .select(`
           id, explicit_percentage, genre_diversity, created_at, snapshot_date,
@@ -991,7 +992,7 @@ export class SupabaseService {
   /** Loads all stats snapshots metadata without item joins for performance. */
   async loadAllStatsSnapshotsMetadata(supabaseUserId: string, range: string): Promise<any[]> {
     try {
-      const { data, error } = await this.client
+      const { data, error } = await (await this.getClient())
         .from('stats_snapshots')
         .select('id, explicit_percentage, genre_diversity, created_at, snapshot_date')
         .eq('user_id', supabaseUserId)
@@ -1042,7 +1043,7 @@ export class SupabaseService {
         : 'genre_name';
 
     try {
-      let query = this.client
+      let query = (await this.getClient())
         .from(table)
         .select(`rank, stats_snapshots!inner(user_id, range, snapshot_date, created_at)`)
         .eq('stats_snapshots.user_id', supabaseUserId)
@@ -1077,7 +1078,7 @@ export class SupabaseService {
   /** Loads full details for a single stats snapshot by ID */
   async loadStatsSnapshotById(supabaseUserId: string, snapshotId: string): Promise<any | null> {
     try {
-      const { data, error } = await this.client
+      const { data, error } = await (await this.getClient())
         .from('stats_snapshots')
         .select(`
           id, explicit_percentage, genre_diversity, created_at, snapshot_date, range,
@@ -1300,7 +1301,7 @@ export class SupabaseService {
         }
       });
 
-      const {data: currentSnapshot, error: revisionError} = await this.client
+      const {data: currentSnapshot, error: revisionError} = await (await this.getClient())
         .from('stats_snapshots')
         .select('revision')
         .eq('user_id', supabaseUserId)
@@ -1308,7 +1309,7 @@ export class SupabaseService {
         .eq('snapshot_date', todayStr)
         .maybeSingle();
       if (revisionError) throw revisionError;
-      const {error: replaceError} = await this.client.rpc('replace_stats_snapshot_v2', {
+      const {error: replaceError} = await (await this.getClient()).rpc('replace_stats_snapshot_v2', {
         p_user_id: supabaseUserId,
         p_range: range,
         p_snapshot_date: todayStr,
@@ -1339,7 +1340,7 @@ export class SupabaseService {
   /** Saves a serialized cache key-value pair to database */
   async saveUserCache(supabaseUserId: string, key: string, value: string): Promise<void> {
     try {
-      const { error } = await this.client
+      const { error } = await (await this.getClient())
         .from('user_cache')
         .upsert({ 
           user_id: supabaseUserId, 
@@ -1361,7 +1362,7 @@ export class SupabaseService {
     keys?: string[]
   ): Promise<{ key: string; value: string; updated_at?: string }[]> {
     try {
-      let query = this.client
+      let query = (await this.getClient())
         .from('user_cache')
         .select('key, value, updated_at')
         .eq('user_id', supabaseUserId);
@@ -1383,7 +1384,7 @@ export class SupabaseService {
     const uniqueKeys = Array.from(new Set(keys.filter(Boolean)));
     if (uniqueKeys.length === 0) return;
 
-    const { error } = await this.client
+    const { error } = await (await this.getClient())
       .from('user_cache')
       .delete()
       .eq('user_id', supabaseUserId)
@@ -1393,7 +1394,7 @@ export class SupabaseService {
 
   private async markDailyStatsCompleteIfReady(supabaseUserId: string): Promise<void> {
     const requiredRanges = ['short_term', 'medium_term', 'long_term'];
-    const { data, error } = await this.client
+    const { data, error } = await (await this.getClient())
       .from('stats_snapshots')
       .select('range')
       .eq('user_id', supabaseUserId)
@@ -1404,7 +1405,7 @@ export class SupabaseService {
     const completedRanges = new Set((data || []).map((snapshot: any) => snapshot.range));
     if (!requiredRanges.every(range => completedRanges.has(range))) return;
 
-    const { error: markerError } = await this.client
+    const { error: markerError } = await (await this.getClient())
       .from('users')
       .update({ last_synced_at: new Date().toISOString() })
       .eq('id', supabaseUserId);
