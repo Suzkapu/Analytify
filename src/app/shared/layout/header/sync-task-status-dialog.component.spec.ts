@@ -8,6 +8,7 @@ describe('SyncTaskStatusDialogComponent', () => {
   let fixture: ComponentFixture<SyncTaskStatusDialogComponent>;
   let component: SyncTaskStatusDialogComponent;
   let rpc: ReturnType<typeof vi.fn>;
+  let getClient: ReturnType<typeof vi.fn>;
 
   beforeEach(async () => {
     rpc = vi.fn().mockResolvedValue({data: [
@@ -30,15 +31,40 @@ describe('SyncTaskStatusDialogComponent', () => {
         policy_available: false
       }
     ], error: null});
+    getClient = vi.fn().mockResolvedValue({rpc});
     await TestBed.configureTestingModule({
       imports: [SyncTaskStatusDialogComponent],
-      providers: [{provide: SupabaseService, useValue: {client: {rpc}}}]
+      providers: [{provide: SupabaseService, useValue: {client: {rpc}, getClient}}]
     }).compileComponents();
     fixture = TestBed.createComponent(SyncTaskStatusDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     await fixture.whenStable();
     fixture.detectChanges();
+  });
+
+  it('waits for client readiness before saving an editable task', async () => {
+    let ready!: (client: any) => void;
+    getClient.mockReturnValue(new Promise(resolve => { ready = resolve; }));
+    rpc.mockClear();
+    const pending = component.save(component.tasks[0]);
+    expect(rpc).not.toHaveBeenCalled();
+    expect(component.savingTask).toBe('listening_history');
+    ready({rpc});
+    await pending;
+    expect(rpc.mock.calls.map(call => call[0])).toEqual([
+      'update_my_sync_schedule_preference', 'get_my_sync_task_status'
+    ]);
+    expect(component.savedTask).toBe('listening_history');
+  });
+
+  it('shows client initialization errors without sending a preference update', async () => {
+    getClient.mockRejectedValue(new Error('Client unavailable'));
+    rpc.mockClear();
+    await component.save(component.tasks[0]);
+    expect(component.error).toBe('Client unavailable');
+    expect(component.savingTask).toBeNull();
+    expect(rpc).not.toHaveBeenCalled();
   });
 
   it('offers controls only for personal tasks and shows feature tasks as locked', () => {

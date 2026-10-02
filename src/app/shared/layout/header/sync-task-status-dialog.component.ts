@@ -66,7 +66,7 @@ export class SyncTaskStatusDialogComponent implements OnInit {
     delete this.validationErrors[task.task_key];
     this.savingTask = task.task_key;
     try {
-      const {error} = await this.supabase.client.rpc('update_my_sync_schedule_preference', {
+      const {error} = await (await this.supabase.getClient()).rpc('update_my_sync_schedule_preference', {
         p_task_key: task.task_key,
         p_enabled: task.optional_enabled,
         p_interval_value: task.interval_value,
@@ -107,7 +107,7 @@ export class SyncTaskStatusDialogComponent implements OnInit {
   }
 
   private async load(): Promise<void> {
-    const {data, error} = await this.supabase.client.rpc('get_my_sync_task_status');
+    const {data, error} = await (await this.supabase.getClient()).rpc('get_my_sync_task_status');
     if (error) throw error;
     this.tasks = (data || []) as SyncTaskStatus[];
     if (this.expandedTask && !this.tasks.some(task => task.task_key === this.expandedTask && this.stateFor(task).editable)) {

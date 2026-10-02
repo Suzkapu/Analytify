@@ -21,6 +21,7 @@ describe('CompareGuestPlaylistSourceService', () => {
             checkBackupActive: vi.fn().mockName('checkBackupActive').mockResolvedValue(false),
             loadUserCache: vi.fn().mockName('loadUserCache').mockResolvedValue([])
         };
+        supabase.getClient = vi.fn().mockImplementation(async () => supabase.client);
         spotify = {
             getPlaylists: vi.fn().mockName("ParticipantSpotifyService.getPlaylists"),
             getPlaylistTracks: vi.fn().mockName("ParticipantSpotifyService.getPlaylistTracks"),
@@ -58,6 +59,29 @@ describe('CompareGuestPlaylistSourceService', () => {
         expect(result.playlists[0].total).toBe(2000);
         expect(spotify.getPlaylists).not.toHaveBeenCalled();
         expect(supabase.loadUserCache).not.toHaveBeenCalled();
+    });
+
+    it('waits for readiness before checking the guest cloud identity', async () => {
+        let ready!: (client: any) => void;
+        supabase.getClient.mockReturnValue(new Promise(resolve => { ready = resolve; }));
+        values['spotifyUserId'] = 'guest-user';
+        values['guest-user_playlists'] = JSON.stringify([{id: 'fav', name: 'Liked Songs', total: 2000}]);
+        values['guest-user_playlists_lastUpdated'] = Date.now().toString();
+        const pending = service.loadPlaylists('guest-token', 'guest-user');
+        await vi.waitFor(() => expect(supabase.getClient).toHaveBeenCalled());
+        expect(supabase.client.auth.getSession).not.toHaveBeenCalled();
+        expect(spotify.getPlaylists).not.toHaveBeenCalled();
+        ready(supabase.client);
+        expect((await pending).source).toBe('local');
+        expect(supabase.client.auth.getSession).toHaveBeenCalledOnce();
+    });
+
+    it('propagates readiness failure before requesting guest Spotify data', async () => {
+        const failure = new Error('Client unavailable');
+        supabase.getClient.mockRejectedValue(failure);
+        await expect(service.loadPlaylists('guest-token', 'guest-user')).rejects.toBe(failure);
+        expect(supabase.client.auth.getSession).not.toHaveBeenCalled();
+        expect(spotify.getPlaylists).not.toHaveBeenCalled();
     });
 
     it('loads fresh playlist tracks from the matching guest Supabase session', async () => {

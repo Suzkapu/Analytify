@@ -256,3 +256,9 @@ All 687 unit tests, unchanged coverage allowances, lint, application/test typech
 Completed readiness migration across AdminService and PushNotificationService; neither now reads `supabase.client` directly. Admin user-summary loading awaits one client and still starts all three RPCs concurrently. A regression holds all responses pending and verifies all three calls start before any response resolves. Notification settings now have delayed-readiness and initialization-failure regressions, while the existing device-registration/preference cases remain green.
 
 All 690 unit tests, unchanged coverage gates, lint, and production index/bundle checks passed; initial JavaScript is 748,506 bytes. The previously recorded mock-hoisting/build warnings remain. Other direct consumers and SupabaseService itself still require migration before deferred initialization, so no startup byte or LCP improvement is claimed at this stage.
+
+## Automatic Updates and guest identity readiness (2026-10-02)
+
+Automatic Updates loading/saving and guest playlist cache identity checks now await client readiness. New regressions verify a save remains pending without an RPC until readiness resolves, initialization failures surface without preference updates, guest session reads wait for readiness, and failed guest initialization does not start Spotify data requests. Existing feature-controlled task locking and mismatched guest-account/cache isolation cases remain covered.
+
+All 694 unit tests, unchanged coverage gates, lint, and production index/bundle checks passed. Initial JavaScript remains 748,506 bytes and the previously recorded warnings remain. SDK construction is still eager while authentication, sharing, league, and realtime consumers await migration; no completed startup optimization is claimed.
