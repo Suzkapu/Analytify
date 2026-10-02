@@ -6,12 +6,11 @@ import {StorageService} from '@core/data-access/storage/storage.service';
 import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 import {PlaylistLoaderService} from '@core/sync/playlist-loader/playlist-loader.service';
 import {V2ButtonDirective, V2CardComponent, V2PageComponent, V2SectionHeaderComponent, V2StateComponent} from '@shared/ui-v2';
-import {PlaylistAnalysisController} from '../playlist-analysis/playlist-analysis.component';
-import {PlaylistAnalysisUiModule} from '../playlist-analysis/playlist-analysis.module';
+import {PlaylistAnalysisController} from '../playlist-analysis/playlist-analysis.controller';
 
 @Component({
   selector: 'app-v2-analysis-page', standalone: true,
-  imports: [CommonModule, RouterLink, PlaylistAnalysisUiModule, V2ButtonDirective, V2CardComponent, V2PageComponent, V2SectionHeaderComponent, V2StateComponent],
+  imports: [CommonModule, RouterLink, V2ButtonDirective, V2CardComponent, V2PageComponent, V2SectionHeaderComponent, V2StateComponent],
   template: `
     <v2-page eyebrow="Playlist analysis" [title]="playlistName || 'Playlist analysis'"
       description="A focused overview of this playlist’s size, timeline, and standout songs.">

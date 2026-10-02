@@ -10,7 +10,7 @@ const guard = readFileSync('src/app/core/auth/spotify-auth.guard.ts', 'utf8');
 const asyncLoad = readFileSync('src/app/core/performance/async-load.ts', 'utf8');
 const playlistLoader = readFileSync('src/app/core/sync/playlist-loader/playlist-loader.service.ts', 'utf8');
 const compareSource = readFileSync('src/app/core/compare-room/compare-playlist-source.service.ts', 'utf8');
-const songs = readFileSync('src/app/features/library/songs/songs.component.ts', 'utf8');
+const songs = readFileSync('src/app/features/library/songs/songs.controller.ts', 'utf8');
 const serviceWorker = JSON.parse(readFileSync('ngsw-config.json', 'utf8'));
 
 const prefetchedServiceWorkerFiles = serviceWorker.assetGroups

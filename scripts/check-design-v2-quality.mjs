@@ -24,6 +24,16 @@ if (hardcodedNamespace.length) {
 }
 
 const router = readFileSync('src/app/app-routing.module.ts', 'utf8');
+for (const [page, feature] of [['songs', 'songs'], ['analysis', 'playlist-analysis'], ['artist-details', 'artist-details']]) {
+  const source = readFileSync(`src/app/features/library/design-v2/v2-${page}-page.component.ts`, 'utf8');
+  if (source.includes('UiModule') || !source.includes(`../${feature}/${feature}.controller`)) {
+    throw new Error(`The redesigned ${page} page must reuse its controller without importing the legacy screen.`);
+  }
+  const controller = readFileSync(`src/app/features/library/${feature}/${feature}.controller.ts`, 'utf8');
+  if (controller.includes('@Component(') || controller.includes('templateUrl:') || controller.includes('styleUrls:')) {
+    throw new Error(`The shared ${feature} controller must not carry legacy presentation metadata.`);
+  }
+}
 if (!router.includes('enableViewTransitions: true')) {
   throw new Error('Angular native route View Transitions must remain enabled.');
 }
