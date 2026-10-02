@@ -1,5 +1,6 @@
 import {existsSync, readFileSync, readdirSync} from 'node:fs';
 import {join} from 'node:path';
+import {isDesignV2BehaviorSource} from './design-v2-test-policy.mjs';
 
 function filesBelow(directory) {
   return readdirSync(directory, {withFileTypes: true}).flatMap(entry => {
@@ -8,20 +9,7 @@ function filesBelow(directory) {
   });
 }
 
-const roots = [
-  'src/app/features/library/design-v2',
-  'src/app/shared/ambient',
-  'src/app/shared/layout/design-v2-shell',
-  'src/app/shared/ui-v2',
-  'src/app/core/navigation'
-];
-const behavioralSources = roots.flatMap(filesBelow).filter(path =>
-  path.endsWith('.ts')
-  && !path.endsWith('.spec.ts')
-  && !path.endsWith('/index.ts')
-  && !path.endsWith('.module.ts')
-  && (path.includes('design-v2') || path.includes('/ambient/'))
-);
+const behavioralSources = filesBelow('src/app').filter(isDesignV2BehaviorSource);
 const missingSpecs = behavioralSources.filter(path => !existsSync(path.replace(/\.ts$/, '.spec.ts')));
 if (missingSpecs.length) {
   throw new Error(`Design v2 behavior is missing unit coverage:\n${missingSpecs.map(path => `- ${path}`).join('\n')}`);

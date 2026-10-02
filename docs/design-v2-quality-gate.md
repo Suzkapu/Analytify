@@ -11,6 +11,14 @@ The canonical Design v2 release must keep this gate and the UI parity matrix gre
 - The ambient browser suite verifies one persistent renderer, hidden/reduced-motion behavior, route/scroll/overlay continuity, reflow, and Axe.
 - Canonical route smoke coverage and `/new/*` compatibility-redirect coverage run together. The legacy presentation is removed.
 
+## Unit coverage enforcement
+
+The shared source policy includes Library and Insights v2 wrappers, the shell, primitives, ambient renderer, and design navigation. It discovers future matching sources automatically; a missing colocated spec or missing coverage entry fails CI. Barrel exports and the declarative lazy-route configuration are excluded; route behavior remains covered by the routing suite. New modules under v2 feature directories are not blanket-excluded.
+
+`test:ci` checks per-file absolute uncovered statements, branches, functions, and lines against `scripts/design-v2-coverage-baseline.json`, measured from the full 638-test run on `d9da0bf`. Missing baseline entries/metrics allow zero uncovered code. Adding covered code cannot dilute a regression as it could with percentage-only thresholds. Six policy regression tests cover source discovery, absent evidence, new-file defaults, dilution, report path normalization, and malformed counters.
+
+The baseline preserves existing coverage gaps; it is not a declaration that they are justified exclusions or that quality issue #163 is complete. Review new behavior and branches alongside the diff, add meaningful tests, and ratchet existing allowances down as gaps are covered. Do not raise allowances to make a failing change pass. This per-file guard does not establish changed-line coverage or replace the required behavioral review.
+
 ## Runtime and performance review
 
 The production baseline is held at initial JavaScript <= 855 KB, global CSS <= 300 KB, and each lazy JavaScript chunk <= 110 KB. Artwork reserves space and non-critical images remain lazy. Long collections use bounded/incremental loading or `content-visibility`; stable domain IDs are used for reorderable lists. The release target remains LCP <= 2.5 s, INP <= 200 ms, and CLS <= 0.1 at p75 for mobile and desktop field data.
