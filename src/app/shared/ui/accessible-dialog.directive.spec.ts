@@ -34,7 +34,8 @@ describe('AccessibleDialogDirective', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TestHostComponent, AccessibleDialogDirective]
+            declarations: [TestHostComponent],
+            imports: [AccessibleDialogDirective]
         }).compileComponents();
         fixture = TestBed.createComponent(TestHostComponent);
         fixture.detectChanges();

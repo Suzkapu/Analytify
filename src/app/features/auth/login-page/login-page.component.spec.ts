@@ -7,7 +7,6 @@ import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
 import { AuthReturnUrlService } from '@core/auth/auth-return-url.service';
 import { TermsAcceptanceService } from '@core/legal/terms-acceptance.service';
-import { FormsModule } from '@angular/forms';
 import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 
 describe('LoginPageComponent', () => {
@@ -21,7 +20,6 @@ describe('LoginPageComponent', () => {
         auth = {isAuthenticated: vi.fn().mockReturnValue(false), loginWithSupabase: vi.fn().mockResolvedValue(undefined)};
         TestBed.configureTestingModule({
             declarations: [LoginPageComponent],
-            imports: [FormsModule],
             providers: [
                 {
                     provide: SpotifyAuthService,
@@ -51,6 +49,36 @@ describe('LoginPageComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('updates terms consent from the native checkbox in both directions', async () => {
+        await fixture.whenStable();
+        const checkbox = fixture.nativeElement.querySelector('input[type="checkbox"]') as HTMLInputElement;
+        checkbox.click();
+        fixture.detectChanges();
+        expect(component.termsAccepted).toBe(true);
+        expect(fixture.nativeElement.querySelector('.login-spotify-button').disabled).toBe(false);
+        checkbox.click();
+        fixture.detectChanges();
+        expect(component.termsAccepted).toBe(false);
+        expect(fixture.nativeElement.querySelector('.login-spotify-button').disabled).toBe(true);
+    });
+
+    it('renders restored consent after asynchronous storage initialization', async () => {
+        fixture.autoDetectChanges();
+        vi.spyOn(TestBed.inject(TermsAcceptanceService), 'hasCurrentAcceptance').mockReturnValue(true);
+        await component.ngOnInit();
+        await fixture.whenStable();
+        expect(fixture.nativeElement.querySelector('input[type="checkbox"]').checked).toBe(true);
+    });
+
+    it('announces an asynchronous login failure without another user interaction', async () => {
+        fixture.autoDetectChanges();
+        component.termsAccepted = true;
+        auth.loginWithSupabase.mockRejectedValue(new Error('Spotify unavailable'));
+        await component.login();
+        await fixture.whenStable();
+        expect(fixture.nativeElement.querySelector('[role="alert"]').textContent).toContain('Spotify unavailable');
     });
 
     it('renders hosted and personal-app login without promoting Compare Room', () => {

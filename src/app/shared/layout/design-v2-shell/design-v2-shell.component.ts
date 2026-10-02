@@ -1,4 +1,4 @@
-import {Location} from '@angular/common';
+import {CommonModule, Location} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -22,7 +22,7 @@ import {
   toolDesignV2Navigation
 } from '@core/navigation/design-v2-navigation.model';
 import {deepestDesignV2RouteData, DesignV2ChromeMode, DesignV2PageWidth} from '@core/navigation/design-v2-route-data';
-import {SharedModule} from '@shared/shared.module';
+import {AccessibleDialogDirective} from '@shared/ui/accessible-dialog.directive';
 import {AmbientBackgroundComponent} from '@shared/ambient/ambient-background.component';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
@@ -53,7 +53,7 @@ const DEFAULT_CONTEXT: DesignV2PageContext = {
   styleUrls: ['./design-v2-shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink, RouterOutlet, SharedModule, AmbientBackgroundComponent],
+  imports: [RouterLink, RouterOutlet, CommonModule, AccessibleDialogDirective, AmbientBackgroundComponent],
   providers: [DesignV2OverlayService]
 })
 export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy {

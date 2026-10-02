@@ -34,7 +34,7 @@
 
       <div class="login-card-body">
         <label class="terms-acceptance">
-          <input type="checkbox" [(ngModel)]="termsAccepted">
+          <input #termsCheckbox type="checkbox" [checked]="termsAccepted" (change)="termsAccepted = termsCheckbox.checked">
           <span>I agree to the <a [routerLink]="navigation.commands('legal')" fragment="terms">Terms</a> and acknowledge the <a [routerLink]="navigation.commands('legal')" fragment="privacy">Privacy Notice</a>.</span>
         </label>
         <details class="terms-version"><summary>Terms version</summary><span>Current version: {{ termsVersion }}</span></details>

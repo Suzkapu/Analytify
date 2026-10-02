@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
 import {Router} from '@angular/router';
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {StorageService} from "@core/data-access/storage/storage.service";
@@ -28,13 +28,15 @@ export class LoginPageComponent implements OnInit {
     private router: Router,
     private returnUrl: AuthReturnUrlService,
     private terms: TermsAcceptanceService,
-    readonly navigation: DesignNavigationService
+    readonly navigation: DesignNavigationService,
+    private readonly changeDetector: ChangeDetectorRef
   ) {
   }
 
   async ngOnInit() {
     await this.storageService.initFromDB();
     this.termsAccepted = this.terms.hasCurrentAcceptance();
+    this.changeDetector.markForCheck();
     if (this.authService.isAuthenticated() && this.termsAccepted) {
       this.router.navigateByUrl(this.returnUrl.consume(this.navigation.url('playlists')));
     }
@@ -50,6 +52,8 @@ export class LoginPageComponent implements OnInit {
     } catch (err) {
       console.error('Login failed', err);
       this.errorMessage = err instanceof Error ? err.message : 'Spotify login could not be started.';
+    } finally {
+      this.changeDetector.markForCheck();
     }
   }
 
