@@ -156,3 +156,9 @@ The final 26-case login/ambient browser run passed. Full verification, including
 The global reduced-motion selector covered ordinary elements and before/after pseudo-elements but did not explicitly cover native View Transition snapshots. The reduced-motion media query now disables animation on transition groups, image pairs, and old/new snapshots. A desktop/mobile regression instruments a real native transition and inspects group/old/new computed animation names after its `ready` promise: all must be `none`. Navigation must still render Compare Room, focus its main landmark, and retain a single ambient renderer.
 
 All 12 ambient/transition browser cases, lint, and production build/index/bundle gates passed. This is a CSS behavior fix with browser-level regression coverage; no new application TypeScript decision logic was introduced. It does not prove performance on physical mobile hardware or fulfill the outstanding manual screen-reader requirement.
+
+## Rendered keyboard-focus contrast sample (2026-10-02)
+
+Added a desktop/mobile ranking-history focus check using the real computed outline and row background. It verifies keyboard `:focus-visible`, at least a 2px ring, an opaque adjacent surface, alpha-composited sRGB contrast of at least 3:1, and that outline width/offset fit within the row without clipping. Both samples passed without changing the existing focus color; the previously suspected translucent-ring deficiency was not substantiated on these surfaces. The browser report attaches the measured evidence with its limited scope. This is not an all-controls/states contrast audit, and no broader conformance claim is made.
+
+The complete eight-case Insights browser suite and lint passed after adding the attachment; this follow-up changes only tests and the audit record.

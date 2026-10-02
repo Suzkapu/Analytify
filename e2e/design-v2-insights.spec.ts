@@ -66,3 +66,44 @@ test('v2 Insights reflows at 320 CSS pixels', async ({page}) => {
     expect(overflow, `${path} should not overflow horizontally`).toBeLessThanOrEqual(1);
   }
 });
+
+test('ranking history keyboard focus remains visible and meets non-text contrast', async ({page}, testInfo) => {
+  await page.goto('/stats');
+  const history = page.getByRole('button', {name: 'View position history for Test Song'});
+  await expect(history).toBeVisible();
+  await page.keyboard.press('Tab');
+  await history.focus();
+  const evidence = await history.evaluate(element => {
+    const style = getComputedStyle(element);
+    const row = element.closest('.v2-ranking-row')!;
+    const background = getComputedStyle(row).backgroundColor;
+    const rgba = (color: string) => {
+      const values = color.match(/[\d.]+/g)!.map(Number);
+      return [values[0], values[1], values[2], values[3] ?? 1];
+    };
+    const bg = rgba(background);
+    const ring = rgba(style.outlineColor);
+    const painted = ring.slice(0, 3).map((channel, index) => channel * ring[3] + bg[index] * (1 - ring[3]));
+    const luminance = (channels: number[]) => channels.slice(0, 3).map(channel => channel / 255)
+      .map(channel => channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4)
+      .reduce((sum, channel, index) => sum + channel * [.2126, .7152, .0722][index], 0);
+    const a = luminance(painted), b = luminance(bg);
+    const bounds = element.getBoundingClientRect(), container = row.getBoundingClientRect();
+    const extent = parseFloat(style.outlineWidth) + parseFloat(style.outlineOffset);
+    return {visible: element.matches(':focus-visible'), style: style.outlineStyle,
+      width: parseFloat(style.outlineWidth), backgroundAlpha: bg[3],
+      contrast: (Math.max(a, b) + .05) / (Math.min(a, b) + .05),
+      fits: bounds.left - extent >= container.left && bounds.right + extent <= container.right
+        && bounds.top - extent >= container.top && bounds.bottom + extent <= container.bottom};
+  });
+  expect(evidence.visible).toBe(true);
+  expect(evidence.style).not.toBe('none');
+  expect(evidence.width).toBeGreaterThanOrEqual(2);
+  expect(evidence.backgroundAlpha).toBe(1);
+  expect(evidence.contrast).toBeGreaterThanOrEqual(3);
+  expect(evidence.fits).toBe(true);
+  await testInfo.attach('ranking-focus-contrast.json', {
+    body: JSON.stringify({scope: 'one rendered ranking-history action on its opaque row surface',
+      project: testInfo.project.name, evidence}, null, 2), contentType: 'application/json'
+  });
+});
