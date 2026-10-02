@@ -5,25 +5,37 @@ set -Eeuo pipefail
 source_file="${1:-}"
 snippet_file="/etc/nginx/snippets/analytify-security.conf"
 legacy_file="/etc/nginx/conf.d/analytify-security.conf"
+cache_source="${2:-$(dirname "$source_file")/analytify-asset-cache.conf}"
+cache_file="/etc/nginx/conf.d/analytify-asset-cache.conf"
+cache_backup="$(mktemp /tmp/analytify-nginx-cache.XXXXXX)"
 snippet_backup="$(mktemp /tmp/analytify-nginx-snippet.XXXXXX)"
 legacy_backup="$(mktemp /tmp/analytify-nginx-legacy.XXXXXX)"
 site_backup="$(mktemp /tmp/analytify-nginx-site.XXXXXX)"
 rendered_site="$(mktemp /tmp/analytify-nginx-rendered.XXXXXX)"
 had_snippet=false
 had_legacy=false
+had_cache=false
+cache_changed=false
 site_changed=false
 site_file=""
 
-if [[ -z "$source_file" || ! -f "$source_file" ]]; then
+if [[ -z "$source_file" || ! -f "$source_file" || ! -f "$cache_source" ]]; then
   echo "Nginx security configuration source is missing." >&2
   exit 1
 fi
 
 cleanup() {
-  rm -f "$snippet_backup" "$legacy_backup" "$site_backup" "$rendered_site"
+  rm -f "$snippet_backup" "$legacy_backup" "$site_backup" "$rendered_site" "$cache_backup"
 }
 
 restore_previous() {
+  if [[ "$cache_changed" == true ]]; then
+    if [[ "$had_cache" == true ]]; then
+      sudo -n install -o root -g root -m 0644 "$cache_backup" "$cache_file"
+    else
+      sudo -n rm -f "$cache_file"
+    fi
+  fi
   if [[ "$had_snippet" == true ]]; then
     sudo -n install -o root -g root -m 0644 "$snippet_backup" "$snippet_file"
   else
@@ -67,8 +79,14 @@ if sudo -n test -f "$legacy_file"; then
   had_legacy=true
 fi
 sudo -n cp "$site_file" "$site_backup"
+if sudo -n test -f "$cache_file"; then
+  sudo -n cp "$cache_file" "$cache_backup"
+  had_cache=true
+fi
 
 sudo -n install -d -o root -g root -m 0755 /etc/nginx/snippets
+cache_changed=true
+sudo -n install -o root -g root -m 0644 "$cache_source" "$cache_file"
 sudo -n install -o root -g root -m 0644 "$source_file" "$snippet_file"
 ANALYTIFY_NGINX_BUILD_INFO="$(sudo -n nginx -V 2>&1)" node "$(dirname "$0")/inject-nginx-security-include.mjs" "$site_file" "$rendered_site"
 sudo -n install -o root -g root -m 0644 "$rendered_site" "$site_file"

@@ -4,6 +4,29 @@ import {readFileSync} from 'node:fs';
 import {invalidSecurityHeaders} from './security-headers.mjs';
 
 const nginx = readFileSync('deploy/analytify-security.conf', 'utf8');
+const cachePolicy = readFileSync('deploy/analytify-asset-cache.conf', 'utf8');
+
+test('immutable caching matches only successful hashed build assets', () => {
+  assert.match(cachePolicy, /map "\$status:\$uri" \$analytify_asset_cache_control/);
+  assert.match(cachePolicy, /default "";/);
+  const patterns = [...cachePolicy.matchAll(/"~([^"]+)" "public, max-age=31536000, immutable";/g)]
+    .map(match => new RegExp(match[1]));
+  assert.equal(patterns.length, 2);
+  const matches = value => patterns.some(pattern => pattern.test(value));
+  for (const uri of ['/main-XLPVQTE3.js', '/chunk-D8loj07s.js', '/styles-IDQ5UDPB.css',
+    '/main.123456abcdef.js', '/media/primeicons-VZW3FIZ4.woff2']) {
+    assert.equal(matches(`200:${uri}`), true, uri);
+    assert.equal(matches(`404:${uri}`), false, uri);
+    assert.equal(matches(`500:${uri}`), false, uri);
+  }
+  for (const uri of ['/', '/index.html', '/login', '/ngsw.json', '/ngsw-worker.js',
+    '/safety-worker.js', '/version.json', '/manifest.webmanifest', '/main.js',
+    '/main-short.js', '/api/chunk-D8loj07s.js', '/assets/Analytify-384.webp',
+    '/media/primeicons.woff2', '/chunk-D8loj07sXjs', '/main-XLPVQTE3.js/extra']) {
+    assert.equal(matches(`200:${uri}`), false, uri);
+  }
+  assert.match(nginx, /add_header Cache-Control \$analytify_asset_cache_control;/);
+});
 
 test('static application assets negotiate gzip without enabling API JSON compression', () => {
   assert.match(nginx, /^gzip on;$/m);
@@ -17,6 +40,16 @@ const deploy = readFileSync('scripts/deploy.sh', 'utf8');
 const installer = readFileSync('scripts/install-nginx-security.sh', 'utf8');
 const liveVerification = readFileSync('scripts/verify-live-deployment.mjs', 'utf8');
 const serviceWorker = JSON.parse(readFileSync('ngsw-config.json', 'utf8'));
+
+test('cache policy is commit-scoped during transport and restored with nginx configuration', () => {
+  assert.match(deploy, /deploy_private_file_with_retry "deploy\/analytify-asset-cache[.]conf"/);
+  assert.match(deploy, /[.]analytify-nginx-cache-\$\{deploy_commit_sha\}[.]conf/);
+  assert.match(installer, /cache_source="\$\{2:-/);
+  assert.match(installer, /if \[\[ "\$had_cache" == true \]\]; then/);
+  assert.match(installer, /if \[\[ "\$cache_changed" == true \]\]; then/);
+  assert.match(installer, /install -o root -g root -m 0644 "\$cache_backup" "\$cache_file"/);
+  assert.match(installer, /install -o root -g root -m 0644 "\$cache_source" "\$cache_file"/);
+});
 
 test('versioned nginx configuration supplies the required browser defenses', () => {
   const headers = new Headers();

@@ -220,12 +220,13 @@ deploy_private_file_with_retry "$allowlist_file" "${worker_root}/.admin-spotify-
 deploy_private_file_with_retry "$token_key_file" "${worker_root}/.spotify-token-encryption-key"
 deploy_private_file_with_retry "$token_keys_file" "${worker_root}/.spotify-token-encryption-keys"
 deploy_private_file_with_retry "deploy/analytify-security.conf" "${worker_root}/.analytify-nginx-security-${deploy_commit_sha}.conf"
+deploy_private_file_with_retry "deploy/analytify-asset-cache.conf" "${worker_root}/.analytify-nginx-cache-${deploy_commit_sha}.conf"
 deploy_with_retry "scripts/install-nginx-security.sh" "${worker_root}/install-nginx-security.sh" false
 deploy_with_retry "scripts/inject-nginx-security-include.mjs" "${worker_root}/inject-nginx-security-include.mjs" false
 deploy_with_retry "scripts/nginx-http2.mjs" "${worker_root}/nginx-http2.mjs" false
 
 echo "Installing and syntax-checking the versioned nginx security policy..."
-remote_command_with_retry "chmod 700 '${worker_root}/install-nginx-security.sh' && '${worker_root}/install-nginx-security.sh' '${worker_root}/.analytify-nginx-security-${deploy_commit_sha}.conf'"
+remote_command_with_retry "chmod 700 '${worker_root}/install-nginx-security.sh' && '${worker_root}/install-nginx-security.sh' '${worker_root}/.analytify-nginx-security-${deploy_commit_sha}.conf' '${worker_root}/.analytify-nginx-cache-${deploy_commit_sha}.conf'"
 
 sed \
   -e "s|@@DEPLOY_USER@@|${DEPLOY_USER}|g" \
