@@ -12,6 +12,7 @@ describe('PlaylistSharingService', () => {
     let channelSubscribe: Mock;
     let removeChannel: Mock;
     let from: Mock;
+    let getClient: Mock;
     let postgresChangeHandler: (() => void) | null;
 
     beforeEach(() => {
@@ -36,24 +37,54 @@ describe('PlaylistSharingService', () => {
             })
         };
         from = vi.fn().mockName('from').mockReturnValue(profileQuery);
+        const client = {
+            rpc,
+            auth: { getUser: () => Promise.resolve({ data: { user: { id: 'owner-id' } }, error: null }) },
+            from,
+            channel: channelFactory,
+            removeChannel
+        };
+        getClient = vi.fn().mockResolvedValue(client);
         TestBed.configureTestingModule({
             providers: [
                 PlaylistSharingService,
                 {
                     provide: SupabaseService,
                     useValue: {
-                        client: {
-                            rpc,
-                            auth: { getUser: () => Promise.resolve({ data: { user: { id: 'owner-id' } }, error: null }) },
-                            from,
-                            channel: channelFactory,
-                            removeChannel
-                        }
+                        client, getClient
                     }
                 }
             ]
         });
         service = TestBed.inject(PlaylistSharingService);
+    });
+
+    it('waits for client readiness before claiming a share', async () => {
+        let resolveClient!: (client: any) => void;
+        getClient.mockReturnValue(new Promise(resolve => { resolveClient = resolve; }));
+        const claimed = service.claimShare('token');
+        expect(rpc).not.toHaveBeenCalled();
+        resolveClient({ rpc });
+        await expect(claimed).resolves.toBe('share-id');
+        expect(rpc).toHaveBeenCalledWith('claim_playlist_share', { p_claim_token: 'token' });
+    });
+
+    it('does not revoke a share if client initialization fails', async () => {
+        getClient.mockRejectedValue(new Error('Client unavailable'));
+        await expect(service.revokeShare('share-id')).rejects.toThrow('Client unavailable');
+        expect(rpc).not.toHaveBeenCalled();
+    });
+
+    it('does not start a track query when cancelled during client initialization', async () => {
+        let resolveClient!: (client: any) => void;
+        getClient.mockReturnValue(new Promise(resolve => { resolveClient = resolve; }));
+        const controller = new AbortController();
+        const loading = service.loadShareTracks('share-id', { signal: controller.signal });
+        expect(from).not.toHaveBeenCalled();
+        controller.abort();
+        resolveClient({ from });
+        await expect(loading).rejects.toMatchObject({ name: 'AbortError' });
+        expect(from).not.toHaveBeenCalled();
     });
 
     it('creates a high-entropy claim link while sending the raw token only to the hashing RPC', async () => {

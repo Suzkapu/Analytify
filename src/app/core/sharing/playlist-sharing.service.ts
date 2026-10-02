@@ -20,7 +20,7 @@ export class PlaylistSharingService {
   async createShare(publication: PlaylistSharePublication): Promise<CreatedPlaylistShare> {
     const token = this.createClaimToken();
     const profile = await this.loadCurrentProfile();
-    const {data: uploadData, error: uploadError} = await this.supabase.client.rpc('begin_playlist_share_create_upload', {
+    const {data: uploadData, error: uploadError} = await (await this.supabase.getClient()).rpc('begin_playlist_share_create_upload', {
       p_source_playlist_id: publication.sourcePlaylistId,
       p_playlist_name: publication.playlistName,
       p_playlist_description: publication.playlistDescription,
@@ -33,7 +33,7 @@ export class PlaylistSharingService {
     const uploadId = String(uploadData || '');
     if (!uploadId) throw new Error('Supabase did not start the playlist upload.');
     await this.appendUploadChunks(uploadId, publication.tracks);
-    const {data, error} = await this.supabase.client.rpc('commit_playlist_share_create_upload', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('commit_playlist_share_create_upload', {
       p_upload_id: uploadId,
       p_expected_track_count: publication.tracks.length
     });
@@ -48,7 +48,7 @@ export class PlaylistSharingService {
   }
 
   async claimShare(token: string): Promise<string> {
-    const {data, error} = await this.supabase.client.rpc('claim_playlist_share', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('claim_playlist_share', {
       p_claim_token: token
     });
     if (error) throw error;
@@ -58,7 +58,7 @@ export class PlaylistSharingService {
   }
 
   async listOwnedShares(): Promise<PlaylistShare[]> {
-    const {data, error} = await this.supabase.client
+    const {data, error} = await (await this.supabase.getClient())
       .from('playlist_shares')
       .select('*')
       .order('created_at', {ascending: false});
@@ -70,7 +70,7 @@ export class PlaylistSharingService {
   }
 
   async listReceivedShares(): Promise<PlaylistShare[]> {
-    const {data, error} = await this.supabase.client
+    const {data, error} = await (await this.supabase.getClient())
       .from('playlist_shares')
       .select('*')
       .is('revoked_at', null)
@@ -83,7 +83,7 @@ export class PlaylistSharingService {
   }
 
   async listReceivedDownloads(): Promise<PlaylistShareDownload[]> {
-    const {data, error} = await this.supabase.client
+    const {data, error} = await (await this.supabase.getClient())
       .from('playlist_share_downloads')
       .select('*')
       .order('updated_at', {ascending: false});
@@ -100,12 +100,13 @@ export class PlaylistSharingService {
   }
 
   async loadShareMetadata(shareId: string): Promise<PlaylistShareMetadata> {
-    const shareRequest = this.supabase.client
+    const client = await this.supabase.getClient();
+    const shareRequest = client
       .from('playlist_shares')
       .select('*')
       .eq('id', shareId)
       .maybeSingle();
-    const downloadRequest = this.supabase.client
+    const downloadRequest = client
       .from('playlist_share_downloads')
       .select('*')
       .eq('share_id', shareId)
@@ -178,7 +179,7 @@ export class PlaylistSharingService {
     expectedRevision: number,
     publication: PlaylistSharePublication
   ): Promise<number> {
-    const {data: uploadData, error: uploadError} = await this.supabase.client.rpc('begin_playlist_share_refresh_upload', {
+    const {data: uploadData, error: uploadError} = await (await this.supabase.getClient()).rpc('begin_playlist_share_refresh_upload', {
       p_share_id: shareId,
       p_expected_revision: expectedRevision,
       p_playlist_name: publication.playlistName,
@@ -189,7 +190,7 @@ export class PlaylistSharingService {
     const uploadId = String(uploadData || '');
     if (!uploadId) throw new Error('Supabase did not start the playlist upload.');
     await this.appendUploadChunks(uploadId, publication.tracks);
-    const {data, error} = await this.supabase.client.rpc('commit_playlist_share_refresh_upload', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('commit_playlist_share_refresh_upload', {
       p_upload_id: uploadId,
       p_expected_track_count: publication.tracks.length
     });
@@ -199,7 +200,7 @@ export class PlaylistSharingService {
 
   private async appendUploadChunks(uploadId: string, tracks: CompareTrack[]): Promise<void> {
     for (const chunk of this.chunkTracks(tracks)) {
-      const {error} = await this.supabase.client.rpc('append_playlist_share_upload_chunk', {
+      const {error} = await (await this.supabase.getClient()).rpc('append_playlist_share_upload_chunk', {
         p_upload_id: uploadId,
         p_offset: chunk.offset,
         p_tracks: chunk.tracks
@@ -253,14 +254,14 @@ export class PlaylistSharingService {
   }
 
   async revokeShare(shareId: string): Promise<void> {
-    const {error} = await this.supabase.client.rpc('revoke_playlist_share', {
+    const {error} = await (await this.supabase.getClient()).rpc('revoke_playlist_share', {
       p_share_id: shareId
     });
     if (error) throw error;
   }
 
   async removeReceivedShare(shareId: string): Promise<void> {
-    const {error} = await this.supabase.client.rpc('remove_received_playlist_share', {
+    const {error} = await (await this.supabase.getClient()).rpc('remove_received_playlist_share', {
       p_share_id: shareId
     });
     if (error) throw error;
@@ -272,7 +273,7 @@ export class PlaylistSharingService {
     spotifyPlaylistUrl: string,
     appliedRevision: number
   ): Promise<void> {
-    const {error} = await this.supabase.client.rpc('record_playlist_share_download', {
+    const {error} = await (await this.supabase.getClient()).rpc('record_playlist_share_download', {
       p_share_id: shareId,
       p_spotify_playlist_id: spotifyPlaylistId,
       p_spotify_playlist_url: spotifyPlaylistUrl,
@@ -287,7 +288,7 @@ export class PlaylistSharingService {
     expectedAppliedRevision: number
   ): Promise<string | null> {
     const leaseToken = crypto.randomUUID();
-    const {data, error} = await this.supabase.client.rpc('claim_playlist_share_sync', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('claim_playlist_share_sync', {
       p_share_id: shareId,
       p_recipient_user_id: null,
       p_expected_source_revision: expectedSourceRevision,
@@ -306,7 +307,7 @@ export class PlaylistSharingService {
     spotifyPlaylistId: string,
     spotifyPlaylistUrl: string
   ): Promise<boolean> {
-    const {data, error} = await this.supabase.client.rpc('complete_playlist_share_sync', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('complete_playlist_share_sync', {
       p_share_id: shareId,
       p_recipient_user_id: null,
       p_expected_source_revision: expectedSourceRevision,
@@ -320,7 +321,7 @@ export class PlaylistSharingService {
   }
 
   async releaseDownloadSync(shareId: string, leaseToken: string): Promise<void> {
-    const {error} = await this.supabase.client.rpc('release_playlist_share_sync', {
+    const {error} = await (await this.supabase.getClient()).rpc('release_playlist_share_sync', {
       p_share_id: shareId,
       p_recipient_user_id: null,
       p_lease_token: leaseToken
@@ -385,7 +386,7 @@ export class PlaylistSharingService {
   }
 
   private async currentAuthUserId(): Promise<string> {
-    const {data, error} = await this.supabase.client.auth.getUser();
+    const {data, error} = await (await this.supabase.getClient()).auth.getUser();
     if (error) throw error;
     if (!data.user) throw new Error('A Supabase login is required for playlist sharing.');
     return data.user.id;
@@ -399,7 +400,9 @@ export class PlaylistSharingService {
     includeCount: boolean
   ): Promise<{rows: Array<{position: number; track: CompareTrack}>; count: number | null}> {
     this.throwIfAborted(signal);
-    let query: any = this.supabase.client
+    const client = await this.supabase.getClient();
+    this.throwIfAborted(signal);
+    let query: any = client
       .from('playlist_share_tracks')
       .select('position, track', includeCount ? {count: 'exact'} : undefined)
       .eq('share_id', shareId)
@@ -422,7 +425,7 @@ export class PlaylistSharingService {
 
   private async loadCurrentProfile(): Promise<{displayName: string; imageUrl: string}> {
     const userId = await this.currentAuthUserId();
-    const {data} = await this.supabase.client
+    const {data} = await (await this.supabase.getClient())
       .from('users')
       .select('display_name, profile_pic_url')
       .eq('id', userId)
