@@ -78,3 +78,59 @@ test('canonical library records navigation and interaction performance evidence'
   expect(metrics.cls).toBeLessThanOrEqual(0.1);
   expect(metrics.lcp).toBeGreaterThan(0);
 });
+
+test('full top-song rankings remain bounded through filtering, tabs, and history dialogs', async ({page}, testInfo) => {
+  await mockSpotify(page);
+  await seedAuthenticatedBrowser(page);
+  await page.route('https://api.spotify.com/v1/me/top/tracks?*', async route => {
+    const url = new URL(route.request().url());
+    const offset = Number(url.searchParams.get('offset') || 0);
+    const limit = Number(url.searchParams.get('limit') || 50);
+    const tracks = Array.from({length: 100}, (_, index) => ({
+      id: `dense-track-${index}`, name: `Ranking song ${String(index + 1).padStart(3, '0')}`,
+      artists: [{id: 'artist-1', name: 'Test Artist'}],
+      album: {id: `album-${index}`, name: `Album ${index}`, images: []},
+      duration_ms: 180000, external_urls: {spotify: `https://open.spotify.com/track/dense-track-${index}`}
+    }));
+    await route.fulfill({json: {items: tracks.slice(offset, offset + limit), total: 100}});
+  });
+  await page.goto('/stats');
+  const rows = page.locator('.v2-ranking-row');
+  await expect(rows).toHaveCount(100);
+  const sample = () => page.evaluate(() => ({
+    elements: document.querySelectorAll('*').length,
+    rows: document.querySelectorAll('.v2-ranking-row').length,
+    dialogs: document.querySelectorAll('.v2-trend-dialog').length,
+    artworkWithoutDimensions: [...document.querySelectorAll<HTMLImageElement>('.v2-ranking-row img')]
+      .filter(image => !image.width || !image.height).length
+  }));
+  const initial = await sample();
+  const search = page.getByRole('searchbox', {name: 'Search songs or artists'});
+  const samples: unknown[] = [initial];
+  for (let iteration = 0; iteration < 3; iteration++) {
+    const start = await page.evaluate(() => performance.now());
+    await search.fill('Ranking song 100');
+    await expect(rows).toHaveCount(1);
+    await search.fill('');
+    await expect(rows).toHaveCount(100);
+    await page.getByRole('button', {name: 'Artists', exact: true}).click();
+    await expect(rows).toHaveCount(0);
+    await expect(page.locator('.v2-ranked-artist')).toHaveCount(1);
+    await page.getByRole('button', {name: 'Songs', exact: true}).click();
+    await expect(rows).toHaveCount(100);
+    await rows.first().press('Enter');
+    await expect(page.locator('.v2-trend-dialog')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.locator('.v2-trend-dialog')).toHaveCount(0);
+    await expect(rows.first()).toBeFocused();
+    const current = await sample();
+    expect(current.elements).toBe(initial.elements);
+    expect(current.artworkWithoutDimensions).toBe(0);
+    samples.push({...current, browserAutomationRoundTripMs: await page.evaluate(start => performance.now() - start, start)});
+  }
+  await testInfo.attach('dense-rankings-dom-sample.json', {
+    body: JSON.stringify({project: testInfo.project.name,
+      scope: '100 mocked songs; bounded DOM and interaction correctness, not field INP or hardware timing', samples}, null, 2),
+    contentType: 'application/json'
+  });
+});
