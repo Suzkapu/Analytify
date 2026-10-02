@@ -207,10 +207,12 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
-  requestLogout(): void {
+  async requestLogout(): Promise<void> {
+    if (this.actionRunning()) return;
+    this.actionError.set('');
     this.closeAccount();
     if (this.authService.isAnonymousCloudIdentity()) this.clearDataStep.set('guest');
-    else void this.performLogout();
+    else await this.performLogout();
   }
 
   async confirmLocalClear(): Promise<void> {
@@ -245,8 +247,17 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   private async performLogout(): Promise<void> {
-    await this.authService.logout();
-    await this.router.navigate(this.navigation.commands('login'));
+    this.actionRunning.set(true);
+    try {
+      await this.authService.logout();
+      const navigated = await this.router.navigate(this.navigation.commands('login'));
+      if (!navigated) throw new Error('Navigation was cancelled');
+    } catch {
+      this.actionError.set('Log out did not finish. Please refresh before trying again.');
+      this.accountOpen.set(true);
+    } finally {
+      this.actionRunning.set(false);
+    }
   }
 
   private async runDestructive(action: () => Promise<unknown>): Promise<void> {

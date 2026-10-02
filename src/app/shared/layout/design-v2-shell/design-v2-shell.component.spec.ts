@@ -23,6 +23,64 @@ describe('DesignV2ShellComponent', () => {
     return {harness, shell};
   }
 
+  it('requires anonymous-account confirmation before logging out', async () => {
+    const {shell} = await createShell();
+    vi.spyOn(shell.authService, 'isAnonymousCloudIdentity').mockReturnValue(true);
+    const logout = vi.spyOn(shell.authService, 'logout').mockResolvedValue(undefined);
+    shell.toggleAccount();
+    await shell.requestLogout();
+    expect(shell.accountOpen()).toBe(false);
+    expect(shell.clearDataStep()).toBe('guest');
+    expect(logout).not.toHaveBeenCalled();
+  });
+
+  it('logs out a recoverable account and navigates to login', async () => {
+    const {shell} = await createShell();
+    vi.spyOn(shell.authService, 'isAnonymousCloudIdentity').mockReturnValue(false);
+    const logout = vi.spyOn(shell.authService, 'logout').mockResolvedValue(undefined);
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    shell.toggleAccount();
+    await shell.requestLogout();
+    expect(logout).toHaveBeenCalledOnce();
+    expect(navigate).toHaveBeenCalledWith(['/login']);
+    expect(shell.accountOpen()).toBe(false);
+    expect(shell.actionRunning()).toBe(false);
+    expect(shell.actionError()).toBe('');
+  });
+
+  it('does not start a second logout while the first is pending', async () => {
+    const {shell} = await createShell();
+    vi.spyOn(shell.authService, 'isAnonymousCloudIdentity').mockReturnValue(false);
+    let finish!: () => void;
+    const logout = vi.spyOn(shell.authService, 'logout').mockImplementation(() => new Promise<void>(resolve => {finish = resolve;}));
+    vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    const pending = shell.requestLogout();
+    await shell.requestLogout();
+    expect(logout).toHaveBeenCalledOnce();
+    expect(shell.actionRunning()).toBe(true);
+    finish();
+    await pending;
+    expect(shell.actionRunning()).toBe(false);
+  });
+
+  it.each(['logout', 'navigation', 'cancelled'])('renders an account alert for %s failure', async failure => {
+    const {harness, shell} = await createShell();
+    vi.spyOn(shell.authService, 'isAnonymousCloudIdentity').mockReturnValue(false);
+    const logout = vi.spyOn(shell.authService, 'logout');
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate');
+    if (failure === 'logout') logout.mockRejectedValue(new Error('Offline'));
+    else logout.mockResolvedValue(undefined);
+    if (failure === 'navigation') navigate.mockRejectedValue(new Error('Route failed'));
+    else navigate.mockResolvedValue(failure !== 'cancelled');
+    await expect(shell.requestLogout()).resolves.toBeUndefined();
+    harness.fixture.detectChanges();
+    expect(shell.accountOpen()).toBe(true);
+    expect(shell.actionRunning()).toBe(false);
+    expect(harness.fixture.nativeElement.querySelector('.v2-account-dialog [role="alert"]')?.textContent)
+      .toContain('Log out did not finish');
+    if (failure === 'logout') expect(navigate).not.toHaveBeenCalled();
+  });
+
   it('restores the authoritative backup switch when enabling is cancelled', async () => {
     const {shell} = await createShell();
     vi.spyOn(shell.authService, 'isBackupActive').mockReturnValue(false);
