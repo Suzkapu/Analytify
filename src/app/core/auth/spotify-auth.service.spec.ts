@@ -7,6 +7,7 @@ import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import { firstValueFrom } from 'rxjs';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { CURRENT_TERMS_VERSION, TermsAcceptanceService } from '@core/legal/terms-acceptance.service';
+import {SessionLifecycleService} from './session-lifecycle.service';
 
 describe('SpotifyAuthService', () => {
     let service: SpotifyAuthService;
@@ -47,6 +48,7 @@ describe('SpotifyAuthService', () => {
         };
         rpc = vi.fn().mockName('rpc').mockResolvedValue({ data: true, error: null });
         supabaseService = {
+            getClient: vi.fn().mockImplementation(async () => supabaseService.client),
             client: {
                 auth: authClient,
                 rpc,
@@ -147,6 +149,38 @@ describe('SpotifyAuthService', () => {
         expect(values['spotifyAccessToken']).toBe('spotify-token');
         expect(values['spotifyRefreshToken']).toBe('spotify-refresh');
         expect(values['spotifyTokenExpiresAt']).toBeTruthy();
+    });
+
+    it('waits for client readiness before exchanging an OAuth code', async () => {
+        let resolveClient!: (client: any) => void;
+        supabaseService.getClient.mockReturnValue(new Promise(resolve => { resolveClient = resolve; }));
+        authClient.exchangeCodeForSession.mockResolvedValue({data: {session: null}, error: null});
+        const exchange = firstValueFrom(service.exchangeSupabaseCodeForSession('one-time-code'));
+        expect(authClient.exchangeCodeForSession).not.toHaveBeenCalled();
+        resolveClient(supabaseService.client);
+        await exchange;
+        expect(authClient.exchangeCodeForSession).toHaveBeenCalledWith('one-time-code');
+    });
+
+    it('does not exchange an OAuth code when its session ends during initialization', async () => {
+        let resolveClient!: (client: any) => void;
+        supabaseService.getClient.mockReturnValue(new Promise(resolve => { resolveClient = resolve; }));
+        const exchange = firstValueFrom(service.exchangeSupabaseCodeForSession('one-time-code'));
+        const rejected = expect(exchange).rejects.toMatchObject({name: 'AbortError'});
+        const drained = TestBed.inject(SessionLifecycleService).invalidateAndDrain();
+        resolveClient(supabaseService.client);
+        await rejected;
+        await drained;
+        expect(authClient.exchangeCodeForSession).not.toHaveBeenCalled();
+        expect(values['spotifyAccessToken']).toBeUndefined();
+    });
+
+    it('propagates client initialization failure before reading a callback session', async () => {
+        await service.restoreSessionFromSupabase();
+        authClient.getSession.mockClear();
+        supabaseService.getClient.mockRejectedValue(new Error('Client unavailable'));
+        await expect(firstValueFrom(service.handleCallbackSession())).rejects.toThrow('Client unavailable');
+        expect(authClient.getSession).not.toHaveBeenCalled();
     });
 
     it('rejects a callback session that has no Spotify provider token', async () => {

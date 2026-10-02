@@ -5,6 +5,7 @@ import {Observable, throwError, Subject, from, defer, firstValueFrom} from 'rxjs
 import {tap, catchError, shareReplay, switchMap, finalize} from 'rxjs/operators';
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
+import type {SupabaseClient} from '@supabase/supabase-js';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {PersonalSpotifyAuthRequest, SpotifyConnectionMode} from './spotify-auth.models';
 import {TRANSIENT_SPOTIFY_REQUEST} from '@core/compare-room/spotify-request-context';
@@ -133,7 +134,7 @@ export class SpotifyAuthService {
     if (promptConsent) {
       queryParams.prompt = 'consent';
     }
-    return this.supabaseService.client.auth.signInWithOAuth({
+    return (await this.supabaseService.getClient()).auth.signInWithOAuth({
       provider: 'spotify',
       options: {
         redirectTo: environment.spotifyRedirectUri,
@@ -299,7 +300,7 @@ export class SpotifyAuthService {
     if (request.expectedSpotifyId) {
       const {recoverPersonalIdentity} = await import('./personal-spotify-recovery');
       const recovery = await this.sessionLifecycle.track(recoverPersonalIdentity(
-        this.supabaseService.client,
+        await this.readySessionClient(generation),
         (body, fallback) => this.invokeCredentialFunction(body, fallback),
         (key, value) => this.storageService.setItem(key, value, false),
         key => this.storageService.removeItem(key),
@@ -386,7 +387,7 @@ export class SpotifyAuthService {
   async clearSupabaseSession(): Promise<void> {
     await this.unlinkCurrentPushDevice();
     try {
-      await this.supabaseService.client.auth.signOut({ scope: 'local' });
+      await (await this.supabaseService.getClient()).auth.signOut({ scope: 'local' });
     } catch {
       // Ignore errors — we just want to clear local state
     }
@@ -396,7 +397,7 @@ export class SpotifyAuthService {
   exchangeSupabaseCodeForSession(code: string): Observable<any> {
     const generation = this.sessionLifecycle.capture();
     const exchange = this.sessionLifecycle.track(
-      this.supabaseService.client.auth.exchangeCodeForSession(code),
+      this.readySessionClient(generation).then(client => client.auth.exchangeCodeForSession(code)),
       generation
     );
     return from(exchange).pipe(
@@ -459,7 +460,7 @@ export class SpotifyAuthService {
   handleCallbackSession(): Observable<any> {
     const generation = this.sessionLifecycle.capture();
     const sessionRequest = this.sessionLifecycle.track(
-      this.supabaseService.client.auth.getSession(),
+      this.readySessionClient(generation).then(client => client.auth.getSession()),
       generation
     );
     return from(sessionRequest).pipe(
@@ -555,7 +556,7 @@ export class SpotifyAuthService {
   private async _restoreSessionFromSupabase(): Promise<boolean> {
     const generation = this.sessionLifecycle.capture();
     try {
-      const sessionRequest = this.supabaseService.client.auth.getSession();
+      const sessionRequest = this.readySessionClient(generation).then(client => client.auth.getSession());
       const { data: { session }, error } = await this.sessionLifecycle.track(sessionRequest, generation);
       if (!this.sessionLifecycle.isCurrent(generation)) return false;
       if (error) throw error;
@@ -634,7 +635,7 @@ export class SpotifyAuthService {
 
     const generation = this.sessionLifecycle.capture();
     const refreshViaSupabase$ = defer(
-      () => from(this.supabaseService.client.auth.refreshSession())
+      () => from(this.readySessionClient(generation).then(client => client.auth.refreshSession()))
     ).pipe(
       switchMap(({ data: { session }, error }: any) => {
         if (error) throw error;
@@ -721,6 +722,12 @@ export class SpotifyAuthService {
     } catch (error) {
       console.warn('The expired cloud Spotify credential could not be removed immediately.', error);
     }
+  }
+
+  private async readySessionClient(generation: {id: number; signal: AbortSignal}): Promise<SupabaseClient> {
+    const client = await this.supabaseService.getClient();
+    this.assertCurrentSession(generation);
+    return client;
   }
 
   private assertCurrentSession(generation: {id: number; signal: AbortSignal}): void {
@@ -828,7 +835,7 @@ export class SpotifyAuthService {
     this.storageService.removeItem(this.collaborationIdentityReadyKey);
     this.storageService.removeItem(this.cloudIdentityReadyKey);
     try {
-      await this.supabaseService.client.auth.signOut();
+      await (await this.supabaseService.getClient()).auth.signOut();
     } catch (err) {
       console.error('Supabase signout failed', err);
     }
@@ -846,7 +853,7 @@ export class SpotifyAuthService {
     }
     await this.storageService.clear();
     try {
-      await this.supabaseService.client.auth.signOut();
+      await (await this.supabaseService.getClient()).auth.signOut();
     } catch (err) {
       console.error('Supabase signout failed', err);
     }
@@ -861,7 +868,7 @@ export class SpotifyAuthService {
       const registration = await navigator.serviceWorker.getRegistration();
       const subscription = await registration?.pushManager?.getSubscription();
       if (!subscription?.endpoint) return;
-      const result = await this.supabaseService.client.rpc('unlink_push_subscription', {
+      const result = await (await this.supabaseService.getClient()).rpc('unlink_push_subscription', {
         p_endpoint: subscription.endpoint
       });
       if (result.error) throw result.error;
@@ -881,7 +888,7 @@ export class SpotifyAuthService {
     const supabaseUserId = this.getSupabaseUserId();
     if (supabaseUserId) {
       const spotifyId = this.getUserId();
-      const { data, error } = await this.supabaseService.client
+      const { data, error } = await (await this.supabaseService.getClient())
         .from('users')
         .select('backup_active, last_synced_at')
         .eq('id', supabaseUserId)
@@ -953,11 +960,11 @@ export class SpotifyAuthService {
       throw new Error('Sign in with Spotify before enabling cloud features.');
     }
 
-    const {data: {session: existingSession}, error: sessionError} = await this.supabaseService.client.auth.getSession();
+    const {data: {session: existingSession}, error: sessionError} = await (await this.supabaseService.getClient()).auth.getSession();
     let session = existingSession;
     if (sessionError) throw sessionError;
     if (!session) {
-      const anonymousResult = await this.supabaseService.client.auth.signInAnonymously();
+      const anonymousResult = await (await this.supabaseService.getClient()).auth.signInAnonymously();
       if (anonymousResult.error) {
         if (/anonymous sign-ins are disabled/i.test(anonymousResult.error.message || '')) {
           throw new Error('Cloud Backup is temporarily unavailable because anonymous cloud identities are disabled on the server.');
@@ -980,7 +987,7 @@ export class SpotifyAuthService {
 
   private async recordTermsAcceptance(connectionMode: 'hosted' | 'personal_pkce'): Promise<void> {
     const acceptance = this.termsAcceptance.acceptCurrent();
-    const {error} = await this.supabaseService.client.rpc('accept_current_terms', {
+    const {error} = await (await this.supabaseService.getClient()).rpc('accept_current_terms', {
       p_terms_version: CURRENT_TERMS_VERSION,
       p_acceptance_session_id: acceptance.sessionId,
       p_connection_mode: connectionMode
@@ -1245,7 +1252,7 @@ export class SpotifyAuthService {
   }
 
   private async invokeCredentialFunction(body: Record<string, unknown>, fallback: string): Promise<any> {
-    const {data, error} = await this.supabaseService.client.functions.invoke('spotify-credentials', {body});
+    const {data, error} = await (await this.supabaseService.getClient()).functions.invoke('spotify-credentials', {body});
     if (!error) return data;
     const {describeEdgeFunctionError} = await import('@core/data-access/supabase/edge-function-error');
     throw new Error(await describeEdgeFunctionError(error, fallback));
