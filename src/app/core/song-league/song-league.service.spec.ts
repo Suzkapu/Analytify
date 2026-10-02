@@ -85,9 +85,10 @@ describe('SongLeagueService', () => {
         expect(rpc).not.toHaveBeenCalled();
     });
 
-    it('streams recommendation, score, playlist, roster, and league lifecycle changes', () => {
+    it('streams recommendation, score, playlist, roster, and league lifecycle changes', async () => {
         const onChange = vi.fn();
         const unsubscribe = service.subscribeToLeague('league-id', onChange);
+        await Promise.resolve();
 
         expect(channel.on.mock.calls.map((call: any[]) => call[1])).toEqual([
             expect.objectContaining({event: '*', table: 'song_league_recommendations', filter: 'league_id=eq.league-id'}),
@@ -102,6 +103,34 @@ describe('SongLeagueService', () => {
 
         unsubscribe();
         expect(removeChannel).toHaveBeenCalledWith(channel);
+        unsubscribe();
+        for (const call of channel.on.mock.calls) call[2]();
+        expect(removeChannel).toHaveBeenCalledTimes(1);
+        expect(onChange).toHaveBeenCalledTimes(5);
+    });
+
+    it('does not subscribe after cleanup while initialization is pending', async () => {
+        let resolveClient!: (client: any) => void;
+        const channelFactory = vi.fn().mockReturnValue(channel);
+        getClient.mockReturnValue(new Promise(resolve => { resolveClient = resolve; }));
+        const unsubscribe = service.subscribeToLeague('league-id', vi.fn());
+        unsubscribe();
+        resolveClient({ channel: channelFactory, removeChannel });
+        await Promise.resolve();
+        expect(channelFactory).not.toHaveBeenCalled();
+        expect(removeChannel).not.toHaveBeenCalled();
+    });
+
+    it('reports initialization failure without creating a subscription', async () => {
+        const warning = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const error = new Error('Client unavailable');
+        getClient.mockRejectedValue(error);
+        service.subscribeToLeague('league-id', vi.fn());
+        await vi.waitFor(() => expect(warning).toHaveBeenCalledWith(
+            '[SongLeague] Could not initialize realtime subscription.', error
+        ));
+        expect(channel.subscribe).not.toHaveBeenCalled();
+        warning.mockRestore();
     });
 
     it('creates a private high-entropy invitation without persisting the raw token in the client model', async () => {

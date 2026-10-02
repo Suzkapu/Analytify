@@ -320,26 +320,43 @@ export class SongLeagueService {
   }
 
   subscribeToLeague(leagueId: string, onChange: () => void): () => void {
+    let disposed = false;
+    let removeChannel: (() => void) | null = null;
     const suffix = crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`;
-    const channel = this.supabase.client
+    void this.supabase.getClient().then(client => {
+      if (disposed) return;
+      const notify = () => { if (!disposed) onChange(); };
+      const channel = client
       .channel(`song-league:${leagueId}:${suffix}`)
       .on('postgres_changes', {
         event: '*', schema: 'public', table: 'song_league_recommendations', filter: `league_id=eq.${leagueId}`
-      }, onChange)
+      }, notify)
       .on('postgres_changes', {
         event: '*', schema: 'public', table: 'song_league_score_events', filter: `league_id=eq.${leagueId}`
-      }, onChange)
+      }, notify)
       .on('postgres_changes', {
         event: '*', schema: 'public', table: 'song_league_playlists', filter: `league_id=eq.${leagueId}`
-      }, onChange)
+      }, notify)
       .on('postgres_changes', {
         event: '*', schema: 'public', table: 'song_league_members', filter: `league_id=eq.${leagueId}`
-      }, onChange)
+      }, notify)
       .on('postgres_changes', {
         event: '*', schema: 'public', table: 'song_leagues', filter: `id=eq.${leagueId}`
-      }, onChange)
+      }, notify)
       .subscribe();
-    return () => { void this.supabase.client.removeChannel(channel); };
+      removeChannel = () => {
+        void client.removeChannel(channel).catch(error => {
+          console.warn('[SongLeague] Could not remove realtime subscription.', error);
+        });
+      };
+    }).catch(error => {
+      if (!disposed) console.warn('[SongLeague] Could not initialize realtime subscription.', error);
+    });
+    return () => {
+      if (disposed) return;
+      disposed = true;
+      removeChannel?.();
+    };
   }
 
   async currentUserId(): Promise<string> {

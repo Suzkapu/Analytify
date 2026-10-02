@@ -282,3 +282,7 @@ Playlist subscriptions retain their synchronous cleanup API while awaiting clien
 ## Song League data readiness (2026-10-02)
 
 Song League RPCs, auth reads, table reads, and edge-function calls now await readiness. Dashboard loading uses one initialized client and retains concurrent member/recommendation/playlist reads. Delayed-readiness and initialization-failure regressions verify that leaving waits and failed initialization cannot send a deletion request. All 25 Song League service tests, test typechecking, and lint passed. The realtime subscription still needs migration, as do authentication, transport, and internal SupabaseService operations. No deferred SDK loading or completed performance gate is claimed.
+
+## Song League realtime readiness (2026-10-02)
+
+Song League realtime now waits internally for client readiness while preserving synchronous cleanup for existing callers. Early cleanup prevents channel creation, repeated cleanup removes only once, and callbacks after disposal are ignored. Initialization/removal failures are explicitly warned. All six targeted Song League service/page/invitation test files passed (63 tests), together with test typechecking and lint. SongLeagueService no longer directly reads the synchronous client. Authentication, Compare Room transport, and SupabaseService internal operations still require migration before dynamic SDK loading; the performance and manual release gates remain incomplete.
