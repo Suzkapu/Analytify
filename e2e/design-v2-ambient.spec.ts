@@ -61,13 +61,51 @@ test('v2 ambient layer is decorative, stable, scroll-responsive, and reflow-safe
   const axe = await new AxeBuilder({page})
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
     .analyze();
-  expect(axe.violations.filter(violation => ['serious', 'critical'].includes(violation.impact || ''))).toEqual([]);
+  expect(axe.violations, JSON.stringify(axe.violations, null, 2)).toEqual([]);
 
   await page.reload();
   await expect.poll(() => ambient.evaluate(element =>
     (element as HTMLElement).style.getPropertyValue('--ambient-primary-x')
   )).toBe(initial.x);
 });
+
+for (const nativeTransitions of [true, false]) {
+  test(`route content and focus survive with native transitions ${nativeTransitions ? 'enabled' : 'unavailable'}`, async ({page}) => {
+    const errors: string[] = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.addInitScript(enabled => {
+      const native = document.startViewTransition?.bind(document);
+      (window as any).__nativeTransitionCalls = 0;
+      (window as any).__nativeTransitionAvailable = !!native;
+      Object.defineProperty(document, 'startViewTransition', {
+        configurable: true,
+        value: enabled && native ? (callback: () => void | Promise<void>) => {
+          (window as any).__nativeTransitionCalls++;
+          return native(callback);
+        } : undefined
+      });
+    }, nativeTransitions);
+    await mockSpotify(page);
+    await seedAuthenticatedBrowser(page);
+    await page.goto('/playlists');
+    await expect(page.getByRole('heading', {name: 'Your playlists', exact: true})).toBeVisible();
+    if (nativeTransitions) expect(await page.evaluate(() => (window as any).__nativeTransitionAvailable)).toBe(true);
+    const ambient = page.locator('app-ambient-background');
+    await ambient.evaluate(element => { (element as any).__transitionIdentity = 'same-renderer'; });
+    const previousCalls = await page.evaluate(() => (window as any).__nativeTransitionCalls);
+    await page.getByRole('button', {name: 'Open More tools'}).press('Enter');
+    await page.getByRole('link', {name: /Compare Room/}).press('Enter');
+    await expect(page).toHaveURL(/\/compare-room$/);
+    await expect(page.getByRole('main', {name: 'Compare Room content'})).toBeVisible();
+    await expect(page.locator('main')).toBeFocused();
+    await expect(ambient).toHaveCount(1);
+    expect(await ambient.evaluate(element => (element as any).__transitionIdentity)).toBe('same-renderer');
+    const calls = await page.evaluate(() => (window as any).__nativeTransitionCalls);
+    if (nativeTransitions) expect(calls).toBeGreaterThan(previousCalls);
+    else expect(calls).toBe(0);
+    expect(errors).toEqual([]);
+  });
+}
 
 test('v2 ambient layer remains static with reduced motion', async ({page}) => {
   await page.emulateMedia({reducedMotion: 'reduce'});

@@ -8,6 +8,9 @@ import {
   AfterViewInit,
   ViewChild,
   ViewContainerRef,
+  afterNextRender,
+  inject,
+  Injector,
   signal,
   computed
 } from '@angular/core';
@@ -83,7 +86,7 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
   });
 
   private readonly subscriptions = new Subscription();
-  private hasRenderedRoute = false;
+  private readonly injector = inject(Injector);
   private accountLoaded = false;
 
   constructor(
@@ -111,8 +114,7 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
       this.accountOpen.set(false);
       this.applyRouteContext();
       if (this.pageContext().chromeMode === 'app') void this.initializeAccountChrome();
-      if (this.hasRenderedRoute) setTimeout(() => this.mainContent?.nativeElement.focus({preventScroll: true}));
-      this.hasRenderedRoute = true;
+      afterNextRender(() => this.mainContent?.nativeElement.focus({preventScroll: true}), {injector: this.injector});
     }));
   }
 

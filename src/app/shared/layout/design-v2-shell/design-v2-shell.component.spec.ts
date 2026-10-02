@@ -278,6 +278,25 @@ describe('DesignV2ShellComponent', () => {
     }));
   });
 
+  it('hands focus to the new route after an open tools dialog releases its inert background', async () => {
+    const {harness, shell} = await createShell();
+    shell.toggleTools();
+    harness.fixture.detectChanges();
+    await harness.fixture.whenStable();
+    const main = harness.fixture.nativeElement.querySelector('main') as HTMLElement;
+    const focusedWhileInert: boolean[] = [];
+    const focus = vi.spyOn(main, 'focus').mockImplementation(() => {
+      focusedWhileInert.push(Boolean(main.inert || main.closest('[inert], [aria-hidden="true"]')));
+    });
+    await harness.navigateByUrl('/stats');
+    harness.fixture.detectChanges();
+    await harness.fixture.whenStable();
+    expect(shell.toolsOpen()).toBe(false);
+    expect(harness.fixture.nativeElement.querySelector('[role="dialog"]')).toBeNull();
+    expect(focus).toHaveBeenCalledWith({preventScroll: true});
+    expect(focusedWhileInert).toEqual([false]);
+  });
+
   it('renders desktop and mobile navigation from the same model with semantic active state', async () => {
     const harness = await RouterTestingHarness.create('/stats');
     harness.fixture.detectChanges();
