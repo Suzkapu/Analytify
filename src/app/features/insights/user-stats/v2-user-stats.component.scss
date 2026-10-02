@@ -13,7 +13,8 @@
 .v2-past-grid strong, .v2-past-grid small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .v2-past-grid small { color: var(--v2-color-text-muted); }
 .v2-ranking-list { display: grid; gap: 8px; }
-.v2-ranking-row { display: grid; grid-template-columns: 48px 58px minmax(0, 1fr) auto; align-items: center; gap: var(--v2-space-3); }
+.v2-ranking-row { display: grid; grid-template-columns: 48px 58px minmax(0, 1fr); align-items: center; gap: var(--v2-space-3); }
+.v2-ranking-history { display: flex; align-items: center; justify-content: space-between; min-width: 0; width: 100%; min-height: 44px; padding: 0; gap: 8px; border: 0; color: var(--v2-color-text); background: transparent; text-align: left; }
 .v2-rank { display: grid; color: var(--v2-color-text-muted); font-size: 1.05rem; text-align: center; }
 .v2-rank small { color: var(--v2-color-accent); font-size: .65rem; }
 .v2-ranking-art { overflow: hidden; width: 58px; height: 58px; padding: 0; border: 0; border-radius: 10px; }
@@ -23,7 +24,8 @@
 .v2-ranking-copy span { color: var(--v2-color-text-muted); font-size: .82rem; }
 .v2-artist-rankings { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--v2-space-3); }
 .v2-ranked-artist { position: relative; display: grid; justify-items: center; min-width: 0; gap: 8px; text-align: center; }
-.v2-ranked-artist button { overflow: hidden; width: 110px; height: 110px; padding: 0; border: 0; border-radius: 50%; }
+.v2-ranked-artist .v2-artist-art { overflow: hidden; width: 110px; height: 110px; padding: 0; border: 0; border-radius: 50%; }
+.v2-artist-history { display: grid; align-content: center; min-width: 0; width: 100%; min-height: 44px; gap: 8px; padding: 0; border: 0; color: var(--v2-color-text); background: transparent; }
 .v2-ranked-artist img { width: 100%; height: 100%; object-fit: cover; }
 .v2-ranked-artist strong { overflow: hidden; width: 100%; text-overflow: ellipsis; white-space: nowrap; }
 .v2-ranked-artist small { color: var(--v2-color-accent); }
@@ -46,6 +48,6 @@
   .v2-past-grid { grid-template-columns: 1fr; }
   .v2-artist-rankings { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .v2-ranking-row { grid-template-columns: 42px 50px minmax(0, 1fr); }
-  .v2-ranking-row > .pi-chart-line { display: none; }
+  .v2-ranking-history > .pi-chart-line { display: none; }
   .v2-ranking-art { width: 50px; height: 50px; }
 }

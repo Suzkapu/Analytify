@@ -118,11 +118,12 @@ test('full top-song rankings remain bounded through filtering, tabs, and history
     await expect(page.locator('.v2-ranked-artist')).toHaveCount(1);
     await page.getByRole('button', {name: 'Songs', exact: true}).click();
     await expect(rows).toHaveCount(100);
-    await rows.first().press('Enter');
+    const historyAction = rows.first().getByRole('button', {name: 'View position history for Ranking song 001'});
+    await historyAction.press('Enter');
     await expect(page.locator('.v2-trend-dialog')).toBeVisible();
     await page.keyboard.press('Escape');
     await expect(page.locator('.v2-trend-dialog')).toHaveCount(0);
-    await expect(rows.first()).toBeFocused();
+    await expect(historyAction).toBeFocused();
     const current = await sample();
     expect(current.elements).toBe(initial.elements);
     expect(current.artworkWithoutDimensions).toBe(0);

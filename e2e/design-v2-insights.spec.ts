@@ -18,9 +18,23 @@ test('v2 Stats exposes labeled independent controls and keyboard category tabs',
   const songs = page.getByRole('button', {name: 'Songs'});
   await expect(songs).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByRole('searchbox', {name: 'Search songs or artists'})).toBeVisible();
+  const songHistory = page.getByRole('button', {name: 'View position history for Test Song'});
+  await expect(songHistory).toBeVisible();
+  await songHistory.press('Space');
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(songHistory).toBeFocused();
+  await expect(page.locator('.v2-ranking-row[role="button"]')).toHaveCount(0);
   await songs.press('ArrowRight');
   await expect(page.getByRole('button', {name: 'Artists'})).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByRole('searchbox', {name: 'Search artists'})).toBeVisible();
+  const artistHistory = page.getByRole('button', {name: 'View position history for Test Artist'});
+  await artistHistory.press('Enter');
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(artistHistory).toBeFocused();
+  await expect(page.getByRole('button', {name: 'Open Test Artist on Spotify'})).toBeVisible();
+  await expect(page.locator('.v2-ranked-artist[role="button"]')).toHaveCount(0);
 
   const historical = page.getByRole('button', {name: 'Search past'});
   await expect(historical).toHaveAttribute('aria-pressed', 'false');
