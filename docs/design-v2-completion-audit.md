@@ -290,3 +290,7 @@ Song League realtime now waits internally for client readiness while preserving 
 ## Compare Room RPC readiness (2026-10-02)
 
 Compare Room transport RPCs now await client readiness. Four new service tests verify delayed invitation initialization, failure without revocation, collaboration-session establishment before room creation, and local no-op handling for disconnected presence operations. The targeted service run, test typechecking, and lint passed. Transport connection/channel ownership still needs migration before SDK initialization can be deferred; no completed startup or release gate is claimed.
+
+## Compare Room connection readiness and cancellation (2026-10-02)
+
+Transport connections now await readiness and retain their originating client for channel removal. Connection generations invalidate initialization when disconnected or superseded, prevent late initialization from overwriting a newer room, and suppress messages from disposed channels. Disconnect cancels an outstanding subscription immediately; subscription failure/timeout removes its channel and clears the timer. New lifecycle regressions cover those cases. All 719 unit tests, unchanged coverage gates, test typechecking, lint, and production index/bundle checks passed. Initial JavaScript remains 748,506 bytes and previously recorded warnings remain. Authentication and internal SupabaseService reads remain before deferred SDK loading; remaining performance/manual release gates are not complete.

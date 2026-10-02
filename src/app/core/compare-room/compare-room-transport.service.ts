@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
-import {RealtimeChannel} from '@supabase/supabase-js';
+import type {RealtimeChannel} from '@supabase/supabase-js';
 import {CompareRoomEnvelope, CompareRoomMessage} from './compare-room.models';
 import {assertCompareMessageBounds} from './compare-room-integrity';
 
@@ -8,6 +8,9 @@ import {assertCompareMessageBounds} from './compare-room-integrity';
 export class CompareRoomTransportService {
   private channel: RealtimeChannel | null = null;
   private roomId = '';
+  private connectionGeneration = 0;
+  private removeCurrentChannel: (() => Promise<unknown>) | null = null;
+  private cancelSubscription: (() => void) | null = null;
 
   constructor(private supabase: SupabaseService) {}
 
@@ -49,15 +52,22 @@ export class CompareRoomTransportService {
   }
 
   async connect(roomId: string, onMessage: (envelope: CompareRoomEnvelope) => void): Promise<void> {
-    await this.disconnect();
+    const cleanup = this.disconnect();
+    const generation = this.connectionGeneration;
+    await cleanup;
     await this.supabase.ensureCollaborationSession();
+    const client = await this.supabase.getClient();
+    if (generation !== this.connectionGeneration) throw new Error('Compare Room connection was cancelled.');
     this.roomId = roomId;
-    this.channel = this.supabase.client.channel(`compare-room:${roomId}`, {
+    const channel = client.channel(`compare-room:${roomId}`, {
       config: {private: true}
     });
-    this.channel.on('postgres_changes', {
+    this.channel = channel;
+    this.removeCurrentChannel = () => client.removeChannel(channel);
+    channel.on('postgres_changes', {
       event: 'INSERT', schema: 'public', table: 'compare_room_messages', filter: `room_id=eq.${roomId}`
     }, payload => {
+      if (generation !== this.connectionGeneration) return;
       const row = payload?.new as any;
       const message = row?.payload as CompareRoomMessage | undefined;
       if (!message?.type) return;
@@ -70,18 +80,32 @@ export class CompareRoomTransportService {
       });
     });
 
-    await new Promise<void>((resolve, reject) => {
-      const timeout = window.setTimeout(() => reject(new Error('Could not connect to the Compare Room.')), 10_000);
-      this.channel?.subscribe(status => {
+    try {
+      await new Promise<void>((resolve, reject) => {
+        let settled = false;
+        const finish = (error?: Error) => {
+          if (settled) return;
+          settled = true;
+          window.clearTimeout(timeout);
+          if (this.cancelSubscription === cancel) this.cancelSubscription = null;
+          if (error) reject(error);
+          else resolve();
+        };
+        const cancel = () => finish(new Error('Compare Room connection was cancelled.'));
+        const timeout = window.setTimeout(() => finish(new Error('Could not connect to the Compare Room.')), 10_000);
+        this.cancelSubscription = cancel;
+        channel.subscribe(status => {
         if (status === 'SUBSCRIBED') {
-          window.clearTimeout(timeout);
-          resolve();
-        } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
-          window.clearTimeout(timeout);
-          reject(new Error('The Compare Room realtime connection failed.'));
+          finish();
+        } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED') {
+          finish(new Error('The Compare Room realtime connection failed.'));
         }
+        });
       });
-    });
+    } catch (error) {
+      if (generation === this.connectionGeneration) await this.disconnect();
+      throw error;
+    }
   }
 
   async send(message: CompareRoomMessage): Promise<void> {
@@ -132,13 +156,13 @@ export class CompareRoomTransportService {
   }
 
   async disconnect(): Promise<void> {
-    if (!this.channel) {
-      this.roomId = '';
-      return;
-    }
-    const current = this.channel;
+    this.connectionGeneration++;
+    this.cancelSubscription?.();
+    this.cancelSubscription = null;
+    const remove = this.removeCurrentChannel;
+    this.removeCurrentChannel = null;
     this.channel = null;
     this.roomId = '';
-    await this.supabase.client.removeChannel(current);
+    if (remove) await remove();
   }
 }
