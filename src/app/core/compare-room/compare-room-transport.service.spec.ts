@@ -58,6 +58,31 @@ describe('CompareRoomTransportService readiness', () => {
     expect(rpc).not.toHaveBeenCalled();
   });
 
+  it.each([
+    (transport: CompareRoomTransportService) => transport.createInvitation('invite', 'secret'),
+    (transport: CompareRoomTransportService) => transport.revokeInvitation('invite'),
+    (transport: CompareRoomTransportService) => transport.closeRoom(),
+    (transport: CompareRoomTransportService) => transport.touchPresence(),
+    (transport: CompareRoomTransportService) => transport.reconcileParticipants(),
+    (transport: CompareRoomTransportService) => transport.leaveRoom(),
+    (transport: CompareRoomTransportService) => transport.send({type: 'room-closed'}),
+    (transport: CompareRoomTransportService) => transport.sendCreation({type: 'create-playlist-commit', proposalId: 'proposal'})
+  ])('does not redirect a pending room operation after disconnect (%#)', async operation => {
+    const channel: any = {on: vi.fn(), subscribe: vi.fn(callback => callback('SUBSCRIBED'))};
+    channel.on.mockReturnValue(channel);
+    const client = {channel: () => channel, removeChannel: vi.fn().mockResolvedValue('ok'), rpc};
+    getClient.mockResolvedValue(client);
+    await service.connect('original-room', vi.fn());
+    let resolveClient!: (client: any) => void;
+    getClient.mockReturnValue(new Promise(resolve => { resolveClient = resolve; }));
+    const pending = operation(service);
+    const rejected = expect(pending).rejects.toMatchObject({name: 'AbortError'});
+    await service.disconnect();
+    resolveClient(client);
+    await rejected;
+    expect(rpc).not.toHaveBeenCalled();
+  });
+
   it('does not open a channel after disconnect during readiness', async () => {
     let resolveClient!: (client: any) => void;
     getClient.mockReturnValue(new Promise(resolve => { resolveClient = resolve; }));

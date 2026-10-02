@@ -24,8 +24,7 @@ export class CompareRoomTransportService {
   }
 
   async createInvitation(invitationId: string, invitationSecret: string): Promise<void> {
-    const {error} = await (await this.supabase.getClient()).rpc('create_compare_room_invitation', {
-      p_room_id: this.roomId,
+    const {error} = await this.roomRpc('create_compare_room_invitation', {
       p_invitation_id: invitationId,
       p_invitation_secret: invitationSecret
     });
@@ -44,8 +43,7 @@ export class CompareRoomTransportService {
   }
 
   async revokeInvitation(invitationId: string): Promise<void> {
-    const {error} = await (await this.supabase.getClient()).rpc('revoke_compare_room_invitation', {
-      p_room_id: this.roomId,
+    const {error} = await this.roomRpc('revoke_compare_room_invitation', {
       p_invitation_id: invitationId
     });
     if (error) throw error;
@@ -111,8 +109,7 @@ export class CompareRoomTransportService {
   async send(message: CompareRoomMessage): Promise<void> {
     if (!this.channel || !this.roomId) throw new Error('The Compare Room is not connected.');
     assertCompareMessageBounds(message);
-    const {error} = await (await this.supabase.getClient()).rpc('send_compare_room_message', {
-      p_room_id: this.roomId,
+    const {error} = await this.roomRpc('send_compare_room_message', {
       p_message: message
     });
     if (error) throw error;
@@ -122,37 +119,44 @@ export class CompareRoomTransportService {
     'create-playlist-start' | 'create-playlist-track-chunk' | 'create-playlist-commit'}>): Promise<void> {
     if (!this.channel || !this.roomId) throw new Error('The Compare Room is not connected.');
     assertCompareMessageBounds(message);
-    const {error} = await (await this.supabase.getClient()).rpc('send_compare_room_creation_message', {
-      p_room_id: this.roomId,
+    const {error} = await this.roomRpc('send_compare_room_creation_message', {
       p_message: message
     });
     if (error) throw error;
   }
 
   async closeRoom(): Promise<void> {
-    const {error} = await (await this.supabase.getClient()).rpc('close_compare_room', {p_room_id: this.roomId});
+    const {error} = await this.roomRpc('close_compare_room');
     if (error) throw error;
   }
 
   async touchPresence(): Promise<void> {
     if (!this.roomId) return;
-    const {error} = await (await this.supabase.getClient()).rpc('touch_compare_room_presence', {p_room_id: this.roomId});
+    const {error} = await this.roomRpc('touch_compare_room_presence');
     if (error) throw error;
   }
 
   async reconcileParticipants(): Promise<string[]> {
     if (!this.roomId) return [];
-    const {data, error} = await (await this.supabase.getClient()).rpc('reconcile_compare_room_participants', {
-      p_room_id: this.roomId
-    });
+    const {data, error} = await this.roomRpc('reconcile_compare_room_participants');
     if (error) throw error;
     return (data || []).map((row: {participant_id: string}) => row.participant_id);
   }
 
   async leaveRoom(): Promise<void> {
     if (!this.roomId) return;
-    const {error} = await (await this.supabase.getClient()).rpc('leave_compare_room', {p_room_id: this.roomId});
+    const {error} = await this.roomRpc('leave_compare_room');
     if (error) throw error;
+  }
+
+  private async roomRpc(name: string, parameters: Record<string, unknown> = {}) {
+    const generation = this.connectionGeneration;
+    const roomId = this.roomId;
+    const client = await this.supabase.getClient();
+    if (generation !== this.connectionGeneration || roomId !== this.roomId) {
+      throw new DOMException('Compare Room request was cancelled.', 'AbortError');
+    }
+    return client.rpc(name, {...parameters, p_room_id: roomId});
   }
 
   async disconnect(): Promise<void> {
