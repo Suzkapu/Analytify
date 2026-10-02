@@ -45,7 +45,7 @@ export class AdminService {
   }
 
   async updateSiteSettings(settings: SiteSettings): Promise<void> {
-    const {error} = await this.supabase.client.rpc('admin_update_site_settings', {
+    const {error} = await (await this.supabase.getClient()).rpc('admin_update_site_settings', {
       p_announcement: settings.announcement,
       p_allow_song_league_creation: settings.allowSongLeagueCreation
     });
@@ -53,7 +53,7 @@ export class AdminService {
   }
 
   async loadSyncSchedulePolicy(): Promise<SyncSchedulePolicy[]> {
-    const {data, error} = await this.supabase.client.rpc('admin_list_sync_schedule_policy');
+    const {data, error} = await (await this.supabase.getClient()).rpc('admin_list_sync_schedule_policy');
     if (error) throw error;
     return (data || []).map((row: any) => ({
       taskKey: row.task_key,
@@ -64,7 +64,7 @@ export class AdminService {
   }
 
   async updateSyncSchedulePolicy(policy: SyncSchedulePolicy): Promise<void> {
-    const {error} = await this.supabase.client.rpc('admin_update_sync_schedule_policy', {
+    const {error} = await (await this.supabase.getClient()).rpc('admin_update_sync_schedule_policy', {
       p_task_key: policy.taskKey,
       p_available: policy.available,
       p_interval_value: policy.intervalValue,
@@ -74,14 +74,15 @@ export class AdminService {
   }
 
   async listUsers(): Promise<AdminUserSyncSettings[]> {
+    const client = await this.supabase.getClient();
     const [
       {data, error},
       {data: statusData, error: statusError},
       {data: requiredData, error: requiredError}
     ] = await Promise.all([
-      this.supabase.client.rpc('admin_list_users'),
-      this.supabase.client.rpc('admin_list_schedule_status'),
-      this.supabase.client.rpc('admin_list_required_sync_reasons')
+      client.rpc('admin_list_users'),
+      client.rpc('admin_list_schedule_status'),
+      client.rpc('admin_list_required_sync_reasons')
     ]);
     if (error) throw error;
     if (statusError) throw statusError;
@@ -125,7 +126,7 @@ export class AdminService {
   }
 
   async updateUser(settings: AdminUserSyncSettings): Promise<void> {
-    const {error} = await this.supabase.client.rpc('admin_update_sync_user', {
+    const {error} = await (await this.supabase.getClient()).rpc('admin_update_sync_user', {
       p_user_id: settings.userId,
       p_enabled: settings.enabled,
       p_timezone: settings.timezone,
@@ -153,7 +154,7 @@ export class AdminService {
   }
 
   async reviewPendingProfile(userId: string): Promise<PendingProfileReview> {
-    const {data, error} = await this.supabase.client.rpc('admin_review_pending_spotify_profile', {p_user_id: userId});
+    const {data, error} = await (await this.supabase.getClient()).rpc('admin_review_pending_spotify_profile', {p_user_id: userId});
     if (error) throw error;
     return {
       eligible: data?.eligible === true,
@@ -164,7 +165,7 @@ export class AdminService {
   }
 
   async deleteReviewedPendingProfile(userId: string, expectedSpotifyId: string): Promise<void> {
-    const {error} = await this.supabase.client.rpc('admin_delete_reviewed_pending_spotify_profile', {
+    const {error} = await (await this.supabase.getClient()).rpc('admin_delete_reviewed_pending_spotify_profile', {
       p_user_id: userId, p_expected_spotify_id: expectedSpotifyId
     });
     if (error) throw error;
@@ -178,7 +179,7 @@ export class AdminService {
     if (settings.longTermEnabled) tasks.push('stats_long_term');
     if (settings.songLeaguePlaylistsEnabled || settings.requiredTasks?.song_league_playlists) tasks.push('song_league_playlists');
     if (settings.sharedPlaylistsEnabled || settings.requiredTasks?.shared_playlists) tasks.push('shared_playlists');
-    const {data, error} = await this.supabase.client.rpc('admin_enqueue_sync', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('admin_enqueue_sync', {
       p_user_id: settings.userId,
       p_task_keys: tasks
     });
@@ -187,7 +188,7 @@ export class AdminService {
   }
 
   async listRuns(limit = 50): Promise<AdminSyncRun[]> {
-    const {data, error} = await this.supabase.client.rpc('admin_list_sync_runs', {p_limit: limit});
+    const {data, error} = await (await this.supabase.getClient()).rpc('admin_list_sync_runs', {p_limit: limit});
     if (error) throw error;
     return (data || []).map((row: any) => ({
       id: row.id,
@@ -205,7 +206,7 @@ export class AdminService {
   }
 
   async listModerationReports(): Promise<AdminModerationReport[]> {
-    const {data, error} = await this.supabase.client.rpc('admin_list_moderation_reports', {p_status: null});
+    const {data, error} = await (await this.supabase.getClient()).rpc('admin_list_moderation_reports', {p_status: null});
     if (error) throw error;
     return (data || []).map((row: any) => ({
       reportId: row.report_id,
@@ -228,7 +229,7 @@ export class AdminService {
   }
 
   async updateModerationReport(report: AdminModerationReport): Promise<void> {
-    const {error} = await this.supabase.client.rpc('admin_update_moderation_report', {
+    const {error} = await (await this.supabase.getClient()).rpc('admin_update_moderation_report', {
       p_report_id: report.reportId,
       p_status: report.status,
       p_outcome: report.outcome || null,
@@ -240,7 +241,7 @@ export class AdminService {
   }
 
   async loadOperationalHealth(): Promise<AdminOperationalHealth> {
-    const {data, error} = await this.supabase.client.rpc('admin_operational_health');
+    const {data, error} = await (await this.supabase.getClient()).rpc('admin_operational_health');
     if (error) throw error;
     const value = data || {};
     const workerRuntime = value.workerRuntime || {};
@@ -269,7 +270,7 @@ export class AdminService {
   }
 
   async createDemoLeague(name: string, timezone: string): Promise<string> {
-    const {data, error} = await this.supabase.client.rpc('admin_create_demo_league', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('admin_create_demo_league', {
       p_name: name,
       p_timezone: timezone
     });
@@ -280,7 +281,7 @@ export class AdminService {
   }
 
   async sendTestNotification(): Promise<number> {
-    const {data, error} = await this.supabase.client.functions.invoke('song-league-notifications', {
+    const {data, error} = await (await this.supabase.getClient()).functions.invoke('song-league-notifications', {
       body: {action: 'test'}
     });
     if (error) throw error;

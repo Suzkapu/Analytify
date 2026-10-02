@@ -60,6 +60,25 @@ describe('AdminService', () => {
         expect(rpc).not.toHaveBeenCalled();
     });
 
+    it('loads all three user summaries concurrently after one readiness wait', async () => {
+        let ready!: (client: any) => void;
+        getClient.mockReturnValue(new Promise(resolve => { ready = resolve; }));
+        const finish: Array<() => void> = [];
+        rpc.mockImplementation(() => new Promise(resolve => {
+            finish.push(() => resolve({data: [], error: null}));
+        }));
+        const pending = service.listUsers();
+        expect(rpc).not.toHaveBeenCalled();
+        ready({rpc});
+        await vi.waitFor(() => expect(rpc).toHaveBeenCalledTimes(3));
+        expect(getClient).toHaveBeenCalledOnce();
+        expect(rpc.mock.calls.map(call => call[0])).toEqual([
+            'admin_list_users', 'admin_list_schedule_status', 'admin_list_required_sync_reasons'
+        ]);
+        finish.forEach(resolve => resolve());
+        expect(await pending).toEqual([]);
+    });
+
     it('does not query Supabase for a local-only session', async () => {
         auth.getSupabaseUserId.mockReturnValue(null);
 

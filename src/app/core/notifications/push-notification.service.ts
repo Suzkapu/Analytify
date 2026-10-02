@@ -35,7 +35,7 @@ export class PushNotificationService {
       this.currentPermission()
     ]);
     const endpoint = subscription?.endpoint || subscription?.toJSON().endpoint || null;
-    const preferenceResult = await this.supabase.client.rpc('get_notification_settings', {
+    const preferenceResult = await (await this.supabase.getClient()).rpc('get_notification_settings', {
       p_endpoint: endpoint
     });
     if (preferenceResult.error) throw preferenceResult.error;
@@ -109,7 +109,7 @@ export class PushNotificationService {
       await this.registerDevice(subscription);
     }
 
-    const preference = await this.supabase.client.rpc('set_notification_preference', {
+    const preference = await (await this.supabase.getClient()).rpc('set_notification_preference', {
       p_category: category,
       p_enabled: enabled
     });
@@ -158,7 +158,7 @@ export class PushNotificationService {
     if (!endpoint || !p256dh || !auth) {
       throw new Error('The browser returned an incomplete push subscription.');
     }
-    const registration = await this.supabase.client.rpc('upsert_push_subscription', {
+    const registration = await (await this.supabase.getClient()).rpc('upsert_push_subscription', {
       p_endpoint: endpoint,
       p_p256dh: p256dh,
       p_auth: auth,

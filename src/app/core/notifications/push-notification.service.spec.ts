@@ -9,6 +9,7 @@ import { PushNotificationService } from './push-notification.service';
 describe('PushNotificationService', () => {
     let service: PushNotificationService;
     let rpc: Mock;
+    let getClient: Mock;
     let requestSubscription: Mock;
     let browserSubscription: PushSubscription | null;
     let permissionState: PermissionState;
@@ -63,6 +64,7 @@ describe('PushNotificationService', () => {
             };
         });
         requestSubscription = vi.fn().mockName('requestSubscription').mockResolvedValue(subscription);
+        getClient = vi.fn().mockResolvedValue({rpc});
         swPush = {isEnabled: true, subscription: defer(() => of(browserSubscription)), requestSubscription};
         TestBed.configureTestingModule({
             providers: [
@@ -71,10 +73,28 @@ describe('PushNotificationService', () => {
                     provide: SwPush,
                     useValue: swPush
                 },
-                { provide: SupabaseService, useValue: { client: { rpc } } }
+                { provide: SupabaseService, useValue: { client: { rpc }, getClient } }
             ]
         });
         service = TestBed.inject(PushNotificationService);
+    });
+
+    it('does not send notification settings requests until client readiness resolves', async () => {
+        let ready!: (client: any) => void;
+        getClient.mockReturnValue(new Promise(resolve => { ready = resolve; }));
+        const pending = service.loadSettings();
+        await vi.waitFor(() => expect(getClient).toHaveBeenCalled());
+        expect(rpc).not.toHaveBeenCalled();
+        ready({rpc});
+        await pending;
+        expect(rpc).toHaveBeenCalledWith('get_notification_settings', {p_endpoint: null});
+    });
+
+    it('propagates notification client initialization failure without a preference request', async () => {
+        const failure = new Error('Client unavailable');
+        getClient.mockRejectedValue(failure);
+        await expect(service.loadSettings()).rejects.toBe(failure);
+        expect(rpc).not.toHaveBeenCalled();
     });
 
     it('reuses a browser subscription that was already granted instead of registering again', async () => {
