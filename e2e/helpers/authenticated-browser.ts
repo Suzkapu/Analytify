@@ -5,8 +5,7 @@ import {CURRENT_TERMS_VERSION} from '../../src/app/core/legal/terms-acceptance.s
 export async function expectNoBlockingAxeViolations(page: Page): Promise<void> {
   const result = await new AxeBuilder({page})
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
-  expect(result.violations.filter(item => ['serious', 'critical'].includes(item.impact || '')),
-    JSON.stringify(result.violations, null, 2)).toEqual([]);
+  expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
 }
 
 export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {

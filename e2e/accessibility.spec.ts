@@ -2,16 +2,11 @@ import AxeBuilder from '@axe-core/playwright';
 import {expect, Page, test} from '@playwright/test';
 import {CURRENT_TERMS_VERSION} from '../src/app/core/legal/terms-acceptance.service';
 
-const seriousOrCritical = ['serious', 'critical'];
-
 async function expectNoBlockingAxeViolations(page: Page): Promise<void> {
   const result = await new AxeBuilder({page})
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
     .analyze();
-  const blocking = result.violations.filter(violation =>
-    seriousOrCritical.includes(violation.impact || '')
-  );
-  expect(blocking, JSON.stringify(blocking, null, 2)).toEqual([]);
+  expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
 }
 
 async function seedAuthenticatedBrowser(page: Page): Promise<void> {

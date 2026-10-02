@@ -136,3 +136,9 @@ Settings close buttons were 36px and schedule fields were 40px, below the 44px p
 The strict accessible-name lookup also exposed decorative icon glyphs in account and schedule summary names. Decorative shell and schedule-sheet icons now use `aria-hidden`; rendered unit regressions guard that distinction. All 12 quality browser cases, lint, and full verification passed with 676 unit tests and the production bundle/index gates. Remaining manual and broader performance requirements are unchanged.
 
 Independent production version inspection confirmed `bfce01f9e88cb6b98b6c1cd8dbf82386895bed4b`, deployed at `2026-10-02T02:39:26Z`; its verify/deploy run `36955858496` completed successfully.
+
+## All-severity WCAG scan gate and notification names (2026-10-02)
+
+Both browser Axe helpers now fail on every violation under the selected WCAG A/AA tags rather than ignoring moderate/minor findings. No rule exclusions were added. The full browser run passed all 76 cases with the shared feature helper tightened; a subsequent 16-case accessibility/login run separately verified the tightened local helper. This remains automated, sampled-state evidence, not full WCAG conformance or a replacement for manual screen-reader testing.
+
+The notification sheet's remaining decorative icons are hidden from assistive technology. The nine-case rendered notification unit suite passed, including icon semantics across all six device outcome states, and browser settings checks verify no exposed decorative icon remains in the notification dialog. Lint and the production build/index/bundle gates passed. The latest pushed deployment `36956995635` is still in progress; these follow-up changes are queued locally rather than superseding its release.

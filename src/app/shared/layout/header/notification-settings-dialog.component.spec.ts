@@ -39,6 +39,9 @@ describe('NotificationSettingsDialogComponent', () => {
     await fixture.whenStable();
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.notification-device-block')?.textContent).toContain(title);
+    const icons = fixture.nativeElement.querySelectorAll('.pi') as NodeListOf<HTMLElement>;
+    expect(icons.length).toBeGreaterThan(0);
+    expect([...icons].every(icon => icon.getAttribute('aria-hidden') === 'true')).toBe(true);
   });
 
   it('keeps install guidance in the device block instead of category rows', async () => {

@@ -5,7 +5,7 @@ The canonical Design v2 release must keep this gate and the UI parity matrix gre
 ## Automated release evidence
 
 - Playwright exercises 320, 375, 430, 500, 768, 1024, and 1440 CSS-pixel widths, 200% text enlargement, fixed mobile navigation, keyboard focus restoration, Escape, reduced motion, and representative nested/public routes.
-- Axe scans login, Library, Insights, Private Sharing, Compare Room, Song League, Notifications, and Automatic Updates without rule exclusions; serious and critical findings fail deployment.
+- Axe scans login, Library, Insights, Private Sharing, Compare Room, Song League, Notifications, and Automatic Updates without rule exclusions; every finding under the selected WCAG A/AA tags fails deployment, including lower-severity findings. This is scoped automated evidence, not complete conformance proof.
 - The parity and quality source checks reject missing inventory groups, a second ambient renderer, hardcoded `/new` feature links, or a Design v2 behavioral source without a colocated unit spec.
 - Production builds enforce initial JavaScript, global CSS, and every lazy-route chunk budget. The shell keeps feature pages lazy and service-worker scripts use lazy caching.
 - The ambient browser suite verifies one persistent renderer, hidden/reduced-motion behavior, route/scroll/overlay continuity, reflow, and Axe.

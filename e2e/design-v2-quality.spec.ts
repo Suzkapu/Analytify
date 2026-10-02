@@ -47,6 +47,7 @@ test('notification and automatic-update sheets restore focus and remain accessib
   await notifications.focus();
   await notifications.press('Enter');
   await expect(page.getByRole('dialog', {name: 'Notifications'})).toBeVisible();
+  expect(await page.getByRole('dialog', {name: 'Notifications'}).locator('.pi:not([aria-hidden="true"])').count()).toBe(0);
   await expectNoBlockingAxeViolations(page);
   await page.keyboard.press('Escape');
   await expect(account).toBeFocused();

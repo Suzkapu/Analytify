@@ -3,22 +3,22 @@
     aria-labelledby="notification-settings-title" aria-describedby="notification-settings-description"
     appAccessibleDialog (modalEscape)="close()" (click)="$event.stopPropagation()">
     <header class="settings-sheet-header">
-      <span><i class="pi pi-bell"></i></span>
+      <span><i class="pi pi-bell" aria-hidden="true"></i></span>
       <div><h3 id="notification-settings-title">Notifications</h3><p id="notification-settings-description">Choose which updates you want to receive.</p></div>
       <button type="button" class="notification-modal-close" appModalInitialFocus (click)="close()"
         [disabled]="saving" aria-label="Close notification settings">×</button>
     </header>
     <div class="settings-sheet-body">
     @if (loading) {
-      <div class="notification-settings-loading" role="status"><i class="pi pi-spin pi-spinner"></i> Loading notification settings…</div>
+      <div class="notification-settings-loading" role="status"><i class="pi pi-spin pi-spinner" aria-hidden="true"></i> Loading notification settings…</div>
     } @else {
       <section class="notification-device-block" [attr.data-tone]="deviceStatus.tone" aria-labelledby="notification-device-title">
-        <i class="pi" [ngClass]="deviceStatus.tone === 'success' ? 'pi-check-circle' : deviceStatus.tone === 'danger' ? 'pi-ban' : 'pi-mobile'"></i>
+        <i class="pi" [ngClass]="deviceStatus.tone === 'success' ? 'pi-check-circle' : deviceStatus.tone === 'danger' ? 'pi-ban' : 'pi-mobile'" aria-hidden="true"></i>
         <div><strong id="notification-device-title">{{ deviceStatus.title }}</strong><p>{{ deviceStatus.description }}</p></div>
       </section>
       <div class="notification-category-list">
         <label class="notification-category-row">
-          <span class="notification-category-icon"><i class="pi pi-star"></i></span>
+          <span class="notification-category-icon"><i class="pi pi-star" aria-hidden="true"></i></span>
           <span class="notification-category-copy">
             <strong>Song League pick windows</strong>
             <small>Remind me when weekly picks open.</small>
@@ -32,7 +32,7 @@
         </label>
         @if (settings.songLeagueMember) {
           <label class="notification-category-row">
-            <span class="notification-category-icon"><i class="pi pi-volume-up"></i></span>
+            <span class="notification-category-icon"><i class="pi pi-volume-up" aria-hidden="true"></i></span>
             <span class="notification-category-copy">
               <strong>New Song League picks</strong>
             <small>Notify me when another member submits a song.</small>
@@ -46,7 +46,7 @@
           </label>
         }
         <label class="notification-category-row">
-          <span class="notification-category-icon"><i class="pi pi-eye"></i></span>
+          <span class="notification-category-icon"><i class="pi pi-eye" aria-hidden="true"></i></span>
           <span class="notification-category-copy">
             <strong>Stats access requests</strong>
             <small>Notify me when someone asks to view my stats.</small>
