@@ -3,7 +3,7 @@
     aria-labelledby="sync-task-status-title" aria-describedby="sync-task-status-description"
     appAccessibleDialog (modalEscape)="close()" (click)="$event.stopPropagation()">
     <header class="settings-sheet-header">
-      <span><i class="pi pi-refresh"></i></span>
+      <span><i class="pi pi-refresh" aria-hidden="true"></i></span>
       <div>
         <h3 id="sync-task-status-title">Automatic updates</h3>
         <p id="sync-task-status-description">Choose which personal Spotify data updates in the background.</p>
@@ -13,7 +13,7 @@
     </header>
     <div class="settings-sheet-body">
       @if (loading) {
-        <div class="notification-settings-loading" role="status"><i class="pi pi-spin pi-spinner"></i> Loading automatic updates…</div>
+        <div class="notification-settings-loading" role="status"><i class="pi pi-spin pi-spinner" aria-hidden="true"></i> Loading automatic updates…</div>
       } @else {
         <div class="sync-task-list">
           @for (task of tasks; track task.task_key) {
@@ -22,7 +22,7 @@
                 [disabled]="!stateFor(task).editable"
                 [attr.aria-expanded]="stateFor(task).editable ? expandedTask === task.task_key : null"
                 [attr.aria-controls]="stateFor(task).editable ? 'sync-editor-' + task.task_key : null">
-                <span class="notification-category-icon"><i class="pi" [ngClass]="task.feature_required ? 'pi-lock' : task.effective_active ? 'pi-check' : 'pi-minus'"></i></span>
+                <span class="notification-category-icon"><i class="pi" [ngClass]="task.feature_required ? 'pi-lock' : task.effective_active ? 'pi-check' : 'pi-minus'" aria-hidden="true"></i></span>
                 <span class="notification-category-copy">
                   <strong>{{ label(task.task_key) }}</strong>
                   <small>{{ stateFor(task).label }} · {{ stateFor(task).detail }}</small>
@@ -56,9 +56,9 @@
                     <p class="sync-validation-error" [id]="'sync-error-' + task.task_key" role="alert">{{ validationErrors[task.task_key] }}</p>
                   }
                   <div class="sync-save-row">
-                    @if (savedTask === task.task_key) { <span role="status"><i class="pi pi-check"></i> Saved</span> }
+                    @if (savedTask === task.task_key) { <span role="status"><i class="pi pi-check" aria-hidden="true"></i> Saved</span> }
                     <button type="button" class="confirm-modal-btn confirm-modal-btn-confirm" (click)="save(task)" [disabled]="savingTask !== null">
-                      <i class="pi" [ngClass]="savingTask === task.task_key ? 'pi-spin pi-spinner' : 'pi-check'"></i>{{ savingTask === task.task_key ? 'Saving…' : 'Save' }}
+                      <i class="pi" [ngClass]="savingTask === task.task_key ? 'pi-spin pi-spinner' : 'pi-check'" aria-hidden="true"></i>{{ savingTask === task.task_key ? 'Saving…' : 'Save' }}
                     </button>
                   </div>
                 </div>

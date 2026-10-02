@@ -341,6 +341,9 @@ describe('DesignV2ShellComponent', () => {
     expect(element.querySelector('.v2-account-dialog')?.textContent).toContain('Notifications');
     expect(element.querySelector('.v2-account-dialog')?.textContent).toContain('Manage Spotify access');
     expect(element.querySelector('.v2-account-dialog')?.textContent).toContain('Clear data');
+    const decorativeIcons = element.querySelectorAll('.v2-account-dialog .pi');
+    expect(decorativeIcons.length).toBeGreaterThan(0);
+    expect([...decorativeIcons].every(icon => icon.getAttribute('aria-hidden') === 'true')).toBe(true);
   });
 
   it('uses minimal chrome for focus routes', async () => {

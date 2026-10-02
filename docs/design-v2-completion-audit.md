@@ -128,3 +128,11 @@ All four performance-suite cases passed, including the existing Library timeline
 The APG/native-control audit found button-role song rows and artist cards containing separate Spotify buttons. Those interactive ancestors are now passive layout containers. Each history action is its own labeled native button, separate from artwork's Spotify action; no custom Enter/Space handling is needed for the new buttons. History actions preserve text layout, reserved artwork sizes, 44px minimum height, and the existing text-selection behavior.
 
 A rendered component regression checks semantics, action delegation, and absence of nested interactive controls. Browser checks exercise Space/Enter, Escape, and restored focus for both song and artist history actions, alongside the full-ranking repeated interaction sample. Ten Insights/performance cases passed; the updated six-case Insights suite also passed independently. Full verification passed 676 unit tests, coverage, production compilation, and bundle/index gates. This fixes an identified interaction flaw but is not a substitute for the pending manual screen-reader review.
+
+## Populated settings reflow and target audit (2026-10-02)
+
+Settings close buttons were 36px and schedule fields were 40px, below the 44px product standard. They now meet 44px. The new browser case loads six schedule rows through a mocked RPC, expands a personal editor, and tests both 320px reflow and 768px with 200% text. It measures the close/input/select targets, verifies the close action remains within the viewport and unobscured after body scrolling, checks dialog overflow/Axe, and verifies native keyboard close/focus restoration.
+
+The strict accessible-name lookup also exposed decorative icon glyphs in account and schedule summary names. Decorative shell and schedule-sheet icons now use `aria-hidden`; rendered unit regressions guard that distinction. All 12 quality browser cases, lint, and full verification passed with 676 unit tests and the production bundle/index gates. Remaining manual and broader performance requirements are unchanged.
+
+Independent production version inspection confirmed `bfce01f9e88cb6b98b6c1cd8dbf82386895bed4b`, deployed at `2026-10-02T02:39:26Z`; its verify/deploy run `36955858496` completed successfully.

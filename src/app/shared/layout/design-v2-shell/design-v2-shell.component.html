@@ -116,7 +116,7 @@
         <div class="v2-account-summary">
           <span class="v2-account-avatar" aria-hidden="true">
             @if (profilePicUrl()) { <img [src]="profilePicUrl()" (error)="profileImageFailed()" alt=""> }
-            @else { <i class="pi pi-user"></i> }
+            @else { <i class="pi pi-user" aria-hidden="true"></i> }
           </span>
           <div><span class="v2-eyebrow">Account &amp; data</span><h2 id="v2-account-title">{{ displayName() }}</h2></div>
           <button appModalInitialFocus type="button" class="v2-icon-button" aria-label="Close account settings" (click)="closeAccount()"><i class="pi pi-times" aria-hidden="true"></i></button>
@@ -127,15 +127,15 @@
             <i class="pi pi-cloud" aria-hidden="true"></i><span>Cloud Backup</span>
             <input type="checkbox" role="switch" [checked]="authService.isBackupActive()" [disabled]="actionRunning()" (change)="requestBackupChange($event)">
           </label>
-          <button type="button" class="v2-account-action" (click)="openNotifications()"><i class="pi pi-bell"></i><span>Notifications</span></button>
+          <button type="button" class="v2-account-action" (click)="openNotifications()"><i class="pi pi-bell" aria-hidden="true"></i><span>Notifications</span></button>
           @if (authService.hasCloudIdentity()) {
-            <button type="button" class="v2-account-action" (click)="openBlockedUsers()"><i class="pi pi-ban"></i><span>Blocked users</span></button>
-            <button type="button" class="v2-account-action" (click)="openAutomaticUpdates()"><i class="pi pi-clock"></i><span>Automatic updates</span></button>
+            <button type="button" class="v2-account-action" (click)="openBlockedUsers()"><i class="pi pi-ban" aria-hidden="true"></i><span>Blocked users</span></button>
+            <button type="button" class="v2-account-action" (click)="openAutomaticUpdates()"><i class="pi pi-clock" aria-hidden="true"></i><span>Automatic updates</span></button>
           }
-          <button type="button" class="v2-account-action" [disabled]="actionRunning()" (click)="requestLogout()"><i class="pi pi-sign-out"></i><span>Log out</span></button>
-          <a class="v2-account-action" [routerLink]="navigation.commands('legal')" fragment="privacy" (click)="closeAccount()"><i class="pi pi-shield"></i><span>Privacy notice</span></a>
-          <a class="v2-account-action" href="https://www.spotify.com/account/apps/" target="_blank" rel="noopener noreferrer"><i class="pi pi-external-link"></i><span>Manage Spotify access</span></a>
-          <button type="button" class="v2-account-action is-danger" [disabled]="actionRunning()" (click)="closeAccount(); clearDataStep.set('choose')"><i class="pi pi-trash"></i><span>Clear data</span></button>
+          <button type="button" class="v2-account-action" [disabled]="actionRunning()" (click)="requestLogout()"><i class="pi pi-sign-out" aria-hidden="true"></i><span>Log out</span></button>
+          <a class="v2-account-action" [routerLink]="navigation.commands('legal')" fragment="privacy" (click)="closeAccount()"><i class="pi pi-shield" aria-hidden="true"></i><span>Privacy notice</span></a>
+          <a class="v2-account-action" href="https://www.spotify.com/account/apps/" target="_blank" rel="noopener noreferrer"><i class="pi pi-external-link" aria-hidden="true"></i><span>Manage Spotify access</span></a>
+          <button type="button" class="v2-account-action is-danger" [disabled]="actionRunning()" (click)="closeAccount(); clearDataStep.set('choose')"><i class="pi pi-trash" aria-hidden="true"></i><span>Clear data</span></button>
         </div>
         @if (actionError() && !backupConfirmationOpen()) { <p class="v2-action-error" role="alert">{{ actionError() }}</p> }
       </section>
@@ -147,12 +147,12 @@
         aria-describedby="v2-confirm-description"
         appAccessibleDialog (modalEscape)="closeConfirmation()">
         @if (backupConfirmationOpen()) {
-          <span class="v2-confirm-icon"><i class="pi pi-cloud"></i></span>
+          <span class="v2-confirm-icon"><i class="pi pi-cloud" aria-hidden="true"></i></span>
           <h2 id="v2-confirm-title">Enable Cloud Backup?</h2>
           <p id="v2-confirm-description">Your Spotify identity, selected listening snapshots, and an encrypted refresh token will be stored so chosen features can update while this browser is closed.</p>
           <div class="v2-confirm-actions"><button appModalInitialFocus type="button" [disabled]="actionRunning()" (click)="closeConfirmation()">Cancel</button><button type="button" class="is-primary" [disabled]="actionRunning()" (click)="enableBackup()">Enable Cloud Backup</button></div>
         } @else if (clearDataStep() === 'choose') {
-          <span class="v2-confirm-icon"><i class="pi pi-trash"></i></span>
+          <span class="v2-confirm-icon"><i class="pi pi-trash" aria-hidden="true"></i></span>
           <h2 id="v2-confirm-title">What would you like to clear?</h2>
           <p id="v2-confirm-description">Choose local browser data or permanently remove your cloud data and shared-feature memberships.</p>
           <div class="v2-choice-list">

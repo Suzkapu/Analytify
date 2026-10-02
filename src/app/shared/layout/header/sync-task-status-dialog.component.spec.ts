@@ -47,6 +47,9 @@ describe('SyncTaskStatusDialogComponent', () => {
     expect(fixture.nativeElement.textContent).toContain('Unavailable');
     expect(component.minimumFor(component.tasks[0], 'hours')).toBe(1);
     expect(component.minimumLabel(component.tasks[2])).toBe('7 days');
+    const icons = fixture.nativeElement.querySelectorAll('.pi') as NodeListOf<HTMLElement>;
+    expect(icons.length).toBeGreaterThan(0);
+    expect([...icons].every(icon => icon.getAttribute('aria-hidden') === 'true')).toBe(true);
   });
 
   it('expands only one editable schedule at a time', () => {

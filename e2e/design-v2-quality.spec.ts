@@ -73,3 +73,47 @@ test('mobile fixed navigation does not obscure the last task region', async ({pa
   expect(navBox).not.toBeNull();
   expect(cardBox!.y + cardBox!.height).toBeLessThanOrEqual(navBox!.y);
 });
+
+test('populated schedule sheets retain reachable 44px controls at narrow and enlarged-text sizes', async ({page}) => {
+  const tasks = ['listening_history', 'stats_short_term', 'stats_medium_term', 'stats_long_term',
+    'song_league_playlists', 'shared_playlists'].map(task_key => ({
+    task_key, optional_enabled: true, feature_required: task_key.endsWith('playlists'),
+    effective_active: true, reasons: ['Required by the features you use'],
+    editable: !task_key.endsWith('playlists'), interval_value: 60, interval_unit: 'minutes',
+    minimum_interval_minutes: 60, policy_available: true
+  }));
+  await page.route('**/rest/v1/rpc/get_my_sync_task_status', route => route.fulfill({json: tasks}));
+  for (const [width, fontSize] of [[320, '100%'], [768, '200%']] as const) {
+    await page.setViewportSize({width, height: 800});
+    await page.goto('/playlists');
+    await page.evaluate(size => { document.documentElement.style.fontSize = size; }, fontSize);
+    const account = page.getByRole('button', {name: 'Open account and data settings'});
+    await account.click();
+    await page.getByRole('button', {name: 'Automatic updates', exact: true}).click();
+    const dialog = page.getByRole('dialog', {name: 'Automatic updates'});
+    await expect(dialog.locator('.sync-task-row')).toHaveCount(6);
+    await dialog.getByRole('button', {name: /^Listening history/}).click();
+    const close = dialog.getByRole('button', {name: 'Close automatic updates'});
+    for (const control of [close, dialog.getByRole('spinbutton', {name: 'Every'}), dialog.getByRole('combobox', {name: 'Unit'})]) {
+      const box = await control.boundingBox();
+      expect(box).not.toBeNull();
+      expect(box!.width).toBeGreaterThanOrEqual(44);
+      expect(box!.height).toBeGreaterThanOrEqual(44);
+    }
+    const body = dialog.locator('.settings-sheet-body');
+    await body.evaluate(element => { element.scrollTop = element.scrollHeight; });
+    const closeBox = await close.boundingBox();
+    expect(closeBox!.y).toBeGreaterThanOrEqual(0);
+    expect(closeBox!.y + closeBox!.height).toBeLessThanOrEqual(800);
+    const hidden = await close.evaluate(element => {
+      const box = element.getBoundingClientRect();
+      return !element.contains(document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2));
+    });
+    expect(hidden).toBe(false);
+    expect(await dialog.evaluate(element => element.scrollWidth - element.clientWidth)).toBeLessThanOrEqual(1);
+    await expectNoBlockingAxeViolations(page);
+    await close.press('Enter');
+    await expect(dialog).toHaveCount(0);
+    await expect(account).toBeFocused();
+  }
+});
