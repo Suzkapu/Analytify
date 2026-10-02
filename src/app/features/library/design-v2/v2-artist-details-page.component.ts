@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Optional} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Optional} from '@angular/core';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {SpotifyDataService} from '@core/data-access/spotify/spotify-data.service';
@@ -55,7 +55,7 @@ import {ArtistDetailsUiModule} from '../artist-details/artist-details.module';
 export class V2ArtistDetailsPageComponent extends ArtistDetailsController {
   readonly backLink = history.state?.playlistId ? this.navigation.commands('songs', {id: history.state.playlistId}) : this.navigation.commands('playlists');
   constructor(route: ActivatedRoute, spotifyData: SpotifyDataService, router: Router, auth: SpotifyAuthService,
-    storage: StorageService, supabase: SupabaseService, @Optional() readonly navigation: DesignNavigationService) {
-    super(route, spotifyData, router, auth, storage, supabase, navigation);
+    storage: StorageService, supabase: SupabaseService, @Optional() readonly navigation: DesignNavigationService, changeDetector: ChangeDetectorRef) {
+    super(route, spotifyData, router, auth, storage, supabase, navigation, changeDetector);
   }
 }

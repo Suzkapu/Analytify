@@ -1,4 +1,4 @@
-import {Component, Directive, OnDestroy, ChangeDetectionStrategy, Optional} from '@angular/core';
+import {Component, Directive, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, Optional} from '@angular/core';
 import {SpotifyDataService} from "@core/data-access/spotify/spotify-data.service";
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {StorageService} from "@core/data-access/storage/storage.service";
@@ -30,7 +30,8 @@ export class ArtistDetailsController implements OnDestroy {
     public authService: SpotifyAuthService,
     private storageService: StorageService,
     private supabaseService: SupabaseService,
-    @Optional() private designNavigation?: DesignNavigationService
+    @Optional() private designNavigation?: DesignNavigationService,
+    @Optional() private changeDetector?: ChangeDetectorRef
   ) {
     this.routeSubscription = this.route.params.pipe(
       map(params => params['id'] || ''),
@@ -161,6 +162,7 @@ export class ArtistDetailsController implements OnDestroy {
         console.error('[ArtistDetails] Failed to load artist from Spotify:', err);
         this.isLoadingArtist = false;
         this.artistLoadError = 'Artist details could not be loaded.';
+        this.changeDetector?.markForCheck();
       }
     }
   }
@@ -169,6 +171,7 @@ export class ArtistDetailsController implements OnDestroy {
     if (this.artistId !== id || this.loadGeneration !== generation) return;
     this.artist = artist;
     this.isLoadingArtist = false;
+    this.changeDetector?.markForCheck();
   }
 
   openTrackClick(url?: string) {

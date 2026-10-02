@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Optional} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Optional} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
@@ -64,8 +64,8 @@ import {PlaylistAnalysisUiModule} from '../playlist-analysis/playlist-analysis.m
 export class V2AnalysisPageComponent extends PlaylistAnalysisController {
   readonly backLink = this.navigation.commands('playlists');
   constructor(route: ActivatedRoute, auth: SpotifyAuthService, router: Router, storage: StorageService,
-    loader: PlaylistLoaderService, @Optional() readonly navigation: DesignNavigationService) {
-    super(route, auth, router, storage, loader, navigation);
+    loader: PlaylistLoaderService, @Optional() readonly navigation: DesignNavigationService, changeDetector: ChangeDetectorRef) {
+    super(route, auth, router, storage, loader, navigation, changeDetector);
   }
   get metrics(): Array<{label: string; icon: string; value: string | number}> {
     return [

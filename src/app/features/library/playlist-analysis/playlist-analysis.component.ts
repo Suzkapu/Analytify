@@ -1,4 +1,4 @@
-import { Component, Directive, OnInit, OnDestroy, ViewEncapsulation, ChangeDetectionStrategy, Optional } from '@angular/core';
+import { Component, Directive, OnInit, OnDestroy, ViewEncapsulation, ChangeDetectionStrategy, ChangeDetectorRef, Optional } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { SpotifyAuthService } from "@core/auth/spotify-auth.service";
 import { StorageService } from "@core/data-access/storage/storage.service";
@@ -56,7 +56,8 @@ export class PlaylistAnalysisController implements OnInit, OnDestroy {
     private router: Router,
     private storageService: StorageService,
     private playlistLoaderService: PlaylistLoaderService,
-    @Optional() private designNavigation?: DesignNavigationService
+    @Optional() private designNavigation?: DesignNavigationService,
+    @Optional() private changeDetector?: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -71,7 +72,7 @@ export class PlaylistAnalysisController implements OnInit, OnDestroy {
       if (this.authService.isAuthenticated()) {
         void this.authService.ensureInitialSync().catch(() => {});
       }
-      void this.loadPlaylistData(playlistId, loadGeneration);
+      void this.loadPlaylistData(playlistId, loadGeneration).finally(() => this.changeDetector?.markForCheck());
     });
   }
 
@@ -321,6 +322,7 @@ export class PlaylistAnalysisController implements OnInit, OnDestroy {
       } else if (!silent) {
         this.artists = (this.artists.length === 0 || !progress.isRefreshing) ? progress.artists : this.artists;
       }
+      this.changeDetector?.markForCheck();
     });
   }
 
