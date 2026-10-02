@@ -76,6 +76,11 @@ export class SupabaseService {
     });
   }
 
+  /** Explicit readiness boundary for consumers being migrated to deferred SDK loading. */
+  getClient(): Promise<SupabaseClient> {
+    return Promise.resolve(this.client);
+  }
+
   /** Creates an authenticated database identity for collaboration without
    * enabling Cloud Backup or uploading Spotify data. */
   async ensureCollaborationSession(): Promise<string> {

@@ -11,6 +11,7 @@ describe('AdminService', () => {
     let auth: any;
     let rpc: Mock;
     let invoke: Mock;
+    let getClient: Mock;
 
     beforeEach(() => {
         auth = {
@@ -18,12 +19,45 @@ describe('AdminService', () => {
         };
         rpc = vi.fn().mockName('rpc').mockResolvedValue({ data: true, error: null });
         invoke = vi.fn().mockName('invoke').mockResolvedValue({ data: { ok: true, sent: 1 }, error: null });
+        getClient = vi.fn().mockResolvedValue({rpc, functions: {invoke}});
         TestBed.configureTestingModule({ providers: [
                 AdminService,
                 { provide: SpotifyAuthService, useValue: auth },
-                { provide: SupabaseService, useValue: { client: { rpc, functions: { invoke } } } }
+                { provide: SupabaseService, useValue: { client: { rpc, functions: { invoke } }, getClient } }
             ] });
         service = TestBed.inject(AdminService);
+    });
+
+    it('waits for client readiness before requesting public settings', async () => {
+        let ready!: (client: any) => void;
+        getClient.mockReturnValue(new Promise(resolve => { ready = resolve; }));
+        rpc.mockResolvedValue({data: [{announcement: 'Hello', allow_song_league_creation: false}], error: null});
+        const pending = service.loadSiteSettings();
+        expect(rpc).not.toHaveBeenCalled();
+        ready({rpc});
+        expect(await pending).toEqual({announcement: 'Hello', allowSongLeagueCreation: false});
+        expect(rpc).toHaveBeenCalledWith('get_public_site_settings');
+    });
+
+    it('coalesces admin checks while client readiness is pending', async () => {
+        auth.getSupabaseUserId.mockReturnValue('cloud-user');
+        let ready!: (client: any) => void;
+        getClient.mockReturnValue(new Promise(resolve => { ready = resolve; }));
+        const first = service.isAdmin();
+        const second = service.isAdmin();
+        expect(first).toBe(second);
+        expect(rpc).not.toHaveBeenCalled();
+        ready({rpc});
+        expect(await first).toBe(true);
+        expect(getClient).toHaveBeenCalledOnce();
+        expect(rpc).toHaveBeenCalledOnce();
+    });
+
+    it('propagates client initialization failure without sending a settings request', async () => {
+        const failure = new Error('Client initialization failed');
+        getClient.mockRejectedValue(failure);
+        await expect(service.loadSiteSettings()).rejects.toBe(failure);
+        expect(rpc).not.toHaveBeenCalled();
     });
 
     it('does not query Supabase for a local-only session', async () => {

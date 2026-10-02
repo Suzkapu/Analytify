@@ -25,7 +25,7 @@ export class AdminService {
     }
     if (!this.adminPromise || refresh || this.adminUserId !== userId) {
       this.adminUserId = userId;
-      this.adminPromise = Promise.resolve(this.supabase.client.rpc('is_app_admin')).then(({data, error}) => {
+      this.adminPromise = this.supabase.getClient().then(client => client.rpc('is_app_admin')).then(({data, error}) => {
         if (error) return false;
         return data === true;
       });
@@ -34,7 +34,8 @@ export class AdminService {
   }
 
   async loadSiteSettings(): Promise<SiteSettings> {
-    const {data, error} = await this.supabase.client.rpc('get_public_site_settings');
+    const client = await this.supabase.getClient();
+    const {data, error} = await client.rpc('get_public_site_settings');
     if (error) throw error;
     const row = data?.[0] || {};
     return {
