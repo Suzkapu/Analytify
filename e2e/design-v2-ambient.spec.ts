@@ -125,3 +125,30 @@ test('v2 ambient layer remains static with reduced motion', async ({page}) => {
   }))).toEqual(initial);
   await expect(page.locator('.ambient-dots')).toHaveCSS('transform', 'none');
 });
+
+test('reduced motion suppresses native route snapshot animations without losing navigation', async ({page}) => {
+  await page.emulateMedia({reducedMotion: 'reduce'});
+  await page.addInitScript(() => {
+    const native = document.startViewTransition.bind(document);
+    (window as any).__reducedTransitionStyles = null;
+    document.startViewTransition = ((callback: () => void | Promise<void>) => {
+      const transition = native(callback);
+      void transition.ready.then(() => {
+        (window as any).__reducedTransitionStyles = ['::view-transition-group(root)',
+          '::view-transition-old(root)', '::view-transition-new(root)'].map(pseudo =>
+          getComputedStyle(document.documentElement, pseudo).animationName);
+      }).catch(() => { (window as any).__reducedTransitionStyles = ['transition-ready-rejected']; });
+      return transition;
+    }) as typeof document.startViewTransition;
+  });
+  await mockSpotify(page);
+  await seedAuthenticatedBrowser(page);
+  await page.goto('/playlists');
+  await expect(page.getByRole('heading', {name: 'Your playlists', exact: true})).toBeVisible();
+  await page.getByRole('button', {name: 'Open More tools'}).click();
+  await page.getByRole('link', {name: /Compare Room/}).click();
+  await expect(page.getByRole('main', {name: 'Compare Room content'})).toBeFocused();
+  await expect.poll(() => page.evaluate(() => (window as any).__reducedTransitionStyles))
+    .toEqual(['none', 'none', 'none']);
+  await expect(page.locator('app-ambient-background')).toHaveCount(1);
+});
