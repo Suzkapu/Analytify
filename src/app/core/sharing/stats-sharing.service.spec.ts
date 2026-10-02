@@ -230,9 +230,9 @@ describe('StatsSharingService', () => {
         ]);
     });
 
-    it('subscribes to access changes and removes its realtime channel', () => {
+    it('subscribes to access changes and removes its realtime channel', async () => {
         const onChange = vi.fn().mockName('onChange');
-        const unsubscribe = service.subscribeToAccessChanges(onChange);
+        const unsubscribe = await service.subscribeToAccessChanges(onChange);
 
         expect(channel.on).toHaveBeenCalledWith('postgres_changes', expect.objectContaining({
             event: '*', schema: 'public', table: 'stats_access_requests'
@@ -243,5 +243,26 @@ describe('StatsSharingService', () => {
         unsubscribe();
         expect(removeChannel).toHaveBeenCalledTimes(1);
         expect(removeChannel).toHaveBeenCalledWith(channel);
+        unsubscribe();
+        changeHandler?.();
+        expect(removeChannel).toHaveBeenCalledTimes(1);
+        expect(onChange).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not subscribe until client readiness resolves', async () => {
+        let resolveClient!: (client: any) => void;
+        getClient.mockReturnValue(new Promise(resolve => { resolveClient = resolve; }));
+        const subscription = service.subscribeToAccessChanges(vi.fn());
+        expect(channel.subscribe).not.toHaveBeenCalled();
+        resolveClient({ channel: () => channel, removeChannel });
+        const unsubscribe = await subscription;
+        expect(channel.subscribe).toHaveBeenCalledTimes(1);
+        unsubscribe();
+    });
+
+    it('propagates realtime initialization failure without subscribing', async () => {
+        getClient.mockRejectedValue(new Error('Client unavailable'));
+        await expect(service.subscribeToAccessChanges(vi.fn())).rejects.toThrow('Client unavailable');
+        expect(channel.subscribe).not.toHaveBeenCalled();
     });
 });

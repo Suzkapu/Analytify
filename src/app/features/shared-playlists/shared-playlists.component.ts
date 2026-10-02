@@ -98,7 +98,15 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
       this.reloadSilently();
     });
     if (this.restrictedFeaturesEnabled) {
-      this.unsubscribeFromStatsChanges = this.statsSharing.subscribeToAccessChanges(() => this.reloadSilently());
+      try {
+        const unsubscribe = await this.statsSharing.subscribeToAccessChanges(() => {
+          if (!this.destroyed) this.reloadSilently();
+        });
+        if (this.destroyed) unsubscribe();
+        else this.unsubscribeFromStatsChanges = unsubscribe;
+      } catch (error) {
+        if (!this.destroyed) this.errorMessage = this.describeError(error);
+      }
     }
   }
 

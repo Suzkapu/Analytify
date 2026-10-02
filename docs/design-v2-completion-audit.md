@@ -266,3 +266,7 @@ All 694 unit tests, unchanged coverage gates, lint, and production index/bundle 
 ## Stats Sharing RPC readiness (2026-10-02)
 
 All StatsSharingService RPC operations now await client readiness. New delayed-readiness and failed-initialization tests prove that access requests are not sent before initialization and that failures propagate without an RPC. All 13 Stats Sharing service tests passed. This step does not defer SDK initialization: its synchronous realtime subscription and other consumers still require migration before the constructor can change. No performance improvement or completion of the remaining release gates is claimed.
+
+## Stats Sharing realtime readiness (2026-10-02)
+
+Stats access subscriptions now await readiness, retain the exact originating client for removal, ignore callbacks after disposal, and dispose idempotently. The sharing page immediately removes a subscription whose initialization finishes after destruction, and reports initialization failure only while alive. Delayed initialization, failed initialization, late completion after destruction, repeated cleanup, and post-cleanup callbacks are covered. All 43 targeted sharing tests and all 700 unit tests passed, alongside unchanged coverage gates, test typechecking, lint, and production index/bundle gates. Initial JavaScript remains 748,506 bytes; previously recorded warnings remain. Other sharing, authentication, league, transport, and internal client reads still prevent deferred SDK construction, so startup optimization remains incomplete.

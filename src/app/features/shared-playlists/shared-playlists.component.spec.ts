@@ -87,7 +87,7 @@ describe('SharedPlaylistsComponent', () => {
         statsSharing.listAvailableUsers.mockResolvedValue([]);
         statsSharing.listAccessRequests.mockResolvedValue([]);
         statsSharing.listModerationCases.mockResolvedValue([]);
-        statsSharing.subscribeToAccessChanges.mockReturnValue(vi.fn().mockName('unsubscribeStats'));
+        statsSharing.subscribeToAccessChanges.mockResolvedValue(vi.fn().mockName('unsubscribeStats'));
         statsSharing.requestAccess.mockResolvedValue('request-id');
         statsSharing.createAccessInvite.mockResolvedValue({
             inviteId: 'invite-id',
@@ -142,6 +142,28 @@ describe('SharedPlaylistsComponent', () => {
         fixture.detectChanges();
         await fixture.whenStable();
         expect(startAutoSync).toHaveBeenCalledTimes(1);
+    });
+
+    it('cleans up a stats subscription that resolves after destruction', async () => {
+        let resolveSubscription!: (cleanup: () => void) => void;
+        statsSharing.subscribeToAccessChanges.mockReturnValue(new Promise(resolve => {
+            resolveSubscription = resolve;
+        }));
+        const initialization = component.ngOnInit();
+        await vi.waitFor(() => expect(statsSharing.subscribeToAccessChanges).toHaveBeenCalled());
+        component.ngOnDestroy();
+        const cleanup = vi.fn();
+        resolveSubscription(cleanup);
+        await initialization;
+        expect(cleanup).toHaveBeenCalledTimes(1);
+        component.ngOnDestroy();
+        expect(cleanup).toHaveBeenCalledTimes(1);
+    });
+
+    it('shows stats realtime initialization errors while the page remains open', async () => {
+        statsSharing.subscribeToAccessChanges.mockRejectedValue(new Error('Client unavailable'));
+        await component.ngOnInit();
+        expect(component.errorMessage).toBe('Client unavailable');
     });
 
     it('keeps stats requests available but blocks playlist publishing without Cloud Backup', async () => {

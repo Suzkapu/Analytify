@@ -247,16 +247,20 @@ export class StatsSharingService {
     };
   }
 
-  subscribeToAccessChanges(onChange: () => void): () => void {
+  async subscribeToAccessChanges(onChange: () => void): Promise<() => void> {
+    const client = await this.supabase.getClient();
+    let disposed = false;
     const suffix = crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`;
-    const channel = this.supabase.client
+    const channel = client
       .channel(`stats-access-updates:${suffix}`)
       .on('postgres_changes', {
         event: '*', schema: 'public', table: 'stats_access_requests'
-      }, () => onChange())
+      }, () => { if (!disposed) onChange(); })
       .subscribe();
     return () => {
-      void this.supabase.client.removeChannel(channel);
+      if (disposed) return;
+      disposed = true;
+      void client.removeChannel(channel);
     };
   }
 
