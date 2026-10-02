@@ -168,3 +168,11 @@ The complete eight-case Insights browser suite and lint passed after adding the 
 A regression added before the implementation change failed with ten `scrollHeight` reads for ten scroll events. Scroll/resize handlers now only mark metrics pending and schedule the existing single frame. That frame reads geometry once before style writes; interpolation frames reuse it until another event. Visibility restoration and re-enabling motion request fresh metrics, while hidden/reduced-motion events perform no geometry reads. Resize now updates normalized progress without requiring a scroll event, and its listener is removed on destruction.
 
 Four new behavioral unit cases cover burst coalescing/read-before-write order, hidden/visible transitions, reduced-motion restoration, and resize-only progress. Full verification passed with 681 unit tests and unchanged per-file coverage allowances; lint and all 12 ambient browser cases passed. The measured ten-to-one read reduction is not a claim that forced layout, INP, or physical-device jank has been fully profiled or eliminated.
+
+## Route-driven ambient frames outside Angular (2026-10-02)
+
+A regression demonstrated that changing the route input inside Angular scheduled the animation frame inside Angular as well. Frame scheduling now explicitly runs outside Angular, including route-driven restarts. The new behavioral unit test failed before the fix and passes afterward. This prevents that scheduling path from re-entering Angular through its patched frame callback; it does not replace Angular DevTools profiling or physical-device performance measurements.
+
+Full verification passed with 682 unit tests, unchanged per-file coverage allowances, and production index/bundle gates. Lint and all 12 ambient browser cases passed. Independent production inspection still identified `7a6008e0a1a0e418cde371e1622cfdf36360cc1a`, deployed at `2026-10-02T03:06:14Z`, before these follow-ups were pushed.
+
+The user confirmed that no real screen-reader test has been performed and their browser is Brave Origin. That requirement remains explicitly unverified, alongside the outstanding broader performance and real staging-rollback evidence; #163/#164/#165 are not complete.

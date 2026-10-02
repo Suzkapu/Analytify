@@ -1,4 +1,5 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {NgZone} from '@angular/core';
 import {AmbientBackgroundComponent} from './ambient-background.component';
 
 interface TestMediaQuery extends MediaQueryList {
@@ -201,5 +202,23 @@ describe('AmbientBackgroundComponent', () => {
     window.dispatchEvent(new Event('resize'));
     runFrames();
     expect(fixture.componentInstance.state.scrollProgress()).toBe(.25);
+  });
+
+  it('schedules route-driven frames outside Angular even when inputs change inside Angular', () => {
+    fixture.detectChanges();
+    runFrames(60);
+    const schedulingZones: boolean[] = [];
+    vi.mocked(window.requestAnimationFrame).mockImplementation(callback => {
+      schedulingZones.push(NgZone.isInAngularZone());
+      const id = nextFrame++;
+      frames.set(id, callback);
+      return id;
+    });
+    TestBed.inject(NgZone).run(() => {
+      fixture.componentRef.setInput('ambientKey', 'insights');
+      fixture.detectChanges();
+    });
+    expect(frames.size).toBe(1);
+    expect(schedulingZones).toEqual([false]);
   });
 });

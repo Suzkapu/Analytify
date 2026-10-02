@@ -95,7 +95,7 @@ export class AmbientBackgroundComponent implements AfterViewInit, OnDestroy {
 
   private scheduleFrame(): void {
     if (!this.viewReady || this.state.paused() || this.state.reducedMotion() || this.frameId !== null) return;
-    this.frameId = window.requestAnimationFrame(time => this.animate(time));
+    this.frameId = this.zone.runOutsideAngular(() => window.requestAnimationFrame(time => this.animate(time)));
   }
 
   private animate(time: number): void {
