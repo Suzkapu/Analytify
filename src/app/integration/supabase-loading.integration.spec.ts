@@ -97,9 +97,10 @@ integrationDescribe('real Supabase-first playlist and stats loading', () => {
         });
 
         supabase = TestBed.inject(SupabaseService);
-        supabase.client = createClient(supabaseUrl, supabaseAnonKey, {
+        const client = createClient(supabaseUrl, supabaseAnonKey, {
             auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
         });
+        vi.spyOn(supabase, 'getClient').mockResolvedValue(client);
         storage = TestBed.inject(StorageService);
         http = TestBed.inject(HttpTestingController);
 

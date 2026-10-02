@@ -1,11 +1,32 @@
-import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
+import {createClient} from '@supabase/supabase-js';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '@env/environment';
 import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {KeyedSerialTaskQueue} from '@core/performance/async-load';
 import {sanitizeSpotifyUrl} from '@core/navigation/spotify-url';
 
 const console = createScopedLogger('Supabase');
+
+export async function loadSupabaseClient(
+  loadSdk: () => Promise<Pick<typeof import('@supabase/supabase-js'), 'createClient'>> = async () => ({createClient})
+): Promise<SupabaseClient> {
+  const {createClient} = await loadSdk();
+  return createClient(environment.supabaseUrl, environment.supabaseKey, {
+    auth: {
+      flowType: 'pkce',
+      // The callback component exchanges the one-time code explicitly.
+      detectSessionInUrl: false,
+      persistSession: true,
+      autoRefreshToken: true
+    }
+  });
+}
+
+export const SUPABASE_CLIENT_FACTORY = new InjectionToken<() => Promise<SupabaseClient>>(
+  'SUPABASE_CLIENT_FACTORY',
+  {providedIn: 'root', factory: () => () => loadSupabaseClient()}
+);
 
 export interface PastTopItem {
   kind: 'track' | 'artist' | 'genre';
@@ -60,25 +81,21 @@ function getStatsSnapshotCutoff(maxAgeDays: number): string {
   providedIn: 'root'
 })
 export class SupabaseService {
-  public client: SupabaseClient;
+  private clientPromise: Promise<SupabaseClient> | null = null;
   private readonly statsSnapshotWrites = new KeyedSerialTaskQueue();
 
-  constructor() {
-    this.client = createClient(environment.supabaseUrl, environment.supabaseKey, {
-      auth: {
-        flowType: 'pkce',
-        // The Angular callback component performs the exchange explicitly so
-        // the one-time code cannot be consumed by two competing flows.
-        detectSessionInUrl: false,
-        persistSession: true,
-        autoRefreshToken: true
-      }
-    });
-  }
+  constructor(@Inject(SUPABASE_CLIENT_FACTORY) private createClient: () => Promise<SupabaseClient>) {}
 
-  /** Explicit readiness boundary for consumers being migrated to deferred SDK loading. */
+  /** Shares on-demand client initialization and allows failed loads to retry. */
   getClient(): Promise<SupabaseClient> {
-    return Promise.resolve(this.client);
+    if (!this.clientPromise) {
+      const request = Promise.resolve().then(() => this.createClient());
+      this.clientPromise = request;
+      void request.catch(() => {
+        if (this.clientPromise === request) this.clientPromise = null;
+      });
+    }
+    return this.clientPromise;
   }
 
   /** Creates an authenticated database identity for collaboration without

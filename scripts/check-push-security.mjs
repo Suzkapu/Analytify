@@ -15,7 +15,7 @@ const contracts = [
   ['old deliveries are removed before transfer', migration.includes('delete from public.push_subscriptions where id = v_subscription.id')],
   ['endpoint ownership transitions are serialized', migration.includes('pg_advisory_xact_lock')],
   ['logout unlinks before Supabase signout', auth.indexOf('await this.unlinkCurrentPushDevice();')
-    < auth.indexOf('await this.supabaseService.client.auth.signOut();')],
+    < auth.indexOf('await (await this.supabaseService.getClient()).auth.signOut();')],
   ['browser permission remains intact', !auth.includes('subscription.unsubscribe()')],
   ['delivery revalidates legacy rows', webPush.includes('normalizedPushEndpoint(subscription.endpoint)')],
   ['push fetch rejects redirects', webPush.includes("redirect: 'manual'")],

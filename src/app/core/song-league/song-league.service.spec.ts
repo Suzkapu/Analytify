@@ -40,7 +40,16 @@ describe('SongLeagueService', () => {
         channel.on.mockReturnValue(channel);
         channel.subscribe.mockReturnValue(channel);
         removeChannel = vi.fn().mockName('removeChannel').mockResolvedValue(undefined);
-        getClient = vi.fn().mockImplementation(async () => TestBed.inject(SupabaseService).client);
+        const client = {
+            rpc,
+            functions: { invoke },
+            auth: { getUser: vi.fn().mockName('getUser').mockResolvedValue({
+                data: { user: { id: 'member-id' } }, error: null
+            }) },
+            channel: vi.fn().mockName('channel').mockReturnValue(channel),
+            removeChannel
+        };
+        getClient = vi.fn().mockResolvedValue(client);
 
         TestBed.configureTestingModule({
             providers: [
@@ -53,15 +62,7 @@ describe('SongLeagueService', () => {
                         syncTracks,
                         loadLatestStatsSnapshot,
                         saveStatsSnapshot,
-                        client: {
-                            rpc,
-                            functions: { invoke },
-                            auth: { getUser: vi.fn().mockName('getUser').mockResolvedValue({
-                                    data: { user: { id: 'member-id' } }, error: null
-                                }) },
-                            channel: vi.fn().mockName('channel').mockReturnValue(channel),
-                            removeChannel
-                        }
+                        client
                     }
                 }
             ]
