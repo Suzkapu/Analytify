@@ -13,11 +13,16 @@ test('live cache validation rejects stale metadata and conflicting asset directi
   assert.equal(hasImmutableAssetCaching(immutable), true);
   assert.equal(hasMutableMetadataCaching(immutable), false);
   for (const value of ['', 'public, max-age=60', 'public, max-age=31536000, immutable, no-cache',
-    'private, max-age=31536000, immutable']) {
+    'private, max-age=31536000, immutable',
+    'public, max-age=31536000, immutable, max-age=60',
+    'public, max-age=31536000, immutable, private="Authorization"']) {
     assert.equal(hasImmutableAssetCaching(new Headers({'cache-control': value})), false);
   }
   for (const value of ['', 'no-cache', 'no-store', 'max-age=0']) {
     assert.equal(hasMutableMetadataCaching(new Headers({'cache-control': value})), true);
+  }
+  for (const value of ['max-age="60"', 'max-age = 60', 's-maxage=60', 'max-age=garbage']) {
+    assert.equal(hasMutableMetadataCaching(new Headers({'cache-control': value})), false, value);
   }
 });
 

@@ -3,12 +3,16 @@ export function hashedMainAsset(html) {
 }
 
 export function hasImmutableAssetCaching(headers) {
-  const directives = new Set((headers.get('cache-control') || '').toLowerCase().split(',').map(value => value.trim()));
-  return ['public', 'max-age=31536000', 'immutable'].every(value => directives.has(value))
-    && !['private', 'no-cache', 'no-store'].some(value => directives.has(value));
+  const directives = (headers.get('cache-control') || '').toLowerCase().split(',').map(value => value.trim());
+  const ages = directives.filter(value => /^max-age(?:\s*=|$)/.test(value));
+  return ['public', 'immutable'].every(value => directives.includes(value))
+    && ages.length === 1 && ages[0] === 'max-age=31536000'
+    && !directives.some(value => /^(?:private|no-cache|no-store)(?:\s*=|$)/.test(value));
 }
 
 export function hasMutableMetadataCaching(headers) {
-  const value = headers.get('cache-control') || '';
-  return !/\bimmutable\b/i.test(value) && !/\bmax-age=[1-9]\d*/i.test(value);
+  const directives = (headers.get('cache-control') || '').toLowerCase().split(',').map(value => value.trim());
+  const ages = directives.filter(value => /^(?:s-maxage|max-age)(?:\s*=|$)/.test(value));
+  return !directives.some(value => /^immutable(?:\s*=|$)/.test(value))
+    && ages.every(value => /^(?:s-maxage|max-age)\s*=\s*(?:0|"0")$/.test(value));
 }

@@ -226,3 +226,9 @@ HTTP assertions confirmed immutable caching on a successful hashed JS fixture an
 ## Live cache-policy regression gate (2026-10-02)
 
 Extended the deployment's application probe to identify a same-origin hashed main script from the actual served HTML and require a successful JavaScript HEAD response with immutable caching and intact security headers. HTML, `ngsw.json`, and version metadata must not have immutable or positive max-age caching. Nested asset fetches share the probe deadline signal. Pure policy tests reject missing/conflicting/private directives, unhashed paths, and external or traversal script URLs. All 41 deployment regression cases, lint, and probe syntax checks passed. The `5ebd020` release was still in progress before this follow-up; these assertions are not yet production-pass evidence.
+
+## Conflicting cache-header regression (2026-10-02)
+
+Added cases for duplicate conflicting max-age values, field-specific private directives, quoted/whitespace-separated positive metadata ages, shared-cache ages, and malformed ages. The new regression failed before implementation: the asset checker accepted a conflicting max-age. It now requires exactly one expected asset age and rejects private/no-cache/no-store directives even with field arguments. Metadata ages must explicitly be zero if supplied; malformed values do not pass. All seven security-policy tests, the complete 41-case deployment suite, and lint passed.
+
+Release `37032927395` for `5ebd020` was independently confirmed still running its browser verification; no restart or superseding push was performed. Live version inspection continued to report `884186b`, not the cache/font candidate. Production improvement remains unverified.
