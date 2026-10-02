@@ -278,3 +278,7 @@ Playlist Sharing RPCs, table reads, and auth reads now await client readiness. M
 ## Playlist realtime readiness (2026-10-02)
 
 Playlist subscriptions retain their synchronous cleanup API while awaiting client readiness internally. Disposal before readiness prevents channel creation; later disposal removes the originating client's channel exactly once and suppresses subsequent callbacks. Initialization/removal failures are reported as explicit warnings rather than unhandled rejections. All seven targeted sharing test files passed (78 tests); the subsequently added originating-client regression passed in the final 17-test Playlist Sharing service run. Test typechecking and lint passed. PlaylistSharingService no longer directly reads the synchronous client. Authentication, league, transport, and SupabaseService itself remain to migrate before dynamic SDK initialization; release completion remains unproven.
+
+## Song League data readiness (2026-10-02)
+
+Song League RPCs, auth reads, table reads, and edge-function calls now await readiness. Dashboard loading uses one initialized client and retains concurrent member/recommendation/playlist reads. Delayed-readiness and initialization-failure regressions verify that leaving waits and failed initialization cannot send a deletion request. All 25 Song League service tests, test typechecking, and lint passed. The realtime subscription still needs migration, as do authentication, transport, and internal SupabaseService operations. No deferred SDK loading or completed performance gate is claimed.

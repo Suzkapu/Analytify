@@ -17,6 +17,7 @@ describe('SongLeagueService', () => {
     let spotify: any;
     let channel: any;
     let removeChannel: Mock;
+    let getClient: Mock;
 
     beforeEach(() => {
         rpc = vi.fn().mockName('rpc').mockResolvedValue({ data: 'league-id', error: null });
@@ -39,6 +40,7 @@ describe('SongLeagueService', () => {
         channel.on.mockReturnValue(channel);
         channel.subscribe.mockReturnValue(channel);
         removeChannel = vi.fn().mockName('removeChannel').mockResolvedValue(undefined);
+        getClient = vi.fn().mockImplementation(async () => TestBed.inject(SupabaseService).client);
 
         TestBed.configureTestingModule({
             providers: [
@@ -47,6 +49,7 @@ describe('SongLeagueService', () => {
                 {
                     provide: SupabaseService,
                     useValue: {
+                        getClient,
                         syncTracks,
                         loadLatestStatsSnapshot,
                         saveStatsSnapshot,
@@ -64,6 +67,22 @@ describe('SongLeagueService', () => {
             ]
         });
         service = TestBed.inject(SongLeagueService);
+    });
+
+    it('waits for client readiness before leaving a league', async () => {
+        let resolveClient!: (client: any) => void;
+        getClient.mockReturnValue(new Promise(resolve => { resolveClient = resolve; }));
+        const leaving = service.leaveLeague('league-id');
+        expect(rpc).not.toHaveBeenCalled();
+        resolveClient({ rpc });
+        await leaving;
+        expect(rpc).toHaveBeenCalledWith('leave_song_league', { p_league_id: 'league-id' });
+    });
+
+    it('does not delete a league if initialization fails', async () => {
+        getClient.mockRejectedValue(new Error('Client unavailable'));
+        await expect(service.deleteLeague('league-id')).rejects.toThrow('Client unavailable');
+        expect(rpc).not.toHaveBeenCalled();
     });
 
     it('streams recommendation, score, playlist, roster, and league lifecycle changes', () => {

@@ -39,7 +39,7 @@ export class SongLeagueService {
       ? this.pendingLeagueCreation
       : {fingerprint, inviteToken: this.createToken(), idempotencyKey: this.createToken()};
     this.pendingLeagueCreation = pending;
-    const {data, error} = await this.supabase.client.rpc('create_song_league', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('create_song_league', {
       p_name: normalizedName,
       p_timezone: timezone,
       p_max_members: maxMembers,
@@ -58,7 +58,7 @@ export class SongLeagueService {
 
   async createInvite(leagueId: string, expiresInHours = 168): Promise<{id: string; url: string}> {
     const token = this.createToken();
-    const {data, error} = await this.supabase.client.rpc('rotate_song_league_invite', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('rotate_song_league_invite', {
       p_league_id: leagueId,
       p_invite_token: token,
       p_expires_in_hours: expiresInHours,
@@ -72,7 +72,7 @@ export class SongLeagueService {
   }
 
   async listActiveInvites(leagueId: string): Promise<SongLeagueInvite[]> {
-    const {data, error} = await this.supabase.client.rpc('list_song_league_invites', {p_league_id: leagueId});
+    const {data, error} = await (await this.supabase.getClient()).rpc('list_song_league_invites', {p_league_id: leagueId});
     if (error) throw error;
     return (data || []).map((row: any) => ({
       id: row.invite_id,
@@ -86,12 +86,12 @@ export class SongLeagueService {
   }
 
   async revokeInvite(inviteId: string): Promise<void> {
-    const {error} = await this.supabase.client.rpc('revoke_song_league_invite', {p_invite_id: inviteId});
+    const {error} = await (await this.supabase.getClient()).rpc('revoke_song_league_invite', {p_invite_id: inviteId});
     if (error) throw error;
   }
 
   async revokeAllInvites(leagueId: string): Promise<number> {
-    const {data, error} = await this.supabase.client.rpc('revoke_all_song_league_invites', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('revoke_all_song_league_invites', {
       p_league_id: leagueId
     });
     if (error) throw error;
@@ -99,14 +99,14 @@ export class SongLeagueService {
   }
 
   async approveRejoin(leagueId: string, userId: string): Promise<void> {
-    const {error} = await this.supabase.client.rpc('approve_song_league_rejoin', {
+    const {error} = await (await this.supabase.getClient()).rpc('approve_song_league_rejoin', {
       p_league_id: leagueId, p_user_id: userId
     });
     if (error) throw error;
   }
 
   async requestRejoin(token: string): Promise<SongLeagueRejoinRequest> {
-    const {data, error} = await this.supabase.client.rpc('request_song_league_rejoin', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('request_song_league_rejoin', {
       p_invite_token: token
     });
     if (error) throw error;
@@ -116,7 +116,7 @@ export class SongLeagueService {
   }
 
   async getMyRejoinRequest(token: string): Promise<SongLeagueRejoinRequest | null> {
-    const {data, error} = await this.supabase.client.rpc('get_my_song_league_rejoin_request', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('get_my_song_league_rejoin_request', {
       p_invite_token: token
     });
     if (error) throw error;
@@ -125,7 +125,7 @@ export class SongLeagueService {
   }
 
   async listRejoinRequests(leagueId: string): Promise<SongLeagueRejoinRequest[]> {
-    const {data, error} = await this.supabase.client.rpc('list_song_league_rejoin_requests', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('list_song_league_rejoin_requests', {
       p_league_id: leagueId
     });
     if (error) throw error;
@@ -133,14 +133,14 @@ export class SongLeagueService {
   }
 
   async respondToRejoinRequest(requestId: string, decision: 'approved' | 'declined'): Promise<void> {
-    const {error} = await this.supabase.client.rpc('respond_song_league_rejoin_request', {
+    const {error} = await (await this.supabase.getClient()).rpc('respond_song_league_rejoin_request', {
       p_request_id: requestId, p_decision: decision
     });
     if (error) throw error;
   }
 
   async listLifecycleEvents(leagueId: string): Promise<SongLeagueLifecycleEvent[]> {
-    const {data, error} = await this.supabase.client.rpc('list_song_league_lifecycle_events', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('list_song_league_lifecycle_events', {
       p_league_id: leagueId
     });
     if (error) throw error;
@@ -156,7 +156,7 @@ export class SongLeagueService {
   }
 
   async setMemberLimit(leagueId: string, maxMembers: number): Promise<number> {
-    const {data, error} = await this.supabase.client.rpc('set_song_league_member_limit', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('set_song_league_member_limit', {
       p_league_id: leagueId,
       p_max_members: maxMembers
     });
@@ -165,7 +165,7 @@ export class SongLeagueService {
   }
 
   async claimLeague(token: string): Promise<string> {
-    const {data, error} = await this.supabase.client.rpc('claim_song_league', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('claim_song_league', {
       p_invite_token: token
     });
     if (error) throw error;
@@ -175,36 +175,36 @@ export class SongLeagueService {
   }
 
   async leaveLeague(leagueId: string): Promise<void> {
-    const {error} = await this.supabase.client.rpc('leave_song_league', {p_league_id: leagueId});
+    const {error} = await (await this.supabase.getClient()).rpc('leave_song_league', {p_league_id: leagueId});
     if (error) throw error;
   }
 
   async closeLeague(leagueId: string): Promise<void> {
-    const {error} = await this.supabase.client.rpc('close_song_league', {p_league_id: leagueId});
+    const {error} = await (await this.supabase.getClient()).rpc('close_song_league', {p_league_id: leagueId});
     if (error) throw error;
   }
 
   async removeMember(leagueId: string, userId: string): Promise<void> {
-    const {error} = await this.supabase.client.rpc('remove_song_league_member', {
+    const {error} = await (await this.supabase.getClient()).rpc('remove_song_league_member', {
       p_league_id: leagueId, p_user_id: userId
     });
     if (error) throw error;
   }
 
   async transferOwnership(leagueId: string, userId: string): Promise<void> {
-    const {error} = await this.supabase.client.rpc('transfer_song_league_ownership', {
+    const {error} = await (await this.supabase.getClient()).rpc('transfer_song_league_ownership', {
       p_league_id: leagueId, p_new_owner_user_id: userId
     });
     if (error) throw error;
   }
 
   async deleteLeague(leagueId: string): Promise<void> {
-    const {error} = await this.supabase.client.rpc('delete_song_league', {p_league_id: leagueId});
+    const {error} = await (await this.supabase.getClient()).rpc('delete_song_league', {p_league_id: leagueId});
     if (error) throw error;
   }
 
   async listLeagues(closed = false): Promise<SongLeague[]> {
-    let query = this.supabase.client
+    let query = (await this.supabase.getClient())
       .from('song_leagues')
       .select('*');
     query = closed ? query.not('closed_at', 'is', null) : query.is('closed_at', null);
@@ -214,12 +214,13 @@ export class SongLeagueService {
   }
 
   async loadDashboard(leagueId: string): Promise<SongLeagueDashboard> {
-    const leagueResult = await this.supabase.client.from('song_leagues').select('*').eq('id', leagueId).maybeSingle();
+    const client = await this.supabase.getClient();
+    const leagueResult = await client.from('song_leagues').select('*').eq('id', leagueId).maybeSingle();
     if (leagueResult.error) throw leagueResult.error;
     if (!leagueResult.data) throw new Error('This Song League is unavailable.');
     const isClosed = !!leagueResult.data.closed_at;
-    let memberQuery = this.supabase.client.from('song_league_members').select('*').eq('league_id', leagueId);
-    let recommendationQuery = this.supabase.client.from('song_league_recommendations').select('*').eq('league_id', leagueId);
+    let memberQuery = client.from('song_league_members').select('*').eq('league_id', leagueId);
+    let recommendationQuery = client.from('song_league_recommendations').select('*').eq('league_id', leagueId);
     if (!isClosed) {
       memberQuery = memberQuery.is('left_at', null);
       recommendationQuery = recommendationQuery.gte('scoring_ends_at', new Date().toISOString());
@@ -227,7 +228,7 @@ export class SongLeagueService {
     const [memberResult, recommendationResult, playlistResult] = await Promise.all([
       memberQuery.order('joined_at', {ascending: true}),
       recommendationQuery.order('submitted_at', {ascending: false}),
-      this.supabase.client.from('song_league_playlists').select('*')
+      client.from('song_league_playlists').select('*')
         .eq('league_id', leagueId).order('updated_at', {ascending: false})
     ]);
     if (memberResult.error) throw memberResult.error;
@@ -252,7 +253,7 @@ export class SongLeagueService {
   }
 
   async loadScoreBreakdown(leagueId: string, recommenderUserId: string): Promise<SongLeagueScoreBreakdown[]> {
-    const {data, error} = await this.supabase.client.rpc('get_song_league_score_breakdown', {
+    const {data, error} = await (await this.supabase.getClient()).rpc('get_song_league_score_breakdown', {
       p_league_id: leagueId,
       p_recommender_user_id: recommenderUserId
     });
@@ -295,7 +296,7 @@ export class SongLeagueService {
   async submitRecommendation(leagueId: string, track: SongLeagueTrack, isDemo = false): Promise<string> {
     if (!track?.id) throw new Error('Choose a Spotify track first.');
     await this.supabase.syncTracks([track]);
-    const {data, error} = await this.supabase.client.rpc(
+    const {data, error} = await (await this.supabase.getClient()).rpc(
       isDemo ? 'submit_song_league_demo_recommendation' : 'submit_song_league_recommendation', {
       p_league_id: leagueId,
       p_track_id: track.id
@@ -307,7 +308,7 @@ export class SongLeagueService {
   }
 
   async syncWeeklyPlaylists(leagueId: string, createForCurrentUser = false): Promise<void> {
-    const {data, error} = await this.supabase.client.functions.invoke('song-league-playlist-sync', {
+    const {data, error} = await (await this.supabase.getClient()).functions.invoke('song-league-playlist-sync', {
       body: {leagueId, createForCurrentUser}
     });
     if (error) throw error;
@@ -342,7 +343,7 @@ export class SongLeagueService {
   }
 
   async currentUserId(): Promise<string> {
-    const {data, error} = await this.supabase.client.auth.getUser();
+    const {data, error} = await (await this.supabase.getClient()).auth.getUser();
     if (error) throw error;
     if (!data.user) throw new Error('A Supabase login is required for Song League.');
     return data.user.id;
@@ -353,7 +354,7 @@ export class SongLeagueService {
     timezone: string,
     now: Date = new Date()
   ): Promise<{refreshed: boolean; snapshotDate: string}> {
-    const {error: settingsError} = await this.supabase.client.rpc(
+    const {error: settingsError} = await (await this.supabase.getClient()).rpc(
       'ensure_song_league_member_sync',
       {p_league_id: leagueId}
     );
@@ -535,7 +536,7 @@ export class SongLeagueService {
   ): Promise<SongLeagueStanding[]> {
     const cutoff = new Date();
     cutoff.setUTCDate(cutoff.getUTCDate() - 6);
-    const {data: recentEvents, error} = await this.supabase.client
+    const {data: recentEvents, error} = await (await this.supabase.getClient())
       .from('song_league_score_events')
       .select('recommendation_id, points')
       .eq('league_id', leagueId)
