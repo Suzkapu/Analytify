@@ -231,6 +231,8 @@ export class PlaylistSharingService {
   }
 
   subscribeToShareChanges(onChange: () => void, shareId?: string): () => void {
+    let disposed = false;
+    let removeChannel: (() => void) | null = null;
     const suffix = crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`;
     const postgresFilter: any = {
       event: '*',
@@ -238,18 +240,31 @@ export class PlaylistSharingService {
       table: 'playlist_shares'
     };
     if (shareId) postgresFilter.filter = `id=eq.${shareId}`;
-    const channel = this.supabase.client
+    void this.supabase.getClient().then(client => {
+      if (disposed) return;
+      const notify = () => { if (!disposed) onChange(); };
+      const channel = client
       .channel(`playlist-share-updates:${suffix}`)
-      .on('postgres_changes', postgresFilter, () => onChange())
+      .on('postgres_changes', postgresFilter, notify)
       .on('postgres_changes', {
         event: 'INSERT',
         schema: 'public',
         table: 'playlist_share_revocations',
         ...(shareId ? {filter: `share_id=eq.${shareId}`} : {})
-      }, () => onChange())
+      }, notify)
       .subscribe();
+      removeChannel = () => {
+        void client.removeChannel(channel).catch(error => {
+          console.warn('[PlaylistSharing] Could not remove realtime subscription.', error);
+        });
+      };
+    }).catch(error => {
+      if (!disposed) console.warn('[PlaylistSharing] Could not initialize realtime subscription.', error);
+    });
     return () => {
-      void this.supabase.client.removeChannel(channel);
+      if (disposed) return;
+      disposed = true;
+      removeChannel?.();
     };
   }
 

@@ -274,3 +274,7 @@ Stats access subscriptions now await readiness, retain the exact originating cli
 ## Playlist Sharing data readiness (2026-10-02)
 
 Playlist Sharing RPCs, table reads, and auth reads now await client readiness. Metadata retains concurrent share/download queries after one readiness wait. Track pagination rechecks cancellation after readiness, avoiding queries cancelled during initialization. New delayed-readiness, initialization-failure, and cancellation regressions pass with all 14 service tests. Test typechecking and lint passed. Playlist realtime subscriptions and other consumers still require migration; deferred SDK initialization and the outstanding performance/manual release gates are not yet complete.
+
+## Playlist realtime readiness (2026-10-02)
+
+Playlist subscriptions retain their synchronous cleanup API while awaiting client readiness internally. Disposal before readiness prevents channel creation; later disposal removes the originating client's channel exactly once and suppresses subsequent callbacks. Initialization/removal failures are reported as explicit warnings rather than unhandled rejections. All seven targeted sharing test files passed (78 tests); the subsequently added originating-client regression passed in the final 17-test Playlist Sharing service run. Test typechecking and lint passed. PlaylistSharingService no longer directly reads the synchronous client. Authentication, league, transport, and SupabaseService itself remain to migrate before dynamic SDK initialization; release completion remains unproven.

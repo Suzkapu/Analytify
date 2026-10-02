@@ -212,10 +212,11 @@ describe('PlaylistSharingService', () => {
         expect(stats.durationMs).toBe(360000);
     });
 
-    it('subscribes to a single share and removes the realtime channel during cleanup', () => {
+    it('subscribes to a single share and removes the realtime channel during cleanup', async () => {
         const onChange = vi.fn().mockName('onChange');
 
         const unsubscribe = service.subscribeToShareChanges(onChange, 'share-id');
+        await Promise.resolve();
 
         expect(channelFactory).toHaveBeenCalled();
         expect(channelOn).toHaveBeenCalledWith('postgres_changes', expect.objectContaining({
@@ -238,6 +239,47 @@ describe('PlaylistSharingService', () => {
         unsubscribe();
         expect(removeChannel).toHaveBeenCalledTimes(1);
         expect(removeChannel).toHaveBeenCalledWith(channel);
+        unsubscribe();
+        postgresChangeHandler?.();
+        expect(removeChannel).toHaveBeenCalledTimes(1);
+        expect(onChange).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not create a channel after cleanup during initialization', async () => {
+        let resolveClient!: (client: any) => void;
+        getClient.mockReturnValue(new Promise(resolve => { resolveClient = resolve; }));
+        const unsubscribe = service.subscribeToShareChanges(vi.fn());
+        expect(channelFactory).not.toHaveBeenCalled();
+        unsubscribe();
+        resolveClient({ channel: channelFactory, removeChannel });
+        await Promise.resolve();
+        expect(channelFactory).not.toHaveBeenCalled();
+        expect(removeChannel).not.toHaveBeenCalled();
+    });
+
+    it('subscribes only after readiness and removes the originating client channel', async () => {
+        let resolveClient!: (client: any) => void;
+        getClient.mockReturnValue(new Promise(resolve => { resolveClient = resolve; }));
+        const unsubscribe = service.subscribeToShareChanges(vi.fn());
+        expect(channelFactory).not.toHaveBeenCalled();
+        resolveClient({ channel: channelFactory, removeChannel });
+        await Promise.resolve();
+        expect(channelFactory).toHaveBeenCalledTimes(1);
+        getClient.mockResolvedValue({ removeChannel: vi.fn() });
+        unsubscribe();
+        expect(removeChannel).toHaveBeenCalledWith(channel);
+    });
+
+    it('reports initialization failures without opening a channel', async () => {
+        const warning = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const error = new Error('Client unavailable');
+        getClient.mockRejectedValue(error);
+        service.subscribeToShareChanges(vi.fn());
+        await vi.waitFor(() => expect(warning).toHaveBeenCalledWith(
+            '[PlaylistSharing] Could not initialize realtime subscription.', error
+        ));
+        expect(channelFactory).not.toHaveBeenCalled();
+        warning.mockRestore();
     });
 
     it('loads every shared track beyond the Supabase one-thousand-row response limit', async () => {
