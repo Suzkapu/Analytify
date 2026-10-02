@@ -7,6 +7,21 @@ import {
 
 const widths = [320, 375, 430, 500, 768, 1024, 1440] as const;
 
+test('decorative icons use a non-blocking loaded font face', async ({page}) => {
+  await page.goto('/login');
+  await expect(page.locator('.pi:visible').first()).toBeVisible();
+  const faces = await page.evaluate(async () => {
+    const icon = document.querySelector('.pi')!;
+    const family = getComputedStyle(icon).fontFamily;
+    if (family.replace(/["']/g, '') !== 'AnalytifyIcons') throw new Error(`Unexpected icon face: ${family}`);
+    await document.fonts.load(`16px ${family}`);
+    return [...document.fonts].filter(face => face.family.replace(/["']/g, '') === 'AnalytifyIcons'
+      && face.status === 'loaded').map(face => ({display: face.display, status: face.status}));
+  });
+  expect(faces.length).toBeGreaterThan(0);
+  expect(faces.every(face => face.display === 'swap')).toBe(true);
+});
+
 test.beforeEach(async ({page}) => {
   await mockSpotify(page);
   await seedAuthenticatedBrowser(page, {cloudIdentity: true});
