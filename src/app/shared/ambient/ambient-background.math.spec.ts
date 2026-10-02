@@ -10,6 +10,11 @@ import {
 } from './ambient-background.math';
 
 describe('ambient background math', () => {
+  it('normalizes blank and case-varied route keys consistently', () => {
+    expect(ambientPhaseForKey('   ')).toBe(ambientPhaseForKey('default'));
+    expect(ambientPhaseForKey(' LIBRARY ')).toBe(ambientPhaseForKey('library'));
+    expect(ambientTargetForKey('')).toEqual(ambientTargetForKey('default'));
+  });
   it('derives stable distinct normalized targets from semantic route keys', () => {
     expect(ambientPhaseForKey('library')).toBe(ambientPhaseForKey('library'));
     expect(ambientPhaseForKey('library')).not.toBe(ambientPhaseForKey('insights'));

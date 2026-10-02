@@ -28,6 +28,19 @@ describe('DesignNavigationService', () => {
     );
   });
 
+  it('uses the default navigation call and preserves a cancelled result', async () => {
+    const service = TestBed.inject(DesignNavigationService);
+    router.navigate.mockResolvedValueOnce(false);
+    expect(await service.navigate('playlists')).toBe(false);
+    expect(router.navigate).toHaveBeenCalledWith(['/playlists']);
+  });
+
+  it('propagates navigation failures without reporting success', async () => {
+    const service = TestBed.inject(DesignNavigationService);
+    router.navigate.mockRejectedValueOnce(new Error('Navigation failed'));
+    await expect(service.navigate('stats')).rejects.toThrow('Navigation failed');
+  });
+
   it('preserves query parameters when creating a link tree', () => {
     const service = TestBed.inject(DesignNavigationService);
     service.tree('stats', {}, {queryParams: {range: 'short_term'}});

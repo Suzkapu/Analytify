@@ -8,6 +8,15 @@ describe('AmbientBackgroundState', () => {
     state = TestBed.inject(AmbientBackgroundState);
   });
 
+  it('restores the default ambient context for an empty route key', () => {
+    state.setRouteKey('library');
+    state.setRouteKey('  ');
+    expect(state.routeKey()).toBe('default');
+    const fallback = state.routeTarget();
+    state.setRouteKey('default');
+    expect(state.routeTarget()).toEqual(fallback);
+  });
+
   it('updates a route target without recreating the state object', () => {
     const reference = state;
     state.setRouteKey('library');
