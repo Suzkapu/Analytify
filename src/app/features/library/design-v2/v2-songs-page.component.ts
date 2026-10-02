@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, NgZone, Optional} from '@angular/core';
+import {afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, inject, Injector, NgZone, Optional, QueryList, ViewChildren} from '@angular/core';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
@@ -80,16 +80,44 @@ import {SongsUiModule} from '../songs/songs.module';
         </section>
       } @else {
         @if (selectedAlbum) {
-          <button type="button" v2Button="tertiary" (click)="closeAlbumDetails()"><i class="pi pi-arrow-left"></i> Back to albums</button>
+          <button type="button" v2Button="tertiary" (click)="returnToAlbums()"><i class="pi pi-arrow-left"></i> Back to albums</button>
         }
         <section class="v2-album-grid" aria-label="Albums in playlist">
           @for (album of (selectedAlbum ? [selectedAlbum] : filteredAlbums.slice(0, displayedAlbumsCount)); track album.id || album.name) {
-            <v2-card class="v2-album-card" (click)="!selectedAlbum && openAlbumDetails(album)">
-              <img [src]="album.imageUrl || 'assets/Analytify-96.webp'" width="80" height="80" [alt]="album.name + ' cover'" loading="lazy">
+            <v2-card class="v2-album-card">
+              @if (selectedAlbum) {
+                <button type="button" class="v2-media-action v2-album-artwork" [disabled]="!album.spotifyUrl"
+                  [attr.aria-label]="'Open ' + album.name + ' on Spotify'" (click)="openAlbumClick(album.spotifyUrl)">
+                  <img [src]="album.imageUrl || 'assets/Analytify-96.webp'" width="80" height="80" alt="" loading="lazy">
+                </button>
+              } @else {
+                <img [src]="album.imageUrl || 'assets/Analytify-96.webp'" width="80" height="80" [alt]="album.name + ' cover'" loading="lazy">
+              }
               <div><h2>{{ album.name }}</h2><p>{{ album.artists?.[0] || 'Unknown artist' }}</p><small>{{ album.tracks?.length || album.count || 0 }} songs</small></div>
+              @if (!selectedAlbum) {
+                <button #albumOpen type="button" v2Button="secondary" class="v2-album-open" [attr.data-album-key]="album.id || album.name"
+                  [attr.aria-label]="'View songs in ' + album.name" (click)="openAlbumDetails(album)">View songs</button>
+              }
             </v2-card>
           }
         </section>
+        @if (selectedAlbum) {
+          <section class="v2-track-list" [attr.aria-label]="'Songs in ' + selectedAlbum.name">
+            @if (!selectedAlbum.tracks?.length) { <v2-state icon="pi-music" title="No songs found" message="No available songs from this album are in the playlist." /> }
+            @for (track of selectedAlbum.tracks; track trackSongItem($index, track); let index = $index) {
+              <v2-list-row class="v2-track-row">
+                <span class="v2-track-index">{{ index + 1 }}</span>
+                <button type="button" class="v2-media-action" [disabled]="!track.external_urls?.spotify"
+                  [attr.aria-label]="'Open ' + track.name + ' on Spotify'" (click)="openTrackClick(track.external_urls?.spotify)">
+                  <img [src]="track.album?.images?.[0]?.url || selectedAlbum.imageUrl || 'assets/Analytify-96.webp'"
+                    width="54" height="54" [alt]="track.name + ' cover'" loading="lazy">
+                </button>
+                <div class="v2-track-copy"><strong>{{ track.name }}</strong><span>{{ track.artists?.[0]?.name || 'Unknown artist' }}</span></div>
+                <div class="v2-track-meta">@if (track.explicit) { <span class="v2-explicit">Explicit</span> }<span>{{ formatDurationShort(track.duration_ms) }}</span></div>
+              </v2-list-row>
+            }
+          </section>
+        }
       }
     </v2-page>
   `,
@@ -97,12 +125,14 @@ import {SongsUiModule} from '../songs/songs.module';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class V2SongsPageComponent extends SongsController {
+  private readonly renderInjector = inject(Injector);
+  @ViewChildren('albumOpen', {read: ElementRef}) private albumButtons!: QueryList<ElementRef<HTMLButtonElement>>;
   readonly backLink = this.navigation.commands('playlists');
   readonly viewTabs = [{id: 'artists', label: 'Artists'}, {id: 'songs', label: 'Songs'}, {id: 'albums', label: 'Albums'}];
   constructor(route: ActivatedRoute, router: Router, auth: SpotifyAuthService, storage: StorageService,
     loader: PlaylistLoaderService, imageHealing: ImageHealingService, zone: NgZone,
-    @Optional() readonly navigation: DesignNavigationService) {
-    super(route, router, auth, storage, loader, imageHealing, zone, navigation);
+    @Optional() readonly navigation: DesignNavigationService, changeDetector: ChangeDetectorRef) {
+    super(route, router, auth, storage, loader, imageHealing, zone, navigation, changeDetector);
   }
   get searchLabel(): string { return this.viewStyle === 'artists' ? 'Search artists' : this.viewStyle === 'songs' ? 'Search songs or artists' : 'Search albums or artists'; }
   get activeSearch(): string { return this.viewStyle === 'artists' ? this.searchText : this.viewStyle === 'songs' ? this.trackSearchText : this.albumSearchText; }
@@ -113,4 +143,11 @@ export class V2SongsPageComponent extends SongsController {
     else { this.albumSearchText = value; this.filterAlbums(); }
   }
   selectSort(value: string): void { this.trackSortKey = value; this.sortAscending = this.getDefaultSortDirection(value); this.filterAndSortTracks(); }
+  returnToAlbums(): void {
+    const key = this.selectedAlbum?.id || this.selectedAlbum?.name;
+    this.closeAlbumDetails();
+    afterNextRender(() => {
+      this.albumButtons.find(button => button.nativeElement.dataset['albumKey'] === key)?.nativeElement.focus({preventScroll: true});
+    }, {injector: this.renderInjector});
+  }
 }

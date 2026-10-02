@@ -19,6 +19,8 @@
 .v2-explicit { padding: 2px 5px; border-radius: 4px; color: var(--v2-color-background); background: var(--v2-color-text-muted); font-weight: 900; }
 .v2-album-card { display: grid; grid-template-columns: 80px 1fr; align-items: center; gap: var(--v2-space-3); }
 .v2-album-card img { width: 80px; height: 80px; border-radius: var(--v2-radius-control); object-fit: cover; }
+.v2-album-open { grid-column: 1 / -1; }
+.v2-album-artwork { width: 80px; height: 80px; }
 @media (max-width: 700px) { .v2-artist-grid, .v2-album-grid { grid-template-columns: 1fr; } }
 @media (max-width: 440px) {
   .v2-artist-card { grid-template-columns: 56px minmax(0, 1fr); }

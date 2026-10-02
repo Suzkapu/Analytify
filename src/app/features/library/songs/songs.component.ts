@@ -1,4 +1,4 @@
-import {Component, Directive, OnInit, OnDestroy, ViewEncapsulation, HostListener, NgZone, ChangeDetectionStrategy, Optional} from '@angular/core';
+import {Component, Directive, OnInit, OnDestroy, ViewEncapsulation, HostListener, NgZone, ChangeDetectionStrategy, ChangeDetectorRef, Optional} from '@angular/core';
 import {ActivatedRoute, NavigationExtras, Router} from "@angular/router";
 import {SpotifyAuthService} from "@core/auth/spotify-auth.service";
 import {StorageService} from "@core/data-access/storage/storage.service";
@@ -69,7 +69,8 @@ export class SongsController implements OnInit, OnDestroy {
     private playlistLoaderService: PlaylistLoaderService,
     private imageHealingService: ImageHealingService,
     private ngZone: NgZone,
-    @Optional() private designNavigation?: DesignNavigationService
+    @Optional() private designNavigation?: DesignNavigationService,
+    @Optional() private changeDetector?: ChangeDetectorRef
   ) {
     this.route.params.subscribe(async (params) => {
       this.playlistId = params['id'];
@@ -81,7 +82,11 @@ export class SongsController implements OnInit, OnDestroy {
       if (this.authService.isAuthenticated()) {
         void this.authService.ensureInitialSync().catch(() => {});
       }
-      await this.loadArtistsFromPlaylist();
+      try {
+        await this.loadArtistsFromPlaylist();
+      } finally {
+        this.changeDetector?.markForCheck();
+      }
     });
   }
 
@@ -358,7 +363,11 @@ export class SongsController implements OnInit, OnDestroy {
     }
     // Standard playlists keep their daily full-refresh boundary. Liked Songs
     // exposes the cheaper incremental check explicitly through this action.
-    await this.loadArtistsFromPlaylist();
+    try {
+      await this.loadArtistsFromPlaylist();
+    } finally {
+      this.changeDetector?.markForCheck();
+    }
   }
 
   private subscribeToLoaderTask(task: any, silent: boolean = false) {
@@ -397,6 +406,7 @@ export class SongsController implements OnInit, OnDestroy {
         this.artists = (this.artists.length === 0 || !progress.isRefreshing) ? progress.artists : this.artists;
         this.filterArtists();
       }
+      this.changeDetector?.markForCheck();
     });
   }
 
@@ -795,6 +805,7 @@ export class SongsController implements OnInit, OnDestroy {
       } else if (this.displayedAlbumsCount < this.filteredAlbums.length) {
         this.displayedAlbumsCount += 50;
       }
+      this.changeDetector?.markForCheck();
     });
   }
 }

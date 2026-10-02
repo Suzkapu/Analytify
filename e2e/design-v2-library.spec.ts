@@ -48,6 +48,48 @@ test('every v2 library child route retains the shared shell', async ({page}) => 
   }
 });
 
+test('album details expose playlist songs through keyboard controls', async ({page}) => {
+  await page.evaluate(async () => {
+    await new Promise<void>((resolve, reject) => {
+      const request = indexedDB.open('AnalytifyDB', 4);
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => {
+        const db = request.result;
+        const transaction = db.transaction(['appData', 'featureData'], 'readwrite');
+        const tracks = [2, 1].map(index => ({
+          id: `album-song-${index}`, name: `Album song ${index}`, playlist_index: index,
+          duration_ms: 120000, artists: [{id: 'artist-1', name: 'Test Artist'}],
+          album: {id: 'album-1', name: 'Test Album', images: []},
+          external_urls: {spotify: `https://open.spotify.com/track/album-song-${index}`}
+        }));
+        for (const userId of ['e2e-user', 'e2e-user_dev']) {
+          transaction.objectStore('featureData').put({key: `${userId}_playlist-1`,
+            value: JSON.stringify([{id: 'artist-1', name: 'Test Artist', images: [], tracks}])});
+          const store = transaction.objectStore('appData');
+          store.put({key: `${userId}_playlist-1_lastUpdated`, value: String(Date.now())});
+          store.put({key: `${userId}_playlist-1_Amount`, value: '2'});
+          store.put({key: `${userId}_playlist-1_CachedTrackCount`, value: '2'});
+          store.put({key: `${userId}_playlist-1_Name`, value: JSON.stringify('Test Playlist')});
+        }
+        transaction.oncomplete = () => {db.close(); resolve();};
+        transaction.onerror = () => reject(transaction.error);
+      };
+    });
+  });
+  await page.goto('/songs/playlist-1');
+  await page.getByRole('button', {name: 'Albums', exact: true}).click();
+  const open = page.getByRole('button', {name: 'View songs in Test Album'});
+  await open.focus();
+  await page.keyboard.press('Enter');
+  const songs = page.getByRole('region', {name: 'Songs in Test Album'});
+  await expect(songs.locator('.v2-track-copy strong')).toHaveText(['Album song 1', 'Album song 2']);
+  await expectNoBlockingAxeViolations(page);
+  await page.getByRole('button', {name: 'Back to albums'}).click();
+  await expect(open).toBeVisible();
+  await expect(open).toBeFocused();
+  await expect(songs).toHaveCount(0);
+});
+
 test('account hub is keyboard reachable on desktop and mobile', async ({page}) => {
   await page.goto('/playlists');
   const account = page.getByRole('button', {name: 'Open account and data settings'});
