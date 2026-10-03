@@ -8,7 +8,7 @@ import {spotifyAuthGuard} from '@core/auth/spotify-auth.guard';
 import {spotifyRestrictedFeatureGuard} from '@core/compliance/spotify-policy-gate';
 import {AppShellComponent} from '@shared/layout/app-shell/app-shell.component';
 import {DesignSelectivePreloadingStrategy} from '@core/navigation/design-selective-preloading.strategy';
-import {PreviewHandoffComponent} from '@core/navigation/preview-handoff.component';
+import {PreviewHandoffComponent, previewOAuthHandoffGuard} from '@core/navigation/preview-handoff.component';
 
 const PRODUCT_ROUTES: Routes = [
   {
@@ -58,7 +58,7 @@ const PUBLIC_TOOL_ROUTES: Routes = [
     loadChildren: () => import('@features/legal/legal/legal.module').then(module => module.LegalModule)
   },
   {
-    path: 'compare-room/callback', canActivate: [spotifyRestrictedFeatureGuard],
+    path: 'compare-room/callback', canActivate: [previewOAuthHandoffGuard, spotifyRestrictedFeatureGuard],
     loadChildren: () => import('@features/compare-room/compare-room-callback.module').then(module => module.CompareRoomCallbackModule)
   },
   {
@@ -85,11 +85,11 @@ export const APP_ROUTES: Routes = [
     loadChildren: () => import('@features/auth/login-page/login-page.module').then(module => module.LoginPageModule)
   },
   {
-    path: 'callback',
+    path: 'callback', canActivate: [previewOAuthHandoffGuard],
     loadChildren: () => import('@features/auth/callback/callback.module').then(module => module.CallbackModule)
   },
   {
-    path: 'spotify',
+    path: 'spotify', canActivate: [previewOAuthHandoffGuard],
     loadChildren: () => import('@features/auth/personal-spotify/personal-spotify.module').then(module => module.PersonalSpotifyModule)
   },
   {path: '', component: AppShellComponent, children: PRODUCT_ROUTES},
