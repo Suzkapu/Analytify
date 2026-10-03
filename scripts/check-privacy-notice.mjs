@@ -5,9 +5,8 @@ import path from 'node:path';
 const root = path.resolve(import.meta.dirname, '..');
 const notice = await readFile(path.join(root, 'src/app/features/legal/legal/legal.component.html'), 'utf8');
 const acceptance = await readFile(path.join(root, 'src/app/core/legal/terms-acceptance.service.ts'), 'utf8');
-const routes = await readFile(path.join(root, 'src/app/app-routing.module.ts'), 'utf8')
-  + await readFile(path.join(root, 'src/app/design-v2-routing.module.ts'), 'utf8');
-const shell = await readFile(path.join(root, 'src/app/shared/layout/design-v2-shell/design-v2-shell.component.html'), 'utf8');
+const routes = await readFile(path.join(root, 'src/app/app-routing.module.ts'), 'utf8');
+const shell = await readFile(path.join(root, 'src/app/shared/layout/header/header.component.html'), 'utf8');
 const termsMigration = await readFile(path.join(root, 'supabase/migrations/20260925160000_personal_spotify_cross_device_identity.sql'), 'utf8');
 
 for (const activity of [
@@ -47,7 +46,7 @@ assert.match(acceptance, /analytify-eula-2026-09-25/);
 assert.match(termsMigration, /p_terms_version <> 'analytify-eula-2026-09-25'/,
   'the database acceptance allowlist must match the published browser version');
 assert.match(routes, /path:\s*'legal'/, 'privacy notice must remain publicly routable');
-assert.match(shell, /navigation\.commands\('legal'\)[^>]+fragment="privacy"/,
+assert.match(shell, /routerLink="\/legal"[^>]+fragment="privacy"/,
   'signed-in users need a persistent privacy-notice link');
 
 console.log('Article 13/14 privacy notice contract passed.');

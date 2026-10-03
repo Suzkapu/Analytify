@@ -51,12 +51,12 @@ describe('AppComponent', () => {
         expect(app.title).toEqual('Spotify Artists Stats');
     });
 
-    it('renders only the router outlet at the application root', () => {
+    it('should render the router outlet and scroll button', () => {
         const fixture = TestBed.createComponent(AppComponent);
         fixture.detectChanges();
         const compiled = fixture.nativeElement as HTMLElement;
         expect(compiled.querySelector('router-outlet')).not.toBeNull();
-        expect(compiled.querySelector('.scroll-to-top-btn')).toBeNull();
+        expect(compiled.querySelector('.scroll-to-top-btn')).not.toBeNull();
     });
 
     it('should overlay an announcement without moving the routed page', () => {
@@ -118,13 +118,14 @@ describe('AppComponent', () => {
         expect(warn).not.toHaveBeenCalled();
     });
 
-    it('uses only the shell skip link and hides the floating scroll control in Design v2', () => {
+    it('keeps the original skip link and scroll control in the stable shell', () => {
         const fixture = TestBed.createComponent(AppComponent);
-        routerEvents.next(new NavigationEnd(3, '/playlists', '/playlists'));
+        fixture.detectChanges();
+        fixture.componentInstance.showScrollBtn = true;
         fixture.detectChanges();
 
-        expect(fixture.nativeElement.querySelector('.skip-link')).toBeNull();
-        expect(fixture.nativeElement.querySelector('.scroll-to-top-btn.visible')).toBeNull();
+        expect(fixture.nativeElement.querySelector('.skip-link')).not.toBeNull();
+        expect(fixture.nativeElement.querySelector('.scroll-to-top-btn.visible')).not.toBeNull();
     });
 
     it('offers accessible reload-now and later actions without a native confirm', () => {

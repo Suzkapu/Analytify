@@ -199,7 +199,7 @@ describe('SharedPlaylistsComponent', () => {
         fixture.detectChanges();
 
         const actions = Array.from(fixture.nativeElement.querySelectorAll('.owner-share-actions button')) as HTMLButtonElement[];
-        const refresh = actions.find(button => button.textContent?.includes('Publish latest version'));
+        const refresh = actions.find(button => button.textContent?.includes('Refresh snapshot'));
         const revoke = actions.find(button => button.textContent?.includes('Revoke access'));
         expect(refresh?.disabled).toBe(true);
         expect(refresh?.title).toContain('Enable Cloud Backup');
@@ -227,7 +227,7 @@ describe('SharedPlaylistsComponent', () => {
         expect(fixture.nativeElement.textContent).toContain('playlist');
     });
 
-    it('restores the v2 Playlists or Stats view from the linkable query state', async () => {
+    it('keeps playlists and stats visible together in the stable presentation', async () => {
         const queryParams = new Subject<ReturnType<typeof convertToParamMap>>();
         Object.defineProperty(component.navigation, 'variant', {value: 'new'});
         (component as any).route = {queryParamMap: queryParams.asObservable()};
@@ -238,12 +238,12 @@ describe('SharedPlaylistsComponent', () => {
 
         expect(component.activeTab).toBe('stats');
         expect(component.showStatsSections).toBe(true);
-        expect(component.showPlaylistSections).toBe(false);
+        expect(component.showPlaylistSections).toBe(true);
 
         queryParams.next(convertToParamMap({tab: 'playlists'}));
         expect(component.activeTab).toBe('playlists');
         expect(component.showPlaylistSections).toBe(true);
-        expect(component.showStatsSections).toBe(false);
+        expect(component.showStatsSections).toBe(true);
     });
 
     it('starts playlist and stats sharing loads in parallel', async () => {

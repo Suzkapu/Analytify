@@ -1,4 +1,4 @@
-import {Component, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
+import {AfterViewInit, Component, NgZone, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
 import {SwUpdate, VersionReadyEvent} from '@angular/service-worker';
 import {
   NavigationCancel,
@@ -23,14 +23,16 @@ const ANNOUNCEMENT_AUTO_HIDE_MS = 5000;
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent implements AfterViewInit, OnDestroy {
   title = 'Spotify Artists Stats';
+  showScrollBtn = false;
   isInitialNavigationLoading: boolean;
   siteAnnouncement = '';
   announcementVisible = true;
   isLandingAnnouncement = true;
   updateReady = false;
 
+  private readonly windowScrollHandler = () => this.onWindowScroll();
   private navigationStartedAt = 0;
   private announcementHideTimer?: ReturnType<typeof setTimeout>;
   private transientAnnouncementShown = false;
@@ -38,6 +40,7 @@ export class AppComponent implements OnDestroy {
   constructor(
     private swUpdate: SwUpdate,
     private router: Router,
+    private ngZone: NgZone,
     private siteSettings: SiteSettingsService
   ) {
     this.isInitialNavigationLoading = !this.router.navigated;
@@ -98,7 +101,15 @@ export class AppComponent implements OnDestroy {
     }
   }
 
+  ngAfterViewInit(): void {
+    this.ngZone.runOutsideAngular(() => {
+      window.addEventListener('scroll', this.windowScrollHandler, {passive: true});
+      this.onWindowScroll();
+    });
+  }
+
   ngOnDestroy(): void {
+    window.removeEventListener('scroll', this.windowScrollHandler);
     this.clearAnnouncementHideTimer();
   }
 
@@ -139,6 +150,21 @@ export class AppComponent implements OnDestroy {
       clearTimeout(this.announcementHideTimer);
       this.announcementHideTimer = undefined;
     }
+  }
+
+  onWindowScroll(): void {
+    const scrollPos = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    const shouldShow = scrollPos > 300;
+    if (shouldShow !== this.showScrollBtn) {
+      this.ngZone.run(() => this.showScrollBtn = shouldShow);
+    }
+  }
+
+  scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
 
   reloadForUpdate(): void {

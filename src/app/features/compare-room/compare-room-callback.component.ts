@@ -31,7 +31,6 @@ import {DesignNavigationService} from '@core/navigation/design-navigation.servic
     i.error { color: #ff7474; }
     p { color: #a1aaa4; line-height: 1.5; }
     a { color: #1ed760; font-weight: 700; }
-    :host-context(.design-v2) .compare-callback { min-height: min(620px, calc(100vh - 180px)); background: transparent; color: var(--color-text); }
   `],
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false

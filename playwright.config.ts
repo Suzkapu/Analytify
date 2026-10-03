@@ -2,6 +2,8 @@ import {defineConfig, devices} from '@playwright/test';
 
 export default defineConfig({
   testDir: './e2e',
+  // Design v2 is released and tested independently on codex/design-v2.
+  testIgnore: '**/design-v2-*.spec.ts',
   fullyParallel: true,
   forbidOnly: !!process.env['CI'],
   retries: process.env['CI'] ? 1 : 0,

@@ -6,7 +6,6 @@ import {SharedPlaylistClaimComponent} from './shared-playlist-claim.component';
 import {StatsRequestClaimComponent} from './stats-request-claim.component';
 import {StatsShareClaimComponent} from './stats-share-claim.component';
 import {spotifyRestrictedFeatureGuard} from '@core/compliance/spotify-policy-gate';
-import {V2OverflowMenuComponent} from '@shared/ui-v2/design-v2-primitives';
 
 @NgModule({
   declarations: [
@@ -17,7 +16,6 @@ import {V2OverflowMenuComponent} from '@shared/ui-v2/design-v2-primitives';
   ],
   imports: [
     SharedModule,
-    V2OverflowMenuComponent,
     RouterModule.forChild([
       {path: '', pathMatch: 'full', component: SharedPlaylistsComponent},
       {path: 'claim/:token', component: SharedPlaylistClaimComponent},

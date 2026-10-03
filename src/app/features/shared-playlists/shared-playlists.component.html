@@ -1,34 +1,16 @@
 
-<div class="sharing-page">
+<main class="sharing-page">
   <header class="sharing-hero page-hero">
     <div>
       <span class="page-eyebrow">Shared with permission</span>
       <h1>Private sharing</h1>
-      <p>Share playlists and manage private stats access.</p>
+      <p>Share a playlist privately or revoke access.</p>
     </div>
-    @if (showPlaylistSections) {
-    <button type="button" class="open-share-menu-button" (click)="openShareDialog('playlist')">
+    <button type="button" class="open-share-menu-button" (click)="openShareDialog()">
       <i class="pi pi-share-alt"></i>
       <span>Share a playlist</span>
     </button>
-    }
-    @if (showStatsSections && restrictedFeaturesEnabled) {
-      <button type="button" class="open-share-menu-button" (click)="openShareDialog('stats')">
-        <i class="pi pi-eye"></i><span>Share stats access</span>
-      </button>
-    }
   </header>
-
-  <nav class="sharing-tabs" aria-label="Private sharing views">
-      <a [routerLink]="navigation.commands('sharedPlaylists')" [queryParams]="{tab: 'playlists'}"
-        [attr.aria-current]="activeTab === 'playlists' ? 'page' : null" [class.is-active]="activeTab === 'playlists'">
-        <i class="pi pi-list" aria-hidden="true"></i><span>Playlists</span>
-      </a>
-      <a [routerLink]="navigation.commands('sharedPlaylists')" [queryParams]="{tab: 'stats'}"
-        [attr.aria-current]="activeTab === 'stats' ? 'page' : null" [class.is-active]="activeTab === 'stats'">
-        <i class="pi pi-eye" aria-hidden="true"></i><span>Stats</span>
-      </a>
-  </nav>
 
   @if (errorMessage) {
     <div class="share-alert error" role="alert">
@@ -49,10 +31,9 @@
   }
 
   @if (!isLoading) {
-    @if (showPlaylistSections) {
     <section class="share-section">
       <div class="section-heading">
-        <div><span class="eyebrow">Your library</span><h2>Playlists shared with you</h2></div>
+        <div><span class="eyebrow">Your library</span><h2>Shared with you</h2></div>
         <span>{{ receivedShares.length }}</span>
       </div>
       @if (receivedShares.length === 0) {
@@ -66,12 +47,12 @@
         <div class="share-grid">
           @for (share of receivedShares; track trackShare($index, share)) {
             <article class="received-share-card">
-              <a [routerLink]="sharedPlaylistCommands(share)" class="share-card">
-                <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="" loading="lazy" decoding="async" width="72" height="72">
+              <a [routerLink]="['/shared-playlists', share.id]" class="share-card">
+                <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="" loading="lazy" decoding="async">
                 <div>
                   <span class="card-label">Shared with you</span>
                   <h3>{{ receivedPlaylistName(share) }}</h3>
-                  <p>{{ share.trackCount }} songs · version {{ share.revision }}</p>
+                  <p>{{ share.trackCount }} songs · revision {{ share.revision }}</p>
                 </div>
                 <i class="pi pi-chevron-right"></i>
               </a>
@@ -79,10 +60,6 @@
                 [disabled]="!!busyShareId" [attr.aria-label]="'Remove ' + share.playlistName + ' from my shared playlists'">
                 <i class="pi pi-times"></i><span>Remove</span>
               </button>
-              <v2-overflow-menu class="mobile-share-overflow"
-                [label]="'More actions for ' + receivedPlaylistName(share)"
-                [items]="receivedShareMenuItems(share)"
-                (itemSelected)="onReceivedShareMenuAction($event, share)" />
             </article>
           }
         </div>
@@ -90,7 +67,7 @@
     </section>
     <section class="share-section owner-section">
       <div class="section-heading">
-        <div><span class="eyebrow">Access control</span><h2>Your shared playlists</h2></div>
+        <div><span class="eyebrow">Access control</span><h2>Shared by you</h2></div>
         <span>{{ ownedShares.length }}</span>
       </div>
       @if (ownedShares.length === 0) {
@@ -101,35 +78,33 @@
             <p>Choose “Share a playlist” above to select a playlist and create a revocable private link.</p>
           }
           @if (!canCreateShares) {
-            <p>Cloud Backup is required to publish private playlist versions.</p>
-            <button type="button" class="inline-recovery-action" (click)="openBackupEnableDialog()">Enable Cloud Backup</button>
+            <p>Enable Cloud Backup in your profile menu to share a playlist.</p>
           }
         </div>
       }
       @if (ownedShares.length && !canCreateShares) {
-        <div class="share-publishing-notice" role="note">
+        <p class="share-publishing-notice" role="note">
           <i class="pi pi-cloud"></i>
-          <span>Your existing shares remain accessible and revocable. Enable Cloud Backup to publish a new version.</span>
-          <button type="button" (click)="openBackupEnableDialog()">Enable Cloud Backup</button>
-        </div>
+          Your existing shares remain accessible and revocable. Enable Cloud Backup to refresh or publish playlist data.
+        </p>
       }
       @for (share of ownedShares; track trackShare($index, share)) {
         <article class="owner-share-row" [class.revoked]="share.revokedAt">
-          <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="" loading="lazy" decoding="async" width="62" height="62">
+          <img [src]="share.playlistImageUrl || 'https://misc.scdn.co/liked-songs/liked-songs-300.png'" alt="" loading="lazy" decoding="async">
           <div class="owner-share-copy">
             <span class="status-pill" [class.revoked]="share.revokedAt">
               {{ share.revokedAt ? 'Revoked' : (share.recipientUserId ? 'Claimed' : (share.acceptedAt ? 'Removed by recipient' : 'Waiting for recipient')) }}
             </span>
             <h3>{{ share.playlistName }}</h3>
-            <p>{{ share.trackCount }} songs · version {{ share.revision }}@if (share.recipientDisplayName) {
+            <p>{{ share.trackCount }} songs · revision {{ share.revision }}@if (share.recipientDisplayName) {
               <span> · {{ share.recipientDisplayName }}</span>
             }</p>
           </div>
           @if (!share.revokedAt) {
             <div class="owner-share-actions">
               <button type="button" (click)="refreshShare(share)" [disabled]="!!busyShareId || !canCreateShares"
-                [title]="canCreateShares ? 'Publish the latest playlist version' : 'Enable Cloud Backup to publish a new version'">
-                <i class="pi" [ngClass]="busyShareId === share.id ? 'pi-spin pi-spinner' : 'pi-refresh'"></i> Publish latest version
+                [title]="canCreateShares ? 'Refresh this shared playlist snapshot' : 'Enable Cloud Backup to refresh this snapshot'">
+                <i class="pi" [ngClass]="busyShareId === share.id ? 'pi-spin pi-spinner' : 'pi-refresh'"></i> Refresh snapshot
               </button>
               <button type="button" class="danger" (click)="openShareRevocation(share)" [disabled]="!!busyShareId">
                 <i class="pi pi-ban"></i> Revoke access
@@ -139,26 +114,25 @@
         </article>
       }
     </section>
-    }
-    @if (showStatsSections && restrictedFeaturesEnabled) {<section class="share-section stats-access-section">
+    @if (restrictedFeaturesEnabled) {<section class="share-section stats-access-section">
       <div class="section-heading">
-        <div><span class="eyebrow">Stats access</span><h2>People you can view</h2></div>
+        <div><span class="eyebrow">Spy mode</span><h2>Stats you can view</h2></div>
         <span>{{ approvedStatsAccess.length }}</span>
       </div>
       @if (approvedStatsAccess.length === 0) {
         <div class="empty-share-card compact-empty-card">
           <i class="pi pi-eye"></i>
           <strong>No stats access yet</strong>
-          <p>Create a private request link above. The other person decides whether to give you access.</p>
+          <p>Request access above. The other person must explicitly agree before you can see anything.</p>
         </div>
       }
       @if (approvedStatsAccess.length) {
         <div class="share-grid">
           @for (request of approvedStatsAccess; track request) {
-            <a [routerLink]="statsCommands(request)" class="share-card stats-user-card">
+            <a [routerLink]="['/stats', request.ownerUserId]" class="share-card stats-user-card">
               <span class="stats-avatar">
                 @if (request.ownerImageUrl) {
-                  <img [src]="request.ownerImageUrl" appImageFallback alt="" width="72" height="72">
+                  <img [src]="request.ownerImageUrl" appImageFallback alt="">
                 }
                 @if (!request.ownerImageUrl) {
                   <i class="pi pi-user"></i>
@@ -175,25 +149,40 @@
         </div>
       }
     </section>
-    <section class="share-section owner-section">
-      <div class="section-heading">
-        <div><span class="eyebrow">Stats access</span><h2>People who can view you</h2></div>
-        <span>{{ grantedStatsAccess.length }}</span>
-      </div>
-      @if (grantedStatsAccess.length === 0) {
-        <div class="empty-share-card compact-empty-card">
-          <i class="pi pi-user"></i><strong>No one can view your stats</strong>
-          <p>Share a private stats link above when you want to grant read-only access.</p>
+    @if (sentStatsRequests.length || grantedStatsAccess.length) {
+      <section class="share-section owner-section">
+        <div class="section-heading">
+          <div><span class="eyebrow">Stats sharing</span><h2>Requests</h2></div>
+          <span>{{ sentStatsRequests.length + grantedStatsAccess.length }}</span>
         </div>
-      }
-      @if (grantedStatsAccess.length) {
+        @for (request of sentStatsRequests; track request) {
+          <article class="owner-share-row stats-access-row"
+            [class.revoked]="request.status === 'revoked' || request.status === 'declined'">
+            <span class="stats-avatar"><i class="pi pi-user"></i></span>
+            <div class="owner-share-copy">
+              <span class="status-pill" [class.revoked]="request.status === 'revoked' || request.status === 'declined'">{{ request.status }}</span>
+              <h3>{{ request.ownerDisplayName }}</h3>
+              <p>{{ request.status === 'pending' ? 'Waiting for their decision' : 'Your request to view their stats' }}</p>
+            </div>
+            @if (request.status === 'pending' || request.status === 'approved') {
+              <div class="owner-share-actions">
+                <button type="button" class="danger" (click)="openStatsRevocation(request)" [disabled]="!!busyStatsRequestId">
+                  <i class="pi pi-ban"></i> {{ request.status === 'pending' ? 'Cancel request' : 'Revoke access' }}
+                </button>
+                <button type="button" class="secondary" (click)="openStatsModeration(request)" [disabled]="!!busyStatsRequestId">
+                  <i class="pi pi-shield"></i> Block / report
+                </button>
+              </div>
+            }
+          </article>
+        }
         @for (request of grantedStatsAccess; track request) {
           <article class="owner-share-row stats-access-row">
             <span class="stats-avatar"><i class="pi pi-eye"></i></span>
             <div class="owner-share-copy">
-              <span class="status-pill" role="status">{{ statsStatus(request).label }}</span>
+              <span class="status-pill">Approved</span>
               <h3>{{ request.viewerDisplayName }}</h3>
-              <p>{{ statsStatus(request).description }}</p>
+              <p>Can view your saved stats</p>
             </div>
             <div class="owner-share-actions">
               <button type="button" class="danger" (click)="openStatsRevocation(request)" [disabled]="!!busyStatsRequestId">
@@ -205,44 +194,8 @@
             </div>
           </article>
         }
-      }
-    </section>
-    <section class="share-section owner-section">
-      <div class="section-heading">
-        <div><span class="eyebrow">Stats access</span><h2>Requests</h2></div>
-        <span>{{ pendingOrClosedStatsRequests.length }}</span>
-      </div>
-      @if (pendingOrClosedStatsRequests.length === 0) {
-        <div class="empty-share-card compact-empty-card">
-          <i class="pi pi-inbox"></i><strong>No open requests</strong>
-          <p>Stats requests you send or receive will appear here.</p>
-        </div>
-      }
-      @for (request of pendingOrClosedStatsRequests; track request.id) {
-        @if (statsStatus(request); as status) {
-          <article class="owner-share-row stats-access-row" [class.revoked]="status.tone === 'danger' || status.tone === 'neutral'">
-            <span class="stats-avatar"><i class="pi" [ngClass]="request.viewerRole === 'owner' ? 'pi-download' : 'pi-send'"></i></span>
-            <div class="owner-share-copy">
-              <span class="status-pill" [class.revoked]="status.tone === 'danger' || status.tone === 'neutral'" role="status">{{ status.label }}</span>
-              <h3>{{ request.viewerRole === 'owner' ? request.viewerDisplayName : request.ownerDisplayName }}</h3>
-              <p>{{ request.viewerRole === 'owner' ? 'They requested access to your stats · ' : 'You requested access to their stats · ' }}{{ status.description }}</p>
-            </div>
-            @if (request.status === 'pending') {
-              <div class="owner-share-actions">
-                @if (request.viewerRole === 'owner') {
-                  <button type="button" (click)="respondToSpecificStatsRequest(request, true)" [disabled]="!!busyStatsRequestId">Approve</button>
-                  <button type="button" class="danger" (click)="respondToSpecificStatsRequest(request, false)" [disabled]="!!busyStatsRequestId">Decline</button>
-                }
-                @if (request.viewerRole === 'viewer') {
-                  <button type="button" class="danger" (click)="openStatsRevocation(request)" [disabled]="!!busyStatsRequestId">Cancel request</button>
-                }
-                <button type="button" class="secondary" (click)="openStatsModeration(request)" [disabled]="!!busyStatsRequestId">Block / report</button>
-              </div>
-            }
-          </article>
-        }
-      }
-    </section>
+      </section>
+    }
     @if (moderationCases.length) {
       <section class="share-section moderation-cases-section">
         <div class="section-heading">
@@ -253,7 +206,7 @@
             <article class="moderation-case-card">
               <header>
                 <strong>{{ moderationCase.receiptCode }}</strong>
-                <span class="status-pill" [class.revoked]="moderationCase.status === 'resolved_action'">{{ moderationStatus(moderationCase.status) }}</span>
+                <span class="status-pill" [class.revoked]="moderationCase.status === 'resolved_action'">{{ moderationCase.status.replaceAll('_', ' ') }}</span>
               </header>
               @if (moderationCase.notice) {
                 <p class="moderation-notice">{{ moderationCase.notice }}</p>
@@ -277,7 +230,7 @@
       </section>
     }}
   }
-</div>
+</main>
 
 @if (receivedShareRemovalRequest; as share) {
   <div class="share-modal-overlay" (click)="closeReceivedShareRemoval()">
@@ -355,7 +308,6 @@
     </section>
   </div>
 }
-
 @if (isShareDialogOpen) {
   <div class="share-modal-overlay" (click)="closeShareDialog()">
     <section class="share-modal" [class.stats-request-modal]="shareMode === 'stats'" (click)="$event.stopPropagation()" role="dialog" aria-modal="true"
@@ -466,7 +418,7 @@
           <button type="button" class="share-primary" (click)="createShareLink()"
             [disabled]="!selectedPlaylistId || isLoadingSharePlaylists || isCreatingShare">
             <i class="pi" [ngClass]="isCreatingShare ? 'pi-spin pi-spinner' : 'pi-link'"></i>
-            <span>{{ isCreatingShare ? 'Publishing version…' : 'Create private link' }}</span>
+            <span>{{ isCreatingShare ? 'Publishing snapshot…' : 'Create private link' }}</span>
           </button>
         }
         <button type="button" class="share-secondary" (click)="closeShareDialog()"

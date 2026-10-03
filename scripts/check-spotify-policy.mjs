@@ -44,7 +44,7 @@ const [
   read('src/app/app-routing.module.ts'),
   read('services/sync-service/task-registry.js'),
 ]);
-const canonicalRoutes = routes + await read('src/app/design-v2-routing.module.ts');
+const canonicalRoutes = routes;
 
 const baseScopeBlock = scopes.match(/HOSTED_SPOTIFY_SCOPES\s*=\s*\[([\s\S]*?)\]/)?.[1] || '';
 assert.ok(baseScopeBlock, 'hosted Spotify read scopes must stay explicit');

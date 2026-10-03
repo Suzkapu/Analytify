@@ -27,29 +27,29 @@ describe('LegalComponent', () => {
         }).compileComponents();
     });
 
-    it('uses the shared shell instead of mounting a second header when logged in', () => {
+    it('shows the original account header when logged in', () => {
         authenticated = true;
         fixture = TestBed.createComponent(LegalComponent);
         fixture.detectChanges();
 
-        expect(fixture.nativeElement.querySelector('app-header')).toBeNull();
+        expect(fixture.nativeElement.querySelector('app-header')).not.toBeNull();
         expect(fixture.nativeElement.querySelector('.legal-public-header')).toBeNull();
     });
 
-    it('uses the shared public shell instead of mounting a second header when logged out', () => {
+    it('shows the original public header when logged out', () => {
         fixture = TestBed.createComponent(LegalComponent);
         fixture.detectChanges();
 
         expect(fixture.nativeElement.querySelector('app-header')).toBeNull();
-        expect(fixture.nativeElement.querySelector('.legal-public-header')).toBeNull();
+        expect(fixture.nativeElement.querySelector('.legal-public-header')).not.toBeNull();
     });
 
-    it('uses the shared reading shell without a duplicate header', () => {
+    it('keeps legal content and links in the stable reading page', () => {
         fixture = TestBed.createComponent(LegalComponent);
         fixture.detectChanges();
 
         expect(fixture.nativeElement.querySelector('app-header')).toBeNull();
-        expect(fixture.nativeElement.querySelector('.legal-public-header')).toBeNull();
+        expect(fixture.nativeElement.querySelector('.legal-public-header')).not.toBeNull();
         expect(fixture.nativeElement.querySelector('.legal-wrapper')).not.toBeNull();
         expect(fixture.nativeElement.querySelector('article.legal-card')).not.toBeNull();
         expect(fixture.componentInstance.navigation.commands('legal')).toEqual(['/legal']);

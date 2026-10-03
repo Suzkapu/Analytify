@@ -158,11 +158,11 @@ export class SharedPlaylistsComponent implements OnInit, OnDestroy {
   }
 
   get showPlaylistSections(): boolean {
-    return this.activeTab === 'playlists';
+    return true;
   }
 
   get showStatsSections(): boolean {
-    return this.activeTab === 'stats';
+    return true;
   }
 
   get selectedPlaylist(): ComparePlaylist | null {

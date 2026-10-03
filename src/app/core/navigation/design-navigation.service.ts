@@ -8,6 +8,7 @@ import {
 
 @Injectable({providedIn: 'root'})
 export class DesignNavigationService {
+  readonly variant = 'legacy';
   constructor(
     private readonly router: Router
   ) {}

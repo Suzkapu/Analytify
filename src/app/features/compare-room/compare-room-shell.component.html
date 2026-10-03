@@ -1,3 +1,15 @@
+@if (enteredAuthenticated) {
+  <app-header mobileTitle="Compare Room"></app-header>
+} @else {
+  <header class="app-header public-room-header">
+    <div class="header-shell">
+      <button type="button" class="header-logo public-room-brand" (click)="leaveRoom()"
+        aria-label="Leave Compare Room and return to login">
+        <img src="assets/Analytify-96.webp" width="48" height="48" alt=""><span class="logo-text">Analytify</span>
+      </button>
+    </div>
+  </header>
+}
 <div class="compare-room-page">
   <header class="compare-room-hero page-hero">
     <div>
