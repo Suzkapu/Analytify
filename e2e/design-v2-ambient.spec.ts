@@ -5,7 +5,7 @@ import {mockSpotify, seedAuthenticatedBrowser} from './helpers/authenticated-bro
 test('one ambient renderer persists through overlays, routes, and shell modes', async ({page}) => {
   await mockSpotify(page);
   await seedAuthenticatedBrowser(page);
-  await page.goto('/playlists');
+  await page.goto('/new/playlists');
   const ambient = page.locator('app-ambient-background');
   await expect(ambient).toHaveCount(1);
   await ambient.evaluate(element => { (element as HTMLElement & {ambientIdentity?: string}).ambientIdentity = 'persistent'; });
@@ -26,7 +26,7 @@ test('one ambient renderer persists through overlays, routes, and shell modes', 
 
 test('v2 ambient layer is decorative, stable, scroll-responsive, and reflow-safe', async ({page}) => {
   await page.setViewportSize({width: 320, height: 800});
-  await page.goto('/login');
+  await page.goto('/new/login');
   const ambient = page.locator('app-ambient-background');
   await expect(ambient).toHaveCount(1);
   await expect(ambient).toHaveAttribute('aria-hidden', 'true');
@@ -87,7 +87,7 @@ for (const nativeTransitions of [true, false]) {
     }, nativeTransitions);
     await mockSpotify(page);
     await seedAuthenticatedBrowser(page);
-    await page.goto('/playlists');
+    await page.goto('/new/playlists');
     await expect(page.getByRole('heading', {name: 'Your playlists', exact: true})).toBeVisible();
     if (nativeTransitions) expect(await page.evaluate(() => (window as any).__nativeTransitionAvailable)).toBe(true);
     const ambient = page.locator('app-ambient-background');
@@ -109,7 +109,7 @@ for (const nativeTransitions of [true, false]) {
 
 test('v2 ambient layer remains static with reduced motion', async ({page}) => {
   await page.emulateMedia({reducedMotion: 'reduce'});
-  await page.goto('/login');
+  await page.goto('/new/login');
   const ambient = page.locator('app-ambient-background');
   const initial = await ambient.evaluate(element => ({
     x: (element as HTMLElement).style.getPropertyValue('--ambient-primary-x'),
@@ -143,7 +143,7 @@ test('reduced motion suppresses native route snapshot animations without losing 
   });
   await mockSpotify(page);
   await seedAuthenticatedBrowser(page);
-  await page.goto('/playlists');
+  await page.goto('/new/playlists');
   await expect(page.getByRole('heading', {name: 'Your playlists', exact: true})).toBeVisible();
   await page.getByRole('button', {name: 'Open More tools'}).click();
   await page.getByRole('link', {name: /Compare Room/}).click();

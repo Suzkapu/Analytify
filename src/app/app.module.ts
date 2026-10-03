@@ -12,7 +12,9 @@ import {CoreModule} from '@core/core.module';
     BrowserModule,
     CoreModule,
     AppRoutingModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
+    ServiceWorkerModule.register('/new/ngsw-worker.js', {
+      // A separate scope and cache namespace; never replace the stable worker.
+      scope: '/new/',
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000'
     })

@@ -3,7 +3,7 @@ import {HOSTED_SPOTIFY_SCOPES} from './spotify-scopes';
 export const environment = {
   production: false,
   spotifyUrl: 'https://api.spotify.com/v1',
-  appUrl: 'http://127.0.0.1:4200/',
+  appUrl: 'http://127.0.0.1:4200/new/',
   authorizeUrl: 'https://accounts.spotify.com/authorize',
 
   // ─── NEW: ADDED FOR SUPABASE & AUTH ───────────────────────────

@@ -132,7 +132,7 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   isActive(item: DesignV2NavigationItem): boolean {
-    const destination = this.navigation.url(item.destination);
+    const destination = this.navigation.commands(item.destination).join('/');
     const current = this.currentUrl().split(/[?#]/, 1)[0];
     return current === destination || current.startsWith(`${destination}/`);
   }

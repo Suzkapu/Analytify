@@ -77,6 +77,6 @@ describe('PersonalSpotifyConnectComponent', () => {
     route.snapshot.queryParamMap = convertToParamMap({ returnUrl: '//attacker.example' });
     component.ngOnInit();
     component.cancel();
-    expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/new/login');
   });
 });

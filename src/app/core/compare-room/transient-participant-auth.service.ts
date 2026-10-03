@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import {Injectable} from '@angular/core';
+import {previewReturnPath} from '@core/navigation/preview-return-path';
 import {environment} from '@env/environment';
 import {CompareRoomAuthRequest, SpotifyTransientSession} from './compare-room.models';
 import {firstValueFrom} from 'rxjs';
@@ -56,7 +57,7 @@ export class TransientParticipantAuthService {
     const request: CompareRoomAuthRequest = {
       state: this.randomUrlSafeString(32),
       verifier,
-      returnUrl,
+      returnUrl: previewReturnPath(returnUrl),
       createdAt: Date.now()
     };
     sessionStorage.setItem(this.requestKey, JSON.stringify(request));

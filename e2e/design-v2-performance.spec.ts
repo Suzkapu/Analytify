@@ -32,7 +32,7 @@ test('large cached playlists render incrementally and search the entire collecti
       };
     });
   });
-  await page.goto('/songs/playlist-1');
+  await page.goto('/new/songs/playlist-1');
   await page.getByRole('button', {name: 'Songs', exact: true}).click();
   const rows = page.locator('.v2-track-row');
   await expect(rows).toHaveCount(50);
@@ -115,7 +115,7 @@ test('canonical library records navigation and interaction performance evidence'
     categories: 'devtools.timeline,blink.user_timing,toplevel,disabled-by-default-devtools.timeline',
     transferMode: 'ReturnAsStream'
   });
-  await page.goto('/playlists');
+  await page.goto('/new/playlists');
   const search = page.getByRole('searchbox', {name: 'Search your playlists'});
   await expect(search).toBeVisible();
   await expect(page.getByText('Test Playlist', {exact: true})).toBeVisible();
@@ -177,7 +177,7 @@ test('full top-song rankings remain bounded through filtering, tabs, and history
     }));
     await route.fulfill({json: {items: tracks.slice(offset, offset + limit), total: 100}});
   });
-  await page.goto('/stats');
+  await page.goto('/new/stats');
   const rows = page.locator('.v2-ranking-row');
   await expect(rows).toHaveCount(100);
   const sample = () => page.evaluate(() => ({

@@ -17,7 +17,7 @@ export class DesignNavigationService {
   }
 
   url(destination: LogicalRouteId, parameters: LogicalRouteParameters = {}): string {
-    return this.commands(destination, parameters).join('/');
+    return '/new' + this.commands(destination, parameters).join('/');
   }
 
   tree(

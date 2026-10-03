@@ -52,6 +52,6 @@ describe('DesignNavigationService', () => {
 
   it('returns a stable absolute URL for auth return storage', () => {
     const service = TestBed.inject(DesignNavigationService);
-    expect(service.url('playlists')).toBe('/playlists');
+    expect(service.url('playlists')).toBe('/new/playlists');
   });
 });

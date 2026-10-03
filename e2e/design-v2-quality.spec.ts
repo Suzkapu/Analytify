@@ -8,7 +8,7 @@ import {
 const widths = [320, 375, 430, 500, 768, 1024, 1440] as const;
 
 test('decorative icons use a non-blocking loaded font face', async ({page}) => {
-  await page.goto('/login');
+  await page.goto('/new/login');
   await expect(page.locator('.pi:visible').first()).toBeVisible();
   const faces = await page.evaluate(async () => {
     const icon = document.querySelector('.pi')!;
@@ -34,7 +34,7 @@ test('the temporary /new compatibility URL resolves to the canonical route', asy
 });
 
 test('the shared shell and representative dense content reflow at every release width', async ({page}) => {
-  await page.goto('/playlists');
+  await page.goto('/new/playlists');
   await expect(page.getByRole('heading', {name: 'Your playlists', exact: true})).toBeVisible();
   for (const width of widths) {
     await page.setViewportSize({width, height: 900});
@@ -46,7 +46,7 @@ test('the shared shell and representative dense content reflow at every release 
 
 test('200% text enlargement preserves the primary task and does not create horizontal overflow', async ({page}) => {
   await page.setViewportSize({width: 768, height: 900});
-  await page.goto('/playlists');
+  await page.goto('/new/playlists');
   await page.evaluate(() => { document.documentElement.style.fontSize = '200%'; });
   await expect(page.getByRole('searchbox', {name: 'Search your playlists'})).toBeVisible();
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
@@ -54,7 +54,7 @@ test('200% text enlargement preserves the primary task and does not create horiz
 });
 
 test('notification and automatic-update sheets restore focus and remain accessible', async ({page}) => {
-  await page.goto('/playlists');
+  await page.goto('/new/playlists');
   const account = page.getByRole('button', {name: 'Open account and data settings'});
   await account.click();
 
@@ -79,7 +79,7 @@ test('notification and automatic-update sheets restore focus and remain accessib
 
 test('mobile fixed navigation does not obscure the last task region', async ({page}) => {
   await page.setViewportSize({width: 320, height: 640});
-  await page.goto('/playlists');
+  await page.goto('/new/playlists');
   const card = page.locator('.v2-playlist-card').last();
   await expect(card).toBeVisible();
   await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
@@ -101,7 +101,7 @@ test('populated schedule sheets retain reachable 44px controls at narrow and enl
   await page.route('**/rest/v1/rpc/get_my_sync_task_status', route => route.fulfill({json: tasks}));
   for (const [width, fontSize] of [[320, '100%'], [768, '200%']] as const) {
     await page.setViewportSize({width, height: 800});
-    await page.goto('/playlists');
+    await page.goto('/new/playlists');
     await page.evaluate(size => { document.documentElement.style.fontSize = size; }, fontSize);
     const account = page.getByRole('button', {name: 'Open account and data settings'});
     await account.click();

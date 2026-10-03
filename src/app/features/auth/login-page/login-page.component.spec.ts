@@ -125,7 +125,7 @@ describe('LoginPageComponent', () => {
     it('records the canonical return destination before hosted Spotify authorization', async () => {
         component.termsAccepted = true;
         await component.login();
-        expect(returnUrl.remember).toHaveBeenCalledWith('/playlists');
+        expect(returnUrl.remember).toHaveBeenCalledWith('/new/playlists');
         expect(auth.loginWithSupabase).toHaveBeenCalledTimes(1);
     });
 
@@ -137,7 +137,7 @@ describe('LoginPageComponent', () => {
         const router = TestBed.inject(Router);
         expect(router.navigate).toHaveBeenCalledWith(
             ['/spotify', 'connect'],
-            {queryParams: {returnUrl: '/playlists'}}
+            {queryParams: {returnUrl: '/new/playlists'}}
         );
     });
 

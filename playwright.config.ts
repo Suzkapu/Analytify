@@ -7,7 +7,7 @@ export default defineConfig({
   retries: process.env['CI'] ? 1 : 0,
   reporter: process.env['CI'] ? [['html', {open: 'never'}], ['github']] : 'list',
   use: {
-    baseURL: 'http://127.0.0.1:4200',
+    baseURL: 'http://127.0.0.1:4200/new/',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure'
   },
@@ -17,7 +17,7 @@ export default defineConfig({
   ],
   webServer: {
     command: 'npm start -- --host 127.0.0.1 --port 4200',
-    url: 'http://127.0.0.1:4200/login',
+    url: 'http://127.0.0.1:4200/new/login',
     reuseExistingServer: !process.env['CI'],
     timeout: 120_000
   }

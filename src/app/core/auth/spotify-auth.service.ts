@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {previewReturnPath} from '@core/navigation/preview-return-path';
 import {environment} from "@env/environment";
 import { HttpClient, HttpContext, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import {Observable, throwError, Subject, from, defer, firstValueFrom} from 'rxjs';
@@ -1276,7 +1277,7 @@ export class SpotifyAuthService {
   }
 
   private safeInternalReturnUrl(value: string): string {
-    return value.startsWith('/') && !value.startsWith('//') ? value : '/playlists';
+    return previewReturnPath(value);
   }
 
   private randomUrlSafeString(byteCount: number): string {

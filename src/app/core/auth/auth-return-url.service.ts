@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {previewReturnPath} from '@core/navigation/preview-return-path';
 
 @Injectable({providedIn: 'root'})
 export class AuthReturnUrlService {
@@ -7,7 +8,7 @@ export class AuthReturnUrlService {
   remember(url: string | undefined): void {
     if (!url || !url.startsWith('/') || url.startsWith('//')) return;
     try {
-      sessionStorage.setItem(this.key, url);
+      sessionStorage.setItem(this.key, previewReturnPath(url));
     } catch {
       // Navigation still falls back safely when session storage is unavailable.
     }

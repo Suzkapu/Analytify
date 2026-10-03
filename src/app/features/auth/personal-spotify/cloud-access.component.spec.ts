@@ -54,6 +54,6 @@ describe('CloudAccessComponent', () => {
 
   it('cancels to the canonical playlists route', () => {
     component.cancel();
-    expect(router.navigateByUrl).toHaveBeenCalledWith('/playlists');
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/new/playlists');
   });
 });

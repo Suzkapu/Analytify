@@ -10,7 +10,7 @@ async function expectNoBlockingAxeViolations(page: Page): Promise<void> {
 }
 
 async function seedAuthenticatedBrowser(page: Page): Promise<void> {
-  await page.goto('/login');
+  await page.goto('/new/login');
   await page.evaluate(async termsVersion => {
     await new Promise<void>((resolve, reject) => {
       const request = indexedDB.open('AnalytifyDB', 4);
@@ -71,7 +71,7 @@ async function mockSpotify(page: Page): Promise<void> {
 }
 
 test('logged-out home is keyboard reachable, zoom-safe, and WCAG 2.2 AA clean', async ({page}) => {
-  await page.goto('/login');
+  await page.goto('/new/login');
   await expect(page.getByRole('heading', {name: 'Explore your playlists.'})).toBeVisible();
   await page.keyboard.press('Tab');
   await expect(page.locator(':focus')).toBeVisible();
@@ -81,7 +81,7 @@ test('logged-out home is keyboard reachable, zoom-safe, and WCAG 2.2 AA clean', 
 });
 
 test('v2 focus routes keep minimal chrome and one skip target', async ({page}) => {
-  await page.goto('/login');
+  await page.goto('/new/login');
   await expect(page.getByRole('main')).toHaveCount(1);
   await expect(page.getByRole('link', {name: 'Analytify playlists'})).toBeVisible();
   await expect(page.getByRole('navigation', {name: 'Main navigation'})).toHaveCount(0);
@@ -91,7 +91,7 @@ test('v2 focus routes keep minimal chrome and one skip target', async ({page}) =
 });
 
 test('fresh logged-out visit contains no account, feature, stats, or tracking data', async ({page}) => {
-  await page.goto('/login');
+  await page.goto('/new/login');
   await expect(page.getByRole('heading', {name: 'Explore your playlists.'})).toBeVisible();
 
   const state = await page.evaluate(async () => {
@@ -147,7 +147,7 @@ test('current terms acceptance survives a new page load in a first-party cookie'
     sameSite: 'Lax'
   }]);
 
-  await page.goto('/login');
+  await page.goto('/new/login');
   await expect(page.getByRole('checkbox')).toBeChecked();
   await page.reload();
   await expect(page.getByRole('checkbox')).toBeChecked();
@@ -158,7 +158,7 @@ test('an acceptance saved by the previous IndexedDB layout is migrated on startu
     contentType: 'text/html',
     body: '<!doctype html><title>Storage migration seed</title>'
   }));
-  await page.goto('/__terms_migration_seed__');
+  await page.goto('/new/__terms_migration_seed__');
   await page.evaluate(async termsVersion => {
     await new Promise<void>((resolve, reject) => {
       const request = indexedDB.open('AnalytifyDB', 3);
@@ -183,7 +183,7 @@ test('an acceptance saved by the previous IndexedDB layout is migrated on startu
     });
   }, CURRENT_TERMS_VERSION);
 
-  await page.goto('/login');
+  await page.goto('/new/login');
   await expect(page.getByRole('checkbox')).toBeChecked();
   await expect.poll(() => page.evaluate(() => document.cookie)).toContain('analytify_terms_acceptance=');
 });
@@ -191,7 +191,7 @@ test('an acceptance saved by the previous IndexedDB layout is migrated on startu
 test('authenticated playlists route is responsive and WCAG 2.2 AA clean', async ({page}) => {
   await mockSpotify(page);
   await seedAuthenticatedBrowser(page);
-  await page.goto('/playlists');
+  await page.goto('/new/playlists');
   await expect(page.getByRole('heading', {name: /^Your playlists$/i}).first()).toBeVisible();
   await expect(page.getByText('Test Playlist')).toBeVisible();
   await expectNoBlockingAxeViolations(page);
@@ -200,7 +200,7 @@ test('authenticated playlists route is responsive and WCAG 2.2 AA clean', async 
 test('enabled stats route is responsive and WCAG 2.2 AA clean', async ({page}) => {
   await mockSpotify(page);
   await seedAuthenticatedBrowser(page);
-  await page.goto('/stats');
+  await page.goto('/new/stats');
   await expect(page).toHaveURL(/\/stats$/);
   await expect(page.getByRole('heading', {name: /^Your top listening$/i}).first()).toBeVisible();
   await expectNoBlockingAxeViolations(page);
@@ -208,7 +208,7 @@ test('enabled stats route is responsive and WCAG 2.2 AA clean', async ({page}) =
 
 test('critical routes honor reduced-motion preferences', async ({page}) => {
   await page.emulateMedia({reducedMotion: 'reduce'});
-  await page.goto('/login');
+  await page.goto('/new/login');
   const offenders = await page.locator('body *').evaluateAll(elements => elements.flatMap(element => {
     const style = getComputedStyle(element);
     const durations = [style.animationDuration, style.transitionDuration];

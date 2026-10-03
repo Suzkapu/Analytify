@@ -16,7 +16,7 @@ describe('AuthReturnUrlService', () => {
     it('returns a private share claim route once after login', () => {
         service.remember('/shared-playlists/claim/private-token');
 
-        expect(service.consume()).toBe('/shared-playlists/claim/private-token');
+        expect(service.consume()).toBe('/new/shared-playlists/claim/private-token');
         expect(service.consume()).toBe('/playlists');
     });
 

@@ -3,7 +3,7 @@ import {HOSTED_SPOTIFY_SCOPES} from './spotify-scopes';
 export const environment = {
   production: true,
   spotifyUrl: 'https://api.spotify.com/v1',
-  appUrl: 'https://analytify.dynv6.net',
+  appUrl: 'https://analytify.dynv6.net/new',
   authorizeUrl: 'https://accounts.spotify.com/authorize',
   supabaseUrl: 'https://tmmhylpexbubyznlizfs.supabase.co',
   supabaseKey: 'sb_publishable_hMg6wOlMTQai9ipA4ZlxzQ_rawnrTD-',

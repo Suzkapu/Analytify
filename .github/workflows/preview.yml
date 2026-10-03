@@ -1,0 +1,62 @@
+name: Verify and deploy development preview
+
+on:
+  push:
+    branches: [codex/design-v2]
+  pull_request:
+    branches: [codex/design-v2]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24.15.0'
+          cache: npm
+      - run: npm install --global npm@12.0.2
+      - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
+        with:
+          deno-version: v2.9.6
+      - run: npm ci
+      - run: npm ci --prefix services/sync-service --ignore-scripts
+      - run: npx playwright install --with-deps chromium
+      - run: node --test scripts/preview-nginx.test.mjs
+      - run: npm run verify:ci
+      - run: npm run accessibility:browser
+      - name: Record preview artifact identity
+        run: node -e 'require("node:fs").writeFileSync("dist/spoti-front/version.json",JSON.stringify({commit:process.env.GITHUB_SHA,branch:"codex/design-v2",mount:"/new/"}))'
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: preview-web-${{ github.sha }}
+          path: dist/spoti-front
+          if-no-files-found: error
+          retention-days: 1
+  deploy:
+    needs: verify
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/codex/design-v2'
+    runs-on: ubuntu-latest
+    # Serialize Nginx configuration writes with stable releases, without ever
+    # replacing their frontend artifacts or running their backend deployment.
+    concurrency:
+      group: analytify-production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: preview-web-${{ github.sha }}
+          path: dist/spoti-front
+      - name: Deploy only the separate preview frontend
+        env:
+          DEPLOY_HOST: analytify.dynv6.net
+          DEPLOY_USER: ${{ secrets.REMOTE_USER }}
+          DEPLOY_TARGET: ${{ secrets.TARGET_DIR }}
+          DEPLOY_SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          DEPLOY_SSH_KNOWN_HOSTS: ${{ secrets.ORACLE_SSH_KNOWN_HOSTS }}
+        run: bash scripts/deploy-preview.sh
