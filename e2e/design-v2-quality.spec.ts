@@ -111,6 +111,10 @@ test('populated schedule sheets retain reachable 44px controls at narrow and enl
     await dialog.getByRole('button', {name: /^Listening history/}).click();
     const close = dialog.getByRole('button', {name: 'Close automatic updates'});
     for (const control of [close, dialog.getByRole('spinbutton', {name: 'Every'}), dialog.getByRole('combobox', {name: 'Unit'})]) {
+      // The sheet scales in on entry. Measure its settled touch target, not an
+      // intermediate animation frame (which depends on CI rendering speed).
+      await expect.poll(async () => (await control.boundingBox())?.width ?? 0).toBeGreaterThanOrEqual(44);
+      await expect.poll(async () => (await control.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(44);
       const box = await control.boundingBox();
       expect(box).not.toBeNull();
       expect(box!.width).toBeGreaterThanOrEqual(44);
