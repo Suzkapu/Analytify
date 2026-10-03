@@ -68,7 +68,18 @@ site_changed=true
 sudo -n install -o root -g root -m 0644 "$backup/rendered.conf" "$site"
 sudo -n nginx -t
 sudo -n systemctl reload nginx
-curl --fail --silent --show-error -H 'Cache-Control: no-cache' https://analytify.dynv6.net/new/version.json | node -e 'let body="";process.stdin.on("data",x=>body+=x);process.stdin.on("end",()=>{if(JSON.parse(body).commit!==process.argv[1])process.exit(1)})' "$sha"
+# A graceful reload starts new workers asynchronously. Old workers can still
+# answer the first request using the previous /new fallback; allow that bounded
+# handover before deciding the release is unhealthy and rolling it back.
+verified=false
+for attempt in {1..15}; do
+  if curl --fail --silent --show-error --max-time 5 -H 'Cache-Control: no-cache' https://analytify.dynv6.net/new/version.json | node -e 'let body="";process.stdin.on("data",x=>body+=x);process.stdin.on("end",()=>{try{if(JSON.parse(body).commit!==process.argv[1])process.exitCode=1}catch{process.exitCode=1}})' "$sha"; then
+    verified=true
+    break
+  fi
+  sleep 1
+done
+[[ "$verified" == true ]] || { echo 'Preview activation did not become healthy.' >&2; false; }
 trap - ERR
 echo "Preview frontend activated independently at /new/. Previous config preserved in $backup"
 REMOTE
