@@ -71,6 +71,30 @@ revalidation policy, so a tested preview-only metadata rule now requires
 `no-cache, no-store, must-revalidate` for HTML, worker scripts/manifests, and the
 version endpoint. That follow-up still requires deployment/header verification.
 
+A follow-up Brave Origin mobile Lighthouse sample at `2026-10-04T00:21:02Z`
+reported performance 90, automated accessibility 100, LCP 3,259.51 ms, CLS 0,
+and TBT 66 ms, without warnings. Hashed scripts/styles/fonts no longer appeared
+in its cache-lifetime finding; only the two unhashed logo images remained.
+The mobile LCP target is still unmet. The bootstrap, application loader, and
+38-pixel login brand now use the existing 3,860-byte 96-pixel logo instead of
+the 20,420-byte 384-pixel image, retaining explicit display dimensions. The
+initial-navigation unit test covers the loader asset and reserved dimensions.
+Post-deployment transfer and performance evidence is still required; no claimed
+LCP improvement follows from the byte difference alone.
+
+All 20 focused application/login unit tests and the production build/asset
+budgets passed. All 18 desktop/mobile accessibility cases passed, including a
+new network regression that verifies the visible login logo loads successfully
+with reserved dimensions and startup never requests the 384-pixel asset.
+The full CI gate and a post-deployment performance sample remain necessary.
+
+Metadata release `623ac1b` passed workflow `37164657526`. Independent live
+requests confirmed preview `623ac1b` and unchanged stable `a467ddb`; preview
+index HTML, `ngsw.json`, `ngsw-worker.js`, and `version.json` each returned
+HTTP/2 200 with `no-cache, no-store, must-revalidate`. The hashed main script
+retained `public, max-age=31536000, immutable`. This establishes the scoped
+cache policies, not completion of the mobile LCP or manual quality gates.
+
 Checked on 2026-10-01. The initiative remains incomplete until the outstanding release evidence below is recorded.
 
 ## Implemented and verified

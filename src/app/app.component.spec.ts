@@ -102,6 +102,10 @@ describe('AppComponent', () => {
         fixture.detectChanges();
 
         expect(fixture.nativeElement.querySelector('.app-loading')).not.toBeNull();
+        const logo = fixture.nativeElement.querySelector('.app-loading img') as HTMLImageElement;
+        expect(logo.getAttribute('src')).toBe('assets/Analytify-96.webp');
+        expect(logo.getAttribute('width')).toBe('64');
+        expect(logo.getAttribute('height')).toBe('64');
 
         routerEvents.next(new NavigationEnd(1, '/', '/login'));
         fixture.detectChanges();

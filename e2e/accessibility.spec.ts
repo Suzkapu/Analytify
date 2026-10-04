@@ -70,6 +70,24 @@ async function mockSpotify(page: Page): Promise<void> {
   });
 }
 
+test('signed-out startup uses the small logo without requesting oversized artwork', async ({page}) => {
+  const oversizedRequests: string[] = [];
+  page.on('request', request => {
+    if (new URL(request.url()).pathname.endsWith('/Analytify-384.webp')) oversizedRequests.push(request.url());
+  });
+  await page.goto('/new/login');
+  const logo = page.locator('.login-brand img');
+  await expect(logo).toBeVisible();
+  await expect(logo).toHaveAttribute('src', 'assets/Analytify-96.webp');
+  await expect(logo).toHaveAttribute('width', '38');
+  await expect(logo).toHaveAttribute('height', '38');
+  await expect.poll(() => logo.evaluate(element => {
+    const image = element as HTMLImageElement;
+    return image.complete && image.naturalWidth > 0;
+  })).toBe(true);
+  expect(oversizedRequests).toEqual([]);
+});
+
 test('logged-out home is keyboard reachable, zoom-safe, and WCAG 2.2 AA clean', async ({page}) => {
   await page.goto('/new/login');
   await expect(page.getByRole('heading', {name: 'Explore your playlists.'})).toBeVisible();
