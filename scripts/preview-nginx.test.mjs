@@ -37,7 +37,8 @@ test('rejects ambiguous hosts, unmanaged routes and unsafe roots', () => {
 test('immutable preview caching matches only content-hashed assets, never mutable metadata', () => {
   const result = renderPreviewNginx(source, root);
   // Quantifier braces must remain inside quotes, or Nginx treats them as blocks.
-  const pattern = result.match(/location ~ "(\^\/new\/[^"\n]+)" \{/)[1];
+  const patterns = Array.from(result.matchAll(/location ~ "(\^\/new\/[^"\n]+)" \{/g), match => match[1]);
+  const pattern = patterns.find(value => value.includes('polyfills'));
   const expression = new RegExp(pattern);
   for (const path of ['/new/main-62CF5IFV.js', '/new/chunk-wzYwz1Vg.js', '/new/styles-GJ4RSZKV.css', '/new/media/primeicons-VZW3FIZ4.woff2']) {
     assert.equal(expression.test(path), true, path);
@@ -46,6 +47,18 @@ test('immutable preview caching matches only content-hashed assets, never mutabl
     assert.equal(expression.test(path), false, path);
   }
   assert.match(result, /set \$analytify_asset_cache_control "public, max-age=31536000, immutable"/);
+});
+test('preview HTML and mutable worker/version metadata explicitly revalidate', () => {
+  const result = renderPreviewNginx(source, root);
+  const patterns = Array.from(result.matchAll(/location ~ "(\^\/new\/[^"\n]+)" \{/g), match => match[1]);
+  const expression = new RegExp(patterns.find(value => value.includes('ngsw')));
+  for (const name of ['index.html', 'ngsw.json', 'ngsw-worker.js', 'manifest.webmanifest', 'version.json']) {
+    assert.equal(expression.test(`/new/${name}`), true, name);
+  }
+  for (const path of ['/version.json', '/new/main-62CF5IFV.js', '/new/assets/version.json']) {
+    assert.equal(expression.test(path), false, path);
+  }
+  assert.match(result, /set \$analytify_asset_cache_control "no-cache, no-store, must-revalidate"/);
 });
 test('the preview deployment does not deploy the production backend or worker', () => {
   const workflow = readFileSync('.github/workflows/preview.yml', 'utf8');

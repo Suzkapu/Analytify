@@ -63,6 +63,14 @@ statements and 70/73 branches, with all functions and lines covered; allowances
 were tightened again to three statements and three branches. Remaining gaps
 are not relabeled as complete coverage or artificial exclusions.
 
+Preview `a7d02ae` passed workflow `37164167241`; live preview/stable version
+endpoints confirmed `a7d02ae` / unchanged `a467ddb`. The live preview hashed main
+script returned HTTP/2 200 and `public, max-age=31536000, immutable`, while
+version metadata had no immutable header. The latter lacked an explicit
+revalidation policy, so a tested preview-only metadata rule now requires
+`no-cache, no-store, must-revalidate` for HTML, worker scripts/manifests, and the
+version endpoint. That follow-up still requires deployment/header verification.
+
 Checked on 2026-10-01. The initiative remains incomplete until the outstanding release evidence below is recorded.
 
 ## Implemented and verified
