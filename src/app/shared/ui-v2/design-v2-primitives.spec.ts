@@ -202,6 +202,21 @@ describe('V2TabsComponent', () => {
 });
 
 describe('V2SearchFiltersComponent', () => {
+  it('adds an enabled filter without mutating the current selection and ignores disabled filters', async () => {
+    await TestBed.configureTestingModule({imports: [V2SearchFiltersComponent]}).compileComponents();
+    const fixture = TestBed.createComponent(V2SearchFiltersComponent);
+    const active = Object.freeze(['saved']);
+    fixture.componentRef.setInput('activeFilters', active);
+    const changes = vi.fn();
+    fixture.componentInstance.activeFiltersChange.subscribe(changes);
+    fixture.componentInstance.toggleFilter({id: 'mine', label: 'Mine', disabled: true});
+    expect(changes).not.toHaveBeenCalled();
+    fixture.componentInstance.toggleFilter({id: 'recent', label: 'Recent'});
+    expect(changes).toHaveBeenCalledExactlyOnceWith(['saved', 'recent']);
+    expect(fixture.componentInstance.activeFilters).toBe(active);
+    expect(active).toEqual(['saved']);
+  });
+
   it('labels search, emits query changes, and toggles enabled filters', async () => {
     await TestBed.configureTestingModule({imports: [V2SearchFiltersComponent]}).compileComponents();
     const fixture = TestBed.createComponent(V2SearchFiltersComponent);
@@ -326,6 +341,60 @@ describe('V2ModalComponent', () => {
 });
 
 describe('V2OverflowMenuComponent', () => {
+  it.each([
+    ['Home', 1, 0], ['End', 0, 1], ['ArrowDown', 1, 0], ['ArrowUp', 0, 1]
+  ] as const)('supports %s and wraps focus between enabled menu items', async (key, start, expected) => {
+    await TestBed.configureTestingModule({imports: [V2OverflowMenuComponent]}).compileComponents();
+    const fixture = TestBed.createComponent(V2OverflowMenuComponent);
+    fixture.componentRef.setInput('items', [
+      {id: 'one', label: 'One'}, {id: 'locked', label: 'Locked', disabled: true}, {id: 'two', label: 'Two'}
+    ]);
+    fixture.detectChanges();
+    fixture.componentInstance.toggle();
+    fixture.detectChanges();
+    await Promise.resolve();
+    const buttons = fixture.nativeElement.querySelectorAll('[role="menuitem"]:not(:disabled)') as NodeListOf<HTMLButtonElement>;
+    buttons[start].focus();
+    const event = new KeyboardEvent('keydown', {key, bubbles: true, cancelable: true});
+    buttons[start].dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(true);
+    expect(document.activeElement).toBe(buttons[expected]);
+    expect(fixture.componentInstance.isOpen()).toBe(true);
+  });
+
+  it('ignores ordinary keys and disabled actions, and safely closes an all-disabled menu', async () => {
+    await TestBed.configureTestingModule({imports: [V2OverflowMenuComponent]}).compileComponents();
+    const fixture = TestBed.createComponent(V2OverflowMenuComponent);
+    const locked = {id: 'locked', label: 'Locked', disabled: true};
+    fixture.componentRef.setInput('items', [locked]);
+    fixture.detectChanges();
+    const selected = vi.fn();
+    fixture.componentInstance.itemSelected.subscribe(selected);
+    const trigger = fixture.nativeElement.querySelector('[aria-haspopup="menu"]') as HTMLButtonElement;
+    trigger.focus();
+    const ordinaryKey = new KeyboardEvent('keydown', {key: 'Tab', cancelable: true});
+    fixture.componentInstance.onTriggerKeydown(ordinaryKey);
+    expect(ordinaryKey.defaultPrevented).toBe(false);
+    expect(fixture.componentInstance.isOpen()).toBe(false);
+    trigger.click();
+    fixture.detectChanges();
+    await Promise.resolve();
+    expect(document.activeElement).toBe(trigger);
+    fixture.componentInstance.choose(locked);
+    expect(selected).not.toHaveBeenCalled();
+    expect(fixture.componentInstance.isOpen()).toBe(true);
+    for (const key of ['Tab', 'ArrowDown']) {
+      const event = new KeyboardEvent('keydown', {key, cancelable: true});
+      fixture.componentInstance.onMenuKeydown(event);
+      expect(event.defaultPrevented).toBe(false);
+    }
+    trigger.click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('[role="menu"]')).toBeNull();
+    fixture.componentInstance.closeFromDocument();
+    expect(fixture.componentInstance.isOpen()).toBe(false);
+  });
+
   it('opens on demand, emits enabled choices, and closes', async () => {
     await TestBed.configureTestingModule({imports: [V2OverflowMenuComponent]}).compileComponents();
     const fixture = TestBed.createComponent(V2OverflowMenuComponent);

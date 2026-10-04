@@ -55,6 +55,14 @@ and 14 branches, with zero uncovered functions or lines. This strengthens the
 #163 unit gate without asserting that its remaining behavioral gaps or manual
 requirements are complete.
 
+The next shared-control review added rendered overflow-menu Home/End and arrow
+wraparound checks across disabled choices, an all-disabled menu/ordinary-key
+case, disabled-action suppression, and immutable filter-selection updates. All
+748 unit tests passed with one skip. Shared primitives now cover 147/150
+statements and 70/73 branches, with all functions and lines covered; allowances
+were tightened again to three statements and three branches. Remaining gaps
+are not relabeled as complete coverage or artificial exclusions.
+
 Checked on 2026-10-01. The initiative remains incomplete until the outstanding release evidence below is recorded.
 
 ## Implemented and verified
