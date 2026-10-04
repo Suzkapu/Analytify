@@ -335,8 +335,11 @@ export class V2OverflowMenuComponent {
   }
   choose(item: V2MenuItem): void {
     if (item.disabled) return;
-    this.itemSelected.emit(item.id);
     this.isOpen.set(false);
+    // Restore focus before handing control to the action. A parent may then
+    // intentionally focus a dialog or destination without us stealing it back.
+    this.focusTrigger();
+    this.itemSelected.emit(item.id);
   }
   onMenuKeydown(event: KeyboardEvent): void {
     if (event.key === 'Escape') { event.preventDefault(); this.isOpen.set(false); this.focusTrigger(); return; }

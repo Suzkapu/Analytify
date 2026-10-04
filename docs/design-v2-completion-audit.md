@@ -95,6 +95,32 @@ HTTP/2 200 with `no-cache, no-store, must-revalidate`. The hashed main script
 retained `public, max-age=31536000, immutable`. This establishes the scoped
 cache policies, not completion of the mobile LCP or manual quality gates.
 
+## Overflow action focus regression (2026-10-04)
+
+The shared menu emitted its action while still open and removed the focused
+menu item without restoring a durable focus target. Two rendered regressions
+failed before the fix. Selection now closes the menu and restores its trigger
+before emitting the action, so an action handler can intentionally move focus
+without a later menu callback stealing it back. A real primitive/dialog
+integration regression verifies initial dialog focus and trigger restoration
+after cancellation, with background inert state released.
+
+All 751 unit tests passed with one existing skip, unchanged coverage gates,
+test typechecking, and lint. The production build stayed within all budgets;
+four desktop/mobile sharing browser regressions passed. These tests prove the
+scoped action/focus behavior, not a manual screen-reader pass or all-account
+workflow parity. Deployment of this follow-up remains pending.
+
+Logo release `e66724d` passed workflow `37165031438`; live version identity
+matched and stable remained `a467ddb`. Fresh live browser visits to preview
+entry/playlists retained `/new/`, had one document navigation and no page
+errors, and requested no 384-pixel artwork. The signed-out mobile Brave Origin
+Lighthouse sample at `2026-10-04T00:35:48Z` scored performance 89 / automated
+accessibility 100, LCP 3,307.37 ms, CLS 0, and TBT 119 ms, without warnings.
+Only the small logo remained in the cache audit. The artwork transfer is
+demonstrably reduced, but LCP still fails the target and no significant
+performance improvement or field p75/INP conformance is inferred.
+
 Checked on 2026-10-01. The initiative remains incomplete until the outstanding release evidence below is recorded.
 
 ## Implemented and verified

@@ -31,6 +31,21 @@ class PrimitivesHostComponent {
   readonly tabs = [{id: 'all', label: 'All'}, {id: 'saved', label: 'Saved'}];
 }
 
+@Component({
+  standalone: true,
+  imports: [V2OverflowMenuComponent, V2ModalComponent],
+  template: `
+    <v2-overflow-menu [items]="items" (itemSelected)="open = true" />
+    <v2-modal title="Confirm action" [open]="open" (openChange)="open = $event">
+      <button type="button" appModalInitialFocus (click)="open = false">Cancel action</button>
+    </v2-modal>
+  `
+})
+class MenuConfirmationHostComponent {
+  readonly items = [{id: 'remove', label: 'Remove', danger: true}];
+  open = false;
+}
+
 describe('Design v2 presentational primitives', () => {
   let fixture: ComponentFixture<PrimitivesHostComponent>;
 
@@ -341,6 +356,55 @@ describe('V2ModalComponent', () => {
 });
 
 describe('V2OverflowMenuComponent', () => {
+  it('returns focus to the menu trigger after its action confirmation closes', async () => {
+    await TestBed.configureTestingModule({imports: [MenuConfirmationHostComponent]}).compileComponents();
+    const fixture = TestBed.createComponent(MenuConfirmationHostComponent);
+    fixture.detectChanges();
+    const trigger = fixture.nativeElement.querySelector('[aria-haspopup="menu"]') as HTMLButtonElement;
+    trigger.click();
+    fixture.detectChanges();
+    await Promise.resolve();
+    (fixture.nativeElement.querySelector('[role="menuitem"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
+    const cancel = fixture.nativeElement.querySelector('[appModalInitialFocus]') as HTMLButtonElement;
+    expect(document.activeElement).toBe(cancel);
+    cancel.click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('[role="dialog"]')).toBeNull();
+    expect(document.activeElement).toBe(trigger);
+    expect(trigger.closest('[inert]')).toBeNull();
+  });
+
+  it.each([false, true])('closes and restores trigger focus before an action can choose its own focus (%s)', async parentMovesFocus => {
+    await TestBed.configureTestingModule({imports: [V2OverflowMenuComponent]}).compileComponents();
+    const fixture = TestBed.createComponent(V2OverflowMenuComponent);
+    fixture.componentRef.setInput('items', [{id: 'rename', label: 'Rename'}]);
+    fixture.detectChanges();
+    const trigger = fixture.nativeElement.querySelector('[aria-haspopup="menu"]') as HTMLButtonElement;
+    const destination = document.createElement('input');
+    document.body.appendChild(destination);
+    try {
+      const stateAtSelection: {closed: boolean; triggerFocused: boolean}[] = [];
+      fixture.componentInstance.itemSelected.subscribe(() => {
+        stateAtSelection.push({closed: !fixture.componentInstance.isOpen(), triggerFocused: document.activeElement === trigger});
+        if (parentMovesFocus) destination.focus();
+      });
+      trigger.click();
+      fixture.detectChanges();
+      await Promise.resolve();
+      const item = fixture.nativeElement.querySelector('[role="menuitem"]') as HTMLButtonElement;
+      expect(document.activeElement).toBe(item);
+      item.click();
+      fixture.detectChanges();
+      expect(stateAtSelection).toEqual([{closed: true, triggerFocused: true}]);
+      expect(fixture.nativeElement.querySelector('[role="menu"]')).toBeNull();
+      expect(document.activeElement).toBe(parentMovesFocus ? destination : trigger);
+    } finally {
+      destination.remove();
+    }
+  });
+
   it.each([
     ['Home', 1, 0], ['End', 0, 1], ['ArrowDown', 1, 0], ['ArrowUp', 0, 1]
   ] as const)('supports %s and wraps focus between enabled menu items', async (key, start, expected) => {
