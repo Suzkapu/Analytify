@@ -34,6 +34,18 @@ test('rejects ambiguous hosts, unmanaged routes and unsafe roots', () => {
     assert.throws(() => renderPreviewNginx(source, invalid));
   }
 });
+test('immutable preview caching matches only content-hashed assets, never mutable metadata', () => {
+  const result = renderPreviewNginx(source, root);
+  const pattern = result.match(/location ~ (\^\/new\/[^\n]+) \{/)[1];
+  const expression = new RegExp(pattern);
+  for (const path of ['/new/main-62CF5IFV.js', '/new/chunk-wzYwz1Vg.js', '/new/styles-GJ4RSZKV.css', '/new/media/primeicons-VZW3FIZ4.woff2']) {
+    assert.equal(expression.test(path), true, path);
+  }
+  for (const path of ['/main-62CF5IFV.js', '/new/version.json', '/new/ngsw.json', '/new/ngsw-worker.js', '/new/index.html', '/new/manifest.webmanifest', '/new/main.js', '/new/assets/Analytify-384.webp']) {
+    assert.equal(expression.test(path), false, path);
+  }
+  assert.match(result, /set \$analytify_asset_cache_control "public, max-age=31536000, immutable"/);
+});
 test('the preview deployment does not deploy the production backend or worker', () => {
   const workflow = readFileSync('.github/workflows/preview.yml', 'utf8');
   const deploy = readFileSync('scripts/deploy-preview.sh', 'utf8');

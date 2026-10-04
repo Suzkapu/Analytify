@@ -1,6 +1,9 @@
 # Design v2 quality gate
 
-The canonical Design v2 release must keep this gate and the UI parity matrix green. Automated checks are guardrails, not a claim that an automated scanner proves WCAG conformance.
+The Design v2 development release at `/new/` must keep this gate and the UI parity
+matrix green. The user's 2026-10-04 decision keeps main's original interface
+independent; the earlier canonical-cutover plan is superseded. Automated checks
+are guardrails, not a claim that a scanner proves WCAG conformance.
 
 ## Automated release evidence
 
@@ -9,7 +12,9 @@ The canonical Design v2 release must keep this gate and the UI parity matrix gre
 - The parity and quality source checks reject missing inventory groups, a second ambient renderer, hardcoded `/new` feature links, or a Design v2 behavioral source without a colocated unit spec.
 - Production builds enforce initial JavaScript, global CSS, and every lazy-route chunk budget. The shell keeps feature pages lazy and service-worker scripts use lazy caching.
 - The ambient browser suite verifies one persistent renderer, hidden/reduced-motion behavior, route/scroll/overlay continuity, reflow, and Axe.
-- Canonical route smoke coverage and `/new/*` compatibility-redirect coverage run together. The legacy presentation is removed.
+- Browser coverage runs at `/new/`; normal routes are independently tested by
+  main's workflow. Preview assets and service-worker scope remain inside `/new/`.
+  The stable release contains no preview presentation.
 
 ## Unit coverage enforcement
 
@@ -29,4 +34,6 @@ The application still opts into ZoneJS because third-party integration paths hav
 
 For each release candidate, record a pass using a desktop screen reader/browser combination. Check skip navigation, landmarks and heading order, navigation, account/settings dialogs, tab sets, validation errors, status announcements, and destructive confirmations. Also inspect text/non-text contrast, 44x44 product hit targets, focus visibility/obscuring, source order, and representative Chrome Performance traces for repeated tasks over 50 ms, tasks over 100 ms, forced reflow, duplicate requests, DOM growth, and artwork CLS.
 
-Record the browser, screen reader, build commit, tester, date, and any exception in the #164 rollout evidence. A missing manual pass blocks release activation.
+Record the browser, screen reader, build commit, tester, date, and any exception
+in the #164 evidence. The user deferred this review and permits the development
+preview; a missing manual pass still prevents claiming the quality issue complete.

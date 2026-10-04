@@ -1,5 +1,39 @@
 # Design v2 completion audit
 
+## Current release boundary (2026-10-04)
+
+The historical canonical-rollout entries below no longer describe the active
+deployment contract. At the user's request, main was restored to the original
+interface and all Design v2 source/future development stays on `codex/design-v2`.
+The preview is independently hosted at `/new/`; it must not be merged into main.
+See `development-and-releases.md` and `design-v2-rollout.md` for the current rules.
+
+Stable commit `a467ddb` passed workflow `37162638239`. Preview commit `d77203e`
+passed workflow `37163174531`, including its full verification and browser matrix,
+and deployed its frontend only. Independent live version requests confirmed both
+commits. A live browser smoke check found one document navigation and no page
+errors for stable login, preview entry, and preview playlists; the latter two
+retained `/new/` and rendered the preview shell (signed-out users reach login).
+The previous preview activation failed its immediate health check and restored
+its prior configuration; the successful follow-up permits bounded Nginx worker
+handover before deciding the activation is unhealthy.
+
+This proves deployment separation and the reload-loop fix, not all-account flow
+parity, manual screen-reader conformance, field p75 performance, or a staging
+rollback rehearsal. Those outstanding requirements remain open. #164's original
+instruction to replace main with v2 conflicts with the newer user decision and
+must not be implemented without renewed authorization.
+
+A fresh production preview mobile Lighthouse sample at `2026-10-03T23:59:56Z`
+using Brave Origin reported performance 89, automated accessibility 100, LCP
+3,362.75 ms, CLS 0, and TBT 76 ms, with no warnings. LCP still fails the 2.5-second
+target; this signed-out lab sample is not field p75 or INP evidence. Its cache
+audit identified zero cache lifetime for preview hashed scripts, CSS, and fonts:
+the shared root cache map does not match `/new/`. The preview renderer now adds
+an isolated hashed-asset rule with regression tests excluding mutable metadata,
+unhashed assets, and stable paths. Live cache headers and post-deployment
+measurements must still be verified before claiming this finding resolved.
+
 Checked on 2026-10-01. The initiative remains incomplete until the outstanding release evidence below is recorded.
 
 ## Implemented and verified
