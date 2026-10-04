@@ -34,6 +34,15 @@ an isolated hashed-asset rule with regression tests excluding mutable metadata,
 unhashed assets, and stable paths. Live cache headers and post-deployment
 measurements must still be verified before claiming this finding resolved.
 
+Workflow `37163681427` passed verification but rejected activation because the
+hashed-asset regex quantifier braces were unquoted in the Nginx location. Its
+failure handler restored the previous preview configuration; no successful
+cache deployment is claimed. The location is now quoted, its regression test
+requires that syntax, and the generated rules passed the production host's
+actual `nginx -t` parser in a disposable standalone configuration without
+reloading or altering the live site. This is syntax evidence, not a staging
+rollback or runtime caching pass.
+
 ## Shared-choice keyboard coverage (2026-10-04)
 
 Rendered unit regressions now verify Home/End, left/right wraparound across a

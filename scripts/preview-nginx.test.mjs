@@ -36,7 +36,8 @@ test('rejects ambiguous hosts, unmanaged routes and unsafe roots', () => {
 });
 test('immutable preview caching matches only content-hashed assets, never mutable metadata', () => {
   const result = renderPreviewNginx(source, root);
-  const pattern = result.match(/location ~ (\^\/new\/[^\n]+) \{/)[1];
+  // Quantifier braces must remain inside quotes, or Nginx treats them as blocks.
+  const pattern = result.match(/location ~ "(\^\/new\/[^"\n]+)" \{/)[1];
   const expression = new RegExp(pattern);
   for (const path of ['/new/main-62CF5IFV.js', '/new/chunk-wzYwz1Vg.js', '/new/styles-GJ4RSZKV.css', '/new/media/primeicons-VZW3FIZ4.woff2']) {
     assert.equal(expression.test(path), true, path);
