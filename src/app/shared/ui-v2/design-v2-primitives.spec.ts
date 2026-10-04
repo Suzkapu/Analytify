@@ -123,6 +123,56 @@ describe('V2StatusBadgeComponent', () => {
 });
 
 describe('V2TabsComponent', () => {
+  it.each([
+    ['Home', 'long', 'short'],
+    ['End', 'short', 'long'],
+    ['ArrowLeft', 'short', 'long'],
+    ['ArrowRight', 'long', 'short']
+  ])('supports %s with enabled-choice focus and wraparound', async (key, current, expected) => {
+    await TestBed.configureTestingModule({imports: [V2TabsComponent]}).compileComponents();
+    const fixture = TestBed.createComponent(V2TabsComponent);
+    const choices = [
+      {id: 'short', label: 'Short'},
+      {id: 'medium', label: 'Medium', disabled: true},
+      {id: 'long', label: 'Long'}
+    ];
+    fixture.componentRef.setInput('tabs', choices);
+    fixture.componentRef.setInput('selected', current);
+    const selected = vi.fn();
+    fixture.componentInstance.selectedChange.subscribe(selected);
+    fixture.detectChanges();
+    const buttons = fixture.nativeElement.querySelectorAll('button') as NodeListOf<HTMLButtonElement>;
+    const event = new KeyboardEvent('keydown', {key, bubbles: true, cancelable: true});
+    buttons[choices.findIndex(choice => choice.id === current)].dispatchEvent(event);
+    await Promise.resolve();
+    expect(event.defaultPrevented).toBe(true);
+    expect(selected).toHaveBeenCalledExactlyOnceWith(expected);
+    expect(document.activeElement).toBe(buttons[choices.findIndex(choice => choice.id === expected)]);
+  });
+
+  it('ignores unrelated keys, disabled selections, unchanged selections, and an all-disabled group', async () => {
+    await TestBed.configureTestingModule({imports: [V2TabsComponent]}).compileComponents();
+    const fixture = TestBed.createComponent(V2TabsComponent);
+    const enabled = {id: 'short', label: 'Short'};
+    const disabled = {id: 'long', label: 'Long', disabled: true};
+    fixture.componentRef.setInput('tabs', [enabled, disabled]);
+    fixture.componentRef.setInput('selected', enabled.id);
+    const selected = vi.fn();
+    fixture.componentInstance.selectedChange.subscribe(selected);
+    fixture.detectChanges();
+    fixture.componentInstance.select(enabled);
+    fixture.componentInstance.select(disabled);
+    const ordinaryKey = new KeyboardEvent('keydown', {key: 'Tab', cancelable: true});
+    fixture.componentInstance.onKeydown(ordinaryKey, enabled);
+    expect(ordinaryKey.defaultPrevented).toBe(false);
+    fixture.componentRef.setInput('tabs', [disabled]);
+    fixture.detectChanges();
+    const arrow = new KeyboardEvent('keydown', {key: 'ArrowRight', cancelable: true});
+    fixture.componentInstance.onKeydown(arrow, disabled);
+    expect(arrow.defaultPrevented).toBe(false);
+    expect(selected).not.toHaveBeenCalled();
+  });
+
   it('uses segmented-button semantics, skips disabled choices, and supports arrow navigation', async () => {
     await TestBed.configureTestingModule({imports: [V2TabsComponent]}).compileComponents();
     const fixture = TestBed.createComponent(V2TabsComponent);

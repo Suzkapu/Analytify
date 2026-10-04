@@ -34,6 +34,18 @@ an isolated hashed-asset rule with regression tests excluding mutable metadata,
 unhashed assets, and stable paths. Live cache headers and post-deployment
 measurements must still be verified before claiming this finding resolved.
 
+## Shared-choice keyboard coverage (2026-10-04)
+
+Rendered unit regressions now verify Home/End, left/right wraparound across a
+disabled choice, focus on the selected enabled control, unrelated-key handling,
+unchanged/disabled selection suppression, and an all-disabled group. The full
+suite passed with 742 tests and one skip, unchanged project thresholds, test
+typechecking, and lint. The shared-primitives allowance was ratcheted from 13
+uncovered statements / 22 branches / one function / one line to ten statements
+and 14 branches, with zero uncovered functions or lines. This strengthens the
+#163 unit gate without asserting that its remaining behavioral gaps or manual
+requirements are complete.
+
 Checked on 2026-10-01. The initiative remains incomplete until the outstanding release evidence below is recorded.
 
 ## Implemented and verified
