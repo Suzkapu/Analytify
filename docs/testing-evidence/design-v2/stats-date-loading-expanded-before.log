@@ -1,0 +1,254 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts --progress=false
+Application bundle generation complete. [40.506 seconds] - 2026-10-06T18:27:44.430Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stdout | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > ignores an older range rejection instead of resetting the new range snapshot with the same date
+[Analytify][0005][+00610ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+
+stdout | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not apply or persist another account's late response under the current account
+[Analytify][0007][+00669ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+
+stderr | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not apply or persist another account's late response under the current account
+AssertionError: expected { id: 'snapshot-B', …(6) } to match object { id: 'snapshot-B', …(2) }
+(4 matching properties omitted from actual)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1283:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts:79:38
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171) {
+  showDiff: true,
+  expected: { id: 'snapshot-B', isLoaded: 'loading', topTracks: [] },
+  actual: { id: 'snapshot-B', topTracks: [ [Object] ], isLoaded: true }
+}
+
+stdout | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > ignores a late ready response after the requesting component is destroyed
+[Analytify][0008][+00710ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+
+stdout | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > ignores a late unavailable response after the requesting component is destroyed
+[Analytify][0009][+00725ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+
+stdout | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > ignores a late failed response after the requesting component is destroyed
+[Analytify][0010][+00742ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+
+stdout | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not merge an older snapshot into replacement metadata for the same date
+[Analytify][0012][+00757ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+
+stderr | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not merge an older snapshot into replacement metadata for the same date
+AssertionError: expected { id: 'replacement-snapshot', …(6) } to match object { id: 'replacement-snapshot', …(2) }
+(4 matching properties omitted from actual)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1283:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts:101:38
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171) {
+  showDiff: true,
+  expected: { id: 'replacement-snapshot', isLoaded: 'loading', topTracks: [] },
+  actual: {
+    id: 'replacement-snapshot',
+    topTracks: [ [Object] ],
+    isLoaded: true
+  }
+}
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts (9 tests | 6 failed) 591ms
+     × ignores an older range rejection instead of resetting the new range snapshot with the same date 46ms
+     × does not apply or persist another account's late response under the current account 51ms
+     × ignores a late ready response after the requesting component is destroyed 11ms
+     × ignores a late unavailable response after the requesting component is destroyed 19ms
+     × ignores a late failed response after the requesting component is destroyed 17ms
+     × does not merge an older snapshot into replacement metadata for the same date 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > ignores an older range rejection instead of resetting the new range snapshot with the same date
+AssertionError: expected { id: 'snapshot-B', …(6) } to match object { id: 'snapshot-B', …(1) }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "id": "snapshot-B",
+-   "isLoaded": "loading",
++   "isLoaded": false,
+  }
+
+ ❯ src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts:70:38
+     68|     component.selectedRange='medium_term';component.historyData=[metad…
+     69|     request.reject(new Error('Isolated old-range failure'));await sett…
+     70|     expect(component.historyData[0]).toMatchObject({id:'snapshot-B',is…
+       |                                      ^
+     71|     expect(storage.saveStatsHistory).not.toHaveBeenCalled();component.…
+     72|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not apply or persist another account's late response under the current account
+AssertionError: expected { id: 'snapshot-B', …(6) } to match object { id: 'snapshot-B', …(2) }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "id": "snapshot-B",
+-   "isLoaded": "loading",
+-   "topTracks": [],
++   "isLoaded": true,
++   "topTracks": [
++     {
++       "artist": "Saved artist",
++       "id": "saved-track",
++       "name": "Saved song",
++     },
++   ],
+  }
+
+ ❯ src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts:79:38
+     77|     account.cloud='owner-B';account.spotify='spotify-B';component.hist…
+     78|     request.resolve(full);await settle();
+     79|     expect(component.historyData[0]).toMatchObject({id:'snapshot-B',is…
+       |                                      ^
+     80|     expect(storage.saveStatsHistory).not.toHaveBeenCalled();
+     81|     expect(sdk.loadStatsSnapshotById.mock.calls).toEqual([['owner-A','…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > ignores a late ready response after the requesting component is destroyed
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "id": "snapshot-A",
+        "isLoaded": true,
+        "snapshotDate": "2026-10-04",
+        "timestamp": 1791115200000,
+        "topArtists": Array [],
+        "topGenres": Array [],
+        "topTracks": Array [
+          Object {
+            "artist": "Saved artist",
+            "id": "saved-track",
+            "name": "Saved song",
+          },
+        ],
+        "userId": "spotify-A",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts:92:42
+     90|     else request.resolve(outcome==='ready'?full:null as never);
+     91|     await settle();
+     92|     expect(storage.saveStatsHistory).not.toHaveBeenCalled();
+       |                                          ^
+     93|     expect(component.historyData[0]).toMatchObject({topTracks:[],isLoa…
+     94|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > ignores a late unavailable response after the requesting component is destroyed
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > ignores a late failed response after the requesting component is destroyed
+AssertionError: expected { id: 'snapshot-A', …(6) } to match object { topTracks: [], isLoaded: 'loading' }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "isLoaded": "loading",
++   "isLoaded": false,
+    "topTracks": [],
+  }
+
+ ❯ src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts:93:38
+     91|     await settle();
+     92|     expect(storage.saveStatsHistory).not.toHaveBeenCalled();
+     93|     expect(component.historyData[0]).toMatchObject({topTracks:[],isLoa…
+       |                                      ^
+     94|   });
+     95|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not merge an older snapshot into replacement metadata for the same date
+AssertionError: expected { id: 'replacement-snapshot', …(6) } to match object { id: 'replacement-snapshot', …(2) }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "id": "replacement-snapshot",
+-   "isLoaded": "loading",
+-   "topTracks": [],
++   "isLoaded": true,
++   "topTracks": [
++     {
++       "artist": "Saved artist",
++       "id": "saved-track",
++       "name": "Saved song",
++     },
++   ],
+  }
+
+ ❯ src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts:101:38
+     99|     component.historyData=[metadata('replacement-snapshot','loading')];
+    100|     request.resolve(full);await settle();
+    101|     expect(component.historyData[0]).toMatchObject({id:'replacement-sn…
+       |                                      ^
+    102|     expect(storage.saveStatsHistory).not.toHaveBeenCalled();component.…
+    103|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 3 passed (9)
+   Start at  20:27:45
+   Duration  5.65s (transform 1.27s, setup 687ms, import 2.23s, tests 591ms, environment 1.33s)
+

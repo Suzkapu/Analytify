@@ -1,0 +1,53 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test -c /tmp/analytify-palette-candidates.config.ts --project=webkit-stats e2e/design-v2-stats-flames.spec.ts --grep canonical flame colors and placement at 390px --output=/tmp/analytify-design-v2-baseline/stats-row-child-layout
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:343598) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:343598) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:343682) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ROW_LAYOUT {"viewport":390,"root":{"x":16,"y":392.375,"width":358,"height":116,"top":392.375,"right":374,"bottom":508.375,"left":16},"children":[{"tag":"BUTTON","text":"","bounds":{"x":32,"y":426.375,"width":48,"height":48,"top":426.375,"right":80,"bottom":474.375,"left":32},"style":{"height":"48px","width":"48px","flex":"0 0 48px","font":"16px / 24px Outfit, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif"}},{"tag":"V2-RANKING-FLAME","text":"Top 10 debut","bounds":{"x":96,"y":441.375,"width":18,"height":18,"top":441.375,"right":114,"bottom":459.375,"left":96},"style":{"height":"18px","width":"18px","flex":"0 0 auto","font":"16px / 24px Outfit, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif"}},{"tag":"DIV","text":"1. Midnight DriveNeon Coast · New","bounds":{"x":130,"y":428.375,"width":134,"height":44,"top":428.375,"right":264,"bottom":472.375,"left":130},"style":{"height":"44px","width":"134px","flex":"1 1 0px","font":"14px / 20px Outfit, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif"}},{"tag":"BUTTON","text":"History","bounds":{"x":280,"y":428.375,"width":78,"height":44,"top":428.375,"right":358,"bottom":472.375,"left":280},"style":{"height":"44px","width":"78px","flex":"0 0 78px","font":"600 14px / 20px Outfit, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif"}}]}
+  ✘  1 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:223:9 › static canonical row captures › canonical flame colors and placement at 390px (7.8s)
+
+
+  1) [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:223:9 › static canonical row captures › canonical flame colors and placement at 390px 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 80
+    Received: 116
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      48 |   // Scrolling/resizing can leave a contained row's remembered offscreen height
+      49 |   // until its next paint. Require the canonical visible geometry before capture.
+    > 50 |   await expect.poll(() => row.evaluate(element => element.getBoundingClientRect().height)).toBe(80);
+         |                                                                                            ^
+      51 |   const rendering = await row.evaluate(element => {
+      52 |     const bounds = element.getBoundingClientRect();
+      53 |     const ancestors = [];
+        at recordCanonicalRow (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:50:92)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:228:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-design-v2-baseline/stats-row-child-layout/design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../tmp/analytify-design-v2-baseline/stats-row-child-layout/design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-design-v2-baseline/stats-row-child-layout/design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../tmp/analytify-design-v2-baseline/stats-row-child-layout/design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:223:9 › static canonical row captures › canonical flame colors and placement at 390px 

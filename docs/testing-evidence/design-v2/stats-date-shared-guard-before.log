@@ -1,0 +1,37 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts --progress=false
+Application bundle generation complete. [2.900 seconds] - 2026-10-06T20:25:24.983Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stdout | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not request private saved dates while viewing shared stats
+[Analytify][0014][+00056ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts (14 tests | 1 failed) 52ms
+     × does not request private saved dates while viewing shared stats 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not request private saved dates while viewing shared stats
+TypeError: Cannot read properties of undefined (reading 'then')
+ ❯ UserStatsComponent2.lazyLoadSnapshotDetails src/app/features/insights/user-stats/user-stats.component.ts:2250:73
+ ❯ UserStatsComponent2.ensureSnapshotLoaded src/app/features/insights/user-stats/user-stats.component.ts:2227:10
+ ❯ src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts:117:15
+    115|     const {component,account,storage,sdk}=setup();
+    116|     account.sharedOwner='shared-owner';
+    117|     component.ensureSnapshotLoaded(String(timestamp));
+       |               ^
+    118|     expect(sdk.loadStatsSnapshotById).not.toHaveBeenCalled();
+    119|     expect(component.historyData[0]).toMatchObject({topTracks:[],isLoa…
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  22:25:25
+   Duration  1.07s (transform 215ms, setup 265ms, import 262ms, tests 52ms, environment 353ms)
+

@@ -1,0 +1,323 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts --progress=false
+Application bundle generation complete. [2.064 seconds] - 2026-10-06T22:32:55.335Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts (14 tests | 10 failed) 26ms
+     × rejects {"code":"42501","message":"Denied"} rather than reporting an empty cloud inventory or exposing accompanying data 7ms
+     × rejects {"code":"503","message":"Unavailable"} rather than reporting an empty cloud inventory or exposing accompanying data 1ms
+     × propagates a transport rejection and allows a fresh request 2ms
+     × allows client initialization to recover without caching failure as empty history 1ms
+     × rejects malformed calendar metadata 2026-02-30 instead of rolling it to another date 1ms
+     × rejects malformed calendar metadata 2026-13-01 instead of rolling it to another date 1ms
+     × rejects malformed calendar metadata 2026-2-03 instead of rolling it to another date 1ms
+     × rejects malformed calendar metadata not-a-date instead of rolling it to another date 1ms
+     × rejects metadata with no usable date instead of persisting NaN timestamps 1ms
+     × rejects a malformed non-array response instead of presenting empty history 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts > saved Stats date metadata service boundary > rejects {"code":"42501","message":"Denied"} rather than reporting an empty cloud inventory or exposing accompanying data
+ FAIL  |SpotiFront| src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts > saved Stats date metadata service boundary > rejects {"code":"503","message":"Unavailable"} rather than reporting an empty cloud inventory or exposing accompanying data
+AssertionError: promise resolved "[]" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+[]
+
+ ❯ src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts:37:82
+     35|       vi.spyOn(console, 'error').mockImplementation(() => {});
+     36|       const {service, query} = setup([{id: 'must-not-leak', snapshot_d…
+     37|       await expect(service.loadAllStatsSnapshotsMetadata('owner-A', 's…
+       |                                                                                  ^
+     38|       query.order.mockResolvedValueOnce({data: [], error: null});
+     39|       await expect(service.loadAllStatsSnapshotsMetadata('owner-A', 's…
+ ❯ chunk-EFV3TZQO.js:87:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-EFV3TZQO.js:71:10
+ ❯ src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts:34:110
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts > saved Stats date metadata service boundary > propagates a transport rejection and allows a fresh request
+AssertionError: promise resolved "[]" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+[]
+
+ ❯ src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts:48:81
+     46|     const error = new Error('Isolated transport failure');
+     47|     query.order.mockRejectedValueOnce(error);
+     48|     await expect(service.loadAllStatsSnapshotsMetadata('owner-A', 'med…
+       |                                                                                 ^
+     49|     await expect(service.loadAllStatsSnapshotsMetadata('owner-A', 'med…
+     50|   });
+ ❯ chunk-EFV3TZQO.js:87:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-EFV3TZQO.js:71:10
+ ❯ src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts:43:80
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts > saved Stats date metadata service boundary > allows client initialization to recover without caching failure as empty history
+AssertionError: promise resolved "[]" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+[]
+
+ ❯ src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts:57:80
+     55|     const error = new Error('Isolated initialization failure');
+     56|     factory.mockRejectedValueOnce(error);
+     57|     await expect(service.loadAllStatsSnapshotsMetadata('owner-A', 'sho…
+       |                                                                                ^
+     58|     await expect(service.loadAllStatsSnapshotsMetadata('owner-A', 'sho…
+     59|     expect(factory).toHaveBeenCalledTimes(2);
+ ❯ chunk-EFV3TZQO.js:87:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-EFV3TZQO.js:71:10
+ ❯ src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts:52:101
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts > saved Stats date metadata service boundary > rejects malformed calendar metadata 2026-02-30 instead of rolling it to another date
+AssertionError: promise resolved "[ { id: 'snapshot-A', …(10) } ]" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+[
+  {
+    "explicitPercentage": NaN,
+    "genreDiversity": undefined,
+    "id": "snapshot-A",
+    "isLoaded": false,
+    "range": "short_term",
+    "snapshotDate": "2026-02-30",
+    "timestamp": 1772406000000,
+    "topArtists": [],
+    "topGenres": [],
+    "topTracks": [],
+    "userId": "owner-A",
+  },
+]
+
+ ❯ src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts:65:80
+     63|     vi.spyOn(console, 'error').mockImplementation(() => {});
+     64|     const {service} = setup([{id: 'snapshot-A', snapshot_date, created…
+     65|     await expect(service.loadAllStatsSnapshotsMetadata('owner-A', 'sho…
+       |                                                                                ^
+     66|   });
+     67|
+ ❯ chunk-EFV3TZQO.js:87:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-EFV3TZQO.js:71:10
+ ❯ src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts:62:170
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts > saved Stats date metadata service boundary > rejects malformed calendar metadata 2026-13-01 instead of rolling it to another date
+AssertionError: promise resolved "[ { id: 'snapshot-A', …(10) } ]" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+[
+  {
+    "explicitPercentage": NaN,
+    "genreDiversity": undefined,
+    "id": "snapshot-A",
+    "isLoaded": false,
+    "range": "short_term",
+    "snapshotDate": "2026-13-01",
+    "timestamp": 1798758000000,
+    "topArtists": [],
+    "topGenres": [],
+    "topTracks": [],
+    "userId": "owner-A",
+  },
+]
+
+ ❯ src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts:65:80
+     63|     vi.spyOn(console, 'error').mockImplementation(() => {});
+     64|     const {service} = setup([{id: 'snapshot-A', snapshot_date, created…
+     65|     await expect(service.loadAllStatsSnapshotsMetadata('owner-A', 'sho…
+       |                                                                                ^
+     66|   });
+     67|
+ ❯ chunk-EFV3TZQO.js:87:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-EFV3TZQO.js:71:10
+ ❯ src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts:62:170
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts > saved Stats date metadata service boundary > rejects malformed calendar metadata 2026-2-03 instead of rolling it to another date
+AssertionError: promise resolved "[ { id: 'snapshot-A', …(10) } ]" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+[
+  {
+    "explicitPercentage": NaN,
+    "genreDiversity": undefined,
+    "id": "snapshot-A",
+    "isLoaded": false,
+    "range": "short_term",
+    "snapshotDate": "2026-2-03",
+    "timestamp": 1770073200000,
+    "topArtists": [],
+    "topGenres": [],
+    "topTracks": [],
+    "userId": "owner-A",
+  },
+]
+
+ ❯ src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts:65:80
+     63|     vi.spyOn(console, 'error').mockImplementation(() => {});
+     64|     const {service} = setup([{id: 'snapshot-A', snapshot_date, created…
+     65|     await expect(service.loadAllStatsSnapshotsMetadata('owner-A', 'sho…
+       |                                                                                ^
+     66|   });
+     67|
+ ❯ chunk-EFV3TZQO.js:87:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-EFV3TZQO.js:71:10
+ ❯ src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts:62:170
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts > saved Stats date metadata service boundary > rejects malformed calendar metadata not-a-date instead of rolling it to another date
+AssertionError: promise resolved "[ { id: 'snapshot-A', …(10) } ]" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+[
+  {
+    "explicitPercentage": NaN,
+    "genreDiversity": undefined,
+    "id": "snapshot-A",
+    "isLoaded": false,
+    "range": "short_term",
+    "snapshotDate": "not-a-date",
+    "timestamp": NaN,
+    "topArtists": [],
+    "topGenres": [],
+    "topTracks": [],
+    "userId": "owner-A",
+  },
+]
+
+ ❯ src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts:65:80
+     63|     vi.spyOn(console, 'error').mockImplementation(() => {});
+     64|     const {service} = setup([{id: 'snapshot-A', snapshot_date, created…
+     65|     await expect(service.loadAllStatsSnapshotsMetadata('owner-A', 'sho…
+       |                                                                                ^
+     66|   });
+     67|
+ ❯ chunk-EFV3TZQO.js:87:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-EFV3TZQO.js:71:10
+ ❯ src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts:62:170
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts > saved Stats date metadata service boundary > rejects metadata with no usable date instead of persisting NaN timestamps
+AssertionError: promise resolved "[ { id: 'invalid', …(10) } ]" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+[
+  {
+    "explicitPercentage": NaN,
+    "genreDiversity": undefined,
+    "id": "invalid",
+    "isLoaded": false,
+    "range": "short_term",
+    "snapshotDate": undefined,
+    "timestamp": NaN,
+    "topArtists": [],
+    "topGenres": [],
+    "topTracks": [],
+    "userId": "owner-A",
+  },
+]
+
+ ❯ src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts:78:80
+     76|     vi.spyOn(console, 'error').mockImplementation(() => {});
+     77|     const {service} = setup([{id: 'invalid', created_at: 'bad'}]);
+     78|     await expect(service.loadAllStatsSnapshotsMetadata('owner-A', 'sho…
+       |                                                                                ^
+     79|   });
+     80|
+ ❯ chunk-EFV3TZQO.js:87:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-EFV3TZQO.js:71:10
+ ❯ src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts:75:94
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts > saved Stats date metadata service boundary > rejects a malformed non-array response instead of presenting empty history
+AssertionError: promise resolved "[]" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+[]
+
+ ❯ src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts:84:80
+     82|     vi.spyOn(console, 'error').mockImplementation(() => {});
+     83|     const {service} = setup({id: 'unexpected-object'});
+     84|     await expect(service.loadAllStatsSnapshotsMetadata('owner-A', 'sho…
+       |                                                                                ^
+     85|   });
+     86| });
+ ❯ chunk-EFV3TZQO.js:87:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-EFV3TZQO.js:71:10
+ ❯ src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts:81:95
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  10 failed | 4 passed (14)
+   Start at  00:32:55
+   Duration  745ms (transform 61ms, setup 228ms, import 53ms, tests 26ms, environment 314ms)
+

@@ -1,0 +1,164 @@
+{
+  "branch": "codex/design-v2",
+  "baseCommit": "de3d5b58e99d74a225fa20ab223bb2700f3ed1b8",
+  "finalCommit": null,
+  "complete": false,
+  "verification": {
+    "fullVerify": {
+      "command": "npm run verify:ci",
+      "exitCode": 0,
+      "log": "/tmp/analytify-design-v2-baseline/shared-past-verify.log",
+      "frontend": {
+        "passed": 817,
+        "skipped": 1
+      },
+      "workerPassed": 70,
+      "edgePassed": 26,
+      "edgeEntrypointChecks": 3
+    },
+    "sharedComponent": {
+      "passed": 22,
+      "log": "/tmp/analytify-design-v2-baseline/shared-past-after.log"
+    },
+    "webkitHistory": {
+      "passed": 7,
+      "retries": 0,
+      "log": "/tmp/analytify-design-v2-baseline/history-webkit-native-final.log"
+    },
+    "cloudAndPerformanceChromiumFirefox": {
+      "passed": 14,
+      "log": "/tmp/analytify-design-v2-baseline/history-native-cross-browser.log"
+    },
+    "sharedPermissionsCurrentAllEngines": {
+      "passed": 4,
+      "log": "/tmp/analytify-design-v2-baseline/shared-past-browser-final.log"
+    }
+  },
+  "coverage": {
+    "frontend": {
+      "lines": {
+        "total": 9854,
+        "covered": 6847,
+        "skipped": 0,
+        "pct": 69.48
+      },
+      "statements": {
+        "total": 11376,
+        "covered": 7522,
+        "skipped": 0,
+        "pct": 66.12
+      },
+      "functions": {
+        "total": 2385,
+        "covered": 1518,
+        "skipped": 0,
+        "pct": 63.64
+      },
+      "branches": {
+        "total": 7345,
+        "covered": 3870,
+        "skipped": 0,
+        "pct": 52.68
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "worker": {
+      "lines": {
+        "total": 873,
+        "covered": 616,
+        "skipped": 0,
+        "pct": 70.56
+      },
+      "statements": {
+        "total": 1091,
+        "covered": 700,
+        "skipped": 0,
+        "pct": 64.16
+      },
+      "functions": {
+        "total": 197,
+        "covered": 125,
+        "skipped": 0,
+        "pct": 63.45
+      },
+      "branches": {
+        "total": 910,
+        "covered": 547,
+        "skipped": 0,
+        "pct": 60.1
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "edge": {
+      "lines": {
+        "total": 763,
+        "covered": 200,
+        "skipped": 0,
+        "pct": 26.21
+      },
+      "statements": {
+        "total": 902,
+        "covered": 219,
+        "skipped": 0,
+        "pct": 24.27
+      },
+      "functions": {
+        "total": 113,
+        "covered": 48,
+        "skipped": 0,
+        "pct": 42.47
+      },
+      "branches": {
+        "total": 797,
+        "covered": 160,
+        "skipped": 0,
+        "pct": 20.07
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    }
+  },
+  "final98PercentGates": {
+    "frontend": "failed",
+    "worker": "failed",
+    "edge": "failed"
+  },
+  "figma": {
+    "fileKey": "5v8ckmlbfhMDWwP5sTdSXd",
+    "sharedScreens": [
+      "330:15889",
+      "330:16194"
+    ],
+    "rowMaster": "161:8697",
+    "privateHistoryProperty": "Show ranking history#751:0",
+    "sharedRowsUpdated": 18,
+    "sharedGenreActionsHidden": 22,
+    "pastControlsHidden": [
+      "330:15918",
+      "330:16220"
+    ],
+    "visualEvidenceScope": "shared song rows desktop/mobile; shared mobile screen reviewed; partial-history browser captures reviewed; full parity remains unverified"
+  },
+  "limitations": [
+    "isolated Supabase integration skipped: container runtime unavailable",
+    "all four metrics below 98% in every suite",
+    "canonical color tokens still differ from Angular",
+    "shared Compare dates remains visible in canonical mobile without corresponding shared workflow",
+    "loading/empty/unavailable without local history and navigation races still need browser evidence",
+    "final reviewable commit pending; no merge/push/deploy performed"
+  ]
+}

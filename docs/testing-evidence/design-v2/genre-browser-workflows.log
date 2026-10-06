@@ -1,0 +1,340 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-all-browsers.config.ts e2e/design-v2-stats-genres.spec.ts --grep=scale, keyboard --workers=2 --retries=0 --output=/tmp/analytify-genre-workflows
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:27605) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:27605) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 2 workers
+
+(node:27737) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27738) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (9.0s)
+  ✘  2 [desktop] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (9.2s)
+(node:27983) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:28007) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (3.8s)
+  ✘  4 [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (3.9s)
+(node:28600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:28608) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  5 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (10.7s)
+  ✘  6 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (10.3s)
+(node:29164) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29173) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  8 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (12.6s)
+  ✘  7 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (12.9s)
+
+
+  1) [desktop] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('v2-genre-rankings').getByRole('button', { name: 'View position history for Dream Pop' })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" locator('v2-genre-rankings').getByRole('button', { name: 'View position history for Dream Pop' }) with timeout 5000ms
+      - waiting for locator('v2-genre-rankings').getByRole('button', { name: 'View position history for Dream Pop' })
+        14 × locator resolved to <button type="button" v2button="secondary" _ngcontent-ng-c3015665284="" class="history v2-button v2-button--secondary" aria-label="View position history for Dream Pop">…</button>
+           - unexpected value "inactive"
+
+
+      87 |     const history = chart.getByRole('button', {name: 'View position history for Dream Pop'});
+      88 |     await search.press('Tab');
+    > 89 |     await expect(history).toBeFocused();
+         |                           ^
+      90 |     await expect(history).toHaveCSS('border-top-width', '2px');
+      91 |     await expect(history).toHaveCSS('border-top-color', 'rgb(159, 255, 200)');
+      92 |     await history.press('Enter');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-genres.spec.ts:89:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('v2-genre-rankings').getByRole('button', { name: 'View position history for Dream Pop' })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" locator('v2-genre-rankings').getByRole('button', { name: 'View position history for Dream Pop' }) with timeout 5000ms
+      - waiting for locator('v2-genre-rankings').getByRole('button', { name: 'View position history for Dream Pop' })
+        14 × locator resolved to <button type="button" v2button="secondary" _ngcontent-ng-c3015665284="" class="history v2-button v2-button--secondary" aria-label="View position history for Dream Pop">…</button>
+           - unexpected value "inactive"
+
+
+      87 |     const history = chart.getByRole('button', {name: 'View position history for Dream Pop'});
+      88 |     await search.press('Tab');
+    > 89 |     await expect(history).toBeFocused();
+         |                           ^
+      90 |     await expect(history).toHaveCSS('border-top-width', '2px');
+      91 |     await expect(history).toHaveCSS('border-top-color', 'rgb(159, 255, 200)');
+      92 |     await history.press('Enter');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-genres.spec.ts:89:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 44
+    Received: 48
+
+      68 |         });
+      69 |         expect(geometry.overflow).toBeLessThanOrEqual(1);
+    > 70 |         expect(geometry.action.height).toBe(44);
+         |                                        ^
+      71 |         expect(geometry.action.width).toBe(width <= 760 ? 88 : 96);
+      72 |         expect(geometry.bar.height).toBe(8);
+      73 |         expect(geometry.currentRatio).toBeCloseTo(.96, 2);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-genres.spec.ts:70:40
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 44
+    Received: 48
+
+      68 |         });
+      69 |         expect(geometry.overflow).toBeLessThanOrEqual(1);
+    > 70 |         expect(geometry.action.height).toBe(44);
+         |                                        ^
+      71 |         expect(geometry.action.width).toBe(width <= 760 ? 88 : 96);
+      72 |         expect(geometry.bar.height).toBe(8);
+      73 |         expect(geometry.currentRatio).toBeCloseTo(.96, 2);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-genres.spec.ts:70:40
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('v2-genre-rankings').getByRole('button', { name: 'View position history for Dream Pop' })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" locator('v2-genre-rankings').getByRole('button', { name: 'View position history for Dream Pop' }) with timeout 5000ms
+      - waiting for locator('v2-genre-rankings').getByRole('button', { name: 'View position history for Dream Pop' })
+        14 × locator resolved to <button type="button" v2button="secondary" _ngcontent-ng-c3015665284="" class="history v2-button v2-button--secondary" aria-label="View position history for Dream Pop">…</button>
+           - unexpected value "inactive"
+
+
+      87 |     const history = chart.getByRole('button', {name: 'View position history for Dream Pop'});
+      88 |     await search.press('Tab');
+    > 89 |     await expect(history).toBeFocused();
+         |                           ^
+      90 |     await expect(history).toHaveCSS('border-top-width', '2px');
+      91 |     await expect(history).toHaveCSS('border-top-color', 'rgb(159, 255, 200)');
+      92 |     await history.press('Enter');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-genres.spec.ts:89:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('v2-genre-rankings').getByRole('button', { name: 'View position history for Dream Pop' })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" locator('v2-genre-rankings').getByRole('button', { name: 'View position history for Dream Pop' }) with timeout 5000ms
+      - waiting for locator('v2-genre-rankings').getByRole('button', { name: 'View position history for Dream Pop' })
+        14 × locator resolved to <button type="button" v2button="secondary" _ngcontent-ng-c3015665284="" class="history v2-button v2-button--secondary" aria-label="View position history for Dream Pop">…</button>
+           - unexpected value "inactive"
+
+
+      87 |     const history = chart.getByRole('button', {name: 'View position history for Dream Pop'});
+      88 |     await search.press('Tab');
+    > 89 |     await expect(history).toBeFocused();
+         |                           ^
+      90 |     await expect(history).toHaveCSS('border-top-width', '2px');
+      91 |     await expect(history).toHaveCSS('border-top-color', 'rgb(159, 255, 200)');
+      92 |     await history.press('Enter');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-genres.spec.ts:89:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('v2-genre-rankings').getByRole('button', { name: 'View position history for Dream Pop' })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" locator('v2-genre-rankings').getByRole('button', { name: 'View position history for Dream Pop' }) with timeout 5000ms
+      - waiting for locator('v2-genre-rankings').getByRole('button', { name: 'View position history for Dream Pop' })
+        13 × locator resolved to <button type="button" v2button="secondary" _ngcontent-ng-c3015665284="" class="history v2-button v2-button--secondary" aria-label="View position history for Dream Pop">…</button>
+           - unexpected value "inactive"
+
+
+      87 |     const history = chart.getByRole('button', {name: 'View position history for Dream Pop'});
+      88 |     await search.press('Tab');
+    > 89 |     await expect(history).toBeFocused();
+         |                           ^
+      90 |     await expect(history).toHaveCSS('border-top-width', '2px');
+      91 |     await expect(history).toHaveCSS('border-top-color', 'rgb(159, 255, 200)');
+      92 |     await history.press('Enter');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-genres.spec.ts:89:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('v2-genre-rankings').getByRole('button', { name: 'View position history for Dream Pop' })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" locator('v2-genre-rankings').getByRole('button', { name: 'View position history for Dream Pop' }) with timeout 5000ms
+      - waiting for locator('v2-genre-rankings').getByRole('button', { name: 'View position history for Dream Pop' })
+        14 × locator resolved to <button type="button" v2button="secondary" _ngcontent-ng-c3015665284="" class="history v2-button v2-button--secondary" aria-label="View position history for Dream Pop">…</button>
+           - unexpected value "inactive"
+
+
+      87 |     const history = chart.getByRole('button', {name: 'View position history for Dream Pop'});
+      88 |     await search.press('Tab');
+    > 89 |     await expect(history).toBeFocused();
+         |                           ^
+      90 |     await expect(history).toHaveCSS('border-top-width', '2px');
+      91 |     await expect(history).toHaveCSS('border-top-color', 'rgb(159, 255, 200)');
+      92 |     await history.press('Enter');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-genres.spec.ts:89:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../tmp/analytify-genre-workflows/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8 failed
+    [desktop] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference 
+    [desktop] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce 
+    [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference 
+    [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce 
+    [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference 
+    [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce 
+    [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference 
+    [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce 

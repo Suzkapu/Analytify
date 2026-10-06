@@ -1,0 +1,39 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test -c /tmp/analytify-all-browsers.config.ts e2e/design-v2-performance.spec.ts e2e/design-v2-quality.spec.ts e2e/design-v2-chromium-performance.spec.ts --grep=large cached playlists|mobile fixed navigation|canonical library records --output=/tmp/analytify-engine-fixes
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:48828) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:48828) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 10 tests using 2 workers
+
+(node:48976) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:48975) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 [desktop] › e2e/design-v2-chromium-performance.spec.ts:6:5 › canonical library records navigation and interaction performance evidence (3.5s)
+  ✓   3 [desktop] › e2e/design-v2-quality.spec.ts:80:5 › mobile fixed navigation does not obscure the last task region (2.3s)
+  ✓   1 [desktop] › e2e/design-v2-performance.spec.ts:4:5 › large cached playlists render incrementally and search the entire collection (5.9s)
+(node:49268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:49277) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   4 [mobile] › e2e/design-v2-chromium-performance.spec.ts:6:5 › canonical library records navigation and interaction performance evidence (3.2s)
+  ✓   6 [mobile] › e2e/design-v2-quality.spec.ts:80:5 › mobile fixed navigation does not obscure the last task region (2.3s)
+  ✓   5 [mobile] › e2e/design-v2-performance.spec.ts:4:5 › large cached playlists render incrementally and search the entire collection (5.6s)
+(node:49481) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:49491) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   8 [firefox-stats] › e2e/design-v2-quality.spec.ts:80:5 › mobile fixed navigation does not obscure the last task region (3.1s)
+(node:49948) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [firefox-stats] › e2e/design-v2-performance.spec.ts:4:5 › large cached playlists render incrementally and search the entire collection (5.4s)
+(node:50060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 [webkit-stats] › e2e/design-v2-quality.spec.ts:80:5 › mobile fixed navigation does not obscure the last task region (4.7s)
+  ✓   9 [webkit-stats] › e2e/design-v2-performance.spec.ts:4:5 › large cached playlists render incrementally and search the entire collection (6.9s)
+
+  10 passed (33.0s)

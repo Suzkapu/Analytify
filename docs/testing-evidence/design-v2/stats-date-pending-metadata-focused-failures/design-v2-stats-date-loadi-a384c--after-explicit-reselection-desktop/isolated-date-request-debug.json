@@ -1,0 +1,64 @@
+{
+  "requests": [
+    "https://tmmhylpexbubyznlizfs.supabase.co/rest/v1/stats_snapshots?select=id%2Cexplicit_percentage%2Cgenre_diversity%2Ccreated_at%2Csnapshot_date%2Crange%2Cstats_snapshot_tracks%28rank%2Ctracks%28id%2Cname%2Cduration_ms%2Cexplicit%2Cspotify_url%2Calbums%28id%2Cname%2Cimage_url%29%2Ctrack_artists%28artist_rank%2Cartists%28id%2Cname%29%29%29%29%2Cstats_snapshot_artists%28rank%2Cartists%28id%2Cname%2Cimage_url%2Cspotify_url%29%29%2Cstats_snapshot_genres%28rank%2Cgenre_name%2Cweight%29&id=eq.22222222-2222-4222-8222-222222222222&user_id=eq.de111111-1111-4111-8111-111111111111",
+    "https://tmmhylpexbubyznlizfs.supabase.co/rest/v1/stats_snapshots?select=id%2Cexplicit_percentage%2Cgenre_diversity%2Ccreated_at%2Csnapshot_date%2Crange%2Cstats_snapshot_tracks%28rank%2Ctracks%28id%2Cname%2Cduration_ms%2Cexplicit%2Cspotify_url%2Calbums%28id%2Cname%2Cimage_url%29%2Ctrack_artists%28artist_rank%2Cartists%28id%2Cname%29%29%29%29%2Cstats_snapshot_artists%28rank%2Cartists%28id%2Cname%2Cimage_url%2Cspotify_url%29%29%2Cstats_snapshot_genres%28rank%2Cgenre_name%2Cweight%29&id=eq.22222222-2222-4222-8222-222222222222&user_id=eq.de111111-1111-4111-8111-111111111111"
+  ],
+  "state": {
+    "context": 1,
+    "unavailable": [
+      "1:short_term:22222222-2222-4222-8222-222222222222"
+    ],
+    "history": [
+      {
+        "id": "22222222-2222-4222-8222-222222222222",
+        "userId": "e2e-user_dev",
+        "range": "short_term",
+        "timestamp": 1791115200000,
+        "snapshotDate": "2026-10-04",
+        "topTracks": [],
+        "topArtists": [],
+        "topGenres": [],
+        "isLoaded": false
+      },
+      {
+        "userId": "e2e-user_dev",
+        "range": "short_term",
+        "timestamp": 1791288000000,
+        "snapshotDate": "2026-10-06",
+        "explicitPercentage": 0,
+        "genreDiversity": 1,
+        "topGenres": [
+          {
+            "name": "pop",
+            "percentage": 100,
+            "count": 1
+          }
+        ],
+        "topTracks": [
+          {
+            "id": "current-song",
+            "linkedFromId": "",
+            "name": "Test Song",
+            "artist": "Test Artist",
+            "albumCover": "",
+            "explicit": false,
+            "spotifyUrl": ""
+          }
+        ],
+        "topArtists": [
+          {
+            "id": "current-artist",
+            "name": "Test Artist",
+            "imageUrl": "",
+            "spotifyUrl": ""
+          }
+        ],
+        "id": 1,
+        "isLoaded": true
+      }
+    ],
+    "selected": "1791115200000",
+    "compare": "current",
+    "range": "short_term"
+  }
+}

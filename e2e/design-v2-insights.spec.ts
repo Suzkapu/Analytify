@@ -1,4 +1,5 @@
-import {expect, test} from '@playwright/test';
+import {writeFile} from 'node:fs/promises';
+import {expect, test} from './fixtures';
 import {
   expectNoBlockingAxeViolations,
   mockSpotify,
@@ -110,8 +111,11 @@ test('ranking history keyboard focus remains visible and meets non-text contrast
   await page.goto('/new/stats');
   const history = page.getByRole('button', {name: 'View position history for Test Song'});
   await expect(history).toBeVisible();
+  const unfocusedBorder=await history.evaluate(element=>getComputedStyle(element).borderTopColor);
   await page.keyboard.press('Tab');
   await history.focus();
+  await expect(history).toHaveCSS('border-top-color','rgb(159, 255, 200)');
+  await expect(history).toHaveCSS('background-color','rgb(18, 24, 20)');
   const evidence = await history.evaluate(element => {
     const style = getComputedStyle(element);
     const row = element.closest('.v2-ranking-row')!;
@@ -121,28 +125,35 @@ test('ranking history keyboard focus remains visible and meets non-text contrast
       return [values[0], values[1], values[2], values[3] ?? 1];
     };
     const bg = rgba(background);
-    const ring = rgba(style.outlineColor);
-    const painted = ring.slice(0, 3).map((channel, index) => channel * ring[3] + bg[index] * (1 - ring[3]));
+    const indicator = rgba(style.borderTopColor);
+    const adjacent=[bg,rgba(style.backgroundColor)];
     const luminance = (channels: number[]) => channels.slice(0, 3).map(channel => channel / 255)
       .map(channel => channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4)
       .reduce((sum, channel, index) => sum + channel * [.2126, .7152, .0722][index], 0);
-    const a = luminance(painted), b = luminance(bg);
+    const contrasts=adjacent.map(background=>{
+      const painted=indicator.slice(0,3).map((channel,index)=>channel*indicator[3]+background[index]*(1-indicator[3]));
+      const a=luminance(painted),b=luminance(background);
+      return (Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+    });
     const bounds = element.getBoundingClientRect(), container = row.getBoundingClientRect();
-    const extent = parseFloat(style.outlineWidth) + parseFloat(style.outlineOffset);
-    return {visible: element.matches(':focus-visible'), style: style.outlineStyle,
-      width: parseFloat(style.outlineWidth), backgroundAlpha: bg[3],
-      contrast: (Math.max(a, b) + .05) / (Math.min(a, b) + .05),
-      fits: bounds.left - extent >= container.left && bounds.right + extent <= container.right
-        && bounds.top - extent >= container.top && bounds.bottom + extent <= container.bottom};
+    return {visible: element.matches(':focus-visible'), style: style.borderTopStyle,
+      color:style.borderTopColor,outline:style.outlineStyle,
+      width: parseFloat(style.borderTopWidth), backgroundAlpha: bg[3],
+      buttonAlpha:adjacent[1][3],contrasts,
+      fits: bounds.left >= container.left && bounds.right <= container.right
+        && bounds.top >= container.top && bounds.bottom <= container.bottom};
   });
   expect(evidence.visible).toBe(true);
   expect(evidence.style).not.toBe('none');
   expect(evidence.width).toBeGreaterThanOrEqual(2);
   expect(evidence.backgroundAlpha).toBe(1);
-  expect(evidence.contrast).toBeGreaterThanOrEqual(3);
+  expect(evidence.color).not.toBe(unfocusedBorder);
+  expect(evidence.outline).toBe('none');
+  expect(evidence.buttonAlpha).toBe(1);
+  for(const contrast of evidence.contrasts) expect(contrast).toBeGreaterThanOrEqual(3);
   expect(evidence.fits).toBe(true);
-  await testInfo.attach('ranking-focus-contrast.json', {
-    body: JSON.stringify({scope: 'one rendered ranking-history action on its opaque row surface',
-      project: testInfo.project.name, evidence}, null, 2), contentType: 'application/json'
-  });
+  const evidencePath=testInfo.outputPath('ranking-focus-contrast.json');
+  await writeFile(evidencePath,JSON.stringify({scope:'canonical inside-border focus against opaque button and row surfaces',
+    project:testInfo.project.name,evidence},null,2)+'\n');
+  await testInfo.attach('ranking-focus-contrast.json',{path:evidencePath,contentType:'application/json'});
 });

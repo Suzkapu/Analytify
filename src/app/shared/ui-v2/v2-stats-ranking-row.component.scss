@@ -1,0 +1,59 @@
+:host {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  min-height: 80px;
+  padding: var(--v2-space-4);
+  gap: var(--v2-space-3);
+  border-radius: var(--v2-radius-control);
+  background: var(--v2-color-surface);
+  content-visibility: auto;
+  // Intrinsic containment sizes the content box; padding supplies the other 32px.
+  contain-intrinsic-size: auto 48px;
+}
+.rank {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex: 0 0 76px;
+  width: 76px;
+  padding: 0 4px 0 2px;
+  gap: 0 18px;
+}
+.rank-number {
+  position: relative;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 36px;
+  -webkit-text-stroke: 2px var(--v2-color-surface);
+  paint-order: stroke fill;
+}
+.rank-movement { position: relative; color: var(--v2-color-accent); font-size: 18px; line-height: 24px; white-space: nowrap; }
+.rank v2-ranking-flame { position: absolute; left: -14px; top: -6px; --v2-ranking-flame-size: 48px; }
+.artwork {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex: 0 0 48px;
+  overflow: hidden;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: var(--v2-radius-control);
+  background: transparent;
+  cursor: pointer;
+}
+.artwork img { flex: none; width: 48px; height: 48px; object-fit: cover; }
+.artwork:not(:disabled):hover { border-color: var(--v2-color-accent); }
+.artwork:not(:disabled):focus-visible { border: 3px solid var(--v2-color-accent); outline: none !important; }
+.artwork:disabled { opacity: 1 !important; cursor: default; }
+.copy { display: grid; flex: 1 1 0; min-width: 0; padding-left: var(--v2-space-4); gap: var(--v2-space-1); overflow-wrap: anywhere; font-size: 14px; line-height: 20px; }
+.copy strong { font-weight: 600; }
+.copy span { color: var(--v2-color-text-muted); font-size: 12px; }
+.history { flex: 0 0 auto; min-width: 44px; height: 44px; min-height: 44px; padding: 0 calc(var(--v2-space-3) - 1px); border-color: var(--v2-color-border); color: var(--v2-color-accent); background: var(--v2-color-input); font-size: 14px; font-weight: 600; line-height: 20px; }
+// Canonical History Focus uses the secondary inside border without an outer ring.
+.history:focus-visible { border-width: 2px; padding-inline: calc(var(--v2-space-3) - 2px); outline: none !important; }
+@media (max-width: 760px) { .copy { padding-left: 0; } }

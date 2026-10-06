@@ -1,0 +1,55 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-date-loading.spec.ts --config=/tmp/analytify-all-browsers.config.ts --project=desktop --grep ranking date unavailable
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:151754) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:151754) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:151837) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:10:7 › ranking date unavailable stops render retries and recovers after explicit reselection (6.7s)
+
+
+  1) [desktop] › e2e/design-v2-stats-date-loading.spec.ts:10:7 › ranking date unavailable stops render retries and recovers after explicit reselection 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 2
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      51 |     const control=purpose==='ranking'?ranking:comparison;
+      52 |     await control.selectOption(String(timestamp));
+    > 53 |     try {await expect.poll(()=>requests.length).toBe(1);}
+         |                                                 ^
+      54 |     finally {
+      55 |       const state=await page.evaluate(()=>{
+      56 |         const host=document.querySelector('app-v2-user-stats');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-date-loading.spec.ts:53:49
+
+    attachment #1: isolated-date-request-debug (application/json) ──────────────────────────────────
+    test-results/design-v2-stats-date-loadi-a384c--after-explicit-reselection-desktop/attachments/isolated-date-request-debug-5ca3e10db01c529dcaa9e22b5c6331a465da6c2d.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-loadi-a384c--after-explicit-reselection-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-date-loadi-a384c--after-explicit-reselection-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-loadi-a384c--after-explicit-reselection-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-date-loadi-a384c--after-explicit-reselection-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-stats-date-loading.spec.ts:10:7 › ranking date unavailable stops render retries and recovers after explicit reselection 

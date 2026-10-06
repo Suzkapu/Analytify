@@ -1,0 +1,101 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-all-browsers.config.ts e2e/design-v2-stats-genres.spec.ts --grep=scale, keyboard --workers=2 --retries=0 --output=/tmp/analytify-genre-workflows-corrected
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:29564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:29564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 2 workers
+
+(node:29651) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [desktop] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (4.6s)
+  ✓  1 [desktop] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (4.7s)
+(node:29883) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29891) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (2.7s)
+(node:30060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  4 [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (3.2s)
+(node:30116) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (6.8s)
+(node:30579) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  6 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (6.9s)
+(node:30661) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  7 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (8.8s)
+  ✓  8 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (8.4s)
+
+
+  1) [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 44
+    Received: 48
+
+      68 |         });
+      69 |         expect(geometry.overflow).toBeLessThanOrEqual(1);
+    > 70 |         expect(geometry.action.height).toBe(44);
+         |                                        ^
+      71 |         expect(geometry.action.width).toBe(width <= 760 ? 88 : 96);
+      72 |         expect(geometry.bar.height).toBe(8);
+      73 |         expect(geometry.currentRatio).toBeCloseTo(.96, 2);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-genres.spec.ts:70:40
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows-corrected/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../tmp/analytify-genre-workflows-corrected/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows-corrected/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../tmp/analytify-genre-workflows-corrected/design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 44
+    Received: 48
+
+      68 |         });
+      69 |         expect(geometry.overflow).toBeLessThanOrEqual(1);
+    > 70 |         expect(geometry.action.height).toBe(44);
+         |                                        ^
+      71 |         expect(geometry.action.width).toBe(width <= 760 ? 88 : 96);
+      72 |         expect(geometry.bar.height).toBe(8);
+      73 |         expect(geometry.currentRatio).toBeCloseTo(.96, 2);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-genres.spec.ts:70:40
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows-corrected/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../tmp/analytify-genre-workflows-corrected/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-workflows-corrected/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../tmp/analytify-genre-workflows-corrected/design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference 
+    [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce 
+  6 passed (33.8s)

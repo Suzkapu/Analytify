@@ -1,0 +1,145 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts --progress=false
+Application bundle generation complete. [2.797 seconds] - 2026-10-06T20:35:17.012Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stdout | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not repeatedly request an unavailable selected date while rendering and filtering
+[Analytify][0018][+00062ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+
+stderr | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not repeatedly request an unavailable selected date while rendering and filtering
+AssertionError: expected "vi.fn()" to be called once with arguments: [ 'owner-A', 'snapshot-A' ]
+
+Received:
+
+  1st vi.fn() call:
+
+Compared values have no visual difference.
+
+  2nd vi.fn() call:
+
+Compared values have no visual difference.
+
+  3rd vi.fn() call:
+
+Compared values have no visual difference.
+
+  4th vi.fn() call:
+
+Compared values have no visual difference.
+
+
+Number of calls: 4
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1504:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts:164:39
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stdout | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not repeatedly request an unavailable selected date while rendering and filtering
+[Analytify][0019][+00062ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+[Analytify][0020][+00063ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+[Analytify][0021][+00063ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+
+stdout | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not repeatedly request an unavailable comparison date while rendering and filtering
+[Analytify][0022][+00066ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+
+stderr | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not repeatedly request an unavailable comparison date while rendering and filtering
+AssertionError: expected "vi.fn()" to be called once with arguments: [ 'owner-A', 'snapshot-A' ]
+
+Received:
+
+  1st vi.fn() call:
+
+Compared values have no visual difference.
+
+  2nd vi.fn() call:
+
+Compared values have no visual difference.
+
+  3rd vi.fn() call:
+
+Compared values have no visual difference.
+
+  4th vi.fn() call:
+
+Compared values have no visual difference.
+
+
+Number of calls: 4
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1504:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts:164:39
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stdout | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not repeatedly request an unavailable comparison date while rendering and filtering
+[Analytify][0023][+00067ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+[Analytify][0024][+00067ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+[Analytify][0025][+00067ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts (17 tests | 2 failed) 59ms
+     × does not repeatedly request an unavailable selected date while rendering and filtering 4ms
+     × does not repeatedly request an unavailable comparison date while rendering and filtering 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not repeatedly request an unavailable selected date while rendering and filtering
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not repeatedly request an unavailable comparison date while rendering and filtering
+AssertionError: expected "vi.fn()" to be called once with arguments: [ 'owner-A', 'snapshot-A' ]
+
+Received:
+
+  1st vi.fn() call:
+
+Compared values have no visual difference.
+
+  2nd vi.fn() call:
+
+Compared values have no visual difference.
+
+  3rd vi.fn() call:
+
+Compared values have no visual difference.
+
+  4th vi.fn() call:
+
+Compared values have no visual difference.
+
+
+Number of calls: 4
+
+ ❯ src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts:164:39
+    162|       await settle();
+    163|     }
+    164|     expect(sdk.loadStatsSnapshotById).toHaveBeenCalledExactlyOnceWith(…
+       |                                       ^
+    165|     expect(storage.saveStatsHistory).not.toHaveBeenCalled();
+    166|     expect(component.isSnapshotLoading()).toBe(false);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 15 passed (17)
+   Start at  22:35:17
+   Duration  969ms (transform 179ms, setup 237ms, import 225ms, tests 59ms, environment 329ms)
+

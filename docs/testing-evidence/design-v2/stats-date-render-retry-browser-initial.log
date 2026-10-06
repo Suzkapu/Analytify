@@ -1,0 +1,178 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-date-loading.spec.ts --config=/tmp/analytify-all-browsers.config.ts --project=desktop
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:146201) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:146201) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 2 workers
+
+(node:146287) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:146288) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date unavailable stops render retries and recovers after explicit reselection (6.7s)
+  ✘  2 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date failed stops render retries and recovers after explicit reselection (6.8s)
+(node:146469) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:146478) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date unavailable stops render retries and recovers after explicit reselection (6.7s)
+  ✘  4 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date failed stops render retries and recovers after explicit reselection (6.8s)
+
+
+  1) [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date unavailable stops render retries and recovers after explicit reselection 
+
+    Error: expect(locator).toBeAttached() failed
+
+    Locator: getByRole('combobox', { name: 'Ranking date' }).locator('option[value="1791115200000"]')
+    Expected: attached
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeAttached" getByRole('combobox', { name: 'Ranking date' }).locator('option[value="1791115200000"]') with timeout 5000ms
+      - waiting for getByRole('combobox', { name: 'Ranking date' }).locator('option[value="1791115200000"]')
+
+
+      40 |     const ranking=page.getByRole('combobox',{name:'Ranking date'});
+      41 |     const comparison=page.getByRole('combobox',{name:'Compare against'});
+    > 42 |     await expect(ranking.locator(`option[value="${timestamp}"]`)).toBeAttached();
+         |                                                                   ^
+      43 |     await expect(page.locator('.v2-ranked-song strong').filter({hasText:'Test Song'})).toBeVisible();
+      44 |     const control=purpose==='ranking'?ranking:comparison;
+      45 |     await control.selectOption(String(timestamp));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-date-loading.spec.ts:42:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-loadi-a384c--after-explicit-reselection-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-date-loadi-a384c--after-explicit-reselection-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-loadi-a384c--after-explicit-reselection-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-date-loadi-a384c--after-explicit-reselection-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date failed stops render retries and recovers after explicit reselection 
+
+    Error: expect(locator).toBeAttached() failed
+
+    Locator: getByRole('combobox', { name: 'Ranking date' }).locator('option[value="1791115200000"]')
+    Expected: attached
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeAttached" getByRole('combobox', { name: 'Ranking date' }).locator('option[value="1791115200000"]') with timeout 5000ms
+      - waiting for getByRole('combobox', { name: 'Ranking date' }).locator('option[value="1791115200000"]')
+
+
+      40 |     const ranking=page.getByRole('combobox',{name:'Ranking date'});
+      41 |     const comparison=page.getByRole('combobox',{name:'Compare against'});
+    > 42 |     await expect(ranking.locator(`option[value="${timestamp}"]`)).toBeAttached();
+         |                                                                   ^
+      43 |     await expect(page.locator('.v2-ranked-song strong').filter({hasText:'Test Song'})).toBeVisible();
+      44 |     const control=purpose==='ranking'?ranking:comparison;
+      45 |     await control.selectOption(String(timestamp));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-date-loading.spec.ts:42:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-loadi-df11e--after-explicit-reselection-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-date-loadi-df11e--after-explicit-reselection-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-loadi-df11e--after-explicit-reselection-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-date-loadi-df11e--after-explicit-reselection-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date unavailable stops render retries and recovers after explicit reselection 
+
+    Error: expect(locator).toBeAttached() failed
+
+    Locator: getByRole('combobox', { name: 'Ranking date' }).locator('option[value="1791115200000"]')
+    Expected: attached
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeAttached" getByRole('combobox', { name: 'Ranking date' }).locator('option[value="1791115200000"]') with timeout 5000ms
+      - waiting for getByRole('combobox', { name: 'Ranking date' }).locator('option[value="1791115200000"]')
+
+
+      40 |     const ranking=page.getByRole('combobox',{name:'Ranking date'});
+      41 |     const comparison=page.getByRole('combobox',{name:'Compare against'});
+    > 42 |     await expect(ranking.locator(`option[value="${timestamp}"]`)).toBeAttached();
+         |                                                                   ^
+      43 |     await expect(page.locator('.v2-ranked-song strong').filter({hasText:'Test Song'})).toBeVisible();
+      44 |     const control=purpose==='ranking'?ranking:comparison;
+      45 |     await control.selectOption(String(timestamp));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-date-loading.spec.ts:42:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-loadi-ae177--after-explicit-reselection-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-date-loadi-ae177--after-explicit-reselection-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-loadi-ae177--after-explicit-reselection-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-date-loadi-ae177--after-explicit-reselection-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date failed stops render retries and recovers after explicit reselection 
+
+    Error: expect(locator).toBeAttached() failed
+
+    Locator: getByRole('combobox', { name: 'Ranking date' }).locator('option[value="1791115200000"]')
+    Expected: attached
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeAttached" getByRole('combobox', { name: 'Ranking date' }).locator('option[value="1791115200000"]') with timeout 5000ms
+      - waiting for getByRole('combobox', { name: 'Ranking date' }).locator('option[value="1791115200000"]')
+
+
+      40 |     const ranking=page.getByRole('combobox',{name:'Ranking date'});
+      41 |     const comparison=page.getByRole('combobox',{name:'Compare against'});
+    > 42 |     await expect(ranking.locator(`option[value="${timestamp}"]`)).toBeAttached();
+         |                                                                   ^
+      43 |     await expect(page.locator('.v2-ranked-song strong').filter({hasText:'Test Song'})).toBeVisible();
+      44 |     const control=purpose==='ranking'?ranking:comparison;
+      45 |     await control.selectOption(String(timestamp));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-date-loading.spec.ts:42:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-loadi-98e57--after-explicit-reselection-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-date-loadi-98e57--after-explicit-reselection-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-loadi-98e57--after-explicit-reselection-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-date-loadi-98e57--after-explicit-reselection-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date unavailable stops render retries and recovers after explicit reselection 
+    [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date failed stops render retries and recovers after explicit reselection 
+    [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date unavailable stops render retries and recovers after explicit reselection 
+    [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date failed stops render retries and recovers after explicit reselection 

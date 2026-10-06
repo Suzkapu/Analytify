@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
-import {expect, Page, test} from '@playwright/test';
+import {expect, Page, test} from './fixtures';
 import {CURRENT_TERMS_VERSION} from '../src/app/core/legal/terms-acceptance.service';
 
 async function expectNoBlockingAxeViolations(page: Page): Promise<void> {

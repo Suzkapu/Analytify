@@ -1,0 +1,237 @@
+{
+  "status": "active; migration completion gates not met",
+  "branch": "codex/design-v2",
+  "finalCommit": null,
+  "canonical": {
+    "fileKey": "5v8ckmlbfhMDWwP5sTdSXd",
+    "page": "7:2",
+    "regularBorder": "24:35 / #34423a",
+    "controlBorder": "24:37 / #6b7d71",
+    "selection": "24:39 / #193c29",
+    "secondarySet": "24:94",
+    "secondaryStates": [
+      "24:86",
+      "24:88",
+      "24:90",
+      "24:92",
+      "584:21889"
+    ]
+  },
+  "verification": {
+    "fullVerify": {
+      "command": "npm run verify:ci",
+      "exit": 0,
+      "frontendTests": 837,
+      "frontendSkipped": 1,
+      "files": 94,
+      "workerTests": 70,
+      "edgeTests": 26,
+      "edgeEntrypointChecks": 3,
+      "initialJavascriptBytes": 751546,
+      "log": "/tmp/analytify-design-v2-baseline/history-palette-verify.log"
+    },
+    "paletteBrowser": {
+      "passed": 4,
+      "retries": 0,
+      "log": "/tmp/analytify-design-v2-baseline/history-palette-focus-final.log",
+      "before": "1 failure before token fix; 4 failures caught hover overriding keyboard focus after first fix"
+    },
+    "staticCandidates": {
+      "approvedRepositoryGoldens": false,
+      "candidateGenerationTests": 16,
+      "repeatWithoutUpdatingTests": 16,
+      "loadedArtworkAndCanonicalSurfaceTests": 16,
+      "log": "/tmp/analytify-design-v2-baseline/palette-diagnostics.log",
+      "candidateDirectory": "/tmp/analytify-design-v2-baseline/palette-candidates",
+      "review": "All 24 paired rows viewed in two contact sheets. Border changes expected. Additional background/artwork differences remain unexplained; repository goldens intentionally unchanged.",
+      "savedUnapprovedCandidates": "docs/testing-evidence/design-v2/palette-unapproved-row-candidates",
+      "currentDiff": "palette-golden-current-candidate-diff.json",
+      "currentReviewSheets": [
+        "palette-current-review-390.png",
+        "palette-current-review-1440.png"
+      ]
+    },
+    "historyRegression": {
+      "passed": 56,
+      "exit": 0,
+      "retries": 0,
+      "duration": "3.9m",
+      "engines": [
+        "Chromium desktop",
+        "Chromium Pixel 7",
+        "Firefox",
+        "portable WebKit"
+      ],
+      "log": "/tmp/analytify-design-v2-baseline/palette-history-regression.log"
+    },
+    "e2eLint": {
+      "exit": 0,
+      "log": "/tmp/analytify-design-v2-baseline/palette-final-confirmed-lint.log"
+    },
+    "otherPagesRegression": {
+      "passed": 92,
+      "exit": 0,
+      "retries": 0,
+      "duration": "2.2m",
+      "projects": [
+        "desktop",
+        "mobile"
+      ],
+      "log": "/tmp/analytify-design-v2-baseline/palette-other-pages.log",
+      "scope": "Nine existing browser files, excludes flames/history (separate runs). Before upcoming custom artist border correction."
+    },
+    "currentPopupCaptures": {
+      "reviewed": [
+        "history-palette-loading-mobile.png",
+        "history-palette-selected-desktop.png"
+      ],
+      "saved": [
+        "Loading",
+        "Unavailable",
+        "Retrying",
+        "Empty",
+        "Single"
+      ],
+      "approvedGoldens": false
+    },
+    "artistRole": {
+      "before": {
+        "failed": 1,
+        "exit": 1,
+        "log": "/tmp/analytify-design-v2-baseline/palette-artist-role-before.log"
+      },
+      "temporaryCandidates": {
+        "passed": 8,
+        "exit": 0,
+        "log": "/tmp/analytify-design-v2-baseline/palette-artist-role-candidates.log"
+      },
+      "canonicalDefault": "Regular border24:35/#34423a; custom input surface24:13 retained",
+      "focusHover": "Shared secondary states continue to apply; full custom canonical action-state matrix unfinished"
+    },
+    "finalFlames": {
+      "passed": 24,
+      "exit": 0,
+      "retries": 0,
+      "log": "/tmp/analytify-design-v2-baseline/palette-flames-final.log",
+      "scope": "8 normal/reduced workflow cases plus16 static cases against UNAPPROVED temporary candidates; repository goldens unchanged",
+      "snapshotUpdates": false
+    },
+    "scopedFinalBuild": {
+      "exit": 0,
+      "initialJavascriptBytes": 751546,
+      "log": "/tmp/analytify-design-v2-baseline/palette-artist-role-build.log"
+    }
+  },
+  "coverage": {
+    "frontend": {
+      "lines": {
+        "total": 9864,
+        "covered": 6850,
+        "skipped": 0,
+        "pct": 69.44
+      },
+      "statements": {
+        "total": 11388,
+        "covered": 7527,
+        "skipped": 0,
+        "pct": 66.09
+      },
+      "functions": {
+        "total": 2385,
+        "covered": 1517,
+        "skipped": 0,
+        "pct": 63.6
+      },
+      "branches": {
+        "total": 7364,
+        "covered": 3887,
+        "skipped": 0,
+        "pct": 52.78
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "worker": {
+      "lines": {
+        "total": 873,
+        "covered": 616,
+        "skipped": 0,
+        "pct": 70.56
+      },
+      "statements": {
+        "total": 1091,
+        "covered": 700,
+        "skipped": 0,
+        "pct": 64.16
+      },
+      "functions": {
+        "total": 197,
+        "covered": 125,
+        "skipped": 0,
+        "pct": 63.45
+      },
+      "branches": {
+        "total": 910,
+        "covered": 547,
+        "skipped": 0,
+        "pct": 60.1
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "edge": {
+      "lines": {
+        "total": 763,
+        "covered": 200,
+        "skipped": 0,
+        "pct": 26.21
+      },
+      "statements": {
+        "total": 902,
+        "covered": 219,
+        "skipped": 0,
+        "pct": 24.27
+      },
+      "functions": {
+        "total": 113,
+        "covered": 48,
+        "skipped": 0,
+        "pct": 42.47
+      },
+      "branches": {
+        "total": 797,
+        "covered": 160,
+        "skipped": 0,
+        "pct": 20.07
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    }
+  },
+  "coverageSources": {
+    "frontend": 134,
+    "worker": 17,
+    "edge": 12
+  },
+  "final98Gate": "each suite failed separately; no metric reaches target",
+  "limitations": [
+    "Control-role audit remains open for generic modal/menu/spinner users of border-strong compatibility alias",
+    "Whole Stats and hidden genre canonical composition and popup visual goldens unfinished",
+    "Isolated real Supabase contract check unrun: no container runtime",
+    "Final commit pending; no merge, push or deployment",
+    "Other-page Firefox/WebKit not scheduled by current Stats-only project match",
+    "Fullverify and56-case history run precede final artist-only CSS role correction; fresh scoped build/all24 flames followed it"
+  ]
+}

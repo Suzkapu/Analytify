@@ -1,0 +1,70 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-date-loading.spec.ts e2e/design-v2-stats-flames.spec.ts e2e/design-v2-stats-history.spec.ts --config=/tmp/analytify-all-browsers.config.ts --grep stops render retries|snapshot classifications survive|saved history preserves
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:156465) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:156465) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 32 tests using 2 workers
+
+(node:156987) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:156988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 10:54:28 PM [vite] (client) [console.error] [Analytify][0008][+00726ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+  ✓   1 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date unavailable stops render retries and recovers after explicit reselection (3.6s)
+  ✓   2 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date failed stops render retries and recovers after explicit reselection (3.8s)
+[WebServer] 10:54:31 PM [vite] (client) [console.error] [Analytify][0008][+00712ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+  ✓   3 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date unavailable stops render retries and recovers after explicit reselection (3.4s)
+  ✓   4 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date failed stops render retries and recovers after explicit reselection (3.7s)
+  ✓   5 [desktop] › e2e/design-v2-stats-flames.spec.ts:125:7 › snapshot classifications survive filtering, categories and responsive resizing with motion no-preference (5.3s)
+  ✓   6 [desktop] › e2e/design-v2-stats-flames.spec.ts:125:7 › snapshot classifications survive filtering, categories and responsive resizing with motion reduce (5.6s)
+  ✓   7 [desktop] › e2e/design-v2-stats-history.spec.ts:77:7 › saved history preserves real dates, keyboard inspection and responsive geometry with motion no-preference (5.2s)
+(node:158245) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   8 [desktop] › e2e/design-v2-stats-history.spec.ts:77:7 › saved history preserves real dates, keyboard inspection and responsive geometry with motion reduce (5.7s)
+(node:158337) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 10:54:47 PM [vite] (client) [console.error] [Analytify][0008][+00687ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+  ✓   9 [mobile] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date unavailable stops render retries and recovers after explicit reselection (3.5s)
+  ✓  10 [mobile] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date failed stops render retries and recovers after explicit reselection (3.6s)
+[WebServer] 10:54:50 PM [vite] (client) [console.error] [Analytify][0008][+00576ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+  ✓  11 [mobile] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date unavailable stops render retries and recovers after explicit reselection (3.6s)
+  ✓  12 [mobile] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date failed stops render retries and recovers after explicit reselection (3.5s)
+  ✓  13 [mobile] › e2e/design-v2-stats-flames.spec.ts:125:7 › snapshot classifications survive filtering, categories and responsive resizing with motion no-preference (5.6s)
+  ✓  14 [mobile] › e2e/design-v2-stats-flames.spec.ts:125:7 › snapshot classifications survive filtering, categories and responsive resizing with motion reduce (5.8s)
+  ✓  15 [mobile] › e2e/design-v2-stats-history.spec.ts:77:7 › saved history preserves real dates, keyboard inspection and responsive geometry with motion no-preference (7.5s)
+(node:159178) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  16 [mobile] › e2e/design-v2-stats-history.spec.ts:77:7 › saved history preserves real dates, keyboard inspection and responsive geometry with motion reduce (8.4s)
+(node:159513) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 10:55:19 PM [vite] (client) [console.error] [Analytify][0008][+01607ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+[WebServer] 10:55:21 PM [vite] (client) [console.warn] [Analytify][0009][+07544ms][Authentication][WARN] Failed to check backup and sync status {"message":"TypeError: NetworkError when attempting to fetch resource.","details":"","hint":"","code":""}
+  ✓  17 [firefox-stats] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date unavailable stops render retries and recovers after explicit reselection (16.5s)
+  ✓  18 [firefox-stats] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date failed stops render retries and recovers after explicit reselection (16.8s)
+[WebServer] 10:55:33 PM [vite] (client) [console.error] [Analytify][0008][+02260ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+  ✓  19 [firefox-stats] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date unavailable stops render retries and recovers after explicit reselection (11.7s)
+  ✓  20 [firefox-stats] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date failed stops render retries and recovers after explicit reselection (10.0s)
+  ✓  22 [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:125:7 › snapshot classifications survive filtering, categories and responsive resizing with motion reduce (6.2s)
+  ✓  21 [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:125:7 › snapshot classifications survive filtering, categories and responsive resizing with motion no-preference (7.1s)
+  ✓  24 [firefox-stats] › e2e/design-v2-stats-history.spec.ts:77:7 › saved history preserves real dates, keyboard inspection and responsive geometry with motion reduce (6.5s)
+  ✓  23 [firefox-stats] › e2e/design-v2-stats-history.spec.ts:77:7 › saved history preserves real dates, keyboard inspection and responsive geometry with motion no-preference (7.0s)
+(node:161362) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:161381) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 10:55:53 PM [vite] (client) [console.error] [Analytify][0008][+01211ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+  ✓  26 [webkit-stats] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date failed stops render retries and recovers after explicit reselection (7.6s)
+  ✓  25 [webkit-stats] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date unavailable stops render retries and recovers after explicit reselection (8.4s)
+[WebServer] 10:56:01 PM [vite] (client) [console.error] [Analytify][0008][+01450ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+  ✓  27 [webkit-stats] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date unavailable stops render retries and recovers after explicit reselection (7.3s)
+  ✓  28 [webkit-stats] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date failed stops render retries and recovers after explicit reselection (8.8s)
+  ✓  29 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:125:7 › snapshot classifications survive filtering, categories and responsive resizing with motion no-preference (8.3s)
+  ✓  30 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:125:7 › snapshot classifications survive filtering, categories and responsive resizing with motion reduce (7.5s)
+  ✓  31 [webkit-stats] › e2e/design-v2-stats-history.spec.ts:77:7 › saved history preserves real dates, keyboard inspection and responsive geometry with motion no-preference (9.9s)
+  ✓  32 [webkit-stats] › e2e/design-v2-stats-history.spec.ts:77:7 › saved history preserves real dates, keyboard inspection and responsive geometry with motion reduce (9.5s)
+
+  32 passed (2.1m)

@@ -1,0 +1,23 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-date-loading.spec.ts --config=/tmp/analytify-all-browsers.config.ts --project=desktop
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:156018) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:156018) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 2 workers
+
+(node:156098) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:156097) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 10:53:54 PM [vite] (client) [console.error] [Analytify][0008][+00615ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+  ✓  1 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date failed stops render retries and recovers after explicit reselection (3.2s)
+  ✓  2 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date unavailable stops render retries and recovers after explicit reselection (3.2s)
+[WebServer] 10:53:57 PM [vite] (client) [console.error] [Analytify][0008][+00606ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+  ✓  3 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date unavailable stops render retries and recovers after explicit reselection (3.0s)
+  ✓  4 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date failed stops render retries and recovers after explicit reselection (3.2s)
+
+  4 passed (14.3s)

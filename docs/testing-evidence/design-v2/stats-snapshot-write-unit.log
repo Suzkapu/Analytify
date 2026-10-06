@@ -1,0 +1,18 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/core/data-access/supabase/stats-snapshot-write-boundary.spec.ts --progress=false
+Application bundle generation failed. [2.076 seconds] - 2026-10-06T17:17:11.006Z
+
+✘ [ERROR] TS2550: Property 'withResolvers' does not exist on type 'PromiseConstructor'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2024' or later. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/supabase/stats-snapshot-write-boundary.spec.ts:125:28:
+      125 │     const entered = Promise.withResolvers<void>();
+          ╵                             ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2550: Property 'withResolvers' does not exist on type 'PromiseConstructor'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2024' or later. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/supabase/stats-snapshot-write-boundary.spec.ts:126:28:
+      126 │     const release = Promise.withResolvers<any>();
+          ╵                             ~~~~~~~~~~~~~
+
+

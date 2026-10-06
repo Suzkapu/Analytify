@@ -41,6 +41,16 @@ export interface PastTopItem {
   appearances: number;
 }
 
+export interface StatsItemTrendPoint {
+  timestamp: number;
+  snapshotDate: string;
+  rank: number;
+}
+
+export type StatsItemTrendResult =
+  | {status: 'ready'; points: StatsItemTrendPoint[]}
+  | {status: 'unavailable'; points: []};
+
 function parseSnapshotTimestamp(snapshotDate?: string, createdAt?: string): number {
   if (snapshotDate) {
     const parts = snapshotDate.split('-');
@@ -52,6 +62,22 @@ function parseSnapshotTimestamp(snapshotDate?: string, createdAt?: string): numb
     }
   }
   return new Date(createdAt || '').getTime();
+}
+
+function parseSnapshotMetadataTimestamp(snapshotDate?: string, createdAt?: string): number {
+  if (snapshotDate) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(snapshotDate)) throw new Error('Invalid saved snapshot date.');
+    const [year, month, day] = snapshotDate.split('-').map(Number);
+    const date = new Date(0);
+    date.setFullYear(year, month - 1, day);
+    date.setHours(0, 0, 0, 0);
+    if (year < 1 || date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day)
+      throw new Error('Invalid saved snapshot date.');
+    return date.getTime();
+  }
+  const timestamp = parseSnapshotTimestamp(undefined, createdAt);
+  if (!Number.isFinite(timestamp)) throw new Error('Invalid saved snapshot date.');
+  return timestamp;
 }
 
 function getDailyCutoff(now: Date = new Date()): Date {
@@ -1006,7 +1032,7 @@ export class SupabaseService {
     }
   }
 
-  /** Loads all stats snapshots metadata without item joins for performance. */
+  /** Loads lightweight dates; failures stay retryable rather than looking like empty cloud history. */
   async loadAllStatsSnapshotsMetadata(supabaseUserId: string, range: string): Promise<any[]> {
     try {
       const { data, error } = await (await this.getClient())
@@ -1023,7 +1049,7 @@ export class SupabaseService {
         id: row.id,
         userId: supabaseUserId,
         range: range,
-        timestamp: parseSnapshotTimestamp(row.snapshot_date, row.created_at),
+        timestamp: parseSnapshotMetadataTimestamp(row.snapshot_date, row.created_at),
         snapshotDate: row.snapshot_date,
         explicitPercentage: Number(row.explicit_percentage),
         genreDiversity: row.genre_diversity,
@@ -1034,7 +1060,7 @@ export class SupabaseService {
       }));
     } catch (e) {
       console.error('[SupabaseService] Error loading stats snapshots metadata:', e);
-      return [];
+      throw e;
     }
   }
 
@@ -1045,8 +1071,19 @@ export class SupabaseService {
     category: 'tracks' | 'artists' | 'genres',
     identities: string[]
   ): Promise<Array<{timestamp: number; snapshotDate: string; rank: number}>> {
+    const result = await this.loadStatsItemTrendResult(supabaseUserId, range, category, identities);
+    return result.points;
+  }
+
+  /** Distinguishes a successful empty history from a recoverable cloud failure. */
+  async loadStatsItemTrendResult(
+    supabaseUserId: string,
+    range: string,
+    category: 'tracks' | 'artists' | 'genres',
+    identities: string[]
+  ): Promise<StatsItemTrendResult> {
     const keys = Array.from(new Set(identities.filter(Boolean)));
-    if (keys.length === 0) return [];
+    if (keys.length === 0) return {status: 'ready', points: []};
 
     const table = category === 'tracks'
       ? 'stats_snapshot_tracks'
@@ -1076,19 +1113,32 @@ export class SupabaseService {
         const snapshot = Array.isArray(row.stats_snapshots)
           ? row.stats_snapshots[0]
           : row.stats_snapshots;
-        if (!snapshot?.snapshot_date) return;
+        if (!snapshot) return;
+        // A damaged response must remain retryable, not look like empty history
+        // or poison same-day deduplication with NaN/rolled-over calendar dates.
+        const date = snapshot.snapshot_date;
+        if (typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error('Invalid saved history date.');
+        const [year, month, day] = date.split('-').map(Number);
+        const savedDay = new Date(0);
+        savedDay.setFullYear(year, month - 1, day);
+        savedDay.setHours(0, 0, 0, 0);
+        if (year < 1 || savedDay.getFullYear() !== year || savedDay.getMonth() !== month - 1 || savedDay.getDate() !== day)
+          throw new Error('Invalid saved history date.');
+        const rank = typeof row.rank === 'number' || (typeof row.rank === 'string' && /^\d+$/.test(row.rank))
+          ? Number(row.rank) : NaN;
+        if (!Number.isSafeInteger(rank) || rank < 1) throw new Error('Invalid saved history position.');
         const point = {
-          timestamp: parseSnapshotTimestamp(snapshot.snapshot_date, snapshot.created_at),
-          snapshotDate: snapshot.snapshot_date,
-          rank: Number(row.rank)
+          timestamp: savedDay.getTime(),
+          snapshotDate: date,
+          rank
         };
         const previous = byDate.get(point.snapshotDate);
         if (!previous || point.rank < previous.rank) byDate.set(point.snapshotDate, point);
       });
-      return Array.from(byDate.values()).sort((left, right) => left.timestamp - right.timestamp);
+      return {status: 'ready', points: Array.from(byDate.values()).sort((left, right) => left.timestamp - right.timestamp)};
     } catch (error) {
       console.warn('[SupabaseService] Error loading stats item trend:', error);
-      return [];
+      return {status: 'unavailable', points: []};
     }
   }
 

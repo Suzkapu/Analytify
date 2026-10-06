@@ -1,0 +1,30 @@
+:host { display: block; min-width: 0; }
+.chart { padding: var(--v2-space-4); border: 1px solid var(--v2-color-border); border-radius: var(--v2-radius-card); background: var(--v2-color-background-raised); }
+.axis, .v2-genre-row { display: grid; grid-template-columns: 208px minmax(0, 1fr) 44px 96px; align-items: center; gap: var(--v2-space-3); }
+.axis { margin-bottom: var(--v2-space-1); color: var(--v2-color-text-muted); font-size: 12px; line-height: 18px; }
+.ticks { display: flex; justify-content: space-between; min-width: 0; }
+.v2-genre-row + .v2-genre-row { margin-top: var(--v2-space-1); }
+.name { display: flex; flex-direction: column; min-width: 0; overflow-wrap: anywhere; }
+.name strong, .share { font-size: 14px; font-weight: 500; line-height: 20px; }
+.name small { color: var(--v2-color-text-muted); font-size: 14px; line-height: 20px; }
+.share { color: var(--v2-color-accent); text-align: right; }
+.track { position: relative; display: block; min-width: 0; height: 8px; overflow: hidden; border-radius: var(--v2-radius-pill); background: var(--v2-color-border); }
+.track i { position: absolute; inset: 0 auto 0 0; border-radius: inherit; }
+.current { background: var(--v2-color-accent); }
+.previous { background: var(--v2-color-chart-previous); }
+.marker { height: 2px; }
+.history { box-sizing: border-box; width: 96px; height: 44px; min-height: 44px; padding-inline: 8px; gap: 8px; font-size: 14px; font-weight: 600; line-height: 20px; }
+.history:focus-visible { border-width: 2px; outline: none !important; }
+.history i { font-size: 16px; }
+.shared .axis, .shared .v2-genre-row { grid-template-columns: 208px minmax(0, 1fr) 44px; }
+@media (max-width: 760px) {
+  .axis { display: block; }
+  .genre-heading, .share-heading { display: none; }
+  .v2-genre-row { display: grid; grid-template-columns: minmax(0, 1fr) 34px 88px; grid-template-rows: minmax(min-content, auto) 8px; gap: 2px 8px; }
+  .name { grid-column: 1; grid-row: 1; }
+  .name strong, .share { font-size: 13px; line-height: 19px; }
+  .track { grid-column: 1 / -1; grid-row: 2; }
+  .share { grid-column: 2; grid-row: 1; }
+  .history { grid-column: 3; grid-row: 1; width: 88px; }
+  .shared .v2-genre-row { grid-template-columns: minmax(0, 1fr) 34px; }
+}

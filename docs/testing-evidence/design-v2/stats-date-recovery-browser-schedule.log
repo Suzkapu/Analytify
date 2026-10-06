@@ -1,0 +1,346 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --list --config=/tmp/analytify-all-browsers.config.ts
+Listing tests:
+  [desktop] › accessibility.spec.ts:73:5 › signed-out startup uses the small logo without requesting oversized artwork
+  [desktop] › accessibility.spec.ts:91:5 › logged-out home is keyboard reachable, zoom-safe, and WCAG 2.2 AA clean
+  [desktop] › accessibility.spec.ts:101:5 › v2 focus routes keep minimal chrome and one skip target
+  [desktop] › accessibility.spec.ts:111:5 › fresh logged-out visit contains no account, feature, stats, or tracking data
+  [desktop] › accessibility.spec.ts:158:5 › current terms acceptance survives a new page load in a first-party cookie
+  [desktop] › accessibility.spec.ts:174:5 › an acceptance saved by the previous IndexedDB layout is migrated on startup
+  [desktop] › accessibility.spec.ts:209:5 › authenticated playlists route is responsive and WCAG 2.2 AA clean
+  [desktop] › accessibility.spec.ts:218:5 › enabled stats route is responsive and WCAG 2.2 AA clean
+  [desktop] › accessibility.spec.ts:227:5 › critical routes honor reduced-motion preferences
+  [desktop] › design-v2-ambient.spec.ts:5:5 › one ambient renderer persists through overlays, routes, and shell modes
+  [desktop] › design-v2-ambient.spec.ts:27:5 › v2 ambient layer is decorative, stable, scroll-responsive, and reflow-safe
+  [desktop] › design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions enabled
+  [desktop] › design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions unavailable
+  [desktop] › design-v2-ambient.spec.ts:110:5 › v2 ambient layer remains static with reduced motion
+  [desktop] › design-v2-ambient.spec.ts:129:5 › reduced motion suppresses native route snapshot animations without losing navigation
+  [desktop] › design-v2-chromium-performance.spec.ts:6:5 › canonical library records navigation and interaction performance evidence
+  [desktop] › design-v2-compare-room.spec.ts:9:5 › v2 Compare Room presents the compact three-step host task
+  [desktop] › design-v2-compare-room.spec.ts:19:5 › v2 Compare Room prioritizes progress and participant actions at 320 CSS pixels
+  [desktop] › design-v2-compare-room.spec.ts:28:5 › v2 join route stays inside the v2 shell and exposes a text invite flow
+  [desktop] › design-v2-insights.spec.ts:14:5 › v2 Stats exposes labeled independent controls and keyboard category tabs
+  [desktop] › design-v2-insights.spec.ts:48:5 › v2 Recently Played groups dates without chart-like position numbers
+  [desktop] › design-v2-insights.spec.ts:61:5 › v2 Insights reflows at 320 CSS pixels
+  [desktop] › design-v2-insights.spec.ts:71:5 › Insights long names and controls reflow across the release matrix and enlarged text
+  [desktop] › design-v2-insights.spec.ts:110:5 › ranking history keyboard focus remains visible and meets non-text contrast
+  [desktop] › design-v2-library.spec.ts:13:5 › v2 playlists uses stable controls and preserves v2 navigation
+  [desktop] › design-v2-library.spec.ts:31:5 › v2 library remains reflow-safe at 320 CSS pixels
+  [desktop] › design-v2-library.spec.ts:42:5 › every v2 library child route retains the shared shell
+  [desktop] › design-v2-library.spec.ts:84:5 › album details expose playlist songs through keyboard controls
+  [desktop] › design-v2-library.spec.ts:100:5 › analysis and artist details render asynchronously hydrated data
+  [desktop] › design-v2-library.spec.ts:113:5 › account hub is keyboard reachable on desktop and mobile
+  [desktop] › design-v2-library.spec.ts:131:5 › local data clear uses a consequence-first confirmation flow
+  [desktop] › design-v2-library.spec.ts:142:5 › cancelling backup enable leaves the account switch off
+  [desktop] › design-v2-performance.spec.ts:4:5 › large cached playlists render incrementally and search the entire collection
+  [desktop] › design-v2-performance.spec.ts:90:5 › full top-song rankings remain bounded through filtering, tabs, and history dialogs
+  [desktop] › design-v2-quality.spec.ts:10:5 › decorative icons use a non-blocking loaded font face
+  [desktop] › design-v2-quality.spec.ts:30:5 › the temporary /new compatibility URL resolves to the canonical route
+  [desktop] › design-v2-quality.spec.ts:36:5 › the shared shell and representative dense content reflow at every release width
+  [desktop] › design-v2-quality.spec.ts:47:5 › 200% text enlargement preserves the primary task and does not create horizontal overflow
+  [desktop] › design-v2-quality.spec.ts:56:5 › notification and automatic-update sheets restore focus and remain accessible
+  [desktop] › design-v2-quality.spec.ts:80:5 › mobile fixed navigation does not obscure the last task region
+  [desktop] › design-v2-quality.spec.ts:97:5 › populated schedule sheets retain reachable 44px controls at narrow and enlarged-text sizes
+  [desktop] › design-v2-sharing.spec.ts:13:5 › v2 Private Sharing keeps Playlists and Stats as linkable native navigation
+  [desktop] › design-v2-sharing.spec.ts:33:5 › v2 Private Sharing reflows at 320 CSS pixels
+  [desktop] › design-v2-song-league.spec.ts:9:5 › v2 Song League home stays in the v2 shell and keeps rules on demand
+  [desktop] › design-v2-song-league.spec.ts:20:5 › v2 Song League reflows at 320 CSS pixels without a floating content obstruction
+  [desktop] › design-v2-song-league.spec.ts:29:5 › v2 invite route never falls back to a legacy shell
+  [desktop] › design-v2-stats-date-loading.spec.ts:9:7 › ranking date unavailable stops render retries and recovers after explicit reselection
+  [desktop] › design-v2-stats-date-loading.spec.ts:9:7 › ranking date failed stops render retries and recovers after explicit reselection
+  [desktop] › design-v2-stats-date-loading.spec.ts:9:7 › comparison date unavailable stops render retries and recovers after explicit reselection
+  [desktop] › design-v2-stats-date-loading.spec.ts:9:7 › comparison date failed stops render retries and recovers after explicit reselection
+  [desktop] › design-v2-stats-flames.spec.ts:125:7 › snapshot classifications survive filtering, categories and responsive resizing with motion no-preference
+  [desktop] › design-v2-stats-flames.spec.ts:125:7 › snapshot classifications survive filtering, categories and responsive resizing with motion reduce
+  [desktop] › design-v2-stats-flames.spec.ts:238:9 › static canonical row captures › canonical artist row geometry at 390px
+  [desktop] › design-v2-stats-flames.spec.ts:238:9 › static canonical row captures › canonical artist row geometry at 1440px
+  [desktop] › design-v2-stats-flames.spec.ts:250:9 › static canonical row captures › canonical flame colors and placement at 390px
+  [desktop] › design-v2-stats-flames.spec.ts:250:9 › static canonical row captures › canonical flame colors and placement at 1440px
+  [desktop] › design-v2-stats-flames.spec.ts:263:9 › static canonical row captures › canonical History action states retain geometry and keyboard recovery at 390px
+  [desktop] › design-v2-stats-flames.spec.ts:263:9 › static canonical row captures › canonical History action states retain geometry and keyboard recovery at 1440px
+  [desktop] › design-v2-stats-flames.spec.ts:318:5 › song ranking artwork and History follow the canonical independent action workflow
+  [desktop] › design-v2-stats-flames.spec.ts:351:7 › large original ranks wrap movement without shifting actions with motion no-preference
+  [desktop] › design-v2-stats-flames.spec.ts:436:7 › long ranking names grow without clipping controls or keyboard actions with motion no-preference
+  [desktop] › design-v2-stats-flames.spec.ts:351:7 › large original ranks wrap movement without shifting actions with motion reduce
+  [desktop] › design-v2-stats-flames.spec.ts:436:7 › long ranking names grow without clipping controls or keyboard actions with motion reduce
+  [desktop] › design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference
+  [desktop] › design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce
+  [desktop] › design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 390px
+  [desktop] › design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 1440px
+  [desktop] › design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion no-preference
+  [desktop] › design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion reduce
+  [desktop] › design-v2-stats-history.spec.ts:38:5 › approved shared snapshot has no private history actions in any category
+  [desktop] › design-v2-stats-history.spec.ts:77:7 › saved history preserves real dates, keyboard inspection and responsive geometry with motion no-preference
+  [desktop] › design-v2-stats-history.spec.ts:77:7 › saved history preserves real dates, keyboard inspection and responsive geometry with motion reduce
+  [desktop] › design-v2-stats-history.spec.ts:153:7 › cloud failure 403 preserves local history and recovers with one scoped retry, motion no-preference
+  [desktop] › design-v2-stats-history.spec.ts:153:7 › cloud failure 503 preserves local history and recovers with one scoped retry, motion no-preference
+  [desktop] › design-v2-stats-history.spec.ts:153:7 › cloud failure malformed response preserves local history and recovers with one scoped retry, motion no-preference
+  [desktop] › design-v2-stats-history.spec.ts:153:7 › cloud failure 403 preserves local history and recovers with one scoped retry, motion reduce
+  [desktop] › design-v2-stats-history.spec.ts:153:7 › cloud failure 503 preserves local history and recovers with one scoped retry, motion reduce
+  [desktop] › design-v2-stats-history.spec.ts:153:7 › cloud failure malformed response preserves local history and recovers with one scoped retry, motion reduce
+  [desktop] › design-v2-stats-history.spec.ts:256:7 › cloud-only history distinguishes loading, unavailable, empty and single positions with motion no-preference
+  [desktop] › design-v2-stats-history.spec.ts:256:7 › cloud-only history distinguishes loading, unavailable, empty and single positions with motion reduce
+  [desktop] › design-v2-stats-history.spec.ts:351:7 › late ready history cannot replace a reopened request or shared navigation
+  [desktop] › design-v2-stats-history.spec.ts:351:7 › late unavailable history cannot replace a reopened request or shared navigation
+  [desktop] › design-v2-stats-history.spec.ts:437:5 › canonical history palette distinguishes surfaces, controls, hover and keyboard focus
+  [desktop] › design-v2-typography.spec.ts:5:7 › public pages load canonical Outfit rather than a system fallback at 390px
+  [desktop] › design-v2-typography.spec.ts:5:7 › public pages load canonical Outfit rather than a system fallback at 1440px
+  [desktop] › design-v2-typography.spec.ts:32:5 › initially hidden public page mounts with reduced motion without browser rendering errors
+  [mobile] › accessibility.spec.ts:73:5 › signed-out startup uses the small logo without requesting oversized artwork
+  [mobile] › accessibility.spec.ts:91:5 › logged-out home is keyboard reachable, zoom-safe, and WCAG 2.2 AA clean
+  [mobile] › accessibility.spec.ts:101:5 › v2 focus routes keep minimal chrome and one skip target
+  [mobile] › accessibility.spec.ts:111:5 › fresh logged-out visit contains no account, feature, stats, or tracking data
+  [mobile] › accessibility.spec.ts:158:5 › current terms acceptance survives a new page load in a first-party cookie
+  [mobile] › accessibility.spec.ts:174:5 › an acceptance saved by the previous IndexedDB layout is migrated on startup
+  [mobile] › accessibility.spec.ts:209:5 › authenticated playlists route is responsive and WCAG 2.2 AA clean
+  [mobile] › accessibility.spec.ts:218:5 › enabled stats route is responsive and WCAG 2.2 AA clean
+  [mobile] › accessibility.spec.ts:227:5 › critical routes honor reduced-motion preferences
+  [mobile] › design-v2-ambient.spec.ts:5:5 › one ambient renderer persists through overlays, routes, and shell modes
+  [mobile] › design-v2-ambient.spec.ts:27:5 › v2 ambient layer is decorative, stable, scroll-responsive, and reflow-safe
+  [mobile] › design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions enabled
+  [mobile] › design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions unavailable
+  [mobile] › design-v2-ambient.spec.ts:110:5 › v2 ambient layer remains static with reduced motion
+  [mobile] › design-v2-ambient.spec.ts:129:5 › reduced motion suppresses native route snapshot animations without losing navigation
+  [mobile] › design-v2-chromium-performance.spec.ts:6:5 › canonical library records navigation and interaction performance evidence
+  [mobile] › design-v2-compare-room.spec.ts:9:5 › v2 Compare Room presents the compact three-step host task
+  [mobile] › design-v2-compare-room.spec.ts:19:5 › v2 Compare Room prioritizes progress and participant actions at 320 CSS pixels
+  [mobile] › design-v2-compare-room.spec.ts:28:5 › v2 join route stays inside the v2 shell and exposes a text invite flow
+  [mobile] › design-v2-insights.spec.ts:14:5 › v2 Stats exposes labeled independent controls and keyboard category tabs
+  [mobile] › design-v2-insights.spec.ts:48:5 › v2 Recently Played groups dates without chart-like position numbers
+  [mobile] › design-v2-insights.spec.ts:61:5 › v2 Insights reflows at 320 CSS pixels
+  [mobile] › design-v2-insights.spec.ts:71:5 › Insights long names and controls reflow across the release matrix and enlarged text
+  [mobile] › design-v2-insights.spec.ts:110:5 › ranking history keyboard focus remains visible and meets non-text contrast
+  [mobile] › design-v2-library.spec.ts:13:5 › v2 playlists uses stable controls and preserves v2 navigation
+  [mobile] › design-v2-library.spec.ts:31:5 › v2 library remains reflow-safe at 320 CSS pixels
+  [mobile] › design-v2-library.spec.ts:42:5 › every v2 library child route retains the shared shell
+  [mobile] › design-v2-library.spec.ts:84:5 › album details expose playlist songs through keyboard controls
+  [mobile] › design-v2-library.spec.ts:100:5 › analysis and artist details render asynchronously hydrated data
+  [mobile] › design-v2-library.spec.ts:113:5 › account hub is keyboard reachable on desktop and mobile
+  [mobile] › design-v2-library.spec.ts:131:5 › local data clear uses a consequence-first confirmation flow
+  [mobile] › design-v2-library.spec.ts:142:5 › cancelling backup enable leaves the account switch off
+  [mobile] › design-v2-performance.spec.ts:4:5 › large cached playlists render incrementally and search the entire collection
+  [mobile] › design-v2-performance.spec.ts:90:5 › full top-song rankings remain bounded through filtering, tabs, and history dialogs
+  [mobile] › design-v2-quality.spec.ts:10:5 › decorative icons use a non-blocking loaded font face
+  [mobile] › design-v2-quality.spec.ts:30:5 › the temporary /new compatibility URL resolves to the canonical route
+  [mobile] › design-v2-quality.spec.ts:36:5 › the shared shell and representative dense content reflow at every release width
+  [mobile] › design-v2-quality.spec.ts:47:5 › 200% text enlargement preserves the primary task and does not create horizontal overflow
+  [mobile] › design-v2-quality.spec.ts:56:5 › notification and automatic-update sheets restore focus and remain accessible
+  [mobile] › design-v2-quality.spec.ts:80:5 › mobile fixed navigation does not obscure the last task region
+  [mobile] › design-v2-quality.spec.ts:97:5 › populated schedule sheets retain reachable 44px controls at narrow and enlarged-text sizes
+  [mobile] › design-v2-sharing.spec.ts:13:5 › v2 Private Sharing keeps Playlists and Stats as linkable native navigation
+  [mobile] › design-v2-sharing.spec.ts:33:5 › v2 Private Sharing reflows at 320 CSS pixels
+  [mobile] › design-v2-song-league.spec.ts:9:5 › v2 Song League home stays in the v2 shell and keeps rules on demand
+  [mobile] › design-v2-song-league.spec.ts:20:5 › v2 Song League reflows at 320 CSS pixels without a floating content obstruction
+  [mobile] › design-v2-song-league.spec.ts:29:5 › v2 invite route never falls back to a legacy shell
+  [mobile] › design-v2-stats-date-loading.spec.ts:9:7 › ranking date unavailable stops render retries and recovers after explicit reselection
+  [mobile] › design-v2-stats-date-loading.spec.ts:9:7 › ranking date failed stops render retries and recovers after explicit reselection
+  [mobile] › design-v2-stats-date-loading.spec.ts:9:7 › comparison date unavailable stops render retries and recovers after explicit reselection
+  [mobile] › design-v2-stats-date-loading.spec.ts:9:7 › comparison date failed stops render retries and recovers after explicit reselection
+  [mobile] › design-v2-stats-flames.spec.ts:125:7 › snapshot classifications survive filtering, categories and responsive resizing with motion no-preference
+  [mobile] › design-v2-stats-flames.spec.ts:125:7 › snapshot classifications survive filtering, categories and responsive resizing with motion reduce
+  [mobile] › design-v2-stats-flames.spec.ts:238:9 › static canonical row captures › canonical artist row geometry at 390px
+  [mobile] › design-v2-stats-flames.spec.ts:238:9 › static canonical row captures › canonical artist row geometry at 1440px
+  [mobile] › design-v2-stats-flames.spec.ts:250:9 › static canonical row captures › canonical flame colors and placement at 390px
+  [mobile] › design-v2-stats-flames.spec.ts:250:9 › static canonical row captures › canonical flame colors and placement at 1440px
+  [mobile] › design-v2-stats-flames.spec.ts:263:9 › static canonical row captures › canonical History action states retain geometry and keyboard recovery at 390px
+  [mobile] › design-v2-stats-flames.spec.ts:263:9 › static canonical row captures › canonical History action states retain geometry and keyboard recovery at 1440px
+  [mobile] › design-v2-stats-flames.spec.ts:318:5 › song ranking artwork and History follow the canonical independent action workflow
+  [mobile] › design-v2-stats-flames.spec.ts:351:7 › large original ranks wrap movement without shifting actions with motion no-preference
+  [mobile] › design-v2-stats-flames.spec.ts:436:7 › long ranking names grow without clipping controls or keyboard actions with motion no-preference
+  [mobile] › design-v2-stats-flames.spec.ts:351:7 › large original ranks wrap movement without shifting actions with motion reduce
+  [mobile] › design-v2-stats-flames.spec.ts:436:7 › long ranking names grow without clipping controls or keyboard actions with motion reduce
+  [mobile] › design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference
+  [mobile] › design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce
+  [mobile] › design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 390px
+  [mobile] › design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 1440px
+  [mobile] › design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion no-preference
+  [mobile] › design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion reduce
+  [mobile] › design-v2-stats-history.spec.ts:38:5 › approved shared snapshot has no private history actions in any category
+  [mobile] › design-v2-stats-history.spec.ts:77:7 › saved history preserves real dates, keyboard inspection and responsive geometry with motion no-preference
+  [mobile] › design-v2-stats-history.spec.ts:77:7 › saved history preserves real dates, keyboard inspection and responsive geometry with motion reduce
+  [mobile] › design-v2-stats-history.spec.ts:153:7 › cloud failure 403 preserves local history and recovers with one scoped retry, motion no-preference
+  [mobile] › design-v2-stats-history.spec.ts:153:7 › cloud failure 503 preserves local history and recovers with one scoped retry, motion no-preference
+  [mobile] › design-v2-stats-history.spec.ts:153:7 › cloud failure malformed response preserves local history and recovers with one scoped retry, motion no-preference
+  [mobile] › design-v2-stats-history.spec.ts:153:7 › cloud failure 403 preserves local history and recovers with one scoped retry, motion reduce
+  [mobile] › design-v2-stats-history.spec.ts:153:7 › cloud failure 503 preserves local history and recovers with one scoped retry, motion reduce
+  [mobile] › design-v2-stats-history.spec.ts:153:7 › cloud failure malformed response preserves local history and recovers with one scoped retry, motion reduce
+  [mobile] › design-v2-stats-history.spec.ts:256:7 › cloud-only history distinguishes loading, unavailable, empty and single positions with motion no-preference
+  [mobile] › design-v2-stats-history.spec.ts:256:7 › cloud-only history distinguishes loading, unavailable, empty and single positions with motion reduce
+  [mobile] › design-v2-stats-history.spec.ts:351:7 › late ready history cannot replace a reopened request or shared navigation
+  [mobile] › design-v2-stats-history.spec.ts:351:7 › late unavailable history cannot replace a reopened request or shared navigation
+  [mobile] › design-v2-stats-history.spec.ts:437:5 › canonical history palette distinguishes surfaces, controls, hover and keyboard focus
+  [mobile] › design-v2-typography.spec.ts:5:7 › public pages load canonical Outfit rather than a system fallback at 390px
+  [mobile] › design-v2-typography.spec.ts:5:7 › public pages load canonical Outfit rather than a system fallback at 1440px
+  [mobile] › design-v2-typography.spec.ts:32:5 › initially hidden public page mounts with reduced motion without browser rendering errors
+  [firefox-stats] › accessibility.spec.ts:73:5 › signed-out startup uses the small logo without requesting oversized artwork
+  [firefox-stats] › accessibility.spec.ts:91:5 › logged-out home is keyboard reachable, zoom-safe, and WCAG 2.2 AA clean
+  [firefox-stats] › accessibility.spec.ts:101:5 › v2 focus routes keep minimal chrome and one skip target
+  [firefox-stats] › accessibility.spec.ts:111:5 › fresh logged-out visit contains no account, feature, stats, or tracking data
+  [firefox-stats] › accessibility.spec.ts:158:5 › current terms acceptance survives a new page load in a first-party cookie
+  [firefox-stats] › accessibility.spec.ts:174:5 › an acceptance saved by the previous IndexedDB layout is migrated on startup
+  [firefox-stats] › accessibility.spec.ts:209:5 › authenticated playlists route is responsive and WCAG 2.2 AA clean
+  [firefox-stats] › accessibility.spec.ts:218:5 › enabled stats route is responsive and WCAG 2.2 AA clean
+  [firefox-stats] › accessibility.spec.ts:227:5 › critical routes honor reduced-motion preferences
+  [firefox-stats] › design-v2-ambient.spec.ts:5:5 › one ambient renderer persists through overlays, routes, and shell modes
+  [firefox-stats] › design-v2-ambient.spec.ts:27:5 › v2 ambient layer is decorative, stable, scroll-responsive, and reflow-safe
+  [firefox-stats] › design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions enabled
+  [firefox-stats] › design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions unavailable
+  [firefox-stats] › design-v2-ambient.spec.ts:110:5 › v2 ambient layer remains static with reduced motion
+  [firefox-stats] › design-v2-ambient.spec.ts:129:5 › reduced motion suppresses native route snapshot animations without losing navigation
+  [firefox-stats] › design-v2-compare-room.spec.ts:9:5 › v2 Compare Room presents the compact three-step host task
+  [firefox-stats] › design-v2-compare-room.spec.ts:19:5 › v2 Compare Room prioritizes progress and participant actions at 320 CSS pixels
+  [firefox-stats] › design-v2-compare-room.spec.ts:28:5 › v2 join route stays inside the v2 shell and exposes a text invite flow
+  [firefox-stats] › design-v2-insights.spec.ts:14:5 › v2 Stats exposes labeled independent controls and keyboard category tabs
+  [firefox-stats] › design-v2-insights.spec.ts:48:5 › v2 Recently Played groups dates without chart-like position numbers
+  [firefox-stats] › design-v2-insights.spec.ts:61:5 › v2 Insights reflows at 320 CSS pixels
+  [firefox-stats] › design-v2-insights.spec.ts:71:5 › Insights long names and controls reflow across the release matrix and enlarged text
+  [firefox-stats] › design-v2-insights.spec.ts:110:5 › ranking history keyboard focus remains visible and meets non-text contrast
+  [firefox-stats] › design-v2-library.spec.ts:13:5 › v2 playlists uses stable controls and preserves v2 navigation
+  [firefox-stats] › design-v2-library.spec.ts:31:5 › v2 library remains reflow-safe at 320 CSS pixels
+  [firefox-stats] › design-v2-library.spec.ts:42:5 › every v2 library child route retains the shared shell
+  [firefox-stats] › design-v2-library.spec.ts:84:5 › album details expose playlist songs through keyboard controls
+  [firefox-stats] › design-v2-library.spec.ts:100:5 › analysis and artist details render asynchronously hydrated data
+  [firefox-stats] › design-v2-library.spec.ts:113:5 › account hub is keyboard reachable on desktop and mobile
+  [firefox-stats] › design-v2-library.spec.ts:131:5 › local data clear uses a consequence-first confirmation flow
+  [firefox-stats] › design-v2-library.spec.ts:142:5 › cancelling backup enable leaves the account switch off
+  [firefox-stats] › design-v2-performance.spec.ts:4:5 › large cached playlists render incrementally and search the entire collection
+  [firefox-stats] › design-v2-performance.spec.ts:90:5 › full top-song rankings remain bounded through filtering, tabs, and history dialogs
+  [firefox-stats] › design-v2-quality.spec.ts:10:5 › decorative icons use a non-blocking loaded font face
+  [firefox-stats] › design-v2-quality.spec.ts:30:5 › the temporary /new compatibility URL resolves to the canonical route
+  [firefox-stats] › design-v2-quality.spec.ts:36:5 › the shared shell and representative dense content reflow at every release width
+  [firefox-stats] › design-v2-quality.spec.ts:47:5 › 200% text enlargement preserves the primary task and does not create horizontal overflow
+  [firefox-stats] › design-v2-quality.spec.ts:56:5 › notification and automatic-update sheets restore focus and remain accessible
+  [firefox-stats] › design-v2-quality.spec.ts:80:5 › mobile fixed navigation does not obscure the last task region
+  [firefox-stats] › design-v2-quality.spec.ts:97:5 › populated schedule sheets retain reachable 44px controls at narrow and enlarged-text sizes
+  [firefox-stats] › design-v2-sharing.spec.ts:13:5 › v2 Private Sharing keeps Playlists and Stats as linkable native navigation
+  [firefox-stats] › design-v2-sharing.spec.ts:33:5 › v2 Private Sharing reflows at 320 CSS pixels
+  [firefox-stats] › design-v2-song-league.spec.ts:9:5 › v2 Song League home stays in the v2 shell and keeps rules on demand
+  [firefox-stats] › design-v2-song-league.spec.ts:20:5 › v2 Song League reflows at 320 CSS pixels without a floating content obstruction
+  [firefox-stats] › design-v2-song-league.spec.ts:29:5 › v2 invite route never falls back to a legacy shell
+  [firefox-stats] › design-v2-stats-date-loading.spec.ts:9:7 › ranking date unavailable stops render retries and recovers after explicit reselection
+  [firefox-stats] › design-v2-stats-date-loading.spec.ts:9:7 › ranking date failed stops render retries and recovers after explicit reselection
+  [firefox-stats] › design-v2-stats-date-loading.spec.ts:9:7 › comparison date unavailable stops render retries and recovers after explicit reselection
+  [firefox-stats] › design-v2-stats-date-loading.spec.ts:9:7 › comparison date failed stops render retries and recovers after explicit reselection
+  [firefox-stats] › design-v2-stats-flames.spec.ts:125:7 › snapshot classifications survive filtering, categories and responsive resizing with motion no-preference
+  [firefox-stats] › design-v2-stats-flames.spec.ts:125:7 › snapshot classifications survive filtering, categories and responsive resizing with motion reduce
+  [firefox-stats] › design-v2-stats-flames.spec.ts:238:9 › static canonical row captures › canonical artist row geometry at 390px
+  [firefox-stats] › design-v2-stats-flames.spec.ts:238:9 › static canonical row captures › canonical artist row geometry at 1440px
+  [firefox-stats] › design-v2-stats-flames.spec.ts:250:9 › static canonical row captures › canonical flame colors and placement at 390px
+  [firefox-stats] › design-v2-stats-flames.spec.ts:250:9 › static canonical row captures › canonical flame colors and placement at 1440px
+  [firefox-stats] › design-v2-stats-flames.spec.ts:263:9 › static canonical row captures › canonical History action states retain geometry and keyboard recovery at 390px
+  [firefox-stats] › design-v2-stats-flames.spec.ts:263:9 › static canonical row captures › canonical History action states retain geometry and keyboard recovery at 1440px
+  [firefox-stats] › design-v2-stats-flames.spec.ts:318:5 › song ranking artwork and History follow the canonical independent action workflow
+  [firefox-stats] › design-v2-stats-flames.spec.ts:351:7 › large original ranks wrap movement without shifting actions with motion no-preference
+  [firefox-stats] › design-v2-stats-flames.spec.ts:436:7 › long ranking names grow without clipping controls or keyboard actions with motion no-preference
+  [firefox-stats] › design-v2-stats-flames.spec.ts:351:7 › large original ranks wrap movement without shifting actions with motion reduce
+  [firefox-stats] › design-v2-stats-flames.spec.ts:436:7 › long ranking names grow without clipping controls or keyboard actions with motion reduce
+  [firefox-stats] › design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference
+  [firefox-stats] › design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce
+  [firefox-stats] › design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 390px
+  [firefox-stats] › design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 1440px
+  [firefox-stats] › design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion no-preference
+  [firefox-stats] › design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion reduce
+  [firefox-stats] › design-v2-stats-history.spec.ts:38:5 › approved shared snapshot has no private history actions in any category
+  [firefox-stats] › design-v2-stats-history.spec.ts:77:7 › saved history preserves real dates, keyboard inspection and responsive geometry with motion no-preference
+  [firefox-stats] › design-v2-stats-history.spec.ts:77:7 › saved history preserves real dates, keyboard inspection and responsive geometry with motion reduce
+  [firefox-stats] › design-v2-stats-history.spec.ts:153:7 › cloud failure 403 preserves local history and recovers with one scoped retry, motion no-preference
+  [firefox-stats] › design-v2-stats-history.spec.ts:153:7 › cloud failure 503 preserves local history and recovers with one scoped retry, motion no-preference
+  [firefox-stats] › design-v2-stats-history.spec.ts:153:7 › cloud failure malformed response preserves local history and recovers with one scoped retry, motion no-preference
+  [firefox-stats] › design-v2-stats-history.spec.ts:153:7 › cloud failure 403 preserves local history and recovers with one scoped retry, motion reduce
+  [firefox-stats] › design-v2-stats-history.spec.ts:153:7 › cloud failure 503 preserves local history and recovers with one scoped retry, motion reduce
+  [firefox-stats] › design-v2-stats-history.spec.ts:153:7 › cloud failure malformed response preserves local history and recovers with one scoped retry, motion reduce
+  [firefox-stats] › design-v2-stats-history.spec.ts:256:7 › cloud-only history distinguishes loading, unavailable, empty and single positions with motion no-preference
+  [firefox-stats] › design-v2-stats-history.spec.ts:256:7 › cloud-only history distinguishes loading, unavailable, empty and single positions with motion reduce
+  [firefox-stats] › design-v2-stats-history.spec.ts:351:7 › late ready history cannot replace a reopened request or shared navigation
+  [firefox-stats] › design-v2-stats-history.spec.ts:351:7 › late unavailable history cannot replace a reopened request or shared navigation
+  [firefox-stats] › design-v2-stats-history.spec.ts:437:5 › canonical history palette distinguishes surfaces, controls, hover and keyboard focus
+  [firefox-stats] › design-v2-typography.spec.ts:5:7 › public pages load canonical Outfit rather than a system fallback at 390px
+  [firefox-stats] › design-v2-typography.spec.ts:5:7 › public pages load canonical Outfit rather than a system fallback at 1440px
+  [firefox-stats] › design-v2-typography.spec.ts:32:5 › initially hidden public page mounts with reduced motion without browser rendering errors
+  [webkit-stats] › accessibility.spec.ts:73:5 › signed-out startup uses the small logo without requesting oversized artwork
+  [webkit-stats] › accessibility.spec.ts:91:5 › logged-out home is keyboard reachable, zoom-safe, and WCAG 2.2 AA clean
+  [webkit-stats] › accessibility.spec.ts:101:5 › v2 focus routes keep minimal chrome and one skip target
+  [webkit-stats] › accessibility.spec.ts:111:5 › fresh logged-out visit contains no account, feature, stats, or tracking data
+  [webkit-stats] › accessibility.spec.ts:158:5 › current terms acceptance survives a new page load in a first-party cookie
+  [webkit-stats] › accessibility.spec.ts:174:5 › an acceptance saved by the previous IndexedDB layout is migrated on startup
+  [webkit-stats] › accessibility.spec.ts:209:5 › authenticated playlists route is responsive and WCAG 2.2 AA clean
+  [webkit-stats] › accessibility.spec.ts:218:5 › enabled stats route is responsive and WCAG 2.2 AA clean
+  [webkit-stats] › accessibility.spec.ts:227:5 › critical routes honor reduced-motion preferences
+  [webkit-stats] › design-v2-ambient.spec.ts:5:5 › one ambient renderer persists through overlays, routes, and shell modes
+  [webkit-stats] › design-v2-ambient.spec.ts:27:5 › v2 ambient layer is decorative, stable, scroll-responsive, and reflow-safe
+  [webkit-stats] › design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions enabled
+  [webkit-stats] › design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions unavailable
+  [webkit-stats] › design-v2-ambient.spec.ts:110:5 › v2 ambient layer remains static with reduced motion
+  [webkit-stats] › design-v2-ambient.spec.ts:129:5 › reduced motion suppresses native route snapshot animations without losing navigation
+  [webkit-stats] › design-v2-compare-room.spec.ts:9:5 › v2 Compare Room presents the compact three-step host task
+  [webkit-stats] › design-v2-compare-room.spec.ts:19:5 › v2 Compare Room prioritizes progress and participant actions at 320 CSS pixels
+  [webkit-stats] › design-v2-compare-room.spec.ts:28:5 › v2 join route stays inside the v2 shell and exposes a text invite flow
+  [webkit-stats] › design-v2-insights.spec.ts:14:5 › v2 Stats exposes labeled independent controls and keyboard category tabs
+  [webkit-stats] › design-v2-insights.spec.ts:48:5 › v2 Recently Played groups dates without chart-like position numbers
+  [webkit-stats] › design-v2-insights.spec.ts:61:5 › v2 Insights reflows at 320 CSS pixels
+  [webkit-stats] › design-v2-insights.spec.ts:71:5 › Insights long names and controls reflow across the release matrix and enlarged text
+  [webkit-stats] › design-v2-insights.spec.ts:110:5 › ranking history keyboard focus remains visible and meets non-text contrast
+  [webkit-stats] › design-v2-library.spec.ts:13:5 › v2 playlists uses stable controls and preserves v2 navigation
+  [webkit-stats] › design-v2-library.spec.ts:31:5 › v2 library remains reflow-safe at 320 CSS pixels
+  [webkit-stats] › design-v2-library.spec.ts:42:5 › every v2 library child route retains the shared shell
+  [webkit-stats] › design-v2-library.spec.ts:84:5 › album details expose playlist songs through keyboard controls
+  [webkit-stats] › design-v2-library.spec.ts:100:5 › analysis and artist details render asynchronously hydrated data
+  [webkit-stats] › design-v2-library.spec.ts:113:5 › account hub is keyboard reachable on desktop and mobile
+  [webkit-stats] › design-v2-library.spec.ts:131:5 › local data clear uses a consequence-first confirmation flow
+  [webkit-stats] › design-v2-library.spec.ts:142:5 › cancelling backup enable leaves the account switch off
+  [webkit-stats] › design-v2-performance.spec.ts:4:5 › large cached playlists render incrementally and search the entire collection
+  [webkit-stats] › design-v2-performance.spec.ts:90:5 › full top-song rankings remain bounded through filtering, tabs, and history dialogs
+  [webkit-stats] › design-v2-quality.spec.ts:10:5 › decorative icons use a non-blocking loaded font face
+  [webkit-stats] › design-v2-quality.spec.ts:30:5 › the temporary /new compatibility URL resolves to the canonical route
+  [webkit-stats] › design-v2-quality.spec.ts:36:5 › the shared shell and representative dense content reflow at every release width
+  [webkit-stats] › design-v2-quality.spec.ts:47:5 › 200% text enlargement preserves the primary task and does not create horizontal overflow
+  [webkit-stats] › design-v2-quality.spec.ts:56:5 › notification and automatic-update sheets restore focus and remain accessible
+  [webkit-stats] › design-v2-quality.spec.ts:80:5 › mobile fixed navigation does not obscure the last task region
+  [webkit-stats] › design-v2-quality.spec.ts:97:5 › populated schedule sheets retain reachable 44px controls at narrow and enlarged-text sizes
+  [webkit-stats] › design-v2-sharing.spec.ts:13:5 › v2 Private Sharing keeps Playlists and Stats as linkable native navigation
+  [webkit-stats] › design-v2-sharing.spec.ts:33:5 › v2 Private Sharing reflows at 320 CSS pixels
+  [webkit-stats] › design-v2-song-league.spec.ts:9:5 › v2 Song League home stays in the v2 shell and keeps rules on demand
+  [webkit-stats] › design-v2-song-league.spec.ts:20:5 › v2 Song League reflows at 320 CSS pixels without a floating content obstruction
+  [webkit-stats] › design-v2-song-league.spec.ts:29:5 › v2 invite route never falls back to a legacy shell
+  [webkit-stats] › design-v2-stats-date-loading.spec.ts:9:7 › ranking date unavailable stops render retries and recovers after explicit reselection
+  [webkit-stats] › design-v2-stats-date-loading.spec.ts:9:7 › ranking date failed stops render retries and recovers after explicit reselection
+  [webkit-stats] › design-v2-stats-date-loading.spec.ts:9:7 › comparison date unavailable stops render retries and recovers after explicit reselection
+  [webkit-stats] › design-v2-stats-date-loading.spec.ts:9:7 › comparison date failed stops render retries and recovers after explicit reselection
+  [webkit-stats] › design-v2-stats-flames.spec.ts:125:7 › snapshot classifications survive filtering, categories and responsive resizing with motion no-preference
+  [webkit-stats] › design-v2-stats-flames.spec.ts:125:7 › snapshot classifications survive filtering, categories and responsive resizing with motion reduce
+  [webkit-stats] › design-v2-stats-flames.spec.ts:238:9 › static canonical row captures › canonical artist row geometry at 390px
+  [webkit-stats] › design-v2-stats-flames.spec.ts:238:9 › static canonical row captures › canonical artist row geometry at 1440px
+  [webkit-stats] › design-v2-stats-flames.spec.ts:250:9 › static canonical row captures › canonical flame colors and placement at 390px
+  [webkit-stats] › design-v2-stats-flames.spec.ts:250:9 › static canonical row captures › canonical flame colors and placement at 1440px
+  [webkit-stats] › design-v2-stats-flames.spec.ts:263:9 › static canonical row captures › canonical History action states retain geometry and keyboard recovery at 390px
+  [webkit-stats] › design-v2-stats-flames.spec.ts:263:9 › static canonical row captures › canonical History action states retain geometry and keyboard recovery at 1440px
+  [webkit-stats] › design-v2-stats-flames.spec.ts:318:5 › song ranking artwork and History follow the canonical independent action workflow
+  [webkit-stats] › design-v2-stats-flames.spec.ts:351:7 › large original ranks wrap movement without shifting actions with motion no-preference
+  [webkit-stats] › design-v2-stats-flames.spec.ts:436:7 › long ranking names grow without clipping controls or keyboard actions with motion no-preference
+  [webkit-stats] › design-v2-stats-flames.spec.ts:351:7 › large original ranks wrap movement without shifting actions with motion reduce
+  [webkit-stats] › design-v2-stats-flames.spec.ts:436:7 › long ranking names grow without clipping controls or keyboard actions with motion reduce
+  [webkit-stats] › design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference
+  [webkit-stats] › design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce
+  [webkit-stats] › design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 390px
+  [webkit-stats] › design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 1440px
+  [webkit-stats] › design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion no-preference
+  [webkit-stats] › design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion reduce
+  [webkit-stats] › design-v2-stats-history.spec.ts:38:5 › approved shared snapshot has no private history actions in any category
+  [webkit-stats] › design-v2-stats-history.spec.ts:77:7 › saved history preserves real dates, keyboard inspection and responsive geometry with motion no-preference
+  [webkit-stats] › design-v2-stats-history.spec.ts:77:7 › saved history preserves real dates, keyboard inspection and responsive geometry with motion reduce
+  [webkit-stats] › design-v2-stats-history.spec.ts:153:7 › cloud failure 403 preserves local history and recovers with one scoped retry, motion no-preference
+  [webkit-stats] › design-v2-stats-history.spec.ts:153:7 › cloud failure 503 preserves local history and recovers with one scoped retry, motion no-preference
+  [webkit-stats] › design-v2-stats-history.spec.ts:153:7 › cloud failure malformed response preserves local history and recovers with one scoped retry, motion no-preference
+  [webkit-stats] › design-v2-stats-history.spec.ts:153:7 › cloud failure 403 preserves local history and recovers with one scoped retry, motion reduce
+  [webkit-stats] › design-v2-stats-history.spec.ts:153:7 › cloud failure 503 preserves local history and recovers with one scoped retry, motion reduce
+  [webkit-stats] › design-v2-stats-history.spec.ts:153:7 › cloud failure malformed response preserves local history and recovers with one scoped retry, motion reduce
+  [webkit-stats] › design-v2-stats-history.spec.ts:256:7 › cloud-only history distinguishes loading, unavailable, empty and single positions with motion no-preference
+  [webkit-stats] › design-v2-stats-history.spec.ts:256:7 › cloud-only history distinguishes loading, unavailable, empty and single positions with motion reduce
+  [webkit-stats] › design-v2-stats-history.spec.ts:351:7 › late ready history cannot replace a reopened request or shared navigation
+  [webkit-stats] › design-v2-stats-history.spec.ts:351:7 › late unavailable history cannot replace a reopened request or shared navigation
+  [webkit-stats] › design-v2-stats-history.spec.ts:437:5 › canonical history palette distinguishes surfaces, controls, hover and keyboard focus
+  [webkit-stats] › design-v2-typography.spec.ts:5:7 › public pages load canonical Outfit rather than a system fallback at 390px
+  [webkit-stats] › design-v2-typography.spec.ts:5:7 › public pages load canonical Outfit rather than a system fallback at 1440px
+  [webkit-stats] › design-v2-typography.spec.ts:32:5 › initially hidden public page mounts with reduced motion without browser rendering errors
+Total: 342 tests in 15 files

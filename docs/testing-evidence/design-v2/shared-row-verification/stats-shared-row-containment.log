@@ -1,0 +1,79 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test -c /tmp/analytify-palette-candidates.config.ts e2e/design-v2-stats-flames.spec.ts --grep canonical artist row|canonical flame colors --update-snapshots=all --output=/tmp/analytify-design-v2-baseline/stats-shared-row-containment
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:341027) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:341027) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 16 tests using 2 workers
+
+(node:341123) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:341124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-stats-flames.spec.ts:207:9 › static canonical row captures › canonical artist row geometry at 390px (3.4s)
+  ✓   2 [desktop] › e2e/design-v2-stats-flames.spec.ts:207:9 › static canonical row captures › canonical artist row geometry at 1440px (3.6s)
+  ✓   3 [desktop] › e2e/design-v2-stats-flames.spec.ts:219:9 › static canonical row captures › canonical flame colors and placement at 390px (3.4s)
+  ✓   4 [desktop] › e2e/design-v2-stats-flames.spec.ts:219:9 › static canonical row captures › canonical flame colors and placement at 1440px (3.5s)
+(node:341350) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:341358) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   5 [mobile] › e2e/design-v2-stats-flames.spec.ts:207:9 › static canonical row captures › canonical artist row geometry at 390px (3.5s)
+  ✓   6 [mobile] › e2e/design-v2-stats-flames.spec.ts:207:9 › static canonical row captures › canonical artist row geometry at 1440px (4.2s)
+  ✓   7 [mobile] › e2e/design-v2-stats-flames.spec.ts:219:9 › static canonical row captures › canonical flame colors and placement at 390px (3.4s)
+(node:341580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   8 [mobile] › e2e/design-v2-stats-flames.spec.ts:219:9 › static canonical row captures › canonical flame colors and placement at 1440px (3.9s)
+(node:341772) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:207:9 › static canonical row captures › canonical artist row geometry at 390px (3.8s)
+  ✓  10 [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:207:9 › static canonical row captures › canonical artist row geometry at 1440px (4.6s)
+  ✓  11 [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:219:9 › static canonical row captures › canonical flame colors and placement at 390px (3.6s)
+(node:342113) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  12 [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:219:9 › static canonical row captures › canonical flame colors and placement at 1440px (3.0s)
+(node:342199) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  13 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:207:9 › static canonical row captures › canonical artist row geometry at 390px (4.0s)
+  ✓  14 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:207:9 › static canonical row captures › canonical artist row geometry at 1440px (4.9s)
+  ✘  15 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:219:9 › static canonical row captures › canonical flame colors and placement at 390px (3.8s)
+  ✓  16 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:219:9 › static canonical row captures › canonical flame colors and placement at 1440px (3.8s)
+
+
+  1) [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:219:9 › static canonical row captures › canonical flame colors and placement at 390px 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 80
+    Received: 116
+
+      62 |   expect(rendering.artwork.complete).toBe(true);
+      63 |   expect(rendering.artwork.naturalWidth).toBeGreaterThan(0);
+    > 64 |   expect(rendering.bounds.height).toBe(80);
+         |                                   ^
+      65 |   expect(rendering.bounds.width).toBe(row.page().viewportSize()!.width === 390 ? 358 : 1120);
+      66 |   const evidencePath = testInfo.outputPath(`${name}-rendering.json`);
+      67 |   await writeFile(evidencePath, JSON.stringify(rendering, null, 2));
+        at recordCanonicalRow (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:64:35)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:224:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-design-v2-baseline/stats-shared-row-containment/design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../tmp/analytify-design-v2-baseline/stats-shared-row-containment/design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-design-v2-baseline/stats-shared-row-containment/design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../tmp/analytify-design-v2-baseline/stats-shared-row-containment/design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:219:9 › static canonical row captures › canonical flame colors and placement at 390px 
+  15 passed (43.3s)

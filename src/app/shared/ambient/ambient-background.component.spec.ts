@@ -85,6 +85,26 @@ describe('AmbientBackgroundComponent', () => {
     expect(element.style.getPropertyValue('--ambient-primary-x')).not.toBe(initial);
   });
 
+  it('mounts an initially hidden reduced-motion touch page without rendering errors or scheduled animation', () => {
+    hidden = true;
+    reduced.dispatch(true);
+    coarse.dispatch(true);
+    fixture.componentRef.setInput('ambientKey', 'public');
+    expect(() => fixture.detectChanges()).not.toThrow();
+    expect(fixture.componentInstance.state.paused()).toBe(true);
+    expect(fixture.componentInstance.state.reducedMotion()).toBe(true);
+    expect(fixture.componentInstance.state.coarsePointer()).toBe(true);
+    expect(frames.size).toBe(0);
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.style.getPropertyValue('--ambient-intensity')).not.toBe('');
+    hidden = false;
+    document.dispatchEvent(new Event('visibilitychange'));
+    expect(fixture.componentInstance.state.paused()).toBe(false);
+    expect(frames.size).toBe(0);
+    reduced.dispatch(false);
+    expect(frames.size).toBe(1);
+  });
+
   it('switches to a static target when reduced motion becomes active', () => {
     fixture.componentRef.setInput('ambientKey', 'social');
     fixture.detectChanges();

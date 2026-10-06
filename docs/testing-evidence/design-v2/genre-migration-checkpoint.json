@@ -1,0 +1,191 @@
+{
+  "status": "In progress: current canonical row/control mismatch discovered; earlier visual parity superseded",
+  "branch": "codex/design-v2",
+  "commit": "de3d5b58e99d74a225fa20ab223bb2700f3ed1b8",
+  "canonical": {
+    "rowSet": "805:25710",
+    "preview": "805:25711",
+    "desktopContainers": [
+      "110:3641",
+      "330:15937"
+    ],
+    "mobileContainer": "110:3673",
+    "variants": 10,
+    "reviewedSource": "genre-canonical-comparison-final-figma.png"
+  },
+  "verification": {
+    "frontendUnit": {
+      "passed": 849,
+      "skipped": 1,
+      "files": 97,
+      "exitCode": 0,
+      "log": "genre-full-unit-coverage.log",
+      "sources": 137
+    },
+    "coverage": {
+      "lines": 69.59,
+      "statements": 66.29,
+      "functions": 63.85,
+      "branches": 53.16,
+      "newModelAndComponentAllMetrics": 100
+    },
+    "beforeFontCorrection": {
+      "genreCandidates": 16,
+      "longLabelCases": 8,
+      "geometryRecordsArchived": 144,
+      "fontDefectProvenByFailedCase": "genre-font-before.log",
+      "build": {
+        "exitCode": 0,
+        "initialJSBytes": 751608,
+        "log": "genre-final-build-current.log"
+      }
+    },
+    "currentFontCorrection": {
+      "scope": "/new shell only; stable body declaration untouched",
+      "actualFamily": "Outfit Variable",
+      "genreCases": {
+        "passed": 24,
+        "exitCode": 0,
+        "snapshotUpdates": false,
+        "retries": 0,
+        "log": "genre-final-browser.log"
+      },
+      "geometryFiles": 16,
+      "geometryRecords": 288,
+      "approvedGenreGoldens": 8,
+      "componentCases": 29,
+      "build": {
+        "exitCode": 0,
+        "initialJSBytes": 751698,
+        "log": "genre-isolated-row-build.log"
+      },
+      "lint": 0,
+      "types": 0,
+      "qualityPolicy": 0,
+      "staticParityPolicy": 0,
+      "performance": 0,
+      "existingRowGoldens": "48 genuine Outfit images reviewed, approved and no-update44-case regression passed"
+    },
+    "sharedPrivacy": {
+      "passed": 4,
+      "exitCode": 0,
+      "duration": "23.9s",
+      "log": "genre-shared-privacy.log"
+    },
+    "fullLocalCi": {
+      "command": "npm run verify:ci",
+      "exitCode": 0,
+      "frontendPassed": 849,
+      "frontendSkipped": 1,
+      "edgePassed": 26,
+      "productionSources": 137,
+      "initialJSBytes": 751698,
+      "log": "genre-full-verify-ci.log"
+    },
+    "rankingOutfit": {
+      "candidateCases": 24,
+      "candidateExitCode": 0,
+      "imagesReviewedAndApproved": 48,
+      "preservedOldImages": "ranking-before-outfit-goldens",
+      "approvalManifest": "ranking-outfit-approved-goldens.json",
+      "full44NoUpdateRegression": {
+        "passed": 44,
+        "exitCode": 0,
+        "duration": "2.0m",
+        "snapshotUpdates": false,
+        "retries": 0
+      }
+    },
+    "historyOutfit": {
+      "passed": 56,
+      "exitCode": 0,
+      "duration": "4.1m",
+      "log": "history-outfit-full.log",
+      "retries": 0,
+      "snapshotUpdates": false
+    },
+    "publicFont": {
+      "fontCasesPassed": 8,
+      "log": "public-font-browser.log",
+      "runtimeError": "NG0600 ambient visibility write observed; repeat/error investigation unresolved",
+      "cleanWorkflowPass": false,
+      "currentExplicitErrorRegression": {
+        "passed": 12,
+        "exitCode": 0,
+        "duration": "29.6s",
+        "log": "public-font-final.log",
+        "hiddenReducedMotionStartup": true
+      }
+    },
+    "latestFrontend": {
+      "passed": 875,
+      "skipped": 1,
+      "files": 100,
+      "sources": 137,
+      "exitCode": 0,
+      "command": "npm run test:ci",
+      "log": "stats-write-full-coverage.log",
+      "coverage": {
+        "lines": 72.03,
+        "statements": 68.9,
+        "functions": 67.19,
+        "branches": 57.17
+      },
+      "snapshotWriteFocused": 16
+    },
+    "otherPagesOutfit": {
+      "passed": 92,
+      "exitCode": 0,
+      "duration": "3.0m",
+      "projects": [
+        "desktop",
+        "mobile"
+      ],
+      "log": "other-pages-outfit.log"
+    },
+    "otherPagesFirefoxWebkit": {
+      "initial": {
+        "passed": 88,
+        "failed": 4,
+        "exitCode": 1,
+        "duration": "3.5m",
+        "log": "other-pages-firefox-webkit.log"
+      },
+      "focusedReadiness": {
+        "passed": 10,
+        "exitCode": 0,
+        "duration": "33.0s",
+        "log": "cross-browser-readiness-focused.log"
+      },
+      "final": {
+        "passed": 90,
+        "exitCode": 0,
+        "duration": "3.5m",
+        "retries": 0,
+        "log": "other-pages-firefox-webkit-final.log"
+      }
+    },
+    "browserScheduling": {
+      "cases": 318,
+      "files": 14,
+      "allSharedWorkflowsAllEngines": true,
+      "chromiumOnlyFile": "design-v2-chromium-performance.spec.ts",
+      "traceAssertionsChanged": false,
+      "listLog": "cross-browser-scheduled-tests.log",
+      "remoteCI": "not run"
+    },
+    "currentCanonicalParity": {
+      "rowMismatch": true,
+      "rowRead": "stats-current-ranking-column-read.json",
+      "controlsRead": "stats-current-controls-compact.json",
+      "priorImagesStatus": "Historical reviewed rendering; not current canonical parity",
+      "figmaWritesThisRead": 0
+    }
+  },
+  "remaining": [
+    "Canonical ranking-column/long-content states and row reconciliation, then Stats controls/date-calendar/switch/heading; ambient NG0600 cause unresolved",
+    "Complete retained feature/state migration and edge/worker/frontend98 gates",
+    "Selected real service contracts in an isolated environment",
+    "Combined final-commit verification and final commit"
+  ]
+}

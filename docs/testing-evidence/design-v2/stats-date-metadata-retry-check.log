@@ -1,0 +1,245 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts --progress=false
+Application bundle generation complete. [2.392 seconds] - 2026-10-06T20:46:49.147Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stdout | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not repeatedly request a selected date after a unavailable response while rendering and filtering
+[Analytify][0018][+00049ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+
+stdout | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not repeatedly request a selected date after a failed response while rendering and filtering
+[Analytify][0020][+00052ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+
+stdout | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not repeatedly request a comparison date after a unavailable response while rendering and filtering
+[Analytify][0023][+00054ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+
+stdout | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not repeatedly request a comparison date after a failed response while rendering and filtering
+[Analytify][0025][+00057ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts (19 tests | 4 failed) 54ms
+     × does not repeatedly request a selected date after a unavailable response while rendering and filtering 3ms
+     × does not repeatedly request a selected date after a failed response while rendering and filtering 2ms
+     × does not repeatedly request a comparison date after a unavailable response while rendering and filtering 2ms
+     × does not repeatedly request a comparison date after a failed response while rendering and filtering 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not repeatedly request a selected date after a unavailable response while rendering and filtering
+AssertionError: expected "error" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st error call:
+
+    Array [
+      "[Analytify][0019][+00050ms][Personal Stats][ERROR]",
+      "Failed to load stats history",
+      Object {
+        "message": "this.storageService.deleteStatsHistoryEntries is not a function",
+        "name": "TypeError",
+        "stack": "TypeError: this.storageService.deleteStatsHistoryEntries is not a function
+        at UserStatsComponent2.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/user-stats.component.ts:1410:37)
+        at Generator.next (<anonymous>)
+        at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+        at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+        at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+        at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/user-stats.component.ts:1386:86
+        at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+        at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+        at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+        at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ UserStatsComponent2.<anonymous> src/app/features/insights/user-stats/user-stats.component.ts:1410:37
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/features/insights/user-stats/user-stats.component.ts:1386:86
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts:172:31
+    170|     component.loadHistoryData();await settle();await settle();
+    171|     void component.filteredTracks;await settle();
+    172|     expect(console.error).not.toHaveBeenCalled();
+       |                               ^
+    173|     expect(sdk.loadStatsSnapshotById).toHaveBeenCalledExactlyOnceWith(…
+    174|     expect(storage.saveStatsHistory).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not repeatedly request a selected date after a failed response while rendering and filtering
+AssertionError: expected "error" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st error call:
+
+    Array [
+      "[Analytify][0022][+00053ms][Personal Stats][ERROR]",
+      "Failed to load stats history",
+      Object {
+        "message": "this.storageService.deleteStatsHistoryEntries is not a function",
+        "name": "TypeError",
+        "stack": "TypeError: this.storageService.deleteStatsHistoryEntries is not a function
+        at UserStatsComponent2.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/user-stats.component.ts:1410:37)
+        at Generator.next (<anonymous>)
+        at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+        at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+        at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+        at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/user-stats.component.ts:1386:86
+        at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+        at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+        at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+        at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ UserStatsComponent2.<anonymous> src/app/features/insights/user-stats/user-stats.component.ts:1410:37
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/features/insights/user-stats/user-stats.component.ts:1386:86
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts:172:31
+    170|     component.loadHistoryData();await settle();await settle();
+    171|     void component.filteredTracks;await settle();
+    172|     expect(console.error).not.toHaveBeenCalled();
+       |                               ^
+    173|     expect(sdk.loadStatsSnapshotById).toHaveBeenCalledExactlyOnceWith(…
+    174|     expect(storage.saveStatsHistory).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not repeatedly request a comparison date after a unavailable response while rendering and filtering
+AssertionError: expected "error" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st error call:
+
+    Array [
+      "[Analytify][0024][+00055ms][Personal Stats][ERROR]",
+      "Failed to load stats history",
+      Object {
+        "message": "this.storageService.deleteStatsHistoryEntries is not a function",
+        "name": "TypeError",
+        "stack": "TypeError: this.storageService.deleteStatsHistoryEntries is not a function
+        at UserStatsComponent2.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/user-stats.component.ts:1410:37)
+        at Generator.next (<anonymous>)
+        at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+        at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+        at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+        at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/user-stats.component.ts:1386:86
+        at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+        at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+        at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+        at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ UserStatsComponent2.<anonymous> src/app/features/insights/user-stats/user-stats.component.ts:1410:37
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/features/insights/user-stats/user-stats.component.ts:1386:86
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts:172:31
+    170|     component.loadHistoryData();await settle();await settle();
+    171|     void component.filteredTracks;await settle();
+    172|     expect(console.error).not.toHaveBeenCalled();
+       |                               ^
+    173|     expect(sdk.loadStatsSnapshotById).toHaveBeenCalledExactlyOnceWith(…
+    174|     expect(storage.saveStatsHistory).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > does not repeatedly request a comparison date after a failed response while rendering and filtering
+AssertionError: expected "error" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st error call:
+
+    Array [
+      "[Analytify][0027][+00058ms][Personal Stats][ERROR]",
+      "Failed to load stats history",
+      Object {
+        "message": "this.storageService.deleteStatsHistoryEntries is not a function",
+        "name": "TypeError",
+        "stack": "TypeError: this.storageService.deleteStatsHistoryEntries is not a function
+        at UserStatsComponent2.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/user-stats.component.ts:1410:37)
+        at Generator.next (<anonymous>)
+        at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+        at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+        at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+        at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/user-stats.component.ts:1386:86
+        at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+        at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+        at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+        at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ UserStatsComponent2.<anonymous> src/app/features/insights/user-stats/user-stats.component.ts:1410:37
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/features/insights/user-stats/user-stats.component.ts:1386:86
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts:172:31
+    170|     component.loadHistoryData();await settle();await settle();
+    171|     void component.filteredTracks;await settle();
+    172|     expect(console.error).not.toHaveBeenCalled();
+       |                               ^
+    173|     expect(sdk.loadStatsSnapshotById).toHaveBeenCalledExactlyOnceWith(…
+    174|     expect(storage.saveStatsHistory).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 15 passed (19)
+   Start at  22:46:49
+   Duration  923ms (transform 167ms, setup 210ms, import 215ms, tests 54ms, environment 312ms)
+

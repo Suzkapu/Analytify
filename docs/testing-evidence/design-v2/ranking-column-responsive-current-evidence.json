@@ -1,0 +1,33 @@
+{
+  "status": "canonical-reviewed-angular-pending",
+  "branch": "codex/design-v2",
+  "head": "de3d5b58e99d74a225fa20ab223bb2700f3ed1b8",
+  "canonicalFile": "5v8ckmlbfhMDWwP5sTdSXd",
+  "sourceNode": "161:8697",
+  "reviewNode": "817:25759",
+  "approvedFigmaScreenshot": "ranking-column-responsive-wrap-figma.png",
+  "scope": "Figma ranking-column refinement only; not Angular parity or final completion",
+  "rejectedScreenshots": [
+    "ranking-column-responsive-figma-initial.png",
+    "ranking-column-responsive-figma-final.png"
+  ],
+  "unitTests": {
+    "command": "npx ng test --watch=false --include=src/app/shared/ui-v2/v2-stats-ranking-row.component.spec.ts --progress=false",
+    "passed": 4,
+    "exitCode": 0
+  },
+  "lintExitCode": 0,
+  "testTypecheckExitCode": 0,
+  "fullCoverageRerun": false,
+  "files": {
+    "ranking-column-responsive-figma-ledger.json": "e7c65e9e115f4979c37a52d4b7d145f6196529c16359eb352872fcde7fd158fb",
+    "ranking-column-responsive-figma-layout-fix.json": "2154a168b30882ec6decca1bdfe58e3f7f27518327b08c9e413f38e9c09779d8",
+    "ranking-column-responsive-rejected-stack-fix.json": "ab236ace9300c08c0bc7da972a1fc682b987cba5ea39a7d4a4449de40f2eac6a",
+    "ranking-column-responsive-wrap-fix.json": "47f83fa1fafe026798099ea2983e7224487f1976f06adc9a5f8441e25f4cc1e3",
+    "ranking-column-responsive-final-contract.json": "5c6a2dba317587dfad521304789d3f9f52733afb32d4fab4903c16e8fa8b3725",
+    "ranking-column-responsive-wrap-figma.png": "21e70f7466bfb14f5f9c983b213553c86a041640b57b623de5b847141109f8fa",
+    "ranking-column-before-migration-unit.log": "9554dabe54c8e287ff4b3da76f8c230736f5d8ef1ccbc42cfbf690a6cfaf9389",
+    "ranking-column-before-migration-lint.log": "ff97944ba7e123061c9791b1835e2cc7b925204e05c50bf000a4ee1e7b9b274b",
+    "ranking-column-before-migration-types.log": "ecb06bda5b0ff231e6e421ac0d6a304f62d43281ad2077d1b66c50bad2db6419"
+  }
+}

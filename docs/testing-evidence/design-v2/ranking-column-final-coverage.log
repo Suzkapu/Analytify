@@ -1,0 +1,25 @@
+npm notice run spoti-front@0.0.0 test:ci
+npm notice run ng test --watch=false --coverage --progress=false && node scripts/check-coverage-thresholds.mjs && node scripts/check-design-v2-coverage.mjs && node scripts/check-application-coverage-inventory.mjs frontend
+Application bundle generation complete. [4.939 seconds] - 2026-10-06T17:56:16.468Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+      Coverage enabled with v8
+
+
+ Test Files  100 passed (100)
+      Tests  876 passed | 1 skipped (877)
+   Start at  19:56:16
+   Duration  20.53s (transform 7.49s, setup 59.36s, import 27.72s, tests 47.61s, environment 81.49s)
+
+ % Coverage report from v8
+
+=============================== Coverage summary ===============================
+Statements   : 68.91% ( 7891/11450 )
+Branches     : 57.18% ( 4235/7406 )
+Functions    : 67.2% ( 1611/2397 )
+Lines        : 72.03% ( 7141/9913 )
+================================================================================
+Coverage thresholds passed.
+Design v2 uncovered-code budgets passed for 24 behavioral sources.
+frontend: all 137 production sources included; final 98% gate not requested.

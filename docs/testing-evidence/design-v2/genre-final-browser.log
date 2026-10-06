@@ -1,0 +1,53 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-all-browsers.config.ts e2e/design-v2-stats-genres.spec.ts --workers=2 --retries=0 --output=/tmp/analytify-genre-final-browser
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:13509) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13509) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 24 tests using 2 workers
+
+(node:13606) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:13612) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (6.0s)
+  ✓   2 [desktop] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (6.1s)
+  ✓   3 [desktop] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 390px (3.1s)
+  ✓   4 [desktop] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 1440px (3.7s)
+  ✓   6 [desktop] › e2e/design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion reduce (4.4s)
+  ✓   5 [desktop] › e2e/design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion no-preference (5.1s)
+(node:13993) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14000) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   8 [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (4.7s)
+  ✓   7 [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (5.5s)
+  ✓   9 [mobile] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 390px (3.5s)
+  ✓  10 [mobile] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 1440px (4.6s)
+  ✓  11 [mobile] › e2e/design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion no-preference (7.1s)
+(node:14402) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  12 [mobile] › e2e/design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion reduce (5.8s)
+(node:14416) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  13 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (9.3s)
+  ✓  14 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (8.7s)
+  ✓  16 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 1440px (3.3s)
+  ✓  15 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 390px (3.3s)
+  ✓  18 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion reduce (4.5s)
+  ✓  17 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion no-preference (4.8s)
+(node:15159) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15169) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  19 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (7.8s)
+  ✓  20 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (7.8s)
+  ✓  21 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 390px (4.7s)
+  ✓  22 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 1440px (5.5s)
+  ✓  23 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion no-preference (8.2s)
+  ✓  24 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion reduce (7.7s)
+
+  24 passed (1.3m)

@@ -1,0 +1,57 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-genre-candidates.config.ts e2e/design-v2-stats-genres.spec.ts --project=desktop --grep=canonical genre comparisons at 390px --workers=1 --retries=0 --output=/tmp/analytify-genre-font-before
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:8496) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:8496) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:8603) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 390px (7.2s)
+
+
+  1) [desktop] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 390px ───
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('v2-genre-rankings .chart').locator('strong').first()
+    Expected: "\"Outfit Variable\", sans-serif"
+    Received: "Outfit, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('v2-genre-rankings .chart').locator('strong').first() with timeout 5000ms
+      - waiting for locator('v2-genre-rankings .chart').locator('strong').first()
+        14 × locator resolved to <strong _ngcontent-ng-c3015665284="">1. Alternative Rock</strong>
+           - unexpected value "Outfit, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif"
+
+
+      120 |     await expect(chart.locator('.genre-row').first()).toHaveCSS('height', width === 390 ? '54px' : '44px');
+      121 |     await expect(chart.locator('strong').first()).toHaveCSS('font-weight', '500');
+    > 122 |     await expect(chart.locator('strong').first()).toHaveCSS('font-family', '"Outfit Variable", sans-serif');
+          |                                                   ^
+      123 |     expect(await page.evaluate(() => [...document.fonts].some(font =>
+      124 |       font.family.replace(/["']/g, '') === 'Outfit Variable' && font.status === 'loaded'))).toBe(true);
+      125 |     await expect(chart.locator('.lost')).toHaveCSS('background-color', 'rgb(162, 173, 166)');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-genres.spec.ts:122:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-font-before/design-v2-stats-genres-canonical-genre-comparisons-at-390px-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../tmp/analytify-genre-font-before/design-v2-stats-genres-canonical-genre-comparisons-at-390px-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-font-before/design-v2-stats-genres-canonical-genre-comparisons-at-390px-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../tmp/analytify-genre-font-before/design-v2-stats-genres-canonical-genre-comparisons-at-390px-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 390px ────

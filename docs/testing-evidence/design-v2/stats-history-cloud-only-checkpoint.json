@@ -1,0 +1,164 @@
+{
+  "branch": "codex/design-v2",
+  "baseCommit": "de3d5b58e99d74a225fa20ab223bb2700f3ed1b8",
+  "finalCommit": null,
+  "complete": false,
+  "verification": {
+    "fullVerify": {
+      "command": "npm run verify:ci",
+      "exitCode": 0,
+      "log": "/tmp/analytify-design-v2-baseline/history-cloud-only-semantic-verify.log",
+      "frontendPassed": 837,
+      "frontendSkipped": 1,
+      "workerPassed": 70,
+      "edgePassed": 26,
+      "edgeEntrypointChecks": 3
+    },
+    "historyBrowser": {
+      "passed": 44,
+      "exitCode": 0,
+      "retries": 0,
+      "log": "/tmp/analytify-design-v2-baseline/history-all-states-current.log",
+      "scope": "all workflows before corrected spinner asset"
+    },
+    "finalSpinnerAndCloudOnly": {
+      "passed": 8,
+      "exitCode": 0,
+      "retries": 0,
+      "log": "/tmp/analytify-design-v2-baseline/history-spinner-current.log",
+      "scope": "all configurations/motion modes after exact visible-slot asset replacement; rendered green pixel assertions"
+    },
+    "finalBuild": {
+      "exitCode": 0,
+      "initialJavaScriptBytes": 751530,
+      "log": "/tmp/analytify-design-v2-baseline/history-spinner-build.log"
+    },
+    "e2eLint": {
+      "exitCode": 0,
+      "log": "/tmp/analytify-design-v2-baseline/history-spinner-lint.log"
+    }
+  },
+  "coverage": {
+    "frontend": {
+      "lines": {
+        "total": 9864,
+        "covered": 6850,
+        "skipped": 0,
+        "pct": 69.44
+      },
+      "statements": {
+        "total": 11388,
+        "covered": 7527,
+        "skipped": 0,
+        "pct": 66.09
+      },
+      "functions": {
+        "total": 2385,
+        "covered": 1517,
+        "skipped": 0,
+        "pct": 63.6
+      },
+      "branches": {
+        "total": 7364,
+        "covered": 3887,
+        "skipped": 0,
+        "pct": 52.78
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "worker": {
+      "lines": {
+        "total": 873,
+        "covered": 616,
+        "skipped": 0,
+        "pct": 70.56
+      },
+      "statements": {
+        "total": 1091,
+        "covered": 700,
+        "skipped": 0,
+        "pct": 64.16
+      },
+      "functions": {
+        "total": 197,
+        "covered": 125,
+        "skipped": 0,
+        "pct": 63.45
+      },
+      "branches": {
+        "total": 910,
+        "covered": 547,
+        "skipped": 0,
+        "pct": 60.1
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "edge": {
+      "lines": {
+        "total": 763,
+        "covered": 200,
+        "skipped": 0,
+        "pct": 26.21
+      },
+      "statements": {
+        "total": 902,
+        "covered": 219,
+        "skipped": 0,
+        "pct": 24.27
+      },
+      "functions": {
+        "total": 113,
+        "covered": 48,
+        "skipped": 0,
+        "pct": 42.47
+      },
+      "branches": {
+        "total": 797,
+        "covered": 160,
+        "skipped": 0,
+        "pct": 20.07
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    }
+  },
+  "final98PercentGates": {
+    "frontend": "failed",
+    "worker": "failed",
+    "edge": "failed"
+  },
+  "figmaEvidence": {
+    "sharedComparison": "330:15916/330:16218 hidden, reactions cleared; current shared mobile screenshot reviewed",
+    "loading": "724:22680 current context/screenshot green; exact visible slot I724:22691;584:21797 green SVG downloaded unmodified",
+    "reviewedBrowserCaptures": [
+      "desktop loading",
+      "mobile loading",
+      "mobile single"
+    ],
+    "goldenApproval": "pending"
+  },
+  "limitations": [
+    "all four coverage metrics below98% in each suite",
+    "isolated real Supabase integration skipped: no container runtime",
+    "palette and whole-screen Stats parity unresolved",
+    "hidden canonical genre composition review pending",
+    "browser navigation/request races pending",
+    "approved visual goldens pending",
+    "remaining retained features and service coverage incomplete",
+    "final commit pending; no merge/push/deploy"
+  ]
+}

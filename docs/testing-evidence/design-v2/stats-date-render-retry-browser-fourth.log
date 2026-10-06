@@ -1,0 +1,162 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-date-loading.spec.ts --config=/tmp/analytify-all-browsers.config.ts --project=desktop
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:148520) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:148520) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 2 workers
+
+(node:148631) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:148630) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date failed stops render retries and recovers after explicit reselection (7.1s)
+  ✘  2 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date unavailable stops render retries and recovers after explicit reselection (7.2s)
+(node:148829) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:148837) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date unavailable stops render retries and recovers after explicit reselection (6.9s)
+  ✘  4 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date failed stops render retries and recovers after explicit reselection (7.1s)
+
+
+  1) [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date unavailable stops render retries and recovers after explicit reselection 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 3
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      50 |     const control=purpose==='ranking'?ranking:comparison;
+      51 |     await control.selectOption(String(timestamp));
+    > 52 |     await expect.poll(()=>requests.length).toBe(1);
+         |                                            ^
+      53 |     if(purpose==='ranking') await expect(page.getByText('No top songs found',{exact:true})).toBeVisible();
+      54 |     else await expect(page.locator('.v2-ranking-list strong').filter({hasText:'Test Song'})).toBeVisible();
+      55 |     const search=page.getByRole('searchbox',{name:'Search songs or artists'});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-date-loading.spec.ts:52:44
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-loadi-a384c--after-explicit-reselection-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-date-loadi-a384c--after-explicit-reselection-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-loadi-a384c--after-explicit-reselection-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-date-loadi-a384c--after-explicit-reselection-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date failed stops render retries and recovers after explicit reselection 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 6
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      50 |     const control=purpose==='ranking'?ranking:comparison;
+      51 |     await control.selectOption(String(timestamp));
+    > 52 |     await expect.poll(()=>requests.length).toBe(1);
+         |                                            ^
+      53 |     if(purpose==='ranking') await expect(page.getByText('No top songs found',{exact:true})).toBeVisible();
+      54 |     else await expect(page.locator('.v2-ranking-list strong').filter({hasText:'Test Song'})).toBeVisible();
+      55 |     const search=page.getByRole('searchbox',{name:'Search songs or artists'});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-date-loading.spec.ts:52:44
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-loadi-df11e--after-explicit-reselection-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-date-loadi-df11e--after-explicit-reselection-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-loadi-df11e--after-explicit-reselection-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-date-loadi-df11e--after-explicit-reselection-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date unavailable stops render retries and recovers after explicit reselection 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 3
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      50 |     const control=purpose==='ranking'?ranking:comparison;
+      51 |     await control.selectOption(String(timestamp));
+    > 52 |     await expect.poll(()=>requests.length).toBe(1);
+         |                                            ^
+      53 |     if(purpose==='ranking') await expect(page.getByText('No top songs found',{exact:true})).toBeVisible();
+      54 |     else await expect(page.locator('.v2-ranking-list strong').filter({hasText:'Test Song'})).toBeVisible();
+      55 |     const search=page.getByRole('searchbox',{name:'Search songs or artists'});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-date-loading.spec.ts:52:44
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-loadi-ae177--after-explicit-reselection-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-date-loadi-ae177--after-explicit-reselection-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-loadi-ae177--after-explicit-reselection-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-date-loadi-ae177--after-explicit-reselection-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date failed stops render retries and recovers after explicit reselection 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 6
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      50 |     const control=purpose==='ranking'?ranking:comparison;
+      51 |     await control.selectOption(String(timestamp));
+    > 52 |     await expect.poll(()=>requests.length).toBe(1);
+         |                                            ^
+      53 |     if(purpose==='ranking') await expect(page.getByText('No top songs found',{exact:true})).toBeVisible();
+      54 |     else await expect(page.locator('.v2-ranking-list strong').filter({hasText:'Test Song'})).toBeVisible();
+      55 |     const search=page.getByRole('searchbox',{name:'Search songs or artists'});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-date-loading.spec.ts:52:44
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-loadi-98e57--after-explicit-reselection-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-date-loadi-98e57--after-explicit-reselection-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-loadi-98e57--after-explicit-reselection-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-date-loadi-98e57--after-explicit-reselection-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date unavailable stops render retries and recovers after explicit reselection 
+    [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › ranking date failed stops render retries and recovers after explicit reselection 
+    [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date unavailable stops render retries and recovers after explicit reselection 
+    [desktop] › e2e/design-v2-stats-date-loading.spec.ts:9:7 › comparison date failed stops render retries and recovers after explicit reselection 

@@ -1,0 +1,285 @@
+{
+  "status": "active; full migration gates unmet",
+  "branch": "codex/design-v2",
+  "finalCommit": null,
+  "canonical": {
+    "fileKey": "5v8ckmlbfhMDWwP5sTdSXd",
+    "page": "7:2",
+    "row": "161:8697",
+    "songExamples": [
+      "25:145",
+      "25:150",
+      "25:833",
+      "25:838"
+    ],
+    "artworkSet": "129:8806",
+    "artistWidthFix": [
+      "110:3640",
+      "347:18015",
+      "347:18022",
+      "347:18029",
+      "347:18036"
+    ],
+    "qaCloneRemoved": [
+      "768:25450",
+      "768:25451",
+      "768:25452",
+      "768:25453",
+      "768:25454"
+    ],
+    "mobileGutter": 16,
+    "mobileRowWidth": 358,
+    "desktopRowWidth": 1120,
+    "exampleHeight": 80
+  },
+  "verification": {
+    "beforeSong": {
+      "failed": 1,
+      "exit": 1,
+      "log": "song-row-before.log"
+    },
+    "componentAndParent": {
+      "passed": 26,
+      "exit": 0,
+      "log": "stats-shared-row-caption-unit.log"
+    },
+    "fullVerify": {
+      "frontendPassed": 840,
+      "skipped": 1,
+      "files": 95,
+      "workerPassed": 70,
+      "edgePassed": 26,
+      "entrypointChecks": 3,
+      "exit": 0,
+      "log": "stats-shared-row-caption-verify.log"
+    },
+    "longRow": {
+      "passed": 8,
+      "exit": 0,
+      "log": "stats-shared-row-long-current.log",
+      "viewportPairsPerCase": 14,
+      "motion": [
+        "no-preference",
+        "reduce"
+      ],
+      "engines": [
+        "Chromium desktop",
+        "Chromium Pixel7",
+        "Firefox",
+        "portable WebKit"
+      ]
+    },
+    "scopedNormalWorkflow": {
+      "passed": 12,
+      "log": "stats-shared-row-reflow.log",
+      "combinedRunFailed": 8,
+      "reason": "Long fixture initially restored old current cache; corrected only disposable fixture cache/readiness, all reflow assertions retained."
+    },
+    "lint": {
+      "exit": 0,
+      "log": "stats-row-column-lint.log"
+    },
+    "visual": {
+      "status": "24 repository goldens approved after native-dimension Figma review; no-update full regression passed",
+      "captureCases": 16,
+      "captureLog": "stats-row-column-canonical.log",
+      "manifest": "stats-shared-row-approved-goldens.json",
+      "fullWorkflowCases": 36,
+      "fullWorkflowExit": 0,
+      "fullWorkflowLog": "stats-shared-row-approved-regression.log",
+      "duration": "1.7m",
+      "retries": 0
+    },
+    "build": {
+      "exit": 0,
+      "log": "stats-row-column-build.log",
+      "initialJavaScriptBytes": 751546
+    },
+    "performanceContract": {
+      "exit": 0,
+      "log": "stats-row-column-performance-contract.log"
+    },
+    "history": {
+      "passed": 56,
+      "exit": 0,
+      "retries": 0,
+      "duration": "4.2m",
+      "log": "stats-shared-row-history-current.log",
+      "previousRun": {
+        "passed": 44,
+        "failed": 12,
+        "exit": 1,
+        "log": "stats-shared-row-history.log",
+        "reason": "All12 failures at2 exact-title assertions; required canonical1. Shared Song instead of oldShared Song; all permissions/race assertions preserved."
+      }
+    },
+    "final98Gates": {
+      "frontend": 1,
+      "worker": 1,
+      "edge": 1,
+      "logs": "stats-row-{frontend,worker,edge}-final-gate.log",
+      "allMetricsBelowTarget": true
+    },
+    "otherPages": {
+      "passed": 92,
+      "exit": 0,
+      "projects": [
+        "Chromium desktop",
+        "Chromium Pixel7"
+      ],
+      "log": "stats-row-other-pages.log",
+      "scope": "9 other-page browser files; Firefox/WebKit broader pages not scheduled",
+      "duration": "2.5m"
+    },
+    "durableGeometry": {
+      "passed": 16,
+      "exit": 0,
+      "retries": 0,
+      "duration": "1.1m",
+      "log": "stats-row-durable-geometry.log",
+      "matrices": 16,
+      "measurements": 336,
+      "artifact": "stats-shared-row-responsive-measurements.json",
+      "changedOnly": "persist successful geometry files; assertions unchanged"
+    },
+    "denseOtherEngines": {
+      "passed": 2,
+      "exit": 0,
+      "retries": 0,
+      "duration": "18.7s",
+      "log": "stats-row-dense-other-engines.log",
+      "projects": [
+        "Firefox",
+        "portable WebKit"
+      ],
+      "scope": "100-song bounded DOM/filter/tab/history workflow; temporary testMatch override; no claim of wider-page engine verification"
+    }
+  },
+  "coverage": {
+    "frontend": {
+      "lines": {
+        "total": 9883,
+        "covered": 6869,
+        "skipped": 0,
+        "pct": 69.5
+      },
+      "statements": {
+        "total": 11411,
+        "covered": 7551,
+        "skipped": 0,
+        "pct": 66.17
+      },
+      "functions": {
+        "total": 2387,
+        "covered": 1520,
+        "skipped": 0,
+        "pct": 63.67
+      },
+      "branches": {
+        "total": 7372,
+        "covered": 3895,
+        "skipped": 0,
+        "pct": 52.83
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "worker": {
+      "lines": {
+        "total": 873,
+        "covered": 616,
+        "skipped": 0,
+        "pct": 70.56
+      },
+      "statements": {
+        "total": 1091,
+        "covered": 700,
+        "skipped": 0,
+        "pct": 64.16
+      },
+      "functions": {
+        "total": 197,
+        "covered": 125,
+        "skipped": 0,
+        "pct": 63.45
+      },
+      "branches": {
+        "total": 910,
+        "covered": 547,
+        "skipped": 0,
+        "pct": 60.1
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "edge": {
+      "lines": {
+        "total": 763,
+        "covered": 200,
+        "skipped": 0,
+        "pct": 26.21
+      },
+      "statements": {
+        "total": 902,
+        "covered": 219,
+        "skipped": 0,
+        "pct": 24.27
+      },
+      "functions": {
+        "total": 113,
+        "covered": 48,
+        "skipped": 0,
+        "pct": 42.47
+      },
+      "branches": {
+        "total": 797,
+        "covered": 160,
+        "skipped": 0,
+        "pct": 20.07
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    }
+  },
+  "sourceCounts": {
+    "frontend": 135,
+    "worker": 17,
+    "edge": 12
+  },
+  "limitations": [
+    "Final98 gates all below target",
+    "Whole-application broader-page engine matrix incomplete; current row/history scoped regressions passed",
+    "Canonical custom action state matrix, genre, whole Stats and popup parity unfinished",
+    "Isolated real contracts unrun without container runtime",
+    "Final commit pending; no merge/push/deployment"
+  ],
+  "listSizingCorrection": {
+    "symptom": "WebKit canonical row116px with correctly sized48px artwork and44px copy/action; grid tracks overestimated",
+    "fix": "vertical flex list; containment retained with48px content-box fallback",
+    "focusedCase": {
+      "passed": 1,
+      "exit": 0,
+      "log": "stats-row-column.log"
+    },
+    "failedAttempts": [
+      "stats-shared-row-containment.log",
+      "stats-shared-row-materialized.log"
+    ],
+    "diagnostics": [
+      "stats-row-child-layout.log",
+      "stats-row-parent-layout.log"
+    ]
+  }
+}

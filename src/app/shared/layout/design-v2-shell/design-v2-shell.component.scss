@@ -4,6 +4,7 @@
 
 .design-v2 {
   @include design-v2-tokens.tokens;
+  font-family: var(--v2-font-family);
   --v2-header-height: 72px;
   position: relative;
   min-height: 100dvh;
@@ -115,7 +116,9 @@
 
 .v2-main {
   position: relative;
-  z-index: 1;
+  // Page dialogs must participate in the shell's overlay stack rather than
+  // being trapped below its header, navigation and footer.
+  z-index: auto;
   width: min(100% - (var(--v2-page-gutter) * 2), 1120px);
   min-height: calc(100dvh - var(--v2-header-height));
   margin: 0 auto;

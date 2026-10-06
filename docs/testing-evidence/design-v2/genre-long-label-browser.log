@@ -1,0 +1,37 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-all-browsers.config.ts e2e/design-v2-stats-genres.spec.ts --grep=long genre names --workers=2 --retries=0 --output=/tmp/analytify-genre-long-label-results
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:7166) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:7166) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 2 workers
+
+(node:7250) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7251) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop] › e2e/design-v2-stats-genres.spec.ts:128:7 › long genre names reflow without losing shares or History with motion no-preference (5.6s)
+  ✓  2 [desktop] › e2e/design-v2-stats-genres.spec.ts:128:7 › long genre names reflow without losing shares or History with motion reduce (5.7s)
+(node:7467) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7477) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  4 [mobile] › e2e/design-v2-stats-genres.spec.ts:128:7 › long genre names reflow without losing shares or History with motion reduce (6.2s)
+  ✓  3 [mobile] › e2e/design-v2-stats-genres.spec.ts:128:7 › long genre names reflow without losing shares or History with motion no-preference (6.5s)
+(node:7663) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  6 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:128:7 › long genre names reflow without losing shares or History with motion reduce (5.7s)
+  ✓  5 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:128:7 › long genre names reflow without losing shares or History with motion no-preference (6.1s)
+(node:8180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8186) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  7 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:128:7 › long genre names reflow without losing shares or History with motion reduce (9.2s)
+  ✓  8 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:128:7 › long genre names reflow without losing shares or History with motion no-preference (9.8s)
+
+  8 passed (39.2s)

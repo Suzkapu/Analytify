@@ -1,0 +1,79 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts --progress=false
+Application bundle generation complete. [2.581 seconds] - 2026-10-06T20:53:26.473Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stdout | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > keeps the selected local date address stable when cloud details normalize its timestamp to midnight
+[Analytify][0029][+00080ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+
+stderr | src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > keeps the selected local date address stable when cloud details normalize its timestamp to midnight
+AssertionError: expected { id: 'snapshot-A', …(8) } to match object { id: 'snapshot-A', …(3) }
+(5 matching properties omitted from actual)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1283:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts:204:38
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171) {
+  showDiff: true,
+  expected: {
+    id: 'snapshot-A',
+    timestamp: 1791115200000,
+    snapshotDate: '2026-10-04',
+    isLoaded: true
+  },
+  actual: {
+    id: 'snapshot-A',
+    timestamp: 1791064800000,
+    snapshotDate: '2026-10-04',
+    isLoaded: true
+  }
+}
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts (21 tests | 1 failed) 77ms
+     × keeps the selected local date address stable when cloud details normalize its timestamp to midnight 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts > selected Stats date loading service boundary > keeps the selected local date address stable when cloud details normalize its timestamp to midnight
+AssertionError: expected { id: 'snapshot-A', …(8) } to match object { id: 'snapshot-A', …(3) }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "id": "snapshot-A",
+    "isLoaded": true,
+    "snapshotDate": "2026-10-04",
+-   "timestamp": 1791115200000,
++   "timestamp": 1791064800000,
+  }
+
+ ❯ src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts:204:38
+    202|     component.ensureSnapshotLoaded(String(timestamp));await settle();
+    203|     expect(component.selectedSnapshotId).toBe(String(timestamp));
+    204|     expect(component.historyData[0]).toMatchObject({id:'snapshot-A',ti…
+       |                                      ^
+    205|     expect(component.filteredTracks).toEqual(full.topTracks);
+    206|     expect(storage.saveStatsHistory).toHaveBeenCalledExactlyOnceWith(e…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 passed (21)
+   Start at  22:53:26
+   Duration  906ms (transform 169ms, setup 210ms, import 210ms, tests 77ms, environment 298ms)
+

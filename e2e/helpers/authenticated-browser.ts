@@ -10,6 +10,7 @@ export async function expectNoBlockingAxeViolations(page: Page): Promise<void> {
 
 export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
   await page.goto('/new/login');
+  await expect(page.locator('app-login-page')).toBeVisible();
   await page.evaluate(async settings => {
     await new Promise<void>((resolve, reject) => {
       const request = indexedDB.open('AnalytifyDB', 4);

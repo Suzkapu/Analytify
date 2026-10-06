@@ -1,0 +1,19 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test -c /tmp/analytify-row-performance.config.ts e2e/design-v2-performance.spec.ts --project=firefox-stats --project=webkit-stats --grep full top-song rankings remain bounded --output=/tmp/analytify-design-v2-baseline/stats-row-dense-other-engines
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:367169) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:367169) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:367267) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:367266) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [firefox-stats] › e2e/design-v2-performance.spec.ts:165:5 › full top-song rankings remain bounded through filtering, tabs, and history dialogs (9.0s)
+  ✓  1 [webkit-stats] › e2e/design-v2-performance.spec.ts:165:5 › full top-song rankings remain bounded through filtering, tabs, and history dialogs (9.7s)
+
+  2 passed (18.7s)

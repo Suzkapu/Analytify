@@ -1,0 +1,53 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-genre-candidates.config.ts e2e/design-v2-stats-genres.spec.ts --workers=2 --retries=0 --update-snapshots --output=/tmp/analytify-genre-candidates-results
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:31057) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:31057) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 16 tests using 2 workers
+
+(node:31289) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:31290) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (5.2s)
+  ✓   2 [desktop] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (5.3s)
+A snapshot doesn't exist at /tmp/analytify-genre-candidates/desktop/stats-genres-390.png, writing actual.
+  ✓   3 [desktop] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 390px (2.9s)
+A snapshot doesn't exist at /tmp/analytify-genre-candidates/desktop/stats-genres-1440.png, writing actual.
+(node:31592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   4 [desktop] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 1440px (3.3s)
+(node:31604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   6 [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (4.6s)
+  ✓   5 [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (5.5s)
+A snapshot doesn't exist at /tmp/analytify-genre-candidates/mobile/stats-genres-390.png, writing actual.
+  ✓   7 [mobile] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 390px (2.8s)
+(node:31834) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+A snapshot doesn't exist at /tmp/analytify-genre-candidates/mobile/stats-genres-1440.png, writing actual.
+  ✓   8 [mobile] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 1440px (4.4s)
+(node:32042) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (6.4s)
+  ✓  10 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (6.3s)
+A snapshot doesn't exist at /tmp/analytify-genre-candidates/firefox-stats/stats-genres-390.png, writing actual.
+  ✓  11 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 390px (2.1s)
+(node:32439) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+A snapshot doesn't exist at /tmp/analytify-genre-candidates/firefox-stats/stats-genres-1440.png, writing actual.
+  ✓  12 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 1440px (2.4s)
+(node:32525) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  13 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (7.7s)
+  ✓  14 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (8.5s)
+A snapshot doesn't exist at /tmp/analytify-genre-candidates/webkit-stats/stats-genres-390.png, writing actual.
+  ✓  15 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 390px (4.8s)
+A snapshot doesn't exist at /tmp/analytify-genre-candidates/webkit-stats/stats-genres-1440.png, writing actual.
+  ✓  16 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:116:7 › canonical genre comparisons at 1440px (4.9s)
+
+  16 passed (54.9s)

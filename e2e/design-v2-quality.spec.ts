@@ -1,4 +1,4 @@
-import {expect, test} from '@playwright/test';
+import {expect, test} from './fixtures';
 import {
   expectNoBlockingAxeViolations,
   mockSpotify,
@@ -83,11 +83,15 @@ test('mobile fixed navigation does not obscure the last task region', async ({pa
   const card = page.locator('.v2-playlist-card').last();
   await expect(card).toBeVisible();
   await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
-  const cardBox = await card.boundingBox();
-  const navBox = await page.getByRole('navigation', {name: 'Primary navigation'}).boundingBox();
-  expect(cardBox).not.toBeNull();
-  expect(navBox).not.toBeNull();
-  expect(cardBox!.y + cardBox!.height).toBeLessThanOrEqual(navBox!.y);
+  // The shell uses native smooth scrolling. Evaluate settled clearance rather
+  // than an engine-dependent intermediate animation frame.
+  await expect.poll(async () => {
+    const cardBox = await card.boundingBox();
+    const navBox = await page.getByRole('navigation', {name: 'Primary navigation'}).boundingBox();
+    expect(cardBox).not.toBeNull();
+    expect(navBox).not.toBeNull();
+    return cardBox!.y + cardBox!.height - navBox!.y;
+  }).toBeLessThanOrEqual(0);
 });
 
 test('populated schedule sheets retain reachable 44px controls at narrow and enlarged-text sizes', async ({page}) => {

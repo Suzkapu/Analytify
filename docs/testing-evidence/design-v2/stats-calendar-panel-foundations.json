@@ -1,0 +1,488 @@
+{
+  "overlay": {
+    "id": "144:8179",
+    "parent": "442:19546",
+    "parentName": "95 — Prototype mechanics",
+    "bindings": {
+      "itemSpacing": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:24:43"
+      },
+      "paddingLeft": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:24:45"
+      },
+      "paddingTop": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:24:45"
+      },
+      "paddingRight": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:24:45"
+      },
+      "paddingBottom": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:24:45"
+      },
+      "topLeftRadius": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:24:61"
+      },
+      "topRightRadius": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:24:61"
+      },
+      "bottomLeftRadius": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:24:61"
+      },
+      "bottomRightRadius": {
+        "type": "VARIABLE_ALIAS",
+        "id": "VariableID:24:61"
+      },
+      "fills": [
+        {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:11"
+        }
+      ],
+      "strokes": [
+        {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:35"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "id": "24:86",
+      "name": "State=Default",
+      "parent": "24:94",
+      "parentName": "Analytify/secondary",
+      "key": "f272be661aa8a558e88f9f353b733b9186ec904e"
+    },
+    {
+      "id": "62:2392",
+      "name": "Analytify/Icon / chevron-right",
+      "parent": "442:19535",
+      "parentName": "02 — Components and shared shell",
+      "key": "37e6acaed63df1009b726fa9dc8f73539a7d15f9"
+    },
+    {
+      "id": "144:8009",
+      "name": "State=Unavailable",
+      "parent": "144:8011",
+      "parentName": "Analytify/Snapshot day",
+      "key": "13371c33501872f80f584cb09866b7242d795ea0"
+    },
+    {
+      "id": "144:8005",
+      "name": "State=Available",
+      "parent": "144:8011",
+      "parentName": "Analytify/Snapshot day",
+      "key": "202100078879828c136031b29c34452867b172c5"
+    },
+    {
+      "id": "144:8007",
+      "name": "State=Selected",
+      "parent": "144:8011",
+      "parentName": "Analytify/Snapshot day",
+      "key": "49c109f7e9b27a5633cf265ce55781caf814fe07"
+    }
+  ],
+  "variables": [
+    {
+      "id": "VariableID:24:9",
+      "name": "color/surface",
+      "syntax": {
+        "WEB": "var(--v2-color-surface)"
+      }
+    },
+    {
+      "id": "VariableID:24:11",
+      "name": "color/surface-raised",
+      "syntax": {
+        "WEB": "var(--v2-color-surface-raised)"
+      }
+    },
+    {
+      "id": "VariableID:24:21",
+      "name": "color/accent",
+      "syntax": {
+        "WEB": "var(--v2-color-accent)"
+      }
+    },
+    {
+      "id": "VariableID:24:23",
+      "name": "color/accent-strong",
+      "syntax": {
+        "WEB": "var(--v2-color-accent-strong)"
+      }
+    },
+    {
+      "id": "VariableID:24:25",
+      "name": "color/accent-ink",
+      "syntax": {
+        "WEB": "var(--v2-color-accent-ink)"
+      }
+    },
+    {
+      "id": "VariableID:24:35",
+      "name": "color/border",
+      "syntax": {
+        "WEB": "var(--v2-color-border)"
+      }
+    },
+    {
+      "id": "VariableID:24:37",
+      "name": "color/border-control",
+      "syntax": {
+        "WEB": "var(--v2-color-border-control)"
+      }
+    },
+    {
+      "id": "VariableID:24:39",
+      "name": "color/selection",
+      "syntax": {
+        "WEB": "var(--v2-color-selection)"
+      }
+    },
+    {
+      "id": "VariableID:24:41",
+      "name": "space/4",
+      "syntax": {
+        "WEB": "var(--v2-space-1)"
+      }
+    },
+    {
+      "id": "VariableID:24:43",
+      "name": "space/8",
+      "syntax": {
+        "WEB": "var(--v2-space-2)"
+      }
+    },
+    {
+      "id": "VariableID:24:45",
+      "name": "space/12",
+      "syntax": {
+        "WEB": "var(--v2-space-3)"
+      }
+    },
+    {
+      "id": "VariableID:24:47",
+      "name": "space/16",
+      "syntax": {
+        "WEB": "var(--v2-space-4)"
+      }
+    },
+    {
+      "id": "VariableID:24:49",
+      "name": "space/20",
+      "syntax": {
+        "WEB": "var(--v2-space-5)"
+      }
+    },
+    {
+      "id": "VariableID:24:51",
+      "name": "space/24",
+      "syntax": {
+        "WEB": "var(--v2-space-6)"
+      }
+    },
+    {
+      "id": "VariableID:24:53",
+      "name": "space/32",
+      "syntax": {
+        "WEB": "var(--v2-space-8)"
+      }
+    },
+    {
+      "id": "VariableID:24:55",
+      "name": "space/40",
+      "syntax": {
+        "WEB": "var(--v2-space-10)"
+      }
+    },
+    {
+      "id": "VariableID:24:57",
+      "name": "space/48",
+      "syntax": {
+        "WEB": "var(--v2-space-12)"
+      }
+    },
+    {
+      "id": "VariableID:24:59",
+      "name": "space/64",
+      "syntax": {
+        "WEB": "var(--v2-space-16)"
+      }
+    },
+    {
+      "id": "VariableID:24:61",
+      "name": "radius/control",
+      "syntax": {
+        "WEB": "var(--v2-radius-control)"
+      }
+    },
+    {
+      "id": "VariableID:24:65",
+      "name": "radius/panel",
+      "syntax": {
+        "WEB": "var(--v2-radius-panel)"
+      }
+    },
+    {
+      "id": "VariableID:58:2090",
+      "name": "space/mobile-navigation-inset",
+      "syntax": {
+        "WEB": "var(--v2-mobile-nav-inset)"
+      }
+    },
+    {
+      "id": "VariableID:58:2092",
+      "name": "space/mobile-navigation-padding-with-border",
+      "syntax": {
+        "WEB": "var(--v2-mobile-nav-inner-inset)"
+      }
+    }
+  ],
+  "textStyles": [
+    {
+      "id": "S:d29cce6c5384cf1716f442b7500e78b9e0179506,",
+      "name": "Analytify/Display",
+      "font": {
+        "family": "Outfit",
+        "style": "Bold",
+        "variationSettings": {
+          "wght": 700
+        }
+      },
+      "size": 36
+    },
+    {
+      "id": "S:a02a4cf38f25568f8883f45016f998cce43d6c2f,",
+      "name": "Analytify/Heading",
+      "font": {
+        "family": "Outfit",
+        "style": "Bold",
+        "variationSettings": {
+          "wght": 700
+        }
+      },
+      "size": 28
+    },
+    {
+      "id": "S:1e96f196ec6ce5989811aacc24efbdc1dffc3b0d,",
+      "name": "Analytify/Section",
+      "font": {
+        "family": "Outfit",
+        "style": "SemiBold",
+        "variationSettings": {
+          "wght": 600
+        }
+      },
+      "size": 20
+    },
+    {
+      "id": "S:2161256cc89b609a10e54b0e7872ebffacfdddb3,",
+      "name": "Analytify/Body",
+      "font": {
+        "family": "Outfit",
+        "style": "Regular",
+        "variationSettings": {
+          "wght": 400
+        }
+      },
+      "size": 16
+    },
+    {
+      "id": "S:666f5797302040118595d1dc470f593346b717f1,",
+      "name": "Analytify/Label",
+      "font": {
+        "family": "Outfit",
+        "style": "SemiBold",
+        "variationSettings": {
+          "wght": 600
+        }
+      },
+      "size": 14
+    },
+    {
+      "id": "S:9e913ee99550810bc7e4448fca342798d47f0485,",
+      "name": "Analytify/Caption",
+      "font": {
+        "family": "Outfit",
+        "style": "Regular",
+        "variationSettings": {
+          "wght": 400
+        }
+      },
+      "size": 14
+    },
+    {
+      "id": "S:918d494e13bcf0c0f1c2a402f950131feed0041a,",
+      "name": "Analytify/Eyebrow",
+      "font": {
+        "family": "Outfit",
+        "style": "SemiBold",
+        "variationSettings": {
+          "wght": 600
+        }
+      },
+      "size": 12
+    },
+    {
+      "id": "S:b91dd3009843020f361409b35f364da18d502cd6,",
+      "name": "Analytify/Mobile navigation label",
+      "font": {
+        "family": "Outfit",
+        "style": "Bold",
+        "variationSettings": {
+          "wght": 700
+        }
+      },
+      "size": 11.199999809265137
+    },
+    {
+      "id": "S:d697f0728b2dfcb401b045623b6264a2468cd379,",
+      "name": "Analytify/Compact control",
+      "font": {
+        "family": "Outfit",
+        "style": "SemiBold",
+        "variationSettings": {
+          "wght": 600
+        }
+      },
+      "size": 12
+    },
+    {
+      "id": "S:e4e1dccefa8c48e968c7f524ca542877ea1daa72,",
+      "name": "Analytify/Calendar month",
+      "font": {
+        "family": "Outfit",
+        "style": "SemiBold",
+        "variationSettings": {
+          "wght": 600
+        }
+      },
+      "size": 18
+    },
+    {
+      "id": "S:c412a4c989e54fe383d9ae54c80a911b6602bc16,",
+      "name": "Analytify/Chart axis",
+      "font": {
+        "family": "Outfit",
+        "style": "Regular",
+        "variationSettings": {
+          "wght": 400
+        }
+      },
+      "size": 10
+    },
+    {
+      "id": "S:b395fbab425e7915881daa26c50587968ca2a08b,",
+      "name": "Analytify/Chart value",
+      "font": {
+        "family": "Outfit",
+        "style": "SemiBold",
+        "variationSettings": {
+          "wght": 600
+        }
+      },
+      "size": 10
+    },
+    {
+      "id": "S:089b931a4dc1a12e9f4e75f82f5dc48670086907,",
+      "name": "Analytify/Genre rank",
+      "font": {
+        "family": "Outfit",
+        "style": "Medium",
+        "variationSettings": {
+          "wght": 500
+        }
+      },
+      "size": 14
+    },
+    {
+      "id": "S:c5c2ae9d048d2f7085359c033aabdb0a2837fa58,",
+      "name": "Analytify/Genre rank compact",
+      "font": {
+        "family": "Outfit",
+        "style": "Medium",
+        "variationSettings": {
+          "wght": 500
+        }
+      },
+      "size": 13
+    },
+    {
+      "id": "S:9643c765ee7fdbaab1dda3ce99d87f8a02ee53fc,",
+      "name": "Analytify/Ranking number",
+      "font": {
+        "family": "Outfit",
+        "style": "SemiBold",
+        "variationSettings": {
+          "wght": 600
+        }
+      },
+      "size": 28
+    },
+    {
+      "id": "S:338ea47a4e7a0df70f2e32215e75bde54f77c0d7,",
+      "name": "Analytify/Ranking movement",
+      "font": {
+        "family": "Outfit",
+        "style": "Regular",
+        "variationSettings": {
+          "wght": 400
+        }
+      },
+      "size": 18
+    },
+    {
+      "id": "S:a3fdf39ae2d86d4cf07cb15fc18e0ff06b7f424f,",
+      "name": "Analytify/Ranking metadata",
+      "font": {
+        "family": "Outfit",
+        "style": "Regular",
+        "variationSettings": {
+          "wght": 400
+        }
+      },
+      "size": 12
+    }
+  ],
+  "effectStyles": [
+    {
+      "id": "S:980c3fc299c36b5216649b95c7aaf245ba3479bb,",
+      "name": "Analytify/Mobile floating navigation"
+    },
+    {
+      "id": "S:9abd4dc159ac4840714a605fdd8c3d530930a703,",
+      "name": "Analytify/Modal backdrop blur"
+    }
+  ],
+  "stateComponents": [
+    {
+      "id": "222:11674",
+      "name": "Analytify/Icon / notice"
+    },
+    {
+      "id": "227:11768",
+      "name": "Analytify/Icon / calendar"
+    },
+    {
+      "id": "584:21877",
+      "name": "Analytify/Loading content"
+    },
+    {
+      "id": "584:21884",
+      "name": "Analytify/Refreshing notice"
+    },
+    {
+      "id": "347:18014",
+      "name": "Analytify/Stats rank history popup"
+    }
+  ]
+}

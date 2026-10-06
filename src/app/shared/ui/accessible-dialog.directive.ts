@@ -92,6 +92,9 @@ export class AccessibleDialogDirective implements AfterViewInit, OnDestroy {
   }
 
   private focusInitialControl(): void {
+    // A user may choose a dialog control before the deferred initialization.
+    // Do not move focus away between keydown and native keyboard activation.
+    if (document.activeElement !== this.dialog && this.dialog.contains(document.activeElement)) return;
     const requested = this.dialog.querySelector<HTMLElement>('[appModalInitialFocus]:not([disabled])');
     (requested ?? this.focusableElements()[0] ?? this.dialog).focus();
   }

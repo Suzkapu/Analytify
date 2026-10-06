@@ -1,0 +1,52 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test -c /tmp/analytify-palette-candidates.config.ts --project=webkit-stats e2e/design-v2-stats-flames.spec.ts --grep canonical flame colors and placement at 390px --update-snapshots=all --output=/tmp/analytify-design-v2-baseline/stats-shared-row-materialized
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:342989) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:342989) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:343065) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:222:9 › static canonical row captures › canonical flame colors and placement at 390px (7.8s)
+
+
+  1) [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:222:9 › static canonical row captures › canonical flame colors and placement at 390px 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 80
+    Received: 116
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      47 |   // Scrolling/resizing can leave a contained row's remembered offscreen height
+      48 |   // until its next paint. Require the canonical visible geometry before capture.
+    > 49 |   await expect.poll(() => row.evaluate(element => element.getBoundingClientRect().height)).toBe(80);
+         |                                                                                            ^
+      50 |   const rendering = await row.evaluate(element => {
+      51 |     const bounds = element.getBoundingClientRect();
+      52 |     const ancestors = [];
+        at recordCanonicalRow (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:49:92)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:227:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-design-v2-baseline/stats-shared-row-materialized/design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../tmp/analytify-design-v2-baseline/stats-shared-row-materialized/design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-design-v2-baseline/stats-shared-row-materialized/design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../tmp/analytify-design-v2-baseline/stats-shared-row-materialized/design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:222:9 › static canonical row captures › canonical flame colors and placement at 390px 

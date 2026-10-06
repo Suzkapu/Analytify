@@ -1,0 +1,52 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-all-browsers.config.ts e2e/design-v2-stats-genres.spec.ts --project=webkit-stats --grep=long genre names --workers=2 --retries=0 --output=/tmp/analytify-genre-webkit-explicit-rows
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:12594) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12594) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:12702) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:12701) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion no-preference (6.9s)
+  ✓  1 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion reduce (7.6s)
+
+
+  1) [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion no-preference 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 280
+    Received:    125
+
+      173 |         expect(geometry.clippedY).toBeLessThanOrEqual(1);
+      174 |         expect(geometry.name.right).toBeLessThanOrEqual(geometry.action.x);
+    > 175 |         expect(geometry.rowHeight).toBeGreaterThanOrEqual(geometry.name.height);
+          |                                    ^
+      176 |         expect(geometry.action.height).toBe(44);
+      177 |         expect(geometry.action.width).toBe(width <= 760 ? 88 : 96);
+      178 |         expect(geometry.bar.height).toBe(8);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-genres.spec.ts:175:36
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-webkit-explicit-rows/design-v2-stats-genres-lon-956b1-y-with-motion-no-preference-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../tmp/analytify-genre-webkit-explicit-rows/design-v2-stats-genres-lon-956b1-y-with-motion-no-preference-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../tmp/analytify-genre-webkit-explicit-rows/design-v2-stats-genres-lon-956b1-y-with-motion-no-preference-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../tmp/analytify-genre-webkit-explicit-rows/design-v2-stats-genres-lon-956b1-y-with-motion-no-preference-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:131:7 › long genre names reflow without losing shares or History with motion no-preference 
+  1 passed (16.4s)

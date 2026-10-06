@@ -22,6 +22,31 @@ import {SafeSpotifyUrlPipe} from '@shared/pipes/safe-spotify-url.pipe';
 
 const supabaseUrl = process.env['SUPABASE_INTEGRATION_URL'] || '';
 const supabaseAnonKey = process.env['SUPABASE_INTEGRATION_ANON_KEY'] || '';
+function isIsolatedLoadingTestUrl(value: string): boolean {
+    try {
+        const url = new URL(value);
+        return ['http:', 'https:'].includes(url.protocol)
+            && ['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname)
+            && !url.username && !url.password;
+    } catch {
+        return false;
+    }
+}
+
+if (supabaseUrl && !isIsolatedLoadingTestUrl(supabaseUrl)) {
+    throw new Error('Supabase loading integration tests require an isolated loopback stack; remote URLs are rejected.');
+}
+
+it('restricts real loading-contract tests to an isolated loopback stack', () => {
+    for (const url of ['http://127.0.0.1:55321', 'http://localhost:55321', 'http://[::1]:55321']) {
+        expect(isIsolatedLoadingTestUrl(url)).toBe(true);
+    }
+    for (const url of ['https://production.supabase.co', 'https://localhost.example.test',
+        'https://localhost@production.supabase.co', 'file:///tmp/test', 'invalid', 'http://user:secret@localhost:55321']) {
+        expect(isIsolatedLoadingTestUrl(url)).toBe(false);
+    }
+});
+
 const integrationDescribe = supabaseUrl && supabaseAnonKey ? describe : describe.skip;
 const cloudUserId = '11111111-1111-4111-8111-111111111111';
 const spotifyUserId = 'ci-spotify-user';

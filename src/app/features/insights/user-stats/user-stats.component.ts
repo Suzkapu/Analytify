@@ -117,6 +117,9 @@ export class UserStatsController implements OnInit, OnDestroy {
   private historyWriteQueue: Promise<void> = Promise.resolve();
   private statsLoadSequence = 0;
   private historyLoadSequence = 0;
+  private snapshotDetailContext = 0;
+  private unavailableSnapshotDetails = new Set<string>();
+  private pendingSnapshotDetails = new Set<string>();
   private statsSubscription: Subscription | null = null;
   private cancelScheduledHistoryLoad: (() => void) | null = null;
   private pastSearchTimer: ReturnType<typeof setTimeout> | null = null;
@@ -151,6 +154,9 @@ export class UserStatsController implements OnInit, OnDestroy {
   trendPopupCategory: 'tracks' | 'artists' | 'genres' = 'tracks';
   trendPopupPoints: any[] = [];
   isLoadingTrendData: boolean = false;
+  trendPopupLoadFailed = false;
+  protected trendLoadSequence = 0;
+  protected readonly showLocalTrendDuringLoad: boolean = false;
   visibleLabelIndices = new Set<number>();
   hoveredPointIndex: number | null = null;
 
@@ -203,6 +209,10 @@ export class UserStatsController implements OnInit, OnDestroy {
   }
 
   private activateStatsRoute(userId: string): void {
+    this.snapshotDetailContext++;
+    this.unavailableSnapshotDetails.clear();
+    this.pendingSnapshotDetails.clear();
+    if (this.showTrendPopup) this.closeTrendPopup();
     this.statsLoadSequence++;
     this.historyLoadSequence++;
     this.statsSubscription?.unsubscribe();
@@ -236,6 +246,10 @@ export class UserStatsController implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.snapshotDetailContext++;
+    this.unavailableSnapshotDetails.clear();
+    this.pendingSnapshotDetails.clear();
+    this.trendLoadSequence++;
     this.statsLoadSequence++;
     this.historyLoadSequence++;
     this.statsSubscription?.unsubscribe();
@@ -252,6 +266,9 @@ export class UserStatsController implements OnInit, OnDestroy {
   changeRange(range: string) {
     if (range === this.selectedRange) return;
 
+    this.snapshotDetailContext++;
+    this.unavailableSnapshotDetails.clear();
+    this.pendingSnapshotDetails.clear();
     this.statsLoadSequence++;
     this.historyLoadSequence++;
     this.statsSubscription?.unsubscribe();
@@ -891,8 +908,8 @@ export class UserStatsController implements OnInit, OnDestroy {
 
   selectHistoryCalendarDay(day: SnapshotCalendarDay, event: Event): void {
     event.stopPropagation();
-    if (!day.isAvailable || !day.optionId) return;
-    this.selectHistorySnapshot(day.optionId, event);
+    if (!this.canSelectSnapshotCalendarDay('history', day)) return;
+    this.selectHistorySnapshot(day.optionId!, event);
   }
 
   canNavigateCompareCalendar(direction: -1 | 1): boolean {
@@ -905,8 +922,17 @@ export class UserStatsController implements OnInit, OnDestroy {
 
   selectCompareCalendarDay(day: SnapshotCalendarDay, event: Event): void {
     event.stopPropagation();
-    if (!day.isAvailable || !day.optionId) return;
-    this.selectCompareSnapshot(day.optionId, event);
+    if (!this.canSelectSnapshotCalendarDay('compare', day)) return;
+    this.selectCompareSnapshot(day.optionId!, event);
+  }
+
+  private canSelectSnapshotCalendarDay(target: SnapshotCalendarTarget, day: SnapshotCalendarDay): boolean {
+    if (this.isSpyMode || !day.isAvailable || !day.optionId) return false;
+    // Metadata, the primary selection or the logical Today date can change
+    // between rendering a cell and handling its click.
+    return this.getSnapshotCalendarOptions(target).some(option =>
+      option.id === day.optionId && this.getSnapshotOptionDateKey(option) === day.dateKey
+    );
   }
 
   private canNavigateSnapshotCalendar(target: SnapshotCalendarTarget, direction: -1 | 1): boolean {
@@ -1189,7 +1215,7 @@ export class UserStatsController implements OnInit, OnDestroy {
       return snap;
     }
 
-    if (snap.isLoaded === false) {
+    if (snap.isLoaded === false && !this.unavailableSnapshotDetails.has(this.snapshotDetailKey(snap))) {
       this.lazyLoadSnapshotDetails(snap.timestamp.toString());
     }
     return snap.isLoaded === true ? snap : null;
@@ -1367,7 +1393,9 @@ export class UserStatsController implements OnInit, OnDestroy {
     const supabaseUserId = this.authService.getSupabaseUserId();
     const range = this.selectedRange;
     const isCurrentLoad = () =>
-      loadSequence === this.historyLoadSequence && range === this.selectedRange;
+      loadSequence === this.historyLoadSequence && range === this.selectedRange
+      && userId === (this.authService.getUserId() || 'anonymous')
+      && supabaseUserId === this.authService.getSupabaseUserId() && !this.isSpyMode;
 
     const loadLocal = () => {
       return this.storageService.getStatsHistory(userId, range).then(async history => {
@@ -1431,9 +1459,9 @@ export class UserStatsController implements OnInit, OnDestroy {
         this.calculateHotMovers();
 
         // Trigger lazy loading for startup selected snapshots
-        this.ensureSnapshotLoaded(this.selectedSnapshotId);
+        this.ensureSnapshotLoaded(this.selectedSnapshotId, false);
         if (this.compareSnapshotId) {
-          this.ensureSnapshotLoaded(this.compareSnapshotId);
+          this.ensureSnapshotLoaded(this.compareSnapshotId, false);
         }
       }).catch(err => {
         console.error('Failed to load stats history:', err);
@@ -1454,12 +1482,13 @@ export class UserStatsController implements OnInit, OnDestroy {
 
         const isBackupActive = this.authService.isBackupActive();
         if (isBackupActive && supabaseUserId) {
+          const isCurrentSync = () => isCurrentLoad() && this.authService.isBackupActive();
           // Fetch only the lightweight metadata from Supabase
           this.supabaseService.loadAllStatsSnapshotsMetadata(supabaseUserId, range).then(async (dbSnapshots) => {
-            if (!isCurrentLoad()) return;
+            if (!isCurrentSync()) return;
 
             const localHistory = await this.storageService.getStatsHistory(userId, range).catch(() => [] as any[]);
-            if (!isCurrentLoad()) return;
+            if (!isCurrentSync()) return;
 
             const toDateKey = toDailySnapshotDateKey;
 
@@ -1480,6 +1509,7 @@ export class UserStatsController implements OnInit, OnDestroy {
                   return !localDateKeys.has(key);
                 });
                 await mapWithConcurrency(missingSnapshots, async (snap: any) => {
+                  if (!isCurrentSync()) return;
                   await this.storageService.saveStatsHistory({ ...snap, userId, isLoaded: false });
                   localUpdated = true;
                 });
@@ -1488,6 +1518,8 @@ export class UserStatsController implements OnInit, OnDestroy {
               }
             }
 
+            if (!isCurrentSync()) return;
+
             // Step 2: Upload local-only snapshots to cloud
             try {
               const localOnlySnapshots = localHistory.filter((h: any) =>
@@ -1495,6 +1527,7 @@ export class UserStatsController implements OnInit, OnDestroy {
               );
 
               await mapWithConcurrency(localOnlySnapshots, async (localSnap: any) => {
+                if (!isCurrentSync()) return;
                 const dateStr = localSnap.snapshotDate || toDateKey(localSnap.timestamp);
                 let explicitCount = 0;
                 (localSnap.topTracks || []).forEach((t: any) => {
@@ -1522,8 +1555,9 @@ export class UserStatsController implements OnInit, OnDestroy {
             }
 
             if (localUpdated) {
+              if (!isCurrentSync()) return;
               await loadLocal();
-              if (!isCurrentLoad()) return;
+              if (!isCurrentSync()) return;
               this.autoSetDefaultCompare(true);
               this.calculateHotMovers();
             }
@@ -1753,7 +1787,7 @@ export class UserStatsController implements OnInit, OnDestroy {
     }
     const snapshot = this.snapshotById.get(this.selectedSnapshotId);
     if (!snapshot) return category === 'tracks' ? this.topTracks : category === 'artists' ? this.topArtists : [];
-    if (snapshot.isLoaded === false) {
+    if (snapshot.isLoaded === false && !this.unavailableSnapshotDetails.has(this.snapshotDetailKey(snapshot))) {
       this.lazyLoadSnapshotDetails(snapshot.timestamp.toString());
       return [];
     }
@@ -1838,11 +1872,16 @@ export class UserStatsController implements OnInit, OnDestroy {
 
   async openTrendPopup(item: any, category: 'tracks' | 'artists' | 'genres') {
     if (this.isSpyMode) return;
+    const sequence = ++this.trendLoadSequence;
     const range = this.selectedRange;
+    const isCurrent = () => sequence === this.trendLoadSequence && range === this.selectedRange && this.showTrendPopup && !this.isSpyMode;
     this.trendPopupItem = item;
     this.trendPopupCategory = category;
     this.showTrendPopup = true;
     this.trendPopupPoints = [];
+    this.isLoadingTrendData = false;
+    this.trendPopupLoadFailed = false;
+    if (this.showLocalTrendDuringLoad) this.calculateTrendPoints();
 
     const hasUnloaded = this.historyData.some(d => d.isLoaded !== true);
     const supabaseUserId = this.authService.getSupabaseUserId();
@@ -1857,22 +1896,29 @@ export class UserStatsController implements OnInit, OnDestroy {
           : category === 'artists'
             ? [item?.id]
             : [typeof item === 'string' ? item : item?.name];
-        cloudPoints = await this.supabaseService.loadStatsItemTrend(
+        cloudPoints = await this.loadTrendCloud(
           supabaseUserId,
           range,
           category,
           identities
         );
-        if (range !== this.selectedRange || !this.showTrendPopup) return;
+        if (!isCurrent()) return;
       } catch (err) {
+        if (isCurrent()) this.trendPopupLoadFailed = true;
         console.error('Failed to load the item trend from cloud:', err);
       } finally {
-        this.isLoadingTrendData = false;
-        this.changeDetector?.markForCheck();
+        if (sequence === this.trendLoadSequence) {
+          this.isLoadingTrendData = false;
+          this.changeDetector?.markForCheck();
+        }
       }
     }
 
-    this.calculateTrendPoints(cloudPoints);
+    if (isCurrent()) this.calculateTrendPoints(cloudPoints);
+  }
+
+  protected loadTrendCloud(userId: string, range: string, category: StatsCategory, identities: string[]): Promise<any[]> {
+    return this.supabaseService.loadStatsItemTrend(userId, range, category, identities);
   }
 
   private async loadSharedStats(loadSequence: number, ownerUserId: string): Promise<void> {
@@ -1965,6 +2011,9 @@ export class UserStatsController implements OnInit, OnDestroy {
 
   closeTrendPopup(event?: Event) {
     if (event) event.stopPropagation();
+    this.trendLoadSequence++;
+    this.isLoadingTrendData = false;
+    this.trendPopupLoadFailed = false;
     this.showTrendPopup = false;
     this.trendPopupItem = null;
     this.trendPopupPoints = [];
@@ -2191,57 +2240,68 @@ export class UserStatsController implements OnInit, OnDestroy {
   isSnapshotLoading(): boolean {
     if (this.selectedSnapshotId === 'current') return false;
     const snap = this.snapshotById.get(this.selectedSnapshotId);
-    return snap ? snap.isLoaded === 'loading' : false;
+    return snap ? snap.isLoaded === 'loading' || this.pendingSnapshotDetails.has(this.snapshotDetailKey(snap)) : false;
   }
 
-  ensureSnapshotLoaded(snapshotId: string | 'current') {
+  ensureSnapshotLoaded(snapshotId: string | 'current', retryUnavailable = true) {
     if (!snapshotId || snapshotId === 'current') return;
 
     const snap = this.snapshotById.get(snapshotId);
     if (!snap || snap.isLoaded) return;
 
-    this.lazyLoadSnapshotDetails(snapshotId);
+    this.lazyLoadSnapshotDetails(snapshotId, retryUnavailable);
   }
 
-  lazyLoadSnapshotDetails(snapshotIdStr: string) {
+  lazyLoadSnapshotDetails(snapshotIdStr: string, retryUnavailable = false) {
+    if (this.isSpyMode) return;
     const snap = this.snapshotById.get(snapshotIdStr);
     if (!snap || snap.isLoaded === 'loading' || snap.isLoaded === true) return;
+    const key = this.snapshotDetailKey(snap);
+    if (this.pendingSnapshotDetails.has(key)) return;
+    if (!retryUnavailable && this.unavailableSnapshotDetails.has(key)) return;
+    this.unavailableSnapshotDetails.delete(key);
 
     const range = this.selectedRange;
+    const context = this.snapshotDetailContext;
+    const supabaseUserId = this.authService.getSupabaseUserId();
+    const userId = this.authService.getUserId() || 'anonymous';
+    const isCurrentRequest = () => context === this.snapshotDetailContext
+      && range === this.selectedRange
+      && supabaseUserId === this.authService.getSupabaseUserId()
+      && userId === (this.authService.getUserId() || 'anonymous')
+      && !this.isSpyMode
+      && this.snapshotById.get(snapshotIdStr)?.id === snap.id;
     this.historyData = this.historyData.map(snapshot => snapshot === snap
       ? {...snapshot, isLoaded: 'loading'}
       : snapshot
     );
-    const supabaseUserId = this.authService.getSupabaseUserId();
     if (supabaseUserId && snap.id) {
+      this.pendingSnapshotDetails.add(key);
       console.log(`[Stats] Lazy-loading snapshot details on demand: ${snap.snapshotDate || snapshotIdStr}`);
       this.supabaseService.loadStatsSnapshotById(supabaseUserId, snap.id).then(fullSnap => {
-        if (range !== this.selectedRange) return;
+        this.pendingSnapshotDetails.delete(key);
+        if (!isCurrentRequest()) return;
 
         if (fullSnap) {
           const idx = this.historyData.findIndex(d => d.timestamp.toString() === snapshotIdStr);
           if (idx !== -1) {
             this.historyData = this.historyData.map((snapshot, snapshotIndex) => snapshotIndex === idx
-              ? {...snapshot, ...fullSnap, isLoaded: true}
+              ? {...snapshot, ...fullSnap, id: snapshot.id, timestamp: snapshot.timestamp,
+                snapshotDate: snapshot.snapshotDate || fullSnap.snapshotDate, isLoaded: true}
               : snapshot
             );
             // Save to local IndexedDB for future offline usage
-            const userId = this.authService.getUserId() || 'anonymous';
             this.storageService.saveStatsHistory({ ...this.historyData[idx], userId }).catch(() => {});
             this.calculateHotMovers();
           }
         } else {
-          this.historyData = this.historyData.map(snapshot => snapshot.timestamp.toString() === snapshotIdStr
-            ? {...snapshot, isLoaded: false}
-            : snapshot
-          );
+          this.markSnapshotDetailsUnavailable(snapshotIdStr);
         }
       }).catch(err => {
+        this.pendingSnapshotDetails.delete(key);
+        if (!isCurrentRequest()) return;
         console.error('Failed to lazy load snapshot details:', err);
-        this.historyData = this.historyData.map(snapshot => snapshot.timestamp.toString() === snapshotIdStr
-          ? {...snapshot, isLoaded: false}
-          : snapshot
-        );
+        this.markSnapshotDetailsUnavailable(snapshotIdStr);
       });
     } else {
       this.historyData = this.historyData.map(snapshot => snapshot.timestamp.toString() === snapshotIdStr
@@ -2249,6 +2309,19 @@ export class UserStatsController implements OnInit, OnDestroy {
         : snapshot
       );
     }
+  }
+
+  private markSnapshotDetailsUnavailable(snapshotId: string): void {
+    this.historyData = this.historyData.map(snapshot => {
+      if (snapshot.timestamp.toString() !== snapshotId) return snapshot;
+      const unavailable = {...snapshot, isLoaded: false};
+      this.unavailableSnapshotDetails.add(this.snapshotDetailKey(unavailable));
+      return unavailable;
+    });
+  }
+
+  private snapshotDetailKey(snapshot: any): string {
+    return `${this.snapshotDetailContext}:${this.selectedRange}:${snapshot.id || snapshot.timestamp}`;
   }
 
   trackStatItem(index: number, item: any): string | number {

@@ -21,8 +21,9 @@
 }
 .v2-button--primary { color: var(--v2-color-accent-ink); background: var(--v2-color-accent); }
 .v2-button--primary:hover { background: var(--v2-color-accent-strong); }
-.v2-button--secondary { border-color: var(--v2-color-border-strong); background: var(--v2-color-surface); }
-.v2-button--secondary:hover,
+.v2-button--secondary { border-color: var(--v2-color-border-control); background: var(--v2-color-surface); }
+.v2-button--secondary:hover:not(:disabled):not([aria-disabled="true"]) { border-color: var(--v2-color-border-control); background: var(--v2-color-surface-raised); }
+.v2-button--secondary:focus-visible:not(:disabled):not([aria-disabled="true"]) { border-color: var(--v2-color-focus); background: var(--v2-color-surface); }
 .v2-button--tertiary:hover,
 .v2-button--icon:hover { border-color: var(--v2-color-accent); background: var(--v2-color-selection); }
 .v2-button--tertiary { color: var(--v2-color-text-muted); }

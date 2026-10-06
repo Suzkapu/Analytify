@@ -1,0 +1,79 @@
+{
+  "status": "in progress",
+  "branch": "codex/design-v2",
+  "finalCommit": null,
+  "frontend": {
+    "sources": 134,
+    "testsPassed": 816,
+    "testsSkipped": 1,
+    "coverage": {
+      "lines": {
+        "total": 9854,
+        "covered": 6847,
+        "skipped": 0,
+        "pct": 69.48
+      },
+      "statements": {
+        "total": 11376,
+        "covered": 7522,
+        "skipped": 0,
+        "pct": 66.12
+      },
+      "functions": {
+        "total": 2385,
+        "covered": 1519,
+        "skipped": 0,
+        "pct": 63.68
+      },
+      "branches": {
+        "total": 7345,
+        "covered": 3869,
+        "skipped": 0,
+        "pct": 52.67
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    }
+  },
+  "commands": {
+    "npm run verify:ci": {
+      "exitCode": 0,
+      "log": "/tmp/analytify-design-v2-baseline/history-popup-verify.log"
+    },
+    "frontend --final": {
+      "exitCode": 1,
+      "log": "/tmp/analytify-design-v2-baseline/history-popup-final-gate.log"
+    },
+    "history browser desktop/mobile/firefox": {
+      "exitCode": 0,
+      "passed": 6,
+      "log": "/tmp/analytify-design-v2-baseline/history-browser-current.log"
+    },
+    "history browser portable webkit": {
+      "exitCode": 0,
+      "passed": 2,
+      "log": "/tmp/analytify-design-v2-baseline/history-browser-webkit-current.log"
+    },
+    "history geometry persistence": {
+      "exitCode": 0,
+      "passed": 2,
+      "log": "/tmp/analytify-design-v2-baseline/history-browser-geometry.log",
+      "artifacts": [
+        "stats-history-geometry-chromium-no-preference.json",
+        "stats-history-geometry-chromium-reduce.json"
+      ]
+    }
+  },
+  "limits": [
+    "not full Stats/Figma parity",
+    "semantic border/selection/control colors differ from Figma",
+    "cloud recovery browser workflows pending",
+    "isolated integration skipped: no container runtime",
+    "all suites below 98%",
+    "no final commit or deployment"
+  ]
+}

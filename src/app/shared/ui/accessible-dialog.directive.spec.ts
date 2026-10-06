@@ -55,6 +55,17 @@ describe('AccessibleDialogDirective', () => {
         expect(fixture.nativeElement.querySelector('#page').getAttribute('aria-hidden')).toBe('true');
     });
 
+    it('preserves a control chosen before deferred initial focus runs', async () => {
+        (fixture.nativeElement.querySelector('#trigger') as HTMLButtonElement).click();
+        fixture.detectChanges();
+        const chosen = fixture.nativeElement.querySelector('#last') as HTMLButtonElement;
+        chosen.focus();
+
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(document.activeElement).toBe(chosen);
+    });
+
     it('wraps keyboard focus within the dialog', async () => {
         await openDialog();
         const first = fixture.nativeElement.querySelector('#first') as HTMLButtonElement;

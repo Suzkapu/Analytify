@@ -1,0 +1,60 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/stats-calendar-boundary.spec.ts --progress=false
+Application bundle generation complete. [2.438 seconds] - 2026-10-06T22:19:02.051Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stdout | src/app/features/insights/user-stats/stats-calendar-boundary.spec.ts > Stats calendar public workflow boundary > rejects a stale comparison day after it becomes the primary date
+[Analytify][0004][+00000ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-04
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/stats-calendar-boundary.spec.ts (10 tests | 2 failed) 89ms
+     × rejects a stale comparison day after it becomes the primary date 20ms
+     × rejects a stale ranking day removed by a history refresh 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-calendar-boundary.spec.ts > Stats calendar public workflow boundary > rejects a stale comparison day after it becomes the primary date
+AssertionError: expected '1791108000000' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ 1791108000000
+
+ ❯ src/app/features/insights/user-stats/stats-calendar-boundary.spec.ts:135:41
+    133|     component.updateSnapshotGroups();
+    134|     component.selectCompareCalendarDay(stale, event());
+    135|     expect(component.compareSnapshotId).toBe('');
+       |                                         ^
+    136|     expect(component.showCompareMenu).toBe(true);
+    137|     expect(sdk.loadStatsSnapshotById).not.toHaveBeenCalled();
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-calendar-boundary.spec.ts > Stats calendar public workflow boundary > rejects a stale ranking day removed by a history refresh
+AssertionError: expected '1791108000000' to be 'current' // Object.is equality
+
+Expected: "current"
+Received: "1791108000000"
+
+ ❯ src/app/features/insights/user-stats/stats-calendar-boundary.spec.ts:149:42
+    147|     component.updateSnapshotGroups();
+    148|     component.selectHistoryCalendarDay(stale, event());
+    149|     expect(component.selectedSnapshotId).toBe('current');
+       |                                          ^
+    150|     expect(component.showHistoryMenu).toBe(true);
+    151|     expect(sdk.loadStatsSnapshotById).not.toHaveBeenCalled();
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 8 passed (10)
+   Start at  00:19:02
+   Duration  950ms (transform 181ms, setup 228ms, import 219ms, tests 89ms, environment 301ms)
+

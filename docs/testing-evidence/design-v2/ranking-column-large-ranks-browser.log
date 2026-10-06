@@ -1,0 +1,358 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-flames.spec.ts --config=/tmp/analytify-all-browsers.config.ts --grep large original ranks
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:70349) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:70349) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 2 workers
+
+(node:70824) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:70825) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [desktop] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion reduce (26.7s)
+(node:71780) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion no-preference (27.4s)
+(node:71865) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 [mobile] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion no-preference (11.9s)
+(node:71996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  4 [mobile] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion reduce (12.2s)
+(node:72148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  5 [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion no-preference (13.4s)
+  ✘  6 [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion reduce (12.5s)
+(node:72542) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:72550) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  8 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion reduce (15.2s)
+  ✘  7 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion no-preference (22.9s)
+
+
+  1) [desktop] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion no-preference 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.v2-ranking-row')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.v2-ranking-row') with timeout 5000ms
+      - waiting for locator('.v2-ranking-row')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      364 |     for(const [rank,name] of names) {
+      365 |       await page.getByRole('searchbox',{name:'Search songs or artists'}).fill(name);
+    > 366 |       const row=page.locator('.v2-ranking-row');await expect(row).toHaveCount(1);
+          |                                                                   ^
+      367 |       const caption=rank===50?'↑ 15 places':rank===100?'↓ 99 places':'↓ 998 places';
+      368 |       await expect(row.getByRole('group',{name:`Rank ${rank}. ${caption}`,exact:true})).toBeVisible();
+      369 |       await expect(row.locator('.rank-number')).toHaveText(String(rank));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:366:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-lar-fdb1d-s-with-motion-no-preference-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-flames-lar-fdb1d-s-with-motion-no-preference-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-lar-fdb1d-s-with-motion-no-preference-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-flames-lar-fdb1d-s-with-motion-no-preference-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion reduce 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.v2-ranking-row')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.v2-ranking-row') with timeout 5000ms
+      - waiting for locator('.v2-ranking-row')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      364 |     for(const [rank,name] of names) {
+      365 |       await page.getByRole('searchbox',{name:'Search songs or artists'}).fill(name);
+    > 366 |       const row=page.locator('.v2-ranking-row');await expect(row).toHaveCount(1);
+          |                                                                   ^
+      367 |       const caption=rank===50?'↑ 15 places':rank===100?'↓ 99 places':'↓ 998 places';
+      368 |       await expect(row.getByRole('group',{name:`Rank ${rank}. ${caption}`,exact:true})).toBeVisible();
+      369 |       await expect(row.locator('.rank-number')).toHaveText(String(rank));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:366:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion no-preference 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.v2-ranking-row')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.v2-ranking-row') with timeout 5000ms
+      - waiting for locator('.v2-ranking-row')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      364 |     for(const [rank,name] of names) {
+      365 |       await page.getByRole('searchbox',{name:'Search songs or artists'}).fill(name);
+    > 366 |       const row=page.locator('.v2-ranking-row');await expect(row).toHaveCount(1);
+          |                                                                   ^
+      367 |       const caption=rank===50?'↑ 15 places':rank===100?'↓ 99 places':'↓ 998 places';
+      368 |       await expect(row.getByRole('group',{name:`Rank ${rank}. ${caption}`,exact:true})).toBeVisible();
+      369 |       await expect(row.locator('.rank-number')).toHaveText(String(rank));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:366:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-lar-fdb1d-s-with-motion-no-preference-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-flames-lar-fdb1d-s-with-motion-no-preference-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-lar-fdb1d-s-with-motion-no-preference-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-flames-lar-fdb1d-s-with-motion-no-preference-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [mobile] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion reduce 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.v2-ranking-row')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.v2-ranking-row') with timeout 5000ms
+      - waiting for locator('.v2-ranking-row')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      364 |     for(const [rank,name] of names) {
+      365 |       await page.getByRole('searchbox',{name:'Search songs or artists'}).fill(name);
+    > 366 |       const row=page.locator('.v2-ranking-row');await expect(row).toHaveCount(1);
+          |                                                                   ^
+      367 |       const caption=rank===50?'↑ 15 places':rank===100?'↓ 99 places':'↓ 998 places';
+      368 |       await expect(row.getByRole('group',{name:`Rank ${rank}. ${caption}`,exact:true})).toBeVisible();
+      369 |       await expect(row.locator('.rank-number')).toHaveText(String(rank));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:366:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion no-preference 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.v2-ranking-row')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.v2-ranking-row') with timeout 5000ms
+      - waiting for locator('.v2-ranking-row')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      364 |     for(const [rank,name] of names) {
+      365 |       await page.getByRole('searchbox',{name:'Search songs or artists'}).fill(name);
+    > 366 |       const row=page.locator('.v2-ranking-row');await expect(row).toHaveCount(1);
+          |                                                                   ^
+      367 |       const caption=rank===50?'↑ 15 places':rank===100?'↓ 99 places':'↓ 998 places';
+      368 |       await expect(row.getByRole('group',{name:`Rank ${rank}. ${caption}`,exact:true})).toBeVisible();
+      369 |       await expect(row.locator('.rank-number')).toHaveText(String(rank));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:366:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-lar-fdb1d-s-with-motion-no-preference-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-flames-lar-fdb1d-s-with-motion-no-preference-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-lar-fdb1d-s-with-motion-no-preference-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-flames-lar-fdb1d-s-with-motion-no-preference-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion reduce 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.v2-ranking-row')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.v2-ranking-row') with timeout 5000ms
+      - waiting for locator('.v2-ranking-row')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      364 |     for(const [rank,name] of names) {
+      365 |       await page.getByRole('searchbox',{name:'Search songs or artists'}).fill(name);
+    > 366 |       const row=page.locator('.v2-ranking-row');await expect(row).toHaveCount(1);
+          |                                                                   ^
+      367 |       const caption=rank===50?'↑ 15 places':rank===100?'↓ 99 places':'↓ 998 places';
+      368 |       await expect(row.getByRole('group',{name:`Rank ${rank}. ${caption}`,exact:true})).toBeVisible();
+      369 |       await expect(row.locator('.rank-number')).toHaveText(String(rank));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:366:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion no-preference 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.v2-ranking-row')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.v2-ranking-row') with timeout 5000ms
+      - waiting for locator('.v2-ranking-row')
+        13 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      364 |     for(const [rank,name] of names) {
+      365 |       await page.getByRole('searchbox',{name:'Search songs or artists'}).fill(name);
+    > 366 |       const row=page.locator('.v2-ranking-row');await expect(row).toHaveCount(1);
+          |                                                                   ^
+      367 |       const caption=rank===50?'↑ 15 places':rank===100?'↓ 99 places':'↓ 998 places';
+      368 |       await expect(row.getByRole('group',{name:`Rank ${rank}. ${caption}`,exact:true})).toBeVisible();
+      369 |       await expect(row.locator('.rank-number')).toHaveText(String(rank));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:366:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-lar-fdb1d-s-with-motion-no-preference-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-flames-lar-fdb1d-s-with-motion-no-preference-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-lar-fdb1d-s-with-motion-no-preference-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-flames-lar-fdb1d-s-with-motion-no-preference-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion reduce 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.v2-ranking-row')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.v2-ranking-row') with timeout 5000ms
+      - waiting for locator('.v2-ranking-row')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      364 |     for(const [rank,name] of names) {
+      365 |       await page.getByRole('searchbox',{name:'Search songs or artists'}).fill(name);
+    > 366 |       const row=page.locator('.v2-ranking-row');await expect(row).toHaveCount(1);
+          |                                                                   ^
+      367 |       const caption=rank===50?'↑ 15 places':rank===100?'↓ 99 places':'↓ 998 places';
+      368 |       await expect(row.getByRole('group',{name:`Rank ${rank}. ${caption}`,exact:true})).toBeVisible();
+      369 |       await expect(row.locator('.rank-number')).toHaveText(String(rank));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:366:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8 failed
+    [desktop] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion no-preference 
+    [desktop] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion reduce 
+    [mobile] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion no-preference 
+    [mobile] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion reduce 
+    [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion no-preference 
+    [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion reduce 
+    [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion no-preference 
+    [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:341:7 › large original ranks wrap movement without shifting actions with motion reduce 

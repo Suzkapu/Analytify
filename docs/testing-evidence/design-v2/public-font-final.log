@@ -1,0 +1,41 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test -c /tmp/analytify-all-browsers.config.ts e2e/design-v2-typography.spec.ts --output=/tmp/analytify-public-final
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:39762) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:39762) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 2 workers
+
+(node:39877) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-typography.spec.ts:5:7 › public pages load canonical Outfit rather than a system fallback at 390px (2.3s)
+  ✓   2 [desktop] › e2e/design-v2-typography.spec.ts:5:7 › public pages load canonical Outfit rather than a system fallback at 1440px (2.6s)
+(node:40071) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   3 [desktop] › e2e/design-v2-typography.spec.ts:32:5 › initially hidden public page mounts with reduced motion without browser rendering errors (1.8s)
+(node:40161) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   4 [mobile] › e2e/design-v2-typography.spec.ts:5:7 › public pages load canonical Outfit rather than a system fallback at 390px (2.8s)
+  ✓   6 [mobile] › e2e/design-v2-typography.spec.ts:32:5 › initially hidden public page mounts with reduced motion without browser rendering errors (2.2s)
+(node:40276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   5 [mobile] › e2e/design-v2-typography.spec.ts:5:7 › public pages load canonical Outfit rather than a system fallback at 1440px (4.4s)
+(node:40418) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [firefox-stats] › e2e/design-v2-typography.spec.ts:5:7 › public pages load canonical Outfit rather than a system fallback at 390px (2.8s)
+  ✓   8 [firefox-stats] › e2e/design-v2-typography.spec.ts:5:7 › public pages load canonical Outfit rather than a system fallback at 1440px (3.4s)
+  ✓   9 [firefox-stats] › e2e/design-v2-typography.spec.ts:32:5 › initially hidden public page mounts with reduced motion without browser rendering errors (2.0s)
+(node:40794) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:40812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 [webkit-stats] › e2e/design-v2-typography.spec.ts:5:7 › public pages load canonical Outfit rather than a system fallback at 390px (3.9s)
+  ✓  11 [webkit-stats] › e2e/design-v2-typography.spec.ts:5:7 › public pages load canonical Outfit rather than a system fallback at 1440px (5.3s)
+  ✓  12 [webkit-stats] › e2e/design-v2-typography.spec.ts:32:5 › initially hidden public page mounts with reduced motion without browser rendering errors (2.9s)
+
+  12 passed (29.6s)

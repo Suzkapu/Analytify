@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
-import {expect, test} from '@playwright/test';
+import {expect, test} from './fixtures';
 import {mockSpotify, seedAuthenticatedBrowser} from './helpers/authenticated-browser';
 
 test('one ambient renderer persists through overlays, routes, and shell modes', async ({page}) => {

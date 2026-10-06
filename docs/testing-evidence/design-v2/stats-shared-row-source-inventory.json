@@ -1,0 +1,709 @@
+{
+  "schemaVersion": 1,
+  "suites": {
+    "frontend": {
+      "sources": [
+        "src/app/app-routing.module.ts",
+        "src/app/app.component.ts",
+        "src/app/app.module.ts",
+        "src/app/core/admin/admin.guard.ts",
+        "src/app/core/admin/admin.service.ts",
+        "src/app/core/auth/auth-return-url.service.ts",
+        "src/app/core/auth/cloud-identity.guard.ts",
+        "src/app/core/auth/personal-spotify-recovery.ts",
+        "src/app/core/auth/redirect-logged-in.guard.ts",
+        "src/app/core/auth/session-lifecycle.service.ts",
+        "src/app/core/auth/spotify-auth.guard.ts",
+        "src/app/core/auth/spotify-auth.interceptor.ts",
+        "src/app/core/auth/spotify-auth.service.ts",
+        "src/app/core/compare-room/compare-guest-playlist-source.service.ts",
+        "src/app/core/compare-room/compare-playlist-source.service.ts",
+        "src/app/core/compare-room/compare-room-coordinator.service.ts",
+        "src/app/core/compare-room/compare-room-guest.service.ts",
+        "src/app/core/compare-room/compare-room-integrity.ts",
+        "src/app/core/compare-room/compare-room-transport.service.ts",
+        "src/app/core/compare-room/participant-spotify.service.ts",
+        "src/app/core/compare-room/playlist-intersection.service.ts",
+        "src/app/core/compare-room/spotify-request-context.ts",
+        "src/app/core/compare-room/transient-participant-auth.service.ts",
+        "src/app/core/compliance/spotify-policy-gate.ts",
+        "src/app/core/core.module.ts",
+        "src/app/core/data-access/spotify/spotify-data.service.ts",
+        "src/app/core/data-access/storage/storage.service.ts",
+        "src/app/core/data-access/supabase/edge-function-error.ts",
+        "src/app/core/data-access/supabase/supabase.service.ts",
+        "src/app/core/diagnostics/app-logger.ts",
+        "src/app/core/legal/terms-acceptance.service.ts",
+        "src/app/core/navigation/design-navigation.service.ts",
+        "src/app/core/navigation/design-navigation.ts",
+        "src/app/core/navigation/design-path.ts",
+        "src/app/core/navigation/design-selective-preloading.strategy.ts",
+        "src/app/core/navigation/design-v2-navigation.model.ts",
+        "src/app/core/navigation/design-v2-route-data.ts",
+        "src/app/core/navigation/preview-return-path.ts",
+        "src/app/core/navigation/spotify-url.ts",
+        "src/app/core/notifications/push-notification.service.ts",
+        "src/app/core/performance/async-load.ts",
+        "src/app/core/settings/site-settings.service.ts",
+        "src/app/core/sharing/playlist-share-auto-sync.service.ts",
+        "src/app/core/sharing/playlist-sharing-names.ts",
+        "src/app/core/sharing/playlist-sharing.models.ts",
+        "src/app/core/sharing/playlist-sharing.service.ts",
+        "src/app/core/sharing/stats-sharing.service.ts",
+        "src/app/core/song-league/song-league.models.ts",
+        "src/app/core/song-league/song-league.service.ts",
+        "src/app/core/sync/image-healing/image-healing.service.ts",
+        "src/app/core/sync/playlist-loader/playlist-loader.service.ts",
+        "src/app/core/sync/playlist-loader/playlist-source-manifest.ts",
+        "src/app/design-v2-routing.module.ts",
+        "src/app/features/admin/admin.component.ts",
+        "src/app/features/admin/admin.module.ts",
+        "src/app/features/auth/callback/callback.component.ts",
+        "src/app/features/auth/callback/callback.module.ts",
+        "src/app/features/auth/login-page/login-page.component.ts",
+        "src/app/features/auth/login-page/login-page.module.ts",
+        "src/app/features/auth/personal-spotify/cloud-access.component.ts",
+        "src/app/features/auth/personal-spotify/personal-spotify-callback.component.ts",
+        "src/app/features/auth/personal-spotify/personal-spotify-connect.component.ts",
+        "src/app/features/auth/personal-spotify/personal-spotify.module.ts",
+        "src/app/features/compare-room/compare-room-callback.component.ts",
+        "src/app/features/compare-room/compare-room-callback.module.ts",
+        "src/app/features/compare-room/compare-room-join.component.ts",
+        "src/app/features/compare-room/compare-room-join.module.ts",
+        "src/app/features/compare-room/compare-room-shell.component.ts",
+        "src/app/features/compare-room/compare-room-view-model.ts",
+        "src/app/features/compare-room/compare-room.module.ts",
+        "src/app/features/insights/insights-view-model.ts",
+        "src/app/features/insights/listening-history/listening-history.component.ts",
+        "src/app/features/insights/listening-history/listening-history.module.ts",
+        "src/app/features/insights/listening-history/v2-listening-history.component.ts",
+        "src/app/features/insights/user-stats/user-stats.component.ts",
+        "src/app/features/insights/user-stats/user-stats.module.ts",
+        "src/app/features/insights/user-stats/v2-user-stats.component.ts",
+        "src/app/features/legal/legal/legal.component.ts",
+        "src/app/features/legal/legal/legal.module.ts",
+        "src/app/features/library/artist-details/artist-details.component.ts",
+        "src/app/features/library/artist-details/artist-details.controller.ts",
+        "src/app/features/library/artist-details/artist-details.module.ts",
+        "src/app/features/library/design-v2/v2-analysis-page.component.ts",
+        "src/app/features/library/design-v2/v2-artist-details-page.component.ts",
+        "src/app/features/library/design-v2/v2-playlists-page.component.ts",
+        "src/app/features/library/design-v2/v2-songs-page.component.ts",
+        "src/app/features/library/playlist-analysis/playlist-analysis.component.ts",
+        "src/app/features/library/playlist-analysis/playlist-analysis.controller.ts",
+        "src/app/features/library/playlist-analysis/playlist-analysis.module.ts",
+        "src/app/features/library/playlists/playlists.component.ts",
+        "src/app/features/library/playlists/playlists.module.ts",
+        "src/app/features/library/songs/songs.component.ts",
+        "src/app/features/library/songs/songs.controller.ts",
+        "src/app/features/library/songs/songs.module.ts",
+        "src/app/features/shared-playlists/shared-playlist-claim.component.ts",
+        "src/app/features/shared-playlists/shared-playlist-detail.component.ts",
+        "src/app/features/shared-playlists/shared-playlist-detail.module.ts",
+        "src/app/features/shared-playlists/shared-playlists.component.ts",
+        "src/app/features/shared-playlists/shared-playlists.module.ts",
+        "src/app/features/shared-playlists/sharing-view-model.ts",
+        "src/app/features/shared-playlists/stats-request-claim.component.ts",
+        "src/app/features/shared-playlists/stats-share-claim.component.ts",
+        "src/app/features/song-league/song-league-claim.component.ts",
+        "src/app/features/song-league/song-league-detail.component.ts",
+        "src/app/features/song-league/song-league-home.component.ts",
+        "src/app/features/song-league/song-league-rules.component.ts",
+        "src/app/features/song-league/song-league-view-model.ts",
+        "src/app/features/song-league/song-league.module.ts",
+        "src/app/shared/ambient/ambient-background.component.ts",
+        "src/app/shared/ambient/ambient-background.math.ts",
+        "src/app/shared/ambient/ambient-background.state.ts",
+        "src/app/shared/layout/design-v2-shell/design-v2-overlay.service.ts",
+        "src/app/shared/layout/design-v2-shell/design-v2-shell.component.ts",
+        "src/app/shared/layout/header/blocked-users-dialog.component.ts",
+        "src/app/shared/layout/header/notification-settings-dialog.component.ts",
+        "src/app/shared/layout/header/settings-sheet-view-model.ts",
+        "src/app/shared/layout/header/sync-task-status-dialog.component.ts",
+        "src/app/shared/pipes/safe-spotify-url.pipe.ts",
+        "src/app/shared/shared.module.ts",
+        "src/app/shared/ui/accessible-dialog.directive.ts",
+        "src/app/shared/ui/image-fallback.directive.ts",
+        "src/app/shared/ui/metric-card/metric-card.component.ts",
+        "src/app/shared/ui/page-state/page-state.component.ts",
+        "src/app/shared/ui/section-heading/section-heading.component.ts",
+        "src/app/shared/ui-v2/design-v2-primitives.ts",
+        "src/app/shared/ui-v2/design-v2-status.ts",
+        "src/app/shared/ui-v2/index.ts",
+        "src/app/shared/ui-v2/v2-rank-history-plot.component.ts",
+        "src/app/shared/ui-v2/v2-rank-history-popup.component.ts",
+        "src/app/shared/ui-v2/v2-ranking-flame.component.ts",
+        "src/app/shared/ui-v2/v2-stats-ranking-row.component.ts",
+        "src/environments/environment.development.ts",
+        "src/environments/environment.ts",
+        "src/environments/spotify-scopes.ts",
+        "src/main.ts"
+      ],
+      "exclusions": [
+        {
+          "path": "src/app/app-routing.module.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/app.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/admin/admin.guard.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/admin/admin.models.ts",
+          "reason": "type-only source (AST checked)"
+        },
+        {
+          "path": "src/app/core/admin/admin.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/auth/auth-return-url.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/auth/auth.guards.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/auth/session-lifecycle.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/auth/spotify-auth.interceptor.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/auth/spotify-auth.models.ts",
+          "reason": "type-only source (AST checked)"
+        },
+        {
+          "path": "src/app/core/auth/spotify-auth.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-guest-playlist-source.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-playlist-source.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-room-coordinator.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-room-guest.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-room-integrity.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-room-transport.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-room.models.ts",
+          "reason": "type-only source (AST checked)"
+        },
+        {
+          "path": "src/app/core/compare-room/participant-spotify.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/playlist-intersection.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/spotify/spotify-data.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/storage/storage.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/supabase/edge-function-error.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/supabase/supabase.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/diagnostics/app-logger.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/legal/terms-acceptance.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-navigation.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-navigation.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-path.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-selective-preloading.strategy.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-v2-navigation.model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-v2-route-data.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/preview-return-path.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/spotify-url.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/notifications/push-notification.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/performance/async-load.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sharing/playlist-share-auto-sync.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sharing/playlist-sharing-names.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sharing/playlist-sharing.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sharing/stats-sharing.models.ts",
+          "reason": "type-only source (AST checked)"
+        },
+        {
+          "path": "src/app/core/sharing/stats-sharing.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/song-league/song-league.models.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/song-league/song-league.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sync/playlist-loader/playlist-loader.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sync/playlist-loader/playlist-source-manifest.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/admin/admin.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/auth/callback/callback.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/auth/login-page/login-page.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/auth/personal-spotify/cloud-access.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/auth/personal-spotify/personal-spotify-callback.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/auth/personal-spotify/personal-spotify-connect.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/compare-room/compare-room-callback.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/compare-room/compare-room-join.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/compare-room/compare-room-shell.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/compare-room/compare-room-view-model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/insights-view-model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/listening-history/listening-history.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/listening-history/v2-listening-history.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/user-stats.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/v2-user-stats.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/legal/legal/legal.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/artist-details/artist-details.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/design-v2/v2-analysis-page.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/design-v2/v2-artist-details-page.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/design-v2/v2-playlists-page.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/design-v2/v2-songs-page.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/playlist-analysis/playlist-analysis.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/playlists/playlists.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/songs/songs.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/shared-playlists/shared-playlist-detail.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/shared-playlists/shared-playlists.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/shared-playlists/sharing-view-model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/shared-playlists/stats-request-claim.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/shared-playlists/stats-share-claim.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/song-league/song-league-claim.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/song-league/song-league-detail.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/song-league/song-league-home.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/song-league/song-league-rules.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/song-league/song-league-view-model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/integration/supabase-loading.integration.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ambient/ambient-background.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ambient/ambient-background.math.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ambient/ambient-background.state.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/layout/design-v2-shell/design-v2-overlay.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/layout/header/notification-settings-dialog.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/layout/header/settings-sheet-view-model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui/accessible-dialog.directive.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui/image-fallback.directive.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui/shared-ui.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/design-v2-primitives.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/design-v2-status.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-rank-history-plot.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-rank-history-popup.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-ranking-flame.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-stats-ranking-row.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/environments/environment.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/environments/spotify-scopes.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/test-setup.ts",
+          "reason": "test environment setup"
+        }
+      ],
+      "metrics": {
+        "lines": {
+          "total": 9883,
+          "covered": 6869,
+          "skipped": 0,
+          "pct": 69.5
+        },
+        "statements": {
+          "total": 11411,
+          "covered": 7551,
+          "skipped": 0,
+          "pct": 66.17
+        },
+        "functions": {
+          "total": 2387,
+          "covered": 1520,
+          "skipped": 0,
+          "pct": 63.67
+        },
+        "branches": {
+          "total": 7372,
+          "covered": 3895,
+          "skipped": 0,
+          "pct": 52.83
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "sourcesMissingFromReport": [],
+      "reportedSources": 135
+    },
+    "worker": {
+      "sources": [
+        "services/sync-service/catalog-repository.js",
+        "services/sync-service/config.js",
+        "services/sync-service/credential-store.js",
+        "services/sync-service/daily-pull.js",
+        "services/sync-service/date-utils.js",
+        "services/sync-service/health-server.js",
+        "services/sync-service/index.js",
+        "services/sync-service/push-dispatcher.js",
+        "services/sync-service/scheduler.js",
+        "services/sync-service/spotify-client.js",
+        "services/sync-service/spotify-url-validator.js",
+        "services/sync-service/task-registry.js",
+        "services/sync-service/tasks/history-task.js",
+        "services/sync-service/tasks/shared-playlists-task.js",
+        "services/sync-service/tasks/song-league-playlists-task.js",
+        "services/sync-service/tasks/stats-task.js",
+        "services/sync-service/worker-runtime-health.js"
+      ],
+      "exclusions": [
+        {
+          "path": "services/sync-service/catalog-repository.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/credential-store.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/date-utils.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/health-server.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/push-dispatcher.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/scheduler.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/spotify-client.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/spotify-url-validator.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/task-registry.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/tasks/history-task.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/tasks/shared-playlists-task.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/tasks/song-league-playlists-task.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/tasks/stats-task.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/worker-runtime-health.test.js",
+          "reason": "test source"
+        }
+      ]
+    },
+    "edge": {
+      "sources": [
+        "supabase/functions/_shared/bounded-fetch.ts",
+        "supabase/functions/_shared/request-security.ts",
+        "supabase/functions/_shared/spotify-credential-crypto.ts",
+        "supabase/functions/song-league-notifications/delivery-state.ts",
+        "supabase/functions/song-league-notifications/index.ts",
+        "supabase/functions/song-league-notifications/push-endpoint.ts",
+        "supabase/functions/song-league-notifications/web-push.ts",
+        "supabase/functions/song-league-playlist-sync/index.ts",
+        "supabase/functions/song-league-playlist-sync/recovery.ts",
+        "supabase/functions/spotify-credentials/index.ts",
+        "supabase/functions/spotify-credentials/personal-recovery.ts",
+        "supabase/functions/spotify-credentials/profile-verification.ts"
+      ],
+      "exclusions": [
+        {
+          "path": "supabase/functions/_shared/bounded-fetch.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/_shared/request-security.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/_shared/spotify-credential-crypto.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/song-league-notifications/delivery-state.test.mjs",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/song-league-notifications/push-endpoint.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/song-league-playlist-sync/recovery.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/spotify-credentials/personal-recovery.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/spotify-credentials/profile-verification.test.ts",
+          "reason": "test source"
+        }
+      ]
+    }
+  }
+}

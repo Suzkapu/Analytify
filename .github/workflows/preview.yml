@@ -25,10 +25,43 @@ jobs:
           deno-version: v2.9.6
       - run: npm ci
       - run: npm ci --prefix services/sync-service --ignore-scripts
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium firefox webkit
       - run: node --test scripts/preview-nginx.test.mjs
       - run: npm run verify:ci
+      - run: npm run test:coverage:instrumentation
+      - run: npm run test:coverage:worker
+      - run: npm run test:coverage:edge
+      - uses: supabase/setup-cli@3c2f5e2ae34c34e428e8e206e2c4d21fa2d20fbf # v2.1.1
+        id: supabase-cli
+        with:
+          version: 2.84.2
+          github-token: ${{ github.token }}
+      - name: Start isolated loading-contract stack
+        run: >-
+          supabase start --workdir integration
+          -x studio,imgproxy,storage-api,realtime,mailpit,postgres-meta,edge-runtime,logflare,vector,supavisor
+      - name: Export isolated loading-contract settings
+        run: |
+          supabase status --workdir integration -o env \
+            --override-name api.url=SUPABASE_INTEGRATION_URL \
+            --override-name auth.anon_key=SUPABASE_INTEGRATION_ANON_KEY \
+            > /tmp/analytify-supabase-integration.env
+          sed 's/"//g' /tmp/analytify-supabase-integration.env >> "$GITHUB_ENV"
+      - run: npm run test:supabase-integration
+      - name: Stop isolated loading-contract stack
+        if: always() && steps.supabase-cli.outcome == 'success'
+        run: supabase stop --workdir integration --no-backup
       - run: npm run accessibility:browser
+      - name: Preserve test evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: preview-test-evidence-${{ github.sha }}
+          path: |
+            coverage
+            test-results
+            playwright-report
+          retention-days: 7
       - name: Record preview artifact identity
         run: node -e 'require("node:fs").writeFileSync("dist/spoti-front/version.json",JSON.stringify({commit:process.env.GITHUB_SHA,branch:"codex/design-v2",mount:"/new/"}))'
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

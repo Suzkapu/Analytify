@@ -1,0 +1,440 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts --progress=false
+Application bundle generation complete. [2.593 seconds] - 2026-10-06T22:34:19.180Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stdout | src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > discards old metadata after only the cloud identity changes
+[Analytify][0003][+00050ms][Personal Stats][STEP] Uploading local-only snapshot to cloud: 2026-10-03 (short_term)
+
+stderr | src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > discards old metadata after only the cloud identity changes
+AssertionError: expected [ { id: 'cloud-A', …(7) }, …(1) ] to deeply equal [ { id: 'local-A', …(6) } ]
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts:66:35
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [
+    {
+      id: 'cloud-A',
+      timestamp: 1790892000000,
+      snapshotDate: '2026-10-02',
+      topTracks: [],
+      topArtists: [],
+      topGenres: [],
+      isLoaded: false,
+      userId: 'metadata-spotify-A'
+    },
+    {
+      id: 'local-A',
+      timestamp: 1791021600000,
+      snapshotDate: '2026-10-03',
+      topTracks: [Array],
+      topArtists: [],
+      topGenres: [],
+      isLoaded: true
+    }
+  ],
+  expected: [
+    {
+      id: 'local-A',
+      timestamp: 1791021600000,
+      snapshotDate: '2026-10-03',
+      topTracks: [Array],
+      topArtists: [],
+      topGenres: [],
+      isLoaded: true
+    }
+  ],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stdout | src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > discards old metadata after only the spotify identity changes
+[Analytify][0004][+00064ms][Personal Stats][STEP] Uploading local-only snapshot to cloud: 2026-10-03 (short_term)
+
+stderr | src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > discards old metadata after only the spotify identity changes
+AssertionError: expected [ { id: 'cloud-A', …(7) }, …(1) ] to deeply equal [ { id: 'local-A', …(6) } ]
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts:66:35
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [
+    {
+      id: 'cloud-A',
+      timestamp: 1790892000000,
+      snapshotDate: '2026-10-02',
+      topTracks: [],
+      topArtists: [],
+      topGenres: [],
+      isLoaded: false,
+      userId: 'metadata-spotify-A'
+    },
+    {
+      id: 'local-A',
+      timestamp: 1791021600000,
+      snapshotDate: '2026-10-03',
+      topTracks: [Array],
+      topArtists: [],
+      topGenres: [],
+      isLoaded: true
+    }
+  ],
+  expected: [
+    {
+      id: 'local-A',
+      timestamp: 1791021600000,
+      snapshotDate: '2026-10-03',
+      topTracks: [Array],
+      topArtists: [],
+      topGenres: [],
+      isLoaded: true
+    }
+  ],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stdout | src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > discards old metadata after only the sharedOwner identity changes
+[Analytify][0005][+00074ms][Personal Stats][STEP] Uploading local-only snapshot to cloud: 2026-10-03 (short_term)
+
+stderr | src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > discards old metadata after only the sharedOwner identity changes
+AssertionError: expected [ { id: 'cloud-A', …(7) }, …(1) ] to deeply equal [ { id: 'local-A', …(6) } ]
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts:66:35
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [
+    {
+      id: 'cloud-A',
+      timestamp: 1790892000000,
+      snapshotDate: '2026-10-02',
+      topTracks: [],
+      topArtists: [],
+      topGenres: [],
+      isLoaded: false,
+      userId: 'metadata-spotify-A'
+    },
+    {
+      id: 'local-A',
+      timestamp: 1791021600000,
+      snapshotDate: '2026-10-03',
+      topTracks: [Array],
+      topArtists: [],
+      topGenres: [],
+      isLoaded: true
+    }
+  ],
+  expected: [
+    {
+      id: 'local-A',
+      timestamp: 1791021600000,
+      snapshotDate: '2026-10-03',
+      topTracks: [Array],
+      topArtists: [],
+      topGenres: [],
+      isLoaded: true
+    }
+  ],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stdout | src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > does not display a late local cache or request cloud history after the cloud identity changes
+[Analytify][0006][+00084ms][Personal Stats][STEP] Uploading local-only snapshot to cloud: 2026-10-03 (short_term)
+
+stderr | src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > does not display a late local cache or request cloud history after the cloud identity changes
+AssertionError: expected [ { id: 'local-A', …(6) } ] to deeply equal []
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts:79:35
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [
+    {
+      id: 'local-A',
+      timestamp: 1791021600000,
+      snapshotDate: '2026-10-03',
+      topTracks: [Array],
+      topArtists: [],
+      topGenres: [],
+      isLoaded: true
+    }
+  ],
+  expected: [],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stdout | src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > does not display a late local cache or request cloud history after the spotify identity changes
+[Analytify][0007][+00090ms][Personal Stats][STEP] Uploading local-only snapshot to cloud: 2026-10-03 (short_term)
+
+stderr | src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > does not display a late local cache or request cloud history after the spotify identity changes
+AssertionError: expected [ { id: 'local-A', …(6) } ] to deeply equal []
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts:79:35
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [
+    {
+      id: 'local-A',
+      timestamp: 1791021600000,
+      snapshotDate: '2026-10-03',
+      topTracks: [Array],
+      topArtists: [],
+      topGenres: [],
+      isLoaded: true
+    }
+  ],
+  expected: [],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stdout | src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > does not display a late local cache or request cloud history after the sharedOwner identity changes
+[Analytify][0008][+00096ms][Personal Stats][STEP] Uploading local-only snapshot to cloud: 2026-10-03 (short_term)
+
+stderr | src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > does not display a late local cache or request cloud history after the sharedOwner identity changes
+AssertionError: expected [ { id: 'local-A', …(6) } ] to deeply equal []
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts:79:35
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [
+    {
+      id: 'local-A',
+      timestamp: 1791021600000,
+      snapshotDate: '2026-10-03',
+      topTracks: [Array],
+      topArtists: [],
+      topGenres: [],
+      isLoaded: true
+    }
+  ],
+  expected: [],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stdout | src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > does not continue synchronization after teardown during local persistence
+[Analytify][0009][+00103ms][Personal Stats][STEP] Uploading local-only snapshot to cloud: 2026-10-03 (short_term)
+
+stderr | src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > does not continue synchronization after teardown during local persistence
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "metadata-owner-A",
+      "short_term",
+      0,
+      0,
+      Array [
+        Object {
+          "id": "cached",
+          "name": "Cached ranking",
+        },
+      ],
+      Array [],
+      Array [],
+      true,
+      "2026-10-03",
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts:94:39
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts (9 tests | 7 failed) 100ms
+     × discards old metadata after only the cloud identity changes 14ms
+     × discards old metadata after only the spotify identity changes 10ms
+     × discards old metadata after only the sharedOwner identity changes 10ms
+     × does not display a late local cache or request cloud history after the cloud identity changes 7ms
+     × does not display a late local cache or request cloud history after the spotify identity changes 6ms
+     × does not display a late local cache or request cloud history after the sharedOwner identity changes 6ms
+     × does not continue synchronization after teardown during local persistence 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > discards old metadata after only the cloud identity changes
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > discards old metadata after only the spotify identity changes
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > discards old metadata after only the sharedOwner identity changes
+AssertionError: expected [ { id: 'cloud-A', …(7) }, …(1) ] to deeply equal [ { id: 'local-A', …(6) } ]
+
+- Expected
++ Received
+
+@@ -1,7 +1,17 @@
+  [
+    {
++     "id": "cloud-A",
++     "isLoaded": false,
++     "snapshotDate": "2026-10-02",
++     "timestamp": 1790892000000,
++     "topArtists": [],
++     "topGenres": [],
++     "topTracks": [],
++     "userId": "metadata-spotify-A",
++   },
++   {
+      "id": "local-A",
+      "isLoaded": true,
+      "snapshotDate": "2026-10-03",
+      "timestamp": 1791021600000,
+      "topArtists": [],
+
+ ❯ src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts:66:35
+     64|     account[identity] = 'another-account';
+     65|     request.resolve([cloud]); await settle();
+     66|     expect(component.historyData).toEqual(visibleBefore);
+       |                                   ^
+     67|     expect(storage.getStatsHistory).toHaveBeenCalledTimes(1);
+     68|     expect(storage.saveStatsHistory).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > does not display a late local cache or request cloud history after the cloud identity changes
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > does not display a late local cache or request cloud history after the spotify identity changes
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > does not display a late local cache or request cloud history after the sharedOwner identity changes
+AssertionError: expected [ { id: 'local-A', …(6) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "id": "local-A",
++     "isLoaded": true,
++     "snapshotDate": "2026-10-03",
++     "timestamp": 1791021600000,
++     "topArtists": [],
++     "topGenres": [],
++     "topTracks": [
++       {
++         "id": "cached",
++         "name": "Cached ranking",
++       },
++     ],
++   },
++ ]
+
+ ❯ src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts:79:35
+     77|     account[identity] = 'another-account';
+     78|     request.resolve([local]); await settle();
+     79|     expect(component.historyData).toEqual([]);
+       |                                   ^
+     80|     expect(component.snapshotOptions).toEqual([]);
+     81|     expect(component.compareSnapshotId).toBe('');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts > Stats metadata hydration ownership and reconciliation boundary > does not continue synchronization after teardown during local persistence
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "metadata-owner-A",
+      "short_term",
+      0,
+      0,
+      Array [
+        Object {
+          "id": "cached",
+          "name": "Cached ranking",
+        },
+      ],
+      Array [],
+      Array [],
+      true,
+      "2026-10-03",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts:94:39
+     92|     expect(storage.saveStatsHistory).toHaveBeenCalledExactlyOnceWith(e…
+     93|     component.ngOnDestroy(); persist.resolve(); await settle();
+     94|     expect(sdk.saveStatsSnapshot).not.toHaveBeenCalled();
+       |                                       ^
+     95|     expect(storage.getStatsHistory).toHaveBeenCalledTimes(2);
+     96|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 2 passed (9)
+   Start at  00:34:19
+   Duration  979ms (transform 178ms, setup 218ms, import 226ms, tests 100ms, environment 311ms)
+
