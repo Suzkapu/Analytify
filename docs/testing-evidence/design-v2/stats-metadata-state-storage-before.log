@@ -1,0 +1,170 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/core/data-access/storage/stats-history-read-boundary.spec.ts --progress=false
+Application bundle generation complete. [2.132 seconds] - 2026-10-06T23:05:14.068Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/data-access/storage/stats-history-read-boundary.spec.ts > Saved Stats history read and retry boundary > distinguishes an empty successful inventory from a failed strict read
+Error: promise resolved "[]" instead of rejecting
+    at Assertion.__VITEST_REJECTS__ (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1747:17)
+    at Assertion.propertyGetter (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1607:27)
+    at Reflect.get (<anonymous>)
+    at Object.proxyGetter [as get] (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1696:22)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/stats-history-read-boundary.spec.ts:48:37
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30 {
+  showDiff: true,
+  expected: Error: rejected promise
+      at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1769:17
+      at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+      at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+      at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+      at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+      at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+      at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+      at processTicksAndRejections (node:internal/process/task_queues:104:5),
+  actual: []
+}
+
+stderr | src/app/core/data-access/storage/stats-history-read-boundary.spec.ts > Saved Stats history read and retry boundary > recovers after a failed cache request and retains owner/range filtering and date order
+Error: promise resolved "[]" instead of rejecting
+    at Assertion.__VITEST_REJECTS__ (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1747:17)
+    at Assertion.propertyGetter (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1607:27)
+    at Reflect.get (<anonymous>)
+    at Object.proxyGetter [as get] (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1696:22)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/stats-history-read-boundary.spec.ts:55:37
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/stats-history-read-boundary.spec.ts:51:107 {
+  showDiff: true,
+  expected: Error: rejected promise
+      at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1769:17
+      at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+      at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+      at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+      at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+      at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+      at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+      at processTicksAndRejections (node:internal/process/task_queues:104:5),
+  actual: []
+}
+
+stderr | src/app/core/data-access/storage/stats-history-read-boundary.spec.ts > Saved Stats history read and retry boundary > can retry opening the database after an initial temporary failure
+Error: promise resolved "[]" instead of rejecting
+    at Assertion.__VITEST_REJECTS__ (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1747:17)
+    at Assertion.propertyGetter (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1607:27)
+    at Reflect.get (<anonymous>)
+    at Object.proxyGetter [as get] (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1696:22)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/stats-history-read-boundary.spec.ts:71:37
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/stats-history-read-boundary.spec.ts:67:86 {
+  showDiff: true,
+  expected: Error: rejected promise
+      at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1769:17
+      at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+      at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+      at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+      at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+      at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+      at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+      at processTicksAndRejections (node:internal/process/task_queues:104:5),
+  actual: []
+}
+
+ ❯ |SpotiFront| src/app/core/data-access/storage/stats-history-read-boundary.spec.ts (5 tests | 3 failed) 23ms
+     × distinguishes an empty successful inventory from a failed strict read 15ms
+     × recovers after a failed cache request and retains owner/range filtering and date order 2ms
+     × can retry opening the database after an initial temporary failure 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/storage/stats-history-read-boundary.spec.ts > Saved Stats history read and retry boundary > distinguishes an empty successful inventory from a failed strict read
+AssertionError: promise resolved "[]" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+[]
+
+ ❯ src/app/core/data-access/storage/stats-history-read-boundary.spec.ts:48:37
+     46|     const error = new Error('Isolated cache request failure');
+     47|     responses.push({error});
+     48|     await expect(strictRead(service)).rejects.toBe(error);
+       |                                     ^
+     49|   });
+     50|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/storage/stats-history-read-boundary.spec.ts > Saved Stats history read and retry boundary > recovers after a failed cache request and retains owner/range filtering and date order
+AssertionError: promise resolved "[]" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+[]
+
+ ❯ src/app/core/data-access/storage/stats-history-read-boundary.spec.ts:55:37
+     53|     const {service, responses, open, db} = requestBoundary();
+     54|     responses.push({error: new Error('Isolated cache request failure')…
+     55|     await expect(strictRead(service)).rejects.toThrow('Isolated cache …
+       |                                     ^
+     56|     responses.push({data: [
+     57|       {id: 2, userId: 'reader-A', range: 'short_term', timestamp: 200},
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/data-access/storage/stats-history-read-boundary.spec.ts:51:107
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/storage/stats-history-read-boundary.spec.ts > Saved Stats history read and retry boundary > can retry opening the database after an initial temporary failure
+AssertionError: promise resolved "[]" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+[]
+
+ ❯ src/app/core/data-access/storage/stats-history-read-boundary.spec.ts:71:37
+     69|     const {service, opens, open} = requestBoundary();
+     70|     opens.push(new Error('Isolated database open failure'));
+     71|     await expect(strictRead(service)).rejects.toThrow('Isolated databa…
+       |                                     ^
+     72|     expect(await strictRead(service)).toEqual([]);
+     73|     expect(open.mock.calls).toEqual([['AnalytifyDB', 4], ['AnalytifyDB…
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/data-access/storage/stats-history-read-boundary.spec.ts:67:86
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 2 passed (5)
+   Start at  01:05:14
+   Duration  803ms (transform 78ms, setup 222ms, import 82ms, tests 23ms, environment 343ms)
+

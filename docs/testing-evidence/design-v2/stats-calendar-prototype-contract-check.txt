@@ -1,0 +1,35 @@
+await figma.setCurrentPageAsync(await figma.getNodeByIdAsync('7:2'));figma.skipInvisibleInstanceChildren=false;
+const panels=await Promise.all(['850:26785','850:27146','865:28019','865:28506'].map(id=>figma.getNodeByIdAsync(id)));
+const dates=new Map();for(const p of panels)for(const d of p.findAll(n=>n.type==='INSTANCE'&&n.name.startsWith('Snapshot /')))dates.set(d.name.slice(11),d);
+const keys=[...dates.keys()].sort();if(keys.length!==20)throw new Error('Expected20 sample dates');
+const defaults=new Map((await figma.variables.getLocalVariablesAsync()).map(v=>[v.id,Object.values(v.valuesByMode)[0]]));
+const resolve=(v,state)=>v.type==='VARIABLE_ALIAS'?state.get(v.value.id):v.type==='EXPRESSION'?expression(v.value,state):v.value;
+const expression=(e,state)=>{if(e.expressionFunction!=='EQUALS')throw new Error('Unverified expression '+e.expressionFunction);return resolve(e.expressionArguments[0],state)===resolve(e.expressionArguments[1],state);};
+const run=(actions,state,events)=>{for(const a of actions){if(a.type==='SET_VARIABLE')state.set(a.variableId,resolve(a.variableValue,state));else if(a.type==='CONDITIONAL'){const b=a.conditionalBlocks.find(b=>!b.condition||resolve(b.condition,state));if(b)run(b.actions,state,events);}else if(a.type==='NODE')events.push({type:'NODE',navigation:a.navigation,destinationId:a.destinationId});else if(a.type==='CLOSE')events.push({type:'CLOSE'});else throw new Error('Unverified action '+a.type);}};
+let openings=0,selections=0,blocked=0;
+for(const fieldId of ['25:128','25:816']){
+ const field=await figma.getNodeByIdAsync(fieldId),viewport=fieldId==='25:128'?'Desktop':'Mobile',relevant=panels.filter(p=>p.componentProperties.Viewport.value===viewport);
+ for(const primary of keys)for(const comparison of keys){
+  const state=new Map(defaults);state.set('VariableID:144:8034',primary);state.set('VariableID:144:8035',comparison);state.set('VariableID:148:8052',comparison.startsWith('2026-09')?'September':'October');const events=[];
+  run(field.reactions[0].actions,state,events);openings++;
+  const expectedFrame=viewport==='Desktop'?(comparison.startsWith('2026-09')?'865:28018':'850:26784'):(comparison.startsWith('2026-09')?'865:28505':'850:27145');
+  if(events.at(-1)?.destinationId!==expectedFrame)throw new Error('Wrong purpose/viewport/month destination');
+  if(state.get('VariableID:866:28457')!==(primary!=='2026-10-04'))throw new Error('Today eligibility mismatch');
+  for(const p of relevant)for(const day of p.findAll(n=>n.type==='INSTANCE'&&n.name.startsWith('Snapshot /'))){
+   const date=day.name.slice(11),alias=day.componentProperties.State.boundVariables?.value;
+   if(!alias)throw new Error('Missing date state binding '+day.id);
+   const expected=date===primary?'Unavailable':date===comparison?'Selected':'Available',actual=state.get(alias.id);
+   if(actual!==expected)throw new Error(JSON.stringify({fieldId,primary,comparison,date,expected,actual,alias}));
+   const after=new Map(state),selectionEvents=[];run(day.reactions[0].actions,after,selectionEvents);
+   if(after.get('VariableID:144:8034')!==primary)throw new Error('Comparison changed primary');
+   if(date===primary){blocked++;if(after.get('VariableID:144:8035')!==comparison||selectionEvents.some(e=>e.type==='CLOSE'))throw new Error('Primary date selected or dismissed');}
+   else{selections++;if(after.get('VariableID:144:8035')!==date||selectionEvents.at(-1)?.type!=='CLOSE')throw new Error('Eligible selection failed');}
+  }
+ }
+}
+const recoveryMap=[['25:124',['848:26561','848:26576']],['25:812',['848:26612','848:26627']],['25:128',['848:26646','848:26661']],['25:816',['848:26680','848:26695']]];
+for(const [f,buttons]of recoveryMap){const field=await figma.getNodeByIdAsync(f);for(const id of buttons){const b=await figma.getNodeByIdAsync(id);if(JSON.stringify(b.reactions[0].actions)!==JSON.stringify(field.reactions[0].actions))throw new Error('Recovery bypasses canonical entry');}}
+const edges=[];for(const id of ['850:26615','850:26784','850:26976','850:27145','865:27812','865:28018','865:28299','865:28505']){
+ const frame=await figma.getNodeByIdAsync(id);for(const c of frame.findAll(n=>n.type==='INSTANCE'&&n.name.startsWith('Month /'))){for(const r of c.reactions){const state=new Map(defaults),events=[];run(r.actions,state,events);if(JSON.stringify([...state])!==JSON.stringify([...defaults]))throw new Error('Browsing month changes selected data');edges.push({source:id,control:c.name,destination:events[0]?.destinationId});}}
+}
+return {status:'passed',scope:'Read-only evaluation of actual Figma prototype actions; not browser execution, Angular parity, service integration or application-code coverage',openingScenarios:openings,eligibleSelections:selections,primarySelectionsBlocked:blocked,recoveryButtons:8,monthEdges:edges,sampleSavedDates:keys};

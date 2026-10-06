@@ -117,6 +117,8 @@ export class UserStatsController implements OnInit, OnDestroy {
   private historyWriteQueue: Promise<void> = Promise.resolve();
   private statsLoadSequence = 0;
   private historyLoadSequence = 0;
+  historyMetadataState: 'loading' | 'refreshing' | 'ready' | 'empty' | 'unavailable' | 'refresh-failed' = 'loading';
+  historyMetadataError = '';
   private snapshotDetailContext = 0;
   private unavailableSnapshotDetails = new Set<string>();
   private pendingSnapshotDetails = new Set<string>();
@@ -230,6 +232,7 @@ export class UserStatsController implements OnInit, OnDestroy {
     this.topGenres = [];
     this.historyData = [];
     this.snapshotOptions = [];
+    this.setHistoryMetadataState('loading');
     // Start the visible selected-range request in the critical turn. Historical
     // metadata begins only after the browser gets a paint opportunity, while
     // broad account hydration remains fully independent in the background.
@@ -278,6 +281,7 @@ export class UserStatsController implements OnInit, OnDestroy {
     this.compareSnapshotId = '';
     this.historyData = [];
     this.snapshotOptions = [];
+    this.setHistoryMetadataState('loading');
     this.topTracks = [];
     this.topArtists = [];
     this.topGenres = [];
@@ -1389,6 +1393,7 @@ export class UserStatsController implements OnInit, OnDestroy {
   loadHistoryData() {
     if (this.isSpyMode) return;
     const loadSequence = ++this.historyLoadSequence;
+    this.setHistoryMetadataState(this.snapshotOptions.length ? 'refreshing' : 'loading');
     const userId = this.authService.getUserId() || 'anonymous';
     const supabaseUserId = this.authService.getSupabaseUserId();
     const range = this.selectedRange;
@@ -1398,8 +1403,8 @@ export class UserStatsController implements OnInit, OnDestroy {
       && supabaseUserId === this.authService.getSupabaseUserId() && !this.isSpyMode;
 
     const loadLocal = () => {
-      return this.storageService.getStatsHistory(userId, range).then(async history => {
-        if (!isCurrentLoad()) return;
+      return this.storageService.getStatsHistory(userId, range, {readFailure: 'reject'}).then(async history => {
+        if (!isCurrentLoad()) return false;
 
         const snapshotsByDate = new Map<string, any>();
         (history || []).forEach((snapshot: any) => {
@@ -1424,7 +1429,7 @@ export class UserStatsController implements OnInit, OnDestroy {
         if (duplicateIds.length > 0) {
           await this.storageService.deleteStatsHistoryEntries(duplicateIds);
         }
-        if (!isCurrentLoad()) return;
+        if (!isCurrentLoad()) return false;
 
         // Mark snapshots that already have topTracks array as fully loaded
         this.historyData = Array.from(snapshotsByDate.values())
@@ -1463,14 +1468,17 @@ export class UserStatsController implements OnInit, OnDestroy {
         if (this.compareSnapshotId) {
           this.ensureSnapshotLoaded(this.compareSnapshotId, false);
         }
+        return true;
       }).catch(err => {
+        if (isCurrentLoad()) this.failHistoryMetadata();
         console.error('Failed to load stats history:', err);
+        return false;
       });
     };
 
     // 1. Load local history IMMEDIATELY so comparison dropdown is responsive instantly
-    loadLocal().then(() => {
-      if (!isCurrentLoad()) return;
+    loadLocal().then(localLoaded => {
+      if (!isCurrentLoad() || !localLoaded) return;
 
       // 2. Perform sync in background
       // The locally cached backup flag is sufficient to begin this lightweight
@@ -1482,12 +1490,13 @@ export class UserStatsController implements OnInit, OnDestroy {
 
         const isBackupActive = this.authService.isBackupActive();
         if (isBackupActive && supabaseUserId) {
+          this.setHistoryMetadataState(this.snapshotOptions.length ? 'refreshing' : 'loading');
           const isCurrentSync = () => isCurrentLoad() && this.authService.isBackupActive();
           // Fetch only the lightweight metadata from Supabase
           this.supabaseService.loadAllStatsSnapshotsMetadata(supabaseUserId, range).then(async (dbSnapshots) => {
             if (!isCurrentSync()) return;
 
-            const localHistory = await this.storageService.getStatsHistory(userId, range).catch(() => [] as any[]);
+            const localHistory = await this.storageService.getStatsHistory(userId, range, {readFailure: 'reject'});
             if (!isCurrentSync()) return;
 
             const toDateKey = toDailySnapshotDateKey;
@@ -1497,6 +1506,7 @@ export class UserStatsController implements OnInit, OnDestroy {
             ));
 
             let localUpdated = false;
+            let restoreFailed = false;
 
             // Step 1: Download cloud snapshots missing from local IndexedDB (as metadata-only placeholder)
             if (dbSnapshots && dbSnapshots.length > 0) {
@@ -1514,6 +1524,7 @@ export class UserStatsController implements OnInit, OnDestroy {
                   localUpdated = true;
                 });
               } catch (e) {
+                restoreFailed = true;
                 console.warn('[Stats] Failed to restore DB history snapshots locally:', e);
               }
             }
@@ -1556,21 +1567,47 @@ export class UserStatsController implements OnInit, OnDestroy {
 
             if (localUpdated) {
               if (!isCurrentSync()) return;
-              await loadLocal();
+              const localLoaded = await loadLocal();
               if (!isCurrentSync()) return;
+              if (!localLoaded) return;
               this.autoSetDefaultCompare(true);
               this.calculateHotMovers();
             }
+
+            if (restoreFailed) this.failHistoryMetadata();
+            else this.finishHistoryMetadata();
 
             // Full snapshot payloads stay lazy. Only the selected and compare
             // snapshots are loaded by ensureSnapshotLoaded(), which prevents
             // hundreds of Top-100 joins and IndexedDB writes on page entry.
           }).catch(err => {
+            if (isCurrentLoad() && this.authService.isBackupActive()) this.failHistoryMetadata();
             console.warn('[Stats] Failed to load history snapshots from Supabase:', err);
+          }).finally(() => {
+            if (isCurrentLoad() && !this.authService.isBackupActive()) this.finishHistoryMetadata();
           });
+        } else {
+          this.finishHistoryMetadata();
         }
       });
     });
+  }
+
+  private setHistoryMetadataState(state: typeof this.historyMetadataState, error = ''): void {
+    this.historyMetadataState = state;
+    this.historyMetadataError = error;
+    this.changeDetector?.markForCheck();
+  }
+
+  private finishHistoryMetadata(): void {
+    this.setHistoryMetadataState(this.snapshotOptions.length ? 'ready' : 'empty');
+  }
+
+  private failHistoryMetadata(): void {
+    this.setHistoryMetadataState(
+      this.snapshotOptions.length ? 'refresh-failed' : 'unavailable',
+      'Saved dates could not be refreshed. Try again.'
+    );
   }
 
 

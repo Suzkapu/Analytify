@@ -34,7 +34,7 @@ export class StorageService {
       return this.dbPromise;
     }
 
-    this.dbPromise = new Promise((resolve, reject) => {
+    this.dbPromise = new Promise<IDBDatabase>((resolve, reject) => {
       if (typeof indexedDB === 'undefined') {
         reject(new Error('IndexedDB is not supported in this environment.'));
         return;
@@ -85,6 +85,10 @@ export class StorageService {
 
       request.onsuccess = (event: any) => resolve(event.target.result);
       request.onerror  = (event: any) => reject(event.target.error);
+    }).catch(error => {
+      // A temporary open failure must not permanently poison later cache reads.
+      this.dbPromise = null;
+      throw error;
     });
 
     return this.dbPromise;
@@ -525,7 +529,11 @@ export class StorageService {
     this.sessionLifecycle.track(nextWrite, generation);
   }
 
-  getStatsHistory(userId: string, range: string): Promise<any[]> {
+  getStatsHistory(
+    userId: string,
+    range: string,
+    options: {readFailure?: 'empty' | 'reject'} = {}
+  ): Promise<any[]> {
     return this.getDB().then(db => new Promise<any[]>((resolve, reject) => {
       const tx      = db.transaction('statsHistory', 'readonly');
       const store   = tx.objectStore('statsHistory');
@@ -544,6 +552,10 @@ export class StorageService {
       };
       request.onerror = (e: any) => reject(e.target.error);
     })).catch(err => {
+      if (options.readFailure === 'reject') {
+        console.warn('IndexedDB failed to read stats history:', err);
+        throw err;
+      }
       console.warn('IndexedDB failed to read stats history, returning empty:', err);
       return [];
     });
