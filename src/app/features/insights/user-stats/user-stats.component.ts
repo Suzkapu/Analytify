@@ -536,6 +536,11 @@ export class UserStatsController implements OnInit, OnDestroy {
     showStaleCacheDuringRefresh();
 
     if ((isExpired || isCacheIncomplete) && this.authService.isBackupActive()) {
+      // Retain one coherent local fallback if an incoming cloud cache cannot
+      // be parsed. A fresh timestamp must not certify corrupt replacement data.
+      const localFallback = hasUsableCachedStats()
+        ? {tracks: cachedTracks!, artists: cachedArtists!, genres: cachedGenres, updated: lastUpdated}
+        : null;
       await this.storageService.restoreItemsFromCloud([
         tracksKey,
         artistsKey,
@@ -550,6 +555,20 @@ export class UserStatsController implements OnInit, OnDestroy {
       cachedArtists = this.storageService.getItem(artistsKey);
       cachedGenres = this.storageService.getItem(genresKey);
       parseCachedStats();
+      if (isCacheIncomplete && localFallback) {
+        cachedTracks = localFallback.tracks;
+        cachedArtists = localFallback.artists;
+        cachedGenres = localFallback.genres;
+        lastUpdated = localFallback.updated;
+        this.storageService.setItem(tracksKey, cachedTracks, false);
+        this.storageService.setItem(artistsKey, cachedArtists, false);
+        if (cachedGenres !== null) this.storageService.setItem(genresKey, cachedGenres, false);
+        else this.storageService.removeItem(genresKey);
+        if (lastUpdated !== null) this.storageService.setItem(lastUpdatedKey, lastUpdated, false);
+        else this.storageService.removeItem(lastUpdatedKey);
+        isExpired = this.isCacheExpired(lastUpdated, range);
+        parseCachedStats();
+      }
       await enrichParsedGenres();
       if (!isCurrentLoad()) return;
       showStaleCacheDuringRefresh();

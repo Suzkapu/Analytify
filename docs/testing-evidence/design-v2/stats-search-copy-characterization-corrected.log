@@ -1,0 +1,61 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/v2-stats-search-copy.spec.ts --progress=false
+Application bundle generation complete. [2.549 seconds] - 2026-10-09T17:59:43.528Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/v2-stats-search-copy.spec.ts (3 tests | 2 failed) 398ms
+     × uses the designed song hint while keeping artist matching, clearing and no-results recovery 329ms
+     × renders the canonical visible song hint 25ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-stats-search-copy.spec.ts > canonical Stats search copy preserves intended filtering > uses the designed song hint while keeping artist matching, clearing and no-results recovery
+TypeError: Cannot read properties of undefined (reading 'textContent')
+ ❯ src/app/features/insights/user-stats/v2-stats-search-copy.spec.ts:34:30
+     32|   it('uses the designed song hint while keeping artist matching, clear…
+     33|     const s=await setup();
+     34|     expect(s.input.labels?.[0].textContent).toBe('Search songs or arti…
+       |                              ^
+     35|     await s.type('  NEON  ');expect(s.element.querySelector('.v2-ranki…
+     36|     await s.type('absent song');expect(s.element.querySelector('.v2-ra…
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-stats-search-copy.spec.ts > canonical Stats search copy preserves intended filtering > renders the canonical visible song hint
+AssertionError: expected 'Search songs or artists' to be 'Search songs' // Object.is equality
+
+Expected: "Search songs"
+Received: "Search songs or artists"
+
+ ❯ src/app/features/insights/user-stats/v2-stats-search-copy.spec.ts:41:55
+     39|   });
+     40|   it('renders the canonical visible song hint',async()=>{
+     41|     const s=await setup();expect(s.input.placeholder).toBe('Search son…
+       |                                                       ^
+     42|   });
+     43|   it('keeps category-specific typed queries local when switching artis…
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  19:59:43
+   Duration  1.33s (transform 234ms, setup 214ms, import 318ms, tests 398ms, environment 296ms)
+

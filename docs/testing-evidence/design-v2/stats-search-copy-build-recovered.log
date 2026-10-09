@@ -1,0 +1,65 @@
+npm notice run spoti-front@0.0.0 build:production
+npm notice run ng build --configuration production && node scripts/check-production-index.mjs && node scripts/check-bundle-budgets.mjs
+❯ Building...
+✔ Building...
+Initial chunk files   | Names                         |  Raw size | Estimated transfer size
+chunk-CvnqY_R5.js     | -                             | 580.92 kB |               141.10 kB
+styles-3JEGQTUQ.css   | styles                        | 140.49 kB |                21.03 kB
+main-CWLBECHF.js      | main                          |  88.24 kB |                20.84 kB
+polyfills-LVNOU2XZ.js | polyfills                     |  35.88 kB |                11.64 kB
+chunk-BxmOvYFf.js     | -                             |  32.89 kB |                 7.49 kB
+chunk-BxE59bw-.js     | -                             |  15.36 kB |                 4.32 kB
+chunk-D8z9AtxK.js     | -                             | 853 bytes |               853 bytes
+chunk-_AZConfp.js     | -                             |  77 bytes |                77 bytes
+
+                      | Initial total                 | 894.71 kB |               207.35 kB
+
+Lazy chunk files      | Names                         |  Raw size | Estimated transfer size
+chunk-BqDIWxLE.js     | v2-user-stats-component       | 109.94 kB |                24.69 kB
+chunk-C_xzVYhB.js     | song-league-module            |  97.49 kB |                20.85 kB
+chunk-CgysL7Kg.js     | shared-playlists-module       |  95.52 kB |                17.68 kB
+chunk-gZ9sIOrI.js     | compare-room-module           |  67.33 kB |                13.82 kB
+chunk-DrLK4EUk.js     | admin-module                  |  54.44 kB |                10.85 kB
+chunk-BuT9S7vK.js     | -                             |  43.56 kB |                 9.40 kB
+chunk-BXw0J2O2.js     | compare-room-join-module      |  35.92 kB |                 9.04 kB
+chunk-C3GyopTX.js     | legal-module                  |  34.99 kB |                 8.91 kB
+chunk-Lsad1Y-g.js     | v2-songs-page-component       |  34.60 kB |                 8.80 kB
+chunk-B1HdYeu_.js     | -                             |  31.20 kB |                 6.24 kB
+chunk-C5x_9Gu9.js     | shared-playlist-detail-module |  28.21 kB |                 7.17 kB
+chunk-BUJ1pa9I.js     | browser                       |  24.62 kB |                 8.28 kB
+chunk-DIyKvMGa.js     | personal-spotify-module       |  20.63 kB |                 5.14 kB
+chunk-CS0BiqOv.js     | -                             |  19.96 kB |                 5.48 kB
+chunk-CY3ADKF8.js     | v2-analysis-page-component    |  19.11 kB |                 5.17 kB
+...and 21 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [6.723 seconds] - 2026-10-09T18:05:17.478Z
+
+▲ [WARNING] src/app/features/shared-playlists/shared-playlists.component.scss exceeded maximum budget. Budget 10.00 kB was not met by 588 bytes with a total of 10.59 kB.
+
+
+▲ [WARNING] src/app/features/compare-room/compare-room-shell.component.scss exceeded maximum budget. Budget 10.00 kB was not met by 4.48 kB with a total of 14.48 kB.
+
+
+▲ [WARNING] src/app/features/admin/admin.component.scss exceeded maximum budget. Budget 10.00 kB was not met by 449 bytes with a total of 10.45 kB.
+
+
+▲ [WARNING] src/app/features/insights/user-stats/user-stats.component.scss exceeded maximum budget. Budget 10.00 kB was not met by 3.43 kB with a total of 13.43 kB.
+
+
+▲ [WARNING] src/app/shared/layout/design-v2-shell/design-v2-shell.component.scss exceeded maximum budget. Budget 10.00 kB was not met by 167 bytes with a total of 10.17 kB.
+
+
+▲ [WARNING] src/app/features/insights/listening-history/listening-history.component.scss exceeded maximum budget. Budget 10.00 kB was not met by 3.94 kB with a total of 13.94 kB.
+
+
+▲ [WARNING] Module 'dijkstrajs' used by 'node_modules/qrcode/lib/core/segments.js' is not ESM
+
+  CommonJS or AMD dependencies can cause optimization bailouts.
+  For more information see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+Output location: /mnt/Storage/ProgrammingProjects/Analytify/dist/spoti-front
+
+Production index check passed (1 directly active stylesheet link).
+Initial module preload check passed (5 local hints).
+Initial JavaScript (754216 bytes), styles, and every lazy chunk stay within budgets.

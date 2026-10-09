@@ -36,6 +36,7 @@ function setup(cached = false) {
   const lifecycle = new SessionLifecycleService(), storage = new StorageService(supabase, lifecycle);
   // Persistence ports remain isolated; cache hydration/cloud adapter behavior is real.
   vi.spyOn(storage as any, 'persistKV').mockImplementation(() => {});
+  vi.spyOn(storage as any, 'deleteKV').mockImplementation(() => {});
   vi.spyOn(storage, 'getStatsHistory').mockResolvedValue([]);
   const historyWrite = vi.spyOn(storage, 'saveStatsHistory').mockResolvedValue(undefined);
   storage.setItem('spotifyUserId', 'owner', false); storage.setItem('supabaseUserId', 'cloud-owner', false);
@@ -115,6 +116,29 @@ describe('current Stats composed storage/cloud fallback boundary', () => {
     expect(h.component).toMatchObject({isLoading: false, isRefreshingStats: false, currentStatsLoadFailed: true});
     expect(h.component.topTracks[0]?.name).toBe('Restored stale song'); expect(h.historyWrite).not.toHaveBeenCalled();
     expect(h.storage.getItem('owner_stats_short_term_lastUpdated')).toBe('1'); h.component.ngOnDestroy();
+  });
+
+  it.each([['broken-json', false, false], ['{"not":"an array"}', false, false], ['broken-json', true, false], ['broken-json', true, true]] as const)('retains a complete local cache when cloud restoration returns invalid tracks: %s, missing timestamp=%s, tracks only=%s', async (invalid, missingTimestamp, tracksOnly) => {
+    const h = setup(true);
+    if (tracksOnly) {
+      h.storage.setItem('owner_stats_short_term_artists', '[]', false);
+      h.storage.removeItem('owner_stats_short_term_genres');
+    }
+    if (missingTimestamp) h.storage.removeItem('owner_stats_short_term_lastUpdated');
+    const pending = h.component.loadStats(); await settle();
+    expect(h.component.topTracks).toEqual([song]);
+    const cloudEntries = entries('Invalid cloud replacement');
+    cloudEntries.find(item => item.key.endsWith('_tracks'))!.value = invalid;
+    h.cacheReads[0].resolve({data: cloudEntries, error: null}); await settle();
+    h.snapshotReads[0].resolve({data: null, error: null}); await pending;
+    expect(h.component.topTracks).toEqual([song]);
+    expect(h.component).toMatchObject({isLoading: false, isRefreshingStats: true});
+    h.pages[0].error(new Error('Isolated recovery failure')); await settle();
+    expect(h.component.topTracks).toEqual([song]);
+    expect(h.component.currentStatsLoadFailed).toBe(true);
+    expect(h.storage.getItem('owner_stats_short_term_lastUpdated')).toBe(missingTimestamp ? null : '1');
+    expect(JSON.parse(h.storage.getItem('owner_stats_short_term_tracks')!)).toEqual([song]);
+    expect(h.historyWrite).not.toHaveBeenCalled(); h.component.ngOnDestroy();
   });
 
   it.each(['short_term', 'long_term'])('uses a normalized cloud snapshot after cache miss for %s without Spotify fallback', async range => {

@@ -1,0 +1,66 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/v2-stats-search-copy.spec.ts --progress=false
+Application bundle generation complete. [2.618 seconds] - 2026-10-09T18:00:27.796Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/v2-stats-search-copy.spec.ts (4 tests | 2 failed) 462ms
+     × associates the native search label with the actual input 38ms
+     × renders the canonical visible song hint 23ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-stats-search-copy.spec.ts > canonical Stats search copy preserves intended filtering > associates the native search label with the actual input
+AssertionError: expected  to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/app/features/insights/user-stats/v2-stats-search-copy.spec.ts:41:50
+     39|   });
+     40|   it('associates the native search label with the actual input',async(…
+     41|     const s=await setup();expect(s.input.labels).toHaveLength(1);s.fix…
+       |                                                  ^
+     42|   });
+     43|   it('renders the canonical visible song hint',async()=>{
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-stats-search-copy.spec.ts > canonical Stats search copy preserves intended filtering > renders the canonical visible song hint
+AssertionError: expected 'Search songs or artists' to be 'Search songs' // Object.is equality
+
+Expected: "Search songs"
+Received: "Search songs or artists"
+
+ ❯ src/app/features/insights/user-stats/v2-stats-search-copy.spec.ts:44:55
+     42|   });
+     43|   it('renders the canonical visible song hint',async()=>{
+     44|     const s=await setup();expect(s.input.placeholder).toBe('Search son…
+       |                                                       ^
+     45|   });
+     46|   it('keeps category-specific typed queries local when switching artis…
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)
+   Start at  20:00:27
+   Duration  1.38s (transform 220ms, setup 213ms, import 300ms, tests 462ms, environment 295ms)
+

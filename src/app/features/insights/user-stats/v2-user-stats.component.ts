@@ -28,7 +28,7 @@ import {UserStatsUiModule} from './user-stats.module';
         <v2-tabs id="stats-category" caption="Category" label="Ranking category" appearance="sections" [tabs]="categoryTabs" [selected]="selectedCategory" (selectedChange)="changeCategoryValue($event)" />
       </section>
       <v2-toolbar class="stats-search-controls" appearance="plain" label="Search rankings">
-        <v2-search-filters id="v2-stats-search" [labelVisible]="false" [label]="statsSearchPlaceholder" [placeholder]="statsSearchPlaceholder" [query]="statsSearchQuery" (queryChange)="onStatsSearchChange($event)" />
+        <v2-search-filters [id]="'v2-stats-search'" iconUrl="assets/design-v2/stats-search.svg" [labelVisible]="false" [label]="statsSearchPlaceholder" [placeholder]="selectedCategory === 'tracks' ? 'Search songs' : statsSearchPlaceholder" [query]="statsSearchQuery" (queryChange)="onStatsSearchChange($event)" />
         @if (!isSpyMode) {
           <button type="button" v2Button="secondary" class="compare-dates" [attr.aria-expanded]="showComparisonControls" aria-controls="v2-stats-dates" (click)="toggleComparisonControls()"><span class="calendar-icon"><img src="assets/design-v2/stats-calendar-action.svg" alt=""></span>Compare dates</button>
           <v2-search-past-toggle label="Search past rankings" [checked]="includePastStatsSearch" (checkedChange)="changePastSearchEnabled($event)" /> }

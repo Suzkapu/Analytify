@@ -197,7 +197,9 @@ export class V2TabsComponent {
   template: `
     <div class="v2-search">
       <label [for]="id" [class.v2-search__label-hidden]="!labelVisible">{{ label }}</label>
-      <div class="v2-search__field"><i class="pi pi-search" aria-hidden="true"></i>
+      <div class="v2-search__field" [class.v2-search__field--canonical-icon]="iconUrl">
+        @if (iconUrl) { <span class="v2-search__icon" aria-hidden="true"><img [src]="iconUrl" alt=""></span> }
+        @else { <i class="pi pi-search" aria-hidden="true"></i> }
         <input [id]="id" type="search" [placeholder]="placeholder" [ngModel]="query"
           (ngModelChange)="queryChange.emit($event)" [attr.aria-describedby]="description ? id + '-description' : null">
       </div>
@@ -217,6 +219,7 @@ export class V2TabsComponent {
 })
 export class V2SearchFiltersComponent {
   @Input() id = 'v2-search';
+  @Input() iconUrl = '';
   @Input() label = 'Search';
   @Input() labelVisible = true;
   @Input() placeholder = '';

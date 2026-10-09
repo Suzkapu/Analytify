@@ -1,0 +1,398 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-search-copy.spec.ts e2e/design-v2-stats-search-switch.spec.ts e2e/design-v2-stats-period-controls.spec.ts --config=/tmp/analytify-all-browsers.config.ts --workers=2
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:60025) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:60025) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 28 tests using 2 workers
+
+(node:60918) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:60919) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 [desktop] › e2e/design-v2-stats-period-controls.spec.ts:68:5 › period keyboard changes query the selected range once and category choices reuse its payload (5.1s)
+  ✓   1 [desktop] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing (6.8s)
+  ✘   3 [desktop] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (no-preference) (8.9s)
+(node:61545) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   4 [desktop] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (reduce) (9.4s)
+(node:61928) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 8:02:32 PM [vite] (client) [console.warn] [Analytify][0006][+02316ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 8:02:32 PM [vite] (client) [console.warn] [Analytify][0007][+02363ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 8:02:33 PM [vite] (client) [console.warn] [Analytify][0011][+03400ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 8:02:33 PM [vite] (client) [console.warn] [Analytify][0012][+03401ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓   5 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (13.8s)
+  ✓   6 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (18.4s)
+(node:62900) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:98:5 › selection follows the native 220ms timeline and responds to reduced motion (10.1s)
+(node:62987) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 8:03:01 PM [vite] (client) [console.error] TimeoutError: Transition was aborted because of timeout in DOM update. DOM update timed out
+  ✓   9 [mobile] › e2e/design-v2-stats-period-controls.spec.ts:68:5 › period keyboard changes query the selected range once and category choices reuse its payload (12.4s)
+  ✓   8 [mobile] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing (18.0s)
+  ✘  10 [mobile] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (no-preference) (10.6s)
+(node:63904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 8:03:18 PM [vite] (client) [console.warn] [Analytify][0006][+00663ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 8:03:18 PM [vite] (client) [console.warn] [Analytify][0007][+00666ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 8:03:18 PM [vite] (client) [console.warn] [Analytify][0011][+00793ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 8:03:18 PM [vite] (client) [console.warn] [Analytify][0012][+00793ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✘  11 [mobile] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (reduce) (9.6s)
+(node:63991) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  12 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (4.7s)
+  ✓  14 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:98:5 › selection follows the native 220ms timeline and responds to reduced motion (2.4s)
+(node:64155) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  13 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (5.0s)
+(node:64276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  16 [firefox-stats] › e2e/design-v2-stats-period-controls.spec.ts:68:5 › period keyboard changes query the selected range once and category choices reuse its payload (4.2s)
+  ✓  15 [firefox-stats] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing (5.6s)
+  ✘  17 [firefox-stats] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (no-preference) (8.2s)
+(node:64780) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  18 [firefox-stats] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (reduce) (8.0s)
+(node:64789) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 8:03:42 PM [vite] (client) [console.warn] [Analytify][0006][+00399ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 8:03:42 PM [vite] (client) [console.warn] [Analytify][0007][+00404ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 8:03:42 PM [vite] (client) [console.warn] [Analytify][0011][+00790ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 8:03:42 PM [vite] (client) [console.warn] [Analytify][0012][+00792ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓  19 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (5.1s)
+  ✓  20 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (6.5s)
+  ✓  21 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:98:5 › selection follows the native 220ms timeline and responds to reduced motion (2.2s)
+(node:65334) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:65348) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 8:03:50 PM [vite] (client) [console.error] InvalidStateError: Skipping view transition because viewport size changed.
+  ✓  23 [webkit-stats] › e2e/design-v2-stats-period-controls.spec.ts:68:5 › period keyboard changes query the selected range once and category choices reuse its payload (6.9s)
+  ✓  22 [webkit-stats] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing (9.2s)
+  ✘  25 [webkit-stats] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (reduce) (10.8s)
+  ✘  24 [webkit-stats] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (no-preference) (12.9s)
+(node:65951) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:65959) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 8:04:12 PM [vite] (client) [console.warn] [Analytify][0006][+01328ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 8:04:12 PM [vite] (client) [console.warn] [Analytify][0007][+01333ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 8:04:12 PM [vite] (client) [console.error] InvalidStateError: Skipping view transition because viewport size changed.
+[WebServer] 8:04:12 PM [vite] (client) [console.warn] [Analytify][0011][+01801ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 8:04:12 PM [vite] (client) [console.warn] [Analytify][0012][+01803ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓  27 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (8.8s)
+  ✓  26 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (9.8s)
+  ✓  28 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:98:5 › selection follows the native 220ms timeline and responds to reduced motion (3.6s)
+
+
+  1) [desktop] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (no-preference) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('main').getByText('pop', { exact: true }).first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('main').getByText('pop', { exact: true }).first() with timeout 5000ms
+      - waiting for getByRole('main').getByText('pop', { exact: true }).first()
+
+
+      34 |   await page.getByRole('group',{name:'Ranking category'}).getByRole('button',{name:'Genres',exact:true}).press('Enter');
+      35 |   const genreSearch=page.getByRole('searchbox',{name:'Search genres',exact:true});await expect(genreSearch).toHaveValue('neon');await genreSearch.fill('pop');
+    > 36 |   await expect(page.getByRole('main').getByText('pop',{exact:true}).first()).toBeVisible();expect(requests).toBe(4);
+         |                                                                              ^
+      37 |   await expectNoBlockingAxeViolations(page);await writeFile(info.outputPath('search-responsive-geometry.json'),JSON.stringify(geometry,null,2));
+      38 | });
+      39 |
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-search-copy.spec.ts:36:78
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-search-cop-6dfb8-ative-labels-no-preference--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-search-cop-6dfb8-ative-labels-no-preference--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-search-cop-6dfb8-ative-labels-no-preference--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-search-cop-6dfb8-ative-labels-no-preference--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (reduce) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('main').getByText('pop', { exact: true }).first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('main').getByText('pop', { exact: true }).first() with timeout 5000ms
+      - waiting for getByRole('main').getByText('pop', { exact: true }).first()
+
+
+      34 |   await page.getByRole('group',{name:'Ranking category'}).getByRole('button',{name:'Genres',exact:true}).press('Enter');
+      35 |   const genreSearch=page.getByRole('searchbox',{name:'Search genres',exact:true});await expect(genreSearch).toHaveValue('neon');await genreSearch.fill('pop');
+    > 36 |   await expect(page.getByRole('main').getByText('pop',{exact:true}).first()).toBeVisible();expect(requests).toBe(4);
+         |                                                                              ^
+      37 |   await expectNoBlockingAxeViolations(page);await writeFile(info.outputPath('search-responsive-geometry.json'),JSON.stringify(geometry,null,2));
+      38 | });
+      39 |
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-search-copy.spec.ts:36:78
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-search-cop-a448c-g-and-native-labels-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-search-cop-a448c-g-and-native-labels-reduce--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-search-cop-a448c-g-and-native-labels-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-search-cop-a448c-g-and-native-labels-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (no-preference) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('main').getByText('pop', { exact: true }).first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('main').getByText('pop', { exact: true }).first() with timeout 5000ms
+      - waiting for getByRole('main').getByText('pop', { exact: true }).first()
+
+
+      34 |   await page.getByRole('group',{name:'Ranking category'}).getByRole('button',{name:'Genres',exact:true}).press('Enter');
+      35 |   const genreSearch=page.getByRole('searchbox',{name:'Search genres',exact:true});await expect(genreSearch).toHaveValue('neon');await genreSearch.fill('pop');
+    > 36 |   await expect(page.getByRole('main').getByText('pop',{exact:true}).first()).toBeVisible();expect(requests).toBe(4);
+         |                                                                              ^
+      37 |   await expectNoBlockingAxeViolations(page);await writeFile(info.outputPath('search-responsive-geometry.json'),JSON.stringify(geometry,null,2));
+      38 | });
+      39 |
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-search-copy.spec.ts:36:78
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-search-cop-6dfb8-ative-labels-no-preference--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-search-cop-6dfb8-ative-labels-no-preference--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-search-cop-6dfb8-ative-labels-no-preference--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-search-cop-6dfb8-ative-labels-no-preference--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [mobile] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (reduce) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('main').getByText('pop', { exact: true }).first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('main').getByText('pop', { exact: true }).first() with timeout 5000ms
+      - waiting for getByRole('main').getByText('pop', { exact: true }).first()
+
+
+      34 |   await page.getByRole('group',{name:'Ranking category'}).getByRole('button',{name:'Genres',exact:true}).press('Enter');
+      35 |   const genreSearch=page.getByRole('searchbox',{name:'Search genres',exact:true});await expect(genreSearch).toHaveValue('neon');await genreSearch.fill('pop');
+    > 36 |   await expect(page.getByRole('main').getByText('pop',{exact:true}).first()).toBeVisible();expect(requests).toBe(4);
+         |                                                                              ^
+      37 |   await expectNoBlockingAxeViolations(page);await writeFile(info.outputPath('search-responsive-geometry.json'),JSON.stringify(geometry,null,2));
+      38 | });
+      39 |
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-search-copy.spec.ts:36:78
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-search-cop-a448c-g-and-native-labels-reduce--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-search-cop-a448c-g-and-native-labels-reduce--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-search-cop-a448c-g-and-native-labels-reduce--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-search-cop-a448c-g-and-native-labels-reduce--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [firefox-stats] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (no-preference) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('main').getByText('pop', { exact: true }).first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('main').getByText('pop', { exact: true }).first() with timeout 5000ms
+      - waiting for getByRole('main').getByText('pop', { exact: true }).first()
+
+
+      34 |   await page.getByRole('group',{name:'Ranking category'}).getByRole('button',{name:'Genres',exact:true}).press('Enter');
+      35 |   const genreSearch=page.getByRole('searchbox',{name:'Search genres',exact:true});await expect(genreSearch).toHaveValue('neon');await genreSearch.fill('pop');
+    > 36 |   await expect(page.getByRole('main').getByText('pop',{exact:true}).first()).toBeVisible();expect(requests).toBe(4);
+         |                                                                              ^
+      37 |   await expectNoBlockingAxeViolations(page);await writeFile(info.outputPath('search-responsive-geometry.json'),JSON.stringify(geometry,null,2));
+      38 | });
+      39 |
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-search-copy.spec.ts:36:78
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-search-cop-6dfb8-ative-labels-no-preference--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-search-cop-6dfb8-ative-labels-no-preference--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-search-cop-6dfb8-ative-labels-no-preference--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-search-cop-6dfb8-ative-labels-no-preference--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [firefox-stats] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (reduce) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('main').getByText('pop', { exact: true }).first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('main').getByText('pop', { exact: true }).first() with timeout 5000ms
+      - waiting for getByRole('main').getByText('pop', { exact: true }).first()
+
+
+      34 |   await page.getByRole('group',{name:'Ranking category'}).getByRole('button',{name:'Genres',exact:true}).press('Enter');
+      35 |   const genreSearch=page.getByRole('searchbox',{name:'Search genres',exact:true});await expect(genreSearch).toHaveValue('neon');await genreSearch.fill('pop');
+    > 36 |   await expect(page.getByRole('main').getByText('pop',{exact:true}).first()).toBeVisible();expect(requests).toBe(4);
+         |                                                                              ^
+      37 |   await expectNoBlockingAxeViolations(page);await writeFile(info.outputPath('search-responsive-geometry.json'),JSON.stringify(geometry,null,2));
+      38 | });
+      39 |
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-search-copy.spec.ts:36:78
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-search-cop-a448c-g-and-native-labels-reduce--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-search-cop-a448c-g-and-native-labels-reduce--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-search-cop-a448c-g-and-native-labels-reduce--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-search-cop-a448c-g-and-native-labels-reduce--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [webkit-stats] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (no-preference) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('main').getByText('pop', { exact: true }).first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('main').getByText('pop', { exact: true }).first() with timeout 5000ms
+      - waiting for getByRole('main').getByText('pop', { exact: true }).first()
+
+
+      34 |   await page.getByRole('group',{name:'Ranking category'}).getByRole('button',{name:'Genres',exact:true}).press('Enter');
+      35 |   const genreSearch=page.getByRole('searchbox',{name:'Search genres',exact:true});await expect(genreSearch).toHaveValue('neon');await genreSearch.fill('pop');
+    > 36 |   await expect(page.getByRole('main').getByText('pop',{exact:true}).first()).toBeVisible();expect(requests).toBe(4);
+         |                                                                              ^
+      37 |   await expectNoBlockingAxeViolations(page);await writeFile(info.outputPath('search-responsive-geometry.json'),JSON.stringify(geometry,null,2));
+      38 | });
+      39 |
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-search-copy.spec.ts:36:78
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-search-cop-6dfb8-ative-labels-no-preference--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-search-cop-6dfb8-ative-labels-no-preference--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-search-cop-6dfb8-ative-labels-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-search-cop-6dfb8-ative-labels-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [webkit-stats] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (reduce) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('main').getByText('pop', { exact: true }).first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('main').getByText('pop', { exact: true }).first() with timeout 5000ms
+      - waiting for getByRole('main').getByText('pop', { exact: true }).first()
+
+
+      34 |   await page.getByRole('group',{name:'Ranking category'}).getByRole('button',{name:'Genres',exact:true}).press('Enter');
+      35 |   const genreSearch=page.getByRole('searchbox',{name:'Search genres',exact:true});await expect(genreSearch).toHaveValue('neon');await genreSearch.fill('pop');
+    > 36 |   await expect(page.getByRole('main').getByText('pop',{exact:true}).first()).toBeVisible();expect(requests).toBe(4);
+         |                                                                              ^
+      37 |   await expectNoBlockingAxeViolations(page);await writeFile(info.outputPath('search-responsive-geometry.json'),JSON.stringify(geometry,null,2));
+      38 | });
+      39 |
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-search-copy.spec.ts:36:78
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-search-cop-a448c-g-and-native-labels-reduce--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-search-cop-a448c-g-and-native-labels-reduce--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-search-cop-a448c-g-and-native-labels-reduce--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-search-cop-a448c-g-and-native-labels-reduce--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8 failed
+    [desktop] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (no-preference) 
+    [desktop] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (reduce) 
+    [mobile] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (no-preference) 
+    [mobile] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (reduce) 
+    [firefox-stats] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (no-preference) 
+    [firefox-stats] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (reduce) 
+    [webkit-stats] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (no-preference) 
+    [webkit-stats] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (reduce) 
+  20 passed (2.3m)

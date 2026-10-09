@@ -1,0 +1,225 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-cloud-fallback.spec.ts --workers=2
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:33339) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33339) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 16 tests using 2 workers
+
+(node:33598) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33599) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 7:46:38 PM [vite] (client) [console.warn] [Analytify][0009][+00695ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 7:46:38 PM [vite] (client) [console.warn] [Analytify][0010][+00696ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 7:46:38 PM [vite] (client) [console.warn] [Analytify][0009][+00648ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 7:46:38 PM [vite] (client) [console.warn] [Analytify][0010][+00650ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓   2 [desktop] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=false (reduce) (3.2s)
+  ✓   1 [desktop] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=false (no-preference) (3.4s)
+[WebServer] 7:46:41 PM [vite] (client) [console.error] [Analytify][0007][+01067ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated cloud-cache refresh failure"}}}
+[WebServer] 7:46:41 PM [vite] (client) [console.error] [Analytify][0007][+00700ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated cloud-cache refresh failure"}}}
+[WebServer] 7:46:42 PM [vite] (client) [console.warn] [Analytify][0010][+02248ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 7:46:42 PM [vite] (client) [console.warn] [Analytify][0011][+02251ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 7:46:42 PM [vite] (client) [console.warn] [Analytify][0010][+01857ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 7:46:42 PM [vite] (client) [console.warn] [Analytify][0011][+01860ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 7:46:42 PM [vite] (client) [console.warn] [Analytify][0015][+02524ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 7:46:42 PM [vite] (client) [console.warn] [Analytify][0016][+02524ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 7:46:43 PM [vite] (client) [console.warn] [Analytify][0015][+02139ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 7:46:43 PM [vite] (client) [console.warn] [Analytify][0016][+02140ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓   3 [desktop] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=true (no-preference) (4.4s)
+  ✓   4 [desktop] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=true (reduce) (4.1s)
+(node:34193) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34221) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 7:46:46 PM [vite] (client) [console.warn] [Analytify][0009][+00634ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 7:46:46 PM [vite] (client) [console.warn] [Analytify][0010][+00636ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 7:46:46 PM [vite] (client) [console.warn] [Analytify][0009][+00657ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 7:46:46 PM [vite] (client) [console.warn] [Analytify][0010][+00657ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓   6 [mobile] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=false (reduce) (3.3s)
+  ✓   5 [mobile] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=false (no-preference) (3.5s)
+[WebServer] 7:46:50 PM [vite] (client) [console.error] [Analytify][0007][+00863ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated cloud-cache refresh failure"}}}
+[WebServer] 7:46:50 PM [vite] (client) [console.error] [Analytify][0007][+01230ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated cloud-cache refresh failure"}}}
+[WebServer] 7:46:51 PM [vite] (client) [console.warn] [Analytify][0010][+01985ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 7:46:51 PM [vite] (client) [console.warn] [Analytify][0011][+01988ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 7:46:51 PM [vite] (client) [console.warn] [Analytify][0010][+02432ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 7:46:51 PM [vite] (client) [console.warn] [Analytify][0011][+02441ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 7:46:51 PM [vite] (client) [console.warn] [Analytify][0015][+02255ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 7:46:51 PM [vite] (client) [console.warn] [Analytify][0016][+02255ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 7:46:51 PM [vite] (client) [console.warn] [Analytify][0015][+02671ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 7:46:51 PM [vite] (client) [console.warn] [Analytify][0016][+02672ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓   8 [mobile] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=true (reduce) (4.3s)
+  ✓   7 [mobile] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=true (no-preference) (4.5s)
+(node:34853) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34881) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 7:46:56 PM [vite] (client) [console.warn] [Analytify][0009][+00586ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 7:46:56 PM [vite] (client) [console.warn] [Analytify][0010][+00587ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 7:46:56 PM [vite] (client) [console.warn] [Analytify][0009][+00426ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 7:46:56 PM [vite] (client) [console.warn] [Analytify][0010][+00427ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓  10 [firefox-stats] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=false (reduce) (4.5s)
+  ✓   9 [firefox-stats] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=false (no-preference) (4.6s)
+[WebServer] 7:47:00 PM [vite] (client) [console.error] [Analytify][0007][+00905ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated cloud-cache refresh failure"}}}
+[WebServer] 7:47:00 PM [vite] (client) [console.error] [Analytify][0007][+00562ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated cloud-cache refresh failure"}}}
+[WebServer] 7:47:01 PM [vite] (client) [console.warn] [Analytify][0010][+02452ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 7:47:01 PM [vite] (client) [console.warn] [Analytify][0011][+02456ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 7:47:01 PM [vite] (client) [console.warn] [Analytify][0010][+01883ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 7:47:01 PM [vite] (client) [console.warn] [Analytify][0011][+01888ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 7:47:01 PM [vite] (client) [console.warn] [Analytify][0015][+02873ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 7:47:01 PM [vite] (client) [console.warn] [Analytify][0016][+02875ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 7:47:02 PM [vite] (client) [console.warn] [Analytify][0015][+02299ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 7:47:02 PM [vite] (client) [console.warn] [Analytify][0016][+02301ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓  11 [firefox-stats] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=true (no-preference) (5.3s)
+  ✓  12 [firefox-stats] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=true (reduce) (4.9s)
+(node:35995) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36002) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  13 [webkit-stats] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=false (no-preference) (1ms)
+  ✘  14 [webkit-stats] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=false (reduce) (2ms)
+(node:36037) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36043) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  15 [webkit-stats] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=true (no-preference) (1ms)
+  ✘  16 [webkit-stats] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=true (reduce) (1ms)
+
+
+  1) [webkit-stats] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=false (no-preference) 
+
+    Error: browserType.launch: Target page, context or browser has been closed
+    Browser logs:
+
+    <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window
+    <launched> pid=36019
+    [pid=36019][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+    Call log:
+      - <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window
+      - <launched> pid=36019
+      - [pid=36019][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+      - [pid=36019] <gracefully close start>
+      - [pid=36019] <kill>
+      - [pid=36019] <will force kill>
+      - [pid=36019] exception while trying to kill process: Error: kill ESRCH
+      - [pid=36019] <process did exit: exitCode=127, signal=null>
+      - [pid=36019] starting temporary directories cleanup
+      - [pid=36019] finished temporary directories cleanup
+      - [pid=36019] <gracefully close end>
+
+
+    Error Context: test-results/design-v2-stats-cloud-fall-93093--stale-false-no-preference--webkit-stats/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-cloud-fall-93093--stale-false-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-cloud-fall-93093--stale-false-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [webkit-stats] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=false (reduce) 
+
+    Error: browserType.launch: Target page, context or browser has been closed
+    Browser logs:
+
+    <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window
+    <launched> pid=36028
+    [pid=36028][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+    Call log:
+      - <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window
+      - <launched> pid=36028
+      - [pid=36028][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+      - [pid=36028] <gracefully close start>
+      - [pid=36028] <kill>
+      - [pid=36028] <will force kill>
+      - [pid=36028] exception while trying to kill process: Error: kill ESRCH
+      - [pid=36028] <process did exit: exitCode=127, signal=null>
+      - [pid=36028] starting temporary directories cleanup
+      - [pid=36028] finished temporary directories cleanup
+      - [pid=36028] <gracefully close end>
+
+
+    Error Context: test-results/design-v2-stats-cloud-fall-19e1f-trieval-stale-false-reduce--webkit-stats/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-cloud-fall-19e1f-trieval-stale-false-reduce--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-cloud-fall-19e1f-trieval-stale-false-reduce--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit-stats] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=true (no-preference) 
+
+    Error: browserType.launch: Target page, context or browser has been closed
+    Browser logs:
+
+    <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window
+    <launched> pid=36121
+    [pid=36121][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+    Call log:
+      - <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window
+      - <launched> pid=36121
+      - [pid=36121][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+      - [pid=36121] <gracefully close start>
+      - [pid=36121] <kill>
+      - [pid=36121] <will force kill>
+      - [pid=36121] exception while trying to kill process: Error: kill ESRCH
+      - [pid=36121] <process did exit: exitCode=127, signal=null>
+      - [pid=36121] starting temporary directories cleanup
+      - [pid=36121] finished temporary directories cleanup
+      - [pid=36121] <gracefully close end>
+
+
+    Error Context: test-results/design-v2-stats-cloud-fall-f2fb3-l-stale-true-no-preference--webkit-stats/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-cloud-fall-f2fb3-l-stale-true-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-cloud-fall-f2fb3-l-stale-true-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [webkit-stats] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=true (reduce) 
+
+    Error: browserType.launch: Target page, context or browser has been closed
+    Browser logs:
+
+    <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window
+    <launched> pid=36134
+    [pid=36134][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+    Call log:
+      - <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window
+      - <launched> pid=36134
+      - [pid=36134][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+      - [pid=36134] <gracefully close start>
+      - [pid=36134] <kill>
+      - [pid=36134] <will force kill>
+      - [pid=36134] exception while trying to kill process: Error: kill ESRCH
+      - [pid=36134] <process did exit: exitCode=127, signal=null>
+      - [pid=36134] starting temporary directories cleanup
+      - [pid=36134] finished temporary directories cleanup
+      - [pid=36134] <gracefully close end>
+
+
+    Error Context: test-results/design-v2-stats-cloud-fall-a39a4-etrieval-stale-true-reduce--webkit-stats/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-cloud-fall-a39a4-etrieval-stale-true-reduce--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-cloud-fall-a39a4-etrieval-stale-true-reduce--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [webkit-stats] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=false (no-preference) 
+    [webkit-stats] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=false (reduce) 
+    [webkit-stats] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=true (no-preference) 
+    [webkit-stats] › e2e/design-v2-stats-cloud-fallback.spec.ts:6:7 › cloud-restored Stats cache preserves rankings and uses only necessary retrieval, stale=true (reduce) 
+  12 passed (37.3s)

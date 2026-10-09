@@ -1,0 +1,58 @@
+npm notice run spoti-front@0.0.0 test:coverage:edge
+npm notice run node scripts/run-application-coverage.mjs edge && node scripts/check-application-coverage-inventory.mjs edge
+running 4 tests from ./supabase/functions/song-league-playlist-sync/recovery.test.ts
+the recovery marker survives playlist description updates ... ok (774µs)
+recovery accepts only a marker match owned by the connected Spotify user ... ok (233µs)
+recovery requires the exact operation marker ... ok (120µs)
+playlist replacement retains every track in Spotify-sized batches ... ok (248µs)
+running 2 tests from ./supabase/functions/song-league-notifications/push-endpoint.test.ts
+accepts supported browser push providers ... ok (993µs)
+rejects SSRF, lookalike, credential, port, and redirect-style endpoints ... ok (1ms)
+running 3 tests from ./supabase/functions/spotify-credentials/personal-recovery.test.ts
+personal recovery accepts only bounded Spotify account identifiers ... ok (708µs)
+personal recovery aliases are deterministic and reveal no Spotify ID ... ok (1ms)
+personal recovery requires both token paths to verify the claimed account ... ok (449µs)
+running 3 tests from ./supabase/functions/spotify-credentials/profile-verification.test.ts
+matches only Spotify identities returned by the verified profile ... ok (1ms)
+allows a verified anonymous personal-app identity alongside a hosted profile ... ok (119µs)
+allows an unverified placeholder to be replaced after server verification ... ok (129µs)
+running 3 tests from ./supabase/functions/_shared/bounded-fetch.test.ts
+boundedFetch honors Retry-After before retrying ... ok (15ms)
+boundedFetch never retries an unsafe request unless explicitly allowed ... ok (442µs)
+boundedFetch classifies an expired deadline ... ok (8ms)
+running 9 tests from ./supabase/functions/_shared/request-security.test.ts
+CORS reflects only an explicitly allowed origin ... ok (17ms)
+preflight rejects unsupported methods and headers ... ok (1ms)
+streaming JSON parsing rejects undeclared oversized bodies ... ok (5ms)
+JSON parsing rejects arrays and malformed bodies with a stable error ... ok (1ms)
+bearer tokens have a strict size and syntax bound ... ok (2ms)
+worker access requires the exact service secret, not an unsigned role claim ... ok (390µs)
+request bodies reject compressed or ambiguous media types before parsing ... ok (789µs)
+durable limits count calls and expose only a bounded retry delay ... ok (2ms)
+public failures contain correlation IDs but not internal details ... ok (7ms)
+running 2 tests from ./supabase/functions/_shared/spotify-credential-crypto.test.ts
+credential key ring reads mixed versions and writes only the active version ... ok (4ms)
+credential decryption fails closed for retired keys and corrupt ciphertext ... ok (950µs)
+
+ok | 26 passed | 0 failed (1s)
+
+| File                                        | Branch % | Function % | Line % |
+| ------------------------------------------- | -------- | ---------- | ------ |
+| _shared/bounded-fetch.ts                    |     67.3 |       80.0 |   87.9 |
+| _shared/request-security.ts                 |     66.2 |       93.8 |   90.1 |
+| _shared/spotify-credential-crypto.ts        |     68.0 |       90.0 |   82.5 |
+| song-league-notifications/push-endpoint.ts  |    100.0 |      100.0 |  100.0 |
+| song-league-playlist-sync/recovery.ts       |     89.5 |      100.0 |   91.7 |
+| spotify-credentials/personal-recovery.ts    |    100.0 |      100.0 |  100.0 |
+| spotify-credentials/profile-verification.ts |    100.0 |      100.0 |  100.0 |
+| All files                                   |     73.2 |       93.3 |   89.8 |
+Lcov coverage report has been generated at file:///mnt/Storage/ProgrammingProjects/Analytify/coverage/edge/raw-B3lIFc/lcov.info
+HTML coverage report has been generated at file:///mnt/Storage/ProgrammingProjects/Analytify/coverage/edge/raw-B3lIFc/html/index.html
+
+=============================== Coverage summary ===============================
+Statements   : 24.27% ( 219/902 )
+Branches     : 20.07% ( 160/797 )
+Functions    : 42.47% ( 48/113 )
+Lines        : 26.21% ( 200/763 )
+================================================================================
+edge: all 12 production sources included; final 98% gate not requested.

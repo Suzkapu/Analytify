@@ -1,0 +1,41 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/v2-stats-search-copy.spec.ts --progress=false
+Application bundle generation complete. [3.763 seconds] - 2026-10-09T17:58:31.300Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/v2-stats-search-copy.spec.ts (2 tests | 1 failed) 450ms
+     × uses the designed song hint while keeping artist matching, clearing and no-results recovery 396ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-stats-search-copy.spec.ts > canonical Stats search copy preserves intended filtering > uses the designed song hint while keeping artist matching, clearing and no-results recovery
+AssertionError: expected 'Search songs or artists' to be 'Search songs' // Object.is equality
+
+Expected: "Search songs"
+Received: "Search songs or artists"
+
+ ❯ src/app/features/insights/user-stats/v2-stats-search-copy.spec.ts:32:55
+     30| describe('canonical Stats search copy preserves intended filtering',()…
+     31|   it('uses the designed song hint while keeping artist matching, clear…
+     32|     const s=await setup();expect(s.input.placeholder).toBe('Search son…
+       |                                                       ^
+     33|     expect(s.input.labels?.[0].textContent).toBe('Search songs or arti…
+     34|     await s.type('  NEON  ');expect(s.element.querySelector('.v2-ranki…
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  19:58:31
+   Duration  1.46s (transform 248ms, setup 231ms, import 347ms, tests 450ms, environment 319ms)
+

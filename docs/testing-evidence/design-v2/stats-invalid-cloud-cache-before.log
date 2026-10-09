@@ -1,0 +1,117 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts --progress=false
+Application bundle generation complete. [2.785 seconds] - 2026-10-09T17:47:23.009Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stdout | src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > retains a complete local cache when cloud restoration returns invalid tracks: broken-json
+[Analytify][0018][+00000ms][Local Storage][DONE] Restored 4 requested cache keys from Supabase.
+[Analytify][0019][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+
+stderr | src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > retains a complete local cache when cloud restoration returns invalid tracks: broken-json
+AssertionError: expected [] to deeply equal [ { id: 'cached-song', …(3) } ]
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts:127:35
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [],
+  expected: [
+    {
+      id: 'cached-song',
+      name: 'Cached song',
+      artists: [Array],
+      album: [Object]
+    }
+  ],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stdout | src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > retains a complete local cache when cloud restoration returns invalid tracks: {"not":"an array"}
+[Analytify][0020][+00000ms][Local Storage][DONE] Restored 4 requested cache keys from Supabase.
+[Analytify][0021][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+
+stderr | src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > retains a complete local cache when cloud restoration returns invalid tracks: {"not":"an array"}
+AssertionError: expected [] to deeply equal [ { id: 'cached-song', …(3) } ]
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts:127:35
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [],
+  expected: [
+    {
+      id: 'cached-song',
+      name: 'Cached song',
+      artists: [Array],
+      album: [Object]
+    }
+  ],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts (14 tests | 2 failed) 82ms
+     × retains a complete local cache when cloud restoration returns invalid tracks: broken-json 6ms
+     × retains a complete local cache when cloud restoration returns invalid tracks: {"not":"an array"} 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > retains a complete local cache when cloud restoration returns invalid tracks: broken-json
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > retains a complete local cache when cloud restoration returns invalid tracks: {"not":"an array"}
+AssertionError: expected [] to deeply equal [ { id: 'cached-song', …(3) } ]
+
+- Expected
++ Received
+
+- [
+-   {
+-     "album": {
+-       "images": [],
+-     },
+-     "artists": [
+-       {
+-         "name": "Artist",
+-       },
+-     ],
+-     "id": "cached-song",
+-     "name": "Cached song",
+-   },
+- ]
++ []
+
+ ❯ src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts:127:35
+    125|     h.cacheReads[0].resolve({data: cloudEntries, error: null}); await …
+    126|     h.snapshotReads[0].resolve({data: null, error: null}); await pendi…
+    127|     expect(h.component.topTracks).toEqual([song]);
+       |                                   ^
+    128|     expect(h.component).toMatchObject({isLoading: false, isRefreshingS…
+    129|     h.pages[0].error(new Error('Isolated recovery failure')); await se…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 12 passed (14)
+   Start at  19:47:23
+   Duration  1.03s (transform 174ms, setup 216ms, import 222ms, tests 82ms, environment 375ms)
+

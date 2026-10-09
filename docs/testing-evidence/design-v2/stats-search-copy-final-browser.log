@@ -1,0 +1,76 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-search-copy.spec.ts e2e/design-v2-stats-search-switch.spec.ts e2e/design-v2-stats-period-controls.spec.ts --config=/tmp/analytify-all-browsers.config.ts --workers=2
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:70199) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:70199) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 28 tests using 2 workers
+
+(node:70312) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:70313) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 [desktop] › e2e/design-v2-stats-period-controls.spec.ts:68:5 › period keyboard changes query the selected range once and category choices reuse its payload (3.1s)
+  ✓   1 [desktop] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing (4.2s)
+  ✓   3 [desktop] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (no-preference) (3.3s)
+  ✓   4 [desktop] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (reduce) (3.4s)
+[WebServer] 8:07:34 PM [vite] (client) [console.warn] [Analytify][0006][+00606ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 8:07:34 PM [vite] (client) [console.warn] [Analytify][0007][+00609ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 8:07:35 PM [vite] (client) [console.warn] [Analytify][0011][+00731ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 8:07:35 PM [vite] (client) [console.warn] [Analytify][0012][+00732ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 8:07:35 PM [vite] (client) [console.error] InvalidStateError: Transition was aborted because of invalid state. Viewport size changed
+  ✓   5 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (3.8s)
+  ✓   6 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (3.8s)
+(node:70676) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:98:5 › selection follows the native 220ms timeline and responds to reduced motion (2.3s)
+(node:70762) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 [mobile] › e2e/design-v2-stats-period-controls.spec.ts:68:5 › period keyboard changes query the selected range once and category choices reuse its payload (3.0s)
+  ✓   8 [mobile] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing (5.2s)
+  ✓  10 [mobile] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (no-preference) (4.5s)
+  ✓  11 [mobile] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (reduce) (4.2s)
+[WebServer] 8:07:48 PM [vite] (client) [console.warn] [Analytify][0006][+00541ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 8:07:48 PM [vite] (client) [console.warn] [Analytify][0007][+00544ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 8:07:49 PM [vite] (client) [console.warn] [Analytify][0011][+00665ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 8:07:49 PM [vite] (client) [console.warn] [Analytify][0012][+00666ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 8:07:49 PM [vite] (client) [console.error] InvalidStateError: Transition was aborted because of invalid state. Viewport size changed
+  ✓  12 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (4.0s)
+  ✓  13 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (4.3s)
+(node:71044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  14 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:98:5 › selection follows the native 220ms timeline and responds to reduced motion (2.3s)
+(node:71196) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  16 [firefox-stats] › e2e/design-v2-stats-period-controls.spec.ts:68:5 › period keyboard changes query the selected range once and category choices reuse its payload (3.9s)
+  ✓  15 [firefox-stats] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing (5.2s)
+  ✓  18 [firefox-stats] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (reduce) (3.6s)
+  ✓  17 [firefox-stats] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (no-preference) (4.0s)
+[WebServer] 8:08:04 PM [vite] (client) [console.warn] [Analytify][0006][+00587ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 8:08:04 PM [vite] (client) [console.warn] [Analytify][0007][+00594ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 8:08:04 PM [vite] (client) [console.warn] [Analytify][0011][+00899ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 8:08:04 PM [vite] (client) [console.warn] [Analytify][0012][+00901ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓  19 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (4.1s)
+  ✓  20 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (4.7s)
+(node:71917) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  21 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:98:5 › selection follows the native 220ms timeline and responds to reduced motion (2.0s)
+(node:71991) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  23 [webkit-stats] › e2e/design-v2-stats-period-controls.spec.ts:68:5 › period keyboard changes query the selected range once and category choices reuse its payload (6.7s)
+  ✓  22 [webkit-stats] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing (8.5s)
+  ✓  25 [webkit-stats] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (reduce) (5.7s)
+[WebServer] 8:08:26 PM [vite] (client) [console.warn] [Analytify][0006][+00990ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 8:08:26 PM [vite] (client) [console.warn] [Analytify][0007][+00994ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓  24 [webkit-stats] › e2e/design-v2-stats-search-copy.spec.ts:4:61 › canonical inline search preserves artist matching and native labels (no-preference) (9.8s)
+[WebServer] 8:08:26 PM [vite] (client) [console.warn] [Analytify][0011][+01292ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 8:08:26 PM [vite] (client) [console.warn] [Analytify][0012][+01292ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 8:08:29 PM [vite] (client) [console.error] InvalidStateError: Skipping view transition because viewport size changed.
+  ✓  26 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (8.9s)
+  ✓  27 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (7.1s)
+  ✓  28 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:98:5 › selection follows the native 220ms timeline and responds to reduced motion (3.9s)
+
+  28 passed (1.3m)
