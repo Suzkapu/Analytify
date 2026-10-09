@@ -2,6 +2,14 @@ import {readFileSync} from 'node:fs';
 
 const matrix = readFileSync(new URL('../docs/design-v2-ui-parity-matrix.md', import.meta.url), 'utf8');
 const shell = readFileSync(new URL('../src/app/shared/layout/design-v2-shell/design-v2-shell.component.html', import.meta.url), 'utf8');
+const shellController = readFileSync(new URL('../src/app/shared/layout/design-v2-shell/design-v2-shell.component.ts', import.meta.url), 'utf8');
+if (/blocked users|openBlockedUsers/i.test(shell) || /openBlockedUsers|blocked-users-dialog/.test(shellController)) {
+  throw new Error('Design v2 shell restores intentionally excluded blocked-user management.');
+}
+if (!matrix.includes('Blocked Users management and admin runtime health are intentionally excluded')) {
+  throw new Error('Design v2 parity inventory must record the current intentional exclusions.');
+}
+
 const sourceFiles = [
   '../src/app/features/library/design-v2/v2-playlists-page.component.ts',
   '../src/app/features/library/design-v2/v2-songs-page.component.ts',
@@ -30,7 +38,7 @@ for (const section of ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'I1', 'J1
 const requiredSurfaceInventory = [
   'initial navigation loading', 'global announcement', 'update prompt', 'skip links',
   'desktop shell', 'mobile shell', 'global overlay', 'persistent ambient renderer',
-  'Cloud Backup', 'Blocked Users', 'Automatic Updates', 'Manage Spotify access', 'Clear Data chooser',
+  'Cloud Backup', 'Automatic Updates', 'Manage Spotify access', 'Clear Data chooser',
   'Terms/Privacy acceptance', 'hosted callback', 'personal Spotify', 'Cloud Access setup',
   'Playlists header', 'Songs context/back', 'Artist profile/header', 'Analysis context/back',
   'Stats/spy header', 'Search past', 'Recently Played header',

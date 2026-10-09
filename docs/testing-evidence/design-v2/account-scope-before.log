@@ -1,0 +1,92 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts --progress=false
+Application bundle generation complete. [2.395 seconds] - 2026-10-09T18:17:42.586Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > keeps retained account settings and excludes blocked-user management (cloud identity true)
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:27 (2.117.2) 2026-10-09T18:17:44.261Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > opens the retained Notifications action from the rendered menu without a data mutation
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:28 (2.117.2) 2026-10-09T18:17:44.278Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > opens the retained Automatic updates action from the rendered menu without a data mutation
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:29 (2.117.2) 2026-10-09T18:17:44.351Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+ ❯ |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts (34 tests | 3 failed) 955ms
+     × keeps retained account settings and excludes blocked-user management (cloud identity true) 17ms
+     × opens the retained Notifications action from the rendered menu without a data mutation 73ms
+     × opens the retained Automatic updates action from the rendered menu without a data mutation 31ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > keeps retained account settings and excludes blocked-user management (cloud identity true)
+AssertionError: expected [ '', 'Notifications', …(4) ] to not include 'Blocked users'
+ ❯ src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts:398:25
+    396|     expect(buttons).toContain('Clear data');
+    397|     expect(buttons.includes('Automatic updates')).toBe(hasCloudIdentit…
+    398|     expect(buttons).not.toContain('Blocked users');
+       |                         ^
+    399|     expect(dialog.querySelector('input[role="switch"]')).not.toBeNull(…
+    400|     expect(dialog.querySelector('a[href="https://www.spotify.com/accou…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > opens the retained Notifications action from the rendered menu without a data mutation
+AssertionError: expected 'NotificationSettingsDialogComponent2' to be 'NotificationSettingsDialogComponent' // Object.is equality
+
+Expected: "NotificationSettingsDialogComponent"
+Received: "NotificationSettingsDialogComponent2"
+
+ ❯ src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts:419:28
+    417|     const factory = open.mock.calls[0][0];
+    418|     const component = await factory();
+    419|     expect(component.name).toBe(label === 'Notifications' ? 'Notificat…
+       |                            ^
+    420|     expect(shell.accountOpen()).toBe(false);
+    421|     expect(deletion).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > opens the retained Automatic updates action from the rendered menu without a data mutation
+AssertionError: expected 'SyncTaskStatusDialogComponent2' to be 'SyncTaskStatusDialogComponent' // Object.is equality
+
+Expected: "SyncTaskStatusDialogComponent"
+Received: "SyncTaskStatusDialogComponent2"
+
+ ❯ src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts:419:28
+    417|     const factory = open.mock.calls[0][0];
+    418|     const component = await factory();
+    419|     expect(component.name).toBe(label === 'Notifications' ? 'Notificat…
+       |                            ^
+    420|     expect(shell.accountOpen()).toBe(false);
+    421|     expect(deletion).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 31 passed (34)
+   Start at  20:17:42
+   Duration  1.73s (transform 148ms, setup 202ms, import 176ms, tests 955ms, environment 289ms)
+

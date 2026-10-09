@@ -1,0 +1,50 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts --progress=false
+Application bundle generation complete. [2.351 seconds] - 2026-10-09T18:35:38.410Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts (20 tests | 4 failed) 1820ms
+     × cancels obsolete profile HTTP work on public 68ms
+     × cancels obsolete profile HTTP work on logout 64ms
+     × cancels obsolete profile HTTP work on destroy 63ms
+     × cancels obsolete profile HTTP work on replacement 66ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts > shell account through actual Spotify HTTP and admin service boundaries > cancels obsolete profile HTTP work on public
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts > shell account through actual Spotify HTTP and admin service boundaries > cancels obsolete profile HTTP work on logout
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts > shell account through actual Spotify HTTP and admin service boundaries > cancels obsolete profile HTTP work on destroy
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts > shell account through actual Spotify HTTP and admin service boundaries > cancels obsolete profile HTTP work on replacement
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts:170:27
+    168|     else if (reason === 'destroy') harness.fixture.destroy();
+    169|     else {spotifyId = 'actor-b'; await harness.navigateByUrl('/stats')…
+    170|     expect(old.cancelled).toBe(true);
+       |                           ^
+    171|     adminRequests[0].resolve({data: false, error: null});
+    172|     if (reason === 'replacement') (await profileRequest()).flush({...p…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 16 passed (20)
+   Start at  20:35:38
+   Duration  2.58s (transform 125ms, setup 202ms, import 174ms, tests 1.82s, environment 288ms)
+

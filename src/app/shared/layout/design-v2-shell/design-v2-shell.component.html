@@ -129,7 +129,6 @@
           </label>
           <button type="button" class="v2-account-action" (click)="openNotifications()"><i class="pi pi-bell" aria-hidden="true"></i><span>Notifications</span></button>
           @if (authService.hasCloudIdentity()) {
-            <button type="button" class="v2-account-action" (click)="openBlockedUsers()"><i class="pi pi-ban" aria-hidden="true"></i><span>Blocked users</span></button>
             <button type="button" class="v2-account-action" (click)="openAutomaticUpdates()"><i class="pi pi-clock" aria-hidden="true"></i><span>Automatic updates</span></button>
           }
           <button type="button" class="v2-account-action" [disabled]="actionRunning()" (click)="requestLogout()"><i class="pi pi-sign-out" aria-hidden="true"></i><span>Log out</span></button>

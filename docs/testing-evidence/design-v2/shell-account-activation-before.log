@@ -1,0 +1,46 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts --progress=false
+Application bundle generation complete. [2.371 seconds] - 2026-10-09T18:42:11.855Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts (21 tests | 1 failed) 1946ms
+     × cancels old profile work before a public destination activates 68ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts > shell account through actual Spotify HTTP and admin service boundaries > cancels old profile work before a public destination activates
+AssertionError: expected [ false ] to deeply equal [ true ]
+
+- Expected
++ Received
+
+  [
+-   true,
++   false,
+  ]
+
+ ❯ src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts:183:27
+    181|     });
+    182|     await harness.navigateByUrl('/public'); subscription.unsubscribe();
+    183|     expect(cancellations).toEqual([true]);
+       |                           ^
+    184|     adminRequests[0].resolve({data: false, error: null}); await settle…
+    185|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 passed (21)
+   Start at  20:42:11
+   Duration  2.71s (transform 127ms, setup 202ms, import 175ms, tests 1.95s, environment 290ms)
+

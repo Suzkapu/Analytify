@@ -1,0 +1,111 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-all-browsers.config.ts e2e/design-v2-account-scope.spec.ts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:77819) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:77819) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 16 tests using 2 workers
+
+(node:77908) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:77909) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   2 [desktop] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=false, reduce) (2.1s)
+(node:78080) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=false, no-preference) (3.9s)
+  ✘   4 [desktop] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=true, reduce) (2.4s)
+  ✓   3 [desktop] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=true, no-preference) (4.0s)
+(node:78224) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:78232) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   5 [mobile] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=false, no-preference) (5.0s)
+  ✓   6 [mobile] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=false, reduce) (4.9s)
+  ✓   8 [mobile] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=true, reduce) (5.4s)
+  ✓   7 [mobile] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=true, no-preference) (5.7s)
+(node:78578) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:78587) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 [firefox-stats] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=false, reduce) (4.2s)
+  ✓   9 [firefox-stats] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=false, no-preference) (4.9s)
+  ✓  12 [firefox-stats] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=true, reduce) (3.5s)
+  ✓  11 [firefox-stats] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=true, no-preference) (4.3s)
+(node:79386) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:79558) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  14 [webkit-stats] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=false, reduce) (5.6s)
+  ✓  13 [webkit-stats] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=false, no-preference) (7.6s)
+  ✓  16 [webkit-stats] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=true, reduce) (5.6s)
+  ✓  15 [webkit-stats] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=true, no-preference) (8.4s)
+
+
+  1) [desktop] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=false, reduce) 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 0
+    Received:    -82.828125
+
+      36 |       expect(sample.overflow).toBe(0);
+      37 |       expect(sample.dialogLeft).toBeGreaterThanOrEqual(0); expect(sample.dialogRight).toBeLessThanOrEqual(width);
+    > 38 |       expect(sample.dialogTop).toBeGreaterThanOrEqual(0); expect(sample.dialogBottom).toBeLessThanOrEqual(height);
+         |                                ^
+      39 |       expect(sample.top).toBeGreaterThanOrEqual(sample.dialogTop); expect(sample.bottom).toBeLessThanOrEqual(sample.dialogBottom);
+      40 |       expect(sample.reachable).toBe(true); geometry.push(sample);
+      41 |       if (height === 480) await menu.screenshot({path: info.outputPath(`account-${width}.png`)});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-account-scope.spec.ts:38:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-account-scope-ac-d9c41-agement-cloud-false-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-account-scope-ac-d9c41-agement-cloud-false-reduce--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-account-scope-ac-d9c41-agement-cloud-false-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-account-scope-ac-d9c41-agement-cloud-false-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=true, reduce) 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 480
+    Received:    608.828125
+
+      36 |       expect(sample.overflow).toBe(0);
+      37 |       expect(sample.dialogLeft).toBeGreaterThanOrEqual(0); expect(sample.dialogRight).toBeLessThanOrEqual(width);
+    > 38 |       expect(sample.dialogTop).toBeGreaterThanOrEqual(0); expect(sample.dialogBottom).toBeLessThanOrEqual(height);
+         |                                                                                       ^
+      39 |       expect(sample.top).toBeGreaterThanOrEqual(sample.dialogTop); expect(sample.bottom).toBeLessThanOrEqual(sample.dialogBottom);
+      40 |       expect(sample.reachable).toBe(true); geometry.push(sample);
+      41 |       if (height === 480) await menu.screenshot({path: info.outputPath(`account-${width}.png`)});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-account-scope.spec.ts:38:87
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-account-scope-ac-98465-nagement-cloud-true-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-account-scope-ac-98465-nagement-cloud-true-reduce--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-account-scope-ac-98465-nagement-cloud-true-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-account-scope-ac-98465-nagement-cloud-true-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=false, reduce) 
+    [desktop] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=true, reduce) 
+  14 passed (50.2s)

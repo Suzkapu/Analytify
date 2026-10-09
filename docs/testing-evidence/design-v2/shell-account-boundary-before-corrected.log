@@ -1,0 +1,163 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts --progress=false
+Application bundle generation complete. [2.273 seconds] - 2026-10-09T18:28:38.171Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts (11 tests | 7 failed) 2027ms
+     × rejects late account results after entering /login and reloads on return 79ms
+     × rejects late account results after entering /public and reloads on return 72ms
+     × rejects replaced spotify identity and hydrates the current account 71ms
+     × rejects replaced cloud identity and hydrates the current account 1070ms
+     × clears chrome on logout and rejects both late service results 67ms
+     × rejects old results after session generation changes even if identifiers match 72ms
+     × does not publish delayed account results after shell destruction 71ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts > shell account through actual Spotify HTTP and admin service boundaries > rejects late account results after entering /login and reloads on return
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts > shell account through actual Spotify HTTP and admin service boundaries > rejects late account results after entering /public and reloads on return
+AssertionError: expected 'Fresh A' to be 'Your account' // Object.is equality
+
+Expected: "Your account"
+Received: "Fresh A"
+
+ ❯ src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts:91:33
+     89|     await harness.navigateByUrl(destination);
+     90|     old.flush(profile('A')); adminRequests[0].resolve({data: true, err…
+     91|     expect(shell.displayName()).toBe('Your account'); expect(shell.pro…
+       |                                 ^
+     92|     await harness.navigateByUrl('/stats');
+     93|     expect(shell.displayName()).toBe('Cached A');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:463:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts > shell account through actual Spotify HTTP and admin service boundaries > rejects replaced spotify identity and hydrates the current account
+AssertionError: expected 'Cached A' to be 'Cached B' // Object.is equality
+
+Expected: "Cached B"
+Received: "Cached A"
+
+ ❯ src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts:110:33
+    108|     if (identity === 'spotify') spotifyId = 'actor-b'; else cloudId = …
+    109|     await harness.navigateByUrl('/stats');
+    110|     expect(shell.displayName()).toBe(identity === 'spotify' ? 'Cached …
+       |                                 ^
+    111|     const current = await profileRequest();
+    112|     old.flush(profile('A')); adminRequests[0].resolve({data: true, err…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts > shell account through actual Spotify HTTP and admin service boundaries > rejects replaced cloud identity and hydrates the current account
+Error: Expected one matching request for criteria "Match URL: https://api.spotify.com/v1/me", found none.
+ ❯ HttpClientTestingBackend.expectOne ../darwin_arm64-fastbuild-ST-fdfa778d11ba/bin/packages/common/http/testing/src/backend.ts:112:12
+ ❯ src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts:62:34
+     60|   }
+     61|   async function profileRequest() {
+     62|     return vi.waitFor(() => http.expectOne(`${environment.spotifyUrl}/…
+       |                                  ^
+     63|   }
+     64|   // Finish the released HTTP/RPC promise chains before checking disca…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts > shell account through actual Spotify HTTP and admin service boundaries > clears chrome on logout and rejects both late service results
+AssertionError: expected 'Cached A' to be 'Your account' // Object.is equality
+
+Expected: "Your account"
+Received: "Cached A"
+
+ ❯ src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts:124:33
+    122|     const {shell} = await start(); const old = await profileRequest();
+    123|     logout.next(); await TestBed.inject(SessionLifecycleService).inval…
+    124|     expect(shell.displayName()).toBe('Your account'); expect(shell.pro…
+       |                                 ^
+    125|     old.flush(profile('A')); adminRequests[0].resolve({data: true, err…
+    126|     expect(shell.displayName()).toBe('Your account'); expect(shell.pro…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts > shell account through actual Spotify HTTP and admin service boundaries > rejects old results after session generation changes even if identifiers match
+AssertionError: expected 'Fresh A' to be 'Cached A' // Object.is equality
+
+Expected: "Cached A"
+Received: "Fresh A"
+
+ ❯ src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts:133:33
+    131|     await TestBed.inject(SessionLifecycleService).invalidateAndDrain();
+    132|     old.flush(profile('A')); adminRequests[0].resolve({data: true, err…
+    133|     expect(shell.displayName()).toBe('Cached A'); expect(shell.isAdmin…
+       |                                 ^
+    134|   });
+    135|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:463:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts > shell account through actual Spotify HTTP and admin service boundaries > does not publish delayed account results after shell destruction
+AssertionError: expected { name: 'Fresh A', …(1) } to deeply equal { name: 'Cached A', …(1) }
+
+- Expected
++ Received
+
+  {
+-   "name": "Cached A",
+-   "picture": "https://test.invalid/a.png",
++   "name": "Fresh A",
++   "picture": "https://test.invalid/fresh-a.png",
+  }
+
+ ❯ src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts:140:73
+    138|     const prior = {name: shell.displayName(), picture: shell.profilePi…
+    139|     harness.fixture.destroy(); old.flush(profile('A')); adminRequests[…
+    140|     expect({name: shell.displayName(), picture: shell.profilePicUrl()}…
+       |                                                                         ^
+    141|   });
+    142|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:463:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 4 passed (11)
+   Start at  20:28:38
+   Duration  2.79s (transform 121ms, setup 203ms, import 170ms, tests 2.03s, environment 288ms)
+

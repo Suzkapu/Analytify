@@ -384,6 +384,47 @@ describe('DesignV2ShellComponent', () => {
     expect(element.querySelector('.v2-footer')?.textContent).toContain('Legal & privacy');
   });
 
+  it.each([false, true])('keeps retained account settings and excludes blocked-user management (cloud identity %s)', async hasCloudIdentity => {
+    const {harness, shell} = await createShell();
+    vi.spyOn(shell.authService, 'hasCloudIdentity').mockReturnValue(hasCloudIdentity);
+    shell.toggleAccount();
+    harness.fixture.detectChanges();
+    const dialog = harness.fixture.nativeElement.querySelector('.v2-account-dialog') as HTMLElement;
+    const buttons = [...dialog.querySelectorAll('button')].map(button => button.textContent?.trim());
+    expect(buttons).toContain('Notifications');
+    expect(buttons).toContain('Log out');
+    expect(buttons).toContain('Clear data');
+    expect(buttons.includes('Automatic updates')).toBe(hasCloudIdentity);
+    expect(buttons).not.toContain('Blocked users');
+    expect(dialog.querySelector('input[role="switch"]')).not.toBeNull();
+    expect(dialog.querySelector('a[href="https://www.spotify.com/account/apps/"]')?.getAttribute('rel')).toBe('noopener noreferrer');
+    expect(dialog.querySelector('a[href="/legal#privacy"]')).not.toBeNull();
+  });
+
+  it.each(['Notifications', 'Automatic updates'])('opens the retained %s action from the rendered menu without a data mutation', async label => {
+    const {harness, shell} = await createShell();
+    vi.spyOn(shell.authService, 'hasCloudIdentity').mockReturnValue(true);
+    const open = vi.spyOn(shell.overlays, 'open').mockResolvedValue(null);
+    const deletion = vi.spyOn(TestBed.inject(SupabaseService), 'deleteUserProfileData').mockResolvedValue(undefined);
+    const logout = vi.spyOn(shell.authService, 'logout').mockResolvedValue(undefined);
+    shell.toggleAccount();
+    harness.fixture.detectChanges();
+    const button = [...(harness.fixture.nativeElement as HTMLElement).querySelectorAll('.v2-account-dialog button')]
+      .find(item => item.textContent?.trim() === label) as HTMLButtonElement;
+    button.click();
+    await harness.fixture.whenStable();
+    expect(open).toHaveBeenCalledOnce();
+    const factory = open.mock.calls[0][0];
+    const component = await factory();
+    const expected = label === 'Notifications'
+      ? (await import('../header/notification-settings-dialog.component')).NotificationSettingsDialogComponent
+      : (await import('../header/sync-task-status-dialog.component')).SyncTaskStatusDialogComponent;
+    expect(component).toBe(expected);
+    expect(shell.accountOpen()).toBe(false);
+    expect(deletion).not.toHaveBeenCalled();
+    expect(logout).not.toHaveBeenCalled();
+  });
+
   it('routes settings through the shared overlay service', async () => {
     const harness = await RouterTestingHarness.create('/playlists');
     const shell = harness.fixture.debugElement.query(By.directive(DesignV2ShellComponent))
@@ -392,9 +433,8 @@ describe('DesignV2ShellComponent', () => {
 
     await shell.openNotifications();
     await shell.openAutomaticUpdates();
-    await shell.openBlockedUsers();
 
-    expect(open).toHaveBeenCalledTimes(3);
+    expect(open).toHaveBeenCalledTimes(2);
     expect(shell.accountOpen()).toBe(false);
   });
 

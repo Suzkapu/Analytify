@@ -1,0 +1,38 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts --progress=false
+Application bundle generation complete. [2.400 seconds] - 2026-10-09T18:18:00.265Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > keeps retained account settings and excludes blocked-user management (cloud identity true)
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:27 (2.117.2) 2026-10-09T18:18:01.927Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+ ❯ |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts (34 tests | 1 failed) 930ms
+     × keeps retained account settings and excludes blocked-user management (cloud identity true) 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > keeps retained account settings and excludes blocked-user management (cloud identity true)
+AssertionError: expected [ '', 'Notifications', …(4) ] to not include 'Blocked users'
+ ❯ src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts:398:25
+    396|     expect(buttons).toContain('Clear data');
+    397|     expect(buttons.includes('Automatic updates')).toBe(hasCloudIdentit…
+    398|     expect(buttons).not.toContain('Blocked users');
+       |                         ^
+    399|     expect(dialog.querySelector('input[role="switch"]')).not.toBeNull(…
+    400|     expect(dialog.querySelector('a[href="https://www.spotify.com/accou…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 33 passed (34)
+   Start at  20:18:00
+   Duration  1.71s (transform 149ms, setup 203ms, import 179ms, tests 930ms, environment 292ms)
+

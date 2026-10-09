@@ -4,6 +4,8 @@ This is the release inventory for the canonical Design v2 presentation. A row ap
 
 Evidence codes: `U` unit, `B` browser/Playwright, `A` Axe, `K` keyboard/focus, `R` responsive/reflow, `P` performance/bundle. Shell modes are `app`, `focus`, and `public`. Layouts are the approved `form`, `default`, `dashboard`, `full`, and `reading` variants.
 
+Blocked Users management and admin runtime health are intentionally excluded by the current feature-gap audit. Residual stable code does not make them redesign surfaces. Older Complete labels below require fresh verification under the tested implementation plan; they are not current Figma parity certificates.
+
 ## Ownership and state coverage
 
 | ID | Included surfaces | Legacy route/component | v2 route/component | Owner | Shell | Layout | Shared v2 primitives / native HTML | Loading | Empty | Error | Permission / disabled / required | Destructive / confirmation | Final status |
@@ -13,7 +15,7 @@ Evidence codes: `U` unit, `B` browser/Playwright, `A` Axe, `K` keyboard/focus, `
 | A3 | More launcher; account launcher; global overlay/sheet/dialog host | legacy header dropdowns | `DesignV2Shell`, `DesignV2OverlayService` | #167 | app | shell | buttons, accessible dialog, one overlay host | lazy settings | N/A | action status | app-only | modal confirmation host | Complete |
 | A4 | persistent ambient renderer; route, scroll, menu, account, settings, modal, app/focus/public and reduced-motion states | none | shell `AmbientBackgroundComponent` | #170 | all | shell | one decorative compositor | N/A | N/A | safe static fallback | reduced motion/coarse pointer | N/A | Complete |
 | B1 | profile/avatar/fallback; Cloud Backup toggle and confirmation | legacy profile menu | v2 account hub | #167 | app | shell | native switch, artwork fallback, alertdialog | Yes | fallback | Yes | cloud capability | consequence-first | Complete |
-| B2 | Notifications; Blocked Users; Automatic Updates; Manage Spotify access; Privacy Notice | legacy settings dropdown/modals | v2 lazy settings sheets/account actions | #161/#167 | app | shell/sheet | native buttons/switches, accessible dialog | Yes | Yes | Yes | required/locked states | N/A | Complete |
+| B2 | Notifications; Automatic Updates; Manage Spotify access; Privacy Notice | legacy settings dropdown/modals | v2 lazy settings sheets/account actions | #161/#167 | app | shell/sheet | native buttons/switches, accessible dialog | Yes | Yes | Yes | required/locked states | N/A | Complete |
 | B3 | Log out; anonymous identity logout/delete; Clear Data chooser; local clear; cloud delete/leave shared features; deletion success/error | legacy settings modals | v2 account destructive flows | #167 | app | alertdialog | consequence copy, primary/destructive buttons | Yes | N/A | Yes | identity/capability | two-step confirmations | Complete |
 | C1 | landing/login; Terms/Privacy acceptance; hosted OAuth start | removed parallel route | `/`, `/login` focus presentation | #162/#164 | focus | form | labeled native controls, links, status | Yes | N/A | Yes | terms required | N/A | Complete; canonical |
 | C2 | hosted callback/loading/error; auth return/redirect | removed parallel route | `/callback` | #152/#162/#164 | focus | form | status/state patterns | Yes | N/A | Yes | OAuth state | N/A | Complete; canonical |

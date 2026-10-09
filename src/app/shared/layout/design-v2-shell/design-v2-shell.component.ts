@@ -14,8 +14,8 @@ import {
   signal,
   computed
 } from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet} from '@angular/router';
-import {filter, Subscription} from 'rxjs';
+import {ActivatedRoute, ActivationStart, NavigationEnd, Router, RouterLink, RouterOutlet} from '@angular/router';
+import {filter, fromEvent, merge, Subject, Subscription, takeUntil} from 'rxjs';
 
 import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 import {
@@ -28,6 +28,7 @@ import {deepestDesignV2RouteData, DesignV2ChromeMode, DesignV2PageWidth} from '@
 import {AccessibleDialogDirective} from '@shared/ui/accessible-dialog.directive';
 import {AmbientBackgroundComponent} from '@shared/ambient/ambient-background.component';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
+import {SessionGeneration, SessionLifecycleService} from '@core/auth/session-lifecycle.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {SpotifyDataService} from '@core/data-access/spotify/spotify-data.service';
@@ -35,6 +36,13 @@ import {firstValueFrom} from 'rxjs';
 import {DesignV2OverlayService} from './design-v2-overlay.service';
 import {AdminService} from '@core/admin/admin.service';
 import {AmbientOverlayState} from '@shared/ambient/ambient-background.math';
+
+interface AccountChromeContext {
+  userId: string | null;
+  cloudId: string | null;
+  generation: SessionGeneration;
+  cancel: Subject<void>;
+}
 
 interface DesignV2PageContext {
   pageId: string;
@@ -87,7 +95,7 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private readonly subscriptions = new Subscription();
   private readonly injector = inject(Injector);
-  private accountLoaded = false;
+  private accountContext?: AccountChromeContext;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -99,16 +107,27 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
     private readonly spotifyData: SpotifyDataService,
     private readonly supabase: SupabaseService,
     private readonly admin: AdminService,
-    readonly overlays: DesignV2OverlayService
+    readonly overlays: DesignV2OverlayService,
+    private readonly sessionLifecycle: SessionLifecycleService
   ) {}
 
   ngOnInit(): void {
+    this.subscriptions.add(this.authService.logout$.subscribe(() => {
+      this.resetAccountChrome();
+      this.toolsOpen.set(false);
+      this.accountOpen.set(false);
+    }));
     this.currentUrl.set(this.router.url);
     this.applyRouteContext();
     if (this.pageContext().chromeMode === 'app') void this.initializeAccountChrome();
     this.subscriptions.add(this.router.events.pipe(
-      filter((event): event is NavigationEnd => event instanceof NavigationEnd)
+      filter((event): event is NavigationEnd | ActivationStart => event instanceof NavigationEnd || event instanceof ActivationStart)
     ).subscribe(event => {
+      if (event instanceof ActivationStart) {
+        const mode = deepestDesignV2RouteData(event.snapshot).chromeMode;
+        if (mode && mode !== 'app') this.resetAccountChrome();
+        return;
+      }
       this.currentUrl.set(event.urlAfterRedirects);
       this.toolsOpen.set(false);
       this.accountOpen.set(false);
@@ -123,6 +142,7 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnDestroy(): void {
+    this.cancelAccountLoad();
     this.subscriptions.unsubscribe();
     if (this.overlayMount) this.overlays.unregister(this.overlayMount);
   }
@@ -167,11 +187,6 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
   async openAutomaticUpdates(): Promise<void> {
     this.closeAccount();
     await this.overlays.open(async () => (await import('../header/sync-task-status-dialog.component')).SyncTaskStatusDialogComponent);
-  }
-
-  async openBlockedUsers(): Promise<void> {
-    this.closeAccount();
-    await this.overlays.open(async () => (await import('../header/blocked-users-dialog.component')).BlockedUsersDialogComponent);
   }
 
   requestBackupChange(event: Event): void {
@@ -278,12 +293,15 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
-  private async loadAccountSummary(): Promise<void> {
-    const userId = this.authService.getUserId() || 'anonymous';
+  private async loadAccountSummary(context: AccountChromeContext): Promise<void> {
+    const userId = context.userId || 'anonymous';
     this.profilePicUrl.set(this.storage.getItem(`${userId}_profile_pic`));
     this.displayName.set(this.storage.getItem(`${userId}_display_name`) || 'Your account');
     try {
-      const profile = await firstValueFrom(this.spotifyData.getCurrentUser());
+      const profile = await firstValueFrom(this.spotifyData.getCurrentUser().pipe(
+        takeUntil(merge(context.cancel, fromEvent(context.generation.signal, 'abort')))
+      ));
+      if (!this.isCurrentAccount(context)) return;
       this.profilePicUrl.set(profile?.images?.[0]?.url || null);
       this.displayName.set(profile?.display_name || this.displayName());
     } catch {
@@ -292,17 +310,47 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   private async initializeAccountChrome(): Promise<void> {
-    if (this.accountLoaded) return;
-    this.accountLoaded = true;
+    if (this.accountContext && this.isCurrentAccount(this.accountContext)) return;
+    this.cancelAccountLoad();
+    const context: AccountChromeContext = {
+      userId: this.authService.getUserId(),
+      cloudId: this.authService.getSupabaseUserId(),
+      generation: this.sessionLifecycle.capture(),
+      cancel: new Subject<void>()
+    };
+    this.accountContext = context;
+    this.isAdmin.set(false);
     const [, isAdmin] = await Promise.all([
-      this.loadAccountSummary(),
+      this.loadAccountSummary(context),
       this.admin.isAdmin().catch(() => false)
     ]);
-    this.isAdmin.set(isAdmin);
+    if (this.isCurrentAccount(context)) this.isAdmin.set(isAdmin);
+  }
+
+  private isCurrentAccount(context: AccountChromeContext): boolean {
+    return this.accountContext === context
+      && this.sessionLifecycle.isCurrent(context.generation)
+      && this.authService.getUserId() === context.userId
+      && this.authService.getSupabaseUserId() === context.cloudId;
+  }
+
+  private cancelAccountLoad(): void {
+    const previous = this.accountContext;
+    this.accountContext = undefined;
+    previous?.cancel.next();
+    previous?.cancel.complete();
+  }
+
+  private resetAccountChrome(): void {
+    this.cancelAccountLoad();
+    this.isAdmin.set(false);
+    this.profilePicUrl.set(null);
+    this.displayName.set('Your account');
   }
 
   private applyRouteContext(): void {
     const data = deepestDesignV2RouteData(this.route.snapshot);
+    if (data.chromeMode && data.chromeMode !== 'app') this.resetAccountChrome();
     this.pageContext.set({
       pageId: typeof data.pageId === 'string' ? data.pageId : DEFAULT_CONTEXT.pageId,
       title: typeof data.mobileTitle === 'string' ? data.mobileTitle : DEFAULT_CONTEXT.title,
