@@ -41,7 +41,7 @@ export type RankHistoryCategory = 'tracks' | 'artists' | 'genres';
   styles: `
     :host { display: block; min-width: 0; }
     .history-plot { height: 248px; border-radius: var(--v2-radius-card); background: var(--v2-color-background); cursor: crosshair; }
-    .history-plot:focus-visible { outline: 2px solid var(--v2-color-focus); outline-offset: 2px; }
+    .history-plot:focus-visible { outline: 2px solid var(--v2-color-focus) !important; outline-offset: -2px; }
     svg { display: block; width: 100%; height: 100%; overflow: visible; }
     text { font-family: inherit; font-size: 10px; font-weight: 400; }
     .grid-line { stroke: var(--v2-color-border); stroke-dasharray: 3 3; stroke-width: 1; }
@@ -85,10 +85,10 @@ export class V2RankHistoryPlotComponent implements OnDestroy {
     return index === -1 ? Math.max(0, this.positions().length - 1) : index;
   });
   readonly axes = computed(() => [1, this.category() === 'tracks' ? 50 : this.category() === 'artists' ? 25 : 8, this.maxRank()]
-    .map((rank, index) => ({rank, y: 40 + index / 2 * (this.height() - 84)})));
+    .map(rank => ({rank, y: this.rankY(rank)})));
   readonly geometry = computed(() => this.positions().map((point, index, positions) => ({...point,
     x: 32 + index / Math.max(1, positions.length - 1) * (this.width() - 56),
-    y: 40 + (point.rank - 1) / (this.maxRank() - 1) * (this.height() - 84)
+    y: this.rankY(point.rank)
   })));
   readonly line = computed(() => this.geometry().length < 2 ? '' : this.geometry().map((point, index) => `${index ? 'L' : 'M'} ${point.x},${point.y}`).join(' '));
   readonly area = computed(() => this.line() ? `${this.line()} L ${this.width() - 24},${this.height() - 44} L 32,${this.height() - 44} Z` : '');
@@ -107,19 +107,23 @@ export class V2RankHistoryPlotComponent implements OnDestroy {
   });
 
   ngOnDestroy(): void { this.activeCanvas = undefined; this.resizeObserver?.disconnect(); }
+  private rankY(rank: number): number {
+    return 40 + (rank - 1) / (this.maxRank() - 1) * (this.height() - 84);
+  }
   shortDate(timestamp: number): string {
     const date = new Date(timestamp);
     return `${date.getDate()} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][date.getMonth()]}`;
   }
-  inspectFirst(): void { if (this.selected() === null) this.selected.set(this.positions()[0].timestamp); }
+  inspectFirst(): void { if (this.positions().length >= 2 && this.selected() === null) this.selected.set(this.positions()[0].timestamp); }
   inspectKey(event: KeyboardEvent): void {
-    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+    if (this.positions().length < 2 || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
     event.preventDefault();
     const index = event.key === 'Home' ? 0 : event.key === 'End' ? this.positions().length - 1 :
       this.activeIndex() + (event.key === 'ArrowLeft' ? -1 : 1);
     this.selected.set(this.positions()[Math.max(0, Math.min(index, this.positions().length - 1))].timestamp);
   }
   inspectPointer(event: MouseEvent, focus: boolean): void {
+    if (this.positions().length < 2) return;
     const canvas = event.currentTarget as HTMLElement;
     const bounds = canvas.getBoundingClientRect();
     if (!bounds.width) return;

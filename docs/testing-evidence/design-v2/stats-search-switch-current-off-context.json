@@ -1,0 +1,41 @@
+const imgSwitchTrack = "https://www.figma.com/api/mcp/asset/f28c3f2a-a599-4151-ae89-3167a8fed331.svg";
+
+type AnalytifySearchPastRankingsToggleProps = {
+  className?: string;
+  label?: string;
+  state?: "Off";
+};
+
+function AnalytifySearchPastRankingsToggle({ className, label = "Search past rankings", state = "Off" }: AnalytifySearchPastRankingsToggleProps) {
+  return (
+    <button className={className || "bg-[var(--v2-color-surface-raised,#182019)] border border-[var(--v2-color-border,#34423a)] border-solid content-stretch flex gap-[var(--v2-space-2,8px)] h-[48px] items-center justify-center px-[var(--v2-space-3,12px)] relative rounded-[var(--v2-radius-control,12px)] w-[240px]"} data-node-id="144:8012">
+      <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] text-left whitespace-nowrap" data-node-id="144:8013">
+        {label}
+      </p>
+      <div className="h-[18px] relative shrink-0 w-[32px]" data-node-id="144:8014" data-name="Switch track">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSwitchTrack} />
+      </div>
+    </button>
+  );
+}
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+These styles are contained in the design: Analytify/Label: Font(family: "Outfit", style: SemiBold, size: 14, weight: 600, lineHeight: 20, letterSpacing: 0).
+Component descriptions: The following components have usage descriptions or documentation links defined in Figma. These descriptions provide important context about the intended usage, best practices, and any constraints for each component. Follow these guidelines when implementing or using these components.
+
+## State=Off
+**Node ID:** 144:8012
+
+Compact historical-search option. Stable label, checked switch. Selection220ms ease-in-out; reduced motion immediate. Disabled consumers show a reason; busy search remains cancellable.
+
+## Analytify/Search past rankings toggle
+**Node ID:** 144:8020
+
+Search past rankings is an option, never a destination. Includes saved items absent from current rankings. Eight checked/hover/focus/disabled states; compact32x18 track,14px thumb,14px travel,48px touch height.220ms ease-in-out selection follows Switch29:957; reduced motion immediate. Native Space/Enter and labelled switch semantics. Shared-view omission; cancellable busy state. Existing screen variable actions preserved.
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

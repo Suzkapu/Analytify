@@ -1,0 +1,645 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-current-load.spec.ts e2e/design-v2-stats-current-refresh.spec.ts e2e/design-v2-stats-composition.spec.ts e2e/design-v2-stats-date-loading.spec.ts --config=/tmp/analytify-all-browsers.config.ts --workers=2
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:442625) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:442625) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 84 tests using 2 workers
+
+(node:443098) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:443099) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 [desktop] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (reduce) (6.2s)
+  ✓   1 [desktop] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (no-preference) (6.3s)
+  ✓   3 [desktop] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (no-preference) (8.0s)
+  ✓   4 [desktop] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (reduce) (7.9s)
+  ✘   6 [desktop] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (reduce) (7.2s)
+  ✘   5 [desktop] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (no-preference) (7.3s)
+(node:443528) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:443536) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 12:14:53 PM [vite] (client) [console.error] [Analytify][0006][+00653ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+[WebServer] 12:14:54 PM [vite] (client) [console.error] [Analytify][0006][+00634ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+  ✓   7 [desktop] › e2e/design-v2-stats-current-load.spec.ts:51:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) (3.2s)
+  ✓   8 [desktop] › e2e/design-v2-stats-current-load.spec.ts:51:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) (3.3s)
+  ✓   9 [desktop] › e2e/design-v2-stats-current-load.spec.ts:71:5 › successful empty Spotify responses produce an empty state without a failure alert (3.1s)
+[WebServer] 12:14:59 PM [vite] (client) [console.error] [Analytify][0006][+02515ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated Spotify failure"}}}
+[WebServer] 12:15:01 PM [vite] (client) [console.error] [Analytify][0006][+02474ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated Spotify failure"}}}
+  ✓  10 [desktop] › e2e/design-v2-stats-current-load.spec.ts:80:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) (7.7s)
+  ✓  11 [desktop] › e2e/design-v2-stats-current-load.spec.ts:80:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) (7.4s)
+  ✓  12 [desktop] › e2e/design-v2-stats-current-load.spec.ts:80:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) (6.8s)
+  ✘  14 [desktop] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (no-preference, moved=false) (2.0s)
+(node:444163) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  13 [desktop] › e2e/design-v2-stats-current-load.spec.ts:80:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) (7.1s)
+[WebServer] 12:15:14 PM [vite] (client) [console.error] [Analytify][0006][+00706ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated stale-refresh failure"}}}
+[WebServer] 12:15:14 PM [vite] (client) [console.error] [Analytify][0006][+00979ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated stale-refresh failure"}}}
+  ✓  15 [desktop] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (no-preference, moved=true) (4.3s)
+  ✓  16 [desktop] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (reduce, moved=false) (4.1s)
+[WebServer] 12:15:18 PM [vite] (client) [console.error] [Analytify][0006][+00774ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated stale-refresh failure"}}}
+  ✓  17 [desktop] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (reduce, moved=true) (4.1s)
+  ✓  18 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › ranking date unavailable stops render retries and recovers through canonical Retry (6.7s)
+[WebServer] 12:15:23 PM [vite] (client) [console.error] [Analytify][0008][+01530ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+  ✓  19 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › ranking date failed stops render retries and recovers through canonical Retry (7.1s)
+  ✓  20 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › comparison date unavailable stops render retries and recovers through canonical Retry (7.2s)
+[WebServer] 12:15:30 PM [vite] (client) [console.error] [Analytify][0008][+01597ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+(node:444671) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  21 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › comparison date failed stops render retries and recovers through canonical Retry (6.9s)
+(node:444809) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  22 [mobile] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (no-preference) (7.5s)
+  ✓  23 [mobile] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (reduce) (7.4s)
+  ✓  24 [mobile] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (no-preference) (9.9s)
+  ✓  25 [mobile] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (reduce) (8.8s)
+  ✘  26 [mobile] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (no-preference) (7.4s)
+(node:445131) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 12:15:58 PM [vite] (client) [console.error] [Analytify][0006][+00388ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+  ✘  27 [mobile] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (reduce) (6.8s)
+(node:445243) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  28 [mobile] › e2e/design-v2-stats-current-load.spec.ts:51:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) (2.7s)
+[WebServer] 12:16:01 PM [vite] (client) [console.error] [Analytify][0006][+00592ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+  ✓  29 [mobile] › e2e/design-v2-stats-current-load.spec.ts:51:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) (2.9s)
+  ✓  30 [mobile] › e2e/design-v2-stats-current-load.spec.ts:71:5 › successful empty Spotify responses produce an empty state without a failure alert (2.8s)
+[WebServer] 12:16:06 PM [vite] (client) [console.error] [Analytify][0006][+02894ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated Spotify failure"}}}
+[WebServer] 12:16:06 PM [vite] (client) [console.error] [Analytify][0006][+03084ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated Spotify failure"}}}
+  ✓  32 [mobile] › e2e/design-v2-stats-current-load.spec.ts:80:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) (9.8s)
+  ✓  31 [mobile] › e2e/design-v2-stats-current-load.spec.ts:80:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) (9.8s)
+  ✓  34 [mobile] › e2e/design-v2-stats-current-load.spec.ts:80:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) (10.5s)
+  ✓  33 [mobile] › e2e/design-v2-stats-current-load.spec.ts:80:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) (10.7s)
+[WebServer] 12:16:27 PM [vite] (client) [console.error] [Analytify][0006][+01886ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated stale-refresh failure"}}}
+  ✘  36 [mobile] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (no-preference, moved=true) (4.9s)
+(node:446420) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  35 [mobile] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (no-preference, moved=false) (7.2s)
+[WebServer] 12:16:30 PM [vite] (client) [console.error] [Analytify][0006][+00840ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated stale-refresh failure"}}}
+[WebServer] 12:16:31 PM [vite] (client) [console.error] [Analytify][0006][+00773ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated stale-refresh failure"}}}
+  ✓  37 [mobile] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (reduce, moved=false) (4.2s)
+  ✓  38 [mobile] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (reduce, moved=true) (3.8s)
+[WebServer] 12:16:36 PM [vite] (client) [console.error] [Analytify][0008][+01685ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+  ✓  39 [mobile] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › ranking date unavailable stops render retries and recovers through canonical Retry (7.1s)
+  ✓  40 [mobile] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › ranking date failed stops render retries and recovers through canonical Retry (7.9s)
+[WebServer] 12:16:44 PM [vite] (client) [console.error] [Analytify][0008][+01704ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+  ✓  41 [mobile] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › comparison date unavailable stops render retries and recovers through canonical Retry (7.5s)
+(node:447128) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  42 [mobile] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › comparison date failed stops render retries and recovers through canonical Retry (7.9s)
+(node:447563) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  43 [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (no-preference) (11.5s)
+  ✓  44 [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (reduce) (9.7s)
+  ✓  46 [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (reduce) (10.7s)
+  ✓  45 [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (no-preference) (14.2s)
+  ✘  47 [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (no-preference) (8.2s)
+(node:449190) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  48 [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (reduce) (7.1s)
+(node:449432) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 12:17:23 PM [vite] (client) [console.error] [Analytify][0006][+00569ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+  ✓  49 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:51:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) (5.5s)
+[WebServer] 12:17:26 PM [vite] (client) [console.error] [Analytify][0006][+00331ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+  ✓  50 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:51:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) (5.3s)
+  ✓  51 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:71:5 › successful empty Spotify responses produce an empty state without a failure alert (3.7s)
+[WebServer] 12:17:34 PM [vite] (client) [console.error] [Analytify][0006][+03944ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated Spotify failure"}}}
+[WebServer] 12:17:35 PM [vite] (client) [console.error] [Analytify][0006][+03726ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated Spotify failure"}}}
+  ✓  52 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:80:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) (27.2s)
+  ✓  53 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:80:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) (28.5s)
+  ✓  55 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:80:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) (23.8s)
+  ✓  54 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:80:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) (27.4s)
+[WebServer] 12:18:24 PM [vite] (client) [console.error] [Analytify][0006][+00980ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated stale-refresh failure"}}}
+  ✘  57 [firefox-stats] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (no-preference, moved=true) (2.3s)
+(node:452245) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  56 [firefox-stats] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (no-preference, moved=false) (5.2s)
+[WebServer] 12:18:29 PM [vite] (client) [console.error] [Analytify][0006][+00764ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated stale-refresh failure"}}}
+[WebServer] 12:18:30 PM [vite] (client) [console.error] [Analytify][0006][+00508ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated stale-refresh failure"}}}
+  ✓  59 [firefox-stats] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (reduce, moved=true) (4.3s)
+  ✓  58 [firefox-stats] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (reduce, moved=false) (5.3s)
+[WebServer] 12:18:35 PM [vite] (client) [console.error] [Analytify][0008][+01413ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+[WebServer] 12:18:40 PM [vite] (client) [console.warn] [Analytify][0009][+07252ms][Authentication][WARN] Failed to check backup and sync status {"message":"TypeError: NetworkError when attempting to fetch resource.","details":"","hint":"","code":""}
+  ✓  60 [firefox-stats] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › ranking date unavailable stops render retries and recovers through canonical Retry (9.3s)
+[WebServer] 12:18:41 PM [vite] (client) [console.warn] [Analytify][0010][+07161ms][Authentication][WARN] Failed to check backup and sync status {"message":"TypeError: NetworkError when attempting to fetch resource.","details":"","hint":"","code":""}
+  ✓  61 [firefox-stats] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › ranking date failed stops render retries and recovers through canonical Retry (8.9s)
+[WebServer] 12:18:44 PM [vite] (client) [console.error] [Analytify][0008][+01660ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+[WebServer] 12:18:50 PM [vite] (client) [console.warn] [Analytify][0009][+07121ms][Authentication][WARN] Failed to check backup and sync status {"message":"TypeError: NetworkError when attempting to fetch resource.","details":"","hint":"","code":""}
+[WebServer] 12:18:50 PM [vite] (client) [console.warn] [Analytify][0010][+07118ms][Authentication][WARN] Failed to check backup and sync status {"message":"TypeError: NetworkError when attempting to fetch resource.","details":"","hint":"","code":""}
+  ✓  62 [firefox-stats] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › comparison date unavailable stops render retries and recovers through canonical Retry (9.3s)
+  ✓  63 [firefox-stats] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › comparison date failed stops render retries and recovers through canonical Retry (9.4s)
+(node:453287) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:453303) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  65 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (reduce) (13.1s)
+  ✓  64 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (no-preference) (17.4s)
+  ✓  67 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (reduce) (14.9s)
+  ✓  66 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (no-preference) (19.9s)
+  ✘  68 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (no-preference) (9.1s)
+(node:454009) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  69 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (reduce) (8.5s)
+(node:454022) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 12:19:37 PM [vite] (client) [console.error] [Analytify][0006][+01148ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+[WebServer] 12:19:37 PM [vite] (client) [console.error] [Analytify][0006][+00707ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+  ✓  71 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:51:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) (5.9s)
+  ✓  70 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:51:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) (6.6s)
+  ✓  72 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:71:5 › successful empty Spotify responses produce an empty state without a failure alert (6.5s)
+[WebServer] 12:19:48 PM [vite] (client) [console.error] [Analytify][0006][+05139ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated Spotify failure"}}}
+[WebServer] 12:19:52 PM [vite] (client) [console.error] [Analytify][0006][+03797ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated Spotify failure"}}}
+  ✓  73 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:80:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) (16.0s)
+  ✓  74 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:80:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) (12.5s)
+  ✓  75 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:80:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) (14.5s)
+  ✓  76 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:80:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) (12.4s)
+[WebServer] 12:20:14 PM [vite] (client) [console.error] [Analytify][0006][+01510ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated stale-refresh failure"}}}
+[WebServer] 12:20:16 PM [vite] (client) [console.error] [Analytify][0006][+02104ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"headers":{},"normalizedNames":{},"lazyUpdate":null},"status":0,"statusText":"Unknown Error","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 0 Unknown Error","error":{"isTrusted":true}}
+  ✘  78 [webkit-stats] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (no-preference, moved=true) (4.8s)
+(node:455517) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  77 [webkit-stats] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (no-preference, moved=false) (9.1s)
+[WebServer] 12:20:21 PM [vite] (client) [console.error] [Analytify][0006][+01080ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"headers":{},"normalizedNames":{},"lazyUpdate":null},"status":0,"statusText":"Unknown Error","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 0 Unknown Error","error":{"isTrusted":true}}
+  ✘  79 [webkit-stats] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (reduce, moved=false) (3.6s)
+(node:455750) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 12:20:22 PM [vite] (client) [console.error] [Analytify][0006][+00907ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated stale-refresh failure"}}}
+  ✓  80 [webkit-stats] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (reduce, moved=true) (6.3s)
+[WebServer] 12:20:31 PM [vite] (client) [console.warn] [Analytify][0008][+07205ms][Authentication][WARN] Failed to check backup and sync status {"message":"TypeError: Load failed","details":"","hint":"","code":""}
+[WebServer] 12:20:33 PM [vite] (client) [console.error] [Analytify][0008][+04670ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+[WebServer] 12:20:36 PM [vite] (client) [console.warn] [Analytify][0009][+07384ms][Authentication][WARN] Failed to check backup and sync status {"message":"TypeError: Load failed","details":"","hint":"","code":""}
+  ✓  81 [webkit-stats] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › ranking date unavailable stops render retries and recovers through canonical Retry (14.9s)
+  ✓  82 [webkit-stats] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › ranking date failed stops render retries and recovers through canonical Retry (16.3s)
+[WebServer] 12:20:47 PM [vite] (client) [console.warn] [Analytify][0008][+07487ms][Authentication][WARN] Failed to check backup and sync status {"message":"TypeError: Load failed","details":"","hint":"","code":""}
+[WebServer] 12:20:50 PM [vite] (client) [console.error] [Analytify][0008][+04569ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+[WebServer] 12:20:52 PM [vite] (client) [console.warn] [Analytify][0009][+07234ms][Authentication][WARN] Failed to check backup and sync status {"message":"TypeError: Load failed","details":"","hint":"","code":""}
+  ✓  83 [webkit-stats] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › comparison date unavailable stops render retries and recovers through canonical Retry (16.5s)
+  ✓  84 [webkit-stats] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › comparison date failed stops render retries and recovers through canonical Retry (15.6s)
+
+
+  1) [desktop] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (no-preference) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true }) with timeout 5000ms
+      - waiting for getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true })
+
+
+      132 |     await expect(main.getByText('Shared Song short_term', {exact: true})).toBeVisible();
+      133 |     await period.getByRole('button', {name: '6 months', exact: true}).click();
+    > 134 |     await expect(main.getByRole('heading', {name: 'Loading shared Spotify insights…', exact: true})).toBeVisible();
+          |                                                                                                      ^
+      135 |     await expect(main.getByText('Shared Song short_term', {exact: true})).toHaveCount(0);
+      136 |     await expect(main.locator('.stats-results-heading')).toHaveCount(0);
+      137 |     releaseMedium();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:134:102
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-b9e64-ale-rankings-no-preference--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-compositio-b9e64-ale-rankings-no-preference--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-b9e64-ale-rankings-no-preference--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-compositio-b9e64-ale-rankings-no-preference--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (reduce) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true }) with timeout 5000ms
+      - waiting for getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true })
+
+
+      132 |     await expect(main.getByText('Shared Song short_term', {exact: true})).toBeVisible();
+      133 |     await period.getByRole('button', {name: '6 months', exact: true}).click();
+    > 134 |     await expect(main.getByRole('heading', {name: 'Loading shared Spotify insights…', exact: true})).toBeVisible();
+          |                                                                                                      ^
+      135 |     await expect(main.getByText('Shared Song short_term', {exact: true})).toHaveCount(0);
+      136 |     await expect(main.locator('.stats-results-heading')).toHaveCount(0);
+      137 |     releaseMedium();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:134:102
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-99414-lace-stale-rankings-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-compositio-99414-lace-stale-rankings-reduce--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-99414-lace-stale-rankings-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-compositio-99414-lace-stale-rankings-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [desktop] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (no-preference, moved=false) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+      32 |     await expect(main.getByText('Cached song',{exact:true})).toBeVisible();
+      33 |     await expect(main.getByText('Refreshing this range… Your cached rankings stay visible.',{exact:true})).toBeVisible();
+    > 34 |     expect(requests).toBe(1);await main.locator('.v2-page').screenshot({path:info.outputPath('cached-refreshing.png')});
+         |                      ^
+      35 |     finishInitial();await expect(main.getByRole('alert')).toBeVisible();
+      36 |     await expect(main.getByText('Cached song',{exact:true})).toBeVisible();
+      37 |     await expect(main.getByText('Could not refresh this range',{exact:true})).toBeVisible();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-refresh.spec.ts:34:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-re-14642--no-preference-moved-false--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-re-14642--no-preference-moved-false--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-re-14642--no-preference-moved-false--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-re-14642--no-preference-moved-false--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [mobile] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (no-preference) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true }) with timeout 5000ms
+      - waiting for getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true })
+
+
+      132 |     await expect(main.getByText('Shared Song short_term', {exact: true})).toBeVisible();
+      133 |     await period.getByRole('button', {name: '6 months', exact: true}).click();
+    > 134 |     await expect(main.getByRole('heading', {name: 'Loading shared Spotify insights…', exact: true})).toBeVisible();
+          |                                                                                                      ^
+      135 |     await expect(main.getByText('Shared Song short_term', {exact: true})).toHaveCount(0);
+      136 |     await expect(main.locator('.stats-results-heading')).toHaveCount(0);
+      137 |     releaseMedium();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:134:102
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-b9e64-ale-rankings-no-preference--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-compositio-b9e64-ale-rankings-no-preference--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-b9e64-ale-rankings-no-preference--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-compositio-b9e64-ale-rankings-no-preference--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [mobile] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (reduce) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true }) with timeout 5000ms
+      - waiting for getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true })
+
+
+      132 |     await expect(main.getByText('Shared Song short_term', {exact: true})).toBeVisible();
+      133 |     await period.getByRole('button', {name: '6 months', exact: true}).click();
+    > 134 |     await expect(main.getByRole('heading', {name: 'Loading shared Spotify insights…', exact: true})).toBeVisible();
+          |                                                                                                      ^
+      135 |     await expect(main.getByText('Shared Song short_term', {exact: true})).toHaveCount(0);
+      136 |     await expect(main.locator('.stats-results-heading')).toHaveCount(0);
+      137 |     releaseMedium();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:134:102
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-99414-lace-stale-rankings-reduce--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-compositio-99414-lace-stale-rankings-reduce--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-99414-lace-stale-rankings-reduce--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-compositio-99414-lace-stale-rankings-reduce--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [mobile] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (no-preference, moved=true) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+      32 |     await expect(main.getByText('Cached song',{exact:true})).toBeVisible();
+      33 |     await expect(main.getByText('Refreshing this range… Your cached rankings stay visible.',{exact:true})).toBeVisible();
+    > 34 |     expect(requests).toBe(1);await main.locator('.v2-page').screenshot({path:info.outputPath('cached-refreshing.png')});
+         |                      ^
+      35 |     finishInitial();await expect(main.getByRole('alert')).toBeVisible();
+      36 |     await expect(main.getByText('Cached song',{exact:true})).toBeVisible();
+      37 |     await expect(main.getByText('Could not refresh this range',{exact:true})).toBeVisible();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-refresh.spec.ts:34:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-re-6d4f5-s-no-preference-moved-true--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-re-6d4f5-s-no-preference-moved-true--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-re-6d4f5-s-no-preference-moved-true--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-re-6d4f5-s-no-preference-moved-true--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (no-preference) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true }) with timeout 5000ms
+      - waiting for getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true })
+
+
+      132 |     await expect(main.getByText('Shared Song short_term', {exact: true})).toBeVisible();
+      133 |     await period.getByRole('button', {name: '6 months', exact: true}).click();
+    > 134 |     await expect(main.getByRole('heading', {name: 'Loading shared Spotify insights…', exact: true})).toBeVisible();
+          |                                                                                                      ^
+      135 |     await expect(main.getByText('Shared Song short_term', {exact: true})).toHaveCount(0);
+      136 |     await expect(main.locator('.stats-results-heading')).toHaveCount(0);
+      137 |     releaseMedium();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:134:102
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-b9e64-ale-rankings-no-preference--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-compositio-b9e64-ale-rankings-no-preference--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-b9e64-ale-rankings-no-preference--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-compositio-b9e64-ale-rankings-no-preference--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (reduce) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true }) with timeout 5000ms
+      - waiting for getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true })
+
+
+      132 |     await expect(main.getByText('Shared Song short_term', {exact: true})).toBeVisible();
+      133 |     await period.getByRole('button', {name: '6 months', exact: true}).click();
+    > 134 |     await expect(main.getByRole('heading', {name: 'Loading shared Spotify insights…', exact: true})).toBeVisible();
+          |                                                                                                      ^
+      135 |     await expect(main.getByText('Shared Song short_term', {exact: true})).toHaveCount(0);
+      136 |     await expect(main.locator('.stats-results-heading')).toHaveCount(0);
+      137 |     releaseMedium();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:134:102
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-99414-lace-stale-rankings-reduce--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-compositio-99414-lace-stale-rankings-reduce--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-99414-lace-stale-rankings-reduce--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-compositio-99414-lace-stale-rankings-reduce--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) [firefox-stats] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (no-preference, moved=true) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+      32 |     await expect(main.getByText('Cached song',{exact:true})).toBeVisible();
+      33 |     await expect(main.getByText('Refreshing this range… Your cached rankings stay visible.',{exact:true})).toBeVisible();
+    > 34 |     expect(requests).toBe(1);await main.locator('.v2-page').screenshot({path:info.outputPath('cached-refreshing.png')});
+         |                      ^
+      35 |     finishInitial();await expect(main.getByRole('alert')).toBeVisible();
+      36 |     await expect(main.getByText('Cached song',{exact:true})).toBeVisible();
+      37 |     await expect(main.getByText('Could not refresh this range',{exact:true})).toBeVisible();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-refresh.spec.ts:34:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-re-6d4f5-s-no-preference-moved-true--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-re-6d4f5-s-no-preference-moved-true--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-re-6d4f5-s-no-preference-moved-true--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-re-6d4f5-s-no-preference-moved-true--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  10) [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (no-preference) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true }) with timeout 5000ms
+      - waiting for getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true })
+
+
+      132 |     await expect(main.getByText('Shared Song short_term', {exact: true})).toBeVisible();
+      133 |     await period.getByRole('button', {name: '6 months', exact: true}).click();
+    > 134 |     await expect(main.getByRole('heading', {name: 'Loading shared Spotify insights…', exact: true})).toBeVisible();
+          |                                                                                                      ^
+      135 |     await expect(main.getByText('Shared Song short_term', {exact: true})).toHaveCount(0);
+      136 |     await expect(main.locator('.stats-results-heading')).toHaveCount(0);
+      137 |     releaseMedium();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:134:102
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-b9e64-ale-rankings-no-preference--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-compositio-b9e64-ale-rankings-no-preference--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-b9e64-ale-rankings-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-compositio-b9e64-ale-rankings-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (reduce) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true }) with timeout 5000ms
+      - waiting for getByRole('main').getByRole('heading', { name: 'Loading shared Spotify insights…', exact: true })
+
+
+      132 |     await expect(main.getByText('Shared Song short_term', {exact: true})).toBeVisible();
+      133 |     await period.getByRole('button', {name: '6 months', exact: true}).click();
+    > 134 |     await expect(main.getByRole('heading', {name: 'Loading shared Spotify insights…', exact: true})).toBeVisible();
+          |                                                                                                      ^
+      135 |     await expect(main.getByText('Shared Song short_term', {exact: true})).toHaveCount(0);
+      136 |     await expect(main.locator('.stats-results-heading')).toHaveCount(0);
+      137 |     releaseMedium();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:134:102
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-99414-lace-stale-rankings-reduce--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-compositio-99414-lace-stale-rankings-reduce--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-99414-lace-stale-rankings-reduce--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-compositio-99414-lace-stale-rankings-reduce--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  12) [webkit-stats] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (no-preference, moved=true) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+      32 |     await expect(main.getByText('Cached song',{exact:true})).toBeVisible();
+      33 |     await expect(main.getByText('Refreshing this range… Your cached rankings stay visible.',{exact:true})).toBeVisible();
+    > 34 |     expect(requests).toBe(1);await main.locator('.v2-page').screenshot({path:info.outputPath('cached-refreshing.png')});
+         |                      ^
+      35 |     finishInitial();await expect(main.getByRole('alert')).toBeVisible();
+      36 |     await expect(main.getByText('Cached song',{exact:true})).toBeVisible();
+      37 |     await expect(main.getByText('Could not refresh this range',{exact:true})).toBeVisible();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-refresh.spec.ts:34:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-re-6d4f5-s-no-preference-moved-true--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-re-6d4f5-s-no-preference-moved-true--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-re-6d4f5-s-no-preference-moved-true--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-re-6d4f5-s-no-preference-moved-true--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  13) [webkit-stats] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (reduce, moved=false) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+      32 |     await expect(main.getByText('Cached song',{exact:true})).toBeVisible();
+      33 |     await expect(main.getByText('Refreshing this range… Your cached rankings stay visible.',{exact:true})).toBeVisible();
+    > 34 |     expect(requests).toBe(1);await main.locator('.v2-page').screenshot({path:info.outputPath('cached-refreshing.png')});
+         |                      ^
+      35 |     finishInitial();await expect(main.getByRole('alert')).toBeVisible();
+      36 |     await expect(main.getByText('Cached song',{exact:true})).toBeVisible();
+      37 |     await expect(main.getByText('Could not refresh this range',{exact:true})).toBeVisible();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-refresh.spec.ts:34:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-re-fe21c-n-focus-reduce-moved-false--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-re-fe21c-n-focus-reduce-moved-false--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-re-fe21c-n-focus-reduce-moved-false--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-re-fe21c-n-focus-reduce-moved-false--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  13 failed
+    [desktop] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (no-preference) 
+    [desktop] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (reduce) 
+    [desktop] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (no-preference, moved=false) 
+    [mobile] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (no-preference) 
+    [mobile] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (reduce) 
+    [mobile] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (no-preference, moved=true) 
+    [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (no-preference) 
+    [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (reduce) 
+    [firefox-stats] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (no-preference, moved=true) 
+    [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (no-preference) 
+    [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:115:7 › shared range loading, permission failure and recovery replace stale rankings (reduce) 
+    [webkit-stats] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (no-preference, moved=true) 
+    [webkit-stats] › e2e/design-v2-stats-current-refresh.spec.ts:5:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (reduce, moved=false) 
+  71 passed (6.7m)

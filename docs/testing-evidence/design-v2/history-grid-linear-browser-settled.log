@@ -1,0 +1,68 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-history.spec.ts --grep category rank grids align --config=/tmp/analytify-all-browsers.config.ts --workers=1
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:296570) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:296570) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:296681) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop] › e2e/design-v2-stats-history.spec.ts:464:5 › category rank grids align with real saved positions through short and tall resizing (8.0s)
+(node:296830) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [mobile] › e2e/design-v2-stats-history.spec.ts:464:5 › category rank grids align with real saved positions through short and tall resizing (9.3s)
+(node:297013) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 [firefox-stats] › e2e/design-v2-stats-history.spec.ts:464:5 › category rank grids align with real saved positions through short and tall resizing (9.3s)
+(node:297267) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  4 [webkit-stats] › e2e/design-v2-stats-history.spec.ts:464:5 › category rank grids align with real saved positions through short and tall resizing (11.1s)
+
+
+  1) [firefox-stats] › e2e/design-v2-stats-history.spec.ts:464:5 › category rank grids align with real saved positions through short and tall resizing 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "canvasMatches": true,
+    -   "projectedAlignment": true,
+    +   "projectedAlignment": false,
+        "viewport": 320,
+      }
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      504 |         return {viewport: innerWidth, canvasMatches: Math.abs(box.width - vb.width) < 0.001 && Math.abs(box.height - vb.height) < 0.001,
+      505 |           projectedAlignment: Math.abs(line.y - point.y - point.height / 2) < 0.0005};
+    > 506 |       })).toEqual({viewport: width, canvasMatches: true, projectedAlignment: true});
+          |           ^
+      507 |       const measured = await slider.evaluate(element => {
+      508 |         const svg = element.querySelector('svg')!, grid = [...svg.querySelectorAll('.grid-line')], markers = [...svg.querySelectorAll('.position-marker')];
+      509 |         const labels = [...svg.querySelectorAll('.axis-label')];
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-history.spec.ts:506:11
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-ca-04a7c-ugh-short-and-tall-resizing-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-history-ca-04a7c-ugh-short-and-tall-resizing-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-ca-04a7c-ugh-short-and-tall-resizing-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-history-ca-04a7c-ugh-short-and-tall-resizing-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [firefox-stats] › e2e/design-v2-stats-history.spec.ts:464:5 › category rank grids align with real saved positions through short and tall resizing 
+  3 passed (47.8s)

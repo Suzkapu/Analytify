@@ -1,0 +1,114 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/insights/user-stats/v2-user-stats.component.spec.ts --include=src/app/features/insights/user-stats/user-stats.component.spec.ts --include=src/app/shared/ui-v2/design-v2-primitives.spec.ts
+Application bundle generation complete. [2.942 seconds] - 2026-10-08T00:45:10.636Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:321558) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:321559) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:321565) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ |SpotiFront| src/app/features/insights/user-stats/v2-user-stats.component.spec.ts (32 tests | 9 failed) 645ms
+     × keeps the false owner identity and category heading coherent through actual tab clicks 18ms
+     × keeps the true owner identity and category heading coherent through actual tab clicks 14ms
+     × describes only a valid shared snapshot date: 2026-10-04 16ms
+     × describes only a valid shared snapshot date: 2026-02-28 13ms
+     × describes only a valid shared snapshot date: 2024-02-29 12ms
+     × describes only a valid shared snapshot date: 2026-02-29 13ms
+     × describes only a valid shared snapshot date: 2026-02-30 11ms
+     × describes only a valid shared snapshot date: 2026-10-04T12:00:00Z 12ms
+     × describes only a valid shared snapshot date:  11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-user-stats.component.spec.ts > canonical Stats content identity and result context > keeps the false owner identity and category heading coherent through actual tab clicks
+AssertionError: expected <p class="v2-page__eyebrow"></p> to be null
+
+- Expected:
+null
+
++ Received:
+<p
+  class="v2-page__eyebrow"
+>
+  Personal listening
+</p>
+
+ ❯ src/app/features/insights/user-stats/v2-user-stats.component.spec.ts:435:58
+    433|     try {
+    434|       expect(element.querySelector('h1')?.textContent).toBe(shared ? '…
+    435|       expect(element.querySelector('.v2-page__eyebrow')).toBeNull();
+       |                                                          ^
+    436|       for (const [category, heading] of [['tracks', 'Top songs'], ['ar…
+    437|         element.querySelector<HTMLButtonElement>(`#stats-category-choi…
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-user-stats.component.spec.ts > canonical Stats content identity and result context > keeps the true owner identity and category heading coherent through actual tab clicks
+AssertionError: expected 'Alex top listening' to be 'Alex · Listening stats' // Object.is equality
+
+Expected: "Alex · Listening stats"
+Received: "Alex top listening"
+
+ ❯ src/app/features/insights/user-stats/v2-user-stats.component.spec.ts:434:56
+    432|     const {fixture, component, element, initialize} = await setupView(…
+    433|     try {
+    434|       expect(element.querySelector('h1')?.textContent).toBe(shared ? '…
+       |                                                        ^
+    435|       expect(element.querySelector('.v2-page__eyebrow')).toBeNull();
+    436|       for (const [category, heading] of [['tracks', 'Top songs'], ['ar…
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-user-stats.component.spec.ts > canonical Stats content identity and result context > describes only a valid shared snapshot date: 2026-10-04
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-user-stats.component.spec.ts > canonical Stats content identity and result context > describes only a valid shared snapshot date: 2026-02-28
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-user-stats.component.spec.ts > canonical Stats content identity and result context > describes only a valid shared snapshot date: 2024-02-29
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-user-stats.component.spec.ts > canonical Stats content identity and result context > describes only a valid shared snapshot date: 2026-02-29
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-user-stats.component.spec.ts > canonical Stats content identity and result context > describes only a valid shared snapshot date: 2026-02-30
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-user-stats.component.spec.ts > canonical Stats content identity and result context > describes only a valid shared snapshot date: 2026-10-04T12:00:00Z
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-user-stats.component.spec.ts > canonical Stats content identity and result context > describes only a valid shared snapshot date: 
+AssertionError: expected 'Shared top listening' to be 'Shared · Listening stats' // Object.is equality
+
+Expected: "Shared · Listening stats"
+Received: "Shared top listening"
+
+ ❯ src/app/features/insights/user-stats/v2-user-stats.component.spec.ts:466:56
+    464|       component.spyDisplayName = '';
+    465|       fixture.detectChanges();
+    466|       expect(element.querySelector('h1')?.textContent).toBe('Shared · …
+       |                                                        ^
+    467|       expect(element.querySelector('.v2-page__description')?.textConte…
+    468|     } finally {fixture.destroy(); initialize.mockRestore();}
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  9 failed | 122 passed (131)
+   Start at  02:45:10
+   Duration  1.65s (transform 573ms, setup 664ms, import 756ms, tests 1.33s, environment 980ms)
+

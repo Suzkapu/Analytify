@@ -43,14 +43,16 @@ export class V2GenreRankingsComponent {
   readonly genres = input.required<readonly GenreRanking[]>();
   readonly scaleGenres = input<readonly GenreRanking[] | null>(null);
   readonly historyAvailable = input(true);
+  readonly comparisonResolved = input(true);
   readonly historyRequested = output<GenreRanking>();
-  readonly scale = computed(() => genreChartScale(this.scaleGenres() ?? this.genres()));
+  readonly scale = computed(() => genreChartScale((this.scaleGenres() ?? this.genres()).map(genre => this.comparisonResolved() ? genre : {...genre, hasCompare: false})));
   readonly ticks = computed(() => Array.from({length: 6}, (_, index) => index * this.scale() / 5));
-  readonly rows = computed(() => this.genres().map(genre => {
+  readonly rows = computed(() => this.genres().map(source => {
+    const genre = this.comparisonResolved() ? source : {...source, hasCompare: false};
     const share = genreShare(genre.percentage);
     const previous = genre.hasCompare && genre.trendType !== 'new' ? genreShare(genre.prevPercentage) : 0;
     const label = share < 1 ? '<1%' : `${share}%`;
-    return {genre, label, caption: genreComparisonCaption(genre),
+    return {genre: source, label, caption: genreComparisonCaption(genre),
       currentWidth: share / this.scale() * 100, previousWidth: previous / this.scale() * 100,
       description: `${genre.name}: ${label}${genre.hasCompare && genre.trendType !== 'new' ? ', previously ' + previous + '%' : ''}`};
   }));

@@ -281,7 +281,7 @@ describe('UserStatsComponent trends', () => {
                 topArtists: [{ id: 'artist' }], topGenres: [{ name: 'indie', count: 4, percentage: 40 }]
             })
         };
-        const spyComponent = new UserStatsComponent(spotify as any, {} as any, storage as any, {} as any, { snapshot: { paramMap: { get: () => 'owner-id' } } } as any, statsSharing as any);
+        const spyComponent = new UserStatsComponent(spotify as any, {getUserId: () => 'viewer', getSupabaseUserId: () => 'viewer-cloud'} as any, storage as any, {} as any, { snapshot: { paramMap: { get: () => 'owner-id' } } } as any, statsSharing as any);
 
         await spyComponent.loadStats();
 
@@ -299,7 +299,7 @@ describe('UserStatsComponent trends', () => {
         const statsSharing = {
             loadSharedStats: vi.fn().mockName('loadSharedStats').mockRejectedValue(new Error('Stats access is not approved.'))
         };
-        const spyComponent = new UserStatsComponent(spotify as any, {} as any, {} as any, {} as any, { snapshot: { paramMap: { get: () => 'owner-id' } } } as any, statsSharing as any);
+        const spyComponent = new UserStatsComponent(spotify as any, {getUserId: () => 'viewer', getSupabaseUserId: () => 'viewer-cloud'} as any, {} as any, {} as any, { snapshot: { paramMap: { get: () => 'owner-id' } } } as any, statsSharing as any);
 
         await spyComponent.loadStats();
 
@@ -311,7 +311,7 @@ describe('UserStatsComponent trends', () => {
     it('keeps shared user B visible when shared user A resolves later', async () => {
         const paramMap = new Subject<any>();
         const pending = new Map<string, (snapshot: any) => void>();
-        const routedComponent = new UserStatsComponent({} as any, {} as any, {} as any, {} as any, { paramMap, snapshot: { paramMap: { get: () => '' } } } as any, { loadSharedStats: (id: string) => new Promise(resolve => pending.set(id, resolve)) } as any);
+        const routedComponent = new UserStatsComponent({} as any, {getUserId: () => 'viewer', getSupabaseUserId: () => 'viewer-cloud'} as any, {} as any, {} as any, { paramMap, snapshot: { paramMap: { get: () => '' } } } as any, { loadSharedStats: (id: string) => new Promise(resolve => pending.set(id, resolve)) } as any);
         routedComponent.ngOnInit();
         paramMap.next({ get: () => 'owner-a' });
         paramMap.next({ get: () => 'owner-b' });

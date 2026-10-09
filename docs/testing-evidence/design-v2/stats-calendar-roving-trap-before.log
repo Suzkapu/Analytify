@@ -1,0 +1,42 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/shared/ui-v2/v2-snapshot-calendar.component.spec.ts --include=src/app/shared/ui/accessible-dialog.directive.spec.ts --progress=false
+Application bundle generation complete. [1.353 seconds] - 2026-10-07T17:30:01.817Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/shared/ui-v2/v2-snapshot-calendar.component.spec.ts (16 tests | 1 failed) 451ms
+     × wraps Tab to the active date when both month controls are disabled 21ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-snapshot-calendar.component.spec.ts > Canonical responsive calendar interactions > wraps Tab to the active date when both month controls are disabled
+AssertionError: expected '2026-10-01' to be '2026-10-03' // Object.is equality
+
+Expected: "2026-10-03"
+Received: "2026-10-01"
+
+ ❯ src/app/shared/ui-v2/v2-snapshot-calendar.component.spec.ts:197:63
+    195|     close.focus();
+    196|     document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Tab', b…
+    197|     expect(document.activeElement?.getAttribute('data-date')).toBe('20…
+       |                                                               ^
+    198|     c.dispose();
+    199|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:463:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 19 passed (20)
+   Start at  19:30:01
+   Duration  1.17s (transform 93ms, setup 430ms, import 112ms, tests 551ms, environment 626ms)
+

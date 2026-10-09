@@ -1,0 +1,758 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/shared/ui-v2/v2-rank-history-popup.component.spec.ts --progress=false
+Application bundle generation complete. [1.266 seconds] - 2026-10-08T00:11:27.406Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/shared/ui-v2/v2-rank-history-popup.component.spec.ts (16 tests | 4 failed) 370ms
+     × moves focus to Close when refreshed data removes a focused chart with 0 retained positions 21ms
+     × moves focus to Close when refreshed data removes a focused chart with 1 retained positions 14ms
+     × returns focus to Close when a refresh removes the focused table disclosure 13ms
+     × keeps focus inside when successful recovery removes the focused Retry control 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-rank-history-popup.component.spec.ts > Rank history popup workflows > moves focus to Close when refreshed data removes a focused chart with 0 retained positions
+AssertionError: expected <body>…(1)</body> to be <button …(5)><i …(3)></i></button> // Object.is equality
+
+- Expected
++ Received
+
+@@ -1,5 +1,103 @@
++ <body>
++   <div
++     _nghost-a-c579977398=""
++     id="root11"
++     ng-version="22.2.1"
++   >
++     <div
++       _ngcontent-a-c579977398=""
++       class="history-overlay"
++     >
++       <section
++         _ngcontent-a-c579977398=""
++         appaccessibledialog=""
++         aria-labelledby="v2-rank-history-title-12"
++         aria-modal="true"
++         class="history-dialog"
++         role="dialog"
++         tabindex="-1"
++       >
++         <div
++           _ngcontent-a-c579977398=""
++           class="history-body"
++         >
++           <header
++             _ngcontent-a-c579977398=""
++             class="history-header"
++           >
++             <span
++               _ngcontent-a-c579977398=""
++               class="entity-badge"
++             >
++               <img
++                 _ngcontent-a-c579977398=""
++                 alt=""
++                 src="assets/design-v2/history-song.svg"
++               />
++               <!--container-->
++               <!--container-->
++             </span>
++             <div
++               _ngcontent-a-c579977398=""
++             >
++               <h2
++                 _ngcontent-a-c579977398=""
++                 id="v2-rank-history-title-12"
++               >
++                 Test Song
++                 <span
++                   _ngcontent-a-c579977398=""
++                   class="visually-hidden"
++                 >
++                    position history
++                 </span>
++               </h2>
++               <p
++                 _ngcontent-a-c579977398=""
++               >
++                 Top Song
++               </p>
++             </div>
++           </header>
++           <hr
++             _ngcontent-a-c579977398=""
++           />
++           <h3
++             _ngcontent-a-c579977398=""
++             class="history-heading"
++           >
++             <i
++               _ngcontent-a-c579977398=""
++               aria-hidden="true"
++               class="pi pi-chart-bar"
++             />
++              Rank Position History
++           </h3>
++           <!--container-->
++           <!--container-->
++           <!--container-->
++           <!--container-->
++           <div
++             _ngcontent-a-c579977398=""
++             class="history-feedback"
++           >
++             <p
++               _ngcontent-a-c579977398=""
++               class="feedback-title"
++             >
++               No saved positions yet
++             </p>
++             <p
++               _ngcontent-a-c579977398=""
++             >
++               History is recorded once daily when you visit your personal Stats. Try another period or ranking date.
++             </p>
++           </div>
++           <!--container-->
++           <!--container-->
++         </div>
+          <button
+            _ngcontent-a-c579977398=""
+            appmodalinitialfocus=""
+            class="close-button v2-button v2-button--secondary"
+            type="button"
+@@ -10,5 +108,9 @@
+              aria-hidden="true"
+              class="pi pi-times"
+            />
+             Close
+          </button>
++       </section>
++     </div>
++   </div>
++ </body>
+
+ ❯ src/app/shared/ui-v2/v2-rank-history-popup.component.spec.ts:126:36
+    124|     update({points: saved.slice(0, count)});
+    125|     expect(element.querySelector('[role="slider"]')).toBeNull();
+    126|     expect(document.activeElement).toBe(close());
+       |                                    ^
+    127|     expect(element.textContent).toContain(count ? 'One saved position'…
+    128|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-rank-history-popup.component.spec.ts > Rank history popup workflows > moves focus to Close when refreshed data removes a focused chart with 1 retained positions
+AssertionError: expected <body>…(1)</body> to be <button …(5)><i …(3)></i></button> // Object.is equality
+
+- Expected
++ Received
+
+@@ -1,5 +1,116 @@
++ <body>
++   <div
++     _nghost-a-c579977398=""
++     id="root12"
++     ng-version="22.2.1"
++   >
++     <div
++       _ngcontent-a-c579977398=""
++       class="history-overlay"
++     >
++       <section
++         _ngcontent-a-c579977398=""
++         appaccessibledialog=""
++         aria-labelledby="v2-rank-history-title-13"
++         aria-modal="true"
++         class="history-dialog"
++         role="dialog"
++         tabindex="-1"
++       >
++         <div
++           _ngcontent-a-c579977398=""
++           class="history-body"
++         >
++           <header
++             _ngcontent-a-c579977398=""
++             class="history-header"
++           >
++             <span
++               _ngcontent-a-c579977398=""
++               class="entity-badge"
++             >
++               <img
++                 _ngcontent-a-c579977398=""
++                 alt=""
++                 src="assets/design-v2/history-song.svg"
++               />
++               <!--container-->
++               <!--container-->
++             </span>
++             <div
++               _ngcontent-a-c579977398=""
++             >
++               <h2
++                 _ngcontent-a-c579977398=""
++                 id="v2-rank-history-title-13"
++               >
++                 Test Song
++                 <span
++                   _ngcontent-a-c579977398=""
++                   class="visually-hidden"
++                 >
++                    position history
++                 </span>
++               </h2>
++               <p
++                 _ngcontent-a-c579977398=""
++               >
++                 Top Song
++               </p>
++             </div>
++           </header>
++           <hr
++             _ngcontent-a-c579977398=""
++           />
++           <h3
++             _ngcontent-a-c579977398=""
++             class="history-heading"
++           >
++             <i
++               _ngcontent-a-c579977398=""
++               aria-hidden="true"
++               class="pi pi-chart-bar"
++             />
++              Rank Position History
++           </h3>
++           <!--container-->
++           <!--container-->
++           <!--container-->
++           <div
++             _ngcontent-a-c579977398=""
++             class="history-feedback"
++           >
++             <p
++               _ngcontent-a-c579977398=""
++               class="feedback-title"
++             >
++               One saved position
++             </p>
++             <p
++               _ngcontent-a-c579977398=""
++             >
++               A chart needs at least two saved positions. Your available position is shown below.
++             </p>
++             <p
++               _ngcontent-a-c579977398=""
++               class="feedback-title"
++             >
++               <time
++                 _ngcontent-a-c579977398=""
++                 aria-label="5 Sep 2026"
++                 datetime="2026-09-05"
++               >
++                 5 Sep
++               </time>
++                · #7
++             </p>
++           </div>
++           <!--container-->
++           <!--container-->
++           <!--container-->
++         </div>
+          <button
+            _ngcontent-a-c579977398=""
+            appmodalinitialfocus=""
+            class="close-button v2-button v2-button--secondary"
+            type="button"
+@@ -10,5 +121,9 @@
+              aria-hidden="true"
+              class="pi pi-times"
+            />
+             Close
+          </button>
++       </section>
++     </div>
++   </div>
++ </body>
+
+ ❯ src/app/shared/ui-v2/v2-rank-history-popup.component.spec.ts:126:36
+    124|     update({points: saved.slice(0, count)});
+    125|     expect(element.querySelector('[role="slider"]')).toBeNull();
+    126|     expect(document.activeElement).toBe(close());
+       |                                    ^
+    127|     expect(element.textContent).toContain(count ? 'One saved position'…
+    128|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-rank-history-popup.component.spec.ts > Rank history popup workflows > returns focus to Close when a refresh removes the focused table disclosure
+AssertionError: expected <body>…(1)</body> to be <button …(5)><i …(3)></i></button> // Object.is equality
+
+- Expected
++ Received
+
+@@ -1,5 +1,103 @@
++ <body>
++   <div
++     _nghost-a-c579977398=""
++     id="root13"
++     ng-version="22.2.1"
++   >
++     <div
++       _ngcontent-a-c579977398=""
++       class="history-overlay"
++     >
++       <section
++         _ngcontent-a-c579977398=""
++         appaccessibledialog=""
++         aria-labelledby="v2-rank-history-title-14"
++         aria-modal="true"
++         class="history-dialog"
++         role="dialog"
++         tabindex="-1"
++       >
++         <div
++           _ngcontent-a-c579977398=""
++           class="history-body"
++         >
++           <header
++             _ngcontent-a-c579977398=""
++             class="history-header"
++           >
++             <span
++               _ngcontent-a-c579977398=""
++               class="entity-badge"
++             >
++               <img
++                 _ngcontent-a-c579977398=""
++                 alt=""
++                 src="assets/design-v2/history-song.svg"
++               />
++               <!--container-->
++               <!--container-->
++             </span>
++             <div
++               _ngcontent-a-c579977398=""
++             >
++               <h2
++                 _ngcontent-a-c579977398=""
++                 id="v2-rank-history-title-14"
++               >
++                 Test Song
++                 <span
++                   _ngcontent-a-c579977398=""
++                   class="visually-hidden"
++                 >
++                    position history
++                 </span>
++               </h2>
++               <p
++                 _ngcontent-a-c579977398=""
++               >
++                 Top Song
++               </p>
++             </div>
++           </header>
++           <hr
++             _ngcontent-a-c579977398=""
++           />
++           <h3
++             _ngcontent-a-c579977398=""
++             class="history-heading"
++           >
++             <i
++               _ngcontent-a-c579977398=""
++               aria-hidden="true"
++               class="pi pi-chart-bar"
++             />
++              Rank Position History
++           </h3>
++           <!--container-->
++           <!--container-->
++           <!--container-->
++           <!--container-->
++           <div
++             _ngcontent-a-c579977398=""
++             class="history-feedback"
++           >
++             <p
++               _ngcontent-a-c579977398=""
++               class="feedback-title"
++             >
++               No saved positions yet
++             </p>
++             <p
++               _ngcontent-a-c579977398=""
++             >
++               History is recorded once daily when you visit your personal Stats. Try another period or ranking date.
++             </p>
++           </div>
++           <!--container-->
++           <!--container-->
++         </div>
+          <button
+            _ngcontent-a-c579977398=""
+            appmodalinitialfocus=""
+            class="close-button v2-button v2-button--secondary"
+            type="button"
+@@ -10,5 +108,9 @@
+              aria-hidden="true"
+              class="pi pi-times"
+            />
+             Close
+          </button>
++       </section>
++     </div>
++   </div>
++ </body>
+
+ ❯ src/app/shared/ui-v2/v2-rank-history-popup.component.spec.ts:137:36
+    135|     update({points: []});
+    136|     expect(element.querySelector('.table-toggle, table')).toBeNull();
+    137|     expect(document.activeElement).toBe(close());
+       |                                    ^
+    138|   });
+    139|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-rank-history-popup.component.spec.ts > Rank history popup workflows > keeps focus inside when successful recovery removes the focused Retry control
+AssertionError: expected <body>…(1)</body> to be <button …(5)><i …(3)></i></button> // Object.is equality
+
+- Expected
++ Received
+
+@@ -1,7 +1,275 @@
++ <body>
++   <div
++     _nghost-a-c579977398=""
++     id="root14"
++     ng-version="22.2.1"
++   >
++     <div
++       _ngcontent-a-c579977398=""
++       class="history-overlay"
++     >
++       <section
++         _ngcontent-a-c579977398=""
++         appaccessibledialog=""
++         aria-labelledby="v2-rank-history-title-15"
++         aria-modal="true"
++         class="history-dialog"
++         role="dialog"
++         tabindex="-1"
++       >
++         <div
++           _ngcontent-a-c579977398=""
++           class="history-body"
++         >
++           <header
++             _ngcontent-a-c579977398=""
++             class="history-header"
++           >
++             <span
++               _ngcontent-a-c579977398=""
++               class="entity-badge"
++             >
++               <img
++                 _ngcontent-a-c579977398=""
++                 alt=""
++                 src="assets/design-v2/history-song.svg"
++               />
++               <!--container-->
++               <!--container-->
++             </span>
++             <div
++               _ngcontent-a-c579977398=""
++             >
++               <h2
++                 _ngcontent-a-c579977398=""
++                 id="v2-rank-history-title-15"
++               >
++                 Test Song
++                 <span
++                   _ngcontent-a-c579977398=""
++                   class="visually-hidden"
++                 >
++                    position history
++                 </span>
++               </h2>
++               <p
++                 _ngcontent-a-c579977398=""
++               >
++                 Top Song
++               </p>
++             </div>
++           </header>
++           <hr
++             _ngcontent-a-c579977398=""
++           />
++           <h3
++             _ngcontent-a-c579977398=""
++             class="history-heading"
++           >
++             <i
++               _ngcontent-a-c579977398=""
++               aria-hidden="true"
++               class="pi pi-chart-bar"
++             />
++              Rank Position History
++           </h3>
++           <!--container-->
++           <!--container-->
++           <v2-rank-history-plot
++             _ngcontent-a-c579977398=""
++             _nghost-a-c3018853340=""
++           >
++             <div
++               _ngcontent-a-c3018853340=""
++               aria-description="Use Left and Right arrows, Home or End to inspect saved dates and positions."
++               aria-label="Saved ranking position"
++               aria-orientation="horizontal"
++               aria-valuemax="3"
++               aria-valuemin="1"
++               aria-valuenow="1"
++               aria-valuetext="5 Sep 2026, position 7"
++               class="history-plot"
++               role="slider"
++               tabindex="0"
++             >
++               <svg
++                 _ngcontent-a-c3018853340=""
++                 aria-hidden="true"
++                 focusable="false"
++                 viewBox="0 0 512 248"
++               >
++                 <line
++                   _ngcontent-a-c3018853340=""
++                   class="grid-line"
++                   x1="32"
++                   x2="488"
++                   y1="40"
++                   y2="40"
++                 />
++                 <text
++                   _ngcontent-a-c3018853340=""
++                   class="axis-label"
++                   x="8"
++                   y="48"
++                 >
++                   #1
++                 </text>
++                 <line
++                   _ngcontent-a-c3018853340=""
++                   class="grid-line"
++                   x1="32"
++                   x2="488"
++                   y1="121.17171717171718"
++                   y2="121.17171717171718"
++                 />
++                 <text
++                   _ngcontent-a-c3018853340=""
++                   class="axis-label"
++                   x="8"
++                   y="129.17171717171718"
++                 >
++                   #50
++                 </text>
++                 <line
++                   _ngcontent-a-c3018853340=""
++                   class="grid-line"
++                   x1="32"
++                   x2="488"
++                   y1="204"
++                   y2="204"
++                 />
++                 <text
++                   _ngcontent-a-c3018853340=""
++                   class="axis-label"
++                   x="8"
++                   y="212"
++                 >
++                   #100
++                 </text>
++                 <!--container-->
++                 <path
++                   _ngcontent-a-c3018853340=""
++                   class="history-area"
++                   d="M 32,49.93939393939394 L 260,43.313131313131315 L 488,40 L 488,204 L 32,204 Z"
++                 />
++                 <path
++                   _ngcontent-a-c3018853340=""
++                   class="history-line"
++                   d="M 32,49.93939393939394 L 260,43.313131313131315 L 488,40"
++                 />
++                 <circle
++                   _ngcontent-a-c3018853340=""
++                   class="position-marker"
++                   cx="32"
++                   cy="49.93939393939394"
++                   r="3"
++                 />
++                 <text
++                   _ngcontent-a-c3018853340=""
++                   class="position-label"
++                   text-anchor="middle"
++                   x="32"
++                   y="37.93939393939394"
++                 >
++                   #7
++                 </text>
++                 <text
++                   _ngcontent-a-c3018853340=""
++                   class="date-label"
++                   text-anchor="start"
++                   x="20"
++                   y="236"
++                 >
++                   5 Sep
++                 </text>
++                 <!--container-->
++                 <circle
++                   _ngcontent-a-c3018853340=""
++                   class="position-marker"
++                   cx="260"
++                   cy="43.313131313131315"
++                   r="3"
++                 />
++                 <text
++                   _ngcontent-a-c3018853340=""
++                   class="position-label"
++                   text-anchor="middle"
++                   x="260"
++                   y="31.313131313131315"
++                 >
++                   #3
++                 </text>
++                 <text
++                   _ngcontent-a-c3018853340=""
++                   class="date-label"
++                   text-anchor="middle"
++                   x="260"
++                   y="236"
++                 >
++                   18 Sep
++                 </text>
++                 <!--container-->
++                 <circle
++                   _ngcontent-a-c3018853340=""
++                   class="position-marker"
++                   cx="488"
++                   cy="40"
++                   r="3"
++                 />
++                 <text
++                   _ngcontent-a-c3018853340=""
++                   class="position-label"
++                   text-anchor="middle"
++                   x="488"
++                   y="28"
++                 >
++                   #1
++                 </text>
++                 <text
++                   _ngcontent-a-c3018853340=""
++                   class="date-label"
++                   text-anchor="end"
++                   x="488"
++                   y="236"
++                 >
++                   30 Sep
++                 </text>
++                 <!--container-->
++                 <!--container-->
++                 <!--container-->
++               </svg>
++             </div>
++             <p
++               _ngcontent-a-c3018853340=""
++               aria-atomic="true"
++               aria-live="polite"
++               class="visually-hidden"
++             >
++               
++             </p>
++             <!--container-->
++           </v2-rank-history-plot>
++           <!--container-->
+            <button
+              _ngcontent-a-c579977398=""
++             aria-controls="v2-rank-history-title-15-positions"
++             aria-expanded="false"
++             class="table-toggle v2-button v2-button--secondary"
++             type="button"
++             v2button="secondary"
++           >
++             View saved positions
++           </button>
++           <!--container-->
++           <!--container-->
++           <!--container-->
++           <!--container-->
++           <!--container-->
++         </div>
++         <button
++           _ngcontent-a-c579977398=""
+            appmodalinitialfocus=""
+            class="close-button v2-button v2-button--secondary"
+            type="button"
+            v2button="secondary"
+          >
+@@ -10,5 +278,9 @@
+              aria-hidden="true"
+              class="pi pi-times"
+            />
+             Close
+          </button>
++       </section>
++     </div>
++   </div>
++ </body>
+
+ ❯ src/app/shared/ui-v2/v2-rank-history-popup.component.spec.ts:145:36
+    143|     update({failed: false, points: saved});
+    144|     expect(element.querySelector('.retry-button')).toBeNull();
+    145|     expect(document.activeElement).toBe(close());
+       |                                    ^
+    146|   });
+    147|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 12 passed (16)
+   Start at  02:11:27
+   Duration  1.03s (transform 57ms, setup 204ms, import 70ms, tests 370ms, environment 284ms)
+

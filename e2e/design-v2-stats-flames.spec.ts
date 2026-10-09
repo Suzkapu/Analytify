@@ -116,9 +116,93 @@ test.beforeEach(async ({page}) => {
   await page.route('https://api.spotify.com/v1/me/top/tracks?*', route => route.fulfill({json: {items: currentTracks, total: 3}}));
   await page.route('https://api.spotify.com/v1/me/top/artists?*', route => route.fulfill({json: {items: currentArtists, total: 3}}));
   await page.goto('/new/stats');
-  await expect(page.getByLabel('Compare against')).toBeVisible();
+  await expect(page.getByRole('button',{name:'Compare dates',exact:true})).toBeVisible();
   await expect(page.getByRole('img', {name: 'Top 10 debut', exact: true})).toHaveCount(1);
   await expect(page.getByRole('img', {name: 'Hot mover', exact: true})).toHaveCount(1);
+});
+
+test('canonical flame timeline loops without moving controls and stops on preference changes', async ({page}, testInfo) => {
+  await page.emulateMedia({reducedMotion: 'no-preference'});
+  const flames = page.locator('.v2-ranking-row v2-ranking-flame svg');
+  await expect(flames).toHaveCount(2);
+  await expect.poll(() => flames.first().evaluate(element => element.getAnimations().length)).toBe(3);
+  // Observe the native clock across a full loop before seeking deterministic
+  // keyframes. A paused style sample alone would not prove the loop runs.
+  const start = await flames.first().evaluate(element => Number(element.getAnimations()[0].currentTime));
+  await expect.poll(() => flames.first().evaluate(element => Number(element.getAnimations()[0].currentTime)), {timeout: 5000}).toBeGreaterThan(start + 2000);
+  const evidence = [];
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({width, height: 480});
+    const rows = page.locator('.v2-ranking-row');
+    const stable = await rows.evaluateAll(elements => elements.slice(0, 2).map(element => {
+      const rank = element.querySelector('.rank-number')!.getBoundingClientRect();
+      const history = element.querySelector('.v2-ranking-history')!.getBoundingClientRect();
+      return {rank: {x: rank.x + scrollX, y: rank.y + scrollY}, history: {x: history.x + scrollX, y: history.y + scrollY}};
+    }));
+    for (const [time, opacity, rotate, scaleY] of [[0, 1, 0, 1], [100, .979334, .004521, 1.011625], [400, .84, .035, 1.09], [800, .96, -.026, .96], [1200, .88, .017, 1.04], [1600, 1, 0, 1], [2000, 1, 0, 1], [2400, .84, .035, 1.09]]) {
+      const samples = await flames.evaluateAll((elements, time) => elements.map(element => {
+        const animations = element.getAnimations();
+        animations.forEach(animation => {animation.pause(); animation.currentTime = time;});
+        const style = getComputedStyle(element);
+        const matrix = new DOMMatrixReadOnly(style.transform);
+        const bounds = element.getBoundingClientRect();
+        return {label: element.getAttribute('aria-label'), opacity: Number(style.opacity), rotate: Math.atan2(matrix.b, matrix.a),
+          scaleY: Number(style.scale.split(' ')[1] || style.scale), width: bounds.width, height: bounds.height,
+          durations: animations.map(animation => animation.effect!.getTiming().duration), iterations: animations.map(animation => animation.effect!.getTiming().iterations === Infinity)};
+      }), time);
+      for (const sample of samples) {
+        expect(sample.opacity).toBeCloseTo(opacity, 4);
+        expect(sample.rotate).toBeCloseTo(rotate, 4);
+        expect(sample.scaleY).toBeCloseTo(scaleY, 4);
+        expect(sample.durations).toEqual([2000, 2000, 2000]);
+        expect(sample.iterations).toEqual([true, true, true]);
+        expect(sample.width).toBeGreaterThanOrEqual(48);
+        expect(sample.width).toBeLessThan(51);
+        expect(sample.height).toBeGreaterThan(46);
+        expect(sample.height).toBeLessThan(55);
+      }
+      const after = await rows.evaluateAll(elements => elements.slice(0, 2).map(element => {
+        const rank = element.querySelector('.rank-number')!.getBoundingClientRect();
+        const history = element.querySelector('.v2-ranking-history')!.getBoundingClientRect();
+        return {rank: {x: rank.x + scrollX, y: rank.y + scrollY}, history: {x: history.x + scrollX, y: history.y + scrollY}};
+      }));
+      for (let index = 0; index < stable.length; index++) for (const control of ['rank', 'history'] as const) for (const coordinate of ['x', 'y'] as const) {
+        // Firefox serializes fractional viewport+scroll sums with ~3e-5px
+        // rounding differences. This tolerance is below 0.00005px.
+        expect(after[index][control][coordinate]).toBeCloseTo(stable[index][control][coordinate], 4);
+      }
+      evidence.push({width, time, samples});
+      if (time === 400) for (const [index, kind] of ['debut', 'hot'].entries()) {
+        const row = rows.nth(index);
+        await row.evaluate(async element => {
+          element.scrollIntoView({block: 'center'});
+          await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+        });
+        // Native capture must include the painted controls, rather than a row
+        // still underneath mobile navigation after screenshot auto-scrolling.
+        const action = row.getByRole('button', {name: /^View position history for/});
+        await expect.poll(() => action.evaluate(element => {
+          const bounds = element.getBoundingClientRect();
+          return element.contains(document.elementFromPoint(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2));
+        })).toBe(true);
+        await row.screenshot({path: testInfo.outputPath(`flame-motion-${kind}-${width}-400ms.png`)});
+      }
+    }
+  }
+  await page.emulateMedia({reducedMotion: 'reduce'});
+  for (const flame of await flames.all()) {
+    await expect(flame).toHaveCSS('animation-name', 'none');
+    await expect(flame).toHaveCSS('opacity', '1');
+    // Media-query style changes and cancellation of previously paused native
+    // animations can settle in separate browser frames. Require cancellation,
+    // rather than sampling the animation list only once during that boundary.
+    await expect.poll(() => flame.evaluate(element => element.getAnimations().length)).toBe(0);
+    expect(await flame.evaluate(element => ({width: element.getBoundingClientRect().width, height: element.getBoundingClientRect().height}))).toEqual({width: 48, height: 48});
+  }
+  await page.emulateMedia({reducedMotion: 'no-preference'});
+  await expect.poll(() => flames.first().evaluate(element => element.getAnimations().filter(animation => animation.playState === 'running').length)).toBe(3);
+  await expectNoBlockingAxeViolations(page);
+  await writeFile(testInfo.outputPath('flame-canonical-motion.json'), JSON.stringify(evidence, null, 2));
 });
 
 for (const motion of ['no-preference', 'reduce'] as const) {
@@ -135,7 +219,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
           const rank = element.querySelector('.rank')!.getBoundingClientRect();
           const action = element.querySelector('.v2-ranking-history')!.getBoundingClientRect();
           return {overflow: document.documentElement.scrollWidth - innerWidth,
-            icon: {width: flame.width, height: flame.height}, action: {width: action.width, height: action.height},
+            icon: {width: Number.parseFloat(getComputedStyle(element.querySelector('svg')!).width), height: Number.parseFloat(getComputedStyle(element.querySelector('svg')!).height)}, paintedIcon: {width: flame.width, height: flame.height}, action: {width: action.width, height: action.height},
             rankWidth:rank.width, ordered: flame.right <= rank.right && rank.right <= art.left && art.right <= action.left,
             iconAnimation: getComputedStyle(element.querySelector('svg')!).animationName};
         });
@@ -145,7 +229,16 @@ for (const motion of ['no-preference', 'reduce'] as const) {
         expect(geometry.action.width).toBeGreaterThanOrEqual(44);
         expect(geometry.action.height).toBeGreaterThanOrEqual(44);
         expect(geometry.ordered).toBe(true);
-        expect(geometry.iconAnimation).toBe('none');
+        if (motion === 'reduce') {
+          expect(geometry.paintedIcon).toEqual({width: 48, height: 48});
+          expect(geometry.iconAnimation).toBe('none');
+        } else {
+          expect(geometry.paintedIcon.width).toBeGreaterThanOrEqual(48);
+          expect(geometry.paintedIcon.width).toBeLessThan(51);
+          expect(geometry.paintedIcon.height).toBeGreaterThan(46);
+          expect(geometry.paintedIcon.height).toBeLessThan(55);
+          expect(geometry.iconAnimation).toMatch(/flame-opacity.*flame-rotation.*flame-scale/);
+        }
         evidence.push({width, height, ...geometry});
       }
     }

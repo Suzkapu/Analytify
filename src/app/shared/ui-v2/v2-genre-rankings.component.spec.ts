@@ -10,6 +10,27 @@ const genres: GenreRanking[] = [
 ];
 
 describe('canonical genre rankings', () => {
+  it('preserves primary shares and history while hiding unresolved comparison claims, then restores them', () => {
+    const fixture = TestBed.createComponent(V2GenreRankingsComponent);
+    const data = [{...genres[0], percentage: 10, prevPercentage: 80}];
+    fixture.componentRef.setInput('genres', data);
+    fixture.componentRef.setInput('comparisonResolved', false);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('.previous, small')).toBeNull();
+    expect(element.querySelector('.ticks')?.textContent).toBe('0%2%4%6%8%10%');
+    expect(element.querySelector('[role="img"]')?.getAttribute('aria-label')).toBe('Alternative Rock: 10%');
+    expect(element.querySelector('button')).not.toBeNull();
+    expect(data[0].hasCompare).toBe(true);
+    fixture.componentRef.setInput('scaleGenres', data);
+    fixture.componentRef.setInput('comparisonResolved', true);
+    fixture.detectChanges();
+    expect(element.querySelector('.ticks')?.textContent).toBe('0%16%32%48%64%80%');
+    expect(element.querySelector('.previous')).not.toBeNull();
+    expect(element.querySelector('small')?.textContent).toBe('↑ 1 place · −70 pp');
+    fixture.destroy();
+  });
+
   it('renders comparable percentages and independent private History actions', () => {
     const fixture = TestBed.createComponent(V2GenreRankingsComponent);
     fixture.componentRef.setInput('genres', genres);

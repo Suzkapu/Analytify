@@ -27,6 +27,7 @@ function toDailySnapshotDateKey(ts: number): string {
 }
 
 type StatsCategory = InsightsCategory;
+export type StatsSnapshotDetailState = 'ready' | 'loading' | 'empty' | 'unavailable';
 type StatsTrend = { type: 'up' | 'down' | 'same' | 'new'; diff?: number };
 type SnapshotCalendarTarget = 'history' | 'compare';
 type SnapshotCalendarDay = {
@@ -61,6 +62,7 @@ export class UserStatsController implements OnInit, OnDestroy {
   pastStatsSearchError = '';
   isLoading: boolean = true;
   isRefreshingStats: boolean = false;
+  currentStatsLoadFailed = false;
   spyDisplayName = '';
   spyImageUrl = '';
   spySnapshotDate = '';
@@ -419,6 +421,7 @@ export class UserStatsController implements OnInit, OnDestroy {
 
   async loadStats() {
     const loadSequence = ++this.statsLoadSequence;
+    this.currentStatsLoadFailed = false;
     this.statsSubscription?.unsubscribe();
     this.statsSubscription = null;
 
@@ -432,13 +435,15 @@ export class UserStatsController implements OnInit, OnDestroy {
     const supabaseUserId = this.authService.getSupabaseUserId();
     const range = this.selectedRange;
     const isCurrentLoad = () =>
-      loadSequence === this.statsLoadSequence && range === this.selectedRange;
+      loadSequence === this.statsLoadSequence && range === this.selectedRange
+      && userId === (this.authService.getUserId() || 'anonymous')
+      && supabaseUserId === this.authService.getSupabaseUserId() && !this.isSpyMode;
     const lastUpdatedKey = `${userId}_stats_${range}_lastUpdated`;
     const tracksKey = `${userId}_stats_${range}_tracks`;
     const artistsKey = `${userId}_stats_${range}_artists`;
     const genresKey = `${userId}_stats_${range}_genres`;
     await this.storageService.hydrateItems?.([tracksKey, artistsKey, genresKey]);
-    if (loadSequence !== this.statsLoadSequence || range !== this.selectedRange) return;
+    if (!isCurrentLoad()) return;
     let lastUpdated = this.storageService.getItem(lastUpdatedKey);
     let isExpired = this.isCacheExpired(lastUpdated, range);
     let cachedTracks = this.storageService.getItem(tracksKey);
@@ -519,13 +524,16 @@ export class UserStatsController implements OnInit, OnDestroy {
     // Stale-while-revalidate: never blank a complete current view merely
     // because its refresh is due. The replacement is assembled off-screen and
     // committed atomically when every required response has completed.
-    if (hasUsableCachedStats() && isExpired && isCurrentLoad()) {
-      this.topTracks = parsedTracks;
-      this.topArtists = parsedArtists;
-      this.topGenres = parsedGenres;
-      this.isLoading = false;
-      this.isRefreshingStats = true;
-    }
+    const showStaleCacheDuringRefresh = () => {
+      if (hasUsableCachedStats() && isExpired && isCurrentLoad()) {
+        this.topTracks = parsedTracks;
+        this.topArtists = parsedArtists;
+        this.topGenres = parsedGenres;
+        this.isLoading = false;
+        this.isRefreshingStats = true;
+      }
+    };
+    showStaleCacheDuringRefresh();
 
     if ((isExpired || isCacheIncomplete) && this.authService.isBackupActive()) {
       await this.storageService.restoreItemsFromCloud([
@@ -533,7 +541,7 @@ export class UserStatsController implements OnInit, OnDestroy {
         artistsKey,
         genresKey,
         lastUpdatedKey
-      ]);
+      ], isCurrentLoad);
       if (!isCurrentLoad()) return;
 
       lastUpdated = this.storageService.getItem(lastUpdatedKey);
@@ -544,6 +552,7 @@ export class UserStatsController implements OnInit, OnDestroy {
       parseCachedStats();
       await enrichParsedGenres();
       if (!isCurrentLoad()) return;
+      showStaleCacheDuringRefresh();
     }
 
     if (!isExpired && !isCacheIncomplete) {
@@ -703,6 +712,7 @@ export class UserStatsController implements OnInit, OnDestroy {
           this.isLoading = false;
           this.isRefreshingStats = false;
           // Fallback if API fails but we have stale cache
+          this.currentStatsLoadFailed = true;
           if (
             Array.isArray(parsedTracks) &&
             Array.isArray(parsedArtists) &&
@@ -1520,8 +1530,16 @@ export class UserStatsController implements OnInit, OnDestroy {
                 });
                 await mapWithConcurrency(missingSnapshots, async (snap: any) => {
                   if (!isCurrentSync()) return;
-                  await this.storageService.saveStatsHistory({ ...snap, userId, isLoaded: false });
-                  localUpdated = true;
+                  // Settle every started restore before re-reading the cache.
+                  // One failed write must not hide another successful write or
+                  // release the refresh state while other dates are pending.
+                  try {
+                    await this.storageService.saveStatsHistory({ ...snap, userId, isLoaded: false });
+                    localUpdated = true;
+                  } catch (error) {
+                    restoreFailed = true;
+                    console.warn('[Stats] Failed to restore history snapshot locally:', error);
+                  }
                 });
               } catch (e) {
                 restoreFailed = true;
@@ -1959,6 +1977,13 @@ export class UserStatsController implements OnInit, OnDestroy {
   }
 
   private async loadSharedStats(loadSequence: number, ownerUserId: string): Promise<void> {
+    const range = this.selectedRange;
+    const recipientSpotifyId = this.authService.getUserId();
+    const recipientCloudId = this.authService.getSupabaseUserId();
+    const isCurrentLoad = () => loadSequence === this.statsLoadSequence
+      && ownerUserId === this.spyOwnerUserId && range === this.selectedRange
+      && recipientSpotifyId === this.authService.getUserId()
+      && recipientCloudId === this.authService.getSupabaseUserId();
     this.isLoading = true;
     this.isRefreshingStats = false;
     this.sharedStatsError = '';
@@ -1967,8 +1992,8 @@ export class UserStatsController implements OnInit, OnDestroy {
     this.topGenres = [];
     try {
       if (!this.statsSharing) throw new Error('Stats sharing is unavailable.');
-      const snapshot = await this.statsSharing.loadSharedStats(ownerUserId, this.selectedRange);
-      if (loadSequence !== this.statsLoadSequence || ownerUserId !== this.spyOwnerUserId) return;
+      const snapshot = await this.statsSharing.loadSharedStats(ownerUserId, range);
+      if (!isCurrentLoad()) return;
       if (!snapshot) throw new Error('This user does not have a saved snapshot for this range yet.');
       this.spyDisplayName = snapshot.ownerDisplayName;
       this.spyImageUrl = snapshot.ownerImageUrl;
@@ -1977,11 +2002,11 @@ export class UserStatsController implements OnInit, OnDestroy {
       this.topArtists = snapshot.topArtists;
       this.topGenres = snapshot.topGenres;
     } catch (error) {
-      if (loadSequence !== this.statsLoadSequence || ownerUserId !== this.spyOwnerUserId) return;
+      if (!isCurrentLoad()) return;
       const value = error as any;
       this.sharedStatsError = value?.message || 'These shared stats are unavailable.';
     } finally {
-      if (loadSequence === this.statsLoadSequence && ownerUserId === this.spyOwnerUserId) {
+      if (isCurrentLoad()) {
         this.isLoading = false;
         this.changeDetector?.markForCheck();
       }
@@ -2280,6 +2305,23 @@ export class UserStatsController implements OnInit, OnDestroy {
     return snap ? snap.isLoaded === 'loading' || this.pendingSnapshotDetails.has(this.snapshotDetailKey(snap)) : false;
   }
 
+  /** Detail outcomes are independent of search filtering and calendar metadata refresh. */
+  getSnapshotDetailState(snapshotId: string, category: StatsCategory = this.selectedCategory): StatsSnapshotDetailState {
+    if (!snapshotId) return 'ready';
+    if (snapshotId === 'current') {
+      const items = category === 'tracks' ? this.topTracks : category === 'artists' ? this.topArtists : this.topGenres;
+      return items.length ? 'ready' : 'empty';
+    }
+    if (this.isSpyMode) return 'unavailable';
+    const snapshot = this.snapshotById.get(snapshotId);
+    if (!snapshot) return 'unavailable';
+    const key = this.snapshotDetailKey(snapshot);
+    if (snapshot.isLoaded === 'loading' || this.pendingSnapshotDetails.has(key)) return 'loading';
+    if (snapshot.isLoaded === true) return this.getSnapshotItems(snapshot, category).length ? 'ready' : 'empty';
+    if (this.unavailableSnapshotDetails.has(key) || !this.authService.getSupabaseUserId() || !snapshot.id) return 'unavailable';
+    return 'loading';
+  }
+
   ensureSnapshotLoaded(snapshotId: string | 'current', retryUnavailable = true) {
     if (!snapshotId || snapshotId === 'current') return;
 
@@ -2341,10 +2383,7 @@ export class UserStatsController implements OnInit, OnDestroy {
         this.markSnapshotDetailsUnavailable(snapshotIdStr);
       });
     } else {
-      this.historyData = this.historyData.map(snapshot => snapshot.timestamp.toString() === snapshotIdStr
-        ? {...snapshot, isLoaded: true}
-        : snapshot
-      );
+      this.markSnapshotDetailsUnavailable(snapshotIdStr);
     }
   }
 

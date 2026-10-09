@@ -1,0 +1,57 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/insights/user-stats/v2-user-stats.component.spec.ts --include=src/app/features/insights/user-stats/user-stats.component.spec.ts --include=src/app/shared/ui-v2/design-v2-primitives.spec.ts
+Application bundle generation complete. [2.807 seconds] - 2026-10-08T00:51:29.107Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:323744) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:323737) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:323738) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ |SpotiFront| src/app/features/insights/user-stats/v2-user-stats.component.spec.ts (32 tests | 2 failed) 665ms
+     × keeps the false owner identity and category heading coherent through actual tab clicks 29ms
+     × keeps the true owner identity and category heading coherent through actual tab clicks 27ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-user-stats.component.spec.ts > canonical Stats content identity and result context > keeps the false owner identity and category heading coherent through actual tab clicks
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-user-stats.component.spec.ts > canonical Stats content identity and result context > keeps the true owner identity and category heading coherent through actual tab clicks
+AssertionError: expected <h2 _ngcontent-a-c676837515 …(1)></h2> to be null
+
+- Expected:
+null
+
++ Received:
+<h2
+  _ngcontent-a-c676837515=""
+  class="stats-results-heading"
+>
+  Top genres
+</h2>
+
+ ❯ src/app/features/insights/user-stats/v2-user-stats.component.spec.ts:465:63
+    463|       component.isLoading = !shared;
+    464|       fixture.changeDetectorRef.markForCheck(); TestBed.tick(); fixtur…
+    465|       expect(element.querySelector('.stats-results-heading')).toBeNull…
+       |                                                               ^
+    466|       expect(element.textContent).toContain(shared ? 'Access was revok…
+    467|     } finally {fixture.destroy(); initialize.mockRestore();}
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  2 failed | 129 passed (131)
+   Start at  02:51:29
+   Duration  1.62s (transform 533ms, setup 620ms, import 745ms, tests 1.35s, environment 931ms)
+

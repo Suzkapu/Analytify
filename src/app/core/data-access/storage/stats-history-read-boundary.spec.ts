@@ -31,11 +31,8 @@ function requestBoundary(indexed = false) {
   const service = new StorageService({} as never, new SessionLifecycleService());
   return {service, responses, opens, open, db, store, getAll};
 }
-// Exercise the future public strict-read option against the current adapter too,
-// so the before-fix run produces behavioral failures rather than a type error.
 const strictRead = (service: StorageService) =>
-  (service.getStatsHistory as (...args: any[]) => Promise<any[]>)(
-    'reader-A', 'short_term', {readFailure: 'reject'});
+  service.getStatsHistory('reader-A', 'short_term', {readFailure: 'reject'});
 
 afterEach(() => {vi.unstubAllGlobals(); vi.restoreAllMocks();});
 describe('Saved Stats history read and retry boundary', () => {

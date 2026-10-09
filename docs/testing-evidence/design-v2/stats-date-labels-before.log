@@ -1,0 +1,93 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/v2-stats-date-labels.spec.ts --progress=false
+Application bundle generation complete. [2.963 seconds] - 2026-10-07T23:20:00.896Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/v2-stats-date-labels.spec.ts (13 tests | 4 failed) 190ms
+     × uses the canonical saved calendar date, independent of a localized timestamp label 15ms
+     × formats valid calendar boundary 2000-02-29 without changing its day 1ms
+     × formats valid calendar boundary 2024-02-29 without changing its day 1ms
+     × formats valid calendar boundary 2026-01-01 without changing its day 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-stats-date-labels.spec.ts > snapshot date presentation preserves selection identity > uses the canonical saved calendar date, independent of a localized timestamp label
+AssertionError: expected 'Sep 25, 2026' to be '24 Sep 2026' // Object.is equality
+
+Expected: "24 Sep 2026"
+Received: "Sep 25, 2026"
+
+ ❯ src/app/features/insights/user-stats/v2-stats-date-labels.spec.ts:29:50
+     27|     const component = setup(V2UserStatsComponent);
+     28|     component.selectedSnapshotId = 'saved'; component.compareSnapshotI…
+     29|     expect(component.getSelectedSnapshotLabel()).toBe('24 Sep 2026');
+       |                                                  ^
+     30|     expect(component.getCompareSnapshotLabel()).toBe('24 Sep 2026');
+     31|     expect(component.selectedSnapshotId).toBe('saved');
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-stats-date-labels.spec.ts > snapshot date presentation preserves selection identity > formats valid calendar boundary 2000-02-29 without changing its day
+AssertionError: expected 'Sep 25, 2026' to be '29 Feb 2000' // Object.is equality
+
+Expected: "29 Feb 2000"
+Received: "Sep 25, 2026"
+
+ ❯ src/app/features/insights/user-stats/v2-stats-date-labels.spec.ts:57:50
+     55|     const component = setup(V2UserStatsComponent);
+     56|     component.snapshotOptions[0].dateKey = dateKey; component.selected…
+     57|     expect(component.getSelectedSnapshotLabel()).toBe(expected);
+       |                                                  ^
+     58|   });
+     59| });
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-stats-date-labels.spec.ts > snapshot date presentation preserves selection identity > formats valid calendar boundary 2024-02-29 without changing its day
+AssertionError: expected 'Sep 25, 2026' to be '29 Feb 2024' // Object.is equality
+
+Expected: "29 Feb 2024"
+Received: "Sep 25, 2026"
+
+ ❯ src/app/features/insights/user-stats/v2-stats-date-labels.spec.ts:57:50
+     55|     const component = setup(V2UserStatsComponent);
+     56|     component.snapshotOptions[0].dateKey = dateKey; component.selected…
+     57|     expect(component.getSelectedSnapshotLabel()).toBe(expected);
+       |                                                  ^
+     58|   });
+     59| });
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-stats-date-labels.spec.ts > snapshot date presentation preserves selection identity > formats valid calendar boundary 2026-01-01 without changing its day
+AssertionError: expected 'Sep 25, 2026' to be '1 Jan 2026' // Object.is equality
+
+Expected: "1 Jan 2026"
+Received: "Sep 25, 2026"
+
+ ❯ src/app/features/insights/user-stats/v2-stats-date-labels.spec.ts:57:50
+     55|     const component = setup(V2UserStatsComponent);
+     56|     component.snapshotOptions[0].dateKey = dateKey; component.selected…
+     57|     expect(component.getSelectedSnapshotLabel()).toBe(expected);
+       |                                                  ^
+     58|   });
+     59| });
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 9 passed (13)
+   Start at  01:20:01
+   Duration  1.21s (transform 244ms, setup 232ms, import 343ms, tests 190ms, environment 314ms)
+

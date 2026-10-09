@@ -80,6 +80,23 @@ describe('AccessibleDialogDirective', () => {
         expect(document.activeElement).toBe(last);
     });
 
+    it('respects dynamically removed tab stops without hiding their controls', async () => {
+        await openDialog();
+        const first = fixture.nativeElement.querySelector('#first') as HTMLButtonElement;
+        const safe = fixture.nativeElement.querySelector('#safe') as HTMLButtonElement;
+        const last = fixture.nativeElement.querySelector('#last') as HTMLButtonElement;
+        first.tabIndex = -1;
+        last.focus();
+        document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Tab', bubbles: true, cancelable: true}));
+        expect(document.activeElement).toBe(safe);
+        expect(first.disabled).toBe(false);
+        expect(first.getAttribute('aria-hidden')).toBeNull();
+        safe.tabIndex = -1;
+        last.focus();
+        document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Tab', shiftKey: true, bubbles: true, cancelable: true}));
+        expect(document.activeElement).toBe(last);
+    });
+
     it('closes on Escape, restores the trigger, and releases the background', async () => {
         const trigger = fixture.nativeElement.querySelector('#trigger') as HTMLButtonElement;
         trigger.focus();

@@ -1,0 +1,39 @@
+✔ lazily hydrates missing artist genres with bounded parallel requests (2.771653ms)
+✔ does not spend artist requests when Top Artists already includes genres (0.132958ms)
+✔ replaces a daily snapshot through one atomic database call (12.29021ms)
+✔ deduplicates tracks with matching title and artist so duplicate releases are omitted (0.174998ms)
+✔ loads overflow tracks in parallel and keeps a full 100 after de-duplication (1.2032ms)
+✔ stats_short_term preserves its range, local day, daily idempotency and CAS revision (1.533928ms)
+✔ stats_medium_term preserves its range, local day, daily idempotency and CAS revision (0.743059ms)
+✔ stats_long_term preserves its range, local day, daily idempotency and CAS revision (0.760322ms)
+✔ unsupported task and failed credentials do not fetch, write or mark completion (0.543096ms)
+✔ mandatory artistsPageError failure preserves the prior snapshot (0.367707ms)
+✔ mandatory firstTracksPage failure preserves the prior snapshot (0.197098ms)
+✔ failed optional pages preserve primary rankings and report both partial failures (1.025768ms)
+✔ catalogError is propagated without scoring or a false successful sync marker (0.287848ms)
+✔ tracksError is propagated without scoring or a false successful sync marker (0.667018ms)
+✔ artistsError is propagated without scoring or a false successful sync marker (0.67934ms)
+✔ revisionError is propagated without scoring or a false successful sync marker (0.713454ms)
+✔ replaceError is propagated without scoring or a false successful sync marker (0.643083ms)
+✔ retry after a CAS conflict rereads the revision and retains the daily idempotency key (1.27314ms)
+✔ missing page payloads save an explicitly empty ranking without catalog lookup requests (0.659012ms)
+✔ catalog absence cannot produce dangling snapshot relations (0.635428ms)
+✔ a scoring failure preserves a committed ranking and reports the skipped side effect (0.67387ms)
+✔ marker failure is reported after commit rather than pretending the task completed (0.660895ms)
+✔ missing committed snapshot identity (null) cannot be scored or marked successful (1.072105ms)
+✔ missing committed snapshot identity ([]) cannot be scored or marked successful (0.506467ms)
+✔ missing committed snapshot identity ({}) cannot be scored or marked successful (0.484336ms)
+✔ missing committed snapshot identity ([{"revision":5}]) cannot be scored or marked successful (0.550349ms)
+✔ missing committed snapshot identity ({"snapshot_id":""}) cannot be scored or marked successful (0.568553ms)
+✔ single-object atomic replacement responses retain the committed snapshot identity (0.568673ms)
+✔ genre enrichment deduplicates requests and retains original artists on partial failure (0.273301ms)
+✔ genre ranking excludes placeholders and caps the weighted distinct result at fifteen (0.162594ms)
+✔ deduplication retains distinct artists and unnamed tracks while dropping invalid and duplicate IDs (0.109935ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 49.016139

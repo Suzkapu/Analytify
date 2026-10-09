@@ -1,0 +1,258 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-all-browsers.config.ts e2e/design-v2-stats-flames.spec.ts --grep canonical flame timeline
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:151492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:151492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 2 workers
+
+(node:151594) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:151593) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [desktop] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes (5.5s)
+  ✘  1 [mobile] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes (5.8s)
+(node:151790) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:151799) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  4 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes (7.6s)
+  ✘  3 [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes (7.7s)
+
+
+  1) [desktop] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 4
+    + Received  + 4
+
+      Array [
+        Object {
+          "history": Object {
+            "x": 289,
+    -       "y": 591.859375,
+    +       "y": 217.859375,
+          },
+          "rank": Object {
+            "x": 34,
+    -       "y": 595.859375,
+    +       "y": 221.859375,
+          },
+        },
+        Object {
+          "history": Object {
+            "x": 289,
+    -       "y": 679.859375,
+    +       "y": 305.859375,
+          },
+          "rank": Object {
+            "x": 34,
+    -       "y": 683.859375,
+    +       "y": 309.859375,
+          },
+        },
+      ]
+
+      166 |         const history = element.querySelector('.v2-ranking-history')!.getBoundingClientRect();
+      167 |         return {rank: {x: rank.x, y: rank.y}, history: {x: history.x, y: history.y}};
+    > 168 |       }))).toEqual(stable);
+          |            ^
+      169 |       evidence.push({width, time, samples});
+      170 |       if (time === 400) await rows.nth(0).screenshot({path: testInfo.outputPath(`flame-motion-${width}-400ms.png`)});
+      171 |     }
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:168:12
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 4
+    + Received  + 4
+
+      Array [
+        Object {
+          "history": Object {
+            "x": 289,
+    -       "y": 599.859375,
+    +       "y": 217.859375,
+          },
+          "rank": Object {
+            "x": 34,
+    -       "y": 603.859375,
+    +       "y": 221.859375,
+          },
+        },
+        Object {
+          "history": Object {
+            "x": 289,
+    -       "y": 687.859375,
+    +       "y": 305.859375,
+          },
+          "rank": Object {
+            "x": 34,
+    -       "y": 691.859375,
+    +       "y": 309.859375,
+          },
+        },
+      ]
+
+      166 |         const history = element.querySelector('.v2-ranking-history')!.getBoundingClientRect();
+      167 |         return {rank: {x: rank.x, y: rank.y}, history: {x: history.x, y: history.y}};
+    > 168 |       }))).toEqual(stable);
+          |            ^
+      169 |       evidence.push({width, time, samples});
+      170 |       if (time === 400) await rows.nth(0).screenshot({path: testInfo.outputPath(`flame-motion-${width}-400ms.png`)});
+      171 |     }
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:168:12
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 4
+    + Received  + 4
+
+      Array [
+        Object {
+          "history": Object {
+            "x": 287.83331298828125,
+    -       "y": 591.88330078125,
+    +       "y": 217.88333129882812,
+          },
+          "rank": Object {
+            "x": 34,
+    -       "y": 595.88330078125,
+    +       "y": 221.88333129882812,
+          },
+        },
+        Object {
+          "history": Object {
+            "x": 287.83331298828125,
+    -       "y": 679.88330078125,
+    +       "y": 305.8833312988281,
+          },
+          "rank": Object {
+            "x": 34,
+    -       "y": 683.88330078125,
+    +       "y": 309.8833312988281,
+          },
+        },
+      ]
+
+      166 |         const history = element.querySelector('.v2-ranking-history')!.getBoundingClientRect();
+      167 |         return {rank: {x: rank.x, y: rank.y}, history: {x: history.x, y: history.y}};
+    > 168 |       }))).toEqual(stable);
+          |            ^
+      169 |       evidence.push({width, time, samples});
+      170 |       if (time === 400) await rows.nth(0).screenshot({path: testInfo.outputPath(`flame-motion-${width}-400ms.png`)});
+      171 |     }
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:168:12
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 4
+    + Received  + 4
+
+      Array [
+        Object {
+          "history": Object {
+            "x": 287.84375,
+    -       "y": 591.84375,
+    +       "y": 217.84375,
+          },
+          "rank": Object {
+            "x": 34,
+    -       "y": 595.84375,
+    +       "y": 221.84375,
+          },
+        },
+        Object {
+          "history": Object {
+            "x": 287.84375,
+    -       "y": 679.84375,
+    +       "y": 305.84375,
+          },
+          "rank": Object {
+            "x": 34,
+    -       "y": 683.84375,
+    +       "y": 309.84375,
+          },
+        },
+      ]
+
+      166 |         const history = element.querySelector('.v2-ranking-history')!.getBoundingClientRect();
+      167 |         return {rank: {x: rank.x, y: rank.y}, history: {x: history.x, y: history.y}};
+    > 168 |       }))).toEqual(stable);
+          |            ^
+      169 |       evidence.push({width, time, samples});
+      170 |       if (time === 400) await rows.nth(0).screenshot({path: testInfo.outputPath(`flame-motion-${width}-400ms.png`)});
+      171 |     }
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:168:12
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [desktop] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes 
+    [mobile] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes 
+    [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes 
+    [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes 

@@ -1,0 +1,52 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-search-switch.spec.ts --config=/tmp/analytify-all-browsers.config.ts --workers=1
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:178395) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:178395) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:178513) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 10:07:06 PM [vite] (client) [console.warn] [Analytify][0006][+00502ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:07:06 PM [vite] (client) [console.warn] [Analytify][0007][+00504ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 10:07:06 PM [vite] (client) [console.warn] [Analytify][0012][+00612ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:07:06 PM [vite] (client) [console.warn] [Analytify][0013][+00613ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 10:07:06 PM [vite] (client) [console.warn] [Analytify][0015][+00660ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:07:06 PM [vite] (client) [console.warn] [Analytify][0016][+00660ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓   1 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (3.6s)
+  ✓   2 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (3.6s)
+  ✓   3 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:97:5 › selection follows the native 220ms timeline and responds to reduced motion (2.1s)
+(node:178754) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 10:07:16 PM [vite] (client) [console.warn] [Analytify][0006][+00464ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:07:16 PM [vite] (client) [console.warn] [Analytify][0007][+00466ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 10:07:16 PM [vite] (client) [console.warn] [Analytify][0011][+00555ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:07:16 PM [vite] (client) [console.warn] [Analytify][0012][+00556ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓   4 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (3.8s)
+  ✓   5 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (4.2s)
+  ✓   6 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:97:5 › selection follows the native 220ms timeline and responds to reduced motion (2.3s)
+(node:179036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 10:07:27 PM [vite] (client) [console.warn] [Analytify][0006][+00243ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:07:27 PM [vite] (client) [console.warn] [Analytify][0007][+00245ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 10:07:28 PM [vite] (client) [console.warn] [Analytify][0011][+00419ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:07:28 PM [vite] (client) [console.warn] [Analytify][0012][+00420ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓   7 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (4.4s)
+  ✓   8 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (5.1s)
+  ✓   9 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:97:5 › selection follows the native 220ms timeline and responds to reduced motion (2.0s)
+(node:179508) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 10:07:40 PM [vite] (client) [console.warn] [Analytify][0006][+00817ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:07:40 PM [vite] (client) [console.warn] [Analytify][0007][+00819ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 10:07:41 PM [vite] (client) [console.warn] [Analytify][0011][+01090ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:07:41 PM [vite] (client) [console.warn] [Analytify][0012][+01091ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓  10 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (6.7s)
+[WebServer] 10:07:47 PM [vite] (client) [console.error] InvalidStateError: Skipping view transition because viewport size changed.
+  ✓  11 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (4.7s)
+  ✓  12 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:97:5 › selection follows the native 220ms timeline and responds to reduced motion (4.8s)
+
+  12 passed (57.6s)

@@ -1,0 +1,129 @@
+const imgAnalytifyIconStar = "https://www.figma.com/api/mcp/asset/e914fecd-d1e4-42c1-92b0-cc63f7d12f72.svg";
+const imgAnalytifyIconUser = "https://www.figma.com/api/mcp/asset/07c4cc72-8d73-4094-b345-35c38516dd93.svg";
+const imgFrame = "https://www.figma.com/api/mcp/asset/977ac694-fb81-4b34-9593-03307b487dcf.svg";
+
+function AnalytifyIconStar({ className }: { className?: string }) {
+  return (
+    <div className={className || "relative size-[20px]"} data-node-id="62:2346" data-name="Analytify/Icon / star">
+      <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgAnalytifyIconStar} />
+    </div>
+  );
+}
+
+function AnalytifyIconUser({ className }: { className?: string }) {
+  return (
+    <div className={className || "relative size-[20px]"} data-node-id="62:2389" data-name="Analytify/Icon / user">
+      <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgAnalytifyIconUser} />
+    </div>
+  );
+}
+
+function AnalytifyIconSongs({ className }: { className?: string }) {
+  return (
+    <div className={className || "relative size-[20px]"} data-node-id="218:11633" data-name="Analytify/Icon / songs">
+      <div className="absolute left-0 size-[20px] top-0" data-node-id="218:11634" data-name="Frame">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgFrame} />
+      </div>
+    </div>
+  );
+}
+
+export default function StatsRow1TimeframeAndCategory() {
+  return (
+    <div className="content-stretch flex flex-col gap-[var(--v2-space-2,8px)] items-start relative size-full" data-node-id="87:3583" data-name="Stats / Row 1 · Timeframe and category">
+      <div className="content-stretch flex flex-col gap-[var(--v2-space-2,8px)] items-start overflow-clip relative shrink-0 w-full" data-node-id="430:26788" data-name="Stats / Period group">
+        <p className="[word-break:break-word] font-['Outfit:Regular'] font-normal leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text-muted,#a2ada6)] w-full" data-node-id="430:26789">
+          Period
+        </p>
+        <div className="content-stretch cursor-pointer flex gap-[var(--v2-space-1,4px)] h-[48px] items-center relative shrink-0 w-full" data-node-id="25:804" data-name="Local navigation / 4 weeks, 6 months, 1 year">
+          <button className="bg-[var(--stats\/period\/4-weeks\/background,#193c29)] border border-[var(--color\/border,#34423a)] border-solid content-stretch flex flex-[1_0_0] gap-[var(--v2-space-2,8px)] h-[48px] items-center justify-center min-w-[80px] px-[2px] relative rounded-[var(--v2-radius-control,12px)]" data-node-id="25:805" data-name="Action / 4 weeks">
+            <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[16px] relative shrink-0 text-[11px] text-[color:var(--stats\/period\/4-weeks\/foreground,#35e783)] text-center whitespace-nowrap" data-node-id="I25:805;24:87">
+              4 weeks
+            </p>
+          </button>
+          <button className="bg-[var(--stats\/period\/6-months\/background,#121814)] border border-[var(--color\/border,#34423a)] border-solid content-stretch flex flex-[1_0_0] gap-[var(--v2-space-2,8px)] h-[48px] items-center justify-center min-w-[80px] px-[2px] relative rounded-[var(--v2-radius-control,12px)]" data-node-id="25:807" data-name="Action / 6 months">
+            <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[16px] relative shrink-0 text-[11px] text-[color:var(--stats\/period\/6-months\/foreground,#f5f7f5)] text-center whitespace-nowrap" data-node-id="I25:807;24:87">
+              6 months
+            </p>
+          </button>
+          <button className="bg-[var(--stats\/period\/1-year\/background,#121814)] border border-[var(--color\/border,#34423a)] border-solid content-stretch flex flex-[1_0_0] gap-[var(--v2-space-2,8px)] h-[48px] items-center justify-center min-w-[80px] px-[2px] relative rounded-[var(--v2-radius-control,12px)]" data-node-id="25:809" data-name="Action / 1 year">
+            <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[16px] relative shrink-0 text-[11px] text-[color:var(--stats\/period\/1-year\/foreground,#f5f7f5)] text-center whitespace-nowrap" data-node-id="I25:809;24:87">
+              1 year
+            </p>
+          </button>
+        </div>
+      </div>
+      <div className="content-stretch flex flex-col gap-[var(--v2-space-2,8px)] items-start overflow-clip relative shrink-0 w-full" data-node-id="430:26790" data-name="Stats / Category group">
+        <p className="[word-break:break-word] font-['Outfit:Regular'] font-normal leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text-muted,#a2ada6)] w-full" data-node-id="430:26791">
+          Category
+        </p>
+        <div className="content-stretch cursor-pointer flex gap-[var(--v2-space-1,4px)] h-[48px] items-center relative shrink-0 w-full" data-node-id="25:820" data-name="Local navigation / Songs, Artists, Genres">
+          <button className="bg-[var(--stats\/category\/songs\/background,#193c29)] border border-[var(--color\/border,#34423a)] border-solid content-stretch flex flex-[1_0_0] flex-col gap-[4px] h-[48px] items-center justify-center min-w-[80px] px-[var(--v2-space-1,4px)] relative rounded-[12px]" data-node-id="25:821" data-name="Action / Songs">
+            <AnalytifyIconSongs className="relative shrink-0 size-[18px]" />
+            <p className="[word-break:break-word] font-['Outfit:Medium'] font-medium leading-[normal] relative shrink-0 text-[12px] text-[color:var(--stats\/category\/songs\/foreground,#35e783)] text-left whitespace-nowrap" data-node-id="I25:821;218:11669">
+              Songs
+            </p>
+          </button>
+          <button className="bg-[var(--stats\/category\/artists\/background,#121814)] border border-[var(--color\/border,#34423a)] border-solid content-stretch flex flex-[1_0_0] flex-col gap-[4px] h-[48px] items-center justify-center min-w-[80px] px-[var(--v2-space-1,4px)] relative rounded-[12px]" data-node-id="25:823" data-name="Action / Artists">
+            <AnalytifyIconUser className="relative shrink-0 size-[18px]" />
+            <p className="[word-break:break-word] font-['Outfit:Medium'] font-medium leading-[normal] relative shrink-0 text-[12px] text-[color:var(--stats\/category\/artists\/foreground,#f5f7f5)] text-left whitespace-nowrap" data-node-id="I25:823;218:11669">
+              Artists
+            </p>
+          </button>
+          <button className="bg-[var(--stats\/category\/genres\/background,#121814)] border border-[var(--color\/border,#34423a)] border-solid content-stretch flex flex-[1_0_0] flex-col gap-[4px] h-[48px] items-center justify-center min-w-[80px] px-[var(--v2-space-1,4px)] relative rounded-[12px]" data-node-id="25:825" data-name="Action / Genres">
+            <AnalytifyIconStar className="relative shrink-0 size-[18px]" />
+            <p className="[word-break:break-word] font-['Outfit:Medium'] font-medium leading-[normal] relative shrink-0 text-[12px] text-[color:var(--stats\/category\/genres\/foreground,#f5f7f5)] text-left whitespace-nowrap" data-node-id="I25:825;218:11669">
+              Genres
+            </p>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+
+These styles are contained in the design: Analytify/Caption: Font(family: "Outfit", style: Regular, size: 14, weight: 400, lineHeight: 20, letterSpacing: 0).
+
+Component descriptions: The following components have usage descriptions or documentation links defined in Figma. These descriptions provide important context about the intended usage, best practices, and any constraints for each component. Follow these guidelines when implementing or using these components.
+
+## Analytify/secondary
+**Node ID:** 24:94
+
+Shared secondary control. 48 px targets. Keyboard focus remains visible. Disabled only while unavailable or submitting; explain the reason nearby.
+
+## Viewport=Mobile, State=Inactive
+**Node ID:** 218:11665
+
+Playlist section tab. Mobile icon above existing label; desktop icon beside label. Green active border and fill.
+
+## Analytify/Section tab
+**Node ID:** 218:11685
+
+Shared section navigation. Consistent bordered tabs with semantic icons, selected state and native prototype actions. Desktop horizontal; compact mobile icon above label.
+
+## Analytify/Icon / songs
+**Node ID:** 218:11633
+
+Semantic songs icon. Use with the control accessible name.
+
+## Analytify/Icon / user
+**Node ID:** 62:2389
+
+PrimeIcons user from the app icon library.
+
+## Analytify/Icon / star
+**Node ID:** 62:2346
+
+PrimeIcons star from the app icon library.
+
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

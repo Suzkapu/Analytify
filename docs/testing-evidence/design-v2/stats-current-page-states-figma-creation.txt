@@ -1,0 +1,28 @@
+const p=await figma.getNodeByIdAsync('7:2');await figma.setCurrentPageAsync(p);
+function all(n){const a=[n];if('children'in n)for(const c of n.children)a.push(...all(c));return a;}
+function named(n,name){return all(n).find(c=>c.name===name);}
+const source=await figma.getNodeByIdAsync(SOURCE_ID),family=await figma.getNodeByIdAsync('969:29865');
+const states=STATES,viewport=VIEWPORT,shared=SHARED;
+const names=states.map(state=>'Stats / Current page states / '+(shared?'Shared':'Owner')+' / '+viewport+' / '+state);
+if(p.children.some(n=>names.includes(n.name)))throw Error('State reference exists; read ledger before retry.');
+const fonts=new Map();for(const root of [source,family])for(const t of all(root).filter(n=>n.type==='TEXT'))for(const s of t.getStyledTextSegments(['fontName']))fonts.set(JSON.stringify(s.fontName),s.fontName);
+for(const font of fonts.values())await figma.loadFontAsync(font);
+const refs=[];
+for(const state of states){
+ const frame=source.clone();p.appendChild(frame);frame.name=names[states.indexOf(state)];frame.x=21000+(viewport==='Mobile'?1520:0)+(shared?2100:0);frame.y=states.indexOf(state)*1100+Y_OFFSET;
+ const content=named(frame,'Template / Page content');if(!content||content.type!=='FRAME')throw Error('Page content missing');
+ const selected=named(content,'Selected ranking / Service feedback');if(selected)selected.visible=false;
+ const resolved=named(content,'Selected ranking / Resolved content');
+ const target=family.children.find(c=>c.variantProperties.Viewport===viewport&&c.variantProperties.State===state);
+ const feedback=target.createInstance();feedback.name='Current range / '+state;
+ const row=content.children.find(c=>c.name==='Stats / Row 2 · Search options and comparison');
+ content.insertChild(content.children.indexOf(row)+1,feedback);feedback.layoutSizingHorizontal='FILL';
+ if(state==='Loading'||state==='Unavailable'){if(resolved)resolved.visible=false;else for(const child of content.children)if(child.name==='Top songs'||child.name.startsWith('Stats rankings /')||child.name==='Stats / Create playlist below song results')child.visible=false;}
+ if(state==='Empty'){
+  const container=resolved||content;for(const child of container.children)if(child.name.startsWith('Stats rankings /')||child.name==='Stats / Create playlist below song results')child.visible=false;
+  if(resolved){content.children.includes(feedback)&&resolved.insertChild(resolved.children.findIndex(c=>c.name==='Top songs')+1,feedback);}else content.insertChild(content.children.findIndex(c=>c.name==='Top songs')+1,feedback);
+ }
+ if(shared){if(state==='Loading')named(feedback,'Current Stats / Loading').setProperties({'Title#584:16':'Loading shared Spotify insights…','Description#584:17':'This read-only snapshot will appear when the range is ready.'});else if(state==='Unavailable'){named(feedback,'Status title').characters='Shared stats unavailable';named(feedback,'Status description').characters='This range is unavailable. Retry or choose another ranking period.';}}
+ refs.push({id:frame.id,name:frame.name,state,feedbackId:feedback.id,width:frame.width,height:frame.height,sourceId:source.id,contentId:content.id,feedbackWidth:feedback.width,feedbackHeight:feedback.height,createdNodeIds:all(frame).map(n=>n.id).join(',')});
+}
+return {references:refs,fonts:[...fonts.values()],newVariables:0,newStyles:0,sidebarMasterUnchanged:true};

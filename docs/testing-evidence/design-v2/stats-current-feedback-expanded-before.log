@@ -1,0 +1,1021 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-current-load.spec.ts --config=/tmp/analytify-all-browsers.config.ts --workers=2
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:431482) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:431482) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 28 tests using 2 workers
+
+(node:431599) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:431598) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 12:08:52 PM [vite] (client) [console.error] [Analytify][0006][+00585ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+[WebServer] 12:08:52 PM [vite] (client) [console.error] [Analytify][0006][+00619ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+  ✘   1 [desktop] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) (7.5s)
+  ✘   2 [desktop] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) (7.5s)
+(node:431812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:431819) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   4 [desktop] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) (2.7s)
+(node:432021) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   3 [desktop] › e2e/design-v2-stats-current-load.spec.ts:66:5 › successful empty Spotify responses produce an empty state without a failure alert (3.3s)
+  ✘   5 [desktop] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) (2.0s)
+(node:432150) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   6 [desktop] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) (2.1s)
+(node:432160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   7 [desktop] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) (2.2s)
+[WebServer] 12:09:06 PM [vite] (client) [console.error] [Analytify][0006][+00535ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+(node:432347) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 12:09:08 PM [vite] (client) [console.error] [Analytify][0006][+00475ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+  ✘   8 [mobile] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) (7.4s)
+(node:432477) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   9 [mobile] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) (7.1s)
+(node:432585) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 [mobile] › e2e/design-v2-stats-current-load.spec.ts:66:5 › successful empty Spotify responses produce an empty state without a failure alert (2.7s)
+  ✘  11 [mobile] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) (2.3s)
+  ✘  12 [mobile] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) (2.0s)
+(node:432744) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:432753) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  13 [mobile] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) (2.2s)
+  ✘  14 [mobile] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) (2.2s)
+(node:432942) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:432950) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 12:09:23 PM [vite] (client) [console.error] [Analytify][0006][+00314ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+[WebServer] 12:09:24 PM [vite] (client) [console.error] [Analytify][0006][+00297ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+  ✘  15 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) (8.1s)
+(node:433481) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  16 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) (8.2s)
+(node:433496) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  18 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) (3.4s)
+  ✓  17 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:66:5 › successful empty Spotify responses produce an empty state without a failure alert (4.4s)
+(node:433989) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  19 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) (1.9s)
+(node:434284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  20 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) (3.0s)
+(node:434518) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  21 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) (3.4s)
+(node:434658) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 12:09:43 PM [vite] (client) [console.error] [Analytify][0006][+01016ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+[WebServer] 12:09:46 PM [vite] (client) [console.error] [Analytify][0006][+00894ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+  ✘  22 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) (9.8s)
+(node:434800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  23 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) (9.0s)
+(node:434907) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  24 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:66:5 › successful empty Spotify responses produce an empty state without a failure alert (6.5s)
+[WebServer] 12:09:57 PM [vite] (client) [console.error] [Analytify][0006][+01580ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"headers":{},"normalizedNames":{},"lazyUpdate":null},"status":0,"statusText":"Unknown Error","url":"https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50&offset=0: 0 Unknown Error","error":{"isTrusted":true}}
+  ✘  25 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) (4.8s)
+(node:435128) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 12:09:59 PM [vite] (client) [console.error] [Analytify][0006][+00912ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"headers":{},"normalizedNames":{},"lazyUpdate":null},"status":0,"statusText":"Unknown Error","url":"https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50&offset=0: 0 Unknown Error","error":{"isTrusted":true}}
+  ✘  26 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) (2.6s)
+(node:435249) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  27 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) (4.5s)
+  ✘  28 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) (3.4s)
+
+
+  1) [desktop] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('main').getByRole('heading', { name: 'Top songs', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByRole('main').getByRole('heading', { name: 'Top songs', exact: true }) with timeout 5000ms
+      - waiting for getByRole('main').getByRole('heading', { name: 'Top songs', exact: true })
+        14 × locator resolved to <h2 _ngcontent-ng-c1299352168="" class="stats-results-heading">Top songs</h2>
+           - unexpected value "inactive"
+
+
+      59 |     await main.getByRole('button', {name: 'Retry', exact: true}).press('Enter');
+      60 |     await expect(main.getByText('Test Song', {exact: true})).toBeVisible();
+    > 61 |     await expect(main.getByRole('heading', {name:'Top songs', exact:true})).toBeFocused();
+         |                                                                             ^
+      62 |     await expect(main.getByRole('alert')).toHaveCount(0); await expectNoBlockingAxeViolations(page);
+      63 |   });
+      64 | }
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:61:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('main').getByRole('heading', { name: 'Top songs', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByRole('main').getByRole('heading', { name: 'Top songs', exact: true }) with timeout 5000ms
+      - waiting for getByRole('main').getByRole('heading', { name: 'Top songs', exact: true })
+        14 × locator resolved to <h2 _ngcontent-ng-c1299352168="" class="stats-results-heading">Top songs</h2>
+           - unexpected value "inactive"
+
+
+      59 |     await main.getByRole('button', {name: 'Retry', exact: true}).press('Enter');
+      60 |     await expect(main.getByText('Test Song', {exact: true})).toBeVisible();
+    > 61 |     await expect(main.getByRole('heading', {name:'Top songs', exact:true})).toBeFocused();
+         |                                                                             ^
+      62 |     await expect(main.getByRole('alert')).toHaveCount(0); await expectNoBlockingAxeViolations(page);
+      63 |   });
+      64 | }
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:61:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [desktop] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) 
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "animation": "none",
+        "naturalWidth": 20,
+    -   "width": 20,
+    +   "width": 19.984375,
+      }
+
+      34 |     if (state === 'loading') {
+      35 |       expect(measured.panel).toEqual({padding:'24px', gap:'16px', border:'1px'}); expect(measured.skeletons).toBe(3);
+    > 36 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+         |                                 ^
+      37 |       expect(measured.progress!.height).toBeCloseTo(19.7753,2); expect(measured.progress!.naturalHeight).toBe(20);
+      38 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      39 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:36:33)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:91:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [desktop] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) 
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "animation": "none",
+        "naturalWidth": 20,
+    -   "width": 20,
+    +   "width": 19.984375,
+      }
+
+      34 |     if (state === 'loading') {
+      35 |       expect(measured.panel).toEqual({padding:'24px', gap:'16px', border:'1px'}); expect(measured.skeletons).toBe(3);
+    > 36 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+         |                                 ^
+      37 |       expect(measured.progress!.height).toBeCloseTo(19.7753,2); expect(measured.progress!.naturalHeight).toBe(20);
+      38 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      39 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:36:33)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:91:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [desktop] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) 
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "animation": "none",
+        "naturalWidth": 20,
+    -   "width": 20,
+    +   "width": 19.984375,
+      }
+
+      34 |     if (state === 'loading') {
+      35 |       expect(measured.panel).toEqual({padding:'24px', gap:'16px', border:'1px'}); expect(measured.skeletons).toBe(3);
+    > 36 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+         |                                 ^
+      37 |       expect(measured.progress!.height).toBeCloseTo(19.7753,2); expect(measured.progress!.naturalHeight).toBe(20);
+      38 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      39 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:36:33)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:91:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [desktop] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) 
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "animation": "none",
+        "naturalWidth": 20,
+    -   "width": 20,
+    +   "width": 19.984375,
+      }
+
+      34 |     if (state === 'loading') {
+      35 |       expect(measured.panel).toEqual({padding:'24px', gap:'16px', border:'1px'}); expect(measured.skeletons).toBe(3);
+    > 36 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+         |                                 ^
+      37 |       expect(measured.progress!.height).toBeCloseTo(19.7753,2); expect(measured.progress!.naturalHeight).toBe(20);
+      38 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      39 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:36:33)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:91:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [mobile] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('main').getByRole('heading', { name: 'Top songs', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByRole('main').getByRole('heading', { name: 'Top songs', exact: true }) with timeout 5000ms
+      - waiting for getByRole('main').getByRole('heading', { name: 'Top songs', exact: true })
+        14 × locator resolved to <h2 _ngcontent-ng-c1299352168="" class="stats-results-heading">Top songs</h2>
+           - unexpected value "inactive"
+
+
+      59 |     await main.getByRole('button', {name: 'Retry', exact: true}).press('Enter');
+      60 |     await expect(main.getByText('Test Song', {exact: true})).toBeVisible();
+    > 61 |     await expect(main.getByRole('heading', {name:'Top songs', exact:true})).toBeFocused();
+         |                                                                             ^
+      62 |     await expect(main.getByRole('alert')).toHaveCount(0); await expectNoBlockingAxeViolations(page);
+      63 |   });
+      64 | }
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:61:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [mobile] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('main').getByRole('heading', { name: 'Top songs', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByRole('main').getByRole('heading', { name: 'Top songs', exact: true }) with timeout 5000ms
+      - waiting for getByRole('main').getByRole('heading', { name: 'Top songs', exact: true })
+        14 × locator resolved to <h2 _ngcontent-ng-c1299352168="" class="stats-results-heading">Top songs</h2>
+           - unexpected value "inactive"
+
+
+      59 |     await main.getByRole('button', {name: 'Retry', exact: true}).press('Enter');
+      60 |     await expect(main.getByText('Test Song', {exact: true})).toBeVisible();
+    > 61 |     await expect(main.getByRole('heading', {name:'Top songs', exact:true})).toBeFocused();
+         |                                                                             ^
+      62 |     await expect(main.getByRole('alert')).toHaveCount(0); await expectNoBlockingAxeViolations(page);
+      63 |   });
+      64 | }
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:61:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) [mobile] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) 
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "animation": "none",
+        "naturalWidth": 20,
+    -   "width": 20,
+    +   "width": 19.984375,
+      }
+
+      34 |     if (state === 'loading') {
+      35 |       expect(measured.panel).toEqual({padding:'24px', gap:'16px', border:'1px'}); expect(measured.skeletons).toBe(3);
+    > 36 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+         |                                 ^
+      37 |       expect(measured.progress!.height).toBeCloseTo(19.7753,2); expect(measured.progress!.naturalHeight).toBe(20);
+      38 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      39 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:36:33)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:91:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  10) [mobile] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) 
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "animation": "none",
+        "naturalWidth": 20,
+    -   "width": 20,
+    +   "width": 19.984375,
+      }
+
+      34 |     if (state === 'loading') {
+      35 |       expect(measured.panel).toEqual({padding:'24px', gap:'16px', border:'1px'}); expect(measured.skeletons).toBe(3);
+    > 36 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+         |                                 ^
+      37 |       expect(measured.progress!.height).toBeCloseTo(19.7753,2); expect(measured.progress!.naturalHeight).toBe(20);
+      38 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      39 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:36:33)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:91:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) [mobile] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) 
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "animation": "none",
+        "naturalWidth": 20,
+    -   "width": 20,
+    +   "width": 19.984375,
+      }
+
+      34 |     if (state === 'loading') {
+      35 |       expect(measured.panel).toEqual({padding:'24px', gap:'16px', border:'1px'}); expect(measured.skeletons).toBe(3);
+    > 36 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+         |                                 ^
+      37 |       expect(measured.progress!.height).toBeCloseTo(19.7753,2); expect(measured.progress!.naturalHeight).toBe(20);
+      38 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      39 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:36:33)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:91:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  12) [mobile] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) 
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "animation": "none",
+        "naturalWidth": 20,
+    -   "width": 20,
+    +   "width": 19.984375,
+      }
+
+      34 |     if (state === 'loading') {
+      35 |       expect(measured.panel).toEqual({padding:'24px', gap:'16px', border:'1px'}); expect(measured.skeletons).toBe(3);
+    > 36 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+         |                                 ^
+      37 |       expect(measured.progress!.height).toBeCloseTo(19.7753,2); expect(measured.progress!.naturalHeight).toBe(20);
+      38 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      39 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:36:33)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:91:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  13) [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('main').getByRole('heading', { name: 'Top songs', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByRole('main').getByRole('heading', { name: 'Top songs', exact: true }) with timeout 5000ms
+      - waiting for getByRole('main').getByRole('heading', { name: 'Top songs', exact: true })
+        14 × locator resolved to <h2 _ngcontent-ng-c1299352168="" class="stats-results-heading">Top songs</h2>
+           - unexpected value "inactive"
+
+
+      59 |     await main.getByRole('button', {name: 'Retry', exact: true}).press('Enter');
+      60 |     await expect(main.getByText('Test Song', {exact: true})).toBeVisible();
+    > 61 |     await expect(main.getByRole('heading', {name:'Top songs', exact:true})).toBeFocused();
+         |                                                                             ^
+      62 |     await expect(main.getByRole('alert')).toHaveCount(0); await expectNoBlockingAxeViolations(page);
+      63 |   });
+      64 | }
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:61:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  14) [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('main').getByRole('heading', { name: 'Top songs', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByRole('main').getByRole('heading', { name: 'Top songs', exact: true }) with timeout 5000ms
+      - waiting for getByRole('main').getByRole('heading', { name: 'Top songs', exact: true })
+        14 × locator resolved to <h2 _ngcontent-ng-c1299352168="" class="stats-results-heading">Top songs</h2>
+           - unexpected value "inactive"
+
+
+      59 |     await main.getByRole('button', {name: 'Retry', exact: true}).press('Enter');
+      60 |     await expect(main.getByText('Test Song', {exact: true})).toBeVisible();
+    > 61 |     await expect(main.getByRole('heading', {name:'Top songs', exact:true})).toBeFocused();
+         |                                                                             ^
+      62 |     await expect(main.getByRole('alert')).toHaveCount(0); await expectNoBlockingAxeViolations(page);
+      63 |   });
+      64 | }
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:61:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  15) [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) 
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 19.7753
+    Received: 19.783340454101562
+
+    Expected precision:    2
+    Expected difference: < 0.005
+    Received difference:   0.008040454101561068
+
+      35 |       expect(measured.panel).toEqual({padding:'24px', gap:'16px', border:'1px'}); expect(measured.skeletons).toBe(3);
+      36 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+    > 37 |       expect(measured.progress!.height).toBeCloseTo(19.7753,2); expect(measured.progress!.naturalHeight).toBe(20);
+         |                                         ^
+      38 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      39 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+      40 |     if (height === 1080 && [390,1440].includes(width)) await page.locator('v2-current-stats-feedback').first().screenshot({path:info.outputPath(`${state}-${width}.png`)});
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:37:41)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:91:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  16) [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) 
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 19.7753
+    Received: 19.783340454101562
+
+    Expected precision:    2
+    Expected difference: < 0.005
+    Received difference:   0.008040454101561068
+
+      35 |       expect(measured.panel).toEqual({padding:'24px', gap:'16px', border:'1px'}); expect(measured.skeletons).toBe(3);
+      36 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+    > 37 |       expect(measured.progress!.height).toBeCloseTo(19.7753,2); expect(measured.progress!.naturalHeight).toBe(20);
+         |                                         ^
+      38 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      39 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+      40 |     if (height === 1080 && [390,1440].includes(width)) await page.locator('v2-current-stats-feedback').first().screenshot({path:info.outputPath(`${state}-${width}.png`)});
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:37:41)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:91:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  17) [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) 
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 19.7753
+    Received: 19.783340454101562
+
+    Expected precision:    2
+    Expected difference: < 0.005
+    Received difference:   0.008040454101561068
+
+      35 |       expect(measured.panel).toEqual({padding:'24px', gap:'16px', border:'1px'}); expect(measured.skeletons).toBe(3);
+      36 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+    > 37 |       expect(measured.progress!.height).toBeCloseTo(19.7753,2); expect(measured.progress!.naturalHeight).toBe(20);
+         |                                         ^
+      38 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      39 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+      40 |     if (height === 1080 && [390,1440].includes(width)) await page.locator('v2-current-stats-feedback').first().screenshot({path:info.outputPath(`${state}-${width}.png`)});
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:37:41)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:91:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  18) [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) 
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 19.7753
+    Received: 19.783340454101562
+
+    Expected precision:    2
+    Expected difference: < 0.005
+    Received difference:   0.008040454101561068
+
+      35 |       expect(measured.panel).toEqual({padding:'24px', gap:'16px', border:'1px'}); expect(measured.skeletons).toBe(3);
+      36 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+    > 37 |       expect(measured.progress!.height).toBeCloseTo(19.7753,2); expect(measured.progress!.naturalHeight).toBe(20);
+         |                                         ^
+      38 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      39 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+      40 |     if (height === 1080 && [390,1440].includes(width)) await page.locator('v2-current-stats-feedback').first().screenshot({path:info.outputPath(`${state}-${width}.png`)});
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:37:41)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:91:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  19) [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('main').getByRole('heading', { name: 'Top songs', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByRole('main').getByRole('heading', { name: 'Top songs', exact: true }) with timeout 5000ms
+      - waiting for getByRole('main').getByRole('heading', { name: 'Top songs', exact: true })
+        14 × locator resolved to <h2 _ngcontent-ng-c1299352168="" class="stats-results-heading">Top songs</h2>
+           - unexpected value "inactive"
+
+
+      59 |     await main.getByRole('button', {name: 'Retry', exact: true}).press('Enter');
+      60 |     await expect(main.getByText('Test Song', {exact: true})).toBeVisible();
+    > 61 |     await expect(main.getByRole('heading', {name:'Top songs', exact:true})).toBeFocused();
+         |                                                                             ^
+      62 |     await expect(main.getByRole('alert')).toHaveCount(0); await expectNoBlockingAxeViolations(page);
+      63 |   });
+      64 | }
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:61:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  20) [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('main').getByRole('heading', { name: 'Top songs', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByRole('main').getByRole('heading', { name: 'Top songs', exact: true }) with timeout 5000ms
+      - waiting for getByRole('main').getByRole('heading', { name: 'Top songs', exact: true })
+        14 × locator resolved to <h2 _ngcontent-ng-c1299352168="" class="stats-results-heading">Top songs</h2>
+           - unexpected value "inactive"
+
+
+      59 |     await main.getByRole('button', {name: 'Retry', exact: true}).press('Enter');
+      60 |     await expect(main.getByText('Test Song', {exact: true})).toBeVisible();
+    > 61 |     await expect(main.getByRole('heading', {name:'Top songs', exact:true})).toBeFocused();
+         |                                                                             ^
+      62 |     await expect(main.getByRole('alert')).toHaveCount(0); await expectNoBlockingAxeViolations(page);
+      63 |   });
+      64 | }
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:61:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  21) [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) 
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 19.7753
+    Received: 19.765625
+
+    Expected precision:    2
+    Expected difference: < 0.005
+    Received difference:   0.009675000000001432
+
+      35 |       expect(measured.panel).toEqual({padding:'24px', gap:'16px', border:'1px'}); expect(measured.skeletons).toBe(3);
+      36 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+    > 37 |       expect(measured.progress!.height).toBeCloseTo(19.7753,2); expect(measured.progress!.naturalHeight).toBe(20);
+         |                                         ^
+      38 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      39 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+      40 |     if (height === 1080 && [390,1440].includes(width)) await page.locator('v2-current-stats-feedback').first().screenshot({path:info.outputPath(`${state}-${width}.png`)});
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:37:41)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:91:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  22) [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) 
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 19.7753
+    Received: 19.765625
+
+    Expected precision:    2
+    Expected difference: < 0.005
+    Received difference:   0.009675000000001432
+
+      35 |       expect(measured.panel).toEqual({padding:'24px', gap:'16px', border:'1px'}); expect(measured.skeletons).toBe(3);
+      36 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+    > 37 |       expect(measured.progress!.height).toBeCloseTo(19.7753,2); expect(measured.progress!.naturalHeight).toBe(20);
+         |                                         ^
+      38 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      39 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+      40 |     if (height === 1080 && [390,1440].includes(width)) await page.locator('v2-current-stats-feedback').first().screenshot({path:info.outputPath(`${state}-${width}.png`)});
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:37:41)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:91:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  23) [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) 
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 19.7753
+    Received: 19.765625
+
+    Expected precision:    2
+    Expected difference: < 0.005
+    Received difference:   0.009675000000001432
+
+      35 |       expect(measured.panel).toEqual({padding:'24px', gap:'16px', border:'1px'}); expect(measured.skeletons).toBe(3);
+      36 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+    > 37 |       expect(measured.progress!.height).toBeCloseTo(19.7753,2); expect(measured.progress!.naturalHeight).toBe(20);
+         |                                         ^
+      38 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      39 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+      40 |     if (height === 1080 && [390,1440].includes(width)) await page.locator('v2-current-stats-feedback').first().screenshot({path:info.outputPath(`${state}-${width}.png`)});
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:37:41)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:91:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  24) [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) 
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 19.7753
+    Received: 19.765625
+
+    Expected precision:    2
+    Expected difference: < 0.005
+    Received difference:   0.009675000000001432
+
+      35 |       expect(measured.panel).toEqual({padding:'24px', gap:'16px', border:'1px'}); expect(measured.skeletons).toBe(3);
+      36 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+    > 37 |       expect(measured.progress!.height).toBeCloseTo(19.7753,2); expect(measured.progress!.naturalHeight).toBe(20);
+         |                                         ^
+      38 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      39 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+      40 |     if (height === 1080 && [390,1440].includes(width)) await page.locator('v2-current-stats-feedback').first().screenshot({path:info.outputPath(`${state}-${width}.png`)});
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:37:41)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:91:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  24 failed
+    [desktop] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) 
+    [desktop] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) 
+    [desktop] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) 
+    [desktop] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) 
+    [desktop] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) 
+    [desktop] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) 
+    [mobile] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) 
+    [mobile] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) 
+    [mobile] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) 
+    [mobile] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) 
+    [mobile] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) 
+    [mobile] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) 
+    [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) 
+    [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) 
+    [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) 
+    [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) 
+    [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) 
+    [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) 
+    [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) 
+    [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:46:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) 
+    [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) 
+    [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) 
+    [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) 
+    [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:75:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) 
+  4 passed (1.4m)

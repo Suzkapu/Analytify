@@ -88,7 +88,10 @@ for (const motion of ['no-preference', 'reduce'] as const) {
     expect(filteredRatio).toBeCloseTo(.72, 2);
     const history = chart.getByRole('button', {name: 'View position history for Dream Pop'});
     await search.press('Tab');
-    const searchPast = page.getByRole('button', {name: 'Search past', exact: true});
+    const compareDates = page.getByRole('button', {name: 'Compare dates', exact: true});
+    await expect(compareDates).toBeFocused();
+    await compareDates.press('Tab');
+    const searchPast = page.getByRole('switch', {name: 'Search past rankings', exact: true});
     await expect(searchPast).toBeFocused();
     await searchPast.press('Tab');
     await expect(history).toBeFocused();

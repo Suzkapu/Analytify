@@ -24,6 +24,53 @@ async function settle() {for(let i=0;i<4;i++)await Promise.resolve();}
 afterEach(()=>vi.restoreAllMocks());
 
 describe('selected Stats date loading service boundary',()=>{
+  it('does not present metadata as a successful empty ranking when cloud access is unavailable',()=>{
+    const {component,account,sdk,storage}=setup();
+    account.cloud='';
+    component.ensureSnapshotLoaded(String(timestamp));
+    expect(component.historyData[0]).toMatchObject({isLoaded:false,topTracks:[]});
+    expect(component.isSnapshotLoading()).toBe(false);
+    expect(sdk.loadStatsSnapshotById).not.toHaveBeenCalled();
+    expect(storage.saveStatsHistory).not.toHaveBeenCalled();
+    account.cloud='owner-A';
+    sdk.loadStatsSnapshotById.mockResolvedValue(full);
+    component.ensureSnapshotLoaded(String(timestamp));
+    expect(sdk.loadStatsSnapshotById).toHaveBeenCalledExactlyOnceWith('owner-A','snapshot-A');
+    component.ngOnDestroy();
+  });
+
+  it('treats a successful empty payload as loaded and persists it without repeating the request',async()=>{
+    const {component,sdk,storage}=setup();
+    sdk.loadStatsSnapshotById.mockResolvedValue({topTracks:[],topArtists:[],topGenres:[]});
+    component.ensureSnapshotLoaded(String(timestamp));await settle();
+    expect(component.historyData[0]).toMatchObject({isLoaded:true,topTracks:[],topArtists:[],topGenres:[]});
+    expect(component.isSnapshotLoading()).toBe(false);
+    component.ensureSnapshotLoaded(String(timestamp));
+    expect(sdk.loadStatsSnapshotById).toHaveBeenCalledOnce();
+    expect(storage.saveStatsHistory).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({userId:'spotify-A',isLoaded:true,topTracks:[]}));
+    component.ngOnDestroy();
+  });
+
+  it('keeps the primary payload while the comparison fails and retries independently',async()=>{
+    const {component,sdk,storage}=setup(),request=deferred<typeof full>();
+    component.topTracks=full.topTracks;component.selectedSnapshotId='current';component.compareSnapshotId=String(timestamp);
+    sdk.loadStatsSnapshotById.mockReturnValueOnce(request.promise);
+    component.ensureSnapshotLoaded(String(timestamp));
+    expect(component.filteredTracks).toEqual(full.topTracks);
+    expect(component.getComparisonSnapshot()).toBeNull();
+    request.resolve(null as never);await settle();
+    expect(component.filteredTracks).toEqual(full.topTracks);
+    expect(storage.saveStatsHistory).not.toHaveBeenCalled();
+    const retry=deferred<typeof full>();sdk.loadStatsSnapshotById.mockReturnValueOnce(retry.promise);
+    component.ensureSnapshotLoaded(String(timestamp));
+    expect(component.selectedSnapshotId).toBe('current');
+    expect(component.filteredTracks).toEqual(full.topTracks);
+    retry.resolve(full);await settle();
+    expect(component.getComparisonSnapshot()).toMatchObject(full);
+    expect(sdk.loadStatsSnapshotById).toHaveBeenCalledTimes(2);
+    component.ngOnDestroy();
+  });
+
   it('loads the selected owner snapshot once while pending and keeps its date/identity when saving offline',async()=>{
     const {component,storage,sdk}=setup(),request=deferred<typeof full>();
     sdk.loadStatsSnapshotById.mockReturnValue(request.promise);

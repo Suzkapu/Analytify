@@ -1,0 +1,194 @@
+✔ lazily hydrates missing artist genres with bounded parallel requests (2.77021ms)
+✔ does not spend artist requests when Top Artists already includes genres (0.133861ms)
+✔ replaces a daily snapshot through one atomic database call (12.218755ms)
+✔ deduplicates tracks with matching title and artist so duplicate releases are omitted (0.170719ms)
+✔ loads overflow tracks in parallel and keeps a full 100 after de-duplication (1.264474ms)
+✔ stats_short_term preserves its range, local day, daily idempotency and CAS revision (1.515012ms)
+✔ stats_medium_term preserves its range, local day, daily idempotency and CAS revision (0.750323ms)
+✔ stats_long_term preserves its range, local day, daily idempotency and CAS revision (0.752898ms)
+✔ unsupported task and failed credentials do not fetch, write or mark completion (0.571699ms)
+✔ mandatory artistsPageError failure preserves the prior snapshot (0.37448ms)
+✔ mandatory firstTracksPage failure preserves the prior snapshot (0.233927ms)
+✔ failed optional pages preserve primary rankings and report both partial failures (1.012564ms)
+✔ catalogError is propagated without scoring or a false successful sync marker (0.322423ms)
+✔ tracksError is propagated without scoring or a false successful sync marker (0.651238ms)
+✔ artistsError is propagated without scoring or a false successful sync marker (0.678498ms)
+✔ revisionError is propagated without scoring or a false successful sync marker (0.674231ms)
+✔ replaceError is propagated without scoring or a false successful sync marker (0.718333ms)
+✔ retry after a CAS conflict rereads the revision and retains the daily idempotency key (1.212638ms)
+✔ valid empty pages save an explicitly empty ranking without catalog lookup requests (0.66887ms)
+✖ malformed mandatory artistsResponse (null) cannot erase saved rankings (1.020227ms)
+✖ malformed mandatory artistsResponse (undefined) cannot erase saved rankings (0.605733ms)
+✖ malformed mandatory artistsResponse ({}) cannot erase saved rankings (0.63604ms)
+✖ malformed mandatory artistsResponse ({"items":null}) cannot erase saved rankings (0.575185ms)
+✖ malformed mandatory artistsResponse ({"items":""}) cannot erase saved rankings (0.572771ms)
+✖ malformed mandatory tracksResponse (null) cannot erase saved rankings (0.65241ms)
+✖ malformed mandatory tracksResponse (undefined) cannot erase saved rankings (0.557713ms)
+✖ malformed mandatory tracksResponse ({}) cannot erase saved rankings (0.560588ms)
+✖ malformed mandatory tracksResponse ({"items":null}) cannot erase saved rankings (0.554357ms)
+✖ malformed mandatory tracksResponse ({"items":""}) cannot erase saved rankings (0.584163ms)
+✔ catalog absence cannot produce dangling snapshot relations (0.568613ms)
+✔ a scoring failure preserves a committed ranking and reports the skipped side effect (0.644955ms)
+✔ marker failure is reported after commit rather than pretending the task completed (0.611193ms)
+✔ missing committed snapshot identity (null) cannot be scored or marked successful (0.636229ms)
+✔ missing committed snapshot identity ([]) cannot be scored or marked successful (0.568894ms)
+✔ missing committed snapshot identity ({}) cannot be scored or marked successful (0.548616ms)
+✔ missing committed snapshot identity ([{"revision":5}]) cannot be scored or marked successful (0.693456ms)
+✔ missing committed snapshot identity ({"snapshot_id":""}) cannot be scored or marked successful (0.568022ms)
+✔ missing committed snapshot identity ({"snapshot_id":"   "}) cannot be scored or marked successful (0.546923ms)
+✔ missing committed snapshot identity ({"snapshot_id":123}) cannot be scored or marked successful (0.554186ms)
+✔ an unconfirmed commit can recover on retry without scoring the absent identity (1.114454ms)
+✔ single-object atomic replacement responses retain the committed snapshot identity (0.585846ms)
+✔ genre enrichment deduplicates requests and retains original artists on partial failure (0.281046ms)
+✔ genre ranking excludes placeholders and caps the weighted distinct result at fifteen (0.166461ms)
+✔ deduplication retains distinct artists and unnamed tracks while dropping invalid and duplicate IDs (0.894953ms)
+ℹ tests 44
+ℹ suites 0
+ℹ pass 34
+ℹ fail 10
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 60.019629
+
+✖ failing tests:
+
+test at services/sync-service/tasks/stats-task.test.js:327:5
+✖ malformed mandatory artistsResponse (null) cannot erase saved rankings (1.020227ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:329:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at services/sync-service/tasks/stats-task.test.js:327:5
+✖ malformed mandatory artistsResponse (undefined) cannot erase saved rankings (0.605733ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:329:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at services/sync-service/tasks/stats-task.test.js:327:5
+✖ malformed mandatory artistsResponse ({}) cannot erase saved rankings (0.63604ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:329:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at services/sync-service/tasks/stats-task.test.js:327:5
+✖ malformed mandatory artistsResponse ({"items":null}) cannot erase saved rankings (0.575185ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:329:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at services/sync-service/tasks/stats-task.test.js:327:5
+✖ malformed mandatory artistsResponse ({"items":""}) cannot erase saved rankings (0.572771ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:329:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at services/sync-service/tasks/stats-task.test.js:327:5
+✖ malformed mandatory tracksResponse (null) cannot erase saved rankings (0.65241ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:329:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at services/sync-service/tasks/stats-task.test.js:327:5
+✖ malformed mandatory tracksResponse (undefined) cannot erase saved rankings (0.557713ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:329:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at services/sync-service/tasks/stats-task.test.js:327:5
+✖ malformed mandatory tracksResponse ({}) cannot erase saved rankings (0.560588ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:329:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at services/sync-service/tasks/stats-task.test.js:327:5
+✖ malformed mandatory tracksResponse ({"items":null}) cannot erase saved rankings (0.554357ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:329:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at services/sync-service/tasks/stats-task.test.js:327:5
+✖ malformed mandatory tracksResponse ({"items":""}) cannot erase saved rankings (0.584163ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:329:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }

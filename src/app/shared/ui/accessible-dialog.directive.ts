@@ -101,7 +101,7 @@ export class AccessibleDialogDirective implements AfterViewInit, OnDestroy {
 
   private focusableElements(): HTMLElement[] {
     return Array.from(this.dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR))
-      .filter(element => element.getAttribute('aria-hidden') !== 'true');
+      .filter(element => element.tabIndex >= 0 && element.getAttribute('aria-hidden') !== 'true');
   }
 
   private isolateBackground(): void {

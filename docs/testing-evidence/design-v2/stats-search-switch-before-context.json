@@ -1,0 +1,36 @@
+const imgSwitchTrack = "https://www.figma.com/api/mcp/asset/d573bb69-9be4-46ca-ad92-bea3cb80d0f2.svg";
+
+type AnalytifySwitchProps = {
+  className?: string;
+  label?: string;
+  state?: boolean;
+};
+
+function AnalytifySwitch({ className, label = "Setting label", state = false }: AnalytifySwitchProps) {
+  return (
+    <button className={className || "content-stretch flex h-[56px] items-center justify-between relative w-[576px]"} data-node-id="29:945">
+      <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] text-left whitespace-nowrap" data-node-id="29:946">
+        {label}
+      </p>
+      <div className="h-[24px] relative shrink-0 w-[48px]" data-node-id="29:947" data-name="Switch track">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSwitchTrack} />
+      </div>
+    </button>
+  );
+}
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+These styles are contained in the design: Analytify/Label: Font(family: "Outfit", style: SemiBold, size: 14, weight: 600, lineHeight: 20, letterSpacing: 0).
+Component descriptions: The following components have usage descriptions or documentation links defined in Figma. These descriptions provide important context about the intended usage, best practices, and any constraints for each component. Follow these guidelines when implementing or using these components.
+
+## Analytify/Switch
+**Node ID:** 29:957
+
+Named switch. Clear checked state, 48 px minimum touch region, labelled disabled reason and keyboard focus in implementation.
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

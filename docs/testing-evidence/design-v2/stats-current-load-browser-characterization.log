@@ -1,0 +1,102 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-current-load.spec.ts --config=/tmp/analytify-all-browsers.config.ts --project=desktop --workers=1
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:419075) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:419075) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:419185) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 11:34:49 AM [vite] (client) [console.error] [Analytify][0006][+00461ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+  ✘  1 [desktop] › e2e/design-v2-stats-current-load.spec.ts:5:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) (13.4s)
+(node:419363) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 11:35:03 AM [vite] (client) [console.error] [Analytify][0006][+00417ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+  ✘  2 [desktop] › e2e/design-v2-stats-current-load.spec.ts:5:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) (13.3s)
+(node:419519) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [desktop] › e2e/design-v2-stats-current-load.spec.ts:24:5 › successful empty Spotify responses produce an empty state without a failure alert (2.3s)
+
+
+  1) [desktop] › e2e/design-v2-stats-current-load.spec.ts:5:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('main').getByRole('alert')
+    Expected: visible
+    Timeout: 12000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('main').getByRole('alert') with timeout 12000ms
+      - waiting for getByRole('main').getByRole('alert')
+
+
+      12 |     await page.goto('/new/stats');
+      13 |     const main = page.getByRole('main');
+    > 14 |     await expect(main.getByRole('alert')).toBeVisible({timeout: 12_000});
+         |                                           ^
+      15 |     await expect(main.getByRole('heading', {name: 'No top songs found', exact: true})).toHaveCount(0);
+      16 |     await expect(main.locator('v2-stats-ranking-row')).toHaveCount(0);
+      17 |     failed = false;
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:14:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-e84e4-ers-recovery-no-preference--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-stats-current-load.spec.ts:5:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('main').getByRole('alert')
+    Expected: visible
+    Timeout: 12000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('main').getByRole('alert') with timeout 12000ms
+      - waiting for getByRole('main').getByRole('alert')
+
+
+      12 |     await page.goto('/new/stats');
+      13 |     const main = page.getByRole('main');
+    > 14 |     await expect(main.getByRole('alert')).toBeVisible({timeout: 12_000});
+         |                                           ^
+      15 |     await expect(main.getByRole('heading', {name: 'No top songs found', exact: true})).toHaveCount(0);
+      16 |     await expect(main.locator('v2-stats-ranking-row')).toHaveCount(0);
+      17 |     failed = false;
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:14:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-35967-and-offers-recovery-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › e2e/design-v2-stats-current-load.spec.ts:5:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) 
+    [desktop] › e2e/design-v2-stats-current-load.spec.ts:5:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) 
+  1 passed (38.0s)

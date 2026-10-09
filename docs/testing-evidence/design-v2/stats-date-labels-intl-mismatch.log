@@ -1,0 +1,36 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/v2-stats-date-labels.spec.ts --include=src/app/features/insights/user-stats/v2-stats-snapshot-workflow.spec.ts --include=src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts --include=src/app/shared/ui-v2/v2-snapshot-date-field.component.spec.ts --progress=false
+Application bundle generation complete. [2.951 seconds] - 2026-10-07T23:21:19.615Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/v2-stats-date-labels.spec.ts (13 tests | 1 failed) 209ms
+     × uses the canonical saved calendar date, independent of a localized timestamp label 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-stats-date-labels.spec.ts > snapshot date presentation preserves selection identity > uses the canonical saved calendar date, independent of a localized timestamp label
+AssertionError: expected '24 Sept 2026' to be '24 Sep 2026' // Object.is equality
+
+Expected: "24 Sep 2026"
+Received: "24 Sept 2026"
+
+ ❯ src/app/features/insights/user-stats/v2-stats-date-labels.spec.ts:29:50
+     27|     const component = setup(V2UserStatsComponent);
+     28|     component.selectedSnapshotId = 'saved'; component.compareSnapshotI…
+     29|     expect(component.getSelectedSnapshotLabel()).toBe('24 Sep 2026');
+       |                                                  ^
+     30|     expect(component.getCompareSnapshotLabel()).toBe('24 Sep 2026');
+     31|     expect(component.selectedSnapshotId).toBe('saved');
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 46 passed (47)
+   Start at  01:21:19
+   Duration  2.25s (transform 571ms, setup 990ms, import 1.09s, tests 1.54s, environment 1.48s)
+

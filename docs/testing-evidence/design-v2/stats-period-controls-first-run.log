@@ -1,0 +1,448 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-period-controls.spec.ts --config=/tmp/analytify-all-browsers.config.ts --workers=1
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:217276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:217276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:217427) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 10:48:16 PM [vite] (client) [console.error] InvalidStateError: Transition was aborted because of invalid state. Viewport size changed
+  ✘  1 [desktop] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing (2.5s)
+(node:217554) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [desktop] › e2e/design-v2-stats-period-controls.spec.ts:66:5 › period keyboard changes query the selected range once and category choices reuse its payload (2.0s)
+(node:217662) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 [mobile] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing (2.8s)
+(node:217770) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  4 [mobile] › e2e/design-v2-stats-period-controls.spec.ts:66:5 › period keyboard changes query the selected range once and category choices reuse its payload (2.0s)
+(node:217877) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 [firefox-stats] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing (5.2s)
+  ✘  6 [firefox-stats] › e2e/design-v2-stats-period-controls.spec.ts:66:5 › period keyboard changes query the selected range once and category choices reuse its payload (1.8s)
+(node:218230) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 10:48:37 PM [vite] (client) [console.error] InvalidStateError: Skipping view transition because viewport size changed.
+  ✘  7 [webkit-stats] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing (3.7s)
+(node:218354) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  8 [webkit-stats] › e2e/design-v2-stats-period-controls.spec.ts:66:5 › period keyboard changes query the selected range once and category choices reuse its payload (4.2s)
+
+
+  1) [desktop] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing 
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 349.671875
+    Received: 349.65625
+
+    Expected precision:    4
+    Expected difference: < 0.00005
+    Received difference:   0.015625
+
+      46 |     else {
+      47 |       expect(sample.groups[1].box.x - sample.groups[0].box.right).toBeCloseTo(16, 4);
+    > 48 |       expect(sample.groups[0].box.width).toBeCloseTo(sample.groups[1].box.width, 4);
+         |                                          ^
+      49 |     }
+      50 |     evidence.push({width, height, ...sample});
+      51 |     if ([390, 1440].includes(width)) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-period-controls.spec.ts:48:42
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-period-con-62060-t-and-short-window-resizing-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-period-con-62060-t-and-short-window-resizing-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-period-con-62060-t-and-short-window-resizing-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-period-con-62060-t-and-short-window-resizing-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-stats-period-controls.spec.ts:66:5 › period keyboard changes query the selected range once and category choices reuse its payload 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  0
+    + Received  + 24
+
+    @@ -6,19 +6,43 @@
+        Object {
+          "kind": "tracks",
+          "range": "long_term",
+        },
+        Object {
+    +     "kind": "tracks",
+    +     "range": "long_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+    +     "range": "long_term",
+    +   },
+    +   Object {
+          "kind": "artists",
+    +     "range": "medium_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+    +     "range": "medium_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+          "range": "medium_term",
+        },
+        Object {
+          "kind": "tracks",
+          "range": "medium_term",
+        },
+        Object {
+          "kind": "artists",
+    +     "range": "short_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+    +     "range": "short_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+          "range": "short_term",
+        },
+        Object {
+          "kind": "tracks",
+          "range": "short_term",
+
+      93 |   await expect(artists).toHaveCSS('border-top-color', 'rgb(53, 231, 131)');
+      94 |   await expect(page.locator('.v2-artist-rankings strong')).toHaveText('Artist long_term');
+    > 95 |   expect(requests.sort((a, b) => `${a.range}:${a.kind}`.localeCompare(`${b.range}:${b.kind}`))).toEqual(
+         |                                                                                                 ^
+      96 |     ['long_term', 'medium_term', 'short_term'].flatMap(range => [{kind: 'artists', range}, {kind: 'tracks', range}]));
+      97 |   await expectNoBlockingAxeViolations(page);
+      98 |   await writeFile(testInfo.outputPath('period-service-requests.json'), JSON.stringify(requests, null, 2));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-period-controls.spec.ts:95:97
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-period-con-f970d-y-choices-reuse-its-payload-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-period-con-f970d-y-choices-reuse-its-payload-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-period-con-f970d-y-choices-reuse-its-payload-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-period-con-f970d-y-choices-reuse-its-payload-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing 
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 349.671875
+    Received: 349.65625
+
+    Expected precision:    4
+    Expected difference: < 0.00005
+    Received difference:   0.015625
+
+      46 |     else {
+      47 |       expect(sample.groups[1].box.x - sample.groups[0].box.right).toBeCloseTo(16, 4);
+    > 48 |       expect(sample.groups[0].box.width).toBeCloseTo(sample.groups[1].box.width, 4);
+         |                                          ^
+      49 |     }
+      50 |     evidence.push({width, height, ...sample});
+      51 |     if ([390, 1440].includes(width)) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-period-controls.spec.ts:48:42
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-period-con-62060-t-and-short-window-resizing-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-period-con-62060-t-and-short-window-resizing-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-period-con-62060-t-and-short-window-resizing-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-period-con-62060-t-and-short-window-resizing-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [mobile] › e2e/design-v2-stats-period-controls.spec.ts:66:5 › period keyboard changes query the selected range once and category choices reuse its payload 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  0
+    + Received  + 24
+
+    @@ -6,19 +6,43 @@
+        Object {
+          "kind": "tracks",
+          "range": "long_term",
+        },
+        Object {
+    +     "kind": "tracks",
+    +     "range": "long_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+    +     "range": "long_term",
+    +   },
+    +   Object {
+          "kind": "artists",
+    +     "range": "medium_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+    +     "range": "medium_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+          "range": "medium_term",
+        },
+        Object {
+          "kind": "tracks",
+          "range": "medium_term",
+        },
+        Object {
+          "kind": "artists",
+    +     "range": "short_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+    +     "range": "short_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+          "range": "short_term",
+        },
+        Object {
+          "kind": "tracks",
+          "range": "short_term",
+
+      93 |   await expect(artists).toHaveCSS('border-top-color', 'rgb(53, 231, 131)');
+      94 |   await expect(page.locator('.v2-artist-rankings strong')).toHaveText('Artist long_term');
+    > 95 |   expect(requests.sort((a, b) => `${a.range}:${a.kind}`.localeCompare(`${b.range}:${b.kind}`))).toEqual(
+         |                                                                                                 ^
+      96 |     ['long_term', 'medium_term', 'short_term'].flatMap(range => [{kind: 'artists', range}, {kind: 'tracks', range}]));
+      97 |   await expectNoBlockingAxeViolations(page);
+      98 |   await writeFile(testInfo.outputPath('period-service-requests.json'), JSON.stringify(requests, null, 2));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-period-controls.spec.ts:95:97
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-period-con-f970d-y-choices-reuse-its-payload-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-period-con-f970d-y-choices-reuse-its-payload-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-period-con-f970d-y-choices-reuse-its-payload-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-period-con-f970d-y-choices-reuse-its-payload-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [firefox-stats] › e2e/design-v2-stats-period-controls.spec.ts:66:5 › period keyboard changes query the selected range once and category choices reuse its payload 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  0
+    + Received  + 24
+
+    @@ -6,19 +6,43 @@
+        Object {
+          "kind": "tracks",
+          "range": "long_term",
+        },
+        Object {
+    +     "kind": "tracks",
+    +     "range": "long_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+    +     "range": "long_term",
+    +   },
+    +   Object {
+          "kind": "artists",
+    +     "range": "medium_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+    +     "range": "medium_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+          "range": "medium_term",
+        },
+        Object {
+          "kind": "tracks",
+          "range": "medium_term",
+        },
+        Object {
+          "kind": "artists",
+    +     "range": "short_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+    +     "range": "short_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+          "range": "short_term",
+        },
+        Object {
+          "kind": "tracks",
+          "range": "short_term",
+
+      93 |   await expect(artists).toHaveCSS('border-top-color', 'rgb(53, 231, 131)');
+      94 |   await expect(page.locator('.v2-artist-rankings strong')).toHaveText('Artist long_term');
+    > 95 |   expect(requests.sort((a, b) => `${a.range}:${a.kind}`.localeCompare(`${b.range}:${b.kind}`))).toEqual(
+         |                                                                                                 ^
+      96 |     ['long_term', 'medium_term', 'short_term'].flatMap(range => [{kind: 'artists', range}, {kind: 'tracks', range}]));
+      97 |   await expectNoBlockingAxeViolations(page);
+      98 |   await writeFile(testInfo.outputPath('period-service-requests.json'), JSON.stringify(requests, null, 2));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-period-controls.spec.ts:95:97
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-period-con-f970d-y-choices-reuse-its-payload-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-period-con-f970d-y-choices-reuse-its-payload-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-period-con-f970d-y-choices-reuse-its-payload-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-period-con-f970d-y-choices-reuse-its-payload-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [webkit-stats] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing 
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 349.671875
+    Received: 349.65625
+
+    Expected precision:    4
+    Expected difference: < 0.00005
+    Received difference:   0.015625
+
+      46 |     else {
+      47 |       expect(sample.groups[1].box.x - sample.groups[0].box.right).toBeCloseTo(16, 4);
+    > 48 |       expect(sample.groups[0].box.width).toBeCloseTo(sample.groups[1].box.width, 4);
+         |                                          ^
+      49 |     }
+      50 |     evidence.push({width, height, ...sample});
+      51 |     if ([390, 1440].includes(width)) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-period-controls.spec.ts:48:42
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-period-con-62060-t-and-short-window-resizing-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-period-con-62060-t-and-short-window-resizing-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-period-con-62060-t-and-short-window-resizing-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-period-con-62060-t-and-short-window-resizing-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [webkit-stats] › e2e/design-v2-stats-period-controls.spec.ts:66:5 › period keyboard changes query the selected range once and category choices reuse its payload 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  0
+    + Received  + 24
+
+    @@ -6,19 +6,43 @@
+        Object {
+          "kind": "tracks",
+          "range": "long_term",
+        },
+        Object {
+    +     "kind": "tracks",
+    +     "range": "long_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+    +     "range": "long_term",
+    +   },
+    +   Object {
+          "kind": "artists",
+    +     "range": "medium_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+    +     "range": "medium_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+          "range": "medium_term",
+        },
+        Object {
+          "kind": "tracks",
+          "range": "medium_term",
+        },
+        Object {
+          "kind": "artists",
+    +     "range": "short_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+    +     "range": "short_term",
+    +   },
+    +   Object {
+    +     "kind": "tracks",
+          "range": "short_term",
+        },
+        Object {
+          "kind": "tracks",
+          "range": "short_term",
+
+      93 |   await expect(artists).toHaveCSS('border-top-color', 'rgb(53, 231, 131)');
+      94 |   await expect(page.locator('.v2-artist-rankings strong')).toHaveText('Artist long_term');
+    > 95 |   expect(requests.sort((a, b) => `${a.range}:${a.kind}`.localeCompare(`${b.range}:${b.kind}`))).toEqual(
+         |                                                                                                 ^
+      96 |     ['long_term', 'medium_term', 'short_term'].flatMap(range => [{kind: 'artists', range}, {kind: 'tracks', range}]));
+      97 |   await expectNoBlockingAxeViolations(page);
+      98 |   await writeFile(testInfo.outputPath('period-service-requests.json'), JSON.stringify(requests, null, 2));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-period-controls.spec.ts:95:97
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-period-con-f970d-y-choices-reuse-its-payload-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-period-con-f970d-y-choices-reuse-its-payload-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-period-con-f970d-y-choices-reuse-its-payload-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-period-con-f970d-y-choices-reuse-its-payload-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7 failed
+    [desktop] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing 
+    [desktop] › e2e/design-v2-stats-period-controls.spec.ts:66:5 › period keyboard changes query the selected range once and category choices reuse its payload 
+    [mobile] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing 
+    [mobile] › e2e/design-v2-stats-period-controls.spec.ts:66:5 › period keyboard changes query the selected range once and category choices reuse its payload 
+    [firefox-stats] › e2e/design-v2-stats-period-controls.spec.ts:66:5 › period keyboard changes query the selected range once and category choices reuse its payload 
+    [webkit-stats] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing 
+    [webkit-stats] › e2e/design-v2-stats-period-controls.spec.ts:66:5 › period keyboard changes query the selected range once and category choices reuse its payload 
+  1 passed (37.5s)

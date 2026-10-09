@@ -1,0 +1,499 @@
+✔ lazily hydrates missing artist genres with bounded parallel requests (2.800967ms)
+✔ does not spend artist requests when Top Artists already includes genres (0.127138ms)
+✔ replaces a daily snapshot through one atomic database call (12.56839ms)
+✔ deduplicates tracks with matching title and artist so duplicate releases are omitted (0.178093ms)
+✔ loads overflow tracks in parallel and keeps a full 100 after de-duplication (1.180968ms)
+✔ stats_short_term preserves its range, local day, daily idempotency and CAS revision (1.482693ms)
+✔ stats_medium_term preserves its range, local day, daily idempotency and CAS revision (0.730866ms)
+✔ stats_long_term preserves its range, local day, daily idempotency and CAS revision (0.760762ms)
+✔ unsupported task and failed credentials do not fetch, write or mark completion (0.526334ms)
+✔ mandatory artistsPageError failure preserves the prior snapshot (0.381073ms)
+✔ mandatory firstTracksPage failure preserves the prior snapshot (0.215543ms)
+✔ failed optional pages preserve primary rankings and report both partial failures (1.031067ms)
+✔ catalogError is propagated without scoring or a false successful sync marker (0.290202ms)
+✔ tracksError is propagated without scoring or a false successful sync marker (0.644044ms)
+✔ artistsError is propagated without scoring or a false successful sync marker (0.662699ms)
+✔ revisionError is propagated without scoring or a false successful sync marker (0.687155ms)
+✔ replaceError is propagated without scoring or a false successful sync marker (0.678539ms)
+✔ retry after a CAS conflict rereads the revision and retains the daily idempotency key (1.151292ms)
+✔ valid empty pages save an explicitly empty ranking without catalog lookup requests (0.660916ms)
+✖ malformed mandatory artistsResponse (null) cannot erase saved rankings (1.370934ms)
+✖ malformed mandatory artistsResponse (undefined) cannot erase saved rankings (0.473325ms)
+✖ malformed mandatory artistsResponse ({}) cannot erase saved rankings (0.374139ms)
+✖ malformed mandatory artistsResponse ({"items":null}) cannot erase saved rankings (0.310079ms)
+✖ malformed mandatory artistsResponse ({"items":""}) cannot erase saved rankings (0.317714ms)
+✖ malformed mandatory tracksResponse (null) cannot erase saved rankings (0.368179ms)
+✖ malformed mandatory tracksResponse (undefined) cannot erase saved rankings (0.309158ms)
+✖ malformed mandatory tracksResponse ({}) cannot erase saved rankings (0.301974ms)
+✖ malformed mandatory tracksResponse ({"items":null}) cannot erase saved rankings (0.318095ms)
+✖ malformed mandatory tracksResponse ({"items":""}) cannot erase saved rankings (0.317554ms)
+✔ catalog absence cannot produce dangling snapshot relations (0.606313ms)
+✔ a scoring failure preserves a committed ranking and reports the skipped side effect (0.692856ms)
+✔ marker failure is reported after commit rather than pretending the task completed (0.632773ms)
+✔ missing committed snapshot identity (null) cannot be scored or marked successful (0.654674ms)
+✔ missing committed snapshot identity ([]) cannot be scored or marked successful (0.580045ms)
+✔ missing committed snapshot identity ({}) cannot be scored or marked successful (0.563433ms)
+✔ missing committed snapshot identity ([{"revision":5}]) cannot be scored or marked successful (0.567731ms)
+✔ missing committed snapshot identity ({"snapshot_id":""}) cannot be scored or marked successful (0.548024ms)
+✔ missing committed snapshot identity ({"snapshot_id":"   "}) cannot be scored or marked successful (0.590594ms)
+✔ missing committed snapshot identity ({"snapshot_id":123}) cannot be scored or marked successful (0.573923ms)
+✔ an unconfirmed commit can recover on retry without scoring the absent identity (1.110056ms)
+✔ single-object atomic replacement responses retain the committed snapshot identity (0.512218ms)
+✔ genre enrichment deduplicates requests and retains original artists on partial failure (0.255828ms)
+✔ genre ranking excludes placeholders and caps the weighted distinct result at fifteen (0.147135ms)
+✔ deduplication retains distinct artists and unnamed tracks while dropping invalid and duplicate IDs (0.119032ms)
+ℹ tests 44
+ℹ suites 0
+ℹ pass 34
+ℹ fail 10
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 57.649317
+
+✖ failing tests:
+
+test at services/sync-service/tasks/stats-task.test.js:328:5
+✖ malformed mandatory artistsResponse (null) cannot erase saved rankings (1.370934ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /invalid.*ranking data/i. Input:
+  
+  'AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n' +
+    '+ actual - expected\n' +
+    '\n' +
+    '+ []\n' +
+    '- [\n' +
+    '-   {\n' +
+    '-     genres: [\n' +
+    "-       'rock',\n" +
+    "-       ' artist ',\n" +
+    "-       ''\n" +
+    '-     ],\n' +
+    "-     id: 'artist-a'\n" +
+    '-   },\n' +
+    '-   {\n' +
+    '-     genres: [\n' +
+    "-       'rock',\n" +
+    "-       'pop'\n" +
+    '-     ],\n' +
+    "-     id: 'artist-b'\n" +
+    '-   }\n' +
+    '- ]\n'
+  
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:330:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [AssertionError],
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at services/sync-service/tasks/stats-task.test.js:328:5
+✖ malformed mandatory artistsResponse (undefined) cannot erase saved rankings (0.473325ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /invalid.*ranking data/i. Input:
+  
+  'AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n' +
+    '+ actual - expected\n' +
+    '\n' +
+    '+ []\n' +
+    '- [\n' +
+    '-   {\n' +
+    '-     genres: [\n' +
+    "-       'rock',\n" +
+    "-       ' artist ',\n" +
+    "-       ''\n" +
+    '-     ],\n' +
+    "-     id: 'artist-a'\n" +
+    '-   },\n' +
+    '-   {\n' +
+    '-     genres: [\n' +
+    "-       'rock',\n" +
+    "-       'pop'\n" +
+    '-     ],\n' +
+    "-     id: 'artist-b'\n" +
+    '-   }\n' +
+    '- ]\n'
+  
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:330:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [AssertionError],
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at services/sync-service/tasks/stats-task.test.js:328:5
+✖ malformed mandatory artistsResponse ({}) cannot erase saved rankings (0.374139ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /invalid.*ranking data/i. Input:
+  
+  'AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n' +
+    '+ actual - expected\n' +
+    '\n' +
+    '+ []\n' +
+    '- [\n' +
+    '-   {\n' +
+    '-     genres: [\n' +
+    "-       'rock',\n" +
+    "-       ' artist ',\n" +
+    "-       ''\n" +
+    '-     ],\n' +
+    "-     id: 'artist-a'\n" +
+    '-   },\n' +
+    '-   {\n' +
+    '-     genres: [\n' +
+    "-       'rock',\n" +
+    "-       'pop'\n" +
+    '-     ],\n' +
+    "-     id: 'artist-b'\n" +
+    '-   }\n' +
+    '- ]\n'
+  
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:330:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [AssertionError],
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at services/sync-service/tasks/stats-task.test.js:328:5
+✖ malformed mandatory artistsResponse ({"items":null}) cannot erase saved rankings (0.310079ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /invalid.*ranking data/i. Input:
+  
+  'AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n' +
+    '+ actual - expected\n' +
+    '\n' +
+    '+ []\n' +
+    '- [\n' +
+    '-   {\n' +
+    '-     genres: [\n' +
+    "-       'rock',\n" +
+    "-       ' artist ',\n" +
+    "-       ''\n" +
+    '-     ],\n' +
+    "-     id: 'artist-a'\n" +
+    '-   },\n' +
+    '-   {\n' +
+    '-     genres: [\n' +
+    "-       'rock',\n" +
+    "-       'pop'\n" +
+    '-     ],\n' +
+    "-     id: 'artist-b'\n" +
+    '-   }\n' +
+    '- ]\n'
+  
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:330:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [AssertionError],
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at services/sync-service/tasks/stats-task.test.js:328:5
+✖ malformed mandatory artistsResponse ({"items":""}) cannot erase saved rankings (0.317714ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /invalid.*ranking data/i. Input:
+  
+  'AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n' +
+    '+ actual - expected\n' +
+    '\n' +
+    '+ []\n' +
+    '- [\n' +
+    '-   {\n' +
+    '-     genres: [\n' +
+    "-       'rock',\n" +
+    "-       ' artist ',\n" +
+    "-       ''\n" +
+    '-     ],\n' +
+    "-     id: 'artist-a'\n" +
+    '-   },\n' +
+    '-   {\n' +
+    '-     genres: [\n' +
+    "-       'rock',\n" +
+    "-       'pop'\n" +
+    '-     ],\n' +
+    "-     id: 'artist-b'\n" +
+    '-   }\n' +
+    '- ]\n'
+  
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:330:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [AssertionError],
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at services/sync-service/tasks/stats-task.test.js:328:5
+✖ malformed mandatory tracksResponse (null) cannot erase saved rankings (0.368179ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /invalid.*ranking data/i. Input:
+  
+  'AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n' +
+    '+ actual - expected\n' +
+    '\n' +
+    '+ []\n' +
+    '- [\n' +
+    '-   {\n' +
+    '-     artists: [\n' +
+    '-       {\n' +
+    "-         name: 'Artist'\n" +
+    '-       }\n' +
+    '-     ],\n' +
+    '-     explicit: true,\n' +
+    "-     id: 'song-a',\n" +
+    "-     name: 'A'\n" +
+    '-   },\n' +
+    '-   {\n' +
+    '-     artists: [\n' +
+    '-       {\n' +
+    "-         name: 'Artist'\n" +
+    '-       }\n' +
+    '-     ],\n' +
+    '-     explicit: false,\n' +
+    "-     id: 'song-b',\n" +
+    "-     name: 'B'\n" +
+    '-   },\n' +
+    '-   {\n' +
+    '-     artists: [\n' +
+    '-       {\n' +
+    "-         name: 'Artist'\n" +
+    '-       }\n' +
+    '-     ],\n' +
+    '-     explicit: false,\n' +
+    "-     id: 'song-c',\n" +
+    "-     name: 'C'\n" +
+    '-   }\n' +
+    '- ]\n'
+  
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:330:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [AssertionError],
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at services/sync-service/tasks/stats-task.test.js:328:5
+✖ malformed mandatory tracksResponse (undefined) cannot erase saved rankings (0.309158ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /invalid.*ranking data/i. Input:
+  
+  'AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n' +
+    '+ actual - expected\n' +
+    '\n' +
+    '+ []\n' +
+    '- [\n' +
+    '-   {\n' +
+    '-     artists: [\n' +
+    '-       {\n' +
+    "-         name: 'Artist'\n" +
+    '-       }\n' +
+    '-     ],\n' +
+    '-     explicit: true,\n' +
+    "-     id: 'song-a',\n" +
+    "-     name: 'A'\n" +
+    '-   },\n' +
+    '-   {\n' +
+    '-     artists: [\n' +
+    '-       {\n' +
+    "-         name: 'Artist'\n" +
+    '-       }\n' +
+    '-     ],\n' +
+    '-     explicit: false,\n' +
+    "-     id: 'song-b',\n" +
+    "-     name: 'B'\n" +
+    '-   },\n' +
+    '-   {\n' +
+    '-     artists: [\n' +
+    '-       {\n' +
+    "-         name: 'Artist'\n" +
+    '-       }\n' +
+    '-     ],\n' +
+    '-     explicit: false,\n' +
+    "-     id: 'song-c',\n" +
+    "-     name: 'C'\n" +
+    '-   }\n' +
+    '- ]\n'
+  
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:330:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [AssertionError],
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at services/sync-service/tasks/stats-task.test.js:328:5
+✖ malformed mandatory tracksResponse ({}) cannot erase saved rankings (0.301974ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /invalid.*ranking data/i. Input:
+  
+  'AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n' +
+    '+ actual - expected\n' +
+    '\n' +
+    '+ []\n' +
+    '- [\n' +
+    '-   {\n' +
+    '-     artists: [\n' +
+    '-       {\n' +
+    "-         name: 'Artist'\n" +
+    '-       }\n' +
+    '-     ],\n' +
+    '-     explicit: true,\n' +
+    "-     id: 'song-a',\n" +
+    "-     name: 'A'\n" +
+    '-   },\n' +
+    '-   {\n' +
+    '-     artists: [\n' +
+    '-       {\n' +
+    "-         name: 'Artist'\n" +
+    '-       }\n' +
+    '-     ],\n' +
+    '-     explicit: false,\n' +
+    "-     id: 'song-b',\n" +
+    "-     name: 'B'\n" +
+    '-   },\n' +
+    '-   {\n' +
+    '-     artists: [\n' +
+    '-       {\n' +
+    "-         name: 'Artist'\n" +
+    '-       }\n' +
+    '-     ],\n' +
+    '-     explicit: false,\n' +
+    "-     id: 'song-c',\n" +
+    "-     name: 'C'\n" +
+    '-   }\n' +
+    '- ]\n'
+  
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:330:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [AssertionError],
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at services/sync-service/tasks/stats-task.test.js:328:5
+✖ malformed mandatory tracksResponse ({"items":null}) cannot erase saved rankings (0.318095ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /invalid.*ranking data/i. Input:
+  
+  'AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n' +
+    '+ actual - expected\n' +
+    '\n' +
+    '+ []\n' +
+    '- [\n' +
+    '-   {\n' +
+    '-     artists: [\n' +
+    '-       {\n' +
+    "-         name: 'Artist'\n" +
+    '-       }\n' +
+    '-     ],\n' +
+    '-     explicit: true,\n' +
+    "-     id: 'song-a',\n" +
+    "-     name: 'A'\n" +
+    '-   },\n' +
+    '-   {\n' +
+    '-     artists: [\n' +
+    '-       {\n' +
+    "-         name: 'Artist'\n" +
+    '-       }\n' +
+    '-     ],\n' +
+    '-     explicit: false,\n' +
+    "-     id: 'song-b',\n" +
+    "-     name: 'B'\n" +
+    '-   },\n' +
+    '-   {\n' +
+    '-     artists: [\n' +
+    '-       {\n' +
+    "-         name: 'Artist'\n" +
+    '-       }\n' +
+    '-     ],\n' +
+    '-     explicit: false,\n' +
+    "-     id: 'song-c',\n" +
+    "-     name: 'C'\n" +
+    '-   }\n' +
+    '- ]\n'
+  
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:330:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [AssertionError],
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at services/sync-service/tasks/stats-task.test.js:328:5
+✖ malformed mandatory tracksResponse ({"items":""}) cannot erase saved rankings (0.317554ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /invalid.*ranking data/i. Input:
+  
+  'AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n' +
+    '+ actual - expected\n' +
+    '\n' +
+    '+ []\n' +
+    '- [\n' +
+    '-   {\n' +
+    '-     artists: [\n' +
+    '-       {\n' +
+    "-         name: 'Artist'\n" +
+    '-       }\n' +
+    '-     ],\n' +
+    '-     explicit: true,\n' +
+    "-     id: 'song-a',\n" +
+    "-     name: 'A'\n" +
+    '-   },\n' +
+    '-   {\n' +
+    '-     artists: [\n' +
+    '-       {\n' +
+    "-         name: 'Artist'\n" +
+    '-       }\n' +
+    '-     ],\n' +
+    '-     explicit: false,\n' +
+    "-     id: 'song-b',\n" +
+    "-     name: 'B'\n" +
+    '-   },\n' +
+    '-   {\n' +
+    '-     artists: [\n' +
+    '-       {\n' +
+    "-         name: 'Artist'\n" +
+    '-       }\n' +
+    '-     ],\n' +
+    '-     explicit: false,\n' +
+    "-     id: 'song-c',\n" +
+    "-     name: 'C'\n" +
+    '-   }\n' +
+    '- ]\n'
+  
+      at async TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/tasks/stats-task.test.js:330:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [AssertionError],
+    expected: /invalid.*ranking data/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }

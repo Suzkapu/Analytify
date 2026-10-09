@@ -1,0 +1,607 @@
+const imgProgressIndeterminate = "https://www.figma.com/api/mcp/asset/4d26d794-5129-405d-a14c-1e98d4ec7866.svg";
+
+type AnalytifySnapshotDayProps = {
+  className?: string;
+  day?: string;
+  state?: "Available" | "Unavailable";
+};
+
+function AnalytifySnapshotDay({ className, day = "4", state = "Available" }: AnalytifySnapshotDayProps) {
+  const isUnavailable = state === "Unavailable";
+  return (
+    <div className={className || `content-stretch flex items-center justify-center relative rounded-[var(--v2-radius-control,12px)] size-[44px] ${isUnavailable ? "" : "bg-[var(--v2-color-selection,#193c29)] border border-[var(--v2-color-accent,#35e783)] border-solid"}`} id={isUnavailable ? "node-144_8009" : "node-144_8005"}>
+      {state === "Available" && (
+        <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] whitespace-nowrap" data-node-id="144:8006">
+          {day}
+        </p>
+      )}
+      {isUnavailable && (
+        <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="144:8010">
+          {day}
+        </p>
+      )}
+    </div>
+  );
+}
+
+type AnalytifySnapshotCalendarProps = {
+  className?: string;
+  help?: string;
+  month?: string;
+  purpose?: string;
+  showTodayShortcut?: boolean;
+  state?: "Refreshing" | "Refresh failed";
+  viewport?: "Mobile";
+};
+
+function AnalytifySnapshotCalendar({ className, help = "Saved dates are green.", month = "October 2026", purpose = "VIEW SNAPSHOT", showTodayShortcut = true, state = "Refreshing", viewport = "Mobile" }: AnalytifySnapshotCalendarProps) {
+  const isMobileAndRefreshFailed = viewport === "Mobile" && state === "Refresh failed";
+  const isMobileAndRefreshing = viewport === "Mobile" && state === "Refreshing";
+  return (
+    <div className={className || "bg-[var(--v2-color-surface-raised,#182019)] border border-[var(--v2-color-border,#34423a)] border-solid content-stretch flex flex-col gap-[var(--v2-space-2,8px)] items-start p-[var(--v2-space-3,12px)] relative rounded-[var(--v2-radius-control,12px)] w-[288px]"} id={isMobileAndRefreshFailed ? "node-854_27388" : "node-838_27055"}>
+      <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[16px] relative shrink-0 text-[12px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="838:27056">
+        {purpose}
+      </p>
+      <div className="content-stretch flex gap-[var(--v2-space-2,8px)] items-start overflow-clip relative shrink-0 w-full" id={isMobileAndRefreshFailed ? "node-854_27390" : "node-838_27057"} data-name="Month and navigation">
+        <p className="[word-break:break-word] flex-[1_0_0] font-['Outfit:SemiBold'] font-semibold leading-[24px] min-w-px relative text-[18px] text-[color:var(--v2-color-text,#f5f7f5)]" data-node-id="838:27058">
+          {month}
+        </p>
+        <button className="bg-[var(--v2-color-surface,#121814)] border border-[var(--v2-color-border-control,#6b7d71)] border-solid content-stretch cursor-pointer flex gap-[var(--v2-space-2,8px)] items-center justify-center px-[4px] relative rounded-[var(--v2-radius-control,12px)] shrink-0 size-[44px]" id={isMobileAndRefreshFailed ? "node-854_27392" : "node-838_27059"} data-name="Month / previous">
+          <div className="relative shrink-0 size-[18px]" id={isMobileAndRefreshFailed ? "node-I854_27392-227_11841" : "node-I838_27059-227_11841"} data-name="Action icon" />
+          <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] text-left whitespace-nowrap" id={isMobileAndRefreshFailed ? "node-I854_27392-24_87" : "node-I838_27059-24_87"}>
+            ​
+          </p>
+        </button>
+        <div className="bg-[var(--v2-color-surface,#121814)] border border-[var(--v2-color-border-control,#6b7d71)] border-solid content-stretch flex gap-[var(--v2-space-2,8px)] items-center justify-center opacity-45 px-[4px] relative rounded-[var(--v2-radius-control,12px)] shrink-0 size-[44px]" id={isMobileAndRefreshFailed ? "node-854_27393" : "node-838_27060"} data-name="Month / next">
+          <div className="relative shrink-0 size-[18px]" id={isMobileAndRefreshFailed ? "node-I854_27393-227_11850" : "node-I838_27060-227_11850"} data-name="Action icon" />
+          <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] whitespace-nowrap" id={isMobileAndRefreshFailed ? "node-I854_27393-24_93" : "node-I838_27060-24_93"}>
+            ​
+          </p>
+        </div>
+      </div>
+      <div className="content-stretch flex flex-col gap-[var(--v2-space-2,8px)] items-start p-[var(--v2-space-1,4px)] relative shrink-0 w-full" id={isMobileAndRefreshFailed ? "node-854_27394" : "node-838_27061"} data-name="Calendar scroll body">
+        {isMobileAndRefreshing && (
+          <>
+            <div className="content-stretch flex gap-[var(--v2-space-3,12px)] h-[60px] items-start relative shrink-0 w-full" data-node-id="838:27062" data-name="Calendar metadata refreshing">
+              <div className="relative shrink-0 size-[20px]" data-node-id="I838:27062;584:21882" data-name="Progress / Indeterminate">
+                <div className="absolute inset-[1.12%_0_0_0]">
+                  <img alt="" className="block max-w-none size-full" src={imgProgressIndeterminate} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] flex-[1_0_0] font-['Outfit:Regular'] font-normal h-[24px] leading-[20px] min-w-px relative text-[14px] text-[color:var(--v2-color-text-muted,#a2ada6)]" data-node-id="I838:27062;584:21883">
+                Refreshing saved dates…
+              </p>
+            </div>
+            <div className="[word-break:break-word] content-stretch flex font-['Outfit:SemiBold'] font-semibold gap-[var(--v2-space-1,4px)] items-start leading-[16px] overflow-clip relative shrink-0 text-[12px] text-[color:var(--v2-color-text-subtle,#8e9b92)] text-center w-full" data-node-id="838:27063" data-name="Weekdays / Monday first">
+              <p className="flex-[1_0_0] min-w-px relative" data-node-id="838:27064">
+                M
+              </p>
+              <p className="flex-[1_0_0] min-w-px relative" data-node-id="838:27065">
+                T
+              </p>
+              <p className="flex-[1_0_0] min-w-px relative" data-node-id="838:27066">
+                W
+              </p>
+              <p className="flex-[1_0_0] min-w-px relative" data-node-id="838:27067">
+                T
+              </p>
+              <p className="flex-[1_0_0] min-w-px relative" data-node-id="838:27068">
+                F
+              </p>
+              <p className="flex-[1_0_0] min-w-px relative" data-node-id="838:27069">
+                S
+              </p>
+              <p className="flex-[1_0_0] min-w-px relative" data-node-id="838:27070">
+                S
+              </p>
+            </div>
+            <div className="content-stretch flex gap-[var(--v2-space-1,4px)] items-start relative shrink-0 w-full" data-node-id="838:27071" data-name="Calendar week 1">
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27072" data-name="Calendar column 1">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27073" data-name="Blank calendar cell">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27073;144:8010">
+                    ​
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27074" data-name="Calendar column 2">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27075" data-name="Blank calendar cell">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27075;144:8010">
+                    ​
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27076" data-name="Calendar column 3">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27077" data-name="Blank calendar cell">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27077;144:8010">
+                    ​
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27078" data-name="Calendar column 4">
+                <button className="bg-[var(--v2-color-selection,#193c29)] border border-[var(--v2-color-accent,#35e783)] border-solid content-stretch cursor-pointer flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27079" data-name="Snapshot / 2026-10-01">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] text-left whitespace-nowrap" data-node-id="I838:27079;144:8006">
+                    1
+                  </p>
+                </button>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27080" data-name="Calendar column 5">
+                <button className="bg-[var(--v2-color-selection,#193c29)] border border-[var(--v2-color-accent,#35e783)] border-solid content-stretch cursor-pointer flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27081" data-name="Snapshot / 2026-10-02">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] text-left whitespace-nowrap" data-node-id="I838:27081;144:8006">
+                    2
+                  </p>
+                </button>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27082" data-name="Calendar column 6">
+                <button className="bg-[var(--v2-color-selection,#193c29)] border border-[var(--v2-color-accent,#35e783)] border-solid content-stretch cursor-pointer flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27083" data-name="Snapshot / 2026-10-03">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] text-left whitespace-nowrap" data-node-id="I838:27083;144:8006">
+                    3
+                  </p>
+                </button>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27084" data-name="Calendar column 7">
+                <button className="bg-[var(--v2-color-accent,#35e783)] border border-[var(--v2-color-accent,#35e783)] border-solid content-stretch cursor-pointer flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27085" data-name="Snapshot / 2026-10-04">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-accent-ink,#06130b)] text-left whitespace-nowrap" data-node-id="I838:27085;144:8008">
+                    4
+                  </p>
+                </button>
+              </div>
+            </div>
+            <div className="content-stretch flex gap-[var(--v2-space-1,4px)] items-start relative shrink-0 w-full" data-node-id="838:27086" data-name="Calendar week 2">
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27087" data-name="Calendar column 1">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27088" data-name="Unavailable / 5">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27088;144:8010">
+                    5
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27089" data-name="Calendar column 2">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27090" data-name="Unavailable / 6">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27090;144:8010">
+                    6
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27091" data-name="Calendar column 3">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27092" data-name="Unavailable / 7">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27092;144:8010">
+                    7
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27093" data-name="Calendar column 4">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27094" data-name="Unavailable / 8">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27094;144:8010">
+                    8
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27095" data-name="Calendar column 5">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27096" data-name="Unavailable / 9">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27096;144:8010">
+                    9
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27097" data-name="Calendar column 6">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27098" data-name="Unavailable / 10">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27098;144:8010">
+                    10
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27099" data-name="Calendar column 7">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27100" data-name="Unavailable / 11">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27100;144:8010">
+                    11
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="content-stretch flex gap-[var(--v2-space-1,4px)] items-start relative shrink-0 w-full" data-node-id="838:27101" data-name="Calendar week 3">
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27102" data-name="Calendar column 1">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27103" data-name="Unavailable / 12">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27103;144:8010">
+                    12
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27104" data-name="Calendar column 2">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27105" data-name="Unavailable / 13">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27105;144:8010">
+                    13
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27106" data-name="Calendar column 3">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27107" data-name="Unavailable / 14">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27107;144:8010">
+                    14
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27108" data-name="Calendar column 4">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27109" data-name="Unavailable / 15">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27109;144:8010">
+                    15
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27110" data-name="Calendar column 5">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27111" data-name="Unavailable / 16">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27111;144:8010">
+                    16
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27112" data-name="Calendar column 6">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27113" data-name="Unavailable / 17">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27113;144:8010">
+                    17
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27114" data-name="Calendar column 7">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27115" data-name="Unavailable / 18">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27115;144:8010">
+                    18
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="content-stretch flex gap-[var(--v2-space-1,4px)] items-start relative shrink-0 w-full" data-node-id="838:27116" data-name="Calendar week 4">
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27117" data-name="Calendar column 1">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27118" data-name="Unavailable / 19">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27118;144:8010">
+                    19
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27119" data-name="Calendar column 2">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27120" data-name="Unavailable / 20">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27120;144:8010">
+                    20
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27121" data-name="Calendar column 3">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27122" data-name="Unavailable / 21">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27122;144:8010">
+                    21
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27123" data-name="Calendar column 4">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27124" data-name="Unavailable / 22">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27124;144:8010">
+                    22
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27125" data-name="Calendar column 5">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27126" data-name="Unavailable / 23">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27126;144:8010">
+                    23
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27127" data-name="Calendar column 6">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27128" data-name="Unavailable / 24">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27128;144:8010">
+                    24
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27129" data-name="Calendar column 7">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27130" data-name="Unavailable / 25">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27130;144:8010">
+                    25
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="content-stretch flex gap-[var(--v2-space-1,4px)] items-start relative shrink-0 w-full" data-node-id="838:27131" data-name="Calendar week 5">
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27132" data-name="Calendar column 1">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27133" data-name="Unavailable / 26">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27133;144:8010">
+                    26
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27134" data-name="Calendar column 2">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27135" data-name="Unavailable / 27">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27135;144:8010">
+                    27
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27136" data-name="Calendar column 3">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27137" data-name="Unavailable / 28">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27137;144:8010">
+                    28
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27138" data-name="Calendar column 4">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27139" data-name="Unavailable / 29">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27139;144:8010">
+                    29
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27140" data-name="Calendar column 5">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27141" data-name="Unavailable / 30">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27141;144:8010">
+                    30
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27142" data-name="Calendar column 6">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27143" data-name="Unavailable / 31">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27143;144:8010">
+                    31
+                  </p>
+                </div>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="838:27144" data-name="Calendar column 7">
+                <div className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="838:27145" data-name="Blank calendar cell">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] opacity-35 relative shrink-0 text-[14px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="I838:27145;144:8010">
+                    ​
+                  </p>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+        {isMobileAndRefreshFailed && (
+          <>
+            <div className="[word-break:break-word] content-stretch flex flex-col gap-[var(--v2-space-2,8px)] items-start overflow-clip relative shrink-0 w-full" data-node-id="854:27479" data-name="Calendar message">
+              <p className="font-['Outfit:SemiBold'] font-semibold leading-[24px] relative shrink-0 text-[18px] text-[color:var(--v2-color-text,#f5f7f5)] w-full" data-node-id="854:27480">
+                Saved dates not refreshed
+              </p>
+              <p className="font-['Outfit:Regular'] font-normal leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text-muted,#a2ada6)] w-full" data-node-id="854:27481">
+                You can use saved dates below or retry.
+              </p>
+            </div>
+            <div className="[word-break:break-word] content-stretch flex font-['Outfit:SemiBold'] font-semibold gap-[var(--v2-space-1,4px)] items-start leading-[16px] overflow-clip relative shrink-0 text-[12px] text-[color:var(--v2-color-text-subtle,#8e9b92)] text-center w-full" data-node-id="854:27396" data-name="Weekdays / Monday first">
+              <p className="flex-[1_0_0] min-w-px relative" data-node-id="854:27397">
+                M
+              </p>
+              <p className="flex-[1_0_0] min-w-px relative" data-node-id="854:27398">
+                T
+              </p>
+              <p className="flex-[1_0_0] min-w-px relative" data-node-id="854:27399">
+                W
+              </p>
+              <p className="flex-[1_0_0] min-w-px relative" data-node-id="854:27400">
+                T
+              </p>
+              <p className="flex-[1_0_0] min-w-px relative" data-node-id="854:27401">
+                F
+              </p>
+              <p className="flex-[1_0_0] min-w-px relative" data-node-id="854:27402">
+                S
+              </p>
+              <p className="flex-[1_0_0] min-w-px relative" data-node-id="854:27403">
+                S
+              </p>
+            </div>
+            <div className="content-stretch flex gap-[var(--v2-space-1,4px)] items-start relative shrink-0 w-full" data-node-id="854:27404" data-name="Calendar week 1">
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27405" data-name="Calendar column 1">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27407" data-name="Calendar column 2">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27409" data-name="Calendar column 3">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27411" data-name="Calendar column 4">
+                <button className="bg-[var(--v2-color-selection,#193c29)] border border-[var(--v2-color-accent,#35e783)] border-solid content-stretch cursor-pointer flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="854:27412" data-name="Snapshot / 2026-10-01">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] text-left whitespace-nowrap" data-node-id="I854:27412;144:8006">
+                    1
+                  </p>
+                </button>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27413" data-name="Calendar column 5">
+                <button className="bg-[var(--v2-color-selection,#193c29)] border border-[var(--v2-color-accent,#35e783)] border-solid content-stretch cursor-pointer flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="854:27414" data-name="Snapshot / 2026-10-02">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] text-left whitespace-nowrap" data-node-id="I854:27414;144:8006">
+                    2
+                  </p>
+                </button>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27415" data-name="Calendar column 6">
+                <button className="bg-[var(--v2-color-selection,#193c29)] border border-[var(--v2-color-accent,#35e783)] border-solid content-stretch cursor-pointer flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="854:27416" data-name="Snapshot / 2026-10-03">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] text-left whitespace-nowrap" data-node-id="I854:27416;144:8006">
+                    3
+                  </p>
+                </button>
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27417" data-name="Calendar column 7">
+                <button className="bg-[var(--v2-color-accent,#35e783)] border border-[var(--v2-color-accent,#35e783)] border-solid content-stretch cursor-pointer flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" data-node-id="854:27418" data-name="Snapshot / 2026-10-04">
+                  <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-accent-ink,#06130b)] text-left whitespace-nowrap" data-node-id="I854:27418;144:8008">
+                    4
+                  </p>
+                </button>
+              </div>
+            </div>
+            <div className="content-stretch flex gap-[var(--v2-space-1,4px)] items-start relative shrink-0 w-full" data-node-id="854:27419" data-name="Calendar week 2">
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27420" data-name="Calendar column 1">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="5" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27422" data-name="Calendar column 2">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="6" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27424" data-name="Calendar column 3">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="7" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27426" data-name="Calendar column 4">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="8" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27428" data-name="Calendar column 5">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="9" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27430" data-name="Calendar column 6">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="10" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27432" data-name="Calendar column 7">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="11" state="Unavailable" />
+              </div>
+            </div>
+            <div className="content-stretch flex gap-[var(--v2-space-1,4px)] items-start relative shrink-0 w-full" data-node-id="854:27434" data-name="Calendar week 3">
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27435" data-name="Calendar column 1">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="12" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27437" data-name="Calendar column 2">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="13" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27439" data-name="Calendar column 3">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="14" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27441" data-name="Calendar column 4">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="15" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27443" data-name="Calendar column 5">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="16" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27445" data-name="Calendar column 6">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="17" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27447" data-name="Calendar column 7">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="18" state="Unavailable" />
+              </div>
+            </div>
+            <div className="content-stretch flex gap-[var(--v2-space-1,4px)] items-start relative shrink-0 w-full" data-node-id="854:27449" data-name="Calendar week 4">
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27450" data-name="Calendar column 1">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="19" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27452" data-name="Calendar column 2">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="20" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27454" data-name="Calendar column 3">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="21" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27456" data-name="Calendar column 4">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="22" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27458" data-name="Calendar column 5">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="23" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27460" data-name="Calendar column 6">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="24" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27462" data-name="Calendar column 7">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="25" state="Unavailable" />
+              </div>
+            </div>
+            <div className="content-stretch flex gap-[var(--v2-space-1,4px)] items-start relative shrink-0 w-full" data-node-id="854:27464" data-name="Calendar week 5">
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27465" data-name="Calendar column 1">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="26" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27467" data-name="Calendar column 2">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="27" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27469" data-name="Calendar column 3">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="28" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27471" data-name="Calendar column 4">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="29" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27473" data-name="Calendar column 5">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="30" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27475" data-name="Calendar column 6">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="31" state="Unavailable" />
+              </div>
+              <div className="content-stretch flex flex-[1_0_0] h-[44px] items-start min-w-px relative" data-node-id="854:27477" data-name="Calendar column 7">
+                <AnalytifySnapshotDay className="content-stretch flex flex-[1_0_0] h-[44px] items-center justify-center min-w-px relative rounded-[var(--v2-radius-control,12px)]" day="" state="Unavailable" />
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+      <div className={`content-stretch flex gap-[var(--v2-space-2,8px)] items-start overflow-clip relative shrink-0 w-full ${isMobileAndRefreshFailed ? "cursor-pointer" : ""}`} id={isMobileAndRefreshFailed ? "node-854_27483" : "node-838_27150"} data-name="Calendar help and close">
+        {isMobileAndRefreshing && (
+          <p className="[word-break:break-word] flex-[1_0_0] font-['Outfit:Regular'] font-normal leading-[20px] min-w-px relative text-[14px] text-[color:var(--v2-color-text-muted,#a2ada6)]" data-node-id="838:27151">
+            {help}
+          </p>
+        )}
+        {isMobileAndRefreshing && showTodayShortcut && (
+          <button className="bg-[var(--v2-color-surface,#121814)] border border-[var(--v2-color-border-control,#6b7d71)] border-solid content-stretch cursor-pointer flex gap-[var(--v2-space-2,8px)] h-[44px] items-center justify-center px-[var(--v2-space-4,16px)] relative rounded-[var(--v2-radius-control,12px)] shrink-0" data-node-id="838:27153" data-name="Calendar / Today">
+            <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] text-left whitespace-nowrap" data-node-id="I838:27153;24:87">
+              Today
+            </p>
+          </button>
+        )}
+        {isMobileAndRefreshing && (
+          <button className="bg-[var(--v2-color-surface,#121814)] border border-[var(--v2-color-border-control,#6b7d71)] border-solid content-stretch cursor-pointer flex gap-[var(--v2-space-2,8px)] h-[44px] items-center justify-center px-[var(--v2-space-4,16px)] relative rounded-[var(--v2-radius-control,12px)] shrink-0" data-node-id="838:27154" data-name="Calendar / Close">
+            <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] text-left whitespace-nowrap" data-node-id="I838:27154;24:87">
+              Close
+            </p>
+          </button>
+        )}
+        {isMobileAndRefreshFailed && (
+          <button className="bg-[var(--v2-color-surface,#121814)] border border-[var(--v2-color-border-control,#6b7d71)] border-solid content-stretch flex gap-[var(--v2-space-2,8px)] h-[44px] items-center justify-center px-[var(--v2-space-4,16px)] relative rounded-[var(--v2-radius-control,12px)] shrink-0" data-node-id="854:27485" data-name="Calendar / Retry">
+            <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] text-left whitespace-nowrap" data-node-id="I854:27485;24:87">
+              Retry
+            </p>
+          </button>
+        )}
+        {isMobileAndRefreshFailed && showTodayShortcut && (
+          <button className="bg-[var(--v2-color-surface,#121814)] border border-[var(--v2-color-border-control,#6b7d71)] border-solid content-stretch flex gap-[var(--v2-space-2,8px)] h-[44px] items-center justify-center px-[var(--v2-space-4,16px)] relative rounded-[var(--v2-radius-control,12px)] shrink-0" data-node-id="854:27486" data-name="Calendar / Today">
+            <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] text-left whitespace-nowrap" data-node-id="I854:27486;24:87">
+              Today
+            </p>
+          </button>
+        )}
+        {isMobileAndRefreshFailed && (
+          <button className="bg-[var(--v2-color-surface,#121814)] border border-[var(--v2-color-border-control,#6b7d71)] border-solid content-stretch flex gap-[var(--v2-space-2,8px)] h-[44px] items-center justify-center px-[var(--v2-space-4,16px)] relative rounded-[var(--v2-radius-control,12px)] shrink-0" data-node-id="854:27487" data-name="Calendar / Close">
+            <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] text-left whitespace-nowrap" data-node-id="I854:27487;24:87">
+              Close
+            </p>
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+These styles are contained in the design: Analytify/Eyebrow: Font(family: "Outfit", style: SemiBold, size: 12, weight: 600, lineHeight: 16, letterSpacing: 0), Analytify/Calendar month: Font(family: "Outfit", style: SemiBold, size: 18, weight: 600, lineHeight: 24, letterSpacing: 0), Analytify/Label: Font(family: "Outfit", style: SemiBold, size: 14, weight: 600, lineHeight: 20, letterSpacing: 0), Analytify/Caption: Font(family: "Outfit", style: Regular, size: 14, weight: 400, lineHeight: 20, letterSpacing: 0), Analytify/Compact control: Font(family: "Outfit", style: SemiBold, size: 12, weight: 600, lineHeight: 16, letterSpacing: 0).
+Component descriptions: The following components have usage descriptions or documentation links defined in Figma. These descriptions provide important context about the intended usage, best practices, and any constraints for each component. Follow these guidelines when implementing or using these components.
+
+## Viewport=Mobile, State=Refresh failed
+**Node ID:** 854:27388
+
+Metadata refresh failed with cached dates. Preserve eligible dates, month navigation and selected date; Retry requests metadata and changes to Refreshing without clearing cached choices. Completion follows the actual response. Initial failure without cached dates uses Unavailable. Close and Escape return focus to the opener; Close is last.
+
+## Analytify/Snapshot calendar
+**Node ID:** 838:27694
+
+Saved-date chooser for own rankings and comparisons. One responsive implementation: equal seven-column dates, 44px day height, 44×44 month controls. Mobile uses 16px viewport gutters; short windows scroll only the body. States describe available-date metadata: Ready, initial Loading, Empty, Unavailable with Retry, and Refreshing with usable cached dates. Date choice updates only its purpose and closes; selected-detail loading/failure is on Stats afterwards. Comparison omits primary/current where ineligible; Today visibility is conditional. Escape/Close/backdrop dismissal return focus; arrows move across enabled dates; Home/End and PageUp/PageDown navigate the grid/month. Failure retry transitions to Loading and resolves from the actual request, never an assumed success. State copy is variant-owned; callers may override Purpose, Month, Help and Today visibility. Refresh failed variants preserve cached selectable dates, show a refresh error, and retry through Refreshing; initial failure with no usable cache remains Unavailable. Runtime keyboard contract: own Stats only; Enter/Space open from date controls, Escape/backdrop/Close dismiss and return focus to the opener, Tab stays inside the dialog. Grid focus starts at selected eligible date or the closest eligible date; arrows move by day/week, Home/End by week edge, PageUp/PageDown by available month, Enter/Space select only eligible dates. Revalidate permissions and date availability at activation. Preserve focus on metadata refresh and expose Retry after failure. Short windows scroll the body while month and Close remain reachable. Runtime reduced motion removes animated interpolation without delaying state changes or recovery. User-authored retry Smart Animate is 220ms ease-in-out; actual service completion drives outcomes.
+
+## Analytify/secondary
+**Node ID:** 24:94
+
+Shared secondary control. 48 px targets. Keyboard focus remains visible. Disabled only while unavailable or submitting; explain the reason nearby.
+
+## Analytify/Icon / chevron-left
+**Node ID:** 835:25849
+
+Previous calendar month; reuses the semantic chevron geometry and color bindings of the shared right-chevron icon.
+
+## Analytify/Icon / chevron-right
+**Node ID:** 62:2392
+
+PrimeIcons chevron-right from the app icon library.
+
+## Analytify/Snapshot day
+**Node ID:** 144:8011
+
+Saved Stats calendar day. Default reference geometry44×44; the responsive calendar keeps44px height and assigns each day an equal fraction of the available week width. Strokes and the3px outside keyboard focus border do not participate in layout. Unavailable dates are disabled and never focusable. Hover uses a2px inside border; selected hover uses accent-ink. Selection writes only the ranking/comparison field for the active purpose and dismisses. Arrow/Home/End/PageUp/PageDown navigation, Enter/Space selection and Escape with focus return follow the calendar contract.
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

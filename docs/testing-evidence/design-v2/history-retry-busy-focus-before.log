@@ -1,0 +1,66 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/shared/ui-v2/v2-rank-history-popup.component.spec.ts --progress=false
+Application bundle generation complete. [1.898 seconds] - 2026-10-08T00:14:20.372Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/shared/ui-v2/v2-rank-history-popup.component.spec.ts (19 tests | 1 failed) 496ms
+     × keeps focus on Close when starting a retry disables its focused control 18ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-rank-history-popup.component.spec.ts > Rank history popup workflows > keeps focus on Close when starting a retry disables its focused control
+AssertionError: expected <button …(7)>…(1)</button> to be <button …(5)><i …(3)></i></button> // Object.is equality
+
+- Expected
++ Received
+
+  <button
+    _ngcontent-a-c579977398=""
+-   appmodalinitialfocus=""
+-   class="close-button v2-button v2-button--secondary"
++   aria-busy="true"
++   aria-disabled="true"
++   class="retry-button v2-button v2-button--secondary is-loading"
++   disabled=""
+    type="button"
+    v2button="secondary"
+  >
+-   <i
++   <img
+      _ngcontent-a-c579977398=""
+-     aria-hidden="true"
+-     class="pi pi-times"
++     alt=""
++     class="progress-icon"
++     src="assets/design-v2/history-retry-progress.svg"
+    />
+-    Close
++   <!--container-->
++    Retrying… 
+  </button>
+
+ ❯ src/app/shared/ui-v2/v2-rank-history-popup.component.spec.ts:156:36
+    154|     update({busy: true, failed: false, retrying: true}); TestBed.tick(…
+    155|     expect(element.querySelector<HTMLButtonElement>('.retry-button')!.…
+    156|     expect(document.activeElement).toBe(close());
+       |                                    ^
+    157|   });
+    158|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 passed (19)
+   Start at  02:14:20
+   Duration  1.36s (transform 72ms, setup 273ms, import 80ms, tests 496ms, environment 372ms)
+

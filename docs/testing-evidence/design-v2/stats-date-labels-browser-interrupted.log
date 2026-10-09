@@ -1,0 +1,51 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-date-labels.spec.ts e2e/design-v2-stats-search-switch.spec.ts e2e/design-v2-stats-date-loading.spec.ts --config=/tmp/analytify-all-browsers.config.ts --workers=1
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:245931) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:245931) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 40 tests using 1 worker
+
+(node:246083) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   1 [desktop] › e2e/design-v2-stats-date-labels.spec.ts:8:7 › canonical saved day in UTC › calendar selection uses the saved date and keeps narrow date controls readable (27.4s)
+
+
+  1) [desktop] › e2e/design-v2-stats-date-labels.spec.ts:8:7 › canonical saved day in UTC › calendar selection uses the saved date and keeps narrow date controls readable 
+
+    Test was interrupted.
+
+    Error: locator.click: Test ended.
+    Call log:
+      - waiting for getByRole('dialog', { name: 'VIEW SNAPSHOT', exact: true }).getByRole('button', { name: 'Previous month', exact: true })
+
+
+      37 |     await ranking.press('Enter');
+      38 |     const calendar = page.getByRole('dialog', {name: 'VIEW SNAPSHOT', exact: true});
+    > 39 |     await calendar.getByRole('button', {name: 'Previous month', exact: true}).click();
+         |                                                                               ^
+      40 |     await calendar.locator('button[data-date="2026-09-24"]').click();
+      41 |     await expect(calendar).toHaveCount(0);
+      42 |     await expect(page.locator('.v2-ranking-list strong')).toHaveText('Saved calendar-day song');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-date-labels.spec.ts:39:79
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-label-ee87d-rrow-date-controls-readable-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-date-label-ee87d-rrow-date-controls-readable-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-date-label-ee87d-rrow-date-controls-readable-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-date-label-ee87d-rrow-date-controls-readable-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 interrupted
+    [desktop] › e2e/design-v2-stats-date-labels.spec.ts:8:7 › canonical saved day in UTC › calendar selection uses the saved date and keeps narrow date controls readable 
+  39 did not run

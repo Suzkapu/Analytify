@@ -1,9 +1,12 @@
 :host { display: block; }
+.stats-choice-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--v2-space-4); }
+.stats-choice-controls v2-tabs { min-width: 0; }
+@media (max-width: 760px) {
+  .stats-choice-controls { grid-template-columns: minmax(0, 1fr); gap: var(--v2-space-2); }
+}
 .v2-stats-refresh, .v2-action-success, .v2-action-error { color: var(--v2-color-text-muted); }
 .v2-action-success { color: var(--v2-color-success); }
 .v2-action-error { color: var(--v2-color-danger); }
-.v2-stats-select { display: grid; min-width: 180px; gap: 4px; color: var(--v2-color-text-muted); font-size: .72rem; font-weight: 800; }
-.v2-stats-select select { min-height: 44px; padding: 0 34px 0 11px; border: 1px solid var(--v2-color-border-strong); border-radius: var(--v2-radius-control); color: var(--v2-color-text); background: var(--v2-color-input); }
 .v2-past-results { padding: var(--v2-space-4); border: 1px solid var(--v2-color-border); border-radius: var(--v2-radius-panel); background: var(--v2-color-surface); }
 .v2-past-results h2 { margin-top: 0; font-size: 1rem; }
 .v2-past-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
@@ -20,3 +23,22 @@
   // The shared mobile shell supplies 12px; canonical Stats content uses 16px.
   :host { padding-inline: 4px; }
 }
+
+.v2-stats-dates { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--v2-space-3); }
+.compare-dates { width: 164px; min-height: 48px; flex: none; font-size: 14px; font-weight: 600; line-height: 20px; }
+.calendar-icon { position: relative; display: block; width: 18px; height: 18px; flex: none; }
+.calendar-icon img { position: absolute; left: 0; top: 0; }
+.stats-search-controls v2-search-past-toggle { flex: none; }
+.stats-search-controls { --v2-control-height: 48px; }
+.stats-search-controls v2-search-filters { flex: 1; min-width: 0; }
+@media (max-width: 760px) {
+  .compare-dates { width: 166px; }
+  .stats-search-controls v2-search-filters { flex-basis: 100%; }
+  .stats-search-controls v2-search-past-toggle { width: 100%; }
+}
+
+.stats-resolved-results { display: grid; gap: var(--v2-space-4); min-width: 0; }
+.stats-results-heading { margin: 0; color: var(--v2-color-text); font-size: 20px; font-weight: 600; line-height: 28px; }
+.stats-playlist-action { display: flex; justify-content: center; }
+.stats-create-playlist { width: 240px; min-height: 48px; font-size: 14px; font-weight: 600; line-height: 20px; }
+.stats-create-playlist i { flex: none; width: 18px; font-size: 18px; }

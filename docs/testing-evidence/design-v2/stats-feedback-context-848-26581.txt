@@ -1,0 +1,72 @@
+const imgProgressIndeterminate = "https://www.figma.com/api/mcp/asset/65b2b88f-1ba8-4ff3-ae46-186bb1dcc838.svg";
+
+type AnalytifySelectedSnapshotFeedbackProps = {
+  className?: string;
+  state?: "Loading";
+  target?: "Ranking";
+  viewport?: "Mobile";
+};
+
+function AnalytifySelectedSnapshotFeedback({ className, state = "Loading", target = "Ranking", viewport = "Mobile" }: AnalytifySelectedSnapshotFeedbackProps) {
+  return (
+    <div className={className || "bg-[var(--v2-color-background,#070b09)] content-stretch flex flex-col gap-[var(--v2-space-3,12px)] items-start p-[var(--v2-space-4,16px)] relative rounded-[var(--v2-radius-card,18px)] w-[288px]"} data-node-id="848:26581">
+      <div className="bg-[var(--v2-color-surface,#121814)] border border-[var(--v2-color-border,#34423a)] border-solid content-stretch flex flex-col gap-[var(--v2-space-4,16px)] items-start p-[var(--v2-space-6,24px)] relative rounded-[var(--v2-radius-card,18px)] shrink-0 w-full" data-node-id="848:26589" data-name="Selected date / Loading">
+        <div className="content-stretch flex gap-[var(--v2-space-3,12px)] items-start relative shrink-0 w-full" data-node-id="I848:26589;584:21817" data-name="Loading label">
+          <div className="relative shrink-0 size-[20px]" data-node-id="I848:26589;584:21818" data-name="Progress / Indeterminate">
+            <div className="absolute inset-[1.12%_0_0_0]">
+              <img alt="" className="block max-w-none size-full" src={imgProgressIndeterminate} />
+            </div>
+          </div>
+          <p className="[word-break:break-word] flex-[1_0_0] font-['Outfit:SemiBold'] font-semibold leading-[20px] min-w-px relative text-[14px] text-[color:var(--v2-color-text,#f5f7f5)]" data-node-id="I848:26589;584:21819">
+            Loading saved rankings…
+          </p>
+        </div>
+        <p className="[word-break:break-word] font-['Outfit:Regular'] font-normal leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text-muted,#a2ada6)] w-full" data-node-id="I848:26589;584:21820">
+          Your selected date stays selected while its rankings load.
+        </p>
+        <div className="content-stretch flex gap-[var(--v2-space-3,12px)] items-start relative shrink-0 w-full" data-node-id="I848:26589;584:21821" data-name="Skeleton / List">
+          <div className="bg-[var(--v2-color-border,#34423a)] opacity-65 relative rounded-[6px] shrink-0 size-[48px]" data-node-id="I848:26589;584:21822" data-name="Skeleton / Decorative" />
+          <div className="content-stretch flex flex-[1_0_0] flex-col gap-[var(--v2-space-3,12px)] items-start min-w-px relative" data-node-id="I848:26589;584:21823" data-name="Skeleton copy">
+            <div className="bg-[var(--v2-color-border,#34423a)] h-[12px] max-w-[170px] opacity-65 relative rounded-[6px] shrink-0 w-full" data-node-id="I848:26589;584:21824" data-name="Skeleton / Decorative" />
+            <div className="bg-[var(--v2-color-border,#34423a)] h-[10px] max-w-[120px] opacity-65 relative rounded-[6px] shrink-0 w-full" data-node-id="I848:26589;584:21825" data-name="Skeleton / Decorative" />
+          </div>
+        </div>
+        <div className="content-stretch flex gap-[var(--v2-space-3,12px)] items-start relative shrink-0 w-full" data-node-id="I848:26589;584:21826" data-name="Skeleton / List">
+          <div className="bg-[var(--v2-color-border,#34423a)] opacity-65 relative rounded-[6px] shrink-0 size-[48px]" data-node-id="I848:26589;584:21827" data-name="Skeleton / Decorative" />
+          <div className="content-stretch flex flex-[1_0_0] flex-col gap-[var(--v2-space-3,12px)] items-start min-w-px relative" data-node-id="I848:26589;584:21828" data-name="Skeleton copy">
+            <div className="bg-[var(--v2-color-border,#34423a)] h-[12px] max-w-[170px] opacity-65 relative rounded-[6px] shrink-0 w-full" data-node-id="I848:26589;584:21829" data-name="Skeleton / Decorative" />
+            <div className="bg-[var(--v2-color-border,#34423a)] h-[10px] max-w-[120px] opacity-65 relative rounded-[6px] shrink-0 w-full" data-node-id="I848:26589;584:21830" data-name="Skeleton / Decorative" />
+          </div>
+        </div>
+        <div className="content-stretch flex gap-[var(--v2-space-3,12px)] items-start relative shrink-0 w-full" data-node-id="I848:26589;584:21831" data-name="Skeleton / List">
+          <div className="bg-[var(--v2-color-border,#34423a)] opacity-65 relative rounded-[6px] shrink-0 size-[48px]" data-node-id="I848:26589;584:21832" data-name="Skeleton / Decorative" />
+          <div className="content-stretch flex flex-[1_0_0] flex-col gap-[var(--v2-space-3,12px)] items-start min-w-px relative" data-node-id="I848:26589;584:21833" data-name="Skeleton copy">
+            <div className="bg-[var(--v2-color-border,#34423a)] h-[12px] max-w-[170px] opacity-65 relative rounded-[6px] shrink-0 w-full" data-node-id="I848:26589;584:21834" data-name="Skeleton / Decorative" />
+            <div className="bg-[var(--v2-color-border,#34423a)] h-[10px] max-w-[120px] opacity-65 relative rounded-[6px] shrink-0 w-full" data-node-id="I848:26589;584:21835" data-name="Skeleton / Decorative" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+These styles are contained in the design: Analytify/Label: Font(family: "Outfit", style: SemiBold, size: 14, weight: 600, lineHeight: 20, letterSpacing: 0), Analytify/Caption: Font(family: "Outfit", style: Regular, size: 14, weight: 400, lineHeight: 20, letterSpacing: 0).
+Component descriptions: The following components have usage descriptions or documentation links defined in Figma. These descriptions provide important context about the intended usage, best practices, and any constraints for each component. Follow these guidelines when implementing or using these components.
+
+## Analytify/Selected snapshot feedback
+**Node ID:** 851:27182
+
+After chooser dismissal: ranking Loading replaces ranking results with shared skeletons; Unavailable preserves date/category/range and offers explicit Retry or Choose date; successful empty categories use Empty. Comparison feedback retains primary rankings while hiding movement/flames until comparison data is ready. Retry is single-flight and tied to owner/range/snapshot context, never automatic from render or timed prototype success. Stale requests cannot update a new date/owner/range/destroyed view. Private actions absent in shared mode. Choose date opens its purpose-specific calendar. Keyboard and reduced-motion behavior follow the page/dialog contract. Canonical page outcome contract: selected ranking loading/empty/unavailable replaces result content. Selected comparison loading/empty/unavailable preserves primary rankings but hides unresolved movement/flames. Retry returns its target to Loading while preserving selection; Choose date reuses the canonical opener. Outcomes are explicit service results, never timed assumed success. Own-only controls follow stats/can-create; shared read-only pages do not expose private date/search controls.
+
+## Analytify/Loading content
+**Node ID:** 584:21877
+
+Initial loading only. Reuse for playlists, Stats, history, sharing, league and admin data. Title/Description are overridable. Skeletons are decorative; announce the loading label once. In implementation keep shell navigation usable, use aria-busy, and stop optional motion for reduced motion. Chart belongs inside the existing blurred popup. Keep cached content visible during refresh instead of replacing it.
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

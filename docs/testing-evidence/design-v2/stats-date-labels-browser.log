@@ -1,0 +1,94 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-date-labels.spec.ts e2e/design-v2-stats-search-switch.spec.ts e2e/design-v2-stats-date-loading.spec.ts --config=/tmp/analytify-all-browsers.config.ts --workers=1
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:246347) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:246347) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 40 tests using 1 worker
+
+(node:246473) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-stats-date-labels.spec.ts:8:7 › canonical saved day in UTC › calendar selection uses the saved date and keeps narrow date controls readable (4.3s)
+  ✓   2 [desktop] › e2e/design-v2-stats-date-labels.spec.ts:8:7 › canonical saved day in America/Los_Angeles › calendar selection uses the saved date and keeps narrow date controls readable (4.3s)
+  ✓   3 [desktop] › e2e/design-v2-stats-date-labels.spec.ts:8:7 › canonical saved day in Asia/Tokyo › calendar selection uses the saved date and keeps narrow date controls readable (4.1s)
+  ✓   4 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › ranking date unavailable stops render retries and recovers through canonical Retry (5.3s)
+[WebServer] 1:24:10 AM [vite] (client) [console.error] [Analytify][0008][+01300ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+  ✓   5 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › ranking date failed stops render retries and recovers through canonical Retry (5.3s)
+  ✓   6 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › comparison date unavailable stops render retries and recovers through canonical Retry (5.4s)
+[WebServer] 1:24:21 AM [vite] (client) [console.error] [Analytify][0008][+01373ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+  ✓   7 [desktop] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › comparison date failed stops render retries and recovers through canonical Retry (5.7s)
+[WebServer] 1:24:26 AM [vite] (client) [console.warn] [Analytify][0006][+00459ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 1:24:26 AM [vite] (client) [console.warn] [Analytify][0007][+00462ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 1:24:26 AM [vite] (client) [console.warn] [Analytify][0012][+00582ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 1:24:26 AM [vite] (client) [console.warn] [Analytify][0013][+00582ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 1:24:26 AM [vite] (client) [console.warn] [Analytify][0015][+00616ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 1:24:26 AM [vite] (client) [console.warn] [Analytify][0016][+00617ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓   8 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (3.5s)
+  ✓   9 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (3.6s)
+  ✓  10 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:98:5 › selection follows the native 220ms timeline and responds to reduced motion (2.2s)
+(node:247232) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  11 [mobile] › e2e/design-v2-stats-date-labels.spec.ts:8:7 › canonical saved day in UTC › calendar selection uses the saved date and keeps narrow date controls readable (5.5s)
+  ✓  12 [mobile] › e2e/design-v2-stats-date-labels.spec.ts:8:7 › canonical saved day in America/Los_Angeles › calendar selection uses the saved date and keeps narrow date controls readable (5.1s)
+  ✓  13 [mobile] › e2e/design-v2-stats-date-labels.spec.ts:8:7 › canonical saved day in Asia/Tokyo › calendar selection uses the saved date and keeps narrow date controls readable (5.3s)
+  ✓  14 [mobile] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › ranking date unavailable stops render retries and recovers through canonical Retry (6.8s)
+[WebServer] 1:24:59 AM [vite] (client) [console.error] [Analytify][0008][+01310ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+  ✓  15 [mobile] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › ranking date failed stops render retries and recovers through canonical Retry (6.5s)
+  ✓  16 [mobile] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › comparison date unavailable stops render retries and recovers through canonical Retry (6.2s)
+[WebServer] 1:25:12 AM [vite] (client) [console.error] [Analytify][0008][+01344ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+  ✓  17 [mobile] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › comparison date failed stops render retries and recovers through canonical Retry (6.4s)
+[WebServer] 1:25:18 AM [vite] (client) [console.warn] [Analytify][0006][+00454ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 1:25:18 AM [vite] (client) [console.warn] [Analytify][0007][+00456ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 1:25:18 AM [vite] (client) [console.warn] [Analytify][0011][+00549ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 1:25:18 AM [vite] (client) [console.warn] [Analytify][0012][+00549ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓  18 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (3.8s)
+[WebServer] 1:25:21 AM [vite] (client) [console.error] InvalidStateError: Transition was aborted because of invalid state. Viewport size changed
+  ✓  19 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (3.9s)
+  ✓  20 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:98:5 › selection follows the native 220ms timeline and responds to reduced motion (2.4s)
+(node:248408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  21 [firefox-stats] › e2e/design-v2-stats-date-labels.spec.ts:8:7 › canonical saved day in UTC › calendar selection uses the saved date and keeps narrow date controls readable (6.0s)
+  ✓  22 [firefox-stats] › e2e/design-v2-stats-date-labels.spec.ts:8:7 › canonical saved day in America/Los_Angeles › calendar selection uses the saved date and keeps narrow date controls readable (5.2s)
+  ✓  23 [firefox-stats] › e2e/design-v2-stats-date-labels.spec.ts:8:7 › canonical saved day in Asia/Tokyo › calendar selection uses the saved date and keeps narrow date controls readable (4.9s)
+  ✓  24 [firefox-stats] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › ranking date unavailable stops render retries and recovers through canonical Retry (7.3s)
+[WebServer] 1:25:54 AM [vite] (client) [console.error] [Analytify][0008][+01428ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+  ✓  25 [firefox-stats] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › ranking date failed stops render retries and recovers through canonical Retry (7.3s)
+  ✓  26 [firefox-stats] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › comparison date unavailable stops render retries and recovers through canonical Retry (7.1s)
+[WebServer] 1:26:07 AM [vite] (client) [console.error] [Analytify][0008][+01279ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+  ✓  27 [firefox-stats] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › comparison date failed stops render retries and recovers through canonical Retry (6.6s)
+[WebServer] 1:26:13 AM [vite] (client) [console.warn] [Analytify][0006][+00293ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 1:26:13 AM [vite] (client) [console.warn] [Analytify][0007][+00297ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 1:26:13 AM [vite] (client) [console.warn] [Analytify][0012][+00476ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 1:26:13 AM [vite] (client) [console.warn] [Analytify][0013][+00476ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 1:26:13 AM [vite] (client) [console.warn] [Analytify][0015][+00544ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 1:26:13 AM [vite] (client) [console.warn] [Analytify][0016][+00545ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓  28 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (3.6s)
+  ✓  29 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (4.2s)
+  ✓  30 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:98:5 › selection follows the native 220ms timeline and responds to reduced motion (3.1s)
+(node:249764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  31 [webkit-stats] › e2e/design-v2-stats-date-labels.spec.ts:8:7 › canonical saved day in UTC › calendar selection uses the saved date and keeps narrow date controls readable (8.8s)
+  ✓  32 [webkit-stats] › e2e/design-v2-stats-date-labels.spec.ts:8:7 › canonical saved day in America/Los_Angeles › calendar selection uses the saved date and keeps narrow date controls readable (8.0s)
+  ✓  33 [webkit-stats] › e2e/design-v2-stats-date-labels.spec.ts:8:7 › canonical saved day in Asia/Tokyo › calendar selection uses the saved date and keeps narrow date controls readable (7.6s)
+[WebServer] 1:26:57 AM [vite] (client) [console.warn] [Analytify][0009][+07184ms][Authentication][WARN] Failed to check backup and sync status {"message":"TypeError: Load failed","details":"","hint":"","code":""}
+  ✓  34 [webkit-stats] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › ranking date unavailable stops render retries and recovers through canonical Retry (9.8s)
+[WebServer] 1:27:02 AM [vite] (client) [console.error] [Analytify][0008][+02499ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+[WebServer] 1:27:07 AM [vite] (client) [console.warn] [Analytify][0010][+07106ms][Authentication][WARN] Failed to check backup and sync status {"message":"TypeError: Load failed","details":"","hint":"","code":""}
+  ✓  35 [webkit-stats] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › ranking date failed stops render retries and recovers through canonical Retry (9.6s)
+[WebServer] 1:27:17 AM [vite] (client) [console.warn] [Analytify][0009][+07153ms][Authentication][WARN] Failed to check backup and sync status {"message":"TypeError: Load failed","details":"","hint":"","code":""}
+  ✓  36 [webkit-stats] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › comparison date unavailable stops render retries and recovers through canonical Retry (9.7s)
+[WebServer] 1:27:21 AM [vite] (client) [console.error] [Analytify][0008][+02328ms][Supabase][ERROR] Error loading stats snapshot details {"message":"Isolated saved-date failure"}
+[WebServer] 1:27:26 AM [vite] (client) [console.warn] [Analytify][0010][+07124ms][Authentication][WARN] Failed to check backup and sync status {"message":"TypeError: Load failed","details":"","hint":"","code":""}
+  ✓  37 [webkit-stats] › e2e/design-v2-stats-date-loading.spec.ts:11:7 › comparison date failed stops render retries and recovers through canonical Retry (10.2s)
+[WebServer] 1:27:30 AM [vite] (client) [console.warn] [Analytify][0006][+00885ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 1:27:30 AM [vite] (client) [console.warn] [Analytify][0007][+00890ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 1:27:30 AM [vite] (client) [console.warn] [Analytify][0011][+01127ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 1:27:30 AM [vite] (client) [console.warn] [Analytify][0012][+01127ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓  38 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (6.7s)
+  ✓  39 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (5.3s)
+  ✓  40 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:98:5 › selection follows the native 220ms timeline and responds to reduced motion (4.5s)
+
+  40 passed (4.0m)

@@ -1,0 +1,915 @@
+{
+  "command": "npm run verify:ci",
+  "session": 3930,
+  "exitCode": 0,
+  "frontendTests": {
+    "passed": 1099,
+    "skipped": 1,
+    "files": 118
+  },
+  "workerCiTests": 107,
+  "edgeTests": 26,
+  "suites": {
+    "frontend": {
+      "sourceCount": 142,
+      "missing": [],
+      "total": {
+        "lines": {
+          "total": 10242,
+          "covered": 7608,
+          "skipped": 0,
+          "pct": 74.28
+        },
+        "statements": {
+          "total": 11885,
+          "covered": 8499,
+          "skipped": 0,
+          "pct": 71.51
+        },
+        "functions": {
+          "total": 2472,
+          "covered": 1740,
+          "skipped": 0,
+          "pct": 70.38
+        },
+        "branches": {
+          "total": 7815,
+          "covered": 4775,
+          "skipped": 0,
+          "pct": 61.1
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "sources": {
+        "src/app/app-routing.module.ts": "4b877377d04a34b34007741f75d340ff20a54ee5751236dd99a4d2548f093998",
+        "src/app/app.component.ts": "724c1c6c0f4bbf3d56e4cb668f43d98f12053e166ef10985333885081de3f7e9",
+        "src/app/app.module.ts": "71991d481a62890f7a31ffb33c18aa23b545ced5d3e9f507efdac93347be2b5b",
+        "src/app/core/admin/admin.guard.ts": "f1b065f5ba5394540b6a0cd22d1f3d0d02091fc1fd2bbed54f75e30e7bc5699f",
+        "src/app/core/admin/admin.service.ts": "5f61db8eb76cdc45a9f3bd8b241c8658a7a6b677fa32a375c05b3325ef4115b7",
+        "src/app/core/auth/auth-return-url.service.ts": "f0271f6a14905b18411580a4ffa635c17c59d6e928f6d194f788bcecd2f25a08",
+        "src/app/core/auth/cloud-identity.guard.ts": "248a4b234116936ba634acd3c64ba5ea52c9b772bf4b45f50d45eaf17a2db5e5",
+        "src/app/core/auth/personal-spotify-recovery.ts": "4deb1854ae341714fdf32793b1c40edeeebe69a990cd69ccbd35a2516f756812",
+        "src/app/core/auth/redirect-logged-in.guard.ts": "a850d355539cffee1ab383e6d57b5a27346252f372d6b2dae1455cd14ab67928",
+        "src/app/core/auth/session-lifecycle.service.ts": "b874c0afde0273c8bf3aaf1ef3f62461f931aa987ba6f91962405cf0ad0b8484",
+        "src/app/core/auth/spotify-auth.guard.ts": "25761735cb5b44418442dfe2533a829ca1f285cfef9cd4dd8c7c694d8d8b27d9",
+        "src/app/core/auth/spotify-auth.interceptor.ts": "1cbe32377f602f5538b3b50d8142afbfacc119d238a07b3126d9683145759f7c",
+        "src/app/core/auth/spotify-auth.service.ts": "2c663227ddbec093f8cc46d143cc7357586ed0ba7cb0e5810767d69ccc5ce1aa",
+        "src/app/core/compare-room/compare-guest-playlist-source.service.ts": "ed108ca3edc6c5eb1d750fdff48252b0bc75d99df6278fae23cf5a74fc186e11",
+        "src/app/core/compare-room/compare-playlist-source.service.ts": "0c09dfb8c775c26f39eb34111f962f97ba74b93d7eca6f78ef8a3efed9130ffe",
+        "src/app/core/compare-room/compare-room-coordinator.service.ts": "458ba94726ca1046bc6f4305aa5d2f1461388e4af671f16bf6982638c20f2e97",
+        "src/app/core/compare-room/compare-room-guest.service.ts": "063cce58e63c8145e46c9dee07363c58aa1460e20c98679408a38dcc1dea1650",
+        "src/app/core/compare-room/compare-room-integrity.ts": "56cd3b46d651ce283f08030b3d624fa7aa236d67be1a1069c08178e75a19cbc5",
+        "src/app/core/compare-room/compare-room-transport.service.ts": "f1e58f161b399b1966d4b81a2789e258415b59a8a39abed259b3614f3014d8ec",
+        "src/app/core/compare-room/participant-spotify.service.ts": "3195fb42528a23db0df741abc2fb2464bd430f773f14ccdcc9e48b2003037a89",
+        "src/app/core/compare-room/playlist-intersection.service.ts": "e69f27872defb548b1be45fd831cd3430169f9e5b1783ae4140a5298e49544f3",
+        "src/app/core/compare-room/spotify-request-context.ts": "633ca92644b595c03170c2b81a39d44e5eea8c7a771c491be10c50966ec90f82",
+        "src/app/core/compare-room/transient-participant-auth.service.ts": "5fcd06c611429013c16cdb61ba995d4401231ce9cb54f81c969e775eb14fe4d0",
+        "src/app/core/compliance/spotify-policy-gate.ts": "c7e73e210de9cb5c079e12b7019766696c9c1a1ea5bd03cc5c1c0f540e73ebe2",
+        "src/app/core/core.module.ts": "abb8f655d1d02dc85ddc9ba584f3b8b46e02eb57e2b3e0ac28faa955388b0068",
+        "src/app/core/data-access/spotify/spotify-data.service.ts": "43b598ab27aaabc48d569adac77067d77507d152fcc568665592b1f72d78318b",
+        "src/app/core/data-access/storage/storage.service.ts": "558d5dc14ae0a13919a41820018a5d11ed366736cb3592760abc2c85868c7867",
+        "src/app/core/data-access/supabase/edge-function-error.ts": "202e1238579794fc0868971b0098e1f1e9b45b5dd9a5704793fc4d2c1ec2cd95",
+        "src/app/core/data-access/supabase/supabase.service.ts": "ee55c8178752989fd976fd815289729647f6f98ff82b18385cfea41f3622d9df",
+        "src/app/core/diagnostics/app-logger.ts": "85b73546ccb9f1aed3dd2c7e88527418e8cac1a5f129da811f2c7a7a19aca43f",
+        "src/app/core/legal/terms-acceptance.service.ts": "b9cd252a2482bd3ae209ecd8c824bc0da6ac7f0503d59006e25b1be546e9f06d",
+        "src/app/core/navigation/design-navigation.service.ts": "8861ae0134499931ab3ba609fad1d34d5ae0366b0dd1659291154defc05fda4d",
+        "src/app/core/navigation/design-navigation.ts": "2710c16f9ee95cc8cc1ad26ed30698ec267ba97e48e76a9f2b2377578bf4cbc4",
+        "src/app/core/navigation/design-path.ts": "a20a2819cb6d84d8fc6eff40964e05e5e07578367509517bad8df88fe8a15305",
+        "src/app/core/navigation/design-selective-preloading.strategy.ts": "f9e2e3871d77c2697dc4143e44bbeb9d62c30fee776eda673743d5546d50aa15",
+        "src/app/core/navigation/design-v2-navigation.model.ts": "61ec4f77c080ef8c4fcfdbd39e5a985f3454d4afc60a90e6683e4f96125f79b7",
+        "src/app/core/navigation/design-v2-route-data.ts": "b7e56d5375ac075623927463a5c8126071a92805fba0a6785aa967395618963a",
+        "src/app/core/navigation/preview-return-path.ts": "2a876cb798c401b1ff116d8a05c00a836f9a124f156f9c03dc120bdb2f562498",
+        "src/app/core/navigation/spotify-url.ts": "e622a5a3ba83c7817ab7a7e79364c3e4db353db365c753a3811befb6fefd36d8",
+        "src/app/core/notifications/push-notification.service.ts": "2876f629017da18ed08e25f7bf9e1e51556cdd0784a3ed2b7fb43c4afcdea007",
+        "src/app/core/performance/async-load.ts": "497a9bb258fc4bd7b4f4ff74e8f0bc7763080a3c352d80a596f606cd55040887",
+        "src/app/core/settings/site-settings.service.ts": "d43d51af7a8fa6af1166b16091d092dfda6557a72469ef697e217bbcb932eae7",
+        "src/app/core/sharing/playlist-share-auto-sync.service.ts": "6ccf05960306c587b18ec1c9a3d1762d527216ea01bee5016d9d5c9c57c3530e",
+        "src/app/core/sharing/playlist-sharing-names.ts": "0e565909074a91ae838415cc8e65edb44d8e7f24862a90cf6a5fd7110ab9c712",
+        "src/app/core/sharing/playlist-sharing.models.ts": "7f7557b55b9f9035a872ba0f764eebde35beacf37d886ca292987b955f6d4d5f",
+        "src/app/core/sharing/playlist-sharing.service.ts": "69b67d331980b1c781c74fc5d39579d296baf710da669f21db52819d4e876bbe",
+        "src/app/core/sharing/stats-sharing.service.ts": "a9439b793acdcf46f6a99a813e3e04d8ba90939dad1b4ed52006e51dec7b2833",
+        "src/app/core/song-league/song-league.models.ts": "cdc7c483cf44d4a5893c6f9524c342f688984398e8ad2df2117b59e2388719df",
+        "src/app/core/song-league/song-league.service.ts": "56a23960b9ddf28e41d12b96bd3031e14a074a33871ef5442864ecf68ec5a107",
+        "src/app/core/sync/image-healing/image-healing.service.ts": "c2c0c2d5f00fe4abe55b30f801d4e58d9c94468ed6273bca240a93e780c50f42",
+        "src/app/core/sync/playlist-loader/playlist-loader.service.ts": "a40ad807eb9222be08d5b91ee10fcbaa971b070fc301cf4eb16974f046d2f286",
+        "src/app/core/sync/playlist-loader/playlist-source-manifest.ts": "fdd5e0086da9492cc38b520ea08cf58da6cf18a4833401d24976047371828bd4",
+        "src/app/design-v2-routing.module.ts": "aa733b55cc3a6dc0c212544f6f501ea4e6c162a561783507664ac470b66c5e69",
+        "src/app/features/admin/admin.component.ts": "51d3a631ffd92446e3cbd2dd5b432fa3e585fae7e0cf7e5bb98aac315cecaef4",
+        "src/app/features/admin/admin.module.ts": "fe5996d4f99346655fb459ac732b0c29e57ee9b88f9980479da509fb13221112",
+        "src/app/features/auth/callback/callback.component.ts": "0f8b2e1c4c51e6082c75539d5fb84b36421fbd2f0dc37f1e12e581991db685c2",
+        "src/app/features/auth/callback/callback.module.ts": "0fb22b04d6773923e3f3a77cd2bd3f0bba287f4ad373d7a9caf1e11e03ee6d7f",
+        "src/app/features/auth/login-page/login-page.component.ts": "dbe0c9de0349b572fc1f198b0212b0b7a60ed3fdb9235068bb61618b466fec76",
+        "src/app/features/auth/login-page/login-page.module.ts": "27400ef4b9d782166b80a4fccf620f63d170f4a44d02c8d13f74c6d1260a7590",
+        "src/app/features/auth/personal-spotify/cloud-access.component.ts": "842bc4061945563ddd84350ce831755670ba6fa7d9a37bc8ea9ea9665cbc358f",
+        "src/app/features/auth/personal-spotify/personal-spotify-callback.component.ts": "dda989fd1ae784e3ccc47cba79156b626c2c7d42e55afe2cf02e004536370b32",
+        "src/app/features/auth/personal-spotify/personal-spotify-connect.component.ts": "7cd11d8f361ac2266b20d06e8fc8b5e11d2a2201705a0cd5d516423d1d23735a",
+        "src/app/features/auth/personal-spotify/personal-spotify.module.ts": "8d5725b00b1450a6254f68e2c42d4ef9d496897ca20ec40e52e2f0e3bccdc389",
+        "src/app/features/compare-room/compare-room-callback.component.ts": "5d58467a1e32a5b3a9d3598567c331266b96445ea8ff97e063f4cbb2e048ea23",
+        "src/app/features/compare-room/compare-room-callback.module.ts": "88b4e8fb70179054e523e505342d32158274b4823c1e6c0a7234d7b42cd4de4d",
+        "src/app/features/compare-room/compare-room-join.component.ts": "a7457f9d6e614e5f4babbc2a4fba739af071e8c60b8096097c6e312976c356cf",
+        "src/app/features/compare-room/compare-room-join.module.ts": "343503072701fc61c5c03e103b5d6d2eb430f04256f930a83e350963d8bc3861",
+        "src/app/features/compare-room/compare-room-shell.component.ts": "17f6948f41ca696eb542e1fc02364f144c302914ae60b78063bcd49678e1f388",
+        "src/app/features/compare-room/compare-room-view-model.ts": "d7932c29b7d3f14c085aedd96d174a9fe3f5f82263b225b63846b34085e347ee",
+        "src/app/features/compare-room/compare-room.module.ts": "e5466b70dc458ba2dabc08a72ca8c67b383bf92baa96eb6339f08cbf817ec09f",
+        "src/app/features/insights/insights-view-model.ts": "57c6455f8e2f068103e155aa387ee375e68cda3af6e971c6eb6b0ee2a5e921fc",
+        "src/app/features/insights/listening-history/listening-history.component.ts": "9733fafb8552c63474b9fee53f0cc68c37194f581747caf582a1d57b6602c281",
+        "src/app/features/insights/listening-history/listening-history.module.ts": "3c134fee03bd0179166b71cac1d5e418403c2da472aba8b9dd2f7457b8952249",
+        "src/app/features/insights/listening-history/v2-listening-history.component.ts": "57e9112f9a88491eb9420cf24032a4e878cd449cc9229e49b18d2a62fadf6a21",
+        "src/app/features/insights/user-stats/user-stats.component.ts": "5f72e2c5c99b97739dca2d342d45d600914cc79e09b8ad4cc6515e5d8e85584b",
+        "src/app/features/insights/user-stats/user-stats.module.ts": "039e2d300da56707819b021c0ec23af5b40ed9fe1cd7d13071e0adecb050c1ea",
+        "src/app/features/insights/user-stats/v2-user-stats.component.ts": "a44ade2984acf76437e88012fed82b62ba3f4d05dd2092cda7671dcf5a6bb1b0",
+        "src/app/features/legal/legal/legal.component.ts": "c466610493183788b947270c98ac508f4aaa62f6b603906ccc8c05b159518e8b",
+        "src/app/features/legal/legal/legal.module.ts": "37e153f9c8c948cfa4f9fb16c668b7626f80ac49de073295f40b46eccc5cf995",
+        "src/app/features/library/artist-details/artist-details.component.ts": "d1938c2e64218e9c8524bfcf6fd43d78605d61dabd1f62e511b9e81bdc0ee68c",
+        "src/app/features/library/artist-details/artist-details.controller.ts": "0238e368babdb1d8ad576521edd699c109d08d8bde851a8e249e40a07f5baf13",
+        "src/app/features/library/artist-details/artist-details.module.ts": "4dddd978be95dfda6b55f6d4e0b2970dd3ef66cd1bcacfd9c9c3a29d330c8dbf",
+        "src/app/features/library/design-v2/v2-analysis-page.component.ts": "353b96423d5f879f1a898b54689054bbe911e7fbf440b60681646bb4ab19d8ec",
+        "src/app/features/library/design-v2/v2-artist-details-page.component.ts": "9ea268dd5a2786e7d34b14732d45d2a2d5bd11941d899960959dcb653368af49",
+        "src/app/features/library/design-v2/v2-playlists-page.component.ts": "1349e844e97155a7da34f922d23d77b3e2fbc4da34c018ec5dc321c0a4134fce",
+        "src/app/features/library/design-v2/v2-songs-page.component.ts": "3644c4211bc90d7e6443c660e11cc742036d795dffa4d87e8bc51f1cbcb28882",
+        "src/app/features/library/playlist-analysis/playlist-analysis.component.ts": "2971e6274645f90242c9831e8ad52d1c05783a2f05921c44443d504793642178",
+        "src/app/features/library/playlist-analysis/playlist-analysis.controller.ts": "5a6aa4bd4b19876180d7c7c9fd412d2903dd9b5f4bb5813ce4d558f3c3773491",
+        "src/app/features/library/playlist-analysis/playlist-analysis.module.ts": "25d8b5cd71561c8a9f8a1e34886077c8b401a6ef48f06f73d87080a6bdfa13be",
+        "src/app/features/library/playlists/playlists.component.ts": "6b7b15bb02bad31b87b6dfbb695152e9a08cd4bc1bc1bf006cd876a6ac217805",
+        "src/app/features/library/playlists/playlists.module.ts": "2ea24e2bcc0d0993f0f20b51b66f14be4baa72a35d3416385cefc58b1c458d78",
+        "src/app/features/library/songs/songs.component.ts": "6e32e197cc2fd95b277956ba37f0b96481facea3b5741b3449a5cb765627270d",
+        "src/app/features/library/songs/songs.controller.ts": "cfd5925fa128ea5b6c588366417934c7975982180da9084ed78acdbbccddf378",
+        "src/app/features/library/songs/songs.module.ts": "e1e3292401acf63ad4c3fafc7f592ddb65b6a68694d9683e57c470556be34d55",
+        "src/app/features/shared-playlists/shared-playlist-claim.component.ts": "74887a986c47bfd21bf6b257722353c9c0fce1ddd604d4f3ef4b449625cf20f6",
+        "src/app/features/shared-playlists/shared-playlist-detail.component.ts": "cf08b150cee9e724541ee2fa6348a57258dccf61b01a631214dc66b18476b882",
+        "src/app/features/shared-playlists/shared-playlist-detail.module.ts": "c213fbd5f49d3a5de5b59699eae2e4fef5eb2bbe819cac1214b517236bace096",
+        "src/app/features/shared-playlists/shared-playlists.component.ts": "0006d1d94aae481cf12230093ddb175c709ed298f66892a32e1d1d944f660226",
+        "src/app/features/shared-playlists/shared-playlists.module.ts": "2af7ca14b302858d9db1110a147c0f729fafe46efcdc03051e1093303cf7e944",
+        "src/app/features/shared-playlists/sharing-view-model.ts": "da888ff9d8882c260ffd5baa37e009f26b679aba4c395a53bebbba1f4b9b3c4a",
+        "src/app/features/shared-playlists/stats-request-claim.component.ts": "536781ca04dc46526b02105b2aa93919158be29d7318be626ca10e0eba175990",
+        "src/app/features/shared-playlists/stats-share-claim.component.ts": "94180edf8b3294f2ea237eb6f06bbc06bf09abf3b6d2871656ecf3b119d20c0a",
+        "src/app/features/song-league/song-league-claim.component.ts": "2e6444361e1888d6969b4183dabd915286a02aff5bc7f170158cd2c90a2406fe",
+        "src/app/features/song-league/song-league-detail.component.ts": "b5a9369a98673d8e04831e60a19eab6250afd8d8f07ea33ef6087958ab15ce70",
+        "src/app/features/song-league/song-league-home.component.ts": "9e0f0fc862ff9a9a740bd0ee0f8bae9fba0bf0f0e33464605294ab0f9a9ca688",
+        "src/app/features/song-league/song-league-rules.component.ts": "a4b8ea476670381cac8a194652e9ed37fe13c626412e7fb870b491bf1574329e",
+        "src/app/features/song-league/song-league-view-model.ts": "89159c76b7c9348c5bbfc615b710f637d3352f051048621a6bf35c71387052f8",
+        "src/app/features/song-league/song-league.module.ts": "71a715ac794649102ae77a5562fd5ab50ee3ed18f6f2a1a20f0f8370c0322ab2",
+        "src/app/shared/ambient/ambient-background.component.ts": "27087ddb17d5f8c9951a559d3f1d4a95bca0191dc1392d29e24adbf4daeba6ca",
+        "src/app/shared/ambient/ambient-background.math.ts": "97ac038cf229d40cc22e08395c98edb470cace6695b4c5c8d4bebdfe8a497b7e",
+        "src/app/shared/ambient/ambient-background.state.ts": "c065e6143f6cde843bbe73753833437c48e5796322b08a0103ab3f0276d7d2e4",
+        "src/app/shared/layout/design-v2-shell/design-v2-overlay.service.ts": "d8d4ff803f16a2741709b0eac07db541c2d61eedc919525d0e077694ddbaa9f2",
+        "src/app/shared/layout/design-v2-shell/design-v2-shell.component.ts": "2a195282abfe92a09c459a56aa3621f5e3d127c45db8e65b080a8bddd43cf35a",
+        "src/app/shared/layout/header/blocked-users-dialog.component.ts": "b89bf809de44289fda2908765a54e7c64201d04fe98703e9541949f29f623ca0",
+        "src/app/shared/layout/header/notification-settings-dialog.component.ts": "75a5ac6b1f1a4cc3a893f036beeae55d7f1ac462b377f4006913c53b11df175f",
+        "src/app/shared/layout/header/settings-sheet-view-model.ts": "7526a7645bc6cf8d20712f603e3d24fde77a4e1192ee4cdca79ed46da460e50d",
+        "src/app/shared/layout/header/sync-task-status-dialog.component.ts": "cf2ab6ab519fdddea3467de8d885794596e30bcb28bf96342cf7178ae96cea18",
+        "src/app/shared/pipes/safe-spotify-url.pipe.ts": "c03f0f7b8a548336e875ed472bb749b9b33301fa1371607605ca0ab3c8898480",
+        "src/app/shared/shared.module.ts": "c223de6eb8f83eea3a3cee851d24603fde158624d589a3462ef7107b3bd625db",
+        "src/app/shared/ui/accessible-dialog.directive.ts": "46be4e93f71fdc6ad67c1a47976c83fd261ed231cf20391169bdd7eb42c9c93f",
+        "src/app/shared/ui/image-fallback.directive.ts": "48956eaa60e395dbb4d89e43c4a6dbd1187e7ee6bdf0f8b0a998964385f23f76",
+        "src/app/shared/ui/metric-card/metric-card.component.ts": "b6c12e09298969e06699751637f3c7af52bb712500e32ed94e8fe79da2bdaa33",
+        "src/app/shared/ui/page-state/page-state.component.ts": "2c15a53a31ccd8b03c867a92eb3f6736923a4707cd5e20060bf3bf64cd398ddd",
+        "src/app/shared/ui/section-heading/section-heading.component.ts": "18aaddfbdb11fa477d8bd408c2069bcf4b4051b533470e26050f628c21e7ddb1",
+        "src/app/shared/ui-v2/design-v2-primitives.ts": "6a55d9664172e8b88c05339768ce598a43c8485c4f4243435e654bb7d6bae02d",
+        "src/app/shared/ui-v2/design-v2-status.ts": "ece1696584f80814ced22f80ed2ba9acd75017739cc632dbfebedf36497a2001",
+        "src/app/shared/ui-v2/genre-chart.model.ts": "f054eb1129ff78f17f9cd0b75a1a3e425a20f9b8fea456cd4be165ef8f50c5ea",
+        "src/app/shared/ui-v2/index.ts": "a5193bd90430cb46ce24984c260a01eddbe23a3c7b59cd83681a617467797c98",
+        "src/app/shared/ui-v2/v2-current-stats-feedback.component.ts": "9bc1aa9b91725d3df03125f68f5ed30beed79492917c98bd569c50a2c350a782",
+        "src/app/shared/ui-v2/v2-genre-rankings.component.ts": "3abf2c816568c7987af4761ff56b4eb71b88a43d42574dba14ff0273e490cb80",
+        "src/app/shared/ui-v2/v2-rank-history-plot.component.ts": "11a20ab5e3876315d8a3fba590efab4dedd77b3a772a84c888f5b70e1e593e6c",
+        "src/app/shared/ui-v2/v2-rank-history-popup.component.ts": "1707649d6b06a08f1000eda02c71f60be4d9fe450b7a0874d7422d89bb8f7704",
+        "src/app/shared/ui-v2/v2-ranking-flame.component.ts": "22c7437037c88c9b01548e1cc5dbd04dfff608f7e6032c95cfe4511a21f9a922",
+        "src/app/shared/ui-v2/v2-search-past-toggle.component.ts": "d3d773c2905a9732ab838c5579939bf8d935495c6066c41b5fa049a9d7db6a5c",
+        "src/app/shared/ui-v2/v2-snapshot-calendar.component.ts": "9c75d3de17dd9b15de3f477cb0c8348f4a8cf8e439f03f36c4c682eb6509adbd",
+        "src/app/shared/ui-v2/v2-snapshot-date-field.component.ts": "a81fa001f6870f42614eca2fdf47e3d8cbe93a39c88432975f1d354f217580e4",
+        "src/app/shared/ui-v2/v2-snapshot-feedback.component.ts": "14dc67bcac7493545e5d287457e425e5e9928a66098b385f46336feac994e447",
+        "src/app/shared/ui-v2/v2-stats-ranking-row.component.ts": "d6a124a1812f0a8f5f8d690064cba3210cbb4aed6d8c3397dfd16bb578dff0b6",
+        "src/environments/environment.development.ts": "31971c80e59ea35b06b177f0195d257a6d9e60acf7d77a3122605bbee4199a7d",
+        "src/environments/environment.ts": "8b4fec7da63ee6ff0dd0e5b86efab82984946815785002d9336a0520a5ac36ba",
+        "src/environments/spotify-scopes.ts": "61f0ff5ff3b0123f176345e73da52668b646fc58cbbbfef0b0a607f8473a9984",
+        "src/main.ts": "6d9b540a2af1e6e3f123fd5fa3db758366c32260372355b9e7eb0f8d84707732"
+      },
+      "exclusions": [
+        {
+          "path": "src/app/app-routing.module.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/app.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/admin/admin.guard.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/admin/admin.models.ts",
+          "reason": "type-only source (AST checked)"
+        },
+        {
+          "path": "src/app/core/admin/admin.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/auth/auth-return-url.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/auth/auth.guards.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/auth/session-lifecycle.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/auth/spotify-auth.interceptor.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/auth/spotify-auth.models.ts",
+          "reason": "type-only source (AST checked)"
+        },
+        {
+          "path": "src/app/core/auth/spotify-auth.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-guest-playlist-source.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-playlist-source.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-room-coordinator.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-room-guest.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-room-integrity.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-room-transport.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-room.models.ts",
+          "reason": "type-only source (AST checked)"
+        },
+        {
+          "path": "src/app/core/compare-room/participant-spotify.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/playlist-intersection.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/spotify/spotify-data.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/storage/stats-history-read-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/storage/storage.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/supabase/edge-function-error.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/supabase/stats-past-search-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/supabase/stats-snapshot-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/supabase/stats-snapshot-write-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/supabase/supabase.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/diagnostics/app-logger.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/legal/terms-acceptance.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-navigation.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-navigation.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-path.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-selective-preloading.strategy.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-v2-navigation.model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-v2-route-data.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/preview-return-path.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/spotify-url.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/notifications/push-notification.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/performance/async-load.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sharing/playlist-share-auto-sync.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sharing/playlist-sharing-names.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sharing/playlist-sharing.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sharing/stats-sharing.models.ts",
+          "reason": "type-only source (AST checked)"
+        },
+        {
+          "path": "src/app/core/sharing/stats-sharing.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/song-league/song-league.models.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/song-league/song-league.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sync/playlist-loader/playlist-loader.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sync/playlist-loader/playlist-source-manifest.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/admin/admin.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/auth/callback/callback.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/auth/login-page/login-page.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/auth/personal-spotify/cloud-access.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/auth/personal-spotify/personal-spotify-callback.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/auth/personal-spotify/personal-spotify-connect.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/compare-room/compare-room-callback.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/compare-room/compare-room-join.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/compare-room/compare-room-shell.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/compare-room/compare-room-view-model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/insights-view-model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/listening-history/listening-history.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/listening-history/v2-listening-history.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/stats-calendar-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/stats-detail-state-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/stats-metadata-state-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/stats-past-search-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/user-stats.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/v2-stats-current-recovery.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/v2-stats-date-labels.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/v2-stats-snapshot-workflow.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/v2-user-stats.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/legal/legal/legal.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/artist-details/artist-details.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/design-v2/v2-analysis-page.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/design-v2/v2-artist-details-page.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/design-v2/v2-playlists-page.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/design-v2/v2-songs-page.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/playlist-analysis/playlist-analysis.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/playlists/playlists.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/songs/songs.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/shared-playlists/shared-playlist-detail.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/shared-playlists/shared-playlists.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/shared-playlists/sharing-view-model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/shared-playlists/stats-request-claim.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/shared-playlists/stats-share-claim.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/song-league/song-league-claim.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/song-league/song-league-detail.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/song-league/song-league-home.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/song-league/song-league-rules.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/song-league/song-league-view-model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/integration/supabase-loading.integration.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ambient/ambient-background.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ambient/ambient-background.math.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ambient/ambient-background.state.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/layout/design-v2-shell/design-v2-overlay.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/layout/header/notification-settings-dialog.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/layout/header/settings-sheet-view-model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui/accessible-dialog.directive.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui/image-fallback.directive.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui/shared-ui.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/design-v2-primitives.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/design-v2-status.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/genre-chart.model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-current-stats-feedback.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-genre-rankings.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-rank-history-plot.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-rank-history-popup.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-ranking-flame.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-search-past-toggle.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-snapshot-calendar.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-snapshot-date-field.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-snapshot-feedback.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-stats-ranking-row.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/environments/environment.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/environments/spotify-scopes.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/test-setup.ts",
+          "reason": "test environment setup"
+        }
+      ],
+      "reportSha256": "95c26f221f3d434bd248f070ee8bc800e5f1b68e48545c28060245052cdd309f",
+      "freshRun": true,
+      "unchangedSincePriorReport": null,
+      "eachMetricPasses98": {
+        "lines": false,
+        "statements": false,
+        "functions": false,
+        "branches": false
+      },
+      "finalGateExit": 1
+    },
+    "worker": {
+      "sourceCount": 17,
+      "missing": [],
+      "total": {
+        "lines": {
+          "total": 877,
+          "covered": 623,
+          "skipped": 0,
+          "pct": 71.03
+        },
+        "statements": {
+          "total": 1095,
+          "covered": 716,
+          "skipped": 0,
+          "pct": 65.38
+        },
+        "functions": {
+          "total": 197,
+          "covered": 125,
+          "skipped": 0,
+          "pct": 63.45
+        },
+        "branches": {
+          "total": 918,
+          "covered": 579,
+          "skipped": 0,
+          "pct": 63.07
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "sources": {
+        "services/sync-service/catalog-repository.js": "843eda3224caa7e4e01ee3c58651c0791cbeee2856dc2a2cd6b099ad0d85356e",
+        "services/sync-service/config.js": "b8a2413a59c3d5b3407d2aa63bfd950ecfdf90b00d824b09e83865a7b55e537d",
+        "services/sync-service/credential-store.js": "73801b8cdeee66f37d6513b8288162fbf5fa1163fb8b734ff3c1ba601dd73f24",
+        "services/sync-service/daily-pull.js": "73286f72d4a4f1630f70c8bd43f7d92d0138ef5b5c71a2ebc394a0017fdd44db",
+        "services/sync-service/date-utils.js": "6110f409f42edfe30ce15a98ec0eb851a0ddca16154242066617abda7484f451",
+        "services/sync-service/health-server.js": "dffeb1ad12ae1c0177de6cdfafe2a99561034b416ddf7a39e23dadb34e231c19",
+        "services/sync-service/index.js": "5823eacb8d28fa9bdfbecd3b47c5cb7fd4a9f9a27a2b55c9a371de3dc5165355",
+        "services/sync-service/push-dispatcher.js": "b3ff320c7de61c19863dc3e26cc644f3bca11e5b5d32cef35e393a557d698543",
+        "services/sync-service/scheduler.js": "67aecdf66969c3136293942cd426f4830909e5bd52d6bcc523601e8b30d327dc",
+        "services/sync-service/spotify-client.js": "d0e935e2c5221a8563e076154ead95c83e2c74141d9a3c56127d0a4585f1541c",
+        "services/sync-service/spotify-url-validator.js": "a505545cb3c870705f7a556b4a009acb623c2eff2a32dedbfc03255b87849e11",
+        "services/sync-service/task-registry.js": "7a6e21a9ee1e1e5dc82a1b3db18ed8ba9a945fd4f94aba7b83075375d9f614cd",
+        "services/sync-service/tasks/history-task.js": "4c7407436abe288b9deb2af2dda47e20927f70b1721e5b8a0e6d001552778b03",
+        "services/sync-service/tasks/shared-playlists-task.js": "70ec79e304efc8baba7b622be1834548d8a75f71520297594910b5d7b1d7a10c",
+        "services/sync-service/tasks/song-league-playlists-task.js": "aa611c17298f4fc40f50958730fb97181b51cff738577b8578cf08a23e0f3ff0",
+        "services/sync-service/tasks/stats-task.js": "a2c69216c8a269b297f99b8c283adaec4fad8319673487b9cbd7aa6d1987896b",
+        "services/sync-service/worker-runtime-health.js": "3666f247f178ac84733dbd91c01a0be4a1d64cc793346c6a73d9f80ef4473f28"
+      },
+      "exclusions": [
+        {
+          "path": "services/sync-service/catalog-repository.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/credential-store.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/date-utils.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/health-server.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/push-dispatcher.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/scheduler.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/spotify-client.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/spotify-url-validator.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/task-registry.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/tasks/history-task.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/tasks/shared-playlists-task.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/tasks/song-league-playlists-task.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/tasks/stats-task.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/worker-runtime-health.test.js",
+          "reason": "test source"
+        }
+      ],
+      "reportSha256": "fbd66e3b42ec71b38a5c3bd49f9ddc61d0400f2430403278a4740e91c3d9a951",
+      "freshRun": false,
+      "unchangedSincePriorReport": true,
+      "eachMetricPasses98": {
+        "lines": false,
+        "statements": false,
+        "functions": false,
+        "branches": false
+      },
+      "finalGateExit": 1
+    },
+    "edge": {
+      "sourceCount": 12,
+      "missing": [],
+      "total": {
+        "lines": {
+          "total": 763,
+          "covered": 200,
+          "skipped": 0,
+          "pct": 26.21
+        },
+        "statements": {
+          "total": 902,
+          "covered": 219,
+          "skipped": 0,
+          "pct": 24.27
+        },
+        "functions": {
+          "total": 113,
+          "covered": 48,
+          "skipped": 0,
+          "pct": 42.47
+        },
+        "branches": {
+          "total": 797,
+          "covered": 160,
+          "skipped": 0,
+          "pct": 20.07
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "sources": {
+        "supabase/functions/_shared/bounded-fetch.ts": "6661fed0ffce6cfd42afed9fe90ffe047d748dd485fbb973cd19ab8b13300d2e",
+        "supabase/functions/_shared/request-security.ts": "d03bb7fe8206ea328984aa811d2402ea98a1f01a35254bf2f411936a428039f2",
+        "supabase/functions/_shared/spotify-credential-crypto.ts": "2285f5e80532a9c58c1bf4938cbbe3060da64969e927559303903f320edc9417",
+        "supabase/functions/song-league-notifications/delivery-state.ts": "d406a45b0296b98ca7593be94cb78b17f40f97345440e5ff963bd0074308421c",
+        "supabase/functions/song-league-notifications/index.ts": "3a3961835049e2de6471d2a96b95ed149f81c0475739e5dd1004f9a43c442ab9",
+        "supabase/functions/song-league-notifications/push-endpoint.ts": "7c5995c8d5f842b75e8bedb84696d182a1ded7af36b9702e8efd44feea7cebda",
+        "supabase/functions/song-league-notifications/web-push.ts": "ac50a53d5ebdce3728a1726a74ecc372709e3d7cdd1b56bf6bd845a4e06b4c0e",
+        "supabase/functions/song-league-playlist-sync/index.ts": "8a3bf546a0a1880171559075626fd9436ee7977bbcca8e40e5fe240aa62f6b28",
+        "supabase/functions/song-league-playlist-sync/recovery.ts": "4f105ee8919c5132978210af2c6e71fe7d638e2c0bbe5b7ca795b890a04c0175",
+        "supabase/functions/spotify-credentials/index.ts": "f9ef05c3c48ca5608cacd0eacabbc12ab2d7fd1ed16f648e5e29e26e956f1ccf",
+        "supabase/functions/spotify-credentials/personal-recovery.ts": "eeaf3510d41c2ddc95722eaf04d55500bafa0833a60376c8ccdd501762df59cf",
+        "supabase/functions/spotify-credentials/profile-verification.ts": "3b3e4519e61f9f2e188c0af77ed7fe6176e69c22310f4d32934b3a11c105849b"
+      },
+      "exclusions": [
+        {
+          "path": "supabase/functions/_shared/bounded-fetch.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/_shared/request-security.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/_shared/spotify-credential-crypto.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/song-league-notifications/delivery-state.test.mjs",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/song-league-notifications/push-endpoint.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/song-league-playlist-sync/recovery.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/spotify-credentials/personal-recovery.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/spotify-credentials/profile-verification.test.ts",
+          "reason": "test source"
+        }
+      ],
+      "reportSha256": "f1280c4aedbf5ff1f0d62cf4ac211baceee254422971901cc50e387aa8a78f7e",
+      "freshRun": false,
+      "unchangedSincePriorReport": true,
+      "eachMetricPasses98": {
+        "lines": false,
+        "statements": false,
+        "functions": false,
+        "branches": false
+      },
+      "finalGateExit": 1
+    }
+  }
+}

@@ -1,0 +1,197 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: design-v2-stats-date-loading.spec.ts >> comparison date unavailable stops render retries and recovers through canonical Retry
+- Location: e2e/design-v2-stats-date-loading.spec.ts:11:7
+
+# Error details
+
+```
+Test timeout of 30000ms exceeded.
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=f1e5]:
+  - link [aria-hidden] [ref=f1e6] [cursor=pointer]:
+    - /url: "#v2-main-content"
+    - text: Skip to main content
+  - banner [aria-hidden] [ref=f1e7]:
+    - generic [ref=f1e8]:
+      - link [ref=f1e9] [cursor=pointer]:
+        - /url: /new/playlists
+        - generic [ref=f1e10]: Analytify
+      - navigation [ref=f1e11]:
+        - link [ref=f1e12] [cursor=pointer]:
+          - /url: /new/playlists
+          - generic [aria-hidden] [ref=f1e13]: 
+          - generic [ref=f1e14]: Playlists
+        - link [ref=f1e15] [cursor=pointer]:
+          - /url: /new/stats
+          - generic [aria-hidden] [ref=f1e16]: 
+          - generic [ref=f1e17]: Stats
+        - link [ref=f1e18] [cursor=pointer]:
+          - /url: /new/history
+          - generic [aria-hidden] [ref=f1e19]: 
+          - generic [ref=f1e20]: History
+      - generic [ref=f1e21]:
+        - button [ref=f1e22] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e23]: 
+          - generic [ref=f1e24]: More
+        - button [ref=f1e25] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e26]: 
+  - main "Your Top Listening content" [ref=f1e27]:
+    - generic [ref=f1e28]:
+      - generic [ref=f1e30]:
+        - generic [ref=f1e32]:
+          - paragraph [ref=f1e33]: Personal listening
+          - heading [level=1] [ref=f1e34]: Your top listening
+          - paragraph [ref=f1e35]: See top songs, artists, and genres, and how their rankings change.
+        - group [ref=f1e38]:
+          - button [pressed] [ref=f1e39] [cursor=pointer]: Songs
+          - button [ref=f1e40] [cursor=pointer]: Artists
+          - button [ref=f1e41] [cursor=pointer]: Genres
+        - group [ref=f1e44]:
+          - group [ref=f1e46]:
+            - button [pressed] [ref=f1e47] [cursor=pointer]: 4 weeks
+            - button [ref=f1e48] [cursor=pointer]: 6 months
+            - button [ref=f1e49] [cursor=pointer]: 1 year
+        - generic [ref=f1e50]:
+          - group [ref=f1e52]:
+            - generic [ref=f1e54]:
+              - generic [ref=f1e55]: Search songs or artists
+              - generic [ref=f1e56]:
+                - generic [aria-hidden]: 
+                - searchbox [ref=f1e57]
+            - button [expanded] [ref=f1e58] [cursor=pointer]: Compare dates
+            - button [ref=f1e60] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f1e61]: 
+              - text: Search past
+          - region [ref=f1e62]:
+            - button [ref=f1e64] [cursor=pointer]:
+              - generic [ref=f1e65]: Ranking date
+              - generic [ref=f1e66]: Today
+            - button [expanded] [ref=f1e68] [cursor=pointer]:
+              - generic [ref=f1e69]: Compare with
+              - generic [ref=f1e70]: Oct 4, 2026
+          - alert [ref=f1e72]:
+            - paragraph [ref=f1e73]: Comparison unavailable
+            - paragraph [ref=f1e74]: We couldn’t load this comparison. Your selected rankings stay visible.
+            - generic [ref=f1e75]:
+              - button [ref=f1e76] [cursor=pointer]: Retry
+              - button [ref=f1e77] [cursor=pointer]: Choose date
+          - generic [ref=f1e79]:
+            - group [ref=f1e80]:
+              - generic [aria-hidden] [ref=f1e81]: "1"
+            - button [disabled] [ref=f1e82]
+            - generic [ref=f1e84]:
+              - strong [ref=f1e85]: Test Song
+              - generic [ref=f1e86]: Test Artist
+            - button [ref=f1e87] [cursor=pointer]: History
+          - button [ref=f1e88] [cursor=pointer]:
+            - generic [ref=f1e89]: 
+            - text: Create playlist
+      - dialog [ref=f1e92]:
+        - heading "COMPARE SNAPSHOT" [level=2] [ref=f1e93]
+        - generic [ref=f1e94]:
+          - paragraph [ref=f1e95]: October 2026
+          - button "Previous saved month" [disabled] [ref=f1e96]
+          - button "Next saved month" [disabled] [ref=f1e97]
+        - generic [ref=f1e98]:
+          - generic [aria-hidden] [ref=f1e99]:
+            - generic [ref=f1e100]: M
+            - generic [ref=f1e101]: T
+            - generic [ref=f1e102]: W
+            - generic [ref=f1e103]: T
+            - generic [ref=f1e104]: F
+            - generic [ref=f1e105]: S
+            - generic [ref=f1e106]: S
+          - grid "October 2026" [ref=f1e107]:
+            - row [ref=f1e108]:
+              - gridcell [disabled] [ref=f1e109]
+              - gridcell [disabled] [ref=f1e110]
+              - gridcell [disabled] [ref=f1e111]
+              - gridcell "Thursday, October 1, 2026, unavailable" [disabled] [ref=f1e112]:
+                - generic "Thursday, October 1, 2026, unavailable" [ref=f1e113]: "1"
+              - gridcell "Friday, October 2, 2026, unavailable" [disabled] [ref=f1e114]:
+                - generic "Friday, October 2, 2026, unavailable" [ref=f1e115]: "2"
+              - gridcell "Saturday, October 3, 2026, unavailable" [disabled] [ref=f1e116]:
+                - generic "Saturday, October 3, 2026, unavailable" [ref=f1e117]: "3"
+              - gridcell [selected] [ref=f1e118]:
+                - button "Sunday, October 4, 2026, available" [active] [ref=f1e119] [cursor=pointer]: "4"
+            - row [ref=f1e120]:
+              - gridcell [ref=f1e121]:
+                - button "Monday, October 5, 2026, available" [ref=f1e122] [cursor=pointer]: "5"
+              - gridcell "Tuesday, October 6, 2026, unavailable" [disabled] [ref=f1e123]:
+                - generic "Tuesday, October 6, 2026, unavailable" [ref=f1e124]: "6"
+              - gridcell "Wednesday, October 7, 2026, unavailable" [disabled] [ref=f1e125]:
+                - generic "Wednesday, October 7, 2026, unavailable" [ref=f1e126]: "7"
+              - gridcell "Thursday, October 8, 2026, unavailable" [disabled] [ref=f1e127]:
+                - generic "Thursday, October 8, 2026, unavailable" [ref=f1e128]: "8"
+              - gridcell "Friday, October 9, 2026, unavailable" [disabled] [ref=f1e129]:
+                - generic "Friday, October 9, 2026, unavailable" [ref=f1e130]: "9"
+              - gridcell "Saturday, October 10, 2026, unavailable" [disabled] [ref=f1e131]:
+                - generic "Saturday, October 10, 2026, unavailable" [ref=f1e132]: "10"
+              - gridcell "Sunday, October 11, 2026, unavailable" [disabled] [ref=f1e133]:
+                - generic "Sunday, October 11, 2026, unavailable" [ref=f1e134]: "11"
+            - row [ref=f1e135]:
+              - gridcell "Monday, October 12, 2026, unavailable" [disabled] [ref=f1e136]:
+                - generic "Monday, October 12, 2026, unavailable" [ref=f1e137]: "12"
+              - gridcell "Tuesday, October 13, 2026, unavailable" [disabled] [ref=f1e138]:
+                - generic "Tuesday, October 13, 2026, unavailable" [ref=f1e139]: "13"
+              - gridcell "Wednesday, October 14, 2026, unavailable" [disabled] [ref=f1e140]:
+                - generic "Wednesday, October 14, 2026, unavailable" [ref=f1e141]: "14"
+              - gridcell "Thursday, October 15, 2026, unavailable" [disabled] [ref=f1e142]:
+                - generic "Thursday, October 15, 2026, unavailable" [ref=f1e143]: "15"
+              - gridcell "Friday, October 16, 2026, unavailable" [disabled] [ref=f1e144]:
+                - generic "Friday, October 16, 2026, unavailable" [ref=f1e145]: "16"
+              - gridcell "Saturday, October 17, 2026, unavailable" [disabled] [ref=f1e146]:
+                - generic "Saturday, October 17, 2026, unavailable" [ref=f1e147]: "17"
+              - gridcell "Sunday, October 18, 2026, unavailable" [disabled] [ref=f1e148]:
+                - generic "Sunday, October 18, 2026, unavailable" [ref=f1e149]: "18"
+            - row [ref=f1e150]:
+              - gridcell "Monday, October 19, 2026, unavailable" [disabled] [ref=f1e151]:
+                - generic "Monday, October 19, 2026, unavailable" [ref=f1e152]: "19"
+              - gridcell "Tuesday, October 20, 2026, unavailable" [disabled] [ref=f1e153]:
+                - generic "Tuesday, October 20, 2026, unavailable" [ref=f1e154]: "20"
+              - gridcell "Wednesday, October 21, 2026, unavailable" [disabled] [ref=f1e155]:
+                - generic "Wednesday, October 21, 2026, unavailable" [ref=f1e156]: "21"
+              - gridcell "Thursday, October 22, 2026, unavailable" [disabled] [ref=f1e157]:
+                - generic "Thursday, October 22, 2026, unavailable" [ref=f1e158]: "22"
+              - gridcell "Friday, October 23, 2026, unavailable" [disabled] [ref=f1e159]:
+                - generic "Friday, October 23, 2026, unavailable" [ref=f1e160]: "23"
+              - gridcell "Saturday, October 24, 2026, unavailable" [disabled] [ref=f1e161]:
+                - generic "Saturday, October 24, 2026, unavailable" [ref=f1e162]: "24"
+              - gridcell "Sunday, October 25, 2026, unavailable" [disabled] [ref=f1e163]:
+                - generic "Sunday, October 25, 2026, unavailable" [ref=f1e164]: "25"
+            - row [ref=f1e165]:
+              - gridcell "Monday, October 26, 2026, unavailable" [disabled] [ref=f1e166]:
+                - generic "Monday, October 26, 2026, unavailable" [ref=f1e167]: "26"
+              - gridcell "Tuesday, October 27, 2026, unavailable" [disabled] [ref=f1e168]:
+                - generic "Tuesday, October 27, 2026, unavailable" [ref=f1e169]: "27"
+              - gridcell "Wednesday, October 28, 2026, unavailable" [disabled] [ref=f1e170]:
+                - generic "Wednesday, October 28, 2026, unavailable" [ref=f1e171]: "28"
+              - gridcell "Thursday, October 29, 2026, unavailable" [disabled] [ref=f1e172]:
+                - generic "Thursday, October 29, 2026, unavailable" [ref=f1e173]: "29"
+              - gridcell "Friday, October 30, 2026, unavailable" [disabled] [ref=f1e174]:
+                - generic "Friday, October 30, 2026, unavailable" [ref=f1e175]: "30"
+              - gridcell "Saturday, October 31, 2026, unavailable" [disabled] [ref=f1e176]:
+                - generic "Saturday, October 31, 2026, unavailable" [ref=f1e177]: "31"
+              - gridcell [disabled] [ref=f1e178]
+        - generic [ref=f1e179]:
+          - paragraph [ref=f1e180]: Saved dates are green.
+          - button "Close" [ref=f1e181] [cursor=pointer]
+  - text:   
+  - contentinfo [aria-hidden] [ref=f1e182]:
+    - generic [ref=f1e183]: Powered by Spotify
+    - generic [ref=f1e184]: Artwork and metadata belong to their owners.
+    - link [ref=f1e185] [cursor=pointer]:
+      - /url: /new/legal
+      - text: Legal & privacy
+```

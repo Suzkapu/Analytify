@@ -1,7 +1,9 @@
+import {ChangeDetectorRef} from '@angular/core';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {V2UserStatsComponent} from './v2-user-stats.component';
 import {TestBed} from '@angular/core/testing';
 import {ActivatedRoute} from '@angular/router';
+import {Location} from '@angular/common';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {SpotifyDataService} from '@core/data-access/spotify/spotify-data.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
@@ -309,7 +311,8 @@ describe('V2UserStatsComponent', () => {
     const element = fixture.nativeElement as HTMLElement;
     expect([...element.querySelectorAll('button')].some(button => button.textContent?.includes('Search past'))).toBe(true);
     const pastSearch = [...element.querySelectorAll('button')].find(button => button.textContent?.includes('Search past'))!;
-    expect(pastSearch.querySelector('.pi-history')?.getAttribute('aria-hidden')).toBe('true');
+    expect(pastSearch.getAttribute('role')).toBe('switch');
+    expect(pastSearch.getAttribute('aria-checked')).toBe('false');
     const row = element.querySelector('.v2-ranking-row')!;
     expect(row.hasAttribute('role')).toBe(false);
     expect(row.hasAttribute('tabindex')).toBe(false);
@@ -406,4 +409,81 @@ describe('V2UserStatsComponent', () => {
     initialize.mockRestore();
   });
 
+});
+
+
+describe('canonical Stats content identity and result context', () => {
+  const setupView = async (shared: boolean) => {
+    TestBed.resetTestingModule();
+    const back = vi.fn();
+    const initialize = vi.spyOn(V2UserStatsComponent.prototype, 'ngOnInit').mockImplementation(() => {});
+    await TestBed.configureTestingModule({imports: [V2UserStatsComponent], providers: [
+      ...[SpotifyAuthService, SpotifyDataService, StorageService, SupabaseService, StatsSharingService, ParticipantSpotifyService].map(provide => ({provide, useValue: null})),
+      {provide: Location, useValue: {back}},
+      {provide: ActivatedRoute, useValue: {snapshot: {paramMap: {get: () => shared ? 'shared-owner' : null}}}}
+    ]}).compileComponents();
+    const fixture = TestBed.createComponent(V2UserStatsComponent), component = fixture.componentInstance;
+    component.isLoading = false;
+    component.spyDisplayName = 'Alex'; component.spySnapshotDate = '2026-10-04';
+    component.topTracks = [{id: 'song', name: 'Song', artists: [], album: {images: []}}];
+    component.topArtists = [{id: 'artist', name: 'Artist', images: []}];
+    component.topGenres = [{name: 'pop', count: 1, percentage: 100}];
+    fixture.detectChanges();
+    return {fixture, component, element: fixture.nativeElement as HTMLElement, initialize, back};
+  };
+
+  it.each([false, true])('keeps the %s owner identity and category heading coherent through actual tab clicks', async shared => {
+    const {fixture, component, element, initialize, back} = await setupView(shared);
+    try {
+      expect(element.querySelector('h1')?.textContent).toBe(shared ? 'Alex · Listening stats' : 'Your top listening');
+      expect(element.querySelector('.v2-page__eyebrow')).toBeNull();
+      if (shared) {
+        element.querySelector<HTMLButtonElement>('.v2-page__back')!.click();
+        expect(back).toHaveBeenCalledTimes(1);
+      } else {
+        expect(element.querySelector('.v2-page__back')).toBeNull();
+        component.backFromSharedStats();
+        expect(back).not.toHaveBeenCalled();
+        const create = vi.spyOn(component, 'createTopPlaylist').mockResolvedValue(undefined);
+        const action = element.querySelector<HTMLButtonElement>('.stats-create-playlist')!;
+        expect(action.textContent?.trim()).toBe('Create playlist from these songs');
+        action.click(); expect(create).toHaveBeenCalledTimes(1);
+        component.isCreatingPlaylist = true; fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck(); fixture.detectChanges();
+        expect(action.disabled).toBe(true); action.click(); expect(create).toHaveBeenCalledTimes(1);
+        component.isCreatingPlaylist = false;
+      }
+      for (const [category, heading] of [['tracks', 'Top songs'], ['artists', 'Top artists'], ['genres', 'Top genres']] as const) {
+        element.querySelector<HTMLButtonElement>(`#stats-category-choice-${category}`)!.click();
+        TestBed.tick(); fixture.detectChanges();
+        expect(component.selectedCategory).toBe(category);
+        expect(element.querySelector('.stats-results-heading')?.textContent?.trim()).toBe(heading);
+        if (shared) expect(element.querySelector('[aria-label^="View position history"], v2-search-past-toggle, .compare-dates')).toBeNull();
+        else expect(element.querySelector('[aria-label^="View position history"]')).not.toBeNull();
+      }
+      component.sharedStatsError = shared ? 'Access was revoked.' : '';
+      component.isLoading = !shared;
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck(); TestBed.tick(); fixture.detectChanges();
+      expect(element.querySelector('.stats-results-heading'), JSON.stringify({shared, loading: component.isLoading, error: component.sharedStatsError})).toBeNull();
+      expect(element.textContent).toContain(shared ? 'Access was revoked.' : 'Loading your Spotify insights');
+    } finally {fixture.destroy(); initialize.mockRestore();}
+  });
+
+  it.each([
+    ['2026-10-04', 'Read-only listening snapshot · Refreshed 4 October'],
+    ['2026-02-28', 'Read-only listening snapshot · Refreshed 28 February'],
+    ['2024-02-29', 'Read-only listening snapshot · Refreshed 29 February'],
+    ['2026-02-29', 'Read-only listening snapshot'],
+    ['2026-02-30', 'Read-only listening snapshot'],
+    ['2026-10-04T12:00:00Z', 'Read-only listening snapshot'],
+    ['', 'Read-only listening snapshot']
+  ])('describes only a valid shared snapshot date: %s', async (snapshotDate, description) => {
+    const {fixture, component, element, initialize} = await setupView(true);
+    try {
+      component.spySnapshotDate = snapshotDate;
+      component.spyDisplayName = '';
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck(); fixture.detectChanges();
+      expect(element.querySelector('h1')?.textContent).toBe('Shared · Listening stats');
+      expect(element.querySelector('.v2-page__description')?.textContent).toBe(description);
+    } finally {fixture.destroy(); initialize.mockRestore();}
+  });
 });

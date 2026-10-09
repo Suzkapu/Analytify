@@ -1,0 +1,207 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-current-load.spec.ts --config=/tmp/analytify-all-browsers.config.ts --workers=2
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:436104) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:436104) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 28 tests using 2 workers
+
+(node:436276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:436275) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 12:11:55 PM [vite] (client) [console.error] [Analytify][0006][+00631ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+[WebServer] 12:11:56 PM [vite] (client) [console.error] [Analytify][0006][+00605ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+  ✓   1 [desktop] › e2e/design-v2-stats-current-load.spec.ts:48:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) (3.3s)
+  ✓   2 [desktop] › e2e/design-v2-stats-current-load.spec.ts:48:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) (3.3s)
+  ✓   3 [desktop] › e2e/design-v2-stats-current-load.spec.ts:68:5 › successful empty Spotify responses produce an empty state without a failure alert (3.5s)
+[WebServer] 12:12:01 PM [vite] (client) [console.error] [Analytify][0006][+02606ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated Spotify failure"}}}
+[WebServer] 12:12:04 PM [vite] (client) [console.error] [Analytify][0006][+02420ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated Spotify failure"}}}
+  ✓   4 [desktop] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) (7.9s)
+  ✓   5 [desktop] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) (7.4s)
+  ✓   6 [desktop] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) (7.1s)
+(node:436872) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 12:12:14 PM [vite] (client) [console.error] [Analytify][0006][+00666ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+  ✓   7 [desktop] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) (7.6s)
+(node:437291) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   8 [mobile] › e2e/design-v2-stats-current-load.spec.ts:48:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) (3.4s)
+[WebServer] 12:12:18 PM [vite] (client) [console.error] [Analytify][0006][+00653ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+  ✓   9 [mobile] › e2e/design-v2-stats-current-load.spec.ts:68:5 › successful empty Spotify responses produce an empty state without a failure alert (3.2s)
+  ✓  10 [mobile] › e2e/design-v2-stats-current-load.spec.ts:48:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) (3.7s)
+[WebServer] 12:12:24 PM [vite] (client) [console.error] [Analytify][0006][+03364ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated Spotify failure"}}}
+[WebServer] 12:12:24 PM [vite] (client) [console.error] [Analytify][0006][+03272ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated Spotify failure"}}}
+  ✓  11 [mobile] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) (10.7s)
+  ✓  12 [mobile] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) (10.5s)
+  ✓  13 [mobile] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) (9.5s)
+  ✓  14 [mobile] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) (9.3s)
+(node:437910) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:437918) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 12:12:43 PM [vite] (client) [console.error] [Analytify][0006][+00385ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+[WebServer] 12:12:44 PM [vite] (client) [console.error] [Analytify][0006][+00367ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+  ✓  15 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:48:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) (4.3s)
+  ✓  16 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:48:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) (4.3s)
+  ✓  17 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:68:5 › successful empty Spotify responses produce an empty state without a failure alert (3.6s)
+[WebServer] 12:12:50 PM [vite] (client) [console.error] [Analytify][0006][+03232ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated Spotify failure"}}}
+[WebServer] 12:12:52 PM [vite] (client) [console.error] [Analytify][0006][+02580ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":403,"statusText":"Forbidden","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 403 Forbidden","error":{"error":{"status":403,"message":"Isolated Spotify failure"}}}
+  ✓  18 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) (10.4s)
+  ✓  19 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) (8.4s)
+  ✓  21 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) (9.9s)
+  ✓  20 [firefox-stats] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) (11.4s)
+(node:439271) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:439282) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 12:13:12 PM [vite] (client) [console.error] [Analytify][0006][+00792ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+[WebServer] 12:13:12 PM [vite] (client) [console.error] [Analytify][0006][+01169ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"normalizedNames":{},"lazyInit":"() => {\n\t\t\tthis.headers = /* @__PURE__ */ new Map();\n\t\t\theaders.split(\"\\n\").forEach((line) => {\n\t\t\t\tconst index = line.indexOf(\":\");\n\t\t\t\tif (index > 0) {\n\t\t\t\t\tconst name = line.slice(0, index);\n\t\t\t\t\tconst value = line.slice(index + 1).trim();\n\t\t\t\t\tthis.addHeaderEntry(name, value);\n\t\t\t\t}\n\t\t\t});\n\t\t}","lazyUpdate":null},"status":503,"statusText":"Service Unavailable","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 503 Service Unavailable","error":{"error":{"status":503,"message":"Isolated current Stats failure"}}}
+  ✓  23 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:48:7 › cold Spotify failure differs from empty rankings and offers recovery (reduce) (6.5s)
+  ✓  22 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:48:7 › cold Spotify failure differs from empty rankings and offers recovery (no-preference) (7.1s)
+[WebServer] 12:13:19 PM [vite] (client) [console.error] [Analytify][0006][+01582ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"headers":{},"normalizedNames":{},"lazyUpdate":null},"status":0,"statusText":"Unknown Error","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 0 Unknown Error","error":{"isTrusted":true}}
+  ✘  25 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) (4.6s)
+(node:439768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  24 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:68:5 › successful empty Spotify responses produce an empty state without a failure alert (5.9s)
+[WebServer] 12:13:24 PM [vite] (client) [console.error] [Analytify][0006][+01241ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"headers":{},"normalizedNames":{},"lazyUpdate":null},"status":0,"statusText":"Unknown Error","url":"https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=10&offset=100","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=10&offset=100: 0 Unknown Error","error":{"isTrusted":true}}
+  ✘  26 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) (3.7s)
+(node:439981) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  27 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) (4.2s)
+  ✘  28 [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) (2.3s)
+
+
+  1) [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 20
+    Received: 19
+
+      37 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+      38 |       // SVG fractional intrinsic height is quantized to browser layout units (1/60 or 1/64px).
+    > 39 |       expect(Math.abs(measured.progress!.height - 19.7753)).toBeLessThanOrEqual(1/60); expect(measured.progress!.naturalHeight).toBe(20);
+         |                                                                                                                                 ^
+      40 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      41 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+      42 |     if (height === 1080 && [390,1440].includes(width)) await page.locator('v2-current-stats-feedback').first().screenshot({path:info.outputPath(`${state}-${width}.png`)});
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:39:129)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:93:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 20
+    Received: 19
+
+      37 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+      38 |       // SVG fractional intrinsic height is quantized to browser layout units (1/60 or 1/64px).
+    > 39 |       expect(Math.abs(measured.progress!.height - 19.7753)).toBeLessThanOrEqual(1/60); expect(measured.progress!.naturalHeight).toBe(20);
+         |                                                                                                                                 ^
+      40 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      41 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+      42 |     if (height === 1080 && [390,1440].includes(width)) await page.locator('v2-current-stats-feedback').first().screenshot({path:info.outputPath(`${state}-${width}.png`)});
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:39:129)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:93:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-eafd9-covery-shared-false-reduce--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 20
+    Received: 19
+
+      37 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+      38 |       // SVG fractional intrinsic height is quantized to browser layout units (1/60 or 1/64px).
+    > 39 |       expect(Math.abs(measured.progress!.height - 19.7753)).toBeLessThanOrEqual(1/60); expect(measured.progress!.naturalHeight).toBe(20);
+         |                                                                                                                                 ^
+      40 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      41 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+      42 |     if (height === 1080 && [390,1440].includes(width)) await page.locator('v2-current-stats-feedback').first().screenshot({path:info.outputPath(`${state}-${width}.png`)});
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:39:129)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:93:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-8f030--shared-true-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 20
+    Received: 19
+
+      37 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+      38 |       // SVG fractional intrinsic height is quantized to browser layout units (1/60 or 1/64px).
+    > 39 |       expect(Math.abs(measured.progress!.height - 19.7753)).toBeLessThanOrEqual(1/60); expect(measured.progress!.naturalHeight).toBe(20);
+         |                                                                                                                                 ^
+      40 |     } else { expect(measured.panel).toBeNull(); expect(measured.skeletons).toBe(0); }
+      41 |     expect(measured.buttonHeight).toBe(state === 'unavailable' ? 44 : null);
+      42 |     if (height === 1080 && [390,1440].includes(width)) await page.locator('v2-current-stats-feedback').first().screenshot({path:info.outputPath(`${state}-${width}.png`)});
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:39:129)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:93:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-258bc-ecovery-shared-true-reduce--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) 
+    [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (reduce) 
+    [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (no-preference) 
+    [webkit-stats] › e2e/design-v2-stats-current-load.spec.ts:77:7 › current feedback responsive loading/failure/empty and same-range recovery shared=true (reduce) 
+  24 passed (1.7m)

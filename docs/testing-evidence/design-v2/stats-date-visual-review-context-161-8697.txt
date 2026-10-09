@@ -1,0 +1,95 @@
+const imgShapeCoverStateDefault = "https://www.figma.com/api/mcp/asset/c67253ba-2bf6-4670-a83a-298857de5374.png";
+import { motion } from "motion/react";
+const imgFlame = "https://www.figma.com/api/mcp/asset/43c1d47e-8b9d-46d1-bc0f-6b55716f2b7b.svg";
+
+type AnalytifySpotifyArtworkProps = {
+  className?: string;
+  shape?: "Cover";
+  state?: "Default";
+};
+
+function AnalytifySpotifyArtwork({ className, shape = "Cover", state = "Default" }: AnalytifySpotifyArtworkProps) {
+  return (
+    <div className={className || "border-2 border-[rgba(53,231,131,0)] border-solid overflow-clip relative rounded-[var(--v2-radius-control,12px)] size-[96px]"} data-node-id="129:8798">
+      <img alt="" className="absolute inset-0 max-w-none object-contain pointer-events-none rounded-[var(--v2-radius-control,12px)] size-full" src={imgShapeCoverStateDefault} />
+    </div>
+  );
+}
+
+type AnalytifyStatsRankingRowProps = {
+  className?: string;
+  action?: string;
+  name?: string;
+  rankingFlameKind?: React.ReactNode | null;
+  rankMovement?: string;
+  rankNumber?: string;
+  showRankingFlame?: boolean;
+  showRankingHistory?: boolean;
+  supportingInformation?: string;
+};
+
+export default function AnalytifyStatsRankingRow({ className, action = "Details", name = "Name", rankingFlameKind = null, rankMovement = "", rankNumber = "1", showRankingFlame = false, showRankingHistory = true, supportingInformation = "Supporting information" }: AnalytifyStatsRankingRowProps) {
+  return (
+    <div className={className || "bg-[var(--v2-color-surface,#121814)] content-stretch flex gap-[var(--v2-space-3,12px)] items-center min-h-[80px] p-[var(--v2-space-4,16px)] relative rounded-[var(--v2-radius-control,12px)] w-[640px]"} data-node-id="161:8697" data-name="Analytify/Stats ranking row">
+      <div className="content-center flex flex-wrap gap-[0px_18px] items-center min-w-[76px] pl-[2px] pr-[4px] relative shrink-0 w-[76px]" data-node-id="787:45733" data-name="Rank / Number and movement">
+        {showRankingFlame &&
+          (rankingFlameKind || (
+            <div className="absolute content-stretch flex items-center justify-center left-[-14px] opacity-80 size-[48px] top-[-6px]" data-node-id="716:22656" data-name="Ranking flame">
+              <motion.div className="relative shrink-0 size-[48px]" data-node-id="I716:22656;716:22650" data-name="Flame">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgFlame} />
+              </motion.div>
+            </div>
+          ))}
+        <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[36px] relative shrink-0 text-[28px] text-[color:var(--v2-color-text,#f5f7f5)] whitespace-nowrap" data-node-id="787:45734">
+          {rankNumber}
+        </p>
+        <p className="[word-break:break-word] font-['Outfit:Regular'] font-normal leading-[24px] relative shrink-0 text-[18px] text-[color:var(--v2-color-accent,#35e783)] whitespace-nowrap" data-node-id="787:45735">
+          {rankMovement}
+        </p>
+      </div>
+      <AnalytifySpotifyArtwork className="border-2 border-[rgba(53,231,131,0)] border-solid relative rounded-[var(--v2-radius-control,12px)] shrink-0 size-[48px]" />
+      <div className="[word-break:break-word] content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start leading-[20px] min-w-px pl-[var(--v2-space-4,16px)] relative" data-node-id="161:8699" data-name="Frame">
+        <p className="font-['Outfit:SemiBold'] font-semibold relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] w-full" data-node-id="161:8700">
+          {name}
+        </p>
+        <p className="font-['Outfit:Regular'] font-normal relative shrink-0 text-[12px] text-[color:var(--v2-color-text-muted,#a2ada6)] w-full" data-node-id="161:8701">
+          {supportingInformation}
+        </p>
+      </div>
+      {showRankingHistory && (
+        <div className="content-stretch flex h-[44px] items-center justify-center min-h-[44px] min-w-[68px] overflow-clip px-[12px] relative rounded-[var(--v2-radius-control,12px)] shrink-0" data-node-id="161:8703" data-name="Action / View ranking history">
+          <div className="absolute bg-[var(--v2-color-input,#0d130f)] border border-[var(--v2-color-border,#34423a)] border-solid inset-0 rounded-[var(--v2-radius-control,12px)]" data-node-id="780:25454" data-name="History action visual state" />
+          <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-accent,#35e783)] text-center whitespace-nowrap" data-node-id="161:8702">
+            {action}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+These styles are contained in the design: Analytify/Ranking number: Font(family: "Outfit", style: SemiBold, size: 28, weight: 600, lineHeight: 36, letterSpacing: 0), Analytify/Ranking movement: Font(family: "Outfit", style: Regular, size: 18, weight: 400, lineHeight: 24, letterSpacing: 0), Analytify/Label: Font(family: "Outfit", style: SemiBold, size: 14, weight: 600, lineHeight: 20, letterSpacing: 0), Analytify/Ranking metadata: Font(family: "Outfit", style: Regular, size: 12, weight: 400, lineHeight: 20, letterSpacing: 0).
+Component descriptions: The following components have usage descriptions or documentation links defined in Figma. These descriptions provide important context about the intended usage, best practices, and any constraints for each component. Follow these guidelines when implementing or using these components.
+
+## Analytify/Stats ranking row
+**Node ID:** 161:8697
+
+Shared responsive ranking row. Artwork opens validated Spotify destination. Position history is owner-only: Show ranking history=true for own Stats and false for approved shared snapshots; a shared snapshot grants the displayed rankings, not private daily history. Reuse Name, Supporting information and flame properties. Responsive rank column contract: retain76px column and28/36 number,18/24 movement. Rank and movement use horizontal wrapping with18px horizontal gap and0px line gap in the fixed76px column (2px left/4px right inset). Movement wraps below when their measured text widths exceed the available space; short ranks remain inline. Both text nodes hug width and height.48px flame sits behind the rank;1px outside surface-colored numeral outline maintains readable contrast over bright flames. Copy hugs content, titles and12/20 metadata wrap without truncation; desktop inset16px, mobile0px. History retains44px height and intrinsic text+24px width, independent of Spotify artwork. Shared access hides History. Render the same component responsively; examples are state references, not pages.
+
+## Analytify/Spotify artwork
+**Node ID:** 129:8806
+
+The image alone opens its Spotify entity. Covers: track, album, playlist. Circular photo: artist. Desktop hover and keyboard focus use the same green border without moving content. Missing Spotify URL: Unavailable, no interaction. Figma fixtures use named Spotify searches; production uses validated external\_urls.spotify. Individual prototype hover variables prevent every artwork from highlighting together.
+
+## Analytify/Ranking history action surface
+**Node ID:** 780:25453
+
+Owner History action visual states. Default: input surface/regular border. Hover and Focus: existing secondary roles. Focus has2px inside border and no outer ring, including hover. The containing action retains label/Show ranking history/prototype destination. Shared mode hides History; cloud failure remains actionable for recovery.
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

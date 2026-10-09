@@ -1,0 +1,641 @@
+{
+  "exitCode": 0,
+  "passed": 60,
+  "duration": "4.2m",
+  "projects": {
+    "desktop": 15,
+    "mobile": 15,
+    "firefox-stats": 15,
+    "webkit-stats": 15
+  },
+  "snapshotUpdates": false,
+  "approvedGoldenHashesUnchanged": 72,
+  "cases": [
+    "\u2713   1 [desktop] \u203a e2e/design-v2-stats-flames.spec.ts:124:5 \u203a canonical flame timeline loops without moving controls and stops on preference changes (7.4s)",
+    "\u2713   2 [desktop] \u203a e2e/design-v2-stats-flames.spec.ts:331:9 \u203a static canonical row captures \u203a canonical artist row geometry at 390px (2.5s)",
+    "\u2713   3 [desktop] \u203a e2e/design-v2-stats-flames.spec.ts:331:9 \u203a static canonical row captures \u203a canonical artist row geometry at 1440px (2.6s)",
+    "\u2713   4 [desktop] \u203a e2e/design-v2-stats-flames.spec.ts:343:9 \u203a static canonical row captures \u203a canonical flame colors and placement at 390px (2.6s)",
+    "\u2713   5 [desktop] \u203a e2e/design-v2-stats-flames.spec.ts:343:9 \u203a static canonical row captures \u203a canonical flame colors and placement at 1440px (3.5s)",
+    "\u2713   6 [desktop] \u203a e2e/design-v2-stats-flames.spec.ts:356:9 \u203a static canonical row captures \u203a canonical History action states retain geometry and keyboard recovery at 390px (3.6s)",
+    "\u2713   7 [desktop] \u203a e2e/design-v2-stats-flames.spec.ts:356:9 \u203a static canonical row captures \u203a canonical History action states retain geometry and keyboard recovery at 1440px (3.7s)",
+    "\u2713   8 [desktop] \u203a e2e/design-v2-stats-flames.spec.ts:444:7 \u203a large original ranks wrap movement without shifting actions with motion reduce (6.3s)",
+    "\u2713   9 [desktop] \u203a e2e/design-v2-stats-genres.spec.ts:49:7 \u203a genre chart scale, keyboard History and responsive resizing with motion no-preference (3.5s)",
+    "\u2713  10 [desktop] \u203a e2e/design-v2-stats-genres.spec.ts:49:7 \u203a genre chart scale, keyboard History and responsive resizing with motion reduce (3.2s)",
+    "\u2713  11 [desktop] \u203a e2e/design-v2-stats-genres.spec.ts:119:7 \u203a canonical genre comparisons at 390px (2.0s)",
+    "\u2713  12 [desktop] \u203a e2e/design-v2-stats-genres.spec.ts:119:7 \u203a canonical genre comparisons at 1440px (2.1s)",
+    "\u2713  13 [desktop] \u203a e2e/design-v2-stats-search-switch.spec.ts:5:5 \u203a historical search stays cancellable, ignores a late result and recovers through the native switch (3.4s)",
+    "\u2713  14 [desktop] \u203a e2e/design-v2-stats-search-switch.spec.ts:59:5 \u203a canonical search row keeps touch geometry when resizing short and tall windows (3.5s)",
+    "\u2713  15 [desktop] \u203a e2e/design-v2-stats-search-switch.spec.ts:97:5 \u203a selection follows the native 220ms timeline and responds to reduced motion (2.1s)",
+    "\u2713  16 [mobile] \u203a e2e/design-v2-stats-flames.spec.ts:124:5 \u203a canonical flame timeline loops without moving controls and stops on preference changes (7.8s)",
+    "\u2713  17 [mobile] \u203a e2e/design-v2-stats-flames.spec.ts:331:9 \u203a static canonical row captures \u203a canonical artist row geometry at 390px (2.6s)",
+    "\u2713  18 [mobile] \u203a e2e/design-v2-stats-flames.spec.ts:331:9 \u203a static canonical row captures \u203a canonical artist row geometry at 1440px (3.2s)",
+    "\u2713  19 [mobile] \u203a e2e/design-v2-stats-flames.spec.ts:343:9 \u203a static canonical row captures \u203a canonical flame colors and placement at 390px (2.8s)",
+    "\u2713  20 [mobile] \u203a e2e/design-v2-stats-flames.spec.ts:343:9 \u203a static canonical row captures \u203a canonical flame colors and placement at 1440px (3.7s)",
+    "\u2713  21 [mobile] \u203a e2e/design-v2-stats-flames.spec.ts:356:9 \u203a static canonical row captures \u203a canonical History action states retain geometry and keyboard recovery at 390px (3.8s)",
+    "\u2713  22 [mobile] \u203a e2e/design-v2-stats-flames.spec.ts:356:9 \u203a static canonical row captures \u203a canonical History action states retain geometry and keyboard recovery at 1440px (4.3s)",
+    "\u2713  23 [mobile] \u203a e2e/design-v2-stats-flames.spec.ts:444:7 \u203a large original ranks wrap movement without shifting actions with motion reduce (7.0s)",
+    "\u2713  24 [mobile] \u203a e2e/design-v2-stats-genres.spec.ts:49:7 \u203a genre chart scale, keyboard History and responsive resizing with motion no-preference (3.4s)",
+    "\u2713  25 [mobile] \u203a e2e/design-v2-stats-genres.spec.ts:49:7 \u203a genre chart scale, keyboard History and responsive resizing with motion reduce (3.4s)",
+    "\u2713  26 [mobile] \u203a e2e/design-v2-stats-genres.spec.ts:119:7 \u203a canonical genre comparisons at 390px (2.7s)",
+    "\u2713  27 [mobile] \u203a e2e/design-v2-stats-genres.spec.ts:119:7 \u203a canonical genre comparisons at 1440px (3.5s)",
+    "\u2713  28 [mobile] \u203a e2e/design-v2-stats-search-switch.spec.ts:5:5 \u203a historical search stays cancellable, ignores a late result and recovers through the native switch (3.8s)",
+    "\u2713  29 [mobile] \u203a e2e/design-v2-stats-search-switch.spec.ts:59:5 \u203a canonical search row keeps touch geometry when resizing short and tall windows (4.2s)",
+    "\u2713  30 [mobile] \u203a e2e/design-v2-stats-search-switch.spec.ts:97:5 \u203a selection follows the native 220ms timeline and responds to reduced motion (2.1s)",
+    "\u2713  31 [firefox-stats] \u203a e2e/design-v2-stats-flames.spec.ts:124:5 \u203a canonical flame timeline loops without moving controls and stops on preference changes (9.2s)",
+    "\u2713  32 [firefox-stats] \u203a e2e/design-v2-stats-flames.spec.ts:331:9 \u203a static canonical row captures \u203a canonical artist row geometry at 390px (2.4s)",
+    "\u2713  33 [firefox-stats] \u203a e2e/design-v2-stats-flames.spec.ts:331:9 \u203a static canonical row captures \u203a canonical artist row geometry at 1440px (2.3s)",
+    "\u2713  34 [firefox-stats] \u203a e2e/design-v2-stats-flames.spec.ts:343:9 \u203a static canonical row captures \u203a canonical flame colors and placement at 390px (2.5s)",
+    "\u2713  35 [firefox-stats] \u203a e2e/design-v2-stats-flames.spec.ts:343:9 \u203a static canonical row captures \u203a canonical flame colors and placement at 1440px (2.4s)",
+    "\u2713  36 [firefox-stats] \u203a e2e/design-v2-stats-flames.spec.ts:356:9 \u203a static canonical row captures \u203a canonical History action states retain geometry and keyboard recovery at 390px (3.8s)",
+    "\u2713  37 [firefox-stats] \u203a e2e/design-v2-stats-flames.spec.ts:356:9 \u203a static canonical row captures \u203a canonical History action states retain geometry and keyboard recovery at 1440px (3.9s)",
+    "\u2713  38 [firefox-stats] \u203a e2e/design-v2-stats-flames.spec.ts:444:7 \u203a large original ranks wrap movement without shifting actions with motion reduce (7.3s)",
+    "\u2713  39 [firefox-stats] \u203a e2e/design-v2-stats-genres.spec.ts:49:7 \u203a genre chart scale, keyboard History and responsive resizing with motion no-preference (4.1s)",
+    "\u2713  40 [firefox-stats] \u203a e2e/design-v2-stats-genres.spec.ts:49:7 \u203a genre chart scale, keyboard History and responsive resizing with motion reduce (5.0s)",
+    "\u2713  41 [firefox-stats] \u203a e2e/design-v2-stats-genres.spec.ts:119:7 \u203a canonical genre comparisons at 390px (1.8s)",
+    "\u2713  42 [firefox-stats] \u203a e2e/design-v2-stats-genres.spec.ts:119:7 \u203a canonical genre comparisons at 1440px (1.9s)",
+    "\u2713  43 [firefox-stats] \u203a e2e/design-v2-stats-search-switch.spec.ts:5:5 \u203a historical search stays cancellable, ignores a late result and recovers through the native switch (3.6s)",
+    "\u2713  44 [firefox-stats] \u203a e2e/design-v2-stats-search-switch.spec.ts:59:5 \u203a canonical search row keeps touch geometry when resizing short and tall windows (4.0s)",
+    "\u2713  45 [firefox-stats] \u203a e2e/design-v2-stats-search-switch.spec.ts:97:5 \u203a selection follows the native 220ms timeline and responds to reduced motion (2.1s)",
+    "\u2713  46 [webkit-stats] \u203a e2e/design-v2-stats-flames.spec.ts:124:5 \u203a canonical flame timeline loops without moving controls and stops on preference changes (9.2s)",
+    "\u2713  47 [webkit-stats] \u203a e2e/design-v2-stats-flames.spec.ts:331:9 \u203a static canonical row captures \u203a canonical artist row geometry at 390px (3.1s)",
+    "\u2713  48 [webkit-stats] \u203a e2e/design-v2-stats-flames.spec.ts:331:9 \u203a static canonical row captures \u203a canonical artist row geometry at 1440px (3.4s)",
+    "\u2713  49 [webkit-stats] \u203a e2e/design-v2-stats-flames.spec.ts:343:9 \u203a static canonical row captures \u203a canonical flame colors and placement at 390px (3.1s)",
+    "\u2713  50 [webkit-stats] \u203a e2e/design-v2-stats-flames.spec.ts:343:9 \u203a static canonical row captures \u203a canonical flame colors and placement at 1440px (3.3s)",
+    "\u2713  51 [webkit-stats] \u203a e2e/design-v2-stats-flames.spec.ts:356:9 \u203a static canonical row captures \u203a canonical History action states retain geometry and keyboard recovery at 390px (4.3s)",
+    "\u2713  52 [webkit-stats] \u203a e2e/design-v2-stats-flames.spec.ts:356:9 \u203a static canonical row captures \u203a canonical History action states retain geometry and keyboard recovery at 1440px (4.9s)",
+    "\u2713  53 [webkit-stats] \u203a e2e/design-v2-stats-flames.spec.ts:444:7 \u203a large original ranks wrap movement without shifting actions with motion reduce (8.9s)",
+    "\u2713  54 [webkit-stats] \u203a e2e/design-v2-stats-genres.spec.ts:49:7 \u203a genre chart scale, keyboard History and responsive resizing with motion no-preference (5.4s)",
+    "\u2713  55 [webkit-stats] \u203a e2e/design-v2-stats-genres.spec.ts:49:7 \u203a genre chart scale, keyboard History and responsive resizing with motion reduce (4.5s)",
+    "\u2713  56 [webkit-stats] \u203a e2e/design-v2-stats-genres.spec.ts:119:7 \u203a canonical genre comparisons at 390px (3.0s)",
+    "\u2713  57 [webkit-stats] \u203a e2e/design-v2-stats-genres.spec.ts:119:7 \u203a canonical genre comparisons at 1440px (3.6s)",
+    "\u2713  58 [webkit-stats] \u203a e2e/design-v2-stats-search-switch.spec.ts:5:5 \u203a historical search stays cancellable, ignores a late result and recovers through the native switch (6.3s)",
+    "\u2713  59 [webkit-stats] \u203a e2e/design-v2-stats-search-switch.spec.ts:59:5 \u203a canonical search row keeps touch geometry when resizing short and tall windows (4.7s)",
+    "\u2713  60 [webkit-stats] \u203a e2e/design-v2-stats-search-switch.spec.ts:97:5 \u203a selection follows the native 220ms timeline and responds to reduced motion (3.8s)"
+  ],
+  "files": [
+    {
+      "path": ".last-run.json",
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-desktop/flame-motion-debut-390-400ms.png",
+      "sha256": "9ad3fae6308bbcc16567cc7e93d8b7ffd101446b149861472e0628a76668d44e"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-desktop/flame-motion-hot-390-400ms.png",
+      "sha256": "04b5354b05535e202febbc9043e6ca65cfc03c989f80f673a062aad82f6f687d"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-desktop/flame-motion-debut-1440-400ms.png",
+      "sha256": "c898153f4f147ed5135dd1b0c92f1f7c2ee6180a98ac98b77ecf1f35f99b289f"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-desktop/flame-motion-hot-1440-400ms.png",
+      "sha256": "27cd7f2268e482b8d3c6d2676f6c800ab8baf9b267e8bf95d3bcbe8b25130bfe"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-desktop/flame-canonical-motion.json",
+      "sha256": "e8d6a8c24071bb06c01da801d923fa3a0cf66f60b9c2883313e62a03a8d3887d"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-3ae25-rtist-row-geometry-at-390px-desktop/artist-rendering.json",
+      "sha256": "35bb95f2b04aeed22be1a8b98e4e134968c58183028320689fa6a8b7b98f2516"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-40b18-tist-row-geometry-at-1440px-desktop/artist-rendering.json",
+      "sha256": "ab902ee4f3caad82851f8dc56ac6c0658ce16f83f567e962f3adcae3401c88b7"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-desktop/debut-rendering.json",
+      "sha256": "c26933a9ede7cfbb9b695976278166bb669618a8f1b4017150635d41b5540ade"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-desktop/hot-mover-rendering.json",
+      "sha256": "c26933a9ede7cfbb9b695976278166bb669618a8f1b4017150635d41b5540ade"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-ed03e-ors-and-placement-at-1440px-desktop/debut-rendering.json",
+      "sha256": "9d25e4a1e7d0df85963029b35fbd9bee427b79293342e20febb11de01f8e65bb"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-ed03e-ors-and-placement-at-1440px-desktop/hot-mover-rendering.json",
+      "sha256": "cae7e57d6020bcaaaa3dc4ae22575626682820d4e0d09c1e211e58e28746ae53"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-642bf--keyboard-recovery-at-390px-desktop/history-action-row-rendering.json",
+      "sha256": "c26933a9ede7cfbb9b695976278166bb669618a8f1b4017150635d41b5540ade"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-642bf--keyboard-recovery-at-390px-desktop/history-action-state-geometry.json",
+      "sha256": "710e84e3a1a357d2408c93798f17c449d84e96b4fc899172248d9e3c37562ff9"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-130ad-keyboard-recovery-at-1440px-desktop/history-action-row-rendering.json",
+      "sha256": "cae7e57d6020bcaaaa3dc4ae22575626682820d4e0d09c1e211e58e28746ae53"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-130ad-keyboard-recovery-at-1440px-desktop/history-action-state-geometry.json",
+      "sha256": "9195f4856186e38a9bc6ca699fe9d6b47e470ed395525aa9dd870aa22fd189a8"
+    },
+    {
+      "path": "design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-desktop/large-rank-responsive-geometry.json",
+      "sha256": "0781cbd818e4d1db9b4f4bb73929f0996354da976cbf2c63a4badd6bbc6391a1"
+    },
+    {
+      "path": "design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-desktop/genre-responsive-geometry.json",
+      "sha256": "d5b3d6ed207c9141c6bc237e1fda4264c02cbd31dc38fc928eb1ccb4b53a71b8"
+    },
+    {
+      "path": "design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-desktop/genre-responsive-geometry.json",
+      "sha256": "daa6de4942f38ec236a733f5fabdc8fa3ee50e993f03bcc242115127323d7cc1"
+    },
+    {
+      "path": "design-v2-stats-search-swi-278f4-s-through-the-native-switch-desktop/historical-search-recovered.png",
+      "sha256": "9b5c2598444eef201d8df9285dde0ba5c936377cc5d35d77d18a9f6c3714be20"
+    },
+    {
+      "path": "design-v2-stats-search-swi-b806e-zing-short-and-tall-windows-desktop/search-row-1440-480.png",
+      "sha256": "57e12774336ffdd04b921d8278761386b82ef61d048c17b686644f3c4ccf3414"
+    },
+    {
+      "path": "design-v2-stats-search-swi-b806e-zing-short-and-tall-windows-desktop/search-row-1440-1000.png",
+      "sha256": "f6a33f27d745dc3aded27dbcae306892b141baa30f59ec5f68010ea99d66bea8"
+    },
+    {
+      "path": "design-v2-stats-search-swi-b806e-zing-short-and-tall-windows-desktop/search-row-390-480.png",
+      "sha256": "c3beb0ef539b7a34a4d99daae3d5ef90c6071676bf82574c5446588ba6ccaf1e"
+    },
+    {
+      "path": "design-v2-stats-search-swi-b806e-zing-short-and-tall-windows-desktop/search-row-390-1000.png",
+      "sha256": "ffdb5503b2e59c6f9aa58114c71a544b752b8b2e5834fff733ddc3a9d38417c9"
+    },
+    {
+      "path": "design-v2-stats-search-swi-fbc12--responds-to-reduced-motion-desktop/toggle-on-focus.png",
+      "sha256": "786d1a6158a1eb72dddb3b1962747ff80a295b8242951ecf86a83f5ba895725a"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-mobile/flame-motion-debut-390-400ms.png",
+      "sha256": "4cb3518f2bc23abf98a5d69cfcaa851f8146a3b32e493a4cc040d1d21543ef0e"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-mobile/flame-motion-hot-390-400ms.png",
+      "sha256": "6536cce27a5cc8e854a211c54724b2dcb04e0db54de5f539d0b48e237fd09a18"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-mobile/flame-motion-debut-1440-400ms.png",
+      "sha256": "e5e16c6a9e62951e406804f45596cb03c0fa80d32e3925e1f602c62393c1ffe5"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-mobile/flame-motion-hot-1440-400ms.png",
+      "sha256": "6cfb653bf39e95f3e4b44d3e107a9d1d7d937c1810d6a2c85390067e3bbf9e13"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-mobile/flame-canonical-motion.json",
+      "sha256": "e8d6a8c24071bb06c01da801d923fa3a0cf66f60b9c2883313e62a03a8d3887d"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-3ae25-rtist-row-geometry-at-390px-mobile/artist-rendering.json",
+      "sha256": "35bb95f2b04aeed22be1a8b98e4e134968c58183028320689fa6a8b7b98f2516"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-40b18-tist-row-geometry-at-1440px-mobile/artist-rendering.json",
+      "sha256": "5e21d3019358ceeb5d9afbd5b6ea684ee20a368e9b98efa78e11c29fa83f417e"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-mobile/debut-rendering.json",
+      "sha256": "c26933a9ede7cfbb9b695976278166bb669618a8f1b4017150635d41b5540ade"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-mobile/hot-mover-rendering.json",
+      "sha256": "c26933a9ede7cfbb9b695976278166bb669618a8f1b4017150635d41b5540ade"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-ed03e-ors-and-placement-at-1440px-mobile/debut-rendering.json",
+      "sha256": "6ba4c0dd9c72e09749190e584a8a1040d343b8e4208d8fb66a25ddad50a8b1bd"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-ed03e-ors-and-placement-at-1440px-mobile/hot-mover-rendering.json",
+      "sha256": "58b447a113f15c2bcccd29b1288c3bc6e0253c9dd01ee31774ba9d3681e77ac3"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-642bf--keyboard-recovery-at-390px-mobile/history-action-row-rendering.json",
+      "sha256": "c26933a9ede7cfbb9b695976278166bb669618a8f1b4017150635d41b5540ade"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-642bf--keyboard-recovery-at-390px-mobile/history-action-state-geometry.json",
+      "sha256": "710e84e3a1a357d2408c93798f17c449d84e96b4fc899172248d9e3c37562ff9"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-130ad-keyboard-recovery-at-1440px-mobile/history-action-row-rendering.json",
+      "sha256": "58b447a113f15c2bcccd29b1288c3bc6e0253c9dd01ee31774ba9d3681e77ac3"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-130ad-keyboard-recovery-at-1440px-mobile/history-action-state-geometry.json",
+      "sha256": "9d7fdd541004b9534bf5a86a29ef5d6b2a1b80e4e148cb90a378f3c6cdb12304"
+    },
+    {
+      "path": "design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-mobile/large-rank-responsive-geometry.json",
+      "sha256": "92620415f50519f66631ec0c79907c65c75f9919e87fabc3210c7fbe3ed5aa1f"
+    },
+    {
+      "path": "design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-mobile/genre-responsive-geometry.json",
+      "sha256": "8ba9ddba2213373c119e0ffea926045dcedf28ec5119552320824ab7786332d3"
+    },
+    {
+      "path": "design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-mobile/genre-responsive-geometry.json",
+      "sha256": "99ec7e4971ef21042f066bf6793d106ee752c7ef6f8ece3a7590e1349b01667d"
+    },
+    {
+      "path": "design-v2-stats-search-swi-278f4-s-through-the-native-switch-mobile/historical-search-recovered.png",
+      "sha256": "eded652ecae05405676fbc4a8d8266706a9f5ebf4964928dd803c15443f1cbe0"
+    },
+    {
+      "path": "design-v2-stats-search-swi-b806e-zing-short-and-tall-windows-mobile/search-row-1440-480.png",
+      "sha256": "c21685e652048288bb08b336d7b382550bbbaeeeeaa54fd9f241916ce81593ca"
+    },
+    {
+      "path": "design-v2-stats-search-swi-b806e-zing-short-and-tall-windows-mobile/search-row-1440-1000.png",
+      "sha256": "17765bb9baa29c1c768963147bb83c6ffc018aed49d510316c7528e73e14bbd3"
+    },
+    {
+      "path": "design-v2-stats-search-swi-b806e-zing-short-and-tall-windows-mobile/search-row-390-480.png",
+      "sha256": "bf9abda833324b3a06becdb478ebf55f91183ba83ea0f5844c4191b9745c106a"
+    },
+    {
+      "path": "design-v2-stats-search-swi-b806e-zing-short-and-tall-windows-mobile/search-row-390-1000.png",
+      "sha256": "ae14710abd3e7cc6cb999c0f5c0a0116dda2824e8c39ddcb726e03bf81eeee8e"
+    },
+    {
+      "path": "design-v2-stats-search-swi-fbc12--responds-to-reduced-motion-mobile/toggle-on-focus.png",
+      "sha256": "b57257d0ddce124fb7f965c4ea67ae7abb5a054a97d8773f9cb980fc18c52184"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-firefox-stats/flame-motion-debut-390-400ms.png",
+      "sha256": "04631fd3a5eede69c69fa0ea0f4209d8ebc1b0c73c1567fd79310b46520f0f10"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-firefox-stats/flame-motion-hot-390-400ms.png",
+      "sha256": "c35f6a68fc2c89008ff765563d769c4286f5d1a07c885eef8b4fff0129b31d1a"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-firefox-stats/flame-motion-debut-1440-400ms.png",
+      "sha256": "57097585483e8ac3cecd69b8f8627196532a6542bad61219b15447e286ab1d28"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-firefox-stats/flame-motion-hot-1440-400ms.png",
+      "sha256": "3a53bb655582ba48caa89a47cb00005994decfbfa03238763454fda70f96d4bd"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-firefox-stats/flame-canonical-motion.json",
+      "sha256": "964c1a8fa9a99f98b3264e0b21d0f9b3aa5175ad2d7583598014cc62cb15876f"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-3ae25-rtist-row-geometry-at-390px-firefox-stats/artist-rendering.json",
+      "sha256": "523d5d6682e822ba2532f7ab85c05499b5ecbdebe488910322abe003b821f450"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-40b18-tist-row-geometry-at-1440px-firefox-stats/artist-rendering.json",
+      "sha256": "1bdc66f18941aa4d2e6fc94f6680f4f857227af4c9d237301a2e16ad25ebdb17"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-firefox-stats/debut-rendering.json",
+      "sha256": "209c9b426f37f787679106be2b1cf5369c37fd80c24be3fff302c8c2af072bf8"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-firefox-stats/hot-mover-rendering.json",
+      "sha256": "209c9b426f37f787679106be2b1cf5369c37fd80c24be3fff302c8c2af072bf8"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-ed03e-ors-and-placement-at-1440px-firefox-stats/debut-rendering.json",
+      "sha256": "332c005d11c4bc6f152be47cd77a21dba256c640dcb63375573186a2d3b2e23e"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-ed03e-ors-and-placement-at-1440px-firefox-stats/hot-mover-rendering.json",
+      "sha256": "f51f0eba415b431579a391fd71e06235f1f4f87806117861fd744f2dc1c55a30"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-642bf--keyboard-recovery-at-390px-firefox-stats/history-action-row-rendering.json",
+      "sha256": "209c9b426f37f787679106be2b1cf5369c37fd80c24be3fff302c8c2af072bf8"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-642bf--keyboard-recovery-at-390px-firefox-stats/history-action-state-geometry.json",
+      "sha256": "793b5e29b0d1e681fffde04a40f0172b736c261a8f004a2566c11bb92dc80605"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-130ad-keyboard-recovery-at-1440px-firefox-stats/history-action-row-rendering.json",
+      "sha256": "f51f0eba415b431579a391fd71e06235f1f4f87806117861fd744f2dc1c55a30"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-130ad-keyboard-recovery-at-1440px-firefox-stats/history-action-state-geometry.json",
+      "sha256": "8292e104a4d71475581d4e6b47dfad35088187defe7830efee3ace927167adc4"
+    },
+    {
+      "path": "design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-firefox-stats/large-rank-responsive-geometry.json",
+      "sha256": "ef88603575483e5ff3846905b0301f4dc3cb8377538c07624fac0c3650e067b5"
+    },
+    {
+      "path": "design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-firefox-stats/genre-responsive-geometry.json",
+      "sha256": "5493f6fd4f53dfd755e60fea0942185b1770fe0887610dffe9fdb7790d83a33d"
+    },
+    {
+      "path": "design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-firefox-stats/genre-responsive-geometry.json",
+      "sha256": "814d9facf6094fa68073cffb4ab3f1700839f031d7601a9bc31867e21b9e1e6b"
+    },
+    {
+      "path": "design-v2-stats-search-swi-278f4-s-through-the-native-switch-firefox-stats/historical-search-recovered.png",
+      "sha256": "51a93ed286bac7721dd499816f7e10ba19b440688c9ec34bb474d24894a694b7"
+    },
+    {
+      "path": "design-v2-stats-search-swi-b806e-zing-short-and-tall-windows-firefox-stats/search-row-1440-480.png",
+      "sha256": "4489cd6835f03393060c07d720decabafe3c511f85a16a23e84b0f78f4b9e0e1"
+    },
+    {
+      "path": "design-v2-stats-search-swi-b806e-zing-short-and-tall-windows-firefox-stats/search-row-1440-1000.png",
+      "sha256": "d3549e96160ffc4adba80f88d085e070228f0f415e05f6b3ccf9f5b345827d3f"
+    },
+    {
+      "path": "design-v2-stats-search-swi-b806e-zing-short-and-tall-windows-firefox-stats/search-row-390-480.png",
+      "sha256": "8359df4948d71ad9cb9e800c107c0f5dced7d22375404c1170416f9d022f85e6"
+    },
+    {
+      "path": "design-v2-stats-search-swi-b806e-zing-short-and-tall-windows-firefox-stats/search-row-390-1000.png",
+      "sha256": "4b0bc025f5017f98787d41e6fa861649e5cf3c4c06bb87e7a3e7ccf856573ea8"
+    },
+    {
+      "path": "design-v2-stats-search-swi-fbc12--responds-to-reduced-motion-firefox-stats/toggle-on-focus.png",
+      "sha256": "bf50ddfa09746a43307d06339626dc1bbdce77972d2de591ff6b26a13585c655"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-webkit-stats/flame-motion-debut-390-400ms.png",
+      "sha256": "074440e9614804df2a91d76bfd2d585f0232b268211e913de26de9c872f54c1c"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-webkit-stats/flame-motion-hot-390-400ms.png",
+      "sha256": "979d32c99e12b3d8126e99b3f9aa6d6a9ae7478dd3f2c066bc7356952748e43d"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-webkit-stats/flame-motion-debut-1440-400ms.png",
+      "sha256": "b29b7b016a10f2ee4a1c41e62b95e35358f7a0fbaa276ab69e87cba1360ff31c"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-webkit-stats/flame-motion-hot-1440-400ms.png",
+      "sha256": "595119d8e30a427697329bb4bc84781994ac9bbbd65d544d22d443d1a0f216da"
+    },
+    {
+      "path": "design-v2-stats-flames-can-046c6-stops-on-preference-changes-webkit-stats/flame-canonical-motion.json",
+      "sha256": "8acd7ec0c4ddd261965dcead92f073dc71762509a15dea6d8cbe2737f4ec3163"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-3ae25-rtist-row-geometry-at-390px-webkit-stats/artist-rendering.json",
+      "sha256": "35bb95f2b04aeed22be1a8b98e4e134968c58183028320689fa6a8b7b98f2516"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-40b18-tist-row-geometry-at-1440px-webkit-stats/artist-rendering.json",
+      "sha256": "531728e0d2468c2a9162aaa9d7b451f0a7330d00d162859d9d2fed9b03cb4609"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-webkit-stats/debut-rendering.json",
+      "sha256": "c26933a9ede7cfbb9b695976278166bb669618a8f1b4017150635d41b5540ade"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-webkit-stats/hot-mover-rendering.json",
+      "sha256": "c26933a9ede7cfbb9b695976278166bb669618a8f1b4017150635d41b5540ade"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-ed03e-ors-and-placement-at-1440px-webkit-stats/debut-rendering.json",
+      "sha256": "8713bd7da86751e02cfee5fd7d93a2c1e0c4b1bfe9de4f0a9fbb900fe48cf5d0"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-ed03e-ors-and-placement-at-1440px-webkit-stats/hot-mover-rendering.json",
+      "sha256": "b4f1f5592ede3e618d3ab79ef2f42edf7979c963220aa19e42b83e4c5424cce6"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-642bf--keyboard-recovery-at-390px-webkit-stats/history-action-row-rendering.json",
+      "sha256": "c26933a9ede7cfbb9b695976278166bb669618a8f1b4017150635d41b5540ade"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-642bf--keyboard-recovery-at-390px-webkit-stats/history-action-state-geometry.json",
+      "sha256": "f243ea5e394a1aca650fd809cb405e38bf6b414e4e87ecfc60feb8515bb397a9"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-130ad-keyboard-recovery-at-1440px-webkit-stats/history-action-row-rendering.json",
+      "sha256": "b4f1f5592ede3e618d3ab79ef2f42edf7979c963220aa19e42b83e4c5424cce6"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-130ad-keyboard-recovery-at-1440px-webkit-stats/history-action-state-geometry.json",
+      "sha256": "5a4bcd88d1995f2a8b07f3293aeb8cc7c46ba19b3f437f7f7aa052dcf2d9f4c8"
+    },
+    {
+      "path": "design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-webkit-stats/large-rank-responsive-geometry.json",
+      "sha256": "1e8057c780c02059191c53c55a858281784f9c2178319c988b559545cc6b592f"
+    },
+    {
+      "path": "design-v2-stats-genres-gen-345d0-g-with-motion-no-preference-webkit-stats/genre-responsive-geometry.json",
+      "sha256": "56ab7e7c57cf375c69b3e6be2834911e09f9ee2791db4682cc209a58909d8bd7"
+    },
+    {
+      "path": "design-v2-stats-genres-gen-f592f-resizing-with-motion-reduce-webkit-stats/genre-responsive-geometry.json",
+      "sha256": "4be67d62e867883413c388e552de2a54db0cab99d317635887cdd38c4a8f20ca"
+    },
+    {
+      "path": "design-v2-stats-search-swi-278f4-s-through-the-native-switch-webkit-stats/historical-search-recovered.png",
+      "sha256": "de7438d347b9c37736497a0901e5cd6768684a077624fefea72003796dcb4bde"
+    },
+    {
+      "path": "design-v2-stats-search-swi-b806e-zing-short-and-tall-windows-webkit-stats/search-row-1440-480.png",
+      "sha256": "cdda5b583303fe2fd560ad648e117d8380ac33344f38bd6b68868f7cab7526dd"
+    },
+    {
+      "path": "design-v2-stats-search-swi-b806e-zing-short-and-tall-windows-webkit-stats/search-row-1440-1000.png",
+      "sha256": "57d592ab44b8eedca4812e8806d01ecbd9302b7821f2699f8b97319d99cbb360"
+    },
+    {
+      "path": "design-v2-stats-search-swi-b806e-zing-short-and-tall-windows-webkit-stats/search-row-390-480.png",
+      "sha256": "6480602d272f8a4d238e534fdd3c6ed1f26e532bccab8686f1143e7f9c4e003b"
+    },
+    {
+      "path": "design-v2-stats-search-swi-b806e-zing-short-and-tall-windows-webkit-stats/search-row-390-1000.png",
+      "sha256": "7dd06c98c650e902781f150f550405f948328d4f8583e76680c9518d69aa19ce"
+    },
+    {
+      "path": "design-v2-stats-search-swi-fbc12--responds-to-reduced-motion-webkit-stats/toggle-on-focus.png",
+      "sha256": "12140de4568f16418a4f70604b2324c732d7a5e564b0ba4c9b822afb8f8b39bd"
+    },
+    {
+      "path": "design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-webkit-stats/attachments/large-rank-responsive-geometry-b816925e24e68155cbe74ea961f7110209510ca7.json",
+      "sha256": "1e8057c780c02059191c53c55a858281784f9c2178319c988b559545cc6b592f"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-130ad-keyboard-recovery-at-1440px-webkit-stats/attachments/history-action-row-rendering-json-bd8606233bf148d27bd41e05266c7daee518c212.json",
+      "sha256": "b4f1f5592ede3e618d3ab79ef2f42edf7979c963220aa19e42b83e4c5424cce6"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-130ad-keyboard-recovery-at-1440px-webkit-stats/attachments/history-action-state-geometry-58b0b77da9dd7ef5dba1637616e8fe2b78e39d98.json",
+      "sha256": "5a4bcd88d1995f2a8b07f3293aeb8cc7c46ba19b3f437f7f7aa052dcf2d9f4c8"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-642bf--keyboard-recovery-at-390px-webkit-stats/attachments/history-action-row-rendering-json-81c30e7e437fd6b2a021010397440cf03354d30f.json",
+      "sha256": "c26933a9ede7cfbb9b695976278166bb669618a8f1b4017150635d41b5540ade"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-642bf--keyboard-recovery-at-390px-webkit-stats/attachments/history-action-state-geometry-441044b4561223cb9ba6320a4046e0eb767cd70f.json",
+      "sha256": "f243ea5e394a1aca650fd809cb405e38bf6b414e4e87ecfc60feb8515bb397a9"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-ed03e-ors-and-placement-at-1440px-webkit-stats/attachments/debut-rendering-json-2492913530208e9fc34632ac7809cc779b210dff.json",
+      "sha256": "8713bd7da86751e02cfee5fd7d93a2c1e0c4b1bfe9de4f0a9fbb900fe48cf5d0"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-ed03e-ors-and-placement-at-1440px-webkit-stats/attachments/hot-mover-rendering-json-e57cab568524be75e2c34c5728d56d2cccde4397.json",
+      "sha256": "b4f1f5592ede3e618d3ab79ef2f42edf7979c963220aa19e42b83e4c5424cce6"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-webkit-stats/attachments/debut-rendering-json-86fc44e55ccb71c0ae3ed276c80e93e504999c5c.json",
+      "sha256": "c26933a9ede7cfbb9b695976278166bb669618a8f1b4017150635d41b5540ade"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-webkit-stats/attachments/hot-mover-rendering-json-2a4c6e24df63bf0c36338a90d21f34fe357b143c.json",
+      "sha256": "c26933a9ede7cfbb9b695976278166bb669618a8f1b4017150635d41b5540ade"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-40b18-tist-row-geometry-at-1440px-webkit-stats/attachments/artist-rendering-json-dbd253cdeefa7039f4b9b1d9bcc9145d113056ec.json",
+      "sha256": "531728e0d2468c2a9162aaa9d7b451f0a7330d00d162859d9d2fed9b03cb4609"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-3ae25-rtist-row-geometry-at-390px-webkit-stats/attachments/artist-rendering-json-e4c31cbc53fada19a7db785f1e3c6c9a189d9a7c.json",
+      "sha256": "35bb95f2b04aeed22be1a8b98e4e134968c58183028320689fa6a8b7b98f2516"
+    },
+    {
+      "path": "design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-firefox-stats/attachments/large-rank-responsive-geometry-79fd7f29931a524f80bc5fde02e59946392ca7ec.json",
+      "sha256": "ef88603575483e5ff3846905b0301f4dc3cb8377538c07624fac0c3650e067b5"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-130ad-keyboard-recovery-at-1440px-firefox-stats/attachments/history-action-row-rendering-json-8f7e91a51accb6af0a7d668c7a2a06a67fa012fa.json",
+      "sha256": "f51f0eba415b431579a391fd71e06235f1f4f87806117861fd744f2dc1c55a30"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-130ad-keyboard-recovery-at-1440px-firefox-stats/attachments/history-action-state-geometry-adb4b44d8ed164f6dbf54e7ec44a91384c000298.json",
+      "sha256": "8292e104a4d71475581d4e6b47dfad35088187defe7830efee3ace927167adc4"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-642bf--keyboard-recovery-at-390px-firefox-stats/attachments/history-action-row-rendering-json-3280be5c8832c97e111d0daaf65ec506b4400cd1.json",
+      "sha256": "209c9b426f37f787679106be2b1cf5369c37fd80c24be3fff302c8c2af072bf8"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-642bf--keyboard-recovery-at-390px-firefox-stats/attachments/history-action-state-geometry-b5cf103d369b1f152aa695562f7cd1fa60d21aa4.json",
+      "sha256": "793b5e29b0d1e681fffde04a40f0172b736c261a8f004a2566c11bb92dc80605"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-ed03e-ors-and-placement-at-1440px-firefox-stats/attachments/debut-rendering-json-c2bbeaa78c1a78754442e0231d6ba1e23d7890d9.json",
+      "sha256": "332c005d11c4bc6f152be47cd77a21dba256c640dcb63375573186a2d3b2e23e"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-ed03e-ors-and-placement-at-1440px-firefox-stats/attachments/hot-mover-rendering-json-be036659d5bc6443ba955cd4f664c004aa72e210.json",
+      "sha256": "f51f0eba415b431579a391fd71e06235f1f4f87806117861fd744f2dc1c55a30"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-firefox-stats/attachments/debut-rendering-json-45b2f25e626d1b1ec17912aad0823f866558da15.json",
+      "sha256": "209c9b426f37f787679106be2b1cf5369c37fd80c24be3fff302c8c2af072bf8"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-firefox-stats/attachments/hot-mover-rendering-json-ba6c0c87573a1c42a1e671f98476f69eb5f289d2.json",
+      "sha256": "209c9b426f37f787679106be2b1cf5369c37fd80c24be3fff302c8c2af072bf8"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-40b18-tist-row-geometry-at-1440px-firefox-stats/attachments/artist-rendering-json-b6c8a9ad6e263d8a3d3eb869d0de6db96f8736fb.json",
+      "sha256": "1bdc66f18941aa4d2e6fc94f6680f4f857227af4c9d237301a2e16ad25ebdb17"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-3ae25-rtist-row-geometry-at-390px-firefox-stats/attachments/artist-rendering-json-bf8ccccf0d283bed70c8285e5c64b16a78372bea.json",
+      "sha256": "523d5d6682e822ba2532f7ab85c05499b5ecbdebe488910322abe003b821f450"
+    },
+    {
+      "path": "design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-mobile/attachments/large-rank-responsive-geometry-db98074f81e85b74cfbacfc45576bee0211c60fe.json",
+      "sha256": "92620415f50519f66631ec0c79907c65c75f9919e87fabc3210c7fbe3ed5aa1f"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-130ad-keyboard-recovery-at-1440px-mobile/attachments/history-action-row-rendering-json-6cfd37070c569dc8cd3444e4820dfcb003549164.json",
+      "sha256": "58b447a113f15c2bcccd29b1288c3bc6e0253c9dd01ee31774ba9d3681e77ac3"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-130ad-keyboard-recovery-at-1440px-mobile/attachments/history-action-state-geometry-ea6f18f4ac20b445973dc3b382e681e89c051137.json",
+      "sha256": "9d7fdd541004b9534bf5a86a29ef5d6b2a1b80e4e148cb90a378f3c6cdb12304"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-642bf--keyboard-recovery-at-390px-mobile/attachments/history-action-row-rendering-json-c7eb91dc04df212ca7b8a4dbc7500e13aa59a90d.json",
+      "sha256": "c26933a9ede7cfbb9b695976278166bb669618a8f1b4017150635d41b5540ade"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-642bf--keyboard-recovery-at-390px-mobile/attachments/history-action-state-geometry-99e411ae800aae4877df13359289e88abab9f9aa.json",
+      "sha256": "710e84e3a1a357d2408c93798f17c449d84e96b4fc899172248d9e3c37562ff9"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-ed03e-ors-and-placement-at-1440px-mobile/attachments/debut-rendering-json-c0ec6829c00f655ce580c16dfd994b81c3582d17.json",
+      "sha256": "6ba4c0dd9c72e09749190e584a8a1040d343b8e4208d8fb66a25ddad50a8b1bd"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-ed03e-ors-and-placement-at-1440px-mobile/attachments/hot-mover-rendering-json-2ac77c33d5c9ce6fa155f08008f79ef5ca37891b.json",
+      "sha256": "58b447a113f15c2bcccd29b1288c3bc6e0253c9dd01ee31774ba9d3681e77ac3"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-mobile/attachments/debut-rendering-json-7dd08d71b031f6c9a3ef824f7acfbf12b131c0a0.json",
+      "sha256": "c26933a9ede7cfbb9b695976278166bb669618a8f1b4017150635d41b5540ade"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-mobile/attachments/hot-mover-rendering-json-fda07075f1cd76a4777885a84d220dc32a9d9521.json",
+      "sha256": "c26933a9ede7cfbb9b695976278166bb669618a8f1b4017150635d41b5540ade"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-40b18-tist-row-geometry-at-1440px-mobile/attachments/artist-rendering-json-d17a39e8c7cebd87d3e508b69a8198f51b9df9f0.json",
+      "sha256": "5e21d3019358ceeb5d9afbd5b6ea684ee20a368e9b98efa78e11c29fa83f417e"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-3ae25-rtist-row-geometry-at-390px-mobile/attachments/artist-rendering-json-c15d6ffcec85b5e05fd4e675ca808c03dd7ef4bd.json",
+      "sha256": "35bb95f2b04aeed22be1a8b98e4e134968c58183028320689fa6a8b7b98f2516"
+    },
+    {
+      "path": "design-v2-stats-flames-lar-ec2bd--actions-with-motion-reduce-desktop/attachments/large-rank-responsive-geometry-0774b156acf0a800692ba7c53cf2152ffe3f0b0a.json",
+      "sha256": "0781cbd818e4d1db9b4f4bb73929f0996354da976cbf2c63a4badd6bbc6391a1"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-130ad-keyboard-recovery-at-1440px-desktop/attachments/history-action-row-rendering-json-ee35a78df0a3963553f7915540bb10b4f843f470.json",
+      "sha256": "cae7e57d6020bcaaaa3dc4ae22575626682820d4e0d09c1e211e58e28746ae53"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-130ad-keyboard-recovery-at-1440px-desktop/attachments/history-action-state-geometry-a8e75cd4537329f04b398783bd3be97407b4a673.json",
+      "sha256": "9195f4856186e38a9bc6ca699fe9d6b47e470ed395525aa9dd870aa22fd189a8"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-642bf--keyboard-recovery-at-390px-desktop/attachments/history-action-row-rendering-json-1e3321376c132a61ae88d48609d82a53071400e6.json",
+      "sha256": "c26933a9ede7cfbb9b695976278166bb669618a8f1b4017150635d41b5540ade"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-642bf--keyboard-recovery-at-390px-desktop/attachments/history-action-state-geometry-44f98cd8caa02ee154893ef9812a96bcfabfd7f7.json",
+      "sha256": "710e84e3a1a357d2408c93798f17c449d84e96b4fc899172248d9e3c37562ff9"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-ed03e-ors-and-placement-at-1440px-desktop/attachments/debut-rendering-json-87a15b9ed66c70c3afe052f6e0c3f227b62223e8.json",
+      "sha256": "9d25e4a1e7d0df85963029b35fbd9bee427b79293342e20febb11de01f8e65bb"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-ed03e-ors-and-placement-at-1440px-desktop/attachments/hot-mover-rendering-json-a1112d2b8e033ac05a3d294bd0d4f8acc3c6a12c.json",
+      "sha256": "cae7e57d6020bcaaaa3dc4ae22575626682820d4e0d09c1e211e58e28746ae53"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-desktop/attachments/debut-rendering-json-b9466ac0bbaa0720024e694233e285d335047fe6.json",
+      "sha256": "c26933a9ede7cfbb9b695976278166bb669618a8f1b4017150635d41b5540ade"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-bb6cf-lors-and-placement-at-390px-desktop/attachments/hot-mover-rendering-json-a3ba87d3285314149ce8e2bdd5926f6025560b15.json",
+      "sha256": "c26933a9ede7cfbb9b695976278166bb669618a8f1b4017150635d41b5540ade"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-40b18-tist-row-geometry-at-1440px-desktop/attachments/artist-rendering-json-3b2ce8fba660dda49e0016ac04e262b7e5b622f1.json",
+      "sha256": "ab902ee4f3caad82851f8dc56ac6c0658ce16f83f567e962f3adcae3401c88b7"
+    },
+    {
+      "path": "design-v2-stats-flames-sta-3ae25-rtist-row-geometry-at-390px-desktop/attachments/artist-rendering-json-67e252acca48a4057e37fa9b28f8ec9617eb6de8.json",
+      "sha256": "35bb95f2b04aeed22be1a8b98e4e134968c58183028320689fa6a8b7b98f2516"
+    }
+  ]
+}

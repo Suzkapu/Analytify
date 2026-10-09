@@ -1,0 +1,65 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-calendar-refresh-retry.spec.ts e2e/design-v2-insights.spec.ts --grep cached calendar Retry|Insights long names --config=/tmp/analytify-all-browsers.config.ts --workers=1
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:283546) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:283546) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:283667) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 1:56:11 AM [vite] (client) [console.error] [Analytify][0007][+00460ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:11 AM [vite] (client) [console.warn] [Analytify][0008][+00461ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:11 AM [vite] (client) [console.error] [Analytify][0009][+00486ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:11 AM [vite] (client) [console.warn] [Analytify][0010][+00487ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+  ✓   1 [desktop] › e2e/design-v2-calendar-refresh-retry.spec.ts:6:71 › cached calendar Retry keeps focus and eligible dates through a real metadata request, motion no-preference (3.7s)
+[WebServer] 1:56:14 AM [vite] (client) [console.error] [Analytify][0007][+00309ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:14 AM [vite] (client) [console.warn] [Analytify][0008][+00311ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:14 AM [vite] (client) [console.error] [Analytify][0009][+00343ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:14 AM [vite] (client) [console.warn] [Analytify][0010][+00343ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+  ✓   2 [desktop] › e2e/design-v2-calendar-refresh-retry.spec.ts:6:71 › cached calendar Retry keeps focus and eligible dates through a real metadata request, motion reduce (3.0s)
+  ✓   3 [desktop] › e2e/design-v2-insights.spec.ts:71:5 › Insights long names and controls reflow across the release matrix and enlarged text (2.7s)
+(node:283980) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 1:56:21 AM [vite] (client) [console.error] [Analytify][0007][+00456ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:21 AM [vite] (client) [console.warn] [Analytify][0008][+00457ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:21 AM [vite] (client) [console.error] [Analytify][0009][+00489ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:21 AM [vite] (client) [console.warn] [Analytify][0010][+00489ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+  ✓   4 [mobile] › e2e/design-v2-calendar-refresh-retry.spec.ts:6:71 › cached calendar Retry keeps focus and eligible dates through a real metadata request, motion no-preference (3.5s)
+[WebServer] 1:56:24 AM [vite] (client) [console.error] [Analytify][0007][+00369ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:24 AM [vite] (client) [console.warn] [Analytify][0008][+00369ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:24 AM [vite] (client) [console.error] [Analytify][0009][+00406ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:24 AM [vite] (client) [console.warn] [Analytify][0010][+00406ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+  ✓   5 [mobile] › e2e/design-v2-calendar-refresh-retry.spec.ts:6:71 › cached calendar Retry keeps focus and eligible dates through a real metadata request, motion reduce (2.9s)
+  ✓   6 [mobile] › e2e/design-v2-insights.spec.ts:71:5 › Insights long names and controls reflow across the release matrix and enlarged text (2.9s)
+(node:284262) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 1:56:31 AM [vite] (client) [console.error] [Analytify][0007][+00225ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:31 AM [vite] (client) [console.warn] [Analytify][0008][+00226ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:31 AM [vite] (client) [console.error] [Analytify][0009][+00265ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:31 AM [vite] (client) [console.warn] [Analytify][0010][+00266ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+  ✓   7 [firefox-stats] › e2e/design-v2-calendar-refresh-retry.spec.ts:6:71 › cached calendar Retry keeps focus and eligible dates through a real metadata request, motion no-preference (4.6s)
+[WebServer] 1:56:35 AM [vite] (client) [console.error] [Analytify][0007][+00185ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:35 AM [vite] (client) [console.warn] [Analytify][0008][+00185ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:35 AM [vite] (client) [console.error] [Analytify][0009][+00268ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:35 AM [vite] (client) [console.warn] [Analytify][0010][+00268ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+  ✓   8 [firefox-stats] › e2e/design-v2-calendar-refresh-retry.spec.ts:6:71 › cached calendar Retry keeps focus and eligible dates through a real metadata request, motion reduce (3.1s)
+  ✓   9 [firefox-stats] › e2e/design-v2-insights.spec.ts:71:5 › Insights long names and controls reflow across the release matrix and enlarged text (2.7s)
+(node:284830) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 1:56:43 AM [vite] (client) [console.error] [Analytify][0007][+00602ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:43 AM [vite] (client) [console.warn] [Analytify][0008][+00603ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:43 AM [vite] (client) [console.error] [Analytify][0009][+00756ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:43 AM [vite] (client) [console.warn] [Analytify][0010][+00757ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+  ✓  10 [webkit-stats] › e2e/design-v2-calendar-refresh-retry.spec.ts:6:71 › cached calendar Retry keeps focus and eligible dates through a real metadata request, motion no-preference (7.0s)
+[WebServer] 1:56:49 AM [vite] (client) [console.error] [Analytify][0007][+00446ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:49 AM [vite] (client) [console.warn] [Analytify][0008][+00447ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:49 AM [vite] (client) [console.error] [Analytify][0009][+00476ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 1:56:49 AM [vite] (client) [console.warn] [Analytify][0010][+00477ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+  ✓  11 [webkit-stats] › e2e/design-v2-calendar-refresh-retry.spec.ts:6:71 › cached calendar Retry keeps focus and eligible dates through a real metadata request, motion reduce (4.0s)
+  ✓  12 [webkit-stats] › e2e/design-v2-insights.spec.ts:71:5 › Insights long names and controls reflow across the release matrix and enlarged text (4.0s)
+
+  12 passed (54.1s)

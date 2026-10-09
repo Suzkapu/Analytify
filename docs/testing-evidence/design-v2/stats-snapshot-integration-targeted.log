@@ -1,0 +1,106 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/v2-stats-snapshot-workflow.spec.ts --include=src/app/features/insights/user-stats/v2-user-stats.component.spec.ts --include=src/app/shared/ui-v2/v2-genre-rankings.component.spec.ts --progress=false
+Application bundle generation complete. [2.926 seconds] - 2026-10-07T17:55:57.378Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stdout | src/app/features/insights/user-stats/v2-stats-snapshot-workflow.spec.ts > Stats selected-date recovery through the rendered page > opens the ranking calendar from a successful empty date and returns to Today
+[Analytify][0005][+00481ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-03
+
+stdout | src/app/features/insights/user-stats/v2-stats-snapshot-workflow.spec.ts > Stats selected-date recovery through the rendered page > opens the comparison calendar, excludes the primary date and keeps primary content
+[Analytify][0006][+00516ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-03
+
+stdout | src/app/features/insights/user-stats/v2-stats-snapshot-workflow.spec.ts > Stats selected-date recovery through the rendered page > removes private selectors, dialogs and recovery actions after shared access replaces ownership
+[Analytify][0007][+00552ms][Personal Stats][STEP] Lazy-loading snapshot details on demand: 2026-10-03
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/v2-stats-snapshot-workflow.spec.ts (5 tests | 3 failed) 608ms
+     × opens the ranking calendar from a successful empty date and returns to Today 33ms
+     × opens the comparison calendar, excludes the primary date and keeps primary content 38ms
+     × removes private selectors, dialogs and recovery actions after shared access replaces ownership 78ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-stats-snapshot-workflow.spec.ts > Stats selected-date recovery through the rendered page > opens the ranking calendar from a successful empty date and returns to Today
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ src/app/features/insights/user-stats/v2-stats-snapshot-workflow.spec.ts:70:67
+     68|     expect(element.textContent).toContain('No rankings for this catego…
+     69|     button('v2-snapshot-feedback', 'Choose date').click(); render();
+     70|     expect(element.querySelector('[role="dialog"]')?.textContent).toCo…
+       |                                                                   ^
+     71|     expect(element.querySelector('[data-date="2026-10-03"]')?.getAttri…
+     72|     button('v2-snapshot-calendar', 'Today').click(); render();
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-stats-snapshot-workflow.spec.ts > Stats selected-date recovery through the rendered page > opens the comparison calendar, excludes the primary date and keeps primary content
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ src/app/features/insights/user-stats/v2-stats-snapshot-workflow.spec.ts:83:67
+     81|     component.selectCompareValue(id); await settle(); render();
+     82|     button('v2-snapshot-feedback', 'Choose date').click(); render();
+     83|     expect(element.querySelector('[role="dialog"]')?.textContent).toCo…
+       |                                                                   ^
+     84|     expect(button('v2-snapshot-calendar', 'Today')).toBeUndefined();
+     85|     expect(element.querySelector('.v2-ranking-list strong')?.textConte…
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-stats-snapshot-workflow.spec.ts > Stats selected-date recovery through the rendered page > removes private selectors, dialogs and recovery actions after shared access replaces ownership
+AssertionError: expected <select …(2)>…(2)</select> to be null
+
+- Expected:
+null
+
++ Received:
+<select
+  _ngcontent-a-c845923377=""
+  class="ng-untouched ng-pristine ng-valid"
+>
+  <option
+    _ngcontent-a-c845923377=""
+    value="current"
+  >
+    Current
+  </option>
+  <option
+    _ngcontent-a-c845923377=""
+    value="1791021600000"
+  >
+    Oct 3, 2026
+  </option>
+  <!--container-->
+</select>
+
+ ❯ src/app/features/insights/user-stats/v2-stats-snapshot-workflow.spec.ts:97:89
+     95|     component.openSnapshotCalendar('comparison'); render();
+     96|     account.shared = 'shared-owner'; render();
+     97|     expect(element.querySelector('select, v2-snapshot-calendar, v2-sna…
+       |                                                                                         ^
+     98|     component.retrySnapshot('comparison'); component.openSnapshotCalen…
+     99|     component.selectComparisonToday(new Event('click'));
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  3 failed | 29 passed (32)
+   Start at  19:55:57
+   Duration  1.66s (transform 594ms, setup 703ms, import 941ms, tests 1.39s, environment 995ms)
+

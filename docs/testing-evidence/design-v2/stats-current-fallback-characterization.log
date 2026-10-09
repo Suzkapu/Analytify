@@ -1,0 +1,184 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts --progress=false
+Application bundle generation complete. [2.290 seconds] - 2026-10-08T11:03:08.657Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:515994) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > does not persist obsolete cloud cache entries after range changes while restore is pending
+[Analytify][0012][+00000ms][Local Storage][DONE] Restored 4 requested cache keys from Supabase.
+
+stderr | src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > does not persist obsolete cloud cache entries after range changes while restore is pending
+AssertionError: expected '[{"id":"cached-song","name":"Obsolete…' to be null
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts:91:109
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: '[{"id":"cached-song","name":"Obsolete cloud song","artists":[{"name":"Artist"}],"album":{"images":[]}}]',
+  expected: null,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stdout | src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > does not persist obsolete cloud cache entries after spotify changes while restore is pending
+[Analytify][0013][+00000ms][Local Storage][DONE] Restored 4 requested cache keys from Supabase.
+
+stderr | src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > does not persist obsolete cloud cache entries after spotify changes while restore is pending
+AssertionError: expected '[{"id":"cached-song","name":"Obsolete…' to be null
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts:91:109
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: '[{"id":"cached-song","name":"Obsolete cloud song","artists":[{"name":"Artist"}],"album":{"images":[]}}]',
+  expected: null,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stdout | src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > does not persist obsolete cloud cache entries after cloud changes while restore is pending
+[Analytify][0014][+00000ms][Local Storage][DONE] Restored 4 requested cache keys from Supabase.
+
+stderr | src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > does not persist obsolete cloud cache entries after cloud changes while restore is pending
+AssertionError: expected '[{"id":"cached-song","name":"Obsolete…' to be null
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts:91:109
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: '[{"id":"cached-song","name":"Obsolete cloud song","artists":[{"name":"Artist"}],"album":{"images":[]}}]',
+  expected: null,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stdout | src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > does not persist obsolete cloud cache entries after destroy changes while restore is pending
+[Analytify][0015][+00000ms][Local Storage][DONE] Restored 4 requested cache keys from Supabase.
+
+stderr | src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > does not persist obsolete cloud cache entries after destroy changes while restore is pending
+AssertionError: expected '[{"id":"cached-song","name":"Obsolete…' to be null
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts:91:109
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: '[{"id":"cached-song","name":"Obsolete cloud song","artists":[{"name":"Artist"}],"album":{"images":[]}}]',
+  expected: null,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stdout | src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > does not let a late first restore overwrite a newer same-range complete cache
+[Analytify][0016][+00000ms][Local Storage][DONE] Restored 4 requested cache keys from Supabase.
+[Analytify][0017][+00000ms][Personal Stats][STEP] Loading stats for short_term from the local IndexedDB cache.
+[Analytify][0018][+00000ms][Personal Stats][DONE] Saved history snapshot to IndexedDB
+[Analytify][0019][+00000ms][Local Storage][DONE] Restored 4 requested cache keys from Supabase.
+
+stderr | src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > does not let a late first restore overwrite a newer same-range complete cache
+AssertionError: expected 'Obsolete cloud song' to be 'Newest cloud song' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts:104:85
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: 'Obsolete cloud song',
+  expected: 'Newest cloud song',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts (8 tests | 5 failed) 56ms
+     × does not persist obsolete cloud cache entries after range changes while restore is pending 3ms
+     × does not persist obsolete cloud cache entries after spotify changes while restore is pending 2ms
+     × does not persist obsolete cloud cache entries after cloud changes while restore is pending 2ms
+     × does not persist obsolete cloud cache entries after destroy changes while restore is pending 2ms
+     × does not let a late first restore overwrite a newer same-range complete cache 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > does not persist obsolete cloud cache entries after range changes while restore is pending
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > does not persist obsolete cloud cache entries after spotify changes while restore is pending
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > does not persist obsolete cloud cache entries after cloud changes while restore is pending
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > does not persist obsolete cloud cache entries after destroy changes while restore is pending
+AssertionError: expected '[{"id":"cached-song","name":"Obsolete…' to be null
+
+- Expected:
+null
+
++ Received:
+"[{\"id\":\"cached-song\",\"name\":\"Obsolete cloud song\",\"artists\":[{\"name\":\"Artist\"}],\"album\":{\"images\":[]}}]"
+
+ ❯ src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts:91:109
+     89|       else h.account[change] = 'replacement';
+     90|       h.cacheReads[0].resolve({data: entries('Obsolete cloud song'), e…
+     91|       expect(h.component.topTracks).toEqual([]); expect(h.storage.getI…
+       |                                                                                                             ^
+     92|       expect(h.storage.getItem('owner_stats_short_term_lastUpdated')).…
+     93|       expect(h.historyWrite).not.toHaveBeenCalled(); expect(h.spotify.…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > does not let a late first restore overwrite a newer same-range complete cache
+AssertionError: expected 'Obsolete cloud song' to be 'Newest cloud song' // Object.is equality
+
+Expected: "Newest cloud song"
+Received: "Obsolete cloud song"
+
+ ❯ src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts:104:85
+    102|     h.cacheReads[0].resolve({data: entries('Obsolete cloud song'), err…
+    103|     expect(h.component.topTracks[0].name).toBe('Newest cloud song');
+    104|     expect(JSON.parse(h.storage.getItem('owner_stats_short_term_tracks…
+       |                                                                                     ^
+    105|     expect(h.historyWrite).toHaveBeenCalledOnce(); h.component.ngOnDes…
+    106|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 3 passed (8)
+   Start at  13:03:08
+   Duration  861ms (transform 164ms, setup 201ms, import 203ms, tests 56ms, environment 289ms)
+

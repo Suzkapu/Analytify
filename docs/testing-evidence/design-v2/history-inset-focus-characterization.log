@@ -1,0 +1,286 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-history.spec.ts --config=/tmp/analytify-all-browsers.config.ts --workers=1 --grep keyboard focus stays inside
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:311621) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:311621) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:311768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (no-preference) (2.5s)
+(node:311884) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [desktop] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (reduce) (2.5s)
+(node:311997) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 [mobile] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (no-preference) (2.5s)
+(node:312118) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  4 [mobile] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (reduce) (2.4s)
+(node:312255) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  5 [firefox-stats] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (no-preference) (2.8s)
+(node:312509) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  6 [firefox-stats] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (reduce) (2.8s)
+(node:312760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  7 [webkit-stats] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (no-preference) (4.2s)
+(node:312905) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  8 [webkit-stats] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (reduce) (3.1s)
+
+
+  1) [desktop] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (no-preference) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 3
+
+      595 |       await writeFile(evidencePath, JSON.stringify(evidence, null, 2));
+      596 |       expect(measured.keyboardFocus).toBe(true);
+    > 597 |       expect(measured.outlineWidth).toBe(2);
+          |                                     ^
+      598 |       expect(measured.color).toBe('rgb(159, 255, 200)');
+      599 |       expect(measured.outlineInsideCanvas, 'the focus indicator must not extend into the scrolling clip').toBe(true);
+      600 |       expect(measured.horizontalOutlineInsideBody).toBe(true);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-history.spec.ts:597:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-hi-7212b-ile-resizing-no-preference--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-history-hi-7212b-ile-resizing-no-preference--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-hi-7212b-ile-resizing-no-preference--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-history-hi-7212b-ile-resizing-no-preference--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (reduce) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 3
+
+      595 |       await writeFile(evidencePath, JSON.stringify(evidence, null, 2));
+      596 |       expect(measured.keyboardFocus).toBe(true);
+    > 597 |       expect(measured.outlineWidth).toBe(2);
+          |                                     ^
+      598 |       expect(measured.color).toBe('rgb(159, 255, 200)');
+      599 |       expect(measured.outlineInsideCanvas, 'the focus indicator must not extend into the scrolling clip').toBe(true);
+      600 |       expect(measured.horizontalOutlineInsideBody).toBe(true);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-history.spec.ts:597:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-hi-94112-nvas-while-resizing-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-history-hi-94112-nvas-while-resizing-reduce--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-hi-94112-nvas-while-resizing-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-history-hi-94112-nvas-while-resizing-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (no-preference) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 3
+
+      595 |       await writeFile(evidencePath, JSON.stringify(evidence, null, 2));
+      596 |       expect(measured.keyboardFocus).toBe(true);
+    > 597 |       expect(measured.outlineWidth).toBe(2);
+          |                                     ^
+      598 |       expect(measured.color).toBe('rgb(159, 255, 200)');
+      599 |       expect(measured.outlineInsideCanvas, 'the focus indicator must not extend into the scrolling clip').toBe(true);
+      600 |       expect(measured.horizontalOutlineInsideBody).toBe(true);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-history.spec.ts:597:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-hi-7212b-ile-resizing-no-preference--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-history-hi-7212b-ile-resizing-no-preference--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-hi-7212b-ile-resizing-no-preference--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-history-hi-7212b-ile-resizing-no-preference--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [mobile] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (reduce) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 3
+
+      595 |       await writeFile(evidencePath, JSON.stringify(evidence, null, 2));
+      596 |       expect(measured.keyboardFocus).toBe(true);
+    > 597 |       expect(measured.outlineWidth).toBe(2);
+          |                                     ^
+      598 |       expect(measured.color).toBe('rgb(159, 255, 200)');
+      599 |       expect(measured.outlineInsideCanvas, 'the focus indicator must not extend into the scrolling clip').toBe(true);
+      600 |       expect(measured.horizontalOutlineInsideBody).toBe(true);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-history.spec.ts:597:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-hi-94112-nvas-while-resizing-reduce--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-history-hi-94112-nvas-while-resizing-reduce--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-hi-94112-nvas-while-resizing-reduce--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-history-hi-94112-nvas-while-resizing-reduce--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [firefox-stats] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (no-preference) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 3
+
+      595 |       await writeFile(evidencePath, JSON.stringify(evidence, null, 2));
+      596 |       expect(measured.keyboardFocus).toBe(true);
+    > 597 |       expect(measured.outlineWidth).toBe(2);
+          |                                     ^
+      598 |       expect(measured.color).toBe('rgb(159, 255, 200)');
+      599 |       expect(measured.outlineInsideCanvas, 'the focus indicator must not extend into the scrolling clip').toBe(true);
+      600 |       expect(measured.horizontalOutlineInsideBody).toBe(true);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-history.spec.ts:597:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-hi-7212b-ile-resizing-no-preference--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-history-hi-7212b-ile-resizing-no-preference--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-hi-7212b-ile-resizing-no-preference--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-history-hi-7212b-ile-resizing-no-preference--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [firefox-stats] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (reduce) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 3
+
+      595 |       await writeFile(evidencePath, JSON.stringify(evidence, null, 2));
+      596 |       expect(measured.keyboardFocus).toBe(true);
+    > 597 |       expect(measured.outlineWidth).toBe(2);
+          |                                     ^
+      598 |       expect(measured.color).toBe('rgb(159, 255, 200)');
+      599 |       expect(measured.outlineInsideCanvas, 'the focus indicator must not extend into the scrolling clip').toBe(true);
+      600 |       expect(measured.horizontalOutlineInsideBody).toBe(true);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-history.spec.ts:597:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-hi-94112-nvas-while-resizing-reduce--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-history-hi-94112-nvas-while-resizing-reduce--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-hi-94112-nvas-while-resizing-reduce--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-history-hi-94112-nvas-while-resizing-reduce--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [webkit-stats] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (no-preference) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 3
+
+      595 |       await writeFile(evidencePath, JSON.stringify(evidence, null, 2));
+      596 |       expect(measured.keyboardFocus).toBe(true);
+    > 597 |       expect(measured.outlineWidth).toBe(2);
+          |                                     ^
+      598 |       expect(measured.color).toBe('rgb(159, 255, 200)');
+      599 |       expect(measured.outlineInsideCanvas, 'the focus indicator must not extend into the scrolling clip').toBe(true);
+      600 |       expect(measured.horizontalOutlineInsideBody).toBe(true);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-history.spec.ts:597:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-hi-7212b-ile-resizing-no-preference--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-history-hi-7212b-ile-resizing-no-preference--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-hi-7212b-ile-resizing-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-history-hi-7212b-ile-resizing-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [webkit-stats] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (reduce) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 3
+
+      595 |       await writeFile(evidencePath, JSON.stringify(evidence, null, 2));
+      596 |       expect(measured.keyboardFocus).toBe(true);
+    > 597 |       expect(measured.outlineWidth).toBe(2);
+          |                                     ^
+      598 |       expect(measured.color).toBe('rgb(159, 255, 200)');
+      599 |       expect(measured.outlineInsideCanvas, 'the focus indicator must not extend into the scrolling clip').toBe(true);
+      600 |       expect(measured.horizontalOutlineInsideBody).toBe(true);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-history.spec.ts:597:37
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-hi-94112-nvas-while-resizing-reduce--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-history-hi-94112-nvas-while-resizing-reduce--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-hi-94112-nvas-while-resizing-reduce--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-history-hi-94112-nvas-while-resizing-reduce--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8 failed
+    [desktop] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (no-preference) 
+    [desktop] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (reduce) 
+    [mobile] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (no-preference) 
+    [mobile] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (reduce) 
+    [firefox-stats] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (no-preference) 
+    [firefox-stats] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (reduce) 
+    [webkit-stats] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (no-preference) 
+    [webkit-stats] › e2e/design-v2-stats-history.spec.ts:563:7 › history keyboard focus stays inside its canvas while resizing (reduce) 

@@ -62,12 +62,16 @@ export class V2ButtonDirective implements OnDestroy {
 @Component({
   selector: 'v2-page',
   standalone: true,
+  imports: [V2ButtonDirective],
   template: `
-    <div class="v2-page">
+    <div class="v2-page" [class.v2-page--canonical]="appearance === 'canonical'" [class.v2-page--hide-mobile-description]="!showDescriptionOnMobile">
       <header class="v2-page__header">
         <div class="v2-page__copy">
           @if (eyebrow) { <p class="v2-page__eyebrow">{{ eyebrow }}</p> }
-          <h1>{{ title }}</h1>
+          <div class="v2-page__title-row">
+            <h1>{{ title }}</h1>
+            @if (showBack) { <button type="button" v2Button="secondary" class="v2-page__back" (click)="backRequested.emit()"><img src="assets/design-v2/navigation-back.svg" width="18" height="18" alt="">Back</button> }
+          </div>
           @if (description) { <p class="v2-page__description">{{ description }}</p> }
         </div>
         <div class="v2-page__actions" aria-label="Page actions"><ng-content select="[v2PageActions]" /></div>
@@ -83,6 +87,10 @@ export class V2PageComponent {
   @Input({required: true}) title = '';
   @Input() eyebrow = '';
   @Input() description = '';
+  @Input() appearance: 'default' | 'canonical' = 'default';
+  @Input() showDescriptionOnMobile = true;
+  @Input() showBack = false;
+  @Output() readonly backRequested = new EventEmitter<void>();
 }
 
 @Component({
@@ -135,19 +143,20 @@ export class V2StatusBadgeComponent {
   }
 }
 
-export interface V2Choice { id: string; label: string; disabled?: boolean; }
+export interface V2Choice { id: string; label: string; disabled?: boolean; iconUrl?: string; }
 
 @Component({
   selector: 'v2-tabs',
   standalone: true,
   imports: [CommonModule],
   template: `
+    @if (caption) { <p class="v2-tabs-caption">{{ caption }}</p> }
     <div [class]="'v2-tabs v2-tabs--' + appearance" role="group" [attr.aria-label]="label">
       @for (tab of tabs; track tab.id) {
         <button type="button" [id]="id + '-choice-' + tab.id"
           [attr.aria-pressed]="tab.id === selected"
           [tabIndex]="tab.id === selected ? 0 : -1" [disabled]="tab.disabled"
-          (click)="select(tab)" (keydown)="onKeydown($event, tab)">{{ tab.label }}</button>
+          (click)="select(tab)" (keydown)="onKeydown($event, tab)">@if (tab.iconUrl) { <span class="v2-tabs__icon" aria-hidden="true"><img [src]="tab.iconUrl" width="20" height="20" alt=""></span> }<span>{{ tab.label }}</span></button>
       }
     </div>
   `,
@@ -156,9 +165,10 @@ export interface V2Choice { id: string; label: string; disabled?: boolean; }
 export class V2TabsComponent {
   @Input() id = 'v2-tabs';
   @Input() label = 'Sections';
+  @Input() caption = '';
   @Input() tabs: readonly V2Choice[] = [];
   @Input() selected = '';
-  @Input() appearance: 'tabs' | 'segmented' = 'tabs';
+  @Input() appearance: 'tabs' | 'segmented' | 'controls' | 'sections' = 'tabs';
   @Output() selectedChange = new EventEmitter<string>();
 
   constructor(private readonly host: ElementRef<HTMLElement>) {}
@@ -186,7 +196,7 @@ export class V2TabsComponent {
   imports: [FormsModule],
   template: `
     <div class="v2-search">
-      <label [for]="id">{{ label }}</label>
+      <label [for]="id" [class.v2-search__label-hidden]="!labelVisible">{{ label }}</label>
       <div class="v2-search__field"><i class="pi pi-search" aria-hidden="true"></i>
         <input [id]="id" type="search" [placeholder]="placeholder" [ngModel]="query"
           (ngModelChange)="queryChange.emit($event)" [attr.aria-describedby]="description ? id + '-description' : null">
@@ -208,6 +218,7 @@ export class V2TabsComponent {
 export class V2SearchFiltersComponent {
   @Input() id = 'v2-search';
   @Input() label = 'Search';
+  @Input() labelVisible = true;
   @Input() placeholder = '';
   @Input() description = '';
   @Input() query = '';
@@ -228,10 +239,13 @@ export class V2SearchFiltersComponent {
 @Component({
   selector: 'v2-toolbar',
   standalone: true,
-  template: '<div class="v2-toolbar" role="group" [attr.aria-label]="label"><ng-content /></div>',
+  template: '<div class="v2-toolbar" [class.v2-toolbar--plain]="appearance === \'plain\'" role="group" [attr.aria-label]="label"><ng-content /></div>',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class V2ToolbarComponent { @Input() label = 'Page tools'; }
+export class V2ToolbarComponent {
+  @Input() label = 'Page tools';
+  @Input() appearance: 'panel' | 'plain' = 'panel';
+}
 
 @Component({
   selector: 'v2-state',

@@ -1,0 +1,67 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/shared/ui-v2/v2-snapshot-calendar.component.spec.ts --progress=false
+Application bundle generation complete. [1.427 seconds] - 2026-10-07T17:25:46.941Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/shared/ui-v2/v2-snapshot-calendar.component.spec.ts (14 tests | 2 failed) 431ms
+     × keeps month browsing usable after current-month dates disappear, without activating the stale date 21ms
+     × keeps keyboard focus in the dialog when Retry is replaced by initial loading 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-snapshot-calendar.component.spec.ts > Canonical responsive calendar interactions > keeps month browsing usable after current-month dates disappear, without activating the stale date
+AssertionError: expected 'Ranking dateVIEW SNAPSHOTOctober 2026…' to be 'Close' // Object.is equality
+
+Expected: "Close"
+Received: "Ranking dateVIEW SNAPSHOTOctober 2026MTWTFSSSaved dates are green.TodayClose"
+
+ ❯ src/app/shared/ui-v2/v2-snapshot-calendar.component.spec.ts:155:49
+    153|     c.fixture.componentRef.setInput('days', []);
+    154|     c.fixture.detectChanges(); await c.fixture.whenStable();
+    155|     expect(document.activeElement?.textContent).toBe('Close');
+       |                                                 ^
+    156|     const stale = new KeyboardEvent('keydown', {key: 'ArrowRight', can…
+    157|     c.fixture.componentInstance.onDayKey(stale, dates()[5]!);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:463:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-snapshot-calendar.component.spec.ts > Canonical responsive calendar interactions > keeps keyboard focus in the dialog when Retry is replaced by initial loading
+AssertionError: expected 'Ranking dateRanking dateVIEW SNAPSHOT…' to be 'Close' // Object.is equality
+
+Expected: "Close"
+Received: "Ranking dateRanking dateVIEW SNAPSHOTLoading saved dates…Only dates with saved rankings can be selected.Saved dates are green.TodayClose"
+
+ ❯ src/app/shared/ui-v2/v2-snapshot-calendar.component.spec.ts:171:49
+    169|     (document.activeElement as HTMLButtonElement).click();
+    170|     c.fixture.detectChanges(); await c.fixture.whenStable();
+    171|     expect(document.activeElement?.textContent).toBe('Close');
+       |                                                 ^
+    172|     expect(c.retry).toHaveBeenCalledOnce();
+    173|     expect(c.dismiss).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:463:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 12 passed (14)
+   Start at  19:25:47
+   Duration  1.14s (transform 59ms, setup 216ms, import 76ms, tests 431ms, environment 307ms)
+

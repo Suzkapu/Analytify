@@ -1,0 +1,137 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-history.spec.ts --grep category rank grids align --config=/tmp/analytify-all-browsers.config.ts --workers=1
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:294931) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:294931) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:295096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-stats-history.spec.ts:464:5 › category rank grids align with real saved positions through short and tall resizing (5.1s)
+(node:295234) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [mobile] › e2e/design-v2-stats-history.spec.ts:464:5 › category rank grids align with real saved positions through short and tall resizing (9.0s)
+(node:295380) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 [firefox-stats] › e2e/design-v2-stats-history.spec.ts:464:5 › category rank grids align with real saved positions through short and tall resizing (4.4s)
+(node:295628) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  4 [webkit-stats] › e2e/design-v2-stats-history.spec.ts:464:5 › category rank grids align with real saved positions through short and tall resizing (9.2s)
+
+
+  1) [desktop] › e2e/design-v2-stats-history.spec.ts:464:5 › category rank grids align with real saved positions through short and tall resizing 
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 498.98980712890625
+    Received: 506.8265380859375
+
+    Expected precision:    3
+    Expected difference: < 0.0005
+    Received difference:   7.83673095703125
+
+      517 |         expect(measured.labelY[i]).toBeCloseTo(measured.points[i], 8);
+      518 |       }
+    > 519 |       expect(measured.projectedGridMiddle).toBeCloseTo(measured.projectedPointMiddle, 3);
+          |                                            ^
+      520 |       expect(measured.overflow).toBeLessThanOrEqual(1);
+      521 |       await expect(slider).toHaveAttribute('aria-valuetext', `9 Sep 2026, position ${middle}`);
+      522 |       evidence.push({category, width, height, ...measured});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-history.spec.ts:519:44
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-ca-04a7c-ugh-short-and-tall-resizing-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-history-ca-04a7c-ugh-short-and-tall-resizing-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-ca-04a7c-ugh-short-and-tall-resizing-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-history-ca-04a7c-ugh-short-and-tall-resizing-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox-stats] › e2e/design-v2-stats-history.spec.ts:464:5 › category rank grids align with real saved positions through short and tall resizing 
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 303.2583312988281
+    Received: 302.75
+
+    Expected precision:    3
+    Expected difference: < 0.0005
+    Received difference:   0.508331298828125
+
+      517 |         expect(measured.labelY[i]).toBeCloseTo(measured.points[i], 8);
+      518 |       }
+    > 519 |       expect(measured.projectedGridMiddle).toBeCloseTo(measured.projectedPointMiddle, 3);
+          |                                            ^
+      520 |       expect(measured.overflow).toBeLessThanOrEqual(1);
+      521 |       await expect(slider).toHaveAttribute('aria-valuetext', `9 Sep 2026, position ${middle}`);
+      522 |       evidence.push({category, width, height, ...measured});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-history.spec.ts:519:44
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-ca-04a7c-ugh-short-and-tall-resizing-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-history-ca-04a7c-ugh-short-and-tall-resizing-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-ca-04a7c-ugh-short-and-tall-resizing-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-history-ca-04a7c-ugh-short-and-tall-resizing-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit-stats] › e2e/design-v2-stats-history.spec.ts:464:5 › category rank grids align with real saved positions through short and tall resizing 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByRole('dialog', { name: 'Midnight Drive position history', exact: true }).getByRole('slider', { name: 'Saved ranking position' })
+    Expected: "9 Sep 2026, position 50"
+    Received: "28 Sep 2026, position 60"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" getByRole('dialog', { name: 'Midnight Drive position history', exact: true }).getByRole('slider', { name: 'Saved ranking position' }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Midnight Drive position history', exact: true }).getByRole('slider', { name: 'Saved ranking position' })
+        14 × locator resolved to <div tabindex="0" role="slider" aria-valuemin="1" aria-valuemax="7" aria-valuenow="6" class="history-plot" _ngcontent-ng-c3018853340="" aria-orientation="horizontal" aria-label="Saved ranking position" aria-valuetext="28 Sep 2026, position 60" aria-description="Use Left and Right arrows, Home or End to inspect saved dates and positions.">…</div>
+           - unexpected value "28 Sep 2026, position 60"
+
+
+      494 |     await expect(slider).toHaveAttribute('aria-valuemax', '7');
+      495 |     await slider.focus(); await slider.press('Home'); await slider.press('ArrowRight');
+    > 496 |     await expect(slider).toHaveAttribute('aria-valuetext', `9 Sep 2026, position ${middle}`);
+          |                          ^
+      497 |     for (const width of [320,390,600,601,768,1440]) for (const height of [480,1000]) {
+      498 |       await page.setViewportSize({width, height});
+      499 |       await expect.poll(() => slider.locator('svg').evaluate(svg => {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-history.spec.ts:496:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-ca-04a7c-ugh-short-and-tall-resizing-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-history-ca-04a7c-ugh-short-and-tall-resizing-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-history-ca-04a7c-ugh-short-and-tall-resizing-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-history-ca-04a7c-ugh-short-and-tall-resizing-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [desktop] › e2e/design-v2-stats-history.spec.ts:464:5 › category rank grids align with real saved positions through short and tall resizing 
+    [firefox-stats] › e2e/design-v2-stats-history.spec.ts:464:5 › category rank grids align with real saved positions through short and tall resizing 
+    [webkit-stats] › e2e/design-v2-stats-history.spec.ts:464:5 › category rank grids align with real saved positions through short and tall resizing 
+  1 passed (38.0s)

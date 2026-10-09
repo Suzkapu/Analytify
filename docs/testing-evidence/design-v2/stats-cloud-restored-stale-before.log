@@ -1,0 +1,72 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts --progress=false
+Application bundle generation complete. [2.387 seconds] - 2026-10-08T11:04:47.536Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:516489) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > shows a complete expired cloud cache while refreshing and retains it if Spotify fails
+[Analytify][0015][+00000ms][Local Storage][DONE] Restored 4 requested cache keys from Supabase.
+[Analytify][0016][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+
+stderr | src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > shows a complete expired cloud cache while refreshing and retains it if Spotify fails
+AssertionError: expected UserStatsComponent2{ …(95) } to match object { isLoading: false, …(1) }
+(123 matching properties omitted from actual)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1283:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts:112:25
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171) {
+  showDiff: true,
+  expected: { isLoading: false, isRefreshingStats: true },
+  actual: { isLoading: true, isRefreshingStats: false }
+}
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts (12 tests | 1 failed) 68ms
+     × shows a complete expired cloud cache while refreshing and retains it if Spotify fails 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts > current Stats composed storage/cloud fallback boundary > shows a complete expired cloud cache while refreshing and retains it if Spotify fails
+AssertionError: expected UserStatsComponent2{ …(95) } to match object { isLoading: false, …(1) }
+(123 matching properties omitted from actual)
+
+- Expected
++ Received
+
+- {
+-   "isLoading": false,
+-   "isRefreshingStats": true,
++ UserStatsComponent2 {
++   "isLoading": true,
++   "isRefreshingStats": false,
+  }
+
+ ❯ src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts:112:25
+    110|     h.cacheReads[0].resolve({data: entries('Restored stale song', 1), …
+    111|     h.snapshotReads[0].resolve({data: null, error: null}); await pendi…
+    112|     expect(h.component).toMatchObject({isLoading: false, isRefreshingS…
+       |                         ^
+    113|     expect(h.component.topTracks[0]?.name).toBe('Restored stale song');
+    114|     h.pages[0].error(new Error('Isolated refresh failure')); await set…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 passed (12)
+   Start at  13:04:47
+   Duration  871ms (transform 165ms, setup 205ms, import 205ms, tests 68ms, environment 289ms)
+

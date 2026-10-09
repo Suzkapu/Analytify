@@ -117,6 +117,63 @@ describe('Rank history popup workflows', () => {
     expect(element.querySelector('h2')?.textContent).toContain('Second Song');
   });
 
+  it.each([0, 1])('moves focus to Close when refreshed data removes a focused chart with %s retained positions', async count => {
+    const {element, close, update} = await render({points: saved});
+    vi.runOnlyPendingTimers();
+    element.querySelector<HTMLElement>('[role="slider"]')!.focus();
+    update({points: saved.slice(0, count)});
+    TestBed.tick();
+    expect(element.querySelector('[role="slider"]')).toBeNull();
+    expect(document.activeElement).toBe(close());
+    expect(element.textContent).toContain(count ? 'One saved position' : 'No saved positions yet');
+  });
+
+  it('returns focus to Close when a refresh removes the focused table disclosure', async () => {
+    const {element, close, update} = await render({points: saved});
+    vi.runOnlyPendingTimers();
+    const toggle = element.querySelector<HTMLButtonElement>('.table-toggle')!;
+    toggle.click(); TestBed.tick(); toggle.focus();
+    update({points: []});
+    TestBed.tick();
+    expect(element.querySelector('.table-toggle, table')).toBeNull();
+    expect(document.activeElement).toBe(close());
+  });
+
+  it('keeps focus inside when successful recovery removes the focused Retry control', async () => {
+    const {element, close, update} = await render({failed: true});
+    vi.runOnlyPendingTimers(); element.querySelector<HTMLButtonElement>('.retry-button')!.focus();
+    update({failed: false, points: saved});
+    TestBed.tick();
+    expect(element.querySelector('.retry-button')).toBeNull();
+    expect(document.activeElement).toBe(close());
+  });
+
+  it('keeps focus on Close when starting a retry disables its focused control', async () => {
+    const {element, close, update} = await render({failed: true});
+    vi.runOnlyPendingTimers(); element.querySelector<HTMLButtonElement>('.retry-button')!.focus();
+    update({busy: true, failed: false, retrying: true}); TestBed.tick();
+    expect(element.querySelector<HTMLButtonElement>('.retry-button')!.disabled).toBe(true);
+    expect(document.activeElement).toBe(close());
+  });
+
+  it('recovers to Close when a context change replaces the focused plot', async () => {
+    const {element, close, update} = await render({points: saved});
+    vi.runOnlyPendingTimers(); const plot = element.querySelector<HTMLElement>('[role="slider"]')!; plot.focus();
+    update({context: 'artists:long_term:other', category: 'artists', title: 'Other Artist'}); TestBed.tick();
+    expect(element.querySelector('[role="slider"]')).not.toBe(plot);
+    expect(document.activeElement).toBe(close());
+    expect(element.querySelector('h2')?.textContent).toContain('Other Artist');
+  });
+
+  it('retains focused plot and Close controls during ordinary history refreshes', async () => {
+    const {element, close, update} = await render({points: saved});
+    vi.runOnlyPendingTimers(); const plot = element.querySelector<HTMLElement>('[role="slider"]')!; plot.focus();
+    update({points: [...saved, point(31, 2)], busy: true}); TestBed.tick();
+    expect(document.activeElement).toBe(plot);
+    close().focus(); update({points: []}); TestBed.tick();
+    expect(document.activeElement).toBe(close());
+  });
+
   it('closes only for backdrop, Close or Escape and restores the trigger focus', async () => {
     const trigger = document.createElement('button'); trigger.textContent = 'History'; document.body.appendChild(trigger); trigger.focus();
     const {fixture, element, close} = await render({points: saved});

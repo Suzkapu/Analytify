@@ -37,10 +37,10 @@ test('v2 Stats exposes labeled independent controls and keyboard category tabs',
   await expect(page.getByRole('button', {name: 'Open Test Artist on Spotify'})).toBeVisible();
   await expect(page.locator('.v2-ranked-artist[role="button"]')).toHaveCount(0);
 
-  const historical = page.getByRole('button', {name: 'Search past'});
-  await expect(historical).toHaveAttribute('aria-pressed', 'false');
+  const historical = page.getByRole('switch', {name: 'Search past rankings'});
+  await expect(historical).toHaveAttribute('aria-checked', 'false');
   await historical.click();
-  await expect(historical).toHaveAttribute('aria-pressed', 'true');
+  await expect(historical).toHaveAttribute('aria-checked', 'true');
   await expect(page.locator('app-design-v2-shell')).toHaveCount(1);
   await expectNoBlockingAxeViolations(page);
 });
@@ -90,8 +90,20 @@ test('Insights long names and controls reflow across the release matrix and enla
         const history = page.getByRole('button', {name: `View position history for ${title.trim()}`});
         await expect(history).toBeVisible();
         const box = await history.boundingBox();
-        expect(box!.width).toBeGreaterThanOrEqual(44);
-        expect(box!.height).toBeGreaterThanOrEqual(44);
+        const target = await history.evaluate(element => {
+          const style = getComputedStyle(element);
+          return {width: parseFloat(style.width), height: parseFloat(style.height),
+            layoutWidth: (element as HTMLElement).offsetWidth, layoutHeight: (element as HTMLElement).offsetHeight};
+        });
+        expect(target.width).toBeGreaterThanOrEqual(44);
+        expect(target.height).toBeGreaterThanOrEqual(44);
+        expect(target.layoutWidth).toBeGreaterThanOrEqual(44);
+        expect(target.layoutHeight).toBeGreaterThanOrEqual(44);
+        // CSSOM serializes fractional sizes with fewer digits than the projected
+        // rectangle. Compare those representations to 0.001px; the actual 44px
+        // layout minimum is checked independently above, without a tolerance.
+        expect(box!.width).toBeCloseTo(target.width, 3);
+        expect(box!.height).toBeCloseTo(target.height, 3);
         await expect(page.getByRole('searchbox', {name: 'Search songs or artists'})).toBeVisible();
       } else {
         await expect(page.getByText('Played today', {exact: true})).toBeVisible();

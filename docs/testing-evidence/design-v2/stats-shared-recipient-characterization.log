@@ -1,0 +1,201 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts --progress=false
+Application bundle generation complete. [2.782 seconds] - 2026-10-08T10:42:37.311Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:489968) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stderr | src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts > shared Stats recipient isolation through the consent-aware service > ignores success and its final loading notification after the recipient spotify identity changes
+AssertionError: expected [ { id: 'private-song' } ] to deeply equal []
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts:63:37
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [ { id: 'private-song' } ],
+  expected: [],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stderr | src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts > shared Stats recipient isolation through the consent-aware service > ignores denied and its final loading notification after the recipient spotify identity changes
+AssertionError: expected 'Old recipient permission error' to be '' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts:64:44
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: 'Old recipient permission error',
+  expected: '',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts > shared Stats recipient isolation through the consent-aware service > ignores success and its final loading notification after the recipient cloud identity changes
+AssertionError: expected [ { id: 'private-song' } ] to deeply equal []
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts:63:37
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [ { id: 'private-song' } ],
+  expected: [],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stderr | src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts > shared Stats recipient isolation through the consent-aware service > ignores denied and its final loading notification after the recipient cloud identity changes
+AssertionError: expected 'Old recipient permission error' to be '' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts:64:44
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: 'Old recipient permission error',
+  expected: '',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts > shared Stats recipient isolation through the consent-aware service > rejects a response for a range that is no longer selected, even before the next request starts
+AssertionError: expected [ { id: 'private-song' } ] to deeply equal []
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts:87:35
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [ { id: 'private-song' } ],
+  expected: [],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts (9 tests | 5 failed) 41ms
+     × ignores success and its final loading notification after the recipient spotify identity changes 12ms
+     × ignores denied and its final loading notification after the recipient spotify identity changes 2ms
+     × ignores success and its final loading notification after the recipient cloud identity changes 2ms
+     × ignores denied and its final loading notification after the recipient cloud identity changes 1ms
+     × rejects a response for a range that is no longer selected, even before the next request starts 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts > shared Stats recipient isolation through the consent-aware service > ignores success and its final loading notification after the recipient spotify identity changes
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts > shared Stats recipient isolation through the consent-aware service > ignores success and its final loading notification after the recipient cloud identity changes
+AssertionError: expected [ { id: 'private-song' } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "id": "private-song",
++   },
++ ]
+
+ ❯ src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts:63:37
+     61|       h.requests[0].resolve(outcome === 'success' ? {data: snapshot(),…
+     62|         : {data: null, error: {message: 'Old recipient permission erro…
+     63|       expect(h.component.topTracks).toEqual([]); expect(h.component.to…
+       |                                     ^
+     64|       expect(h.component.sharedStatsError).toBe(''); expect(h.componen…
+     65|       expect(h.component.spyDisplayName).toBe(before.name); expect(h.c…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts > shared Stats recipient isolation through the consent-aware service > ignores denied and its final loading notification after the recipient spotify identity changes
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts > shared Stats recipient isolation through the consent-aware service > ignores denied and its final loading notification after the recipient cloud identity changes
+AssertionError: expected 'Old recipient permission error' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ Old recipient permission error
+
+ ❯ src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts:64:44
+     62|         : {data: null, error: {message: 'Old recipient permission erro…
+     63|       expect(h.component.topTracks).toEqual([]); expect(h.component.to…
+     64|       expect(h.component.sharedStatsError).toBe(''); expect(h.componen…
+       |                                            ^
+     65|       expect(h.component.spyDisplayName).toBe(before.name); expect(h.c…
+     66|       expect(h.component.spySnapshotDate).toBe(before.date);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts > shared Stats recipient isolation through the consent-aware service > rejects a response for a range that is no longer selected, even before the next request starts
+AssertionError: expected [ { id: 'private-song' } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "id": "private-song",
++   },
++ ]
+
+ ❯ src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts:87:35
+     85|     const marks = h.changeDetector.markForCheck.mock.calls.length;
+     86|     h.requests[0].resolve({data: snapshot(), error: null}); await pend…
+     87|     expect(h.component.topTracks).toEqual([]); expect(h.component.spyD…
+       |                                   ^
+     88|     expect(h.changeDetector.markForCheck).toHaveBeenCalledTimes(marks)…
+     89|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 4 passed (9)
+   Start at  12:42:37
+   Duration  953ms (transform 181ms, setup 229ms, import 228ms, tests 41ms, environment 327ms)
+

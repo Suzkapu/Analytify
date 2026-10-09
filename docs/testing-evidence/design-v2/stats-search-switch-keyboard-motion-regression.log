@@ -1,0 +1,33 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-flames.spec.ts e2e/design-v2-stats-genres.spec.ts --config=/tmp/analytify-all-browsers.config.ts --workers=1 --grep canonical flame timeline|genre chart scale
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:205007) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:205007) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:205122) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes (7.7s)
+  ✓   2 [desktop] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (3.8s)
+  ✓   3 [desktop] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (3.7s)
+(node:205393) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   4 [mobile] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes (8.2s)
+  ✓   5 [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (4.3s)
+  ✓   6 [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (4.0s)
+(node:205635) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes (9.8s)
+  ✓   8 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (4.2s)
+  ✓   9 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (3.7s)
+(node:206112) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes (9.3s)
+  ✓  11 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (5.4s)
+  ✓  12 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (5.0s)
+
+  12 passed (1.3m)

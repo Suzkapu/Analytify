@@ -1,0 +1,49 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-search-switch.spec.ts --config=/tmp/analytify-all-browsers.config.ts --workers=1
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:176835) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:176835) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:176974) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 10:04:54 PM [vite] (client) [console.warn] [Analytify][0006][+00636ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:04:54 PM [vite] (client) [console.warn] [Analytify][0007][+00638ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 10:04:54 PM [vite] (client) [console.warn] [Analytify][0011][+00758ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:04:54 PM [vite] (client) [console.warn] [Analytify][0012][+00759ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓  1 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (3.9s)
+  ✓  2 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (2.6s)
+(node:177168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 10:05:00 PM [vite] (client) [console.warn] [Analytify][0006][+00410ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:05:00 PM [vite] (client) [console.warn] [Analytify][0007][+00412ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 10:05:00 PM [vite] (client) [console.warn] [Analytify][0011][+00503ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:05:00 PM [vite] (client) [console.warn] [Analytify][0012][+00504ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓  3 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (3.9s)
+[WebServer] 10:05:04 PM [vite] (client) [console.error] InvalidStateError: Transition was aborted because of invalid state. Viewport size changed
+  ✓  4 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (3.2s)
+(node:177395) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 10:05:09 PM [vite] (client) [console.warn] [Analytify][0006][+00293ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:05:09 PM [vite] (client) [console.warn] [Analytify][0007][+00296ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 10:05:09 PM [vite] (client) [console.warn] [Analytify][0012][+00507ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:05:09 PM [vite] (client) [console.warn] [Analytify][0013][+00507ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 10:05:09 PM [vite] (client) [console.warn] [Analytify][0015][+00560ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:05:09 PM [vite] (client) [console.warn] [Analytify][0016][+00562ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓  5 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (4.5s)
+  ✓  6 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (2.7s)
+(node:177822) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 10:05:17 PM [vite] (client) [console.warn] [Analytify][0006][+00627ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:05:17 PM [vite] (client) [console.warn] [Analytify][0007][+00630ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 10:05:18 PM [vite] (client) [console.warn] [Analytify][0011][+00909ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:05:18 PM [vite] (client) [console.warn] [Analytify][0012][+00909ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓  7 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (6.7s)
+[WebServer] 10:05:24 PM [vite] (client) [console.error] InvalidStateError: Skipping view transition because viewport size changed.
+  ✓  8 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (4.7s)
+
+  8 passed (43.1s)

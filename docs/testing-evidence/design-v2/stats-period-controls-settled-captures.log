@@ -1,0 +1,31 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-period-controls.spec.ts --config=/tmp/analytify-all-browsers.config.ts --workers=1
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:242899) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:242899) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:243053) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 1:17:24 AM [vite] (client) [console.error] InvalidStateError: Transition was aborted because of invalid state. Viewport size changed
+  ✓  1 [desktop] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing (3.6s)
+  ✓  2 [desktop] › e2e/design-v2-stats-period-controls.spec.ts:68:5 › period keyboard changes query the selected range once and category choices reuse its payload (2.4s)
+(node:243251) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [mobile] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing (4.9s)
+  ✓  4 [mobile] › e2e/design-v2-stats-period-controls.spec.ts:68:5 › period keyboard changes query the selected range once and category choices reuse its payload (2.5s)
+(node:243429) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 [firefox-stats] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing (4.8s)
+  ✓  6 [firefox-stats] › e2e/design-v2-stats-period-controls.spec.ts:68:5 › period keyboard changes query the selected range once and category choices reuse its payload (2.5s)
+(node:243807) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 1:17:49 AM [vite] (client) [console.error] InvalidStateError: Skipping view transition because viewport size changed.
+  ✓  7 [webkit-stats] › e2e/design-v2-stats-period-controls.spec.ts:10:5 › canonical period and category geometry survives breakpoint and short-window resizing (6.6s)
+  ✓  8 [webkit-stats] › e2e/design-v2-stats-period-controls.spec.ts:68:5 › period keyboard changes query the selected range once and category choices reuse its payload (4.9s)
+
+  8 passed (43.3s)

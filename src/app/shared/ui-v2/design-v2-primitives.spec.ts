@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
@@ -138,6 +138,36 @@ describe('V2StatusBadgeComponent', () => {
 });
 
 describe('V2TabsComponent', () => {
+  it('keeps decorative canonical icons out of choice names and preserves caller-owned selection', async () => {
+    await TestBed.configureTestingModule({imports: [V2TabsComponent]}).compileComponents();
+    const fixture = TestBed.createComponent(V2TabsComponent);
+    fixture.componentRef.setInput('caption', 'Category');
+    fixture.componentRef.setInput('label', 'Ranking category');
+    fixture.componentRef.setInput('appearance', 'sections');
+    fixture.componentRef.setInput('tabs', [
+      {id: 'songs', label: 'Songs', iconUrl: 'assets/design-v2/stats-category-songs.svg'},
+      {id: 'artists', label: 'Artists', iconUrl: 'assets/design-v2/stats-category-user.svg'}
+    ]);
+    fixture.componentRef.setInput('selected', 'songs');
+    const changes = vi.fn(); fixture.componentInstance.selectedChange.subscribe(changes);
+    fixture.detectChanges();
+    const group = fixture.nativeElement.querySelector('[role="group"]') as HTMLElement;
+    const buttons = group.querySelectorAll('button');
+    expect(group.getAttribute('aria-label')).toBe('Ranking category');
+    expect(fixture.nativeElement.querySelector('p')?.textContent).toBe('Category');
+    expect(buttons[0].textContent).toBe('Songs');
+    expect(buttons[0].querySelector('img')?.getAttribute('alt')).toBe('');
+    expect(buttons[0].querySelector('.v2-tabs__icon')?.getAttribute('aria-hidden')).toBe('true');
+    buttons[1].click();
+    expect(changes).toHaveBeenCalledExactlyOnceWith('artists');
+    expect(buttons[0].getAttribute('aria-pressed')).toBe('true');
+    fixture.componentRef.setInput('selected', 'artists'); fixture.detectChanges();
+    expect(buttons[1].getAttribute('aria-pressed')).toBe('true');
+    expect(buttons[1].tabIndex).toBe(0);
+    expect(buttons[0].tabIndex).toBe(-1);
+    fixture.destroy();
+  });
+
   it.each([
     ['Home', 'long', 'short'],
     ['End', 'short', 'long'],
@@ -217,6 +247,28 @@ describe('V2TabsComponent', () => {
 });
 
 describe('V2SearchFiltersComponent', () => {
+  it('retains a native search label when the visible caption is omitted', async () => {
+    await TestBed.configureTestingModule({imports: [V2SearchFiltersComponent]}).compileComponents();
+    const fixture = TestBed.createComponent(V2SearchFiltersComponent);
+    fixture.componentRef.setInput('id', 'ranking-search');
+    fixture.componentRef.setInput('label', 'Search songs');
+    fixture.detectChanges();
+    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+    expect(input.labels?.[0].textContent).toBe('Search songs');
+    expect(input.labels?.[0].classList.contains('v2-search__label-hidden')).toBe(false);
+    fixture.componentRef.setInput('labelVisible', false);
+    fixture.detectChanges();
+    expect(input.labels?.[0].textContent).toBe('Search songs');
+    expect(input.labels?.[0].classList.contains('v2-search__label-hidden')).toBe(true);
+    expect(input.getAttribute('aria-hidden')).toBeNull();
+    const changes = vi.fn();
+    fixture.componentInstance.queryChange.subscribe(changes);
+    input.value = 'former';
+    input.dispatchEvent(new Event('input', {bubbles: true}));
+    expect(changes).toHaveBeenCalledExactlyOnceWith('former');
+    fixture.destroy();
+  });
+
   it('adds an enabled filter without mutating the current selection and ignores disabled filters', async () => {
     await TestBed.configureTestingModule({imports: [V2SearchFiltersComponent]}).compileComponents();
     const fixture = TestBed.createComponent(V2SearchFiltersComponent);
@@ -518,5 +570,32 @@ describe('V2OverflowMenuComponent', () => {
     fixture.detectChanges();
     await Promise.resolve();
     expect((document.activeElement as HTMLElement).textContent).toContain('Two');
+  });
+});
+
+
+@Component({
+  standalone: true,
+  imports: [...DESIGN_V2_PRIMITIVES],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `<v2-page title="Saved rankings">@if (busy) { <p role="status">Loading rankings</p> } @else { <p class="saved-rankings">Saved rankings remain</p> }</v2-page>`
+})
+class ProjectedStateHostComponent { busy = false; }
+
+describe('page projected service state', () => {
+  it('replaces resolved projected results on a scheduled service update and restores them after recovery', async () => {
+    await TestBed.configureTestingModule({imports: [ProjectedStateHostComponent]}).compileComponents();
+    const fixture = TestBed.createComponent(ProjectedStateHostComponent);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.saved-rankings')?.textContent).toBe('Saved rankings remain');
+    fixture.componentInstance.busy = true;
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck(); TestBed.tick(); fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.saved-rankings')).toBeNull();
+    expect(fixture.nativeElement.querySelector('[role="status"]')?.textContent).toBe('Loading rankings');
+    fixture.componentInstance.busy = false;
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck(); TestBed.tick(); fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('[role="status"]')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.saved-rankings')?.textContent).toBe('Saved rankings remain');
+    fixture.destroy();
   });
 });

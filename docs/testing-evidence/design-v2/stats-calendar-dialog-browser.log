@@ -1,0 +1,9 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-all-browsers.config.ts e2e/design-v2-stats-history.spec.ts
+Error: /tmp/analytify-all-browsers.config.ts does not exist
+    at resolveConfigFile2 (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/playwright/lib/common/index.js:1480:11)
+    at resolveConfigLocation (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/playwright/lib/common/index.js:1461:30)
+    at Object.loadConfigFromFile (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/playwright/lib/common/index.js:1490:27)
+    at runTests (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/playwright/lib/cli/testActions.js:46:51)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async _Command.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/playwright/lib/program.js:55:7)

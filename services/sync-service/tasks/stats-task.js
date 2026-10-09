@@ -107,6 +107,9 @@ function createStatsTask({supabase, spotify, catalog}) {
     });
     if (error) throw error;
     const snapshotId = Array.isArray(replacement) ? replacement[0]?.snapshot_id : replacement?.snapshot_id;
+    if (typeof snapshotId !== 'string' || !snapshotId.trim()) {
+      throw new Error('Snapshot replacement returned no committed snapshot identity.');
+    }
     if (range === 'short_term') {
       const {error: scoreError} = await supabase.rpc('score_song_league_snapshot', {p_snapshot_id: snapshotId});
       if (scoreError) console.warn(`[Stats] Song League scoring skipped: ${scoreError.message}`);
@@ -132,6 +135,9 @@ function createStatsTask({supabase, spotify, catalog}) {
       optionalPage(`/me/top/tracks?time_range=${range}&limit=50&offset=50`),
       optionalPage(`/me/top/tracks?time_range=${range}&limit=10&offset=100`)
     ]);
+    if (!Array.isArray(artistsResponse?.items) || !Array.isArray(firstTracksResponse?.items)) {
+      throw new Error('Spotify returned invalid primary Stats ranking data.');
+    }
     let topArtists = artistsResponse?.items || [];
     const rawTracks = [
       ...(firstTracksResponse?.items || []),

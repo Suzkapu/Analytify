@@ -1,0 +1,131 @@
+{
+  "description": "Saved-date chooser for own rankings and comparisons. One responsive implementation: equal seven-column dates, 44px day height, 44×44 month controls. Mobile uses 16px viewport gutters; short windows scroll only the body. States describe available-date metadata: Ready, initial Loading, Empty, Unavailable with Retry, and Refreshing with usable cached dates. Date choice updates only its purpose and closes; selected-detail loading/failure is on Stats afterwards. Comparison omits primary/current where ineligible; Today visibility is conditional. Escape/Close/backdrop dismissal return focus; arrows move across enabled dates; Home/End and PageUp/PageDown navigate the grid/month. Failure retry transitions to Loading and resolves from the actual request, never an assumed success. State copy is variant-owned; callers may override Purpose, Month, Help and Today visibility. Refresh failed variants preserve cached selectable dates, show a refresh error, and retry through Refreshing; initial failure with no usable cache remains Unavailable.\n\nRuntime keyboard contract: own Stats only; Enter/Space open from date controls, Escape/backdrop/Close dismiss and return focus to the opener, Tab stays inside the dialog. Grid focus starts at selected eligible date or the closest eligible date; arrows move by day/week, Home/End by week edge, PageUp/PageDown by available month, Enter/Space select only eligible dates. Revalidate permissions and date availability at activation. Preserve focus on metadata refresh and expose Retry after failure. Short windows scroll the body while month and Close remain reachable. Runtime reduced motion removes animated interpolation without delaying state changes or recovery. User-authored retry Smart Animate is 220ms ease-in-out; actual service completion drives outcomes.",
+  "variants": [
+    {
+      "id": "836:25905",
+      "name": "Viewport=Desktop, State=Ready",
+      "width": 356,
+      "height": 438
+    },
+    {
+      "id": "838:25928",
+      "name": "Viewport=Mobile, State=Ready",
+      "width": 288,
+      "height": 438
+    },
+    {
+      "id": "838:26073",
+      "name": "Viewport=Mobile short, State=Ready",
+      "width": 288,
+      "height": 328
+    },
+    {
+      "id": "838:26218",
+      "name": "Viewport=Desktop, State=Loading",
+      "width": 356,
+      "height": 446
+    },
+    {
+      "id": "838:26341",
+      "name": "Viewport=Desktop, State=Empty",
+      "width": 356,
+      "height": 182
+    },
+    {
+      "id": "838:26451",
+      "name": "Viewport=Desktop, State=Unavailable",
+      "width": 356,
+      "height": 162
+    },
+    {
+      "id": "838:26563",
+      "name": "Viewport=Desktop, State=Refreshing",
+      "width": 356,
+      "height": 506
+    },
+    {
+      "id": "838:26710",
+      "name": "Viewport=Mobile, State=Loading",
+      "width": 288,
+      "height": 446
+    },
+    {
+      "id": "838:26833",
+      "name": "Viewport=Mobile, State=Empty",
+      "width": 288,
+      "height": 182
+    },
+    {
+      "id": "838:26943",
+      "name": "Viewport=Mobile, State=Unavailable",
+      "width": 288,
+      "height": 182
+    },
+    {
+      "id": "838:27055",
+      "name": "Viewport=Mobile, State=Refreshing",
+      "width": 288,
+      "height": 506
+    },
+    {
+      "id": "838:27202",
+      "name": "Viewport=Mobile short, State=Loading",
+      "width": 288,
+      "height": 328
+    },
+    {
+      "id": "838:27325",
+      "name": "Viewport=Mobile short, State=Empty",
+      "width": 288,
+      "height": 328
+    },
+    {
+      "id": "838:27435",
+      "name": "Viewport=Mobile short, State=Unavailable",
+      "width": 288,
+      "height": 328
+    },
+    {
+      "id": "838:27547",
+      "name": "Viewport=Mobile short, State=Refreshing",
+      "width": 288,
+      "height": 328
+    },
+    {
+      "id": "840:26205",
+      "name": "Viewport=Desktop, State=Focus",
+      "width": 356,
+      "height": 438
+    },
+    {
+      "id": "840:26351",
+      "name": "Viewport=Mobile, State=Focus",
+      "width": 288,
+      "height": 438
+    },
+    {
+      "id": "840:26497",
+      "name": "Viewport=Mobile short, State=Focus",
+      "width": 288,
+      "height": 328
+    },
+    {
+      "id": "854:27219",
+      "name": "Viewport=Desktop, State=Refresh failed",
+      "width": 356,
+      "height": 498
+    },
+    {
+      "id": "854:27388",
+      "name": "Viewport=Mobile, State=Refresh failed",
+      "width": 288,
+      "height": 498
+    },
+    {
+      "id": "854:27557",
+      "name": "Viewport=Mobile short, State=Refresh failed",
+      "width": 288,
+      "height": 328
+    }
+  ]
+}

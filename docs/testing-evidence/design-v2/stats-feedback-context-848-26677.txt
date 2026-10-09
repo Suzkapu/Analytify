@@ -1,0 +1,47 @@
+type AnalytifySelectedSnapshotFeedbackProps = {
+  className?: string;
+  state?: "Empty";
+  target?: "Comparison";
+  viewport?: "Mobile";
+};
+
+function AnalytifySelectedSnapshotFeedback({ className, state = "Empty", target = "Comparison", viewport = "Mobile" }: AnalytifySelectedSnapshotFeedbackProps) {
+  return (
+    <div className={className || "bg-[var(--v2-color-background,#070b09)] content-stretch flex flex-col gap-[var(--v2-space-3,12px)] items-start p-[var(--v2-space-4,16px)] relative rounded-[var(--v2-radius-card,18px)] w-[288px]"} data-node-id="848:26677">
+      <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] min-w-full relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] w-[min-content]" data-node-id="848:26678">
+        No comparison rankings
+      </p>
+      <p className="[word-break:break-word] font-['Outfit:Regular'] font-normal leading-[20px] min-w-full relative shrink-0 text-[14px] text-[color:var(--v2-color-text-muted,#a2ada6)] w-[min-content]" data-node-id="848:26679">
+        Your selected rankings stay visible. Choose another date to compare.
+      </p>
+      <div className="content-stretch flex gap-[var(--v2-space-3,12px)] items-start relative shrink-0" data-node-id="848:26685" data-name="Selected date / Recovery actions">
+        <button className="bg-[var(--v2-color-surface,#121814)] border border-[var(--v2-color-border-control,#6b7d71)] border-solid content-stretch cursor-pointer flex gap-[var(--v2-space-2,8px)] h-[44px] items-center justify-center px-[var(--v2-space-4,16px)] relative rounded-[var(--v2-radius-control,12px)] shrink-0" data-node-id="848:26680" data-name="Selected date / Choose date">
+          <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] text-left whitespace-nowrap" data-node-id="I848:26680;24:87">
+            Choose date
+          </p>
+        </button>
+      </div>
+    </div>
+  );
+}
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+These styles are contained in the design: Analytify/Label: Font(family: "Outfit", style: SemiBold, size: 14, weight: 600, lineHeight: 20, letterSpacing: 0), Analytify/Caption: Font(family: "Outfit", style: Regular, size: 14, weight: 400, lineHeight: 20, letterSpacing: 0).
+Component descriptions: The following components have usage descriptions or documentation links defined in Figma. These descriptions provide important context about the intended usage, best practices, and any constraints for each component. Follow these guidelines when implementing or using these components.
+
+## Analytify/Selected snapshot feedback
+**Node ID:** 851:27182
+
+After chooser dismissal: ranking Loading replaces ranking results with shared skeletons; Unavailable preserves date/category/range and offers explicit Retry or Choose date; successful empty categories use Empty. Comparison feedback retains primary rankings while hiding movement/flames until comparison data is ready. Retry is single-flight and tied to owner/range/snapshot context, never automatic from render or timed prototype success. Stale requests cannot update a new date/owner/range/destroyed view. Private actions absent in shared mode. Choose date opens its purpose-specific calendar. Keyboard and reduced-motion behavior follow the page/dialog contract. Canonical page outcome contract: selected ranking loading/empty/unavailable replaces result content. Selected comparison loading/empty/unavailable preserves primary rankings but hides unresolved movement/flames. Retry returns its target to Loading while preserving selection; Choose date reuses the canonical opener. Outcomes are explicit service results, never timed assumed success. Own-only controls follow stats/can-create; shared read-only pages do not expose private date/search controls.
+
+## Analytify/secondary
+**Node ID:** 24:94
+
+Shared secondary control. 48 px targets. Keyboard focus remains visible. Disabled only while unavailable or submitting; explain the reason nearby.
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

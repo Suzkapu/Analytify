@@ -1,0 +1,56 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-current-load.spec.ts --grep responsive.*shared=false.*no-preference --project=desktop --config=/tmp/analytify-all-browsers.config.ts --workers=1
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:473368) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:473368) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:473510) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-stats-current-load.spec.ts:84:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) (1.9s)
+
+
+  1) [desktop] › e2e/design-v2-stats-current-load.spec.ts:84:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "gap": 12,
+        "height": 20,
+    -   "width": 20,
+    +   "width": 97,
+      }
+
+      38 |     if (state === 'loading') {
+      39 |       expect(measured.panel).toEqual({padding:'24px', gap:'16px', border:'1px'}); expect(measured.skeletons).toBe(3);
+    > 40 |       expect(measured.progressSlot).toEqual({width:20,height:20,gap:12});
+         |                                     ^
+      41 |       expect(measured.progress).toMatchObject({width:20, naturalWidth:20, animation:'none'});
+      42 |       // SVG fractional intrinsic height is quantized to browser layout units (1/60 or 1/64px).
+      43 |       expect(Math.abs(measured.progress!.height - 19.7753)).toBeLessThanOrEqual(1/60);
+        at measureFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:40:37)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts:100:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-current-lo-7489a-shared-false-no-preference--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-stats-current-load.spec.ts:84:7 › current feedback responsive loading/failure/empty and same-range recovery shared=false (no-preference) 

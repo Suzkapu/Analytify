@@ -1,0 +1,641 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-composition.spec.ts --config=/tmp/analytify-all-browsers.config.ts --workers=1
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:325261) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:325261) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 24 tests using 1 worker
+
+(node:325388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (no-preference) (3.8s)
+  ✘   2 [desktop] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (reduce) (3.5s)
+(node:325604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   3 [desktop] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (no-preference) (5.4s)
+  ✘   4 [desktop] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (reduce) (4.9s)
+(node:325812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   5 [desktop] › e2e/design-v2-stats-composition.spec.ts:110:7 › shared range loading, permission failure and recovery replace stale rankings (no-preference) (2.9s)
+  ✓   6 [desktop] › e2e/design-v2-stats-composition.spec.ts:110:7 › shared range loading, permission failure and recovery replace stale rankings (reduce) (2.3s)
+(node:325995) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [mobile] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (no-preference) (4.9s)
+  ✓   8 [mobile] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (reduce) (4.4s)
+  ✓   9 [mobile] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (no-preference) (6.8s)
+  ✘  10 [mobile] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (reduce) (6.3s)
+(node:326342) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  11 [mobile] › e2e/design-v2-stats-composition.spec.ts:110:7 › shared range loading, permission failure and recovery replace stale rankings (no-preference) (3.7s)
+  ✓  12 [mobile] › e2e/design-v2-stats-composition.spec.ts:110:7 › shared range loading, permission failure and recovery replace stale rankings (reduce) (2.4s)
+(node:326516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  13 [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (no-preference) (6.6s)
+  ✘  14 [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (reduce) (4.4s)
+(node:326931) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  15 [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (no-preference) (7.7s)
+  ✘  16 [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (reduce) (5.3s)
+(node:327308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  17 [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:110:7 › shared range loading, permission failure and recovery replace stale rankings (no-preference) (4.2s)
+  ✓  18 [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:110:7 › shared range loading, permission failure and recovery replace stale rankings (reduce) (2.3s)
+(node:327671) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  19 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (no-preference) (9.5s)
+  ✓  20 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (reduce) (5.8s)
+[WebServer] 2:57:56 AM [vite] (client) [console.error] TypeError: Importing a module script failed.
+[WebServer] 2:57:56 AM [vite] (client) [console.error] TypeError: Importing a module script failed.
+[WebServer] 2:57:56 AM [vite] (client) [console.error] [Analytify][0006][+00628ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"headers":{},"normalizedNames":{},"lazyUpdate":null},"status":0,"statusText":"Unknown Error","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 0 Unknown Error","error":{"isTrusted":true}}
+  ✓  21 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (no-preference) (10.9s)
+[WebServer] 2:58:05 AM [vite] (client) [console.error] [Analytify][0006][+01313ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"headers":{},"normalizedNames":{},"lazyUpdate":null},"status":0,"statusText":"Unknown Error","url":"https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=10&offset=100","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=10&offset=100: 0 Unknown Error","error":{"isTrusted":true}}
+[WebServer] 2:58:06 AM [vite] (client) [console.error] TypeError: Importing a module script failed.
+[WebServer] 2:58:06 AM [vite] (client) [console.error] TypeError: Importing a module script failed.
+[WebServer] 2:58:06 AM [vite] (client) [console.error] ERROR TypeError: Importing a module script failed.
+[WebServer] 2:58:06 AM [vite] (client) [console.error] [Analytify][0006][+00275ms][Personal Stats][ERROR] Failed to load user stats {"headers":{"headers":{},"normalizedNames":{},"lazyUpdate":null},"status":0,"statusText":"Unknown Error","url":"https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0","ok":false,"name":"HttpErrorResponse","message":"Http failure response for https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=50&offset=0: 0 Unknown Error","error":{"isTrusted":true}}
+  ✘  22 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (reduce) (7.4s)
+(node:328298) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  23 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:110:7 › shared range loading, permission failure and recovery replace stale rankings (no-preference) (4.7s)
+  ✓  24 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:110:7 › shared range loading, permission failure and recovery replace stale rankings (reduce) (3.1s)
+
+
+  1) [desktop] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (reduce) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 28
+    Received: 36
+
+      63 |       expect.soft(measured.title).toBe(shared ? 'Alex · Listening stats' : 'Your top listening');
+      64 |       expect.soft(measured.eyebrow).toBe('');
+    > 65 |       expect.soft(measured.fontSize).toBe(width <= 760 ? 28 : 36);
+         |                                      ^
+      66 |       expect.soft(measured.lineHeight).toBe(width <= 760 ? 36 : 44);
+      67 |       expect.soft(measured.letterSpacing).toBe('normal');
+      68 |       expect.soft(measured.descriptionVisible).toBe(width > 760);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:65:38
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 36
+    Received: 44
+
+      64 |       expect.soft(measured.eyebrow).toBe('');
+      65 |       expect.soft(measured.fontSize).toBe(width <= 760 ? 28 : 36);
+    > 66 |       expect.soft(measured.lineHeight).toBe(width <= 760 ? 36 : 44);
+         |                                        ^
+      67 |       expect.soft(measured.letterSpacing).toBe('normal');
+      68 |       expect.soft(measured.descriptionVisible).toBe(width > 760);
+      69 |       expect.soft(measured.description).toBe(shared ? 'Read-only listening snapshot · Refreshed 4 October' : 'Your songs, artists and genres, ranked over time.');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:66:40
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 12
+    Received: 16
+
+      70 |       expect.soft(measured.descriptionFont).toBe(16);
+      71 |       expect.soft(measured.descriptionLine).toBe(24);
+    > 72 |       expect.soft(measured.headingToControls).toBe(width <= 760 ? 12 : 16);
+         |                                               ^
+      73 |       expect.soft(measured.contentGap).toBe(width <= 760 ? 12 : 16);
+      74 |       expect.soft(measured.categoryHeading).toBe('Top songs');
+      75 |       expect.soft(measured.categoryFont).toBe(20); expect.soft(measured.categoryLine).toBe(28); expect.soft(measured.resultGap).toBe(16);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:72:47
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 12
+    Received: 16
+
+      71 |       expect.soft(measured.descriptionLine).toBe(24);
+      72 |       expect.soft(measured.headingToControls).toBe(width <= 760 ? 12 : 16);
+    > 73 |       expect.soft(measured.contentGap).toBe(width <= 760 ? 12 : 16);
+         |                                        ^
+      74 |       expect.soft(measured.categoryHeading).toBe('Top songs');
+      75 |       expect.soft(measured.categoryFont).toBe(20); expect.soft(measured.categoryLine).toBe(28); expect.soft(measured.resultGap).toBe(16);
+      76 |       expect.soft(measured.back).toEqual(shared ? {width: 92, height: 44, imageWidth: 18, imageHeight: 18, naturalWidth: 18, naturalHeight: 18} : null);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:73:40
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 36
+    Received: 28
+
+      63 |       expect.soft(measured.title).toBe(shared ? 'Alex · Listening stats' : 'Your top listening');
+      64 |       expect.soft(measured.eyebrow).toBe('');
+    > 65 |       expect.soft(measured.fontSize).toBe(width <= 760 ? 28 : 36);
+         |                                      ^
+      66 |       expect.soft(measured.lineHeight).toBe(width <= 760 ? 36 : 44);
+      67 |       expect.soft(measured.letterSpacing).toBe('normal');
+      68 |       expect.soft(measured.descriptionVisible).toBe(width > 760);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:65:38
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 44
+    Received: 36
+
+      64 |       expect.soft(measured.eyebrow).toBe('');
+      65 |       expect.soft(measured.fontSize).toBe(width <= 760 ? 28 : 36);
+    > 66 |       expect.soft(measured.lineHeight).toBe(width <= 760 ? 36 : 44);
+         |                                        ^
+      67 |       expect.soft(measured.letterSpacing).toBe('normal');
+      68 |       expect.soft(measured.descriptionVisible).toBe(width > 760);
+      69 |       expect.soft(measured.description).toBe(shared ? 'Read-only listening snapshot · Refreshed 4 October' : 'Your songs, artists and genres, ranked over time.');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:66:40
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 16
+    Received: 12
+
+      70 |       expect.soft(measured.descriptionFont).toBe(16);
+      71 |       expect.soft(measured.descriptionLine).toBe(24);
+    > 72 |       expect.soft(measured.headingToControls).toBe(width <= 760 ? 12 : 16);
+         |                                               ^
+      73 |       expect.soft(measured.contentGap).toBe(width <= 760 ? 12 : 16);
+      74 |       expect.soft(measured.categoryHeading).toBe('Top songs');
+      75 |       expect.soft(measured.categoryFont).toBe(20); expect.soft(measured.categoryLine).toBe(28); expect.soft(measured.resultGap).toBe(16);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:72:47
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 16
+    Received: 12
+
+      71 |       expect.soft(measured.descriptionLine).toBe(24);
+      72 |       expect.soft(measured.headingToControls).toBe(width <= 760 ? 12 : 16);
+    > 73 |       expect.soft(measured.contentGap).toBe(width <= 760 ? 12 : 16);
+         |                                        ^
+      74 |       expect.soft(measured.categoryHeading).toBe('Top songs');
+      75 |       expect.soft(measured.categoryFont).toBe(20); expect.soft(measured.categoryLine).toBe(28); expect.soft(measured.resultGap).toBe(16);
+      76 |       expect.soft(measured.back).toEqual(shared ? {width: 92, height: 44, imageWidth: 18, imageHeight: 18, naturalWidth: 18, naturalHeight: 18} : null);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:73:40
+
+    attachment #1: stats-content-composition.json (application/json) ───────────────────────────────
+    test-results/design-v2-stats-compositio-a4b8f-ves-owner-workflows-reduce--desktop/attachments/stats-content-composition-json-7c3938ba5fd3a87943636e7c659c8d3111615d62.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-a4b8f-ves-owner-workflows-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-compositio-a4b8f-ves-owner-workflows-reduce--desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-a4b8f-ves-owner-workflows-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-compositio-a4b8f-ves-owner-workflows-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (reduce) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 36
+    Received: 28
+
+      63 |       expect.soft(measured.title).toBe(shared ? 'Alex · Listening stats' : 'Your top listening');
+      64 |       expect.soft(measured.eyebrow).toBe('');
+    > 65 |       expect.soft(measured.fontSize).toBe(width <= 760 ? 28 : 36);
+         |                                      ^
+      66 |       expect.soft(measured.lineHeight).toBe(width <= 760 ? 36 : 44);
+      67 |       expect.soft(measured.letterSpacing).toBe('normal');
+      68 |       expect.soft(measured.descriptionVisible).toBe(width > 760);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:65:38
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 44
+    Received: 36
+
+      64 |       expect.soft(measured.eyebrow).toBe('');
+      65 |       expect.soft(measured.fontSize).toBe(width <= 760 ? 28 : 36);
+    > 66 |       expect.soft(measured.lineHeight).toBe(width <= 760 ? 36 : 44);
+         |                                        ^
+      67 |       expect.soft(measured.letterSpacing).toBe('normal');
+      68 |       expect.soft(measured.descriptionVisible).toBe(width > 760);
+      69 |       expect.soft(measured.description).toBe(shared ? 'Read-only listening snapshot · Refreshed 4 October' : 'Your songs, artists and genres, ranked over time.');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:66:40
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 16
+    Received: 12
+
+      70 |       expect.soft(measured.descriptionFont).toBe(16);
+      71 |       expect.soft(measured.descriptionLine).toBe(24);
+    > 72 |       expect.soft(measured.headingToControls).toBe(width <= 760 ? 12 : 16);
+         |                                               ^
+      73 |       expect.soft(measured.contentGap).toBe(width <= 760 ? 12 : 16);
+      74 |       expect.soft(measured.categoryHeading).toBe('Top songs');
+      75 |       expect.soft(measured.categoryFont).toBe(20); expect.soft(measured.categoryLine).toBe(28); expect.soft(measured.resultGap).toBe(16);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:72:47
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 16
+    Received: 12
+
+      71 |       expect.soft(measured.descriptionLine).toBe(24);
+      72 |       expect.soft(measured.headingToControls).toBe(width <= 760 ? 12 : 16);
+    > 73 |       expect.soft(measured.contentGap).toBe(width <= 760 ? 12 : 16);
+         |                                        ^
+      74 |       expect.soft(measured.categoryHeading).toBe('Top songs');
+      75 |       expect.soft(measured.categoryFont).toBe(20); expect.soft(measured.categoryLine).toBe(28); expect.soft(measured.resultGap).toBe(16);
+      76 |       expect.soft(measured.back).toEqual(shared ? {width: 92, height: 44, imageWidth: 18, imageHeight: 18, naturalWidth: 18, naturalHeight: 18} : null);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:73:40
+
+    attachment #1: stats-content-composition.json (application/json) ───────────────────────────────
+    test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--desktop/attachments/stats-content-composition-json-3988d901f0cdc704d57943c715ffebba952249a8.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (reduce) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 36
+    Received: 28
+
+      63 |       expect.soft(measured.title).toBe(shared ? 'Alex · Listening stats' : 'Your top listening');
+      64 |       expect.soft(measured.eyebrow).toBe('');
+    > 65 |       expect.soft(measured.fontSize).toBe(width <= 760 ? 28 : 36);
+         |                                      ^
+      66 |       expect.soft(measured.lineHeight).toBe(width <= 760 ? 36 : 44);
+      67 |       expect.soft(measured.letterSpacing).toBe('normal');
+      68 |       expect.soft(measured.descriptionVisible).toBe(width > 760);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:65:38
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 44
+    Received: 36
+
+      64 |       expect.soft(measured.eyebrow).toBe('');
+      65 |       expect.soft(measured.fontSize).toBe(width <= 760 ? 28 : 36);
+    > 66 |       expect.soft(measured.lineHeight).toBe(width <= 760 ? 36 : 44);
+         |                                        ^
+      67 |       expect.soft(measured.letterSpacing).toBe('normal');
+      68 |       expect.soft(measured.descriptionVisible).toBe(width > 760);
+      69 |       expect.soft(measured.description).toBe(shared ? 'Read-only listening snapshot · Refreshed 4 October' : 'Your songs, artists and genres, ranked over time.');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:66:40
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 16
+    Received: 12
+
+      70 |       expect.soft(measured.descriptionFont).toBe(16);
+      71 |       expect.soft(measured.descriptionLine).toBe(24);
+    > 72 |       expect.soft(measured.headingToControls).toBe(width <= 760 ? 12 : 16);
+         |                                               ^
+      73 |       expect.soft(measured.contentGap).toBe(width <= 760 ? 12 : 16);
+      74 |       expect.soft(measured.categoryHeading).toBe('Top songs');
+      75 |       expect.soft(measured.categoryFont).toBe(20); expect.soft(measured.categoryLine).toBe(28); expect.soft(measured.resultGap).toBe(16);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:72:47
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 16
+    Received: 12
+
+      71 |       expect.soft(measured.descriptionLine).toBe(24);
+      72 |       expect.soft(measured.headingToControls).toBe(width <= 760 ? 12 : 16);
+    > 73 |       expect.soft(measured.contentGap).toBe(width <= 760 ? 12 : 16);
+         |                                        ^
+      74 |       expect.soft(measured.categoryHeading).toBe('Top songs');
+      75 |       expect.soft(measured.categoryFont).toBe(20); expect.soft(measured.categoryLine).toBe(28); expect.soft(measured.resultGap).toBe(16);
+      76 |       expect.soft(measured.back).toEqual(shared ? {width: 92, height: 44, imageWidth: 18, imageHeight: 18, naturalWidth: 18, naturalHeight: 18} : null);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:73:40
+
+    attachment #1: stats-content-composition.json (application/json) ───────────────────────────────
+    test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--mobile/attachments/stats-content-composition-json-b8b2b47323f6cc5f6701ab08c871aff5b6ce8c60.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (reduce) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 36
+    Received: 28
+
+      63 |       expect.soft(measured.title).toBe(shared ? 'Alex · Listening stats' : 'Your top listening');
+      64 |       expect.soft(measured.eyebrow).toBe('');
+    > 65 |       expect.soft(measured.fontSize).toBe(width <= 760 ? 28 : 36);
+         |                                      ^
+      66 |       expect.soft(measured.lineHeight).toBe(width <= 760 ? 36 : 44);
+      67 |       expect.soft(measured.letterSpacing).toBe('normal');
+      68 |       expect.soft(measured.descriptionVisible).toBe(width > 760);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:65:38
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 44
+    Received: 36
+
+      64 |       expect.soft(measured.eyebrow).toBe('');
+      65 |       expect.soft(measured.fontSize).toBe(width <= 760 ? 28 : 36);
+    > 66 |       expect.soft(measured.lineHeight).toBe(width <= 760 ? 36 : 44);
+         |                                        ^
+      67 |       expect.soft(measured.letterSpacing).toBe('normal');
+      68 |       expect.soft(measured.descriptionVisible).toBe(width > 760);
+      69 |       expect.soft(measured.description).toBe(shared ? 'Read-only listening snapshot · Refreshed 4 October' : 'Your songs, artists and genres, ranked over time.');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:66:40
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 16
+    Received: 12
+
+      70 |       expect.soft(measured.descriptionFont).toBe(16);
+      71 |       expect.soft(measured.descriptionLine).toBe(24);
+    > 72 |       expect.soft(measured.headingToControls).toBe(width <= 760 ? 12 : 16);
+         |                                               ^
+      73 |       expect.soft(measured.contentGap).toBe(width <= 760 ? 12 : 16);
+      74 |       expect.soft(measured.categoryHeading).toBe('Top songs');
+      75 |       expect.soft(measured.categoryFont).toBe(20); expect.soft(measured.categoryLine).toBe(28); expect.soft(measured.resultGap).toBe(16);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:72:47
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 16
+    Received: 12
+
+      71 |       expect.soft(measured.descriptionLine).toBe(24);
+      72 |       expect.soft(measured.headingToControls).toBe(width <= 760 ? 12 : 16);
+    > 73 |       expect.soft(measured.contentGap).toBe(width <= 760 ? 12 : 16);
+         |                                        ^
+      74 |       expect.soft(measured.categoryHeading).toBe('Top songs');
+      75 |       expect.soft(measured.categoryFont).toBe(20); expect.soft(measured.categoryLine).toBe(28); expect.soft(measured.resultGap).toBe(16);
+      76 |       expect.soft(measured.back).toEqual(shared ? {width: 92, height: 44, imageWidth: 18, imageHeight: 18, naturalWidth: 18, naturalHeight: 18} : null);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:73:40
+
+    attachment #1: stats-content-composition.json (application/json) ───────────────────────────────
+    test-results/design-v2-stats-compositio-a4b8f-ves-owner-workflows-reduce--firefox-stats/attachments/stats-content-composition-json-7eeb242af76e1cea8f4f0d9a356aa27240c0f5da.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-a4b8f-ves-owner-workflows-reduce--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-compositio-a4b8f-ves-owner-workflows-reduce--firefox-stats/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-a4b8f-ves-owner-workflows-reduce--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-compositio-a4b8f-ves-owner-workflows-reduce--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (reduce) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 36
+    Received: 28
+
+      63 |       expect.soft(measured.title).toBe(shared ? 'Alex · Listening stats' : 'Your top listening');
+      64 |       expect.soft(measured.eyebrow).toBe('');
+    > 65 |       expect.soft(measured.fontSize).toBe(width <= 760 ? 28 : 36);
+         |                                      ^
+      66 |       expect.soft(measured.lineHeight).toBe(width <= 760 ? 36 : 44);
+      67 |       expect.soft(measured.letterSpacing).toBe('normal');
+      68 |       expect.soft(measured.descriptionVisible).toBe(width > 760);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:65:38
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 44
+    Received: 36
+
+      64 |       expect.soft(measured.eyebrow).toBe('');
+      65 |       expect.soft(measured.fontSize).toBe(width <= 760 ? 28 : 36);
+    > 66 |       expect.soft(measured.lineHeight).toBe(width <= 760 ? 36 : 44);
+         |                                        ^
+      67 |       expect.soft(measured.letterSpacing).toBe('normal');
+      68 |       expect.soft(measured.descriptionVisible).toBe(width > 760);
+      69 |       expect.soft(measured.description).toBe(shared ? 'Read-only listening snapshot · Refreshed 4 October' : 'Your songs, artists and genres, ranked over time.');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:66:40
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 16
+    Received: 12
+
+      70 |       expect.soft(measured.descriptionFont).toBe(16);
+      71 |       expect.soft(measured.descriptionLine).toBe(24);
+    > 72 |       expect.soft(measured.headingToControls).toBe(width <= 760 ? 12 : 16);
+         |                                               ^
+      73 |       expect.soft(measured.contentGap).toBe(width <= 760 ? 12 : 16);
+      74 |       expect.soft(measured.categoryHeading).toBe('Top songs');
+      75 |       expect.soft(measured.categoryFont).toBe(20); expect.soft(measured.categoryLine).toBe(28); expect.soft(measured.resultGap).toBe(16);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:72:47
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 16
+    Received: 12
+
+      71 |       expect.soft(measured.descriptionLine).toBe(24);
+      72 |       expect.soft(measured.headingToControls).toBe(width <= 760 ? 12 : 16);
+    > 73 |       expect.soft(measured.contentGap).toBe(width <= 760 ? 12 : 16);
+         |                                        ^
+      74 |       expect.soft(measured.categoryHeading).toBe('Top songs');
+      75 |       expect.soft(measured.categoryFont).toBe(20); expect.soft(measured.categoryLine).toBe(28); expect.soft(measured.resultGap).toBe(16);
+      76 |       expect.soft(measured.back).toEqual(shared ? {width: 92, height: 44, imageWidth: 18, imageHeight: 18, naturalWidth: 18, naturalHeight: 18} : null);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:73:40
+
+    attachment #1: stats-content-composition.json (application/json) ───────────────────────────────
+    test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--firefox-stats/attachments/stats-content-composition-json-32500313c49a08c8d6721fb959ae4e64f99128dc.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--firefox-stats/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (reduce) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 36
+    Received: 28
+
+      63 |       expect.soft(measured.title).toBe(shared ? 'Alex · Listening stats' : 'Your top listening');
+      64 |       expect.soft(measured.eyebrow).toBe('');
+    > 65 |       expect.soft(measured.fontSize).toBe(width <= 760 ? 28 : 36);
+         |                                      ^
+      66 |       expect.soft(measured.lineHeight).toBe(width <= 760 ? 36 : 44);
+      67 |       expect.soft(measured.letterSpacing).toBe('normal');
+      68 |       expect.soft(measured.descriptionVisible).toBe(width > 760);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:65:38
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 44
+    Received: 36
+
+      64 |       expect.soft(measured.eyebrow).toBe('');
+      65 |       expect.soft(measured.fontSize).toBe(width <= 760 ? 28 : 36);
+    > 66 |       expect.soft(measured.lineHeight).toBe(width <= 760 ? 36 : 44);
+         |                                        ^
+      67 |       expect.soft(measured.letterSpacing).toBe('normal');
+      68 |       expect.soft(measured.descriptionVisible).toBe(width > 760);
+      69 |       expect.soft(measured.description).toBe(shared ? 'Read-only listening snapshot · Refreshed 4 October' : 'Your songs, artists and genres, ranked over time.');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:66:40
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 16
+    Received: 12
+
+      70 |       expect.soft(measured.descriptionFont).toBe(16);
+      71 |       expect.soft(measured.descriptionLine).toBe(24);
+    > 72 |       expect.soft(measured.headingToControls).toBe(width <= 760 ? 12 : 16);
+         |                                               ^
+      73 |       expect.soft(measured.contentGap).toBe(width <= 760 ? 12 : 16);
+      74 |       expect.soft(measured.categoryHeading).toBe('Top songs');
+      75 |       expect.soft(measured.categoryFont).toBe(20); expect.soft(measured.categoryLine).toBe(28); expect.soft(measured.resultGap).toBe(16);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:72:47
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 16
+    Received: 12
+
+      71 |       expect.soft(measured.descriptionLine).toBe(24);
+      72 |       expect.soft(measured.headingToControls).toBe(width <= 760 ? 12 : 16);
+    > 73 |       expect.soft(measured.contentGap).toBe(width <= 760 ? 12 : 16);
+         |                                        ^
+      74 |       expect.soft(measured.categoryHeading).toBe('Top songs');
+      75 |       expect.soft(measured.categoryFont).toBe(20); expect.soft(measured.categoryLine).toBe(28); expect.soft(measured.resultGap).toBe(16);
+      76 |       expect.soft(measured.back).toEqual(shared ? {width: 92, height: 44, imageWidth: 18, imageHeight: 18, naturalWidth: 18, naturalHeight: 18} : null);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:73:40
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 36
+    Received: 28
+
+      63 |       expect.soft(measured.title).toBe(shared ? 'Alex · Listening stats' : 'Your top listening');
+      64 |       expect.soft(measured.eyebrow).toBe('');
+    > 65 |       expect.soft(measured.fontSize).toBe(width <= 760 ? 28 : 36);
+         |                                      ^
+      66 |       expect.soft(measured.lineHeight).toBe(width <= 760 ? 36 : 44);
+      67 |       expect.soft(measured.letterSpacing).toBe('normal');
+      68 |       expect.soft(measured.descriptionVisible).toBe(width > 760);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:65:38
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 44
+    Received: 36
+
+      64 |       expect.soft(measured.eyebrow).toBe('');
+      65 |       expect.soft(measured.fontSize).toBe(width <= 760 ? 28 : 36);
+    > 66 |       expect.soft(measured.lineHeight).toBe(width <= 760 ? 36 : 44);
+         |                                        ^
+      67 |       expect.soft(measured.letterSpacing).toBe('normal');
+      68 |       expect.soft(measured.descriptionVisible).toBe(width > 760);
+      69 |       expect.soft(measured.description).toBe(shared ? 'Read-only listening snapshot · Refreshed 4 October' : 'Your songs, artists and genres, ranked over time.');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:66:40
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 16
+    Received: 12
+
+      70 |       expect.soft(measured.descriptionFont).toBe(16);
+      71 |       expect.soft(measured.descriptionLine).toBe(24);
+    > 72 |       expect.soft(measured.headingToControls).toBe(width <= 760 ? 12 : 16);
+         |                                               ^
+      73 |       expect.soft(measured.contentGap).toBe(width <= 760 ? 12 : 16);
+      74 |       expect.soft(measured.categoryHeading).toBe('Top songs');
+      75 |       expect.soft(measured.categoryFont).toBe(20); expect.soft(measured.categoryLine).toBe(28); expect.soft(measured.resultGap).toBe(16);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:72:47
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 16
+    Received: 12
+
+      71 |       expect.soft(measured.descriptionLine).toBe(24);
+      72 |       expect.soft(measured.headingToControls).toBe(width <= 760 ? 12 : 16);
+    > 73 |       expect.soft(measured.contentGap).toBe(width <= 760 ? 12 : 16);
+         |                                        ^
+      74 |       expect.soft(measured.categoryHeading).toBe('Top songs');
+      75 |       expect.soft(measured.categoryFont).toBe(20); expect.soft(measured.categoryLine).toBe(28); expect.soft(measured.resultGap).toBe(16);
+      76 |       expect.soft(measured.back).toEqual(shared ? {width: 92, height: 44, imageWidth: 18, imageHeight: 18, naturalWidth: 18, naturalHeight: 18} : null);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts:73:40
+
+    attachment #1: stats-content-composition.json (application/json) ───────────────────────────────
+    test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--webkit-stats/attachments/stats-content-composition-json-4be410fb21747e9b257ad58497337018e86aab10.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--webkit-stats/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-compositio-3fda8-es-shared-workflows-reduce--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6 failed
+    [desktop] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (reduce) 
+    [desktop] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (reduce) 
+    [mobile] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (reduce) 
+    [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves owner workflows (reduce) 
+    [firefox-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (reduce) 
+    [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:9:7 › Stats content composition preserves shared workflows (reduce) 
+  18 passed (2.3m)

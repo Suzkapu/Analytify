@@ -1,0 +1,109 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/shared/ui-v2/v2-rank-history-plot.component.spec.ts --progress=false
+Application bundle generation complete. [1.166 seconds] - 2026-10-08T00:07:44.102Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/shared/ui-v2/v2-rank-history-plot.component.spec.ts (16 tests | 4 failed) 207ms
+     × aligns the labelled middle tracks grid with the corresponding actual rank 13ms
+     × aligns the labelled middle artists grid with the corresponding actual rank 7ms
+     × ignores queued plot inspection after refreshed data leaves 0 positions 10ms
+     × ignores queued plot inspection after refreshed data leaves 1 positions 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-rank-history-plot.component.spec.ts > Saved rank history plot > aligns the labelled middle tracks grid with the corresponding actual rank
+AssertionError: expected 122 to be close to 121.17171717171718, received difference is 0.8282828282828234, but expected 5e-11
+ ❯ src/app/shared/ui-v2/v2-rank-history-plot.component.spec.ts:49:47
+     47|       const point = element.querySelectorAll('.position-marker')[1];
+     48|       const label = element.querySelectorAll('.axis-label')[1];
+     49|       expect(Number(grid.getAttribute('y1'))).toBeCloseTo(Number(point…
+       |                                               ^
+     50|       expect(Number(grid.getAttribute('y2'))).toBeCloseTo(Number(point…
+     51|       expect(Number(label.getAttribute('y')) - 8).toBeCloseTo(Number(p…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-rank-history-plot.component.spec.ts > Saved rank history plot > aligns the labelled middle artists grid with the corresponding actual rank
+AssertionError: expected 122 to be close to 120.3265306122449, received difference is 1.6734693877551052, but expected 5e-11
+ ❯ src/app/shared/ui-v2/v2-rank-history-plot.component.spec.ts:49:47
+     47|       const point = element.querySelectorAll('.position-marker')[1];
+     48|       const label = element.querySelectorAll('.axis-label')[1];
+     49|       expect(Number(grid.getAttribute('y1'))).toBeCloseTo(Number(point…
+       |                                               ^
+     50|       expect(Number(grid.getAttribute('y2'))).toBeCloseTo(Number(point…
+     51|       expect(Number(label.getAttribute('y')) - 8).toBeCloseTo(Number(p…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-rank-history-plot.component.spec.ts > Saved rank history plot > ignores queued plot inspection after refreshed data leaves 0 positions
+AssertionError: expected [Function] to not throw an error but 'TypeError: Cannot read properties of …' was thrown
+
+- Expected:
+undefined
+
++ Received:
+"TypeError: Cannot read properties of undefined (reading 'timestamp')"
+
+ ❯ src/app/shared/ui-v2/v2-rank-history-plot.component.spec.ts:65:67
+     63|     expect(() => fixture.componentInstance.inspectFirst()).not.toThrow…
+     64|     const event = new KeyboardEvent('keydown', {key: 'End', cancelable…
+     65|     expect(() => fixture.componentInstance.inspectKey(event)).not.toTh…
+       |                                                                   ^
+     66|     expect(event.defaultPrevented).toBe(false);
+     67|     const pointer = new MouseEvent('click', {clientX: 360});
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-rank-history-plot.component.spec.ts > Saved rank history plot > ignores queued plot inspection after refreshed data leaves 1 positions
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/app/shared/ui-v2/v2-rank-history-plot.component.spec.ts:66:36
+     64|     const event = new KeyboardEvent('keydown', {key: 'End', cancelable…
+     65|     expect(() => fixture.componentInstance.inspectKey(event)).not.toTh…
+     66|     expect(event.defaultPrevented).toBe(false);
+       |                                    ^
+     67|     const pointer = new MouseEvent('click', {clientX: 360});
+     68|     Object.defineProperty(pointer, 'currentTarget', {value: oldCanvas}…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 12 passed (16)
+   Start at  02:07:44
+   Duration  832ms (transform 41ms, setup 202ms, import 19ms, tests 207ms, environment 287ms)
+

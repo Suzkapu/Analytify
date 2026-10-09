@@ -1,0 +1,188 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts --progress=false
+Application bundle generation complete. [2.442 seconds] - 2026-10-08T09:34:27.715Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:418956) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not display or persist a previous Spotify account after hydration resolves for the replacement account
+[Analytify][0028][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+[Analytify][0029][+00000ms][Personal Stats][DONE] Saved history snapshot to IndexedDB
+
+stderr | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not display or persist a previous Spotify account after hydration resolves for the replacement account
+AssertionError: expected [ { id: 'cached-song', …(3) } ] to deeply equal []
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:92:33
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [
+    {
+      id: 'cached-song',
+      name: 'Cached song',
+      artists: [Array],
+      album: [Object]
+    }
+  ],
+  expected: [],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stdout | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > rejects previous-account API completion after the spotify identity changes
+[Analytify][0030][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+[Analytify][0031][+00000ms][Personal Stats][DONE] Saved history snapshot to IndexedDB
+
+stderr | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > rejects previous-account API completion after the spotify identity changes
+AssertionError: expected [ { id: 'cached-song', …(3) } ] to deeply equal []
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:98:33
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [
+    {
+      id: 'cached-song',
+      name: 'Cached song',
+      artists: [Array],
+      album: [Object]
+    }
+  ],
+  expected: [],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stdout | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > rejects previous-account API completion after the cloud identity changes
+[Analytify][0032][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+[Analytify][0033][+00000ms][Personal Stats][DONE] Saved history snapshot to IndexedDB
+
+stderr | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > rejects previous-account API completion after the cloud identity changes
+AssertionError: expected [ { id: 'cached-song', …(3) } ] to deeply equal []
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:98:33
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [
+    {
+      id: 'cached-song',
+      name: 'Cached song',
+      artists: [Array],
+      album: [Object]
+    }
+  ],
+  expected: [],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts (16 tests | 3 failed) 78ms
+     × does not display or persist a previous Spotify account after hydration resolves for the replacement account 7ms
+     × rejects previous-account API completion after the spotify identity changes 4ms
+     × rejects previous-account API completion after the cloud identity changes 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not display or persist a previous Spotify account after hydration resolves for the replacement account
+AssertionError: expected [ { id: 'cached-song', …(3) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "album": {
++       "images": [],
++     },
++     "artists": [
++       {
++         "name": "Cached artist",
++       },
++     ],
++     "id": "cached-song",
++     "name": "Cached song",
++   },
++ ]
+
+ ❯ src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:92:33
+     90|     const pending = component.loadStats(); account.spotify = 'replacem…
+     91|     if (batches.length) finish(batches[0], [[cachedArtist], [cachedTra…
+     92|     expect(component.topTracks).toEqual([]); expect(storage.setItem).n…
+       |                                 ^
+     93|   });
+     94|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > rejects previous-account API completion after the spotify identity changes
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > rejects previous-account API completion after the cloud identity changes
+AssertionError: expected [ { id: 'cached-song', …(3) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "album": {
++       "images": [],
++     },
++     "artists": [
++       {
++         "name": "Cached artist",
++       },
++     ],
++     "id": "cached-song",
++     "name": "Cached song",
++   },
++ ]
+
+ ❯ src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:98:33
+     96|     const {component, storage, batches, account} = setup(); await comp…
+     97|     account[identity] = 'replacement'; finish(batches[0], [[cachedArti…
+     98|     expect(component.topTracks).toEqual([]); expect(component.topArtis…
+       |                                 ^
+     99|     expect(storage.setItem).not.toHaveBeenCalled(); expect(storage.sav…
+    100|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 13 passed (16)
+   Start at  11:34:27
+   Duration  924ms (transform 174ms, setup 214ms, import 219ms, tests 78ms, environment 299ms)
+

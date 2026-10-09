@@ -1,0 +1,71 @@
+type AnalytifySnapshotCalendarProps = {
+  className?: string;
+  help?: string;
+  purpose?: string;
+  showTodayShortcut?: boolean;
+  state?: "Empty";
+  viewport?: "Desktop";
+};
+
+function AnalytifySnapshotCalendar({ className, help = "Saved dates are green.", purpose = "VIEW SNAPSHOT", showTodayShortcut = true, state = "Empty", viewport = "Desktop" }: AnalytifySnapshotCalendarProps) {
+  return (
+    <div className={className || "bg-[var(--v2-color-surface-raised,#182019)] border border-[var(--v2-color-border,#34423a)] border-solid content-stretch flex flex-col gap-[var(--v2-space-2,8px)] items-start p-[var(--v2-space-3,12px)] relative rounded-[var(--v2-radius-control,12px)] w-[356px]"} data-node-id="838:26341">
+      <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[16px] relative shrink-0 text-[12px] text-[color:var(--v2-color-text-subtle,#8e9b92)] whitespace-nowrap" data-node-id="838:26342">
+        {purpose}
+      </p>
+      <div className="content-stretch flex flex-col gap-[var(--v2-space-2,8px)] items-start p-[var(--v2-space-1,4px)] relative shrink-0 w-full" data-node-id="838:26347" data-name="Calendar scroll body">
+        <div className="[word-break:break-word] content-stretch flex flex-col gap-[var(--v2-space-2,8px)] h-[72px] items-start overflow-clip relative shrink-0 w-full" data-node-id="838:26432" data-name="Calendar message">
+          <p className="flex-[1_0_0] font-['Outfit:SemiBold'] font-semibold leading-[24px] min-h-px relative text-[18px] text-[color:var(--v2-color-text,#f5f7f5)] w-full" data-node-id="838:26433">
+            No saved dates yet
+          </p>
+          <p className="flex-[1_0_0] font-['Outfit:Regular'] font-normal leading-[20px] min-h-px relative text-[14px] text-[color:var(--v2-color-text-muted,#a2ada6)] w-full" data-node-id="838:26434">
+            Saved dates will appear here once you have more history.
+          </p>
+        </div>
+      </div>
+      <div className="content-stretch flex gap-[var(--v2-space-2,8px)] items-start overflow-clip relative shrink-0 w-full" data-node-id="838:26436" data-name="Calendar help and close">
+        <p className="[word-break:break-word] flex-[1_0_0] font-['Outfit:Regular'] font-normal leading-[20px] min-w-px relative text-[14px] text-[color:var(--v2-color-text-muted,#a2ada6)]" data-node-id="838:26437">
+          {help}
+        </p>
+        {showTodayShortcut && (
+          <button className="bg-[var(--v2-color-surface,#121814)] border border-[var(--v2-color-border-control,#6b7d71)] border-solid content-stretch cursor-pointer flex gap-[var(--v2-space-2,8px)] h-[44px] items-center justify-center px-[var(--v2-space-4,16px)] relative rounded-[var(--v2-radius-control,12px)] shrink-0" data-node-id="838:26439" data-name="Calendar / Today">
+            <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] text-left whitespace-nowrap" data-node-id="I838:26439;24:87">
+              Today
+            </p>
+          </button>
+        )}
+        <button className="bg-[var(--v2-color-surface,#121814)] border border-[var(--v2-color-border-control,#6b7d71)] border-solid content-stretch cursor-pointer flex gap-[var(--v2-space-2,8px)] h-[44px] items-center justify-center px-[var(--v2-space-4,16px)] relative rounded-[var(--v2-radius-control,12px)] shrink-0" data-node-id="838:26440" data-name="Calendar / Close">
+          <p className="[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[20px] relative shrink-0 text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] text-left whitespace-nowrap" data-node-id="I838:26440;24:87">
+            Close
+          </p>
+        </button>
+      </div>
+    </div>
+  );
+}
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+These styles are contained in the design: Analytify/Eyebrow: Font(family: "Outfit", style: SemiBold, size: 12, weight: 600, lineHeight: 16, letterSpacing: 0), Analytify/Calendar month: Font(family: "Outfit", style: SemiBold, size: 18, weight: 600, lineHeight: 24, letterSpacing: 0), Analytify/Caption: Font(family: "Outfit", style: Regular, size: 14, weight: 400, lineHeight: 20, letterSpacing: 0), Analytify/Label: Font(family: "Outfit", style: SemiBold, size: 14, weight: 600, lineHeight: 20, letterSpacing: 0).
+Component descriptions: The following components have usage descriptions or documentation links defined in Figma. These descriptions provide important context about the intended usage, best practices, and any constraints for each component. Follow these guidelines when implementing or using these components.
+
+## Viewport=Desktop, State=Empty
+**Node ID:** 838:26341
+
+Shared ranking/comparison date chooser. Uses current available months, seven equal responsive weekday columns, 44px day height, month controls 44×44, and content-driven height. Today shortcut is shown only when current rankings are an allowed choice; comparison excludes the primary date. Calendar body scrolls within short windows, leaving heading/month controls and Close accessible. Available dates select and dismiss; unavailable dates do nothing. Escape/dismiss returns focus to the originating date field. Use loading/empty/unavailable/refreshing states for metadata; chosen-date loading and unavailable feedback remain on the Stats page after this chooser closes.
+
+## Analytify/Snapshot calendar
+**Node ID:** 838:27694
+
+Saved-date chooser for own rankings and comparisons. One responsive implementation: equal seven-column dates, 44px day height, 44×44 month controls. Mobile uses 16px viewport gutters; short windows scroll only the body. States describe available-date metadata: Ready, initial Loading, Empty, Unavailable with Retry, and Refreshing with usable cached dates. Date choice updates only its purpose and closes; selected-detail loading/failure is on Stats afterwards. Comparison omits primary/current where ineligible; Today visibility is conditional. Escape/Close/backdrop dismissal return focus; arrows move across enabled dates; Home/End and PageUp/PageDown navigate the grid/month. Failure retry transitions to Loading and resolves from the actual request, never an assumed success. State copy is variant-owned; callers may override Purpose, Month, Help and Today visibility. Refresh failed variants preserve cached selectable dates, show a refresh error, and retry through Refreshing; initial failure with no usable cache remains Unavailable. Runtime keyboard contract: own Stats only; Enter/Space open from date controls, Escape/backdrop/Close dismiss and return focus to the opener, Tab stays inside the dialog. Grid focus starts at selected eligible date or the closest eligible date; arrows move by day/week, Home/End by week edge, PageUp/PageDown by available month, Enter/Space select only eligible dates. Revalidate permissions and date availability at activation. Preserve focus on metadata refresh and expose Retry after failure. Short windows scroll the body while month and Close remain reachable. Runtime reduced motion removes animated interpolation without delaying state changes or recovery. User-authored retry Smart Animate is 220ms ease-in-out; actual service completion drives outcomes.
+
+## Analytify/secondary
+**Node ID:** 24:94
+
+Shared secondary control. 48 px targets. Keyboard focus remains visible. Disabled only while unavailable or submitting; explain the reason nearby.
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

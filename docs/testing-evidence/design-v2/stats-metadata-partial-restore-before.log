@@ -1,0 +1,62 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/stats-metadata-state-boundary.spec.ts --progress=false
+Application bundle generation complete. [3.061 seconds] - 2026-10-06T23:12:29.159Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/stats-metadata-state-boundary.spec.ts (17 tests | 1 failed) 150ms
+     × waits for concurrent restores, retains successful dates after partial failure, and retries only missing dates 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-metadata-state-boundary.spec.ts > Calendar metadata state and recovery at storage/cloud boundaries > waits for concurrent restores, retains successful dates after partial failure, and retries only missing dates
+AssertionError: expected UserStatsComponent2{ …(94) } to match object { …(2) }
+(109 matching properties omitted from actual)
+
+- Expected
++ Received
+
+- {
+-   "historyData": [
+-     {
+-       "id": "local-A",
+-       "isLoaded": true,
+-       "snapshotDate": "2026-10-03",
+-       "timestamp": 1791021600000,
+-       "topArtists": [],
+-       "topGenres": [],
+-       "topTracks": [
+-         {
+-           "id": "cached",
+-           "name": "Cached ranking",
+-         },
+-       ],
+-     },
+-   ],
+-   "historyMetadataState": "refreshing",
++ UserStatsComponent2 {
++   "historyMetadataState": "refresh-failed",
+  }
+
+ ❯ src/app/features/insights/user-stats/stats-metadata-state-boundary.spec.ts:195:23
+    193|     component.loadHistoryData(); await settle();
+    194|     expect(storage.saveStatsHistory).toHaveBeenCalledTimes(2);
+    195|     expect(component).toMatchObject({historyMetadataState: 'refreshing…
+       |                       ^
+    196|     pending.resolve(); await settle();
+    197|     expect(component).toMatchObject({historyMetadataState: 'refresh-fa…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 16 passed (17)
+   Start at  01:12:29
+   Duration  1.22s (transform 217ms, setup 287ms, import 260ms, tests 150ms, environment 395ms)
+

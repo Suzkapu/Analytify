@@ -1,0 +1,505 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts --progress=false
+Application bundle generation complete. [3.045 seconds] - 2026-10-08T10:04:16.157Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:428446) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stdout | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 0 fails, cached=false
+[Analytify][0003][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+
+stderr | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 0 fails, cached=false
+[Analytify][0004][+00000ms][Personal Stats][ERROR] Failed to load user stats {
+  name: 'Error',
+  message: 'Isolated current Stats failure',
+  stack: 'Error: Isolated current Stats failure\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:50:34\n' +
+    '    at Generator.next (<anonymous>)\n' +
+    '    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)\n' +
+    '    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)\n' +
+    '    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30\n' +
+    '    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)\n' +
+    '    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)\n' +
+    '    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:104:5)'
+}
+AssertionError: expected UserStatsComponent2{ …(94) } to have property "currentStatsLoadFailed" with value true
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:52:25
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: true,
+  showDiff: true
+}
+
+stdout | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 1 fails, cached=false
+[Analytify][0005][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+
+stderr | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 1 fails, cached=false
+[Analytify][0006][+00000ms][Personal Stats][ERROR] Failed to load user stats {
+  name: 'Error',
+  message: 'Isolated current Stats failure',
+  stack: 'Error: Isolated current Stats failure\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:50:34\n' +
+    '    at Generator.next (<anonymous>)\n' +
+    '    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)\n' +
+    '    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)\n' +
+    '    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30\n' +
+    '    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)\n' +
+    '    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)\n' +
+    '    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:104:5)'
+}
+AssertionError: expected UserStatsComponent2{ …(94) } to have property "currentStatsLoadFailed" with value true
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:52:25
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: true,
+  showDiff: true
+}
+
+stdout | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 2 fails, cached=false
+[Analytify][0007][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+
+stderr | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 2 fails, cached=false
+[Analytify][0008][+00000ms][Personal Stats][ERROR] Failed to load user stats {
+  name: 'Error',
+  message: 'Isolated current Stats failure',
+  stack: 'Error: Isolated current Stats failure\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:50:34\n' +
+    '    at Generator.next (<anonymous>)\n' +
+    '    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)\n' +
+    '    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)\n' +
+    '    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30\n' +
+    '    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)\n' +
+    '    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)\n' +
+    '    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:104:5)'
+}
+AssertionError: expected UserStatsComponent2{ …(94) } to have property "currentStatsLoadFailed" with value true
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:52:25
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: true,
+  showDiff: true
+}
+
+stdout | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 3 fails, cached=false
+[Analytify][0009][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+
+stderr | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 3 fails, cached=false
+[Analytify][0010][+00000ms][Personal Stats][ERROR] Failed to load user stats {
+  name: 'Error',
+  message: 'Isolated current Stats failure',
+  stack: 'Error: Isolated current Stats failure\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:50:34\n' +
+    '    at Generator.next (<anonymous>)\n' +
+    '    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)\n' +
+    '    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)\n' +
+    '    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30\n' +
+    '    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)\n' +
+    '    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)\n' +
+    '    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:104:5)'
+}
+AssertionError: expected UserStatsComponent2{ …(94) } to have property "currentStatsLoadFailed" with value true
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:52:25
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: true,
+  showDiff: true
+}
+
+stdout | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 0 fails, cached=true
+[Analytify][0011][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+
+stderr | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 0 fails, cached=true
+[Analytify][0012][+00000ms][Personal Stats][ERROR] Failed to load user stats {
+  name: 'Error',
+  message: 'Isolated current Stats failure',
+  stack: 'Error: Isolated current Stats failure\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:50:34\n' +
+    '    at Generator.next (<anonymous>)\n' +
+    '    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)\n' +
+    '    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)\n' +
+    '    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30\n' +
+    '    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)\n' +
+    '    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)\n' +
+    '    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:104:5)'
+}
+AssertionError: expected UserStatsComponent2{ …(94) } to have property "currentStatsLoadFailed" with value true
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:52:25
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: true,
+  showDiff: true
+}
+
+stdout | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 1 fails, cached=true
+[Analytify][0013][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+
+stderr | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 1 fails, cached=true
+[Analytify][0014][+00000ms][Personal Stats][ERROR] Failed to load user stats {
+  name: 'Error',
+  message: 'Isolated current Stats failure',
+  stack: 'Error: Isolated current Stats failure\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:50:34\n' +
+    '    at Generator.next (<anonymous>)\n' +
+    '    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)\n' +
+    '    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)\n' +
+    '    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30\n' +
+    '    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)\n' +
+    '    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)\n' +
+    '    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:104:5)'
+}
+AssertionError: expected UserStatsComponent2{ …(94) } to have property "currentStatsLoadFailed" with value true
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:52:25
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: true,
+  showDiff: true
+}
+
+stdout | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 2 fails, cached=true
+[Analytify][0015][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+
+stderr | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 2 fails, cached=true
+[Analytify][0016][+00000ms][Personal Stats][ERROR] Failed to load user stats {
+  name: 'Error',
+  message: 'Isolated current Stats failure',
+  stack: 'Error: Isolated current Stats failure\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:50:34\n' +
+    '    at Generator.next (<anonymous>)\n' +
+    '    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)\n' +
+    '    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)\n' +
+    '    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30\n' +
+    '    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)\n' +
+    '    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)\n' +
+    '    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:104:5)'
+}
+AssertionError: expected UserStatsComponent2{ …(94) } to have property "currentStatsLoadFailed" with value true
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:52:25
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: true,
+  showDiff: true
+}
+
+stdout | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 3 fails, cached=true
+[Analytify][0017][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+
+stderr | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 3 fails, cached=true
+[Analytify][0018][+00000ms][Personal Stats][ERROR] Failed to load user stats {
+  name: 'Error',
+  message: 'Isolated current Stats failure',
+  stack: 'Error: Isolated current Stats failure\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:50:34\n' +
+    '    at Generator.next (<anonymous>)\n' +
+    '    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)\n' +
+    '    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)\n' +
+    '    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30\n' +
+    '    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)\n' +
+    '    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)\n' +
+    '    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:104:5)'
+}
+AssertionError: expected UserStatsComponent2{ …(94) } to have property "currentStatsLoadFailed" with value true
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:52:25
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: true,
+  showDiff: true
+}
+
+stdout | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > recovers after a failed attempt without committing its partial data or duplicate history
+[Analytify][0020][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+[Analytify][0022][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+[Analytify][0023][+00000ms][Personal Stats][DONE] Saved history snapshot to IndexedDB
+
+stderr | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > recovers after a failed attempt without committing its partial data or duplicate history
+[Analytify][0021][+00000ms][Personal Stats][ERROR] Failed to load user stats {
+  name: 'Error',
+  message: 'Isolated offline failure',
+  stack: 'Error: Isolated offline failure\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:69:110\n' +
+    '    at Generator.next (<anonymous>)\n' +
+    '    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)\n' +
+    '    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)\n' +
+    '    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30\n' +
+    '    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)\n' +
+    '    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)\n' +
+    '    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:104:5)'
+}
+AssertionError: expected UserStatsComponent2{ …(94) } to have property "currentStatsLoadFailed" with value false
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:72:23
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: false,
+  showDiff: true
+}
+
+stdout | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > retries a failed same-range load once while hydration and required pages remain pending, cached=false
+[Analytify][0030][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+
+stderr | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > retries a failed same-range load once while hydration and required pages remain pending, cached=false
+[Analytify][0031][+00000ms][Personal Stats][ERROR] Failed to load user stats {
+  name: 'Error',
+  message: 'Isolated failure',
+  stack: 'Error: Isolated failure\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:108:54\n' +
+    '    at Generator.next (<anonymous>)\n' +
+    '    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)\n' +
+    '    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)\n' +
+    '    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30\n' +
+    '    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)\n' +
+    '    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)\n' +
+    '    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:104:5)'
+}
+AssertionError: expected false to be true // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:112:64
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: false,
+  expected: true,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stdout | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > retries a failed same-range load once while hydration and required pages remain pending, cached=true
+[Analytify][0032][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+
+stderr | src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > retries a failed same-range load once while hydration and required pages remain pending, cached=true
+[Analytify][0033][+00000ms][Personal Stats][ERROR] Failed to load user stats {
+  name: 'Error',
+  message: 'Isolated failure',
+  stack: 'Error: Isolated failure\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:108:54\n' +
+    '    at Generator.next (<anonymous>)\n' +
+    '    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)\n' +
+    '    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)\n' +
+    '    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30\n' +
+    '    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)\n' +
+    '    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)\n' +
+    '    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:104:5)'
+}
+AssertionError: expected false to be true // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:112:64
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-5S6XLBTS.js:97:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: false,
+  expected: true,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts (18 tests | 11 failed) 227ms
+     × does not persist partial results when required endpoint 0 fails, cached=false 16ms
+     × does not persist partial results when required endpoint 1 fails, cached=false 2ms
+     × does not persist partial results when required endpoint 2 fails, cached=false 3ms
+     × does not persist partial results when required endpoint 3 fails, cached=false 3ms
+     × does not persist partial results when required endpoint 0 fails, cached=true 2ms
+     × does not persist partial results when required endpoint 1 fails, cached=true 3ms
+     × does not persist partial results when required endpoint 2 fails, cached=true 2ms
+     × does not persist partial results when required endpoint 3 fails, cached=true 2ms
+     × recovers after a failed attempt without committing its partial data or duplicate history 5ms
+     × retries a failed same-range load once while hydration and required pages remain pending, cached=false 3ms
+     × retries a failed same-range load once while hydration and required pages remain pending, cached=true 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 0 fails, cached=false
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 1 fails, cached=false
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 2 fails, cached=false
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 3 fails, cached=false
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 0 fails, cached=true
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 1 fails, cached=true
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 2 fails, cached=true
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > does not persist partial results when required endpoint 3 fails, cached=true
+AssertionError: expected UserStatsComponent2{ …(94) } to have property "currentStatsLoadFailed" with value true
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:52:25
+     50|       batches[0][endpoint].error(new Error('Isolated current Stats fai…
+     51|       expect(component).toMatchObject({isLoading: false, isRefreshingS…
+     52|       expect(component).toHaveProperty('currentStatsLoadFailed', true);
+       |                         ^
+     53|       expect(component.topTracks).toEqual(cached ? [cachedTrack] : []);
+     54|       expect(component.topArtists).toEqual(cached ? [cachedArtist] : […
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > recovers after a failed attempt without committing its partial data or duplicate history
+AssertionError: expected UserStatsComponent2{ …(94) } to have property "currentStatsLoadFailed" with value false
+
+- Expected:
+false
+
++ Received:
+undefined
+
+ ❯ src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:72:23
+     70|     await component.loadStats(); finish(batches[1], [[cachedArtist], […
+     71|     expect(component.topTracks).toEqual([cachedTrack]); expect(compone…
+     72|     expect(component).toHaveProperty('currentStatsLoadFailed', false);
+       |                       ^
+     73|     expect(spotify.getUserTopArtists).toHaveBeenCalledTimes(2); expect…
+     74|     expect(storage.saveStatsHistory).toHaveBeenCalledOnce(); component…
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > retries a failed same-range load once while hydration and required pages remain pending, cached=false
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts > current Stats retrieval service boundary > retries a failed same-range load once while hydration and required pages remain pending, cached=true
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts:112:64
+    110|     storage.hydrateItems.mockReturnValue(new Promise<void>(resolve => …
+    111|     (component as any).retryCurrentStats?.(); (component as any).retry…
+    112|     expect(component.isLoading || component.isRefreshingStats).toBe(tr…
+       |                                                                ^
+    113|     release(); await settle();
+    114|     expect(spotify.getUserTopArtists).toHaveBeenCalledTimes(2);
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  11 failed | 7 passed (18)
+   Start at  12:04:16
+   Duration  1.21s (transform 228ms, setup 221ms, import 320ms, tests 227ms, environment 314ms)
+

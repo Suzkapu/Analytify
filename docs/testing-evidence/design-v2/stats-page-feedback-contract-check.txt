@@ -1,0 +1,70 @@
+await figma.setCurrentPageAsync(await figma.getNodeByIdAsync('7:2'));figma.skipInvisibleInstanceChildren=false;
+const V={rank:'VariableID:887:29544',cmp:'VariableID:887:29545',rf:'VariableID:887:29546',rc:'VariableID:887:29547',cf:'VariableID:887:29548',cr:'VariableID:887:29549',primary:'VariableID:144:8034',comparison:'VariableID:144:8035'};
+const defaults=new Map((await figma.variables.getLocalVariablesAsync()).map(v=>[v.id,Object.values(v.valuesByMode)[0]]));
+const resolve=(v,s)=>v.type==='VARIABLE_ALIAS'?s.get(v.value.id):v.type==='EXPRESSION'?expression(v.value,s):v.value;
+const expression=(e,s)=>{if(e.expressionFunction!=='EQUALS')throw Error('Unsupported expression');return resolve(e.expressionArguments[0],s)===resolve(e.expressionArguments[1],s);};
+const run=(actions,s,events)=>{for(const a of actions){if(a.type==='SET_VARIABLE')s.set(a.variableId,resolve(a.variableValue,s));else if(a.type==='CONDITIONAL'){const b=a.conditionalBlocks.find(b=>!b.condition||resolve(b.condition,s));if(b)run(b.actions,s,events);}else if(['NODE','CLOSE'].includes(a.type))events.push(a);else throw Error('Unsupported action '+a.type);}};
+const assert=(ok,message)=>{if(!ok)throw Error(message);};
+assert(defaults.get(V.rf)===false&&defaults.get(V.rc)===true&&defaults.get(V.cf)===false&&defaults.get(V.cr)===true,'Initial loaded page changed');
+let rankingChoices=0,comparisonChoices=0,blocked=0,today=0;
+for(const [id,purpose]of [['850:26616','Ranking'],['850:26785','Comparison'],['850:26977','Ranking'],['850:27146','Comparison'],['865:27813','Ranking'],['865:28019','Comparison'],['865:28300','Ranking'],['865:28506','Comparison']]){
+ const p=await figma.getNodeByIdAsync(id);
+ for(const day of p.findAll(n=>n.type==='INSTANCE'&&n.name.startsWith('Snapshot /'))){
+  const date=day.name.slice(11),s=new Map(defaults),ev=[];
+  s.set('VariableID:144:8033',purpose.toLowerCase());s.set(V.primary,'2026-10-02');s.set(V.comparison,'2026-10-03');
+  run(day.reactions[0].actions,s,ev);
+  if(purpose==='Ranking'){
+   rankingChoices++;assert(s.get(V.primary)===date,'Ranking selection mismatch');
+   assert(s.get(V.rf)===(date!=='2026-10-04')&&s.get(V.rc)===(date==='2026-10-04'),'Ranking readiness mismatch');
+   if(date!=='2026-10-04')assert(s.get(V.rank)==='Loading','Historical ranking missing Loading');
+   assert(s.get(V.cf)===true&&s.get(V.cr)===false&&s.get(V.cmp)==='Loading','Ranking selection must load historical comparison');
+   assert(s.get(V.comparison)===(date==='2026-10-03'?'2026-10-02':'2026-10-03'),'Newest different historical comparison mismatch');
+  }else if(date==='2026-10-02'){
+   blocked++;assert(s.get(V.comparison)==='2026-10-03'&&s.get(V.cf)===false&&s.get(V.cr)===true&&!ev.some(e=>e.type==='CLOSE'),'Blocked selection changes feedback');
+  }else{
+   comparisonChoices++;assert(s.get(V.primary)==='2026-10-02'&&s.get(V.rc)===true&&s.get(V.rf)===false,'Comparison replaces primary');
+   assert(s.get(V.cf)===(date!=='2026-10-04')&&s.get(V.cr)===(date==='2026-10-04'),'Comparison readiness mismatch');
+   if(date!=='2026-10-04')assert(s.get(V.cmp)==='Loading','Comparison missing Loading');
+  }
+ }
+ const s=new Map(defaults),ev=[];s.set('VariableID:144:8033',purpose.toLowerCase());s.set(V.primary,'2026-10-02');s.set('VariableID:866:28457',true);
+ run(p.findOne(n=>n.name==='Calendar / Today').reactions[0].actions,s,ev);today++;
+ assert(purpose==='Ranking'?s.get(V.rc)===true&&s.get(V.rf)===false:s.get(V.cr)===true&&s.get(V.cf)===false,'Today does not reuse loaded payload');
+}
+const fixtureChecks=[];
+for(const [id,target,state]of [['889:29250','Ranking','Ready'],['889:29258','Ranking','Empty'],['889:29264','Ranking','Unavailable'],['889:29271','Comparison','Ready'],['889:29277','Comparison','Empty'],['889:29283','Comparison','Unavailable']]){
+ const n=await figma.getNodeByIdAsync(id),s=new Map(defaults),ev=[];run(n.reactions[0].actions,s,ev);
+ assert(target==='Ranking'?s.get(V.rf)===(state!=='Ready')&&s.get(V.rc)===(state==='Ready'):s.get(V.cf)===(state!=='Ready')&&s.get(V.cr)===(state==='Ready'),'Wrong explicit outcome flags');
+ if(state!=='Ready')assert(s.get(target==='Ranking'?V.rank:V.cmp)===state,'Wrong explicit state');
+ assert(s.get(V.primary)===defaults.get(V.primary)&&s.get(V.comparison)===defaults.get(V.comparison),'Outcome changes dates');
+ assert(n.reactions.every(r=>r.trigger?.type!=='AFTER_TIMEOUT'),'Timed service result');fixtureChecks.push({id,target,state});
+}
+const retryChecks=[];
+for(const [id,target]of [['848:26570','Ranking'],['848:26621','Ranking'],['848:26655','Comparison'],['848:26689','Comparison']]){
+ const n=await figma.getNodeByIdAsync(id),s=new Map(defaults),ev=[];run(n.reactions[0].actions,s,ev);
+ assert(s.get(target==='Ranking'?V.rank:V.cmp)==='Loading','Retry missing Loading');
+ assert(target==='Ranking'?s.get(V.rf)===true&&s.get(V.rc)===false&&s.get(V.cf)===false:s.get(V.cf)===true&&s.get(V.cr)===false&&s.get(V.rc)===true,'Retry disrupts opposite content');
+ assert(s.get(V.primary)===defaults.get(V.primary)&&s.get(V.comparison)===defaults.get(V.comparison),'Retry changes dates');
+ const a=ev.find(a=>a.type==='NODE');assert(Math.abs((a?.transition?.duration??-1)-0.22)<1e-7 && a?.transition?.type==='SMART_ANIMATE' && a?.transition?.easing?.type==='EASE_IN_AND_OUT','User authored Retry duration changed');retryChecks.push({id,target,transition:a.transition});
+}
+const bindings=[];
+for(const [id,variable]of [['887:29550',V.rf],['887:29571',V.rc],['887:29572',V.cf],['887:29576',V.rf],['887:29597',V.rc],['887:29598',V.cf],['25:124','VariableID:71:4436'],['25:128','VariableID:71:4436'],['25:812','VariableID:71:4436'],['25:816','VariableID:71:4436'],['87:3576','VariableID:71:4436'],['87:3585','VariableID:71:4436'],['144:8023','VariableID:71:4436'],['144:8028','VariableID:71:4436']]){
+ const n=await figma.getNodeByIdAsync(id);assert(n.boundVariables.visible?.id===variable,'Wrong visibility binding '+id);bindings.push({id,variable});
+}
+for(const [id,variable]of [['887:29550',V.rank],['887:29576',V.rank],['887:29572',V.cmp],['887:29598',V.cmp]])assert((await figma.getNodeByIdAsync(id)).componentProperties.State.boundVariables.value.id===variable,'Wrong State binding '+id);
+const section=await figma.getNodeByIdAsync('872:30080'),fixture=await figma.getNodeByIdAsync('889:29246'),review=await figma.getNodeByIdAsync('889:29489');
+for(const n of [fixture,review])assert(n.parent.id===section.id&&n.x>=0&&n.y>=0&&n.x+n.width<=section.width&&n.y+n.height<=section.height,'Evidence outside mechanics section');
+for(const id of ['889:29249','889:29270']){const c=await figma.getNodeByIdAsync(id);assert(c.layoutSizingVertical==='HUG'&&c.height>=168,'Collapsed outcome column');for(const n of c.children)assert(n.y+n.height<=c.height,'Clipped outcome control');}
+const bounds=section.absoluteBoundingBox;
+const overlaps=figma.currentPage.children.filter(n=>n.id!==section.id&&n.absoluteBoundingBox).filter(n=>{const b=n.absoluteBoundingBox;return bounds.x<b.x+b.width&&bounds.x+bounds.width>b.x&&bounds.y<b.y+b.height&&bounds.y+bounds.height>b.y;});
+assert(overlaps.length===0,'Mechanics overlaps sibling '+overlaps.map(n=>n.id));
+const controls=[];
+for(const id of ['87:3576','87:3585']){const n=await figma.getNodeByIdAsync(id);for(const enabled of [false,true]){const s=new Map(defaults),events=[];s.set('VariableID:87:3563',enabled);run(n.reactions[0].actions,s,events);assert(s.get('VariableID:87:3563')===!enabled,'Compare toggle failed');assert(s.get(V.primary)===defaults.get(V.primary)&&s.get(V.comparison)===defaults.get(V.comparison),'Compare toggle changes dates');}controls.push({id,contract:'toggle comparison controls without changing selection'});}
+const evaluate=(e,s)=>{const values=e.expressionArguments.map(v=>v.type==='EXPRESSION'?evaluate(v.value,s):resolve(v,s));if(e.expressionFunction==='EQUALS')return values[0]===values[1];if(e.expressionFunction==='AND')return values.every(Boolean);throw Error('Unsupported control expression '+e.expressionFunction);};
+const controlValue=(v,s)=>v.type==='EXPRESSION'?evaluate(v.value,s):resolve(v,s);
+const controlRun=(actions,s)=>{for(const a of actions){if(a.type==='SET_VARIABLE')s.set(a.variableId,controlValue(a.variableValue,s));else if(a.type==='CONDITIONAL'){const b=a.conditionalBlocks.find(b=>!b.condition||controlValue(b.condition,s));if(b)controlRun(b.actions,s);}else throw Error('Unexpected search action');}};
+for(const id of ['144:8023','144:8028']){const n=await figma.getNodeByIdAsync(id);for(const enabled of [false,true])for(const query of ['Night Signals','']){const s=new Map(defaults);s.set('VariableID:144:8021',enabled);s.set('VariableID:146:8068',query);controlRun(n.reactions[0].actions,s);assert(s.get('VariableID:144:8021')===!enabled&&s.get('VariableID:144:8022')===(!enabled?'On':'Off'),'Search scope toggle failed');assert(s.get('VariableID:146:8070')===(!enabled&&query==='Night Signals')&&s.get('VariableID:146:8071')===(enabled&&query==='Night Signals'),'Search feedback mismatch');}controls.push({id,contract:'historical inclusion and frozen no-match/result feedback'});}
+let movementBindings=0,flameBindings=0;
+for(const id of ['887:29571','887:29597']){const n=await figma.getNodeByIdAsync(id);for(const t of n.findAll(n=>n.type==='TEXT'&&n.name==='Rank movement')){assert(t.boundVariables.visible?.id===V.cr,'Ungated movement '+t.id);movementBindings++;}for(const row of n.findAll(n=>n.type==='INSTANCE'&&Object.keys(n.componentProperties).some(k=>k.startsWith('Show ranking flame')))){for(const [key,value]of Object.entries(row.componentProperties)){if(key.startsWith('Show ranking flame')&&value.boundVariables?.value){assert(value.boundVariables.value.id===V.cr,'Incorrect flame binding');flameBindings++;}}}}
+assert(movementBindings===18&&flameBindings>0,'Missing movement/flame bindings');
+return {status:'passed',controls,movementBindings,flameBindings,scope:'Actual Figma prototype and binding checks; not Angular/browser parity or application coverage',rankingChoices,comparisonChoices,blocked,today,fixtureChecks,retryChecks,bindings,fixtureBounds:{width:fixture.width,height:fixture.height},sectionBounds:bounds};

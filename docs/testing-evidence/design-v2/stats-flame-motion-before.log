@@ -1,0 +1,51 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-all-browsers.config.ts e2e/design-v2-stats-flames.spec.ts --project=desktop --grep canonical flame timeline
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:151121) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:151121) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:151234) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes (6.9s)
+
+
+  1) [desktop] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 3
+    Received: 0
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      126 |   const flames = page.locator('.v2-ranking-row v2-ranking-flame svg');
+      127 |   await expect(flames).toHaveCount(2);
+    > 128 |   await expect.poll(() => flames.first().evaluate(element => element.getAnimations().length)).toBe(3);
+          |                                                                                               ^
+      129 |   // Observe the native clock across a full loop before seeking deterministic
+      130 |   // keyframes. A paused style sample alone would not prove the loop runs.
+      131 |   const start = await flames.first().evaluate(element => Number(element.getAnimations()[0].currentTime));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts:128:95
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-stats-flames-can-046c6-stops-on-preference-changes-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes 

@@ -1,0 +1,100 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-stats-flames.spec.ts e2e/design-v2-stats-genres.spec.ts e2e/design-v2-stats-search-switch.spec.ts --config=/tmp/analytify-all-browsers.config.ts --workers=1 --grep static canonical row captures|large original ranks.*motion reduce|canonical genre comparisons|canonical flame timeline|genre chart scale|historical search stays|canonical search row|selection follows
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:210127) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:210127) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 60 tests using 1 worker
+
+(node:210237) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes (7.4s)
+  ✓   2 [desktop] › e2e/design-v2-stats-flames.spec.ts:331:9 › static canonical row captures › canonical artist row geometry at 390px (2.5s)
+  ✓   3 [desktop] › e2e/design-v2-stats-flames.spec.ts:331:9 › static canonical row captures › canonical artist row geometry at 1440px (2.6s)
+  ✓   4 [desktop] › e2e/design-v2-stats-flames.spec.ts:343:9 › static canonical row captures › canonical flame colors and placement at 390px (2.6s)
+  ✓   5 [desktop] › e2e/design-v2-stats-flames.spec.ts:343:9 › static canonical row captures › canonical flame colors and placement at 1440px (3.5s)
+  ✓   6 [desktop] › e2e/design-v2-stats-flames.spec.ts:356:9 › static canonical row captures › canonical History action states retain geometry and keyboard recovery at 390px (3.6s)
+  ✓   7 [desktop] › e2e/design-v2-stats-flames.spec.ts:356:9 › static canonical row captures › canonical History action states retain geometry and keyboard recovery at 1440px (3.7s)
+  ✓   8 [desktop] › e2e/design-v2-stats-flames.spec.ts:444:7 › large original ranks wrap movement without shifting actions with motion reduce (6.3s)
+  ✓   9 [desktop] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (3.5s)
+  ✓  10 [desktop] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (3.2s)
+  ✓  11 [desktop] › e2e/design-v2-stats-genres.spec.ts:119:7 › canonical genre comparisons at 390px (2.0s)
+  ✓  12 [desktop] › e2e/design-v2-stats-genres.spec.ts:119:7 › canonical genre comparisons at 1440px (2.1s)
+[WebServer] 10:37:01 PM [vite] (client) [console.warn] [Analytify][0006][+00478ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:37:01 PM [vite] (client) [console.warn] [Analytify][0007][+00480ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 10:37:01 PM [vite] (client) [console.warn] [Analytify][0011][+00597ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:37:01 PM [vite] (client) [console.warn] [Analytify][0012][+00598ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓  13 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (3.4s)
+  ✓  14 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (3.5s)
+  ✓  15 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:97:5 › selection follows the native 220ms timeline and responds to reduced motion (2.1s)
+(node:211490) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  16 [mobile] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes (7.8s)
+  ✓  17 [mobile] › e2e/design-v2-stats-flames.spec.ts:331:9 › static canonical row captures › canonical artist row geometry at 390px (2.6s)
+  ✓  18 [mobile] › e2e/design-v2-stats-flames.spec.ts:331:9 › static canonical row captures › canonical artist row geometry at 1440px (3.2s)
+  ✓  19 [mobile] › e2e/design-v2-stats-flames.spec.ts:343:9 › static canonical row captures › canonical flame colors and placement at 390px (2.8s)
+  ✓  20 [mobile] › e2e/design-v2-stats-flames.spec.ts:343:9 › static canonical row captures › canonical flame colors and placement at 1440px (3.7s)
+  ✓  21 [mobile] › e2e/design-v2-stats-flames.spec.ts:356:9 › static canonical row captures › canonical History action states retain geometry and keyboard recovery at 390px (3.8s)
+  ✓  22 [mobile] › e2e/design-v2-stats-flames.spec.ts:356:9 › static canonical row captures › canonical History action states retain geometry and keyboard recovery at 1440px (4.3s)
+  ✓  23 [mobile] › e2e/design-v2-stats-flames.spec.ts:444:7 › large original ranks wrap movement without shifting actions with motion reduce (7.0s)
+  ✓  24 [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (3.4s)
+  ✓  25 [mobile] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (3.4s)
+  ✓  26 [mobile] › e2e/design-v2-stats-genres.spec.ts:119:7 › canonical genre comparisons at 390px (2.7s)
+  ✓  27 [mobile] › e2e/design-v2-stats-genres.spec.ts:119:7 › canonical genre comparisons at 1440px (3.5s)
+[WebServer] 10:37:59 PM [vite] (client) [console.warn] [Analytify][0006][+00513ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:37:59 PM [vite] (client) [console.warn] [Analytify][0007][+00516ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 10:37:59 PM [vite] (client) [console.warn] [Analytify][0011][+00636ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:37:59 PM [vite] (client) [console.warn] [Analytify][0012][+00636ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓  28 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (3.8s)
+[WebServer] 10:38:03 PM [vite] (client) [console.error] InvalidStateError: Transition was aborted because of invalid state. Viewport size changed
+  ✓  29 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (4.2s)
+  ✓  30 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:97:5 › selection follows the native 220ms timeline and responds to reduced motion (2.1s)
+(node:212325) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  31 [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes (9.2s)
+  ✓  32 [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:331:9 › static canonical row captures › canonical artist row geometry at 390px (2.4s)
+  ✓  33 [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:331:9 › static canonical row captures › canonical artist row geometry at 1440px (2.3s)
+  ✓  34 [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:343:9 › static canonical row captures › canonical flame colors and placement at 390px (2.5s)
+  ✓  35 [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:343:9 › static canonical row captures › canonical flame colors and placement at 1440px (2.4s)
+  ✓  36 [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:356:9 › static canonical row captures › canonical History action states retain geometry and keyboard recovery at 390px (3.8s)
+  ✓  37 [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:356:9 › static canonical row captures › canonical History action states retain geometry and keyboard recovery at 1440px (3.9s)
+  ✓  38 [firefox-stats] › e2e/design-v2-stats-flames.spec.ts:444:7 › large original ranks wrap movement without shifting actions with motion reduce (7.3s)
+  ✓  39 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (4.1s)
+  ✓  40 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (5.0s)
+  ✓  41 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:119:7 › canonical genre comparisons at 390px (1.8s)
+  ✓  42 [firefox-stats] › e2e/design-v2-stats-genres.spec.ts:119:7 › canonical genre comparisons at 1440px (1.9s)
+[WebServer] 10:38:57 PM [vite] (client) [console.warn] [Analytify][0006][+00247ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:38:57 PM [vite] (client) [console.warn] [Analytify][0007][+00250ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 10:38:57 PM [vite] (client) [console.warn] [Analytify][0012][+00493ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:38:57 PM [vite] (client) [console.warn] [Analytify][0013][+00494ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 10:38:57 PM [vite] (client) [console.warn] [Analytify][0015][+00550ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:38:57 PM [vite] (client) [console.warn] [Analytify][0016][+00551ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓  43 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (3.6s)
+  ✓  44 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (4.0s)
+  ✓  45 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:97:5 › selection follows the native 220ms timeline and responds to reduced motion (2.1s)
+(node:213647) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  46 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:124:5 › canonical flame timeline loops without moving controls and stops on preference changes (9.2s)
+  ✓  47 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:331:9 › static canonical row captures › canonical artist row geometry at 390px (3.1s)
+  ✓  48 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:331:9 › static canonical row captures › canonical artist row geometry at 1440px (3.4s)
+  ✓  49 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:343:9 › static canonical row captures › canonical flame colors and placement at 390px (3.1s)
+  ✓  50 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:343:9 › static canonical row captures › canonical flame colors and placement at 1440px (3.3s)
+  ✓  51 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:356:9 › static canonical row captures › canonical History action states retain geometry and keyboard recovery at 390px (4.3s)
+  ✓  52 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:356:9 › static canonical row captures › canonical History action states retain geometry and keyboard recovery at 1440px (4.9s)
+  ✓  53 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:444:7 › large original ranks wrap movement without shifting actions with motion reduce (8.9s)
+  ✓  54 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion no-preference (5.4s)
+  ✓  55 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:49:7 › genre chart scale, keyboard History and responsive resizing with motion reduce (4.5s)
+  ✓  56 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:119:7 › canonical genre comparisons at 390px (3.0s)
+  ✓  57 [webkit-stats] › e2e/design-v2-stats-genres.spec.ts:119:7 › canonical genre comparisons at 1440px (3.6s)
+[WebServer] 10:40:05 PM [vite] (client) [console.warn] [Analytify][0006][+00855ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:40:05 PM [vite] (client) [console.warn] [Analytify][0007][+00859ms][Supabase][WARN] Session refresh failed Auth session missing!
+[WebServer] 10:40:06 PM [vite] (client) [console.warn] [Analytify][0011][+01193ms][Supabase][WARN] Session missing or expired, attempting refresh...
+[WebServer] 10:40:06 PM [vite] (client) [console.warn] [Analytify][0012][+01193ms][Supabase][WARN] Session refresh failed Auth session missing!
+  ✓  58 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (6.3s)
+  ✓  59 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:59:5 › canonical search row keeps touch geometry when resizing short and tall windows (4.7s)
+  ✓  60 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:97:5 › selection follows the native 220ms timeline and responds to reduced motion (3.8s)
+
+  60 passed (4.2m)

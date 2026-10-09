@@ -181,4 +181,42 @@ describe('Calendar metadata state and recovery at storage/cloud boundaries', () 
     expect(sdk.saveStatsSnapshot).not.toHaveBeenCalled();
     component.ngOnDestroy();
   });
+
+  it('waits for concurrent restores, retains successful dates after partial failure, and retries only missing dates', async () => {
+    const {component, sdk, storage, cache} = setup(), pending = deferred<void>();
+    const second = {...cloud, id: 'cloud-B', snapshotDate: '2026-10-01', timestamp: new Date(2026, 9, 1, 12).getTime()};
+    sdk.loadAllStatsSnapshotsMetadata.mockResolvedValue([local, cloud, second]);
+    storage.saveStatsHistory.mockImplementation(async snapshot => {
+      if (snapshot.id === cloud.id) throw new Error('Isolated first restore failure');
+      await pending.promise; cache.push(snapshot);
+    });
+    component.loadHistoryData(); await settle();
+    expect(storage.saveStatsHistory).toHaveBeenCalledTimes(2);
+    expect(component).toMatchObject({historyMetadataState: 'refreshing', historyData: [local]});
+    pending.resolve(); await settle();
+    expect(component).toMatchObject({historyMetadataState: 'refresh-failed'});
+    expect(component.snapshotOptions.map(option => option.dateKey)).toEqual(['2026-10-03', '2026-10-01']);
+    storage.saveStatsHistory.mockImplementation(async snapshot => {cache.push(snapshot);});
+    component.loadHistoryData(); await settle();
+    expect(component).toMatchObject({historyMetadataState: 'ready', historyMetadataError: ''});
+    expect(component.snapshotOptions.map(option => option.dateKey)).toEqual(['2026-10-03', '2026-10-02', '2026-10-01']);
+    expect(storage.saveStatsHistory.mock.calls.map(([snapshot]) => snapshot.id)).toEqual(['cloud-A', 'cloud-B', 'cloud-A']);
+    expect(sdk.saveStatsSnapshot).not.toHaveBeenCalled();
+    component.ngOnDestroy();
+  });
+
+  it.each(['resolve', 'reject'] as const)('does not publish a late local %s after leaving Stats', async outcome => {
+    const {component, storage, sdk, render} = setup(), read = deferred<any[]>();
+    storage.getStatsHistory.mockReturnValueOnce(read.promise);
+    component.loadHistoryData(); component.ngOnDestroy(); render.markForCheck.mockClear();
+    if (outcome === 'resolve') read.resolve([local]);
+    else read.reject(new Error('Isolated abandoned local read'));
+    await settle();
+    expect(component.historyData).toEqual([]);
+    expect(component.snapshotOptions).toEqual([]);
+    expect(render.markForCheck).not.toHaveBeenCalled();
+    expect(sdk.loadAllStatsSnapshotsMetadata).not.toHaveBeenCalled();
+    expect(storage.saveStatsHistory).not.toHaveBeenCalled();
+  });
+
 });

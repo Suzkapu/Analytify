@@ -1,0 +1,111 @@
+npm notice run spoti-front@0.0.0 test:coverage:edge
+npm notice run node scripts/run-application-coverage.mjs edge && node scripts/check-application-coverage-inventory.mjs edge
+running 4 tests from ./supabase/functions/song-league-playlist-sync/recovery.test.ts
+the recovery marker survives playlist description updates ... ok (365µs)
+recovery accepts only a marker match owned by the connected Spotify user ... ok (143µs)
+recovery requires the exact operation marker ... ok (58µs)
+playlist replacement retains every track in Spotify-sized batches ... ok (129µs)
+running 2 tests from ./supabase/functions/song-league-notifications/push-endpoint.test.ts
+accepts supported browser push providers ... ok (593µs)
+rejects SSRF, lookalike, credential, port, and redirect-style endpoints ... ok (786µs)
+running 3 tests from ./supabase/functions/spotify-credentials/personal-recovery.test.ts
+personal recovery accepts only bounded Spotify account identifiers ... ok (429µs)
+personal recovery aliases are deterministic and reveal no Spotify ID ... ok (607µs)
+personal recovery requires both token paths to verify the claimed account ... ok (147µs)
+running 3 tests from ./supabase/functions/spotify-credentials/profile-verification.test.ts
+matches only Spotify identities returned by the verified profile ... ok (894µs)
+allows a verified anonymous personal-app identity alongside a hosted profile ... ok (76µs)
+allows an unverified placeholder to be replaced after server verification ... ok (80µs)
+running 3 tests from ./supabase/functions/_shared/bounded-fetch.test.ts
+boundedFetch honors Retry-After before retrying ... ok (8ms)
+boundedFetch never retries an unsafe request unless explicitly allowed ... ok (151µs)
+boundedFetch classifies an expired deadline ... ok (7ms)
+running 9 tests from ./supabase/functions/_shared/request-security.test.ts
+CORS reflects only an explicitly allowed origin ... ok (7ms)
+preflight rejects unsupported methods and headers ... ok (398µs)
+streaming JSON parsing rejects undeclared oversized bodies ... ok (1ms)
+JSON parsing rejects arrays and malformed bodies with a stable error ... ok (297µs)
+bearer tokens have a strict size and syntax bound ... ok (1ms)
+worker access requires the exact service secret, not an unsigned role claim ... ok (139µs)
+request bodies reject compressed or ambiguous media types before parsing ... ok (276µs)
+durable limits count calls and expose only a bounded retry delay ... ok (799µs)
+public failures contain correlation IDs but not internal details ... ok (2ms)
+running 2 tests from ./supabase/functions/_shared/spotify-credential-crypto.test.ts
+credential key ring reads mixed versions and writes only the active version ... ok (1ms)
+credential decryption fails closed for retired keys and corrupt ciphertext ... ok (514µs)
+
+ok | 26 passed | 0 failed (493ms)
+
+| File                                        | Branch % | Function % | Line % |
+| ------------------------------------------- | -------- | ---------- | ------ |
+| _shared/bounded-fetch.ts                    |     67.3 |       80.0 |   87.9 |
+| _shared/request-security.ts                 |     66.2 |       93.8 |   90.1 |
+| _shared/spotify-credential-crypto.ts        |     68.0 |       90.0 |   82.5 |
+| song-league-notifications/push-endpoint.ts  |    100.0 |      100.0 |  100.0 |
+| song-league-playlist-sync/recovery.ts       |     89.5 |      100.0 |   91.7 |
+| spotify-credentials/personal-recovery.ts    |    100.0 |      100.0 |  100.0 |
+| spotify-credentials/profile-verification.ts |    100.0 |      100.0 |  100.0 |
+| All files                                   |     73.2 |       93.3 |   89.8 |
+Lcov coverage report has been generated at file:///mnt/Storage/ProgrammingProjects/Analytify/coverage/edge/raw-4L2FhO/lcov.info
+HTML coverage report has been generated at file:///mnt/Storage/ProgrammingProjects/Analytify/coverage/edge/raw-4L2FhO/html/index.html
+node:internal/child_process:1175
+    result.error = new ErrnoException(result.error, 'spawnSync ' + options.file);
+                   ^
+
+<ref *1> Error: spawnSync deno EPERM
+    at Object.spawnSync (node:internal/child_process:1175:20)
+    at spawnSync (node:child_process:929:24)
+    at execFileSync (node:child_process:972:15)
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/scripts/report-edge-v8-coverage.mjs:13:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  errno: -1,
+  code: 'EPERM',
+  syscall: 'spawnSync deno',
+  path: 'deno',
+  spawnargs: [ 'info', '--json' ],
+  error: [Circular *1],
+  status: 0,
+  signal: null,
+  output: [
+    null,
+    '{\n' +
+      '  "version": 1,\n' +
+      '  "denoVersion": "2.9.7",\n' +
+      '  "denoDir": "/home/suzkapu/.cache/deno",\n' +
+      '  "modulesCache": "/home/suzkapu/.cache/deno/remote",\n' +
+      '  "npmCache": "/home/suzkapu/.cache/deno/npm",\n' +
+      '  "typescriptCache": "/home/suzkapu/.cache/deno/gen",\n' +
+      '  "registryCache": "/home/suzkapu/.cache/deno/registries",\n' +
+      '  "originStorage": "/home/suzkapu/.cache/deno/location_data",\n' +
+      '  "webCacheStorage": "/home/suzkapu/.cache/deno/location_data/web_cache"\n' +
+      '}\n',
+    ''
+  ],
+  pid: 73,
+  stdout: '{\n' +
+    '  "version": 1,\n' +
+    '  "denoVersion": "2.9.7",\n' +
+    '  "denoDir": "/home/suzkapu/.cache/deno",\n' +
+    '  "modulesCache": "/home/suzkapu/.cache/deno/remote",\n' +
+    '  "npmCache": "/home/suzkapu/.cache/deno/npm",\n' +
+    '  "typescriptCache": "/home/suzkapu/.cache/deno/gen",\n' +
+    '  "registryCache": "/home/suzkapu/.cache/deno/registries",\n' +
+    '  "originStorage": "/home/suzkapu/.cache/deno/location_data",\n' +
+    '  "webCacheStorage": "/home/suzkapu/.cache/deno/location_data/web_cache"\n' +
+    '}\n',
+  stderr: ''
+}
+
+Node.js v26.10.0
+file:///mnt/Storage/ProgrammingProjects/Analytify/scripts/run-application-coverage.mjs:13
+  if (result.status !== 0) throw new Error(`${command} failed with exit ${result.status}; coverage is unverified.`);
+                                 ^
+
+Error: /usr/bin/node failed with exit 1; coverage is unverified.
+    at run (file:///mnt/Storage/ProgrammingProjects/Analytify/scripts/run-application-coverage.mjs:13:34)
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/scripts/run-application-coverage.mjs:28:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+    at async node:internal/modules/esm/loader:650:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+
+Node.js v26.10.0

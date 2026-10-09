@@ -1,3 +1,4 @@
+import {chooseStatsDate} from './helpers/stats-calendar';
 import {test, expect} from './fixtures';
 import {expectNoBlockingAxeViolations, mockSpotify, seedAuthenticatedBrowser} from './helpers/authenticated-browser';
 import {writeFile} from 'node:fs/promises';
@@ -29,9 +30,7 @@ test.beforeEach(async ({page}) => {
   await page.route('https://api.spotify.com/v1/me/top/tracks?*', route => route.fulfill({json: {items: [], total: 0}}));
   await page.route('https://api.spotify.com/v1/me/top/artists?*', route => route.fulfill({json: {items: [], total: 0}}));
   await page.goto('/new/stats');
-  const date = page.getByRole('combobox', {name: 'Ranking date', exact: true});
-  await expect(date).toBeVisible();
-  await date.selectOption(String(new Date('2026-10-04T12:00:00Z').getTime()));
+  await chooseStatsDate(page, 'ranking', '2026-10-04');
   await expect(page.getByRole('button', {name: 'View position history for Midnight Drive'})).toBeVisible();
 });
 
@@ -48,7 +47,7 @@ test('approved shared snapshot has no private history actions in any category', 
     } : []});
   });
   await page.goto('/new/stats/shared-owner');
-  await expect(page.getByRole('heading',{name:'Alex top listening'})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'Alex · Listening stats'})).toBeVisible();
   for (const [category,item] of [['Songs','Shared Song'],['Artists','Shared Artist'],['Genres','pop']]) {
     await page.getByRole('group',{name:'Ranking category'}).getByRole('button',{name:category,exact:true}).click();
     const main = page.getByRole('main');
@@ -59,9 +58,10 @@ test('approved shared snapshot has no private history actions in any category', 
       await expect(main.locator('.rank-number')).toHaveText('1');
     }
     await expect(main.getByRole('button',{name:/View position history/})).toHaveCount(0);
-    await expect(main.getByRole('button',{name:'Search past',exact:true})).toHaveCount(0);
-    await expect(main.getByRole('combobox',{name:'Ranking date',exact:true})).toHaveCount(0);
-    await expect(main.getByRole('combobox',{name:'Compare against',exact:true})).toHaveCount(0);
+    await expect(main.getByRole('switch',{name:'Search past rankings',exact:true})).toHaveCount(0);
+    await expect(main.getByRole('button',{name:'Ranking date',exact:true})).toHaveCount(0);
+    await expect(main.getByRole('button',{name:'Compare with',exact:true})).toHaveCount(0);
+    await expect(main.getByRole('button',{name:'Compare dates',exact:true})).toHaveCount(0);
     await expect(main.locator('button.v2-genre-row, .v2-artist-history')).toHaveCount(0);
     await expect(page.getByRole('dialog')).toHaveCount(0);
     if (category !== 'Genres') await expect(main.getByRole('button',{name:`Open ${item} on Spotify`})).toBeEnabled();
@@ -179,7 +179,7 @@ for (const motion of ['no-preference','reduce'] as const) for (const failureStat
       });
     });
     await page.reload();
-    await page.getByRole('combobox',{name:'Ranking date',exact:true}).selectOption(String(new Date('2026-10-04T12:00:00Z').getTime()));
+    await chooseStatsDate(page, 'ranking', '2026-10-04');
     const trigger = page.getByRole('button',{name:'View position history for Midnight Drive'});
     await trigger.evaluate(element => element.scrollIntoView({block:'center'}));
     await expect.poll(() => trigger.evaluate(async element => {
@@ -285,8 +285,8 @@ for (const motion of ['no-preference','reduce'] as const) {
       });
     });
     await page.reload();
-    await page.getByRole('combobox',{name:'Ranking date',exact:true}).selectOption('current');
-    await page.getByRole('button',{name:'Search past',exact:true}).click();
+    await chooseStatsDate(page, 'ranking', 'current');
+    await page.getByRole('switch',{name:'Search past rankings',exact:true}).click();
     await page.getByRole('searchbox',{name:'Search songs or artists'}).fill('Archive');
     const trigger=page.getByRole('button',{name:'Archive Song Archive Artist',exact:true});
     await expect(trigger).toBeVisible();
@@ -323,6 +323,7 @@ for (const motion of ['no-preference','reduce'] as const) {
     const busy=dialog.getByRole('button',{name:'Retrying…',exact:true});
     await expect(dialog.getByRole('status')).toContainText('Retrying saved history');
     await expect(busy).toBeDisabled();await expect(busy).toHaveAttribute('aria-busy','true');
+    await expect(close).toBeFocused();
     await busy.evaluate(button=>(button as HTMLButtonElement).click());expect(pending).toHaveLength(2);
     await expect(close).toBeEnabled();
     await dialog.screenshot({path:testInfo.outputPath('history-cloud-only-retrying.png'),animations:'disabled'});
@@ -331,6 +332,7 @@ for (const motion of ['no-preference','reduce'] as const) {
     await expect(dialog.getByRole('alert')).toHaveCount(0);
     await expect(dialog.getByRole('button',{name:/Retry/})).toHaveCount(0);
     await expect(dialog.locator('svg,table')).toHaveCount(0);
+    await expect(close).toBeFocused();
     await expectNoBlockingAxeViolations(page);
     await dialog.screenshot({path:testInfo.outputPath('history-cloud-only-empty.png'),animations:'disabled'});
     await close.click();await expect(trigger).toBeFocused();
@@ -382,10 +384,10 @@ for (const lateOutcome of ['ready','unavailable'] as const) {
     // Use the real router link and browser history so the pending controller is
     // destroyed by navigation, rather than reloading the application in a fixture.
     await page.goto('/new/stats/shared-owner');
-    await expect(page.getByRole('heading',{name:'Alex top listening'})).toBeVisible();
+    await expect(page.getByRole('heading',{name:'Alex · Listening stats'})).toBeVisible();
     await page.getByRole('link',{name:'Stats',exact:true}).first().click();
     await expect(page.getByRole('heading',{name:'Your top listening'})).toBeVisible();
-    await page.getByRole('combobox',{name:'Ranking date',exact:true}).selectOption(String(new Date('2026-10-04T12:00:00Z').getTime()));
+    await chooseStatsDate(page, 'ranking', '2026-10-04');
     const trigger=page.getByRole('button',{name:'View position history for Midnight Drive'});
     const dialog=page.getByRole('dialog',{name:'Midnight Drive position history'});
     const close=dialog.getByRole('button',{name:'Close',exact:true});
@@ -417,10 +419,10 @@ for (const lateOutcome of ['ready','unavailable'] as const) {
     await expect(table.locator('time')).toHaveText(['3 Sep','5 Sep','9 Sep','14 Sep','18 Sep','24 Sep','28 Sep','4 Oct']);
     await close.click();await trigger.press('Enter');await expect.poll(()=>pending.length).toBe(3);
     await page.goBack();
-    await expect(page.getByRole('heading',{name:'Alex top listening'})).toBeVisible();
+    await expect(page.getByRole('heading',{name:'Alex · Listening stats'})).toBeVisible();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await fulfillLate(2);
-    await expect(page.getByRole('heading',{name:'Alex top listening'})).toBeVisible();
+    await expect(page.getByRole('heading',{name:'Alex · Listening stats'})).toBeVisible();
     const main=page.getByRole('main');
     await expect(main.locator('.v2-ranking-copy strong')).toHaveText('Shared Song');
     await expect(main.getByRole('group',{name:'Rank 1. Unchanged',exact:true})).toBeVisible();
@@ -460,3 +462,150 @@ test('canonical history palette distinguishes surfaces, controls, hover and keyb
   });
   await expectNoBlockingAxeViolations(page);
 });
+
+test('category rank grids align with real saved positions through short and tall resizing', async ({page}, testInfo) => {
+  await page.emulateMedia({reducedMotion: 'reduce'});
+  await page.evaluate(async () => {
+    const dates = ['2026-09-05','2026-09-09','2026-09-14','2026-09-18','2026-09-24','2026-09-28','2026-10-04'];
+    const ranks = {tracks: [1,50,100,20,90,60,3], artists: [1,25,50,20,45,30,3], genres: [1,8,15,4,12,6,3]};
+    await new Promise<void>((resolve, reject) => {
+      const request = indexedDB.open('AnalytifyDB', 4); request.onerror = () => reject(request.error);
+      request.onsuccess = () => {
+        const db = request.result, tx = db.transaction('statsHistory', 'readwrite');
+        for (const userId of ['e2e-user', 'e2e-user_dev']) for (let i = 0; i < dates.length; i++) {
+          const song = {id: 'history-song', name: 'Midnight Drive', artists: [{name: 'Example Artist'}], album: {images: []}};
+          const artist = {id: 'history-artist', name: 'History Artist', images: [], genres: ['fixture-genre']};
+          tx.objectStore('statsHistory').put({userId, range: 'short_term', snapshotDate: dates[i],
+            timestamp: Date.parse(`${dates[i]}T12:00:00Z`), isLoaded: true,
+            topTracks: [...Array.from({length: ranks.tracks[i] - 1}, (_, j) => ({id: `other-song-${j}`, name: `Other song ${j}`, artists: []})), song],
+            topArtists: [...Array.from({length: ranks.artists[i] - 1}, (_, j) => ({id: `other-artist-${j}`, name: `Other artist ${j}`, images: [], genres: []})), artist],
+            topGenres: [...Array.from({length: ranks.genres[i] - 1}, (_, j) => ({name: `Other genre ${j}`, weight: 100})), {name: 'fixture-genre', weight: 50}]});
+        }
+        tx.oncomplete = () => {db.close(); resolve();}; tx.onerror = () => reject(tx.error);
+      };
+    });
+  });
+  await page.reload(); await chooseStatsDate(page, 'ranking', '2026-10-04');
+  const evidence = [];
+  for (const [category, name, middle, limit] of [['Songs', 'Midnight Drive', 50, 100], ['Artists', 'History Artist', 25, 50], ['Genres', 'fixture-genre', 8, 15]] as const) {
+    await page.getByRole('group', {name: 'Ranking category'}).getByRole('button', {name: category, exact: true}).click();
+    const trigger = page.getByRole('button', {name: `View position history for ${name}`, exact: true});
+    await trigger.press('Enter');
+    const dialog = page.getByRole('dialog', {name: `${name} position history`, exact: true});
+    const slider = dialog.getByRole('slider', {name: 'Saved ranking position'});
+    await expect(slider).toHaveAttribute('aria-valuemax', '7');
+    await page.mouse.move(0, 0);
+    await slider.focus(); await slider.press('Home'); await slider.press('ArrowRight');
+    await expect(slider).toHaveAttribute('aria-valuetext', `9 Sep 2026, position ${middle}`);
+    for (const width of [320,390,600,601,768,1440]) for (const height of [480,1000]) {
+      await page.setViewportSize({width, height});
+      await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+      const projectionDiagnostic = await slider.locator('svg').evaluate(svg => {
+        const line = svg.querySelectorAll('.grid-line')[1] as SVGLineElement;
+        const point = svg.querySelectorAll('.position-marker')[1] as SVGCircleElement;
+        const box = (n: SVGGraphicsElement) => {const b = n.getBoundingClientRect(); return {x: b.x, y: b.y, width: b.width, height: b.height};};
+        const matrix = line.getScreenCTM()!;
+        return {lineY: line.y1.baseVal.value, circleY: point.cy.baseVal.value, lineRect: box(line), circleRect: box(point),
+          lineBBox: line.getBBox().y, circleBBox: point.getBBox().y, circleRadius: point.r.baseVal.value,
+          scale: matrix.d, offset: matrix.f, lineProjection: matrix.d * line.y1.baseVal.value + matrix.f,
+          circleProjection: matrix.d * point.cy.baseVal.value + matrix.f};
+      });
+      const diagnosticPath = testInfo.outputPath(`projection-${category}-${width}-${height}.json`);
+      await writeFile(diagnosticPath, JSON.stringify(projectionDiagnostic, null, 2));
+      await testInfo.attach(`projection-${category}-${width}-${height}.json`, {path: diagnosticPath, contentType: 'application/json'});
+      const measure = () => slider.evaluate(element => {
+        const svg = element.querySelector('svg')!, grid = [...svg.querySelectorAll('.grid-line')], markers = [...svg.querySelectorAll('.position-marker')];
+        const labels = [...svg.querySelectorAll('.axis-label')];
+        const lineY = (n: Element) => Number(n.getAttribute('y1'));
+        const markerY = (n: Element) => Number(n.getAttribute('cy'));
+        const box = svg.getBoundingClientRect(), vb = (svg as SVGSVGElement).viewBox.baseVal;
+        const matrix = (grid[1] as SVGLineElement).getScreenCTM()!;
+        return {axes: labels.map(n => n.textContent), grid: grid.map(lineY), points: markers.slice(0, 3).map(markerY),
+          labelY: labels.map(n => Number(n.getAttribute('y')) - 8),
+          viewport: innerWidth, canvasMatches: Math.abs(box.width - vb.width) < 0.001 && Math.abs(box.height - vb.height) < 0.001,
+          lineProjection: matrix.d * (grid[1] as SVGLineElement).y1.baseVal.value + matrix.f,
+          pointProjection: matrix.d * (markers[1] as SVGCircleElement).cy.baseVal.value + matrix.f,
+          projectedGridMiddle: grid[1].getBoundingClientRect().y + grid[1].getBoundingClientRect().height / 2,
+          projectedGridHeight: grid[1].getBoundingClientRect().height,
+          projectedPointMiddle: markers[1].getBoundingClientRect().y + markers[1].getBoundingClientRect().height / 2,
+          overflow: document.documentElement.scrollWidth - innerWidth};
+      });
+      let measured = await measure();
+      await expect.poll(async () => {
+        await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+        measured = await measure();
+        return {viewport: measured.viewport, canvasMatches: measured.canvasMatches,
+          projectedAlignment: Math.abs(measured.projectedGridMiddle - measured.projectedPointMiddle) <= 1 / 60};
+      }).toEqual({viewport: width, canvasMatches: true, projectedAlignment: true});
+      expect(measured.axes).toEqual(['#1', `#${middle}`, `#${limit}`]);
+      for (let i = 0; i < 3; i++) {
+        expect(measured.grid[i]).toBeCloseTo(measured.points[i], 8);
+        expect(measured.labelY[i]).toBeCloseTo(measured.points[i], 8);
+      }
+      expect(measured.lineProjection).toBeCloseTo(measured.pointProjection, 8);
+      // Gecko expands SVG stroke bounds in 1/60px layout units. Keep exact
+      // coordinate/transform checks above and allow one unit for those bounds.
+      expect(Math.abs(measured.projectedGridMiddle - measured.projectedPointMiddle)).toBeLessThanOrEqual(1 / 60);
+      expect(measured.overflow).toBeLessThanOrEqual(1);
+      await expect(slider).toHaveAttribute('aria-valuetext', `9 Sep 2026, position ${middle}`);
+      evidence.push({category, width, height, ...measured});
+      if (height === 1000 && [390,1440].includes(width)) await dialog.screenshot({path: testInfo.outputPath(`history-grid-${category}-${width}.png`), animations: 'disabled'});
+    }
+    await expectNoBlockingAxeViolations(page);
+    await dialog.getByRole('button', {name: 'Close', exact: true}).click(); await expect(trigger).toBeFocused();
+  }
+  const geometryPath = testInfo.outputPath('category-grid-geometry.json');
+  await writeFile(geometryPath, JSON.stringify(evidence, null, 2));
+  await testInfo.attach('category-grid-geometry.json', {path: geometryPath, contentType: 'application/json'});
+});
+
+for (const reducedMotion of ['no-preference', 'reduce'] as const) {
+  test(`history keyboard focus stays inside its canvas while resizing (${reducedMotion})`, async ({page}, testInfo) => {
+    await page.emulateMedia({reducedMotion});
+    const trigger = page.getByRole('button', {name: 'View position history for Midnight Drive'});
+    await trigger.press('Enter');
+    const dialog = page.getByRole('dialog', {name: 'Midnight Drive position history'});
+    const close = dialog.getByRole('button', {name: 'Close', exact: true});
+    const slider = dialog.getByRole('slider', {name: 'Saved ranking position'});
+    await slider.click();
+    await expect(slider).toBeFocused();
+    expect(await slider.evaluate(element => element.matches(':focus-visible'))).toBe(false);
+    await page.mouse.move(0, 0);
+    await close.focus();
+    // Native Tab wraps from the last dialog control to the chart; programmatic
+    // focus alone does not reliably enter Firefox's keyboard modality.
+    await close.press('Tab');
+    await expect(slider).toBeFocused();
+    const evidence = [];
+    for (const width of [320,390,600,601,768,1440]) for (const height of [480,1000]) {
+      await page.setViewportSize({width, height});
+      await expect.poll(() => slider.evaluate(element => element.getBoundingClientRect().height)).toBe(width <= 600 ? 232 : 248);
+      const measured = await slider.evaluate(element => {
+        const style = getComputedStyle(element), canvas = element.getBoundingClientRect();
+        const body = element.closest('.history-body')!.getBoundingClientRect();
+        const outlineWidth = parseFloat(style.outlineWidth), offset = parseFloat(style.outlineOffset);
+        const extension = outlineWidth + offset;
+        return {keyboardFocus: element.matches(':focus-visible'), outlineWidth, offset, color: style.outlineColor,
+          outlineInsideCanvas: extension <= 0,
+          horizontalOutlineInsideBody: canvas.left - extension >= body.left - 1 / 60 && canvas.right + extension <= body.right + 1 / 60,
+          overflow: document.documentElement.scrollWidth - innerWidth};
+      });
+      evidence.push({width, height, ...measured});
+      const evidencePath = testInfo.outputPath('keyboard-focus-geometry.json');
+      await writeFile(evidencePath, JSON.stringify(evidence, null, 2));
+      expect(measured.keyboardFocus).toBe(true);
+      expect(measured.outlineWidth).toBe(2);
+      expect(measured.color).toBe('rgb(159, 255, 200)');
+      expect(measured.outlineInsideCanvas, 'the focus indicator must not extend into the scrolling clip').toBe(true);
+      expect(measured.horizontalOutlineInsideBody).toBe(true);
+      expect(measured.overflow).toBeLessThanOrEqual(1);
+      await expect(slider).toBeFocused();
+      if (height === 1000 && [390,1440].includes(width)) await dialog.screenshot({path: testInfo.outputPath(`history-keyboard-focus-${width}.png`), animations: 'disabled'});
+    }
+    await testInfo.attach('keyboard-focus-geometry.json', {path: testInfo.outputPath('keyboard-focus-geometry.json'), contentType: 'application/json'});
+    await expectNoBlockingAxeViolations(page);
+    await slider.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+  });
+}

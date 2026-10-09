@@ -37,6 +37,41 @@ describe('Saved rank history plot', () => {
     expect(element.querySelector('.history-area')?.getAttribute('d')).toBe('M 32,40 L 488,204 L 488,204 L 32,204 Z');
   });
 
+  it.each([
+    ['tracks', 50, 100], ['artists', 25, 50], ['genres', 8, 15]
+  ] as const)('aligns the labelled middle %s grid with the corresponding actual rank', async (category, rank, limit) => {
+    const {fixture, element} = await render([position(5, 1), position(18, rank), position(30, limit)], category);
+    for (const height of [248, 232]) {
+      fixture.componentInstance.height.set(height); fixture.detectChanges();
+      const grid = element.querySelectorAll('.grid-line')[1];
+      const point = element.querySelectorAll('.position-marker')[1];
+      const label = element.querySelectorAll('.axis-label')[1];
+      expect(Number(grid.getAttribute('y1'))).toBeCloseTo(Number(point.getAttribute('cy')), 10);
+      expect(Number(grid.getAttribute('y2'))).toBeCloseTo(Number(point.getAttribute('cy')), 10);
+      expect(Number(label.getAttribute('y')) - 8).toBeCloseTo(Number(point.getAttribute('cy')), 10);
+      expect(label.textContent?.trim()).toBe(`#${rank}`);
+    }
+  });
+
+  it.each([0, 1])('ignores queued plot inspection after refreshed data leaves %s positions', async count => {
+    const {fixture, slider} = await render();
+    const oldCanvas = slider(); oldCanvas.focus();
+    vi.spyOn(oldCanvas, 'getBoundingClientRect').mockReturnValue({left: 100, width: 512} as DOMRect);
+    const selected = fixture.componentInstance.selected();
+    // Inputs update before Angular removes the old canvas in the next render.
+    fixture.componentRef.setInput('points', samples.slice(0, count));
+    expect(() => fixture.componentInstance.inspectFirst()).not.toThrow();
+    const event = new KeyboardEvent('keydown', {key: 'End', cancelable: true});
+    expect(() => fixture.componentInstance.inspectKey(event)).not.toThrow();
+    expect(event.defaultPrevented).toBe(false);
+    const pointer = new MouseEvent('click', {clientX: 360});
+    Object.defineProperty(pointer, 'currentTarget', {value: oldCanvas});
+    expect(() => fixture.componentInstance.inspectPointer(pointer, true)).not.toThrow();
+    expect(fixture.componentInstance.selected()).toBe(selected);
+    fixture.detectChanges();
+    expect(slider()).toBeNull();
+  });
+
   it.each([{points: []}, {points: [position(18, 3)]}])('does not fabricate a plot for fewer than two positions: %j', async ({points}) => {
     const {element, fixture} = await render(points);
     expect(element.querySelector('svg')).toBeNull();

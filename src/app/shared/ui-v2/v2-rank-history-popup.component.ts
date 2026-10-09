@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, effect, input, output, signal} from '@angular/core';
+import {afterRenderEffect, ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, output, signal} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {AccessibleDialogDirective} from '@shared/ui/accessible-dialog.directive';
 import {V2ButtonDirective} from './design-v2-primitives';
@@ -85,5 +85,27 @@ export class V2RankHistoryPopupComponent {
     return this.points().filter(point => Number.isFinite(new Date(point.timestamp).getTime()) &&
       Number.isInteger(point.rank) && point.rank >= 1 && point.rank <= limit);
   });
-  constructor() { effect(() => {this.context(); this.showTable.set(false);}); }
+  private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly closeFocusRequested = signal(false);
+  private previousContext: string | null = null;
+  constructor() {
+    effect(() => {this.context(); this.showTable.set(false);});
+    effect(() => {
+      const context = this.context(), count = this.validPoints().length;
+      const retryVisible = (this.failed() || this.busy()) && !(this.busy() && !count && !this.retrying());
+      const active = document.activeElement as HTMLElement | null;
+      if (active && this.element.nativeElement.contains(active)) {
+        const plotRemoved = active.getAttribute('role') === 'slider' && (count < 2 || context !== this.previousContext);
+        const disclosureRemoved = active.classList.contains('table-toggle') && count < 2;
+        const retryRemoved = active.classList.contains('retry-button') && (!retryVisible || this.busy());
+        if (plotRemoved || disclosureRemoved || retryRemoved) this.closeFocusRequested.set(true);
+      }
+      this.previousContext = context;
+    });
+    afterRenderEffect(() => {
+      if (!this.closeFocusRequested()) return;
+      this.element.nativeElement.querySelector<HTMLButtonElement>('.close-button')?.focus();
+      this.closeFocusRequested.set(false);
+    });
+  }
 }

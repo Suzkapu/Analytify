@@ -1,0 +1,117 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/insights/user-stats/v2-user-stats.component.spec.ts --include=src/app/shared/ui-v2/design-v2-primitives.spec.ts
+Application bundle generation complete. [2.576 seconds] - 2026-10-08T00:52:47.286Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:324001) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:324000) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ |SpotiFront| src/app/shared/ui-v2/design-v2-primitives.spec.ts (33 tests | 1 failed) 319ms
+     × replaces resolved projected results on a scheduled service update and restores them after recovery 11ms
+ ❯ |SpotiFront| src/app/features/insights/user-stats/v2-user-stats.component.spec.ts (32 tests | 2 failed) 643ms
+     × keeps the false owner identity and category heading coherent through actual tab clicks 29ms
+     × keeps the true owner identity and category heading coherent through actual tab clicks 26ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/design-v2-primitives.spec.ts > page projected service state > replaces resolved projected results on a scheduled service update and restores them after recovery
+AssertionError: expected <p class="saved-rankings"></p> to be null
+
+- Expected:
+null
+
++ Received:
+<p
+  class="saved-rankings"
+>
+  Saved rankings remain
+</p>
+
+ ❯ src/app/shared/ui-v2/design-v2-primitives.spec.ts:593:68
+    591|     fixture.componentInstance.busy = true;
+    592|     fixture.changeDetectorRef.markForCheck(); TestBed.tick(); fixture.…
+    593|     expect(fixture.nativeElement.querySelector('.saved-rankings')).toB…
+       |                                                                    ^
+    594|     expect(fixture.nativeElement.querySelector('[role="status"]')?.tex…
+    595|     fixture.componentInstance.busy = false;
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-user-stats.component.spec.ts > canonical Stats content identity and result context > keeps the false owner identity and category heading coherent through actual tab clicks
+AssertionError: {"shared":false,"loading":true,"error":""}: expected <h2 _ngcontent-a-c676837515 …(1)></h2> to be null
+
+- Expected:
+null
+
++ Received:
+<h2
+  _ngcontent-a-c676837515=""
+  class="stats-results-heading"
+>
+  Top genres
+</h2>
+
+ ❯ src/app/features/insights/user-stats/v2-user-stats.component.spec.ts:465:154
+    463|       component.isLoading = !shared;
+    464|       fixture.changeDetectorRef.markForCheck(); TestBed.tick(); fixtur…
+    465|       expect(element.querySelector('.stats-results-heading'), JSON.str…
+       |                                                                                                                                                          ^
+    466|       expect(element.textContent).toContain(shared ? 'Access was revok…
+    467|     } finally {fixture.destroy(); initialize.mockRestore();}
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/v2-user-stats.component.spec.ts > canonical Stats content identity and result context > keeps the true owner identity and category heading coherent through actual tab clicks
+AssertionError: {"shared":true,"loading":false,"error":"Access was revoked."}: expected <h2 _ngcontent-a-c676837515 …(1)></h2> to be null
+
+- Expected:
+null
+
++ Received:
+<h2
+  _ngcontent-a-c676837515=""
+  class="stats-results-heading"
+>
+  Top genres
+</h2>
+
+ ❯ src/app/features/insights/user-stats/v2-user-stats.component.spec.ts:465:154
+    463|       component.isLoading = !shared;
+    464|       fixture.changeDetectorRef.markForCheck(); TestBed.tick(); fixtur…
+    465|       expect(element.querySelector('.stats-results-heading'), JSON.str…
+       |                                                                                                                                                          ^
+    466|       expect(element.textContent).toContain(shared ? 'Access was revok…
+    467|     } finally {fixture.destroy(); initialize.mockRestore();}
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  3 failed | 62 passed (65)
+   Start at  02:52:47
+   Duration  1.56s (transform 414ms, setup 419ms, import 531ms, tests 962ms, environment 596ms)
+
