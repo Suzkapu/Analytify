@@ -15,6 +15,7 @@ export class V2NotificationSettingsController implements OnDestroy {
   readonly settings = signal<PushNotificationSettings | null>(null);
   readonly loading = signal(false);
   readonly saving = signal(false);
+  readonly savingDevice = signal(false);
   readonly error = signal('');
   readonly message = signal('');
   private readonly notifications = inject(PushNotificationService);
@@ -31,7 +32,7 @@ export class V2NotificationSettingsController implements OnDestroy {
   async enableDevice(): Promise<void> {
     const settings = this.settings();
     if (!settings || settings.deviceState === 'denied' || settings.deviceState === 'unsupported') return;
-    await this.run(() => this.notifications.enableDevice(), true);
+    await this.run(() => this.notifications.enableDevice(), true, true);
   }
 
   async setCategory(category: 'song_league' | 'song_league_song_added' | 'stats_access_requests', enabled: boolean): Promise<void> {
@@ -49,10 +50,11 @@ export class V2NotificationSettingsController implements OnDestroy {
       && request.actor === this.auth.getUserId() && this.lifecycle.isCurrent(request.generation);
   }
 
-  private async run(action: () => Promise<PushNotificationSettings>, mutation: boolean): Promise<void> {
+  private async run(action: () => Promise<PushNotificationSettings>, mutation: boolean, device = false): Promise<void> {
     if (this.saving() || this.destroyed) return;
     const request: NotificationRequest = {revision: ++this.revision, actor: this.auth.getUserId(), generation: this.lifecycle.capture()};
     this.loading.set(!mutation); this.saving.set(mutation); this.error.set(''); this.message.set('');
+    this.savingDevice.set(device);
     try {
       const settings = await action();
       if (this.current(request)) {
@@ -64,7 +66,7 @@ export class V2NotificationSettingsController implements OnDestroy {
     } finally {
       if (!this.destroyed && request.revision === this.revision) {
         if (!this.current(request)) {this.settings.set(null); this.error.set(''); this.message.set('');}
-        this.loading.set(false); this.saving.set(false);
+        this.loading.set(false); this.saving.set(false); this.savingDevice.set(false);
       }
     }
   }

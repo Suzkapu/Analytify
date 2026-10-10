@@ -1,0 +1,8 @@
+:host { display: block; min-width: 0; }
+.v2-notifications { display: grid; gap: var(--v2-space-4); }
+.v2-notifications__status { display: flex; flex-direction: column; align-items: flex-start; gap: var(--v2-space-2); padding: var(--v2-space-4); border: 1px solid var(--v2-color-info); border-radius: var(--v2-radius-control); background: var(--v2-color-surface-raised); overflow-wrap: anywhere; }
+.v2-notifications__status strong, .v2-notifications__status p, .v2-notifications__note { margin: 0; font-size: 14px; line-height: 20px; }
+.v2-notifications__status strong { color: var(--v2-color-info); font-weight: 600; }
+.v2-notifications__status p, .v2-notifications__note { color: var(--v2-color-text-muted); }
+.v2-notifications__status button { width: 260px; max-width: 100%; min-height: 48px; font-size: 14px; }
+@media (max-width: 760px) { .v2-notifications { gap: var(--v2-space-3); } .v2-notifications__status button { width: 100%; } }

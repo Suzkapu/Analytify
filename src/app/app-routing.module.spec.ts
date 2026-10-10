@@ -33,7 +33,7 @@ describe('canonical application routes', () => {
   it('keeps every product and public route in the canonical shell', () => {
     expect(shell.children?.map(route => route.path)).toEqual([
       '', 'login', 'callback', 'spotify', 'playlists', 'songs/:id', 'artistDetails/:id',
-      'analysis/:id', 'stats/:userId', 'stats', 'history', 'settings', 'admin', 'song-league', 'shared-playlists',
+      'analysis/:id', 'stats/:userId', 'stats', 'history', 'settings/install', 'settings', 'admin', 'song-league', 'shared-playlists',
       'legal', 'compare-room/callback', 'compare-room/join/:roomId', 'compare-room', '**'
     ]);
     for (const route of shell.children?.filter(candidate => candidate.loadChildren || candidate.loadComponent) ?? []) {
@@ -94,6 +94,11 @@ describe('canonical application routes', () => {
     const panels = await import('./features/settings/v2-settings-account-data.component');
     expect(await account?.loadComponent?.()).toBe(panels.V2SettingsAccountComponent);
     expect(await data?.loadComponent?.()).toBe(panels.V2SettingsDataComponent);
+    const notifications = settings?.children?.find(route => route.path === 'notifications');
+    expect(await notifications?.loadComponent?.()).toBe((await import('./features/settings/v2-settings-notifications.component')).V2SettingsNotificationsComponent);
+    const install = routeByPath('settings/install');
+    expect(install?.canActivate).toEqual([spotifyAuthGuard]);
+    expect(await install?.loadComponent?.()).toBe((await import('./features/settings/v2-settings-install.component')).V2SettingsInstallComponent);
   });
 
   it('keeps stable external links and browser routing behavior', () => {

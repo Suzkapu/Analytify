@@ -109,6 +109,29 @@ describe('SyncTaskStatusDialogComponent', () => {
     expect(component.savedTask).toBe('listening_history');
   });
 
+  it.each([
+    ['required', {feature_required: true}], ['unavailable', {policy_available: false}]
+  ])('does not write an editable-marked task that is %s', async (_name, changes) => {
+    const task = {...component.tasks[0], ...changes}; rpc.mockClear();
+    await component.save(task);
+    expect(rpc).not.toHaveBeenCalled(); expect(component.savedTask).toBeNull();
+  });
+
+  it.each([[1.5, 'hours'], [8, 'days'], [169, 'hours'], [10081, 'minutes']])(
+    'does not write invalid interval %s %s', async (value, unit) => {
+      const task = {...component.tasks[0], interval_value: value as number, interval_unit: unit as 'hours'};
+      rpc.mockClear(); await component.save(task);
+      expect(rpc).not.toHaveBeenCalled(); expect(component.validationErrors[task.task_key]).toBeTruthy();
+    }
+  );
+
+  it('keeps cached tasks and offers recovery after a preference write fails', async () => {
+    const task = component.tasks[0]; rpc.mockRejectedValueOnce(new Error('Preference unavailable'));
+    await component.save(task); expect(component.error).toBe('Preference unavailable'); expect(component.savedTask).toBeNull();
+    expect(component.tasks[0]).toBe(task); expect(component.savingTask).toBeNull();
+    await component.save(task); expect(component.savedTask).toBe('listening_history'); expect(component.error).toBe('');
+  });
+
   it('associates minimum validation with the interval field and does not save', async () => {
     const task = component.tasks[0];
     task.optional_enabled = true;

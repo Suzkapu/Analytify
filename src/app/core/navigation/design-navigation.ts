@@ -25,6 +25,7 @@ export type LogicalRouteId =
   | 'spotifyCloudAccess'
   | 'settingsAccount'
   | 'settingsNotifications'
+  | 'settingsInstall'
   | 'settingsUpdates'
   | 'settingsData'
   | 'settingsNavigation';
@@ -62,6 +63,7 @@ const ROUTES: Record<LogicalRouteId, readonly string[]> = {
   spotifyCloudAccess: ['spotify', 'cloud-access'],
   settingsAccount: ['settings', 'account'],
   settingsNotifications: ['settings', 'notifications'],
+  settingsInstall: ['settings', 'install'],
   settingsUpdates: ['settings', 'updates'],
   settingsData: ['settings', 'data'],
   settingsNavigation: ['settings', 'navigation']

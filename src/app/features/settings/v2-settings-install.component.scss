@@ -1,0 +1,9 @@
+:host { display: block; min-width: 0; }
+.v2-install { display: grid; gap: var(--v2-space-4); width: 100%; max-width: 900px; }
+.v2-install h2 { margin: 0; font-size: 20px; line-height: 28px; font-weight: 600; }
+.v2-install p { margin: 0; color: var(--v2-color-text-muted); font-size: 16px; line-height: 24px; overflow-wrap: anywhere; }
+.v2-install article { display: grid; gap: var(--v2-space-3); padding: var(--v2-space-6); background: var(--v2-color-surface); border: 1px solid var(--v2-color-border); border-radius: var(--v2-radius-card); }
+.v2-install__badge { display: block; padding: var(--v2-space-1) var(--v2-space-3); background: var(--v2-color-surface-raised); border-radius: var(--v2-radius-pill); font-size: 14px; line-height: 20px; font-weight: 600; color: var(--v2-color-text-muted); }
+.v2-install__badge--success { color: var(--v2-color-accent); }
+.v2-install__badge--warning { color: var(--v2-color-warning); }
+@media (max-width: 760px) { .v2-install { gap: var(--v2-space-3); } }

@@ -1,0 +1,79 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/settings/v2-settings-updates.component.spec.ts
+Application bundle generation complete. [4.097 seconds] - 2026-10-10T07:47:39.409Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:121216) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ |SpotiFront| src/app/features/settings/v2-settings-updates.component.spec.ts (6 tests | 3 failed) 190ms
+     × links only editable tasks and accurately distinguishes Required, Unavailable and inactive feature-owned schedules 115ms
+     × changes a draft with the switch, saves explicitly, and discards later unsaved edits through Back 21ms
+     × keeps a rejected save draft for retry without reporting success 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-settings-updates.component.spec.ts > canonical Updates routes and draft editor > links only editable tasks and accurately distinguishes Required, Unavailable and inactive feature-owned schedules
+AssertionError: expected null not to be null
+ ❯ src/app/features/settings/v2-settings-updates.component.spec.ts:36:90
+     34|   it('links only editable tasks and accurately distinguishes Required,…
+     35|     const s = await setup();
+     36|     expect(s.panel().querySelector('a[href="/settings/updates/listenin…
+       |                                                                                          ^
+     37|     expect(s.panel().querySelectorAll('.v2-update-summary')).toHaveLen…
+     38|     expect(s.panel().querySelector('a[href="/settings/updates/stats_sh…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-settings-updates.component.spec.ts > canonical Updates routes and draft editor > changes a draft with the switch, saves explicitly, and discards later unsaved edits through Back
+TypeError: Cannot read properties of null (reading 'checked')
+ ❯ src/app/features/settings/v2-settings-updates.component.spec.ts:45:20
+     43|     const s = await setup('/settings/updates/listening_history');
+     44|     const control = s.panel().querySelector('[role="switch"]') as HTML…
+     45|     expect(control.checked).toBe(false); control.click(); await s.sett…
+       |                    ^
+     46|     expect(s.rpc.mock.calls.some(call => call[0] === 'update_my_sync_s…
+     47|     (s.panel().querySelector('.v2-update-save') as HTMLButtonElement).…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-settings-updates.component.spec.ts > canonical Updates routes and draft editor > keeps a rejected save draft for retry without reporting success
+TypeError: Cannot read properties of null (reading 'click')
+ ❯ src/app/features/settings/v2-settings-updates.component.spec.ts:56:47
+     54|   it('keeps a rejected save draft for retry without reporting success'…
+     55|     const s = await setup('/settings/updates/listening_history'); s.fa…
+     56|     (s.panel().querySelector('.v2-update-save') as HTMLButtonElement).…
+       |                                               ^
+     57|     expect(s.panel().querySelector('[role="alert"]')?.textContent).toC…
+     58|     expect(s.panel().textContent).not.toContain('Automatic updates sav…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 3 passed (6)
+   Start at  09:47:39
+   Duration  1.61s (transform 191ms, setup 380ms, import 282ms, tests 190ms, environment 557ms)
+

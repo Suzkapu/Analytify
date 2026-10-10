@@ -1,0 +1,13 @@
+:host { display: block; min-width: 0; }
+.v2-preference-row { display: flex; align-items: center; gap: var(--v2-space-4); padding: var(--v2-space-4); border-radius: var(--v2-radius-control); background: var(--v2-color-surface); }
+.v2-preference-row > img { flex: none; }
+.v2-preference-row__copy { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.v2-preference-row strong, .v2-preference-row small { display: block; font-size: 14px; line-height: 20px; }
+.v2-preference-row strong { font-weight: 600; }
+.v2-preference-row small { margin-top: var(--v2-space-1); color: var(--v2-color-text-muted); }
+.v2-preference-row__switch { position: relative; display: flex; align-items: center; flex: none; width: 48px; height: 56px; border-radius: var(--v2-radius-control); }
+.v2-preference-row__switch input { position: absolute; inset: 0; margin: 0; width: 48px; height: 56px; opacity: 0; cursor: pointer; }
+.v2-preference-row__switch:focus-within { outline: 2px solid var(--v2-color-focus); outline-offset: 3px; }
+.v2-preference-row__switch img { pointer-events: none; }
+.v2-preference-row__switch.is-disabled { opacity: .45; }
+.v2-preference-row__switch input:disabled { cursor: default; }

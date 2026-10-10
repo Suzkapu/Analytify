@@ -1,0 +1,453 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts
+Application bundle generation complete. [3.859 seconds] - 2026-10-10T07:35:05.087Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:119853) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stderr | src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts > SyncTaskStatusDialogComponent > does not write an editable-marked task that is required
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 2 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "update_my_sync_schedule_preference",
+      Object {
+        "p_enabled": false,
+        "p_interval_unit": "hours",
+        "p_interval_value": 2,
+        "p_task_key": "listening_history",
+      },
+    ]
+
+  2nd vi.fn() call:
+
+    Array [
+      "get_my_sync_task_status",
+    ]
+
+
+Number of calls: 2
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts:117:21
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts > SyncTaskStatusDialogComponent > does not write an editable-marked task that is unavailable
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 2 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "update_my_sync_schedule_preference",
+      Object {
+        "p_enabled": false,
+        "p_interval_unit": "hours",
+        "p_interval_value": 2,
+        "p_task_key": "listening_history",
+      },
+    ]
+
+  2nd vi.fn() call:
+
+    Array [
+      "get_my_sync_task_status",
+    ]
+
+
+Number of calls: 2
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts:117:21
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts > SyncTaskStatusDialogComponent > does not write invalid interval 1.5 hours
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 2 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "update_my_sync_schedule_preference",
+      Object {
+        "p_enabled": false,
+        "p_interval_unit": "hours",
+        "p_interval_value": 1.5,
+        "p_task_key": "listening_history",
+      },
+    ]
+
+  2nd vi.fn() call:
+
+    Array [
+      "get_my_sync_task_status",
+    ]
+
+
+Number of calls: 2
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts:124:23
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts > SyncTaskStatusDialogComponent > does not write invalid interval 8 days
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 2 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "update_my_sync_schedule_preference",
+      Object {
+        "p_enabled": false,
+        "p_interval_unit": "days",
+        "p_interval_value": 8,
+        "p_task_key": "listening_history",
+      },
+    ]
+
+  2nd vi.fn() call:
+
+    Array [
+      "get_my_sync_task_status",
+    ]
+
+
+Number of calls: 2
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts:124:23
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts > SyncTaskStatusDialogComponent > does not write invalid interval 169 hours
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 2 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "update_my_sync_schedule_preference",
+      Object {
+        "p_enabled": false,
+        "p_interval_unit": "hours",
+        "p_interval_value": 169,
+        "p_task_key": "listening_history",
+      },
+    ]
+
+  2nd vi.fn() call:
+
+    Array [
+      "get_my_sync_task_status",
+    ]
+
+
+Number of calls: 2
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts:124:23
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts > SyncTaskStatusDialogComponent > does not write invalid interval 10081 minutes
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 2 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "update_my_sync_schedule_preference",
+      Object {
+        "p_enabled": false,
+        "p_interval_unit": "minutes",
+        "p_interval_value": 10081,
+        "p_task_key": "listening_history",
+      },
+    ]
+
+  2nd vi.fn() call:
+
+    Array [
+      "get_my_sync_task_status",
+    ]
+
+
+Number of calls: 2
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts:124:23
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+ ❯ |SpotiFront| src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts (14 tests | 6 failed) 489ms
+     × does not write an editable-marked task that is required 22ms
+     × does not write an editable-marked task that is unavailable 17ms
+     × does not write invalid interval 1.5 hours 18ms
+     × does not write invalid interval 8 days 15ms
+     × does not write invalid interval 169 hours 21ms
+     × does not write invalid interval 10081 minutes 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts > SyncTaskStatusDialogComponent > does not write an editable-marked task that is required
+ FAIL  |SpotiFront| src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts > SyncTaskStatusDialogComponent > does not write an editable-marked task that is unavailable
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 2 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "update_my_sync_schedule_preference",
+      Object {
+        "p_enabled": false,
+        "p_interval_unit": "hours",
+        "p_interval_value": 2,
+        "p_task_key": "listening_history",
+      },
+    ]
+
+  2nd vi.fn() call:
+
+    Array [
+      "get_my_sync_task_status",
+    ]
+
+
+Number of calls: 2
+
+ ❯ src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts:117:21
+    115|     const task = {...component.tasks[0], ...changes}; rpc.mockClear();
+    116|     await component.save(task);
+    117|     expect(rpc).not.toHaveBeenCalled(); expect(component.savedTask).to…
+       |                     ^
+    118|   });
+    119|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts > SyncTaskStatusDialogComponent > does not write invalid interval 1.5 hours
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 2 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "update_my_sync_schedule_preference",
+      Object {
+        "p_enabled": false,
+        "p_interval_unit": "hours",
+        "p_interval_value": 1.5,
+        "p_task_key": "listening_history",
+      },
+    ]
+
+  2nd vi.fn() call:
+
+    Array [
+      "get_my_sync_task_status",
+    ]
+
+
+Number of calls: 2
+
+ ❯ src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts:124:23
+    122|       const task = {...component.tasks[0], interval_value: value as nu…
+    123|       rpc.mockClear(); await component.save(task);
+    124|       expect(rpc).not.toHaveBeenCalled(); expect(component.validationE…
+       |                       ^
+    125|     }
+    126|   );
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts > SyncTaskStatusDialogComponent > does not write invalid interval 8 days
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 2 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "update_my_sync_schedule_preference",
+      Object {
+        "p_enabled": false,
+        "p_interval_unit": "days",
+        "p_interval_value": 8,
+        "p_task_key": "listening_history",
+      },
+    ]
+
+  2nd vi.fn() call:
+
+    Array [
+      "get_my_sync_task_status",
+    ]
+
+
+Number of calls: 2
+
+ ❯ src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts:124:23
+    122|       const task = {...component.tasks[0], interval_value: value as nu…
+    123|       rpc.mockClear(); await component.save(task);
+    124|       expect(rpc).not.toHaveBeenCalled(); expect(component.validationE…
+       |                       ^
+    125|     }
+    126|   );
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts > SyncTaskStatusDialogComponent > does not write invalid interval 169 hours
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 2 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "update_my_sync_schedule_preference",
+      Object {
+        "p_enabled": false,
+        "p_interval_unit": "hours",
+        "p_interval_value": 169,
+        "p_task_key": "listening_history",
+      },
+    ]
+
+  2nd vi.fn() call:
+
+    Array [
+      "get_my_sync_task_status",
+    ]
+
+
+Number of calls: 2
+
+ ❯ src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts:124:23
+    122|       const task = {...component.tasks[0], interval_value: value as nu…
+    123|       rpc.mockClear(); await component.save(task);
+    124|       expect(rpc).not.toHaveBeenCalled(); expect(component.validationE…
+       |                       ^
+    125|     }
+    126|   );
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts > SyncTaskStatusDialogComponent > does not write invalid interval 10081 minutes
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 2 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "update_my_sync_schedule_preference",
+      Object {
+        "p_enabled": false,
+        "p_interval_unit": "minutes",
+        "p_interval_value": 10081,
+        "p_task_key": "listening_history",
+      },
+    ]
+
+  2nd vi.fn() call:
+
+    Array [
+      "get_my_sync_task_status",
+    ]
+
+
+Number of calls: 2
+
+ ❯ src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts:124:23
+    122|       const task = {...component.tasks[0], interval_value: value as nu…
+    123|       rpc.mockClear(); await component.save(task);
+    124|       expect(rpc).not.toHaveBeenCalled(); expect(component.validationE…
+       |                       ^
+    125|     }
+    126|   );
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 8 passed (14)
+   Start at  09:35:05
+   Duration  1.86s (transform 132ms, setup 368ms, import 253ms, tests 489ms, environment 558ms)
+

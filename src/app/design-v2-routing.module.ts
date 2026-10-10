@@ -79,6 +79,12 @@ export const DESIGN_V2_ROUTES: Routes = [{
         .then(module => module.V2ListeningHistoryComponent)
     },
     {
+      path: 'settings/install', title: 'Install Analytify | Analytify',
+      data: designV2RouteData('settings', 'Install Analytify', 'full', 'account'),
+      canActivate: [spotifyAuthGuard],
+      loadComponent: () => import('@features/settings/v2-settings-install.component').then(module => module.V2SettingsInstallComponent)
+    },
+    {
       path: 'settings', title: 'Settings | Analytify',
       data: designV2RouteData('settings', 'Settings', 'full', 'account'),
       canActivate: [spotifyAuthGuard],
@@ -86,6 +92,7 @@ export const DESIGN_V2_ROUTES: Routes = [{
       children: [
         {path: '', pathMatch: 'full', redirectTo: 'account'},
         {path: 'account', loadComponent: () => import('@features/settings/v2-settings-account-data.component').then(module => module.V2SettingsAccountComponent)},
+        {path: 'notifications', loadComponent: () => import('@features/settings/v2-settings-notifications.component').then(module => module.V2SettingsNotificationsComponent)},
         {path: 'data', loadComponent: () => import('@features/settings/v2-settings-account-data.component').then(module => module.V2SettingsDataComponent)}
       ]
     },

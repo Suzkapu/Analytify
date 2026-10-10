@@ -1,0 +1,500 @@
+{
+  "checkpoint": "1cc40cf",
+  "date": "2026-10-10",
+  "command": "taskset -c 0-3 npx playwright test -c /tmp/analytify-all-browsers.config.ts e2e/design-v2-settings-notifications.spec.ts",
+  "exitCode": 0,
+  "tests": 16,
+  "geometrySamples": 128,
+  "projects": [
+    "desktop",
+    "mobile",
+    "firefox-stats",
+    "webkit-stats"
+  ],
+  "widths": [
+    320,
+    360,
+    390,
+    760,
+    768,
+    1024,
+    1440,
+    1920
+  ],
+  "heights": [
+    480,
+    1000
+  ],
+  "motions": [
+    "no-preference",
+    "reduce"
+  ],
+  "canonicalNodes": [
+    "27:1234",
+    "35:1896",
+    "983:32195",
+    "44:1848",
+    "50:1945"
+  ],
+  "reviewedPanelCaptures": [
+    "desktop/notifications.png",
+    "desktop/install.png",
+    "mobile/notifications.png",
+    "mobile/install.png"
+  ],
+  "limitations": [
+    "Panel review and current full-page captures; no approved visual goldens or complete shell/sidebar parity.",
+    "Switch motion export empty; animation parity remains unverified.",
+    "Dev browser service worker disabled; actual unavailable state only. Supported registration uses isolated local service boundary tests.",
+    "Earlier overlapping run failed and logged a DOM-update timeout; this passing isolated run does not prove that timeout fixed."
+  ],
+  "files": [
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/.last-run.json",
+      "bytes": 45,
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--desktop/install-page.png",
+      "bytes": 312027,
+      "sha256": "10fb66a1c003abad11106660c0badb179738ed40e4e92fb039824fbf16f6b94f"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--desktop/install.png",
+      "bytes": 277776,
+      "sha256": "9626c9ab63077998a73f82559777113c6c8bb39edc6a497ccbbab38671a3af86"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--desktop/notification-workflow.json",
+      "bytes": 4776,
+      "sha256": "40c7f649433ed5e45b23500392973db51d3b57136940b1fb43e7f8e6bef8a27a"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--desktop/notifications-page.png",
+      "bytes": 280629,
+      "sha256": "c1c9e329bb0649224ecf67c44221cb1858988fc62dee02eb4ff1264ae3498cab"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--desktop/notifications.png",
+      "bytes": 77612,
+      "sha256": "2fb683c5fcf1333026b16910324134d34228aef67af200a38bea96c17bc18a2f"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--firefox-stats/install-page.png",
+      "bytes": 173517,
+      "sha256": "fefd72151beea12553b68ca131020e045902fb52ac4ff66ca1c75e08dfcb92bc"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--firefox-stats/install.png",
+      "bytes": 145923,
+      "sha256": "10fb461e69bc09402fceb3c69c1cbd0129a25c941fb5f937ad484a41f6059af4"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--firefox-stats/notification-workflow.json",
+      "bytes": 4828,
+      "sha256": "9ec4c417f0634a355ed120d7aca7166c0753dcda1640d0805241d04b677ea0ba"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--firefox-stats/notifications-page.png",
+      "bytes": 143022,
+      "sha256": "b289beaef3dcacd3628e9eed6e83431ab44a0e0faf0efe2e371332b5ceee7b68"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--firefox-stats/notifications.png",
+      "bytes": 58194,
+      "sha256": "c4c17bfb76a503b5894e6824cfeb0db8a899c0866d2a31c00ff362d0f26607c6"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--mobile/install-page.png",
+      "bytes": 443496,
+      "sha256": "9b4bb65c2e19f1deb15128648f2331c42dfb4dd4036149425933f937f6014013"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--mobile/install.png",
+      "bytes": 366483,
+      "sha256": "de9d45fd12262df5e20828cdf8e5cba3d6c0206e33fc02b54dbfa4061ec3e9a1"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--mobile/notification-workflow.json",
+      "bytes": 4776,
+      "sha256": "40c7f649433ed5e45b23500392973db51d3b57136940b1fb43e7f8e6bef8a27a"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--mobile/notifications-page.png",
+      "bytes": 301596,
+      "sha256": "25bba92513e292327562d7cab006ebc5b1b425ff1cfa8b867cba8f1c9486b5c5"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--mobile/notifications.png",
+      "bytes": 156243,
+      "sha256": "716b4e7626fa9cf205458b5f089cefbed906d08ddc892ae9009cb293fe1df11a"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--webkit-stats/install-page.png",
+      "bytes": 342033,
+      "sha256": "5600c19cbfc71366fa2871f117ccc4f043bbc718e9cfdbc9ef03d3668d383033"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--webkit-stats/install.png",
+      "bytes": 279917,
+      "sha256": "c3f4a70cb00711e92049596107b0d1168b3c5f30ee6a61a81d873336b74ea315"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--webkit-stats/notification-workflow.json",
+      "bytes": 4776,
+      "sha256": "40c7f649433ed5e45b23500392973db51d3b57136940b1fb43e7f8e6bef8a27a"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--webkit-stats/notifications-page.png",
+      "bytes": 275092,
+      "sha256": "deb1d7e28034081d20595ef70fda41cc6e4621792d7c35e43987f089bb6afea6"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--webkit-stats/notifications.png",
+      "bytes": 120787,
+      "sha256": "f11e4b1b37855b8fddcdd8f65a9f5c519d4191405e92d1ba819fe1d29631117d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--desktop/install-page.png",
+      "bytes": 309197,
+      "sha256": "b3d2f12548d3fb47ace551c0910b370ba7a0b81561234f6dd5b1b57ae6b328ad"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--desktop/install.png",
+      "bytes": 275628,
+      "sha256": "0f8d5ab71191be1705401a0e6919e340c1940f1d8c1d10f7e00d884decb34138"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--desktop/notification-workflow.json",
+      "bytes": 4769,
+      "sha256": "fe55de86f05bc78564b1f0608446fa5b132a13b229bd2a2a2416d62454c67793"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--desktop/notifications-page.png",
+      "bytes": 274699,
+      "sha256": "bb72051f15c55c9a29d743b3814a92f7ba7bbf4cde086acc9ecbb0602649f485"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--desktop/notifications.png",
+      "bytes": 71680,
+      "sha256": "80fc92f79c4b05396e1da21877c1fb37e63fc6da6644754144cd69255fe1827a"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--firefox-stats/install-page.png",
+      "bytes": 170801,
+      "sha256": "67c684fb0d4837d673500419bff27469660c501ba6b68d7adfe25700ef63b555"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--firefox-stats/install.png",
+      "bytes": 144616,
+      "sha256": "248106db72e8492552249ae58a2875c5704a7966bbff044a2631b65b568cc532"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--firefox-stats/notification-workflow.json",
+      "bytes": 4821,
+      "sha256": "8c3e5d2c7ab6f3a6b46459248fee51755401a030d73101b0f6198f4800afc372"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--firefox-stats/notifications-page.png",
+      "bytes": 144047,
+      "sha256": "13cb82e62627f711cc7e299252b454ccbaf1f79d67390f9235f53a5d002b5e42"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--firefox-stats/notifications.png",
+      "bytes": 56257,
+      "sha256": "809d503d465d96b5f603be29124ca5bfb89fdef019d6aa28008784e928c13ae1"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--mobile/install-page.png",
+      "bytes": 429313,
+      "sha256": "fb2ac47dd234df16727db478d2afbfd99486d0d3c198dc542bdab42a95e9488f"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--mobile/install.png",
+      "bytes": 362143,
+      "sha256": "836e1245356db8fb10cbe4a0058d113a12e0450d348db1974c2615dea4338f66"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--mobile/notification-workflow.json",
+      "bytes": 4769,
+      "sha256": "fe55de86f05bc78564b1f0608446fa5b132a13b229bd2a2a2416d62454c67793"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--mobile/notifications-page.png",
+      "bytes": 295694,
+      "sha256": "8be028294245109852caa018b3327520de65ec872aa697031c2df23327731edd"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--mobile/notifications.png",
+      "bytes": 150621,
+      "sha256": "e8fc1c7495b7f4df3f51039258eac5b92ebc44f4e1ba222b81505f30dd11d768"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--webkit-stats/install-page.png",
+      "bytes": 339950,
+      "sha256": "439b90e7f9ea336ce9dbd9f0a2f44e7deff8d5c89eb3b8b8b7aae2a38b8e02f3"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--webkit-stats/install.png",
+      "bytes": 278400,
+      "sha256": "8f4a0c90d6ef47484b23444525c256f5c0c1eab2eb0bbd16164ef02ed2c51db6"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--webkit-stats/notification-workflow.json",
+      "bytes": 4769,
+      "sha256": "fe55de86f05bc78564b1f0608446fa5b132a13b229bd2a2a2416d62454c67793"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--webkit-stats/notifications-page.png",
+      "bytes": 272882,
+      "sha256": "ac8b021b368d36fe96fa12dcda8622107be88402359cf1e50383b9520069349d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--webkit-stats/notifications.png",
+      "bytes": 119280,
+      "sha256": "8455821d68498f8c11621a0702f2f3a91fd56bdc848dfd21bf50a04386b8ab53"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--desktop/install-page.png",
+      "bytes": 309197,
+      "sha256": "b3d2f12548d3fb47ace551c0910b370ba7a0b81561234f6dd5b1b57ae6b328ad"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--desktop/install.png",
+      "bytes": 275628,
+      "sha256": "0f8d5ab71191be1705401a0e6919e340c1940f1d8c1d10f7e00d884decb34138"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--desktop/notification-workflow.json",
+      "bytes": 4778,
+      "sha256": "6f899fcedeeda7a5bc2cfc808f7dde4083fb4597411f8620638f1f66d761f5c3"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--desktop/notifications-page.png",
+      "bytes": 271059,
+      "sha256": "5199a9924aeb3e104454fc29ac2329cd19d43e3afab90c5dd096e48fba45b430"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--desktop/notifications.png",
+      "bytes": 71150,
+      "sha256": "b4a74b2796feb4b37655515f018469e674b6bca37c981acae13ec00b642c632f"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--firefox-stats/install-page.png",
+      "bytes": 170801,
+      "sha256": "67c684fb0d4837d673500419bff27469660c501ba6b68d7adfe25700ef63b555"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--firefox-stats/install.png",
+      "bytes": 144616,
+      "sha256": "248106db72e8492552249ae58a2875c5704a7966bbff044a2631b65b568cc532"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--firefox-stats/notification-workflow.json",
+      "bytes": 4830,
+      "sha256": "9376557930b39dadfd09e0c987a0aee6a68d5fe2ea824290fe41d8ab78c3f2d7"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--firefox-stats/notifications-page.png",
+      "bytes": 142805,
+      "sha256": "1ca64626a676e2b725714f9121a114e470152d1265bc3c5766d59095b8e83cda"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--firefox-stats/notifications.png",
+      "bytes": 55720,
+      "sha256": "7b667504582184145710ca7a9cc7b11ecb3b778fb577b31edc17088fb129e3ee"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--mobile/install-page.png",
+      "bytes": 429313,
+      "sha256": "fb2ac47dd234df16727db478d2afbfd99486d0d3c198dc542bdab42a95e9488f"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--mobile/install.png",
+      "bytes": 362143,
+      "sha256": "836e1245356db8fb10cbe4a0058d113a12e0450d348db1974c2615dea4338f66"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--mobile/notification-workflow.json",
+      "bytes": 4778,
+      "sha256": "6f899fcedeeda7a5bc2cfc808f7dde4083fb4597411f8620638f1f66d761f5c3"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--mobile/notifications-page.png",
+      "bytes": 313828,
+      "sha256": "d0cbb75d6c5afc88774d7cd0c6d4522b18c2d52bfed037244808f44571491058"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--mobile/notifications.png",
+      "bytes": 131233,
+      "sha256": "a11409677dd52bd4a11d91105474c8e97699636d412f1c975b8bb1b70e7040c4"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--webkit-stats/install-page.png",
+      "bytes": 339950,
+      "sha256": "439b90e7f9ea336ce9dbd9f0a2f44e7deff8d5c89eb3b8b8b7aae2a38b8e02f3"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--webkit-stats/install.png",
+      "bytes": 278400,
+      "sha256": "8f4a0c90d6ef47484b23444525c256f5c0c1eab2eb0bbd16164ef02ed2c51db6"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--webkit-stats/notification-workflow.json",
+      "bytes": 4778,
+      "sha256": "6f899fcedeeda7a5bc2cfc808f7dde4083fb4597411f8620638f1f66d761f5c3"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--webkit-stats/notifications-page.png",
+      "bytes": 271268,
+      "sha256": "50c4b9fd14603cec9ca63408208088d9510bd9c60a08a5be35ee09b0b8738aa3"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--webkit-stats/notifications.png",
+      "bytes": 118191,
+      "sha256": "0545afb3e33c71a38cfac0b2ab6cc975269921d0cadf8f89eaeca9406ba89392"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--desktop/install-page.png",
+      "bytes": 311726,
+      "sha256": "7ff3f78b0598a33156abd8c9a45c9065a8470d8209f63c2f32943cd2fe385ba9"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--desktop/install.png",
+      "bytes": 277152,
+      "sha256": "7027201fd94f41e726bf558e88972eaf9b92a570cfd37528270ac5eef542ac68"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--desktop/notification-workflow.json",
+      "bytes": 4785,
+      "sha256": "d6a361c0eb65f551a4785d6d5c81b427c36a67f1ec39fc46a20107fa741dacba"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--desktop/notifications-page.png",
+      "bytes": 272196,
+      "sha256": "fa1010ed117123714bed981f2e373b2d249b9f2ef73ac60b640a39735aca587d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--desktop/notifications.png",
+      "bytes": 70026,
+      "sha256": "acdee1691fec8d1503e05e6493839ab3ab6dbe0f5fa7472813786e947c57fe94"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--firefox-stats/install-page.png",
+      "bytes": 172899,
+      "sha256": "6d9d2b1ef9e5a54b87b7edd67715fef9bacfa2baa7f492df0ce1a8a1dd5b4206"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--firefox-stats/install.png",
+      "bytes": 145944,
+      "sha256": "664bd6ea73a6769fb0ddfdf5149d779de4d9fbc96f2204761ecd7ce666fa8d99"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--firefox-stats/notification-workflow.json",
+      "bytes": 4837,
+      "sha256": "9947dcf0bc698d608287a7be5a63a09608e72090c1862e8f41d9b4b4200fc15d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--firefox-stats/notifications-page.png",
+      "bytes": 141103,
+      "sha256": "68e5928fe415062f0cc384887876e78d647e53421b408796333d3283ec4f9060"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--firefox-stats/notifications.png",
+      "bytes": 54892,
+      "sha256": "58ff7e59aee639eff72b627c5c26828fce6e18fb5cb3549ecbc3cec6b0536f73"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--mobile/install-page.png",
+      "bytes": 443568,
+      "sha256": "bbb7f70b3f0a128e019fd8d74deec7f41b6766a9bfa0a8871ef8a0b653efed08"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--mobile/install.png",
+      "bytes": 366622,
+      "sha256": "b1912c874a6c11d9904b43f1f3fd5740ad7b0ad5bd05afa53c58e667ac1220d7"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--mobile/notification-workflow.json",
+      "bytes": 4785,
+      "sha256": "d6a361c0eb65f551a4785d6d5c81b427c36a67f1ec39fc46a20107fa741dacba"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--mobile/notifications-page.png",
+      "bytes": 316725,
+      "sha256": "4f6ae5cdaecf4329068d6270cad0f4cca8ecac1fbacb33d783cf834ebd8af83c"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--mobile/notifications.png",
+      "bytes": 132252,
+      "sha256": "6c2eec1b09f9b6086c91d2fc18aea1a86c8551957da64b5b21f1026ed99e2937"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--webkit-stats/install-page.png",
+      "bytes": 341472,
+      "sha256": "a62531ab7f297b86b9ae156890a0ac83723ebb0fb3c62b826c90838a0c68cdf8"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--webkit-stats/install.png",
+      "bytes": 277842,
+      "sha256": "b8c26ec10c064cdcce649c3456a3d7e12dc22c0b29d4b3a4d20a5cbf450d9a14"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--webkit-stats/notification-workflow.json",
+      "bytes": 4785,
+      "sha256": "d6a361c0eb65f551a4785d6d5c81b427c36a67f1ec39fc46a20107fa741dacba"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--webkit-stats/notifications-page.png",
+      "bytes": 272029,
+      "sha256": "c68372114f453e38bd96f4cae1497bf56ac6d9172ac0e59eedb25de0bff2bc46"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-notification-mount-browser-final-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--webkit-stats/notifications.png",
+      "bytes": 116765,
+      "sha256": "80f2a8e49a06628407268cf5da03cef2981fd16a5be535a18d824af1f40e18c6"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "src/app/features/settings/v2-settings-notifications.component.ts",
+      "sha256": "2ea46cd9ce002fdc9fab4015ad19e179d6b8c9d6186911a15094cb383af3a1b8"
+    },
+    {
+      "path": "src/app/features/settings/v2-settings-notifications.component.scss",
+      "sha256": "a746204a2a870efc3a375dd81581a90646a502ced070cb719b62f38cdd96791f"
+    },
+    {
+      "path": "src/app/features/settings/v2-settings-install.component.ts",
+      "sha256": "b91a685aa953b7a86fe5a177649ed046f19c578a7c3406f4c4415d02576a283c"
+    },
+    {
+      "path": "src/app/features/settings/v2-settings-install.component.scss",
+      "sha256": "205bdce38f27864ef81c527a640f0776df9f3ffe605d1cd8f73b14d7b19b1273"
+    },
+    {
+      "path": "src/app/shared/ui-v2/v2-preference-row.component.ts",
+      "sha256": "c70ecbfb3d92ab9d4a44ee2ddb922734a37fa39618f569f13bba0ab472dbda87"
+    },
+    {
+      "path": "src/app/shared/ui-v2/v2-preference-row.component.scss",
+      "sha256": "e7358b2d16bea3a7b46c9400cc0cebf9af8434ac9d1197815632e09964661292"
+    },
+    {
+      "path": "src/app/features/settings/v2-notification-settings.controller.ts",
+      "sha256": "4064f9a3128e7ae6067a80df0f4760da3e2caed20ea0f9bedbbdb8065bac5628"
+    },
+    {
+      "path": "src/app/core/notifications/push-notification.service.ts",
+      "sha256": "796ee270d760646d32858bb0bf7ce3f351b7f4de7637df1a159c1ce6e15633b2"
+    },
+    {
+      "path": "src/app/design-v2-routing.module.ts",
+      "sha256": "8c54a2ccbae35e49851e548ed44750106fda575b5a62b92aac8b92affbcc23bb"
+    },
+    {
+      "path": "e2e/design-v2-settings-notifications.spec.ts",
+      "sha256": "c378667e4997b0dd55f95a6b98481916704e1c35ea7546f748c0ac74d81120c3"
+    }
+  ]
+}

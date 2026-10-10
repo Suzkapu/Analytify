@@ -1,5 +1,15 @@
 # Settings navigation implementation contract
 
+## Notifications and Install mounting — 10 October 2026
+
+Notifications now resolves its responsive page; Install is a separate protected `settings/install` route ordered before the Settings parent so it has one page heading and no nested Settings tabs. The native destination link enters the guide, and Back returns to Notifications. Account/Data remain mounted; Updates/Navigation remain pending. No Settings profile/menu entry has been added while those destinations remain incomplete.
+
+Canonical Notifications: desktop `27:1234`, mobile `35:1896`, reusable device-status family `983:32195`, reviewed state sheet `983:32196`. Install: desktop `44:1848`, mobile `50:1945`, with corrected independent-enable instructions. Eight status states retain canonical surface/info-border typography. Runtime errors supply their actual detail. Ready/blocked/unavailable have no device-enable action. Initial loading has no fictitious saved preferences; refresh retains cached values. Category saving blocks duplicate actions while native checkboxes retain saved values. Device setup alone describes the browser permission prompt. Retry performs authoritative readback so a registration that succeeded before failed readback is not repeated unnecessarily.
+
+The new-song category retains its active Song League membership prerequisite from `set_notification_preference`; nonmembers do not get that control. Category changes are independent of device support/permission and do not use the combined legacy category action. Real push-service composition is tested against isolated RPC/permission/subscription boundaries for blocked-device saving and registration-success/readback-failure/recovery without duplicate permission or preference effects. These local boundary tests do not certify a hosted service.
+
+Discrete local SVGs retain their 20×20 icon and 48×24 switch root dimensions; native geometry and asset loading are browser assertions. Switch motion export has no tracks; exact static states are implemented and motion parity remains unresolved. Provisional sidebar motion is untouched. Native supported service-worker registration is not certified by the dev browser run (its actual status is unsupported). Service-side actor-switch effects still require the recorded audit; controller completion guards alone do not certify those effects.
+
 Checkpoint: `1dbd16a`, development branch `codex/design-v2`, 10 October 2026.
 
 Fresh canonical design context and screenshots were inspected for Account

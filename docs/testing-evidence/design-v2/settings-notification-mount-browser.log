@@ -1,0 +1,216 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test -c /tmp/analytify-all-browsers.config.ts e2e/design-v2-settings-notifications.spec.ts --output=docs/testing-evidence/design-v2/settings-notification-mount-browser-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:97506) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:97506) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 16 tests using 2 workers
+
+(node:97814) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:97815) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) (26.4s)
+  ✓   2 [desktop] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 1000) (26.9s)
+  ✓   3 [desktop] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 480) (20.1s)
+  ✓   4 [desktop] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 1000) (19.4s)
+(node:99208) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:99237) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   5 [mobile] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) (30.2s)
+[WebServer] 9:20:18 AM [vite] (client) [console.error] TimeoutError: Transition was aborted because of timeout in DOM update. DOM update timed out
+  ✓   6 [mobile] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 1000) (33.2s)
+  ✓   7 [mobile] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 480) (20.3s)
+(node:103363) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   8 [mobile] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 1000) (20.6s)
+(node:103620) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   9 [firefox-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) (34.4s)
+(node:105267) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  10 [firefox-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 1000) (33.2s)
+(node:105307) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  11 [firefox-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 480) (25.4s)
+  ✓  12 [firefox-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 1000) (25.1s)
+(node:106712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:106788) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  14 [webkit-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 1000) (35.0s)
+  ✘  13 [webkit-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) (36.8s)
+(node:108071) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:108102) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  15 [webkit-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 480) (17.9s)
+  ✓  16 [webkit-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 1000) (18.5s)
+
+
+  1) [firefox-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(locator).toBeChecked() failed
+
+    Locator: locator('v2-settings-notifications').getByRole('switch', { name: 'Stats access requests' })
+    Expected: checked
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeChecked" locator('v2-settings-notifications').getByRole('switch', { name: 'Stats access requests' }) with timeout 5000ms
+      - waiting for locator('v2-settings-notifications').getByRole('switch', { name: 'Stats access requests' })
+      - 
+
+
+      57 |       await expect(page).toHaveURL(/\/new\/settings\/install$/); const guide = page.locator('v2-settings-install');
+      58 |       await expect(guide.locator('article')).toHaveCount(5); await expect(guide.getByRole('heading', {level: 1})).toHaveText('Install Analytify');
+    > 59 |       await expectNoBlockingAxeViolations(page); await guide.screenshot({path: info.outputPath('install.png')});
+         |                                                                                            ^
+      60 |       await guide.getByRole('button', {name: 'Back', exact: true}).press('Enter');
+      61 |       await expect(page).toHaveURL(/\/new\/settings\/notifications$/); await expect(stats).toBeChecked();
+      62 |       expect(unexpected).toEqual([]);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-notifications.spec.ts:59:92
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-notification-mount-browser-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/settings-notification-mount-browser-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-notification-mount-browser-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/settings-notification-mount-browser-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 1000) 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(page).toHaveURL(expected) failed
+
+    Expected pattern: /\/new\/settings\/install$/
+    Received string:  "http://127.0.0.1:4200/new/settings/notifications"
+
+    Call log:
+      - Expect "toHaveURL" with timeout 5000ms
+        4 × locator resolved to <html lang="en">…</html>
+          - unexpected value "http://127.0.0.1:4200/new/settings/notifications"
+      - 
+
+
+      53 |       }
+      54 |       await page.setViewportSize({width: info.project.name === 'mobile' ? 390 : 1440, height: 900});
+    > 55 |       await panel.screenshot({path: info.outputPath('notifications.png')});
+         |                          ^
+      56 |       await panel.getByRole('link', {name: 'How to install app'}).press('Enter');
+      57 |       await expect(page).toHaveURL(/\/new\/settings\/install$/); const guide = page.locator('v2-settings-install');
+      58 |       await expect(guide.locator('article')).toHaveCount(5); await expect(guide.getByRole('heading', {level: 1})).toHaveText('Install Analytify');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-notifications.spec.ts:55:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-notification-mount-browser-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/settings-notification-mount-browser-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-notification-mount-browser-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/settings-notification-mount-browser-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(locator).toBeChecked() failed
+
+    Locator: locator('v2-settings-notifications').getByRole('switch', { name: 'Stats access requests' })
+    Expected: checked
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeChecked" locator('v2-settings-notifications').getByRole('switch', { name: 'Stats access requests' }) with timeout 5000ms
+      - waiting for locator('v2-settings-notifications').getByRole('switch', { name: 'Stats access requests' })
+      - 
+
+
+      57 |       await expect(page).toHaveURL(/\/new\/settings\/install$/); const guide = page.locator('v2-settings-install');
+      58 |       await expect(guide.locator('article')).toHaveCount(5); await expect(guide.getByRole('heading', {level: 1})).toHaveText('Install Analytify');
+    > 59 |       await expectNoBlockingAxeViolations(page); await guide.screenshot({path: info.outputPath('install.png')});
+         |                                                                                            ^
+      60 |       await guide.getByRole('button', {name: 'Back', exact: true}).press('Enter');
+      61 |       await expect(page).toHaveURL(/\/new\/settings\/notifications$/); await expect(stats).toBeChecked();
+      62 |       expect(unexpected).toEqual([]);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-notifications.spec.ts:59:92
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-notification-mount-browser-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/settings-notification-mount-browser-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-notification-mount-browser-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/settings-notification-mount-browser-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [webkit-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 1000) 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(page).toHaveURL(expected) failed
+
+    Expected pattern: /\/new\/settings\/install$/
+    Received string:  "http://127.0.0.1:4200/new/settings/notifications"
+
+    Call log:
+      - Expect "toHaveURL" with timeout 5000ms
+        5 × locator resolved to <html lang="en">…</html>
+          - unexpected value "http://127.0.0.1:4200/new/settings/notifications"
+      - Test timeout of 30000ms exceeded.
+
+
+      53 |       }
+      54 |       await page.setViewportSize({width: info.project.name === 'mobile' ? 390 : 1440, height: 900});
+    > 55 |       await panel.screenshot({path: info.outputPath('notifications.png')});
+         |                          ^
+      56 |       await panel.getByRole('link', {name: 'How to install app'}).press('Enter');
+      57 |       await expect(page).toHaveURL(/\/new\/settings\/install$/); const guide = page.locator('v2-settings-install');
+      58 |       await expect(guide.locator('article')).toHaveCount(5); await expect(guide.getByRole('heading', {level: 1})).toHaveText('Install Analytify');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-notifications.spec.ts:55:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-notification-mount-browser-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/settings-notification-mount-browser-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-notification-mount-browser-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/settings-notification-mount-browser-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [firefox-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) 
+    [firefox-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 1000) 
+    [webkit-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) 
+    [webkit-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 1000) 
+  12 passed (4.4m)

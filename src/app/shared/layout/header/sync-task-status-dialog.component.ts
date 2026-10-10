@@ -1,22 +1,8 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
+import {scheduleBounds, scheduleEditable, scheduleValidation, SyncIntervalUnit, SyncTaskStatus} from '@core/sync/sync-schedule-policy';
 import {SharedModule} from '../../shared.module';
 import {humanInterval, syncTaskState} from './settings-sheet-view-model';
-
-type SyncTaskStatus = {
-  task_key: string;
-  optional_enabled: boolean;
-  feature_required: boolean;
-  effective_active: boolean;
-  reasons: string[];
-  editable: boolean;
-  interval_value: number;
-  interval_unit: SyncIntervalUnit;
-  minimum_interval_minutes: number;
-  policy_available: boolean;
-};
-
-type SyncIntervalUnit = 'minutes' | 'hours' | 'days';
 
 @Component({
   selector: 'app-sync-task-status-dialog',
@@ -53,13 +39,12 @@ export class SyncTaskStatusDialogComponent implements OnInit {
   }
 
   async save(task: SyncTaskStatus): Promise<void> {
-    if (!task.editable || this.savingTask) return;
+    if (!scheduleEditable(task) || this.savingTask) return;
     this.error = '';
     this.savedTask = null;
-    const minimum = this.minimumFor(task, task.interval_unit);
-    if (!Number.isFinite(task.interval_value) || task.interval_value < minimum) {
-      const unit = minimum === 1 ? task.interval_unit.replace(/s$/, '') : task.interval_unit;
-      this.validationErrors[task.task_key] = `Choose at least ${minimum} ${unit}.`;
+    const validation = scheduleValidation(task, {enabled: task.optional_enabled, value: task.interval_value, unit: task.interval_unit});
+    if (validation) {
+      this.validationErrors[task.task_key] = validation;
       this.changeDetector.markForCheck();
       return;
     }
@@ -84,8 +69,7 @@ export class SyncTaskStatusDialogComponent implements OnInit {
   }
 
   minimumFor(task: SyncTaskStatus, unit: SyncIntervalUnit): number {
-    const divisor = unit === 'days' ? 1440 : unit === 'hours' ? 60 : 1;
-    return Math.max(1, Math.ceil(task.minimum_interval_minutes / divisor));
+    return scheduleBounds(task, unit).min;
   }
 
   minimumLabel(task: SyncTaskStatus): string {
