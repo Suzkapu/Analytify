@@ -1,0 +1,9 @@
+:host {display:contents;}
+.v2-interval-layer {position:fixed; inset:0; z-index:1100; display:flex; align-items:center; justify-content:center; padding:var(--v2-space-4); overflow:auto;}
+.v2-interval-backdrop {position:fixed; inset:0; background:rgb(7 11 9 / 60%); backdrop-filter:blur(9px);}
+.v2-interval-popup {position:relative; width:350px; max-width:100%; max-height:calc(100dvh - 32px); overflow:auto; flex-shrink:0; display:flex; flex-direction:column; gap:var(--v2-space-4); padding:var(--v2-space-6); border:1px solid var(--v2-color-border); border-radius:var(--v2-radius-panel); background:var(--v2-color-background-raised);}
+h2 {margin:0; font-size:20px; line-height:28px; font-weight:600;}
+p {margin:0; color:var(--v2-color-text-muted); font-size:14px; line-height:20px; overflow-wrap:anywhere;}
+input {width:100%; min-width:0; height:48px; padding:0 var(--v2-space-4); border:1px solid var(--v2-color-border-control); border-radius:var(--v2-radius-control); background:var(--v2-color-input); color:var(--v2-color-text-muted); font:inherit; font-size:16px; line-height:24px;}
+button.v2-button {width:100%; height:48px; min-height:48px; flex-shrink:0; font-size:14px; font-weight:600; line-height:20px;}
+input:focus-visible {outline:2px solid var(--v2-color-focus); outline-offset:2px;}

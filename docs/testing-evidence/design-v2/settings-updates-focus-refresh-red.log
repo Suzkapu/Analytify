@@ -1,0 +1,65 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/settings/v2-settings-updates.component.spec.ts
+Application bundle generation complete. [2.945 seconds] - 2026-10-10T14:25:51.605Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/settings/v2-settings-updates.component.spec.ts (12 tests | 2 failed) 480ms
+     × refreshes on returning to the window, preserving cached rows through pending and failed reads 36ms
+     × closes a popup when a refreshed policy locks the task, without reviving it if the task becomes editable again 57ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-settings-updates.component.spec.ts > canonical Updates routes and draft editor > refreshes on returning to the window, preserving cached rows through pending and failed reads
+AssertionError: expected 'Automatic updatesChoose which persona…' to contain 'Refreshing automatic updates'
+
+Expected: "Refreshing automatic updates"
+Received: "Automatic updatesChoose which personal Spotify data updates in the background.Listening history Disabled Update when you choose to enable itShort-term stats Required Every 2 hoursDisabled by youMedium-term stats Unavailable Update when you choose to enable itDisabled by youShared playlists Disabled Update when you choose to enable itDisabled by youRequired updates stay on while you use the associated feature."
+
+ ❯ src/app/features/settings/v2-settings-updates.component.spec.ts:53:35
+     51|     const s = await setup(); const finish = s.holdNextRead();
+     52|     window.dispatchEvent(new Event('focus')); s.harness.fixture.detect…
+     53|     expect(s.panel().textContent).toContain('Refreshing automatic upda…
+       |                                   ^
+     54|     expect(s.panel().querySelectorAll('.v2-update-summary')).toHaveLen…
+     55|     finish({data: null, error: new Error('Refresh unavailable')}); awa…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-settings-updates.component.spec.ts > canonical Updates routes and draft editor > closes a popup when a refreshed policy locks the task, without reviving it if the task becomes editable again
+AssertionError: expected 'Listening historyBackEdit this option…' to contain 'Refreshing automatic updates'
+
+Expected: "Refreshing automatic updates"
+Received: "Listening historyBackEdit this optional update. Required feature updates stay on.Automatic updatesUpdate listening history in the background.Every2UnithoursMinimum interval: 1 hourChoose an interval of 1 hour or longer.Save changesChanges apply only after Save changes. Leaving through Back, Menu or any other navigation discards unsaved changes.EveryEnter a whole number. The current unit and minimum interval apply.ApplyCancel"
+
+ ❯ src/app/features/settings/v2-settings-updates.component.spec.ts:65:35
+     63|     (s.panel().querySelector('.v2-update-field') as HTMLButtonElement)…
+     64|     const finish = s.holdNextRead(); window.dispatchEvent(new Event('f…
+     65|     expect(s.panel().textContent).toContain('Refreshing automatic upda…
+       |                                   ^
+     66|     finish({data: [{...history, feature_required:true}], error: null})…
+     67|     expect(s.panel().querySelector('[role="dialog"]')).toBeNull(); exp…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 10 passed (12)
+   Start at  16:25:51
+   Duration  1.44s (transform 154ms, setup 241ms, import 250ms, tests 480ms, environment 343ms)
+

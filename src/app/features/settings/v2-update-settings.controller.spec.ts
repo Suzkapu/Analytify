@@ -62,7 +62,7 @@ describe('automatic update drafts and constrained service effects', () => {
     expect(controller.draft()?.value).toBe(3); expect(controller.tasks()).toEqual([task]); await controller.reload(); expect(controller.error()).toBe('');
     response.mockRejectedValueOnce(null); await controller.save(); expect(controller.error()).toContain('could not be saved');
   });
-  it('keeps a draft when registration-equivalent preference success is followed by readback failure', async () => {
+  it('keeps a draft when a successful preference write is followed by readback failure', async () => {
     const {controller, response} = setup(); await controller.reload(); controller.changeDraft({value: 3});
     response.mockResolvedValueOnce({data: null, error: null} as never).mockRejectedValueOnce(new Error('Readback failed'));
     await controller.save(); expect(controller.error()).toBe('Readback failed'); expect(controller.saved()).toBe(false); expect(controller.draft()?.value).toBe(3);
@@ -91,5 +91,32 @@ describe('automatic update drafts and constrained service effects', () => {
     const load = s.controller.reload(); await Promise.resolve(); s.controller.ngOnDestroy(); pending.resolve({data: [task], error: null}); await load;
     expect(s.controller.tasks()).toBeNull(); expect(s.signals[0]).toBe(s.lifecycle.capture().signal);
     await s.controller.reload(); await s.controller.save(); s.controller.changeDraft({value: 4}); expect(s.rpc).toHaveBeenCalledOnce();
+  });
+  it('keeps cached schedules after the service returns a structured read error', async () => {
+    const s = setup(); await s.controller.reload(); s.response.mockResolvedValueOnce({data: null, error: new Error('Policy read failed')} as never);
+    await s.controller.reload(); expect(s.controller.error()).toBe('Policy read failed'); expect(s.controller.tasks()).toEqual([task]);
+  });
+  it('does not dispatch a read whose client initialization outlives a task change', async () => {
+    const s = setup(); const client = deferred<typeof s.client>(); s.getClient.mockReturnValueOnce(client.promise);
+    const old = s.controller.reload(); s.controller.select('stats_short_term'); client.resolve(s.client); await old;
+    expect(s.rpc).not.toHaveBeenCalled(); expect(s.controller.tasks()).toBeNull(); expect(s.controller.taskKey()).toBe('stats_short_term');
+  });
+  it('does not publish a rejected refresh from the previous actor', async () => {
+    const s = setup(); const read = deferred<{data: SyncTaskStatus[]; error: null}>(); s.response.mockReturnValueOnce(read.promise);
+    const old = s.controller.reload(); await Promise.resolve(); s.replaceActor(); read.reject(new Error('Old actor failure')); await old;
+    expect(s.controller.error()).toBe(''); expect(s.controller.tasks()).toBeNull(); expect(s.controller.loading()).toBe(false);
+  });
+  it('does not publish a rejected save from the previous cloud identity', async () => {
+    const s = setup(); await s.controller.reload(); const write = deferred<{data: SyncTaskStatus[]; error: null}>(); s.response.mockReturnValueOnce(write.promise);
+    const old = s.controller.save(); await Promise.resolve(); s.replaceCloud(); write.reject(new Error('Old account failure')); await old;
+    expect(s.controller.error()).toBe(''); expect(s.controller.saved()).toBe(false); expect(s.controller.draft()).toBeNull();
+  });
+  it('never announces a save whose readback arrives after the actor changes', async () => {
+    const s = setup(); await s.controller.reload(); const read = deferred<{data: SyncTaskStatus[]; error: null}>();
+    s.response.mockResolvedValueOnce({data: null, error: null} as never).mockReturnValueOnce(read.promise);
+    const old = s.controller.save();
+    await vi.waitFor(() => expect(s.response.mock.calls.filter(call => call[0] === 'get_my_sync_task_status')).toHaveLength(2));
+    s.replaceActor(); read.resolve({data: [task], error: null}); await old;
+    expect(s.controller.saved()).toBe(false); expect(s.controller.tasks()).toBeNull(); expect(s.controller.saving()).toBe(false);
   });
 });

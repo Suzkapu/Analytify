@@ -25,7 +25,8 @@ describe('design route resolution', () => {
     ['spotifyConnect', {}, ['/spotify', 'connect']],
     ['spotifyCallback', {}, ['/spotify', 'callback']],
     ['spotifyCloudAccess', {}, ['/spotify', 'cloud-access']],
-    ['settingsInstall', {}, ['/settings', 'install']]
+    ['settingsInstall', {}, ['/settings', 'install']],
+    ['settingsUpdate', {id: 'listening_history'}, ['/settings', 'updates', 'listening_history']]
   ];
 
   it.each(routes)('resolves %s to its canonical route', (route, parameters, expected) => {

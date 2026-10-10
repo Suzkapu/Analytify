@@ -85,6 +85,12 @@ export const DESIGN_V2_ROUTES: Routes = [{
       loadComponent: () => import('@features/settings/v2-settings-install.component').then(module => module.V2SettingsInstallComponent)
     },
     {
+      path: 'settings/updates/:id', title: 'Automatic updates | Analytify',
+      data: designV2RouteData('settings', 'Automatic updates', 'full', 'account'),
+      canActivate: [spotifyAuthGuard],
+      loadComponent: () => import('@features/settings/v2-settings-updates.component').then(module => module.V2SettingsUpdateEditorComponent)
+    },
+    {
       path: 'settings', title: 'Settings | Analytify',
       data: designV2RouteData('settings', 'Settings', 'full', 'account'),
       canActivate: [spotifyAuthGuard],
@@ -93,6 +99,7 @@ export const DESIGN_V2_ROUTES: Routes = [{
         {path: '', pathMatch: 'full', redirectTo: 'account'},
         {path: 'account', loadComponent: () => import('@features/settings/v2-settings-account-data.component').then(module => module.V2SettingsAccountComponent)},
         {path: 'notifications', loadComponent: () => import('@features/settings/v2-settings-notifications.component').then(module => module.V2SettingsNotificationsComponent)},
+        {path: 'updates', loadComponent: () => import('@features/settings/v2-settings-updates.component').then(module => module.V2SettingsUpdatesComponent)},
         {path: 'data', loadComponent: () => import('@features/settings/v2-settings-account-data.component').then(module => module.V2SettingsDataComponent)}
       ]
     },

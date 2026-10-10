@@ -15,6 +15,7 @@ export class V2UpdateSettingsController implements OnDestroy {
   readonly loading = signal(false);
   readonly saving = signal(false);
   readonly error = signal('');
+  readonly failedOperation = signal<'load' | 'save' | null>(null);
   readonly validation = signal('');
   readonly saved = signal(false);
   private readonly backend = inject(SupabaseService);
@@ -23,7 +24,10 @@ export class V2UpdateSettingsController implements OnDestroy {
   private revision = 0;
   private destroyed = false;
 
-  select(taskKey: string): void { this.taskKey.set(taskKey); this.draft.set(null); }
+  select(taskKey: string): void {
+    this.revision++; this.taskKey.set(taskKey); this.tasks.set(null); this.draft.set(null);
+    this.loading.set(false); this.saving.set(false); this.error.set(''); this.failedOperation.set(null); this.validation.set(''); this.saved.set(false);
+  }
   changeDraft(changes: Partial<SyncScheduleDraft>): void {
     const draft = this.draft();
     if (!draft || this.saving()) return;
@@ -31,9 +35,9 @@ export class V2UpdateSettingsController implements OnDestroy {
   }
   async reload(): Promise<void> {
     if (this.saving() || this.destroyed) return;
-    const request = this.capture(); this.loading.set(true); this.error.set('');
+    const request = this.capture(); this.loading.set(true); this.error.set(''); this.failedOperation.set(null);
     try { await this.read(request); }
-    catch (error) { if (this.current(request)) this.error.set(this.message(error, 'Automatic updates could not be loaded. Try again.')); }
+    catch (error) { if (this.current(request)) {this.failedOperation.set('load'); this.error.set(this.message(error, 'Automatic updates could not be loaded. Try again.'));} }
     finally { this.finish(request); }
   }
   async save(): Promise<void> {
@@ -43,7 +47,7 @@ export class V2UpdateSettingsController implements OnDestroy {
     this.validation.set(validation || ''); this.saved.set(false);
     if (validation) return;
     const request = this.capture(); const preference = {...draft};
-    this.saving.set(true); this.error.set('');
+    this.saving.set(true); this.error.set(''); this.failedOperation.set(null);
     try {
       const client = await this.backend.getClient();
       if (!this.current(request)) return;
@@ -52,7 +56,7 @@ export class V2UpdateSettingsController implements OnDestroy {
       if (error) throw error;
       await this.read(request, true);
       if (this.current(request)) this.saved.set(true);
-    } catch (error) { if (this.current(request)) this.error.set(this.message(error, 'Your automatic update preference could not be saved. Try again.')); }
+    } catch (error) { if (this.current(request)) {this.failedOperation.set('save'); this.error.set(this.message(error, 'Your automatic update preference could not be saved. Try again.'));} }
     finally { this.finish(request); }
   }
   ngOnDestroy(): void { this.destroyed = true; this.revision++; }
@@ -76,7 +80,7 @@ export class V2UpdateSettingsController implements OnDestroy {
   }
   private finish(request: UpdateRequest): void {
     if (this.destroyed || request.revision !== this.revision) return;
-    if (!this.current(request)) {this.tasks.set(null); this.draft.set(null); this.error.set(''); this.saved.set(false);}
+    if (!this.current(request)) {this.tasks.set(null); this.draft.set(null); this.error.set(''); this.failedOperation.set(null); this.saved.set(false);}
     this.loading.set(false); this.saving.set(false);
   }
   private message(error: unknown, fallback: string): string { return (error as {message?: string} | null)?.message || fallback; }

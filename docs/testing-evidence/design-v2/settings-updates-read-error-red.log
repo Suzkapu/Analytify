@@ -1,0 +1,41 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/settings/v2-settings-updates.component.spec.ts
+Application bundle generation complete. [3.099 seconds] - 2026-10-10T14:30:53.240Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/settings/v2-settings-updates.component.spec.ts (13 tests | 1 failed) 498ms
+     × identifies a failed editor refresh as a read failure while retaining the unsaved draft 38ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-settings-updates.component.spec.ts > canonical Updates routes and draft editor > identifies a failed editor refresh as a read failure while retaining the unsaved draft
+AssertionError: expected 'Changes could not be savedSchedule re…' to contain 'Automatic updates could not be loaded'
+
+Expected: "Automatic updates could not be loaded"
+Received: "Changes could not be savedSchedule read failed"
+
+ ❯ src/app/features/settings/v2-settings-updates.component.spec.ts:76:68
+     74|     const finish = s.holdNextRead(); window.dispatchEvent(new Event('f…
+     75|     finish({data:null,error:new Error('Schedule read failed')}); await…
+     76|     expect(s.panel().querySelector('[role="alert"]')?.textContent).toC…
+       |                                                                    ^
+     77|     expect((s.panel().querySelector('[role="switch"]') as HTMLInputEle…
+     78|     expect(s.panel().textContent).not.toContain('Changes could not be …
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 passed (13)
+   Start at  16:30:53
+   Duration  1.41s (transform 152ms, setup 233ms, import 237ms, tests 498ms, environment 328ms)
+

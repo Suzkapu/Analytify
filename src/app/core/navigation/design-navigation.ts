@@ -27,6 +27,7 @@ export type LogicalRouteId =
   | 'settingsNotifications'
   | 'settingsInstall'
   | 'settingsUpdates'
+  | 'settingsUpdate'
   | 'settingsData'
   | 'settingsNavigation';
 
@@ -65,6 +66,7 @@ const ROUTES: Record<LogicalRouteId, readonly string[]> = {
   settingsNotifications: ['settings', 'notifications'],
   settingsInstall: ['settings', 'install'],
   settingsUpdates: ['settings', 'updates'],
+  settingsUpdate: ['settings', 'updates', ':id'],
   settingsData: ['settings', 'data'],
   settingsNavigation: ['settings', 'navigation']
 };

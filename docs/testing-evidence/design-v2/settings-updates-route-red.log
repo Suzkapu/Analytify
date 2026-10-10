@@ -1,0 +1,49 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/settings/v2-settings-updates.component.spec.ts
+Application bundle generation complete. [3.084 seconds] - 2026-10-10T14:11:17.172Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/settings/v2-settings-updates.component.spec.ts (8 tests | 1 failed) 439ms
+     × drops the previous task draft when navigating between editor routes that reuse the component 26ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-settings-updates.component.spec.ts > canonical Updates routes and draft editor > drops the previous task draft when navigating between editor routes that reuse the component
+AssertionError: expected <input …(4)></input> to be null
+
+- Expected:
+null
+
++ Received:
+<input
+  _ngcontent-a-c2440598044=""
+  aria-label="Automatic updates"
+  role="switch"
+  type="checkbox"
+/>
+
+ ❯ src/app/features/settings/v2-settings-updates.component.spec.ts:69:56
+     67|     (s.panel().querySelector('[role="switch"]') as HTMLInputElement).c…
+     68|     await s.harness.navigateByUrl('/settings/updates/stats_short_term'…
+     69|     expect(s.panel().querySelector('[role="switch"]')).toBeNull();
+       |                                                        ^
+     70|     expect(s.panel().querySelector('h1')?.textContent).toBe('Short-ter…
+     71|     expect(s.panel().textContent).toContain('This update is required');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  16:11:17
+   Duration  1.34s (transform 142ms, setup 223ms, import 234ms, tests 439ms, environment 322ms)
+
