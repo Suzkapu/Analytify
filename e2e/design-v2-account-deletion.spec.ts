@@ -4,6 +4,12 @@ import {writeFile} from 'node:fs/promises';
 
 for (const motion of ['no-preference', 'reduce'] as const) {
   test(`cloud deletion preserves failure recovery and blocks duplicate submissions (${motion})`, async ({page}, info) => {
+    const transitionErrors: string[] = [];
+    const recordTransitionError = (message: string) => {
+      if (/TimeoutError|DOM update timed out/.test(message)) transitionErrors.push(message);
+    };
+    page.on('pageerror', error => recordTransitionError(error.message));
+    page.on('console', message => recordTransitionError(message.text()));
     await page.emulateMedia({reducedMotion: motion});
     await mockSpotify(page);
     const requests: {method: string; table: string; actor: string | null}[] = [];
@@ -48,6 +54,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
     expect(requests).toHaveLength(2);
     expect(requests[1]).toEqual(requests[0]);
     await expect(dialog).toHaveCount(0);
-    await writeFile(info.outputPath('deletion-contract.json'), JSON.stringify({requests, motion, finalPath: new URL(page.url()).pathname}, null, 2));
+    await writeFile(info.outputPath('deletion-contract.json'), JSON.stringify({requests, motion, finalPath: new URL(page.url()).pathname, transitionErrors}, null, 2));
+    expect(transitionErrors).toEqual([]);
   });
 }

@@ -388,6 +388,8 @@ describe('DesignV2ShellComponent', () => {
     shell.requestClearData(); shell.selectClearData('local');
     const pending = shell.confirmLocalClear();
     await shell.confirmLocalClear();
+    shell.requestClearData();
+    shell.selectClearData('cloud');
     shell.closeConfirmation();
     harness.fixture.detectChanges();
     expect(shell.clearDataStep()).toBe('local');
@@ -399,6 +401,29 @@ describe('DesignV2ShellComponent', () => {
     await pending;
     expect(shell.actionRunning()).toBe(false);
     expect(shell.clearDataStep()).toBe('none');
+  });
+
+  it.each(['logout', 'local'] as const)('does not publish obsolete feedback after pending %s navigation', async kind => {
+    const {shell} = await createShell();
+    const cloud = vi.spyOn(shell.authService, 'getSupabaseUserId').mockReturnValue('cloud-a');
+    vi.spyOn(shell.authService, 'isAnonymousCloudIdentity').mockReturnValue(false);
+    const logout = vi.spyOn(shell.authService, 'logout').mockResolvedValue(undefined);
+    const clear = vi.spyOn(shell.authService, 'clearCacheAndLogout').mockResolvedValue(undefined);
+    let completeNavigation!: (result: boolean) => void;
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate')
+      .mockImplementation(() => new Promise<boolean>(resolve => {completeNavigation = resolve;}));
+    if (kind === 'local') {shell.requestClearData(); shell.selectClearData('local');}
+    const pending = kind === 'local' ? shell.confirmLocalClear() : shell.requestLogout();
+    await vi.waitFor(() => expect(navigate).toHaveBeenCalledExactlyOnceWith(['/login']));
+    cloud.mockReturnValue('cloud-b');
+    completeNavigation(false);
+    await pending;
+    expect(logout).toHaveBeenCalledTimes(kind === 'logout' ? 1 : 0);
+    expect(clear).toHaveBeenCalledTimes(kind === 'local' ? 1 : 0);
+    expect(shell.actionError()).toBe('');
+    expect(shell.accountOpen()).toBe(false);
+    expect(shell.actionRunning()).toBe(false);
+    expect(shell.clearDataStep()).toBe(kind === 'local' ? 'local' : 'none');
   });
 
   it('keeps confirmation and conservative feedback if navigation fails after local clearing', async () => {

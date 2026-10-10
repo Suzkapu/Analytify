@@ -22,7 +22,12 @@ export type LogicalRouteId =
   | 'legal'
   | 'spotifyConnect'
   | 'spotifyCallback'
-  | 'spotifyCloudAccess';
+  | 'spotifyCloudAccess'
+  | 'settingsAccount'
+  | 'settingsNotifications'
+  | 'settingsUpdates'
+  | 'settingsData'
+  | 'settingsNavigation';
 
 export interface LogicalRouteParameters {
   id?: string;
@@ -54,7 +59,12 @@ const ROUTES: Record<LogicalRouteId, readonly string[]> = {
   legal: ['legal'],
   spotifyConnect: ['spotify', 'connect'],
   spotifyCallback: ['spotify', 'callback'],
-  spotifyCloudAccess: ['spotify', 'cloud-access']
+  spotifyCloudAccess: ['spotify', 'cloud-access'],
+  settingsAccount: ['settings', 'account'],
+  settingsNotifications: ['settings', 'notifications'],
+  settingsUpdates: ['settings', 'updates'],
+  settingsData: ['settings', 'data'],
+  settingsNavigation: ['settings', 'navigation']
 };
 
 export function resolveDesignRoute(

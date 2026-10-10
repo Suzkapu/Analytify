@@ -1,0 +1,21 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-all-browsers.config.ts e2e/design-v2-account-deletion.spec.ts --project=mobile
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:33628) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33628) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:33813) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33814) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 8:16:10 AM [vite] (client) [console.error] [Analytify][0007][+01189ms][Supabase][ERROR] Failed to delete user profile data {"code":"42501","message":"Isolated deletion denied"}
+[WebServer] 8:16:10 AM [vite] (client) [console.error] [Analytify][0007][+01258ms][Supabase][ERROR] Failed to delete user profile data {"code":"42501","message":"Isolated deletion denied"}
+  ✓  2 [mobile] › e2e/design-v2-account-deletion.spec.ts:6:7 › cloud deletion preserves failure recovery and blocks duplicate submissions (reduce) (5.4s)
+  ✓  1 [mobile] › e2e/design-v2-account-deletion.spec.ts:6:7 › cloud deletion preserves failure recovery and blocks duplicate submissions (no-preference) (5.7s)
+
+  2 passed (19.1s)

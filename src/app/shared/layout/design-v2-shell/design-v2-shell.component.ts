@@ -12,7 +12,8 @@ import {
   inject,
   Injector,
   signal,
-  computed
+  computed,
+  forwardRef
 } from '@angular/core';
 import {ActivatedRoute, ActivationStart, NavigationEnd, Router, RouterLink, RouterOutlet} from '@angular/router';
 import {filter, fromEvent, merge, Subject, Subscription, takeUntil} from 'rxjs';
@@ -36,6 +37,7 @@ import {firstValueFrom} from 'rxjs';
 import {DesignV2OverlayService} from './design-v2-overlay.service';
 import {AdminService} from '@core/admin/admin.service';
 import {AmbientOverlayState} from '@shared/ambient/ambient-background.math';
+import {DESIGN_V2_ACCOUNT_ACTIONS} from './design-v2-account-actions';
 
 interface AccountActionContext {
   userId: string | null;
@@ -72,7 +74,7 @@ const DEFAULT_CONTEXT: DesignV2PageContext = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [RouterLink, RouterOutlet, CommonModule, AccessibleDialogDirective, AmbientBackgroundComponent],
-  providers: [DesignV2OverlayService]
+  providers: [DesignV2OverlayService, {provide: DESIGN_V2_ACCOUNT_ACTIONS, useExisting: forwardRef(() => DesignV2ShellComponent)}]
 })
 export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('mainContent') private mainContent?: ElementRef<HTMLElement>;
@@ -207,6 +209,12 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
     this.actionError.set('');
     if (enabled) this.backupConfirmationOpen.set(true);
     else void this.disableBackup();
+  }
+
+  requestBackupEnable(): void {
+    if (this.actionRunning()) return;
+    this.actionError.set('');
+    this.backupConfirmationOpen.set(true);
   }
 
   private async disableBackup(): Promise<void> {

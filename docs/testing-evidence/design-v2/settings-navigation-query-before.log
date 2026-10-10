@@ -1,0 +1,44 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/shared/ui-v2/v2-settings-navigation.component.spec.ts --progress=false
+Application bundle generation complete. [2.189 seconds] - 2026-10-10T06:22:42.368Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/shared/ui-v2/v2-settings-navigation.component.spec.ts (6 tests | 1 failed) 354ms
+     × keeps the current section selected when its URL has a query or fragment 33ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-settings-navigation.component.spec.ts > canonical Settings navigation > keeps the current section selected when its URL has a query or fragment
+AssertionError: expected undefined to be '/settings/account' // Object.is equality
+
+- Expected:
+"/settings/account"
+
++ Received:
+undefined
+
+ ❯ src/app/shared/ui-v2/v2-settings-navigation.component.spec.ts:59:82
+     57|   it('keeps the current section selected when its URL has a query or f…
+     58|     const {element} = await setup('/settings/account?from=menu#profile…
+     59|     expect(element.querySelector('[aria-current="page"]')?.getAttribut…
+       |                                                                                  ^
+     60|     expect(element.querySelectorAll('[aria-current="page"]')).toHaveLe…
+     61|   });
+ ❯ fulfilled chunk-EFV3TZQO.js:74:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  08:22:42
+   Duration  1.57s (transform 69ms, setup 395ms, import 93ms, tests 354ms, environment 548ms)
+

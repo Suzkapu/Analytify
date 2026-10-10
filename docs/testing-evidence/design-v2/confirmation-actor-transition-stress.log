@@ -1,0 +1,33 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-all-browsers.config.ts e2e/design-v2-account-deletion.spec.ts --project=mobile --grep=no-preference --repeat-each=5
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:34413) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:34413) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 5 tests using 2 workers
+
+(node:34586) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34585) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 8:17:03 AM [vite] (client) [console.error] [Analytify][0007][+01633ms][Supabase][ERROR] Failed to delete user profile data {"code":"42501","message":"Isolated deletion denied"}
+[WebServer] 8:17:03 AM [vite] (client) [console.error] [Analytify][0007][+01721ms][Supabase][ERROR] Failed to delete user profile data {"code":"42501","message":"Isolated deletion denied"}
+  ✓  1 [mobile] › e2e/design-v2-account-deletion.spec.ts:6:7 › cloud deletion preserves failure recovery and blocks duplicate submissions (no-preference) (9.4s)
+  ✓  2 [mobile] › e2e/design-v2-account-deletion.spec.ts:6:7 › cloud deletion preserves failure recovery and blocks duplicate submissions (no-preference) (10.1s)
+(node:35188) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35211) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 8:17:17 AM [vite] (client) [console.error] [Analytify][0007][+02218ms][Supabase][ERROR] Failed to delete user profile data {"code":"42501","message":"Isolated deletion denied"}
+[WebServer] 8:17:18 AM [vite] (client) [console.error] [Analytify][0007][+00983ms][Supabase][ERROR] Failed to delete user profile data {"code":"42501","message":"Isolated deletion denied"}
+  ✓  3 [mobile] › e2e/design-v2-account-deletion.spec.ts:6:7 › cloud deletion preserves failure recovery and blocks duplicate submissions (no-preference) (10.2s)
+  ✓  4 [mobile] › e2e/design-v2-account-deletion.spec.ts:6:7 › cloud deletion preserves failure recovery and blocks duplicate submissions (no-preference) (9.6s)
+(node:35982) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 8:17:24 AM [vite] (client) [console.error] [Analytify][0007][+00868ms][Supabase][ERROR] Failed to delete user profile data {"code":"42501","message":"Isolated deletion denied"}
+  ✓  5 [mobile] › e2e/design-v2-account-deletion.spec.ts:6:7 › cloud deletion preserves failure recovery and blocks duplicate submissions (no-preference) (4.9s)
+
+  5 passed (40.5s)

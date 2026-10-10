@@ -1,0 +1,117 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/shared/ui-v2/v2-settings-navigation.component.spec.ts --progress=false
+Application bundle generation complete. [2.243 seconds] - 2026-10-10T06:21:17.963Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/shared/ui-v2/v2-settings-navigation.component.spec.ts (5 tests | 5 failed) 151ms
+     × exposes native destination links with exactly one current page 100ms
+     × navigates and updates the selected destination without manufacturing a tab state 15ms
+     × keeps one accessible notification name while offering the compact mobile label 11ms
+     × opens the legal row through the router and leaves service data untouched 11ms
+     × opens Spotify access as a protected external link without changing the application route 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-settings-navigation.component.spec.ts > canonical Settings navigation > exposes native destination links with exactly one current page
+AssertionError: expected null not to be null
+ ❯ src/app/shared/ui-v2/v2-settings-navigation.component.spec.ts:40:21
+     38|     const {element} = await setup();
+     39|     const nav = element.querySelector('nav[aria-label="Settings sectio…
+     40|     expect(nav).not.toBeNull();
+       |                     ^
+     41|     expect([...nav.querySelectorAll('a')].map(a => a.getAttribute('hre…
+     42|       .toEqual(['/settings/account', '/settings/notifications', '/sett…
+ ❯ fulfilled chunk-EFV3TZQO.js:74:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-settings-navigation.component.spec.ts > canonical Settings navigation > navigates and updates the selected destination without manufacturing a tab state
+TypeError: Cannot read properties of null (reading 'click')
+ ❯ src/app/shared/ui-v2/v2-settings-navigation.component.spec.ts:50:63
+     48|   it('navigates and updates the selected destination without manufactu…
+     49|     const {harness, element, router} = await setup();
+     50|     (element.querySelector('a[href="/settings/notifications"]') as HTM…
+       |                                                               ^
+     51|     await harness.fixture.whenStable(); harness.fixture.detectChanges(…
+     52|     expect(router.url).toBe('/settings/notifications');
+ ❯ fulfilled chunk-EFV3TZQO.js:74:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-settings-navigation.component.spec.ts > canonical Settings navigation > keeps one accessible notification name while offering the compact mobile label
+TypeError: Cannot read properties of null (reading 'getAttribute')
+ ❯ src/app/shared/ui-v2/v2-settings-navigation.component.spec.ts:60:17
+     58|     const {element} = await setup();
+     59|     const link = element.querySelector('a[href="/settings/notification…
+     60|     expect(link.getAttribute('aria-label')).toBe('Notifications');
+       |                 ^
+     61|     expect(link.querySelector('.v2-settings-navigation__mobile-label')…
+     62|     const icons = element.querySelectorAll('nav img');
+ ❯ fulfilled chunk-EFV3TZQO.js:74:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-settings-navigation.component.spec.ts > canonical Settings navigation > opens the legal row through the router and leaves service data untouched
+TypeError: Cannot read properties of null (reading 'textContent')
+ ❯ src/app/shared/ui-v2/v2-settings-navigation.component.spec.ts:70:16
+     68|     const {harness, element, router} = await setup();
+     69|     const row = element.querySelector('v2-destination-row a[href="/leg…
+     70|     expect(row.textContent).toContain('Legal & privacy');
+       |                ^
+     71|     expect(row.getAttribute('target')).toBeNull(); row.click();
+     72|     await harness.fixture.whenStable(); expect(router.url).toBe('/lega…
+ ❯ fulfilled chunk-EFV3TZQO.js:74:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-settings-navigation.component.spec.ts > canonical Settings navigation > opens Spotify access as a protected external link without changing the application route
+TypeError: Cannot read properties of null (reading 'textContent')
+ ❯ src/app/shared/ui-v2/v2-settings-navigation.component.spec.ts:78:17
+     76|     const {element, router} = await setup();
+     77|     const link = element.querySelector('a[href="https://www.spotify.co…
+     78|     expect(link.textContent).toContain('Spotify connection');
+       |                 ^
+     79|     expect(link.getAttribute('target')).toBe('_blank');
+     80|     expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+ ❯ fulfilled chunk-EFV3TZQO.js:74:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  08:21:18
+   Duration  1.40s (transform 62ms, setup 394ms, import 88ms, tests 151ms, environment 571ms)
+
