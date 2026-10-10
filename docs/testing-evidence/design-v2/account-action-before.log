@@ -1,0 +1,127 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts
+Application bundle generation complete. [2.717 seconds] - 2026-10-09T18:54:12.740Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > does not log out or navigate a replacement session after pending cloud deletion (spotify)
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:2 (2.117.2) 2026-10-09T18:54:14.215Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > does not log out or navigate a replacement session after pending cloud deletion (cloud)
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:3 (2.117.2) 2026-10-09T18:54:14.251Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > does not log out or navigate a replacement session after pending cloud deletion (generation)
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:4 (2.117.2) 2026-10-09T18:54:14.294Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > does not log out or navigate a replacement session after pending cloud deletion (destroy)
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:5 (2.117.2) 2026-10-09T18:54:14.360Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > does not publish a previous account deletion failure into the replacement account
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:6 (2.117.2) 2026-10-09T18:54:14.447Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > does not navigate a replacement account after the original logout is already pending
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:8 (2.117.2) 2026-10-09T18:54:14.534Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+ ❯ |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts (41 tests | 6 failed) 2086ms
+     × does not log out or navigate a replacement session after pending cloud deletion (spotify) 38ms
+     × does not log out or navigate a replacement session after pending cloud deletion (cloud) 41ms
+     × does not log out or navigate a replacement session after pending cloud deletion (generation) 39ms
+     × does not log out or navigate a replacement session after pending cloud deletion (destroy) 83ms
+     × does not publish a previous account deletion failure into the replacement account 72ms
+     × does not navigate a replacement account after the original logout is already pending 99ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > does not log out or navigate a replacement session after pending cloud deletion (spotify)
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > does not log out or navigate a replacement session after pending cloud deletion (cloud)
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > does not log out or navigate a replacement session after pending cloud deletion (generation)
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > does not log out or navigate a replacement session after pending cloud deletion (destroy)
+AssertionError: expected "logout" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st logout call:
+
+    Array []
+
+
+Number of calls: 1
+
+ ❯ src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts:71:24
+     69|     if (replacement === 'destroy') harness.fixture.destroy();
+     70|     finish(); await pending;
+     71|     expect(logout).not.toHaveBeenCalled();
+       |                        ^
+     72|     expect(navigate).not.toHaveBeenCalled();
+     73|     expect(shell.actionError()).toBe('');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > does not publish a previous account deletion failure into the replacement account
+AssertionError: expected 'This action did not finish. Some step…' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ This action did not finish. Some steps may already have completed. Please refresh before trying again.
+
+ ❯ src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts:89:33
+     87|     fail(new Error('Account A deletion failed')); await pending;
+     88|     expect(logout).not.toHaveBeenCalled(); expect(navigate).not.toHave…
+     89|     expect(shell.actionError()).toBe(''); expect(shell.actionRunning()…
+       |                                 ^
+     90|   });
+     91|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > does not navigate a replacement account after the original logout is already pending
+AssertionError: expected "navigate" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st navigate call:
+
+    Array [
+      Array [
+        "/login",
+      ],
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts:120:26
+    118|     await vi.waitFor(() => expect(logout).toHaveBeenCalledOnce());
+    119|     cloud.mockReturnValue('cloud-b'); finish(); await pending;
+    120|     expect(navigate).not.toHaveBeenCalled(); expect(shell.actionError(…
+       |                          ^
+    121|     expect(shell.actionRunning()).toBe(false);
+    122|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 35 passed (41)
+   Start at  20:54:12
+   Duration  2.99s (transform 201ms, setup 240ms, import 243ms, tests 2.09s, environment 305ms)
+

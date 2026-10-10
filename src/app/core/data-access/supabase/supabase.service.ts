@@ -1447,15 +1447,14 @@ export class SupabaseService {
     }
   }
 
-  async deleteUserCacheEntries(supabaseUserId: string, keys: string[]): Promise<void> {
+  async deleteUserCacheEntries(supabaseUserId: string, keys: string[], signal?: AbortSignal): Promise<void> {
     const uniqueKeys = Array.from(new Set(keys.filter(Boolean)));
     if (uniqueKeys.length === 0) return;
 
-    const { error } = await (await this.getClient())
-      .from('user_cache')
-      .delete()
-      .eq('user_id', supabaseUserId)
-      .in('key', uniqueKeys);
+    const client = await this.getClient();
+    if (signal?.aborted) throw signal.reason;
+    const query = client.from('user_cache').delete().eq('user_id', supabaseUserId).in('key', uniqueKeys);
+    const { error } = await (signal ? query.abortSignal(signal) : query);
     if (error) throw error;
   }
 

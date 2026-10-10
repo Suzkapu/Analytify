@@ -9,6 +9,7 @@ import {designV2RouteData} from '@core/navigation/design-v2-route-data';
 import {DesignV2ShellComponent} from './design-v2-shell.component';
 import {AmbientBackgroundComponent} from '@shared/ambient/ambient-background.component';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
+import {SessionLifecycleService} from '@core/auth/session-lifecycle.service';
 
 @Component({standalone: true, template: '<h1>Playlists</h1>'})
 class PlaylistsStubComponent {}
@@ -28,7 +29,7 @@ describe('DesignV2ShellComponent', () => {
     vi.spyOn(shell.authService, 'getSupabaseUserId').mockReturnValue(null);
     const deletion = vi.spyOn(TestBed.inject(SupabaseService), 'deleteUserProfileData').mockResolvedValue(undefined);
     const logout = vi.spyOn(shell.authService, 'logout').mockResolvedValue(undefined);
-    shell.clearDataStep.set('cloud');
+    shell.requestClearData(); shell.selectClearData('cloud');
     await shell.confirmCloudClear();
     expect(deletion).not.toHaveBeenCalled();
     expect(logout).not.toHaveBeenCalled();
@@ -43,11 +44,199 @@ describe('DesignV2ShellComponent', () => {
     const deletion = vi.spyOn(TestBed.inject(SupabaseService), 'deleteUserProfileData').mockImplementation(async () => {sequence.push('delete');});
     vi.spyOn(shell.authService, 'logout').mockImplementation(async () => {sequence.push('logout');});
     vi.spyOn(TestBed.inject(Router), 'navigate').mockImplementation(async () => {sequence.push('navigate'); return true;});
-    shell.clearDataStep.set('cloud');
+    shell.requestClearData(); shell.selectClearData('cloud');
     await shell.confirmCloudClear();
     expect(deletion).toHaveBeenCalledExactlyOnceWith('current-user');
     expect(sequence).toEqual(['delete', 'logout', 'navigate']);
     expect(shell.clearDataStep()).toBe('none');
+  });
+
+  it.each(['spotify', 'cloud', 'generation', 'destroy'])('does not log out or navigate a replacement session after pending cloud deletion (%s)', async replacement => {
+    const {shell, harness} = await createShell();
+    const spotify = vi.spyOn(shell.authService, 'getUserId').mockReturnValue('actor-a');
+    const cloud = vi.spyOn(shell.authService, 'getSupabaseUserId').mockReturnValue('cloud-a');
+    let finish!: () => void;
+    const deletion = vi.spyOn(TestBed.inject(SupabaseService), 'deleteUserProfileData')
+      .mockImplementation(() => new Promise<void>(resolve => {finish = resolve;}));
+    const logout = vi.spyOn(shell.authService, 'logout').mockResolvedValue(undefined);
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    shell.requestClearData(); shell.selectClearData('cloud');
+    const pending = shell.confirmCloudClear();
+    expect(deletion).toHaveBeenCalledExactlyOnceWith('cloud-a');
+    if (replacement === 'spotify') spotify.mockReturnValue('actor-b');
+    if (replacement === 'cloud') cloud.mockReturnValue('cloud-b');
+    if (replacement === 'generation') await TestBed.inject(SessionLifecycleService).invalidateAndDrain();
+    if (replacement === 'destroy') harness.fixture.destroy();
+    finish(); await pending;
+    expect(logout).not.toHaveBeenCalled();
+    expect(navigate).not.toHaveBeenCalled();
+    expect(shell.actionError()).toBe('');
+  });
+
+  it('does not publish a previous account deletion failure into the replacement account', async () => {
+    const {shell} = await createShell();
+    const cloud = vi.spyOn(shell.authService, 'getSupabaseUserId').mockReturnValue('cloud-a');
+    let fail!: (error: Error) => void;
+    vi.spyOn(TestBed.inject(SupabaseService), 'deleteUserProfileData')
+      .mockImplementation(() => new Promise<void>((_, reject) => {fail = reject;}));
+    const logout = vi.spyOn(shell.authService, 'logout').mockResolvedValue(undefined);
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    shell.requestClearData(); shell.selectClearData('cloud');
+    const pending = shell.confirmCloudClear();
+    cloud.mockReturnValue('cloud-b');
+    fail(new Error('Account A deletion failed')); await pending;
+    expect(logout).not.toHaveBeenCalled(); expect(navigate).not.toHaveBeenCalled();
+    expect(shell.actionError()).toBe(''); expect(shell.actionRunning()).toBe(false);
+  });
+
+  it('still finishes its own logout when logout invalidates the generation and clears identity', async () => {
+    const {shell} = await createShell();
+    const spotify = vi.spyOn(shell.authService, 'getUserId').mockReturnValue('actor-a');
+    const cloud = vi.spyOn(shell.authService, 'getSupabaseUserId').mockReturnValue('cloud-a');
+    const lifecycle = TestBed.inject(SessionLifecycleService);
+    vi.spyOn(TestBed.inject(SupabaseService), 'deleteUserProfileData').mockResolvedValue(undefined);
+    vi.spyOn(shell.authService, 'logout').mockImplementation(async () => {
+      shell.authService.logout$.next();
+      await lifecycle.invalidateAndDrain();
+      spotify.mockReturnValue(null); cloud.mockReturnValue(null);
+    });
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    shell.requestClearData(); shell.selectClearData('cloud'); await shell.confirmCloudClear();
+    expect(navigate).toHaveBeenCalledExactlyOnceWith(['/login']);
+    expect(shell.clearDataStep()).toBe('none'); expect(shell.actionRunning()).toBe(false);
+    expect(shell.actionError()).toBe('');
+  });
+
+  it('does not navigate a replacement account after the original logout is already pending', async () => {
+    const {shell} = await createShell();
+    const cloud = vi.spyOn(shell.authService, 'getSupabaseUserId').mockReturnValue('cloud-a');
+    vi.spyOn(TestBed.inject(SupabaseService), 'deleteUserProfileData').mockResolvedValue(undefined);
+    let finish!: () => void;
+    const logout = vi.spyOn(shell.authService, 'logout').mockImplementation(() => new Promise<void>(resolve => {finish = resolve;}));
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    shell.requestClearData(); shell.selectClearData('cloud'); const pending = shell.confirmCloudClear();
+    await vi.waitFor(() => expect(logout).toHaveBeenCalledOnce());
+    cloud.mockReturnValue('cloud-b'); finish(); await pending;
+    expect(navigate).not.toHaveBeenCalled(); expect(shell.actionError()).toBe('');
+    expect(shell.actionRunning()).toBe(false);
+  });
+
+  it.each(['success', 'failure', 'replacement'])('uses the real profile deletion adapter with an isolated database boundary (%s)', async outcome => {
+    let complete!: (result: {error: Error | null}) => void;
+    const eq = vi.fn(() => new Promise<{error: Error | null}>(resolve => {complete = resolve;}));
+    const remove = vi.fn(() => ({eq}));
+    const from = vi.fn(() => ({delete: remove}));
+    const client = {from, rpc: async () => ({data: false, error: null})};
+    vi.spyOn(TestBed.inject(SupabaseService), 'getClient')
+      .mockResolvedValue(client as unknown as Awaited<ReturnType<SupabaseService['getClient']>>);
+    const {shell} = await createShell();
+    const cloud = vi.spyOn(shell.authService, 'getSupabaseUserId').mockReturnValue('isolated-cloud-a');
+    const logout = vi.spyOn(shell.authService, 'logout').mockResolvedValue(undefined);
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    shell.requestClearData(); shell.selectClearData('cloud'); const pending = shell.confirmCloudClear();
+    await vi.waitFor(() => expect(eq).toHaveBeenCalledExactlyOnceWith('id', 'isolated-cloud-a'));
+    expect(from).toHaveBeenCalledExactlyOnceWith('users'); expect(remove).toHaveBeenCalledOnce();
+    expect(logout).not.toHaveBeenCalled(); expect(navigate).not.toHaveBeenCalled();
+    if (outcome === 'replacement') cloud.mockReturnValue('isolated-cloud-b');
+    complete({error: outcome === 'failure' ? new Error('Isolated deletion denied') : null}); await pending;
+    if (outcome === 'success') {
+      expect(logout).toHaveBeenCalledOnce(); expect(navigate).toHaveBeenCalledExactlyOnceWith(['/login']);
+      expect(shell.clearDataStep()).toBe('none'); expect(shell.actionError()).toBe('');
+    } else {
+      expect(logout).not.toHaveBeenCalled(); expect(navigate).not.toHaveBeenCalled();
+      expect(shell.actionError()).toBe(outcome === 'failure'
+        ? 'This action did not finish. Some steps may already have completed. Please refresh before trying again.' : '');
+    }
+    expect(shell.actionRunning()).toBe(false);
+  });
+
+  it.each(['resolve', 'reject'])('keeps a replacement account usable after a pending direct logout %s', async outcome => {
+    const {shell} = await createShell();
+    const cloud = vi.spyOn(shell.authService, 'getSupabaseUserId').mockReturnValue('cloud-a');
+    vi.spyOn(shell.authService, 'isAnonymousCloudIdentity').mockReturnValue(false);
+    let finish!: () => void, fail!: (error: Error) => void;
+    vi.spyOn(shell.authService, 'logout').mockImplementation(() => new Promise<void>((resolve, reject) => {finish = resolve; fail = reject;}));
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    const pending = shell.requestLogout(); cloud.mockReturnValue('cloud-b');
+    if (outcome === 'resolve') finish(); else fail(new Error('Previous logout failed'));
+    await pending;
+    expect(navigate).not.toHaveBeenCalled(); expect(shell.accountOpen()).toBe(false);
+    expect(shell.actionError()).toBe(''); expect(shell.actionRunning()).toBe(false);
+  });
+
+  it.each((['local', 'cloud', 'guest'] as const).flatMap(kind =>
+    ['spotify', 'cloud', 'generation'].map(replacement => ({kind, replacement}))))('rejects the displayed $kind confirmation after $replacement changes', async ({kind, replacement}) => {
+    const {shell, harness} = await createShell();
+    const spotify = vi.spyOn(shell.authService, 'getUserId').mockReturnValue('actor-a');
+    const cloud = vi.spyOn(shell.authService, 'getSupabaseUserId').mockReturnValue('cloud-a');
+    vi.spyOn(shell.authService, 'isAnonymousCloudIdentity').mockReturnValue(kind === 'guest');
+    const deletion = vi.spyOn(TestBed.inject(SupabaseService), 'deleteUserProfileData').mockResolvedValue(undefined);
+    const logout = vi.spyOn(shell.authService, 'logout').mockResolvedValue(undefined);
+    const clear = vi.spyOn(shell.authService, 'clearCacheAndLogout').mockResolvedValue(undefined);
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    const click = (text: string) => {
+      const button = [...(harness.fixture.nativeElement as HTMLElement).querySelectorAll('button')]
+        .find(item => item.textContent?.trim() === text);
+      expect(button).toBeDefined(); button!.click(); harness.fixture.detectChanges();
+    };
+    const open = () => {
+      shell.toggleAccount(); harness.fixture.detectChanges();
+      click(kind === 'guest' ? 'Log out' : 'Clear data');
+      if (kind !== 'guest') {
+        const label = kind === 'local' ? 'Clear this browser and log out' : 'Delete cloud data and leave shared features';
+        const button = [...(harness.fixture.nativeElement as HTMLElement).querySelectorAll('button')]
+          .find(item => item.querySelector('strong')?.textContent === label)!;
+        button.click(); harness.fixture.detectChanges();
+      }
+    };
+    const confirm = kind === 'local' ? 'Clear and log out' : kind === 'cloud' ? 'Delete cloud data' : 'Delete and log out';
+    // Replace the authorization context only after its confirmation is shown.
+      spotify.mockReturnValue('actor-a'); cloud.mockReturnValue('cloud-a'); open();
+      expect(shell.clearDataStep()).toBe(kind);
+      if (replacement === 'spotify') spotify.mockReturnValue('actor-b');
+      if (replacement === 'cloud') cloud.mockReturnValue('cloud-b');
+      if (replacement === 'generation') await TestBed.inject(SessionLifecycleService).invalidateAndDrain();
+      click(confirm); await harness.fixture.whenStable();
+      expect(deletion).not.toHaveBeenCalled(); expect(logout).not.toHaveBeenCalled(); expect(clear).not.toHaveBeenCalled();
+      expect(navigate).not.toHaveBeenCalled(); expect(shell.actionRunning()).toBe(false);
+      expect(shell.clearDataStep()).toBe('none');
+  });
+
+  it.each(['local', 'cloud', 'guest'] as const)('refuses %s data effects when no confirmation was opened', async kind => {
+    const {shell} = await createShell();
+    vi.spyOn(shell.authService, 'getSupabaseUserId').mockReturnValue('cloud-a');
+    const deletion = vi.spyOn(TestBed.inject(SupabaseService), 'deleteUserProfileData').mockResolvedValue(undefined);
+    const logout = vi.spyOn(shell.authService, 'logout').mockResolvedValue(undefined);
+    const clear = vi.spyOn(shell.authService, 'clearCacheAndLogout').mockResolvedValue(undefined);
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    if (kind === 'local') await shell.confirmLocalClear();
+    if (kind === 'cloud') await shell.confirmCloudClear();
+    if (kind === 'guest') await shell.confirmGuestLogout();
+    expect(deletion).not.toHaveBeenCalled(); expect(logout).not.toHaveBeenCalled(); expect(clear).not.toHaveBeenCalled();
+    expect(navigate).not.toHaveBeenCalled(); expect(shell.clearDataStep()).toBe('none');
+  });
+
+  it.each(['choose', 'local'] as const)('does not recapture a replacement actor while moving from %s', async step => {
+    const {shell} = await createShell();
+    const cloud = vi.spyOn(shell.authService, 'getSupabaseUserId').mockReturnValue('cloud-a');
+    shell.requestClearData(); if (step === 'local') shell.selectClearData('local');
+    cloud.mockReturnValue('cloud-b'); shell.selectClearData(step === 'choose' ? 'cloud' : 'choose');
+    expect(shell.clearDataStep()).toBe('none');
+    const deletion = vi.spyOn(TestBed.inject(SupabaseService), 'deleteUserProfileData').mockResolvedValue(undefined);
+    await shell.confirmCloudClear(); expect(deletion).not.toHaveBeenCalled();
+  });
+
+  it('uses fresh consent for the new account after cancellation and reopening', async () => {
+    const {shell} = await createShell();
+    const cloud = vi.spyOn(shell.authService, 'getSupabaseUserId').mockReturnValue('cloud-a');
+    shell.requestClearData(); shell.selectClearData('cloud'); shell.closeConfirmation();
+    cloud.mockReturnValue('cloud-b'); shell.requestClearData(); shell.selectClearData('cloud');
+    const deletion = vi.spyOn(TestBed.inject(SupabaseService), 'deleteUserProfileData').mockResolvedValue(undefined);
+    const logout = vi.spyOn(shell.authService, 'logout').mockResolvedValue(undefined);
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    await shell.confirmCloudClear();
+    expect(deletion).toHaveBeenCalledExactlyOnceWith('cloud-b'); expect(logout).toHaveBeenCalledOnce();
+    expect(navigate).toHaveBeenCalledExactlyOnceWith(['/login']); expect(shell.clearDataStep()).toBe('none');
   });
 
   it('executes anonymous logout only after the explicit confirmation', async () => {
@@ -196,7 +385,7 @@ describe('DesignV2ShellComponent', () => {
     let finish!: () => void;
     const clear = vi.spyOn(shell.authService, 'clearCacheAndLogout').mockImplementation(() => new Promise<void>(resolve => {finish = resolve;}));
     vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
-    shell.clearDataStep.set('local');
+    shell.requestClearData(); shell.selectClearData('local');
     const pending = shell.confirmLocalClear();
     await shell.confirmLocalClear();
     shell.closeConfirmation();
@@ -216,7 +405,7 @@ describe('DesignV2ShellComponent', () => {
     const {harness, shell} = await createShell();
     vi.spyOn(shell.authService, 'clearCacheAndLogout').mockResolvedValue(undefined);
     vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(false);
-    shell.clearDataStep.set('local');
+    shell.requestClearData(); shell.selectClearData('local');
     await shell.confirmLocalClear();
     harness.fixture.detectChanges();
     expect(shell.clearDataStep()).toBe('local');
@@ -230,7 +419,7 @@ describe('DesignV2ShellComponent', () => {
     vi.spyOn(shell.authService, 'getSupabaseUserId').mockReturnValue('cloud-user');
     const deletion = vi.spyOn(TestBed.inject(SupabaseService), 'deleteUserProfileData').mockRejectedValue(new Error('Deletion failed'));
     const logout = vi.spyOn(shell.authService, 'logout').mockResolvedValue(undefined);
-    shell.clearDataStep.set('cloud');
+    shell.requestClearData(); shell.selectClearData('cloud');
     await shell.confirmCloudClear();
     expect(deletion).toHaveBeenCalledWith('cloud-user');
     expect(logout).not.toHaveBeenCalled();
@@ -450,7 +639,7 @@ describe('DesignV2ShellComponent', () => {
     await shell.enableBackup();
     expect(enable).toHaveBeenCalledOnce();
 
-    shell.clearDataStep.set('local');
+    shell.requestClearData(); shell.selectClearData('local');
     await shell.confirmLocalClear();
     expect(clear).toHaveBeenCalledOnce();
     expect(shell.clearDataStep()).toBe('none');

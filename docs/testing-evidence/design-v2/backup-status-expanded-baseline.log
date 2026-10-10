@@ -1,0 +1,127 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/auth/backup-status-boundary.spec.ts
+Application bundle generation complete. [2.692 seconds] - 2026-10-09T19:18:56.044Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/core/auth/backup-status-boundary.spec.ts (9 tests | 6 failed) 945ms
+     × rejects a late successful read after spotify replacement 165ms
+     × rejects a late successful read after cloud replacement 155ms
+     × rejects a late successful read after generation replacement 158ms
+     × aborts the actual pending status transport when the session ends 55ms
+     × cancels pending normalized-cache cleanup on session end 105ms
+     × allows logout to drain initial sync by aborting its transport 66ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/backup-status-boundary.spec.ts > backup status through real Supabase SDK transport and session boundaries > rejects a late successful read after spotify replacement
+ FAIL  |SpotiFront| src/app/core/auth/backup-status-boundary.spec.ts > backup status through real Supabase SDK transport and session boundaries > rejects a late successful read after cloud replacement
+ FAIL  |SpotiFront| src/app/core/auth/backup-status-boundary.spec.ts > backup status through real Supabase SDK transport and session boundaries > rejects a late successful read after generation replacement
+AssertionError: expected [ { …(5) } ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/app/core/auth/backup-status-boundary.spec.ts:91:63
+     89|       expect(settled).toBe(true);
+     90|     });
+     91|     expect(requests.filter(item => item.method === 'DELETE')).toHaveLe…
+       |                                                               ^
+     92|     expect(values.get('cloud-a_backup_active')).toBe('false');
+     93|     expect(values.has('cloud-a_last_synced_at')).toBe(false);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/backup-status-boundary.spec.ts > backup status through real Supabase SDK transport and session boundaries > aborts the actual pending status transport when the session ends
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/app/core/auth/backup-status-boundary.spec.ts:102:21
+    100|     const aborted = request.aborted;
+    101|     request.complete(null); await pending;
+    102|     expect(aborted).toBe(true);
+       |                     ^
+    103|     expect(requests.filter(item => item.method === 'DELETE')).toHaveLe…
+    104|     expect(values.get('cloud-a_backup_active')).toBe('false');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/backup-status-boundary.spec.ts > backup status through real Supabase SDK transport and session boundaries > cancels pending normalized-cache cleanup on session end
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/app/core/auth/backup-status-boundary.spec.ts:114:21
+    112|     await lifecycle.invalidateAndDrain(); const aborted = cleanup.abor…
+    113|     cleanup.complete(null, 204); await pending;
+    114|     expect(aborted).toBe(true);
+       |                     ^
+    115|     expect(requests.filter(item => item.method === 'DELETE')).toHaveLe…
+    116|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/backup-status-boundary.spec.ts > backup status through real Supabase SDK transport and session boundaries > allows logout to drain initial sync by aborting its transport
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/app/core/auth/backup-status-boundary.spec.ts:126:21
+    124|     const aborted = request.aborted;
+    125|     request.complete(null); await rejected; await exit;
+    126|     expect(aborted).toBe(true);
+       |                     ^
+    127|     expect(auth.getUserId()).toBeNull(); expect(auth.getSupabaseUserId…
+    128|     expect(requests.filter(item => item.method === 'DELETE')).toHaveLe…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 3 passed (9)
+   Start at  21:18:56
+   Duration  1.85s (transform 134ms, setup 282ms, import 137ms, tests 945ms, environment 361ms)
+

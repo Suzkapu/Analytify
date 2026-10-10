@@ -104,7 +104,7 @@ export class SpotifyAuthService {
 
     // Complete cloud hydration before feature pages evaluate their local cache.
     // The promise is shared for the whole app session, so this runs only once.
-    await this.syncBackupActiveStatus().catch(err => {
+    await this.syncBackupActiveStatus(generation).catch(err => {
       console.warn('[Auth] Initial sync failed:', err);
     });
     this.assertCurrentSession(generation);
@@ -816,6 +816,7 @@ export class SpotifyAuthService {
     // Stop subscriptions and timers before waiting for in-flight generation A.
     this.logout$.next();
     await this.sessionLifecycle.invalidateAndDrain();
+    this.initialSyncPromise = null;
     const supabaseUserId = this.getSupabaseUserId();
     await this.unlinkCurrentPushDevice();
     if (this.isAnonymousCloudIdentity()) {
@@ -848,6 +849,7 @@ export class SpotifyAuthService {
   async clearCacheAndLogout(): Promise<void> {
     this.logout$.next();
     await this.sessionLifecycle.invalidateAndDrain();
+    this.initialSyncPromise = null;
     await this.unlinkCurrentPushDevice();
     if (this.isAnonymousCloudIdentity()) {
       await this.deleteAnonymousCloudAccount();
@@ -885,16 +887,22 @@ export class SpotifyAuthService {
     return this.storageService.getItem(`${userId}_backup_active`) === 'true';
   }
 
-  async syncBackupActiveStatus(): Promise<void> {
+  async syncBackupActiveStatus(generation = this.sessionLifecycle.capture()): Promise<void> {
     const supabaseUserId = this.getSupabaseUserId();
     if (supabaseUserId) {
       const spotifyId = this.getUserId();
-      const { data, error } = await (await this.supabaseService.getClient())
+      const isCurrent = () => this.sessionLifecycle.isCurrent(generation)
+        && this.getUserId() === spotifyId && this.getSupabaseUserId() === supabaseUserId;
+      const client = await this.supabaseService.getClient();
+      if (!isCurrent()) return;
+      const { data, error } = await client
         .from('users')
         .select('backup_active, last_synced_at')
         .eq('id', supabaseUserId)
+        .abortSignal(generation.signal)
         .maybeSingle();
 
+      if (!isCurrent()) return;
       if (error) {
         console.warn('[SpotifyAuthService] Failed to check backup and sync status:', error);
       } else if (data) {
@@ -922,8 +930,10 @@ export class SpotifyAuthService {
         }
         await this.supabaseService.deleteUserCacheEntries(
           supabaseUserId,
-          redundantCacheKeys
+          redundantCacheKeys,
+          generation.signal
         ).catch(err => {
+          if (!isCurrent()) return;
           console.warn('[SpotifyAuthService] Failed to clean redundant normalized cache keys:', err);
         });
       }

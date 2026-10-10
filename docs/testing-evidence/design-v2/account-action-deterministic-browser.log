@@ -1,0 +1,77 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-all-browsers.config.ts e2e/design-v2-account-deletion.spec.ts e2e/design-v2-shell-account-boundary.spec.ts e2e/design-v2-account-scope.spec.ts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:135498) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:135498) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 40 tests using 2 workers
+
+(node:135639) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:135640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 9:11:56 PM [vite] (client) [console.error] [Analytify][0007][+01277ms][Supabase][ERROR] Failed to delete user profile data {"code":"42501","message":"Isolated deletion denied"}
+[WebServer] 9:11:56 PM [vite] (client) [console.error] [Analytify][0007][+01266ms][Supabase][ERROR] Failed to delete user profile data {"code":"42501","message":"Isolated deletion denied"}
+  ✓   2 [desktop] › e2e/design-v2-account-deletion.spec.ts:6:7 › cloud deletion preserves failure recovery and blocks duplicate submissions (reduce) (4.9s)
+  ✓   1 [desktop] › e2e/design-v2-account-deletion.spec.ts:6:7 › cloud deletion preserves failure recovery and blocks duplicate submissions (no-preference) (5.4s)
+  ✓   3 [desktop] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=false, no-preference) (5.8s)
+  ✓   4 [desktop] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=false, reduce) (6.2s)
+  ✓   5 [desktop] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=true, no-preference) (7.3s)
+  ✓   6 [desktop] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=true, reduce) (7.7s)
+  ✓   7 [desktop] › e2e/design-v2-shell-account-boundary.spec.ts:6:7 › public navigation rejects delayed account success and reloads on return (no-preference) (7.3s)
+  ✓   8 [desktop] › e2e/design-v2-shell-account-boundary.spec.ts:6:7 › public navigation rejects delayed account failure and reloads on return (no-preference) (6.9s)
+  ✓   9 [desktop] › e2e/design-v2-shell-account-boundary.spec.ts:6:7 › public navigation rejects delayed account success and reloads on return (reduce) (5.9s)
+  ✓  10 [desktop] › e2e/design-v2-shell-account-boundary.spec.ts:6:7 › public navigation rejects delayed account failure and reloads on return (reduce) (5.5s)
+(node:136162) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:136170) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 9:12:28 PM [vite] (client) [console.error] [Analytify][0007][+01901ms][Supabase][ERROR] Failed to delete user profile data {"code":"42501","message":"Isolated deletion denied"}
+[WebServer] 9:12:29 PM [vite] (client) [console.error] [Analytify][0007][+01861ms][Supabase][ERROR] Failed to delete user profile data {"code":"42501","message":"Isolated deletion denied"}
+  ✓  11 [mobile] › e2e/design-v2-account-deletion.spec.ts:6:7 › cloud deletion preserves failure recovery and blocks duplicate submissions (no-preference) (7.5s)
+  ✓  12 [mobile] › e2e/design-v2-account-deletion.spec.ts:6:7 › cloud deletion preserves failure recovery and blocks duplicate submissions (reduce) (7.5s)
+  ✓  14 [mobile] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=false, reduce) (8.8s)
+  ✓  13 [mobile] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=false, no-preference) (9.4s)
+  ✓  16 [mobile] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=true, reduce) (9.4s)
+  ✓  15 [mobile] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=true, no-preference) (9.7s)
+  ✓  18 [mobile] › e2e/design-v2-shell-account-boundary.spec.ts:6:7 › public navigation rejects delayed account failure and reloads on return (no-preference) (7.4s)
+  ✓  17 [mobile] › e2e/design-v2-shell-account-boundary.spec.ts:6:7 › public navigation rejects delayed account success and reloads on return (no-preference) (7.6s)
+  ✓  19 [mobile] › e2e/design-v2-shell-account-boundary.spec.ts:6:7 › public navigation rejects delayed account success and reloads on return (reduce) (5.2s)
+  ✓  20 [mobile] › e2e/design-v2-shell-account-boundary.spec.ts:6:7 › public navigation rejects delayed account failure and reloads on return (reduce) (5.3s)
+(node:137221) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:137229) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 9:13:10 PM [vite] (client) [console.error] [Analytify][0007][+01537ms][Supabase][ERROR] Failed to delete user profile data {"code":"42501","message":"Isolated deletion denied"}
+[WebServer] 9:13:11 PM [vite] (client) [console.error] [Analytify][0007][+01127ms][Supabase][ERROR] Failed to delete user profile data {"code":"42501","message":"Isolated deletion denied"}
+  ✓  21 [firefox-stats] › e2e/design-v2-account-deletion.spec.ts:6:7 › cloud deletion preserves failure recovery and blocks duplicate submissions (no-preference) (7.3s)
+  ✓  22 [firefox-stats] › e2e/design-v2-account-deletion.spec.ts:6:7 › cloud deletion preserves failure recovery and blocks duplicate submissions (reduce) (7.1s)
+  ✓  24 [firefox-stats] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=false, reduce) (6.7s)
+  ✓  23 [firefox-stats] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=false, no-preference) (7.9s)
+  ✓  26 [firefox-stats] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=true, reduce) (5.9s)
+  ✓  25 [firefox-stats] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=true, no-preference) (7.3s)
+  ✓  27 [firefox-stats] › e2e/design-v2-shell-account-boundary.spec.ts:6:7 › public navigation rejects delayed account success and reloads on return (no-preference) (7.2s)
+  ✓  28 [firefox-stats] › e2e/design-v2-shell-account-boundary.spec.ts:6:7 › public navigation rejects delayed account failure and reloads on return (no-preference) (7.3s)
+  ✓  29 [firefox-stats] › e2e/design-v2-shell-account-boundary.spec.ts:6:7 › public navigation rejects delayed account success and reloads on return (reduce) (4.8s)
+  ✓  30 [firefox-stats] › e2e/design-v2-shell-account-boundary.spec.ts:6:7 › public navigation rejects delayed account failure and reloads on return (reduce) (4.9s)
+(node:138351) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:138364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 9:13:45 PM [vite] (client) [console.error] [Analytify][0007][+01667ms][Supabase][ERROR] Failed to delete user profile data {"code":"42501","message":"Isolated deletion denied"}
+[WebServer] 9:13:45 PM [vite] (client) [console.error] [Analytify][0007][+02201ms][Supabase][ERROR] Failed to delete user profile data {"code":"42501","message":"Isolated deletion denied"}
+  ✓  32 [webkit-stats] › e2e/design-v2-account-deletion.spec.ts:6:7 › cloud deletion preserves failure recovery and blocks duplicate submissions (reduce) (8.4s)
+  ✓  31 [webkit-stats] › e2e/design-v2-account-deletion.spec.ts:6:7 › cloud deletion preserves failure recovery and blocks duplicate submissions (no-preference) (10.0s)
+  ✓  34 [webkit-stats] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=false, reduce) (8.0s)
+  ✓  33 [webkit-stats] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=false, no-preference) (10.1s)
+  ✓  36 [webkit-stats] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=true, reduce) (9.2s)
+  ✓  35 [webkit-stats] › e2e/design-v2-account-scope.spec.ts:6:7 › account retains settings and excludes blocked management (cloud=true, no-preference) (11.0s)
+  ✓  37 [webkit-stats] › e2e/design-v2-shell-account-boundary.spec.ts:6:7 › public navigation rejects delayed account success and reloads on return (no-preference) (11.4s)
+  ✓  38 [webkit-stats] › e2e/design-v2-shell-account-boundary.spec.ts:6:7 › public navigation rejects delayed account failure and reloads on return (no-preference) (11.9s)
+  ✓  39 [webkit-stats] › e2e/design-v2-shell-account-boundary.spec.ts:6:7 › public navigation rejects delayed account success and reloads on return (reduce) (6.6s)
+  ✓  40 [webkit-stats] › e2e/design-v2-shell-account-boundary.spec.ts:6:7 › public navigation rejects delayed account failure and reloads on return (reduce) (6.5s)
+
+  40 passed (2.8m)

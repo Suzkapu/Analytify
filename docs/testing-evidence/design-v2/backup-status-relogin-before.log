@@ -1,0 +1,30 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/auth/backup-status-boundary.spec.ts
+Application bundle generation complete. [3.574 seconds] - 2026-10-09T19:22:38.998Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/core/auth/backup-status-boundary.spec.ts (13 tests | 1 failed) 1889ms
+     × starts a fresh initial status read for the account signed in after logout 1057ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/backup-status-boundary.spec.ts > backup status through real Supabase SDK transport and session boundaries > starts a fresh initial status read for the account signed in after logout
+AssertionError: expected undefined to be defined
+ ❯ src/app/core/auth/backup-status-boundary.spec.ts:140:23
+    138|     const fresh = await vi.waitFor(() => {
+    139|       const request = requests.find(item => item.url.searchParams.get(…
+    140|       expect(request).toBeDefined(); return request!;
+       |                       ^
+    141|     });
+    142|     fresh.complete(null); await settled;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 passed (13)
+   Start at  21:22:39
+   Duration  2.97s (transform 149ms, setup 320ms, import 164ms, tests 1.89s, environment 445ms)
+

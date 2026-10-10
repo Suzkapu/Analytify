@@ -1,0 +1,104 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/auth/backup-status-boundary.spec.ts
+Application bundle generation complete. [3.112 seconds] - 2026-10-09T19:17:37.139Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/auth/backup-status-boundary.spec.ts > backup status through real Supabase SDK transport and session boundaries > rejects a late successful read after spotify replacement
+GoTrueClient@sb-isolated-auth-token:1 (2.117.2) 2026-10-09T19:17:38.422Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/core/auth/backup-status-boundary.spec.ts > backup status through real Supabase SDK transport and session boundaries > rejects a late successful read after cloud replacement
+GoTrueClient@sb-isolated-auth-token:2 (2.117.2) 2026-10-09T19:17:39.480Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/core/auth/backup-status-boundary.spec.ts > backup status through real Supabase SDK transport and session boundaries > rejects a late successful read after generation replacement
+GoTrueClient@sb-isolated-auth-token:3 (2.117.2) 2026-10-09T19:17:40.540Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/core/auth/backup-status-boundary.spec.ts > backup status through real Supabase SDK transport and session boundaries > aborts the actual pending status transport when the session ends
+GoTrueClient@sb-isolated-auth-token:4 (2.117.2) 2026-10-09T19:17:41.595Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+ ❯ |SpotiFront| src/app/core/auth/backup-status-boundary.spec.ts (7 tests | 5 failed) 3490ms
+     × applies the current flag/time and cleans only captured normalized user cache keys 142ms
+     × rejects a late successful read after spotify replacement 1058ms
+     × rejects a late successful read after cloud replacement 1060ms
+     × rejects a late successful read after generation replacement 1055ms
+     × aborts the actual pending status transport when the session ends 59ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/backup-status-boundary.spec.ts > backup status through real Supabase SDK transport and session boundaries > applies the current flag/time and cleans only captured normalized user cache keys
+AssertionError: expected 'in.(cloud-a_backup_active,cloud-a_las…' to contain 'actor-a_dev_recently_played'
+
+Expected: "actor-a_dev_recently_played"
+Received: "in.(cloud-a_backup_active,cloud-a_last_synced_at,actor-a_recently_played,actor-a_profile_pic,actor-a_stats_short_term_tracks,actor-a_stats_short_term_artists,actor-a_stats_short_term_genres,actor-a_stats_short_term_lastUpdated,actor-a_stats_medium_term_tracks,actor-a_stats_medium_term_artists,actor-a_stats_medium_term_genres,actor-a_stats_medium_term_lastUpdated,actor-a_stats_long_term_tracks,actor-a_stats_long_term_artists,actor-a_stats_long_term_genres,actor-a_stats_long_term_lastUpdated)"
+
+ ❯ src/app/core/auth/backup-status-boundary.spec.ts:67:49
+     65|     expect(cleanup.url.pathname).toBe('/rest/v1/user_cache');
+     66|     expect(cleanup.url.searchParams.get('user_id')).toBe('eq.cloud-a');
+     67|     expect(cleanup.url.searchParams.get('key')).toContain('actor-a_dev…
+       |                                                 ^
+     68|     expect(cleanup.url.searchParams.get('key')).not.toContain('actor-b…
+     69|     cleanup.complete(null, 204); await pending;
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/backup-status-boundary.spec.ts > backup status through real Supabase SDK transport and session boundaries > rejects a late successful read after spotify replacement
+ FAIL  |SpotiFront| src/app/core/auth/backup-status-boundary.spec.ts > backup status through real Supabase SDK transport and session boundaries > rejects a late successful read after cloud replacement
+ FAIL  |SpotiFront| src/app/core/auth/backup-status-boundary.spec.ts > backup status through real Supabase SDK transport and session boundaries > rejects a late successful read after generation replacement
+Error: Timed out in waitFor!
+ ❯ src/app/core/auth/backup-status-boundary.spec.ts:84:14
+     82|     // assertion reports the stale effect rather than hanging the test.
+     83|     const settled = pending.then(() => true);
+     84|     await vi.waitFor(() => {
+       |              ^
+     85|       for (const item of requests.filter(item => item.method === 'DELE…
+     86|       return expect(settled).resolves.toBe(true);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/backup-status-boundary.spec.ts > backup status through real Supabase SDK transport and session boundaries > aborts the actual pending status transport when the session ends
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/app/core/auth/backup-status-boundary.spec.ts:99:21
+     97|     const aborted = request.aborted;
+     98|     request.complete(null); await pending;
+     99|     expect(aborted).toBe(true);
+       |                     ^
+    100|     expect(requests.filter(item => item.method === 'DELETE')).toHaveLe…
+    101|     expect(values.get('cloud-a_backup_active')).toBe('false');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 2 passed (7)
+   Start at  21:17:37
+   Duration  4.47s (transform 141ms, setup 286ms, import 157ms, tests 3.49s, environment 395ms)
+

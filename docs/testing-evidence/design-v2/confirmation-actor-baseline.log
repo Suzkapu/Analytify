@@ -1,0 +1,170 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts
+Application bundle generation complete. [4.056 seconds] - 2026-10-10T06:00:54.307Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > rejects the displayed 'local' confirmation after 'spotify' changes
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:11 (2.117.2) 2026-10-10T06:00:57.052Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > rejects the displayed 'local' confirmation after 'cloud' changes
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:12 (2.117.2) 2026-10-10T06:00:57.116Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > rejects the displayed 'local' confirmation after 'generation' changes
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:13 (2.117.2) 2026-10-10T06:00:57.159Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > rejects the displayed 'cloud' confirmation after 'spotify' changes
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:14 (2.117.2) 2026-10-10T06:00:57.204Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > rejects the displayed 'cloud' confirmation after 'cloud' changes
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:15 (2.117.2) 2026-10-10T06:00:57.245Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > rejects the displayed 'cloud' confirmation after 'generation' changes
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:16 (2.117.2) 2026-10-10T06:00:57.285Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > rejects the displayed 'guest' confirmation after 'spotify' changes
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:17 (2.117.2) 2026-10-10T06:00:57.328Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > rejects the displayed 'guest' confirmation after 'cloud' changes
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:18 (2.117.2) 2026-10-10T06:00:57.365Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > rejects the displayed 'guest' confirmation after 'generation' changes
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:19 (2.117.2) 2026-10-10T06:00:57.402Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+ ❯ |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts (55 tests | 9 failed) 2581ms
+     × rejects the displayed 'local' confirmation after 'spotify' changes 67ms
+     × rejects the displayed 'local' confirmation after 'cloud' changes 44ms
+     × rejects the displayed 'local' confirmation after 'generation' changes 45ms
+     × rejects the displayed 'cloud' confirmation after 'spotify' changes 41ms
+     × rejects the displayed 'cloud' confirmation after 'cloud' changes 40ms
+     × rejects the displayed 'cloud' confirmation after 'generation' changes 43ms
+     × rejects the displayed 'guest' confirmation after 'spotify' changes 37ms
+     × rejects the displayed 'guest' confirmation after 'cloud' changes 37ms
+     × rejects the displayed 'guest' confirmation after 'generation' changes 39ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > rejects the displayed 'local' confirmation after 'spotify' changes
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > rejects the displayed 'local' confirmation after 'cloud' changes
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > rejects the displayed 'local' confirmation after 'generation' changes
+AssertionError: expected "clearCacheAndLogout" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st clearCacheAndLogout call:
+
+    Array []
+
+
+Number of calls: 1
+
+ ❯ src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts:201:105
+    199|       if (replacement === 'generation') await TestBed.inject(SessionLi…
+    200|       click(confirm); await harness.fixture.whenStable();
+    201|       expect(deletion).not.toHaveBeenCalled(); expect(logout).not.toHa…
+       |                                                                                                         ^
+    202|       expect(navigate).not.toHaveBeenCalled(); expect(shell.actionRunn…
+    203|       expect(shell.clearDataStep()).toBe('none');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > rejects the displayed 'cloud' confirmation after 'spotify' changes
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > rejects the displayed 'cloud' confirmation after 'generation' changes
+AssertionError: expected "deleteUserProfileData" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st deleteUserProfileData call:
+
+    Array [
+      "cloud-a",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts:201:28
+    199|       if (replacement === 'generation') await TestBed.inject(SessionLi…
+    200|       click(confirm); await harness.fixture.whenStable();
+    201|       expect(deletion).not.toHaveBeenCalled(); expect(logout).not.toHa…
+       |                            ^
+    202|       expect(navigate).not.toHaveBeenCalled(); expect(shell.actionRunn…
+    203|       expect(shell.clearDataStep()).toBe('none');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > rejects the displayed 'cloud' confirmation after 'cloud' changes
+AssertionError: expected "deleteUserProfileData" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st deleteUserProfileData call:
+
+    Array [
+      "cloud-b",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts:201:28
+    199|       if (replacement === 'generation') await TestBed.inject(SessionLi…
+    200|       click(confirm); await harness.fixture.whenStable();
+    201|       expect(deletion).not.toHaveBeenCalled(); expect(logout).not.toHa…
+       |                            ^
+    202|       expect(navigate).not.toHaveBeenCalled(); expect(shell.actionRunn…
+    203|       expect(shell.clearDataStep()).toBe('none');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > rejects the displayed 'guest' confirmation after 'spotify' changes
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > rejects the displayed 'guest' confirmation after 'cloud' changes
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > rejects the displayed 'guest' confirmation after 'generation' changes
+AssertionError: expected "logout" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st logout call:
+
+    Array []
+
+
+Number of calls: 1
+
+ ❯ src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts:201:67
+    199|       if (replacement === 'generation') await TestBed.inject(SessionLi…
+    200|       click(confirm); await harness.fixture.whenStable();
+    201|       expect(deletion).not.toHaveBeenCalled(); expect(logout).not.toHa…
+       |                                                                   ^
+    202|       expect(navigate).not.toHaveBeenCalled(); expect(shell.actionRunn…
+    203|       expect(shell.clearDataStep()).toBe('none');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 46 passed (55)
+   Start at  08:00:54
+   Duration  3.98s (transform 263ms, setup 360ms, import 331ms, tests 2.58s, environment 523ms)
+

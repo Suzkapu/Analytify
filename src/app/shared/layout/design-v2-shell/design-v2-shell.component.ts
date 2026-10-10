@@ -37,6 +37,13 @@ import {DesignV2OverlayService} from './design-v2-overlay.service';
 import {AdminService} from '@core/admin/admin.service';
 import {AmbientOverlayState} from '@shared/ambient/ambient-background.math';
 
+interface AccountActionContext {
+  userId: string | null;
+  cloudId: string | null;
+  generation: SessionGeneration;
+  exiting: boolean;
+}
+
 interface AccountChromeContext {
   userId: string | null;
   cloudId: string | null;
@@ -96,6 +103,8 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
   private readonly subscriptions = new Subscription();
   private readonly injector = inject(Injector);
   private accountContext?: AccountChromeContext;
+  private destroyed = false;
+  private confirmationContext?: AccountActionContext;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -142,6 +151,7 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnDestroy(): void {
+    this.destroyed = true;
     this.cancelAccountLoad();
     this.subscriptions.unsubscribe();
     if (this.overlayMount) this.overlays.unregister(this.overlayMount);
@@ -228,33 +238,72 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.actionRunning()) return;
     this.actionError.set('');
     this.closeAccount();
-    if (this.authService.isAnonymousCloudIdentity()) this.clearDataStep.set('guest');
+    if (this.authService.isAnonymousCloudIdentity()) {
+      this.confirmationContext = this.captureAccountAction();
+      this.clearDataStep.set('guest');
+    }
     else await this.performLogout();
   }
 
+  requestClearData(): void {
+    if (this.actionRunning()) return;
+    this.closeAccount();
+    this.actionError.set('');
+    this.backupConfirmationOpen.set(false);
+    this.confirmationContext = this.captureAccountAction();
+    this.clearDataStep.set('choose');
+  }
+
+  selectClearData(step: 'choose' | 'local' | 'cloud'): void {
+    if (this.actionRunning()) return;
+    if (!this.confirmationContext || !this.isCurrentAction(this.confirmationContext)) {
+      this.closeConfirmation();
+      return;
+    }
+    this.clearDataStep.set(step);
+  }
+
+  private confirmedAction(step: 'local' | 'cloud' | 'guest'): AccountActionContext | undefined {
+    if (this.actionRunning() || this.clearDataStep() !== step) return undefined;
+    if (!this.confirmationContext || !this.isCurrentAction(this.confirmationContext)) {
+      this.closeConfirmation();
+      return undefined;
+    }
+    // Completion may adopt its own logout generation; the displayed consent
+    // remains bound to the original actor and session, including after errors.
+    return {...this.confirmationContext};
+  }
+
   async confirmLocalClear(): Promise<void> {
-    await this.runDestructive(() => this.authService.clearCacheAndLogout());
+    const confirmed = this.confirmedAction('local');
+    if (!confirmed) return;
+    await this.runDestructive(context => this.exitAccount(context, () => this.authService.clearCacheAndLogout()), confirmed);
   }
 
   async confirmCloudClear(): Promise<void> {
-    const userId = this.authService.getSupabaseUserId();
+    const confirmed = this.confirmedAction('cloud');
+    if (!confirmed) return;
+    const userId = confirmed.cloudId;
     if (!userId) {
       this.actionError.set('You must be signed in to delete cloud data.');
       return;
     }
-    await this.runDestructive(async () => {
+    await this.runDestructive(async context => {
       await this.supabase.deleteUserProfileData(userId);
-      await this.authService.logout();
-    });
+      await this.exitAccount(context, () => this.authService.logout());
+    }, confirmed);
   }
 
   async confirmGuestLogout(): Promise<void> {
-    await this.runDestructive(() => this.authService.logout());
+    const confirmed = this.confirmedAction('guest');
+    if (!confirmed) return;
+    await this.runDestructive(context => this.exitAccount(context, () => this.authService.logout()), confirmed);
   }
 
   closeConfirmation(): void {
     if (this.actionRunning()) return;
     this.clearDataStep.set('none');
+    this.confirmationContext = undefined;
     this.backupConfirmationOpen.set(false);
     this.actionError.set('');
   }
@@ -264,33 +313,65 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   private async performLogout(): Promise<void> {
+    const context = this.captureAccountAction();
     this.actionRunning.set(true);
     try {
-      await this.authService.logout();
+      await this.exitAccount(context, () => this.authService.logout());
+      if (!this.isCurrentAction(context)) return;
       const navigated = await this.router.navigate(this.navigation.commands('login'));
+      if (!this.isCurrentAction(context)) return;
       if (!navigated) throw new Error('Navigation was cancelled');
     } catch {
+      if (!this.isCurrentAction(context)) return;
       this.actionError.set('Log out did not finish. Please refresh before trying again.');
       this.accountOpen.set(true);
     } finally {
-      this.actionRunning.set(false);
+      if (!this.destroyed) this.actionRunning.set(false);
     }
   }
 
-  private async runDestructive(action: () => Promise<unknown>): Promise<void> {
+  private async runDestructive(action: (context: AccountActionContext) => Promise<unknown>, context: AccountActionContext): Promise<void> {
     if (this.actionRunning()) return;
     this.actionRunning.set(true);
     this.actionError.set('');
     try {
-      await action();
+      await action(context);
+      if (!this.isCurrentAction(context)) return;
       const navigated = await this.router.navigate(this.navigation.commands('login'));
+      if (!this.isCurrentAction(context)) return;
       if (!navigated) throw new Error('Navigation was cancelled');
       this.clearDataStep.set('none');
     } catch {
+      if (!this.isCurrentAction(context)) return;
       this.actionError.set('This action did not finish. Some steps may already have completed. Please refresh before trying again.');
     } finally {
-      this.actionRunning.set(false);
+      if (!this.destroyed) this.actionRunning.set(false);
     }
+  }
+
+  private captureAccountAction(): AccountActionContext {
+    return {
+      userId: this.authService.getUserId(), cloudId: this.authService.getSupabaseUserId(),
+      generation: this.sessionLifecycle.capture(), exiting: false
+    };
+  }
+
+  private isCurrentAction(context: AccountActionContext): boolean {
+    if (this.destroyed || !this.sessionLifecycle.isCurrent(context.generation)) return false;
+    const userId = this.authService.getUserId();
+    const cloudId = this.authService.getSupabaseUserId();
+    return (userId === context.userId && cloudId === context.cloudId)
+      || (context.exiting && userId === null && cloudId === null);
+  }
+
+  private async exitAccount(context: AccountActionContext, exit: () => Promise<void>): Promise<void> {
+    if (!this.isCurrentAction(context)) return;
+    // Auth logout synchronously invalidates its own session before awaiting cleanup.
+    // Capture that authorized generation so its completion can still reach login.
+    const pending = exit();
+    context.exiting = true;
+    context.generation = this.sessionLifecycle.capture();
+    await pending;
   }
 
   private async loadAccountSummary(context: AccountChromeContext): Promise<void> {
