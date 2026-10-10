@@ -162,3 +162,27 @@ test('Updates cached refresh, recovery, policy lock and empty account',async ({p
   expect(s.writes).toEqual([]);expect(s.errors).toEqual([]);expect(s.expectedSaveFailures).toEqual([]);expect(s.expectedReadFailures.length).toBeLessThanOrEqual(1);
   await writeFile(info.outputPath('update-recovery.json'),JSON.stringify({writes:s.writes,errors:s.errors,expectedReadFailures:s.expectedReadFailures},null,2));
 });
+
+// Fixed navigation must leave a reachable pointer target after native scrolling;
+// document-bottom padding alone does not protect controls in the middle of a page.
+test('Updates Retry scroll target clears fixed mobile navigation', async ({page}, info) => {
+  await page.setViewportSize({width:360,height:480});
+  const s=await setup(page);await settledNavigation(page);s.failRead();await page.evaluate(()=>window.dispatchEvent(new Event('focus')));
+  const list=page.locator('v2-settings-updates');await expect(list.getByRole('alert')).toContainText('Schedule refresh unavailable');
+  const retry=list.getByRole('button',{name:'Retry',exact:true});
+  await retry.evaluate(element=>element.scrollIntoView({block:'end',behavior:'instant'}));
+  const measureGeometry=()=>retry.evaluate(element=>{
+    const b=element.getBoundingClientRect();const nav=document.querySelector('.v2-mobile-nav')!.getBoundingClientRect();
+    const target=document.elementFromPoint(b.left+b.width/2,b.top+b.height/2);
+    return {buttonBottom:b.bottom,navigationTop:nav.top,receivesPointer:!!target&&element.contains(target),interceptor:target?.tagName,activeTransitions:(window as Window & {updatesActiveTransitions?: number}).updatesActiveTransitions};
+  });
+  // View-transition snapshots temporarily intercept input even when the live
+  // control's box is clear. Wait for its real hit target without changing scroll.
+  await expect.poll(async () => {const sample=await measureGeometry();return sample.buttonBottom<=sample.navigationTop&&sample.receivesPointer;}).toBe(true);
+  const geometry=await measureGeometry();
+  await writeFile(info.outputPath('update-retry-scroll.json'),JSON.stringify(geometry,null,2));
+  expect(geometry.buttonBottom).toBeLessThanOrEqual(geometry.navigationTop);
+  expect(geometry.receivesPointer).toBe(true);
+  await retry.click();await expect(list.getByRole('alert')).toHaveCount(0);
+  expect(s.writes).toEqual([]);expect(s.errors).toEqual([]);
+});

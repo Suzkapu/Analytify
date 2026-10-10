@@ -1,0 +1,22 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-settings-updates.spec.ts --config=/tmp/analytify-updates-browsers.config.ts --workers=1 --project=webkit-stats --grep popup resizing.*no-preference, height 480 --repeat-each=3 --output=docs/testing-evidence/design-v2/settings-updates-startup-diagnostic-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:431103) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:431103) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:431219) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (no-preference, height 480) (29.3s)
+(node:431809) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (no-preference, height 480) (23.5s)
+(node:432310) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (no-preference, height 480) (23.6s)
+
+  3 passed (1.5m)

@@ -1,0 +1,51 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-settings-updates.spec.ts --config=/tmp/analytify-updates-browsers.config.ts --workers=1 --project=firefox-stats --grep Retry scroll target --output=docs/testing-evidence/design-v2/settings-updates-scroll-ready-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:463158) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:463158) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:463267) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:168:5 › Updates Retry scroll target clears fixed mobile navigation (7.6s)
+
+
+  1) [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:168:5 › Updates Retry scroll target clears fixed mobile navigation 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      179 |   // View-transition snapshots temporarily intercept input even when the live
+      180 |   // control's box is clear. Wait for its real hit target without changing scroll.
+    > 181 |   await expect.poll(async () => {const sample=await measureGeometry();return sample.buttonBottom<=sample.navigationTop&&sample.receivesPointer;}).toBe(true);
+          |                                                                                                                                                   ^
+      182 |   const geometry=await measureGeometry();
+      183 |   await writeFile(info.outputPath('update-retry-scroll.json'),JSON.stringify(geometry,null,2));
+      184 |   expect(geometry.buttonBottom).toBeLessThanOrEqual(geometry.navigationTop);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-updates.spec.ts:181:147
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-updates-scroll-ready-red-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/settings-updates-scroll-ready-red-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-updates-scroll-ready-red-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/settings-updates-scroll-ready-red-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:168:5 › Updates Retry scroll target clears fixed mobile navigation 

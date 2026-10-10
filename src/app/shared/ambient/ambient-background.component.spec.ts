@@ -1,5 +1,5 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {NgZone} from '@angular/core';
+import {computed, NgZone} from '@angular/core';
 import {AmbientBackgroundComponent} from './ambient-background.component';
 
 interface TestMediaQuery extends MediaQueryList {
@@ -241,4 +241,47 @@ describe('AmbientBackgroundComponent', () => {
     expect(frames.size).toBe(1);
     expect(schedulingZones).toEqual([false]);
   });
+  it('pauses safely when a native visibility event interrupts a reactive render', () => {
+    fixture.detectChanges();
+    const errors: string[] = [];
+    const onError = (event: ErrorEvent) => {errors.push(event.message); event.preventDefault();};
+    window.addEventListener('error', onError);
+    try {
+      hidden = true;
+      const rendering = computed(() => {document.dispatchEvent(new Event('visibilitychange')); return 'rendered';});
+      expect(rendering()).toBe('rendered');
+      expect(errors).toEqual([]);
+      expect(fixture.componentInstance.state.paused()).toBe(true);
+      expect(frames.size).toBe(0);
+      hidden = false;
+      document.dispatchEvent(new Event('visibilitychange'));
+      expect(fixture.componentInstance.state.paused()).toBe(false);
+      expect(frames.size).toBe(1);
+    } finally {window.removeEventListener('error', onError);}
+  });
+
+  it('applies reduced motion immediately when its native event interrupts a reactive render', () => {
+    fixture.detectChanges();
+    const rendering = computed(() => {reduced.dispatch(true); return 'rendered';});
+    expect(() => rendering()).not.toThrow();
+    expect(fixture.componentInstance.state.reducedMotion()).toBe(true);
+    expect(frames.size).toBe(0);
+    const still = (fixture.nativeElement as HTMLElement).style.getPropertyValue('--ambient-primary-x');
+    window.dispatchEvent(new Event('scroll'));
+    expect((fixture.nativeElement as HTMLElement).style.getPropertyValue('--ambient-primary-x')).toBe(still);
+    reduced.dispatch(false);
+    expect(frames.size).toBe(1);
+  });
+
+  it('accepts a pointer-capability event during reactive rendering without duplicating frames', () => {
+    fixture.detectChanges();
+    const rendering = computed(() => {coarse.dispatch(true); return 'rendered';});
+    expect(() => rendering()).not.toThrow();
+    expect(fixture.componentInstance.state.coarsePointer()).toBe(true);
+    expect(frames.size).toBe(1);
+    coarse.dispatch(false);
+    expect(fixture.componentInstance.state.coarsePointer()).toBe(false);
+    expect(frames.size).toBe(1);
+  });
+
 });

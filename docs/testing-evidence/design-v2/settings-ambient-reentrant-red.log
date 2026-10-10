@@ -1,0 +1,85 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/shared/ambient/ambient-background.component.spec.ts --progress=false
+Application bundle generation complete. [2.668 seconds] - 2026-10-10T15:15:14.445Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:450768) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ |SpotiFront| src/app/shared/ambient/ambient-background.component.spec.ts (14 tests | 3 failed) 258ms
+     × pauses safely when a native visibility event interrupts a reactive render 13ms
+     × applies reduced motion immediately when its native event interrupts a reactive render 6ms
+     × accepts a pointer-capability event during reactive rendering without duplicating frames 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/ambient/ambient-background.component.spec.ts > AmbientBackgroundComponent > pauses safely when a native visibility event interrupts a reactive render
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "NG0600: Writing to signals is not allowed in a `computed`. Find more at https://v22.angular.dev/errors/NG0600",
++ ]
+
+ ❯ src/app/shared/ambient/ambient-background.component.spec.ts:253:22
+    251|       const rendering = computed(() => {document.dispatchEvent(new Eve…
+    252|       expect(rendering()).toBe('rendered');
+    253|       expect(errors).toEqual([]);
+       |                      ^
+    254|       expect(fixture.componentInstance.state.paused()).toBe(true);
+    255|       expect(frames.size).toBe(0);
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |SpotiFront| src/app/shared/ambient/ambient-background.component.spec.ts > AmbientBackgroundComponent > applies reduced motion immediately when its native event interrupts a reactive render
+AssertionError: expected [Function] to not throw an error but 'Error: NG0600: Writing to signals is …' was thrown
+
+- Expected:
+undefined
+
++ Received:
+"Error: NG0600: Writing to signals is not allowed in a `computed`. Find more at https://v22.angular.dev/errors/NG0600"
+
+ ❯ src/app/shared/ambient/ambient-background.component.spec.ts:266:35
+    264|     fixture.detectChanges();
+    265|     const rendering = computed(() => {reduced.dispatch(true); return '…
+    266|     expect(() => rendering()).not.toThrow();
+       |                                   ^
+    267|     expect(fixture.componentInstance.state.reducedMotion()).toBe(true);
+    268|     expect(frames.size).toBe(0);
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |SpotiFront| src/app/shared/ambient/ambient-background.component.spec.ts > AmbientBackgroundComponent > accepts a pointer-capability event during reactive rendering without duplicating frames
+AssertionError: expected [Function] to not throw an error but 'Error: NG0600: Writing to signals is …' was thrown
+
+- Expected:
+undefined
+
++ Received:
+"Error: NG0600: Writing to signals is not allowed in a `computed`. Find more at https://v22.angular.dev/errors/NG0600"
+
+ ❯ src/app/shared/ambient/ambient-background.component.spec.ts:279:35
+    277|     fixture.detectChanges();
+    278|     const rendering = computed(() => {coarse.dispatch(true); return 'r…
+    279|     expect(() => rendering()).not.toThrow();
+       |                                   ^
+    280|     expect(fixture.componentInstance.state.coarsePointer()).toBe(true);
+    281|     expect(frames.size).toBe(1);
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 11 passed (14)
+   Start at  17:15:14
+   Duration  1.11s (transform 57ms, setup 245ms, import 29ms, tests 258ms, environment 431ms)
+

@@ -8,6 +8,11 @@ for (const motion of ['no-preference', 'reduce'] as const) {
     await page.emulateMedia({reducedMotion: motion}); await mockSpotify(page);
     await page.route('**/rest/v1/users?**', route => route.request().method() === 'GET'
       ? route.fulfill({json: null}) : route.abort('blockedbyclient'));
+    await page.route('**/rest/v1/rpc/get_public_site_settings', route => route.fulfill({json: {}}));
+    await page.route('**/rest/v1/rpc/is_app_admin', route => route.fulfill({json: false}));
+    const runtimeErrors: string[] = [];
+    page.on('pageerror', error => runtimeErrors.push(error.message));
+    page.on('console', message => {if (message.type() === 'error') runtimeErrors.push(message.text());});
     const destructiveRequests: string[] = [];
     page.on('request', request => {
       const url = new URL(request.url());
@@ -54,8 +59,8 @@ for (const motion of ['no-preference', 'reduce'] as const) {
     await data.getByRole('button', {name: 'Clear data', exact: true}).press('Enter');
     await expect(page.getByRole('alertdialog', {name: 'What would you like to clear?', exact: true})).toBeVisible();
     await page.keyboard.press('Escape'); await expect(page.getByRole('alertdialog')).toHaveCount(0);
-    await expect(page).toHaveURL(/\/new\/settings\/data$/); expect(destructiveRequests).toEqual([]);
-    await writeFile(info.outputPath('settings-account-data.json'), JSON.stringify({motion, geometry, destructiveRequests}, null, 2));
+    await expect(page).toHaveURL(/\/new\/settings\/data$/); expect(destructiveRequests).toEqual([]); expect(runtimeErrors).toEqual([]);
+    await writeFile(info.outputPath('settings-account-data.json'), JSON.stringify({motion, geometry, destructiveRequests, runtimeErrors}, null, 2));
   });
 }
 }

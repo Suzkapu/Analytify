@@ -1,0 +1,86 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-settings-updates.spec.ts e2e/design-v2-settings-account-data.spec.ts e2e/design-v2-settings-notifications.spec.ts --config=/tmp/analytify-updates-browsers.config.ts --workers=1 --grep Retry scroll target|cached refresh|no-preference, height 480 --output=docs/testing-evidence/design-v2/settings-runtime-focused-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:455105) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:455105) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 32 tests using 1 worker
+
+(node:455225) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 480) (4.9s)
+  ✓   2 [desktop] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) (5.6s)
+  ✓   3 [desktop] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (no-preference, height 480) (3.5s)
+  ✓   4 [desktop] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (no-preference, height 480) (3.8s)
+  ✓   5 [desktop] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (no-preference, height 480) (3.9s)
+  ✓   6 [desktop] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (no-preference, height 480) (4.8s)
+  ✓   7 [desktop] › e2e/design-v2-settings-updates.spec.ts:151:5 › Updates cached refresh, recovery, policy lock and empty account (3.3s)
+  ✓   8 [desktop] › e2e/design-v2-settings-updates.spec.ts:168:5 › Updates Retry scroll target clears fixed mobile navigation (1.9s)
+(node:456041) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 [mobile] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 480) (4.8s)
+  ✓  10 [mobile] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) (7.2s)
+  ✓  11 [mobile] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (no-preference, height 480) (3.3s)
+  ✓  12 [mobile] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (no-preference, height 480) (3.8s)
+  ✓  13 [mobile] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (no-preference, height 480) (4.0s)
+  ✓  14 [mobile] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (no-preference, height 480) (4.3s)
+  ✓  15 [mobile] › e2e/design-v2-settings-updates.spec.ts:151:5 › Updates cached refresh, recovery, policy lock and empty account (3.4s)
+  ✓  16 [mobile] › e2e/design-v2-settings-updates.spec.ts:168:5 › Updates Retry scroll target clears fixed mobile navigation (2.1s)
+(node:457273) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  17 [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 480) (6.6s)
+  ✓  18 [firefox-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) (5.8s)
+  ✓  19 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (no-preference, height 480) (3.0s)
+  ✓  20 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (no-preference, height 480) (4.5s)
+  ✓  21 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (no-preference, height 480) (4.5s)
+  ✓  22 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (no-preference, height 480) (5.4s)
+  ✓  23 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:151:5 › Updates cached refresh, recovery, policy lock and empty account (4.0s)
+  ✘  24 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:168:5 › Updates Retry scroll target clears fixed mobile navigation (1.7s)
+(node:458552) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  25 [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 480) (20.1s)
+  ✓  26 [webkit-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) (24.2s)
+  ✓  27 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (no-preference, height 480) (13.3s)
+  ✓  28 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (no-preference, height 480) (14.4s)
+  ✓  29 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (no-preference, height 480) (16.2s)
+  ✓  30 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (no-preference, height 480) (20.2s)
+  ✓  31 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:151:5 › Updates cached refresh, recovery, policy lock and empty account (8.1s)
+  ✓  32 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:168:5 › Updates Retry scroll target clears fixed mobile navigation (5.2s)
+
+
+  1) [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:168:5 › Updates Retry scroll target clears fixed mobile navigation 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      179 |   await writeFile(info.outputPath('update-retry-scroll.json'),JSON.stringify(geometry,null,2));
+      180 |   expect(geometry.buttonBottom).toBeLessThanOrEqual(geometry.navigationTop);
+    > 181 |   expect(geometry.receivesPointer).toBe(true);
+          |                                    ^
+      182 |   await retry.click();await expect(list.getByRole('alert')).toHaveCount(0);
+      183 |   expect(s.writes).toEqual([]);expect(s.errors).toEqual([]);
+      184 | });
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-updates.spec.ts:181:36
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-runtime-focused-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/settings-runtime-focused-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-runtime-focused-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/settings-runtime-focused-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:168:5 › Updates Retry scroll target clears fixed mobile navigation 
+  31 passed (3.9m)

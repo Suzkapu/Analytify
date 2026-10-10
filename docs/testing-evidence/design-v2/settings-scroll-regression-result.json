@@ -1,0 +1,793 @@
+{
+  "exit": 130,
+  "interruptedIntentionally": true,
+  "reason": "Stop on newly observed ambient NG0600 runtime error; fix before continuing verification.",
+  "runnerSummary": {
+    "passed": 70,
+    "failed": 1,
+    "interrupted": 1,
+    "notRun": 32
+  },
+  "runtimeErrorObserved": true,
+  "qualityPass": false,
+  "logs": {
+    "path": "docs/testing-evidence/design-v2/settings-scroll-regression.log",
+    "sha256": "fd57d821c21982b1968c09ae50e5b31de9270b0911fd7edb792485288cf5ae19"
+  },
+  "sourcesAtRun": "12def44 plus preview scroll padding and initial Retry geometry regression; before ambient fix, icon correction and stronger native error guards",
+  "limitations": [
+    "Passing Account/Data case did not assert runtime errors; log contradicted a clean browser claim.",
+    "One immediate Retry centre-point sample failed after successful geometry clearance; incoming view transition was not settled.",
+    "No full 104-case pass is claimed."
+  ],
+  "artifacts": [
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/.last-run.json",
+      "sha256": "33b8f83fb158844ef0e2d21c2ef0d98d4445ed7727a4db395db7296b6af6bb4e"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--desktop/settings-account-data.json",
+      "sha256": "370ebacafd0e98cb26ee297c3d0afcb915c51fb738c0def4106383e95d7ebe3f"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--desktop/settings-account.png",
+      "sha256": "4ad4f1563de8fe028521e739c1ab84c0105b734a02b8d7eb1123b7a6f5fa806b"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--desktop/settings-data.png",
+      "sha256": "c25e0c7dfafc952e09cf2e4d0c8952256442a3992f5f49a135e00302154567cf"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--firefox-stats/settings-account-data.json",
+      "sha256": "dc993eeb3293ae344d0461143a7d36bdfa50f37068f48e86e3a51c09585c93c4"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--firefox-stats/settings-account.png",
+      "sha256": "b44d7072bd13a785948ea605687e656ab74da64d63c4a6665285ddacfb5328de"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--firefox-stats/settings-data.png",
+      "sha256": "cc0ff7590928671543dae4135bdbe21b6245cbbd53c9bdc33b485523aedb7d4f"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--mobile/settings-account-data.json",
+      "sha256": "370ebacafd0e98cb26ee297c3d0afcb915c51fb738c0def4106383e95d7ebe3f"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--mobile/settings-account.png",
+      "sha256": "647ff63feb8bba70a0b88083ba381b40283931a49e282cb6a6d23c6fbdaf96d5"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--mobile/settings-data.png",
+      "sha256": "ebbca3e3e51209cbf2e7eac59753ac4e13fe39d80eeecdc7dced1bf12450bd42"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--desktop/settings-account-data.json",
+      "sha256": "ee3ace5dc29172d2999b48cd4ea42baff203b12f6bf2ec3540be1538a557ab6c"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--desktop/settings-account.png",
+      "sha256": "bf7ad40d27e2b50a48b53326a102872c7afa2b5e0492bf2121c01ec776838fb0"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--desktop/settings-data.png",
+      "sha256": "e949ea1d691a51f2a6df424d60e9a12ba779db9f4592dccb798770c612cce4f7"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--firefox-stats/settings-account-data.json",
+      "sha256": "397ed86b7469b2f83850ee3abccb63a6ee71255119a43e09e76f3b55416b6f6b"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--firefox-stats/settings-account.png",
+      "sha256": "bee5b7b6b032fb2044d4ab27224572de8da5d42d76ac768058bb0c67d658b76f"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--firefox-stats/settings-data.png",
+      "sha256": "4f1dd41a36b981f04c481b85686b68e8da0599117d84335e5a10fdee6301a767"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--mobile/settings-account-data.json",
+      "sha256": "ee3ace5dc29172d2999b48cd4ea42baff203b12f6bf2ec3540be1538a557ab6c"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--mobile/settings-account.png",
+      "sha256": "173ac0ed5b7eb31b97bc5a9ed13bdcf8d4d6b908002fa3ee1127a7d2e1f5b665"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--mobile/settings-data.png",
+      "sha256": "cffb42502ef3daffd460b871165e74dc0c8fd69778184fe9b94b759121abeda4"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--desktop/settings-account-data.json",
+      "sha256": "98f4a1c194f6e7191ea229d281933aad2961b76d24ddd57dc00525fe4cc85b46"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--desktop/settings-account.png",
+      "sha256": "4ad4f1563de8fe028521e739c1ab84c0105b734a02b8d7eb1123b7a6f5fa806b"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--desktop/settings-data.png",
+      "sha256": "c25e0c7dfafc952e09cf2e4d0c8952256442a3992f5f49a135e00302154567cf"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--firefox-stats/settings-account-data.json",
+      "sha256": "493900fd7029607233a70c886b9e8edbadbfaa80d16c4699755c095e61f3b19a"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--firefox-stats/settings-account.png",
+      "sha256": "b44d7072bd13a785948ea605687e656ab74da64d63c4a6665285ddacfb5328de"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--firefox-stats/settings-data.png",
+      "sha256": "cc0ff7590928671543dae4135bdbe21b6245cbbd53c9bdc33b485523aedb7d4f"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--mobile/settings-account-data.json",
+      "sha256": "ae80d4e47dce2d931a8b0e06b053f52488c745ff534175b7c2cd5d76bfe0939d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--mobile/settings-account.png",
+      "sha256": "647ff63feb8bba70a0b88083ba381b40283931a49e282cb6a6d23c6fbdaf96d5"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--mobile/settings-data.png",
+      "sha256": "ebbca3e3e51209cbf2e7eac59753ac4e13fe39d80eeecdc7dced1bf12450bd42"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--desktop/settings-account-data.json",
+      "sha256": "6462cd3b41c0e9337d2d72be6ee2e9f82aeeb2a628fbf61f41cb9a6466ac2ca6"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--desktop/settings-account.png",
+      "sha256": "331a9ed57507987b2e15c9c427f487f985e91960d7e478cad1091d66feac5076"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--desktop/settings-data.png",
+      "sha256": "931b47c366593314984915d0793b593f398706e17b0a90fb002d530521631a8f"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--firefox-stats/settings-account-data.json",
+      "sha256": "7f373168b5c07d65ab10b4c2e75c840dc43d6d1a624866589d56a5485c41cab4"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--firefox-stats/settings-account.png",
+      "sha256": "355d0fac608f3dc84b22be3967182e3f668f70bf73f269ca61b07ff2842e4d9d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--firefox-stats/settings-data.png",
+      "sha256": "e362ffc4bbe0710b5879cb97c73a9b5c1655a364d63929b6d17161346b0ec7f4"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--mobile/settings-account-data.json",
+      "sha256": "a09bfa0558a45436880fcd659b2656eda907aa2233d5121bfe38bab760743502"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--mobile/settings-account.png",
+      "sha256": "7ee1f5279017c8ca4d52bb35ccb40249016ed1c2cd1f7f093ed90cceceabf4d3"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--mobile/settings-data.png",
+      "sha256": "12b08efa9aef536dc3ba0cbb8e41c25cedda9aa6c8e32c49c7245168426be9da"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--desktop/install-page.png",
+      "sha256": "77cc19848ea6dd5a4570beeb1d70d426320a42c7a086cd91dc9e6d203e4ca90e"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--desktop/install.png",
+      "sha256": "3b72e0306051f0e1a4b34670f6b19fabbc9a9068c4f0088bb7a3e507ff41a7b8"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--desktop/notification-workflow.json",
+      "sha256": "40c7f649433ed5e45b23500392973db51d3b57136940b1fb43e7f8e6bef8a27a"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--desktop/notifications-page.png",
+      "sha256": "178a2c357babfd8661ac3262a6ed121e7f412e0cce79ee070afcb6e4d219e138"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--desktop/notifications.png",
+      "sha256": "ef0b41569458a70f2349fc39fa9f3e00fd419577bbbdf66be23f919bbee27cb4"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--firefox-stats/install-page.png",
+      "sha256": "141c98df45528888ce9025a2589a39e78496f5cb46fc8c7a0b3f8bced3efd013"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--firefox-stats/install.png",
+      "sha256": "918fb729b978c3c98d2407448ff24b3be88add9ff96654faef4e733a6aaec4a4"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--firefox-stats/notification-workflow.json",
+      "sha256": "9ec4c417f0634a355ed120d7aca7166c0753dcda1640d0805241d04b677ea0ba"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--firefox-stats/notifications-page.png",
+      "sha256": "d13053d7d1d3775f8e0355b16e8ecb3cf6336472aa1cb02d0deb78dc4349b5c8"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--firefox-stats/notifications.png",
+      "sha256": "3f305d042c507e7fbf85539751542e73c2a7203694857e68c689869b21b305ac"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--mobile/install-page.png",
+      "sha256": "a1ffd70356d5f6d5c022e9ff17fb6a44210a4526b763aa6d4642c135d5039568"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--mobile/install.png",
+      "sha256": "1ab5387543951418991580099836e79dc921a74083888ac30069f49cf42160e7"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--mobile/notification-workflow.json",
+      "sha256": "40c7f649433ed5e45b23500392973db51d3b57136940b1fb43e7f8e6bef8a27a"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--mobile/notifications-page.png",
+      "sha256": "00bca33fbbf57925d63bb3714729d12eecb0cc67940f9cb8609436709e1ae111"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--mobile/notifications.png",
+      "sha256": "30316adbce85ebb2c2014ed6a2cbd917fda204e567a6f9ec81610ce22d922edb"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--desktop/install-page.png",
+      "sha256": "b3d2f12548d3fb47ace551c0910b370ba7a0b81561234f6dd5b1b57ae6b328ad"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--desktop/install.png",
+      "sha256": "0f8d5ab71191be1705401a0e6919e340c1940f1d8c1d10f7e00d884decb34138"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--desktop/notification-workflow.json",
+      "sha256": "fe55de86f05bc78564b1f0608446fa5b132a13b229bd2a2a2416d62454c67793"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--desktop/notifications-page.png",
+      "sha256": "bb72051f15c55c9a29d743b3814a92f7ba7bbf4cde086acc9ecbb0602649f485"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--desktop/notifications.png",
+      "sha256": "80fc92f79c4b05396e1da21877c1fb37e63fc6da6644754144cd69255fe1827a"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--firefox-stats/install-page.png",
+      "sha256": "67c684fb0d4837d673500419bff27469660c501ba6b68d7adfe25700ef63b555"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--firefox-stats/install.png",
+      "sha256": "248106db72e8492552249ae58a2875c5704a7966bbff044a2631b65b568cc532"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--firefox-stats/notification-workflow.json",
+      "sha256": "8c3e5d2c7ab6f3a6b46459248fee51755401a030d73101b0f6198f4800afc372"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--firefox-stats/notifications-page.png",
+      "sha256": "13cb82e62627f711cc7e299252b454ccbaf1f79d67390f9235f53a5d002b5e42"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--firefox-stats/notifications.png",
+      "sha256": "809d503d465d96b5f603be29124ca5bfb89fdef019d6aa28008784e928c13ae1"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--mobile/install-page.png",
+      "sha256": "30545a10ae482d6182b3e49a9b861f92e4fbac55888b72ebca8da668040d169d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--mobile/install.png",
+      "sha256": "6da813ea5806433e8713d9ae53143339a41e6d35c583fcc9a5dcd34a295f2b4b"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--mobile/notification-workflow.json",
+      "sha256": "fe55de86f05bc78564b1f0608446fa5b132a13b229bd2a2a2416d62454c67793"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--mobile/notifications-page.png",
+      "sha256": "8be028294245109852caa018b3327520de65ec872aa697031c2df23327731edd"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-83232-s-device-reduce-height-480--mobile/notifications.png",
+      "sha256": "e8fc1c7495b7f4df3f51039258eac5b92ebc44f4e1ba222b81505f30dd11d768"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--desktop/install-page.png",
+      "sha256": "ca98b63a36454d1c3e69d6221396ceb96feab2228f00dcefffebe859d64d5e59"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--desktop/install.png",
+      "sha256": "0f8d5ab71191be1705401a0e6919e340c1940f1d8c1d10f7e00d884decb34138"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--desktop/notification-workflow.json",
+      "sha256": "6f899fcedeeda7a5bc2cfc808f7dde4083fb4597411f8620638f1f66d761f5c3"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--desktop/notifications-page.png",
+      "sha256": "5199a9924aeb3e104454fc29ac2329cd19d43e3afab90c5dd096e48fba45b430"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--desktop/notifications.png",
+      "sha256": "b4a74b2796feb4b37655515f018469e674b6bca37c981acae13ec00b642c632f"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--firefox-stats/install-page.png",
+      "sha256": "67c684fb0d4837d673500419bff27469660c501ba6b68d7adfe25700ef63b555"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--firefox-stats/install.png",
+      "sha256": "248106db72e8492552249ae58a2875c5704a7966bbff044a2631b65b568cc532"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--firefox-stats/notification-workflow.json",
+      "sha256": "9376557930b39dadfd09e0c987a0aee6a68d5fe2ea824290fe41d8ab78c3f2d7"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--firefox-stats/notifications-page.png",
+      "sha256": "1ca64626a676e2b725714f9121a114e470152d1265bc3c5766d59095b8e83cda"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--firefox-stats/notifications.png",
+      "sha256": "7b667504582184145710ca7a9cc7b11ecb3b778fb577b31edc17088fb129e3ee"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--mobile/install-page.png",
+      "sha256": "30545a10ae482d6182b3e49a9b861f92e4fbac55888b72ebca8da668040d169d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--mobile/install.png",
+      "sha256": "6da813ea5806433e8713d9ae53143339a41e6d35c583fcc9a5dcd34a295f2b4b"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--mobile/notification-workflow.json",
+      "sha256": "6f899fcedeeda7a5bc2cfc808f7dde4083fb4597411f8620638f1f66d761f5c3"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--mobile/notifications-page.png",
+      "sha256": "3b393ef3fe2b8ace6c977df74e1f3515db595200ad97ecac7870dc61acca366e"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-af1cc--device-reduce-height-1000--mobile/notifications.png",
+      "sha256": "acf4a33213f75543185b0db88bdb03fd79500ed0eec0ac9e4666847b2f11cc2d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--desktop/install-page.png",
+      "sha256": "b1ef919546f91f173f1bd5d5d82f8936a0a05f07e26fc0c5679fc3d54470e76f"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--desktop/install.png",
+      "sha256": "494eac0c07848d8d696328f156417fb914fb0bf31d55f7e1462b459137ba14df"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--desktop/notification-workflow.json",
+      "sha256": "d6a361c0eb65f551a4785d6d5c81b427c36a67f1ec39fc46a20107fa741dacba"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--desktop/notifications-page.png",
+      "sha256": "64aa98e41cbe93bab5460e8654378fd98ceb5ea3656f3a12d7a88fa2f78b2f67"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--desktop/notifications.png",
+      "sha256": "2a360f87cef5c9c502d0f998139e6da3b704a82b78222cf946b3209c9e1bd991"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--firefox-stats/install-page.png",
+      "sha256": "e69d5dfb6dff51fe3d880040c60c5e25d83022cafb07462991838c6800c44cbc"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--firefox-stats/install.png",
+      "sha256": "0c55133c9b6f7baf80a314f74fa1b9fb528845678e47933d82639f803bed2adc"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--firefox-stats/notification-workflow.json",
+      "sha256": "9947dcf0bc698d608287a7be5a63a09608e72090c1862e8f41d9b4b4200fc15d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--firefox-stats/notifications-page.png",
+      "sha256": "68e5928fe415062f0cc384887876e78d647e53421b408796333d3283ec4f9060"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--firefox-stats/notifications.png",
+      "sha256": "58ff7e59aee639eff72b627c5c26828fce6e18fb5cb3549ecbc3cec6b0536f73"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--mobile/install-page.png",
+      "sha256": "eac6cc2c56ce209da30fdbab987a6f70a4b4cc3cbaa4fa77e72e10f86fe15b60"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--mobile/install.png",
+      "sha256": "b136202450239bf118c50c83afc8fa5bc6226e8d857a6f1b6a2e5cd2f158d6d5"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--mobile/notification-workflow.json",
+      "sha256": "d6a361c0eb65f551a4785d6d5c81b427c36a67f1ec39fc46a20107fa741dacba"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--mobile/notifications-page.png",
+      "sha256": "614af204e60bc994b6d559e092863ff62ef740fbe2354fe0461febbde8492782"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--mobile/notifications.png",
+      "sha256": "4e913d4b0b8a1b71270d2e5edac0556e6a33486418871bd85bc01a58db9e6ca4"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-1db84-eadback-reduce-height-1000--desktop/update-workflow.json",
+      "sha256": "1d6e9040f94c850164289abd1c8fe07e1097fe748521e9425e77d4cf44b0b059"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-1db84-eadback-reduce-height-1000--mobile/update-workflow.json",
+      "sha256": "1d6e9040f94c850164289abd1c8fe07e1097fe748521e9425e77d4cf44b0b059"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--desktop/update-popup-geometry.json",
+      "sha256": "017bf4b553bc4e6378b27ce784e912276654dcb3e9bf52e8571d85b147a7b681"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--desktop/updates-every.png",
+      "sha256": "b1f0e18ca11e8d4957da2c2a4f389e8eb4e10479725a4bab2f4e427c2324e058"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--desktop/updates-unit.png",
+      "sha256": "929749d785da493cabe6676b5ef5bbc9e24178383e3fb351710ee03e5992b6bb"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--firefox-stats/update-popup-geometry.json",
+      "sha256": "017bf4b553bc4e6378b27ce784e912276654dcb3e9bf52e8571d85b147a7b681"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--firefox-stats/updates-every.png",
+      "sha256": "d08b479f8c1bc75867ac33836528825607f19f29de13e5118fea62c72e71fc58"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--firefox-stats/updates-unit.png",
+      "sha256": "472bfb95292df4d73a1db186f6c709412aef2ed8c657c45412e5c1b300a4da5c"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--mobile/update-popup-geometry.json",
+      "sha256": "017bf4b553bc4e6378b27ce784e912276654dcb3e9bf52e8571d85b147a7b681"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--mobile/updates-every.png",
+      "sha256": "e7e119ad080d8d36f16eedb3d1a33a06e121a514ff4dfd9868e16c009a5f8bcd"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--mobile/updates-unit.png",
+      "sha256": "c62e8d661d379f4294ca7f86cce86eeb29b09e17d367625eedf9d0c29c4b2a3c"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-377ad-tainment-reduce-height-480--desktop/update-draft.json",
+      "sha256": "b753e2fc254ffd0523ba9457cababf5943376aa2be63ae5b2e3bc6f5eca6246d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-377ad-tainment-reduce-height-480--firefox-stats/update-draft.json",
+      "sha256": "b753e2fc254ffd0523ba9457cababf5943376aa2be63ae5b2e3bc6f5eca6246d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-377ad-tainment-reduce-height-480--mobile/update-draft.json",
+      "sha256": "b753e2fc254ffd0523ba9457cababf5943376aa2be63ae5b2e3bc6f5eca6246d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--desktop/update-popup-geometry.json",
+      "sha256": "91aca6e5e08a6f7cff475b9691787ed034fc766c7b456238abdbb135b9db7a57"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--desktop/updates-every.png",
+      "sha256": "61965ef53ac6016fd1f75e5d06e3c445fa6e319fb4c8d522807b236d82c15e8a"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--desktop/updates-unit.png",
+      "sha256": "a0054c981a8d2639fe4d65676fdea2f8ddb55e93e0b92bc7bde03c663219e618"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--firefox-stats/error-context.md",
+      "sha256": "6ca77e70cdf1f9e35c26ed92aa3a1476099a0ab92503cecbf516bab2da045d62"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--firefox-stats/test-failed-1.png",
+      "sha256": "1a971bdabd7f919b6a7df21141828835026cab039a602cf20c2f68db4e763edd"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--firefox-stats/trace.zip",
+      "sha256": "7ee56ec7cf57c900ec457596c11b1863b2430480dca3ff8a962314d2b0dcd909"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--mobile/update-popup-geometry.json",
+      "sha256": "91aca6e5e08a6f7cff475b9691787ed034fc766c7b456238abdbb135b9db7a57"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--mobile/updates-every.png",
+      "sha256": "5f4449e4169bf0bb4528dc44eeddf4bcf78268eeaeaea0b7b9d332aa838fef37"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--mobile/updates-unit.png",
+      "sha256": "dd806bfad57171073ba25f4bc70404b3d94939ad5c737a8d11df140281b62b80"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--desktop/update-popup-geometry.json",
+      "sha256": "d4d64d2e4ac09a2e084c5dd7a15402d60a51cd01b0ea8b0cb45a2434a030d2ce"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--desktop/updates-every.png",
+      "sha256": "7257db47afb9abfb90877ca4dd8340d62aa3a4941b4d021bcdfb0ca52af481a1"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--desktop/updates-unit.png",
+      "sha256": "929749d785da493cabe6676b5ef5bbc9e24178383e3fb351710ee03e5992b6bb"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--firefox-stats/update-popup-geometry.json",
+      "sha256": "d4d64d2e4ac09a2e084c5dd7a15402d60a51cd01b0ea8b0cb45a2434a030d2ce"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--firefox-stats/updates-every.png",
+      "sha256": "88d2d2dcf5f1332af96eb06cf0850818c1a8917123e5dc8a3476001128ccfa96"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--firefox-stats/updates-unit.png",
+      "sha256": "472bfb95292df4d73a1db186f6c709412aef2ed8c657c45412e5c1b300a4da5c"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--mobile/update-popup-geometry.json",
+      "sha256": "d4d64d2e4ac09a2e084c5dd7a15402d60a51cd01b0ea8b0cb45a2434a030d2ce"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--mobile/updates-every.png",
+      "sha256": "9931da0dc2ac8ffafd16a5330192d5f454d104b14de929bf834f3b26d2a7fa53"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--mobile/updates-unit.png",
+      "sha256": "992add00ef8c8008476de385cdb13f0a46333e38a5be1571bfe98cebf2a1eabf"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-6c47f-k-no-preference-height-480--desktop/update-workflow.json",
+      "sha256": "b819306946453631d8bcb63214c2b9f941ed73a7fad2023b26517062b326e6aa"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-6c47f-k-no-preference-height-480--firefox-stats/update-workflow.json",
+      "sha256": "02d404426dc97d4029e2e08734f18f8584eaed58151e304f6158613e210ea777"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-6c47f-k-no-preference-height-480--mobile/update-workflow.json",
+      "sha256": "b819306946453631d8bcb63214c2b9f941ed73a7fad2023b26517062b326e6aa"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-712b9-ainment-reduce-height-1000--desktop/update-draft.json",
+      "sha256": "aa8da72454f13eac39ef9f6368643bdf05524dbe11417c0786add75a83da7ad7"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-712b9-ainment-reduce-height-1000--mobile/update-draft.json",
+      "sha256": "aa8da72454f13eac39ef9f6368643bdf05524dbe11417c0786add75a83da7ad7"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--desktop/update-popup-geometry.json",
+      "sha256": "1695a9d75cbc29fe5dd0ddd9177f50bc82777e904b9d5d52968a84594706b7cd"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--desktop/updates-every.png",
+      "sha256": "d31d35aa4a4f0570d854b70f4315aec75a637355dae16406816780f40ac667ff"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--desktop/updates-unit.png",
+      "sha256": "a0054c981a8d2639fe4d65676fdea2f8ddb55e93e0b92bc7bde03c663219e618"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--mobile/update-popup-geometry.json",
+      "sha256": "1695a9d75cbc29fe5dd0ddd9177f50bc82777e904b9d5d52968a84594706b7cd"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--mobile/updates-every.png",
+      "sha256": "5f4449e4169bf0bb4528dc44eeddf4bcf78268eeaeaea0b7b9d332aa838fef37"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--mobile/updates-unit.png",
+      "sha256": "dd806bfad57171073ba25f4bc70404b3d94939ad5c737a8d11df140281b62b80"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--desktop/update-card-geometry.json",
+      "sha256": "26ccc56a8722f61487fb72d763f18d326569dcb45a37195267934516fb6456f3"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--desktop/updates-editor.png",
+      "sha256": "e2ffb78a86aa88dcf3048fe86f0d2440f2f571af0f4a5fc02d52145f6cb8e131"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--desktop/updates-list.png",
+      "sha256": "82bc5e1c4b37ac29332b31f5a9c7200b332b80175cfeddc29973a1509092f2dc"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--firefox-stats/update-card-geometry.json",
+      "sha256": "302238d333d2e7f9889590172db1be43d689fa8f43f0bd371f34e79153abc73f"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--firefox-stats/updates-editor.png",
+      "sha256": "408c9bc8cbdeaccca897dbb9a6ffc7def11044e2578841d4ce79e22840a3483e"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--firefox-stats/updates-list.png",
+      "sha256": "14fc76f4e09d6aaf7d7597ad7c0882f5f0d4a5ed16eedd38c9cb0b663afa370d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--mobile/update-card-geometry.json",
+      "sha256": "26ccc56a8722f61487fb72d763f18d326569dcb45a37195267934516fb6456f3"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--mobile/updates-editor.png",
+      "sha256": "d5c8a66d6f2d8fe59422c2982ded25575458f2f08e7fbe57b89825ce0f52fd8f"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--mobile/updates-list.png",
+      "sha256": "d3de7099c1f67e056ecefb8bd003ece506157671a7ce7c480272781262ebf274"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-7ebd2-readback-reduce-height-480--desktop/update-workflow.json",
+      "sha256": "61e6eb1be546c3a40c0fa9bdf1264b216ab8b1396549aaabd2275d701ffe1ad1"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-7ebd2-readback-reduce-height-480--firefox-stats/update-workflow.json",
+      "sha256": "be2af83c0f23d7b279d34f4b641028e475dc14ba8b9d38ace5ec47a4a6430815"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-7ebd2-readback-reduce-height-480--mobile/update-workflow.json",
+      "sha256": "61e6eb1be546c3a40c0fa9bdf1264b216ab8b1396549aaabd2275d701ffe1ad1"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-8f641-t-no-preference-height-480--desktop/update-draft.json",
+      "sha256": "87486e352126f6733038920a5be29c766a9c838a579fa1c938e2a1ebf43ed013"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-8f641-t-no-preference-height-480--firefox-stats/update-draft.json",
+      "sha256": "87486e352126f6733038920a5be29c766a9c838a579fa1c938e2a1ebf43ed013"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-8f641-t-no-preference-height-480--mobile/update-draft.json",
+      "sha256": "87486e352126f6733038920a5be29c766a9c838a579fa1c938e2a1ebf43ed013"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-desktop/error-context.md",
+      "sha256": "c0fce9961618bbd1fb76d3407b2827e3c3de5f8aadd4fa2edd8a1327d2c084b7"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-desktop/test-failed-1.png",
+      "sha256": "d5b580f4e505a67bfe02e98b66e51918bacab0e82f0eb23b36f8b718a4f90f0a"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-desktop/trace.zip",
+      "sha256": "ebb4ec12ecc5c16672c1082917db25653a05d70fa890c3ffad1279d4ac75df3d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-desktop/update-retry-scroll.json",
+      "sha256": "770c91c8e607abd5d1ed20f08356acde87ee3c787e4b8df2222d0edadebe7350"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-mobile/update-retry-scroll.json",
+      "sha256": "6cd509299cdacbeeb9f67fce7c195e352bcb2b1f52e379d6ade6d8027af940b9"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--desktop/update-card-geometry.json",
+      "sha256": "8aee6065c66b2afa4f102c4edecc455a735bedf974e71a8bf637aeab25ba559d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--desktop/updates-editor.png",
+      "sha256": "e2ffb78a86aa88dcf3048fe86f0d2440f2f571af0f4a5fc02d52145f6cb8e131"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--desktop/updates-list.png",
+      "sha256": "a6a6fc1075c15c8b0a8139a9036e5b52d54a35b1afe30dafe9d49abd0c61d851"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--firefox-stats/update-card-geometry.json",
+      "sha256": "80009f52524f3274b9eebe494dd04c94a68aee14819a805671912aa3af5bea10"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--firefox-stats/updates-editor.png",
+      "sha256": "408c9bc8cbdeaccca897dbb9a6ffc7def11044e2578841d4ce79e22840a3483e"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--firefox-stats/updates-list.png",
+      "sha256": "14fc76f4e09d6aaf7d7597ad7c0882f5f0d4a5ed16eedd38c9cb0b663afa370d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--mobile/update-card-geometry.json",
+      "sha256": "8aee6065c66b2afa4f102c4edecc455a735bedf974e71a8bf637aeab25ba559d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--mobile/updates-editor.png",
+      "sha256": "b6a2646dc9e7b7a0fd07f88054988f255df26473c0dbcb58d8577fdb17d0e6d9"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--mobile/updates-list.png",
+      "sha256": "d75f3d268b14654ee8b6b7587488c85504b5e63701b1476609231f67d4d7d77d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-be5c6--no-preference-height-1000--desktop/update-workflow.json",
+      "sha256": "3b174f5c0728cc7a398a738dd78831b28f06a6f5bf95cd9bf12634ae1a394d87"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-be5c6--no-preference-height-1000--firefox-stats/update-workflow.json",
+      "sha256": "e9a3f616071c487b840109f84055b79957cde53d1b911a8d0fb9207f5c5ee97b"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-be5c6--no-preference-height-1000--mobile/update-workflow.json",
+      "sha256": "3b174f5c0728cc7a398a738dd78831b28f06a6f5bf95cd9bf12634ae1a394d87"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--desktop/update-card-geometry.json",
+      "sha256": "ffee174c66dfc6300f64d13e0c69a74daec409e11999a6a5a05f9596c1cc1fe8"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--desktop/updates-editor.png",
+      "sha256": "1f7265afd9a84b732ebfdb808d46b2cda7d2f43a9bb8d160c01bf59b3170e1f3"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--desktop/updates-list.png",
+      "sha256": "b6cd754ea09b17b912f2853131a5ec1243b31ab2161fccd103be24635788c19e"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--mobile/update-card-geometry.json",
+      "sha256": "ffee174c66dfc6300f64d13e0c69a74daec409e11999a6a5a05f9596c1cc1fe8"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--mobile/updates-editor.png",
+      "sha256": "af5acc678c21d60fef9edf5b5e58d2e6c86ab0264c4a6654c9d885d88dbea9c1"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--mobile/updates-list.png",
+      "sha256": "aa84f9ca8a9d2098a213e7e26bb4cc20179b7a275c9f6612878732be58fd4229"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-dc69f-licy-lock-and-empty-account-desktop/update-recovery.json",
+      "sha256": "6b1155d53fb4bd6293ad8f2d33ce80e909593f127f6d2ef946f4429eaa638be0"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-dc69f-licy-lock-and-empty-account-mobile/update-recovery.json",
+      "sha256": "6b1155d53fb4bd6293ad8f2d33ce80e909593f127f6d2ef946f4429eaa638be0"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-e1f29--no-preference-height-1000--desktop/update-draft.json",
+      "sha256": "bb9b15c9935ece7f9464656a3b4e4e608cc713a0ede9d65d8d3d085e4769bc51"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-e1f29--no-preference-height-1000--firefox-stats/update-draft.json",
+      "sha256": "bb9b15c9935ece7f9464656a3b4e4e608cc713a0ede9d65d8d3d085e4769bc51"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-e1f29--no-preference-height-1000--mobile/update-draft.json",
+      "sha256": "bb9b15c9935ece7f9464656a3b4e4e608cc713a0ede9d65d8d3d085e4769bc51"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--desktop/update-card-geometry.json",
+      "sha256": "60f986fd9f8371bd70bdb1aa5f079ce2813f2230f2606c11225137d020a5e21f"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--desktop/updates-editor.png",
+      "sha256": "1f7265afd9a84b732ebfdb808d46b2cda7d2f43a9bb8d160c01bf59b3170e1f3"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--desktop/updates-list.png",
+      "sha256": "17d86b29fd22e9391d30b83fa93905601b444f7a471bbbad0b3ce2757e131d55"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--firefox-stats/update-card-geometry.json",
+      "sha256": "c08d76cd9e3422d8eec2984247264693ea6976a7b57f4530f0b733d61dcfec9d"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--firefox-stats/updates-editor.png",
+      "sha256": "785b4a1dac66c5ab7653cf96d62ca3fcac81b7624928a9f2332693f82fbe6388"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--firefox-stats/updates-list.png",
+      "sha256": "29c39fa60962a5a05c6d637a71206302c2ec712312ba24fe90757757580ece50"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--mobile/update-card-geometry.json",
+      "sha256": "60f986fd9f8371bd70bdb1aa5f079ce2813f2230f2606c11225137d020a5e21f"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--mobile/updates-editor.png",
+      "sha256": "af5acc678c21d60fef9edf5b5e58d2e6c86ab0264c4a6654c9d885d88dbea9c1"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-scroll-regression-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--mobile/updates-list.png",
+      "sha256": "aa84f9ca8a9d2098a213e7e26bb4cc20179b7a275c9f6612878732be58fd4229"
+    }
+  ]
+}

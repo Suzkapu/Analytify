@@ -1,0 +1,29 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-settings-updates.spec.ts --config=/tmp/analytify-updates-browsers.config.ts --workers=1 --grep Retry scroll target|cached refresh --output=docs/testing-evidence/design-v2/settings-updates-scroll-green-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:433642) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:433642) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:433789) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop] › e2e/design-v2-settings-updates.spec.ts:151:5 › Updates cached refresh, recovery, policy lock and empty account (4.2s)
+  ✓  2 [desktop] › e2e/design-v2-settings-updates.spec.ts:168:5 › Updates Retry scroll target clears fixed mobile navigation (2.1s)
+(node:434028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [mobile] › e2e/design-v2-settings-updates.spec.ts:151:5 › Updates cached refresh, recovery, policy lock and empty account (4.3s)
+  ✓  4 [mobile] › e2e/design-v2-settings-updates.spec.ts:168:5 › Updates Retry scroll target clears fixed mobile navigation (2.6s)
+(node:434286) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:151:5 › Updates cached refresh, recovery, policy lock and empty account (5.9s)
+  ✓  6 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:168:5 › Updates Retry scroll target clears fixed mobile navigation (2.3s)
+(node:434759) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  7 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:151:5 › Updates cached refresh, recovery, policy lock and empty account (8.5s)
+  ✓  8 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:168:5 › Updates Retry scroll target clears fixed mobile navigation (5.4s)
+
+  8 passed (50.3s)

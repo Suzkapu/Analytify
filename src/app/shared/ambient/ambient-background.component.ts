@@ -5,7 +5,8 @@ import {
   ElementRef,
   Input,
   NgZone,
-  OnDestroy
+  OnDestroy,
+  untracked
 } from '@angular/core';
 import {AmbientOverlayState, AmbientShellMode, AmbientVector, ambientVectorsClose, dampAmbientVector} from './ambient-background.math';
 import {AmbientBackgroundState} from './ambient-background.state';
@@ -39,23 +40,25 @@ export class AmbientBackgroundComponent implements AfterViewInit, OnDestroy {
     this.scrollMetricsPending = true;
     this.scheduleFrame();
   };
-  private readonly visibilityHandler = (): void => {
+  // Native events can interrupt a template/computed read. Keep their writes
+  // outside that interrupted reactive consumer without delaying pause/resume.
+  private readonly visibilityHandler = (): void => untracked(() => {
     this.state.setVisibility(document.hidden);
     if (document.hidden) this.cancelFrame();
     else this.scrollHandler();
-  };
-  private readonly reducedMotionHandler = (event: MediaQueryListEvent): void => {
+  });
+  private readonly reducedMotionHandler = (event: MediaQueryListEvent): void => untracked(() => {
     this.state.setReducedMotion(event.matches);
     if (event.matches) {
       this.cancelFrame();
       this.current = this.state.target();
       this.render(this.current);
     } else this.scrollHandler();
-  };
-  private readonly coarsePointerHandler = (event: MediaQueryListEvent): void => {
+  });
+  private readonly coarsePointerHandler = (event: MediaQueryListEvent): void => untracked(() => {
     this.state.setCoarsePointer(event.matches);
     this.scheduleFrame();
-  };
+  });
 
   constructor(
     private readonly element: ElementRef<HTMLElement>,

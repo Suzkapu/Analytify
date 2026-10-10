@@ -2055,6 +2055,14 @@ html {
   scroll-behavior: smooth;
 }
 
+// Native focus/scrollIntoView must account for preview app chrome, including
+// controls halfway down a page. Document-bottom padding alone cannot do this.
+@media (max-width: 760px) {
+  html:has(.design-v2[data-chrome='app']) {
+    scroll-padding-block: 62px calc(94px + env(safe-area-inset-bottom));
+  }
+}
+
 body {
   background: linear-gradient(180deg, #090c0a 0%, #080b09 52%, #0a0d0b 100%);
   background-attachment: scroll;

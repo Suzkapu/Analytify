@@ -1,0 +1,56 @@
+{
+  "checkpoint": "12def44a86f04c1d6337e870c5b71b65b7019ac0",
+  "uncommittedCorrection": true,
+  "redExit": 1,
+  "redGeometry": {
+    "buttonBottom": 432,
+    "navigationTop": 404,
+    "receivesPointer": false
+  },
+  "greenExit": 0,
+  "greenCases": 8,
+  "geometry": [
+    {
+      "path": "docs/testing-evidence/design-v2/settings-updates-scroll-green-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-desktop/update-retry-scroll.json",
+      "geometry": {
+        "buttonBottom": 386,
+        "navigationTop": 404,
+        "receivesPointer": true
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-updates-scroll-green-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-firefox-stats/update-retry-scroll.json",
+      "geometry": {
+        "buttonBottom": 386,
+        "navigationTop": 404,
+        "receivesPointer": true
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-updates-scroll-green-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-mobile/update-retry-scroll.json",
+      "geometry": {
+        "buttonBottom": 386,
+        "navigationTop": 404,
+        "receivesPointer": true
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-updates-scroll-green-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-webkit-stats/update-retry-scroll.json",
+      "geometry": {
+        "buttonBottom": 386,
+        "navigationTop": 404,
+        "receivesPointer": true
+      }
+    }
+  ],
+  "sources": {
+    "src/styles.scss": "48d6be94299daaadc032567f18bc712f01217968210cb0fa3b4e7e61026ac9e6",
+    "e2e/design-v2-settings-updates.spec.ts": "96186efd46ba757e01a3a36e208bcbf296059626ae03828fc8be1ed6b6174a43"
+  },
+  "limitations": [
+    "Combined 104-case native regression after CSS correction is running; result pending.",
+    "Three passing unchanged WebKit startup reproductions do not fix the earlier startup failure.",
+    "Canonical shell/footer and approved goldens remain incomplete."
+  ],
+  "fullCiExit": 0
+}

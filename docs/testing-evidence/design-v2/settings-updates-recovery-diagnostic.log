@@ -1,0 +1,22 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-settings-updates.spec.ts --config=/tmp/analytify-updates-browsers.config.ts --workers=1 --project=firefox-stats --grep cached refresh --repeat-each=3 --output=docs/testing-evidence/design-v2/settings-updates-recovery-diagnostic-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:429063) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:429063) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:429639) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:151:5 › Updates cached refresh, recovery, policy lock and empty account (7.1s)
+(node:430057) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:151:5 › Updates cached refresh, recovery, policy lock and empty account (7.1s)
+(node:430573) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:151:5 › Updates cached refresh, recovery, policy lock and empty account (8.6s)
+
+  3 passed (41.9s)
