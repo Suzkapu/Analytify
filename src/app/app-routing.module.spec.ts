@@ -33,7 +33,7 @@ describe('canonical application routes', () => {
   it('keeps every product and public route in the canonical shell', () => {
     expect(shell.children?.map(route => route.path)).toEqual([
       '', 'login', 'callback', 'spotify', 'playlists', 'songs/:id', 'artistDetails/:id',
-      'analysis/:id', 'stats/:userId', 'stats', 'history', 'admin', 'song-league', 'shared-playlists',
+      'analysis/:id', 'stats/:userId', 'stats', 'history', 'settings', 'admin', 'song-league', 'shared-playlists',
       'legal', 'compare-room/callback', 'compare-room/join/:roomId', 'compare-room', '**'
     ]);
     for (const route of shell.children?.filter(candidate => candidate.loadChildren || candidate.loadComponent) ?? []) {
@@ -82,6 +82,18 @@ describe('canonical application routes', () => {
     for (const path of ['stats', 'history', 'compare-room', 'compare-room/callback', 'compare-room/join/:roomId']) {
       expect(routeByPath(path)?.canActivate).toContain(spotifyRestrictedFeatureGuard);
     }
+  });
+
+  it('protects Settings and lazily resolves its implemented Account/Data destinations', async () => {
+    const settings = routeByPath('settings');
+    expect(settings?.canActivate).toEqual([spotifyAuthGuard]);
+    expect(settings?.children?.find(route => route.path === '')).toEqual({path: '', pathMatch: 'full', redirectTo: 'account'});
+    const account = settings?.children?.find(route => route.path === 'account');
+    const data = settings?.children?.find(route => route.path === 'data');
+    expect(await settings?.loadComponent?.()).toBe((await import('./features/settings/v2-settings-page.component')).V2SettingsPageComponent);
+    const panels = await import('./features/settings/v2-settings-account-data.component');
+    expect(await account?.loadComponent?.()).toBe(panels.V2SettingsAccountComponent);
+    expect(await data?.loadComponent?.()).toBe(panels.V2SettingsDataComponent);
   });
 
   it('keeps stable external links and browser routing behavior', () => {

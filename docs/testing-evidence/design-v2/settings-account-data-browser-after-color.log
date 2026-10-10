@@ -1,0 +1,321 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-all-browsers.config.ts e2e/design-v2-settings-account-data.spec.ts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:69124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:69124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 2 workers
+
+(node:70071) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:70070) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [desktop] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) (7.5s)
+(node:70749) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 [mobile] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) (5.9s)
+(node:70965) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) (16.9s)
+(node:71132) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  5 [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) (9.6s)
+(node:71585) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  4 [mobile] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) (16.5s)
+(node:72040) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  6 [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) (26.4s)
+(node:73218) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  7 [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) (32.7s)
+  ✘  8 [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) (17.7s)
+
+
+  1) [desktop] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      37 |         expect(sample.scrollWidth).toBeLessThanOrEqual(width); expect(sample.button.height).toBeGreaterThanOrEqual(48);
+      38 |         expect(sample.button.x).toBeGreaterThanOrEqual(0); expect(sample.button.x + sample.button.width).toBeLessThanOrEqual(width);
+    > 39 |         expect(sample.reachable).toBe(true); geometry.push(sample);
+         |                                  ^
+      40 |       }
+      41 |     }
+      42 |     await page.setViewportSize({width: info.project.name === 'mobile' ? 390 : 1440, height: 900});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:39:34
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) 
+
+    Error: expect(locator).not.toBeChecked() failed
+
+    Locator: locator('v2-settings-data').getByRole('switch', { name: 'Cloud Backup' })
+    Expected: not checked
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "not toBeChecked" locator('v2-settings-data').getByRole('switch', { name: 'Cloud Backup' }) with timeout 5000ms
+      - waiting for locator('v2-settings-data').getByRole('switch', { name: 'Cloud Backup' })
+
+
+      48 |     const backup = data.getByRole('switch', {name: 'Cloud Backup'});
+      49 |     await expect(backup).not.toBeChecked(); await backup.press('Space');
+    > 50 |     await expect(backup).not.toBeChecked(); await expect(page.getByRole('alertdialog')).toBeVisible();
+         |                              ^
+      51 |     await page.keyboard.press('Escape'); await expect(page.getByRole('alertdialog')).toHaveCount(0);
+      52 |     await data.getByRole('button', {name: 'Clear data', exact: true}).press('Enter');
+      53 |     await expect(page.getByRole('alertdialog', {name: 'What would you like to clear?', exact: true})).toBeVisible();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:50:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      37 |         expect(sample.scrollWidth).toBeLessThanOrEqual(width); expect(sample.button.height).toBeGreaterThanOrEqual(48);
+      38 |         expect(sample.button.x).toBeGreaterThanOrEqual(0); expect(sample.button.x + sample.button.width).toBeLessThanOrEqual(width);
+    > 39 |         expect(sample.reachable).toBe(true); geometry.push(sample);
+         |                                  ^
+      40 |       }
+      41 |     }
+      42 |     await page.setViewportSize({width: info.project.name === 'mobile' ? 390 : 1440, height: 900});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:39:34
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [mobile] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) 
+
+    Error: expect(locator).not.toBeChecked() failed
+
+    Locator: locator('v2-settings-data').getByRole('switch', { name: 'Cloud Backup' })
+    Expected: not checked
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "not toBeChecked" locator('v2-settings-data').getByRole('switch', { name: 'Cloud Backup' }) with timeout 5000ms
+      - waiting for locator('v2-settings-data').getByRole('switch', { name: 'Cloud Backup' })
+
+
+      48 |     const backup = data.getByRole('switch', {name: 'Cloud Backup'});
+      49 |     await expect(backup).not.toBeChecked(); await backup.press('Space');
+    > 50 |     await expect(backup).not.toBeChecked(); await expect(page.getByRole('alertdialog')).toBeVisible();
+         |                              ^
+      51 |     await page.keyboard.press('Escape'); await expect(page.getByRole('alertdialog')).toHaveCount(0);
+      52 |     await data.getByRole('button', {name: 'Clear data', exact: true}).press('Enter');
+      53 |     await expect(page.getByRole('alertdialog', {name: 'What would you like to clear?', exact: true})).toBeVisible();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:50:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      37 |         expect(sample.scrollWidth).toBeLessThanOrEqual(width); expect(sample.button.height).toBeGreaterThanOrEqual(48);
+      38 |         expect(sample.button.x).toBeGreaterThanOrEqual(0); expect(sample.button.x + sample.button.width).toBeLessThanOrEqual(width);
+    > 39 |         expect(sample.reachable).toBe(true); geometry.push(sample);
+         |                                  ^
+      40 |       }
+      41 |     }
+      42 |     await page.setViewportSize({width: info.project.name === 'mobile' ? 390 : 1440, height: 900});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:39:34
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) 
+
+    Error: expect(locator).not.toBeChecked() failed
+
+    Locator: locator('v2-settings-data').getByRole('switch', { name: 'Cloud Backup' })
+    Expected: not checked
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "not toBeChecked" locator('v2-settings-data').getByRole('switch', { name: 'Cloud Backup' }) with timeout 5000ms
+      - waiting for locator('v2-settings-data').getByRole('switch', { name: 'Cloud Backup' })
+
+
+      48 |     const backup = data.getByRole('switch', {name: 'Cloud Backup'});
+      49 |     await expect(backup).not.toBeChecked(); await backup.press('Space');
+    > 50 |     await expect(backup).not.toBeChecked(); await expect(page.getByRole('alertdialog')).toBeVisible();
+         |                              ^
+      51 |     await page.keyboard.press('Escape'); await expect(page.getByRole('alertdialog')).toHaveCount(0);
+      52 |     await data.getByRole('button', {name: 'Clear data', exact: true}).press('Enter');
+      53 |     await expect(page.getByRole('alertdialog', {name: 'What would you like to clear?', exact: true})).toBeVisible();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:50:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+
+    Error: expect(locator).not.toBeChecked() failed
+
+    Locator: locator('v2-settings-data').getByRole('switch', { name: 'Cloud Backup' })
+    Expected: not checked
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "not toBeChecked" locator('v2-settings-data').getByRole('switch', { name: 'Cloud Backup' }) with timeout 5000ms
+      - waiting for locator('v2-settings-data').getByRole('switch', { name: 'Cloud Backup' })
+
+
+      48 |     const backup = data.getByRole('switch', {name: 'Cloud Backup'});
+      49 |     await expect(backup).not.toBeChecked(); await backup.press('Space');
+    > 50 |     await expect(backup).not.toBeChecked(); await expect(page.getByRole('alertdialog')).toBeVisible();
+         |                              ^
+      51 |     await page.keyboard.press('Escape'); await expect(page.getByRole('alertdialog')).toHaveCount(0);
+      52 |     await data.getByRole('button', {name: 'Clear data', exact: true}).press('Enter');
+      53 |     await expect(page.getByRole('alertdialog', {name: 'What would you like to clear?', exact: true})).toBeVisible();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:50:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) 
+
+    Error: expect(locator).not.toBeChecked() failed
+
+    Locator: locator('v2-settings-data').getByRole('switch', { name: 'Cloud Backup' })
+    Expected: not checked
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "not toBeChecked" locator('v2-settings-data').getByRole('switch', { name: 'Cloud Backup' }) with timeout 5000ms
+      - waiting for locator('v2-settings-data').getByRole('switch', { name: 'Cloud Backup' })
+
+
+      48 |     const backup = data.getByRole('switch', {name: 'Cloud Backup'});
+      49 |     await expect(backup).not.toBeChecked(); await backup.press('Space');
+    > 50 |     await expect(backup).not.toBeChecked(); await expect(page.getByRole('alertdialog')).toBeVisible();
+         |                              ^
+      51 |     await page.keyboard.press('Escape'); await expect(page.getByRole('alertdialog')).toHaveCount(0);
+      52 |     await data.getByRole('button', {name: 'Clear data', exact: true}).press('Enter');
+      53 |     await expect(page.getByRole('alertdialog', {name: 'What would you like to clear?', exact: true})).toBeVisible();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:50:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8 failed
+    [desktop] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+    [desktop] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) 
+    [mobile] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+    [mobile] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) 
+    [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+    [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) 
+    [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+    [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) 

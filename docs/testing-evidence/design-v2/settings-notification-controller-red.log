@@ -1,0 +1,693 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/settings/v2-notification-settings.controller.spec.ts
+Application bundle generation complete. [4.008 seconds] - 2026-10-10T06:56:55.882Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > loads saved categories without requesting device permission and refreshes cached settings
+AssertionError: expected null to deeply equal { supported: true, …(13) }
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:35:62
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: null,
+  expected: {
+    supported: true,
+    installedPwa: false,
+    permission: 'default',
+    deviceSubscribed: false,
+    deviceRegistered: false,
+    registeredDeviceCount: 0,
+    deviceState: 'permission-required',
+    songLeagueEnabled: true,
+    songLeagueSongAddedEnabled: false,
+    songLeagueMember: true,
+    statsAccessRequestsEnabled: false,
+    active: false,
+    songAddedActive: false,
+    statsAccessActive: false
+  },
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > keeps cached categories on refresh failure and allows recovery
+AssertionError: expected null to deeply equal { supported: true, …(13) }
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:43:35
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: null,
+  expected: {
+    supported: true,
+    installedPwa: false,
+    permission: 'default',
+    deviceSubscribed: false,
+    deviceRegistered: false,
+    registeredDeviceCount: 0,
+    deviceState: 'permission-required',
+    songLeagueEnabled: true,
+    songLeagueSongAddedEnabled: false,
+    songLeagueMember: true,
+    statsAccessRequestsEnabled: false,
+    active: false,
+    songAddedActive: false,
+    statsAccessActive: false
+  },
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > uses a useful generic error when the service supplies no message
+AssertionError: expected '' to be 'Notification settings could not be up…' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:48:59
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: '',
+  expected: 'Notification settings could not be updated. Try again.',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > discards an older refresh after the newest refresh finishes (success)
+AssertionError: expected null to deeply equal { supported: true, …(13) }
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:56:48
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: null,
+  expected: {
+    supported: true,
+    installedPwa: false,
+    permission: 'granted',
+    deviceSubscribed: true,
+    deviceRegistered: true,
+    registeredDeviceCount: 1,
+    deviceState: 'registered',
+    songLeagueEnabled: true,
+    songLeagueSongAddedEnabled: false,
+    songLeagueMember: true,
+    statsAccessRequestsEnabled: false,
+    active: true,
+    songAddedActive: false,
+    statsAccessActive: false
+  },
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > discards an older refresh after the newest refresh finishes (failure)
+Error: Old failure
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:55:68
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+AssertionError: expected null to deeply equal { supported: true, …(13) }
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:56:48
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: null,
+  expected: {
+    supported: true,
+    installedPwa: false,
+    permission: 'granted',
+    deviceSubscribed: true,
+    deviceRegistered: true,
+    registeredDeviceCount: 1,
+    deviceState: 'registered',
+    songLeagueEnabled: true,
+    songLeagueSongAddedEnabled: false,
+    songLeagueMember: true,
+    statsAccessRequestsEnabled: false,
+    active: true,
+    songAddedActive: false,
+    statsAccessActive: false
+  },
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > enables the device once and preserves saved categories while blocking duplicate actions and refresh
+AssertionError: expected false to be true // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:61:33
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: false,
+  expected: true,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > saves a category independently of a denied device and restores saved state on failure
+AssertionError: expected undefined to be false // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:72:63
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: false,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > explains denied through actual settings without attempting device registration
+AssertionError: expected undefined to be 'denied' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:80:48
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: 'denied',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > explains unsupported through actual settings without attempting device registration
+AssertionError: expected undefined to be 'unsupported' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:80:48
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: 'unsupported',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > discards late results and errors after actor changes
+Error: Old account failure
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:91:20
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+AssertionError: expected null to deeply equal { supported: true, …(13) }
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:94:64
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: null,
+  expected: {
+    supported: true,
+    installedPwa: false,
+    permission: 'default',
+    deviceSubscribed: false,
+    deviceRegistered: false,
+    registeredDeviceCount: 0,
+    deviceState: 'permission-required',
+    songLeagueEnabled: true,
+    songLeagueSongAddedEnabled: false,
+    songLeagueMember: true,
+    statsAccessRequestsEnabled: false,
+    active: false,
+    songAddedActive: false,
+    statsAccessActive: false
+  },
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > discards late results and errors after generation changes
+Error: Old account failure
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:91:20
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+AssertionError: expected null to deeply equal { supported: true, …(13) }
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:94:64
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: null,
+  expected: {
+    supported: true,
+    installedPwa: false,
+    permission: 'default',
+    deviceSubscribed: false,
+    deviceRegistered: false,
+    registeredDeviceCount: 0,
+    deviceState: 'permission-required',
+    songLeagueEnabled: true,
+    songLeagueSongAddedEnabled: false,
+    songLeagueMember: true,
+    statsAccessRequestsEnabled: false,
+    active: false,
+    songAddedActive: false,
+    statsAccessActive: false
+  },
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > discards late results and errors after destroy changes
+Error: Old account failure
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:91:20
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:95:67
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: 0,
+  expected: 1,
+  showDiff: false,
+  operator: 'strictEqual'
+}
+
+ ❯ |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts (13 tests | 12 failed) 104ms
+     × loads saved categories without requesting device permission and refreshes cached settings 43ms
+     × keeps cached categories on refresh failure and allows recovery 6ms
+     × uses a useful generic error when the service supplies no message 6ms
+     × discards an older refresh after the newest refresh finishes (success) 5ms
+     × discards an older refresh after the newest refresh finishes (failure) 5ms
+     × enables the device once and preserves saved categories while blocking duplicate actions and refresh 5ms
+     × saves a category independently of a denied device and restores saved state on failure 4ms
+     × explains denied through actual settings without attempting device registration 5ms
+     × explains unsupported through actual settings without attempting device registration 5ms
+     × discards late results and errors after actor changes 4ms
+     × discards late results and errors after generation changes 5ms
+     × discards late results and errors after destroy changes 4ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > loads saved categories without requesting device permission and refreshes cached settings
+AssertionError: expected null to deeply equal { supported: true, …(13) }
+
+- Expected:
+{
+  "active": false,
+  "deviceRegistered": false,
+  "deviceState": "permission-required",
+  "deviceSubscribed": false,
+  "installedPwa": false,
+  "permission": "default",
+  "registeredDeviceCount": 0,
+  "songAddedActive": false,
+  "songLeagueEnabled": true,
+  "songLeagueMember": true,
+  "songLeagueSongAddedEnabled": false,
+  "statsAccessActive": false,
+  "statsAccessRequestsEnabled": false,
+  "supported": true,
+}
+
++ Received:
+null
+
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:35:62
+     33|   it('loads saved categories without requesting device permission and …
+     34|     const {controller, service} = setup(); const pending = deferred<Pu…
+     35|     await controller.reload(); expect(controller.settings()).toEqual(s…
+       |                                                              ^
+     36|     service.loadSettings.mockReturnValueOnce(pending.promise); const r…
+     37|     expect(controller.loading()).toBe(true); expect(controller.setting…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > keeps cached categories on refresh failure and allows recovery
+AssertionError: expected null to deeply equal { supported: true, …(13) }
+
+- Expected:
+{
+  "active": false,
+  "deviceRegistered": false,
+  "deviceState": "permission-required",
+  "deviceSubscribed": false,
+  "installedPwa": false,
+  "permission": "default",
+  "registeredDeviceCount": 0,
+  "songAddedActive": false,
+  "songLeagueEnabled": true,
+  "songLeagueMember": true,
+  "songLeagueSongAddedEnabled": false,
+  "statsAccessActive": false,
+  "statsAccessRequestsEnabled": false,
+  "supported": true,
+}
+
++ Received:
+null
+
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:43:35
+     41|     const {controller, service} = setup(); await controller.reload();
+     42|     service.loadSettings.mockRejectedValueOnce(new Error('Settings una…
+     43|     expect(controller.settings()).toEqual(saved); expect(controller.er…
+       |                                   ^
+     44|     await controller.reload(); expect(controller.error()).toBe(''); ex…
+     45|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > uses a useful generic error when the service supplies no message
+AssertionError: expected '' to be 'Notification settings could not be up…' // Object.is equality
+
+- Expected
++ Received
+
+- Notification settings could not be updated. Try again.
+
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:48:59
+     46|   it('uses a useful generic error when the service supplies no message…
+     47|     const {controller, service} = setup(); service.loadSettings.mockRe…
+     48|     await controller.reload(); expect(controller.error()).toBe('Notifi…
+       |                                                           ^
+     49|     expect(controller.settings()).toBeNull(); expect(controller.loadin…
+     50|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > discards an older refresh after the newest refresh finishes (success)
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > discards an older refresh after the newest refresh finishes (failure)
+AssertionError: expected null to deeply equal { supported: true, …(13) }
+
+- Expected:
+{
+  "active": true,
+  "deviceRegistered": true,
+  "deviceState": "registered",
+  "deviceSubscribed": true,
+  "installedPwa": false,
+  "permission": "granted",
+  "registeredDeviceCount": 1,
+  "songAddedActive": false,
+  "songLeagueEnabled": true,
+  "songLeagueMember": true,
+  "songLeagueSongAddedEnabled": false,
+  "statsAccessActive": false,
+  "statsAccessRequestsEnabled": false,
+  "supported": true,
+}
+
++ Received:
+null
+
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:56:48
+     54|     const first = controller.reload(); await controller.reload();
+     55|     if (outcome === 'success') old.resolve(saved); else old.reject(new…
+     56|     await first; expect(controller.settings()).toEqual(ready); expect(…
+       |                                                ^
+     57|   });
+     58|   it('enables the device once and preserves saved categories while blo…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > enables the device once and preserves saved categories while blocking duplicate actions and refresh
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:61:33
+     59|     const {controller, service} = setup(); await controller.reload(); …
+     60|     service.enableDevice.mockReturnValueOnce(pending.promise); const a…
+     61|     expect(controller.saving()).toBe(true); expect(controller.settings…
+       |                                 ^
+     62|     await controller.enableDevice(); await controller.setCategory('sta…
+     63|     expect(service.enableDevice).toHaveBeenCalledOnce(); expect(servic…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > saves a category independently of a denied device and restores saved state on failure
+AssertionError: expected undefined to be false // Object.is equality
+
+- Expected:
+false
+
++ Received:
+undefined
+
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:72:63
+     70|     await controller.reload(); service.setCategoryPreference.mockRejec…
+     71|     await controller.setCategory('stats_access_requests', true);
+     72|     expect(controller.settings()?.statsAccessRequestsEnabled).toBe(fal…
+       |                                                               ^
+     73|     await controller.setCategory('stats_access_requests', true);
+     74|     expect(service.setCategoryPreference).toHaveBeenLastCalledWith('st…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/12]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > explains denied through actual settings without attempting device registration
+AssertionError: expected undefined to be 'denied' // Object.is equality
+
+- Expected:
+"denied"
+
++ Received:
+undefined
+
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:80:48
+     78|     const {controller, service} = setup(); service.loadSettings.mockRe…
+     79|     await controller.reload(); await controller.enableDevice(); expect…
+     80|     expect(controller.settings()?.deviceState).toBe(deviceState);
+       |                                                ^
+     81|   });
+     82|   it('does not mutate before settings are available', async () => {
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/12]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > explains unsupported through actual settings without attempting device registration
+AssertionError: expected undefined to be 'unsupported' // Object.is equality
+
+- Expected:
+"unsupported"
+
++ Received:
+undefined
+
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:80:48
+     78|     const {controller, service} = setup(); service.loadSettings.mockRe…
+     79|     await controller.reload(); await controller.enableDevice(); expect…
+     80|     expect(controller.settings()?.deviceState).toBe(deviceState);
+       |                                                ^
+     81|   });
+     82|   it('does not mutate before settings are available', async () => {
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/12]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > discards late results and errors after actor changes
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > discards late results and errors after generation changes
+AssertionError: expected null to deeply equal { supported: true, …(13) }
+
+- Expected:
+{
+  "active": false,
+  "deviceRegistered": false,
+  "deviceState": "permission-required",
+  "deviceSubscribed": false,
+  "installedPwa": false,
+  "permission": "default",
+  "registeredDeviceCount": 0,
+  "songAddedActive": false,
+  "songLeagueEnabled": true,
+  "songLeagueMember": true,
+  "songLeagueSongAddedEnabled": false,
+  "statsAccessActive": false,
+  "statsAccessRequestsEnabled": false,
+  "supported": true,
+}
+
++ Received:
+null
+
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:94:64
+     92|     expect(controller.error()).toBe(''); expect(controller.message()).…
+     93|     if (change !== 'destroy') {expect(controller.settings()).toBeNull(…
+     94|       await controller.reload(); expect(controller.settings()).toEqual…
+       |                                                                ^
+     95|     else {await controller.reload(); expect(service.loadSettings).toHa…
+     96|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/12]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > discards late results and errors after destroy changes
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:95:67
+     93|     if (change !== 'destroy') {expect(controller.settings()).toBeNull(…
+     94|       await controller.reload(); expect(controller.settings()).toEqual…
+     95|     else {await controller.reload(); expect(service.loadSettings).toHa…
+       |                                                                   ^
+     96|   });
+     97| });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/12]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  12 failed | 1 passed (13)
+   Start at  08:56:56
+   Duration  1.46s (transform 194ms, setup 374ms, import 210ms, tests 104ms, environment 557ms)
+

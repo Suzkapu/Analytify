@@ -1,0 +1,127 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-all-browsers.config.ts e2e/design-v2-settings-account-data.spec.ts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:75213) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:75213) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 2 workers
+
+(node:75763) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:75762) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [desktop] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) (24.3s)
+(node:76526) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) (27.9s)
+(node:76715) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  4 [mobile] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) (23.0s)
+  ✓  3 [mobile] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) (27.3s)
+(node:77658) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:77667) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  5 [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) (32.9s)
+(node:79276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  6 [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) (33.5s)
+(node:79450) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  8 [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) (22.1s)
+  ✘  7 [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) (34.9s)
+
+
+  1) [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('v2-settings-account').getByRole('button', { name: 'Log out', exact: true })
+        - locator resolved to <button type="button" v2button="danger" _ngcontent-ng-c2181241575="" class="v2-settings-danger v2-button v2-button--danger">…</button>
+      - attempting click action (trial run)
+        - waiting for element to be visible, enabled and stable
+
+
+      28 |         await expect(page.locator('nav[aria-label="Settings sections"] [aria-current="page"]')).toHaveCount(1);
+      29 |         const logout = panel.getByRole('button', {name: 'Log out', exact: true});
+    > 30 |         await logout.scrollIntoViewIfNeeded(); await logout.click({trial: true});
+         |                                                             ^
+      31 |         const sample = await logout.evaluate(element => {
+      32 |           const rect = element.getBoundingClientRect();
+      33 |           const target = document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:30:61
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) 
+
+    Test timeout of 30000ms exceeded.
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.screenshot: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('v2-settings-data')
+
+
+      45 |     const data = page.locator('v2-settings-data'); await expect(data.getByRole('heading', {name: 'Data & privacy'})).toBeVisible();
+      46 |     await expect(page.locator('nav[aria-label="Settings sections"] [aria-current="page"]')).toHaveAccessibleName('Data');
+    > 47 |     await expectNoBlockingAxeViolations(page); await data.screenshot({path: info.outputPath('settings-data.png')});
+         |                                                           ^
+      48 |     const backup = data.getByRole('switch', {name: 'Cloud Backup'});
+      49 |     await expect(backup).not.toBeChecked(); await backup.press('Space');
+      50 |     await expect(data.locator('input[type=checkbox]')).not.toBeChecked(); await expect(page.getByRole('alertdialog')).toBeVisible();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:47:59
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+    [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) 
+    [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+  5 passed (2.6m)

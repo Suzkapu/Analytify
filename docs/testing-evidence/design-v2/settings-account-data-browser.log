@@ -1,0 +1,370 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-all-browsers.config.ts e2e/design-v2-settings-account-data.spec.ts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:62529) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:62529) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 2 workers
+
+(node:63253) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) (14.7s)
+(node:63841) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [desktop] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) (15.8s)
+(node:63960) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 [mobile] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) (15.6s)
+(node:64574) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  4 [mobile] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) (14.7s)
+(node:64661) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  5 [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) (19.1s)
+(node:65977) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  6 [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) (19.5s)
+(node:66192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  7 [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) (14.3s)
+  ✘  8 [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) (13.0s)
+
+
+  1) [desktop] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' })
+    Expected: "rgb(29, 185, 84)"
+    Received: "rgb(53, 231, 131)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' }) with timeout 5000ms
+      - waiting for locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' })
+        - locator resolved to <a target="_blank" rel="noopener noreferrer" class="v2-destination-row" _ngcontent-ng-c3948713666="" href="https://www.spotify.com/account/apps/">…</a>
+        - unexpected value "rgb(53, 155, 97)"
+        - locator resolved to <a target="_blank" rel="noopener noreferrer" class="v2-destination-row" _ngcontent-ng-c3948713666="" href="https://www.spotify.com/account/apps/">…</a>
+        - unexpected value "rgb(53, 182, 110)"
+        - locator resolved to <a target="_blank" rel="noopener noreferrer" class="v2-destination-row" _ngcontent-ng-c3948713666="" href="https://www.spotify.com/account/apps/">…</a>
+        - unexpected value "rgb(53, 228, 130)"
+        11 × locator resolved to <a target="_blank" rel="noopener noreferrer" class="v2-destination-row" _ngcontent-ng-c3948713666="" href="https://www.spotify.com/account/apps/">…</a>
+           - unexpected value "rgb(53, 231, 131)"
+
+
+      20 |     await expect(spotify).toHaveAttribute('target', '_blank'); await expect(spotify).toHaveAttribute('rel', 'noopener noreferrer');
+      21 |     await spotify.focus(); await expect(spotify).toBeFocused();
+    > 22 |     await expect(spotify).toHaveCSS('border-top-color', 'rgb(29, 185, 84)');
+         |                           ^
+      23 |     await expectNoBlockingAxeViolations(page);
+      24 |     const geometry = [];
+      25 |     for (const width of [320, 390, 760, 768, 1024, 1440, 1920]) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:22:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' })
+    Expected: "rgb(29, 185, 84)"
+    Received: "rgb(53, 231, 131)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' }) with timeout 5000ms
+      - waiting for locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' })
+        14 × locator resolved to <a target="_blank" rel="noopener noreferrer" class="v2-destination-row" _ngcontent-ng-c3948713666="" href="https://www.spotify.com/account/apps/">…</a>
+           - unexpected value "rgb(53, 231, 131)"
+
+
+      20 |     await expect(spotify).toHaveAttribute('target', '_blank'); await expect(spotify).toHaveAttribute('rel', 'noopener noreferrer');
+      21 |     await spotify.focus(); await expect(spotify).toBeFocused();
+    > 22 |     await expect(spotify).toHaveCSS('border-top-color', 'rgb(29, 185, 84)');
+         |                           ^
+      23 |     await expectNoBlockingAxeViolations(page);
+      24 |     const geometry = [];
+      25 |     for (const width of [320, 390, 760, 768, 1024, 1440, 1920]) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:22:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' })
+    Expected: "rgb(29, 185, 84)"
+    Received: "rgb(53, 231, 131)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' }) with timeout 5000ms
+      - waiting for locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' })
+        - locator resolved to <a target="_blank" rel="noopener noreferrer" class="v2-destination-row" _ngcontent-ng-c3948713666="" href="https://www.spotify.com/account/apps/">…</a>
+        - unexpected value "rgb(53, 155, 97)"
+        - locator resolved to <a target="_blank" rel="noopener noreferrer" class="v2-destination-row" _ngcontent-ng-c3948713666="" href="https://www.spotify.com/account/apps/">…</a>
+        - unexpected value "rgb(53, 202, 118)"
+        12 × locator resolved to <a target="_blank" rel="noopener noreferrer" class="v2-destination-row" _ngcontent-ng-c3948713666="" href="https://www.spotify.com/account/apps/">…</a>
+           - unexpected value "rgb(53, 231, 131)"
+
+
+      20 |     await expect(spotify).toHaveAttribute('target', '_blank'); await expect(spotify).toHaveAttribute('rel', 'noopener noreferrer');
+      21 |     await spotify.focus(); await expect(spotify).toBeFocused();
+    > 22 |     await expect(spotify).toHaveCSS('border-top-color', 'rgb(29, 185, 84)');
+         |                           ^
+      23 |     await expectNoBlockingAxeViolations(page);
+      24 |     const geometry = [];
+      25 |     for (const width of [320, 390, 760, 768, 1024, 1440, 1920]) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:22:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [mobile] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' })
+    Expected: "rgb(29, 185, 84)"
+    Received: "rgb(53, 231, 131)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' }) with timeout 5000ms
+      - waiting for locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' })
+        14 × locator resolved to <a target="_blank" rel="noopener noreferrer" class="v2-destination-row" _ngcontent-ng-c3948713666="" href="https://www.spotify.com/account/apps/">…</a>
+           - unexpected value "rgb(53, 231, 131)"
+
+
+      20 |     await expect(spotify).toHaveAttribute('target', '_blank'); await expect(spotify).toHaveAttribute('rel', 'noopener noreferrer');
+      21 |     await spotify.focus(); await expect(spotify).toBeFocused();
+    > 22 |     await expect(spotify).toHaveCSS('border-top-color', 'rgb(29, 185, 84)');
+         |                           ^
+      23 |     await expectNoBlockingAxeViolations(page);
+      24 |     const geometry = [];
+      25 |     for (const width of [320, 390, 760, 768, 1024, 1440, 1920]) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:22:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' })
+    Expected: "rgb(29, 185, 84)"
+    Received: "rgb(53, 231, 131)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' }) with timeout 5000ms
+      - waiting for locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' })
+        3 × locator resolved to <a target="_blank" rel="noopener noreferrer" class="v2-destination-row" _ngcontent-ng-c3948713666="" href="https://www.spotify.com/account/apps/">…</a>
+          - unexpected value "rgb(52, 83, 65)"
+        10 × locator resolved to <a target="_blank" rel="noopener noreferrer" class="v2-destination-row" _ngcontent-ng-c3948713666="" href="https://www.spotify.com/account/apps/">…</a>
+           - unexpected value "rgb(53, 231, 131)"
+
+
+      20 |     await expect(spotify).toHaveAttribute('target', '_blank'); await expect(spotify).toHaveAttribute('rel', 'noopener noreferrer');
+      21 |     await spotify.focus(); await expect(spotify).toBeFocused();
+    > 22 |     await expect(spotify).toHaveCSS('border-top-color', 'rgb(29, 185, 84)');
+         |                           ^
+      23 |     await expectNoBlockingAxeViolations(page);
+      24 |     const geometry = [];
+      25 |     for (const width of [320, 390, 760, 768, 1024, 1440, 1920]) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:22:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' })
+    Expected: "rgb(29, 185, 84)"
+    Received: "rgb(53, 231, 131)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' }) with timeout 5000ms
+      - waiting for locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' })
+        13 × locator resolved to <a target="_blank" rel="noopener noreferrer" class="v2-destination-row" _ngcontent-ng-c3948713666="" href="https://www.spotify.com/account/apps/">…</a>
+           - unexpected value "rgb(53, 231, 131)"
+
+
+      20 |     await expect(spotify).toHaveAttribute('target', '_blank'); await expect(spotify).toHaveAttribute('rel', 'noopener noreferrer');
+      21 |     await spotify.focus(); await expect(spotify).toBeFocused();
+    > 22 |     await expect(spotify).toHaveCSS('border-top-color', 'rgb(29, 185, 84)');
+         |                           ^
+      23 |     await expectNoBlockingAxeViolations(page);
+      24 |     const geometry = [];
+      25 |     for (const width of [320, 390, 760, 768, 1024, 1440, 1920]) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:22:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' })
+    Expected: "rgb(29, 185, 84)"
+    Received: "rgb(53, 231, 131)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' }) with timeout 5000ms
+      - waiting for locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' })
+        13 × locator resolved to <a target="_blank" rel="noopener noreferrer" class="v2-destination-row" _ngcontent-ng-c3948713666="" href="https://www.spotify.com/account/apps/">…</a>
+           - unexpected value "rgb(53, 231, 131)"
+
+
+      20 |     await expect(spotify).toHaveAttribute('target', '_blank'); await expect(spotify).toHaveAttribute('rel', 'noopener noreferrer');
+      21 |     await spotify.focus(); await expect(spotify).toBeFocused();
+    > 22 |     await expect(spotify).toHaveCSS('border-top-color', 'rgb(29, 185, 84)');
+         |                           ^
+      23 |     await expectNoBlockingAxeViolations(page);
+      24 |     const geometry = [];
+      25 |     for (const width of [320, 390, 760, 768, 1024, 1440, 1920]) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:22:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-a5ccd-ive-resizing-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' })
+    Expected: "rgb(29, 185, 84)"
+    Received: "rgb(53, 231, 131)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' }) with timeout 5000ms
+      - waiting for locator('v2-settings-account').getByRole('link', { name: 'Spotify connection' })
+        14 × locator resolved to <a target="_blank" rel="noopener noreferrer" class="v2-destination-row" _ngcontent-ng-c3948713666="" href="https://www.spotify.com/account/apps/">…</a>
+           - unexpected value "rgb(53, 231, 131)"
+
+
+      20 |     await expect(spotify).toHaveAttribute('target', '_blank'); await expect(spotify).toHaveAttribute('rel', 'noopener noreferrer');
+      21 |     await spotify.focus(); await expect(spotify).toBeFocused();
+    > 22 |     await expect(spotify).toHaveCSS('border-top-color', 'rgb(29, 185, 84)');
+         |                           ^
+      23 |     await expectNoBlockingAxeViolations(page);
+      24 |     const geometry = [];
+      25 |     for (const width of [320, 390, 760, 768, 1024, 1440, 1920]) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:22:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/design-v2-settings-account-1c8f3-cross-live-resizing-reduce--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8 failed
+    [desktop] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+    [desktop] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) 
+    [mobile] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+    [mobile] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) 
+    [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+    [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) 
+    [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (no-preference) 
+    [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:6:7 › Settings Account and Data preserve consent across live resizing (reduce) 

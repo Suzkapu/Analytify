@@ -1,0 +1,77 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/notifications/push-notification.service.spec.ts
+Application bundle generation complete. [3.541 seconds] - 2026-10-10T06:55:51.791Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > saves song_league independently of device permission without registering or delivering notifications
+TypeError: update.setCategoryPreference is not a function
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:91:43
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:86:121
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:2027:60
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+
+stderr | src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > saves song_league_song_added independently of device permission without registering or delivering notifications
+TypeError: update.setCategoryPreference is not a function
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:91:43
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:86:121
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:2027:60
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+
+stderr | src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > saves stats_access_requests independently of device permission without registering or delivering notifications
+TypeError: update.setCategoryPreference is not a function
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:91:43
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:86:121
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:2027:60
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+
+ ❯ |SpotiFront| src/app/core/notifications/push-notification.service.spec.ts (23 tests | 3 failed) 221ms
+     × saves song_league independently of device permission without registering or delivering notifications 38ms
+     × saves song_league_song_added independently of device permission without registering or delivering notifications 6ms
+     × saves stats_access_requests independently of device permission without registering or delivering notifications 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > saves song_league independently of device permission without registering or delivering notifications
+ FAIL  |SpotiFront| src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > saves song_league_song_added independently of device permission without registering or delivering notifications
+ FAIL  |SpotiFront| src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > saves stats_access_requests independently of device permission without registering or delivering notifications
+TypeError: update.setCategoryPreference is not a function
+ ❯ src/app/core/notifications/push-notification.service.spec.ts:91:43
+     89|                 setCategoryPreference(category: 'song_league' | 'song_…
+     90|             };
+     91|             const settings = await update.setCategoryPreference(catego…
+       |                                           ^
+     92|             expect(preferences[`${category}_enabled`]).toBe(true);
+     93|             expect(settings.deviceSubscribed).toBe(false);
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/notifications/push-notification.service.spec.ts:86:121
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 20 passed (23)
+   Start at  08:55:52
+   Duration  1.46s (transform 128ms, setup 376ms, import 123ms, tests 221ms, environment 545ms)
+

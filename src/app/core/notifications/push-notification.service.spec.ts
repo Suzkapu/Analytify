@@ -4,7 +4,7 @@ import { SwPush } from '@angular/service-worker';
 import { defer, of } from 'rxjs';
 
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
-import { PushNotificationService } from './push-notification.service';
+import { PushNotificationService, PushNotificationSettings } from './push-notification.service';
 
 describe('PushNotificationService', () => {
     let service: PushNotificationService;
@@ -77,6 +77,97 @@ describe('PushNotificationService', () => {
             ]
         });
         service = TestBed.inject(PushNotificationService);
+    });
+
+    const enableDevice = (value: PushNotificationService): Promise<PushNotificationSettings> =>
+        (value as PushNotificationService & {enableDevice(): Promise<PushNotificationSettings>}).enableDevice();
+
+    it('does not register an existing browser subscription while saving only a category preference', async () => {
+        browserSubscription = subscription;
+        const update = service as PushNotificationService & {
+            setCategoryPreference(category: 'song_league', enabled: boolean): Promise<PushNotificationSettings>;
+        };
+        const settings = await update.setCategoryPreference('song_league', true);
+        expect(settings.songLeagueEnabled).toBe(true); expect(settings.deviceRegistered).toBe(false);
+        expect(settings.active).toBe(false); expect(requestSubscription).not.toHaveBeenCalled();
+        expect(rpc.mock.calls.map(call => call[0])).toEqual(['set_notification_preference', 'get_notification_settings']);
+    });
+
+    it('waits for client readiness before saving a preference and surfaces its rejection without registering', async () => {
+        let ready!: (client: unknown) => void;
+        getClient.mockReturnValueOnce(new Promise(resolve => {ready = resolve;}));
+        const pending = service.setCategoryPreference('song_league', true);
+        expect(rpc).not.toHaveBeenCalled();
+        ready({rpc}); await pending;
+        expect(rpc.mock.calls.map(call => call[0])).toEqual(['set_notification_preference', 'get_notification_settings']);
+        const failure = new Error('Preference rejected'); rpc.mockResolvedValueOnce({data: null, error: failure});
+        await expect(service.setCategoryPreference('song_league', false)).rejects.toBe(failure);
+        expect(preferences.song_league_enabled).toBe(true); expect(requestSubscription).not.toHaveBeenCalled();
+    });
+
+    it.each(['song_league', 'song_league_song_added', 'stats_access_requests'] as const)(
+        'saves %s independently of device permission without registering or delivering notifications', async category => {
+            permissionState = 'denied'; swPush.isEnabled = false;
+            const update = service as PushNotificationService & {
+                setCategoryPreference(category: 'song_league' | 'song_league_song_added' | 'stats_access_requests', enabled: boolean): Promise<PushNotificationSettings>;
+            };
+            const settings = await update.setCategoryPreference(category, true);
+            expect(preferences[`${category}_enabled`]).toBe(true);
+            expect(settings.deviceSubscribed).toBe(false);
+            expect(settings.deviceRegistered).toBe(false);
+            expect(settings.active).toBe(false); expect(settings.songAddedActive).toBe(false); expect(settings.statsAccessActive).toBe(false);
+            expect(requestSubscription).not.toHaveBeenCalled();
+            expect(rpc.mock.calls.map(call => call[0])).toEqual(['set_notification_preference', 'get_notification_settings']);
+        });
+
+    it('enables this device while preserving every disabled category and sending no notification', async () => {
+        preferences.stats_access_requests_enabled = false;
+        const settings = await enableDevice(service);
+        expect(settings.deviceState).toBe('registered');
+        expect(settings.deviceSubscribed).toBe(true);
+        expect(settings.songLeagueEnabled).toBe(false);
+        expect(settings.songLeagueSongAddedEnabled).toBe(false);
+        expect(settings.statsAccessRequestsEnabled).toBe(false);
+        expect(settings.active).toBe(false); expect(settings.statsAccessActive).toBe(false);
+        expect(preferences).toEqual({song_league_enabled: false, song_league_song_added_enabled: false,
+            song_league_member: true, stats_access_requests_enabled: false});
+        expect(rpc.mock.calls.map(call => call[0])).toEqual(['upsert_push_subscription', 'get_notification_settings']);
+    });
+
+    it('enables an existing device without requesting permission again or changing preferences', async () => {
+        browserSubscription = subscription; preferences.song_league_enabled = true;
+        const settings = await enableDevice(service);
+        expect(requestSubscription).not.toHaveBeenCalled();
+        expect(settings.deviceState).toBe('registered'); expect(settings.active).toBe(true);
+        expect(rpc.mock.calls.some(call => call[0] === 'set_notification_preference')).toBe(false);
+    });
+
+    it.each(['denied', 'unsupported'] as const)('rejects device enabling when %s without server writes', async state => {
+        if (state === 'denied') permissionState = 'denied';
+        else swPush.isEnabled = false;
+        await expect(enableDevice(service)).rejects.toThrow(state === 'denied' ? 'Notifications are blocked' : 'not supported');
+        expect(requestSubscription).not.toHaveBeenCalled(); expect(rpc).not.toHaveBeenCalled();
+    });
+
+    it('reports registration failure and permits retry without changing saved categories', async () => {
+        const originalRpc = rpc.getMockImplementation()!;
+        rpc.mockImplementation(async (name, parameters) => name === 'upsert_push_subscription'
+            ? {data: null, error: new Error('Device registration unavailable')}
+            : originalRpc(name, parameters));
+        await expect(enableDevice(service)).rejects.toThrow('Device registration unavailable');
+        expect(registeredEndpoint).toBeNull(); expect(preferences.song_league_enabled).toBe(false);
+        rpc.mockImplementation(originalRpc);
+        expect((await enableDevice(service)).deviceState).toBe('registered');
+        expect(rpc.mock.calls.some(call => call[0] === 'set_notification_preference')).toBe(false);
+    });
+
+    it('recovers a browser registration rejection after the browser has actually subscribed', async () => {
+        requestSubscription.mockImplementation(async () => {
+            browserSubscription = subscription; throw new Error('Duplicate registration');
+        });
+        const settings = await enableDevice(service);
+        expect(settings.deviceState).toBe('registered');
+        expect(rpc.mock.calls.some(call => call[0] === 'set_notification_preference')).toBe(false);
     });
 
     it('does not send notification settings requests until client readiness resolves', async () => {

@@ -1,0 +1,657 @@
+npm notice run spoti-front@0.0.0 verify:ci
+npm notice run npm run content:check && npm run architecture:check && npm run retention:check && npm run share-refresh:check && npm run song-league-invites:check && npm run song-league-rules:check && npm run song-league-notifications:check && npm run push-security:check && npm run cloud-capabilities:check && npm run catalog-security:check && npm run dataset-integrity:check && npm run song-league-sync:check && npm run stats-calendars:check && npm run stats-sharing:check && npm run stats-history-search:check && npm run loading-feedback:check && npm run accessibility:check && npm run lint && npm run performance:check && npm run design-v2-parity:check && npm run design-v2-quality:check && npm run api-usage:check && npm run admin:check && npm run deployment-pipeline:check && npm run supply-chain:check && npm run edge-dependencies:check && npm run storage-policy:check && npm run privacy-notice:check && npm run spotify-policy:check && npm run data-retention:check && npm run sync-service:check && npm run edge-functions:check && npm run typecheck && npm run typecheck:tests && npm run test:ci && npm run build:production
+npm notice run spoti-front@0.0.0 content:check
+npm notice run node --test scripts/content-copy.test.mjs
+✔ README leads with user features and sends development details to CONTRIBUTING (5.582174ms)
+✔ logged-out copy plainly describes the currently enabled Spotify features (4.568589ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 105.679147
+npm notice run spoti-front@0.0.0 architecture:check
+npm notice run node scripts/check-architecture.mjs
+Architecture boundaries are valid.
+npm notice run spoti-front@0.0.0 retention:check
+npm notice run node scripts/check-playlist-share-retention.mjs
+Playlist-share retention contracts are present.
+npm notice run spoti-front@0.0.0 share-refresh:check
+npm notice run node scripts/check-playlist-share-refresh.mjs
+Playlist-share refresh performance contracts are present.
+npm notice run spoti-front@0.0.0 song-league-invites:check
+npm notice run node scripts/check-song-league-invites.mjs
+Song League invite links are truthful, token-safe, visible, and revocable.
+npm notice run spoti-front@0.0.0 song-league-rules:check
+npm notice run node scripts/check-song-league-rules.mjs
+Song League supports two members while preserving discovery validation.
+npm notice run spoti-front@0.0.0 song-league-notifications:check
+npm notice run node --test supabase/functions/song-league-notifications/delivery-state.test.mjs && node scripts/check-song-league-notifications.mjs
+✔ surfaces an error when a successful push cannot be marked sent (1.989218ms)
+✔ surfaces an error when a failed push cannot be marked for retry (0.381493ms)
+✔ surfaces an error when an expired subscription cannot be removed (1.204131ms)
+✔ the shared expired-subscription cleanup rejects failed admin-test writes (0.336268ms)
+✔ updates the dedicated new-song delivery table (0.273441ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 479.246307
+Song League PWA notification contracts and encrypted Web Push request are valid.
+npm notice run spoti-front@0.0.0 push-security:check
+npm notice run node scripts/check-push-security.mjs
+Web Push SSRF and shared-device lifecycle contracts are valid.
+npm notice run spoti-front@0.0.0 cloud-capabilities:check
+npm notice run node scripts/check-cloud-capabilities.mjs
+Cloud identity, backup, and scheduled Spotify capabilities are separated.
+npm notice run spoti-front@0.0.0 catalog-security:check
+npm notice run node scripts/check-catalog-security.mjs
+Spotify catalog is browser-read-only and trusted-worker writable.
+npm notice run spoti-front@0.0.0 dataset-integrity:check
+npm notice run node scripts/check-dataset-integrity.mjs
+Stats and catalog replacements are atomic, idempotent, and compare-and-swap guarded.
+npm notice run spoti-front@0.0.0 song-league-sync:check
+npm notice run node scripts/check-song-league-sync-security.mjs
+Song League playlist sync uses one lease-bound, revision-safe mutation authority.
+npm notice run spoti-front@0.0.0 stats-calendars:check
+npm notice run node scripts/check-stats-calendars.mjs
+Both stats comparison sides use the shared availability calendar.
+npm notice run spoti-front@0.0.0 stats-sharing:check
+npm notice run node scripts/check-stats-sharing.mjs
+Stats sharing consent and isolation checks passed.
+npm notice run spoti-front@0.0.0 stats-history-search:check
+npm notice run node scripts/check-stats-history-search.mjs
+Historical Top Songs, Top Artists, and Top Genres search contracts are valid.
+npm notice run spoti-front@0.0.0 loading-feedback:check
+npm notice run node scripts/check-loading-feedback.mjs
+Loading feedback is immediate, non-blocking, and preserves parallel loaders.
+npm notice run spoti-front@0.0.0 accessibility:check
+npm notice run node scripts/check-accessible-dialogs.mjs && node --test scripts/interaction-cursor.test.mjs
+All custom modals use the shared accessible dialog behavior.
+✔ interactive controls expose a pointer without overriding text selection (2.309778ms)
+✔ disabled and aria-disabled controls expose a blocked cursor (0.618265ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 91.922859
+npm notice run spoti-front@0.0.0 lint
+npm notice run eslint .
+npm notice run spoti-front@0.0.0 performance:check
+npm notice run node scripts/check-performance-contracts.mjs
+Startup and statistics performance contracts are valid.
+npm notice run spoti-front@0.0.0 design-v2-parity:check
+npm notice run node scripts/check-design-v2-parity.mjs
+Design v2 UI parity inventory and single-renderer contract are complete.
+npm notice run spoti-front@0.0.0 design-v2-quality:check
+npm notice run node --test scripts/design-v2-test-policy.test.mjs && node scripts/check-design-v2-quality.mjs
+✔ includes Insights, new v2 helpers, shared primitives, ambient, and design navigation (1.304528ms)
+✔ requires evidence for every source, including a newly added file (0.426687ms)
+✔ a new source must have no uncovered code in any metric (1.024996ms)
+✔ absolute uncovered counts cannot be diluted by adding covered code (0.35309ms)
+✔ supports absolute Windows and Unix report paths (0.321621ms)
+✔ fails closed for malformed coverage counters (0.314268ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 98.582924
+Design v2 quality contracts cover 33 behavioral sources and route isolation.
+npm notice run spoti-front@0.0.0 api-usage:check
+npm notice run node scripts/check-api-on-demand.mjs
+API-on-demand decision and implementation contracts are valid.
+npm notice run spoti-front@0.0.0 admin:check
+npm notice run node scripts/check-admin-control-plane.mjs && node --test scripts/operational-policy.test.mjs
+Admin control-plane and sync-service contracts are valid.
+✔ operational retention redacts errors before deleting failed records (1.546471ms)
+✔ health alerts cover both backlogs, lease expiry, provider errors, and cooldown (0.301023ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 96.271866
+npm notice run spoti-front@0.0.0 deployment-pipeline:check
+npm notice run node --test scripts/production-index-validator.test.mjs scripts/activate-release.test.mjs scripts/activate-release-rehearsal.test.mjs scripts/security-headers.test.mjs scripts/inject-nginx-security-include.test.mjs scripts/nginx-http2.test.mjs scripts/deployment-freshness.test.mjs scripts/deployment-policy.test.mjs && bash -n scripts/preflight-oracle-ssh.sh
+✔ activation rehearsal restores both releases after none failure (73.254538ms)
+✔ activation rehearsal restores both releases after worker failure (300.650469ms)
+✔ activation rehearsal restores both releases after web failure (122.302777ms)
+✔ worker activation allows slow credential migration and reports service failures (1.691161ms)
+✔ worker keeps home directories private and deploys from var lib (0.80768ms)
+✔ worker service applies compatible process, kernel, device, and capability confinement (8.092768ms)
+✔ activation audits the installed worker sandbox after its health check passes (0.500495ms)
+✔ remote control commands retry transient DNS and transport failures (0.450792ms)
+✔ a rapidly superseded commit cannot deploy after newer main (198.431497ms)
+✔ feature refs can never pass the production freshness gate (5.179672ms)
+✔ only main can start a production deployment (4.280642ms)
+✔ verification is secret-free and production secrets are environment scoped (0.627573ms)
+✔ verified build is handed to a serialized cancelable production job (1.169106ms)
+✔ the exact tested worker is digested and deployed without registry access (0.791028ms)
+✔ CI declares and installs one exact package-manager release (0.415386ms)
+✔ production waits for same-commit advisory and CodeQL gates (0.799775ms)
+✔ each deployment script checks freshness before its first remote mutation (0.334615ms)
+✔ Oracle identity is pinned and verified before Supabase can mutate production (0.34256ms)
+✔ Edge request controls are configured through production-scoped secrets (0.382154ms)
+✔ the installer renderer combines negotiated HTTP2 with security policy (75.864557ms)
+✔ security policy is installed in application and internal-redirect locations (61.100358ms)
+✔ existing includes are not duplicated while uncovered locations are repaired (74.647352ms)
+✔ an existing server_tokens directive is preserved without duplication (61.804164ms)
+✔ installer refuses to guess when the application location is missing (58.211648ms)
+✔ modern Nginx uses one server directive and preserves nested locations (2.805264ms)
+✔ older Nginx enables HTTP/2 on both TLS listeners only (0.598439ms)
+✔ unknown builds, missing module, unrelated hosts and explicit settings remain untouched (1.44998ms)
+✔ malformed matching server blocks fail before installation (0.826104ms)
+✔ accepts local generated module preload hints (3.063917ms)
+✔ rejects missing, remote, duplicate, or absent preload artifacts (4.410504ms)
+✔ accepts a directly active stylesheet and responsive viewport (1.562231ms)
+✔ rejects an index without a device-width viewport (1.018805ms)
+✔ rejects Angular print-only CSS activation that strict CSP blocks (0.386833ms)
+✔ rejects a stylesheet link whose hashed artifact is missing (0.530151ms)
+✔ live cache validation rejects stale metadata and conflicting asset directives (47.532475ms)
+✔ immutable caching matches only successful hashed build assets (0.767194ms)
+✔ static application assets negotiate gzip without enabling API JSON compression (1.352778ms)
+✔ cache policy is commit-scoped during transport and restored with nginx configuration (0.430945ms)
+✔ versioned nginx configuration supplies the required browser defenses (1.739903ms)
+✔ live validation reports missing or weakened headers (0.789666ms)
+✔ online PWA navigations refresh response security headers from the server (0.321471ms)
+ℹ tests 41
+ℹ suites 0
+ℹ pass 41
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 710.389244
+npm notice run spoti-front@0.0.0 supply-chain:check
+npm notice run node scripts/check-supply-chain-policy.mjs
+Supply-chain policy check passed (4 workflows, immutable action pins).
+npm notice run spoti-front@0.0.0 edge-dependencies:check
+npm notice run node scripts/check-edge-dependency-currency.mjs
+Edge dependency check passed (3 imports, Supabase 2.116.0).
+npm notice run spoti-front@0.0.0 storage-policy:check
+npm notice run node scripts/check-browser-storage-policy.mjs
+Browser storage policy check passed (6 inventoried mechanisms).
+npm notice run spoti-front@0.0.0 privacy-notice:check
+npm notice run node scripts/check-privacy-notice.mjs
+Article 13/14 privacy notice contract passed.
+npm notice run spoti-front@0.0.0 spotify-policy:check
+npm notice run node scripts/check-spotify-policy.mjs
+Spotify access, attribution, and reconnect policy contract passed.
+npm notice run spoti-front@0.0.0 data-retention:check
+npm notice run node scripts/check-data-retention-policy.mjs
+Retention inventory covers 73 database tables and 11 lifecycle groups.
+npm notice run spoti-front@0.0.0 sync-service:check
+npm notice run node scripts/check-sync-worker-package.mjs && node --test services/sync-service/spotify-url-validator.test.js services/sync-service/date-utils.test.js services/sync-service/task-registry.test.js services/sync-service/scheduler.test.js services/sync-service/credential-store.test.js services/sync-service/spotify-client.test.js services/sync-service/push-dispatcher.test.js services/sync-service/health-server.test.js services/sync-service/catalog-repository.test.js services/sync-service/tasks/history-task.test.js services/sync-service/tasks/stats-task.test.js services/sync-service/tasks/shared-playlists-task.test.js services/sync-service/tasks/song-league-playlists-task.test.js
+Sync worker runtime dependencies are installed from its independent lockfile.
+✔ replaces track metadata and relationships through one CAS transaction (4.208287ms)
+✔ surfaces an atomic replacement failure without issuing cleanup writes (1.332571ms)
+✔ stores refresh tokens as AES-GCM ciphertext and decrypts them only in memory (17.580394ms)
+✔ removes encrypted and legacy refresh credentials together (2.32676ms)
+✔ reads mixed key versions and writes only with the active version (4.097389ms)
+✔ verifies a rotated credential before persistence and supports rollback (4.917272ms)
+✔ fails closed for corrupt ciphertext and retired keys (3.507728ms)
+✔ credential rotation is audited, resumable after interruption, and safe to retry (4.824339ms)
+✔ uses the previous local day before the 01:00 cutoff (36.085598ms)
+✔ uses the current local day after the cutoff (1.385059ms)
+✔ detects Friday in the configured timezone (1.839769ms)
+✔ readiness exposes the exact worker commit and startup state (5.877246ms)
+✔ invokes the trusted Song League notification function once per scheduler pass (2.579432ms)
+✔ surfaces edge delivery errors without exposing credentials (0.875417ms)
+✔ blocks Friday-only scheduled playlist jobs outside the configured local Friday (8.025292ms)
+✔ allows explicitly queued manual playlist jobs on any day (0.401461ms)
+✔ rejects an automatic job disabled after it was queued (0.438439ms)
+✔ runs only the short-term task required by active league membership (0.53486ms)
+✔ keeps feature-required playlist work distinct from admin optional switches (0.576849ms)
+✔ retains explicitly queued manual work after automatic scheduling is disabled (0.296785ms)
+✔ claims jobs atomically with a stable worker identity and bounded lease (3.155349ms)
+✔ completes successful work and task state in one atomic RPC (2.78188ms)
+✔ records loading failures instead of stranding claimed jobs (0.987676ms)
+✔ records handler failures through the atomic completion boundary (1.52447ms)
+✔ discards invalid Spotify credentials and stops scheduling retries (1.194213ms)
+✔ cancels a claimed automatic job when its task was disabled after enqueue (0.542223ms)
+✔ heartbeats long-running work before completing it (39.623391ms)
+✔ does not report success after losing lease ownership (13.596517ms)
+✔ surfaces atomic completion persistence errors (2.648ms)
+✔ emits only alerts the database marks due after its cooldown (0.890975ms)
+✔ fails health evaluation when retention monitoring is unavailable (0.432127ms)
+✔ honors Retry-After and retries transient idempotent requests (4.990169ms)
+✔ does not retry unsafe Spotify side effects by default (2.19863ms)
+✔ stops before a retry would exceed the elapsed budget (3.132365ms)
+✔ classifies a deadline abort as a timeout (9.865042ms)
+✔ does not start a request after caller cancellation (4.882237ms)
+✔ parses seconds and dates from Retry-After (0.527777ms)
+✔ refreshes a personal-app credential with its public client ID and no client secret (1.786019ms)
+✔ classifies invalid_grant refresh responses as terminal credentials without retrying (0.733642ms)
+✔ Spotify URL validator accepts only exact HTTPS entity URLs (2.944434ms)
+✔ Spotify URL validator rejects injection and authority confusion (3.824188ms)
+✔ disables metrics and game tasks unless a written Spotify approval reference is configured (1.745403ms)
+✔ registers every independently configurable synchronization purpose (1.466141ms)
+✔ converts every selectable schedule unit to worker intervals (0.431246ms)
+✔ rejects unsupported schedule units (0.664201ms)
+✔ allows scheduled Song League playlist refreshes only on local Fridays by default (25.952344ms)
+✔ allows Song League playlist refreshes every day when Friday-only scheduling is disabled (0.396561ms)
+✔ pages backwards past 50 plays and commits a durable high-water mark (8.011616ms)
+✔ keeps distinct plays sharing a timestamp and deduplicates stable play identities (1.093674ms)
+✔ checkpoints a bounded delayed backfill and resumes it on the next run (0.986634ms)
+✔ retains page progress across a partial Spotify page failure and retry (1.736596ms)
+✔ does not advance the committed checkpoint when a history page upsert fails (1.221904ms)
+✔ retries idempotently when rows persist before the first checkpoint write (1.388306ms)
+✔ does not infer a missing checkpoint from rows that may belong to a partial run (4.570123ms)
+✔ loads the internal fav source from Spotify Liked Songs pages (4.503248ms)
+✔ continues to load regular shared playlists from playlist endpoints (0.752998ms)
+✔ worker source publication stages bounded chunks before one revision compare-and-set commit (2.296162ms)
+✔ worker uploads a maximum playlist in bounded resumable chunks (41.58575ms)
+✔ worker keeps every serialized upload chunk below both database limits (9.202433ms)
+✔ worker refreshes a source larger than the former total limit (32.100148ms)
+✔ out-of-order recipient completion is rejected and releases its lease (2.935096ms)
+✔ recipient refresh loads every published track beyond the default row limit (3.158004ms)
+✔ worker delegates every Spotify mutation to the authoritative Edge Function (2.661916ms)
+✔ lazily hydrates missing artist genres with bounded parallel requests (16.185597ms)
+✔ does not spend artist requests when Top Artists already includes genres (0.490006ms)
+✔ replaces a daily snapshot through one atomic database call (23.503597ms)
+✔ deduplicates tracks with matching title and artist so duplicate releases are omitted (0.308878ms)
+✔ loads overflow tracks in parallel and keeps a full 100 after de-duplication (1.931962ms)
+✔ stats_short_term preserves its range, local day, daily idempotency and CAS revision (2.759158ms)
+✔ stats_medium_term preserves its range, local day, daily idempotency and CAS revision (1.445182ms)
+✔ stats_long_term preserves its range, local day, daily idempotency and CAS revision (1.816385ms)
+✔ unsupported task and failed credentials do not fetch, write or mark completion (1.15551ms)
+✔ mandatory artistsPageError failure preserves the prior snapshot (1.330999ms)
+✔ mandatory firstTracksPage failure preserves the prior snapshot (0.945417ms)
+✔ failed optional pages preserve primary rankings and report both partial failures (2.988657ms)
+✔ catalogError is propagated without scoring or a false successful sync marker (0.740304ms)
+✔ tracksError is propagated without scoring or a false successful sync marker (1.364281ms)
+✔ artistsError is propagated without scoring or a false successful sync marker (1.218127ms)
+✔ revisionError is propagated without scoring or a false successful sync marker (1.193921ms)
+✔ replaceError is propagated without scoring or a false successful sync marker (1.27843ms)
+✔ retry after a CAS conflict rereads the revision and retains the daily idempotency key (2.629716ms)
+✔ valid empty pages save an explicitly empty ranking without catalog lookup requests (1.510434ms)
+✔ malformed mandatory artistsResponse (null) cannot erase saved rankings (0.44954ms)
+✔ malformed mandatory artistsResponse (undefined) cannot erase saved rankings (0.292827ms)
+✔ malformed mandatory artistsResponse ({}) cannot erase saved rankings (1.111638ms)
+✔ malformed mandatory artistsResponse ({"items":null}) cannot erase saved rankings (0.352018ms)
+✔ malformed mandatory artistsResponse ({"items":""}) cannot erase saved rankings (0.389859ms)
+✔ malformed mandatory tracksResponse (null) cannot erase saved rankings (0.296354ms)
+✔ malformed mandatory tracksResponse (undefined) cannot erase saved rankings (0.222355ms)
+✔ malformed mandatory tracksResponse ({}) cannot erase saved rankings (0.204793ms)
+✔ malformed mandatory tracksResponse ({"items":null}) cannot erase saved rankings (0.222055ms)
+✔ malformed mandatory tracksResponse ({"items":""}) cannot erase saved rankings (0.210734ms)
+✔ catalog absence cannot produce dangling snapshot relations (1.12329ms)
+✔ a scoring failure preserves a committed ranking and reports the skipped side effect (1.160279ms)
+✔ marker failure is reported after commit rather than pretending the task completed (1.050203ms)
+✔ missing committed snapshot identity (null) cannot be scored or marked successful (1.126316ms)
+✔ missing committed snapshot identity ([]) cannot be scored or marked successful (1.121908ms)
+✔ missing committed snapshot identity ({}) cannot be scored or marked successful (1.068758ms)
+✔ missing committed snapshot identity ([{"revision":5}]) cannot be scored or marked successful (1.051426ms)
+✔ missing committed snapshot identity ({"snapshot_id":""}) cannot be scored or marked successful (1.140593ms)
+✔ missing committed snapshot identity ({"snapshot_id":"   "}) cannot be scored or marked successful (1.116056ms)
+✔ missing committed snapshot identity ({"snapshot_id":123}) cannot be scored or marked successful (1.058699ms)
+✔ an unconfirmed commit can recover on retry without scoring the absent identity (2.082323ms)
+✔ single-object atomic replacement responses retain the committed snapshot identity (1.119973ms)
+✔ genre enrichment deduplicates requests and retains original artists on partial failure (0.597507ms)
+✔ genre ranking excludes placeholders and caps the weighted distinct result at fifteen (0.392503ms)
+✔ deduplication retains distinct artists and unnamed tracks while dropping invalid and duplicate IDs (0.334976ms)
+ℹ tests 107
+ℹ suites 0
+ℹ pass 107
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 762.927052
+npm notice run spoti-front@0.0.0 edge-functions:check
+npm notice run deno check --config supabase/functions/deno.json supabase/functions/spotify-credentials/index.ts supabase/functions/song-league-playlist-sync/index.ts supabase/functions/song-league-notifications/index.ts && deno test --config supabase/functions/deno.json supabase/functions/_shared/bounded-fetch.test.ts supabase/functions/_shared/request-security.test.ts supabase/functions/_shared/spotify-credential-crypto.test.ts supabase/functions/spotify-credentials/profile-verification.test.ts supabase/functions/spotify-credentials/personal-recovery.test.ts supabase/functions/song-league-playlist-sync/recovery.test.ts supabase/functions/song-league-notifications/push-endpoint.test.ts
+running 4 tests from ./supabase/functions/song-league-playlist-sync/recovery.test.ts
+the recovery marker survives playlist description updates ... ok (609µs)
+recovery accepts only a marker match owned by the connected Spotify user ... ok (236µs)
+recovery requires the exact operation marker ... ok (93µs)
+playlist replacement retains every track in Spotify-sized batches ... ok (198µs)
+running 2 tests from ./supabase/functions/song-league-notifications/push-endpoint.test.ts
+accepts supported browser push providers ... ok (870µs)
+rejects SSRF, lookalike, credential, port, and redirect-style endpoints ... ok (1ms)
+running 3 tests from ./supabase/functions/spotify-credentials/profile-verification.test.ts
+matches only Spotify identities returned by the verified profile ... ok (1ms)
+allows a verified anonymous personal-app identity alongside a hosted profile ... ok (86µs)
+allows an unverified placeholder to be replaced after server verification ... ok (109µs)
+running 3 tests from ./supabase/functions/spotify-credentials/personal-recovery.test.ts
+personal recovery accepts only bounded Spotify account identifiers ... ok (724µs)
+personal recovery aliases are deterministic and reveal no Spotify ID ... ok (929µs)
+personal recovery requires both token paths to verify the claimed account ... ok (247µs)
+running 3 tests from ./supabase/functions/_shared/bounded-fetch.test.ts
+boundedFetch honors Retry-After before retrying ... ok (13ms)
+boundedFetch never retries an unsafe request unless explicitly allowed ... ok (285µs)
+boundedFetch classifies an expired deadline ... ok (7ms)
+running 9 tests from ./supabase/functions/_shared/request-security.test.ts
+CORS reflects only an explicitly allowed origin ... ok (11ms)
+preflight rejects unsupported methods and headers ... ok (661µs)
+streaming JSON parsing rejects undeclared oversized bodies ... ok (2ms)
+JSON parsing rejects arrays and malformed bodies with a stable error ... ok (500µs)
+bearer tokens have a strict size and syntax bound ... ok (2ms)
+worker access requires the exact service secret, not an unsigned role claim ... ok (321µs)
+request bodies reject compressed or ambiguous media types before parsing ... ok (612µs)
+durable limits count calls and expose only a bounded retry delay ... ok (1ms)
+public failures contain correlation IDs but not internal details ... ok (3ms)
+running 2 tests from ./supabase/functions/_shared/spotify-credential-crypto.test.ts
+credential key ring reads mixed versions and writes only the active version ... ok (2ms)
+credential decryption fails closed for retired keys and corrupt ciphertext ... ok (1ms)
+
+ok | 26 passed | 0 failed (499ms)
+
+npm notice run spoti-front@0.0.0 typecheck
+npm notice run tsc -p tsconfig.app.json --noEmit
+npm notice run spoti-front@0.0.0 typecheck:tests
+npm notice run tsc -p tsconfig.spec.json --noEmit
+npm notice run spoti-front@0.0.0 test:ci
+npm notice run ng test --watch=false --coverage --progress=false && node scripts/check-coverage-thresholds.mjs && node scripts/check-design-v2-coverage.mjs && node scripts/check-application-coverage-inventory.mjs frontend
+Application bundle generation complete. [14.146 seconds] - 2026-10-10T06:40:11.494Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+      Coverage enabled with v8
+
+(node:62800) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:62801) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:62807) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:62991) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:62999) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63005) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63141) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63148) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63268) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63340) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63361) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63708) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63720) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63728) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63812) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63819) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63835) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:64138) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:64149) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:64238) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:64311) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:64379) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:64387) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:64459) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:64558) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:64565) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:64648) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:65052) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:65062) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:65257) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:65502) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:65478) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:65586) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:65671) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:65672) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:65757) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:65878) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:65886) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:65965) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66072) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66065) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66193) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66393) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66474) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66565) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66663) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66671) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66743) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66755) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66828) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66859) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66912) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66991) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67020) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67071) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67143) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67158) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67230) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67238) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67246) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67318) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67326) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67398) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67428) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67457) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67463) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67534) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67563) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67570) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67622) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67659) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67631) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67714) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67787) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67766) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67802) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67877) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67886) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67919) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67970) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67999) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68052) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68060) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68143) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68216) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68223) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68253) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68313) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68320) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68393) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ |SpotiFront| src/app/app-routing.module.spec.ts (6 tests | 1 failed) 79ms
+     × keeps every product and public route in the canonical shell 21ms
+(node:68455) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68483) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68558) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68566) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68581) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68659) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68667) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68718) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68748) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68777) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68828) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68835) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68846) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68918) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68925) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68949) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69112) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69098) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69133) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69301) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69308) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69339) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69405) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69412) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69420) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69481) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69480) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69497) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69620) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69622) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69609) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69789) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69797) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69795) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69892) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69898) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/app-routing.module.spec.ts > canonical application routes > keeps every product and public route in the canonical shell
+AssertionError: expected [ '', 'login', 'callback', …(17) ] to deeply equal [ '', 'login', 'callback', …(16) ]
+
+- Expected
++ Received
+
+@@ -8,10 +8,11 @@
+    "artistDetails/:id",
+    "analysis/:id",
+    "stats/:userId",
+    "stats",
+    "history",
++   "settings",
+    "admin",
+    "song-league",
+    "shared-playlists",
+    "legal",
+    "compare-room/callback",
+
+ ❯ src/app/app-routing.module.spec.ts:34:54
+     32|
+     33|   it('keeps every product and public route in the canonical shell', ()…
+     34|     expect(shell.children?.map(route => route.path)).toEqual([
+       |                                                      ^
+     35|       '', 'login', 'callback', 'spotify', 'playlists', 'songs/:id', 'a…
+     36|       'analysis/:id', 'stats/:userId', 'stats', 'history', 'admin', 's…
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 125 passed (126)
+      Tests  1 failed | 1204 passed | 1 skipped (1206)
+   Start at  08:40:12
+   Duration  170.38s (transform 6.26s, setup 97.35s, import 43.18s, tests 121.46s, environment 143.80s)
+

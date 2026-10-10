@@ -1,0 +1,11 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/notifications/push-notification.service.spec.ts
+Application bundle generation failed. [3.800 seconds] - 2026-10-10T06:55:40.459Z
+
+✘ [ERROR] TS2502: 'category' is referenced directly or indirectly in its own type annotation. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:89:38:
+      89 │ ...CategoryPreference(category: typeof category, enabled: boolean)...
+         ╵                       ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+

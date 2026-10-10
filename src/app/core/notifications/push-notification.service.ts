@@ -30,6 +30,10 @@ export class PushNotificationService {
   ) {}
 
   async loadSettings(): Promise<PushNotificationSettings> {
+    return this.readSettings(true);
+  }
+
+  private async readSettings(registerMissingDevice: boolean): Promise<PushNotificationSettings> {
     const [subscription, permission] = await Promise.all([
       this.currentSubscription(),
       this.currentPermission()
@@ -48,7 +52,7 @@ export class PushNotificationService {
     const statsAccessRequestsEnabled = row?.stats_access_requests_enabled !== false;
     let deviceRegistered = !!row?.device_registered;
     let registeredDeviceCount = Number(row?.registered_device_count || 0);
-    if ((songLeagueEnabled || songLeagueSongAddedEnabled || statsAccessRequestsEnabled)
+    if (registerMissingDevice && (songLeagueEnabled || songLeagueSongAddedEnabled || statsAccessRequestsEnabled)
       && subscription && permission === 'granted' && !deviceRegistered) {
       await this.registerDevice(subscription);
       deviceRegistered = true;
@@ -72,42 +76,23 @@ export class PushNotificationService {
     return this.setCategoryEnabled('stats_access_requests', enabled);
   }
 
+  /** Save a category without requesting permission or registering this device. */
+  async setCategoryPreference(
+    category: 'song_league' | 'song_league_song_added' | 'stats_access_requests',
+    enabled: boolean
+  ): Promise<PushNotificationSettings> {
+    const preference = await (await this.supabase.getClient()).rpc('set_notification_preference', {
+      p_category: category, p_enabled: enabled
+    });
+    if (preference.error) throw preference.error;
+    return this.readSettings(false);
+  }
+
   private async setCategoryEnabled(
     category: 'song_league' | 'song_league_song_added' | 'stats_access_requests',
     enabled: boolean
   ): Promise<PushNotificationSettings> {
-    let subscription = await this.currentSubscription();
-    if (enabled) {
-      if (!this.swPush.isEnabled) {
-        throw new Error('Push notifications are not supported by this browser or PWA installation.');
-      }
-      const permission = await this.currentPermission();
-      if (permission === 'denied') {
-        throw new Error('Notifications are blocked. Allow them in the browser or site settings first.');
-      }
-      if (!subscription || permission !== 'granted') {
-        try {
-          subscription = await this.swPush.requestSubscription({
-            serverPublicKey: environment.vapidPublicKey
-          });
-        } catch {
-          // Some browsers finish registration before resolving (or reject a
-          // duplicate request). Reconcile the actual PushManager state before
-          // reporting a failure to somebody who already granted access.
-          subscription = await this.currentSubscription();
-          if (!subscription) {
-            const refreshedPermission = await this.currentPermission();
-            if (refreshedPermission === 'denied') {
-              throw new Error('Notifications are blocked. Allow them in the browser or site settings first.');
-            }
-            throw new Error(refreshedPermission === 'granted'
-              ? 'Browser permission is enabled, but its push service could not register this device. Reopen the installed app and try again.'
-              : 'Notification permission was not granted.');
-          }
-        }
-      }
-      await this.registerDevice(subscription);
-    }
+    const subscription = enabled ? await this.ensureDeviceSubscription() : null;
 
     const preference = await (await this.supabase.getClient()).rpc('set_notification_preference', {
       p_category: category,
@@ -115,8 +100,51 @@ export class PushNotificationService {
     });
     if (preference.error) throw preference.error;
     const settings = await this.loadSettings();
-    if (!enabled || !subscription || settings.deviceSubscribed) return settings;
+    return subscription ? this.reconcileDevice(settings) : settings;
+  }
 
+  /** Enable this device without modifying any saved notification categories. */
+  async enableDevice(): Promise<PushNotificationSettings> {
+    await this.ensureDeviceSubscription();
+    return this.reconcileDevice(await this.loadSettings());
+  }
+
+  private async ensureDeviceSubscription(): Promise<PushSubscription> {
+    let subscription = await this.currentSubscription();
+    if (!this.swPush.isEnabled) {
+      throw new Error('Push notifications are not supported by this browser or PWA installation.');
+    }
+    const permission = await this.currentPermission();
+    if (permission === 'denied') {
+      throw new Error('Notifications are blocked. Allow them in the browser or site settings first.');
+    }
+    if (!subscription || permission !== 'granted') {
+      try {
+        subscription = await this.swPush.requestSubscription({
+          serverPublicKey: environment.vapidPublicKey
+        });
+      } catch {
+        // Some browsers finish registration before resolving (or reject a
+        // duplicate request). Reconcile the actual PushManager state before
+        // reporting a failure to somebody who already granted access.
+        subscription = await this.currentSubscription();
+        if (!subscription) {
+          const refreshedPermission = await this.currentPermission();
+          if (refreshedPermission === 'denied') {
+            throw new Error('Notifications are blocked. Allow them in the browser or site settings first.');
+          }
+          throw new Error(refreshedPermission === 'granted'
+            ? 'Browser permission is enabled, but its push service could not register this device. Reopen the installed app and try again.'
+            : 'Notification permission was not granted.');
+        }
+      }
+    }
+    await this.registerDevice(subscription);
+    return subscription;
+  }
+
+  private reconcileDevice(settings: PushNotificationSettings): PushNotificationSettings {
+    if (settings.deviceSubscribed) return settings;
     // PushManager/SwPush may publish the new subscription one tick after
     // requestSubscription resolves. The returned subscription is already the
     // authoritative registration for this action, so keep the UI in sync

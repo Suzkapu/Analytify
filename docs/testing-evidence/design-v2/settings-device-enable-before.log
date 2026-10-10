@@ -1,0 +1,187 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/notifications/push-notification.service.spec.ts
+Application bundle generation complete. [3.529 seconds] - 2026-10-10T06:37:31.938Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > enables this device while preserving every disabled category and sending no notification
+TypeError: value.enableDevice is not a function
+    at enableDevice (/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:83:98)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:87:32
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:85:111
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+
+stderr | src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > enables an existing device without requesting permission again or changing preferences
+TypeError: value.enableDevice is not a function
+    at enableDevice (/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:83:98)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:101:32
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:99:109
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+
+stderr | src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > rejects device enabling when denied without server writes
+TypeError: value.enableDevice is not a function
+    at enableDevice (/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:83:98)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:110:22
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:107:120
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:2027:60
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+
+stderr | src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > rejects device enabling when unsupported without server writes
+TypeError: value.enableDevice is not a function
+    at enableDevice (/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:83:98)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:110:22
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:107:120
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:2027:60
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+
+stderr | src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > reports registration failure and permits retry without changing saved categories
+TypeError: value.enableDevice is not a function
+    at enableDevice (/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:83:98)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:119:22
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:114:103
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+
+stderr | src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > recovers a browser registration rejection after the browser has actually subscribed
+TypeError: value.enableDevice is not a function
+    at enableDevice (/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:83:98)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:130:32
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:126:106
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+
+ ❯ |SpotiFront| src/app/core/notifications/push-notification.service.spec.ts (20 tests | 6 failed) 159ms
+     × enables this device while preserving every disabled category and sending no notification 36ms
+     × enables an existing device without requesting permission again or changing preferences 6ms
+     × rejects device enabling when denied without server writes 4ms
+     × rejects device enabling when unsupported without server writes 4ms
+     × reports registration failure and permits retry without changing saved categories 3ms
+     × recovers a browser registration rejection after the browser has actually subscribed 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > enables this device while preserving every disabled category and sending no notification
+TypeError: value.enableDevice is not a function
+ ❯ enableDevice src/app/core/notifications/push-notification.service.spec.ts:83:98
+     81|
+     82|     const enableDevice = (value: PushNotificationService): Promise<Pus…
+     83|         (value as PushNotificationService & {enableDevice(): Promise<P…
+       |                                                                                                  ^
+     84|
+     85|     it('enables this device while preserving every disabled category a…
+ ❯ src/app/core/notifications/push-notification.service.spec.ts:87:32
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/notifications/push-notification.service.spec.ts:85:111
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > enables an existing device without requesting permission again or changing preferences
+TypeError: value.enableDevice is not a function
+ ❯ enableDevice src/app/core/notifications/push-notification.service.spec.ts:83:98
+     81|
+     82|     const enableDevice = (value: PushNotificationService): Promise<Pus…
+     83|         (value as PushNotificationService & {enableDevice(): Promise<P…
+       |                                                                                                  ^
+     84|
+     85|     it('enables this device while preserving every disabled category a…
+ ❯ src/app/core/notifications/push-notification.service.spec.ts:101:32
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/notifications/push-notification.service.spec.ts:99:109
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > rejects device enabling when denied without server writes
+ FAIL  |SpotiFront| src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > rejects device enabling when unsupported without server writes
+TypeError: value.enableDevice is not a function
+ ❯ enableDevice src/app/core/notifications/push-notification.service.spec.ts:83:98
+     81|
+     82|     const enableDevice = (value: PushNotificationService): Promise<Pus…
+     83|         (value as PushNotificationService & {enableDevice(): Promise<P…
+       |                                                                                                  ^
+     84|
+     85|     it('enables this device while preserving every disabled category a…
+ ❯ src/app/core/notifications/push-notification.service.spec.ts:110:22
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/notifications/push-notification.service.spec.ts:107:120
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > reports registration failure and permits retry without changing saved categories
+TypeError: value.enableDevice is not a function
+ ❯ enableDevice src/app/core/notifications/push-notification.service.spec.ts:83:98
+     81|
+     82|     const enableDevice = (value: PushNotificationService): Promise<Pus…
+     83|         (value as PushNotificationService & {enableDevice(): Promise<P…
+       |                                                                                                  ^
+     84|
+     85|     it('enables this device while preserving every disabled category a…
+ ❯ src/app/core/notifications/push-notification.service.spec.ts:119:22
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/notifications/push-notification.service.spec.ts:114:103
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > recovers a browser registration rejection after the browser has actually subscribed
+TypeError: value.enableDevice is not a function
+ ❯ enableDevice src/app/core/notifications/push-notification.service.spec.ts:83:98
+     81|
+     82|     const enableDevice = (value: PushNotificationService): Promise<Pus…
+     83|         (value as PushNotificationService & {enableDevice(): Promise<P…
+       |                                                                                                  ^
+     84|
+     85|     it('enables this device while preserving every disabled category a…
+ ❯ src/app/core/notifications/push-notification.service.spec.ts:130:32
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/notifications/push-notification.service.spec.ts:126:106
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 14 passed (20)
+   Start at  08:37:32
+   Duration  1.41s (transform 129ms, setup 404ms, import 125ms, tests 159ms, environment 539ms)
+
