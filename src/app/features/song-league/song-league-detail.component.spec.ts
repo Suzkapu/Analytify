@@ -423,6 +423,23 @@ describe('SongLeagueDetailComponent notifications', () => {
             component.dashboard!.recommendations.push({recommenderUserId: 'member', submittedAt: '2026-10-09T09:00:00Z'} as any);
             vi.setSystemTime(new Date('2026-10-12T10:00:00Z'));
             expect(component.isPickOpen).toBe(false);
+            vi.setSystemTime(new Date('2026-10-29T22:59:00Z'));
+            component.dashboard!.recommendations = [{recommenderUserId: 'member', submittedAt: '2026-10-29T22:00:00Z'}] as any;
+            expect(component.isPickOpen).toBe(false);
+            vi.setSystemTime(new Date('2026-10-29T23:00:00Z'));
+            expect(component.isPickOpen).toBe(true);
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it('shows next-day scoring rather than a fixed Saturday start', () => {
+        vi.useFakeTimers();
+        try {
+            vi.setSystemTime(new Date('2026-10-12T12:00:00Z'));
+            expect(component.recommendationStatus({
+                scoringStartsAt: '2026-10-12T22:00:00Z', scoringEndsAt: '2026-11-06T23:00:00Z'
+            } as any)).toBe('Starts tomorrow');
         } finally {
             vi.useRealTimers();
         }

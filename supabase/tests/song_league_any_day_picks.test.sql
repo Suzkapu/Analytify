@@ -79,10 +79,14 @@ select is(public.score_song_league_snapshot((select id from public.stats_snapsho
   'a submission-day snapshot never awards points to the new pick');
 insert into public.stats_snapshots(id, user_id, range, snapshot_date) values
   ('73000000-0000-4000-8000-000000000001', '71000000-0000-4000-8000-000000000002',
-  'short_term', (now() at time zone 'Europe/Vienna')::date + 1);
-insert into public.stats_snapshot_tracks(snapshot_id, track_id, rank) values
-  ('73000000-0000-4000-8000-000000000001', 'anyday-pick', 1);
-select is(public.score_song_league_snapshot('73000000-0000-4000-8000-000000000001'), 1,
+  'short_term', (now() at time zone 'Europe/Vienna')::date + 1) on conflict do nothing;
+insert into public.stats_snapshot_tracks(snapshot_id, track_id, rank)
+select id, 'anyday-pick', 1 from public.stats_snapshots
+where user_id = '71000000-0000-4000-8000-000000000002' and range = 'short_term'
+  and snapshot_date = (now() at time zone 'Europe/Vienna')::date + 1;
+select is(public.score_song_league_snapshot((select id from public.stats_snapshots
+  where user_id = '71000000-0000-4000-8000-000000000002' and range = 'short_term'
+  and snapshot_date = (now() at time zone 'Europe/Vienna')::date + 1)), 1,
   'the following local day is eligible for scoring');
 select * from finish();
 rollback;
