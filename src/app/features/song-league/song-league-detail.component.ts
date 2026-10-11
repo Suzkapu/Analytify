@@ -301,7 +301,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
         this.successMessage = `“${submittedName}” is locked in and the league’s enabled Weekly Picks playlists were refreshed.`;
       } catch (error) {
         this.successMessage = `“${submittedName}” is locked in and visible to the league.`;
-        this.playlistWarning = `${this.describeError(error, 'The Spotify playlists could not be refreshed immediately.')} The Friday background sync will retry.`;
+        this.playlistWarning = `${this.describeError(error, 'The Spotify playlists could not be refreshed immediately.')} Background sync will retry.`;
       }
       await this.load(true);
     } catch (error) {
@@ -581,7 +581,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
       isClosed: this.isClosed,
       isDemo: !!this.dashboard?.league.isDemo,
       isPickOpen: this.isPickOpen,
-      alreadySubmitted: this.alreadySubmittedToday || this.alreadySubmittedDemoPick
+      alreadySubmitted: this.alreadySubmittedThisWeek || this.alreadySubmittedDemoPick
     });
   }
 
@@ -641,7 +641,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
 
   recommendationStatus(recommendation: SongLeagueRecommendation): string {
     const now = Date.now();
-    if (now < new Date(recommendation.scoringStartsAt).getTime()) return 'Starts Saturday';
+    if (now < new Date(recommendation.scoringStartsAt).getTime()) return 'Starts tomorrow';
     const remaining = Math.max(0, new Date(recommendation.scoringEndsAt).getTime() - now);
     const days = Math.max(1, Math.ceil(remaining / 86_400_000));
     return `${days} ${days === 1 ? 'day' : 'days'} left`;
@@ -651,10 +651,10 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     return !!this.dashboard && this.songLeague.isFridayInTimezone(this.dashboard.league.timezone);
   }
 
-  get alreadySubmittedToday(): boolean {
-    if (!this.dashboard || !this.isFriday) return false;
+  get alreadySubmittedThisWeek(): boolean {
+    if (!this.dashboard) return false;
     return this.dashboard.recommendations.some(item =>
-      item.recommenderUserId === this.currentUserId && this.sameLeagueDay(item.submittedAt, new Date())
+      item.recommenderUserId === this.currentUserId && this.sameLeagueWeek(item.submittedAt, new Date())
     );
   }
 
@@ -667,7 +667,7 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     if (this.isClosed) return false;
     return this.dashboard?.league.isDemo
       ? !this.alreadySubmittedDemoPick
-      : this.isFriday && !this.alreadySubmittedToday;
+      : !!this.dashboard && !this.alreadySubmittedThisWeek;
   }
 
   get pickStatusLabel(): string {
@@ -739,12 +739,18 @@ export class SongLeagueDetailComponent implements OnInit, OnDestroy {
     return !this.destroyed && this.leagueId === leagueId && this.loadGeneration === generation;
   }
 
-  private sameLeagueDay(value: string, now: Date): boolean {
+  private sameLeagueWeek(value: string, now: Date): boolean {
     const timezone = this.dashboard?.league.timezone || 'Europe/Vienna';
     const formatter = new Intl.DateTimeFormat('en-CA', {
       timeZone: timezone, year: 'numeric', month: '2-digit', day: '2-digit'
     });
-    return formatter.format(new Date(value)) === formatter.format(now);
+    const fridayDate = (date: Date): number => {
+      const parts = formatter.formatToParts(date);
+      const part = (type: string): number => Number(parts.find(item => item.type === type)?.value);
+      const localDay = new Date(Date.UTC(part('year'), part('month') - 1, part('day')));
+      return localDay.getTime() - ((localDay.getUTCDay() + 2) % 7) * 86_400_000;
+    };
+    return fridayDate(new Date(value)) === fridayDate(now);
   }
 
   private describeError(error: unknown, fallback: string): string {

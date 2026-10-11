@@ -23,7 +23,7 @@
         <div>
           <span class="league-eyebrow">{{ data.league.isDemo ? 'Admin demo · synthetic opponents' : data.league.timezone + ' · all-time standings' }}</span>
           <h1>{{ data.league.name }}</h1>
-          <p>{{ data.members.length }} / {{ data.league.maxMembers }} members · {{ data.league.isDemo ? 'play any day against three bots' : 'one discovery every Friday · four scoring weeks per song' }}</p>
+          <p>{{ data.members.length }} / {{ data.league.maxMembers }} members · {{ data.league.isDemo ? 'play any day against three bots' : 'one pick per week · resets Friday · late picks get less scoring time' }}</p>
           <span class="picks-status-badge" [class.open]="isPickOpen">
             <i class="pi" [ngClass]="isPickOpen ? 'pi-circle-fill' : 'pi-clock'"></i>
             {{ isClosed ? 'Closed · history only' : pickStatusLabel }}
@@ -308,7 +308,7 @@
           <span class="league-count">{{ data.recommendations.length }}</span>
         </div>
         @if (data.recommendations.length === 0) {
-          <div class="league-empty compact"><i class="pi pi-headphones"></i><strong>No songs scoring yet</strong><p>The first accepted Friday picks will appear here.</p></div>
+          <div class="league-empty compact"><i class="pi pi-headphones"></i><strong>No songs scoring yet</strong><p>Accepted picks appear here and start scoring the next day.</p></div>
         }
         @if (data.recommendations.length) {
           <div class="active-song-grid">
@@ -382,7 +382,7 @@
               <i class="pi pi-spotify"></i> Open my Weekly Picks playlist
             </a>
           }
-          <p>Private on Spotify · updates after accepted Friday picks · keeps the four active weekly rounds</p>
+          <p>Private on Spotify · updates after every accepted pick · keeps the four active weekly rounds</p>
         </section>
       }
       <app-song-league-rules></app-song-league-rules>

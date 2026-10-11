@@ -58,3 +58,10 @@ test('allows Song League playlist refreshes every day when Friday-only schedulin
     song_league_playlist_fridays_only: false
   }, new Date('2026-09-01T12:00:00.000Z')), true);
 });
+
+test('retries feature-required league playlists on any day despite the optional Friday schedule', () => {
+  assert.equal(isScheduledTaskAllowed('song_league_playlists', {
+    timezone: 'Europe/Vienna', song_league_playlists_required: true,
+    song_league_playlist_fridays_only: true
+  }, new Date('2026-10-08T12:00:00Z')), true);
+});
