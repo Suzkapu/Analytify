@@ -1,5 +1,6 @@
-import {inject, NgModule} from '@angular/core';
-import {ExtraOptions, RedirectFunction, Router, RouterModule, Routes, UrlMatcher} from '@angular/router';
+import {inject, NgModule, provideEnvironmentInitializer} from '@angular/core';
+import {ViewportScroller} from '@angular/common';
+import {ExtraOptions, provideRouter, RedirectFunction, Router, RouterModule, Routes, UrlMatcher, withInMemoryScrolling, withPreloading, withViewTransitions} from '@angular/router';
 import {DesignSelectivePreloadingStrategy} from '@core/navigation/design-selective-preloading.strategy';
 import {DESIGN_V2_ROUTES} from './design-v2-routing.module';
 
@@ -24,12 +25,19 @@ export const ROUTER_OPTIONS: ExtraOptions = {
   preloadingStrategy: DesignSelectivePreloadingStrategy,
   scrollPositionRestoration: 'enabled',
   anchorScrolling: 'enabled',
-  scrollOffset: [0, 96],
-  enableViewTransitions: true
+  scrollOffset: [0, 96]
 };
+export const ROUTER_VIEW_TRANSITION_OPTIONS = {skipInitialTransition: true};
 
 @NgModule({
-  imports: [RouterModule.forRoot(APP_ROUTES, ROUTER_OPTIONS)],
-  exports: [RouterModule]
+  imports: [RouterModule],
+  exports: [RouterModule],
+  providers: [
+    provideRouter(APP_ROUTES,
+      withPreloading(DesignSelectivePreloadingStrategy),
+      withInMemoryScrolling({scrollPositionRestoration: ROUTER_OPTIONS.scrollPositionRestoration, anchorScrolling: ROUTER_OPTIONS.anchorScrolling}),
+      withViewTransitions(ROUTER_VIEW_TRANSITION_OPTIONS)),
+    provideEnvironmentInitializer(() => inject(ViewportScroller).setOffset(ROUTER_OPTIONS.scrollOffset!))
+  ]
 })
 export class AppRoutingModule {}

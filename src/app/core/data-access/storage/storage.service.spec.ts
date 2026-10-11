@@ -112,6 +112,46 @@ describe('StorageService', () => {
         expect(service.getItem('local-key')).toBeNull();
     });
 
+    it('keeps device shortcut choices out of immediate and explicit cloud backup selection', async () => {
+        const key = 'design-v2:mobile-shortcuts:spotify-user';
+        service.setItem(key, '[]', false);
+        await Promise.resolve();
+
+        expect(service.getItem(key)).toBe('[]');
+        expect(service.getCacheKeys()).toContain(key);
+        expect(service.getCacheKeys().filter(candidate => service.shouldSyncUserCacheKey(candidate)))
+            .not.toContain(key);
+        expect(supabase.saveUserCache).not.toHaveBeenCalled();
+        expect(supabase.loadUserCache).not.toHaveBeenCalled();
+    });
+
+    it('does not replace an immediate device choice with delayed persisted shortcuts', async () => {
+        const localService = new StorageService(supabase, lifecycle);
+        const key = 'design-v2:mobile-shortcuts:spotify-user';
+        let completeRead!: () => void;
+        const database = {
+            transaction: () => ({objectStore: () => ({get: () => {
+                const request: any = {};
+                completeRead = () => {
+                    request.result = {key, value: '["playlists","stats","history"]'};
+                    request.onsuccess?.();
+                };
+                return request;
+            }})})
+        };
+        vi.spyOn(localService as any, 'getDB').mockResolvedValue(database as any);
+        vi.spyOn(localService as any, 'persistKV').mockImplementation(() => {});
+
+        const hydration = localService.hydrateItems([key]);
+        await vi.waitFor(() => expect(completeRead).toBeTypeOf('function'));
+        localService.setItem(key, '[]', false);
+        completeRead();
+
+        expect(await hydration).toBe(0);
+        expect(localService.getItem(key)).toBe('[]');
+        expect(supabase.saveUserCache).not.toHaveBeenCalled();
+    });
+
     it('bootstraps metadata without enumerating the feature payload store', async () => {
         const bootstrapService = new StorageService(supabase, lifecycle);
         const request: any = {};

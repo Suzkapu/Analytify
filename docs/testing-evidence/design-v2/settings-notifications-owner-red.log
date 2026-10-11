@@ -1,0 +1,288 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/settings/v2-notification-settings.controller.spec.ts
+Application bundle generation complete. [2.660 seconds] - 2026-10-10T16:05:09.139Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:603891) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > refuses a category mutation during cached refresh and permits it after recovery
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "stats_access_requests",
+      true,
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:57:47
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > refuses a device mutation during cached refresh and permits it after recovery
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array []
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:58:38
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > rejects cached actor settings before a category mutation, then permits authoritative reload
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "stats_access_requests",
+      true,
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:80:47
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > rejects cached actor settings before a device mutation, then permits authoritative reload
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array []
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:81:38
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > rejects cached generation settings before a category mutation, then permits authoritative reload
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "stats_access_requests",
+      true,
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:80:47
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > rejects cached generation settings before a device mutation, then permits authoritative reload
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array []
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:81:38
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+ ❯ |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts (22 tests | 6 failed) 74ms
+     × refuses a category mutation during cached refresh and permits it after recovery 5ms
+     × refuses a device mutation during cached refresh and permits it after recovery 5ms
+     × rejects cached actor settings before a category mutation, then permits authoritative reload 3ms
+     × rejects cached actor settings before a device mutation, then permits authoritative reload 3ms
+     × rejects cached generation settings before a category mutation, then permits authoritative reload 4ms
+     × rejects cached generation settings before a device mutation, then permits authoritative reload 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > refuses a category mutation during cached refresh and permits it after recovery
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "stats_access_requests",
+      true,
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:57:47
+     55|     pending.resolve(saved); await refresh;
+     56|
+     57|     expect(service.setCategoryPreference).not.toHaveBeenCalled();
+       |                                               ^
+     58|     expect(service.enableDevice).not.toHaveBeenCalled();
+     59|     expect(duringRefresh).toEqual({loading: true, settings: saved, mes…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > refuses a device mutation during cached refresh and permits it after recovery
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array []
+
+
+Number of calls: 1
+
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:58:38
+     56|
+     57|     expect(service.setCategoryPreference).not.toHaveBeenCalled();
+     58|     expect(service.enableDevice).not.toHaveBeenCalled();
+       |                                      ^
+     59|     expect(duringRefresh).toEqual({loading: true, settings: saved, mes…
+     60|     expect(controller.loading()).toBe(false); expect(controller.settin…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > rejects cached actor settings before a category mutation, then permits authoritative reload
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > rejects cached generation settings before a category mutation, then permits authoritative reload
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "stats_access_requests",
+      true,
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:80:47
+     78|     await mutate();
+     79|
+     80|     expect(service.setCategoryPreference).not.toHaveBeenCalled();
+       |                                               ^
+     81|     expect(service.enableDevice).not.toHaveBeenCalled();
+     82|     expect(controller.settings()).toBeNull(); expect(controller.messag…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > rejects cached actor settings before a device mutation, then permits authoritative reload
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > rejects cached generation settings before a device mutation, then permits authoritative reload
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array []
+
+
+Number of calls: 1
+
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:81:38
+     79|
+     80|     expect(service.setCategoryPreference).not.toHaveBeenCalled();
+     81|     expect(service.enableDevice).not.toHaveBeenCalled();
+       |                                      ^
+     82|     expect(controller.settings()).toBeNull(); expect(controller.messag…
+     83|     expect(controller.error()).toBe(''); expect(controller.saving()).t…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 16 passed (22)
+   Start at  18:05:09
+   Duration  925ms (transform 135ms, setup 234ms, import 143ms, tests 74ms, environment 337ms)
+

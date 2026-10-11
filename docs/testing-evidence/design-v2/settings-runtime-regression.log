@@ -1,0 +1,362 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-settings-updates.spec.ts e2e/design-v2-settings-account-data.spec.ts e2e/design-v2-settings-notifications.spec.ts --config=/tmp/analytify-updates-browsers.config.ts --workers=1 --output=docs/testing-evidence/design-v2/settings-runtime-regression-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:470436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:470436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 104 tests using 1 worker
+
+(node:470539) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓    1 [desktop] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 480) (6.4s)
+  ✓    2 [desktop] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 1000) (4.6s)
+  ✓    3 [desktop] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (reduce, height 480) (3.8s)
+  ✓    4 [desktop] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (reduce, height 1000) (3.8s)
+  ✓    5 [desktop] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) (5.7s)
+  ✘    6 [desktop] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 1000) (7.4s)
+(node:471386) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓    7 [desktop] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 480) (5.4s)
+  ✓    8 [desktop] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 1000) (5.1s)
+  ✓    9 [desktop] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (no-preference, height 480) (3.7s)
+  ✓   10 [desktop] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (no-preference, height 480) (4.0s)
+  ✓   11 [desktop] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (no-preference, height 480) (4.0s)
+  ✓   12 [desktop] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (no-preference, height 480) (5.2s)
+  ✓   13 [desktop] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (no-preference, height 1000) (4.3s)
+  ✓   14 [desktop] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (no-preference, height 1000) (4.1s)
+  ✓   15 [desktop] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (no-preference, height 1000) (4.2s)
+  ✓   16 [desktop] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (no-preference, height 1000) (4.7s)
+  ✓   17 [desktop] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (reduce, height 480) (2.6s)
+  ✓   18 [desktop] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (reduce, height 480) (3.0s)
+  ✓   19 [desktop] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (reduce, height 480) (4.9s)
+  ✓   20 [desktop] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (reduce, height 480) (4.3s)
+  ✓   21 [desktop] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (reduce, height 1000) (3.5s)
+  ✓   22 [desktop] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (reduce, height 1000) (3.1s)
+  ✓   23 [desktop] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (reduce, height 1000) (4.5s)
+  ✓   24 [desktop] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (reduce, height 1000) (6.0s)
+  ✓   25 [desktop] › e2e/design-v2-settings-updates.spec.ts:151:5 › Updates cached refresh, recovery, policy lock and empty account (3.8s)
+  ✓   26 [desktop] › e2e/design-v2-settings-updates.spec.ts:168:5 › Updates Retry scroll target clears fixed mobile navigation (2.5s)
+(node:473254) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   27 [mobile] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 480) (7.1s)
+  ✓   28 [mobile] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 1000) (8.1s)
+  ✓   29 [mobile] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (reduce, height 480) (6.1s)
+  ✓   30 [mobile] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (reduce, height 1000) (5.4s)
+  ✓   31 [mobile] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) (8.9s)
+  ✓   32 [mobile] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 1000) (10.2s)
+  ✓   33 [mobile] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 480) (7.8s)
+  ✓   34 [mobile] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 1000) (7.7s)
+  ✓   35 [mobile] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (no-preference, height 480) (5.0s)
+  ✓   36 [mobile] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (no-preference, height 480) (4.7s)
+  ✓   37 [mobile] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (no-preference, height 480) (6.2s)
+  ✓   38 [mobile] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (no-preference, height 480) (7.2s)
+  ✓   39 [mobile] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (no-preference, height 1000) (5.3s)
+  ✓   40 [mobile] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (no-preference, height 1000) (5.9s)
+  ✓   41 [mobile] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (no-preference, height 1000) (6.7s)
+  ✓   42 [mobile] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (no-preference, height 1000) (6.3s)
+  ✓   43 [mobile] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (reduce, height 480) (3.0s)
+  ✓   44 [mobile] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (reduce, height 480) (4.2s)
+  ✓   45 [mobile] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (reduce, height 480) (5.8s)
+  ✓   46 [mobile] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (reduce, height 480) (4.8s)
+  ✓   47 [mobile] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (reduce, height 1000) (3.2s)
+  ✓   48 [mobile] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (reduce, height 1000) (3.9s)
+  ✓   49 [mobile] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (reduce, height 1000) (5.8s)
+  ✓   50 [mobile] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (reduce, height 1000) (9.7s)
+  ✓   51 [mobile] › e2e/design-v2-settings-updates.spec.ts:151:5 › Updates cached refresh, recovery, policy lock and empty account (7.4s)
+  ✓   52 [mobile] › e2e/design-v2-settings-updates.spec.ts:168:5 › Updates Retry scroll target clears fixed mobile navigation (3.2s)
+(node:477372) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   53 [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 480) (11.6s)
+  ✓   54 [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 1000) (10.1s)
+  ✓   55 [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (reduce, height 480) (7.6s)
+  ✓   56 [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (reduce, height 1000) (6.7s)
+  ✓   57 [firefox-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) (11.4s)
+  ✓   58 [firefox-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 1000) (9.8s)
+  ✓   59 [firefox-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 480) (7.2s)
+  ✓   60 [firefox-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 1000) (9.3s)
+  ✓   61 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (no-preference, height 480) (5.9s)
+  ✓   62 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (no-preference, height 480) (7.1s)
+  ✓   63 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (no-preference, height 480) (8.7s)
+  ✓   64 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (no-preference, height 480) (9.5s)
+  ✓   65 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (no-preference, height 1000) (6.6s)
+  ✓   66 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (no-preference, height 1000) (7.1s)
+  ✓   67 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (no-preference, height 1000) (11.8s)
+  ✓   68 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (no-preference, height 1000) (13.8s)
+  ✓   69 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (reduce, height 480) (3.8s)
+  ✓   70 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (reduce, height 480) (4.0s)
+  ✓   71 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (reduce, height 480) (6.0s)
+  ✓   72 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (reduce, height 480) (7.9s)
+  ✓   73 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (reduce, height 1000) (5.0s)
+  ✓   74 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (reduce, height 1000) (5.0s)
+  ✓   75 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (reduce, height 1000) (5.7s)
+  ✓   76 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (reduce, height 1000) (7.9s)
+  ✓   77 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:151:5 › Updates cached refresh, recovery, policy lock and empty account (5.0s)
+  ✓   78 [firefox-stats] › e2e/design-v2-settings-updates.spec.ts:168:5 › Updates Retry scroll target clears fixed mobile navigation (3.2s)
+(node:483101) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   79 [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 480) (32.4s)
+(node:483850) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   80 [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 1000) (33.7s)
+(node:484564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   81 [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (reduce, height 480) (24.4s)
+  ✘   82 [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (reduce, height 1000) (12.6s)
+(node:485443) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   83 [webkit-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) (34.2s)
+(node:486626) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   84 [webkit-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 1000) (37.3s)
+(node:487464) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   85 [webkit-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 480) (25.2s)
+  ✓   86 [webkit-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 1000) (25.3s)
+  ✓   87 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (no-preference, height 480) (23.1s)
+  ✓   88 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (no-preference, height 480) (20.4s)
+  ✓   89 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (no-preference, height 480) (21.1s)
+  ✓   90 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (no-preference, height 480) (25.2s)
+  ✘   91 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (no-preference, height 1000) (28.5s)
+(node:491047) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   92 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (no-preference, height 1000) (28.3s)
+  ✓   93 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (no-preference, height 1000) (23.1s)
+  ✓   94 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (no-preference, height 1000) (24.1s)
+  ✓   95 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (reduce, height 480) (14.0s)
+  ✓   96 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (reduce, height 480) (21.4s)
+  ✓   97 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (reduce, height 480) (22.6s)
+  ✓   98 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (reduce, height 480) (21.5s)
+  ✓   99 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (reduce, height 1000) (22.7s)
+  ✓  100 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:94:7 › Updates explicit save, retry and authoritative readback (reduce, height 1000) (24.9s)
+  ✓  101 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:111:7 › Updates responsive cards and editor assets (reduce, height 1000) (17.9s)
+  ✓  102 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:131:7 › Updates popup resizing, blur and Cancel-last (reduce, height 1000) (20.6s)
+  ✓  103 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:151:5 › Updates cached refresh, recovery, policy lock and empty account (9.5s)
+  ✓  104 [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:168:5 › Updates Retry scroll target clears fixed mobile navigation (5.5s)
+
+
+  1) [desktop] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 1000) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      37 |       await expect(panel.getByRole('alert')).toHaveCount(0); await stats.press('Space');
+      38 |       await expect(stats).toBeDisabled(); await expect(stats).not.toBeChecked();
+    > 39 |       await expect.poll(() => !!holdSave).toBe(true); holdSave!();
+         |                                           ^
+      40 |       await expect(stats).toBeChecked(); await expect(stats).toBeEnabled();
+      41 |       expect(writes).toEqual([{p_category: 'stats_access_requests', p_enabled: true}, {p_category: 'stats_access_requests', p_enabled: true}]);
+      42 |       await expectNoBlockingAxeViolations(page);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-notifications.spec.ts:39:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 480) 
+
+    Test timeout of 30000ms exceeded.
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 1000) 
+
+    Test timeout of 30000ms exceeded.
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (reduce, height 1000) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('app-login-page')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('app-login-page') with timeout 5000ms
+      - waiting for locator('app-login-page')
+
+
+       at helpers/authenticated-browser.ts:13
+
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+      12 |   await page.goto('/new/login');
+    > 13 |   await expect(page.locator('app-login-page')).toBeVisible();
+         |                                                ^
+      14 |   await page.evaluate(async settings => {
+      15 |     await new Promise<void>((resolve, reject) => {
+      16 |       const request = indexedDB.open('AnalytifyDB', 4);
+        at seedAuthenticatedBrowser (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:13:48)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts:21:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [webkit-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.press: Target page, context or browser has been closed
+
+      72 |       await expectNoBlockingAxeViolations(page); await guide.screenshot({path: info.outputPath('install.png')});
+      73 |       await page.screenshot({path: info.outputPath('install-page.png'), fullPage: true, animations: 'disabled'});
+    > 74 |       await guide.getByRole('button', {name: 'Back', exact: true}).press('Enter');
+         |                                                                    ^
+      75 |       await expect(page).toHaveURL(/\/new\/settings\/notifications$/); await expect(stats).toBeChecked();
+      76 |       expect(unexpected).toEqual([]);
+      77 |       expect(transitionErrors).toEqual([]); expect(expectedSaveFailures.length).toBeLessThanOrEqual(1);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-notifications.spec.ts:74:68
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-notific-07b8c-e-no-preference-height-480--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [webkit-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 1000) 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(locator).toBeChecked() failed
+
+    Locator:  locator('v2-settings-notifications').getByRole('switch', { name: 'Stats access requests' })
+    Expected: checked
+    Received: undefined
+
+    Call log:
+      - Expect "toBeChecked" locator('v2-settings-notifications').getByRole('switch', { name: 'Stats access requests' }) with timeout 5000ms
+      - waiting for locator('v2-settings-notifications').getByRole('switch', { name: 'Stats access requests' })
+      - 
+
+
+      73 |       await page.screenshot({path: info.outputPath('install-page.png'), fullPage: true, animations: 'disabled'});
+      74 |       await guide.getByRole('button', {name: 'Back', exact: true}).press('Enter');
+    > 75 |       await expect(page).toHaveURL(/\/new\/settings\/notifications$/); await expect(stats).toBeChecked();
+         |                                                                                            ^
+      76 |       expect(unexpected).toEqual([]);
+      77 |       expect(transitionErrors).toEqual([]); expect(expectedSaveFailures.length).toBeLessThanOrEqual(1);
+      78 |       await writeFile(info.outputPath('notification-workflow.json'), JSON.stringify({motion, height, geometry, writes, unexpected, transitionErrors, expectedSaveFailures}, null, 2));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-notifications.spec.ts:75:92
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-notific-dfcf8--no-preference-height-1000--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (no-preference, height 1000) 
+
+    Error: expect(locator).not.toBeChecked() failed
+
+    Locator: locator('v2-settings-update-editor').getByRole('switch', { name: 'Automatic updates' })
+    Expected: not checked
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "not toBeChecked" locator('v2-settings-update-editor').getByRole('switch', { name: 'Automatic updates' }) with timeout 5000ms
+      - waiting for locator('v2-settings-update-editor').getByRole('switch', { name: 'Automatic updates' })
+
+
+      89 |     await expect(unit).toHaveCount(0);expect(s.writes).toEqual([]);
+      90 |     await settledNavigation(page);await editor.getByRole('button',{name:'Back',exact:true}).press('Enter');await expect(list.locator('[data-task="listening_history"]')).toContainText('Disabled');await settledNavigation(page);
+    > 91 |     await list.locator('a[data-task="listening_history"]').press('Enter');await expect(toggle).not.toBeChecked();expect(s.errors).toEqual([]);expect(s.expectedSaveFailures).toEqual([]);
+         |                                                                                                    ^
+      92 |     await writeFile(info.outputPath('update-draft.json'),JSON.stringify({motion,height,writes:s.writes,errors:s.errors},null,2));
+      93 |   });
+      94 |   test(`Updates explicit save, retry and authoritative readback (${motion}, height ${height})`, async ({page},info) => {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-updates.spec.ts:91:100
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-updates-e1f29--no-preference-height-1000--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-updates-e1f29--no-preference-height-1000--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-updates-e1f29--no-preference-height-1000--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/settings-runtime-regression-artifacts/design-v2-settings-updates-e1f29--no-preference-height-1000--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7 failed
+    [desktop] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 1000) 
+    [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 480) 
+    [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 1000) 
+    [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (reduce, height 1000) 
+    [webkit-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) 
+    [webkit-stats] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 1000) 
+    [webkit-stats] › e2e/design-v2-settings-updates.spec.ts:74:7 › Updates popup draft and keyboard containment (no-preference, height 1000) 
+  97 passed (18.4m)

@@ -114,7 +114,7 @@ describe('canonical application routes', () => {
     expect(ROUTER_OPTIONS).toEqual(expect.objectContaining({
       preloadingStrategy: DesignSelectivePreloadingStrategy,
       scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled',
-      scrollOffset: [0, 96], enableViewTransitions: true
+      scrollOffset: [0, 96]
     }));
   });
 });

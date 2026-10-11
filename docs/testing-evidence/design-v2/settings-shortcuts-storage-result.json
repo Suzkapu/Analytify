@@ -1,0 +1,27 @@
+{
+  "checkpoint": "5b90069",
+  "newCharacterizationCases": 2,
+  "totalPassed": 12,
+  "scope": "StorageService with isolated persistence/network boundaries; no production-source edit",
+  "command": "taskset -c 8-11 npx ng test --watch=false --progress=false --include=src/app/core/data-access/storage/storage.service.spec.ts",
+  "exit": 0,
+  "lintExit": 0,
+  "sources": [
+    {
+      "path": "src/app/core/data-access/storage/storage.service.ts",
+      "sha256": "558d5dc14ae0a13919a41820018a5d11ed366736cb3592760abc2c85868c7867"
+    },
+    {
+      "path": "src/app/core/data-access/storage/storage.service.spec.ts",
+      "sha256": "e5fdd9df03351eb1f14bc603b688c113be57109d0b645bac5ff170dea356b713"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-shortcuts-canonical-context.json",
+      "sha256": "80ce76bf122d9fcdd6fb986fd1f4d68916ae9d8e173d641da3291b85cabc9861"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-shortcuts-prototype-contract.json",
+      "sha256": "9c6d806157901cc9104e083388b8b8def40774f5a8b5100d38b62cf01eb13760"
+    }
+  ]
+}

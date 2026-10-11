@@ -1,0 +1,26 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-settings-notifications.spec.ts --config=/tmp/analytify-updates-browsers.config.ts --project=desktop --project=mobile --workers=1 --output=docs/testing-evidence/design-v2/settings-notifications-readiness-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:503419) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:503419) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:503692) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) (6.8s)
+  ✓  2 [desktop] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 1000) (6.1s)
+  ✓  3 [desktop] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 480) (5.4s)
+  ✓  4 [desktop] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 1000) (5.3s)
+(node:504379) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 [mobile] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 480) (8.2s)
+[WebServer] 5:49:57 PM [vite] (client) [console.error] TimeoutError: Transition was aborted because of timeout in DOM update. DOM update timed out
+  ✓  6 [mobile] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (no-preference, height 1000) (10.7s)
+  ✓  7 [mobile] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 480) (5.4s)
+  ✓  8 [mobile] › e2e/design-v2-settings-notifications.spec.ts:7:9 › Notifications save independently of this device (reduce, height 1000) (6.7s)
+
+  8 passed (1.2m)

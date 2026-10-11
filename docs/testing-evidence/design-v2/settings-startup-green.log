@@ -1,0 +1,23 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-settings-startup.spec.ts --config=/tmp/analytify-updates-browsers.config.ts --workers=1 --output=docs/testing-evidence/design-v2/settings-startup-green-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:605770) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:605770) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] ✘ [ERROR] TS2322: Type '{ skipInitialTransition: true; }' is not assignable to type 'boolean | undefined'. [plugin angular-compiler]
+[WebServer] 
+[WebServer]     /mnt/Storage/ProgrammingProjects/Analytify/src/app/app-routing.module.ts:28:2:
+[WebServer]       28 │   enableViewTransitions: {skipInitialTransition: true}
+[WebServer]          ╵   ~~~~~~~~~~~~~~~~~~~~~
+[WebServer] 
+[WebServer]   The expected type comes from property 'enableViewTransitions' which is declared here on type 'ExtraOptions'
+[WebServer] 
+[WebServer]     /mnt/Storage/ProgrammingProjects/Analytify/node_modules/@angular/router/types/_router_module-chunk.d.ts:868:4:
+[WebServer]       868 │     enableViewTransitions?: boolean;
+[WebServer]           ╵     ~~~~~~~~~~~~~~~~~~~~~
+[WebServer] 
+[WebServer] 
+Error: Timed out waiting 120000ms from config.webServer.
+

@@ -1,0 +1,48 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-settings-startup.spec.ts --config=/tmp/analytify-updates-browsers.config.ts --project=desktop --workers=1 --output=docs/testing-evidence/design-v2/settings-startup-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:604847) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:604847) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:605031) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-settings-startup.spec.ts:6:5 › first Login renders directly and later Legal navigation retains native transitions (1.2s)
+
+
+  1) [desktop] › e2e/design-v2-settings-startup.spec.ts:6:5 › first Login renders directly and later Legal navigation retains native transitions 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      12 |   await page.goto('/new/login'); await expect(page.locator('app-login-page')).toBeVisible();
+      13 |   const starts = () => page.evaluate(() => (window as Window & {analytifyNativeTransitionProbe: {starts: number}}).analytifyNativeTransitionProbe.starts);
+    > 14 |   expect(await starts()).toBe(0);
+         |                          ^
+      15 |   await expectNativeTransitionsSettled(page);
+      16 |   await page.getByRole('link', {name: 'Terms', exact: true}).press('Enter');
+      17 |   await expect(page).toHaveURL(/\/new\/legal#terms$/);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-startup.spec.ts:14:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-startup-red-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/settings-startup-red-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-startup-red-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/settings-startup-red-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-settings-startup.spec.ts:6:5 › first Login renders directly and later Legal navigation retains native transitions 

@@ -1,4 +1,4 @@
-import {Injectable, OnDestroy, inject, signal} from '@angular/core';
+import {Injectable, OnDestroy, computed, inject, signal} from '@angular/core';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {SessionGeneration, SessionLifecycleService} from '@core/auth/session-lifecycle.service';
 import {PushNotificationService, PushNotificationSettings} from '@core/notifications/push-notification.service';
@@ -12,7 +12,8 @@ interface NotificationRequest {
 /** State for the canonical page; device registration and category saving are separate actions. */
 @Injectable()
 export class V2NotificationSettingsController implements OnDestroy {
-  readonly settings = signal<PushNotificationSettings | null>(null);
+  private readonly cachedSettings = signal<{value: PushNotificationSettings; owner: Pick<NotificationRequest, 'actor' | 'generation'>} | null>(null);
+  readonly settings = computed(() => this.cachedSettings()?.value ?? null);
   readonly loading = signal(false);
   readonly saving = signal(false);
   readonly savingDevice = signal(false);
@@ -26,17 +27,19 @@ export class V2NotificationSettingsController implements OnDestroy {
 
   async reload(): Promise<void> {
     if (this.saving() || this.destroyed) return;
+    const cached = this.cachedSettings();
+    if (cached && !this.ownerCurrent(cached.owner)) this.clearSettings();
     await this.run(() => this.notifications.loadSettings(), false);
   }
 
   async enableDevice(): Promise<void> {
-    const settings = this.settings();
+    const settings = this.mutationSettings();
     if (!settings || settings.deviceState === 'denied' || settings.deviceState === 'unsupported') return;
     await this.run(() => this.notifications.enableDevice(), true, true);
   }
 
   async setCategory(category: 'song_league' | 'song_league_song_added' | 'stats_access_requests', enabled: boolean): Promise<void> {
-    if (!this.settings()) return;
+    if (!this.mutationSettings()) return;
     await this.run(() => this.notifications.setCategoryPreference(category, enabled), true);
   }
 
@@ -50,6 +53,22 @@ export class V2NotificationSettingsController implements OnDestroy {
       && request.actor === this.auth.getUserId() && this.lifecycle.isCurrent(request.generation);
   }
 
+  private ownerCurrent(owner: Pick<NotificationRequest, 'actor' | 'generation'>): boolean {
+    return owner.actor === this.auth.getUserId() && this.lifecycle.isCurrent(owner.generation);
+  }
+
+  private clearSettings(): void {
+    this.cachedSettings.set(null); this.error.set(''); this.message.set('');
+  }
+
+  private mutationSettings(): PushNotificationSettings | null {
+    if (this.loading() || this.saving() || this.destroyed) return null;
+    const cached = this.cachedSettings();
+    if (!cached) return null;
+    if (!this.ownerCurrent(cached.owner)) {this.clearSettings(); return null;}
+    return cached.value;
+  }
+
   private async run(action: () => Promise<PushNotificationSettings>, mutation: boolean, device = false): Promise<void> {
     if (this.saving() || this.destroyed) return;
     const request: NotificationRequest = {revision: ++this.revision, actor: this.auth.getUserId(), generation: this.lifecycle.capture()};
@@ -58,14 +77,14 @@ export class V2NotificationSettingsController implements OnDestroy {
     try {
       const settings = await action();
       if (this.current(request)) {
-        this.settings.set(settings);
+        this.cachedSettings.set({value: settings, owner: request});
         if (mutation) this.message.set('Notification settings saved.');
       }
     } catch (error) {
       if (this.current(request)) this.error.set((error as {message?: string} | null)?.message || 'Notification settings could not be updated. Try again.');
     } finally {
       if (!this.destroyed && request.revision === this.revision) {
-        if (!this.current(request)) {this.settings.set(null); this.error.set(''); this.message.set('');}
+        if (!this.current(request)) this.clearSettings();
         this.loading.set(false); this.saving.set(false); this.savingDevice.set(false);
       }
     }

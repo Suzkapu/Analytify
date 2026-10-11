@@ -1,0 +1,192 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/navigation/mobile-shortcut-policy.spec.ts
+Application bundle generation complete. [1.454 seconds] - 2026-10-10T15:47:16.732Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:502973) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ |SpotiFront| src/app/core/navigation/mobile-shortcut-policy.spec.ts (18 tests | 6 failed) 24ms
+     × uses the three canonical defaults only when no valid preference was saved 7ms
+     × projects valid choices in canonical order, including every retained destination 1ms
+     × allows five choices and refuses a sixth without removing an existing choice 1ms
+     × allows removing a selected shortcut at the limit and adding its replacement 1ms
+     × preserves a chosen empty bar and can add a shortcut again 1ms
+     × rejects an unknown runtime action without changing choices or raising the five-item warning 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/navigation/mobile-shortcut-policy.spec.ts > mobile shortcut preference policy > uses the three canonical defaults only when no valid preference was saved
+AssertionError: expected [ 'playlists', 'stats', 'history' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "playlists",
++   "stats",
++   "history",
++ ]
+
+ ❯ src/app/core/navigation/mobile-shortcut-policy.spec.ts:10:50
+      8|     expect(decodeMobileShortcutPreference(null)).toEqual(defaults);
+      9|     expect(decodeMobileShortcutPreference('')).toEqual(defaults);
+     10|     expect(decodeMobileShortcutPreference('[]')).toEqual([]);
+       |                                                  ^
+     11|   });
+     12|
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/navigation/mobile-shortcut-policy.spec.ts > mobile shortcut preference policy > projects valid choices in canonical order, including every retained destination
+AssertionError: expected [ 'playlists', 'stats', 'history' ] to deeply equal [ 'friends', 'song-league', …(2) ]
+
+- Expected
++ Received
+
+  [
+-   "friends",
+-   "song-league",
+-   "private-sharing",
+-   "compare-room",
++   "playlists",
++   "stats",
++   "history",
+  ]
+
+ ❯ src/app/core/navigation/mobile-shortcut-policy.spec.ts:21:8
+     19|   it('projects valid choices in canonical order, including every retai…
+     20|     expect(decodeMobileShortcutPreference('["compare-room","friends","…
+     21|       .toEqual(['friends', 'song-league', 'private-sharing', 'compare-…
+       |        ^
+     22|   });
+     23|
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/navigation/mobile-shortcut-policy.spec.ts > mobile shortcut preference policy > allows five choices and refuses a sixth without removing an existing choice
+AssertionError: expected { …(2) } to deeply equal { …(2) }
+
+- Expected
++ Received
+
+@@ -2,9 +2,7 @@
+    "limitReached": false,
+    "selection": [
+      "playlists",
+      "stats",
+      "history",
+-     "friends",
+-     "song-league",
+    ],
+  }
+
+ ❯ src/app/core/navigation/mobile-shortcut-policy.spec.ts:27:19
+     25|     const selected = decodeMobileShortcutPreference('["playlists","sta…
+     26|     const fifth = toggleMobileShortcut(selected, 'song-league');
+     27|     expect(fifth).toEqual({selection: ['playlists', 'stats', 'history'…
+       |                   ^
+     28|     expect(toggleMobileShortcut(fifth.selection, 'private-sharing'))
+     29|       .toEqual({selection: fifth.selection, limitReached: true});
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/navigation/mobile-shortcut-policy.spec.ts > mobile shortcut preference policy > allows removing a selected shortcut at the limit and adding its replacement
+AssertionError: expected { …(2) } to deeply equal { …(2) }
+
+- Expected
++ Received
+
+  {
+    "limitReached": false,
+    "selection": [
+      "playlists",
++     "stats",
+      "history",
+-     "friends",
+-     "song-league",
+    ],
+  }
+
+ ❯ src/app/core/navigation/mobile-shortcut-policy.spec.ts:36:21
+     34|     const selected = decodeMobileShortcutPreference('["playlists","sta…
+     35|     const removed = toggleMobileShortcut(selected, 'stats');
+     36|     expect(removed).toEqual({selection: ['playlists', 'history', 'frie…
+       |                     ^
+     37|     expect(toggleMobileShortcut(removed.selection, 'compare-room'))
+     38|       .toEqual({selection: ['playlists', 'history', 'friends', 'song-l…
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/navigation/mobile-shortcut-policy.spec.ts > mobile shortcut preference policy > preserves a chosen empty bar and can add a shortcut again
+AssertionError: expected { …(2) } to deeply equal { selection: [], limitReached: false }
+
+- Expected
++ Received
+
+  {
+    "limitReached": false,
+-   "selection": [],
++   "selection": [
++     "playlists",
++     "stats",
++     "history",
++   ],
+  }
+
+ ❯ src/app/core/navigation/mobile-shortcut-policy.spec.ts:43:19
+     41|   it('preserves a chosen empty bar and can add a shortcut again', () =…
+     42|     const empty = toggleMobileShortcut(decodeMobileShortcutPreference(…
+     43|     expect(empty).toEqual({selection: [], limitReached: false});
+       |                   ^
+     44|     expect(toggleMobileShortcut(empty.selection, 'stats')).toEqual({se…
+     45|   });
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/navigation/mobile-shortcut-policy.spec.ts > mobile shortcut preference policy > rejects an unknown runtime action without changing choices or raising the five-item warning
+AssertionError: expected { …(2) } to deeply equal { selection: [], limitReached: false }
+
+- Expected
++ Received
+
+  {
+    "limitReached": false,
+-   "selection": [],
++   "selection": [
++     "playlists",
++     "stats",
++     "history",
++   ],
+  }
+
+ ❯ src/app/core/navigation/mobile-shortcut-policy.spec.ts:49:8
+     47|   it('rejects an unknown runtime action without changing choices or ra…
+     48|     expect(toggleMobileShortcut(decodeMobileShortcutPreference('[]'), …
+     49|       .toEqual({selection: [], limitReached: false});
+       |        ^
+     50|   });
+     51|
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 12 passed (18)
+   Start at  17:47:16
+   Duration  1.03s (transform 55ms, setup 329ms, import 9ms, tests 24ms, environment 493ms)
+

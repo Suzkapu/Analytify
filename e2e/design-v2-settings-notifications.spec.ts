@@ -1,15 +1,19 @@
 import {test, expect} from './fixtures';
 import {mockSpotify, seedAuthenticatedBrowser, expectNoBlockingAxeViolations} from './helpers/authenticated-browser';
 import {writeFile} from 'node:fs/promises';
+import {observeNativeTransitions, expectNativeTransitionsSettled} from './helpers/native-transitions';
 
 for (const motion of ['no-preference', 'reduce'] as const) {
   for (const height of [480, 1000]) {
-    test(`Notifications save independently of this device (${motion}, height ${height})`, async ({page}, info) => {
+    for (const phase of ['preferences', 'responsive-install'] as const) {
+    test(`Notifications ${phase} independently of this device (${motion}, height ${height})`, async ({page}, info) => {
+      await observeNativeTransitions(page);
       await page.emulateMedia({reducedMotion: motion}); await mockSpotify(page);
       await page.route('**/rest/v1/users?**', route => route.fulfill({json: null}));
       await page.route('**/rest/v1/rpc/get_public_site_settings', route => route.fulfill({json: {}}));
       await page.route('**/rest/v1/rpc/is_app_admin', route => route.fulfill({json: false}));
-      let statsEnabled = false; let failSave = true; let holdSave: (() => void) | undefined;
+      let statsEnabled = phase === 'responsive-install'; let failSave = true; let holdSave: (() => void) | undefined;
+      let holdRefresh = false; let releaseRefresh: (() => void) | undefined;
       const writes: unknown[] = []; const unexpected: string[] = []; const transitionErrors: string[] = []; const expectedSaveFailures: string[] = [];
       page.on('console', message => {
         if (message.location().url.endsWith('/rpc/set_notification_preference') && /server responded with a status of 500/.test(message.text())) expectedSaveFailures.push(message.text());
@@ -17,30 +21,45 @@ for (const motion of ['no-preference', 'reduce'] as const) {
       });
       page.on('pageerror', error => {transitionErrors.push(error.message);});
       page.on('request', request => {if (request.url().includes('upsert_push_subscription') || request.url().includes('/functions/v1/')) unexpected.push(request.url());});
-      await page.route('**/rest/v1/rpc/get_notification_settings', route => route.fulfill({json: [{song_league_enabled: true,
+      await page.route('**/rest/v1/rpc/get_notification_settings', async route => {
+        if (holdRefresh) {holdRefresh = false; await new Promise<void>(resolve => {releaseRefresh = resolve;});}
+        await route.fulfill({json: [{song_league_enabled: true,
         song_league_song_added_enabled: false, song_league_member: true, stats_access_requests_enabled: statsEnabled,
-        device_registered: false, registered_device_count: 0}]}));
+        device_registered: false, registered_device_count: 0}]});
+      });
       await page.route('**/rest/v1/rpc/set_notification_preference', async route => {
         const body = route.request().postDataJSON(); writes.push(body);
         if (failSave) {failSave = false; return route.fulfill({status: 500, json: {message: 'Preference save failed'}});}
         await new Promise<void>(resolve => {holdSave = resolve;});
         statsEnabled = body.p_enabled; await route.fulfill({json: null});
       });
-      await seedAuthenticatedBrowser(page, {cloudIdentity: true}); await page.goto('/new/settings/notifications');
+      await seedAuthenticatedBrowser(page, {cloudIdentity: true}); await expectNativeTransitionsSettled(page);
+      await page.goto('/new/settings/notifications');
       const panel = page.locator('v2-settings-notifications'); const stats = panel.getByRole('switch', {name: 'Stats access requests'});
-      await expect(stats).toBeVisible(); await expect(stats).not.toBeChecked();
+      await expect(stats).toBeVisible();
+      if (phase === 'preferences') await expect(stats).not.toBeChecked();
+      else await expect(stats).toBeChecked();
+      await expectNativeTransitionsSettled(page);
       // The dev build intentionally has no enabled service worker: actual unsupported state.
       await expect(panel.getByText('Notifications are unavailable', {exact: true})).toBeVisible();
       await expect(panel.getByRole('button', {name: 'Enable notifications'})).toHaveCount(0);
+      if (phase === 'preferences') {
       await stats.press('Space'); await expect(panel.getByRole('alert')).toHaveText('Preference save failed');
-      await expect(stats).not.toBeChecked(); await panel.getByRole('button', {name: 'Retry', exact: true}).click();
-      await expect(panel.getByRole('alert')).toHaveCount(0); await stats.press('Space');
+      await expect(stats).not.toBeChecked(); holdRefresh = true;
+      await panel.getByRole('button', {name: 'Retry', exact: true}).click();
+      await expect(panel.getByRole('alert')).toHaveCount(0);
+      await expect.poll(() => !!releaseRefresh).toBe(true); await expect(stats).toBeDisabled();
+      await stats.press('Space'); expect(writes).toHaveLength(1);
+      releaseRefresh!(); await expect(stats).toBeEnabled(); await expect(stats).not.toBeChecked();
+      await stats.press('Space');
       await expect(stats).toBeDisabled(); await expect(stats).not.toBeChecked();
       await expect.poll(() => !!holdSave).toBe(true); holdSave!();
       await expect(stats).toBeChecked(); await expect(stats).toBeEnabled();
       expect(writes).toEqual([{p_category: 'stats_access_requests', p_enabled: true}, {p_category: 'stats_access_requests', p_enabled: true}]);
+      }
       await expectNoBlockingAxeViolations(page);
       const geometry = [];
+      if (phase === 'responsive-install') {
       for (const width of [320, 360, 390, 760, 768, 1024, 1440, 1920]) {
         await page.setViewportSize({width, height}); await stats.scrollIntoViewIfNeeded(); await stats.click({trial: true});
         const sample = await stats.evaluate(element => {
@@ -69,13 +88,18 @@ for (const motion of ['no-preference', 'reduce'] as const) {
       await panel.getByRole('link', {name: 'How to install app'}).press('Enter');
       await expect(page).toHaveURL(/\/new\/settings\/install$/); const guide = page.locator('v2-settings-install');
       await expect(guide.locator('article')).toHaveCount(5); await expect(guide.getByRole('heading', {level: 1})).toHaveText('Install Analytify');
+      await expectNativeTransitionsSettled(page);
       await expectNoBlockingAxeViolations(page); await guide.screenshot({path: info.outputPath('install.png')});
       await page.screenshot({path: info.outputPath('install-page.png'), fullPage: true, animations: 'disabled'});
       await guide.getByRole('button', {name: 'Back', exact: true}).press('Enter');
       await expect(page).toHaveURL(/\/new\/settings\/notifications$/); await expect(stats).toBeChecked();
+      expect(writes).toEqual([]);
+      }
+      await expectNativeTransitionsSettled(page);
       expect(unexpected).toEqual([]);
       expect(transitionErrors).toEqual([]); expect(expectedSaveFailures.length).toBeLessThanOrEqual(1);
-      await writeFile(info.outputPath('notification-workflow.json'), JSON.stringify({motion, height, geometry, writes, unexpected, transitionErrors, expectedSaveFailures}, null, 2));
+      await writeFile(info.outputPath('notification-workflow.json'), JSON.stringify({phase, motion, height, geometry, writes, unexpected, transitionErrors, expectedSaveFailures}, null, 2));
     });
+    }
   }
 }

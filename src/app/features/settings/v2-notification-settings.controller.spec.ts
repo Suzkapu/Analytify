@@ -43,6 +43,61 @@ describe('notification Settings page state', () => {
     expect(controller.settings()).toEqual(saved); expect(controller.error()).toBe('Settings unavailable');
     await controller.reload(); expect(controller.error()).toBe(''); expect(controller.loading()).toBe(false);
   });
+  it.each(['category', 'device'] as const)('refuses a %s mutation during cached refresh and permits it after recovery', async action => {
+    const {controller, service} = setup(); await controller.reload();
+    const pending = deferred<PushNotificationSettings>();
+    service.loadSettings.mockReturnValueOnce(pending.promise);
+    const refresh = controller.reload();
+    const mutate = () => action === 'category'
+      ? controller.setCategory('stats_access_requests', true) : controller.enableDevice();
+    await mutate();
+    const duringRefresh = {loading: controller.loading(), settings: controller.settings(), message: controller.message()};
+    pending.resolve(saved); await refresh;
+
+    expect(service.setCategoryPreference).not.toHaveBeenCalled();
+    expect(service.enableDevice).not.toHaveBeenCalled();
+    expect(duringRefresh).toEqual({loading: true, settings: saved, message: ''});
+    expect(controller.loading()).toBe(false); expect(controller.settings()).toEqual(saved);
+    await mutate();
+    if (action === 'category') {
+      expect(service.setCategoryPreference).toHaveBeenCalledExactlyOnceWith('stats_access_requests', true);
+      expect(controller.settings()?.statsAccessRequestsEnabled).toBe(true);
+    } else {
+      expect(service.enableDevice).toHaveBeenCalledOnce();
+      expect(controller.settings()).toEqual(ready);
+    }
+    expect(controller.message()).toBe('Notification settings saved.');
+  });
+  it.each([
+    ['actor', 'category'], ['actor', 'device'], ['generation', 'category'], ['generation', 'device']
+  ] as const)('rejects cached %s settings before a %s mutation, then permits authoritative reload', async (change, action) => {
+    const {controller, service, lifecycle, replaceActor} = setup(); await controller.reload();
+    if (change === 'actor') replaceActor(); else await lifecycle.invalidateAndDrain();
+    const mutate = () => action === 'category'
+      ? controller.setCategory('stats_access_requests', true) : controller.enableDevice();
+    await mutate();
+
+    expect(service.setCategoryPreference).not.toHaveBeenCalled();
+    expect(service.enableDevice).not.toHaveBeenCalled();
+    expect(controller.settings()).toBeNull(); expect(controller.message()).toBe('');
+    expect(controller.error()).toBe(''); expect(controller.saving()).toBe(false);
+    await controller.reload(); await mutate();
+    if (action === 'category') {
+      expect(service.setCategoryPreference).toHaveBeenCalledExactlyOnceWith('stats_access_requests', true);
+      expect(controller.settings()?.statsAccessRequestsEnabled).toBe(true);
+    } else {
+      expect(service.enableDevice).toHaveBeenCalledOnce(); expect(controller.settings()).toEqual(ready);
+    }
+  });
+  it.each(['actor', 'generation'] as const)('clears %s-owned preferences before rendering a replacement refresh', async change => {
+    const {controller, service, lifecycle, replaceActor} = setup(); await controller.reload();
+    const pending = deferred<PushNotificationSettings>(); service.loadSettings.mockReturnValueOnce(pending.promise);
+    if (change === 'actor') replaceActor(); else await lifecycle.invalidateAndDrain();
+    const refresh = controller.reload();
+    expect(controller.settings()).toBeNull(); expect(controller.loading()).toBe(true);
+    pending.resolve(ready); await refresh;
+    expect(controller.settings()).toEqual(ready); expect(controller.loading()).toBe(false);
+  });
   it('uses a useful generic error when the service supplies no message', async () => {
     const {controller, service} = setup(); service.loadSettings.mockRejectedValueOnce(null);
     await controller.reload(); expect(controller.error()).toBe('Notification settings could not be updated. Try again.');
