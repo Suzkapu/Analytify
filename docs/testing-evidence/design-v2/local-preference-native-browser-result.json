@@ -1,0 +1,53 @@
+{
+  "results": [
+    {
+      "browser": "chromium",
+      "outcomes": {
+        "loaded": 1,
+        "zeroAfterReopen": "[]",
+        "failure": "AbortError",
+        "diskAfterAbort": "[]",
+        "retryAfterReopen": "[\"stats\"]",
+        "cloudCalls": 0
+      },
+      "unexpected": [],
+      "errors": []
+    },
+    {
+      "browser": "firefox",
+      "outcomes": {
+        "loaded": 1,
+        "zeroAfterReopen": "[]",
+        "failure": "AbortError",
+        "diskAfterAbort": "[]",
+        "retryAfterReopen": "[\"stats\"]",
+        "cloudCalls": 0
+      },
+      "unexpected": [],
+      "errors": []
+    },
+    {
+      "browser": "webkit",
+      "outcomes": {
+        "loaded": 1,
+        "zeroAfterReopen": "[]",
+        "failure": "AbortError",
+        "diskAfterAbort": "[]",
+        "retryAfterReopen": "[\"stats\"]",
+        "cloudCalls": 0
+      },
+      "unexpected": [],
+      "errors": []
+    }
+  ],
+  "limitations": [
+    "Isolated synthetic origin; no production data or remote services.",
+    "Storage boundary only; mounted Navigation UI and full browser regression remain separate."
+  ],
+  "sourceHashes": {
+    "src/app/core/data-access/storage/storage.service.ts": "388d58989e47067952d137cef30d7b8f5475394b39cadc959d65c4afed794140",
+    "scripts/test-local-preference-browser.mjs": "13d0311ff12021a873da51a5a1ce8ed9a58bab21826c0245142c314a43700216"
+  },
+  "command": "ANALYTIFY_TEST_WEBKIT_EXECUTABLE=/tmp/analytify-webkit-libs/run-webkit.sh node scripts/test-local-preference-browser.mjs",
+  "exitCode": 0
+}

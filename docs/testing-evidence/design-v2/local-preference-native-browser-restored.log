@@ -1,0 +1,41 @@
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  {
+    cloudCalls: 0,
+    diskAfterAbort: '[]',
++   failure: 'Error',
+-   failure: 'AbortError',
+    loaded: 1,
+    retryAfterReopen: '["stats"]',
+    zeroAfterReopen: '[]'
+  }
+
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/scripts/test-local-preference-browser.mjs:67:12 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: {
+    loaded: 1,
+    zeroAfterReopen: '[]',
+    failure: 'Error',
+    diskAfterAbort: '[]',
+    retryAfterReopen: '["stats"]',
+    cloudCalls: 0
+  },
+  expected: {
+    loaded: 1,
+    zeroAfterReopen: '[]',
+    failure: 'AbortError',
+    diskAfterAbort: '[]',
+    retryAfterReopen: '["stats"]',
+    cloudCalls: 0
+  },
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v26.11.1

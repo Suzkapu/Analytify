@@ -1,0 +1,41 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-updates-browsers.config.ts e2e/design-v2-settings-startup.spec.ts e2e/design-v2-settings-account-data.spec.ts --workers=1 --reporter=list --output=docs/testing-evidence/design-v2/local-preference-read-settings-browser-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:107209) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:107209) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 20 tests using 1 worker
+
+(node:107331) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 480) (4.0s)
+  ✓   2 [desktop] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 1000) (3.9s)
+  ✓   3 [desktop] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (reduce, height 480) (3.7s)
+  ✓   4 [desktop] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (reduce, height 1000) (3.6s)
+  ✓   5 [desktop] › e2e/design-v2-settings-startup.spec.ts:6:5 › first Login renders directly and later Legal navigation retains native transitions (3.2s)
+(node:107954) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   6 [mobile] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 480) (3.8s)
+  ✓   7 [mobile] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 1000) (3.8s)
+  ✓   8 [mobile] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (reduce, height 480) (3.4s)
+  ✓   9 [mobile] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (reduce, height 1000) (3.6s)
+  ✓  10 [mobile] › e2e/design-v2-settings-startup.spec.ts:6:5 › first Login renders directly and later Legal navigation retains native transitions (3.2s)
+(node:108547) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  11 [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 480) (5.8s)
+  ✓  12 [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 1000) (5.3s)
+  ✓  13 [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (reduce, height 480) (3.7s)
+  ✓  14 [firefox-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (reduce, height 1000) (3.8s)
+  ✓  15 [firefox-stats] › e2e/design-v2-settings-startup.spec.ts:6:5 › first Login renders directly and later Legal navigation retains native transitions (2.1s)
+(node:109558) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  16 [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 480) (7.9s)
+  ✓  17 [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (no-preference, height 1000) (8.4s)
+  ✓  18 [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (reduce, height 480) (4.2s)
+  ✓  19 [webkit-stats] › e2e/design-v2-settings-account-data.spec.ts:7:7 › Settings Account and Data preserve consent across live resizing (reduce, height 1000) (4.3s)
+  ✓  20 [webkit-stats] › e2e/design-v2-settings-startup.spec.ts:6:5 › first Login renders directly and later Legal navigation retains native transitions (2.2s)
+
+  20 passed (1.6m)

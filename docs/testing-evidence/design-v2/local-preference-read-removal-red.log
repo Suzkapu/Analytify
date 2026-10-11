@@ -1,0 +1,71 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/data-access/storage/local-preference-read-boundary.spec.ts
+Application bundle generation complete. [1.952 seconds] - 2026-10-11T10:09:53.121Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/core/data-access/storage/local-preference-read-boundary.spec.ts (11 tests | 2 failed) 885ms
+     × does not resurrect a preference removed while its disk read was pending 58ms
+     × does not repopulate cleared app data from an older pending read 52ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/storage/local-preference-read-boundary.spec.ts > Strict device preference hydration > does not resurrect a preference removed while its disk read was pending
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/app/core/data-access/storage/local-preference-read-boundary.spec.ts:163:24
+    161|     service.removeItem(key);
+    162|     requests[0].succeed('["stats"]');
+    163|     expect(await read).toBe(0);
+       |                        ^
+    164|     expect(service.getItem(key)).toBeNull();
+    165|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/storage/local-preference-read-boundary.spec.ts > Strict device preference hydration > does not repopulate cleared app data from an older pending read
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/app/core/data-access/storage/local-preference-read-boundary.spec.ts:173:24
+    171|     await service.clear();
+    172|     requests[0].succeed('["stats"]');
+    173|     expect(await read).toBe(0);
+       |                        ^
+    174|     expect(service.getItem(key)).toBeNull();
+    175|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 9 passed (11)
+   Start at  12:09:53
+   Duration  1.58s (transform 81ms, setup 213ms, import 75ms, tests 885ms, environment 303ms)
+

@@ -1,0 +1,74 @@
+{
+  "results": [
+    {
+      "browser": "chromium",
+      "outcomes": {
+        "loaded": 1,
+        "zeroAfterReopen": "[]",
+        "failure": "AbortError",
+        "diskAfterAbort": "[]",
+        "retryAfterReopen": "[\"stats\"]",
+        "cloudCalls": 0,
+        "readFailure": "AbortError",
+        "cachedAfterReadFailure": null,
+        "retryLoaded": 1,
+        "readAfterRetry": "[\"stats\"]",
+        "removedReadLoaded": 0,
+        "removedReadCache": null,
+        "removedDisk": null
+      },
+      "unexpected": [],
+      "errors": []
+    },
+    {
+      "browser": "firefox",
+      "outcomes": {
+        "loaded": 1,
+        "zeroAfterReopen": "[]",
+        "failure": "AbortError",
+        "diskAfterAbort": "[]",
+        "retryAfterReopen": "[\"stats\"]",
+        "cloudCalls": 0,
+        "readFailure": "AbortError",
+        "cachedAfterReadFailure": null,
+        "retryLoaded": 1,
+        "readAfterRetry": "[\"stats\"]",
+        "removedReadLoaded": 0,
+        "removedReadCache": null,
+        "removedDisk": null
+      },
+      "unexpected": [],
+      "errors": []
+    },
+    {
+      "browser": "webkit",
+      "outcomes": {
+        "loaded": 1,
+        "zeroAfterReopen": "[]",
+        "failure": "AbortError",
+        "diskAfterAbort": "[]",
+        "retryAfterReopen": "[\"stats\"]",
+        "cloudCalls": 0,
+        "readFailure": "AbortError",
+        "cachedAfterReadFailure": null,
+        "retryLoaded": 1,
+        "readAfterRetry": "[\"stats\"]",
+        "removedReadLoaded": 0,
+        "removedReadCache": null,
+        "removedDisk": null
+      },
+      "unexpected": [],
+      "errors": []
+    }
+  ],
+  "limitations": [
+    "Isolated synthetic origin; no production data or remote services.",
+    "Storage boundary only; mounted Navigation UI and full browser regression remain separate."
+  ],
+  "exitCode": 0,
+  "sourceHashes": {
+    "src/app/core/data-access/storage/storage.service.ts": "9577b384a9ccc7246683f5b2a112de34f520e409ce5954db810d41b3fce299f2",
+    "scripts/test-local-preference-browser.mjs": "16a812c6c3361df3ff081bbf0ca3644858387d97db041dcad090cc6952c65ffd"
+  },
+  "command": "ANALYTIFY_TEST_WEBKIT_EXECUTABLE=/tmp/analytify-webkit-libs/run-webkit.sh node scripts/test-local-preference-browser.mjs"
+}

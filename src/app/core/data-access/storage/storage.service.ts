@@ -12,6 +12,8 @@ const console = createScopedLogger('Local Storage');
 export class StorageService {
   /** Primary synchronous read layer – always in sync with IndexedDB */
   private inMemoryCache = new Map<string, string>();
+  private cacheEpoch = 0;
+  private readonly localMutations = new Map<string, number>();
   private readonly databaseVersion = 4;
   private readonly statsUserRangeIndex = 'by_user_range';
   private readonly metadataStore = 'appData';
@@ -231,21 +233,39 @@ export class StorageService {
   }
 
   /** Hydrate only the local feature keys required by the active route. */
-  async hydrateItems(keys: string[]): Promise<number> {
+  async hydrateItems(keys: string[], options: {readFailure?: 'empty' | 'reject'} = {}): Promise<number> {
+    const generation = this.sessionLifecycle.capture();
+    const epoch = this.cacheEpoch;
+    const strict = options.readFailure === 'reject';
     const uniqueKeys = Array.from(new Set(keys.filter(key => !!key && !this.inMemoryCache.has(key))));
+    const revisions = new Map(uniqueKeys.map(key => [key, this.localMutations.get(key) ?? 0]));
     if (uniqueKeys.length === 0) return 0;
-    const db = await this.getDB().catch(() => null);
+    const db = await this.getDB().catch(error => {
+      if (strict) throw error;
+      return null;
+    });
     if (!db) return 0;
-    let loaded = 0;
+    const entries: Array<{key: string; value: string} | null> = [];
     for (let offset = 0; offset < uniqueKeys.length; offset += this.localReadConcurrency) {
+      if (!this.sessionLifecycle.isCurrent(generation)) {
+        if (strict) throw new DOMException('Local preference session ended.', 'AbortError');
+        return 0;
+      }
       const batch = uniqueKeys.slice(offset, offset + this.localReadConcurrency);
-      const entries = await Promise.all(batch.map(key => this.readStoredEntry(db, key)));
-      entries.forEach(entry => {
-        if (!entry || this.inMemoryCache.has(entry.key)) return;
-        this.inMemoryCache.set(entry.key, entry.value);
-        loaded++;
-      });
+      entries.push(...await Promise.all(batch.map(key => this.readStoredEntry(db, key, strict))));
     }
+    if (!this.sessionLifecycle.isCurrent(generation)) {
+      if (strict) throw new DOMException('Local preference session ended.', 'AbortError');
+      return 0;
+    }
+    let loaded = 0;
+    if (epoch !== this.cacheEpoch) return 0;
+    entries.forEach(entry => {
+      if (!entry || this.inMemoryCache.has(entry.key)
+        || revisions.get(entry.key) !== (this.localMutations.get(entry.key) ?? 0)) return;
+      this.inMemoryCache.set(entry.key, entry.value);
+      loaded++;
+    });
     return loaded;
   }
 
@@ -270,6 +290,7 @@ export class StorageService {
   }
 
   setItem(key: string, value: string, syncToCloud = true): void {
+    this.markLocalMutation(key);
     this.inMemoryCache.set(key, value);
     this.persistKV(key, value);
     if (key === 'spotifyUserId' || key === 'supabaseUserId') {
@@ -293,13 +314,63 @@ export class StorageService {
     }
   }
 
+  /** Commit a local preference before publishing it. Never queues a cloud write. */
+  setLocalItemDurably(key: string, value: string): Promise<void> {
+    const generation = this.sessionLifecycle.capture();
+    const requireCurrent = () => {
+      if (!this.sessionLifecycle.isCurrent(generation)) {
+        throw new DOMException('Local preference session ended.', 'AbortError');
+      }
+    };
+    const write = this.getDB().then(async db => {
+      requireCurrent();
+      await new Promise<void>((resolve, reject) => {
+        const target = this.isBootstrapMetadataKey(key) ? this.metadataStore : this.featureStore;
+        const other = target === this.metadataStore ? this.featureStore : this.metadataStore;
+        const tx = db.transaction([target, other], 'readwrite');
+        const cleanup = () => generation.signal.removeEventListener('abort', abort);
+        const abort = () => {
+          try { tx.abort(); } catch {
+            // Completion may already be queued; the post-commit session check
+            // still prevents publishing into the replacement session.
+          }
+        };
+        tx.oncomplete = () => { cleanup(); resolve(); };
+        tx.onabort = () => {
+          cleanup();
+          reject(tx.error ?? new DOMException('Local preference transaction aborted.', 'AbortError'));
+        };
+        // Request errors bubble before the transaction's error is finalized.
+        // Let IndexedDB abort normally; onabort carries the durable outcome.
+        generation.signal.addEventListener('abort', abort, {once: true});
+        try {
+          tx.objectStore(target).put({key, value});
+          tx.objectStore(other).delete(key);
+        } catch (error) {
+          cleanup();
+          reject(error);
+          abort();
+        }
+      });
+      requireCurrent();
+      this.markLocalMutation(key);
+      this.inMemoryCache.set(key, value);
+    });
+    return this.sessionLifecycle.track(write, generation);
+  }
+
   removeItem(key: string): void {
+    this.markLocalMutation(key);
     this.inMemoryCache.delete(key);
     this.deleteKV(key);
   }
 
   getCacheKeys(): string[] {
     return Array.from(this.inMemoryCache.keys());
+  }
+
+  private markLocalMutation(key: string): void {
+    this.localMutations.set(key, (this.localMutations.get(key) ?? 0) + 1);
   }
 
   shouldSyncUserCacheKey(key: string): boolean {
@@ -364,6 +435,8 @@ export class StorageService {
 
   /** Clears ALL app data (appData + statsHistory) and the in-memory cache. */
   clear(): Promise<void> {
+    this.cacheEpoch++;
+    this.localMutations.clear();
     this.inMemoryCache.clear();
     return Promise.all([
       this.clearKV(),
@@ -459,15 +532,23 @@ export class StorageService {
 
   private async readStoredEntry(
     db: IDBDatabase,
-    key: string
+    key: string,
+    strict = false
   ): Promise<{key: string; value: string} | null> {
-    const read = (storeName: string) => new Promise<{key: string; value: string} | null>(resolve => {
+    const read = (storeName: string) => new Promise<{key: string; value: string} | null>((resolve, reject) => {
       try {
-        const request = db.transaction(storeName, 'readonly').objectStore(storeName).get(key);
-        request.onsuccess = () => resolve(request.result || null);
-        request.onerror = () => resolve(null);
-      } catch {
-        resolve(null);
+        const tx = db.transaction(storeName, 'readonly');
+        const request = tx.objectStore(storeName).get(key);
+        if (strict) {
+          tx.oncomplete = () => resolve(request.result || null);
+          tx.onabort = () => reject(tx.error ?? new DOMException('Local preference read aborted.', 'AbortError'));
+        } else {
+          request.onsuccess = () => resolve(request.result || null);
+          request.onerror = () => resolve(null);
+        }
+      } catch (error) {
+        if (strict) reject(error);
+        else resolve(null);
       }
     });
     return (await read(this.featureStore)) || await read(this.metadataStore);

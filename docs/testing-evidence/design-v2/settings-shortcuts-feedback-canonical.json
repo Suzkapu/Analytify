@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-11",
+  "fileKey": "5v8ckmlbfhMDWwP5sTdSXd",
+  "navigationNode": "688:41515",
+  "familyNode": "999:32270",
+  "reviewNode": "999:32271",
+  "reusedFamily": "983:32195",
+  "mutatedNodeIds": [
+    "999:32270",
+    "999:32271",
+    "999:32242",
+    "999:32246",
+    "999:32250",
+    "999:32254",
+    "I999:32257;227:11813;62:2359",
+    "I999:32257;227:11813;62:2360",
+    "I999:32257;227:11813;62:2361",
+    "I999:32257;227:11813;62:2362",
+    "I999:32257;227:11813",
+    "999:32262",
+    "I999:32265;227:11813;62:2359",
+    "I999:32265;227:11813;62:2360",
+    "I999:32265;227:11813;62:2361",
+    "I999:32265;227:11813;62:2362",
+    "I999:32265;227:11813"
+  ],
+  "variants": [
+    {
+      "id": "999:32242",
+      "name": "State=Loading",
+      "width": 576,
+      "height": 82
+    },
+    {
+      "id": "999:32246",
+      "name": "State=Refreshing",
+      "width": 576,
+      "height": 82
+    },
+    {
+      "id": "999:32250",
+      "name": "State=Saving",
+      "width": 576,
+      "height": 102
+    },
+    {
+      "id": "999:32254",
+      "name": "State=Load error",
+      "width": 576,
+      "height": 138
+    },
+    {
+      "id": "999:32262",
+      "name": "State=Save error",
+      "width": 576,
+      "height": 138
+    }
+  ],
+  "review": {
+    "id": "999:32271",
+    "width": 966,
+    "height": 686
+  },
+  "retryIconComponent": "62:2363",
+  "workflow": "Strict local reads before choices. Immediate optimistic selection, block duplicate changes while local commit pending. Failed save restores prior selection; Retry replays the attempted choice for the same Spotify/session. Actor/session replacement clears all prior state. Device-only; independent of cloud identity. Zero hides all bar geometry, Menu stays available.",
+  "implementation": "Guarded preference owner implemented and tested; Navigation route/UI/bar binding and Friends dependency remain unmounted.",
+  "retryStrokeToken": "VariableID:24:25",
+  "reviewScreenshot": {
+    "path": "docs/testing-evidence/design-v2/settings-shortcuts-feedback-final-review.png",
+    "sha256": "cca376baceeea708ebd14a729924a0ce9afa33163788c7135f39719b4a206c78"
+  }
+}

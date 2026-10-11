@@ -1,0 +1,211 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/data-access/storage/local-preference-durability.spec.ts
+Application bundle generation complete. [1.775 seconds] - 2026-10-11T09:59:46.418Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/data-access/storage/local-preference-durability.spec.ts > Durable local device preference > exposes a database-open failure and retries without poisoning future saves
+[Analytify][0001][+00169ms][Local Storage][WARN] IndexedDB write failed {
+  name: 'Error',
+  message: 'Isolated database unavailable',
+  stack: 'Error: Isolated database unavailable\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/local-preference-durability.spec.ts:83:19\n' +
+    '    at Generator.next (<anonymous>)\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61\n' +
+    '    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)\n' +
+    '    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/local-preference-durability.spec.ts:81:95\n' +
+    '    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11\n' +
+    '    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26\n' +
+    '    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20\n' +
+    '    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)'
+}
+Error: promise resolved "undefined" instead of rejecting
+    at Assertion.__VITEST_REJECTS__ (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1747:17)
+    at Assertion.propertyGetter (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1607:27)
+    at Reflect.get (<anonymous>)
+    at Object.proxyGetter [as get] (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1696:22)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/local-preference-durability.spec.ts:85:56
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/local-preference-durability.spec.ts:81:95 {
+  showDiff: true,
+  expected: Error: rejected promise
+      at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1769:17
+      at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+      at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+      at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+      at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+      at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+      at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23),
+  actual: undefined
+}
+
+stderr | src/app/core/data-access/storage/local-preference-durability.spec.ts > Durable local device preference > rejects a queued save if the session ends before the database becomes available
+Error: promise resolved "undefined" instead of rejecting
+    at Assertion.__VITEST_REJECTS__ (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1747:17)
+    at Assertion.propertyGetter (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1607:27)
+    at Reflect.get (<anonymous>)
+    at Object.proxyGetter [as get] (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1696:22)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/local-preference-durability.spec.ts:107:35
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/local-preference-durability.spec.ts:104:100 {
+  showDiff: true,
+  expected: Error: rejected promise
+      at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1769:17
+      at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+      at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+      at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+      at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+      at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+      at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23),
+  actual: undefined
+}
+
+ ❯ |SpotiFront| src/app/core/data-access/storage/local-preference-durability.spec.ts (5 tests | 5 failed) 223ms
+     × acknowledges a chosen zero only after transaction commit, without cloud effects 61ms
+     × retains the last committed value on abort and allows a successful retry 103ms
+     × exposes a database-open failure and retries without poisoning future saves 3ms
+     × cancels an in-flight local write before logout drains and never publishes its value 53ms
+     × rejects a queued save if the session ends before the database becomes available 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/storage/local-preference-durability.spec.ts > Durable local device preference > acknowledges a chosen zero only after transaction commit, without cloud effects
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/app/core/data-access/storage/local-preference-durability.spec.ts:51:26
+     49|     transactions[0].request.onsuccess?.();
+     50|     await Promise.resolve();
+     51|     expect(acknowledged).toBe(false);
+       |                          ^
+     52|     expect(service.getItem(key)).toBeNull();
+     53|     expect(disk.has(`featureData:${key}`)).toBe(false);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/storage/local-preference-durability.spec.ts > Durable local device preference > retains the last committed value on abort and allows a successful retry
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/app/core/data-access/storage/local-preference-durability.spec.ts:69:36
+     67|     transactions[0].complete(); await first;
+     68|     const failed = service.setLocalItemDurably(key, '[]');
+     69|     const rejection = expect(failed).rejects.toMatchObject({name: 'Abo…
+       |                                    ^
+     70|     await vi.waitFor(() => expect(transactions).toHaveLength(2));
+     71|     transactions[1].abort(); await rejection;
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/storage/local-preference-durability.spec.ts > Durable local device preference > exposes a database-open failure and retries without poisoning future saves
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/app/core/data-access/storage/local-preference-durability.spec.ts:85:56
+     83|     const error = new Error('Isolated database unavailable');
+     84|     openingErrors.push(error);
+     85|     await expect(service.setLocalItemDurably(key, '[]')).rejects.toBe(…
+       |                                                        ^
+     86|     expect(service.getItem(key)).toBeNull();
+     87|     expect(transactions).toHaveLength(0);
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/data-access/storage/local-preference-durability.spec.ts:81:95
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/storage/local-preference-durability.spec.ts > Durable local device preference > cancels an in-flight local write before logout drains and never publishes its value
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/app/core/data-access/storage/local-preference-durability.spec.ts:97:35
+     95|     const {service, transactions, disk, lifecycle} = boundary();
+     96|     const saved = service.setLocalItemDurably(key, '[]');
+     97|     const rejection = expect(saved).rejects.toMatchObject({name: 'Abor…
+       |                                   ^
+     98|     await vi.waitFor(() => expect(transactions).toHaveLength(1));
+     99|     await lifecycle.invalidateAndDrain(); await rejection;
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/data-access/storage/local-preference-durability.spec.ts:94:104
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/storage/local-preference-durability.spec.ts > Durable local device preference > rejects a queued save if the session ends before the database becomes available
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/app/core/data-access/storage/local-preference-durability.spec.ts:107:35
+    105|     const {service, lifecycle, transactions} = boundary();
+    106|     const saved = service.setLocalItemDurably(key, '[]');
+    107|     const rejection = expect(saved).rejects.toMatchObject({name: 'Abor…
+       |                                   ^
+    108|     await lifecycle.invalidateAndDrain(); await rejection;
+    109|     expect(transactions).toHaveLength(0);
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/data-access/storage/local-preference-durability.spec.ts:104:100
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  11:59:46
+   Duration  898ms (transform 72ms, setup 208ms, import 66ms, tests 223ms, environment 291ms)
+

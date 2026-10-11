@@ -1,0 +1,173 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/data-access/storage/local-preference-read-boundary.spec.ts
+Application bundle generation complete. [1.894 seconds] - 2026-10-11T10:07:06.236Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/data-access/storage/local-preference-read-boundary.spec.ts > Strict device preference hydration > exposes open failure and successfully loads after retrying the database
+Error: promise resolved "+0" instead of rejecting
+    at Assertion.__VITEST_REJECTS__ (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1747:17)
+    at Assertion.propertyGetter (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1607:27)
+    at Reflect.get (<anonymous>)
+    at Object.proxyGetter [as get] (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1696:22)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/local-preference-read-boundary.spec.ts:72:53
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/local-preference-read-boundary.spec.ts:68:92 {
+  showDiff: true,
+  expected: Error: rejected promise
+      at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1769:17
+      at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+      at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+      at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+      at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+      at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+      at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23),
+  actual: 0
+}
+
+ ❯ |SpotiFront| src/app/core/data-access/storage/local-preference-read-boundary.spec.ts (6 tests | 6 failed) 10245ms
+     × distinguishes an absent preference from a failed primary read and retries the read 5031ms
+     × exposes open failure and successfully loads after retrying the database 3ms
+     × exposes a failed legacy fallback instead of claiming a default preference 103ms
+     × does not publish a successful request if its read transaction subsequently aborts 52ms
+     × never publishes delayed local preferences after session replacement 52ms
+     × keeps a strict multi-key read atomic when another requested entry fails 5002ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/storage/local-preference-read-boundary.spec.ts > Strict device preference hydration > distinguishes an absent preference from a failed primary read and retries the read
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/app/core/data-access/storage/local-preference-read-boundary.spec.ts:43:3
+     41| afterEach(() => vi.unstubAllGlobals());
+     42| describe('Strict device preference hydration', () => {
+     43|   it('distinguishes an absent preference from a failed primary read an…
+       |   ^
+     44|     const {service, requests} = boundary();
+     45|     const missing = service.hydrateItems([key], strict);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/storage/local-preference-read-boundary.spec.ts > Strict device preference hydration > exposes open failure and successfully loads after retrying the database
+AssertionError: promise resolved "+0" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+0
+
+ ❯ src/app/core/data-access/storage/local-preference-read-boundary.spec.ts:72:53
+     70|     const error = new Error('Isolated database-open failure');
+     71|     openErrors.push(error);
+     72|     await expect(service.hydrateItems([key], strict)).rejects.toBe(err…
+       |                                                     ^
+     73|     expect(service.getItem(key)).toBeNull();
+     74|     const retry = service.hydrateItems([key], strict);
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/data-access/storage/local-preference-read-boundary.spec.ts:68:92
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/storage/local-preference-read-boundary.spec.ts > Strict device preference hydration > exposes a failed legacy fallback instead of claiming a default preference
+AssertionError: promise resolved "+0" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+0
+
+ ❯ src/app/core/data-access/storage/local-preference-read-boundary.spec.ts:84:34
+     82|     const read = service.hydrateItems([key], strict);
+     83|     const error = new Error('Isolated legacy read failure');
+     84|     const rejection = expect(read).rejects.toBe(error);
+       |                                  ^
+     85|     await vi.waitFor(() => expect(requests).toHaveLength(1));
+     86|     requests[0].succeed();
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/data-access/storage/local-preference-read-boundary.spec.ts:80:94
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/storage/local-preference-read-boundary.spec.ts > Strict device preference hydration > does not publish a successful request if its read transaction subsequently aborts
+AssertionError: promise resolved "1" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+1
+
+ ❯ src/app/core/data-access/storage/local-preference-read-boundary.spec.ts:96:34
+     94|     const {service, requests} = boundary();
+     95|     const read = service.hydrateItems([key], strict);
+     96|     const rejection = expect(read).rejects.toMatchObject({name: 'Abort…
+       |                                  ^
+     97|     await vi.waitFor(() => expect(requests).toHaveLength(1));
+     98|     requests[0].request.result = {key, value: '[]'};
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/data-access/storage/local-preference-read-boundary.spec.ts:93:102
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/storage/local-preference-read-boundary.spec.ts > Strict device preference hydration > never publishes delayed local preferences after session replacement
+AssertionError: promise resolved "1" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+1
+
+ ❯ src/app/core/data-access/storage/local-preference-read-boundary.spec.ts:108:34
+    106|     const {service, requests, lifecycle} = boundary();
+    107|     const read = service.hydrateItems([key], strict);
+    108|     const rejection = expect(read).rejects.toMatchObject({name: 'Abort…
+       |                                  ^
+    109|     await vi.waitFor(() => expect(requests).toHaveLength(1));
+    110|     await lifecycle.invalidateAndDrain();
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/data-access/storage/local-preference-read-boundary.spec.ts:105:88
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/storage/local-preference-read-boundary.spec.ts > Strict device preference hydration > keeps a strict multi-key read atomic when another requested entry fails
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/app/core/data-access/storage/local-preference-read-boundary.spec.ts:115:3
+    113|   });
+    114|
+    115|   it('keeps a strict multi-key read atomic when another requested entr…
+       |   ^
+    116|     const {service, requests} = boundary();
+    117|     const second = key + ':second';
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed (6)
+   Start at  12:07:06
+   Duration  11.00s (transform 88ms, setup 245ms, import 81ms, tests 10.24s, environment 314ms)
+
