@@ -36,6 +36,7 @@ function isPolicyApprovedTask(taskKey, approvalReference = '') {
 
 function isScheduledTaskAllowed(taskKey, settings, now = new Date()) {
   const definition = TASK_DEFINITIONS[taskKey];
+  if (definition.requiredField && settings[definition.requiredField] === true) return true;
   if (!definition.fridayOnlyField || settings[definition.fridayOnlyField] === false) return true;
   return isFridayInTimezone(now, settings.timezone || 'Europe/Vienna');
 }

@@ -278,7 +278,7 @@ Deno.serve(async (request: Request) => {
         }
 
         const name = playlistName(payload.league_name);
-        const baseDescription = `This Friday's Song League picks for ${payload.league_name}. Private and refreshed automatically by Analytify.`;
+        const baseDescription = `Active Song League picks for ${payload.league_name}. Private and refreshed after accepted picks by Analytify.`;
         const trackUris = Array.isArray(payload.track_uris) ? payload.track_uris : [];
         finalRevision = Number(payload.playlist_revision || 0);
         finalResults = [];

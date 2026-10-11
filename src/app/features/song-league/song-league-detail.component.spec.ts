@@ -403,10 +403,46 @@ describe('SongLeagueDetailComponent notifications', () => {
 
         const task = fixture.nativeElement.querySelector('.league-weekly-task') as HTMLElement;
         const tabs = fixture.nativeElement.querySelector('.league-local-tabs') as HTMLElement;
-        expect(task.textContent).toContain('Weekly Picks open Friday');
+        expect(task.textContent).toContain('Choose this week’s discovery');
         expect(task.compareDocumentPosition(tabs) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
         expect(Array.from(tabs.querySelectorAll('button')).map((button: any) => button.textContent.trim()))
             .toEqual(['Overview', 'Recommendations', 'Members']);
+    });
+
+    it('allows a pick any day and resets the allowance at league-local Friday midnight', () => {
+        vi.useFakeTimers();
+        try {
+            vi.setSystemTime(new Date('2026-10-08T21:30:00Z'));
+            component.currentUserId = 'member';
+            component.dashboard = {league: {timezone: 'Europe/Vienna', isDemo: false}, recommendations: []} as any;
+            expect(component.isPickOpen).toBe(true);
+            component.dashboard!.recommendations = [{recommenderUserId: 'member', submittedAt: '2026-10-08T21:00:00Z'}] as any;
+            expect(component.isPickOpen).toBe(false);
+            vi.setSystemTime(new Date('2026-10-08T22:00:00Z'));
+            expect(component.isPickOpen).toBe(true);
+            component.dashboard!.recommendations.push({recommenderUserId: 'member', submittedAt: '2026-10-09T09:00:00Z'} as any);
+            vi.setSystemTime(new Date('2026-10-12T10:00:00Z'));
+            expect(component.isPickOpen).toBe(false);
+            vi.setSystemTime(new Date('2026-10-29T22:59:00Z'));
+            component.dashboard!.recommendations = [{recommenderUserId: 'member', submittedAt: '2026-10-29T22:00:00Z'}] as any;
+            expect(component.isPickOpen).toBe(false);
+            vi.setSystemTime(new Date('2026-10-29T23:00:00Z'));
+            expect(component.isPickOpen).toBe(true);
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it('shows next-day scoring rather than a fixed Saturday start', () => {
+        vi.useFakeTimers();
+        try {
+            vi.setSystemTime(new Date('2026-10-12T12:00:00Z'));
+            expect(component.recommendationStatus({
+                scoringStartsAt: '2026-10-12T22:00:00Z', scoringEndsAt: '2026-11-06T23:00:00Z'
+            } as any)).toBe('Starts tomorrow');
+        } finally {
+            vi.useRealTimers();
+        }
     });
 
     it('keeps League settings owner-only', async () => {
@@ -431,6 +467,7 @@ describe('SongLeagueDetailComponent notifications', () => {
             ],
             recommendations: [{
                 id: 'rec', recommenderUserId: 'member', trackName: 'Track', artistNames: 'Artist', imageUrl: '', spotifyUrl: '',
+                submittedAt: '2026-08-31T12:00:00Z',
                 scoringStartsAt: '2026-09-01T00:00:00Z', scoringEndsAt: '2099-10-01T00:00:00Z'
             }],
             breakdownByRecommender: new Map([['member', [

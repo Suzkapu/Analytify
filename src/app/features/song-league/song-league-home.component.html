@@ -3,9 +3,9 @@
   <div class="song-league-shell">
     <header class="league-hero">
       <div>
-        <span class="league-eyebrow">Friday music challenge</span>
+        <span class="league-eyebrow">Weekly music challenge</span>
         <h1>Song League</h1>
-        <p>Pick one song on Friday and see how it ranks in your friends’ four-week Top Songs.</p>
+        <p>Pick one song each week, on any day. Your next pick opens Friday.</p>
       </div>
       <button type="button" class="league-primary" (click)="showCreateForm = !showCreateForm"
         [disabled]="!canCreateLeague">
@@ -35,7 +35,7 @@
         <div>
           <span class="league-eyebrow">New private group</span>
           <h2>Name your league</h2>
-          <p>The league uses your current timezone for the Friday submission window.</p>
+          <p>The weekly allowance resets Friday at midnight in your league’s timezone.</p>
         </div>
         <form (ngSubmit)="createLeague()">
           <label>
