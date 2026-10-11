@@ -1,0 +1,9 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-updates-browsers.config.ts e2e/design-v2-settings-startup.spec.ts --project=webkit-stats --workers=1 --reporter=list --output=docs/testing-evidence/design-v2/settings-startup-provider-webkit-artifacts
+Error: /tmp/analytify-updates-browsers.config.ts does not exist
+    at resolveConfigFile2 (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/playwright/lib/common/index.js:1480:11)
+    at resolveConfigLocation (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/playwright/lib/common/index.js:1461:30)
+    at Object.loadConfigFromFile (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/playwright/lib/common/index.js:1490:27)
+    at runTests (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/playwright/lib/cli/testActions.js:46:51)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async _Command.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/playwright/lib/program.js:55:7)

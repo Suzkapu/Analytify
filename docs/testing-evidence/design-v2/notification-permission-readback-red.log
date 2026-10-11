@@ -1,0 +1,178 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/notifications/push-notification.service.spec.ts
+Application bundle generation complete. [3.305 seconds] - 2026-10-11T09:40:06.286Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > does not claim the device is enabled when permission becomes denied before readback
+AssertionError: expected 'registered' to be 'denied' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:392:38
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23) {
+  actual: 'registered',
+  expected: 'denied',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > does not claim the device is enabled when permission becomes prompt before readback
+AssertionError: expected 'registered' to be 'permission-required' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:392:38
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23) {
+  actual: 'registered',
+  expected: 'permission-required',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > refuses an enable action when the Notification API is unavailable even if SwPush is enabled
+Error: promise resolved "{ supported: true, …(13) }" instead of rejecting
+    at Assertion.__VITEST_REJECTS__ (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1747:17)
+    at Assertion.propertyGetter (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1607:27)
+    at Reflect.get (<anonymous>)
+    at Object.proxyGetter [as get] (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1696:22)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:402:48
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts:398:114 {
+  showDiff: true,
+  expected: Error: rejected promise
+      at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1769:17
+      at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+      at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+      at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+      at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+      at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+      at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23),
+  actual: {
+    supported: true,
+    installedPwa: false,
+    permission: 'unavailable',
+    deviceSubscribed: true,
+    deviceRegistered: true,
+    registeredDeviceCount: 1,
+    deviceState: 'registered',
+    songLeagueEnabled: false,
+    songLeagueSongAddedEnabled: false,
+    songLeagueMember: true,
+    statsAccessRequestsEnabled: true,
+    active: false,
+    songAddedActive: false,
+    statsAccessActive: false
+  }
+}
+
+ ❯ |SpotiFront| src/app/core/notifications/push-notification.service.spec.ts (38 tests | 3 failed) 154ms
+     × does not claim the device is enabled when permission becomes denied before readback 4ms
+     × does not claim the device is enabled when permission becomes prompt before readback 2ms
+     × refuses an enable action when the Notification API is unavailable even if SwPush is enabled 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > does not claim the device is enabled when permission becomes denied before readback
+AssertionError: expected 'registered' to be 'denied' // Object.is equality
+
+Expected: "denied"
+Received: "registered"
+
+ ❯ src/app/core/notifications/push-notification.service.spec.ts:392:38
+    390|         const settings = await service.enableDevice();
+    391|         expect(settings.permission).toBe(state === 'prompt' ? 'default…
+    392|         expect(settings.deviceState).toBe(state === 'denied' ? 'denied…
+       |                                      ^
+    393|         expect(settings.registeredDeviceCount).toBe(1);
+    394|         expect(settings.active).toBe(false); expect(settings.songAdded…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |SpotiFront| src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > does not claim the device is enabled when permission becomes prompt before readback
+AssertionError: expected 'registered' to be 'permission-required' // Object.is equality
+
+Expected: "permission-required"
+Received: "registered"
+
+ ❯ src/app/core/notifications/push-notification.service.spec.ts:392:38
+    390|         const settings = await service.enableDevice();
+    391|         expect(settings.permission).toBe(state === 'prompt' ? 'default…
+    392|         expect(settings.deviceState).toBe(state === 'denied' ? 'denied…
+       |                                      ^
+    393|         expect(settings.registeredDeviceCount).toBe(1);
+    394|         expect(settings.active).toBe(false); expect(settings.songAdded…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |SpotiFront| src/app/core/notifications/push-notification.service.spec.ts > PushNotificationService > refuses an enable action when the Notification API is unavailable even if SwPush is enabled
+AssertionError: promise resolved "{ supported: true, …(13) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "active": false,
++   "deviceRegistered": true,
++   "deviceState": "registered",
++   "deviceSubscribed": true,
++   "installedPwa": false,
++   "permission": "unavailable",
++   "registeredDeviceCount": 1,
++   "songAddedActive": false,
++   "songLeagueEnabled": false,
++   "songLeagueMember": true,
++   "songLeagueSongAddedEnabled": false,
++   "statsAccessActive": false,
++   "statsAccessRequestsEnabled": true,
++   "supported": true,
+  }
+
+ ❯ src/app/core/notifications/push-notification.service.spec.ts:402:48
+    400|         Object.defineProperty(globalThis, 'Notification', {...descript…
+    401|         try {
+    402|             await expect(service.enableDevice()).rejects.toThrow('not …
+       |                                                ^
+    403|             expect(requestSubscription).not.toHaveBeenCalled(); expect…
+    404|         } finally {Object.defineProperty(globalThis, 'Notification', d…
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/notifications/push-notification.service.spec.ts:398:114
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 35 passed (38)
+   Start at  11:40:06
+   Duration  1.06s (transform 120ms, setup 248ms, import 122ms, tests 154ms, environment 376ms)
+

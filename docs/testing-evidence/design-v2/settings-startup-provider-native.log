@@ -1,0 +1,60 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-settings-startup.spec.ts --workers=1 --reporter=list --output=docs/testing-evidence/design-v2/settings-startup-provider-native-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:18637) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:18637) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:18923) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop] › e2e/design-v2-settings-startup.spec.ts:6:5 › first Login renders directly and later Legal navigation retains native transitions (1.3s)
+(node:19084) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [mobile] › e2e/design-v2-settings-startup.spec.ts:6:5 › first Login renders directly and later Legal navigation retains native transitions (1.5s)
+(node:19295) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [firefox-stats] › e2e/design-v2-settings-startup.spec.ts:6:5 › first Login renders directly and later Legal navigation retains native transitions (2.2s)
+(node:19705) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  4 [webkit-stats] › e2e/design-v2-settings-startup.spec.ts:6:5 › first Login renders directly and later Legal navigation retains native transitions (1ms)
+
+
+  1) [webkit-stats] › e2e/design-v2-settings-startup.spec.ts:6:5 › first Login renders directly and later Legal navigation retains native transitions 
+
+    Error: browserType.launch: Target page, context or browser has been closed
+    Browser logs:
+
+    <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window
+    <launched> pid=19717
+    [pid=19717][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+    Call log:
+      - <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window
+      - <launched> pid=19717
+      - [pid=19717][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+      - [pid=19717] <gracefully close start>
+      - [pid=19717] <kill>
+      - [pid=19717] <will force kill>
+      - [pid=19717] exception while trying to kill process: Error: kill ESRCH
+      - [pid=19717] <process did exit: exitCode=127, signal=null>
+      - [pid=19717] starting temporary directories cleanup
+      - [pid=19717] finished temporary directories cleanup
+      - [pid=19717] <gracefully close end>
+
+
+    Error Context: docs/testing-evidence/design-v2/settings-startup-provider-native-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-webkit-stats/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/settings-startup-provider-native-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/settings-startup-provider-native-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit-stats] › e2e/design-v2-settings-startup.spec.ts:6:5 › first Login renders directly and later Legal navigation retains native transitions 
+  3 passed (16.2s)

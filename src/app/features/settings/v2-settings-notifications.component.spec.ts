@@ -14,13 +14,14 @@ const saved: PushNotificationSettings = {supported: true, installedPwa: false, p
   active: false, songAddedActive: false, statsAccessActive: false};
 function deferred<T>() { let resolve!: (value: T) => void; const promise = new Promise<T>(yes => {resolve = yes;}); return {resolve, promise}; }
 function setup(settings = saved) {
+  let cloud = 'cloud-a';
   const service = {loadSettings: vi.fn().mockResolvedValue(settings), enableDevice: vi.fn().mockResolvedValue({...settings, deviceState: 'registered'}),
     setCategoryPreference: vi.fn().mockResolvedValue({...settings, statsAccessRequestsEnabled: true})};
-  TestBed.configureTestingModule({providers: [provideRouter([]), {provide: SpotifyAuthService, useValue: {getUserId: () => 'actor-a'}},
+  TestBed.configureTestingModule({providers: [provideRouter([]), {provide: SpotifyAuthService, useValue: {getUserId: () => 'actor-a', getSupabaseUserId: () => cloud}},
     {provide: PushNotificationService, useValue: service}]});
   const fixture = TestBed.createComponent(V2SettingsNotificationsComponent); const panel = fixture.nativeElement as HTMLElement;
   const settle = async () => { await fixture.whenStable(); fixture.detectChanges(); };
-  return {fixture, panel, service, settle};
+  return {fixture, panel, service, settle, replaceCloud: () => {cloud = 'cloud-b';}};
 }
 
 describe('Notifications presentation with its actual state controller', () => {
@@ -91,14 +92,26 @@ describe('Notifications presentation with its actual state controller', () => {
     const {fixture, panel, settle} = setup({...saved, songLeagueMember: false}); fixture.detectChanges(); await settle();
     expect(panel.querySelector('[aria-label="New Song League pick"]')).toBeNull(); expect(panel.querySelectorAll('input')).toHaveLength(2);
   });
+  it('rejects a stale cloud checkbox action and recovers through the actual browser-focus refresh', async () => {
+    const {fixture, panel, service, settle, replaceCloud} = setup(); fixture.detectChanges(); await settle();
+    replaceCloud(); (panel.querySelector('[aria-label="Stats access requests"]') as HTMLInputElement).click(); await settle();
+    expect(service.setCategoryPreference).not.toHaveBeenCalled(); expect(panel.querySelector('input')).toBeNull();
+    const pending = deferred<PushNotificationSettings>(); service.loadSettings.mockReturnValueOnce(pending.promise);
+    window.dispatchEvent(new Event('focus')); fixture.detectChanges();
+    expect(panel.textContent).toContain('Loading notification settings'); expect(panel.querySelector('input')).toBeNull();
+    pending.resolve({...saved, statsAccessRequestsEnabled: true}); await settle();
+    expect((panel.querySelector('[aria-label="Stats access requests"]') as HTMLInputElement).checked).toBe(true);
+    expect(panel.querySelector('[role="alert"]')).toBeNull();
+  });
 });
 
 describe('Notifications composition with the real push service and isolated boundaries', () => {
   function setupBoundary(permission: PermissionState) {
     let browserSubscription: PushSubscription | null = null; let registered = false; let stats = false; let failRead = false;
+    let permissionAfterPrompt: PermissionState = 'granted'; let lagAfterPrompt = false;
     const subscription = {endpoint: 'https://push.example/isolated-device', toJSON: () => ({endpoint: 'https://push.example/isolated-device', keys: {p256dh: 'test-key', auth: 'test-auth'}})} as unknown as PushSubscription;
     vi.spyOn(navigator.permissions, 'query').mockImplementation(async () => ({state: permission} as PermissionStatus));
-    const requestSubscription = vi.fn(async () => {permission = 'granted'; browserSubscription = subscription; return subscription;});
+    const requestSubscription = vi.fn(async () => {permission = permissionAfterPrompt; browserSubscription = lagAfterPrompt ? null : subscription; return subscription;});
     const rpc = vi.fn(async (name: string, parameters: Record<string, unknown>) => {
       if (name === 'upsert_push_subscription') registered = true;
       if (name === 'set_notification_preference') stats = parameters['p_enabled'] as boolean;
@@ -107,12 +120,13 @@ describe('Notifications composition with the real push service and isolated boun
         song_league_member: true, stats_access_requests_enabled: stats, device_registered: registered, registered_device_count: registered ? 1 : 0}] : null, error: null};
     });
     TestBed.configureTestingModule({providers: [provideRouter([]), PushNotificationService,
-      {provide: SpotifyAuthService, useValue: {getUserId: () => 'actor-a'}},
+      {provide: SpotifyAuthService, useValue: {getUserId: () => 'actor-a', getSupabaseUserId: () => 'cloud-a'}},
       {provide: SwPush, useValue: {isEnabled: true, subscription: defer(() => of(browserSubscription)), requestSubscription}},
-      {provide: SupabaseService, useValue: {getClient: async () => ({rpc})}}]});
+      {provide: SupabaseService, useValue: {getClient: async () => ({rpc: (name: string, parameters: Record<string, unknown>) => ({abortSignal: () => rpc(name, parameters)})})}}]});
     const fixture = TestBed.createComponent(V2SettingsNotificationsComponent); const panel = fixture.nativeElement as HTMLElement;
     const settle = async () => {await fixture.whenStable(); fixture.detectChanges();};
-    return {fixture, panel, settle, rpc, requestSubscription, failNextRead: () => {failRead = true;}};
+    return {fixture, panel, settle, rpc, requestSubscription, failNextRead: () => {failRead = true;},
+      promptOutcome: (state: PermissionState) => {permissionAfterPrompt = state; lagAfterPrompt = true;}};
   }
   it('persists a category on a blocked device without browser permission or registration effects', async () => {
     const {fixture, panel, settle, rpc, requestSubscription} = setupBoundary('denied'); fixture.detectChanges(); await settle();
@@ -131,5 +145,14 @@ describe('Notifications composition with the real push service and isolated boun
     expect(rpc.mock.calls.filter(call => call[0] === 'upsert_push_subscription')).toHaveLength(1);
     expect(rpc.mock.calls.some(call => call[0] === 'set_notification_preference')).toBe(false);
     expect([...panel.querySelectorAll('input')].every(input => !input.checked)).toBe(true);
+  });
+  it.each(['denied', 'prompt'] as const)('renders actual %s permission after a prompt even when the subscription stream lags', async permission => {
+    const {fixture, panel, settle, requestSubscription, rpc, promptOutcome} = setupBoundary('prompt'); fixture.detectChanges(); await settle();
+    promptOutcome(permission); (panel.querySelector('button') as HTMLButtonElement).click(); await settle();
+    expect(panel.textContent).toContain(permission === 'denied' ? 'Notifications are blocked' : "Notifications aren't enabled on this device");
+    expect(panel.textContent).not.toContain('Notifications enabled on this device');
+    expect([...panel.querySelectorAll('input')].every(input => !input.checked)).toBe(true);
+    expect(requestSubscription).toHaveBeenCalledOnce(); expect(rpc.mock.calls.some(call => call[0] === 'set_notification_preference')).toBe(false);
+    if (permission === 'denied') expect(panel.querySelector('button')).toBeNull();
   });
 });

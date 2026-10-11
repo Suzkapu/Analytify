@@ -1,0 +1,135 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/notifications/notification-session-boundary.spec.ts
+Application bundle generation complete. [2.078 seconds] - 2026-10-11T09:29:38.250Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/core/notifications/notification-session-boundary.spec.ts (9 tests | 9 failed) 366ms
+     × does not save using a replacement actor after lazy client initialization 29ms
+     × does not save using a replacement cloud after lazy client initialization 4ms
+     × does not save using a replacement generation after lazy client initialization 4ms
+     × does not register a prompted device for replacement actor 56ms
+     × does not register a prompted device for replacement cloud 54ms
+     × does not register a prompted device for replacement generation 54ms
+     × does not read replacement actor preferences after the old write has completed 54ms
+     × does not read replacement cloud preferences after the old write has completed 54ms
+     × aborts an in-flight preference write before logout drains and permits a new session read 55ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/notifications/notification-session-boundary.spec.ts > notification effects across real client transport and session changes > does not save using a replacement actor after lazy client initialization
+ FAIL  |SpotiFront| src/app/core/notifications/notification-session-boundary.spec.ts > notification effects across real client transport and session changes > does not save using a replacement cloud after lazy client initialization
+ FAIL  |SpotiFront| src/app/core/notifications/notification-session-boundary.spec.ts > notification effects across real client transport and session changes > does not save using a replacement generation after lazy client initialization
+AssertionError: expected null to match object { name: 'AbortError' }
+
+- Expected:
+{
+  "name": "AbortError",
+}
+
++ Received:
+null
+
+ ❯ src/app/core/notifications/notification-session-boundary.spec.ts:75:26
+     73|     await replace(kind); completeSuccessors = true; ready.resolve();
+     74|     const result = await pending;
+     75|     expect(result.error).toMatchObject({name: 'AbortError'}); expect(r…
+       |                          ^
+     76|   });
+     77|   it.each(['actor', 'cloud', 'generation'] as const)('does not registe…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  |SpotiFront| src/app/core/notifications/notification-session-boundary.spec.ts > notification effects across real client transport and session changes > does not register a prompted device for replacement actor
+ FAIL  |SpotiFront| src/app/core/notifications/notification-session-boundary.spec.ts > notification effects across real client transport and session changes > does not register a prompted device for replacement cloud
+ FAIL  |SpotiFront| src/app/core/notifications/notification-session-boundary.spec.ts > notification effects across real client transport and session changes > does not register a prompted device for replacement generation
+AssertionError: expected null to match object { name: 'AbortError' }
+
+- Expected:
+{
+  "name": "AbortError",
+}
+
++ Received:
+null
+
+ ❯ src/app/core/notifications/notification-session-boundary.spec.ts:82:26
+     80|     await replace(kind); completeSuccessors = true; prompt.resolve(sub…
+     81|     const result = await pending;
+     82|     expect(result.error).toMatchObject({name: 'AbortError'}); expect(r…
+       |                          ^
+     83|   });
+     84|   it.each(['actor', 'cloud'] as const)('does not read replacement %s p…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  |SpotiFront| src/app/core/notifications/notification-session-boundary.spec.ts > notification effects across real client transport and session changes > does not read replacement actor preferences after the old write has completed
+ FAIL  |SpotiFront| src/app/core/notifications/notification-session-boundary.spec.ts > notification effects across real client transport and session changes > does not read replacement cloud preferences after the old write has completed
+AssertionError: expected null to match object { name: 'AbortError' }
+
+- Expected:
+{
+  "name": "AbortError",
+}
+
++ Received:
+null
+
+ ❯ src/app/core/notifications/notification-session-boundary.spec.ts:88:26
+     86|     const write = await request('set_notification_preference'); await …
+     87|     const result = await pending;
+     88|     expect(result.error).toMatchObject({name: 'AbortError'});
+       |                          ^
+     89|     expect(requests.map(item => item.name)).toEqual(['set_notification…
+     90|     expect(write).toMatchObject({actor: 'actor-a', cloud: 'cloud-a', b…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  |SpotiFront| src/app/core/notifications/notification-session-boundary.spec.ts > notification effects across real client transport and session changes > aborts an in-flight preference write before logout drains and permits a new session read
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/app/core/notifications/notification-session-boundary.spec.ts:98:21
+     96|     // Release the baseline request too so the reproduction fails inst…
+     97|     completeSuccessors = true; write.complete(null); const result = aw…
+     98|     expect(aborted).toBe(true); expect(result.error).toMatchObject({na…
+       |                     ^
+     99|     expect(requests).toHaveLength(1);
+    100|     actor = 'actor-b'; cloud = 'cloud-b';
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed (9)
+   Start at  11:29:38
+   Duration  1.07s (transform 99ms, setup 205ms, import 107ms, tests 366ms, environment 287ms)
+

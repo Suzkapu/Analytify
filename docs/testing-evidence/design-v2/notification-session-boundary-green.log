@@ -1,0 +1,11 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/notifications/notification-session-boundary.spec.ts --include=src/app/core/notifications/push-notification.service.spec.ts --include=src/app/features/settings/v2-settings-notifications.component.spec.ts --include=src/app/features/settings/v2-notification-settings.controller.spec.ts
+Application bundle generation failed. [2.322 seconds] - 2026-10-11T09:30:58.803Z
+
+✘ [ERROR] TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Record<string, unknown>'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-settings-notifications.component.spec.ts:112:144:
+      112 │ ... unknown) => ({abortSignal: () => rpc(name, parameters)})})}}]});
+          ╵                                                ~~~~~~~~~~
+
+

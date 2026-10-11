@@ -1,0 +1,350 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/settings/v2-notification-settings.controller.spec.ts
+Application bundle generation complete. [2.178 seconds] - 2026-10-11T09:34:24.753Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > rejects a category action based on a replaced cloud identity cache
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "stats_access_requests",
+      true,
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:38:47
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > rejects a device action based on a replaced cloud identity cache
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array []
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:38:100
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > clears previous cloud preferences before a replacement identity refresh completes
+AssertionError: expected { supported: true, …(13) } to be null
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:47:19
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: {
+    supported: true,
+    installedPwa: false,
+    permission: 'default',
+    deviceSubscribed: false,
+    deviceRegistered: false,
+    registeredDeviceCount: 0,
+    deviceState: 'permission-required',
+    songLeagueEnabled: true,
+    songLeagueSongAddedEnabled: false,
+    songLeagueMember: true,
+    statsAccessRequestsEnabled: false,
+    active: false,
+    songAddedActive: false,
+    statsAccessActive: false
+  },
+  expected: null,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > discards old cloud mutation success even when the Spotify actor is unchanged
+AssertionError: expected { supported: true, …(13) } to be null
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:55:35
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: {
+    supported: true,
+    installedPwa: false,
+    permission: 'granted',
+    deviceSubscribed: true,
+    deviceRegistered: true,
+    registeredDeviceCount: 1,
+    deviceState: 'registered',
+    songLeagueEnabled: true,
+    songLeagueSongAddedEnabled: false,
+    songLeagueMember: true,
+    statsAccessRequestsEnabled: false,
+    active: true,
+    songAddedActive: false,
+    statsAccessActive: false
+  },
+  expected: null,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > discards old cloud mutation failure even when the Spotify actor is unchanged
+AssertionError: expected { supported: true, …(13) } to be null
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts:55:35
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: {
+    supported: true,
+    installedPwa: false,
+    permission: 'default',
+    deviceSubscribed: false,
+    deviceRegistered: false,
+    registeredDeviceCount: 0,
+    deviceState: 'permission-required',
+    songLeagueEnabled: true,
+    songLeagueSongAddedEnabled: false,
+    songLeagueMember: true,
+    statsAccessRequestsEnabled: false,
+    active: false,
+    songAddedActive: false,
+    statsAccessActive: false
+  },
+  expected: null,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+ ❯ |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts (30 tests | 5 failed) 71ms
+     × rejects a category action based on a replaced cloud identity cache 21ms
+     × rejects a device action based on a replaced cloud identity cache 3ms
+     × clears previous cloud preferences before a replacement identity refresh completes 4ms
+     × discards old cloud mutation success even when the Spotify actor is unchanged 2ms
+     × discards old cloud mutation failure even when the Spotify actor is unchanged 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > rejects a category action based on a replaced cloud identity cache
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "stats_access_requests",
+      true,
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:38:47
+     36|     const mutate = () => action === 'category' ? controller.setCategor…
+     37|     await mutate();
+     38|     expect(service.setCategoryPreference).not.toHaveBeenCalled(); expe…
+       |                                               ^
+     39|     expect(controller.settings()).toBeNull(); expect(controller.messag…
+     40|     await controller.reload(); await mutate(); expect(controller.messa…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > rejects a device action based on a replaced cloud identity cache
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array []
+
+
+Number of calls: 1
+
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:38:100
+     36|     const mutate = () => action === 'category' ? controller.setCategor…
+     37|     await mutate();
+     38|     expect(service.setCategoryPreference).not.toHaveBeenCalled(); expe…
+       |                                                                                                    ^
+     39|     expect(controller.settings()).toBeNull(); expect(controller.messag…
+     40|     await controller.reload(); await mutate(); expect(controller.messa…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > clears previous cloud preferences before a replacement identity refresh completes
+AssertionError: expected { supported: true, …(13) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "active": false,
+  "deviceRegistered": false,
+  "deviceState": "permission-required",
+  "deviceSubscribed": false,
+  "installedPwa": false,
+  "permission": "default",
+  "registeredDeviceCount": 0,
+  "songAddedActive": false,
+  "songLeagueEnabled": true,
+  "songLeagueMember": true,
+  "songLeagueSongAddedEnabled": false,
+  "statsAccessActive": false,
+  "statsAccessRequestsEnabled": false,
+  "supported": true,
+}
+
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:47:19
+     45|     const refresh = controller.reload(); const stale = controller.sett…
+     46|     pending.resolve(ready); await refresh;
+     47|     expect(stale).toBeNull(); expect(controller.settings()).toEqual(re…
+       |                   ^
+     48|   });
+     49|   it.each(['success', 'failure'] as const)('discards old cloud mutatio…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > discards old cloud mutation success even when the Spotify actor is unchanged
+AssertionError: expected { supported: true, …(13) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "active": true,
+  "deviceRegistered": true,
+  "deviceState": "registered",
+  "deviceSubscribed": true,
+  "installedPwa": false,
+  "permission": "granted",
+  "registeredDeviceCount": 1,
+  "songAddedActive": false,
+  "songLeagueEnabled": true,
+  "songLeagueMember": true,
+  "songLeagueSongAddedEnabled": false,
+  "statsAccessActive": false,
+  "statsAccessRequestsEnabled": false,
+  "supported": true,
+}
+
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:55:35
+     53|     if (outcome === 'success') pending.resolve(ready); else pending.re…
+     54|     await action;
+     55|     expect(controller.settings()).toBeNull(); expect(controller.error(…
+       |                                   ^
+     56|     expect(controller.saving()).toBe(false); await controller.reload()…
+     57|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  |SpotiFront| src/app/features/settings/v2-notification-settings.controller.spec.ts > notification Settings page state > discards old cloud mutation failure even when the Spotify actor is unchanged
+AssertionError: expected { supported: true, …(13) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "active": false,
+  "deviceRegistered": false,
+  "deviceState": "permission-required",
+  "deviceSubscribed": false,
+  "installedPwa": false,
+  "permission": "default",
+  "registeredDeviceCount": 0,
+  "songAddedActive": false,
+  "songLeagueEnabled": true,
+  "songLeagueMember": true,
+  "songLeagueSongAddedEnabled": false,
+  "statsAccessActive": false,
+  "statsAccessRequestsEnabled": false,
+  "supported": true,
+}
+
+ ❯ src/app/features/settings/v2-notification-settings.controller.spec.ts:55:35
+     53|     if (outcome === 'success') pending.resolve(ready); else pending.re…
+     54|     await action;
+     55|     expect(controller.settings()).toBeNull(); expect(controller.error(…
+       |                                   ^
+     56|     expect(controller.saving()).toBe(false); await controller.reload()…
+     57|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 25 passed (30)
+   Start at  11:34:24
+   Duration  786ms (transform 105ms, setup 202ms, import 114ms, tests 71ms, environment 289ms)
+

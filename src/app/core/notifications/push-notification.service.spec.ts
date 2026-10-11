@@ -5,11 +5,13 @@ import { defer, of } from 'rxjs';
 
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import { PushNotificationService, PushNotificationSettings } from './push-notification.service';
+import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 
 describe('PushNotificationService', () => {
     let service: PushNotificationService;
     let rpc: Mock;
     let getClient: Mock;
+    let client: {rpc: (name: string, parameters?: any) => {abortSignal: (signal: AbortSignal) => Promise<any>}};
     let requestSubscription: Mock;
     let browserSubscription: PushSubscription | null;
     let permissionState: PermissionState;
@@ -64,11 +66,13 @@ describe('PushNotificationService', () => {
             };
         });
         requestSubscription = vi.fn().mockName('requestSubscription').mockResolvedValue(subscription);
-        getClient = vi.fn().mockResolvedValue({rpc});
+        client = {rpc: (name, parameters) => ({abortSignal: () => rpc(name, parameters)})};
+        getClient = vi.fn().mockResolvedValue(client);
         swPush = {isEnabled: true, subscription: defer(() => of(browserSubscription)), requestSubscription};
         TestBed.configureTestingModule({
             providers: [
                 PushNotificationService,
+                {provide: SpotifyAuthService, useValue: {getUserId: () => 'actor-a', getSupabaseUserId: () => 'cloud-a'}},
                 {
                     provide: SwPush,
                     useValue: swPush
@@ -98,7 +102,7 @@ describe('PushNotificationService', () => {
         getClient.mockReturnValueOnce(new Promise(resolve => {ready = resolve;}));
         const pending = service.setCategoryPreference('song_league', true);
         expect(rpc).not.toHaveBeenCalled();
-        ready({rpc}); await pending;
+        ready(client); await pending;
         expect(rpc.mock.calls.map(call => call[0])).toEqual(['set_notification_preference', 'get_notification_settings']);
         const failure = new Error('Preference rejected'); rpc.mockResolvedValueOnce({data: null, error: failure});
         await expect(service.setCategoryPreference('song_league', false)).rejects.toBe(failure);
@@ -176,7 +180,7 @@ describe('PushNotificationService', () => {
         const pending = service.loadSettings();
         await vi.waitFor(() => expect(getClient).toHaveBeenCalled());
         expect(rpc).not.toHaveBeenCalled();
-        ready({rpc});
+        ready(client);
         await pending;
         expect(rpc).toHaveBeenCalledWith('get_notification_settings', {p_endpoint: null});
     });
@@ -332,5 +336,110 @@ describe('PushNotificationService', () => {
         });
         expect(disabled.statsAccessRequestsEnabled).toBe(false);
         expect(disabled.songLeagueEnabled).toBe(false);
+    });
+
+    it.each(['granted', 'denied', 'prompt'] as const)('reports an unsuccessful prompt with the actual %s permission', async state => {
+        requestSubscription.mockImplementation(async () => {permissionState = state; throw new Error('Browser prompt rejected');});
+        const expected = state === 'granted' ? 'push service could not register this device'
+            : state === 'denied' ? 'Notifications are blocked' : 'Notification permission was not granted';
+        await expect(service.enableDevice()).rejects.toThrow(expected);
+        expect(rpc).not.toHaveBeenCalled(); expect(registeredEndpoint).toBeNull();
+        expect(preferences.song_league_enabled).toBe(false);
+    });
+
+    it('uses Notification.permission when the permissions descriptor is unavailable', async () => {
+        vi.mocked(navigator.permissions.query).mockRejectedValue(new Error('Descriptor unsupported'));
+        const settings = await service.loadSettings();
+        expect(settings.permission).toBe(Notification.permission);
+        expect(settings.deviceState).toBe('permission-required'); expect(settings.active).toBe(false);
+        expect(requestSubscription).not.toHaveBeenCalled();
+    });
+
+    it('represents a missing Notification API without registering the device', async () => {
+        const descriptor = Object.getOwnPropertyDescriptor(globalThis, 'Notification')!;
+        Object.defineProperty(globalThis, 'Notification', {...descriptor, value: undefined});
+        try {
+            const settings = await service.loadSettings();
+            expect(settings.permission).toBe('unavailable'); expect(settings.deviceState).toBe('unsupported');
+            expect(requestSubscription).not.toHaveBeenCalled();
+            expect(rpc.mock.calls.some(call => call[0] === 'upsert_push_subscription')).toBe(false);
+        } finally {Object.defineProperty(globalThis, 'Notification', descriptor);}
+    });
+
+    it.each([
+        {endpoint: '', keys: {p256dh: 'key', auth: 'secret'}},
+        {endpoint: 'https://push.example/incomplete', keys: {auth: 'secret'}},
+        {endpoint: 'https://push.example/incomplete', keys: {p256dh: 'key'}},
+        {endpoint: 'https://push.example/incomplete'}
+    ])('rejects incomplete subscription %j without changing server preferences', async json => {
+        requestSubscription.mockResolvedValue({endpoint: '', toJSON: () => json});
+        await expect(service.enableDevice()).rejects.toThrow('incomplete push subscription');
+        expect(rpc).not.toHaveBeenCalled(); expect(registeredEndpoint).toBeNull();
+    });
+
+    it('registers the browser endpoint when its serialized subscription omits it', async () => {
+        requestSubscription.mockResolvedValue({endpoint: 'https://push.example/fallback',
+            toJSON: () => ({keys: {p256dh: 'key', auth: 'secret'}})});
+        expect((await service.enableDevice()).deviceState).toBe('registered');
+        expect(registeredEndpoint).toBe('https://push.example/fallback');
+        expect(rpc.mock.calls.some(call => call[0] === 'set_notification_preference')).toBe(false);
+    });
+
+    it.each(['denied', 'prompt'] as const)('does not claim the device is enabled when permission becomes %s before readback', async state => {
+        requestSubscription.mockImplementation(async () => {permissionState = state; return subscription;});
+        const settings = await service.enableDevice();
+        expect(settings.permission).toBe(state === 'prompt' ? 'default' : state);
+        expect(settings.deviceState).toBe(state === 'denied' ? 'denied' : 'permission-required');
+        expect(settings.registeredDeviceCount).toBe(1);
+        expect(settings.active).toBe(false); expect(settings.songAddedActive).toBe(false); expect(settings.statsAccessActive).toBe(false);
+        expect(preferences.song_league_enabled).toBe(false);
+    });
+
+    it('refuses an enable action when the Notification API is unavailable even if SwPush is enabled', async () => {
+        const descriptor = Object.getOwnPropertyDescriptor(globalThis, 'Notification')!;
+        Object.defineProperty(globalThis, 'Notification', {...descriptor, value: undefined});
+        try {
+            await expect(service.enableDevice()).rejects.toThrow('not supported');
+            expect(requestSubscription).not.toHaveBeenCalled(); expect(rpc).not.toHaveBeenCalled();
+        } finally {Object.defineProperty(globalThis, 'Notification', descriptor);}
+    });
+
+    it('uses the native registration readiness when PushManager is ahead of the SwPush stream', async () => {
+        const descriptor = Object.getOwnPropertyDescriptor(navigator, 'serviceWorker')!;
+        const getSubscription = vi.fn().mockResolvedValue(subscription);
+        Object.defineProperty(navigator, 'serviceWorker', {configurable: true, value: {
+            getRegistration: async () => undefined, controller: {}, ready: Promise.resolve({pushManager: {getSubscription}})
+        }});
+        try {
+            const settings = await service.loadSettings();
+            expect(settings.deviceSubscribed).toBe(true); expect(settings.deviceState).toBe('registered');
+            expect(settings.statsAccessActive).toBe(true); expect(requestSubscription).not.toHaveBeenCalled();
+            expect(rpc).toHaveBeenCalledWith('get_notification_settings', {p_endpoint: subscription.endpoint});
+            expect(getSubscription).toHaveBeenCalledOnce();
+        } finally {Object.defineProperty(navigator, 'serviceWorker', descriptor);}
+    });
+
+    it('retains an Angular subscription when native registration inspection fails', async () => {
+        browserSubscription = subscription;
+        const descriptor = Object.getOwnPropertyDescriptor(navigator, 'serviceWorker')!;
+        Object.defineProperty(navigator, 'serviceWorker', {configurable: true, value: {
+            getRegistration: async () => {throw new Error('Native inspection unavailable');}
+        }});
+        try {
+            const settings = await service.loadSettings();
+            expect(settings.deviceSubscribed).toBe(true); expect(settings.deviceState).toBe('registered');
+            expect(requestSubscription).not.toHaveBeenCalled();
+            expect(rpc).toHaveBeenCalledWith('get_notification_settings', {p_endpoint: subscription.endpoint});
+        } finally {Object.defineProperty(navigator, 'serviceWorker', descriptor);}
+    });
+
+    it('accepts an RPC object row and keeps saved preferences separate from unsupported device state', async () => {
+        swPush.isEnabled = false;
+        rpc.mockResolvedValueOnce({data: {song_league_enabled: true, song_league_song_added_enabled: true,
+            song_league_member: true, stats_access_requests_enabled: true, device_registered: false, registered_device_count: 2}, error: null});
+        const settings = await service.loadSettings();
+        expect(settings).toMatchObject({songLeagueEnabled: true, songLeagueSongAddedEnabled: true, statsAccessRequestsEnabled: true,
+            registeredDeviceCount: 2, deviceState: 'unsupported', active: false, songAddedActive: false, statsAccessActive: false});
+        expect(requestSubscription).not.toHaveBeenCalled(); expect(rpc).toHaveBeenCalledOnce();
     });
 });

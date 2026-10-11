@@ -1,6 +1,7 @@
 import {existsSync, readFileSync, readdirSync} from 'node:fs';
 import {join} from 'node:path';
 import {isDesignV2BehaviorSource} from './design-v2-test-policy.mjs';
+import {hasConfiguredNativeTransitions} from './router-transition-policy.mjs';
 
 function filesBelow(directory) {
   return readdirSync(directory, {withFileTypes: true}).flatMap(entry => {
@@ -34,8 +35,8 @@ for (const [page, feature] of [['songs', 'songs'], ['analysis', 'playlist-analys
     throw new Error(`The shared ${feature} controller must not carry legacy presentation metadata.`);
   }
 }
-if (!router.includes('enableViewTransitions: true')) {
-  throw new Error('Angular native route View Transitions must remain enabled.');
+if (!hasConfiguredNativeTransitions(router)) {
+  throw new Error('Angular native route View Transitions must remain configured with first-document transitions skipped.');
 }
 if (!router.includes('NEW_COMPATIBILITY_MATCHER') || !router.includes('redirectLegacyDesignV2Url')) {
   throw new Error('The canonical rollout must preserve the routing-layer /new compatibility redirect.');

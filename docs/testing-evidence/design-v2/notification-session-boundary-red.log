@@ -1,0 +1,12 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/notifications/notification-session-boundary.spec.ts
+Application bundle generation failed. [2.135 seconds] - 2026-10-11T09:29:06.198Z
+
+✘ [ERROR] TS2352: Conversion of type '{ endpoint: string; toJSON: () => { endpoint: string; keys: { p256dh: string; auth: string; }; }; }' to type 'PushSubscription' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ endpoint: string; toJSON: () => { endpoint: string; keys: { p256dh: string; auth: string; }; }; }' is missing the following properties from type 'PushSubscription': expirationTime, options, getKey, unsubscribe [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/notification-session-boundary.spec.ts:22:21:
+      22 │ ... subscription = {endpoint: 'https://push.example/isolated-device',
+         ╵                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+

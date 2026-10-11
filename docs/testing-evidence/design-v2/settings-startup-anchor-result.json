@@ -1,0 +1,52 @@
+{
+  "commit": "4b115b5",
+  "includesPostCheckpointAnchorAssertion": true,
+  "exit": 0,
+  "passedCases": 4,
+  "records": [
+    {
+      "path": "docs/testing-evidence/design-v2/settings-startup-anchor-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-desktop/startup-navigation.json",
+      "sha256": "8047f82bd25cde728a623d03013613524150ce15c1f33fedcf8949909ec6fa44",
+      "result": {
+        "initialStarts": 0,
+        "laterStarts": 1,
+        "errors": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-startup-anchor-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-firefox-stats/startup-navigation.json",
+      "sha256": "8047f82bd25cde728a623d03013613524150ce15c1f33fedcf8949909ec6fa44",
+      "result": {
+        "initialStarts": 0,
+        "laterStarts": 1,
+        "errors": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-startup-anchor-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-mobile/startup-navigation.json",
+      "sha256": "8047f82bd25cde728a623d03013613524150ce15c1f33fedcf8949909ec6fa44",
+      "result": {
+        "initialStarts": 0,
+        "laterStarts": 1,
+        "errors": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/settings-startup-anchor-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-webkit-stats/startup-navigation.json",
+      "sha256": "8047f82bd25cde728a623d03013613524150ce15c1f33fedcf8949909ec6fa44",
+      "result": {
+        "initialStarts": 0,
+        "laterStarts": 1,
+        "errors": []
+      }
+    }
+  ],
+  "sources": {
+    "src/app/app-routing.module.ts": "dc3b62a98d0189d94b24f4bed790f2f0fefa00e6948bf783c82ec0f16a5750c7",
+    "src/app/features/settings/v2-notification-settings.controller.ts": "99db958d67c5584c34d1cd07d0a1d1478f77c1caa819c264630f7dc24309bd4c",
+    "e2e/design-v2-settings-startup.spec.ts": "6c9764e02013e8376254cfdfec824dc5fc17a00c297a60ebbf0a88e4a2b83b18",
+    "e2e/helpers/native-transitions.ts": "5c68055cd7d776ed6175b907cc80d2169b2ccc128009e1d2a5393bc9bfc0bcb8"
+  },
+  "rawTransitionDiagnostics": [],
+  "scope": "first Login, later keyboard Legal navigation, native promises, actual 96px Terms anchor offset; no full visual parity claim"
+}

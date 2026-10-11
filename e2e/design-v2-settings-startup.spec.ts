@@ -17,6 +17,9 @@ test('first Login renders directly and later Legal navigation retains native tra
   await expect(page).toHaveURL(/\/new\/legal#terms$/);
   await expect(page.getByRole('main', {name: 'Legal content'})).toBeVisible();
   await expectNativeTransitionsSettled(page); expect(await starts()).toBeGreaterThan(0);
+  // Provider migration must preserve real fragment scrolling below the header.
+  await expect.poll(() => page.locator('#terms').evaluate(element => Math.round(element.getBoundingClientRect().top)))
+    .toBe(96);
   expect(errors).toEqual([]);
   await writeFile(info.outputPath('startup-navigation.json'), JSON.stringify({initialStarts: 0, laterStarts: await starts(), errors}, null, 2));
 });

@@ -20,16 +20,41 @@ function deferred<T>() {
 }
 function setup() {
   let actor = 'actor-a';
+  let cloud = 'cloud-a';
   const service = {loadSettings: vi.fn().mockResolvedValue(saved), enableDevice: vi.fn().mockResolvedValue(ready),
     setCategoryPreference: vi.fn().mockResolvedValue({...saved, statsAccessRequestsEnabled: true})};
   TestBed.configureTestingModule({providers: [V2NotificationSettingsController,
-    {provide: SpotifyAuthService, useValue: {getUserId: () => actor}},
+    {provide: SpotifyAuthService, useValue: {getUserId: () => actor, getSupabaseUserId: () => cloud}},
     {provide: PushNotificationService, useValue: service}]});
   return {controller: TestBed.inject(V2NotificationSettingsController), service,
-    lifecycle: TestBed.inject(SessionLifecycleService), replaceActor: () => {actor = 'actor-b';}};
+    lifecycle: TestBed.inject(SessionLifecycleService), replaceActor: () => {actor = 'actor-b';}, replaceCloud: () => {cloud = 'cloud-b';}};
 }
 
 describe('notification Settings page state', () => {
+  it.each(['category', 'device'] as const)('rejects a %s action based on a replaced cloud identity cache', async action => {
+    const {controller, service, replaceCloud} = setup(); await controller.reload(); replaceCloud();
+    const mutate = () => action === 'category' ? controller.setCategory('stats_access_requests', true) : controller.enableDevice();
+    await mutate();
+    expect(service.setCategoryPreference).not.toHaveBeenCalled(); expect(service.enableDevice).not.toHaveBeenCalled();
+    expect(controller.settings()).toBeNull(); expect(controller.message()).toBe('');
+    await controller.reload(); await mutate(); expect(controller.message()).toBe('Notification settings saved.');
+  });
+  it('clears previous cloud preferences before a replacement identity refresh completes', async () => {
+    const {controller, service, replaceCloud} = setup(); await controller.reload(); replaceCloud();
+    const pending = deferred<PushNotificationSettings>(); service.loadSettings.mockReturnValueOnce(pending.promise);
+    const refresh = controller.reload(); const stale = controller.settings();
+    pending.resolve(ready); await refresh;
+    expect(stale).toBeNull(); expect(controller.settings()).toEqual(ready);
+  });
+  it.each(['success', 'failure'] as const)('discards old cloud mutation %s even when the Spotify actor is unchanged', async outcome => {
+    const {controller, service, replaceCloud} = setup(); await controller.reload();
+    const pending = deferred<PushNotificationSettings>(); service.enableDevice.mockReturnValueOnce(pending.promise);
+    const action = controller.enableDevice(); replaceCloud();
+    if (outcome === 'success') pending.resolve(ready); else pending.reject(new Error('Old cloud error'));
+    await action;
+    expect(controller.settings()).toBeNull(); expect(controller.error()).toBe(''); expect(controller.message()).toBe('');
+    expect(controller.saving()).toBe(false); await controller.reload(); expect(controller.settings()).toEqual(saved);
+  });
   it('loads saved categories without requesting device permission and refreshes cached settings', async () => {
     const {controller, service} = setup(); const pending = deferred<PushNotificationSettings>();
     await controller.reload(); expect(controller.settings()).toEqual(saved); expect(service.enableDevice).not.toHaveBeenCalled();
@@ -137,6 +162,15 @@ describe('notification Settings page state', () => {
   it('does not mutate before settings are available', async () => {
     const {controller, service} = setup(); await controller.enableDevice(); await controller.setCategory('song_league', false);
     expect(service.enableDevice).not.toHaveBeenCalled(); expect(service.setCategoryPreference).not.toHaveBeenCalled();
+  });
+  it('rejects actions retained by a disposed page even when cached settings are idle', async () => {
+    const {controller, service} = setup(); await controller.reload();
+    controller.ngOnDestroy();
+    await controller.enableDevice(); await controller.setCategory('song_league', false); await controller.reload();
+    expect(service.enableDevice).not.toHaveBeenCalled(); expect(service.setCategoryPreference).not.toHaveBeenCalled();
+    expect(service.loadSettings).toHaveBeenCalledOnce();
+    expect(controller.settings()).toEqual(saved); expect(controller.message()).toBe('');
+    expect(controller.saving()).toBe(false); expect(controller.loading()).toBe(false);
   });
   it.each([
     ['actor', 'success'], ['actor', 'failure'], ['generation', 'success'], ['generation', 'failure'],

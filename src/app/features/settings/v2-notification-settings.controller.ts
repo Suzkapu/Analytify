@@ -6,13 +6,14 @@ import {PushNotificationService, PushNotificationSettings} from '@core/notificat
 interface NotificationRequest {
   revision: number;
   actor: string | null;
+  cloud: string | null;
   generation: SessionGeneration;
 }
 
 /** State for the canonical page; device registration and category saving are separate actions. */
 @Injectable()
 export class V2NotificationSettingsController implements OnDestroy {
-  private readonly cachedSettings = signal<{value: PushNotificationSettings; owner: Pick<NotificationRequest, 'actor' | 'generation'>} | null>(null);
+  private readonly cachedSettings = signal<{value: PushNotificationSettings; owner: Pick<NotificationRequest, 'actor' | 'cloud' | 'generation'>} | null>(null);
   readonly settings = computed(() => this.cachedSettings()?.value ?? null);
   readonly loading = signal(false);
   readonly saving = signal(false);
@@ -50,11 +51,12 @@ export class V2NotificationSettingsController implements OnDestroy {
 
   private current(request: NotificationRequest): boolean {
     return !this.destroyed && request.revision === this.revision
-      && request.actor === this.auth.getUserId() && this.lifecycle.isCurrent(request.generation);
+      && this.ownerCurrent(request);
   }
 
-  private ownerCurrent(owner: Pick<NotificationRequest, 'actor' | 'generation'>): boolean {
-    return owner.actor === this.auth.getUserId() && this.lifecycle.isCurrent(owner.generation);
+  private ownerCurrent(owner: Pick<NotificationRequest, 'actor' | 'cloud' | 'generation'>): boolean {
+    return owner.actor === this.auth.getUserId() && owner.cloud === this.auth.getSupabaseUserId()
+      && this.lifecycle.isCurrent(owner.generation);
   }
 
   private clearSettings(): void {
@@ -70,8 +72,7 @@ export class V2NotificationSettingsController implements OnDestroy {
   }
 
   private async run(action: () => Promise<PushNotificationSettings>, mutation: boolean, device = false): Promise<void> {
-    if (this.saving() || this.destroyed) return;
-    const request: NotificationRequest = {revision: ++this.revision, actor: this.auth.getUserId(), generation: this.lifecycle.capture()};
+    const request: NotificationRequest = {revision: ++this.revision, actor: this.auth.getUserId(), cloud: this.auth.getSupabaseUserId(), generation: this.lifecycle.capture()};
     this.loading.set(!mutation); this.saving.set(mutation); this.error.set(''); this.message.set('');
     this.savingDevice.set(device);
     try {

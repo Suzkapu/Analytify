@@ -1,0 +1,19 @@
+npm notice run spoti-front@0.0.0 design-v2-quality:check
+npm notice run node --test scripts/design-v2-test-policy.test.mjs scripts/router-transition-policy.test.mjs && node scripts/check-design-v2-quality.mjs
+✔ includes Insights, new v2 helpers, shared primitives, ambient, and design navigation (0.81287ms)
+✔ requires evidence for every source, including a newly added file (0.250849ms)
+✔ a new source must have no uncovered code in any metric (4.925102ms)
+✔ absolute uncovered counts cannot be diluted by adding covered code (0.307546ms)
+✔ supports absolute Windows and Unix report paths (0.201287ms)
+✔ fails closed for malformed coverage counters (0.179155ms)
+✔ recognizes the actual configured public provider feature (5.829443ms)
+✔ rejects removed motion, first-render animation and misleading text (2.577831ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 238.899846
+Design v2 quality contracts cover 41 behavioral sources and route isolation.

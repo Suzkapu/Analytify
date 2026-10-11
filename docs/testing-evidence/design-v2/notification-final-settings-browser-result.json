@@ -1,0 +1,1819 @@
+{
+  "exit": 0,
+  "passedCases": 124,
+  "failedCases": 0,
+  "projectPassedCases": {
+    "desktop": 31,
+    "mobile": 31,
+    "firefox-stats": 31,
+    "webkit-stats": 31
+  },
+  "qualityPass": true,
+  "recordCounts": {
+    "settings-account-data.json": 16,
+    "notification-workflow.json": 32,
+    "startup-navigation.json": 4,
+    "update-workflow.json": 16,
+    "update-popup-geometry.json": 16,
+    "update-draft.json": 16,
+    "update-card-geometry.json": 16,
+    "update-retry-scroll.json": 4,
+    "update-recovery.json": 4
+  },
+  "resizeGeometrySamples": 528,
+  "retryGeometrySamples": 4,
+  "rawDiagnostics": [],
+  "sources": {
+    "src/app/core/notifications/push-notification.service.ts": "3954ca47ca14ae1bef6f031773bdc628e2d379adaa0377f4109796d6f07385a5",
+    "src/app/features/settings/v2-notification-settings.controller.ts": "21106fe0dfc14649214db70739e66e41852362c77f768783c93de167591f2b25",
+    "src/app/app-routing.module.ts": "dc3b62a98d0189d94b24f4bed790f2f0fefa00e6948bf783c82ec0f16a5750c7",
+    "src/styles.scss": "48d6be94299daaadc032567f18bc712f01217968210cb0fa3b4e7e61026ac9e6",
+    "e2e/design-v2-settings-notifications.spec.ts": "e9d9c221a4b97121883c52318d704978dc0434859be6b587d216d846e0ce45a4",
+    "e2e/design-v2-settings-account-data.spec.ts": "072e5e2071f6a9b666274a9ddc062a05990ef175ce770fcd4dbd0004639387f4",
+    "e2e/design-v2-settings-updates.spec.ts": "9fcd189d8287d13c2bd77103a6c488dfd4dc626fd85e7e82f5b8059c58d9da96",
+    "e2e/design-v2-settings-startup.spec.ts": "6c9764e02013e8376254cfdfec824dc5fc17a00c297a60ebbf0a88e4a2b83b18",
+    "e2e/helpers/native-transitions.ts": "5c68055cd7d776ed6175b907cc80d2169b2ccc128009e1d2a5393bc9bfc0bcb8"
+  },
+  "records": [
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--desktop/settings-account-data.json",
+      "sha256": "d9a11f7a656430b330bac59aac33a4553f27f48d73a4528bd3a235ebaea1854e",
+      "resizeGeometrySamples": 7,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--firefox-stats/settings-account-data.json",
+      "sha256": "33ad7ed3365417b6bf269d25046487c2ee753ed48dfe1fe8cb855a7b0bf866d2",
+      "resizeGeometrySamples": 7,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--mobile/settings-account-data.json",
+      "sha256": "d9a11f7a656430b330bac59aac33a4553f27f48d73a4528bd3a235ebaea1854e",
+      "resizeGeometrySamples": 7,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--webkit-stats/settings-account-data.json",
+      "sha256": "d9a11f7a656430b330bac59aac33a4553f27f48d73a4528bd3a235ebaea1854e",
+      "resizeGeometrySamples": 7,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--desktop/settings-account-data.json",
+      "sha256": "44939c75ea9c3ebaeaeb30ab0095d962033d86eaa8ae98324c3c07e5c0efcb18",
+      "resizeGeometrySamples": 7,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--firefox-stats/settings-account-data.json",
+      "sha256": "06ff144af0985a879c33731cf2db432dcfed5abd945bd1823833ad670672612c",
+      "resizeGeometrySamples": 7,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--mobile/settings-account-data.json",
+      "sha256": "44939c75ea9c3ebaeaeb30ab0095d962033d86eaa8ae98324c3c07e5c0efcb18",
+      "resizeGeometrySamples": 7,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--webkit-stats/settings-account-data.json",
+      "sha256": "44939c75ea9c3ebaeaeb30ab0095d962033d86eaa8ae98324c3c07e5c0efcb18",
+      "resizeGeometrySamples": 7,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--desktop/settings-account-data.json",
+      "sha256": "c6a0bf5c9bcdb2a0bff6fe667a5d404d9f84d501dd929446dea86e94b7ab1dd1",
+      "resizeGeometrySamples": 7,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--firefox-stats/settings-account-data.json",
+      "sha256": "4f448f9688081cc129471d9168104e1722a01d73c7515294b5a6be1790261ec2",
+      "resizeGeometrySamples": 7,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--mobile/settings-account-data.json",
+      "sha256": "1f79d6a14a73f11eda461d48959f113cc5babc527769152c13c8cc22e899e099",
+      "resizeGeometrySamples": 7,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--webkit-stats/settings-account-data.json",
+      "sha256": "c6a0bf5c9bcdb2a0bff6fe667a5d404d9f84d501dd929446dea86e94b7ab1dd1",
+      "resizeGeometrySamples": 7,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--desktop/settings-account-data.json",
+      "sha256": "aa85bbae46a2006396f0bd4867ce4ac8391e897ed54a64e6c47cf97185aeda31",
+      "resizeGeometrySamples": 7,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--firefox-stats/settings-account-data.json",
+      "sha256": "978de27fcf73a7b9d13a4e1f6cc4377aa0395c79889aa2ff805d471da0bfc1a0",
+      "resizeGeometrySamples": 7,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--mobile/settings-account-data.json",
+      "sha256": "f82cbef81c5e75e5cb67ee790a2af3d8fbfeb8f212c87d776ca22d07895e24a7",
+      "resizeGeometrySamples": 7,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--webkit-stats/settings-account-data.json",
+      "sha256": "aa85bbae46a2006396f0bd4867ce4ac8391e897ed54a64e6c47cf97185aeda31",
+      "resizeGeometrySamples": 7,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--desktop/notification-workflow.json",
+      "sha256": "619baa9dedf9f2e0fe9f8f1e3870c4c0d87f101d8d6433296e364053b9ceebf3",
+      "resizeGeometrySamples": 8,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--firefox-stats/notification-workflow.json",
+      "sha256": "705e67ebf89ea63d756c60c98ee3b315e8049318726ca816ded2fec1f7f2fcdf",
+      "resizeGeometrySamples": 8,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--mobile/notification-workflow.json",
+      "sha256": "619baa9dedf9f2e0fe9f8f1e3870c4c0d87f101d8d6433296e364053b9ceebf3",
+      "resizeGeometrySamples": 8,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--webkit-stats/notification-workflow.json",
+      "sha256": "619baa9dedf9f2e0fe9f8f1e3870c4c0d87f101d8d6433296e364053b9ceebf3",
+      "resizeGeometrySamples": 8,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--desktop/notification-workflow.json",
+      "sha256": "fc12c3897c7576039d41f02757db6d5f06dd0ce3b891ec32b7b7b74927e49dcd",
+      "resizeGeometrySamples": 8,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--firefox-stats/notification-workflow.json",
+      "sha256": "ace5c619ae0e73031c0285d077bac30b9535f4d934263b765a68eacb33ccd4fd",
+      "resizeGeometrySamples": 8,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--mobile/notification-workflow.json",
+      "sha256": "fc12c3897c7576039d41f02757db6d5f06dd0ce3b891ec32b7b7b74927e49dcd",
+      "resizeGeometrySamples": 8,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--webkit-stats/notification-workflow.json",
+      "sha256": "fc12c3897c7576039d41f02757db6d5f06dd0ce3b891ec32b7b7b74927e49dcd",
+      "resizeGeometrySamples": 8,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-58be6-s-device-reduce-height-480--desktop/notification-workflow.json",
+      "sha256": "8beb55047260ff5e20637078723916d08185f499a8f0be0c1bc06e1c0e48ce47",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-58be6-s-device-reduce-height-480--firefox-stats/notification-workflow.json",
+      "sha256": "a05ab88c088d6d821706d1dfcba9457e79c8b785b39d1d8562489bc7e9e10615",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-58be6-s-device-reduce-height-480--mobile/notification-workflow.json",
+      "sha256": "8beb55047260ff5e20637078723916d08185f499a8f0be0c1bc06e1c0e48ce47",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-58be6-s-device-reduce-height-480--webkit-stats/notification-workflow.json",
+      "sha256": "8beb55047260ff5e20637078723916d08185f499a8f0be0c1bc06e1c0e48ce47",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--desktop/notification-workflow.json",
+      "sha256": "b90a98a0329dbd344f4119aef67edc6c8addb0860e880dea45eeaf3026f66efb",
+      "resizeGeometrySamples": 8,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--firefox-stats/notification-workflow.json",
+      "sha256": "9dc463e4a46b5c39995b35373f903d851e34424c14c9a078e710b2b824b6e9bc",
+      "resizeGeometrySamples": 8,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--mobile/notification-workflow.json",
+      "sha256": "b90a98a0329dbd344f4119aef67edc6c8addb0860e880dea45eeaf3026f66efb",
+      "resizeGeometrySamples": 8,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--webkit-stats/notification-workflow.json",
+      "sha256": "b90a98a0329dbd344f4119aef67edc6c8addb0860e880dea45eeaf3026f66efb",
+      "resizeGeometrySamples": 8,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--desktop/notification-workflow.json",
+      "sha256": "085866e4f81c9bedb0907a22775673c13a115d4f1daf4f83da975492867963f1",
+      "resizeGeometrySamples": 8,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--firefox-stats/notification-workflow.json",
+      "sha256": "c8eeab7170d99a4f833542901e38ff3a07b3114ca7dc07337857ec6912a6404b",
+      "resizeGeometrySamples": 8,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--mobile/notification-workflow.json",
+      "sha256": "085866e4f81c9bedb0907a22775673c13a115d4f1daf4f83da975492867963f1",
+      "resizeGeometrySamples": 8,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--webkit-stats/notification-workflow.json",
+      "sha256": "085866e4f81c9bedb0907a22775673c13a115d4f1daf4f83da975492867963f1",
+      "resizeGeometrySamples": 8,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-ca12f--device-reduce-height-1000--desktop/notification-workflow.json",
+      "sha256": "7f8a57a77fc31bbaf379fff6def882d2bc1ebf5a4d6b04adb998c0ab9f5e1183",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-ca12f--device-reduce-height-1000--firefox-stats/notification-workflow.json",
+      "sha256": "1379790298dadb327474a25b2214366c6b258645b774f5391e86d234f64a4e47",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-ca12f--device-reduce-height-1000--mobile/notification-workflow.json",
+      "sha256": "7f8a57a77fc31bbaf379fff6def882d2bc1ebf5a4d6b04adb998c0ab9f5e1183",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-ca12f--device-reduce-height-1000--webkit-stats/notification-workflow.json",
+      "sha256": "7f8a57a77fc31bbaf379fff6def882d2bc1ebf5a4d6b04adb998c0ab9f5e1183",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-d5de5--no-preference-height-1000--desktop/notification-workflow.json",
+      "sha256": "f6eb00ff65315d837689df013dde8b1cf4dcbac1b90d5aa7f8621ca4d78721e6",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-d5de5--no-preference-height-1000--firefox-stats/notification-workflow.json",
+      "sha256": "46219ec9ab53f68063580e48f96122508682c0dfedb03598d8279e20169e5280",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-d5de5--no-preference-height-1000--mobile/notification-workflow.json",
+      "sha256": "f6eb00ff65315d837689df013dde8b1cf4dcbac1b90d5aa7f8621ca4d78721e6",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-d5de5--no-preference-height-1000--webkit-stats/notification-workflow.json",
+      "sha256": "f6eb00ff65315d837689df013dde8b1cf4dcbac1b90d5aa7f8621ca4d78721e6",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-df1b4-e-no-preference-height-480--desktop/notification-workflow.json",
+      "sha256": "2344ef923a0c3a5bc7982002a24af3cd3f60a6365f838727f64c803589492133",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-df1b4-e-no-preference-height-480--firefox-stats/notification-workflow.json",
+      "sha256": "945fdba1673be90013e18db218bfad7489a393667088b65e02b072b2a7a89123",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-df1b4-e-no-preference-height-480--mobile/notification-workflow.json",
+      "sha256": "2344ef923a0c3a5bc7982002a24af3cd3f60a6365f838727f64c803589492133",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-df1b4-e-no-preference-height-480--webkit-stats/notification-workflow.json",
+      "sha256": "2344ef923a0c3a5bc7982002a24af3cd3f60a6365f838727f64c803589492133",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-desktop/startup-navigation.json",
+      "sha256": "8047f82bd25cde728a623d03013613524150ce15c1f33fedcf8949909ec6fa44",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-firefox-stats/startup-navigation.json",
+      "sha256": "8047f82bd25cde728a623d03013613524150ce15c1f33fedcf8949909ec6fa44",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-mobile/startup-navigation.json",
+      "sha256": "8047f82bd25cde728a623d03013613524150ce15c1f33fedcf8949909ec6fa44",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-webkit-stats/startup-navigation.json",
+      "sha256": "8047f82bd25cde728a623d03013613524150ce15c1f33fedcf8949909ec6fa44",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1db84-eadback-reduce-height-1000--desktop/update-workflow.json",
+      "sha256": "1d6e9040f94c850164289abd1c8fe07e1097fe748521e9425e77d4cf44b0b059",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1db84-eadback-reduce-height-1000--firefox-stats/update-workflow.json",
+      "sha256": "1fa139bbbabf57e7e0fa4ce8519371f9ce6342266ab3b4557031510a80504776",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1db84-eadback-reduce-height-1000--mobile/update-workflow.json",
+      "sha256": "1d6e9040f94c850164289abd1c8fe07e1097fe748521e9425e77d4cf44b0b059",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1db84-eadback-reduce-height-1000--webkit-stats/update-workflow.json",
+      "sha256": "1d6e9040f94c850164289abd1c8fe07e1097fe748521e9425e77d4cf44b0b059",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--desktop/update-popup-geometry.json",
+      "sha256": "017bf4b553bc4e6378b27ce784e912276654dcb3e9bf52e8571d85b147a7b681",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--firefox-stats/update-popup-geometry.json",
+      "sha256": "017bf4b553bc4e6378b27ce784e912276654dcb3e9bf52e8571d85b147a7b681",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--mobile/update-popup-geometry.json",
+      "sha256": "017bf4b553bc4e6378b27ce784e912276654dcb3e9bf52e8571d85b147a7b681",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--webkit-stats/update-popup-geometry.json",
+      "sha256": "017bf4b553bc4e6378b27ce784e912276654dcb3e9bf52e8571d85b147a7b681",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-377ad-tainment-reduce-height-480--desktop/update-draft.json",
+      "sha256": "b753e2fc254ffd0523ba9457cababf5943376aa2be63ae5b2e3bc6f5eca6246d",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-377ad-tainment-reduce-height-480--firefox-stats/update-draft.json",
+      "sha256": "b753e2fc254ffd0523ba9457cababf5943376aa2be63ae5b2e3bc6f5eca6246d",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-377ad-tainment-reduce-height-480--mobile/update-draft.json",
+      "sha256": "b753e2fc254ffd0523ba9457cababf5943376aa2be63ae5b2e3bc6f5eca6246d",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-377ad-tainment-reduce-height-480--webkit-stats/update-draft.json",
+      "sha256": "b753e2fc254ffd0523ba9457cababf5943376aa2be63ae5b2e3bc6f5eca6246d",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--desktop/update-popup-geometry.json",
+      "sha256": "91aca6e5e08a6f7cff475b9691787ed034fc766c7b456238abdbb135b9db7a57",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--firefox-stats/update-popup-geometry.json",
+      "sha256": "91aca6e5e08a6f7cff475b9691787ed034fc766c7b456238abdbb135b9db7a57",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--mobile/update-popup-geometry.json",
+      "sha256": "91aca6e5e08a6f7cff475b9691787ed034fc766c7b456238abdbb135b9db7a57",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--webkit-stats/update-popup-geometry.json",
+      "sha256": "91aca6e5e08a6f7cff475b9691787ed034fc766c7b456238abdbb135b9db7a57",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--desktop/update-popup-geometry.json",
+      "sha256": "d4d64d2e4ac09a2e084c5dd7a15402d60a51cd01b0ea8b0cb45a2434a030d2ce",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--firefox-stats/update-popup-geometry.json",
+      "sha256": "d4d64d2e4ac09a2e084c5dd7a15402d60a51cd01b0ea8b0cb45a2434a030d2ce",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--mobile/update-popup-geometry.json",
+      "sha256": "d4d64d2e4ac09a2e084c5dd7a15402d60a51cd01b0ea8b0cb45a2434a030d2ce",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--webkit-stats/update-popup-geometry.json",
+      "sha256": "d4d64d2e4ac09a2e084c5dd7a15402d60a51cd01b0ea8b0cb45a2434a030d2ce",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-6c47f-k-no-preference-height-480--desktop/update-workflow.json",
+      "sha256": "b819306946453631d8bcb63214c2b9f941ed73a7fad2023b26517062b326e6aa",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-6c47f-k-no-preference-height-480--firefox-stats/update-workflow.json",
+      "sha256": "02d404426dc97d4029e2e08734f18f8584eaed58151e304f6158613e210ea777",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-6c47f-k-no-preference-height-480--mobile/update-workflow.json",
+      "sha256": "b819306946453631d8bcb63214c2b9f941ed73a7fad2023b26517062b326e6aa",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-6c47f-k-no-preference-height-480--webkit-stats/update-workflow.json",
+      "sha256": "b819306946453631d8bcb63214c2b9f941ed73a7fad2023b26517062b326e6aa",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-712b9-ainment-reduce-height-1000--desktop/update-draft.json",
+      "sha256": "aa8da72454f13eac39ef9f6368643bdf05524dbe11417c0786add75a83da7ad7",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-712b9-ainment-reduce-height-1000--firefox-stats/update-draft.json",
+      "sha256": "aa8da72454f13eac39ef9f6368643bdf05524dbe11417c0786add75a83da7ad7",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-712b9-ainment-reduce-height-1000--mobile/update-draft.json",
+      "sha256": "aa8da72454f13eac39ef9f6368643bdf05524dbe11417c0786add75a83da7ad7",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-712b9-ainment-reduce-height-1000--webkit-stats/update-draft.json",
+      "sha256": "aa8da72454f13eac39ef9f6368643bdf05524dbe11417c0786add75a83da7ad7",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--desktop/update-popup-geometry.json",
+      "sha256": "1695a9d75cbc29fe5dd0ddd9177f50bc82777e904b9d5d52968a84594706b7cd",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--firefox-stats/update-popup-geometry.json",
+      "sha256": "1695a9d75cbc29fe5dd0ddd9177f50bc82777e904b9d5d52968a84594706b7cd",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--mobile/update-popup-geometry.json",
+      "sha256": "1695a9d75cbc29fe5dd0ddd9177f50bc82777e904b9d5d52968a84594706b7cd",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--webkit-stats/update-popup-geometry.json",
+      "sha256": "1695a9d75cbc29fe5dd0ddd9177f50bc82777e904b9d5d52968a84594706b7cd",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--desktop/update-card-geometry.json",
+      "sha256": "26ccc56a8722f61487fb72d763f18d326569dcb45a37195267934516fb6456f3",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--firefox-stats/update-card-geometry.json",
+      "sha256": "302238d333d2e7f9889590172db1be43d689fa8f43f0bd371f34e79153abc73f",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--mobile/update-card-geometry.json",
+      "sha256": "26ccc56a8722f61487fb72d763f18d326569dcb45a37195267934516fb6456f3",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--webkit-stats/update-card-geometry.json",
+      "sha256": "49164487b5b7432c850ec347fbb75bcccd6694e4078eb8cda7c4e2a4693bb4f0",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7ebd2-readback-reduce-height-480--desktop/update-workflow.json",
+      "sha256": "61e6eb1be546c3a40c0fa9bdf1264b216ab8b1396549aaabd2275d701ffe1ad1",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7ebd2-readback-reduce-height-480--firefox-stats/update-workflow.json",
+      "sha256": "be2af83c0f23d7b279d34f4b641028e475dc14ba8b9d38ace5ec47a4a6430815",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7ebd2-readback-reduce-height-480--mobile/update-workflow.json",
+      "sha256": "61e6eb1be546c3a40c0fa9bdf1264b216ab8b1396549aaabd2275d701ffe1ad1",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7ebd2-readback-reduce-height-480--webkit-stats/update-workflow.json",
+      "sha256": "61e6eb1be546c3a40c0fa9bdf1264b216ab8b1396549aaabd2275d701ffe1ad1",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-8f641-t-no-preference-height-480--desktop/update-draft.json",
+      "sha256": "87486e352126f6733038920a5be29c766a9c838a579fa1c938e2a1ebf43ed013",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-8f641-t-no-preference-height-480--firefox-stats/update-draft.json",
+      "sha256": "87486e352126f6733038920a5be29c766a9c838a579fa1c938e2a1ebf43ed013",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-8f641-t-no-preference-height-480--mobile/update-draft.json",
+      "sha256": "87486e352126f6733038920a5be29c766a9c838a579fa1c938e2a1ebf43ed013",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-8f641-t-no-preference-height-480--webkit-stats/update-draft.json",
+      "sha256": "87486e352126f6733038920a5be29c766a9c838a579fa1c938e2a1ebf43ed013",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-desktop/update-retry-scroll.json",
+      "sha256": "371425669f24079a6cd7e1e3d44ce1f5266acf0dca86d5054ebea1e66795edfc",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-firefox-stats/update-retry-scroll.json",
+      "sha256": "371425669f24079a6cd7e1e3d44ce1f5266acf0dca86d5054ebea1e66795edfc",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-mobile/update-retry-scroll.json",
+      "sha256": "371425669f24079a6cd7e1e3d44ce1f5266acf0dca86d5054ebea1e66795edfc",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-webkit-stats/update-retry-scroll.json",
+      "sha256": "371425669f24079a6cd7e1e3d44ce1f5266acf0dca86d5054ebea1e66795edfc",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--desktop/update-card-geometry.json",
+      "sha256": "8aee6065c66b2afa4f102c4edecc455a735bedf974e71a8bf637aeab25ba559d",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--firefox-stats/update-card-geometry.json",
+      "sha256": "80009f52524f3274b9eebe494dd04c94a68aee14819a805671912aa3af5bea10",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--mobile/update-card-geometry.json",
+      "sha256": "8aee6065c66b2afa4f102c4edecc455a735bedf974e71a8bf637aeab25ba559d",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--webkit-stats/update-card-geometry.json",
+      "sha256": "a2db8bb3b448c1b830d1f890b1ce2fcb2a0d8c570c07bfe345782c26a141e5e9",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-be5c6--no-preference-height-1000--desktop/update-workflow.json",
+      "sha256": "3b174f5c0728cc7a398a738dd78831b28f06a6f5bf95cd9bf12634ae1a394d87",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-be5c6--no-preference-height-1000--firefox-stats/update-workflow.json",
+      "sha256": "e9a3f616071c487b840109f84055b79957cde53d1b911a8d0fb9207f5c5ee97b",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-be5c6--no-preference-height-1000--mobile/update-workflow.json",
+      "sha256": "3b174f5c0728cc7a398a738dd78831b28f06a6f5bf95cd9bf12634ae1a394d87",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-be5c6--no-preference-height-1000--webkit-stats/update-workflow.json",
+      "sha256": "3b174f5c0728cc7a398a738dd78831b28f06a6f5bf95cd9bf12634ae1a394d87",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--desktop/update-card-geometry.json",
+      "sha256": "ffee174c66dfc6300f64d13e0c69a74daec409e11999a6a5a05f9596c1cc1fe8",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--firefox-stats/update-card-geometry.json",
+      "sha256": "6076959ee2f67c2ddafad6e9f3afd16bf8426324138529bd4fade60516022fc2",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--mobile/update-card-geometry.json",
+      "sha256": "ffee174c66dfc6300f64d13e0c69a74daec409e11999a6a5a05f9596c1cc1fe8",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--webkit-stats/update-card-geometry.json",
+      "sha256": "c1bc54b1bc9c59ab15363e78547a3883047925aa491865c4941a86f9baa27268",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-dc69f-licy-lock-and-empty-account-desktop/update-recovery.json",
+      "sha256": "6b1155d53fb4bd6293ad8f2d33ce80e909593f127f6d2ef946f4429eaa638be0",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-dc69f-licy-lock-and-empty-account-firefox-stats/update-recovery.json",
+      "sha256": "64eabaacf2da86fc7a50340153e6d1aa0dd28bf70b3e6bdc55b327fec341c295",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-dc69f-licy-lock-and-empty-account-mobile/update-recovery.json",
+      "sha256": "6b1155d53fb4bd6293ad8f2d33ce80e909593f127f6d2ef946f4429eaa638be0",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-dc69f-licy-lock-and-empty-account-webkit-stats/update-recovery.json",
+      "sha256": "6b1155d53fb4bd6293ad8f2d33ce80e909593f127f6d2ef946f4429eaa638be0",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e1f29--no-preference-height-1000--desktop/update-draft.json",
+      "sha256": "bb9b15c9935ece7f9464656a3b4e4e608cc713a0ede9d65d8d3d085e4769bc51",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e1f29--no-preference-height-1000--firefox-stats/update-draft.json",
+      "sha256": "bb9b15c9935ece7f9464656a3b4e4e608cc713a0ede9d65d8d3d085e4769bc51",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e1f29--no-preference-height-1000--mobile/update-draft.json",
+      "sha256": "bb9b15c9935ece7f9464656a3b4e4e608cc713a0ede9d65d8d3d085e4769bc51",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e1f29--no-preference-height-1000--webkit-stats/update-draft.json",
+      "sha256": "bb9b15c9935ece7f9464656a3b4e4e608cc713a0ede9d65d8d3d085e4769bc51",
+      "resizeGeometrySamples": 0,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--desktop/update-card-geometry.json",
+      "sha256": "60f986fd9f8371bd70bdb1aa5f079ce2813f2230f2606c11225137d020a5e21f",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--firefox-stats/update-card-geometry.json",
+      "sha256": "c08d76cd9e3422d8eec2984247264693ea6976a7b57f4530f0b733d61dcfec9d",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--mobile/update-card-geometry.json",
+      "sha256": "60f986fd9f8371bd70bdb1aa5f079ce2813f2230f2606c11225137d020a5e21f",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--webkit-stats/update-card-geometry.json",
+      "sha256": "b8f735c44ed84103b0834cba75f71f9268469a34369c3700dbd1fa7f09a3b349",
+      "resizeGeometrySamples": 9,
+      "errors": {
+        "errors": [],
+        "runtimeErrors": [],
+        "transitionErrors": [],
+        "unexpected": [],
+        "destructiveRequests": []
+      }
+    }
+  ],
+  "artifacts": {
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/.last-run.json": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--desktop/settings-account-data.json": "d9a11f7a656430b330bac59aac33a4553f27f48d73a4528bd3a235ebaea1854e",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--desktop/settings-account.png": "4ad4f1563de8fe028521e739c1ab84c0105b734a02b8d7eb1123b7a6f5fa806b",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--desktop/settings-data.png": "c25e0c7dfafc952e09cf2e4d0c8952256442a3992f5f49a135e00302154567cf",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--firefox-stats/settings-account-data.json": "33ad7ed3365417b6bf269d25046487c2ee753ed48dfe1fe8cb855a7b0bf866d2",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--firefox-stats/settings-account.png": "b44d7072bd13a785948ea605687e656ab74da64d63c4a6665285ddacfb5328de",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--firefox-stats/settings-data.png": "cc0ff7590928671543dae4135bdbe21b6245cbbd53c9bdc33b485523aedb7d4f",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--mobile/settings-account-data.json": "d9a11f7a656430b330bac59aac33a4553f27f48d73a4528bd3a235ebaea1854e",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--mobile/settings-account.png": "647ff63feb8bba70a0b88083ba381b40283931a49e282cb6a6d23c6fbdaf96d5",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--mobile/settings-data.png": "ebbca3e3e51209cbf2e7eac59753ac4e13fe39d80eeecdc7dced1bf12450bd42",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--webkit-stats/settings-account-data.json": "d9a11f7a656430b330bac59aac33a4553f27f48d73a4528bd3a235ebaea1854e",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--webkit-stats/settings-account.png": "de9fcff318b4659746c4351a66319467963e7f3e50d3780541efbe2178c339e6",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-03a52-esizing-reduce-height-1000--webkit-stats/settings-data.png": "a86e273e8577eec5c8ad0f80a8c3539ffc96225b3e03247d0f253f249fef3de7",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--desktop/settings-account-data.json": "44939c75ea9c3ebaeaeb30ab0095d962033d86eaa8ae98324c3c07e5c0efcb18",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--desktop/settings-account.png": "21ea733dfc8058ab05eb1109f6ad3a40ba6731ade828b0fe3c1d630911be7117",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--desktop/settings-data.png": "e949ea1d691a51f2a6df424d60e9a12ba779db9f4592dccb798770c612cce4f7",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--firefox-stats/settings-account-data.json": "06ff144af0985a879c33731cf2db432dcfed5abd945bd1823833ad670672612c",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--firefox-stats/settings-account.png": "bee5b7b6b032fb2044d4ab27224572de8da5d42d76ac768058bb0c67d658b76f",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--firefox-stats/settings-data.png": "4f1dd41a36b981f04c481b85686b68e8da0599117d84335e5a10fdee6301a767",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--mobile/settings-account-data.json": "44939c75ea9c3ebaeaeb30ab0095d962033d86eaa8ae98324c3c07e5c0efcb18",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--mobile/settings-account.png": "173ac0ed5b7eb31b97bc5a9ed13bdcf8d4d6b908002fa3ee1127a7d2e1f5b665",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--mobile/settings-data.png": "cffb42502ef3daffd460b871165e74dc0c8fd69778184fe9b94b759121abeda4",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--webkit-stats/settings-account-data.json": "44939c75ea9c3ebaeaeb30ab0095d962033d86eaa8ae98324c3c07e5c0efcb18",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--webkit-stats/settings-account.png": "73d77e314b3a2a82aa3b50b74fc52c79e66f787227e640bb6dbcab3f8094d094",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-44b1b--no-preference-height-1000--webkit-stats/settings-data.png": "499e4e02a1aecfa41d186f702bc96c8296972f60d8706256e084d86f498e0f2f",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--desktop/settings-account-data.json": "c6a0bf5c9bcdb2a0bff6fe667a5d404d9f84d501dd929446dea86e94b7ab1dd1",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--desktop/settings-account.png": "4ad4f1563de8fe028521e739c1ab84c0105b734a02b8d7eb1123b7a6f5fa806b",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--desktop/settings-data.png": "c25e0c7dfafc952e09cf2e4d0c8952256442a3992f5f49a135e00302154567cf",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--firefox-stats/settings-account-data.json": "4f448f9688081cc129471d9168104e1722a01d73c7515294b5a6be1790261ec2",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--firefox-stats/settings-account.png": "b44d7072bd13a785948ea605687e656ab74da64d63c4a6665285ddacfb5328de",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--firefox-stats/settings-data.png": "cc0ff7590928671543dae4135bdbe21b6245cbbd53c9bdc33b485523aedb7d4f",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--mobile/settings-account-data.json": "1f79d6a14a73f11eda461d48959f113cc5babc527769152c13c8cc22e899e099",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--mobile/settings-account.png": "647ff63feb8bba70a0b88083ba381b40283931a49e282cb6a6d23c6fbdaf96d5",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--mobile/settings-data.png": "ebbca3e3e51209cbf2e7eac59753ac4e13fe39d80eeecdc7dced1bf12450bd42",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--webkit-stats/settings-account-data.json": "c6a0bf5c9bcdb2a0bff6fe667a5d404d9f84d501dd929446dea86e94b7ab1dd1",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--webkit-stats/settings-account.png": "de9fcff318b4659746c4351a66319467963e7f3e50d3780541efbe2178c339e6",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-906d5-resizing-reduce-height-480--webkit-stats/settings-data.png": "a86e273e8577eec5c8ad0f80a8c3539ffc96225b3e03247d0f253f249fef3de7",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--desktop/settings-account-data.json": "aa85bbae46a2006396f0bd4867ce4ac8391e897ed54a64e6c47cf97185aeda31",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--desktop/settings-account.png": "6dcb2d387dd55b2badd1b7387307e0f7969eb1b941ae8e2cf22c805bad5c05e7",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--desktop/settings-data.png": "4a909737e2c64ddff1b31352c011182b4e94464d265fc3e1a6ce17ece7742443",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--firefox-stats/settings-account-data.json": "978de27fcf73a7b9d13a4e1f6cc4377aa0395c79889aa2ff805d471da0bfc1a0",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--firefox-stats/settings-account.png": "076f1dbb687a9a43a95bb615b204be332d4f6b12679ec1840d088de6adea4ead",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--firefox-stats/settings-data.png": "9a1dcee1169ad2e73e12d72bc4612b1a4265671156ead59594f9e92d472f4c11",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--mobile/settings-account-data.json": "f82cbef81c5e75e5cb67ee790a2af3d8fbfeb8f212c87d776ca22d07895e24a7",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--mobile/settings-account.png": "8e842f5a19d47623534160247391f3ef6dd97cd25890e15fb87c001934c751ff",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--mobile/settings-data.png": "6866a8024d8f22d0dc9f188e14399da827bef795de9f9d496811a7a3b63c9d09",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--webkit-stats/settings-account-data.json": "aa85bbae46a2006396f0bd4867ce4ac8391e897ed54a64e6c47cf97185aeda31",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--webkit-stats/settings-account.png": "cc75304e0dbf220a945f21b02e4c532e544661d6dcc918277362a398cfce8e9a",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-account-f9a6b-g-no-preference-height-480--webkit-stats/settings-data.png": "6a0b0f9336d9bda5419f36e802b45055d601ac74ec0ae9f02e4c29284183290b",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--desktop/install-page.png": "437c8cdf14a802cd1ec944547f2c0dded40e7e8b270b03aba25bfa26a3a47669",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--desktop/install.png": "9eb41c03030f1e19064b03bb1a31879ffbb3e19b203dfe36201609c4dceae276",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--desktop/notification-workflow.json": "619baa9dedf9f2e0fe9f8f1e3870c4c0d87f101d8d6433296e364053b9ceebf3",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--desktop/notifications-page.png": "b52546ed4c8a91f9c3dfb2f63b7acbfe0f52b402f973c653b3416672d2ab6d3a",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--desktop/notifications.png": "ff6c88bf4bf4b03dfff75a3a9779315bd159a73232cba766bfd1048edb9ae8e5",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--firefox-stats/install-page.png": "2bdc12f505b8779413ab207869eb04acb52da0223c2b45e0dcaaf138d8c881f0",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--firefox-stats/install.png": "00bd2b21a292e37bba9b18081ea2ecfbfd5f7c515fdc65087b7587f615f3625c",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--firefox-stats/notification-workflow.json": "705e67ebf89ea63d756c60c98ee3b315e8049318726ca816ded2fec1f7f2fcdf",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--firefox-stats/notifications-page.png": "f04e248b3de1f7bcf48af94158daac46c3a72c933f828a21389028d99d935029",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--firefox-stats/notifications.png": "b06d460a63bf458066403f6ab4a8486f6eba5a63caaa2437a8c262ae4858f780",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--mobile/install-page.png": "937c1c874469b7d64cf22d6144b91920a257925202a53f352d0228e3cfa216b3",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--mobile/install.png": "4ed0591c381b1923d7446a83242ae9d5661d62d55f4aa68dad52fe1e1bbb6322",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--mobile/notification-workflow.json": "619baa9dedf9f2e0fe9f8f1e3870c4c0d87f101d8d6433296e364053b9ceebf3",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--mobile/notifications-page.png": "cb945853df8394e47975c934d3c74a41eff2f69da0ad230e0514cdbdc9c6b587",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--mobile/notifications.png": "580e325b2c37a4c5663dfa742d59d218ceec373a1933ef706f84a13979189aed",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--webkit-stats/install-page.png": "a9f3a55a83be0ff46eed5c4ae1ce1f7e7828db292f2698681ba39029d39b61ac",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--webkit-stats/install.png": "3e89a8aa5c9576b17d680137024b78e84d5697acc1ea25fe1073402dc4d179ab",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--webkit-stats/notification-workflow.json": "619baa9dedf9f2e0fe9f8f1e3870c4c0d87f101d8d6433296e364053b9ceebf3",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--webkit-stats/notifications-page.png": "6bd3efeb94597d52f55c4735b014693c5cd9a69398c1d002887193df5e1bf76c",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-00495-e-no-preference-height-480--webkit-stats/notifications.png": "717998c7ccfd78e7806daa04af6b19c5a77f7d082363f37a82bebbb0d3d477a9",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--desktop/install-page.png": "ca98b63a36454d1c3e69d6221396ceb96feab2228f00dcefffebe859d64d5e59",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--desktop/install.png": "0f8d5ab71191be1705401a0e6919e340c1940f1d8c1d10f7e00d884decb34138",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--desktop/notification-workflow.json": "fc12c3897c7576039d41f02757db6d5f06dd0ce3b891ec32b7b7b74927e49dcd",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--desktop/notifications-page.png": "26c22cd7f5c582edf02381aa495a3c62deea6bc2f14ac0253ca5e4b6200f1743",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--desktop/notifications.png": "d3154eabb2a3c3b988d3c0bf51dfaeb94f5642ba61470eb45edb50c9aa049eba",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--firefox-stats/install-page.png": "290d098f2972eb62101cb15bd0e57152544d8419dba1995953f6b2a1ada3600a",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--firefox-stats/install.png": "248106db72e8492552249ae58a2875c5704a7966bbff044a2631b65b568cc532",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--firefox-stats/notification-workflow.json": "ace5c619ae0e73031c0285d077bac30b9535f4d934263b765a68eacb33ccd4fd",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--firefox-stats/notifications-page.png": "f66500b0874c55b707145b33372cf5622c7bba164c9127f4cca4b768fc43ade9",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--firefox-stats/notifications.png": "c7aa3f9683bbe027db7779db11b8680c2ab3051f40efe1f7bf2f2ed986a16d54",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--mobile/install-page.png": "30545a10ae482d6182b3e49a9b861f92e4fbac55888b72ebca8da668040d169d",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--mobile/install.png": "6da813ea5806433e8713d9ae53143339a41e6d35c583fcc9a5dcd34a295f2b4b",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--mobile/notification-workflow.json": "fc12c3897c7576039d41f02757db6d5f06dd0ce3b891ec32b7b7b74927e49dcd",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--mobile/notifications-page.png": "0dfa4d66aa3a2192487e4951f03f243b17962296df3cb0dfe45ffbc31571e1b1",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--mobile/notifications.png": "91ada6298bb3610ffdbc71f57a98f9e13d536aeaf3f9bafed6a609b7d5eeb160",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--webkit-stats/install-page.png": "439b90e7f9ea336ce9dbd9f0a2f44e7deff8d5c89eb3b8b8b7aae2a38b8e02f3",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--webkit-stats/install.png": "8f4a0c90d6ef47484b23444525c256f5c0c1eab2eb0bbd16164ef02ed2c51db6",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--webkit-stats/notification-workflow.json": "fc12c3897c7576039d41f02757db6d5f06dd0ce3b891ec32b7b7b74927e49dcd",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--webkit-stats/notifications-page.png": "6f1efad3316e73f0f8aa76218e2a93eee062781a1eb32afd4daf097364ae421f",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-55fe0-s-device-reduce-height-480--webkit-stats/notifications.png": "a91b3df54b19c172c60a1aa29998445de5d42ff8718958594a2376467c624df9",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-58be6-s-device-reduce-height-480--desktop/notification-workflow.json": "8beb55047260ff5e20637078723916d08185f499a8f0be0c1bc06e1c0e48ce47",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-58be6-s-device-reduce-height-480--firefox-stats/notification-workflow.json": "a05ab88c088d6d821706d1dfcba9457e79c8b785b39d1d8562489bc7e9e10615",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-58be6-s-device-reduce-height-480--mobile/notification-workflow.json": "8beb55047260ff5e20637078723916d08185f499a8f0be0c1bc06e1c0e48ce47",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-58be6-s-device-reduce-height-480--webkit-stats/notification-workflow.json": "8beb55047260ff5e20637078723916d08185f499a8f0be0c1bc06e1c0e48ce47",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--desktop/install-page.png": "94c2e7f52b0579e22906ce800af773b4e717fa867ff138dad79e9f970f77297f",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--desktop/install.png": "df23831a5aaf78ca1678b8bf1832aca1908695ef4d1defbf13cfc656171c6f33",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--desktop/notification-workflow.json": "b90a98a0329dbd344f4119aef67edc6c8addb0860e880dea45eeaf3026f66efb",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--desktop/notifications-page.png": "ed4465ea36186232fc7e5044e4d18a6e591c6522436f789abd75e4f135ba3173",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--desktop/notifications.png": "7e9eb691a8dbd85a52df49a11cdcdead4f4b0a45162255eeafe6db2815a4cb54",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--firefox-stats/install-page.png": "63a162210f115df452a6a66f92bd61bd5ec63dbeed2984b943f3dd77226d25ee",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--firefox-stats/install.png": "664bd6ea73a6769fb0ddfdf5149d779de4d9fbc96f2204761ecd7ce666fa8d99",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--firefox-stats/notification-workflow.json": "9dc463e4a46b5c39995b35373f903d851e34424c14c9a078e710b2b824b6e9bc",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--firefox-stats/notifications-page.png": "1d024e67ccb96c75e3dde0273e18a42037abfcbb07c4157ebeb6e7b6032e52e3",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--firefox-stats/notifications.png": "d960afc008ed01a5552dfb12e0c3aba434bb0b1e8c15f556da5c107663c5607f",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--mobile/install-page.png": "ef5b01bfa039fed43ce4537ee11f947ae74cbd92f9e964dad3fc4ede9916583f",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--mobile/install.png": "170d6730bd5b7cc210e989f5f56820a5deca6cb6e978df7cc5a6f35d13c57ea0",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--mobile/notification-workflow.json": "b90a98a0329dbd344f4119aef67edc6c8addb0860e880dea45eeaf3026f66efb",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--mobile/notifications-page.png": "6f8dd8699f45fa814b4eff9e4d64e12bf53b487274dc287e48da20b3c89a15b4",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--mobile/notifications.png": "9897df631d4902bf49b7e6817dcfed87af03cf1cfd5db46c13104c5ec33bc2e4",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--webkit-stats/install-page.png": "8b839415b8953a7d1633ab8feab4a4a1b43970b3b3984356ae90fa55f54fafb0",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--webkit-stats/install.png": "adeec078bf6fa7377969ef499212382f2b209c905e45e83eadd7e4485676fe47",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--webkit-stats/notification-workflow.json": "b90a98a0329dbd344f4119aef67edc6c8addb0860e880dea45eeaf3026f66efb",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--webkit-stats/notifications-page.png": "5d0d7352548858d9f78d4ab3fe84712181168e28eef700f31e63e3e06117939f",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-5a638--no-preference-height-1000--webkit-stats/notifications.png": "b8d4224ad1de9f4db840d901031ae0271f700517f06c85d825a0771112045cf3",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--desktop/install-page.png": "ca98b63a36454d1c3e69d6221396ceb96feab2228f00dcefffebe859d64d5e59",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--desktop/install.png": "0f8d5ab71191be1705401a0e6919e340c1940f1d8c1d10f7e00d884decb34138",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--desktop/notification-workflow.json": "085866e4f81c9bedb0907a22775673c13a115d4f1daf4f83da975492867963f1",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--desktop/notifications-page.png": "ff73111cb4aeb2179a8474e0199076f063d9b5b9604f71929423201aff137f36",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--desktop/notifications.png": "e87ba2d35b0a5f162ca7f6333d57a224f84e079189db63dad8c4740e97ebacb9",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--firefox-stats/install-page.png": "290d098f2972eb62101cb15bd0e57152544d8419dba1995953f6b2a1ada3600a",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--firefox-stats/install.png": "248106db72e8492552249ae58a2875c5704a7966bbff044a2631b65b568cc532",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--firefox-stats/notification-workflow.json": "c8eeab7170d99a4f833542901e38ff3a07b3114ca7dc07337857ec6912a6404b",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--firefox-stats/notifications-page.png": "7cb69a524313b05e07bd64a6983ce7e7433106cf040612c21c79a7d4b37dbd40",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--firefox-stats/notifications.png": "686307e18deadc23d9345318f0697db392f5f190819f4509b313ca2e97a34bcb",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--mobile/install-page.png": "30545a10ae482d6182b3e49a9b861f92e4fbac55888b72ebca8da668040d169d",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--mobile/install.png": "6da813ea5806433e8713d9ae53143339a41e6d35c583fcc9a5dcd34a295f2b4b",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--mobile/notification-workflow.json": "085866e4f81c9bedb0907a22775673c13a115d4f1daf4f83da975492867963f1",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--mobile/notifications-page.png": "48b6abfa3bd8dfc2cb8e91b81a15079605bc2736fd2ee33c126e8f65db026cf9",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--mobile/notifications.png": "08e9a9b2f5a7e8c42f140b18a20a57da71470cfa44dda490403e3a61857d14dd",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--webkit-stats/install-page.png": "439b90e7f9ea336ce9dbd9f0a2f44e7deff8d5c89eb3b8b8b7aae2a38b8e02f3",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--webkit-stats/install.png": "8f4a0c90d6ef47484b23444525c256f5c0c1eab2eb0bbd16164ef02ed2c51db6",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--webkit-stats/notification-workflow.json": "085866e4f81c9bedb0907a22775673c13a115d4f1daf4f83da975492867963f1",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--webkit-stats/notifications-page.png": "f15e9f6bbe8ad31349771aea0f4319c5f83441b210eda9dc7e525b73f477b5de",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-91516--device-reduce-height-1000--webkit-stats/notifications.png": "9496997d881590264933a4940de91c7720c100647e211a63aa2d51100b1b303a",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-ca12f--device-reduce-height-1000--desktop/notification-workflow.json": "7f8a57a77fc31bbaf379fff6def882d2bc1ebf5a4d6b04adb998c0ab9f5e1183",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-ca12f--device-reduce-height-1000--firefox-stats/notification-workflow.json": "1379790298dadb327474a25b2214366c6b258645b774f5391e86d234f64a4e47",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-ca12f--device-reduce-height-1000--mobile/notification-workflow.json": "7f8a57a77fc31bbaf379fff6def882d2bc1ebf5a4d6b04adb998c0ab9f5e1183",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-ca12f--device-reduce-height-1000--webkit-stats/notification-workflow.json": "7f8a57a77fc31bbaf379fff6def882d2bc1ebf5a4d6b04adb998c0ab9f5e1183",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-d5de5--no-preference-height-1000--desktop/notification-workflow.json": "f6eb00ff65315d837689df013dde8b1cf4dcbac1b90d5aa7f8621ca4d78721e6",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-d5de5--no-preference-height-1000--firefox-stats/notification-workflow.json": "46219ec9ab53f68063580e48f96122508682c0dfedb03598d8279e20169e5280",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-d5de5--no-preference-height-1000--mobile/notification-workflow.json": "f6eb00ff65315d837689df013dde8b1cf4dcbac1b90d5aa7f8621ca4d78721e6",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-d5de5--no-preference-height-1000--webkit-stats/notification-workflow.json": "f6eb00ff65315d837689df013dde8b1cf4dcbac1b90d5aa7f8621ca4d78721e6",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-df1b4-e-no-preference-height-480--desktop/notification-workflow.json": "2344ef923a0c3a5bc7982002a24af3cd3f60a6365f838727f64c803589492133",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-df1b4-e-no-preference-height-480--firefox-stats/notification-workflow.json": "945fdba1673be90013e18db218bfad7489a393667088b65e02b072b2a7a89123",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-df1b4-e-no-preference-height-480--mobile/notification-workflow.json": "2344ef923a0c3a5bc7982002a24af3cd3f60a6365f838727f64c803589492133",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-notific-df1b4-e-no-preference-height-480--webkit-stats/notification-workflow.json": "2344ef923a0c3a5bc7982002a24af3cd3f60a6365f838727f64c803589492133",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-desktop/startup-navigation.json": "8047f82bd25cde728a623d03013613524150ce15c1f33fedcf8949909ec6fa44",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-firefox-stats/startup-navigation.json": "8047f82bd25cde728a623d03013613524150ce15c1f33fedcf8949909ec6fa44",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-mobile/startup-navigation.json": "8047f82bd25cde728a623d03013613524150ce15c1f33fedcf8949909ec6fa44",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-startup-e0fb6--retains-native-transitions-webkit-stats/startup-navigation.json": "8047f82bd25cde728a623d03013613524150ce15c1f33fedcf8949909ec6fa44",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1db84-eadback-reduce-height-1000--desktop/update-workflow.json": "1d6e9040f94c850164289abd1c8fe07e1097fe748521e9425e77d4cf44b0b059",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1db84-eadback-reduce-height-1000--firefox-stats/update-workflow.json": "1fa139bbbabf57e7e0fa4ce8519371f9ce6342266ab3b4557031510a80504776",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1db84-eadback-reduce-height-1000--mobile/update-workflow.json": "1d6e9040f94c850164289abd1c8fe07e1097fe748521e9425e77d4cf44b0b059",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1db84-eadback-reduce-height-1000--webkit-stats/update-workflow.json": "1d6e9040f94c850164289abd1c8fe07e1097fe748521e9425e77d4cf44b0b059",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--desktop/update-popup-geometry.json": "017bf4b553bc4e6378b27ce784e912276654dcb3e9bf52e8571d85b147a7b681",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--desktop/updates-every.png": "f14ee39aa39c39e3ce921d045f77feb80e59546d08b0e83fcc78519758096174",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--desktop/updates-unit.png": "278d6105c4b8194796bd6423b45d7de4613360d117778466b123d1e1d58b224e",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--firefox-stats/update-popup-geometry.json": "017bf4b553bc4e6378b27ce784e912276654dcb3e9bf52e8571d85b147a7b681",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--firefox-stats/updates-every.png": "0ef472a9057dc06fcef6c518a1fc7c0bd45f8c81b90c39ad44949d1e43c6e94d",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--firefox-stats/updates-unit.png": "472bfb95292df4d73a1db186f6c709412aef2ed8c657c45412e5c1b300a4da5c",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--mobile/update-popup-geometry.json": "017bf4b553bc4e6378b27ce784e912276654dcb3e9bf52e8571d85b147a7b681",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--mobile/updates-every.png": "9931da0dc2ac8ffafd16a5330192d5f454d104b14de929bf834f3b26d2a7fa53",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--mobile/updates-unit.png": "992add00ef8c8008476de385cdb13f0a46333e38a5be1571bfe98cebf2a1eabf",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--webkit-stats/update-popup-geometry.json": "017bf4b553bc4e6378b27ce784e912276654dcb3e9bf52e8571d85b147a7b681",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--webkit-stats/updates-every.png": "b83e8f7edd308e43ca3746786bded849c922a978bc7ba1e93f1ba7c67fc3fa11",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-1ece6-t-no-preference-height-480--webkit-stats/updates-unit.png": "47de7a04ca47412cb4b7b48438f70a878b4e6681ac3303f3ecc10a90a9a12044",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-377ad-tainment-reduce-height-480--desktop/update-draft.json": "b753e2fc254ffd0523ba9457cababf5943376aa2be63ae5b2e3bc6f5eca6246d",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-377ad-tainment-reduce-height-480--firefox-stats/update-draft.json": "b753e2fc254ffd0523ba9457cababf5943376aa2be63ae5b2e3bc6f5eca6246d",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-377ad-tainment-reduce-height-480--mobile/update-draft.json": "b753e2fc254ffd0523ba9457cababf5943376aa2be63ae5b2e3bc6f5eca6246d",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-377ad-tainment-reduce-height-480--webkit-stats/update-draft.json": "b753e2fc254ffd0523ba9457cababf5943376aa2be63ae5b2e3bc6f5eca6246d",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--desktop/update-popup-geometry.json": "91aca6e5e08a6f7cff475b9691787ed034fc766c7b456238abdbb135b9db7a57",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--desktop/updates-every.png": "61965ef53ac6016fd1f75e5d06e3c445fa6e319fb4c8d522807b236d82c15e8a",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--desktop/updates-unit.png": "a0054c981a8d2639fe4d65676fdea2f8ddb55e93e0b92bc7bde03c663219e618",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--firefox-stats/update-popup-geometry.json": "91aca6e5e08a6f7cff475b9691787ed034fc766c7b456238abdbb135b9db7a57",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--firefox-stats/updates-every.png": "9248dbce06d139a17d6597c71d8b77a45da51693b7a4b6247b2d7c0f1e953b9d",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--firefox-stats/updates-unit.png": "ecfebde29703f99173001bb007c19ea065c4b31b3201ee5860ebe51f075b8b1c",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--mobile/update-popup-geometry.json": "91aca6e5e08a6f7cff475b9691787ed034fc766c7b456238abdbb135b9db7a57",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--mobile/updates-every.png": "5f4449e4169bf0bb4528dc44eeddf4bcf78268eeaeaea0b7b9d332aa838fef37",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--mobile/updates-unit.png": "dd806bfad57171073ba25f4bc70404b3d94939ad5c737a8d11df140281b62b80",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--webkit-stats/update-popup-geometry.json": "91aca6e5e08a6f7cff475b9691787ed034fc766c7b456238abdbb135b9db7a57",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--webkit-stats/updates-every.png": "d3dd88cc56479833dca76eddf5cafc2ced3cf22d39714e346693ae619e88ea84",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-46045-cel-last-reduce-height-480--webkit-stats/updates-unit.png": "55179655af800cf463845d20c4848e44d88ecdb52d7d26ee884d6cd4712f1a19",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--desktop/update-popup-geometry.json": "d4d64d2e4ac09a2e084c5dd7a15402d60a51cd01b0ea8b0cb45a2434a030d2ce",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--desktop/updates-every.png": "8984810f29a517c8f46d3b83295368097b61e44044b9be75388372f426e66ed1",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--desktop/updates-unit.png": "50b28ab8adf4d7668ab4af5c6422f6f352c017e311e748128a8f5bd5e3b18884",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--firefox-stats/update-popup-geometry.json": "d4d64d2e4ac09a2e084c5dd7a15402d60a51cd01b0ea8b0cb45a2434a030d2ce",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--firefox-stats/updates-every.png": "aac7ae460b29c1bfcb38ae0ceecf5eeb70b60bca5cfec79a96ca283ad24cf750",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--firefox-stats/updates-unit.png": "f12b4479fd4607b7bdd6f1030cbbf07360fa65a9b79e170325900e5ad6c9b1aa",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--mobile/update-popup-geometry.json": "d4d64d2e4ac09a2e084c5dd7a15402d60a51cd01b0ea8b0cb45a2434a030d2ce",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--mobile/updates-every.png": "9931da0dc2ac8ffafd16a5330192d5f454d104b14de929bf834f3b26d2a7fa53",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--mobile/updates-unit.png": "992add00ef8c8008476de385cdb13f0a46333e38a5be1571bfe98cebf2a1eabf",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--webkit-stats/update-popup-geometry.json": "d4d64d2e4ac09a2e084c5dd7a15402d60a51cd01b0ea8b0cb45a2434a030d2ce",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--webkit-stats/updates-every.png": "b83e8f7edd308e43ca3746786bded849c922a978bc7ba1e93f1ba7c67fc3fa11",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-68847--no-preference-height-1000--webkit-stats/updates-unit.png": "47de7a04ca47412cb4b7b48438f70a878b4e6681ac3303f3ecc10a90a9a12044",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-6c47f-k-no-preference-height-480--desktop/update-workflow.json": "b819306946453631d8bcb63214c2b9f941ed73a7fad2023b26517062b326e6aa",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-6c47f-k-no-preference-height-480--firefox-stats/update-workflow.json": "02d404426dc97d4029e2e08734f18f8584eaed58151e304f6158613e210ea777",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-6c47f-k-no-preference-height-480--mobile/update-workflow.json": "b819306946453631d8bcb63214c2b9f941ed73a7fad2023b26517062b326e6aa",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-6c47f-k-no-preference-height-480--webkit-stats/update-workflow.json": "b819306946453631d8bcb63214c2b9f941ed73a7fad2023b26517062b326e6aa",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-712b9-ainment-reduce-height-1000--desktop/update-draft.json": "aa8da72454f13eac39ef9f6368643bdf05524dbe11417c0786add75a83da7ad7",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-712b9-ainment-reduce-height-1000--firefox-stats/update-draft.json": "aa8da72454f13eac39ef9f6368643bdf05524dbe11417c0786add75a83da7ad7",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-712b9-ainment-reduce-height-1000--mobile/update-draft.json": "aa8da72454f13eac39ef9f6368643bdf05524dbe11417c0786add75a83da7ad7",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-712b9-ainment-reduce-height-1000--webkit-stats/update-draft.json": "aa8da72454f13eac39ef9f6368643bdf05524dbe11417c0786add75a83da7ad7",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--desktop/update-popup-geometry.json": "1695a9d75cbc29fe5dd0ddd9177f50bc82777e904b9d5d52968a84594706b7cd",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--desktop/updates-every.png": "61965ef53ac6016fd1f75e5d06e3c445fa6e319fb4c8d522807b236d82c15e8a",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--desktop/updates-unit.png": "a0054c981a8d2639fe4d65676fdea2f8ddb55e93e0b92bc7bde03c663219e618",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--firefox-stats/update-popup-geometry.json": "1695a9d75cbc29fe5dd0ddd9177f50bc82777e904b9d5d52968a84594706b7cd",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--firefox-stats/updates-every.png": "9248dbce06d139a17d6597c71d8b77a45da51693b7a4b6247b2d7c0f1e953b9d",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--firefox-stats/updates-unit.png": "ecfebde29703f99173001bb007c19ea065c4b31b3201ee5860ebe51f075b8b1c",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--mobile/update-popup-geometry.json": "1695a9d75cbc29fe5dd0ddd9177f50bc82777e904b9d5d52968a84594706b7cd",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--mobile/updates-every.png": "5f4449e4169bf0bb4528dc44eeddf4bcf78268eeaeaea0b7b9d332aa838fef37",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--mobile/updates-unit.png": "dd806bfad57171073ba25f4bc70404b3d94939ad5c737a8d11df140281b62b80",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--webkit-stats/update-popup-geometry.json": "1695a9d75cbc29fe5dd0ddd9177f50bc82777e904b9d5d52968a84594706b7cd",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--webkit-stats/updates-every.png": "cbe426534ccdb6c6f6e4f9fa536f517bb1522cf8cf2d9798527227b2fa027eaa",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-783c8-el-last-reduce-height-1000--webkit-stats/updates-unit.png": "55179655af800cf463845d20c4848e44d88ecdb52d7d26ee884d6cd4712f1a19",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--desktop/update-card-geometry.json": "26ccc56a8722f61487fb72d763f18d326569dcb45a37195267934516fb6456f3",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--desktop/updates-editor.png": "e2ffb78a86aa88dcf3048fe86f0d2440f2f571af0f4a5fc02d52145f6cb8e131",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--desktop/updates-list.png": "82bc5e1c4b37ac29332b31f5a9c7200b332b80175cfeddc29973a1509092f2dc",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--firefox-stats/update-card-geometry.json": "302238d333d2e7f9889590172db1be43d689fa8f43f0bd371f34e79153abc73f",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--firefox-stats/updates-editor.png": "408c9bc8cbdeaccca897dbb9a6ffc7def11044e2578841d4ce79e22840a3483e",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--firefox-stats/updates-list.png": "14fc76f4e09d6aaf7d7597ad7c0882f5f0d4a5ed16eedd38c9cb0b663afa370d",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--mobile/update-card-geometry.json": "26ccc56a8722f61487fb72d763f18d326569dcb45a37195267934516fb6456f3",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--mobile/updates-editor.png": "450b387204b64a038c08c23ff7f1cb7b06667b7aeff126d7ff3dc639f4d62275",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--mobile/updates-list.png": "2c2f00422fdb67659860761c6676142b067b7901aa50dde99711575430b2f8bc",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--webkit-stats/update-card-geometry.json": "49164487b5b7432c850ec347fbb75bcccd6694e4078eb8cda7c4e2a4693bb4f0",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--webkit-stats/updates-editor.png": "b2fd954b3e0d06beba414a00009ae30e23f28c35b9dfc9e51cb4ad562810f537",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7d9c3-s-no-preference-height-480--webkit-stats/updates-list.png": "8c8b1f2606cca3cd9a4fa00ccc62e50cdca67a7873e6352395e39f2aec0fb291",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7ebd2-readback-reduce-height-480--desktop/update-workflow.json": "61e6eb1be546c3a40c0fa9bdf1264b216ab8b1396549aaabd2275d701ffe1ad1",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7ebd2-readback-reduce-height-480--firefox-stats/update-workflow.json": "be2af83c0f23d7b279d34f4b641028e475dc14ba8b9d38ace5ec47a4a6430815",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7ebd2-readback-reduce-height-480--mobile/update-workflow.json": "61e6eb1be546c3a40c0fa9bdf1264b216ab8b1396549aaabd2275d701ffe1ad1",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-7ebd2-readback-reduce-height-480--webkit-stats/update-workflow.json": "61e6eb1be546c3a40c0fa9bdf1264b216ab8b1396549aaabd2275d701ffe1ad1",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-8f641-t-no-preference-height-480--desktop/update-draft.json": "87486e352126f6733038920a5be29c766a9c838a579fa1c938e2a1ebf43ed013",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-8f641-t-no-preference-height-480--firefox-stats/update-draft.json": "87486e352126f6733038920a5be29c766a9c838a579fa1c938e2a1ebf43ed013",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-8f641-t-no-preference-height-480--mobile/update-draft.json": "87486e352126f6733038920a5be29c766a9c838a579fa1c938e2a1ebf43ed013",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-8f641-t-no-preference-height-480--webkit-stats/update-draft.json": "87486e352126f6733038920a5be29c766a9c838a579fa1c938e2a1ebf43ed013",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-desktop/update-retry-scroll.json": "371425669f24079a6cd7e1e3d44ce1f5266acf0dca86d5054ebea1e66795edfc",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-firefox-stats/update-retry-scroll.json": "371425669f24079a6cd7e1e3d44ce1f5266acf0dca86d5054ebea1e66795edfc",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-mobile/update-retry-scroll.json": "371425669f24079a6cd7e1e3d44ce1f5266acf0dca86d5054ebea1e66795edfc",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-980d3-ars-fixed-mobile-navigation-webkit-stats/update-retry-scroll.json": "371425669f24079a6cd7e1e3d44ce1f5266acf0dca86d5054ebea1e66795edfc",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--desktop/update-card-geometry.json": "8aee6065c66b2afa4f102c4edecc455a735bedf974e71a8bf637aeab25ba559d",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--desktop/updates-editor.png": "e2ffb78a86aa88dcf3048fe86f0d2440f2f571af0f4a5fc02d52145f6cb8e131",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--desktop/updates-list.png": "a6a6fc1075c15c8b0a8139a9036e5b52d54a35b1afe30dafe9d49abd0c61d851",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--firefox-stats/update-card-geometry.json": "80009f52524f3274b9eebe494dd04c94a68aee14819a805671912aa3af5bea10",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--firefox-stats/updates-editor.png": "408c9bc8cbdeaccca897dbb9a6ffc7def11044e2578841d4ce79e22840a3483e",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--firefox-stats/updates-list.png": "14fc76f4e09d6aaf7d7597ad7c0882f5f0d4a5ed16eedd38c9cb0b663afa370d",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--mobile/update-card-geometry.json": "8aee6065c66b2afa4f102c4edecc455a735bedf974e71a8bf637aeab25ba559d",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--mobile/updates-editor.png": "b4437ccbf837d4c1dff98312bcbeac48cade3311d7933d84f7cbd2b8bb8906a0",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--mobile/updates-list.png": "64ee73c9a4ecee22f2b80587dd3158375d70d3e3c8f87dfc0adb5aa3cbf7dcf8",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--webkit-stats/update-card-geometry.json": "a2db8bb3b448c1b830d1f890b1ce2fcb2a0d8c570c07bfe345782c26a141e5e9",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--webkit-stats/updates-editor.png": "b2fd954b3e0d06beba414a00009ae30e23f28c35b9dfc9e51cb4ad562810f537",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-9999d--no-preference-height-1000--webkit-stats/updates-list.png": "8c8b1f2606cca3cd9a4fa00ccc62e50cdca67a7873e6352395e39f2aec0fb291",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-be5c6--no-preference-height-1000--desktop/update-workflow.json": "3b174f5c0728cc7a398a738dd78831b28f06a6f5bf95cd9bf12634ae1a394d87",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-be5c6--no-preference-height-1000--firefox-stats/update-workflow.json": "e9a3f616071c487b840109f84055b79957cde53d1b911a8d0fb9207f5c5ee97b",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-be5c6--no-preference-height-1000--mobile/update-workflow.json": "3b174f5c0728cc7a398a738dd78831b28f06a6f5bf95cd9bf12634ae1a394d87",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-be5c6--no-preference-height-1000--webkit-stats/update-workflow.json": "3b174f5c0728cc7a398a738dd78831b28f06a6f5bf95cd9bf12634ae1a394d87",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--desktop/update-card-geometry.json": "ffee174c66dfc6300f64d13e0c69a74daec409e11999a6a5a05f9596c1cc1fe8",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--desktop/updates-editor.png": "1f7265afd9a84b732ebfdb808d46b2cda7d2f43a9bb8d160c01bf59b3170e1f3",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--desktop/updates-list.png": "b6cd754ea09b17b912f2853131a5ec1243b31ab2161fccd103be24635788c19e",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--firefox-stats/update-card-geometry.json": "6076959ee2f67c2ddafad6e9f3afd16bf8426324138529bd4fade60516022fc2",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--firefox-stats/updates-editor.png": "785b4a1dac66c5ab7653cf96d62ca3fcac81b7624928a9f2332693f82fbe6388",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--firefox-stats/updates-list.png": "29c39fa60962a5a05c6d637a71206302c2ec712312ba24fe90757757580ece50",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--mobile/update-card-geometry.json": "ffee174c66dfc6300f64d13e0c69a74daec409e11999a6a5a05f9596c1cc1fe8",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--mobile/updates-editor.png": "af5acc678c21d60fef9edf5b5e58d2e6c86ab0264c4a6654c9d885d88dbea9c1",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--mobile/updates-list.png": "aa84f9ca8a9d2098a213e7e26bb4cc20179b7a275c9f6612878732be58fd4229",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--webkit-stats/update-card-geometry.json": "c1bc54b1bc9c59ab15363e78547a3883047925aa491865c4941a86f9baa27268",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--webkit-stats/updates-editor.png": "2a0c106451dc687b2a9c011326dda112414e2630cdb5cd6510a8cd8786044e4c",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-c5c58--assets-reduce-height-1000--webkit-stats/updates-list.png": "a3e65abda6028d1d6d41a77eb4b06d3b72de2b4fe6e449b1a6285abf74d393fe",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-dc69f-licy-lock-and-empty-account-desktop/update-recovery.json": "6b1155d53fb4bd6293ad8f2d33ce80e909593f127f6d2ef946f4429eaa638be0",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-dc69f-licy-lock-and-empty-account-firefox-stats/update-recovery.json": "64eabaacf2da86fc7a50340153e6d1aa0dd28bf70b3e6bdc55b327fec341c295",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-dc69f-licy-lock-and-empty-account-mobile/update-recovery.json": "6b1155d53fb4bd6293ad8f2d33ce80e909593f127f6d2ef946f4429eaa638be0",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-dc69f-licy-lock-and-empty-account-webkit-stats/update-recovery.json": "6b1155d53fb4bd6293ad8f2d33ce80e909593f127f6d2ef946f4429eaa638be0",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e1f29--no-preference-height-1000--desktop/update-draft.json": "bb9b15c9935ece7f9464656a3b4e4e608cc713a0ede9d65d8d3d085e4769bc51",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e1f29--no-preference-height-1000--firefox-stats/update-draft.json": "bb9b15c9935ece7f9464656a3b4e4e608cc713a0ede9d65d8d3d085e4769bc51",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e1f29--no-preference-height-1000--mobile/update-draft.json": "bb9b15c9935ece7f9464656a3b4e4e608cc713a0ede9d65d8d3d085e4769bc51",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e1f29--no-preference-height-1000--webkit-stats/update-draft.json": "bb9b15c9935ece7f9464656a3b4e4e608cc713a0ede9d65d8d3d085e4769bc51",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--desktop/update-card-geometry.json": "60f986fd9f8371bd70bdb1aa5f079ce2813f2230f2606c11225137d020a5e21f",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--desktop/updates-editor.png": "1f7265afd9a84b732ebfdb808d46b2cda7d2f43a9bb8d160c01bf59b3170e1f3",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--desktop/updates-list.png": "460e79436dc15e088c9316fb237b936da3c3374f8e24f83b50b0232a3cae0c1f",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--firefox-stats/update-card-geometry.json": "c08d76cd9e3422d8eec2984247264693ea6976a7b57f4530f0b733d61dcfec9d",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--firefox-stats/updates-editor.png": "785b4a1dac66c5ab7653cf96d62ca3fcac81b7624928a9f2332693f82fbe6388",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--firefox-stats/updates-list.png": "29c39fa60962a5a05c6d637a71206302c2ec712312ba24fe90757757580ece50",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--mobile/update-card-geometry.json": "60f986fd9f8371bd70bdb1aa5f079ce2813f2230f2606c11225137d020a5e21f",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--mobile/updates-editor.png": "af5acc678c21d60fef9edf5b5e58d2e6c86ab0264c4a6654c9d885d88dbea9c1",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--mobile/updates-list.png": "aa84f9ca8a9d2098a213e7e26bb4cc20179b7a275c9f6612878732be58fd4229",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--webkit-stats/update-card-geometry.json": "b8f735c44ed84103b0834cba75f71f9268469a34369c3700dbd1fa7f09a3b349",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--webkit-stats/updates-editor.png": "2a0c106451dc687b2a9c011326dda112414e2630cdb5cd6510a8cd8786044e4c",
+    "docs/testing-evidence/design-v2/notification-final-settings-browser-artifacts/design-v2-settings-updates-e2cbf-r-assets-reduce-height-480--webkit-stats/updates-list.png": "a3e65abda6028d1d6d41a77eb4b06d3b72de2b4fe6e449b1a6285abf74d393fe"
+  },
+  "limitations": [
+    "Offline mocked service contracts, no real server or notification delivery",
+    "Static captures are candidates, not approved golden regressions",
+    "Full shell/sidebar/footer and exact switch motion remain open"
+  ]
+}
