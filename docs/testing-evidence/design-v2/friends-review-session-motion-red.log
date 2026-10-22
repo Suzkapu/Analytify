@@ -1,0 +1,62 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts --project=desktop --grep=no-preference --output=docs/testing-evidence/design-v2/friends-review-session-motion-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214
+[WebServer] (node:190957) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:190957) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:191284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 7:42:23 PM [vite] (client) [console.error] AbortError: Transition was skipped. New ViewTransition started
+  ✘  1 [desktop] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) (14.9s)
+
+
+  1) [desktop] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+      Object {
+    -   "errors": Array [],
+    +   "errors": Array [
+    +     "AbortError: Transition was skipped. New ViewTransition started",
+    +   ],
+        "pending": 0,
+      }
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+       at helpers/native-transitions.ts:27
+
+      25 |     const probe = (window as Window & {analytifyNativeTransitionProbe: {pending: number; errors: string[]}}).analytifyNativeTransitionProbe;
+      26 |     return {pending: probe.pending, errors: probe.errors};
+    > 27 |   })).toEqual({pending: 0, errors: []});
+         |       ^
+      28 | }
+      29 |
+        at expectNativeTransitionsSettled (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/native-transitions.ts:27:7)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:178:41
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-review-session-motion-red-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-review-session-motion-red-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-review-session-motion-red-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-review-session-motion-red-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) 

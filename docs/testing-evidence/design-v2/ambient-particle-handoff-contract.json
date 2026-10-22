@@ -1,0 +1,10 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"mutatedNodeIds\":[\"266:18224\"],\"description\":\"Large green and blue glows are fixed within a page, including during scrolling. Glow positions change only on page navigation, with a smooth route transition. Particle phases loop continuously over 24 seconds; all phases within one Scene have identical glow positions, size and opacity. Shared backdrop behind opaque cards and navigation. Mobile uses fewer and softer dots. Still variant provides reduced motion. Implementation must preserve one shell-level background: scroll can move dots but must never modify glow coordinates. Application handoff: preserve one particle timeline across navigation and overlays, using the same normalized phase coordinates in every Scene. Desktop has 26 dots; mobile has 12. Each A-to-B, B-to-C and C-to-A leg lasts 8 seconds with ease-in-out, forming a continuous 24-second loop. The prototype 50ms AFTER_TIMEOUT trigger advances the variant graph; do not add idle gaps to the application loop. Still uses Phase A positions without animation. Resize preserves loop phase; hidden documents pause the timeline and resume it on return.\",\"visualNodesChanged\":false,\"prototypeReactionsChanged\":false}"
+    }
+  ],
+  "structuredContent": null,
+  "isError": false
+}

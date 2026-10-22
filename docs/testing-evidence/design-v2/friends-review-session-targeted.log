@@ -1,0 +1,25 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --coverage --runner-config=/tmp/analytify-friends-vitest.config.mjs --include=src/app/features/friends/v2-friends-page.component.spec.ts --include=src/app/features/friends/v2-friends.controller.spec.ts --include=src/app/features/friends/v2-friends-layout.component.spec.ts --include=src/app/shared/ui-v2/v2-friends-feedback.component.spec.ts
+Using Vitest configuration file: /tmp/analytify-friends-vitest.config.mjs
+Application bundle generation complete. [2.843 seconds] - 2026-10-12T17:33:36.438Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+      Coverage enabled with v8
+
+Warning: A vi.mock("qrcode") call in "/mnt/Storage/ProgrammingProjects/Analytify/spec-app-features-friends-v2-friends-page.component.js" is not at the top level of the module. Although it appears nested, it will be hoisted and executed before any tests run. Move it to the top level to reflect its actual execution order. This will become an error in a future version.
+See: https://vitest.dev/guide/mocking/modules#how-it-works
+
+ Test Files  4 passed (4)
+      Tests  63 passed (63)
+   Start at  19:33:36
+   Duration  5.21s (transform 660ms, setup 1.41s, import 1.30s, tests 3.05s, environment 1.73s)
+
+ % Coverage report from v8
+
+=============================== Coverage summary ===============================
+Statements   : 4.33% ( 548/12630 )
+Branches     : 3.72% ( 316/8477 )
+Functions    : 4.2% ( 111/2639 )
+Lines        : 3.82% ( 411/10743 )
+================================================================================

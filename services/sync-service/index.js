@@ -10,6 +10,24 @@ const {createPushDispatcher} = require('./push-dispatcher');
 const {createHealthServer, deployedCommit} = require('./health-server');
 const {createWorkerRuntimeHealth} = require('./worker-runtime-health');
 
+// Release every acquired resource, even if a previous cleanup fails. The original
+// startup/pass failure remains authoritative; cleanup-only failures still reject.
+async function closeResources(runtime, health, preserveFailure = false) {
+  let cleanupError;
+  for (const [name, resource, method] of [
+    ['runtime', runtime, 'stop'], ['health', health, 'close']
+  ]) {
+    if (!resource) continue;
+    try {
+      await resource[method]();
+    } catch (error) {
+      cleanupError ||= error;
+      console.error(`[Sync service] ${name} cleanup failed:`, error);
+    }
+  }
+  if (cleanupError && !preserveFailure) throw cleanupError;
+}
+
 async function createService() {
   const config = loadConfig();
   const supabase = createClient(config.supabaseUrl, config.supabaseServiceRoleKey, {
@@ -22,79 +40,89 @@ async function createService() {
   if (releaseError) throw releaseError;
   const runtime = createWorkerRuntimeHealth({supabase, commit: deployedCommit()});
   await runtime.start();
-  const spotify = createSpotifyClient(config);
-  const credentials = createCredentialStore({
-    supabase,
-    encryptionKey: config.spotifyTokenEncryptionKey,
-    encryptionKeys: config.spotifyTokenEncryptionKeys,
-    writeKeyVersion: config.spotifyTokenEncryptionWriteVersion
-  });
-  const pushDispatcher = createPushDispatcher({supabase});
-  const migratedCredentials = await credentials.migrateAllLegacy();
-  if (migratedCredentials) {
-    console.log(`[Sync service] Encrypted ${migratedCredentials} legacy Spotify credential(s).`);
+  try {
+    const spotify = createSpotifyClient(config);
+    const credentials = createCredentialStore({
+      supabase,
+      encryptionKey: config.spotifyTokenEncryptionKey,
+      encryptionKeys: config.spotifyTokenEncryptionKeys,
+      writeKeyVersion: config.spotifyTokenEncryptionWriteVersion
+    });
+    const pushDispatcher = createPushDispatcher({supabase});
+    const migratedCredentials = await credentials.migrateAllLegacy();
+    if (migratedCredentials) {
+      console.log(`[Sync service] Encrypted ${migratedCredentials} legacy Spotify credential(s).`);
+    }
+    const rotation = await credentials.rotatePending();
+    if (rotation.examined) {
+      console.log(`[Sync service] Credential rotation: ${rotation.rotated} succeeded, ${rotation.failed} deferred.`);
+    }
+    const tasks = createTaskRegistry({supabase, spotify});
+    const scheduler = createScheduler({supabase, config, tasks, credentials, pushDispatcher});
+    return {config, scheduler, runtime};
+  } catch (error) {
+    await closeResources(runtime, null, true);
+    throw error;
   }
-  const rotation = await credentials.rotatePending();
-  if (rotation.examined) {
-    console.log(`[Sync service] Credential rotation: ${rotation.rotated} succeeded, ${rotation.failed} deferred.`);
-  }
-  const tasks = createTaskRegistry({supabase, spotify});
-  const scheduler = createScheduler({supabase, config, tasks, credentials, pushDispatcher});
-  return {config, scheduler, runtime};
 }
 
 async function main(argv = process.argv.slice(2)) {
   const watch = argv.includes('--watch');
   const health = createHealthServer({port: Math.max(1, Number(process.env.SYNC_SERVICE_HEALTH_PORT) || 8787)});
   await health.listen();
-  let service;
-  try {
-    service = await createService();
-    health.markReady();
-  } catch (error) {
-    health.recordFailure(error);
-    await health.close();
-    throw error;
-  }
-  const {config, scheduler, runtime} = service;
-  try {
-    await runtime.markReady();
-  } catch (error) {
-    health.recordFailure(error);
-    await health.close();
-    throw error;
-  }
+  let runtime;
+  let failed = false;
   let stopping = false;
-  process.once('SIGINT', () => { stopping = true; });
-  process.once('SIGTERM', () => { stopping = true; });
-
-  do {
-    const startedAt = Date.now();
-    try {
-      await runtime.recordPassStarted();
-      const result = await scheduler.runPass();
-      health.recordPass();
-      await runtime.recordPassSucceeded();
-      console.log(`[Sync service] Pass complete: ${result.queued} queued, ${result.processed} processed.`);
-    } catch (error) {
-      console.error('[Sync service] Pass failed:', error);
-      health.recordFailure(error);
-      try {
-        await runtime.recordFailure(error);
-      } catch (runtimeError) {
-        console.error('[Sync service] Could not persist worker failure:', runtimeError);
-      }
-      if (!watch) throw error;
-    }
-    if (!watch || stopping) break;
-    const elapsed = Date.now() - startedAt;
-    const waitMs = Math.max(1_000, config.pollSeconds * 1_000 - elapsed);
-    await new Promise(resolve => setTimeout(resolve, waitMs));
-  } while (!stopping);
+  let signalsAttached = false;
+  const stop = () => { stopping = true; };
   try {
-    await runtime.stop();
+    let service;
+    try {
+      service = await createService();
+      runtime = service.runtime;
+      health.markReady();
+      await runtime.markReady();
+    } catch (error) {
+      health.recordFailure(error);
+      throw error;
+    }
+    const {config, scheduler} = service;
+    process.once('SIGINT', stop);
+    process.once('SIGTERM', stop);
+    signalsAttached = true;
+
+    do {
+      const startedAt = Date.now();
+      try {
+        await runtime.recordPassStarted();
+        const result = await scheduler.runPass();
+        health.recordPass();
+        await runtime.recordPassSucceeded();
+        console.log(`[Sync service] Pass complete: ${result.queued} queued, ${result.processed} processed.`);
+      } catch (error) {
+        console.error('[Sync service] Pass failed:', error);
+        health.recordFailure(error);
+        try {
+          await runtime.recordFailure(error);
+        } catch (runtimeError) {
+          console.error('[Sync service] Could not persist worker failure:', runtimeError);
+        }
+        if (!watch) throw error;
+      }
+      if (!watch || stopping) break;
+      const elapsed = Date.now() - startedAt;
+      const waitMs = Math.max(1_000, config.pollSeconds * 1_000 - elapsed);
+      await new Promise(resolve => setTimeout(resolve, waitMs));
+    } while (!stopping);
+  } catch (error) {
+    failed = true;
+    throw error;
   } finally {
-    await health.close();
+    if (signalsAttached) {
+      process.removeListener('SIGINT', stop);
+      process.removeListener('SIGTERM', stop);
+    }
+    await closeResources(runtime, health, failed);
   }
 }
 

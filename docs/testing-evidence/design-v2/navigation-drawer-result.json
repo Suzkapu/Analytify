@@ -1,0 +1,237 @@
+{
+  "date": "2026-10-15",
+  "branch": "codex/design-v2",
+  "checkpoint": "a8a7a3966a622c992e9058094627a768c16a363a",
+  "workingTree": "uncommitted; source hashes identify verification state",
+  "scope": "Canonical modal navigation drawer105:3505 and its shared shell integration; expanded worker regression/cleanup. Full retained-feature migration remains incomplete.",
+  "canonical": {
+    "context": "docs/testing-evidence/design-v2/navigation-drawer-canonical-context.json",
+    "node": "105:3505",
+    "descriptionUpdatedBeforeImplementation": true,
+    "logo": {
+      "path": "src/assets/design-v2/product-logo.png",
+      "size": [
+        96,
+        96
+      ],
+      "sha256": "028c149c576d74d0f06d139a5f1eaf463805f1483774da6e76dbaee1d4ad20db"
+    },
+    "visualReview": "Final mobile drawer screenshot compared to canonical screenshot: grouped layout, token colors, type, radius and logo placement match; account identity/active route derive from fixtures. Green profile outline is the tested keyboard focus state. No approved whole-page goldens updated.",
+    "remainingParity": [
+      "desktop sidebar and header",
+      "mobile header/gutters",
+      "footer",
+      "provisional sidebar motion",
+      "all remaining retained features"
+    ]
+  },
+  "commands": [
+    {
+      "command": "npx ng test --watch=false --include=src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts --progress=false",
+      "phase": "RED old popup",
+      "passed": 64,
+      "failed": 2,
+      "exit": 1,
+      "log": "docs/testing-evidence/design-v2/navigation-drawer-red.log"
+    },
+    {
+      "command": "npx ng test --watch=false --include=src/app/shared/ui-v2/v2-navigation-drawer.component.spec.ts --include=src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts --progress=false",
+      "phase": "GREEN",
+      "passed": 70,
+      "files": 2,
+      "exit": 0,
+      "log": "docs/testing-evidence/design-v2/navigation-drawer-targeted.log"
+    },
+    {
+      "command": "npx playwright test --config=playwright.navigation.config.ts --grep persist",
+      "environment": "ANALYTIFY_WEBKIT_EXECUTABLE=/tmp/analytify-webkit-libs/run-webkit.sh; isolated loopback4214",
+      "exit": 0,
+      "passed": 8,
+      "log": "docs/testing-evidence/design-v2/navigation-drawer-final.log",
+      "artifacts": "docs/testing-evidence/design-v2/navigation-drawer-final-artifacts",
+      "projects": [
+        "desktop",
+        "mobile",
+        "firefox-stats",
+        "webkit-stats"
+      ],
+      "motion": [
+        "no-preference",
+        "reduce"
+      ],
+      "drawerGeometrySamples": 96,
+      "assertions": [
+        "320px clamped drawer",
+        "0,0 origin and full viewport height",
+        "72px bottom profile with17px inset",
+        "independent short-window scroll",
+        "focus wrap/return and Escape",
+        "axe",
+        "empty shortcut bar keeps every route reachable",
+        "no unexpected page errors/network"
+      ]
+    },
+    {
+      "command": "npm run verify:ci",
+      "exit": 0,
+      "log": "docs/testing-evidence/design-v2/navigation-drawer-ci.log",
+      "frontendPassed": 1539,
+      "frontendSkipped": 1,
+      "frontendFiles": 148,
+      "skipReason": "documented isolated hosted-service contract; remains a limitation",
+      "workerPassed": 215,
+      "edgePassed": 26,
+      "initialJavaScriptBytes": 779607,
+      "releaseSecurityTypeLintBuildGates": "passed; no weakened gates"
+    },
+    {
+      "command": "npm run test:coverage:final",
+      "exit": 1,
+      "log": "docs/testing-evidence/design-v2/navigation-drawer-final98.log",
+      "scope": "Stops at frontend lines77.66<98; later suite checks not run by this chained command."
+    },
+    {
+      "command": "node scripts/check-application-coverage-inventory.mjs worker --final",
+      "exit": 0,
+      "result": "All17 sources and all4 metrics>=98"
+    }
+  ],
+  "coverage": {
+    "frontend": {
+      "sources": 166,
+      "missing": 0,
+      "metrics": {
+        "lines": {
+          "total": 11124,
+          "covered": 8639,
+          "skipped": 0,
+          "pct": 77.66
+        },
+        "statements": {
+          "total": 13096,
+          "covered": 9881,
+          "skipped": 0,
+          "pct": 75.45
+        },
+        "functions": {
+          "total": 2738,
+          "covered": 2039,
+          "skipped": 0,
+          "pct": 74.47
+        },
+        "branches": {
+          "total": 8523,
+          "covered": 5560,
+          "skipped": 0,
+          "pct": 65.23
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "report": "coverage/SpotiFront/coverage-summary.json",
+      "sha256": "1971f38bea0a6eeec1b8d621de0661e9752487084ab0dff57acb1461d1ef1a88",
+      "drawer": {
+        "lines": {
+          "total": 16,
+          "covered": 16,
+          "skipped": 0,
+          "pct": 100
+        },
+        "functions": {
+          "total": 5,
+          "covered": 5,
+          "skipped": 0,
+          "pct": 100
+        },
+        "statements": {
+          "total": 19,
+          "covered": 19,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 2,
+          "covered": 2,
+          "skipped": 0,
+          "pct": 100
+        }
+      }
+    },
+    "worker": {
+      "sources": 17,
+      "metrics": {
+        "lines": {
+          "total": 891,
+          "covered": 888,
+          "skipped": 0,
+          "pct": 99.66
+        },
+        "statements": {
+          "total": 1110,
+          "covered": 1107,
+          "skipped": 0,
+          "pct": 99.72
+        },
+        "functions": {
+          "total": 197,
+          "covered": 197,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 927,
+          "covered": 913,
+          "skipped": 0,
+          "pct": 98.48
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "manifest": "docs/testing-evidence/design-v2/worker-parallel-manifest.json",
+      "rootVerifiedAllManifestHashes": true
+    },
+    "edge": {
+      "status": "Parallel expansion in progress; separate agent manifest will supersede prior baseline. Full CI above ran only existing26 cases."
+    }
+  },
+  "sourceHashes": {
+    "src/app/shared/ui-v2/v2-navigation-drawer.component.ts": "36b2c7159f516c629ebcc06c8ae2ff8b72cf1a9960c7e82473cad129f017b274",
+    "src/app/shared/ui-v2/v2-navigation-drawer.component.scss": "6b33ae7386bca887ca55a2c7fd36ca6acd973fc15d47a503fb8e2e126207659c",
+    "src/app/shared/ui-v2/v2-navigation-drawer.component.spec.ts": "17f60e07e2c90485ba5492f8a382018c2f95be996c6aa64ad14024f2956e7aa3",
+    "src/assets/design-v2/product-logo.png": "028c149c576d74d0f06d139a5f1eaf463805f1483774da6e76dbaee1d4ad20db",
+    "src/app/shared/layout/design-v2-shell/design-v2-shell.component.html": "94235328dc5b895d6e8e21ad7aae76e81922c266439ac8d47ce44bccb58873dc",
+    "src/app/shared/layout/design-v2-shell/design-v2-shell.component.ts": "ef59e09669845361d420350f8e97f2fef6a1827fbc5241846d07314ca9f624e1",
+    "src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts": "0393cdfc0e1a78de1a4fc060608402e2cafd0246924eb689c741d68c1719cb5f",
+    "e2e/design-v2-navigation.spec.ts": "52881fc953c739de03d74c66dd809fb1c8ce05f6457362cc788584c5a1c16fcf",
+    "e2e/design-v2-ambient.spec.ts": "c391015c2e3c567d54c271ecb332fdb9502d072f169d72a8ac8397ded31ea38e",
+    "e2e/accessibility.spec.ts": "550ee08b4d7652f825879c24485a3be58bf11a001060a8021f772a0276b61af5",
+    "package.json": "ea03b32891b2d4b221667c82c6f8cf02949dbdbf838792fff1c33debea7d084f"
+  },
+  "artifactHashes": {
+    "docs/testing-evidence/design-v2/navigation-drawer-final-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--desktop/navigation-native.json": "84285872d126c2f8fb7afc83d7caca4cd33b56e657314ed6a47ad3182e57e7ce",
+    "docs/testing-evidence/design-v2/navigation-drawer-final-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--desktop/navigation-native.json": "ee4beeea818849b5f5d4f89ae96ce83c24e6262334be41029321231d035998ef",
+    "docs/testing-evidence/design-v2/navigation-drawer-final-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--mobile/navigation-native.json": "84285872d126c2f8fb7afc83d7caca4cd33b56e657314ed6a47ad3182e57e7ce",
+    "docs/testing-evidence/design-v2/navigation-drawer-final-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--mobile/navigation-native.json": "2fb1790787d047bcb6acab2555dbe34046d11655c1a37d699328dc1e761ab261",
+    "docs/testing-evidence/design-v2/navigation-drawer-final-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--firefox-stats/navigation-native.json": "9ab9eb8f6f198ab0bb30271735fa867df4a846667dfddaf88a7f8af9bcab252c",
+    "docs/testing-evidence/design-v2/navigation-drawer-final-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--firefox-stats/navigation-native.json": "b22df36086af53dffc006f61e96a0a2bd65c0bb8475b541c72712d9be2f4ab04",
+    "docs/testing-evidence/design-v2/navigation-drawer-final-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--webkit-stats/navigation-native.json": "84285872d126c2f8fb7afc83d7caca4cd33b56e657314ed6a47ad3182e57e7ce",
+    "docs/testing-evidence/design-v2/navigation-drawer-final-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--webkit-stats/navigation-native.json": "2f1606643794fc636e634c1f75a36f4d8bce15cbb564d8860983b4c355a54787"
+  },
+  "limitations": [
+    "No commit, merge, push or deployment; shared stable services/databases untouched.",
+    "Hosted isolated provider/Auth/PostgREST contracts remain unverified.",
+    "Historical reduced-motion native DOM-update TimeoutError remains open; clean later runs do not fix it.",
+    "Edge all98 gates pending and frontend all98 gates fail."
+  ],
+  "retainedFailure": "First drawer browser measurement occurred mid native entry animation (x=-131); test now awaits actual animation.finished before geometry, with original exact assertions retained.",
+  "subsequentFinalIntegrationEvidence": "docs/testing-evidence/design-v2/parallel-final-result.json",
+  "scopeNote": "Per-command evidence retains original drawer-stage source scope. Later package/gate/runtime configuration, final edge coverage and combined CI are recorded in subsequentFinalIntegrationEvidence."
+}

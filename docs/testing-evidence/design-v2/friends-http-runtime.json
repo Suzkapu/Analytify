@@ -1,0 +1,64 @@
+{
+  "date": "2026-10-20",
+  "architecture": "Linux x86_64",
+  "archives": [
+    {
+      "name": "PostgREST",
+      "version": "16.5",
+      "url": "https://github.com/PostgREST/postgrest/releases/download/v16.5/postgrest-v16.5-linux-static-x86-64.tar.xz",
+      "path": "/tmp/analytify-friends-http-runtime/postgrest.tar.xz",
+      "sha256": "5099e7ada38f9f6846cd87c14c5f158b7c165f1e9959665ad412e61f4dceba95",
+      "expectedSha256": "5099e7ada38f9f6846cd87c14c5f158b7c165f1e9959665ad412e61f4dceba95",
+      "integritySource": "Official GitHub release asset digest: https://api.github.com/repos/PostgREST/postgrest/releases/tags/v16.5"
+    },
+    {
+      "name": "postgresql",
+      "version": "18.6-2",
+      "url": "https://archive.archlinux.org/packages/p/postgresql/postgresql-18.6-2-x86_64.pkg.tar.zst",
+      "path": "/tmp/analytify-friends-http-runtime/postgresql.pkg.tar.zst",
+      "sha256": "9bb57a88e9caf2dc4d9a56e71c79e520072955f99e4f144c35cc8b5059f72e45",
+      "expectedSha256": "9bb57a88e9caf2dc4d9a56e71c79e520072955f99e4f144c35cc8b5059f72e45",
+      "integritySource": "Previously repository-metadata-validated pinned SHA256 in docs/testing-evidence/design-v2/friends-isolated-postgres-runtime.json; same bytes verified before extraction."
+    },
+    {
+      "name": "postgresql-libs",
+      "version": "18.6-2",
+      "url": "https://archive.archlinux.org/packages/p/postgresql-libs/postgresql-libs-18.6-2-x86_64.pkg.tar.zst",
+      "path": "/tmp/analytify-friends-http-runtime/postgresql-libs.pkg.tar.zst",
+      "sha256": "160ee929177c8e1f30bf54fe451dbed3d9a020beeb1a016e1cf1ae264a1e8930",
+      "expectedSha256": "160ee929177c8e1f30bf54fe451dbed3d9a020beeb1a016e1cf1ae264a1e8930",
+      "integritySource": "Previously repository-metadata-validated pinned SHA256 in docs/testing-evidence/design-v2/friends-isolated-postgres-runtime.json; same bytes verified before extraction."
+    }
+  ],
+  "downloads": "curl --fail --location --max-time60 official pinned URLs into /tmp/analytify-friends-http-runtime only; SHA256 validation before tar extraction.",
+  "downloadFailures": [
+    {
+      "urls": [
+        "https://archlinux.cachyos.org/repo/extra/os/x86_64/postgresql-18.6-2-x86_64.pkg.tar.zst",
+        "https://archlinux.cachyos.org/repo/extra/os/x86_64/postgresql-libs-18.6-2-x86_64.pkg.tar.zst"
+      ],
+      "status": 404,
+      "resolution": "Exact pinned bytes fetched from official archive.archlinux.org and matched prior recorded SHA256."
+    }
+  ],
+  "extracted": {
+    "postgresRoot": "/tmp/analytify-friends-http-runtime/postgres",
+    "postgrestRoot": "/tmp/analytify-friends-http-runtime/postgrest"
+  },
+  "binaryHashes": {
+    "postgres/usr/bin/postgres": "a0c86df4b4b9ddf6139ea965a254f780b7026024678b256953d769194ba608cd",
+    "postgres/usr/bin/initdb": "2efa3841cbf4b628a2305b0c449a779a91d0740a34eadaa4c4e3e16bc58ec51c",
+    "postgres/usr/bin/pg_ctl": "a2b13254967cd98eb52d3e176211a4fb5c49722cce5123a93c9be066ac5ee255",
+    "postgres/usr/bin/psql": "9e1fcf0f4515666ec2a09a6f4fbe1d6cc6b6eaffc2efc3388b0e3797bfc573c3",
+    "postgrest/postgrest": "cc218dc89e882ae2b828b3e8d08a1cffd29f4fa126a0869b038ac9e3a12c357d"
+  },
+  "docs": [
+    "https://github.com/PostgREST/postgrest/releases/tag/v16.5",
+    "https://docs.postgrest.org/en/stable/references/configuration.html",
+    "https://docs.postgrest.org/en/stable/references/auth.html",
+    "https://www.postgresql.org/docs/current/app-initdb.html",
+    "https://www.postgresql.org/docs/current/runtime-config-connection.html"
+  ],
+  "hostPackagesInstalled": false,
+  "limitations": "Archives require compatible current-host libraries for native PostgreSQL. Runtime retained only under /tmp and may expire; no universal portable-host or hosted Supabase version-equivalence claim. SHA256 validated; no new detached package-signature validation performed."
+}

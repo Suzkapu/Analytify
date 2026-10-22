@@ -1,0 +1,142 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/compare-room/participant-spotify.cancellation.spec.ts --runner-config=docs/testing-evidence/design-v2/participant-spotify-parallel-vitest.config.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/participant-spotify-parallel-vitest.config.mjs
+Application bundle generation complete. [2.393 seconds] - 2026-10-19T18:09:58.372Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/compare-room/participant-spotify.cancellation.spec.ts > Participant save cancellation boundaries > does not start profile requests for an already cancelled save
+AssertionError: expected [ TestRequest{ …(3) } ] to have a length of +0 but got 1
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1389:20)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/participant-spotify.cancellation.spec.ts:32:24
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171) {
+  actual: 1,
+  expected: 0,
+  showDiff: true
+}
+
+ ❯ |SpotiFront| src/app/core/compare-room/participant-spotify.cancellation.spec.ts (3 tests | 3 failed) 48ms
+     × does not start profile requests for an already cancelled save 32ms
+     × cancels pending recovery discovery and cannot persist a late match after cancellation 8ms
+   × retains acknowledged batch progress when cancellation has a primitive reason 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/compare-room/participant-spotify.cancellation.spec.ts > Participant save cancellation boundaries > does not start profile requests for an already cancelled save
+AssertionError: expected [ TestRequest{ …(3) } ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/app/core/compare-room/participant-spotify.cancellation.spec.ts:32:24
+     30|     unexpected.forEach(r => r.flush({}));
+     31|     expect(await pending).toMatchObject({success: false, addedTracks: …
+     32|     expect(unexpected).toHaveLength(0);
+       |                        ^
+     33|     expect(disk.size).toBe(0);
+     34|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |SpotiFront| src/app/core/compare-room/participant-spotify.cancellation.spec.ts > Participant save cancellation boundaries > cancels pending recovery discovery and cannot persist a late match after cancellation
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/app/core/compare-room/participant-spotify.cancellation.spec.ts:55:35
+     53|     await vi.advanceTimersByTimeAsync(0);
+     54|     expect(await pending).toMatchObject({success: false, addedTracks: …
+     55|     expect.soft(cancelledAtAbort).toBe(true);
+       |                                   ^
+     56|     expect(disk.size).toBe(0);
+     57|     http.expectNone(`${environment.spotifyUrl}/playlists/late-playlist…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |SpotiFront| src/app/core/compare-room/participant-spotify.cancellation.spec.ts > Participant save cancellation boundaries > cancels pending recovery discovery and cannot persist a late match after cancellation
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/app/core/compare-room/participant-spotify.cancellation.spec.ts:56:23
+     54|     expect(await pending).toMatchObject({success: false, addedTracks: …
+     55|     expect.soft(cancelledAtAbort).toBe(true);
+     56|     expect(disk.size).toBe(0);
+       |                       ^
+     57|     http.expectNone(`${environment.spotifyUrl}/playlists/late-playlist…
+     58|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |SpotiFront| src/app/core/compare-room/participant-spotify.cancellation.spec.ts > retains acknowledged batch progress when cancellation has a primitive reason
+AssertionError: expected { success: false, …(8) } to match object { success: false, addedTracks: 100 }
+(7 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "addedTracks": 100,
++   "addedTracks": 0,
+    "success": false,
+  }
+
+ ❯ src/app/core/compare-room/participant-spotify.cancellation.spec.ts:71:25
+     69|   controller.abort('Session ended');
+     70|   await vi.advanceTimersByTimeAsync(0);
+     71|   expect(await pending).toMatchObject({success: false, addedTracks: 10…
+       |                         ^
+     72|   http.expectNone(`${environment.spotifyUrl}/playlists/saved/items`);
+     73| });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  20:09:58
+   Duration  840ms (transform 95ms, setup 239ms, import 100ms, tests 48ms, environment 330ms)
+

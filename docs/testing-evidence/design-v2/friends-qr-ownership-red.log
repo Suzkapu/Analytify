@@ -1,0 +1,44 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/friends/v2-friends-page.component.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.596 seconds] - 2026-10-12T16:55:07.301Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+Warning: A vi.mock("qrcode") call in "/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/friends/v2-friends-page.component.spec.ts" is not at the top level of the module. Although it appears nested, it will be hoisted and executed before any tests run. Move it to the top level to reflect its actual execution order. This will become an error in a future version.
+See: https://vitest.dev/guide/mocking/modules#how-it-works
+ ❯ |SpotiFront| src/app/features/friends/v2-friends-page.component.spec.ts (19 tests | 1 failed) 1239ms
+     × replaces the QR together with its confirmed link after an account change 265ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-page.component.spec.ts > Mounted canonical Friends workflows > replaces the QR together with its confirmed link after an account change
+AssertionError: expected 'data:image/png;base64,actor-A' to be 'data:image/png;base64,actor-B' // Object.is equality
+
+Expected: "data:image/png;base64,actor-B"
+Received: "data:image/png;base64,actor-A"
+
+ ❯ src/app/features/friends/v2-friends-page.component.spec.ts:74:74
+     72|     await component().controller.reload(); await settle();
+     73|     expect(element().querySelector('.invitation-url')?.textContent).to…
+     74|     expect(element().querySelector('.qr-slot img')?.getAttribute('src'…
+       |                                                                          ^
+     75|     expect(vi.mocked(toDataURL).mock.calls.map(call => String(call[0])…
+     76|       expect.stringContaining('a'.repeat(64)), expect.stringContaining…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 passed (19)
+   Start at  18:55:07
+   Duration  2.31s (transform 254ms, setup 290ms, import 340ms, tests 1.24s, environment 329ms)
+

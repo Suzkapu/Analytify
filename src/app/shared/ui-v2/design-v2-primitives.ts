@@ -320,7 +320,10 @@ export interface V2MenuItem extends V2Choice { danger?: boolean; }
   template: `
     <div class="v2-overflow">
       <button type="button" v2Button="icon" [attr.aria-label]="label" aria-haspopup="menu"
-        [attr.aria-expanded]="isOpen()" (click)="toggle()" (keydown)="onTriggerKeydown($event)"><i class="pi pi-ellipsis-v" aria-hidden="true"></i></button>
+        [attr.aria-expanded]="isOpen()" (click)="toggle()" (keydown)="onTriggerKeydown($event)">
+        @if (iconUrl) {<img [src]="iconUrl" width="18" height="18" alt="">}
+        @else {<i class="pi pi-ellipsis-v" aria-hidden="true"></i>}
+      </button>
       @if (isOpen()) {
         <div class="v2-menu" role="menu" (keydown)="onMenuKeydown($event)">
           @for (item of items; track item.id) {
@@ -335,6 +338,7 @@ export interface V2MenuItem extends V2Choice { danger?: boolean; }
 })
 export class V2OverflowMenuComponent {
   @Input() label = 'More actions';
+  @Input() iconUrl = '';
   @Input() items: readonly V2MenuItem[] = [];
   @Output() itemSelected = new EventEmitter<string>();
   readonly isOpen = signal(false);

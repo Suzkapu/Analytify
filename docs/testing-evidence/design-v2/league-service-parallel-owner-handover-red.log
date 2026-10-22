@@ -1,0 +1,93 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/song-league/song-league-creation-owner.spec.ts --runner-config=docs/testing-evidence/design-v2/league-service-parallel-vitest.mjs --filter=logout is queued at the local readiness handover
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/league-service-parallel-vitest.mjs
+Application bundle generation complete. [5.348 seconds] - 2026-10-20T17:37:41.711Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/song-league/song-league-creation-owner.spec.ts > Song League creation session ownership > cancels before mutation when logout is queued at the local readiness handover
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "create_song_league",
+      Object {
+        "p_idempotency_key": "ba4eea1c7e7d0201f8d21e1c219fdb1beb68c6c819679706be39565a974aa750",
+        "p_invite_expires_in_hours": 168,
+        "p_invite_max_uses": null,
+        "p_invite_token": "694ce00aedc38001d7cf777ddb2fb50a15ee2a89902b311d989d39ff9b2ed29e",
+        "p_invite_usage_policy": "multi_use",
+        "p_max_members": 5,
+        "p_name": "Same league",
+        "p_timezone": "UTC",
+      },
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/song-league/song-league-creation-owner.spec.ts:101:21
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+ ❯ |SpotiFront| src/app/core/song-league/song-league-creation-owner.spec.ts (9 tests | 1 failed | 8 skipped) 49ms
+     × cancels before mutation when logout is queued at the local readiness handover 45ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/song-league/song-league-creation-owner.spec.ts > Song League creation session ownership > cancels before mutation when logout is queued at the local readiness handover
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "create_song_league",
+      Object {
+        "p_idempotency_key": "ba4eea1c7e7d0201f8d21e1c219fdb1beb68c6c819679706be39565a974aa750",
+        "p_invite_expires_in_hours": 168,
+        "p_invite_max_uses": null,
+        "p_invite_token": "694ce00aedc38001d7cf777ddb2fb50a15ee2a89902b311d989d39ff9b2ed29e",
+        "p_invite_usage_policy": "multi_use",
+        "p_max_members": 5,
+        "p_name": "Same league",
+        "p_timezone": "UTC",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/core/song-league/song-league-creation-owner.spec.ts:101:21
+     99|     });
+    100|     await expect(service.createLeague('Same league', 'UTC')).rejects.t…
+    101|     expect(rpc).not.toHaveBeenCalled();
+       |                     ^
+    102|   });
+    103|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 skipped (9)
+   Start at  19:37:41
+   Duration  1.39s (transform 233ms, setup 412ms, import 244ms, tests 49ms, environment 494ms)
+

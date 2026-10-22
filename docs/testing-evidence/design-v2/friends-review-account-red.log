@@ -1,0 +1,33 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/friends/v2-friends-page.component.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [3.596 seconds] - 2026-10-12T17:05:13.495Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+Warning: A vi.mock("qrcode") call in "/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/friends/v2-friends-page.component.spec.ts" is not at the top level of the module. Although it appears nested, it will be hoisted and executed before any tests run. Move it to the top level to reflect its actual execution order. This will become an error in a future version.
+See: https://vitest.dev/guide/mocking/modules#how-it-works
+ ❯ |SpotiFront| src/app/features/friends/v2-friends-page.component.spec.ts (24 tests | 1 failed) 2726ms
+     × receives the current review link again for a replacement account without reusing its previous decision 1034ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-page.component.spec.ts > Mounted canonical Friends workflows > receives the current review link again for a replacement account without reusing its previous decision
+AssertionError: expected "vi.fn()" to be called 2 times, but got 1 times
+ ❯ src/app/features/friends/v2-friends-page.component.spec.ts:107:88
+    105|     await component().controller.reload(); await settle();
+    106|     expect(element().textContent).not.toContain('Friend request declin…
+    107|     await vi.waitFor(() => {harness.detectChanges(); expect(backend.re…
+       |                                                                                        ^
+    108|     expect(element().textContent).toContain('Paulzgi wants to be your …
+    109|     expect(backend.respondToRequest).toHaveBeenCalledExactlyOnceWith('…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 23 passed (24)
+   Start at  19:05:13
+   Duration  4.04s (transform 361ms, setup 312ms, import 471ms, tests 2.73s, environment 390ms)
+

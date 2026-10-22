@@ -35,6 +35,8 @@ export class CompareRoomCoordinatorService {
   readonly error$ = new BehaviorSubject<string | null>(null);
 
   private roomId = '';
+  private roomGeneration = 0;
+  private proposalRevision = 0;
   private acceptedParticipantIds = new Set<string>();
   private participantTrackBuffers = new Map<string, CompareTrack[]>();
   private hostSenderId = '';
@@ -52,10 +54,15 @@ export class CompareRoomCoordinatorService {
 
   async createRoom(mainParticipant?: CompareParticipant): Promise<void> {
     this.resetState();
-    this.roomId = this.randomToken(24);
-    this.hostSenderId = this.randomToken(18);
-    await this.transport.createRoom(this.roomId, this.hostSenderId);
-    await this.transport.connect(this.roomId, envelope => this.handleMessage(envelope.message));
+    const generation = this.roomGeneration;
+    const roomId = this.roomId = this.randomToken(24);
+    const hostSenderId = this.hostSenderId = this.randomToken(18);
+    await this.transport.createRoom(roomId, hostSenderId);
+    this.assertRoomGeneration(generation);
+    await this.transport.connect(roomId, envelope => {
+      if (generation === this.roomGeneration) this.handleMessage(envelope.message);
+    });
+    this.assertRoomGeneration(generation);
     this.startPresenceReconciliation();
     if (mainParticipant) {
       this.acceptedParticipantIds.add(mainParticipant.id);
@@ -65,12 +72,15 @@ export class CompareRoomCoordinatorService {
 
   async addInvitation(): Promise<CompareInvitation> {
     if (!this.roomId) throw new Error('Create the room before inviting participants.');
+    const generation = this.roomGeneration;
+    const roomId = this.roomId;
     const id = this.randomToken(10);
     const secret = this.randomToken(24);
-    const joinUrl = `${window.location.origin}/new/compare-room/join/${this.roomId}` +
+    const joinUrl = `${window.location.origin}/new/compare-room/join/${roomId}` +
       `#invitation=${encodeURIComponent(id)}&secret=${encodeURIComponent(secret)}`;
     // QR generation is only downloaded when the host actually opens an invite slot.
     const QRCode = resolveQrCodeApi(await import('qrcode') as LazyQrCodeModule);
+    this.assertRoomGeneration(generation);
     const invitation: CompareInvitation = {
       id,
       secret,
@@ -81,7 +91,9 @@ export class CompareRoomCoordinatorService {
         color: {dark: '#08120c', light: '#ffffff'}
       })
     };
+    this.assertRoomGeneration(generation);
     await this.transport.createInvitation(id, secret);
+    this.assertRoomGeneration(generation);
     this.invitations$.next([...this.invitations$.value, invitation]);
     this.invalidateProposal();
     return invitation;
@@ -93,12 +105,18 @@ export class CompareRoomCoordinatorService {
 
     // Remove the slot immediately so a claimed-but-stalled join cannot keep the
     // host UI locked while the best-effort notification is sent to the guest.
+    const generation = this.roomGeneration;
     this.invitations$.next(this.invitations$.value.filter(item => item.id !== invitationId));
+    if (invitation.claimedBy) {
+      this.acceptedParticipantIds.delete(invitation.claimedBy);
+      this.participantTrackBuffers.delete(invitation.claimedBy);
+      this.participants$.next(this.participants$.value.filter(item => item.id !== invitation.claimedBy));
+    }
+    this.invalidateProposal();
     await this.transport.revokeInvitation(invitationId);
-    if (invitation?.claimedBy) {
-      await this.removeParticipant(invitation.claimedBy);
-    } else {
-      this.invalidateProposal();
+    this.assertRoomGeneration(generation);
+    if (invitation.claimedBy) {
+      await this.transport.send({type: 'remove-participant', participantId: invitation.claimedBy});
     }
   }
 
@@ -141,6 +159,8 @@ export class CompareRoomCoordinatorService {
 
   async prepareProposal(name?: string, mode: CompareMergeMode = 'intersection'): Promise<CompareMergeProposal | null> {
     if (!this.canPrepareResult()) return null;
+    const generation = this.roomGeneration;
+    const revision = ++this.proposalRevision;
     const participants = this.participants$.value;
     const participantTracks = participants.map(participant => participant.tracks);
     const tracks = mode === 'union'
@@ -176,6 +196,7 @@ export class CompareRoomCoordinatorService {
       ...unsignedProposal,
       contentHash: await proposalContentHash(unsignedProposal)
     };
+    if (generation !== this.roomGeneration || revision !== this.proposalRevision) return null;
     this.proposal$.next(proposal);
     this.participants$.next(participants.map(participant => ({
       ...participant,
@@ -186,7 +207,7 @@ export class CompareRoomCoordinatorService {
     void this.transport.send({
       type: 'merge-proposal',
       proposal: {...proposal, tracks: []}
-    }).catch(error => this.reportError(error));
+    }).catch(error => {if (generation === this.roomGeneration) this.reportError(error);});
     return proposal;
   }
 
@@ -248,15 +269,18 @@ export class CompareRoomCoordinatorService {
   }
 
   async closeRoom(): Promise<void> {
-    this.stopPresenceReconciliation();
-    if (this.roomId) {
+    const hadRoom = !!this.roomId;
+    this.resetState();
+    const generation = this.roomGeneration;
+    if (hadRoom) {
       await this.transport.closeRoom().catch(() => {});
     }
+    if (generation !== this.roomGeneration) return;
     await this.transport.disconnect();
-    this.resetState();
   }
 
   private handleMessage(message: CompareRoomMessage): void {
+    const generation = this.roomGeneration;
     if (message.type === 'invitation-claimed') {
       const invitation = this.invitations$.value.find(item => item.id === message.invitationId);
       if (!invitation || invitation.claimedBy) return;
@@ -271,7 +295,7 @@ export class CompareRoomCoordinatorService {
       return;
     }
 
-    if (message.type === 'participant-state') {
+    if (message.type === 'participant-state' || message.type === 'participant-tracks-complete') {
       if (!this.acceptedParticipantIds.has(message.participant.id)) return;
       // Participant IDs identify comparison slots. Spotify identities may
       // intentionally repeat when one account contributes separate groups.
@@ -315,7 +339,7 @@ export class CompareRoomCoordinatorService {
           approvedProposalHash: message.contentHash
         });
         void this.deliverProposal(this.proposal$.value, message.participantId)
-          .catch(error => this.reportError(error));
+          .catch(error => {if (generation === this.roomGeneration) this.reportError(error);});
       }
     } else if (message.type === 'save-result') {
       this.setLocalSaveResult(message.participantId, message.result);
@@ -381,6 +405,7 @@ export class CompareRoomCoordinatorService {
   }
 
   private invalidateProposal(notifyGuests = true): void {
+    this.proposalRevision++;
     const hadProposal = !!this.proposal$.value;
     this.proposal$.next(null);
     this.sharedTracks$.next([]);
@@ -391,7 +416,9 @@ export class CompareRoomCoordinatorService {
       result: undefined
     })));
     if (hadProposal && notifyGuests) {
-      void this.transport.send({type: 'merge-proposal-cancelled'}).catch(error => this.reportError(error));
+      const generation = this.roomGeneration;
+      void this.transport.send({type: 'merge-proposal-cancelled'})
+        .catch(error => {if (generation === this.roomGeneration) this.reportError(error);});
     }
   }
 
@@ -411,9 +438,13 @@ export class CompareRoomCoordinatorService {
 
   private startPresenceReconciliation(): void {
     this.stopPresenceReconciliation();
-    void this.transport.touchPresence().catch(error => this.reportError(error));
+    const generation = this.roomGeneration;
+    const presenceError = (error: unknown) => {
+      if (generation === this.roomGeneration) this.reportError(error);
+    };
+    void this.transport.touchPresence().catch(presenceError);
     this.presenceTimer = window.setInterval(() => {
-      void this.transport.touchPresence().catch(error => this.reportError(error));
+      void this.transport.touchPresence().catch(presenceError);
       void this.reconcileParticipants();
     }, 15_000);
   }
@@ -426,12 +457,13 @@ export class CompareRoomCoordinatorService {
   private async reconcileParticipants(): Promise<void> {
     if (this.reconciliationRunning) return;
     this.reconciliationRunning = true;
+    const generation = this.roomGeneration;
     try {
       await this.transport.reconcileParticipants();
     } catch (error) {
-      this.reportError(error);
+      if (generation === this.roomGeneration) this.reportError(error);
     } finally {
-      this.reconciliationRunning = false;
+      if (generation === this.roomGeneration) this.reconciliationRunning = false;
     }
   }
 
@@ -440,6 +472,9 @@ export class CompareRoomCoordinatorService {
   }
 
   private resetState(): void {
+    this.roomGeneration++;
+    this.proposalRevision++;
+    this.reconciliationRunning = false;
     this.stopPresenceReconciliation();
     this.roomId = '';
     this.hostSenderId = '';
@@ -450,6 +485,12 @@ export class CompareRoomCoordinatorService {
     this.proposal$.next(null);
     this.sharedTracks$.next([]);
     this.error$.next(null);
+  }
+
+  private assertRoomGeneration(generation: number): void {
+    if (generation !== this.roomGeneration) {
+      throw new DOMException('The Compare Room operation was cancelled.', 'AbortError');
+    }
   }
 
   private randomToken(byteCount: number): string {

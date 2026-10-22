@@ -1,0 +1,36 @@
+npm notice run spoti-front@0.0.0 architecture:check
+npm notice run node scripts/check-architecture.mjs
+Architecture boundaries are valid.
+npm notice run spoti-front@0.0.0 api-usage:check
+npm notice run node scripts/check-api-on-demand.mjs
+API-on-demand decision and implementation contracts are valid.
+npm notice run spoti-front@0.0.0 storage-policy:check
+npm notice run node scripts/check-browser-storage-policy.mjs
+Browser storage policy check passed (6 inventoried mechanisms).
+npm notice run spoti-front@0.0.0 data-retention:check
+npm notice run node scripts/check-data-retention-policy.mjs
+Retention inventory covers 75 database tables and 12 lifecycle groups.
+npm notice run spoti-front@0.0.0 deployment-pipeline:check
+npm notice run node --test scripts/production-index-validator.test.mjs scripts/activate-release.test.mjs scripts/activate-release-rehearsal.test.mjs scripts/security-headers.test.mjs scripts/inject-nginx-security-include.test.mjs scripts/nginx-http2.test.mjs scripts/deployment-freshness.test.mjs scripts/deployment-policy.test.mjs && bash -n scripts/preflight-oracle-ssh.sh
+✖ scripts/activate-release-rehearsal.test.mjs (265.815375ms)
+✔ scripts/activate-release.test.mjs (62.329043ms)
+✔ scripts/deployment-freshness.test.mjs (150.900004ms)
+✔ scripts/deployment-policy.test.mjs (67.958737ms)
+✔ scripts/inject-nginx-security-include.test.mjs (220.963485ms)
+✔ scripts/nginx-http2.test.mjs (63.854444ms)
+✔ scripts/production-index-validator.test.mjs (68.812583ms)
+✔ scripts/security-headers.test.mjs (92.003488ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 7
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 276.978413
+
+✖ failing tests:
+
+test at scripts/activate-release-rehearsal.test.mjs:1:1
+✖ scripts/activate-release-rehearsal.test.mjs (265.815375ms)
+  'test failed'

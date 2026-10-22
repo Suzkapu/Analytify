@@ -271,16 +271,29 @@ export class StorageService {
 
   /** Used only after an explicit backup upload request, never during startup. */
   async hydrateAllFeatureData(): Promise<number> {
+    const generation = this.sessionLifecycle.capture();
+    const epoch = this.cacheEpoch;
+    const revisions = new Map(this.localMutations);
     const db = await this.getDB().catch(() => null);
-    if (!db) return 0;
+    if (!db || !this.sessionLifecycle.isCurrent(generation) || epoch !== this.cacheEpoch) return 0;
     return new Promise<number>(resolve => {
       try {
         const request = db.transaction(this.featureStore, 'readonly')
           .objectStore(this.featureStore).getAll();
         request.onsuccess = () => {
+          if (!this.sessionLifecycle.isCurrent(generation) || epoch !== this.cacheEpoch) {
+            resolve(0);
+            return;
+          }
           const entries = (request.result || []) as Array<{key: string; value: string}>;
-          entries.forEach(entry => this.inMemoryCache.set(entry.key, entry.value));
-          resolve(entries.length);
+          let loaded = 0;
+          entries.forEach(entry => {
+            if (this.inMemoryCache.has(entry.key)
+              || (revisions.get(entry.key) ?? 0) !== (this.localMutations.get(entry.key) ?? 0)) return;
+            this.inMemoryCache.set(entry.key, entry.value);
+            loaded++;
+          });
+          resolve(loaded);
         };
         request.onerror = () => resolve(0);
       } catch {

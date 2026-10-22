@@ -1,5 +1,4 @@
 import {
-  ambientPhaseForKey,
   ambientTargetForKey,
   ambientTargetWithInteraction,
   ambientTargetWithScroll,
@@ -10,20 +9,30 @@ import {
 } from './ambient-background.math';
 
 describe('ambient background math', () => {
-  it('normalizes blank and case-varied route keys consistently', () => {
-    expect(ambientPhaseForKey('   ')).toBe(ambientPhaseForKey('default'));
-    expect(ambientPhaseForKey(' LIBRARY ')).toBe(ambientPhaseForKey('library'));
-    expect(ambientTargetForKey('')).toEqual(ambientTargetForKey('default'));
+  it('normalizes canonical scene aliases and uses Library for account/admin/unknown keys', () => {
+    const library = ambientTargetForKey('library');
+    for (const key of ['', '  ', ' LIBRARY ', 'default', 'account', 'admin', 'unknown', 'constructor', '__proto__']) expect(ambientTargetForKey(key)).toEqual(library);
   });
-  it('derives stable distinct normalized targets from semantic route keys', () => {
-    expect(ambientPhaseForKey('library')).toBe(ambientPhaseForKey('library'));
-    expect(ambientPhaseForKey('library')).not.toBe(ambientPhaseForKey('insights'));
-    const target = ambientTargetForKey('library');
-    expect(target).toEqual(ambientTargetForKey('library'));
-    expect(target.primaryX).toBeGreaterThanOrEqual(0);
-    expect(target.primaryX).toBeLessThanOrEqual(1);
-    expect(target.secondaryY).toBeGreaterThanOrEqual(0);
-    expect(target.secondaryY).toBeLessThanOrEqual(1);
+
+  it('uses the canonical normalized glow centers for every desktop scene', () => {
+    for (const [key, centers] of [
+      ['library', [.25, .15, .84, .58]], ['insights', [.68, .3, .16, .72]],
+      ['social', [.4, .76, .83, .22]], ['league', [1120 / 1440, 145 / 810, 210 / 1440, 695 / 810]]
+    ] as const) {
+      const target = ambientTargetForKey(key);
+      for (const [index, property] of (['primaryX', 'primaryY', 'secondaryX', 'secondaryY'] as const).entries()) expect(target[property]).toBeCloseTo(centers[index], 7);
+    }
+  });
+
+  it('preserves canonical particle positions at page top across route changes', () => {
+    for (const key of ['library', 'insights', 'social', 'league', 'login']) {
+      const route = ambientTargetForKey(key);
+      expect(route.dotsX).toBe(0);
+      expect(route.dotsY).toBe(0);
+      const top = ambientTargetWithScroll(route, 0);
+      expect(top.dotsX).toBe(0);
+      expect(top.dotsY).toBe(0);
+    }
   });
 
   it('normalizes scroll and safely handles short or invalid scroll ranges', () => {
@@ -34,14 +43,18 @@ describe('ambient background math', () => {
     expect(normalizedScrollProgress(100, 0, 0)).toBe(0);
   });
 
-  it('blends subtle scroll offsets without mutating the route target', () => {
+  it('moves only particles on scroll and preserves the canonical route glow coordinates', () => {
     const route = ambientTargetForKey('social');
     const copy = {...route};
     const top = ambientTargetWithScroll(route, 0);
     const bottom = ambientTargetWithScroll(route, 1);
     expect(route).toEqual(copy);
     expect(top).not.toEqual(bottom);
-    expect(Math.abs(bottom.primaryY - top.primaryY)).toBeLessThanOrEqual(.11);
+    for (const key of ['primaryX', 'primaryY', 'secondaryX', 'secondaryY'] as const) {
+      expect(top[key]).toBe(route[key]);
+      expect(bottom[key]).toBe(route[key]);
+    }
+    expect(bottom.dotsY).not.toBe(top.dotsY);
     expect(ambientTargetWithScroll(route, 1, 0)).toEqual(ambientTargetWithScroll(route, 0, 0));
   });
 
@@ -58,14 +71,17 @@ describe('ambient background math', () => {
     expect(ambientVectorsClose(current, target)).toBe(false);
   });
 
-  it('composes deterministic generic overlay depth and shell mode offsets', () => {
+  it('composes deterministic overlay depth without moving route glows, and shell mode intensity', () => {
     const route = ambientTargetForKey('library');
     const tools = ambientTargetWithInteraction(route, 'tools', 'app');
     const account = ambientTargetWithInteraction(route, 'account', 'app');
     const modal = ambientTargetWithInteraction(route, 'modal', 'app');
     expect(tools).toEqual(ambientTargetWithInteraction(route, 'tools', 'app'));
-    expect(tools.primaryX).toBeLessThan(route.primaryX);
-    expect(account.primaryX).toBeGreaterThan(route.primaryX);
+    for (const overlay of [tools, account, modal]) {
+      for (const key of ['primaryX', 'primaryY', 'secondaryX', 'secondaryY'] as const) expect(overlay[key]).toBe(route[key]);
+    }
+    expect(tools.dotsX).toBeLessThan(route.dotsX);
+    expect(account.dotsX).toBeGreaterThan(route.dotsX);
     expect(modal.intensity).toBeLessThan(tools.intensity);
     expect(ambientTargetWithInteraction(route, 'none', 'focus').intensity).toBeLessThan(route.intensity);
     expect(route).toEqual(ambientTargetForKey('library'));

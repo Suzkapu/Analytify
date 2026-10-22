@@ -1,0 +1,100 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [3.446 seconds] - 2026-10-12T18:07:59.762Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts (64 tests | 1 failed) 2367ms
+     × hides an empty saved shortcut bar while keeping all destinations reachable from the menu 368ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > hides an empty saved shortcut bar while keeping all destinations reachable from the menu
+AssertionError: expected <nav _ngcontent-a-c1947878117 …(2)>…(3)</nav> to be null
+
+- Expected:
+null
+
++ Received:
+<nav
+  _ngcontent-a-c1947878117=""
+  aria-label="Primary navigation"
+  class="v2-mobile-nav"
+>
+  <a
+    _ngcontent-a-c1947878117=""
+    aria-current="page"
+    class="v2-mobile-nav__link is-active"
+    href="/playlists"
+  >
+    <i
+      _ngcontent-a-c1947878117=""
+      aria-hidden="true"
+      class="pi pi-list"
+    />
+    <span
+      _ngcontent-a-c1947878117=""
+    >
+      Playlists
+    </span>
+  </a>
+  <a
+    _ngcontent-a-c1947878117=""
+    class="v2-mobile-nav__link"
+    href="/stats"
+  >
+    <i
+      _ngcontent-a-c1947878117=""
+      aria-hidden="true"
+      class="pi pi-chart-bar"
+    />
+    <span
+      _ngcontent-a-c1947878117=""
+    >
+      Stats
+    </span>
+  </a>
+  <a
+    _ngcontent-a-c1947878117=""
+    class="v2-mobile-nav__link"
+    href="/history"
+  >
+    <i
+      _ngcontent-a-c1947878117=""
+      aria-hidden="true"
+      class="pi pi-history"
+    />
+    <span
+      _ngcontent-a-c1947878117=""
+    >
+      History
+    </span>
+  </a>
+  <!--container-->
+</nav>
+
+ ❯ src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts:31:75
+     29|     const {harness, shell} = await createShell();
+     30|     harness.detectChanges();
+     31|     expect(harness.fixture.nativeElement.querySelector('.v2-mobile-nav…
+       |                                                                           ^
+     32|     shell.toggleTools(); harness.detectChanges();
+     33|     const links = [...harness.fixture.nativeElement.querySelectorAll('…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 63 passed (64)
+   Start at  20:07:59
+   Duration  3.34s (transform 184ms, setup 245ms, import 229ms, tests 2.37s, environment 364ms)
+

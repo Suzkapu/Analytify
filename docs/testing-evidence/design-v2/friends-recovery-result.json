@@ -1,0 +1,524 @@
+{
+  "verifiedAt": "2026-10-12 Europe/Vienna",
+  "targeted": {
+    "command": "npx ng test --watch=false --progress=false --coverage --runner-config=/tmp/analytify-friends-vitest.config.mjs --include=src/app/features/friends/v2-friends-page.component.spec.ts --include=src/app/features/friends/v2-friends.controller.spec.ts --include=src/app/features/friends/v2-friends-layout.component.spec.ts --include=src/app/shared/ui-v2/v2-friends-feedback.component.spec.ts",
+    "passed": 177,
+    "files": 8,
+    "exitCode": 0,
+    "reportDirectory": "/tmp/analytify-friends-recovery-coverage",
+    "scopeNote": "Per-file evidence only; this selected run does not replace or combine with whole-application coverage.",
+    "log": "navigation-friends-targeted-final.log",
+    "scope": "Combined Friends72 and dependent Navigation105 before the two standalone choice cases added to full CI."
+  },
+  "red": {
+    "log": "friends-receive-recovery-red.log",
+    "failed": 1,
+    "passed": 13,
+    "cause": "Successful receive retry did not publish the route-matching preview."
+  },
+  "productionFix": "Publish an already-confirmed matching preview during prepare after retry, without receiving again or accepting automatically.",
+  "perFile": {
+    "src/app/features/friends/friends.routes.ts": {
+      "lines": {
+        "total": 4,
+        "covered": 4,
+        "skipped": 0,
+        "pct": 100
+      },
+      "functions": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 4,
+        "covered": 4,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "src/app/features/friends/v2-friends-layout.component.ts": {
+      "lines": {
+        "total": 2,
+        "covered": 2,
+        "skipped": 0,
+        "pct": 100
+      },
+      "functions": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 2,
+        "covered": 2,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "src/app/features/friends/v2-friends-page.component.ts": {
+      "lines": {
+        "total": 101,
+        "covered": 101,
+        "skipped": 0,
+        "pct": 100
+      },
+      "functions": {
+        "total": 25,
+        "covered": 25,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 147,
+        "covered": 147,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 126,
+        "covered": 126,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "src/app/features/friends/v2-friends.controller.ts": {
+      "lines": {
+        "total": 122,
+        "covered": 122,
+        "skipped": 0,
+        "pct": 100
+      },
+      "functions": {
+        "total": 45,
+        "covered": 45,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 176,
+        "covered": 176,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 137,
+        "covered": 137,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "src/app/shared/ui-v2/v2-friends-feedback.component.ts": {
+      "lines": {
+        "total": 12,
+        "covered": 12,
+        "skipped": 0,
+        "pct": 100
+      },
+      "functions": {
+        "total": 6,
+        "covered": 6,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 18,
+        "covered": 18,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 11,
+        "covered": 11,
+        "skipped": 0,
+        "pct": 100
+      }
+    }
+  },
+  "sourceHashes": {
+    "src/app/features/friends/v2-friends-page.component.ts": "ca445634406462ef123eabe032a4840d3a7e7f81c835a42cc180d86f81d05e2f",
+    "src/app/features/friends/v2-friends-page.component.spec.ts": "c61ac215db416984e507570ba5b03c880fe584d68189feba7d03d0479efc574d",
+    "src/app/features/friends/v2-friends.controller.ts": "1f067cff9545fbea8f7082bba37d3795cd4e7e4214164bde46db4af3ccba2fd4",
+    "src/app/features/friends/v2-friends.controller.spec.ts": "b37bbbffd81d32d77fb84be5d36af1630fadb7ff92cd5f22184b94be041ab6ed",
+    "src/app/features/friends/v2-friends-layout.component.ts": "312e7e7401d2c688c70d5881a86001650400731089c164f4183e79544051f0d4",
+    "src/app/features/friends/v2-friends-layout.component.spec.ts": "43ad6c876d42f3641bfc36a79cee6dead24b8002d1fc1dfdf62c0d1ae74d491e",
+    "e2e/design-v2-friends.spec.ts": "a44b45ed68299a06d69f3d1e97b5f571e679ba3e9dbffdfb74db87c494407a42",
+    "src/app/shared/ui-v2/v2-friends-feedback.component.ts": "a5e7f6d28ecc40c1ce562f9113372f99c79d6284e9a5281592ecf7437a4a7f21",
+    "src/app/shared/ui-v2/v2-friends-feedback.component.scss": "0c03f352231c0c203a130619180dd4318630524bbc4fa7c08ab911ff23b6b5c0",
+    "src/app/shared/ui-v2/v2-friends-feedback.component.spec.ts": "c9e3aaa141f0c56903f4e3e02819a7e50f7f82463bf665dd2cc260ee434c8b6c",
+    "src/app/features/friends/v2-friends-page.component.html": "54645d6413ef3afb1d62d2d5f94ef603656a189f1520c159b481e7044e34e312",
+    "e2e/helpers/native-transitions.ts": "22c4ab8e8e9e6e67faf0b5719441a06d7a28c613964751004a74837a3e29c742",
+    "src/app/core/auth/spotify-auth.service.ts": "91712d1f5c34c9c32064fd7090c77b464b59d677521e130d9a0f3b94db04a22d"
+  },
+  "browser": {
+    "command": "ANALYTIFY_WEBKIT_EXECUTABLE=/tmp/analytify-webkit-libs/run-webkit.sh npx playwright test --config=playwright.friends.config.ts",
+    "passed": 16,
+    "exitCode": 0,
+    "log": "friends-split-matrix.log",
+    "exitFile": "friends-split-matrix.exit"
+  },
+  "fullFrontendRegression": {
+    "command": "npm run verify:ci",
+    "passed": 1534,
+    "skipped": 1,
+    "files": 147,
+    "exitCode": 0,
+    "log": "navigation-exit-phase-ci-final.log",
+    "coverage": {
+      "lines": {
+        "total": 11107,
+        "covered": 8622,
+        "skipped": 0,
+        "pct": 77.62
+      },
+      "statements": {
+        "total": 13076,
+        "covered": 9861,
+        "skipped": 0,
+        "pct": 75.41
+      },
+      "functions": {
+        "total": 2733,
+        "covered": 2034,
+        "skipped": 0,
+        "pct": 74.42
+      },
+      "branches": {
+        "total": 8521,
+        "covered": 5558,
+        "skipped": 0,
+        "pct": 65.22
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "productionSources": 165,
+    "omissions": 0,
+    "report": "navigation-current-frontend-coverage-summary.json",
+    "scope": "Fresh current auth exit guards and Retry icon.48-source zero-uncovered budgets pass; final98 gates fail."
+  },
+  "limits": [
+    "Hosted Auth/PostgREST/full migration and identity replacement/realtime unverified.",
+    "Full shared-shell/sidebar/header/footer parity and approved visual/motion goldens remain open.",
+    "QR pixels have not been independently decoded.",
+    "Earlier reduced-motion DOM-update TimeoutError remains unresolved; observer still rejects timeouts.",
+    "Navigation window-focus refresh during pre-drain logout needs a dedicated re-entry regression."
+  ],
+  "timingRecovery": {
+    "isolatedOriginalPassed": 9,
+    "isolatedDeterministicPassed": 9,
+    "log": "friends-recovery-stats-deterministic.log",
+    "change": "Control the existing 300ms debounce with fake timers, proving no request at 299ms and exactly one at 300ms. Bound Angular/jsdom concurrency to four workers; deadlines and gates are unchanged.",
+    "boundedFullRegression": {
+      "command": "npm run test:ci",
+      "passed": 1493,
+      "skipped": 1,
+      "files": 145,
+      "exitCode": 1,
+      "cause": "Unchanged Friends new-source coverage budgets fail; runnable tests all pass.",
+      "log": "friends-recovery-bounded-frontend.log",
+      "coverage": {
+        "lines": {
+          "total": 11033,
+          "covered": 8536,
+          "skipped": 0,
+          "pct": 77.36
+        },
+        "statements": {
+          "total": 12969,
+          "covered": 9736,
+          "skipped": 0,
+          "pct": 75.07
+        },
+        "functions": {
+          "total": 2697,
+          "covered": 1997,
+          "skipped": 0,
+          "pct": 74.04
+        },
+        "branches": {
+          "total": 8462,
+          "covered": 5480,
+          "skipped": 0,
+          "pct": 64.76
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "productionSources": 163,
+      "omissions": 0,
+      "scopeNote": "Whole-app run includes the receive Retry fix and deterministic Stats test; predates the subsequent QR ownership fix."
+    }
+  },
+  "qrOwnership": {
+    "redLog": "friends-qr-ownership-red.log",
+    "failed": 1,
+    "passed": 18,
+    "cause": "New account link was rendered alongside the previous account QR image.",
+    "fix": "Store QR with its exact URL, hide stale images synchronously, regenerate for the current confirmed link.",
+    "assertion": "Delayed replacement rendering proves no old image remains while the new QR is pending.",
+    "canonicalChange": "No new visual controls or layouts; restores the existing canonical matching link/QR contract."
+  },
+  "verification": {
+    "testTypecheck": "EXIT0; friends-review-session-types.log",
+    "scopedLint": "EXIT0; friends-review-session-lint.log",
+    "diffCheck": "EXIT0",
+    "nodePolicy": "10 passed / EXIT0",
+    "toolingHashes": {
+      "angular.json": "8bc3dad5fb553bc79403b550f1b0062173b3af87bd99f70c9390986a70c8d8d3",
+      "vitest.base.config.mjs": "4e6ed99867c0def651c08bf1fc1648f550bf8a33e778f69d675589c2ee52cbf0",
+      "scripts/design-v2-test-policy.test.mjs": "9532f0ec8a3b2c0f1b926c0e153d3f41ed64bc5bce56c859e703781051b70de6",
+      "src/app/features/insights/user-stats/v2-stats-snapshot-workflow.spec.ts": "229f0131084686952512b9c472d94287278db9cae9edcdd8e7e99888d2a97e77"
+    },
+    "browserLint": "EXIT0; friends-split-lint.log/.exit",
+    "productionBuild": {
+      "exitCode": 0,
+      "log": "navigation-exit-phase-ci-final.log",
+      "initialJavaScriptBytes": 773839
+    },
+    "transitionPolicy": {
+      "policy": "Every DOM callback and finished promise must fulfill. Only an older ready promise skipped specifically by a newer native transition is expected in rapid logout/Back navigation. The existing settled check stays strict elsewhere.",
+      "policyTests": 3,
+      "policyLog": "friends-transition-observer-policy.log",
+      "qualityLog": "friends-transition-quality.log",
+      "scheduledIn": "npm run design-v2-quality:check",
+      "transitions": [
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--desktop/friends-transitions.json",
+          "result": {
+            "pending": 0,
+            "missingUpdates": 0,
+            "missingFinishes": 0,
+            "unmatchedErrors": 0,
+            "unexpectedErrors": []
+          }
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--firefox-stats/friends-transitions.json",
+          "result": {
+            "pending": 0,
+            "missingUpdates": 0,
+            "missingFinishes": 0,
+            "unmatchedErrors": 0,
+            "unexpectedErrors": []
+          }
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--mobile/friends-transitions.json",
+          "result": {
+            "pending": 0,
+            "missingUpdates": 0,
+            "missingFinishes": 0,
+            "unmatchedErrors": 0,
+            "unexpectedErrors": []
+          }
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--webkit-stats/friends-transitions.json",
+          "result": {
+            "pending": 0,
+            "missingUpdates": 0,
+            "missingFinishes": 0,
+            "unmatchedErrors": 0,
+            "unexpectedErrors": []
+          }
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--ec6c7-responsive-recovery-reduce--desktop/friends-transitions.json",
+          "result": {
+            "pending": 0,
+            "missingUpdates": 0,
+            "missingFinishes": 0,
+            "unmatchedErrors": 0,
+            "unexpectedErrors": []
+          }
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--ec6c7-responsive-recovery-reduce--firefox-stats/friends-transitions.json",
+          "result": {
+            "pending": 0,
+            "missingUpdates": 0,
+            "missingFinishes": 0,
+            "unmatchedErrors": 0,
+            "unexpectedErrors": []
+          }
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--ec6c7-responsive-recovery-reduce--mobile/friends-transitions.json",
+          "result": {
+            "pending": 0,
+            "missingUpdates": 0,
+            "missingFinishes": 0,
+            "unmatchedErrors": 0,
+            "unexpectedErrors": []
+          }
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--ec6c7-responsive-recovery-reduce--webkit-stats/friends-transitions.json",
+          "result": {
+            "pending": 0,
+            "missingUpdates": 0,
+            "missingFinishes": 0,
+            "unmatchedErrors": 0,
+            "unexpectedErrors": []
+          }
+        }
+      ],
+      "earlierTimeout": {
+        "log": "friends-review-session-browser.log",
+        "status": "Observed DOM-update TimeoutError in earlier mobile/reduced-motion run; not reproduced or proven fixed. All TimeoutErrors still fail the recovery observer."
+      },
+      "strictRed": "friends-review-session-motion-red.log"
+    }
+  },
+  "confirmedOutcomes": {
+    "canonical": "friends-outcome-canonical.json",
+    "screenshots": [
+      "friends-outcome-canonical-0.png",
+      "friends-outcome-canonical-1.png",
+      "friends-outcome-canonical-2.png"
+    ],
+    "red": [
+      {
+        "log": "friends-outcomes-red.log",
+        "cause": "Consumed creation caused automatic second invitation; 18 passed and 2 failed, including QR-mock interference from the unintended asynchronous creation."
+      },
+      {
+        "log": "friends-review-account-red.log",
+        "passed": 23,
+        "failed": 1,
+        "cause": "Replacement account never received the same review route again."
+      },
+      {
+        "log": "friends-outcome-geometry-red.log",
+        "failed": 1,
+        "cause": "Shell cascade overrode canonical feedback action height/weight/line-height to44px/760/15.4px."
+      }
+    ],
+    "contracts": [
+      "Inactive owner links require explicit new creation; a fresh token is generated and stale duplicate actions are blocked.",
+      "Accepted/Declined render only after confirmation; read failure retries do not repeat the decision.",
+      "Replacement account receives the review independently and cannot inherit the earlier outcome.",
+      "Feedback actions match canonical260x48 and14px/600/20px typography."
+    ],
+    "browserStatus": "16 split native cases passed; friends-split-matrix.log/.exit",
+    "limits": [
+      "Hosted account replacement/realtime and full visual/motion parity remain unverified."
+    ]
+  },
+  "reviewAndSession": {
+    "canonical": "friends-review-session-canonical.json",
+    "redLog": "friends-review-session-red.log",
+    "red": {
+      "passed": 19,
+      "failed": 3
+    },
+    "contracts": [
+      "A confirming read that loses its received request clears the preview and becomes terminal without another receive.",
+      "Review unavailable state leaves unrelated friendship actions usable on other tabs.",
+      "Real auth logout signal clears secrets before pending work drains and ignores old completion.",
+      "Page dismisses local QR/copy/removal presentation on profile-required feedback."
+    ],
+    "browser": {
+      "passed": 8,
+      "exitCode": 0,
+      "log": "friends-exit-phase-browser.log",
+      "scope": "Affected real-shell confirming-read/session-exit/Back phases after auth/controller exit guards; prior16-case invitation/geometry run remains historical evidence.",
+      "sessions": [
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-exit-phase-artifacts/design-v2-friends-Friends--cce0a-on-and-session-exit-reduce--desktop/friends-session.json",
+          "motion": "reduce",
+          "authLogouts": 1
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-exit-phase-artifacts/design-v2-friends-Friends--cce0a-on-and-session-exit-reduce--firefox-stats/friends-session.json",
+          "motion": "reduce",
+          "authLogouts": 1
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-exit-phase-artifacts/design-v2-friends-Friends--cce0a-on-and-session-exit-reduce--mobile/friends-session.json",
+          "motion": "reduce",
+          "authLogouts": 1
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-exit-phase-artifacts/design-v2-friends-Friends--cce0a-on-and-session-exit-reduce--webkit-stats/friends-session.json",
+          "motion": "reduce",
+          "authLogouts": 1
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-exit-phase-artifacts/design-v2-friends-Friends--cea52-session-exit-no-preference--desktop/friends-session.json",
+          "motion": "no-preference",
+          "authLogouts": 1
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-exit-phase-artifacts/design-v2-friends-Friends--cea52-session-exit-no-preference--firefox-stats/friends-session.json",
+          "motion": "no-preference",
+          "authLogouts": 1
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-exit-phase-artifacts/design-v2-friends-Friends--cea52-session-exit-no-preference--mobile/friends-session.json",
+          "motion": "no-preference",
+          "authLogouts": 1
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-exit-phase-artifacts/design-v2-friends-Friends--cea52-session-exit-no-preference--webkit-stats/friends-session.json",
+          "motion": "no-preference",
+          "authLogouts": 1
+        }
+      ]
+    },
+    "limits": [
+      "Hosted Auth/PostgREST/full migration and identity replacement/realtime unverified.",
+      "Full shared-shell/sidebar/header/footer parity and approved visual/motion goldens remain open.",
+      "QR pixels have not been independently decoded.",
+      "Earlier reduced-motion DOM-update TimeoutError remains unresolved; observer still rejects timeouts.",
+      "Navigation window-focus refresh during pre-drain logout needs a dedicated re-entry regression."
+    ]
+  },
+  "sessionExit": {
+    "red": {
+      "passed": 29,
+      "failed": 1,
+      "log": "navigation-exit-reentry-red.log",
+      "cause": "Real auth logout was still draining while Navigation reload/retry/load reacquired the old account."
+    },
+    "fix": "Count active logout/cache-clear/consent exits and release on completion/failure; account-owned Navigation/Friends reads and actions stay blocked while exiting. Same-account later login remains supported.",
+    "canonical": "navigation-exit-phase-canonical.json",
+    "contracts": [
+      "Real lifecycle drain plus same-account relogin",
+      "Overlapping exits remain blocked until all complete",
+      "Cache clear failure and consent rejection release the phase",
+      "Non-consent continuation does not enter exit phase",
+      "Mounted window focus and subscriber-ordering re-entry cannot restore cached choices"
+    ],
+    "fullCiFailure": {
+      "log": "navigation-exit-phase-ci.log",
+      "passed": 1514,
+      "failed": 20,
+      "skipped": 1,
+      "cause": "One shell-account auth fake lacked the new public sessionExiting state; fixture contract restored with all assertions intact."
+    }
+  }
+}

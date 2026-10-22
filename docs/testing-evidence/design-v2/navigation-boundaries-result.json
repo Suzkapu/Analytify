@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-17",
+  "branch": "codex/design-v2",
+  "checkpoint": "a8a7a3966a622c992e9058094627a768c16a363a",
+  "status": "Reviewed service ownership fixes plus passing full local verification. Full goal remains active/incomplete. Changes uncommitted.",
+  "changes": [
+    "Navigation browser suite split/batched without losing assertions; explicit wait for enabled user input after optimistic save.",
+    "Auth obsolete invalid_grant cleanup cannot clear replacement credentials or invoke deletion via replacement SDK session.",
+    "Auth refresh coalescing belongs to captured session generation; only exact captured observable clears cached request.",
+    "Songs detaches previous progress before hydration, rejects stale route/account/task completions, preserves album selection only on same playlist, disposes route stream and synchronous completed-task observer."
+  ],
+  "commands": [
+    {
+      "command": "npm run verify:ci",
+      "exit": 0,
+      "scope": "Full required existing local policy/security/type/lint/test/build checks; frontend1779pass/1documented hosted skip/159files,worker215,edge81;785303initialJS bytes.",
+      "log": "docs/testing-evidence/design-v2/navigation-boundaries-ci.log",
+      "logSha256": "237df2ebed7a4759ffc00d04904861bc1c34dc7a328bb474f4bb80aefaf68dbb"
+    },
+    {
+      "command": "node scripts/check-application-coverage-inventory.mjs frontend --final",
+      "exit": 1,
+      "scope": "Actual expected failure at frontend lines83.81<98; other metrics also below98.",
+      "log": "docs/testing-evidence/design-v2/navigation-boundaries-final98.log",
+      "logSha256": "3dc652d3fce6c98c1c0c7b3ff497d30787c4bd0b1d1bced222526b962e070c1b"
+    },
+    {
+      "command": "node scripts/check-application-coverage-inventory.mjs worker --final",
+      "exit": 0,
+      "scope": "All17 sources/all4metrics98; measured report unchanged source hashes verified.",
+      "log": "docs/testing-evidence/design-v2/sidebar-worker-final98.log",
+      "logSha256": "c5810ab7c2913b354b2a5face1724d4140fb2a1d04ce8994d87affa54d03af2f"
+    },
+    {
+      "command": "node scripts/check-application-coverage-inventory.mjs edge --final",
+      "exit": 0,
+      "scope": "All12 sources/all4metrics98; measured report unchanged source hashes verified.",
+      "log": "docs/testing-evidence/design-v2/sidebar-edge-final98.log",
+      "logSha256": "855b394795851de46882ec2ec0e5adb2484de43ed7368df1769b791a5f3ab2e1"
+    }
+  ],
+  "coverage": {
+    "frontend": {
+      "sources": 167,
+      "metrics": {
+        "lines": {
+          "total": 11168,
+          "covered": 9361,
+          "skipped": 0,
+          "pct": 83.81
+        },
+        "statements": {
+          "total": 13146,
+          "covered": 10746,
+          "skipped": 0,
+          "pct": 81.74
+        },
+        "functions": {
+          "total": 2740,
+          "covered": 2220,
+          "skipped": 0,
+          "pct": 81.02
+        },
+        "branches": {
+          "total": 8565,
+          "covered": 6275,
+          "skipped": 0,
+          "pct": 73.26
+        }
+      },
+      "all98": false
+    },
+    "worker": {
+      "sources": 17,
+      "metrics": {
+        "lines": {
+          "total": 891,
+          "covered": 888,
+          "skipped": 0,
+          "pct": 99.66
+        },
+        "statements": {
+          "total": 1110,
+          "covered": 1107,
+          "skipped": 0,
+          "pct": 99.72
+        },
+        "functions": {
+          "total": 197,
+          "covered": 197,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 927,
+          "covered": 913,
+          "skipped": 0,
+          "pct": 98.48
+        }
+      },
+      "all98": true
+    },
+    "edge": {
+      "sources": 12,
+      "metrics": {
+        "lines": {
+          "total": 762,
+          "covered": 761,
+          "skipped": 0,
+          "pct": 99.86
+        },
+        "statements": {
+          "total": 901,
+          "covered": 899,
+          "skipped": 0,
+          "pct": 99.77
+        },
+        "functions": {
+          "total": 113,
+          "covered": 113,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 797,
+          "covered": 795,
+          "skipped": 0,
+          "pct": 99.74
+        }
+      },
+      "all98": true
+    }
+  },
+  "frontendMissingSources": 0,
+  "reports": {
+    "docs/testing-evidence/design-v2/navigation-boundaries-frontend-coverage-summary.json": "6ed975e071c7b45be560d82129ad31336136ff3be85ee927bbe4a30b480c653a"
+  },
+  "sourceSnapshot": "docs/testing-evidence/design-v2/navigation-boundaries-source-snapshot.json",
+  "sourceSnapshotSha256": "e60f05cc22410814ffc65f30052800d0e5ab3dd98c0dea0bb22dd49a413b8691",
+  "scopedEvidence": {
+    "frontend-auth-parallel-manifest.json": "d0badf46731b81d3c305facf5e76c87649a686003bfab4bc651e21bec33fb649",
+    "frontend-songs-parallel-manifest.json": "690d7c045e7fe9424254346bca808cb02a8ee7a1b9626598ab153aebde697669",
+    "frontend-storage-parallel-manifest.json": "98b6cce14520b8078b8ce0365238f29a4f142b69c95dfe8acc15da3f8d6dddd3",
+    "frontend-supabase-parallel-evidence.json": "3d43cd9a8878514d09b89c385a3f10a87c8e282051826be853eee9940d93e4f1",
+    "worker-parallel-manifest.json": "6ac026277cf0c24214ae5414d3fe0265ce37966d463af4acedd893e756b45875",
+    "edge-parallel-evidence.json": "9f0d3659143c008b9ff02690baacf8506e0ffdfcc713be0a3b3c0d4d9a8c13de"
+  },
+  "rootHashVerification": {
+    "auth": 33,
+    "songs": 27,
+    "storage": 9,
+    "supabase": 8,
+    "workerSourcesTests": 31,
+    "workerReports": 3,
+    "edgeSourcesTestsReports": 31
+  },
+  "browserAndFigma": {
+    "manifest": "sidebar-static-result.json",
+    "manifestSha256": "0c3f9747ff37606373ebaa071632614c5688005220e8ff92c3a9acc407248f80",
+    "scope": "All32 Navigation scheduled cases have scoped passing evidence across multiple runs before subsequent Auth/Songs source fixes.32 native cases are not falsely claimed as one final EXIT0 matrix. UI/styles unchanged by later service fixes. Native DOM,actualIndexedDB,fault recovery,keyboard/focus/axe and motion verified; full shell parity remains incomplete.",
+    "canonical": [
+      "869:73478",
+      "62:2590",
+      "869:73447",
+      "105:3505",
+      "27:1209",
+      "688:41515"
+    ],
+    "nextReadOnlyContexts": [
+      "navigation-shell-mobile-context.json",
+      "navigation-shell-header-context.json",
+      "navigation-shell-footer-context.json"
+    ]
+  },
+  "runtime": {
+    "node": "26.11.1",
+    "deno": "2.9.7",
+    "remotePinnedCI": "not run"
+  },
+  "remaining": [
+    "Frontend all4coverage metrics below98; all retained features and relevant critical workflows still require completion.",
+    "Canonical shared desktop header removal, mobile brand header/gutters and desktop/mobile footer placement plus approved whole-page visual matrix pending.",
+    "Sidebar animation remains provisional as user requested; static modes implemented.",
+    "Hosted isolated Auth/PostgREST/full retained migration chain unverified; existing documented hosted-contract skip remains.",
+    "Historical reduced-motion native DOM-update timeout unresolved; latest passing scoped runs do not claim to fix it.",
+    "No final development commit created; checkpointa8a7a39 remains last commit."
+  ],
+  "nextSlice": "Finish canonical shared Navigation header/gutters/footer and route access to Settings account/data actions; characterize and preserve actual workflows before removing old header popup access, then approved responsive visual evidence. Continue retained feature testing/coverage in parallel with isolated ownership.",
+  "boundaries": "No commit/merge/push/deployment/shared service/database or stable URL service-worker changes."
+}

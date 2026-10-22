@@ -3,6 +3,16 @@ import { TestBed } from '@angular/core/testing';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import { PlaylistSharingService } from './playlist-sharing.service';
 
+// Public PostgREST RPC builders are awaitable and accept an abort signal.
+function rpcResponse(value: unknown) {
+    const result = Promise.resolve(value);
+    return Object.assign(result, {
+        abortSignal: (signal: AbortSignal) => signal.aborted
+            ? Promise.reject(new DOMException('Request aborted.', 'AbortError'))
+            : result
+    });
+}
+
 describe('PlaylistSharingService', () => {
     let service: PlaylistSharingService;
     let rpc: Mock;
@@ -16,7 +26,7 @@ describe('PlaylistSharingService', () => {
     let postgresChangeHandler: (() => void) | null;
 
     beforeEach(() => {
-        rpc = vi.fn().mockName('rpc').mockResolvedValue({ data: 'share-id', error: null });
+        rpc = vi.fn().mockName('rpc').mockReturnValue(rpcResponse({ data: 'share-id', error: null }));
         postgresChangeHandler = null;
         channel = {};
         channelOn = vi.fn().mockName('on').mockImplementation((_type: string, _filter: any, handler: () => void) => {
@@ -39,7 +49,10 @@ describe('PlaylistSharingService', () => {
         from = vi.fn().mockName('from').mockReturnValue(profileQuery);
         const client = {
             rpc,
-            auth: { getUser: () => Promise.resolve({ data: { user: { id: 'owner-id' } }, error: null }) },
+            auth: {
+                getUser: () => Promise.resolve({ data: { user: { id: 'owner-id' } }, error: null }),
+                getSession: () => Promise.resolve({ data: { session: { user: { id: 'owner-id' } } }, error: null })
+            },
             from,
             channel: channelFactory,
             removeChannel
@@ -109,7 +122,7 @@ describe('PlaylistSharingService', () => {
     });
 
     it('binds recipient synchronization to an opaque lease and exact revisions', async () => {
-        rpc.mockImplementation((name: string) => Promise.resolve({
+        rpc.mockImplementation((name: string) => rpcResponse({
             data: name === 'claim_playlist_share_sync' || name === 'complete_playlist_share_sync',
             error: null
         }));
@@ -134,7 +147,7 @@ describe('PlaylistSharingService', () => {
     });
 
     it('sends the revision the owner viewed with an explicit snapshot refresh', async () => {
-        rpc.mockResolvedValue({ data: 6, error: null });
+        rpc.mockReturnValue(rpcResponse({ data: 6, error: null }));
         const publication = {
             sourcePlaylistId: 'source',
             playlistName: 'Fresh',
@@ -154,7 +167,7 @@ describe('PlaylistSharingService', () => {
     });
 
     it('uploads large playlist snapshots in bounded chunks before one atomic commit', async () => {
-        rpc.mockImplementation((name: string) => Promise.resolve({
+        rpc.mockImplementation((name: string) => rpcResponse({
             data: name.startsWith('begin_') ? 'upload-id' : name.startsWith('commit_') ? 8 : 250,
             error: null
         }));
@@ -189,7 +202,7 @@ describe('PlaylistSharingService', () => {
     });
 
     it('removes only the current recipient association through its dedicated RPC', async () => {
-        rpc.mockResolvedValue({data: null, error: null});
+        rpc.mockReturnValue(rpcResponse({data: null, error: null}));
 
         await service.removeReceivedShare('share-id');
 

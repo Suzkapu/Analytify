@@ -1,3 +1,5 @@
+import {TestBed} from '@angular/core/testing';
+import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 import {UserStatsComponent} from './user-stats.component';
@@ -11,11 +13,27 @@ const snapshot = (name = 'Approved owner') => ({ownerUserId: 'owner', ownerDispl
   ownerImageUrl: 'owner.png', snapshotDate: '2026-10-08', topTracks: [{id: 'private-song'}],
   topArtists: [{id: 'private-artist'}], topGenres: [{name: 'pop', weight: 100}]});
 type RpcResult = {data: ReturnType<typeof snapshot> | null; error: {message: string} | null};
+
+function signalAwareRpc(rpc: (...args: any[]) => any) {
+  return (...args: any[]) => {
+    const result = Promise.resolve(rpc(...args));
+    return Object.assign(result, {abortSignal: (signal: AbortSignal) => new Promise((resolve, reject) => {
+      const cancel = () => reject(signal.reason);
+      if (signal.aborted) {cancel(); return;}
+      signal.addEventListener('abort', cancel, {once: true});
+      void result.then(resolve, reject).finally(() => signal.removeEventListener('abort', cancel));
+    })});
+  };
+}
+
 function setup() {
   const recipient = {spotify: 'viewer-spotify' as string | null, cloud: 'viewer-cloud' as string | null};
   const requests: ReturnType<typeof deferred<RpcResult>>[] = [];
   const rpc = vi.fn(() => {const request = deferred<RpcResult>(); requests.push(request); return request.promise;});
-  const sharing = new StatsSharingService({getClient: async () => ({rpc})} as never);
+  TestBed.configureTestingModule({providers: [StatsSharingService,
+    {provide: SupabaseService, useValue: {getClient: async () => ({rpc: signalAwareRpc(rpc)})}}
+  ]});
+  const sharing = TestBed.inject(StatsSharingService);
   const spotify = {getUserTopTracks: vi.fn(), getUserTopArtists: vi.fn()};
   const storage = {setItem: vi.fn(), getStatsHistory: vi.fn(), saveStatsHistory: vi.fn()};
   const changeDetector = {markForCheck: vi.fn()};

@@ -511,6 +511,30 @@ describe('V2OverflowMenuComponent', () => {
     expect(fixture.componentInstance.isOpen()).toBe(false);
   });
 
+  it('keeps a caller supplied decorative icon out of the menu name and keyboard workflow', async () => {
+    await TestBed.configureTestingModule({imports: [V2OverflowMenuComponent]}).compileComponents();
+    const fixture = TestBed.createComponent(V2OverflowMenuComponent);
+    fixture.componentRef.setInput('label', 'Manage friend Alex');
+    fixture.componentRef.setInput('iconUrl', 'assets/design-v2/friends-member-menu.svg');
+    fixture.componentRef.setInput('items', [{id: 'remove', label: 'Remove friend'}]);
+    fixture.detectChanges();
+    const trigger = fixture.nativeElement.querySelector('[aria-haspopup="menu"]') as HTMLButtonElement;
+    expect(trigger.getAttribute('aria-label')).toBe('Manage friend Alex');
+    const image = trigger.querySelector('img');
+    expect(image).not.toBeNull();
+    expect(image?.getAttribute('src')).toBe('assets/design-v2/friends-member-menu.svg');
+    expect(image?.getAttribute('alt')).toBe('');
+    expect(trigger.querySelector('.pi')).toBeNull();
+    trigger.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown', bubbles: true}));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(document.activeElement?.textContent).toBe('Remove friend');
+    document.activeElement?.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+    fixture.detectChanges();
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    expect(document.activeElement).toBe(trigger);
+  });
+
   it('opens on demand, emits enabled choices, and closes', async () => {
     await TestBed.configureTestingModule({imports: [V2OverflowMenuComponent]}).compileComponents();
     const fixture = TestBed.createComponent(V2OverflowMenuComponent);

@@ -1,0 +1,382 @@
+{
+  "date": "2026-10-19",
+  "status": "root-approved nested completion permission correction GREEN; source/specs frozen for combined verification",
+  "baseline": {
+    "source": "coverage/SpotiFront/coverage-summary.json",
+    "lines": 54.05,
+    "statements": 53.73,
+    "functions": 52.05,
+    "branches": 44.82
+  },
+  "scopedCoverageBeforeReds": {
+    "total": {
+      "lines": {
+        "total": 222,
+        "covered": 212,
+        "skipped": 0,
+        "pct": 95.49
+      },
+      "statements": {
+        "total": 268,
+        "covered": 250,
+        "skipped": 0,
+        "pct": 93.28
+      },
+      "functions": {
+        "total": 73,
+        "covered": 65,
+        "skipped": 0,
+        "pct": 89.04
+      },
+      "branches": {
+        "total": 145,
+        "covered": 127,
+        "skipped": 0,
+        "pct": 87.58
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": "Unknown"
+      }
+    },
+    "/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room-coordinator.service.ts": {
+      "lines": {
+        "total": 222,
+        "covered": 212,
+        "skipped": 0,
+        "pct": 95.49
+      },
+      "functions": {
+        "total": 73,
+        "covered": 65,
+        "skipped": 0,
+        "pct": 89.04
+      },
+      "statements": {
+        "total": 268,
+        "covered": 250,
+        "skipped": 0,
+        "pct": 93.28
+      },
+      "branches": {
+        "total": 145,
+        "covered": 127,
+        "skipped": 0,
+        "pct": 87.58
+      }
+    }
+  },
+  "runs": [
+    {
+      "log": "docs/testing-evidence/design-v2/coordinator-parallel-authoring-types.log",
+      "exit": 1,
+      "classification": "test authoring index-signature TypeScript error corrected"
+    },
+    {
+      "log": "docs/testing-evidence/design-v2/coordinator-parallel-characterization.log",
+      "passed": 20,
+      "failed": 0,
+      "files": 2
+    },
+    {
+      "log": "docs/testing-evidence/design-v2/coordinator-parallel-ownership-red.log",
+      "passed": 20,
+      "failed": 4,
+      "files": 2
+    },
+    {
+      "log": "docs/testing-evidence/design-v2/coordinator-parallel-successor-red.log",
+      "passed": 20,
+      "failed": 6,
+      "files": 2,
+      "productionSourceSha256": "458ba94726ca1046bc6f4305aa5d2f1461388e4af671f16bf6982638c20f2e97"
+    },
+    {
+      "log": "docs/testing-evidence/design-v2/coordinator-parallel-ownership-green.log",
+      "passed": 26,
+      "failed": 0,
+      "files": 2
+    },
+    {
+      "log": "docs/testing-evidence/design-v2/coordinator-parallel-presence-red.log",
+      "passed": 31,
+      "failed": 1,
+      "files": 2
+    },
+    {
+      "log": "docs/testing-evidence/design-v2/coordinator-parallel-sweep-red.log",
+      "passed": 31,
+      "failed": 2,
+      "files": 2
+    },
+    {
+      "log": "docs/testing-evidence/design-v2/coordinator-parallel-final.log",
+      "passed": 33,
+      "failed": 0,
+      "files": 2,
+      "skipped": 0,
+      "command": "npx ng test --watch=false --include='src/app/core/compare-room/compare-room-coordinator*.spec.ts' --runner-config=docs/testing-evidence/design-v2/coordinator-parallel-vitest.mjs --coverage --coverage-include='src/app/core/compare-room/compare-room-coordinator.service.ts'"
+    },
+    {
+      "log": "docs/testing-evidence/design-v2/coordinator-parallel-nested-permission-red.log",
+      "passed": 34,
+      "failed": 2,
+      "files": 2,
+      "productionSourceSha256": "1711e4cfbe79308c210de7f3dfc8a190990b12faf7cc26bbdcde8d33cd6645fc"
+    },
+    {
+      "log": "docs/testing-evidence/design-v2/coordinator-parallel-nested-permission-green.log",
+      "passed": 36,
+      "failed": 0,
+      "files": 2,
+      "skipped": 0
+    },
+    {
+      "log": "docs/testing-evidence/design-v2/coordinator-parallel-permission-recovery-final.log",
+      "passed": 45,
+      "failed": 0,
+      "files": 2,
+      "skipped": 0,
+      "command": "npx ng test --watch=false --include='src/app/core/compare-room/compare-room-coordinator*.spec.ts' --runner-config=docs/testing-evidence/design-v2/coordinator-parallel-vitest.mjs --coverage --coverage-include='src/app/core/compare-room/compare-room-coordinator.service.ts'"
+    }
+  ],
+  "genuineRegressions": [
+    "Late actual integrity-hash completion republishes obsolete proposal/participant selections",
+    "Closed room pendingcreate ack reconnects and restores oldhost",
+    "Claimedinvitation cancellation permits late guest state until revoke ack",
+    "Closed room pendinginvitation ack restores obsoleteinvitation",
+    "Old remoteclose completion disconnects/resets successor room",
+    "Prior room callback removes a same-id guest in successor room",
+    "Old pending presence failure contaminates successor error state",
+    "Prior pending sweep finally releases successor active sweep lock",
+    "Delayed tracks-complete during pending claimed invitation revoke recreates withdrawn guest",
+    "Delayed tracks-complete after explicit removeParticipant recreates withdrawn guest"
+  ],
+  "productionEdits": [
+    "Room generation and proposal revision capture across create/connect, lazyQR/invitation, proposal hash awaits",
+    "Room callbacks belong to captured room generation",
+    "Close invalidates local ownership synchronously and skips late disconnect when a successor owns state",
+    "Claimed invitation cancellation removes participant permissions/buffers/state/proposal before remote revoke acknowledgement",
+    "Background presence/send/reconciliation errors publish only into captured generation; stale sweep finally cannot release successor lock",
+    "Accepted nested participant-ID permission gate also covers participant-tracks-complete; cancelled/removed guests cannot rejoin through delayed completion"
+  ],
+  "lintExit": 0,
+  "testTypesExit": 0,
+  "limitations": [
+    "Controlled transport callback/promise boundary, no hosted/native/UI parity claim",
+    "QR rendering mocked presentation boundary; actual intersection and SHA256 helper used",
+    "Angular-transformed top-level QR module mock generates hoist warning; retained without weakening/skipping",
+    "Scoped L/S/F100/99.67/100 meet98; branches95.32 remains below98; no full frontend coverage claim",
+    "Historical scoped summaries retained embedded; report directory now holds final45case metrics; intermediate report bytes superseded"
+  ],
+  "sha256": {
+    "docs/testing-evidence/design-v2/coordinator-parallel-authoring-types.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/coordinator-parallel-authoring-types.log": "c9a9c4353ffe89d7dc787b3d624207958b47645c1d419dc9eb83c4a06d42f951",
+    "docs/testing-evidence/design-v2/coordinator-parallel-characterization.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/coordinator-parallel-characterization.log": "c617487b57b97a47b95d6e6f8d3f0b4aeabf97fba66d1a92f1b14e2d7890e6e2",
+    "docs/testing-evidence/design-v2/coordinator-parallel-coverage/coverage-summary.json": "468dc0874ac2eddd2509e303b7d9cfea289f394073fe217146086ed534e6245a",
+    "docs/testing-evidence/design-v2/coordinator-parallel-coverage/lcov.info": "907270b702f1edbefbf39b5d108ae372e8523f3fe7d647fbf6b0cfc018f91cfe",
+    "docs/testing-evidence/design-v2/coordinator-parallel-final-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/coordinator-parallel-final-lint.log": "48e66d16659207bd8215cc6f788d22029bda46cf91f1344e55a4dc6df35b1e60",
+    "docs/testing-evidence/design-v2/coordinator-parallel-final-types.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/coordinator-parallel-final-types.log": "4899da4c92726b9f8650082e7201b7694d83648e2725a098f1997133ea86809b",
+    "docs/testing-evidence/design-v2/coordinator-parallel-final.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/coordinator-parallel-final.log": "86c92c3b38e56eeefb3b40a5161f318603bca5f73780b8bd1102ee13dc1b13d2",
+    "docs/testing-evidence/design-v2/coordinator-parallel-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/coordinator-parallel-lint.log": "aa99603cc91104d864e7b4ae8395328243dcd94d1ea8fb5f43ddd657a2e9c9f5",
+    "docs/testing-evidence/design-v2/coordinator-parallel-nested-permission-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/coordinator-parallel-nested-permission-green.log": "51edfb681be6c742c5d90fe7ea5e113ca19ee02ba361a2224ebfe8e29c30a6f6",
+    "docs/testing-evidence/design-v2/coordinator-parallel-nested-permission-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/coordinator-parallel-nested-permission-red.log": "78a86033ab767b2b36d3838cfa2899ec26dea1eef27991c6bf54746d95a66bde",
+    "docs/testing-evidence/design-v2/coordinator-parallel-ownership-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/coordinator-parallel-ownership-green.log": "d535b5e5007bc67b3cc5b9b8b02478bcbeb18ef1e667041aca7a0b4324e7e29f",
+    "docs/testing-evidence/design-v2/coordinator-parallel-ownership-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/coordinator-parallel-ownership-red.log": "47992471543cea87dcb8099cecf48cac7f760c919e0d4f8bddcaf9a6859ddf41",
+    "docs/testing-evidence/design-v2/coordinator-parallel-permission-final-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/coordinator-parallel-permission-final-lint.log": "48e66d16659207bd8215cc6f788d22029bda46cf91f1344e55a4dc6df35b1e60",
+    "docs/testing-evidence/design-v2/coordinator-parallel-permission-final-types.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/coordinator-parallel-permission-final-types.log": "4899da4c92726b9f8650082e7201b7694d83648e2725a098f1997133ea86809b",
+    "docs/testing-evidence/design-v2/coordinator-parallel-permission-recovery-final.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/coordinator-parallel-permission-recovery-final.log": "fc78167621aca2d50539241588d1c9d60679e10fdcf7418dfdf7ae8b2f3028ff",
+    "docs/testing-evidence/design-v2/coordinator-parallel-presence-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/coordinator-parallel-presence-red.log": "48d5c624050dce800bf8df695c66b855898fbf79a0c5cba82646832846f23efa",
+    "docs/testing-evidence/design-v2/coordinator-parallel-successor-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/coordinator-parallel-successor-red.log": "6b411570448127b9cbb5f794606bf56c553b656b852e7491ed15c0454176c204",
+    "docs/testing-evidence/design-v2/coordinator-parallel-sweep-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/coordinator-parallel-sweep-red.log": "73c332a31a02f587586db973d645526edb6cef892a74ddd7832a1846627c1452",
+    "docs/testing-evidence/design-v2/coordinator-parallel-types.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/coordinator-parallel-types.log": "4899da4c92726b9f8650082e7201b7694d83648e2725a098f1997133ea86809b",
+    "docs/testing-evidence/design-v2/coordinator-parallel-vitest.mjs": "40e3b016273655a49b86e33fb1d83d2e609f8b63cfe9529c61aa37011b5803f8",
+    "src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts": "98c28354d26bf70ba2f7a4a814c2a3805436eceeafd65f60de292916df9e46ec",
+    "src/app/core/compare-room/compare-room-coordinator.service.spec.ts": "8bca11e1328a9cc8f6b6f995a86a68cc8101d7d5e2ec64fb5327a2f555e033cc",
+    "src/app/core/compare-room/compare-room-coordinator.service.ts": "0c1b6b09647ea840c2bd4b1e77dc2a9088d8c423a9270d3fefdefde3f5635144",
+    "src/app/core/compare-room/compare-room-integrity.ts": "56cd3b46d651ce283f08030b3d624fa7aa236d67be1a1069c08178e75a19cbc5",
+    "src/app/core/compare-room/playlist-intersection.service.ts": "e69f27872defb548b1be45fd831cd3430169f9e5b1783ae4140a5298e49544f3"
+  },
+  "productionSourceBeforeOwnershipFix": "458ba94726ca1046bc6f4305aa5d2f1461388e4af671f16bf6982638c20f2e97",
+  "coverage": {
+    "total": {
+      "lines": {
+        "total": 257,
+        "covered": 257,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 309,
+        "covered": 308,
+        "skipped": 0,
+        "pct": 99.67
+      },
+      "functions": {
+        "total": 74,
+        "covered": 74,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 171,
+        "covered": 163,
+        "skipped": 0,
+        "pct": 95.32
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": "Unknown"
+      }
+    },
+    "/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room-coordinator.service.ts": {
+      "lines": {
+        "total": 257,
+        "covered": 257,
+        "skipped": 0,
+        "pct": 100
+      },
+      "functions": {
+        "total": 74,
+        "covered": 74,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 309,
+        "covered": 308,
+        "skipped": 0,
+        "pct": 99.67
+      },
+      "branches": {
+        "total": 171,
+        "covered": 163,
+        "skipped": 0,
+        "pct": 95.32
+      }
+    }
+  },
+  "priorScopedCoverageBeforeNestedPermission": {
+    "total": {
+      "lines": {
+        "total": 257,
+        "covered": 254,
+        "skipped": 0,
+        "pct": 98.83
+      },
+      "statements": {
+        "total": 309,
+        "covered": 302,
+        "skipped": 0,
+        "pct": 97.73
+      },
+      "functions": {
+        "total": 74,
+        "covered": 73,
+        "skipped": 0,
+        "pct": 98.64
+      },
+      "branches": {
+        "total": 169,
+        "covered": 150,
+        "skipped": 0,
+        "pct": 88.75
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": "Unknown"
+      }
+    },
+    "/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room-coordinator.service.ts": {
+      "lines": {
+        "total": 257,
+        "covered": 254,
+        "skipped": 0,
+        "pct": 98.83
+      },
+      "functions": {
+        "total": 74,
+        "covered": 73,
+        "skipped": 0,
+        "pct": 98.64
+      },
+      "statements": {
+        "total": 309,
+        "covered": 302,
+        "skipped": 0,
+        "pct": 97.73
+      },
+      "branches": {
+        "total": 169,
+        "covered": 150,
+        "skipped": 0,
+        "pct": 88.75
+      }
+    }
+  },
+  "remainingBranches": [
+    {
+      "line": 137,
+      "behavior": "Legacy local profile with omitted optional localSlotNumber defaults to protected first slot",
+      "reachable": true
+    },
+    {
+      "line": 210,
+      "behavior": "Late merge-proposal send rejection after room replacement must not contaminate successor error",
+      "reachable": true
+    },
+    {
+      "line": 312,
+      "behavior": "Accepted guest first track chunk without prior loading-state buffer uses empty buffer",
+      "reachable": true
+    },
+    {
+      "line": 316,
+      "behavior": "Accepted guest zero-track completion without any prior loading/chunk buffer",
+      "reachable": true
+    },
+    {
+      "line": 344,
+      "behavior": "Transport delivers a message type intentionally not processed by host coordinator; state remains unchanged",
+      "reachable": true
+    },
+    {
+      "line": 388,
+      "behavior": "Missing participant stats guard; public construction builds stats from the exact same participant list",
+      "reachable": false,
+      "invariant": "Do not fabricate private mismatched participant/stat arrays to execute fallback"
+    },
+    {
+      "line": 421,
+      "behavior": "Late proposal-cancel notification failure after successor room begins is ignored",
+      "reachable": true
+    },
+    {
+      "line": 435,
+      "behavior": "Known guest departs before any proposal; plain departure message without proposal-cancel sentence",
+      "reachable": true
+    }
+  ]
+}

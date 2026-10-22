@@ -1,0 +1,27 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/core/compare-room/compare-room-coordinator*.spec.ts --runner-config=docs/testing-evidence/design-v2/coordinator-parallel-vitest.mjs --coverage --coverage-include=src/app/core/compare-room/compare-room-coordinator.service.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/coordinator-parallel-vitest.mjs
+❯ Building...
+✔ Building...
+Application bundle generation complete. [2.113 seconds] - 2026-10-19T18:23:52.220Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+      Coverage enabled with v8
+
+Warning: A vi.mock("qrcode") call in "/mnt/Storage/ProgrammingProjects/Analytify/spec-app-core-compare-room-compare-room-coordinator-boundary.js" is not at the top level of the module. Although it appears nested, it will be hoisted and executed before any tests run. Move it to the top level to reflect its actual execution order. This will become an error in a future version.
+See: https://vitest.dev/guide/mocking/modules#how-it-works
+
+ Test Files  2 passed (2)
+      Tests  45 passed (45)
+   Start at  20:23:52
+   Duration  2.15s (transform 126ms, setup 512ms, import 159ms, tests 234ms, environment 682ms)
+
+ % Coverage report from v8
+
+=============================== Coverage summary ===============================
+Statements   : 99.67% ( 308/309 )
+Branches     : 95.32% ( 163/171 )
+Functions    : 100% ( 74/74 )
+Lines        : 100% ( 257/257 )
+================================================================================

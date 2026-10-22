@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-21",
+  "canonicalFrame": "688:41515",
+  "sectionText": "688:41748",
+  "scope": "Default3selected mobile preference component and desktop resize-continuity component only. Desktop discovery stays mobileOnly; no new desktop Navigation feature or whole-page approval.",
+  "review": "Viewed all4mobile candidates in labelled native-size sheet against fresh canonical screenshot/context. Section20/600/28 in24pxtext box, body16/24,12pxstack gaps,7full-width48pxbuttons, exactlabels/icons/order/defaultfirst3selected and semantic fills/borders match the component reference. Mobile crop358x564; no clipped labels or buttons. New scoped typography/native resize checks passed before approval. No prior baselines replaced.",
+  "reviewSheet": "docs/testing-evidence/design-v2/navigation-preferences-review-mobile.png",
+  "desktopDiagnosticSheet": "docs/testing-evidence/design-v2/navigation-preferences-review-desktop.png",
+  "images": [
+    {
+      "candidate": "docs/testing-evidence/design-v2/navigation-section-green-artifacts/design-v2-navigation-Navig-a71b4-raphy-and-responsive-layout-desktop/candidate-navigation-preferences-mobile.png",
+      "baseline": "e2e/design-v2-navigation.spec.ts-snapshots/navigation-preferences-mobile-desktop-linux.png",
+      "sha256": "cafc5a200cb04937b2441658bec5b0560559b40a40704cd824747703d7cd7332"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/navigation-section-green-artifacts/design-v2-navigation-Navig-a71b4-raphy-and-responsive-layout-firefox-stats/candidate-navigation-preferences-mobile.png",
+      "baseline": "e2e/design-v2-navigation.spec.ts-snapshots/navigation-preferences-mobile-firefox-stats-linux.png",
+      "sha256": "6eedb68b87b833860033d572b3b573fc5afb9504cd12a2af4657750699848783"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/navigation-section-green-artifacts/design-v2-navigation-Navig-a71b4-raphy-and-responsive-layout-mobile/candidate-navigation-preferences-mobile.png",
+      "baseline": "e2e/design-v2-navigation.spec.ts-snapshots/navigation-preferences-mobile-mobile-linux.png",
+      "sha256": "a993c511308e1c348ad15ad1cb9bc6c8a0e23185a078438ab1171d838d192f34"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/navigation-section-green-artifacts/design-v2-navigation-Navig-a71b4-raphy-and-responsive-layout-webkit-stats/candidate-navigation-preferences-mobile.png",
+      "baseline": "e2e/design-v2-navigation.spec.ts-snapshots/navigation-preferences-mobile-webkit-stats-linux.png",
+      "sha256": "e7b350290b76ec9a6802c868851b6a3b44973880b714c41e663c020c8231f802"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/navigation-section-green-artifacts/design-v2-navigation-Navig-a71b4-raphy-and-responsive-layout-desktop/candidate-navigation-preferences-desktop.png",
+      "baseline": "e2e/design-v2-navigation.spec.ts-snapshots/navigation-preferences-desktop-desktop-linux.png",
+      "sha256": "d6d741684725742acda05a92628cd61c604fb321f5815b3ecd3b20e95f38274b"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/navigation-section-green-artifacts/design-v2-navigation-Navig-a71b4-raphy-and-responsive-layout-firefox-stats/candidate-navigation-preferences-desktop.png",
+      "baseline": "e2e/design-v2-navigation.spec.ts-snapshots/navigation-preferences-desktop-firefox-stats-linux.png",
+      "sha256": "016ec517f18f4cd441969a3506a804b7f9814c8f70cb5c73a54e6081522141d9"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/navigation-section-green-artifacts/design-v2-navigation-Navig-a71b4-raphy-and-responsive-layout-mobile/candidate-navigation-preferences-desktop.png",
+      "baseline": "e2e/design-v2-navigation.spec.ts-snapshots/navigation-preferences-desktop-mobile-linux.png",
+      "sha256": "d6d741684725742acda05a92628cd61c604fb321f5815b3ecd3b20e95f38274b"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/navigation-section-green-artifacts/design-v2-navigation-Navig-a71b4-raphy-and-responsive-layout-webkit-stats/candidate-navigation-preferences-desktop.png",
+      "baseline": "e2e/design-v2-navigation.spec.ts-snapshots/navigation-preferences-desktop-webkit-stats-linux.png",
+      "sha256": "ca6d455391ac32de9045bf2cbf7c14435a769fcd3738e335906a0e003a39b2e5"
+    }
+  ],
+  "desktopReview": "The four desktop candidates in navigation-preferences-review-desktop.png were viewed before copying. New canonical25:29 responsive handoff confirms same semantic text/choice tokens,12pxgaps and48pxfullwidth controls within shared desktop32pxgutters. Native component is1120x516. These are component resize-continuity approvals, not a missing fifthdesktopSettings tab or full desktop frame.",
+  "responsiveHandoff": "docs/testing-evidence/design-v2/navigation-responsive-handoff.json",
+  "priorMobileApprovalRetained": true
+}

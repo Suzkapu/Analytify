@@ -1,0 +1,29 @@
+{
+  "scope": "Mounted Friends component with synthetic FriendsService boundary; canonical revoke confirmation behavior; no live service/browser/Figma visual/full coverage claim",
+  "command": "npx ng test --watch=false --progress=false --include=src/app/features/friends/v2-friends-page.component.spec.ts",
+  "phase": "RED before UI implementation",
+  "exitCode": 1,
+  "results": {
+    "passed": 30,
+    "failed": 6,
+    "total": 36
+  },
+  "failures": "Opening and adapted earlier-session test observe an immediate revoke write; cancel/Escape/busy/retry tests observe missing dialog. Existing unrelated component tests pass.",
+  "canonicalNode": "70:5858",
+  "canonicalContext": "docs/testing-evidence/design-v2/friends-secondary-parity-revoke-context.json",
+  "contract": [
+    "Opening confirmation makes no service write",
+    "Canonical title/body and Cancel-last order with initial safe focus",
+    "Cancel and Escape retain pending invitation, do not remove friends, and restore trigger focus",
+    "Explicit confirmation revokes only its ID once",
+    "Repeated confirmations while pending do not duplicate write",
+    "Uncertain write failure retries same confirmed invitation and preserves friendships"
+  ],
+  "sha256": {
+    "src/app/features/friends/v2-friends-page.component.spec.ts": "288970fc63f759fe01ff118cfcb326b0adffbfdca6f4925c05f869e1802cfca6",
+    "src/app/features/friends/v2-friends-page.component.ts": "ca445634406462ef123eabe032a4840d3a7e7f81c835a42cc180d86f81d05e2f",
+    "src/app/features/friends/v2-friends-page.component.html": "8d97b89c86a80d4e5a07f012932f094a1b7c01bc828451ad909aea0332e32ec5",
+    "docs/testing-evidence/design-v2/friends-secondary-parity-revoke-context.json": "c44c7ceea8a4ba6c5a218011ff8208debfe621ead2565d51ffbb5184c1aa8c4e",
+    "docs/testing-evidence/design-v2/friends-revoke-boundary-red.log": "95e354dc0384fca90832f1a5f127c7fb9ec629bf028cc39ffa462d3b23a4ddfb"
+  }
+}

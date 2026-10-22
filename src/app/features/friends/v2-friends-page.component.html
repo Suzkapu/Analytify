@@ -1,0 +1,88 @@
+<v2-page [title]="copy()[0]" [description]="copy()[1]" appearance="canonical" [showBack]="view() !== 'friends'"
+  (backRequested)="navigation.navigate('friends')">
+  <nav class="friends-tabs" aria-label="Friends navigation">
+    <a [v2Button]="view() === 'friends' ? 'primary' : 'secondary'" [routerLink]="navigation.commands('friends')" [attr.aria-current]="view() === 'friends' ? 'page' : null"><span class="icon people" aria-hidden="true"></span>Friends</a>
+    <a [v2Button]="view() === 'invitations' ? 'primary' : 'secondary'" [routerLink]="navigation.commands('friendsInvitations')" [attr.aria-current]="view() === 'invitations' ? 'page' : null"><span class="invitation-icon" aria-hidden="true"></span>Invitations</a>
+  </nav>
+  <a class="add-friend" v2Button="secondary" [routerLink]="navigation.commands('friendsAdd')"><span class="icon plus" aria-hidden="true"></span>Add friend</a>
+  @if (feedback(); as state) {<v2-friends-feedback [state]="state" (retry)="retry()" (createInvitation)="createNewInvitation()" (viewFriends)="openFriends()" />}
+  @if (controller.inventory(); as inventory) {
+    @if (view() === 'friends') {
+      @for (request of inventory.requests; track request.requestId) {
+        <section class="friends-card request" [attr.aria-label]="'Friend request from ' + request.displayName">
+          <h2>Friend request from {{ request.displayName }}</h2>
+          <div class="actions">
+            <button type="button" v2Button="primary" [disabled]="!controller.canAct()" (click)="controller.respond(request.requestId, true)"><span class="icon check" aria-hidden="true"></span>Accept</button>
+            <button type="button" v2Button="secondary" [disabled]="!controller.canAct()" (click)="controller.respond(request.requestId, false)"><img src="assets/design-v2/friends-decline.svg" width="18" height="18" alt="">Decline</button>
+          </div>
+        </section>
+      }
+      <div class="friends-list">
+      @for (friend of inventory.friends; track friend.userId) {
+        <article class="friends-card friend-row">
+          <span class="avatar" aria-hidden="true">
+            @if (friend.imageUrl && !brokenImages().includes(friend.userId)) {<img [src]="friend.imageUrl" alt="" (error)="imageFailed(friend.userId)">}
+            @else { {{ friend.displayName.slice(0, 1).toUpperCase() }} }
+          </span>
+          <div class="identity"><h2>{{ friend.displayName }}</h2><p>Connected</p></div>
+          <v2-overflow-menu [label]="'Manage friend ' + friend.displayName" iconUrl="assets/design-v2/friends-member-menu.svg" [items]="[{id: 'remove', label: 'Remove friend', danger: true, disabled: !controller.canAct()}]" (itemSelected)="requestRemoval(friend)" />
+        </article>
+      } @empty {<p role="status">Your friends will appear here.</p>}
+      </div>
+      <p class="privacy-note">Friendship does not grant access to your playlists or listening data. You choose what to share.</p>
+    } @else if (view() === 'invitations') {
+      @for (invitation of inventory.invitations; track invitation.id) {
+        @if (invitation.status === 'pending') {
+          <section class="friends-card pending-invitation">
+            <h2 class="section-title">Your friend invitation</h2>
+            <p>Link + QR · One person · Pending</p>
+            <div class="actions">
+              @if (controller.createdInvitation()?.invitation?.id === invitation.id) {
+                <a v2Button="secondary" [routerLink]="navigation.commands('friendsAdd')"><span class="icon qr-icon" aria-hidden="true"></span>View link &amp; QR</a>
+              } @else {<button type="button" v2Button="secondary" [disabled]="true"><span class="icon qr-icon" aria-hidden="true"></span>View link &amp; QR</button>}
+              <button type="button" v2Button="danger" [disabled]="!controller.canAct()" (click)="requestRevocation(invitation)"><span class="icon trash" aria-hidden="true"></span>Revoke</button>
+            </div>
+            @if (controller.createdInvitation()?.invitation?.id !== invitation.id) {<v2-friends-feedback state="link-unavailable" />}
+          </section>
+        }
+      }
+      <p>Revoking an invitation does not remove existing friends.</p>
+    } @else if (view() === 'add') {
+      @if (controller.createdInvitation()) {
+        <section class="friends-card invitation">
+          <div class="qr-identity">
+            <div class="qr-slot" [attr.aria-busy]="localBusy() ? 'true' : null">
+              @if (qr() && invitationUrl()) {<img [src]="qr()" width="176" height="176" alt="Scan to open this single-person friend invitation">}
+            </div>
+            <div class="identity"><h2 class="section-title">{{ account?.displayName() || 'Your friend invitation' }}</h2><p>Scan to add me on Analytify.</p></div>
+          </div>
+          <h2>Your invitation link</h2><p class="invitation-url">{{ invitationUrl() }}</p>
+          <button type="button" v2Button="primary" [disabled]="!controller.canAct() || localBusy()" (click)="copyLink()"><span class="icon copy-icon" aria-hidden="true"></span>Copy link</button>
+          <p>One person · Revoke while pending</p>
+        </section>
+      }
+    } @else if (view() === 'review') {
+      @if (preview(); as preview) {
+        <section class="friends-card review">
+          <h2 class="section-title">{{ preview.displayName }} wants to be your friend</h2>
+          <p>You can share playlists and invite each other after accepting. Your listening data stays private until you choose to share it.</p>
+          <div class="actions">
+            <button type="button" v2Button="primary" [disabled]="!controller.canAct()" (click)="controller.respond(preview.id, true)"><span class="icon check" aria-hidden="true"></span>Accept</button>
+            <button type="button" v2Button="secondary" [disabled]="!controller.canAct()" (click)="controller.respond(preview.id, false)"><img src="assets/design-v2/friends-decline.svg" width="18" height="18" alt="">Decline</button>
+          </div>
+        </section>
+      }
+    }
+  }
+</v2-page>
+@if (confirmation(); as pending) {
+  <div class="confirmation-layer">
+    <button type="button" class="confirmation-backdrop" tabindex="-1" [attr.aria-label]="revoking() ? 'Cancel revocation' : 'Cancel removal'" (click)="cancelConfirmation()"></button>
+    <section class="confirmation" role="dialog" aria-modal="true" aria-labelledby="friend-confirmation-title" aria-describedby="friend-confirmation-description" appAccessibleDialog (modalEscape)="cancelConfirmation()">
+      <h2 id="friend-confirmation-title">{{ pending.title }}</h2>
+      <p id="friend-confirmation-description">{{ pending.description }}</p>
+      <button type="button" v2Button="danger" [disabled]="!controller.canAct()" (click)="confirmPendingAction()"><span class="icon trash" aria-hidden="true"></span>{{ pending.action }}</button>
+      <button type="button" v2Button="secondary" appModalInitialFocus (click)="cancelConfirmation()">Cancel</button>
+    </section>
+  </div>
+}

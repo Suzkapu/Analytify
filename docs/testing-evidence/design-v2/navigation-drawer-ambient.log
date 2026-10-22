@@ -1,0 +1,144 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-ambient.spec.ts --grep persists through|route content|reduced motion disables --output=docs/testing-evidence/design-v2/navigation-drawer-ambient-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:114610) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:114610) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 2 workers
+
+(node:114876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:114875) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions enabled (2.9s)
+  ✓   2 [desktop] › e2e/design-v2-ambient.spec.ts:5:5 › one ambient renderer persists through overlays, routes, and shell modes (4.1s)
+(node:115283) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   3 [desktop] › e2e/design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions unavailable (2.2s)
+(node:115410) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   4 [mobile] › e2e/design-v2-ambient.spec.ts:5:5 › one ambient renderer persists through overlays, routes, and shell modes (3.6s)
+  ✓   5 [mobile] › e2e/design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions enabled (3.1s)
+(node:115654) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   6 [mobile] › e2e/design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions unavailable (2.2s)
+(node:115979) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [firefox-stats] › e2e/design-v2-ambient.spec.ts:5:5 › one ambient renderer persists through overlays, routes, and shell modes (5.7s)
+  ✓   8 [firefox-stats] › e2e/design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions enabled (5.2s)
+(node:116790) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  10 [webkit-stats] › e2e/design-v2-ambient.spec.ts:5:5 › one ambient renderer persists through overlays, routes, and shell modes (1ms)
+  ✓   9 [firefox-stats] › e2e/design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions unavailable (2.6s)
+(node:116835) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  11 [webkit-stats] › e2e/design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions enabled (1ms)
+(node:116849) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  12 [webkit-stats] › e2e/design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions unavailable (1ms)
+
+
+  1) [webkit-stats] › e2e/design-v2-ambient.spec.ts:5:5 › one ambient renderer persists through overlays, routes, and shell modes 
+
+    Error: browserType.launch: Target page, context or browser has been closed
+    Browser logs:
+
+    <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window
+    <launched> pid=116826
+    [pid=116826][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+    Call log:
+      - <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window
+      - <launched> pid=116826
+      - [pid=116826][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+      - [pid=116826] <gracefully close start>
+      - [pid=116826] <kill>
+      - [pid=116826] <will force kill>
+      - [pid=116826] exception while trying to kill process: Error: kill ESRCH
+      - [pid=116826] <process did exit: exitCode=127, signal=null>
+      - [pid=116826] starting temporary directories cleanup
+      - [pid=116826] finished temporary directories cleanup
+      - [pid=116826] <gracefully close end>
+
+
+    Error Context: docs/testing-evidence/design-v2/navigation-drawer-ambient-artifacts/design-v2-ambient-one-ambi-e199c-lays-routes-and-shell-modes-webkit-stats/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/navigation-drawer-ambient-artifacts/design-v2-ambient-one-ambi-e199c-lays-routes-and-shell-modes-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/navigation-drawer-ambient-artifacts/design-v2-ambient-one-ambi-e199c-lays-routes-and-shell-modes-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [webkit-stats] › e2e/design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions enabled 
+
+    Error: browserType.launch: Target page, context or browser has been closed
+    Browser logs:
+
+    <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window
+    <launched> pid=116862
+    [pid=116862][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+    Call log:
+      - <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window
+      - <launched> pid=116862
+      - [pid=116862][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+      - [pid=116862] <gracefully close start>
+      - [pid=116862] <kill>
+      - [pid=116862] <will force kill>
+      - [pid=116862] exception while trying to kill process: Error: kill ESRCH
+      - [pid=116862] <process did exit: exitCode=127, signal=null>
+      - [pid=116862] starting temporary directories cleanup
+      - [pid=116862] finished temporary directories cleanup
+      - [pid=116862] <gracefully close end>
+
+
+    Error Context: docs/testing-evidence/design-v2/navigation-drawer-ambient-artifacts/design-v2-ambient-route-co-87376--native-transitions-enabled-webkit-stats/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/navigation-drawer-ambient-artifacts/design-v2-ambient-route-co-87376--native-transitions-enabled-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/navigation-drawer-ambient-artifacts/design-v2-ambient-route-co-87376--native-transitions-enabled-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit-stats] › e2e/design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions unavailable 
+
+    Error: browserType.launch: Target page, context or browser has been closed
+    Browser logs:
+
+    <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window
+    <launched> pid=116917
+    [pid=116917][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+    Call log:
+      - <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window
+      - <launched> pid=116917
+      - [pid=116917][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+      - [pid=116917] <gracefully close start>
+      - [pid=116917] <kill>
+      - [pid=116917] <will force kill>
+      - [pid=116917] exception while trying to kill process: Error: kill ESRCH
+      - [pid=116917] <process did exit: exitCode=127, signal=null>
+      - [pid=116917] starting temporary directories cleanup
+      - [pid=116917] finished temporary directories cleanup
+      - [pid=116917] <gracefully close end>
+
+
+    Error Context: docs/testing-evidence/design-v2/navigation-drawer-ambient-artifacts/design-v2-ambient-route-co-dce9a-ive-transitions-unavailable-webkit-stats/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/navigation-drawer-ambient-artifacts/design-v2-ambient-route-co-dce9a-ive-transitions-unavailable-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/navigation-drawer-ambient-artifacts/design-v2-ambient-route-co-dce9a-ive-transitions-unavailable-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [webkit-stats] › e2e/design-v2-ambient.spec.ts:5:5 › one ambient renderer persists through overlays, routes, and shell modes 
+    [webkit-stats] › e2e/design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions enabled 
+    [webkit-stats] › e2e/design-v2-ambient.spec.ts:73:7 › route content and focus survive with native transitions unavailable 
+  9 passed (28.1s)

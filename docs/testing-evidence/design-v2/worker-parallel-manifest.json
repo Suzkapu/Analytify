@@ -1,0 +1,377 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-15T18:50:44.393Z",
+  "branch": "codex/design-v2",
+  "head": "a8a7a3966a622c992e9058094627a768c16a363a",
+  "workingTree": "Uncommitted development changes; hashes identify verified content.",
+  "runtime": {
+    "node": "v26.11.1",
+    "npm": "12.2.0"
+  },
+  "target": {
+    "suite": "worker",
+    "lines": 98,
+    "statements": 98,
+    "functions": 98,
+    "branches": 98
+  },
+  "baseline": {
+    "command": "npm run test:coverage:worker",
+    "exitCode": 0,
+    "tests": 107,
+    "coverage": {
+      "lines": 71.03,
+      "statements": 65.38,
+      "functions": 63.45,
+      "branches": 63.07
+    },
+    "log": "docs/testing-evidence/design-v2/worker-parallel-baseline.log"
+  },
+  "commands": [
+    {
+      "command": "node --test --test-isolation=none services/sync-service/index.test.js",
+      "phase": "RED before approved production fix",
+      "exitCode": 1,
+      "tests": 20,
+      "passed": 14,
+      "failed": 6,
+      "log": "docs/testing-evidence/design-v2/worker-parallel-cleanup-red.log"
+    },
+    {
+      "command": "node --test --test-isolation=none services/sync-service/index.test.js services/sync-service/scheduler-boundaries.test.js services/sync-service/tasks/shared-playlists-boundaries.test.js",
+      "phase": "GREEN after fix and two additional pass-lifecycle regression cases",
+      "exitCode": 0,
+      "tests": 65,
+      "log": "docs/testing-evidence/design-v2/worker-parallel-cleanup-green.log"
+    },
+    {
+      "command": "node --test --test-isolation=none services/sync-service/health-server.test.js",
+      "phase": "native ephemeral loopback HTTP",
+      "initialSandboxResult": "EPERM for listen 127.0.0.1; approved elevated rerun passed all 5 tests",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run test:coverage:worker",
+      "phase": "FINAL with approved ephemeral loopback listener permission",
+      "exitCode": 0,
+      "tests": 215,
+      "passed": 215,
+      "failed": 0,
+      "skipped": 0,
+      "log": "docs/testing-evidence/design-v2/worker-parallel-final.log"
+    },
+    {
+      "command": "node scripts/check-application-coverage-inventory.mjs worker --final",
+      "exitCode": 0,
+      "result": "all 17 production sources included; every metric meets 98%"
+    },
+    {
+      "command": "node scripts/check-sync-worker-package.mjs && node scripts/check-spotify-policy.mjs && node scripts/check-admin-control-plane.mjs && node scripts/check-catalog-security.mjs && node scripts/check-dataset-integrity.mjs && node scripts/check-song-league-sync-security.mjs",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check -- services/sync-service",
+      "exitCode": 0
+    }
+  ],
+  "final": {
+    "gatesPass": true,
+    "metrics": {
+      "lines": {
+        "total": 891,
+        "covered": 888,
+        "skipped": 0,
+        "pct": 99.66
+      },
+      "statements": {
+        "total": 1110,
+        "covered": 1107,
+        "skipped": 0,
+        "pct": 99.72
+      },
+      "functions": {
+        "total": 197,
+        "covered": 197,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 927,
+        "covered": 913,
+        "skipped": 0,
+        "pct": 98.48
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "productionSources": 17,
+    "newExclusions": [],
+    "productionChanges": [
+      "services/sync-service/index.js"
+    ],
+    "changedTestFiles": [
+      "services/sync-service/catalog-repository.test.js",
+      "services/sync-service/credential-store.test.js",
+      "services/sync-service/health-server.test.js",
+      "services/sync-service/push-dispatcher.test.js",
+      "services/sync-service/spotify-client.test.js",
+      "services/sync-service/task-registry.test.js",
+      "services/sync-service/tasks/history-task.test.js",
+      "services/sync-service/tasks/song-league-playlists-task.test.js",
+      "services/sync-service/worker-runtime-health.test.js",
+      "services/sync-service/config.test.js",
+      "services/sync-service/index.test.js",
+      "services/sync-service/scheduler-boundaries.test.js",
+      "services/sync-service/tasks/shared-playlists-boundaries.test.js",
+      "services/sync-service/test-support/load-isolated.cjs"
+    ],
+    "reportHashes": {
+      "coverage/worker/coverage-summary.json": "c6171b036d25f04fe75b3af3108ad1a261a68a05ea329a1b6a1c542d10708152",
+      "coverage/worker/coverage-final.json": "ef8a55d8ceb1c036cd508b1971c3d1d7ae865fe1bd20d571fae449f6e2b002aa",
+      "coverage/worker/source-inventory.json": "f232e63974f9de1139ae8cd080627295dc2c70e6183b7cf43f81d293535d2c9f"
+    }
+  },
+  "productionFix": {
+    "approval": "Root authorized minimal DEV-only index.js cleanup fix after reviewing resource leaks.",
+    "behavior": [
+      "Runtime and health release exactly once after readiness, migration, rotation, pass-start, pass and pass-success failure.",
+      "Original failure identity remains authoritative when cleanup fails; cleanup errors are logged.",
+      "Cleanup-only errors reject otherwise successful runs.",
+      "Each invocation removes only its own SIGINT/SIGTERM handlers.",
+      "runtime.start awaits startup persistence before heartbeat acquisition; a rejected start acquires no timer."
+    ],
+    "redProductionSourceHash": "5823eacb8d28fa9bdfbecd3b47c5cb7fd4a9f9a27a2b55c9a371de3dc5165355"
+  },
+  "behavioralEvidence": [
+    "Protected config: environment/file precedence, denied reads, required values, key-ring validation, admin deduplication, interval bounds; all protected-file reads stubbed.",
+    "Real entrypoint source compilation with isolated direct dependencies retains actual V8 filenames and cannot construct real service clients.",
+    "Native ephemeral 127.0.0.1 HTTP verifies readiness 503/200, no-store, exact commit identity, failure/recovery, unknown URL 404.",
+    "Admin grant/removal ownership and read/write failure; enqueue backup, credentials, required tasks, policy approval, local-Friday playlist schedule, next-run boundaries, duplicate insertion race.",
+    "Lease claims and heartbeat RPC/transport/ownership failures cannot report success. Invalid credentials are discarded without retries; handlers receive only their user credential.",
+    "AES-GCM migration/refresh/rotation: corrupt ciphertext, retired keys, interrupted CAS, audit/persistence failures, plaintext cleanup ordering and failed-refresh memory consistency.",
+    "Catalog CAS metadata/relationships: previous-value fallbacks, zero/false, release-date precision, bounded concurrency, partial artist-fetch failures and pre-write failure.",
+    "Spotify timeout and cancellation before/during fetch/during delay; bounded retry budget/attempts, Retry-After, unsafe-method suppression, hosted/personal refresh ownership.",
+    "History checkpoint resume and partial page/row failures, same-timestamp identity, invalid timestamps, cursor parsing/repetition, empty pages, monotonic watermark.",
+    "Shared-playlist normalization/chunks, recipient-owned queries, revision/lease CAS, partial Spotify failure/retry on same playlist, current/missing/revoked sources and publication failure.",
+    "League worker delegates only to authoritative Edge Function with current user identity, deduplicates leagues and handles empty/error totals; no obsolete submission-window contract added."
+  ],
+  "sourceHashes": {
+    "services/sync-service/catalog-repository.js": "843eda3224caa7e4e01ee3c58651c0791cbeee2856dc2a2cd6b099ad0d85356e",
+    "services/sync-service/config.js": "b8a2413a59c3d5b3407d2aa63bfd950ecfdf90b00d824b09e83865a7b55e537d",
+    "services/sync-service/credential-store.js": "73801b8cdeee66f37d6513b8288162fbf5fa1163fb8b734ff3c1ba601dd73f24",
+    "services/sync-service/daily-pull.js": "73286f72d4a4f1630f70c8bd43f7d92d0138ef5b5c71a2ebc394a0017fdd44db",
+    "services/sync-service/date-utils.js": "6110f409f42edfe30ce15a98ec0eb851a0ddca16154242066617abda7484f451",
+    "services/sync-service/health-server.js": "dffeb1ad12ae1c0177de6cdfafe2a99561034b416ddf7a39e23dadb34e231c19",
+    "services/sync-service/index.js": "9b1b4cd14527bf10ea929d8c360b3aa220f3a73b2eba5b1760c105bed657d80d",
+    "services/sync-service/push-dispatcher.js": "b3ff320c7de61c19863dc3e26cc644f3bca11e5b5d32cef35e393a557d698543",
+    "services/sync-service/scheduler.js": "67aecdf66969c3136293942cd426f4830909e5bd52d6bcc523601e8b30d327dc",
+    "services/sync-service/spotify-client.js": "d0e935e2c5221a8563e076154ead95c83e2c74141d9a3c56127d0a4585f1541c",
+    "services/sync-service/spotify-url-validator.js": "a505545cb3c870705f7a556b4a009acb623c2eff2a32dedbfc03255b87849e11",
+    "services/sync-service/task-registry.js": "7a6e21a9ee1e1e5dc82a1b3db18ed8ba9a945fd4f94aba7b83075375d9f614cd",
+    "services/sync-service/tasks/history-task.js": "4c7407436abe288b9deb2af2dda47e20927f70b1721e5b8a0e6d001552778b03",
+    "services/sync-service/tasks/shared-playlists-task.js": "70ec79e304efc8baba7b622be1834548d8a75f71520297594910b5d7b1d7a10c",
+    "services/sync-service/tasks/song-league-playlists-task.js": "aa611c17298f4fc40f50958730fb97181b51cff738577b8578cf08a23e0f3ff0",
+    "services/sync-service/tasks/stats-task.js": "a2c69216c8a269b297f99b8c283adaec4fad8319673487b9cbd7aa6d1987896b",
+    "services/sync-service/worker-runtime-health.js": "3666f247f178ac84733dbd91c01a0be4a1d64cc793346c6a73d9f80ef4473f28"
+  },
+  "testHashes": {
+    "services/sync-service/catalog-repository.test.js": "bd3582417612148dec1e81ce3e3fe4499b82a6b08e07ad2eb5521fd5d4f0b502",
+    "services/sync-service/credential-store.test.js": "6faa9a96aad9cf7d96ab89a612b776e4466c88b4802553546a5df9ca0e90139a",
+    "services/sync-service/health-server.test.js": "3b705424026fdb66f6f5be291e628a9bc658d3fcb4ec15ecc10564b38194a879",
+    "services/sync-service/push-dispatcher.test.js": "446ad363936f9144279a3fedbd375587a36628491061c89643a9f47cb518f6b2",
+    "services/sync-service/spotify-client.test.js": "33ef6b88c8d5098a4c09ed398e671649789fff74a0bdfc6b5cd7b8d65fd508ec",
+    "services/sync-service/task-registry.test.js": "f8dfc1282920d327cf19c351707aadb1d123102836fc793bd0ef2a1fa7dddf21",
+    "services/sync-service/tasks/history-task.test.js": "5c18c914076ff865264aa769b8abe3ab9569c2bc6fa90909f8a8a868fccb87c6",
+    "services/sync-service/tasks/song-league-playlists-task.test.js": "ab6d7dd981421acb0c094907fbd9e2a993d0ca5a238cfa45c5560f838a9a667a",
+    "services/sync-service/worker-runtime-health.test.js": "1581a06c40776086ab2c16ca7cbf0a6d7421cef62b37242bdf22121cf9346d8d",
+    "services/sync-service/config.test.js": "05a1149e1b11a7ae17b9397cd6e6771d9aba1a41576294ac44015db33ca97d6d",
+    "services/sync-service/index.test.js": "3e9d6dafa022792fb623500026ac1ab15f29f09f199095fd81f06cd98849c32b",
+    "services/sync-service/scheduler-boundaries.test.js": "0297d2014f689b133605a9374c99375229192052c52fd7f30508b67238a41f8c",
+    "services/sync-service/tasks/shared-playlists-boundaries.test.js": "d943d9e36f1d08a0868dce436dee4c90aea905ea8e6b74339f0af1da80f62c25",
+    "services/sync-service/test-support/load-isolated.cjs": "ca11d62d049e780b026de1e0a16316f696623df10ead349f819a3ca171539534"
+  },
+  "remainingUncovered": [
+    {
+      "path": "services/sync-service/catalog-repository.js",
+      "branches": [
+        {
+          "line": 165,
+          "type": "binary-expr",
+          "counts": [
+            1,
+            0
+          ]
+        }
+      ],
+      "statements": []
+    },
+    {
+      "path": "services/sync-service/credential-store.js",
+      "branches": [
+        {
+          "line": 153,
+          "type": "binary-expr",
+          "counts": [
+            6,
+            0
+          ]
+        }
+      ],
+      "statements": []
+    },
+    {
+      "path": "services/sync-service/scheduler.js",
+      "branches": [
+        {
+          "line": 112,
+          "type": "binary-expr",
+          "counts": [
+            23,
+            0
+          ]
+        }
+      ],
+      "statements": []
+    },
+    {
+      "path": "services/sync-service/spotify-client.js",
+      "branches": [],
+      "statements": [
+        {
+          "line": 97
+        }
+      ]
+    },
+    {
+      "path": "services/sync-service/spotify-url-validator.js",
+      "branches": [
+        {
+          "line": 10,
+          "type": "cond-expr",
+          "counts": [
+            0,
+            13
+          ]
+        },
+        {
+          "line": 20,
+          "type": "if",
+          "counts": [
+            0,
+            9
+          ]
+        }
+      ],
+      "statements": [
+        {
+          "line": 18
+        },
+        {
+          "line": 21
+        }
+      ]
+    },
+    {
+      "path": "services/sync-service/worker-runtime-health.js",
+      "branches": [
+        {
+          "line": 7,
+          "type": "binary-expr",
+          "counts": [
+            2,
+            0
+          ]
+        }
+      ],
+      "statements": []
+    },
+    {
+      "path": "services/sync-service/tasks/shared-playlists-task.js",
+      "branches": [
+        {
+          "line": 148,
+          "type": "binary-expr",
+          "counts": [
+            14,
+            0
+          ]
+        },
+        {
+          "line": 155,
+          "type": "binary-expr",
+          "counts": [
+            14,
+            0
+          ]
+        },
+        {
+          "line": 167,
+          "type": "binary-expr",
+          "counts": [
+            8,
+            0
+          ]
+        }
+      ],
+      "statements": []
+    },
+    {
+      "path": "services/sync-service/tasks/stats-task.js",
+      "branches": [
+        {
+          "line": 89,
+          "type": "binary-expr",
+          "counts": [
+            44,
+            0
+          ]
+        },
+        {
+          "line": 141,
+          "type": "binary-expr",
+          "counts": [
+            27,
+            0
+          ]
+        },
+        {
+          "line": 143,
+          "type": "binary-expr",
+          "counts": [
+            41,
+            0
+          ]
+        },
+        {
+          "line": 144,
+          "type": "binary-expr",
+          "counts": [
+            41,
+            0
+          ]
+        },
+        {
+          "line": 145,
+          "type": "binary-expr",
+          "counts": [
+            41,
+            0
+          ]
+        }
+      ],
+      "statements": []
+    }
+  ],
+  "limitations": [
+    "Coverage is not proof of correctness. Remaining statements/branches remain in the denominator and are listed above, including defensive/redundant guards unreachable through valid upstream contracts.",
+    "Supabase/Spotify/push transports use deterministic service-boundary fixtures. No production endpoints, real secrets/data, notifications or hosted deployment were exercised.",
+    "Native HTTP needs loopback-listener permission in this sandbox; automatic approval granted the narrowly scoped elevated run. No test skips.",
+    "Root coordinates shared package.json CI registration: config.test.js, index.test.js, scheduler-boundaries.test.js, tasks/shared-playlists-boundaries.test.js, worker-runtime-health.test.js.",
+    "Frontend and Edge coverage remain independent workstreams."
+  ],
+  "testHelperExclusion": "test-support/load-isolated.cjs is referenced exclusively by *.test.js. Original 17 production sources remain included, with no new exclusions."
+}

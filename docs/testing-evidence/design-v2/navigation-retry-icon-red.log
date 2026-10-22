@@ -1,0 +1,57 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.navigation.config.ts --project=mobile --grep=read and write recovery.*no-preference --output=docs/testing-evidence/design-v2/navigation-retry-icon-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214
+[WebServer] (node:69082) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:69082) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:69308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [mobile] › e2e/design-v2-navigation.spec.ts:22:7 › Device shortcut read and write recovery (no-preference) (6.7s)
+
+
+  1) [mobile] › e2e/design-v2-navigation.spec.ts:22:7 › Device shortcut read and write recovery (no-preference) 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('v2-settings-navigation-preferences').getByRole('button', { name: 'Retry', exact: true }).locator('.pi-sync')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('v2-settings-navigation-preferences').getByRole('button', { name: 'Retry', exact: true }).locator('.pi-sync') with timeout 5000ms
+      - waiting for locator('v2-settings-navigation-preferences').getByRole('button', { name: 'Retry', exact: true }).locator('.pi-sync')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      52 |     const bar = page.getByRole('navigation', {name: 'Primary navigation', exact: true, includeHidden: true});
+      53 |     await expect(panel.getByRole('alert')).toContainText('Navigation preferences could not be loaded');
+    > 54 |     await expect(panel.getByRole('button', {name: 'Retry', exact: true}).locator('.pi-sync')).toHaveCount(1);
+         |                                                                                               ^
+      55 |     await expect(choices).toHaveCount(7);
+      56 |     for (const button of await choices.all()) await expect(button).toBeDisabled();
+      57 |     await expect(bar).toHaveCount(0);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-navigation.spec.ts:54:95
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/navigation-retry-icon-red-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/navigation-retry-icon-red-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/navigation-retry-icon-red-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/navigation-retry-icon-red-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [mobile] › e2e/design-v2-navigation.spec.ts:22:7 › Device shortcut read and write recovery (no-preference) 

@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"mutatedNodeIds\":[\"999:32270\"],\"description\":\"Per-Spotify-account device-only mobile shortcuts. At most five, fixed canonical order; zero hides the bottom bar, Menu remains reachable. Strict reads never infer defaults on failure. Selection applies while saving; failed persistence restores the last confirmed selection and Retry saves the exact requested draft. Cached state and failed intent clear synchronously on the real logout signal before session draining. Reduced motion changes states without interpolation. During logout, cache clearing and a blocked session-exit phase prevent window-focus refresh, load and Retry from reacquiring the ending account, including while its old identifiers are still present. Once exit finishes, a later valid login, including the same Spotify account, may load its saved choices normally.\"}"
+    }
+  ],
+  "isError": false
+}

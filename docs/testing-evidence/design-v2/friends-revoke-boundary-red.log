@@ -1,0 +1,142 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/friends/v2-friends-page.component.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.771 seconds] - 2026-10-21T19:23:23.808Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+Warning: A vi.mock("qrcode") call in "/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/friends/v2-friends-page.component.spec.ts" is not at the top level of the module. Although it appears nested, it will be hoisted and executed before any tests run. Move it to the top level to reflect its actual execution order. This will become an error in a future version.
+See: https://vitest.dev/guide/mocking/modules#how-it-works
+ ❯ |SpotiFront| src/app/features/friends/v2-friends-page.component.spec.ts (36 tests | 6 failed) 1758ms
+     × explains an earlier-session link and revokes it only after confirmation without removing friends 17ms
+     × opens the canonical invitation-revoke confirmation without writing, with Cancel last and initially focused 16ms
+     × cancels invitation revocation with Cancel without writing and returns focus to its trigger 16ms
+     × cancels invitation revocation with Escape without writing and returns focus to its trigger 22ms
+     × coalesces rapid invitation-revoke confirmations while the write is pending 14ms
+     × retries an uncertain confirmed revocation using the same invitation without removing friends 16ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-page.component.spec.ts > Mounted canonical Friends workflows > explains an earlier-session link and revokes it only after confirmation without removing friends
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "old-invitation",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/friends/v2-friends-page.component.spec.ts:269:42
+    267|     expect(element().textContent).toContain('Link unavailable in this …
+    268|     button(element(), 'Revoke').click(); await settle();
+    269|     expect(backend.revokeInvitation).not.toHaveBeenCalled();
+       |                                          ^
+    270|     button(element().querySelector<HTMLElement>('[role="dialog"]')!, '…
+    271|     expect(backend.revokeInvitation).toHaveBeenCalledExactlyOnceWith('…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-page.component.spec.ts > Mounted canonical Friends workflows > opens the canonical invitation-revoke confirmation without writing, with Cancel last and initially focused
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "old-invitation",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/friends/v2-friends-page.component.spec.ts:281:42
+    279|     const {element, backend, settle} = await setup('/friends/invitatio…
+    280|     button(element(), 'Revoke').click(); await settle();
+    281|     expect(backend.revokeInvitation).not.toHaveBeenCalled();
+       |                                          ^
+    282|     const dialog = element().querySelector<HTMLElement>('[role="dialog…
+    283|     expect(dialog).not.toBeNull();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-page.component.spec.ts > Mounted canonical Friends workflows > cancels invitation revocation with Cancel without writing and returns focus to its trigger
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-page.component.spec.ts > Mounted canonical Friends workflows > cancels invitation revocation with Escape without writing and returns focus to its trigger
+AssertionError: expected null not to be null
+ ❯ src/app/features/friends/v2-friends-page.component.spec.ts:296:24
+    294|     const trigger = button(element(), 'Revoke'); trigger.focus(); trig…
+    295|     const dialog = element().querySelector<HTMLElement>('[role="dialog…
+    296|     expect(dialog).not.toBeNull();
+       |                        ^
+    297|     if (action === 'Cancel') button(dialog, 'Cancel').click();
+    298|     else document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Es…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-page.component.spec.ts > Mounted canonical Friends workflows > coalesces rapid invitation-revoke confirmations while the write is pending
+AssertionError: expected null not to be null
+ ❯ src/app/features/friends/v2-friends-page.component.spec.ts:317:24
+    315|     button(element(), 'Revoke').click(); await settle();
+    316|     const dialog = element().querySelector<HTMLElement>('[role="dialog…
+    317|     expect(dialog).not.toBeNull();
+       |                        ^
+    318|     const confirm = button(dialog, 'Revoke invitation'); confirm.click…
+    319|     await vi.waitFor(() => expect(backend.revokeInvitation).toHaveBeen…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-page.component.spec.ts > Mounted canonical Friends workflows > retries an uncertain confirmed revocation using the same invitation without removing friends
+AssertionError: expected null not to be null
+ ❯ src/app/features/friends/v2-friends-page.component.spec.ts:335:24
+    333|     button(element(), 'Revoke').click(); await settle();
+    334|     const dialog = element().querySelector<HTMLElement>('[role="dialog…
+    335|     expect(dialog).not.toBeNull();
+       |                        ^
+    336|     button(dialog, 'Revoke invitation').click(); await settle();
+    337|     expect(backend.revokeInvitation).toHaveBeenCalledExactlyOnceWith('…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 30 passed (36)
+   Start at  21:23:23
+   Duration  2.86s (transform 265ms, setup 260ms, import 377ms, tests 1.76s, environment 351ms)
+

@@ -186,3 +186,29 @@ describe('Strict device preference hydration', () => {
     expect(service.getItem(second)).toBeNull();
   });
 });
+
+describe('Batched local hydration cancellation', () => {
+  for (const readFailure of ['empty', 'reject'] as const) {
+    it(`does not start a second batch after session replacement (${readFailure})`, async () => {
+      const {service, requests, lifecycle} = boundary();
+      const keys = Array.from({length: 5}, (_, index) => `${key}:${index}`);
+      const read = service.hydrateItems(keys, {readFailure});
+      const outcome = readFailure === 'reject' ? expect(read).rejects.toMatchObject({name: 'AbortError'}) : expect(read).resolves.toBe(0);
+      await vi.waitFor(() => expect(requests).toHaveLength(4));
+      await lifecycle.invalidateAndDrain();
+      requests.forEach(request => request.succeed('isolated old value'));
+      await outcome;
+      expect(requests).toHaveLength(4);
+      expect(service.getCacheKeys()).toEqual([]);
+    });
+  }
+  it('discards a final tolerant read after session replacement', async () => {
+    const {service, requests, lifecycle} = boundary();
+    const read = service.hydrateItems([key]);
+    await vi.waitFor(() => expect(requests).toHaveLength(1));
+    await lifecycle.invalidateAndDrain();
+    requests[0].succeed('old');
+    expect(await read).toBe(0);
+    expect(service.getItem(key)).toBeNull();
+  });
+});

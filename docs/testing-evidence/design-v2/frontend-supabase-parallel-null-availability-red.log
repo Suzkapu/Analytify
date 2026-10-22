@@ -1,0 +1,42 @@
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [5.070 seconds] - 2026-10-16T17:12:01.295Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/core/data-access/supabase/service-boundary-recovery.spec.ts (45 tests | 2 failed) 324ms
+     × returns false for a successful null history response 8ms
+     × returns false for a successful null snapshot response 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/supabase/service-boundary-recovery.spec.ts > boolean availability contracts > returns false for a successful null history response
+ FAIL  |SpotiFront| src/app/core/data-access/supabase/service-boundary-recovery.spec.ts > boolean availability contracts > returns false for a successful null snapshot response
+AssertionError: expected null to be false // Object.is equality
+
+- Expected:
+false
+
++ Received:
+null
+
+ ❯ src/app/core/data-access/supabase/service-boundary-recovery.spec.ts:353:128
+    351|   it.each(['history','snapshot'])('returns false for a successful null…
+    352|     const f=fixture();f.reply(()=>({data:null,error:null}));
+    353|     await expect(kind==='history'?f.service.hasHistoryForToday('owner'…
+       |                                                                                                                                ^
+    354|   });
+    355| });
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/data-access/supabase/service-boundary-recovery.spec.ts:351:97
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 43 passed (45)
+   Start at  19:12:01
+   Duration  2.23s (transform 202ms, setup 533ms, import 263ms, tests 324ms, environment 801ms)
+

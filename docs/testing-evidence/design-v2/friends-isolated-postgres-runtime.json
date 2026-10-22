@@ -1,0 +1,23 @@
+{
+  "version": "18.6-2",
+  "source": "Arch extra repository metadata via pacman -Si/-Sp; archive SHA256 verified before extraction",
+  "archives": [
+    {
+      "name": "postgresql",
+      "url": "https://archlinux.cachyos.org/repo/extra/os/x86_64/postgresql-18.6-2-x86_64.pkg.tar.zst",
+      "sha256": "9bb57a88e9caf2dc4d9a56e71c79e520072955f99e4f144c35cc8b5059f72e45"
+    },
+    {
+      "name": "postgresql-libs",
+      "url": "https://archlinux.cachyos.org/repo/extra/os/x86_64/postgresql-libs-18.6-2-x86_64.pkg.tar.zst",
+      "sha256": "160ee929177c8e1f30bf54fe451dbed3d9a020beeb1a016e1cf1ae264a1e8930"
+    }
+  ],
+  "extractedRoot": "/tmp/analytify-postgres-runtime/root",
+  "hostPackagesInstalled": false,
+  "docs": [
+    "https://www.postgresql.org/docs/current/app-initdb.html",
+    "https://www.postgresql.org/docs/current/runtime-config-connection.html"
+  ],
+  "limitations": "Current host Arch-compatible libraries; portable archives are ephemeral infrastructure, not a bundled or universally reproducible runtime. Selected profile SQL tests do not certify hosted Supabase."
+}

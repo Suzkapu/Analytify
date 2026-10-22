@@ -8,6 +8,7 @@ import { firstValueFrom } from 'rxjs';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { CURRENT_TERMS_VERSION, TermsAcceptanceService } from '@core/legal/terms-acceptance.service';
 import {SessionLifecycleService} from './session-lifecycle.service';
+import {DesignV2MobileShortcutPreferencesService} from '@core/navigation/design-v2-mobile-shortcut-preferences.service';
 
 describe('SpotifyAuthService', () => {
     let service: SpotifyAuthService;
@@ -95,6 +96,64 @@ describe('SpotifyAuthService', () => {
 
     it('should be created', () => {
         expect(service).toBeTruthy();
+    });
+
+    it('keeps session exit active until every overlapping logout finishes', async () => {
+        let finishFirst!: () => void, finishSecond!: () => void;
+        authClient.signOut.mockImplementationOnce(() => new Promise<void>(resolve => {finishFirst = resolve;}))
+            .mockImplementationOnce(() => new Promise<void>(resolve => {finishSecond = resolve;}));
+        const first = service.logout(), second = service.logout();
+        await vi.waitFor(() => expect(authClient.signOut).toHaveBeenCalledTimes(2));
+        expect(service.sessionExiting()).toBe(true);
+        finishFirst(); await first;
+        expect(service.sessionExiting()).toBe(true);
+        finishSecond(); await second;
+        expect(service.sessionExiting()).toBe(false);
+    });
+
+    it('releases the exit phase after a cache-clear failure so recovery can run', async () => {
+        storage.clear = vi.fn().mockRejectedValueOnce(new Error('Device clear failed')).mockResolvedValue(undefined);
+        await expect(service.clearCacheAndLogout()).rejects.toThrow('Device clear failed');
+        expect(service.sessionExiting()).toBe(false);
+        await service.clearCacheAndLogout();
+        expect(authClient.signOut).toHaveBeenCalledOnce();
+        expect(service.sessionExiting()).toBe(false);
+    });
+
+    it.each([true, false])('holds exit through consent cleanup without blocking a non-consent continuation (consent=%s)', async promptConsent => {
+        let fail!: (error: Error) => void;
+        authClient.signInWithOAuth.mockImplementationOnce(() => new Promise((_resolve, reject) => {fail = reject;}));
+        const login = service.loginWithSupabase(promptConsent);
+        const rejected = expect(login).rejects.toThrow('Synthetic OAuth unavailable');
+        await vi.waitFor(() => expect(fail).toBeTypeOf('function'));
+        expect(service.sessionExiting()).toBe(promptConsent);
+        fail(new Error('Synthetic OAuth unavailable')); await rejected;
+        expect(service.sessionExiting()).toBe(false);
+    });
+
+    it('does not let a preference refresh reacquire the account while real logout drains, then reloads the same account after login', async () => {
+        values['spotifyUserId'] = 'spotify-user';
+        values['spotifyAccessToken'] = 'old-token';
+        storage.hydrateItems = vi.fn().mockResolvedValue(0);
+        const preferences = TestBed.inject(DesignV2MobileShortcutPreferencesService);
+        await preferences.load();
+        expect(preferences.selection()).toEqual(['playlists', 'stats', 'history']);
+        let finish!: () => void;
+        const lifecycle = TestBed.inject(SessionLifecycleService);
+        void lifecycle.track(new Promise<void>(resolve => {finish = resolve;}));
+        const exiting = service.logout();
+        try {
+            expect(service.getUserId()).not.toBeNull();
+            await preferences.reload(); await preferences.retry(); await preferences.load();
+            expect(preferences.selection()).toBeNull();
+            expect(storage.hydrateItems).toHaveBeenCalledOnce();
+        } finally {finish(); await exiting;}
+        values['spotifyUserId'] = 'spotify-user';
+        values['spotifyAccessToken'] = 'new-token';
+        values[`design-v2:mobile-shortcuts:${service.getUserId()}`] = '[]';
+        await preferences.load();
+        expect(preferences.selection()).toEqual([]);
+        expect(storage.hydrateItems).toHaveBeenCalledTimes(2);
     });
 
     it('clears only Analytify session state when logging out', async () => {

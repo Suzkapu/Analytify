@@ -1,0 +1,45 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/song-league/song-league-creation-owner.spec.ts --runner-config=docs/testing-evidence/design-v2/league-service-parallel-vitest.mjs --filter=local SDK session disappears
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/league-service-parallel-vitest.mjs
+Application bundle generation complete. [2.869 seconds] - 2026-10-20T17:38:08.640Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/core/song-league/song-league-creation-owner.spec.ts (10 tests | 1 failed | 9 skipped) 79ms
+     × discards an acknowledgement if the local SDK session disappears during the request 77ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/song-league/song-league-creation-owner.spec.ts > Song League creation session ownership > discards an acknowledgement if the local SDK session disappears during the request
+AssertionError: expected Error: A Supabase login is required for S… to match object { name: 'AbortError' }
+
+- Expected
++ Received
+
+- {
+-   "name": "AbortError",
++ Error {
++   "message": "A Supabase login is required for Song League.",
+  }
+
+ ❯ src/app/core/song-league/song-league-creation-owner.spec.ts:81:94
+     79|   it('discards an acknowledgement if the local SDK session disappears …
+     80|     const response = deferred<any>(); rpc.mockReturnValueOnce(response…
+     81|     const pending = service.createLeague('Same league', 'UTC'); const …
+       |                                                                                              ^
+     82|     await vi.waitFor(() => expect(rpc).toHaveBeenCalledOnce()); actor …
+     83|     await result;
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/song-league/song-league-creation-owner.spec.ts:79:103
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 skipped (10)
+   Start at  19:38:08
+   Duration  954ms (transform 149ms, setup 245ms, import 165ms, tests 79ms, environment 349ms)
+

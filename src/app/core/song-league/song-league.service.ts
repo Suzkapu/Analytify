@@ -3,6 +3,7 @@ import {firstValueFrom, forkJoin} from 'rxjs';
 
 import {SpotifyDataService} from '@core/data-access/spotify/spotify-data.service';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
+import {SessionGeneration, SessionLifecycleService} from '@core/auth/session-lifecycle.service';
 import {environment} from '@env/environment';
 import {
   CreatedSongLeague,
@@ -25,21 +26,35 @@ export class SongLeagueService {
     refreshed: boolean;
     snapshotDate: string;
   }>>();
-  private pendingLeagueCreation: {fingerprint: string; inviteToken: string; idempotencyKey: string} | null = null;
+  private pendingCreationGeneration = 0;
+  private readonly pendingLeagueCreations = new Map<string, {inviteToken: string; idempotencyKey: string}>();
 
   constructor(
     private supabase: SupabaseService,
-    private spotify: SpotifyDataService
+    private spotify: SpotifyDataService,
+    private sessionLifecycle: SessionLifecycleService
   ) {}
 
   async createLeague(name: string, timezone: string, maxMembers = 5): Promise<CreatedSongLeague> {
+    const generation = this.sessionLifecycle.capture();
+    const {client, userId} = await this.creationClient(generation);
+    this.assertCreationCurrent(generation);
+    if (this.pendingCreationGeneration !== generation.id) {
+      this.pendingLeagueCreations.clear();
+      this.pendingCreationGeneration = generation.id;
+      generation.signal.addEventListener('abort', () => {
+        if (this.pendingCreationGeneration === generation.id) {
+          this.pendingLeagueCreations.clear();
+          this.pendingCreationGeneration = 0;
+        }
+      }, {once: true});
+    }
     const normalizedName = name.trim();
-    const fingerprint = JSON.stringify([normalizedName, timezone, maxMembers]);
-    const pending = this.pendingLeagueCreation?.fingerprint === fingerprint
-      ? this.pendingLeagueCreation
-      : {fingerprint, inviteToken: this.createToken(), idempotencyKey: this.createToken()};
-    this.pendingLeagueCreation = pending;
-    const {data, error} = await (await this.supabase.getClient()).rpc('create_song_league', {
+    const fingerprint = JSON.stringify([generation.id, userId, normalizedName, timezone, maxMembers]);
+    const pending = this.pendingLeagueCreations.get(fingerprint)
+      || {inviteToken: this.createToken(), idempotencyKey: this.createToken()};
+    this.pendingLeagueCreations.set(fingerprint, pending);
+    const {data, error} = await client.rpc('create_song_league', {
       p_name: normalizedName,
       p_timezone: timezone,
       p_max_members: maxMembers,
@@ -48,12 +63,37 @@ export class SongLeagueService {
       p_invite_usage_policy: 'multi_use',
       p_invite_max_uses: null,
       p_idempotency_key: pending.idempotencyKey
-    });
+    }).abortSignal(generation.signal);
+    await this.creationClient(generation, userId);
+    this.assertCreationCurrent(generation);
     if (error) throw error;
     const leagueId = String(data || '');
     if (!leagueId) throw new Error('Supabase did not return a Song League ID.');
-    this.pendingLeagueCreation = null;
+    if (this.pendingLeagueCreations.get(fingerprint) === pending) {
+      this.pendingLeagueCreations.delete(fingerprint);
+    }
     return {leagueId, inviteUrl: this.inviteUrl(pending.inviteToken)};
+  }
+
+  private assertCreationCurrent(generation: SessionGeneration): void {
+    if (!this.sessionLifecycle.isCurrent(generation)) {
+      throw new DOMException('Song League creation was cancelled.', 'AbortError');
+    }
+  }
+
+  private async creationClient(generation: SessionGeneration, expectedUserId?: string) {
+    this.assertCreationCurrent(generation);
+    const client = await this.supabase.getClient();
+    this.assertCreationCurrent(generation);
+    const {data, error} = await client.auth.getSession();
+    this.assertCreationCurrent(generation);
+    if (error) throw error;
+    const userId = data.session?.user.id;
+    if (expectedUserId && userId !== expectedUserId) {
+      throw new DOMException('Song League creation was cancelled.', 'AbortError');
+    }
+    if (!userId) throw new Error('A Supabase login is required for Song League.');
+    return {client, userId};
   }
 
   async createInvite(leagueId: string, expiresInHours = 168): Promise<{id: string; url: string}> {

@@ -1,0 +1,30 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts --grep=session exit --output=docs/testing-evidence/design-v2/friends-exit-phase-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214
+[WebServer] (node:78537) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:78537) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:79774) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop] › e2e/design-v2-friends.spec.ts:186:7 › Friends confirming-read revocation and session exit (no-preference) (5.5s)
+[WebServer] 8:29:08 PM [vite] (client) [console.error] AbortError: Transition was skipped. New ViewTransition started
+  ✓  2 [desktop] › e2e/design-v2-friends.spec.ts:186:7 › Friends confirming-read revocation and session exit (reduce) (6.2s)
+(node:81213) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [mobile] › e2e/design-v2-friends.spec.ts:186:7 › Friends confirming-read revocation and session exit (no-preference) (4.9s)
+  ✓  4 [mobile] › e2e/design-v2-friends.spec.ts:186:7 › Friends confirming-read revocation and session exit (reduce) (3.2s)
+(node:81837) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 [firefox-stats] › e2e/design-v2-friends.spec.ts:186:7 › Friends confirming-read revocation and session exit (no-preference) (5.4s)
+  ✓  6 [firefox-stats] › e2e/design-v2-friends.spec.ts:186:7 › Friends confirming-read revocation and session exit (reduce) (2.7s)
+(node:83218) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  7 [webkit-stats] › e2e/design-v2-friends.spec.ts:186:7 › Friends confirming-read revocation and session exit (no-preference) (7.2s)
+  ✓  8 [webkit-stats] › e2e/design-v2-friends.spec.ts:186:7 › Friends confirming-read revocation and session exit (reduce) (3.9s)
+
+  8 passed (1.0m)

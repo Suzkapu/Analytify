@@ -1,0 +1,59 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-ambient.spec.ts --project=desktop --grep=fixed-glow --workers=1 --output=docs/testing-evidence/design-v2/ambient-fixed-glows-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:13752) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13752) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:14120) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-ambient.spec.ts:38:5 › v2 ambient layer is decorative, fixed-glow, particle-scroll-responsive, and reflow-safe (1.5s)
+
+
+  1) [desktop] › e2e/design-v2-ambient.spec.ts:38:5 › v2 ambient layer is decorative, fixed-glow, particle-scroll-responsive, and reflow-safe 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 4
+    + Received  + 4
+
+      Object {
+    -   "secondaryX": "84.91%",
+    -   "secondaryY": "54.03%",
+    -   "x": "39.83%",
+    -   "y": "17.50%",
+    +   "secondaryX": "84.64%",
+    +   "secondaryY": "54.45%",
+    +   "x": "40.04%",
+    +   "y": "18.10%",
+      }
+
+      76 |     secondaryY: (element as HTMLElement).style.getPropertyValue('--ambient-secondary-y')
+      77 |   }));
+    > 78 |   expect(scrolled).toEqual({x: initial.x, y: initial.y, secondaryX: initial.secondaryX, secondaryY: initial.secondaryY});
+         |                    ^
+      79 |
+      80 |   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      81 |   expect(overflow).toBeLessThanOrEqual(1);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-ambient.spec.ts:78:20
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/ambient-fixed-glows-red-artifacts/design-v2-ambient-v2-ambie-3f9a6--responsive-and-reflow-safe-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/ambient-fixed-glows-red-artifacts/design-v2-ambient-v2-ambie-3f9a6--responsive-and-reflow-safe-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/ambient-fixed-glows-red-artifacts/design-v2-ambient-v2-ambie-3f9a6--responsive-and-reflow-safe-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/ambient-fixed-glows-red-artifacts/design-v2-ambient-v2-ambie-3f9a6--responsive-and-reflow-safe-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-ambient.spec.ts:38:5 › v2 ambient layer is decorative, fixed-glow, particle-scroll-responsive, and reflow-safe 

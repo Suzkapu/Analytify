@@ -1,0 +1,5 @@
+:host {position: absolute; inset: 0;}
+.drawer-backdrop {position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: rgb(0 0 0 / 68%); backdrop-filter: blur(5px);}
+.navigation-drawer {position: absolute; inset: 0 auto 0 0; width: min(320px, 100%); border: 1px solid var(--v2-color-border); border-radius: 0 var(--v2-radius-panel) var(--v2-radius-panel) 0; color: var(--v2-color-text); background: var(--v2-color-background-raised); overflow: hidden; animation: drawer-entry .16s ease-out;}
+@keyframes drawer-entry {from {transform: translateX(-100%);} to {transform: translateX(0);}}
+@media (prefers-reduced-motion: reduce) {.navigation-drawer {animation: none;}}

@@ -1,0 +1,60 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.navigation.config.ts --project=desktop --grep Settings account and data actions stay reachable \(no-preference\)|Canonical app header, gutters and document footer \(no-preference\) --output=docs/testing-evidence/design-v2/shell-header-footer-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214
+[WebServer] (node:56944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:56944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:57159) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 4:21:36 PM [vite] (client) [console.error] AbortError: Transition was skipped. New ViewTransition started
+  ✓  1 [desktop] › e2e/design-v2-navigation.spec.ts:42:7 › Settings account and data actions stay reachable (no-preference) (5.4s)
+  ✘  2 [desktop] › e2e/design-v2-navigation.spec.ts:75:7 › Canonical app header, gutters and document footer (no-preference) (7.1s)
+
+
+  1) [desktop] › e2e/design-v2-navigation.spec.ts:75:7 › Canonical app header, gutters and document footer (no-preference) 
+
+    Error: expect(locator).toBeHidden() failed
+
+    Locator:  locator('.v2-header')
+    Expected: hidden
+    Received: visible
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeHidden" locator('.v2-header') with timeout 5000ms
+      - waiting for locator('.v2-header')
+        14 × locator resolved to <header class="v2-header" _ngcontent-ng-c2817084706="">…</header>
+           - unexpected value "visible"
+
+
+      86 |         await expect(header.getByRole('link', {name: 'Analytify playlists'})).toBeVisible();
+      87 |         await expect(header.getByRole('button', {name: 'Open navigation menu', exact: true})).toBeVisible();
+    > 88 |       } else await expect(header).toBeHidden();
+         |                                   ^
+      89 |       await expect(page.getByRole('button', {name: 'Open account and data settings', exact: true})).toHaveCount(0);
+      90 |       const sample = await page.evaluate(() => {
+      91 |         const box = (selector: string) => {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-navigation.spec.ts:88:35
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/shell-header-footer-red-artifacts/design-v2-navigation-Canon-2835d-ument-footer-no-preference--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/shell-header-footer-red-artifacts/design-v2-navigation-Canon-2835d-ument-footer-no-preference--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/shell-header-footer-red-artifacts/design-v2-navigation-Canon-2835d-ument-footer-no-preference--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/shell-header-footer-red-artifacts/design-v2-navigation-Canon-2835d-ument-footer-no-preference--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-navigation.spec.ts:75:7 › Canonical app header, gutters and document footer (no-preference) 
+  1 passed (23.8s)

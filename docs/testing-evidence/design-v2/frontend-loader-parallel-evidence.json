@@ -1,0 +1,310 @@
+{
+  "status": "initial reviewed fixes retained; follow-up public workflow characterization GREEN; production unchanged since prior handoff",
+  "date": "2026-10-19",
+  "baseline": {
+    "source": "coverage/SpotiFront/coverage-summary.json",
+    "loader": {
+      "lines": 79.2,
+      "statements": 77.88,
+      "functions": 73.56,
+      "branches": 63.4
+    }
+  },
+  "verifiedRuns": [
+    {
+      "log": "docs/testing-evidence/design-v2/frontend-loader-parallel-lifecycle-red.log",
+      "passed": 2,
+      "failed": 3
+    },
+    {
+      "log": "docs/testing-evidence/design-v2/frontend-loader-parallel-expanded-red.log",
+      "passed": 14,
+      "failed": 3
+    },
+    {
+      "log": "docs/testing-evidence/design-v2/frontend-loader-parallel-reentrant-red.log",
+      "passed": 21,
+      "failed": 5,
+      "productionSourceSha256": "a40ad807eb9222be08d5b91ee10fcbaa971b070fc301cf4eb16974f046d2f286"
+    },
+    {
+      "log": "docs/testing-evidence/design-v2/frontend-loader-parallel-green.log",
+      "passed": 54,
+      "failed": 0,
+      "files": 3,
+      "skipped": 0,
+      "command": "npx ng test --watch=false --include='src/app/core/sync/playlist-loader/*.spec.ts' --runner-config=docs/testing-evidence/design-v2/frontend-loader-parallel-vitest.mjs --coverage --coverage-include='src/app/core/sync/playlist-loader/*.ts'"
+    },
+    {
+      "log": "docs/testing-evidence/design-v2/frontend-loader-parallel-followup.log",
+      "passed": 74,
+      "failed": 0,
+      "files": 4,
+      "skipped": 0
+    },
+    {
+      "log": "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-final.log",
+      "passed": 77,
+      "failed": 0,
+      "files": 4,
+      "skipped": 0,
+      "command": "npx ng test --watch=false --include='src/app/core/sync/playlist-loader/*.spec.ts' --runner-config=docs/testing-evidence/design-v2/frontend-loader-parallel-followup-vitest.mjs --coverage --coverage-include='src/app/core/sync/playlist-loader/*.ts'"
+    }
+  ],
+  "genuineRegressions": [
+    "Late optional enrichment restores logged-out account cache",
+    "Late optional enrichment overwrites replacement task cache",
+    "Dirty reconciliation never settles when cancellation unsubscribes source request",
+    "Single-task cancellation successor survives prior cancellation observer and later reconcile observer",
+    "Clear-all cancellation successor survives prior cancellation observer and later reconcile observer"
+  ],
+  "productionEdits": [
+    "PlaylistLoadTask idempotent terminal AbortError cancellation for unfinished tasks; completed outcomes preserved",
+    "Remove task registration before cancellation; snapshot+clear registry before clear-all cancellations",
+    "Reconciliation terminal cleanup only owns captured task",
+    "Post-await enrichment and completion cancellation guards"
+  ],
+  "testTypesExit": 0,
+  "limitations": [
+    "Scoped combined L/S/F/B97.99/97.81/99.02/89.73: lines/statements/branches below98; not full frontend coverage",
+    "Controlled source Observable/Promise/storage boundaries, no native or hosted transport claims",
+    "Unreachable minPlaylistIndex/missingtracks internals and defensive persistence throw not forced with fabricated callbacks or private-state edits; remaining uncovered paths retained"
+  ],
+  "sha256": {
+    "src/app/core/sync/playlist-loader/playlist-loader.service.ts": "48bc01cbccbcd677b81da425900082e58c92db1b95c8a55b6daf2f6074c61067",
+    "src/app/core/sync/playlist-loader/playlist-source-manifest.ts": "fdd5e0086da9492cc38b520ea08cf58da6cf18a4833401d24976047371828bd4",
+    "src/app/core/sync/playlist-loader/playlist-loader.service.spec.ts": "19ba939730c8e7b8318ee3d17d0bbc7a691cdbf0be24d9976c78095ee8f3178f",
+    "src/app/core/sync/playlist-loader/playlist-source-manifest.spec.ts": "c3ac67d6f31d2582fbd11e37523eb231548dedef779ae858bb7eae7ff23e2ed3",
+    "src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts": "abc189a89e2c51484f0fbff1ed855892db5fbef34088f4bd6d8496f8bc16e856",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-vitest.mjs": "dad93a09d5ac1b4313d69530c8412a8332011649123b7f7a06cc0a2b333fe91c",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-lifecycle-red.log": "63fb6bb92d42fea11baa826b7b4174b87ec5a05868cc3d19f1e6a8f98e06da61",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-lifecycle-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-expanded-red.log": "dfb43bbd45770a60fafe32fd35d49a17ddb4267b229828f5caa27d20ef6c7459",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-expanded-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-lint.log": "9299aa495cc9fe3a868ac83c0aff3b8f2a51202b028e5b69748be9337172676b",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-types.log": "4899da4c92726b9f8650082e7201b7694d83648e2725a098f1997133ea86809b",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-types.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-reentrant-red.log": "37f153925a3ad27b2ce3c141a361fb651e96d68142bd186235145353efcceded",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-reentrant-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-green.log": "c3696f164cab2862c24fe3a8c7cbbd21cd4bb3376ff1cb1cb6ac737a44cd0c8e",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-coverage/coverage-summary.json": "c807824f278e5f70f1ba3e969c2314998ae1a4ac9a5e4e65f4914fb71ff968a6",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-coverage/lcov.info": "d31ed03ea5cd36f676331003e3580a425d7db00881946dd95ef0ebc90bd38199",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-vitest.mjs": "335f3188e8c795975607a65e93e9fc33b8ca1de943743fdfa32daf3104b61826",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup.log": "4bdede54f5f6b7629bbc64c58bcece651792d86eb8ae2ff82052cbc90da29f51",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-final.log": "357c6b316a5fcae9d5d761df247cd600b63f1140a37063670d530af83854cffe",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-lint.log": "fd44e37212a1e141b5349a30b06d3eb5a43f5f9cf0c97b610f509e02b20e1728",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-types.log": "4899da4c92726b9f8650082e7201b7694d83648e2725a098f1997133ea86809b",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-final.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-types.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-coverage/base.css": "3f876e51f0a46864ffa7665b4b7a1f5fb5f6f37fb6a28f014e2b12d82962c852",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-coverage/block-navigation.js": "cd8db34b1fbeb973354a93f8b4133c7c7eab34cdda9429a0434be91384783b7e",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-coverage/favicon.png": "5b0cfd52dc0bfbe544f4e1a9c77aa46b8629b0e0aad6c54f95eef457b86c2a89",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-coverage/sort-arrow-sprite.png": "42c895355f9838ede83fdfdca90127d8471aefed5ecf5342374f65ec7c3f10ab",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-coverage/sorter.js": "f8cc5d157379d844fd695ad567b6c29b3c1f0812964ddf6f95c26327e434bab5",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-coverage/prettify.css": "ea3fe433f9450698ca8a230271688e7aeec12f99c8a7ef6c94379abb38f27823",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-coverage/prettify.js": "fa1b1e1b906ddcfa08b46f161c0f924f506e1a31b4f3e09b8caaa2463ef52c18",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-coverage/index.html": "1d1c0674b0800bd51a1dc71195852e81a27f69cb530182fbe3e630a2b118649d",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-coverage/playlist-loader.service.ts.html": "540a580f07a57597f3339e841a39050011f7c64ae86209bb3e2dbbd2e015c19e",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-coverage/playlist-source-manifest.ts.html": "b207f27a7ecaf3b88678adf7901669dc0ce42fb84f28f377c6889143f9bab0bf",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-coverage/lcov.info": "52f52dcb76943ff87503b9de2fa78c1dda0a2974bce44b5ffc73d0b246cf4ffa",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-followup-coverage/coverage-summary.json": "2d713ad15bdb88bfb67b07aa2d5e5ae0590ea03c1b476c7c62a4536ddafd51d9",
+    "src/app/core/sync/playlist-loader/playlist-loader-incremental-boundary.spec.ts": "ac70233a86b15f2ef396536ceb4c827231ce36776ca5319bffdf5ffe8fce3bd0"
+  },
+  "lintExit": 0,
+  "coverage": {
+    "total": {
+      "lines": {
+        "total": 549,
+        "covered": 538,
+        "skipped": 0,
+        "pct": 97.99
+      },
+      "statements": {
+        "total": 594,
+        "covered": 581,
+        "skipped": 0,
+        "pct": 97.81
+      },
+      "functions": {
+        "total": 103,
+        "covered": 102,
+        "skipped": 0,
+        "pct": 99.02
+      },
+      "branches": {
+        "total": 487,
+        "covered": 437,
+        "skipped": 0,
+        "pct": 89.73
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": "Unknown"
+      }
+    },
+    "/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/playlist-loader/playlist-loader.service.ts": {
+      "lines": {
+        "total": 490,
+        "covered": 480,
+        "skipped": 0,
+        "pct": 97.95
+      },
+      "functions": {
+        "total": 88,
+        "covered": 87,
+        "skipped": 0,
+        "pct": 98.86
+      },
+      "statements": {
+        "total": 522,
+        "covered": 511,
+        "skipped": 0,
+        "pct": 97.89
+      },
+      "branches": {
+        "total": 400,
+        "covered": 353,
+        "skipped": 0,
+        "pct": 88.25
+      }
+    },
+    "/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/playlist-loader/playlist-source-manifest.ts": {
+      "lines": {
+        "total": 59,
+        "covered": 58,
+        "skipped": 0,
+        "pct": 98.3
+      },
+      "functions": {
+        "total": 15,
+        "covered": 15,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 72,
+        "covered": 70,
+        "skipped": 0,
+        "pct": 97.22
+      },
+      "branches": {
+        "total": 87,
+        "covered": 84,
+        "skipped": 0,
+        "pct": 96.55
+      }
+    }
+  },
+  "priorScopedCoverage": {
+    "total": {
+      "lines": {
+        "total": 549,
+        "covered": 509,
+        "skipped": 0,
+        "pct": 92.71
+      },
+      "statements": {
+        "total": 594,
+        "covered": 548,
+        "skipped": 0,
+        "pct": 92.25
+      },
+      "functions": {
+        "total": 103,
+        "covered": 98,
+        "skipped": 0,
+        "pct": 95.14
+      },
+      "branches": {
+        "total": 487,
+        "covered": 409,
+        "skipped": 0,
+        "pct": 83.98
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": "Unknown"
+      }
+    },
+    "/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/playlist-loader/playlist-loader.service.ts": {
+      "lines": {
+        "total": 490,
+        "covered": 455,
+        "skipped": 0,
+        "pct": 92.85
+      },
+      "functions": {
+        "total": 88,
+        "covered": 83,
+        "skipped": 0,
+        "pct": 94.31
+      },
+      "statements": {
+        "total": 522,
+        "covered": 483,
+        "skipped": 0,
+        "pct": 92.52
+      },
+      "branches": {
+        "total": 400,
+        "covered": 330,
+        "skipped": 0,
+        "pct": 82.5
+      }
+    },
+    "/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/playlist-loader/playlist-source-manifest.ts": {
+      "lines": {
+        "total": 59,
+        "covered": 54,
+        "skipped": 0,
+        "pct": 91.52
+      },
+      "functions": {
+        "total": 15,
+        "covered": 15,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 72,
+        "covered": 65,
+        "skipped": 0,
+        "pct": 90.27
+      },
+      "branches": {
+        "total": 87,
+        "covered": 79,
+        "skipped": 0,
+        "pct": 90.8
+      }
+    }
+  },
+  "followup": {
+    "productionEdits": false,
+    "newCases": 23,
+    "totalPassed": 77,
+    "files": 4,
+    "skipped": 0,
+    "typesExit": 0,
+    "lintExit": 0,
+    "workflows": [
+      "51 new liked tracks across2pages before3entry durable overlap; exact source positions and old artist imagery retained",
+      "All Liked Songs removed produces authoritative empty cache and source manifest",
+      "8 unsafe incremental proof variants force exact full reconciliation",
+      "Transport failure preserves durable source/cache; explicit dirty retry recovers",
+      "Corrupt/version mismatched/truncated manifests migrate with exact load",
+      "Malformed dirty envelopes cannot spuriously request source refresh",
+      "Dirty liked source without cached artists returns false",
+      "Deferred dirty playlist completes only after source cache commit and releases owned task",
+      "Initial favourites/playlist/metadata transport failures preserve prior complete payload and subsequent retry succeeds"
+    ]
+  }
+}

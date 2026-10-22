@@ -1,0 +1,68 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/navigation/design-v2-mobile-shortcut-preferences.service.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [3.349 seconds] - 2026-10-12T18:05:14.901Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/navigation/design-v2-mobile-shortcut-preferences.service.spec.ts > Per-user device shortcut preferences > clears cached shortcuts and a pending draft on logout before actor storage changes
+AssertionError: expected [ 'playlists', 'stats', …(2) ] to be null
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/design-v2-mobile-shortcut-preferences.service.spec.ts:42:33
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [ 'playlists', 'stats', 'history', 'friends' ],
+  expected: null,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+ ❯ |SpotiFront| src/app/core/navigation/design-v2-mobile-shortcut-preferences.service.spec.ts (27 tests | 1 failed) 129ms
+     × clears cached shortcuts and a pending draft on logout before actor storage changes 30ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/navigation/design-v2-mobile-shortcut-preferences.service.spec.ts > Per-user device shortcut preferences > clears cached shortcuts and a pending draft on logout before actor storage changes
+AssertionError: expected [ 'playlists', 'stats', …(2) ] to be null
+
+- Expected:
+null
+
++ Received:
+[
+  "playlists",
+  "stats",
+  "history",
+  "friends",
+]
+
+ ❯ src/app/core/navigation/design-v2-mobile-shortcut-preferences.service.spec.ts:42:33
+     40|     expect(service.selection()).toContain('friends');
+     41|     logout.next();
+     42|     expect(service.selection()).toBeNull();
+       |                                 ^
+     43|     expect(service.feedback()).toBe('');
+     44|     held.reject(new Error('Old save failed')); await saving;
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 26 passed (27)
+   Start at  20:05:15
+   Duration  1.21s (transform 164ms, setup 322ms, import 175ms, tests 129ms, environment 441ms)
+

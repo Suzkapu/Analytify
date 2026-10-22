@@ -21,7 +21,7 @@ import {filter, fromEvent, merge, Subject, Subscription, takeUntil} from 'rxjs';
 import {DesignNavigationService} from '@core/navigation/design-navigation.service';
 import {
   DesignV2NavigationItem,
-  mobileDesignV2Navigation,
+  DESIGN_V2_NAVIGATION,
   primaryDesignV2Navigation,
   toolDesignV2Navigation
 } from '@core/navigation/design-v2-navigation.model';
@@ -38,6 +38,10 @@ import {DesignV2OverlayService} from './design-v2-overlay.service';
 import {AdminService} from '@core/admin/admin.service';
 import {AmbientOverlayState} from '@shared/ambient/ambient-background.math';
 import {DESIGN_V2_ACCOUNT_ACTIONS} from './design-v2-account-actions';
+import {V2NavigationDrawerComponent} from '@shared/ui-v2/v2-navigation-drawer.component';
+import {V2ButtonDirective} from '@shared/ui-v2/design-v2-primitives';
+import {V2NavigationPanelComponent} from '@shared/ui-v2/v2-navigation-panel.component';
+import {DesignV2MobileShortcutPreferencesService} from '@core/navigation/design-v2-mobile-shortcut-preferences.service';
 
 interface AccountActionContext {
   userId: string | null;
@@ -73,7 +77,7 @@ const DEFAULT_CONTEXT: DesignV2PageContext = {
   styleUrls: ['./design-v2-shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink, RouterOutlet, CommonModule, AccessibleDialogDirective, AmbientBackgroundComponent],
+  imports: [V2ButtonDirective, RouterLink, RouterOutlet, CommonModule, AccessibleDialogDirective, AmbientBackgroundComponent, V2NavigationDrawerComponent, V2NavigationPanelComponent],
   providers: [DesignV2OverlayService, {provide: DESIGN_V2_ACCOUNT_ACTIONS, useExisting: forwardRef(() => DesignV2ShellComponent)}]
 })
 export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -82,10 +86,15 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
 
   readonly primaryNavigation = primaryDesignV2Navigation();
   readonly toolNavigation = toolDesignV2Navigation();
-  readonly mobileNavigation = mobileDesignV2Navigation();
+  readonly shortcutPreferences = inject(DesignV2MobileShortcutPreferencesService);
+  readonly mobileNavigation = computed(() => {
+    const selected = this.shortcutPreferences.selection();
+    return selected ? selected.map(id => DESIGN_V2_NAVIGATION.find(item => item.id === id)!) : [];
+  });
   readonly pageContext = signal<DesignV2PageContext>(DEFAULT_CONTEXT);
   readonly currentUrl = signal('');
   readonly toolsOpen = signal(false);
+  readonly sidebarCompact = signal(false);
   readonly accountOpen = signal(false);
   readonly profilePicUrl = signal<string | null>(null);
   readonly displayName = signal('Your account');
@@ -130,7 +139,7 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
     }));
     this.currentUrl.set(this.router.url);
     this.applyRouteContext();
-    if (this.pageContext().chromeMode === 'app') void this.initializeAccountChrome();
+    if (this.pageContext().chromeMode === 'app') {void this.initializeAccountChrome(); void this.shortcutPreferences.load();}
     this.subscriptions.add(this.router.events.pipe(
       filter((event): event is NavigationEnd | ActivationStart => event instanceof NavigationEnd || event instanceof ActivationStart)
     ).subscribe(event => {
@@ -143,7 +152,7 @@ export class DesignV2ShellComponent implements OnInit, AfterViewInit, OnDestroy 
       this.toolsOpen.set(false);
       this.accountOpen.set(false);
       this.applyRouteContext();
-      if (this.pageContext().chromeMode === 'app') void this.initializeAccountChrome();
+      if (this.pageContext().chromeMode === 'app') {void this.initializeAccountChrome(); void this.shortcutPreferences.load();}
       afterNextRender(() => this.mainContent?.nativeElement.focus({preventScroll: true}), {injector: this.injector});
     }));
   }

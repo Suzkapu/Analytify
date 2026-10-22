@@ -100,7 +100,8 @@ export const DESIGN_V2_ROUTES: Routes = [{
         {path: 'account', loadComponent: () => import('@features/settings/v2-settings-account-data.component').then(module => module.V2SettingsAccountComponent)},
         {path: 'notifications', loadComponent: () => import('@features/settings/v2-settings-notifications.component').then(module => module.V2SettingsNotificationsComponent)},
         {path: 'updates', loadComponent: () => import('@features/settings/v2-settings-updates.component').then(module => module.V2SettingsUpdatesComponent)},
-        {path: 'data', loadComponent: () => import('@features/settings/v2-settings-account-data.component').then(module => module.V2SettingsDataComponent)}
+        {path: 'data', loadComponent: () => import('@features/settings/v2-settings-account-data.component').then(module => module.V2SettingsDataComponent)},
+        {path: 'navigation', loadComponent: () => import('@features/settings/v2-settings-navigation.component').then(module => module.V2SettingsNavigationComponent)}
       ]
     },
     {
@@ -110,9 +111,15 @@ export const DESIGN_V2_ROUTES: Routes = [{
     },
     {
       path: 'song-league', title: 'Song League | Analytify',
-      data: designV2RouteData('song-league', 'Song League', 'dashboard', 'social', {cloudBackup: true}),
+      data: designV2RouteData('song-league', 'Song League', 'dashboard', 'league', {cloudBackup: true}),
       canActivate: [spotifyAuthGuard, cloudIdentityGuard, spotifyRestrictedFeatureGuard],
       loadChildren: () => import('@features/song-league/song-league.module').then(module => module.SongLeagueModule)
+    },
+    {
+      path: 'friends', title: 'Friends | Analytify',
+      data: designV2RouteData('friends', 'Your friends', 'full', 'social', {cloudBackup: false}),
+      canActivate: [spotifyAuthGuard, cloudIdentityGuard],
+      loadChildren: () => import('@features/friends/friends.routes').then(module => module.FRIENDS_ROUTES)
     },
     {
       path: 'shared-playlists', title: 'Private Sharing | Analytify',

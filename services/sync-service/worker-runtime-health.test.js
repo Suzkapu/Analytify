@@ -40,3 +40,11 @@ test('surfaces lifecycle persistence failures', async () => {
 
   await assert.rejects(runtime.start(), /database unavailable/);
 });
+
+test('heartbeat failure is logged and repeated startup does not create duplicate timers',async t=>{
+ const ticks=[],warns=[],events=[];let clears=0;
+ t.mock.method(global,'setInterval',(fn,ms)=>{assert.equal(ms,25);ticks.push(fn);return {unref(){}};});t.mock.method(global,'clearInterval',()=>{clears++;});
+ const runtime=createWorkerRuntimeHealth({supabase:{async rpc(name,args){events.push(args);return {error:args.p_event==='heartbeat'?new Error('offline'):null};}},heartbeatMs:25,logger:{warn:(...args)=>warns.push(args)}});
+ await runtime.start();await runtime.start();assert.equal(ticks.length,1);ticks[0]();await new Promise(resolve=>setImmediate(resolve));assert.equal(warns.length,1);
+ await runtime.recordFailure('plain failure');assert.equal(events.at(-1).p_error,'plain failure');await runtime.recordFailure({});assert.equal(events.at(-1).p_error,'[object Object]');await runtime.recordFailure(null);assert.equal(events.at(-1).p_error,null);await runtime.stop();assert.equal(clears,1);await runtime.stop();assert.equal(clears,1);
+});

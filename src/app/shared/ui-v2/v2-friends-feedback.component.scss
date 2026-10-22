@@ -1,0 +1,13 @@
+:host { display: block; min-width: 0; width: 100%; }
+.feedback {
+  display: flex; flex-direction: column; gap: var(--v2-space-2);
+  box-sizing: border-box; min-width: 0; padding: var(--v2-space-4);
+  border: 1px solid var(--v2-color-info); border-radius: var(--v2-radius-control);
+  background: var(--v2-color-surface-raised); color: var(--v2-color-text-muted);
+  font-size: 14px; line-height: 20px;
+}
+h3, p { margin: 0; overflow-wrap: anywhere; }
+h3 { color: var(--v2-color-info); font: inherit; font-weight: 600; }
+.feedback button { width: min(260px, 100%); min-height: var(--v2-touch-control-height); font-size: 14px; font-weight: 600; line-height: 20px; }
+.sync { display: block; flex: none; width: 20px; height: 20px; background: currentColor; mask: url('../../../assets/design-v2/update-sync.svg') center / contain no-repeat; }
+@media (prefers-reduced-motion: reduce) { button { transition: none; } }

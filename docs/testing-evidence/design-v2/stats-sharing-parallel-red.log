@@ -1,0 +1,47 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/sharing/stats-sharing-transport-boundary.spec.ts --runner-config=docs/testing-evidence/design-v2/stats-sharing-parallel-vitest.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/stats-sharing-parallel-vitest.mjs
+Application bundle generation complete. [1.840 seconds] - 2026-10-21T19:13:44.046Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/sharing/stats-sharing-transport-boundary.spec.ts > Stats Sharing serialized SDK boundary > does not claim share acceptance succeeded without its request identity
+GoTrueClient@sb-stats-auth-token:36 (2.117.2) 2026-10-21T19:13:44.909Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+ ❯ |SpotiFront| src/app/core/sharing/stats-sharing-transport-boundary.spec.ts (46 tests | 1 failed) 61ms
+     × does not claim share acceptance succeeded without its request identity 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/sharing/stats-sharing-transport-boundary.spec.ts > Stats Sharing serialized SDK boundary > does not claim share acceptance succeeded without its request identity
+AssertionError: promise resolved "''" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+""
+
+ ❯ src/app/core/sharing/stats-sharing-transport-boundary.spec.ts:145:52
+    143|   it('does not claim share acceptance succeeded without its request id…
+    144|     reply = () => json(null);
+    145|     await expect(service.acceptShareInvite('token')).rejects.toThrow('…
+       |                                                    ^
+    146|   });
+    147|
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/sharing/stats-sharing-transport-boundary.spec.ts:143:91
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 45 passed (46)
+   Start at  21:13:44
+   Duration  742ms (transform 71ms, setup 208ms, import 68ms, tests 61ms, environment 294ms)
+

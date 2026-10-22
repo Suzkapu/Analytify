@@ -1,0 +1,124 @@
+{
+  "date": "2026-10-17",
+  "branch": "codex/design-v2",
+  "baseCommit": "a8a7a3966a622c992e9058094627a768c16a363a",
+  "committed": false,
+  "scope": "SongsController characterization/service-boundary tests with actual PlaylistLoadTask/BehaviorSubject and actual PlaylistLoaderService cache validators; in-memory storage, controlled clock, no external transport. Existing SongsComponent and V2SongsPageComponent included.",
+  "changes": [
+    "Dispose route subscription on destroy; detach prior progress before hydration; verify captured actor, playlist, revision and registered task before applying progress or clearing work.",
+    "Use a preassigned Subscription holder so synchronously completed BehaviorSubject subscriptions are disposed.",
+    "Reset selected album only on playlist changes; preserve same-playlist refresh selection.",
+    "Correct two existing component fixtures to reflect actual loader task registration without changing assertions."
+  ],
+  "redEvidence": [
+    {
+      "name": "ownership-red",
+      "exit": 1,
+      "failed": 4
+    },
+    {
+      "name": "handover-red",
+      "exit": 1,
+      "failed": 2,
+      "passed": 1,
+      "filteredOut": 49
+    }
+  ],
+  "final": {
+    "command": "npx ng test --watch=false --progress=false --include='src/app/features/library/songs/*.spec.ts' --include='src/app/features/library/design-v2/v2-songs-page.component.spec.ts' --runner-config=docs/testing-evidence/design-v2/frontend-songs-parallel-vitest.mjs --coverage --coverage-include='src/app/features/library/songs/songs.controller.ts' --coverage-reporters=json-summary --coverage-reporters=json --coverage-reporters=text-summary",
+    "exit": 0,
+    "filesPassed": 3,
+    "testsPassed": 88,
+    "skipped": 0,
+    "coverage": {
+      "lines": {
+        "total": 433,
+        "covered": 432,
+        "skipped": 0,
+        "pct": 99.76
+      },
+      "statements": {
+        "total": 460,
+        "covered": 458,
+        "skipped": 0,
+        "pct": 99.56
+      },
+      "functions": {
+        "total": 75,
+        "covered": 75,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 355,
+        "covered": 342,
+        "skipped": 0,
+        "pct": 96.33
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": "Unknown"
+      }
+    }
+  },
+  "checks": {
+    "eslint": 0,
+    "typescriptSpecNoEmit": 0
+  },
+  "failedAttempt": {
+    "name": "fixture-failure",
+    "exit": 1,
+    "reason": "Existing V2 notification fake lacked real getLoadingTask contract. New negative marker test initially expected unnecessary fetch despite complete actual tracks; corrected to verify valid content and no fetch. Preserved failed log; no production change for either."
+  },
+  "remaining": {
+    "uncoveredBranches": 13,
+    "reachablyUntested": [
+      "Missing optional Amount/Name keys in active/temporary cache paths.",
+      "Negative or nonfinite expected total metadata variants.",
+      "Album initial ordering tie arm."
+    ],
+    "defensiveOrSynchronous": [
+      "Second current-load guard without an intervening await.",
+      "Album-credit fallback after nonempty usable credits have already been required.",
+      "Map entry and artist list rechecks after insertion.",
+      "Pagination rechecks after synchronous hasMore guard.",
+      "Subscription identity false arms requiring synchronous reentry."
+    ],
+    "limitations": [
+      "Scoped controller branches96.33 remain below98; no exclusions or annotations added.",
+      "Browser/native persistence and live backend are not measured by this scoped unit report.",
+      "This report does not claim whole-feature Figma parity or global frontend coverage."
+    ]
+  },
+  "hashes": {
+    "src/app/features/library/songs/songs.controller.ts": "ad5310cd9b5b9a2e63e4c494e8ac17fb017cee4a5b226b2c0e19c5eb69736f67",
+    "src/app/features/library/songs/songs-controller-boundary.spec.ts": "71b91d1163cd24c58f3dc35426952c26f6f0330245e879c7bdeeeccf001513be",
+    "src/app/features/library/songs/songs.component.spec.ts": "184057a2c4da0ad84179580bbd0029d6dbd63539ba8068e77e56cb91ca71ccc8",
+    "src/app/features/library/design-v2/v2-songs-page.component.spec.ts": "0813d9ec5be459387d469020a5a9413fbd205b8c2625f7eded3ff5f7cb36965c",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-vitest.mjs": "e9f3522f1ef47ea7a5504e86781553249f048aaf06a535bc869bb8ec315b2b15",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-coverage/coverage-summary.json": "3fad43f48a94cbd74e976dd2e1d4e27e5c1947adf739b35193e9a5cf233bd854",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-coverage/coverage-final.json": "559782a662e7a5a22bdd48492a4bd76223ceaa14259d5d7afc7b6dee499690c3",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-baseline.log": "32e362cfc22ceafb8a3cbb2c581d22f6914eb71932b810abcdfc94c9d9de90ce",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-baseline.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-ownership-red.log": "ecdb5b58b204189606fa5aea71e3948530debcf8bc7dda62c8b0b74ea6088f96",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-ownership-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-handover-red.log": "4161cdda7fc4205ae2ec8fbdec7bb89c17fb4bed49c916ddc8b151522a9cf3c5",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-handover-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-independent.log": "d123f10d15d534af63974733ab84bdbd12adb624ad4242b4f3ac1d17b6a89bf8",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-independent.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-independent-coverage.log": "767840216d07ec7183e792981535639dd3829248f305a9c58907ea2a45d0dd63",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-independent-coverage.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-green.log": "a175553132ba65f6334b26079446e5c16f08d50011dfffcc3713ffb0942d2683",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-fixture-failure.log": "9674e08dad16ea970833925141ae087eaa3973f2902c4e215f6e6625f5c55191",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-fixture-failure.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-final.log": "e00f6820f9c9a4457d3619daa3d3ef5fc17ca0401d099ee7fd61ccd3de760e9e",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-final.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-final-lint.log": "adcb593b0d63fa4abb35ae7e267122e6d6c6e1a75e8e87238eee570fcefa62f4",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-final-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-types.log": "d15ea3a52b46df9153cdf448f94f3318dc93089281df467c32839192cf8b00df",
+    "docs/testing-evidence/design-v2/frontend-songs-parallel-types.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  }
+}

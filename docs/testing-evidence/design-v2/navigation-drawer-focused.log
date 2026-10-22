@@ -1,0 +1,48 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.navigation.config.ts --project=mobile --grep persist.*no-preference --output=docs/testing-evidence/design-v2/navigation-drawer-focused-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214
+[WebServer] (node:93321) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:93321) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:93623) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [mobile] › e2e/design-v2-navigation.spec.ts:127:7 › Device shortcuts persist and keep navigation reachable (no-preference) (4.2s)
+
+
+  1) [mobile] › e2e/design-v2-navigation.spec.ts:127:7 › Device shortcuts persist and keep navigation reachable (no-preference) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: -131.00155639648438
+
+      207 |             animation: getComputedStyle(element).animationName};
+      208 |         });
+    > 209 |         expect(sample.x).toBe(0); expect(sample.y).toBe(0);
+          |                          ^
+      210 |         expect(sample.drawerWidth).toBe(Math.min(width, 320)); expect(sample.drawerHeight).toBe(height);
+      211 |         expect(sample.profileBottom).toBe(height - 17); expect(sample.profileHeight).toBe(72);
+      212 |         expect(sample.listBottom).toBeLessThanOrEqual(sample.profileBottom - 72 - 16);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-navigation.spec.ts:209:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/navigation-drawer-focused-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/navigation-drawer-focused-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/navigation-drawer-focused-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/navigation-drawer-focused-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [mobile] › e2e/design-v2-navigation.spec.ts:127:7 › Device shortcuts persist and keep navigation reachable (no-preference) 

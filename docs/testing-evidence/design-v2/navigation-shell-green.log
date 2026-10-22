@@ -1,0 +1,52 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts --include=src/app/core/navigation/design-v2-mobile-shortcut-preferences.service.spec.ts --include=src/app/app-routing.module.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [6.122 seconds] - 2026-10-12T18:09:13.018Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > renders desktop and mobile navigation from the same model with semantic active state
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:47 (2.117.2) 2026-10-12T18:09:16.481Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+ ❯ |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts (64 tests | 1 failed) 2477ms
+     × renders desktop and mobile navigation from the same model with semantic active state 19ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > renders desktop and mobile navigation from the same model with semantic active state
+AssertionError: expected [] to deeply equal [ 'Playlists', 'Stats', 'History' ]
+
+- Expected
++ Received
+
+- [
+-   "Playlists",
+-   "Stats",
+-   "History",
+- ]
++ []
+
+ ❯ src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts:538:58
+    536|
+    537|     expect(desktop.map(link => link.textContent?.trim())).toEqual(['Pl…
+    538|     expect(mobile.map(link => link.textContent?.trim())).toEqual(['Pla…
+       |                                                          ^
+    539|     expect(desktop.find(link => link.textContent?.includes('Stats'))?.…
+    540|     expect(element.querySelector('main')?.getAttribute('aria-label')).…
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 98 passed (99)
+   Start at  20:09:13
+   Duration  3.73s (transform 541ms, setup 914ms, import 806ms, tests 2.81s, environment 1.39s)
+

@@ -1,0 +1,302 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/core/sync/playlist-loader/*boundary.spec.ts --runner-config=docs/testing-evidence/design-v2/frontend-loader-parallel-vitest.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-loader-parallel-vitest.mjs
+❯ Building...
+✔ Building...
+Application bundle generation complete. [2.297 seconds] - 2026-10-17T14:40:43.328Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stdout | src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts > Playlist loading lifecycle boundaries > does not restore a logged-out account cache when optional artist hydration settles late
+[Analytify][0001][+00008ms][Playlist Loading][STEP] Starting full Spotify sync for playlist playlist.
+
+stderr | src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts > Playlist loading lifecycle boundaries > does not restore a logged-out account cache when optional artist hydration settles late
+AssertionError: expected [ Array(7) ] to deeply equal []
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts:54:25
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [
+    [
+      'account-a_playlist',
+      '[{"id":"artist","name":"Artist","images":[{"url":"late.jpg"}],"tracks":[{"id":"old","name":"old","artists":[{"id":"artist","name":"Artist"}],"added_at":"2026-10-01T00:00:00Z","playlist_index":1}]}]'
+    ],
+    [ 'account-a_playlist_Amount', '1' ],
+    [ 'account-a_playlist_Name', '"Before logout"' ],
+    [ 'account-a_playlist_CachedTrackCount', '1' ],
+    [
+      'account-a_playlist_SourceManifest',
+      '{"version":1,"playlistId":"playlist","sourceTotal":1,"usableOccurrenceCount":1,"uniqueUsableTrackCount":1,"duplicateOccurrenceCount":0,"localCount":0,"unavailableCount":0,"snapshotId":null,"complete":true,"completedAt":1792248044212,"entries":[{"identity":"track:old|added:2026-10-01T00:00:00Z","trackId":"old","uri":null,"addedAt":"2026-10-01T00:00:00Z","isLocal":false,"isUnavailable":false,"isUsable":true,"position":0}]}'
+    ],
+    [
+      'account-a_playlist_SourceState',
+      '{"version":1,"dirty":false,"reason":"current","observedTotal":1,"observedSnapshotId":null,"checkedAt":1792248044212}'
+    ],
+    [ 'account-a_playlist_lastUpdated', '1792248044212' ]
+  ],
+  expected: [],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stdout | src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts > Playlist loading lifecycle boundaries > does not overwrite a replacement task cache when an older artist hydration finishes
+[Analytify][0002][+00021ms][Playlist Loading][STEP] Starting full Spotify sync for playlist playlist.
+[Analytify][0003][+00021ms][Playlist Loading][STEP] Starting full Spotify sync for playlist playlist.
+
+stderr | src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts > Playlist loading lifecycle boundaries > does not overwrite a replacement task cache when an older artist hydration finishes
+AssertionError: expected Map{ …(7) } to deeply equal Map{ …(7) }
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts:70:20
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: Map(7) {
+    'user_playlist' => '[{"id":"artist","name":"Artist","images":[{"url":"stale.jpg"}],"tracks":[{"id":"old","name":"old","artists":[{"id":"artist","name":"Artist"}],"added_at":"2026-10-01T00:00:00Z","playlist_index":1}]}]',
+    'user_playlist_Amount' => '1',
+    'user_playlist_Name' => '"Old"',
+    'user_playlist_CachedTrackCount' => '1',
+    'user_playlist_SourceManifest' => '{"version":1,"playlistId":"playlist","sourceTotal":1,"usableOccurrenceCount":1,"uniqueUsableTrackCount":1,"duplicateOccurrenceCount":0,"localCount":0,"unavailableCount":0,"snapshotId":null,"complete":true,"completedAt":1792248044224,"entries":[{"identity":"track:old|added:2026-10-01T00:00:00Z","trackId":"old","uri":null,"addedAt":"2026-10-01T00:00:00Z","isLocal":false,"isUnavailable":false,"isUsable":true,"position":0}]}',
+    'user_playlist_SourceState' => '{"version":1,"dirty":false,"reason":"current","observedTotal":1,"observedSnapshotId":null,"checkedAt":1792248044224}',
+    'user_playlist_lastUpdated' => '1792248044224'
+  },
+  expected: Map(7) {
+    'user_playlist' => '[{"id":"artist","name":"Artist","images":[],"tracks":[{"id":"new","name":"new","artists":[{"id":"artist","name":"Artist"}],"added_at":"2026-10-01T00:00:00Z","playlist_index":1}]}]',
+    'user_playlist_Amount' => '1',
+    'user_playlist_Name' => '"New"',
+    'user_playlist_CachedTrackCount' => '1',
+    'user_playlist_SourceManifest' => '{"version":1,"playlistId":"playlist","sourceTotal":1,"usableOccurrenceCount":1,"uniqueUsableTrackCount":1,"duplicateOccurrenceCount":0,"localCount":0,"unavailableCount":0,"snapshotId":null,"complete":true,"completedAt":1792248044224,"entries":[{"identity":"track:new|added:2026-10-01T00:00:00Z","trackId":"new","uri":null,"addedAt":"2026-10-01T00:00:00Z","isLocal":false,"isUnavailable":false,"isUsable":true,"position":0}]}',
+    'user_playlist_SourceState' => '{"version":1,"dirty":false,"reason":"current","observedTotal":1,"observedSnapshotId":null,"checkedAt":1792248044224}',
+    'user_playlist_lastUpdated' => '1792248044224'
+  },
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stdout | src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts > Playlist loading lifecycle boundaries > settles a dirty reconciliation as unsuccessful when logout cancels its pending source request
+[Analytify][0004][+00024ms][Playlist Loading][STEP] Starting full Spotify sync for playlist playlist.
+[Analytify][0005][+00024ms][Playlist Loading][STEP] Running the daily full sync for playlist playlist; cached tracks will not be reused so removals are reconciled.
+
+stderr | src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts > Playlist loading lifecycle boundaries > settles a dirty reconciliation as unsuccessful when logout cancels its pending source request
+AssertionError: expected undefined to be false // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts:85:20
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: false,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stdout | src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts > Playlist loading lifecycle boundaries > preserves a successor started by an earlier cancellation observer during single task clearing
+[Analytify][0020][+00041ms][Playlist Loading][STEP] Starting full Spotify sync for playlist playlist.
+
+stderr | src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts > Playlist loading lifecycle boundaries > preserves a successor started by an earlier cancellation observer during single task clearing
+AssertionError: expected undefined to be defined
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts:284:23
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: undefined,
+  showDiff: false,
+  operator: 'strictEqual'
+}
+
+stdout | src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts > Playlist loading lifecycle boundaries > preserves a successor started by an earlier cancellation observer during all task clearing
+[Analytify][0021][+00042ms][Playlist Loading][STEP] Starting full Spotify sync for playlist playlist.
+
+stderr | src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts > Playlist loading lifecycle boundaries > preserves a successor started by an earlier cancellation observer during all task clearing
+AssertionError: expected undefined to be defined
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts:284:23
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: undefined,
+  showDiff: false,
+  operator: 'strictEqual'
+}
+
+ ❯ |SpotiFront| src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts (26 tests | 5 failed) 39ms
+     × does not restore a logged-out account cache when optional artist hydration settles late 15ms
+     × does not overwrite a replacement task cache when an older artist hydration finishes 3ms
+     × settles a dirty reconciliation as unsuccessful when logout cancels its pending source request 2ms
+     × preserves a successor started by an earlier cancellation observer during single task clearing 1ms
+     × preserves a successor started by an earlier cancellation observer during all task clearing 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts > Playlist loading lifecycle boundaries > does not restore a logged-out account cache when optional artist hydration settles late
+AssertionError: expected [ Array(7) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "account-a_playlist",
++     "[{\"id\":\"artist\",\"name\":\"Artist\",\"images\":[{\"url\":\"late.jpg\"}],\"tracks\":[{\"id\":\"old\",\"name\":\"old\",\"artists\":[{\"id\":\"artist\",\"name\":\"Artist\"}],\"added_at\":\"2026-10-01T00:00:00Z\",\"playlist_index\":1}]}]",
++   ],
++   [
++     "account-a_playlist_Amount",
++     "1",
++   ],
++   [
++     "account-a_playlist_Name",
++     "\"Before logout\"",
++   ],
++   [
++     "account-a_playlist_CachedTrackCount",
++     "1",
++   ],
++   [
++     "account-a_playlist_SourceManifest",
++     "{\"version\":1,\"playlistId\":\"playlist\",\"sourceTotal\":1,\"usableOccurrenceCount\":1,\"uniqueUsableTrackCount\":1,\"duplicateOccurrenceCount\":0,\"localCount\":0,\"unavailableCount\":0,\"snapshotId\":null,\"complete\":true,\"completedAt\":1792248044212,\"entries\":[{\"identity\":\"track:old|added:2026-10-01T00:00:00Z\",\"trackId\":\"old\",\"uri\":null,\"addedAt\":\"2026-10-01T00:00:00Z\",\"isLocal\":false,\"isUnavailable\":false,\"isUsable\":true,\"position\":0}]}",
++   ],
++   [
++     "account-a_playlist_SourceState",
++     "{\"version\":1,\"dirty\":false,\"reason\":\"current\",\"observedTotal\":1,\"observedSnapshotId\":null,\"checkedAt\":1792248044212}",
++   ],
++   [
++     "account-a_playlist_lastUpdated",
++     "1792248044212",
++   ],
++ ]
+
+ ❯ src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts:54:25
+     52|     await Promise.resolve();
+     53|     expect(service.getLoadingTask('playlist')).toBeUndefined();
+     54|     expect([...values]).toEqual([]);
+       |                         ^
+     55|   });
+     56|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts > Playlist loading lifecycle boundaries > does not overwrite a replacement task cache when an older artist hydration finishes
+AssertionError: expected Map{ …(7) } to deeply equal Map{ …(7) }
+
+- Expected
++ Received
+
+  Map {
+-   "user_playlist" => "[{\"id\":\"artist\",\"name\":\"Artist\",\"images\":[],\"tracks\":[{\"id\":\"new\",\"name\":\"new\",\"artists\":[{\"id\":\"artist\",\"name\":\"Artist\"}],\"added_at\":\"2026-10-01T00:00:00Z\",\"playlist_index\":1}]}]",
++   "user_playlist" => "[{\"id\":\"artist\",\"name\":\"Artist\",\"images\":[{\"url\":\"stale.jpg\"}],\"tracks\":[{\"id\":\"old\",\"name\":\"old\",\"artists\":[{\"id\":\"artist\",\"name\":\"Artist\"}],\"added_at\":\"2026-10-01T00:00:00Z\",\"playlist_index\":1}]}]",
+    "user_playlist_Amount" => "1",
+    "user_playlist_CachedTrackCount" => "1",
+-   "user_playlist_Name" => "\"New\"",
+-   "user_playlist_SourceManifest" => "{\"version\":1,\"playlistId\":\"playlist\",\"sourceTotal\":1,\"usableOccurrenceCount\":1,\"uniqueUsableTrackCount\":1,\"duplicateOccurrenceCount\":0,\"localCount\":0,\"unavailableCount\":0,\"snapshotId\":null,\"complete\":true,\"completedAt\":1792248044224,\"entries\":[{\"identity\":\"track:new|added:2026-10-01T00:00:00Z\",\"trackId\":\"new\",\"uri\":null,\"addedAt\":\"2026-10-01T00:00:00Z\",\"isLocal\":false,\"isUnavailable\":false,\"isUsable\":true,\"position\":0}]}",
++   "user_playlist_Name" => "\"Old\"",
++   "user_playlist_SourceManifest" => "{\"version\":1,\"playlistId\":\"playlist\",\"sourceTotal\":1,\"usableOccurrenceCount\":1,\"uniqueUsableTrackCount\":1,\"duplicateOccurrenceCount\":0,\"localCount\":0,\"unavailableCount\":0,\"snapshotId\":null,\"complete\":true,\"completedAt\":1792248044224,\"entries\":[{\"identity\":\"track:old|added:2026-10-01T00:00:00Z\",\"trackId\":\"old\",\"uri\":null,\"addedAt\":\"2026-10-01T00:00:00Z\",\"isLocal\":false,\"isUnavailable\":false,\"isUsable\":true,\"position\":0}]}",
+    "user_playlist_SourceState" => "{\"version\":1,\"dirty\":false,\"reason\":\"current\",\"observedTotal\":1,\"observedSnapshotId\":null,\"checkedAt\":1792248044224}",
+    "user_playlist_lastUpdated" => "1792248044224",
+  }
+
+ ❯ src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts:70:20
+     68|     await oldHydration.promise;
+     69|     await Promise.resolve();
+     70|     expect(values).toEqual(committed);
+       |                    ^
+     71|     expect(service.getLoadingTask('playlist')).toBe(replacement);
+     72|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts > Playlist loading lifecycle boundaries > settles a dirty reconciliation as unsuccessful when logout cancels its pending source request
+AssertionError: expected undefined to be false // Object.is equality
+
+- Expected:
+false
+
++ Received:
+undefined
+
+ ❯ src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts:85:20
+     83|     await Promise.resolve();
+     84|     expect(request.observed).toBe(false);
+     85|     expect(result).toBe(false);
+       |                    ^
+     86|   });
+     87|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts > Playlist loading lifecycle boundaries > preserves a successor started by an earlier cancellation observer during single task clearing
+ FAIL  |SpotiFront| src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts > Playlist loading lifecycle boundaries > preserves a successor started by an earlier cancellation observer during all task clearing
+AssertionError: expected undefined to be defined
+ ❯ src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts:284:23
+    282|     await Promise.resolve();
+    283|     observer.unsubscribe();
+    284|     expect(successor).toBeDefined();
+       |                       ^
+    285|     expect(successor).not.toBe(old);
+    286|     expect(service.getLoadingTask('playlist')).toBe(successor);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 21 passed (26)
+   Start at  16:40:43
+   Duration  803ms (transform 133ms, setup 214ms, import 141ms, tests 39ms, environment 293ms)
+

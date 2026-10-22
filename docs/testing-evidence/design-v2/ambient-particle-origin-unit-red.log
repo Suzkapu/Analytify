@@ -1,0 +1,68 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/shared/ambient/*.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [1.372 seconds] - 2026-10-19T17:50:44.524Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:32581) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:32587) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:32580) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ |SpotiFront| src/app/shared/ambient/ambient-background.math.spec.ts (7 tests | 1 failed) 12ms
+     × preserves canonical particle positions at page top across route changes 5ms
+ ❯ |SpotiFront| src/app/shared/ambient/ambient-background.component.spec.ts (15 tests | 1 failed) 210ms
+     × mounts the canonical particle layer once with 26 independently positioned dots 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/ambient/ambient-background.component.spec.ts > AmbientBackgroundComponent > mounts the canonical particle layer once with 26 independently positioned dots
+AssertionError: expected  to have a length of 26 but got +0
+
+- Expected
++ Received
+
+- 26
++ 0
+
+ ❯ src/app/shared/ambient/ambient-background.component.spec.ts:110:85
+    108|   it('mounts the canonical particle layer once with 26 independently p…
+    109|     fixture.detectChanges();
+    110|     expect((fixture.nativeElement as HTMLElement).querySelectorAll('.a…
+       |                                                                                     ^
+    111|   });
+    112|
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/shared/ambient/ambient-background.math.spec.ts > ambient background math > preserves canonical particle positions at page top across route changes
+AssertionError: expected 0.34364516846283866 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 0.34364516846283866
+
+ ❯ src/app/shared/ambient/ambient-background.math.spec.ts:32:27
+     30|     for (const key of ['library', 'insights', 'social', 'league', 'log…
+     31|       const route = ambientTargetForKey(key);
+     32|       expect(route.dotsX).toBe(0);
+       |                           ^
+     33|       expect(route.dotsY).toBe(0);
+     34|       const top = ambientTargetWithScroll(route, 0);
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  2 failed | 27 passed (29)
+   Start at  19:50:44
+   Duration  982ms (transform 137ms, setup 753ms, import 84ms, tests 255ms, environment 1.12s)
+

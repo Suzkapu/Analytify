@@ -1,0 +1,71 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/friends/v2-friends-page.component.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.680 seconds] - 2026-10-12T17:00:03.086Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+Warning: A vi.mock("qrcode") call in "/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/friends/v2-friends-page.component.spec.ts" is not at the top level of the module. Although it appears nested, it will be hoisted and executed before any tests run. Move it to the top level to reflect its actual execution order. This will become an error in a future version.
+See: https://vitest.dev/guide/mocking/modules#how-it-works
+ ❯ |SpotiFront| src/app/features/friends/v2-friends-page.component.spec.ts (20 tests | 2 failed) 1302ms
+     × does not silently create a second invitation when a creation retry was already consumed 221ms
+     × replaces the QR together with its confirmed link after an account change 150ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-page.component.spec.ts > Mounted canonical Friends workflows > does not silently create a second invitation when a creation retry was already consumed
+AssertionError: expected "vi.fn()" to be called once, but got 2 times
+ ❯ src/app/features/friends/v2-friends-page.component.spec.ts:69:38
+     67|       service.createInvitation.mockResolvedValueOnce({...newInvitation…
+     68|     });
+     69|     expect(backend.createInvitation).toHaveBeenCalledOnce();
+       |                                      ^
+     70|     expect(element().querySelector('.invitation-url')).toBeNull();
+     71|     expect(element().textContent).toContain('Your invitation is no lon…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-page.component.spec.ts > Mounted canonical Friends workflows > replaces the QR together with its confirmed link after an account change
+AssertionError: expected [ …(3) ] to deeply equal [ StringContaining{…}, …(1) ]
+
+- Expected
++ Received
+
+  [
+    "http://localhost:3000/friends/invite/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+-   StringContaining "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
++   "http://localhost:3000/friends/invite/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
++   "http://localhost:3000/friends/invite/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  ]
+
+ ❯ src/app/features/friends/v2-friends-page.component.spec.ts:88:74
+     86|     finish('data:image/png;base64,actor-B'); await settle();
+     87|     await vi.waitFor(() => {harness.detectChanges(); expect(element().…
+     88|     expect(vi.mocked(toDataURL).mock.calls.map(call => String(call[0])…
+       |                                                                          ^
+     89|       expect.stringContaining('a'.repeat(64)), expect.stringContaining…
+     90|     ]);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 18 passed (20)
+   Start at  19:00:03
+   Duration  2.38s (transform 255ms, setup 249ms, import 391ms, tests 1.30s, environment 319ms)
+

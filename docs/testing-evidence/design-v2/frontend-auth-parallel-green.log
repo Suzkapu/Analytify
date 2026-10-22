@@ -1,0 +1,26 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/auth/*.spec.ts --runner-config=docs/testing-evidence/design-v2/frontend-auth-parallel-vitest.config.mjs --coverage --coverage-include=src/app/core/auth/spotify-auth.service.ts --coverage-include=src/app/core/auth/personal-spotify-recovery.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-auth-parallel-vitest.config.mjs
+Application bundle generation failed. [2.685 seconds] - 2026-10-17T14:11:32.728Z
+
+✘ [ERROR] TS4111: Property 'short_term' comes from an index signature, so it must be accessed with ['short_term']. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/backup-activation-boundary.spec.ts:57:14:
+      57 │     histories.short_term = [{snapshotDate: date, topTracks: [{id: ...
+         ╵               ~~~~~~~~~~
+
+
+✘ [ERROR] TS4111: Property 'medium_term' comes from an index signature, so it must be accessed with ['medium_term']. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/backup-activation-boundary.spec.ts:59:14:
+      59 │     histories.medium_term = [{snapshotDate: date, topGenres: ['jaz...
+         ╵               ~~~~~~~~~~~
+
+
+✘ [ERROR] TS4111: Property 'short_term' comes from an index signature, so it must be accessed with ['short_term']. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/backup-activation-boundary.spec.ts:67:14:
+      67 │     histories.short_term = [{timestamp: new Date(2026, 9, 16, 0, 3...
+         ╵               ~~~~~~~~~~
+
+

@@ -1,0 +1,41 @@
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-supabase-parallel-vitest.mjs
+Application bundle generation complete. [5.402 seconds] - 2026-10-16T17:10:51.738Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+      Coverage enabled with v8
+
+ ❯ |SpotiFront| src/app/core/data-access/supabase/service-boundary-recovery.spec.ts (38 tests | 1 failed) 368ms
+     × checks only today for owner history and the range-specific retained snapshot window 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/data-access/supabase/service-boundary-recovery.spec.ts > listening history synchronization and private read mapping > checks only today for owner history and the range-specific retained snapshot window
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/app/core/data-access/supabase/service-boundary-recovery.spec.ts:307:55
+    305|   it('checks only today for owner history and the range-specific retai…
+    306|     const f=fixture(); f.tables.set('listening_history',[{user_id:'oth…
+    307|     await expect(f.service.hasHistoryForToday('owner')).resolves.toBe(…
+       |                                                       ^
+    308|     f.tables.get('listening_history')!.push({user_id:'owner',played_at…
+    309|     expect(f.queries[0]).toMatchObject({filters:[['eq','user_id','owne…
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/data-access/supabase/service-boundary-recovery.spec.ts:305:104
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 6 passed (7)
+      Tests  1 failed | 115 passed (116)
+   Start at  19:10:52
+   Duration  5.27s (transform 824ms, setup 5.21s, import 1.29s, tests 878ms, environment 7.09s)
+

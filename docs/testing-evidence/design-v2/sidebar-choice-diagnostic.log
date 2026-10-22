@@ -1,0 +1,50 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.navigation.config.ts --project=desktop --grep persist.*reduce --output=docs/testing-evidence/design-v2/sidebar-choice-diagnostic-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214
+[WebServer] (node:85066) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:85066) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:85649) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-navigation.spec.ts:188:7 › Device shortcuts persist and keep navigation reachable (reduce) (4.7s)
+
+
+  1) [desktop] › e2e/design-v2-navigation.spec.ts:188:7 › Device shortcuts persist and keep navigation reachable (reduce) 
+
+    Error: {"viewport":{"width":320,"height":1000},"button":{"label":"Song Leagues","left":296,"right":314,"height":64,"fontSize":"12px","iconHeight":18,"labelHeight":32,"padding":"4px 8px","gap":"4px","lineHeight":"16px","width":18,"transition":"1e-05s","transitionProperty":"none"}}
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 48
+    Received: 64
+
+      228 |       for (const button of sample.buttons) {
+      229 |         expect(button.left).toBeGreaterThanOrEqual(0); expect(button.right).toBeLessThanOrEqual(width);
+    > 230 |         expect(button.height, JSON.stringify({viewport: {width: sample.width, height: sample.height}, button})).toBe(48); expect(button.fontSize).toBe('12px');
+          |                                                                                                                 ^
+      231 |         if (motion === 'reduce') expect(button.transitionProperty).toBe('none');
+      232 |       }
+      233 |       expect(sample.bar.visible).toBe(width <= 760);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-navigation.spec.ts:230:113
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/sidebar-choice-diagnostic-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/sidebar-choice-diagnostic-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/sidebar-choice-diagnostic-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/sidebar-choice-diagnostic-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-navigation.spec.ts:188:7 › Device shortcuts persist and keep navigation reachable (reduce) 

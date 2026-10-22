@@ -1,0 +1,53 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214
+[WebServer] (node:26873) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26873) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:27088) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) (12.7s)
+[WebServer] 7:57:14 PM [vite] (client) [console.error] AbortError: Transition was skipped. New ViewTransition started
+  ✓  2 [desktop] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (reduce) (9.4s)
+(node:29397) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [mobile] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) (12.7s)
+  ✓  4 [mobile] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (reduce) (13.3s)
+(node:31574) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 [firefox-stats] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) (21.7s)
+  ✓  6 [firefox-stats] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (reduce) (15.5s)
+(node:35025) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  7 [webkit-stats] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) (31.5s)
+(node:37583) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  8 [webkit-stats] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (reduce) (11.5s)
+
+
+  1) [webkit-stats] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) 
+
+    Test timeout of 30000ms exceeded.
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit-stats] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) 
+  7 passed (2.4m)

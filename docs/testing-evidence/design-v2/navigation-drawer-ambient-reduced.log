@@ -1,0 +1,22 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-ambient.spec.ts --project=desktop --project=mobile --project=firefox-stats --grep reduced motion suppresses --output=docs/testing-evidence/design-v2/navigation-drawer-ambient-reduced-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:118852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:118852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 2 workers
+
+(node:118982) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:118983) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [desktop] › e2e/design-v2-ambient.spec.ts:129:5 › reduced motion suppresses native route snapshot animations without losing navigation (2.2s)
+  ✓  1 [mobile] › e2e/design-v2-ambient.spec.ts:129:5 › reduced motion suppresses native route snapshot animations without losing navigation (2.2s)
+(node:119223) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [firefox-stats] › e2e/design-v2-ambient.spec.ts:129:5 › reduced motion suppresses native route snapshot animations without losing navigation (2.1s)
+
+  3 passed (14.1s)

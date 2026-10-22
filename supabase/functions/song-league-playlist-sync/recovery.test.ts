@@ -1,3 +1,4 @@
+import assert from 'node:assert/strict';
 import {
   matchingOwnedPlaylist,
   playlistDescription,
@@ -50,4 +51,10 @@ Deno.test('playlist replacement retains every track in Spotify-sized batches', (
   if (empty.length !== 1 || empty[0].length !== 0) {
     throw new Error('An empty playlist must still issue one replacement request.');
   }
+});
+
+Deno.test('recovery handles unavailable pages and missing destination URLs without borrowing another user playlist', () => {
+  assert.equal(matchingOwnedPlaylist(null, 'operation', 'listener'), null);
+  assert.equal(matchingOwnedPlaylist({}, 'operation', 'listener'), null);
+  assert.deepEqual(matchingOwnedPlaylist({items: [{id: 'owned', owner: {id: 'listener'}, description: playlistOperationTag('operation')}]}, 'operation', 'listener'), {id: 'owned', url: ''});
 });

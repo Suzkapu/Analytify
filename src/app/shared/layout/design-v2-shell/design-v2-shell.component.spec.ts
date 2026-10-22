@@ -10,6 +10,9 @@ import {DesignV2ShellComponent} from './design-v2-shell.component';
 import {AmbientBackgroundComponent} from '@shared/ambient/ambient-background.component';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {SessionLifecycleService} from '@core/auth/session-lifecycle.service';
+import {DesignV2MobileShortcutPreferencesService} from '@core/navigation/design-v2-mobile-shortcut-preferences.service';
+import {StorageService} from '@core/data-access/storage/storage.service';
+import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 
 @Component({standalone: true, template: '<h1>Playlists</h1>'})
 class PlaylistsStubComponent {}
@@ -18,6 +21,64 @@ class PlaylistsStubComponent {}
 class StatsStubComponent {}
 
 describe('DesignV2ShellComponent', () => {
+  it('uses the canonical shared product header and legal action without duplicate account navigation', async () => {
+    const {harness} = await createShell();
+    const element = harness.fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('.v2-header .v2-brand img')?.getAttribute('src')).toBe('assets/design-v2/product-logo.png');
+    expect(element.querySelector('.v2-tools-button')?.textContent?.trim()).toBe('Menu');
+    expect(element.querySelector('.v2-account-button')).toBeNull();
+    expect(element.querySelector('.v2-desktop-nav')).toBeNull();
+    const legal = element.querySelector('.v2-footer a') as HTMLAnchorElement;
+    expect(legal.getAttribute('href')).toBe('/legal');
+    const shield = legal.querySelector('.v2-footer-shield') as HTMLElement;
+    expect(shield?.getAttribute('aria-hidden')).toBe('true');
+    expect(shield?.querySelector('img')?.getAttribute('src')).toBe('assets/design-v2/footer-shield.svg');
+    expect(shield?.querySelector('img')?.getAttribute('alt')).toBe('');
+    expect(element.querySelector('.v2-footer .pi-spotify')).toBeNull();
+  });
+
+  it('keeps desktop sidebar collapse independent of mobile menu expansion and child navigation', async () => {
+    const {harness} = await createShell();
+    const element = harness.fixture.nativeElement as HTMLElement;
+    const sidebar = element.querySelector('.v2-sidebar') as HTMLElement;
+    expect(sidebar).not.toBeNull();
+    const toggle = sidebar.querySelector('button[aria-expanded]') as HTMLButtonElement;
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    toggle.click(); harness.detectChanges();
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(sidebar.querySelector('a[aria-label="Friends"]')?.getAttribute('href')).toBe('/friends');
+    (element.querySelector('.v2-tools-button') as HTMLButtonElement).click(); harness.detectChanges();
+    expect(element.querySelector('[role="dialog"] .drawer-identity')).not.toBeNull();
+    expect(element.querySelector('[role="dialog"] .panel--compact')).toBeNull();
+    element.querySelector<HTMLButtonElement>('[role="dialog"] .drawer-brand')!.click(); harness.detectChanges();
+    await TestBed.inject(Router).navigateByUrl('/stats'); await harness.fixture.whenStable(); harness.detectChanges();
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(sidebar.querySelector('[aria-current="page"]')?.getAttribute('aria-label')).toBe('Stats');
+  });
+  it('renders only saved shortcuts in canonical order without changing desktop navigation', async () => {
+    vi.spyOn(TestBed.inject(SpotifyAuthService), 'getUserId').mockReturnValue('shortcut-owner');
+    vi.spyOn(TestBed.inject(StorageService), 'hydrateItems').mockResolvedValue(0);
+    vi.spyOn(TestBed.inject(StorageService), 'getItem').mockReturnValue('["compare-room","private-sharing","song-league","friends"]');
+    await TestBed.inject(DesignV2MobileShortcutPreferencesService).load();
+    const {harness} = await createShell(); harness.detectChanges();
+    const element = harness.fixture.nativeElement as HTMLElement;
+    expect([...element.querySelectorAll('.v2-mobile-nav__link')].map(link => link.textContent?.trim())).toEqual(['Friends', 'Song Leagues', 'Private Sharing', 'Compare Room']);
+    expect([...element.querySelectorAll('.v2-sidebar .drawer-link')].map(link => link.textContent?.trim())).toEqual(['Playlists', 'Stats', 'History', 'Friends', 'Song Leagues', 'Private Sharing', 'Compare playlists']);
+    expect(element.querySelector('.v2-mobile-nav')?.getAttribute('style')).toContain('repeat(4, minmax(0, 1fr))');
+  });
+  it('hides an empty saved shortcut bar while keeping all destinations reachable from the menu', async () => {
+    vi.spyOn(TestBed.inject(SpotifyAuthService), 'getUserId').mockReturnValue('shortcut-owner');
+    vi.spyOn(TestBed.inject(StorageService), 'hydrateItems').mockResolvedValue(0);
+    vi.spyOn(TestBed.inject(StorageService), 'getItem').mockReturnValue('[]');
+    await TestBed.inject(DesignV2MobileShortcutPreferencesService).load();
+    const {harness, shell} = await createShell();
+    harness.detectChanges();
+    expect(harness.fixture.nativeElement.querySelector('.v2-mobile-nav')).toBeNull();
+    shell.toggleTools(); harness.detectChanges();
+    const links = [...harness.fixture.nativeElement.querySelectorAll('v2-navigation-drawer a')] as HTMLAnchorElement[];
+    expect(links.map(link => link.getAttribute('aria-label') || link.textContent?.trim())).toEqual(expect.arrayContaining(['Playlists', 'Stats', 'History', 'Friends', 'Settings']));
+    expect(links.find(link => link.textContent?.trim() === 'Friends')?.getAttribute('href')).toBe('/friends');
+  });
   async function createShell() {
     const harness = await RouterTestingHarness.create('/playlists');
     const shell = harness.fixture.debugElement.query(By.directive(DesignV2ShellComponent)).componentInstance as DesignV2ShellComponent;
@@ -264,13 +325,15 @@ describe('DesignV2ShellComponent', () => {
     expect(shell.actionError()).toBe('');
   });
 
-  it('falls back to the profile icon when artwork fails', async () => {
+  it('falls back to the named sidebar account initial when artwork fails', async () => {
     const {harness, shell} = await createShell();
+    shell.displayName.set('Test listener');
     shell.profilePicUrl.set('https://example.com/missing.jpg');
     shell.profileImageFailed();
     harness.fixture.detectChanges();
     expect(shell.profilePicUrl()).toBeNull();
-    expect(harness.fixture.nativeElement.querySelector('.v2-account-button .pi-user')).not.toBeNull();
+    expect(harness.fixture.nativeElement.querySelector('.v2-sidebar .drawer-avatar img')).toBeNull();
+    expect(harness.fixture.nativeElement.querySelector('.v2-sidebar .drawer-avatar')?.textContent.trim()).toBe('T');
   });
 
   it('requires anonymous-account confirmation before logging out', async () => {
@@ -512,15 +575,20 @@ describe('DesignV2ShellComponent', () => {
   });
 
   it('renders desktop and mobile navigation from the same model with semantic active state', async () => {
+    vi.spyOn(TestBed.inject(SpotifyAuthService), 'getUserId').mockReturnValue('navigation-owner');
+    vi.spyOn(TestBed.inject(StorageService), 'hydrateItems').mockResolvedValue(0);
+    vi.spyOn(TestBed.inject(StorageService), 'getItem').mockReturnValue(null);
+    await TestBed.inject(DesignV2MobileShortcutPreferencesService).load();
     const harness = await RouterTestingHarness.create('/stats');
     harness.fixture.detectChanges();
     const element = harness.fixture.nativeElement as HTMLElement;
-    const desktop = Array.from(element.querySelectorAll<HTMLElement>('.v2-desktop-nav .v2-nav-link'));
+    const desktop = Array.from(element.querySelectorAll<HTMLElement>('.v2-sidebar .drawer-link'));
     const mobile = Array.from(element.querySelectorAll<HTMLElement>('.v2-mobile-nav__link'));
 
-    expect(desktop.map(link => link.textContent?.trim())).toEqual(['Playlists', 'Stats', 'History']);
+    expect(desktop.map(link => link.textContent?.trim())).toEqual(['Playlists', 'Stats', 'History', 'Friends', 'Song Leagues', 'Private Sharing', 'Compare playlists']);
     expect(mobile.map(link => link.textContent?.trim())).toEqual(['Playlists', 'Stats', 'History']);
     expect(desktop.find(link => link.textContent?.includes('Stats'))?.getAttribute('aria-current')).toBe('page');
+    expect(mobile.find(link => link.textContent?.includes('Stats'))?.getAttribute('aria-current')).toBe('page');
     expect(element.querySelector('main')?.getAttribute('aria-label')).toBe('Your Stats content');
   });
 
@@ -589,13 +657,32 @@ describe('DesignV2ShellComponent', () => {
     expect(element.querySelector('.v2-brand')).not.toBeNull();
   });
 
-  it('uses More consistently and preserves Spotify attribution', async () => {
+  it('uses the canonical Menu label and preserves Spotify attribution', async () => {
     const harness = await RouterTestingHarness.create('/playlists');
     const element = harness.fixture.nativeElement as HTMLElement;
-    expect(element.querySelector('.v2-tools-button')?.textContent?.trim()).toBe('More');
+    expect(element.querySelector('.v2-tools-button')?.textContent?.trim()).toBe('Menu');
     expect(element.textContent).not.toContain('Workspace');
     expect(element.querySelector('.v2-footer')?.textContent).toContain('Powered by Spotify');
     expect(element.querySelector('.v2-footer')?.textContent).toContain('Legal & privacy');
+  });
+
+  it('opens the grouped canonical drawer and navigates through its current-route and Settings links', async () => {
+    const {harness} = await createShell();
+    const element = harness.fixture.nativeElement as HTMLElement;
+    (element.querySelector('.v2-tools-button') as HTMLButtonElement).click(); harness.detectChanges();
+    const dialog = element.querySelector('[role="dialog"][aria-label="Navigation menu"]') as HTMLElement;
+    expect(dialog).not.toBeNull();
+    expect([...dialog.querySelectorAll('.navigation-group__title')].map(node => node.textContent?.trim()))
+      .toEqual(['Library', 'Listening', 'Social', 'Tools']);
+    const links = [...dialog.querySelectorAll('a')] as HTMLAnchorElement[];
+    expect(links.map(link => link.getAttribute('href'))).toEqual([
+      '/playlists', '/stats', '/history', '/friends', '/song-league', '/shared-playlists', '/compare-room', '/settings/account'
+    ]);
+    expect(links[0].getAttribute('aria-current')).toBe('page');
+    expect(links.slice(1).every(link => !link.hasAttribute('aria-current'))).toBe(true);
+    links[1].click(); await harness.fixture.whenStable(); harness.detectChanges();
+    expect(TestBed.inject(Router).url).toBe('/stats');
+    expect(element.querySelector('[role="dialog"]')).toBeNull();
   });
 
   it.each([false, true])('keeps retained account settings and excludes blocked-user management (cloud identity %s)', async hasCloudIdentity => {

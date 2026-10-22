@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, computed, signal} from '@angular/core';
 import {previewReturnPath} from '@core/navigation/preview-return-path';
 import {environment} from "@env/environment";
 import { HttpClient, HttpContext, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
@@ -57,8 +57,11 @@ export class SpotifyAuthService {
   // installations migrate without another server write.
   private readonly cloudIdentityReadyKey = 'cloudIdentityReady';
   private refreshObservable: Observable<any> | null = null;
+  private refreshGenerationId: number | null = null;
   private restoreSessionPromise: Promise<boolean> | null = null;
   logout$ = new Subject<void>();
+  private readonly sessionExits = signal(0);
+  readonly sessionExiting = computed(() => this.sessionExits() > 0);
 
   isSyncing = false;
   syncProgress = 0;
@@ -118,31 +121,34 @@ export class SpotifyAuthService {
     promptConsent: boolean = true,
     requestedScopes: readonly string[] = HOSTED_SPOTIFY_SCOPES
   ): Promise<any> {
-    this.termsAcceptance.assertCurrentAcceptance();
-    if (promptConsent) {
-      // A user-initiated login must not inherit a Supabase session whose
-      // Spotify provider token has expired or was never persisted.
-      this.logout$.next();
-      await this.sessionLifecycle.invalidateAndDrain();
-      await this.clearSupabaseSession();
-      this.clearSpotifyCredentials();
-    }
-    this.storageService.setItem(this.connectionModeKey, 'hosted', false);
-    sessionStorage.setItem(this.pendingScopesKey, this.normalizeScopes(requestedScopes).join(' '));
-    const queryParams: any = {
-      access_type: 'offline'
-    };
-    if (promptConsent) {
-      queryParams.prompt = 'consent';
-    }
-    return (await this.supabaseService.getClient()).auth.signInWithOAuth({
-      provider: 'spotify',
-      options: {
-        redirectTo: environment.spotifyRedirectUri,
-        scopes: this.normalizeScopes(requestedScopes).join(' '),
-        queryParams
+    const login = async () => {
+      this.termsAcceptance.assertCurrentAcceptance();
+      if (promptConsent) {
+        // A user-initiated login must not inherit a Supabase session whose
+        // Spotify provider token has expired or was never persisted.
+        this.logout$.next();
+        await this.sessionLifecycle.invalidateAndDrain();
+        await this.clearSupabaseSession();
+        this.clearSpotifyCredentials();
       }
-    });
+      this.storageService.setItem(this.connectionModeKey, 'hosted', false);
+      sessionStorage.setItem(this.pendingScopesKey, this.normalizeScopes(requestedScopes).join(' '));
+      const queryParams: any = {
+        access_type: 'offline'
+      };
+      if (promptConsent) {
+        queryParams.prompt = 'consent';
+      }
+      return (await this.supabaseService.getClient()).auth.signInWithOAuth({
+        provider: 'spotify',
+        options: {
+          redirectTo: environment.spotifyRedirectUri,
+          scopes: this.normalizeScopes(requestedScopes).join(' '),
+          queryParams
+        }
+      });
+    };
+    return promptConsent ? this.withSessionExit(login) : login();
   }
 
   getConnectionMode(): SpotifyConnectionMode {
@@ -601,12 +607,14 @@ export class SpotifyAuthService {
   }
 
   refreshToken(): Observable<any> {
-    if (this.refreshObservable) {
+    const generation = this.sessionLifecycle.capture();
+    if (this.refreshObservable && this.refreshGenerationId === generation.id) {
       return this.refreshObservable;
     }
+    this.refreshObservable = null;
+    this.refreshGenerationId = generation.id;
 
     if (this.isPersonalAppConnection()) {
-      const generation = this.sessionLifecycle.capture();
       const refreshToken = this.storageService.getItem('spotifyRefreshToken');
       const clientId = this.getPersonalSpotifyClientId();
       if (!refreshToken || !clientId) {
@@ -616,25 +624,28 @@ export class SpotifyAuthService {
         .set('grant_type', 'refresh_token')
         .set('refresh_token', refreshToken)
         .set('client_id', clientId);
-      this.refreshObservable = this.http.post<any>(
+      const refresh$ = this.http.post<any>(
         'https://accounts.spotify.com/api/token',
         body.toString(),
         {headers: new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'})}
       ).pipe(
         tap(response => this.storeSpotifyTokenResponse(response, true, generation)),
         catchError(error => {
+          this.assertCurrentSession(generation);
           if (!this.isTerminalSpotifyRefreshError(error)) return throwError(() => error);
-          return from(this.handleTerminalSpotifyRefresh()).pipe(
+          return from(this.handleTerminalSpotifyRefresh(generation)).pipe(
             switchMap(() => throwError(() => new Error('Spotify authorization expired. Reconnect Spotify.')))
           );
         }),
-        finalize(() => this.refreshObservable = null),
+        finalize(() => {
+          if (this.refreshObservable === refresh$) this.refreshObservable = null;
+        }),
         shareReplay(1)
       );
-      return this.refreshObservable;
+      this.refreshObservable = refresh$;
+      return refresh$;
     }
 
-    const generation = this.sessionLifecycle.capture();
     const refreshViaSupabase$ = defer(
       () => from(this.readySessionClient(generation).then(client => client.auth.refreshSession()))
     ).pipe(
@@ -658,18 +669,18 @@ export class SpotifyAuthService {
     // exchanged safely by this browser without the app secret. If the current
     // Supabase session has no provider token, callers fall back to a silent
     // signInWithOAuth redirect.
-    this.refreshObservable = refreshViaSupabase$.pipe(
+    const refresh$ = refreshViaSupabase$.pipe(
       tap(() => {
-        this.refreshObservable = null;
+        if (this.refreshObservable === refresh$) this.refreshObservable = null;
       }),
       catchError(err => {
-        this.refreshObservable = null;
+        if (this.refreshObservable === refresh$) this.refreshObservable = null;
         return throwError(() => err);
       }),
       shareReplay(1)
     );
-
-    return this.refreshObservable;
+    this.refreshObservable = refresh$;
+    return refresh$;
   }
 
   private storeSpotifyTokenResponse(
@@ -707,7 +718,8 @@ export class SpotifyAuthService {
     }
   }
 
-  private async handleTerminalSpotifyRefresh(): Promise<void> {
+  private async handleTerminalSpotifyRefresh(generation: {id: number; signal: AbortSignal}): Promise<void> {
+    this.assertCurrentSession(generation);
     const profileUserId = this.getSupabaseUserId();
     const hadScheduledAccess = this.hasScheduledSpotifyAccess();
     this.storageService.removeItem(this.storageKey);
@@ -718,11 +730,13 @@ export class SpotifyAuthService {
     try {
       await this.invokeCredentialFunction(
         {action: 'delete_credentials', profileUserId},
-        'Expired cloud credential cleanup failed.'
+        'Expired cloud credential cleanup failed.',
+        generation
       );
     } catch (error) {
       console.warn('The expired cloud Spotify credential could not be removed immediately.', error);
     }
+    this.assertCurrentSession(generation);
   }
 
   private async readySessionClient(generation: {id: number; signal: AbortSignal}): Promise<SupabaseClient> {
@@ -813,56 +827,66 @@ export class SpotifyAuthService {
   }
 
   async logout(): Promise<void> {
-    // Stop subscriptions and timers before waiting for in-flight generation A.
-    this.logout$.next();
-    await this.sessionLifecycle.invalidateAndDrain();
-    this.initialSyncPromise = null;
-    const supabaseUserId = this.getSupabaseUserId();
-    await this.unlinkCurrentPushDevice();
-    if (this.isAnonymousCloudIdentity()) {
-      await this.deleteAnonymousCloudAccount();
-    }
-    if (supabaseUserId) {
-      this.storageService.removeItem(`${supabaseUserId}_backup_active`);
-      this.storageService.removeItem(`${supabaseUserId}_last_synced_at`);
-    }
-    this.storageService.removeItem(this.storageKey);
-    this.storageService.removeItem('spotifyUserId');
-    this.storageService.removeItem('supabaseUserId');
-    this.storageService.removeItem('spotifyRefreshToken');
-    this.storageService.removeItem('spotifyTokenExpiresAt');
-    this.storageService.removeItem(this.connectionModeKey);
-    this.storageService.removeItem(this.personalClientIdKey);
-    this.storageService.removeItem(this.anonymousCloudKey);
-    this.storageService.removeItem(this.collaborationIdentityReadyKey);
-    this.storageService.removeItem(this.cloudIdentityReadyKey);
-    try {
-      await (await this.supabaseService.getClient()).auth.signOut();
-    } catch (err) {
-      console.error('Supabase signout failed', err);
-    }
-    this.clearAnalytifySessionStorage();
-    this.clearAllCookies();
-    await this.sessionLifecycle.drainCurrent();
+    return this.withSessionExit(async () => {
+      // Stop subscriptions and timers before waiting for in-flight generation A.
+      this.logout$.next();
+      await this.sessionLifecycle.invalidateAndDrain();
+      this.initialSyncPromise = null;
+      const supabaseUserId = this.getSupabaseUserId();
+      await this.unlinkCurrentPushDevice();
+      if (this.isAnonymousCloudIdentity()) {
+        await this.deleteAnonymousCloudAccount();
+      }
+      if (supabaseUserId) {
+        this.storageService.removeItem(`${supabaseUserId}_backup_active`);
+        this.storageService.removeItem(`${supabaseUserId}_last_synced_at`);
+      }
+      this.storageService.removeItem(this.storageKey);
+      this.storageService.removeItem('spotifyUserId');
+      this.storageService.removeItem('supabaseUserId');
+      this.storageService.removeItem('spotifyRefreshToken');
+      this.storageService.removeItem('spotifyTokenExpiresAt');
+      this.storageService.removeItem(this.connectionModeKey);
+      this.storageService.removeItem(this.personalClientIdKey);
+      this.storageService.removeItem(this.anonymousCloudKey);
+      this.storageService.removeItem(this.collaborationIdentityReadyKey);
+      this.storageService.removeItem(this.cloudIdentityReadyKey);
+      try {
+        await (await this.supabaseService.getClient()).auth.signOut();
+      } catch (err) {
+        console.error('Supabase signout failed', err);
+      }
+      this.clearAnalytifySessionStorage();
+      this.clearAllCookies();
+      await this.sessionLifecycle.drainCurrent();
+    });
   }
 
   async clearCacheAndLogout(): Promise<void> {
-    this.logout$.next();
-    await this.sessionLifecycle.invalidateAndDrain();
-    this.initialSyncPromise = null;
-    await this.unlinkCurrentPushDevice();
-    if (this.isAnonymousCloudIdentity()) {
-      await this.deleteAnonymousCloudAccount();
-    }
-    await this.storageService.clear();
-    try {
-      await (await this.supabaseService.getClient()).auth.signOut();
-    } catch (err) {
-      console.error('Supabase signout failed', err);
-    }
-    this.clearAnalytifySessionStorage();
-    this.clearAllCookies();
-    await this.sessionLifecycle.drainCurrent();
+    return this.withSessionExit(async () => {
+      this.logout$.next();
+      await this.sessionLifecycle.invalidateAndDrain();
+      this.initialSyncPromise = null;
+      await this.unlinkCurrentPushDevice();
+      if (this.isAnonymousCloudIdentity()) {
+        await this.deleteAnonymousCloudAccount();
+      }
+      await this.storageService.clear();
+      try {
+        await (await this.supabaseService.getClient()).auth.signOut();
+      } catch (err) {
+        console.error('Supabase signout failed', err);
+      }
+      this.clearAnalytifySessionStorage();
+      this.clearAllCookies();
+      await this.sessionLifecycle.drainCurrent();
+    });
+  }
+
+  private async withSessionExit<T>(operation: () => Promise<T>): Promise<T> {
+    this.sessionExits.update(count => count + 1);
+    try {return await operation();}
+    finally {this.sessionExits.update(count => count - 1);}
   }
 
   private async unlinkCurrentPushDevice(): Promise<void> {
@@ -1262,8 +1286,13 @@ export class SpotifyAuthService {
     }));
   }
 
-  private async invokeCredentialFunction(body: Record<string, unknown>, fallback: string): Promise<any> {
-    const {data, error} = await (await this.supabaseService.getClient()).functions.invoke('spotify-credentials', {body});
+  private async invokeCredentialFunction(
+    body: Record<string, unknown>,
+    fallback: string,
+    generation?: {id: number; signal: AbortSignal}
+  ): Promise<any> {
+    const client = await (generation ? this.readySessionClient(generation) : this.supabaseService.getClient());
+    const {data, error} = await client.functions.invoke('spotify-credentials', {body});
     if (!error) return data;
     const {describeEdgeFunctionError} = await import('@core/data-access/supabase/edge-function-error');
     throw new Error(await describeEdgeFunctionError(error, fallback));

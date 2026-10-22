@@ -1,0 +1,39 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/shared/ui-v2/design-v2-primitives.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [1.661 seconds] - 2026-10-21T19:21:17.918Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/shared/ui-v2/design-v2-primitives.spec.ts (34 tests | 1 failed) 356ms
+     × keeps a caller supplied decorative icon out of the menu name and keyboard workflow 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/design-v2-primitives.spec.ts > V2OverflowMenuComponent > keeps a caller supplied decorative icon out of the menu name and keyboard workflow
+Error: NG0303: Can't set value of the 'iconUrl' input on the 'V2OverflowMenuComponent2' component. Make sure that the 'iconUrl' property is declared as an input using the input() or model() function or the @Input() decorator.
+ ❯ reportUnknownPropertyError ../darwin_arm64-fastbuild-ST-fdfa778d11ba/bin/packages/core/src/render3/instructions/element_validation.ts:228:10
+ ❯ ComponentRef.setInput ../darwin_arm64-fastbuild-ST-fdfa778d11ba/bin/packages/core/src/render3/component_ref.ts:636:6
+ ❯ src/app/shared/ui-v2/design-v2-primitives.spec.ts:518:26
+    516|     const fixture = TestBed.createComponent(V2OverflowMenuComponent);
+    517|     fixture.componentRef.setInput('label', 'Manage friend Alex');
+    518|     fixture.componentRef.setInput('iconUrl', 'assets/design-v2/friends…
+       |                          ^
+    519|     fixture.componentRef.setInput('items', [{id: 'remove', label: 'Rem…
+    520|     fixture.detectChanges();
+ ❯ fulfilled chunk-EFV3TZQO.js:74:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 33 passed (34)
+   Start at  21:21:18
+   Duration  1.20s (transform 61ms, setup 236ms, import 82ms, tests 356ms, environment 335ms)
+

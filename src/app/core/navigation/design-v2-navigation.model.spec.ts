@@ -11,7 +11,7 @@ describe('Design v2 navigation model', () => {
     expect(primaryDesignV2Navigation().map(item => item.id)).toEqual(['playlists', 'stats', 'history']);
     expect(mobileDesignV2Navigation()).toEqual(primaryDesignV2Navigation());
     expect(toolDesignV2Navigation().map(item => item.id)).toEqual([
-      'song-league', 'compare-room', 'private-sharing'
+      'friends', 'song-league', 'compare-room', 'private-sharing'
     ]);
     expect(new Set(DESIGN_V2_NAVIGATION.map(item => item.id)).size).toBe(DESIGN_V2_NAVIGATION.length);
   });

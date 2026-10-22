@@ -1,0 +1,99 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214
+[WebServer] (node:62802) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:62802) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:63128) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) (6.2s)
+  ✓  2 [desktop] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (reduce) (4.2s)
+(node:63804) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [mobile] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) (6.0s)
+  ✓  4 [mobile] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (reduce) (4.3s)
+(node:64651) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 [firefox-stats] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) (7.8s)
+  ✓  6 [firefox-stats] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (reduce) (5.0s)
+(node:65822) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  7 [webkit-stats] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) (2ms)
+(node:65886) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  8 [webkit-stats] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (reduce) (2ms)
+
+
+  1) [webkit-stats] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) 
+
+    Error: browserType.launch: Target page, context or browser has been closed
+    Browser logs:
+
+    <launching> /tmp/analytify-webkit-libs/run-webkit.sh --inspector-pipe --headless --no-startup-window
+    <launched> pid=65877
+    [pid=65877][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+    Call log:
+      - <launching> /tmp/analytify-webkit-libs/run-webkit.sh --inspector-pipe --headless --no-startup-window
+      - <launched> pid=65877
+      - [pid=65877][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+      - [pid=65877] <gracefully close start>
+      - [pid=65877] <kill>
+      - [pid=65877] <will force kill>
+      - [pid=65877] exception while trying to kill process: Error: kill ESRCH
+      - [pid=65877] <process did exit: exitCode=127, signal=null>
+      - [pid=65877] starting temporary directories cleanup
+      - [pid=65877] finished temporary directories cleanup
+      - [pid=65877] <gracefully close end>
+
+
+    Error Context: docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--webkit-stats/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [webkit-stats] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (reduce) 
+
+    Error: browserType.launch: Target page, context or browser has been closed
+    Browser logs:
+
+    <launching> /tmp/analytify-webkit-libs/run-webkit.sh --inspector-pipe --headless --no-startup-window
+    <launched> pid=65899
+    [pid=65899][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+    Call log:
+      - <launching> /tmp/analytify-webkit-libs/run-webkit.sh --inspector-pipe --headless --no-startup-window
+      - <launched> pid=65899
+      - [pid=65899][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+      - [pid=65899] <gracefully close start>
+      - [pid=65899] <kill>
+      - [pid=65899] <will force kill>
+      - [pid=65899] exception while trying to kill process: Error: kill ESRCH
+      - [pid=65899] <process did exit: exitCode=127, signal=null>
+      - [pid=65899] starting temporary directories cleanup
+      - [pid=65899] finished temporary directories cleanup
+      - [pid=65899] <gracefully close end>
+
+
+    Error Context: docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--ec6c7-responsive-recovery-reduce--webkit-stats/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--ec6c7-responsive-recovery-reduce--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--ec6c7-responsive-recovery-reduce--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [webkit-stats] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) 
+    [webkit-stats] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (reduce) 
+  6 passed (47.5s)

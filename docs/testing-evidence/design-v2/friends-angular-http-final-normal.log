@@ -1,0 +1,63 @@
+{
+  "mode": "selected-contract",
+  "versions": {
+    "postgres": "postgres (PostgreSQL) 18.6",
+    "postgrest": "PostgREST 16.5",
+    "supabaseJs": "2.117.2"
+  },
+  "migrations": [
+    {
+      "path": "supabase/migrations/20260801000000_foundational_schema.sql",
+      "sha256": "2ddb1def6b431674bc06bace7edbc55177c957f6689371f894c7f8861b8bc95e"
+    },
+    {
+      "path": "supabase/migrations/20260905153000_lock_spotify_profile_identity.sql",
+      "sha256": "dc6d6dd600184d58ecd8e12a6cf440c84b1db4a10d29d134de626af1bc4c6716"
+    },
+    {
+      "path": "supabase/migrations/20260801181500_playlist_sharing.sql",
+      "sha256": "2744dfdc7236e2c8d95df0b5d73cda7465daf4ad4ca8d6f5bf1c1a2c5c16a8d6"
+    },
+    {
+      "path": "supabase/migrations/20260902190000_stats_spy_mode.sql",
+      "sha256": "110d2f98b0647ec6bb998c22a9ece4583dd52543752f44e0f9978e857f5cbcb7"
+    },
+    {
+      "path": "supabase/migrations/20261011162823_design_v2_single_use_friend_invitations.sql",
+      "sha256": "ec192d691fee40f7f860ae9418c140c43d4a46bdf671b3c6b846b8155726d4db"
+    }
+  ],
+  "outcomes": [
+    "Real SDK HTTP RPC reaches PostgREST with a verified synthetic JWT actor; users RLS exposes only the actor profile.",
+    "Signed anonymous/missing-actor/unverified/forged/expired JWT requests are denied with real HTTP/SQLSTATE codes; private schema is not exposed and raw table grants are absent.",
+    "Real users table RLS allows the actor operational toggle, silently denies another actor row, and column grants reject identity replacement.",
+    "Dropping a committed real HTTP creation response and retrying the same secret produces exactly one hashed pending invitation; malformed secrets/token takeover/non-owner revoke are rejected.",
+    "Receiving reserves exactly one recipient without friendship; exact incoming/preview DTOs contain no secret, and another actor cannot claim or answer the saved request.",
+    "Saved request acceptance and uncertain same-decision retries create one mutual versioned connection with exact Friends DTOs and preserve real independent Stats/playlist grants.",
+    "Removal retries cannot revive old acceptance or remove a later reconnection; the other participant can remove the current version and independent grants remain byte-for-byte unchanged.",
+    "Sender revocation and recipient decline remove incoming pending requests; both are replay-safe and prevent later acceptance.",
+    "Two actual HTTP/SDK receive requests observed waiting on a native row lock reserve exactly one recipient.",
+    "Two actual HTTP accept requests waiting on the same native invitation row produce one accepted recipient and one denied contender.",
+    "Owner revocation committed while actual HTTP acceptance waits prevents late acceptance and preserves independent grants.",
+    "HTTP RPC pagination rejects invalid bounds, owner invitation DTOs omit secrets, and a previously denied synthetic actor recovers after the verified-profile prerequisite is established."
+  ],
+  "isolation": {
+    "freshCluster": true,
+    "postgresTcp": false,
+    "socketPermissions": "0700",
+    "authenticatorNoInherit": true,
+    "authenticatorSuperuser": false,
+    "postgrestAndGatewayHost": "127.0.0.1",
+    "syntheticJwtProfilesOnly": true,
+    "externalDatabaseUrlAccepted": false
+  },
+  "prerequisites": "Local absolute PostgreSQL root and PostgREST directory. Explicit auth.users/auth.uid(JSON request.jwt.claims) and verified_spotify_id fixtures; selected actual migrations only.",
+  "limitations": "No hosted Auth login/token issuance/refresh/logout, Spotify OAuth/provider, Realtime, full retained migration chain, deployed backend compatibility, Angular service injection, browser/UI parity or notification delivery is certified.",
+  "runnerSha256": "59b719692757b8748b8ef6e276efe67eff40ca12b5ce822670525315a2509590",
+  "cleanup": {
+    "gatewayClosed": true,
+    "postgrestStopped": true,
+    "postgresStopped": true,
+    "workspaceRemoved": true
+  }
+}

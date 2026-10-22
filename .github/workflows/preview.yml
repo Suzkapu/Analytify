@@ -52,6 +52,10 @@ jobs:
         if: always() && steps.supabase-cli.outcome == 'success'
         run: supabase stop --workdir integration --no-backup
       - run: npm run accessibility:browser
+      - name: Verify isolated Friends browser workflows
+        run: npx playwright test --config=playwright.friends.config.ts
+      - name: Verify isolated device Navigation preferences
+        run: npx playwright test --config=playwright.navigation.config.ts
       - name: Preserve test evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -61,6 +65,8 @@ jobs:
             coverage
             test-results
             playwright-report
+            docs/testing-evidence/design-v2/friends-browser-artifacts
+            docs/testing-evidence/design-v2/navigation-browser-artifacts
           retention-days: 7
       - name: Record preview artifact identity
         run: node -e 'require("node:fs").writeFileSync("dist/spoti-front/version.json",JSON.stringify({commit:process.env.GITHUB_SHA,branch:"codex/design-v2",mount:"/new/"}))'

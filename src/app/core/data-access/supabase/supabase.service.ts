@@ -725,7 +725,7 @@ export class SupabaseService {
         .limit(1);
 
       if (error) throw error;
-      return data && data.length > 0;
+      return (data?.length ?? 0) > 0;
     } catch (e) {
       console.warn('[SupabaseService] Error checking today\'s history in database:', e);
       return false;
@@ -803,7 +803,7 @@ export class SupabaseService {
         .limit(1);
 
       if (error) throw error;
-      return data && data.length > 0;
+      return (data?.length ?? 0) > 0;
     } catch (e) {
       console.warn('[SupabaseService] Error checking recent stats snapshot:', e);
       return false;

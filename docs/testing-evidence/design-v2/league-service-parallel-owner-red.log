@@ -1,0 +1,336 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/song-league/song-league-creation-owner.spec.ts --runner-config=docs/testing-evidence/design-v2/league-service-parallel-vitest.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/league-service-parallel-vitest.mjs
+Application bundle generation complete. [3.517 seconds] - 2026-10-20T17:36:20.025Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/song-league/song-league-creation-owner.spec.ts > Song League creation session ownership > keeps uncertain same-form secrets separate for local SDK actors and retries only the original owner intent
+AssertionError: expected 'b848cd39becdbf1e68a93979092166952aedf…' not to be 'b848cd39becdbf1e68a93979092166952aedf…' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/song-league/song-league-creation-owner.spec.ts:45:39
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: 'b848cd39becdbf1e68a93979092166952aedf3cbfd64dd6603c47122ba569380',
+  expected: 'b848cd39becdbf1e68a93979092166952aedf3cbfd64dd6603c47122ba569380',
+  showDiff: true,
+  operator: 'notStrictEqual'
+}
+
+stderr | src/app/core/song-league/song-league-creation-owner.spec.ts > Song League creation session ownership > invalidates uncertain intents when the same user logs out and signs in again
+AssertionError: expected 'afa726c39e453cbc076006654c71c6785e6f2…' not to be 'afa726c39e453cbc076006654c71c6785e6f2…' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/song-league/song-league-creation-owner.spec.ts:57:53
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: 'afa726c39e453cbc076006654c71c6785e6f2f754cfc9da23623608778cae895',
+  expected: 'afa726c39e453cbc076006654c71c6785e6f2f754cfc9da23623608778cae895',
+  showDiff: true,
+  operator: 'notStrictEqual'
+}
+
+stderr | src/app/core/song-league/song-league-creation-owner.spec.ts > Song League creation session ownership > does not begin a mutation after session cancellation while client readiness is pending
+Error: promise resolved "{ leagueId: 'created', …(1) }" instead of rejecting
+    at Assertion.__VITEST_REJECTS__ (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1747:17)
+    at Assertion.propertyGetter (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1607:27)
+    at Reflect.get (<anonymous>)
+    at Object.proxyGetter [as get] (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1696:22)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/song-league/song-league-creation-owner.spec.ts:81:94
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/song-league/song-league-creation-owner.spec.ts:79:107 {
+  showDiff: true,
+  expected: Error: rejected promise
+      at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1769:17
+      at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+      at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+      at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+      at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+      at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+      at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23),
+  actual: {
+    leagueId: 'created',
+    inviteUrl: 'https://analytify.dynv6.net/new/song-league/join/635d52b504ad072ba5e8f9b792d1e09a8610f38980148d8df40e02a6175d2e18'
+  }
+}
+
+stderr | src/app/core/song-league/song-league-creation-owner.spec.ts > Song League creation session ownership > does not begin a mutation after cancellation while local session readiness is pending
+Promise returned by `expect(actual).rejects.toMatchObject(expected)` was not awaited. Vitest currently auto-awaits hanging assertions at the end of the test, but this will cause the test to fail in the next Vitest major. Please remember to await the assertion.
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/song-league/song-league-creation-owner.spec.ts:88:94
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise(/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async(/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/song-league/song-league-creation-owner.spec.ts:86:106
+
+stderr | src/app/core/song-league/song-league-creation-owner.spec.ts > Song League creation session ownership > rejects a missing local login before generating a usable creation mutation
+Error: promise resolved "{ leagueId: 'created', …(1) }" instead of rejecting
+    at Assertion.__VITEST_REJECTS__ (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1747:17)
+    at Assertion.propertyGetter (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1607:27)
+    at Reflect.get (<anonymous>)
+    at Object.proxyGetter [as get] (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1696:22)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/song-league/song-league-creation-owner.spec.ts:95:74
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/song-league/song-league-creation-owner.spec.ts:94:95 {
+  showDiff: true,
+  expected: Error: rejected promise
+      at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1769:17
+      at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+      at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+      at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+      at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+      at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+      at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23),
+  actual: {
+    leagueId: 'created',
+    inviteUrl: 'https://analytify.dynv6.net/new/song-league/join/907571d8ec922d8698c11484b51e417c4fbd0e1e71a75f25aa0b8c4c29c7a2eb'
+  }
+}
+
+stderr | src/app/core/song-league/song-league-creation-owner.spec.ts > Song League creation session ownership > preserves local session read errors without sending a mutation
+Error: promise resolved "{ leagueId: 'created', …(1) }" instead of rejecting
+    at Assertion.__VITEST_REJECTS__ (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1747:17)
+    at Assertion.propertyGetter (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1607:27)
+    at Reflect.get (<anonymous>)
+    at Object.proxyGetter [as get] (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1696:22)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/song-league/song-league-creation-owner.spec.ts:100:60
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/song-league/song-league-creation-owner.spec.ts:98:83 {
+  showDiff: true,
+  expected: Error: rejected promise
+      at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1769:17
+      at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+      at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+      at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+      at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+      at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+      at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23),
+  actual: {
+    leagueId: 'created',
+    inviteUrl: 'https://analytify.dynv6.net/new/song-league/join/ef2e3ab6358015777faeaa60fc800633f24953f68be1651ab3193d610a23ee90'
+  }
+}
+
+ ❯ |SpotiFront| src/app/core/song-league/song-league-creation-owner.spec.ts (8 tests | 8 failed) 1184ms
+     × keeps uncertain same-form secrets separate for local SDK actors and retries only the original owner intent 31ms
+     × invalidates uncertain intents when the same user logs out and signs in again 5ms
+     × does not expose an old invitation acknowledgement after the app session ends 57ms
+     × rejects an acknowledgement when the local SDK actor changed without an app generation change 56ms
+     × does not begin a mutation after session cancellation while client readiness is pending 4ms
+     × does not begin a mutation after cancellation while local session readiness is pending 1007ms
+     × rejects a missing local login before generating a usable creation mutation 15ms
+     × preserves local session read errors without sending a mutation 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/song-league/song-league-creation-owner.spec.ts > Song League creation session ownership > keeps uncertain same-form secrets separate for local SDK actors and retries only the original owner intent
+AssertionError: expected 'b848cd39becdbf1e68a93979092166952aedf…' not to be 'b848cd39becdbf1e68a93979092166952aedf…' // Object.is equality
+ ❯ src/app/core/song-league/song-league-creation-owner.spec.ts:45:39
+     43|     const first = rpc.mock.calls[0][1]; actor = 'actor-B';
+     44|     await service.createLeague('Same league', 'UTC'); const second = r…
+     45|     expect(second.p_invite_token).not.toBe(first.p_invite_token);
+       |                                       ^
+     46|     expect(second.p_idempotency_key).not.toBe(first.p_idempotency_key);
+     47|     actor = 'actor-A'; await service.createLeague('Same league', 'UTC'…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  |SpotiFront| src/app/core/song-league/song-league-creation-owner.spec.ts > Song League creation session ownership > invalidates uncertain intents when the same user logs out and signs in again
+AssertionError: expected 'afa726c39e453cbc076006654c71c6785e6f2…' not to be 'afa726c39e453cbc076006654c71c6785e6f2…' // Object.is equality
+ ❯ src/app/core/song-league/song-league-creation-owner.spec.ts:57:53
+     55|     const previous = rpc.mock.calls[0][1]; await lifecycle.invalidateA…
+     56|     await service.createLeague('Same league', 'UTC');
+     57|     expect(rpc.mock.calls[1][1].p_invite_token).not.toBe(previous.p_in…
+       |                                                     ^
+     58|     expect(rpc.mock.calls[1][1].p_idempotency_key).not.toBe(previous.p…
+     59|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  |SpotiFront| src/app/core/song-league/song-league-creation-owner.spec.ts > Song League creation session ownership > does not expose an old invitation acknowledgement after the app session ends
+AssertionError: promise resolved "{ leagueId: 'old-owner-league', …(1) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "inviteUrl": "https://analytify.dynv6.net/new/song-league/join/fb5560d7f966ca734b341da1b353d22a9bd828720963969456f26b70ef35d89e",
++   "leagueId": "old-owner-league",
+  }
+
+ ❯ src/app/core/song-league/song-league-creation-owner.spec.ts:64:34
+     62|     const response = deferred<any>(); rpc.mockReturnValueOnce(response…
+     63|     const pending = service.createLeague('Same league', 'UTC');
+     64|     const result = expect(pending).rejects.toMatchObject({name: 'Abort…
+       |                                  ^
+     65|     await vi.waitFor(() => expect(rpc).toHaveBeenCalledOnce());
+     66|     const draining = lifecycle.invalidateAndDrain(); actor = 'actor-B'…
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/song-league/song-league-creation-owner.spec.ts:61:97
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  |SpotiFront| src/app/core/song-league/song-league-creation-owner.spec.ts > Song League creation session ownership > rejects an acknowledgement when the local SDK actor changed without an app generation change
+AssertionError: promise resolved "{ leagueId: 'old-owner-league', …(1) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "inviteUrl": "https://analytify.dynv6.net/new/song-league/join/4711dfc2d4137afd11811147b2ba02c71e45951000dc2e7b0a57e61f5a34bff4",
++   "leagueId": "old-owner-league",
+  }
+
+ ❯ src/app/core/song-league/song-league-creation-owner.spec.ts:74:94
+     72|   it('rejects an acknowledgement when the local SDK actor changed with…
+     73|     const response = deferred<any>(); rpc.mockReturnValueOnce(response…
+     74|     const pending = service.createLeague('Same league', 'UTC'); const …
+       |                                                                                              ^
+     75|     await vi.waitFor(() => expect(rpc).toHaveBeenCalledOnce()); actor …
+     76|     await result; expect(getUser).not.toHaveBeenCalled();
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/song-league/song-league-creation-owner.spec.ts:72:113
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  |SpotiFront| src/app/core/song-league/song-league-creation-owner.spec.ts > Song League creation session ownership > does not begin a mutation after session cancellation while client readiness is pending
+AssertionError: promise resolved "{ leagueId: 'created', …(1) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "inviteUrl": "https://analytify.dynv6.net/new/song-league/join/635d52b504ad072ba5e8f9b792d1e09a8610f38980148d8df40e02a6175d2e18",
++   "leagueId": "created",
+  }
+
+ ❯ src/app/core/song-league/song-league-creation-owner.spec.ts:81:94
+     79|   it('does not begin a mutation after session cancellation while clien…
+     80|     const ready = deferred<any>(); getClient.mockReturnValueOnce(ready…
+     81|     const pending = service.createLeague('Same league', 'UTC'); const …
+       |                                                                                              ^
+     82|     const draining = lifecycle.invalidateAndDrain(); ready.resolve(cli…
+     83|     expect(rpc).not.toHaveBeenCalled();
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/song-league/song-league-creation-owner.spec.ts:79:107
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  |SpotiFront| src/app/core/song-league/song-league-creation-owner.spec.ts > Song League creation session ownership > does not begin a mutation after cancellation while local session readiness is pending
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/app/core/song-league/song-league-creation-owner.spec.ts:89:47
+     87|     const session = deferred<any>(); getSession.mockReturnValueOnce(se…
+     88|     const pending = service.createLeague('Same league', 'UTC'); const …
+     89|     await vi.waitFor(() => expect(getSession).toHaveBeenCalledOnce());
+       |                                               ^
+     90|     const draining = lifecycle.invalidateAndDrain(); session.resolve({…
+     91|     await result; await draining; expect(rpc).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  |SpotiFront| src/app/core/song-league/song-league-creation-owner.spec.ts > Song League creation session ownership > rejects a missing local login before generating a usable creation mutation
+AssertionError: promise resolved "{ leagueId: 'created', …(1) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "inviteUrl": "https://analytify.dynv6.net/new/song-league/join/907571d8ec922d8698c11484b51e417c4fbd0e1e71a75f25aa0b8c4c29c7a2eb",
++   "leagueId": "created",
+  }
+
+ ❯ src/app/core/song-league/song-league-creation-owner.spec.ts:95:74
+     93|
+     94|   it('rejects a missing local login before generating a usable creatio…
+     95|     actor = null; await expect(service.createLeague('Same league', 'UT…
+       |                                                                          ^
+     96|   });
+     97|
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/song-league/song-league-creation-owner.spec.ts:94:95
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  |SpotiFront| src/app/core/song-league/song-league-creation-owner.spec.ts > Song League creation session ownership > preserves local session read errors without sending a mutation
+AssertionError: promise resolved "{ leagueId: 'created', …(1) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "inviteUrl": "https://analytify.dynv6.net/new/song-league/join/ef2e3ab6358015777faeaa60fc800633f24953f68be1651ab3193d610a23ee90",
++   "leagueId": "created",
+  }
+
+ ❯ src/app/core/song-league/song-league-creation-owner.spec.ts:100:60
+     98|   it('preserves local session read errors without sending a mutation',…
+     99|     const error = new Error('Local session unavailable'); getSession.m…
+    100|     await expect(service.createLeague('Same league', 'UTC')).rejects.t…
+       |                                                            ^
+    101|   });
+    102| });
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/song-league/song-league-creation-owner.spec.ts:98:83
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  8 failed (8)
+   Start at  19:36:20
+   Duration  2.29s (transform 159ms, setup 297ms, import 170ms, tests 1.18s, environment 430ms)
+

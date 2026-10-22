@@ -1,0 +1,59 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts --project=desktop --grep=no-preference
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214
+[WebServer] (node:147733) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:147733) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:147965) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) (7.4s)
+
+
+  1) [desktop] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+        "fontSize": "14px",
+    -   "fontWeight": "600",
+    -   "height": 48,
+    -   "lineHeight": "20px",
+    +   "fontWeight": "760",
+    +   "height": 44,
+    +   "lineHeight": "15.4px",
+        "width": 260,
+      }
+
+      132 |       return {width: rect.width, height: rect.height, fontSize: style.fontSize, fontWeight: style.fontWeight, lineHeight: style.lineHeight};
+      133 |     });
+    > 134 |     expect(actionStyle).toEqual({width: 260, height: 48, fontSize: '14px', fontWeight: '600', lineHeight: '20px'});
+          |                         ^
+      135 |     expect(writes.at(-1)).toEqual({name: 'respond_friend_request', body: {p_invitation_id: '77777777-7777-4777-8777-777777777777', p_accept: accept}});
+      136 |     await expectNoBlockingAxeViolations(page);
+      137 |     await panel.screenshot({path: info.outputPath('friends-outcome.png'), animations: 'disabled'});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:134:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) 

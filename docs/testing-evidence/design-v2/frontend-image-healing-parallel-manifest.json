@@ -1,0 +1,252 @@
+{
+  "status": "Scoped image recovery corrections complete;35tests pass. Application-wide completion is not claimed.",
+  "date": "2026-10-17",
+  "sourceBeforeFixSha256": "c2c0c2d5f00fe4abe55b30f801d4e58d9c94468ed6273bca240a93e780c50f42",
+  "baseline": {
+    "command": "npx ng test --watch=false --progress=false --include='src/app/core/sync/image-healing/*.spec.ts' --runner-config=docs/testing-evidence/design-v2/frontend-image-healing-parallel-vitest.config.mjs --coverage --coverage-include=src/app/core/sync/image-healing/image-healing.service.ts",
+    "scope": "20 characterization tests only, before ownership spec was created",
+    "passed": 20,
+    "exit": 0,
+    "coverage": {
+      "lines": {
+        "total": 107,
+        "covered": 107,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 124,
+        "covered": 124,
+        "skipped": 0,
+        "pct": 100
+      },
+      "functions": {
+        "total": 27,
+        "covered": 27,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 83,
+        "covered": 82,
+        "skipped": 0,
+        "pct": 98.79
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": "Unknown"
+      }
+    },
+    "coverageScope": "Unmodified production source before genuine ownership regression tests; report path was subsequently overwritten by final scoped run."
+  },
+  "regressions": {
+    "command": "npx ng test --watch=false --progress=false --include='src/app/core/sync/image-healing/*ownership.spec.ts' --runner-config=docs/testing-evidence/design-v2/frontend-image-healing-parallel-vitest.config.mjs",
+    "originalRed": {
+      "log": "frontend-image-healing-parallel-ownership-red.log",
+      "exit": 1,
+      "failed": 3
+    },
+    "actualLifecycleRed": {
+      "log": "frontend-image-healing-parallel-lifecycle-red.log",
+      "exit": 1,
+      "failed": 5
+    },
+    "mixedNullTrackRed": {
+      "log": "frontend-image-healing-parallel-null-red.log",
+      "exit": 1,
+      "failed": 6,
+      "unhandledErrors": 1
+    },
+    "cases": [
+      "Old artist response publishes under replacement account",
+      "Old track response publishes and uploads under replacement account",
+      "Old artist response publishes after same-account session replacement",
+      "Unresolved old track observer remains subscribed after session invalidation",
+      "Null cache row prevents valid artist repair",
+      "Null cache track row prevents valid track repair and emits an RxJS unhandled TypeError"
+    ]
+  },
+  "changes": [
+    "Capture actual lifecycle generation, Spotify actor and cloud identity for recovery work.",
+    "Reject stale source responses before image mutation, local persistence, later batches and cloud uploads.",
+    "Abort outstanding Spotify artist/track observables when session generation invalidates.",
+    "Reset artist attempted/in-flight/failed URL caches per generation/identity; old finalization cannot clear replacement generation work.",
+    "Skip missing artist/track rows when applying otherwise valid recovery.",
+    "Only accept requested batch track IDs from raw Spotify responses; unsolicited IDs cannot overwrite valid cached rows or enter persistence/cloud sync."
+  ],
+  "final": {
+    "command": "npx ng test --watch=false --progress=false --include='src/app/core/sync/image-healing/*.spec.ts' --runner-config=docs/testing-evidence/design-v2/frontend-image-healing-parallel-vitest.config.mjs --coverage --coverage-include=src/app/core/sync/image-healing/image-healing.service.ts",
+    "log": "frontend-image-healing-parallel-response-green.log",
+    "exit": 0,
+    "files": 3,
+    "passed": 35,
+    "skipped": 0,
+    "errors": 0,
+    "coverage": {
+      "lines": {
+        "total": 132,
+        "covered": 132,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 161,
+        "covered": 158,
+        "skipped": 0,
+        "pct": 98.13
+      },
+      "functions": {
+        "total": 29,
+        "covered": 29,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 124,
+        "covered": 120,
+        "skipped": 0,
+        "pct": 96.77
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": "Unknown"
+      }
+    }
+  },
+  "checks": [
+    {
+      "command": "npx eslint src/app/core/sync/image-healing/*.ts",
+      "log": "frontend-image-healing-parallel-response-lint.log",
+      "exit": 0
+    },
+    {
+      "command": "npx tsc --noEmit -p tsconfig.spec.json",
+      "log": "frontend-image-healing-parallel-response-types.log",
+      "exit": 0
+    }
+  ],
+  "remainingUncovered": [
+    "Line127 defensive applyProfiles ownership early return after adjacent synchronous ownership check.",
+    "Line169 defensive stale artist next-batch early return.",
+    "Line218 defensive stale track next-batch early return.",
+    "Line253 empty tracksForSync despite a changed requested track is unreachable under accepted requested-ID map invariant; retained defensive check."
+  ],
+  "limitations": [
+    "Scoped service-boundary characterization and real SessionLifecycleService tests; controlled Spotify/cloud/storage transports, no live services or real browser-image decoding.",
+    "No application-wide coverage claim from isolated report; final full suite/CI/browser checks belong to root verification.",
+    "Branches96.77% remains below98 per-file; no ignores, exclusions, skipped tests or artificial getter/clock callbacks added to force defensive paths.",
+    "No hosted SDK, production data, notifications, commits or deployments.",
+    "Additional35-test run includes actual SpotifyDataService aggregation/cooldown plus Angular HTTP testing transport for unsolicited-response regressions; explicit Spotify relinking behavior is unchanged."
+  ],
+  "hashes": {
+    "src/app/core/sync/image-healing/image-healing.service.ts": "7f56885109884f342b9957fa055a8ca757c1ef58a0f546e788c45501ea9bc1de",
+    "src/app/core/sync/image-healing/image-healing.service.spec.ts": "56ee8ce7e803509858575ba2a4588df5be6d1b13375f360b65ba58ac3041f2fa",
+    "src/app/core/sync/image-healing/image-healing-ownership.spec.ts": "513def8dea23a11c225364f9302365e7f69c9492a10ff049b8edfbf729844e2c",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-baseline.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-baseline.log": "1e60436fab76e15fa0865532f07db47a2e9de91132cca2e6643cc491f8acde34",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-final.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-final.log": "1354b78905c813131281f5c8921cc502f18d88ed4245deaa033db137c3d5d5d1",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-green.log": "8fe747f7998748c0fe619bf4d5389c828243ae6101f1b4b54f50d4d82e73fae7",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-lifecycle-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-lifecycle-red.log": "a6b633a08ba59f6a95512aebafc4c98ba126499af015faec2719d46057460ed0",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-lint.log": "efcb2d305041b2b9ebcc7f7f5c9acd7e92b76a6ab1898686a8bbd909df4149cd",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-null-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-null-red.log": "74876c6d67c8c3418b861c2bfd0635afe7aafa9049726de83d5580a3d7992123",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-ownership-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-ownership-red.log": "0cc1dfcab0561a49a03567d8a6b3541dc2c8303a15c2293127e08a667ae5d334",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-types.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-types.log": "cef5dd024756998b2f374aba5f69ecfd22105bbdc289cc9e4adf0518988e97a3",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-vitest.config.mjs": "8bc77bb5f100eb41e161ce79ce187fd3cff63ae51d423fc0e04b4074661ad0d3",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-coverage/coverage-summary.json": "e64b4bc7af3be6eee404a4fde327e9010328dc7dbc4c2d8d48cd2a0165a0a7a9",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-coverage/lcov.info": "b064a358bd616295ab6b32b52ff048eee1d7a7ea97378acadee8f2486837b556",
+    "src/app/core/sync/image-healing/image-healing-response-boundary.spec.ts": "11c991b025eb1fa7e99cd38e5ff8c3bd464dbe0e18b06d59c0581c855c151775",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-response-red.log": "aa5e1bb2177371aea1d3a306cd4a4e33a6b62dc00c9c6d2de48280c74ef7fe46",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-response-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-response-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-response-green.log": "d6745d892830104edd6ddc46303da4cb786708954ecb4b871a64c116b309a779",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-response-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-response-lint.log": "84d4308c3b8f7748aa8b1c6cd6fcae547aecf5e0bdf0a1ffcea214c72ba856c5",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-response-types.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-response-types.log": "cef5dd024756998b2f374aba5f69ecfd22105bbdc289cc9e4adf0518988e97a3"
+  },
+  "responseIntegrityReview": {
+    "date": "2026-10-19",
+    "command": "npx ng test --watch=false --progress=false --include='src/app/core/sync/image-healing/*response-boundary.spec.ts' --runner-config=docs/testing-evidence/design-v2/frontend-image-healing-parallel-vitest.config.mjs",
+    "log": "frontend-image-healing-parallel-response-red.log",
+    "exit": 1,
+    "failed": 2,
+    "errors": 0,
+    "boundary": "Actual ImageHealingService + actual SpotifyDataService.getTracksByIds/getSingleTrack/makeRequest with Angular HttpTestingController response transport; real aggregate behavior. No live HTTP or private-state tricks.",
+    "cases": [
+      "Unsolicited-only response must preserve requested broken row and unrequested valid row, no local or cloud write.",
+      "Mixed requested/mismatched responses repair accepted requested row only; preserve remaining requested broken row and unsolicited valid row, persist accepted repair and upload accepted requested track only."
+    ],
+    "observed": "Both fail because ready-b valid flattened/nested image is overwritten with unsolicited-b cover.",
+    "relinkingApplicability": "Repository Stats logic supports explicit linked_from.id and linkedFromId identity aliases. ImageHealing/getTracksByIds currently maps response.id only and has no image recovery relinking contract. New malformed fixtures intentionally omit linked_from; no alias/relinking feature added or tested by these two cases.",
+    "sourceEdited": true,
+    "productionCorrection": "Filter raw response tracks to the captured requested batch before constructing the response map; existing mutation/persistence/upload paths receive accepted requested identities only."
+  },
+  "previous33TestGreen": {
+    "command": "npx ng test --watch=false --progress=false --include='src/app/core/sync/image-healing/*.spec.ts' --runner-config=docs/testing-evidence/design-v2/frontend-image-healing-parallel-vitest.config.mjs --coverage --coverage-include=src/app/core/sync/image-healing/image-healing.service.ts",
+    "log": "frontend-image-healing-parallel-final.log",
+    "exit": 0,
+    "files": 2,
+    "passed": 33,
+    "skipped": 0,
+    "errors": 0,
+    "coverage": {
+      "lines": {
+        "total": 131,
+        "covered": 131,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 160,
+        "covered": 157,
+        "skipped": 0,
+        "pct": 98.12
+      },
+      "functions": {
+        "total": 29,
+        "covered": 29,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 122,
+        "covered": 118,
+        "skipped": 0,
+        "pct": 96.72
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": "Unknown"
+      }
+    },
+    "reportHashes": {
+      "docs/testing-evidence/design-v2/frontend-image-healing-parallel-coverage/coverage-summary.json": "c9264579056fd12523f2385d0067de57fc1f8232db5d372f9507f5f98523cc8d",
+      "docs/testing-evidence/design-v2/frontend-image-healing-parallel-coverage/lcov.info": "9558498921cc2e591d3cd7f75f5b63ab409b37ccc2f2532a4cb8eb28c2463437"
+    }
+  },
+  "previousChecks": [
+    {
+      "command": "npx eslint src/app/core/sync/image-healing/*.ts",
+      "log": "frontend-image-healing-parallel-lint.log",
+      "exit": 0
+    },
+    {
+      "command": "npx tsc --noEmit -p tsconfig.spec.json",
+      "log": "frontend-image-healing-parallel-types.log",
+      "exit": 0
+    }
+  ]
+}

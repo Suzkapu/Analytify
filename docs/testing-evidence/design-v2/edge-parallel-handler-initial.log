@@ -1,0 +1,110 @@
+Check supabase/functions/_shared/handler-boundaries.test.ts
+running 11 tests from ./supabase/functions/_shared/handler-boundaries.test.ts
+credentials handler rejects invalid HTTP, origins and oversized requests before business writes ... FAILED (9ms)
+sync handler rejects invalid HTTP, origins and oversized requests before business writes ... FAILED (367µs)
+notifications handler rejects invalid HTTP, origins and oversized requests before business writes ... FAILED (226µs)
+credentials resolution is bounded and does not disclose user credentials ... FAILED (332µs)
+credential profile permissions reject wrong sessions before Spotify requests ... FAILED (367µs)
+credential removal clears only the session profile and reports partial failure ... FAILED (337µs)
+account deletion is restricted to anonymous owners and exposes backend failures safely ... FAILED (281µs)
+sync validates inputs and rejects fan-out or cross-user requests from ordinary callers ... FAILED (339µs)
+sync refuses a busy lease and releases an acquired lease when the league disappears ... FAILED (307µs)
+notifications validate actions, admin permissions and trusted-worker schedules ... FAILED (410µs)
+notification worker drains an empty queue with explicit or current time and propagates claim failures ... FAILED (313µs)
+
+ ERRORS 
+
+credentials handler rejects invalid HTTP, origins and oversized requests before business writes => ./supabase/functions/_shared/handler-boundaries.test.ts:5:8
+error: TypeError: Requires read access to "/mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/spotify-credentials/index.ts", run again with the --allow-read flag
+      await import(new URL(paths[name], import.meta.url).href);
+      ^
+    at async invoke (file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-fixture.test.ts:46:7)
+    at async file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-boundaries.test.ts:6:19
+
+sync handler rejects invalid HTTP, origins and oversized requests before business writes => ./supabase/functions/_shared/handler-boundaries.test.ts:5:8
+error: TypeError: Requires read access to "/mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/song-league-playlist-sync/index.ts", run again with the --allow-read flag
+      await import(new URL(paths[name], import.meta.url).href);
+      ^
+    at async invoke (file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-fixture.test.ts:46:7)
+    at async file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-boundaries.test.ts:6:19
+
+notifications handler rejects invalid HTTP, origins and oversized requests before business writes => ./supabase/functions/_shared/handler-boundaries.test.ts:5:8
+error: TypeError: Requires read access to "/mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/song-league-notifications/index.ts", run again with the --allow-read flag
+      await import(new URL(paths[name], import.meta.url).href);
+      ^
+    at async invoke (file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-fixture.test.ts:46:7)
+    at async file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-boundaries.test.ts:6:19
+
+credentials resolution is bounded and does not disclose user credentials => ./supabase/functions/_shared/handler-boundaries.test.ts:18:6
+error: TypeError: Requires read access to "/mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/spotify-credentials/index.ts", run again with the --allow-read flag
+      await import(new URL(paths[name], import.meta.url).href);
+      ^
+    at async invoke (file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-fixture.test.ts:46:7)
+    at async file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-boundaries.test.ts:19:17
+
+credential profile permissions reject wrong sessions before Spotify requests => ./supabase/functions/_shared/handler-boundaries.test.ts:28:6
+error: TypeError: Requires read access to "/mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/spotify-credentials/index.ts", run again with the --allow-read flag
+      await import(new URL(paths[name], import.meta.url).href);
+      ^
+    at async invoke (file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-fixture.test.ts:46:7)
+    at async file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-boundaries.test.ts:29:17
+
+credential removal clears only the session profile and reports partial failure => ./supabase/functions/_shared/handler-boundaries.test.ts:41:6
+error: TypeError: Requires read access to "/mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/spotify-credentials/index.ts", run again with the --allow-read flag
+      await import(new URL(paths[name], import.meta.url).href);
+      ^
+    at async invoke (file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-fixture.test.ts:46:7)
+    at async file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-boundaries.test.ts:43:20
+
+account deletion is restricted to anonymous owners and exposes backend failures safely => ./supabase/functions/_shared/handler-boundaries.test.ts:53:6
+error: TypeError: Requires read access to "/mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/spotify-credentials/index.ts", run again with the --allow-read flag
+      await import(new URL(paths[name], import.meta.url).href);
+      ^
+    at async invoke (file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-fixture.test.ts:46:7)
+    at async file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-boundaries.test.ts:54:17
+
+sync validates inputs and rejects fan-out or cross-user requests from ordinary callers => ./supabase/functions/_shared/handler-boundaries.test.ts:64:6
+error: TypeError: Requires read access to "/mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/song-league-playlist-sync/index.ts", run again with the --allow-read flag
+      await import(new URL(paths[name], import.meta.url).href);
+      ^
+    at async invoke (file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-fixture.test.ts:46:7)
+    at async file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-boundaries.test.ts:65:164
+
+sync refuses a busy lease and releases an acquired lease when the league disappears => ./supabase/functions/_shared/handler-boundaries.test.ts:69:6
+error: TypeError: Requires read access to "/mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/song-league-playlist-sync/index.ts", run again with the --allow-read flag
+      await import(new URL(paths[name], import.meta.url).href);
+      ^
+    at async invoke (file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-fixture.test.ts:46:7)
+    at async file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-boundaries.test.ts:71:20
+
+notifications validate actions, admin permissions and trusted-worker schedules => ./supabase/functions/_shared/handler-boundaries.test.ts:80:6
+error: TypeError: Requires read access to "/mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/song-league-notifications/index.ts", run again with the --allow-read flag
+      await import(new URL(paths[name], import.meta.url).href);
+      ^
+    at async invoke (file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-fixture.test.ts:46:7)
+    at async file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-boundaries.test.ts:81:98
+
+notification worker drains an empty queue with explicit or current time and propagates claim failures => ./supabase/functions/_shared/handler-boundaries.test.ts:89:6
+error: TypeError: Requires read access to "/mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/song-league-notifications/index.ts", run again with the --allow-read flag
+      await import(new URL(paths[name], import.meta.url).href);
+      ^
+    at async invoke (file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-fixture.test.ts:46:7)
+    at async file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/handler-boundaries.test.ts:91:20
+
+ FAILURES 
+
+credentials handler rejects invalid HTTP, origins and oversized requests before business writes => ./supabase/functions/_shared/handler-boundaries.test.ts:5:8
+sync handler rejects invalid HTTP, origins and oversized requests before business writes => ./supabase/functions/_shared/handler-boundaries.test.ts:5:8
+notifications handler rejects invalid HTTP, origins and oversized requests before business writes => ./supabase/functions/_shared/handler-boundaries.test.ts:5:8
+credentials resolution is bounded and does not disclose user credentials => ./supabase/functions/_shared/handler-boundaries.test.ts:18:6
+credential profile permissions reject wrong sessions before Spotify requests => ./supabase/functions/_shared/handler-boundaries.test.ts:28:6
+credential removal clears only the session profile and reports partial failure => ./supabase/functions/_shared/handler-boundaries.test.ts:41:6
+account deletion is restricted to anonymous owners and exposes backend failures safely => ./supabase/functions/_shared/handler-boundaries.test.ts:53:6
+sync validates inputs and rejects fan-out or cross-user requests from ordinary callers => ./supabase/functions/_shared/handler-boundaries.test.ts:64:6
+sync refuses a busy lease and releases an acquired lease when the league disappears => ./supabase/functions/_shared/handler-boundaries.test.ts:69:6
+notifications validate actions, admin permissions and trusted-worker schedules => ./supabase/functions/_shared/handler-boundaries.test.ts:80:6
+notification worker drains an empty queue with explicit or current time and propagates claim failures => ./supabase/functions/_shared/handler-boundaries.test.ts:89:6
+
+FAILED | 0 passed | 11 failed (14ms)
+
+error: Test failed

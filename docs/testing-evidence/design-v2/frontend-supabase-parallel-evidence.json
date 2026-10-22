@@ -1,0 +1,337 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-16T17:16:16.514Z",
+  "branch": "codex/design-v2",
+  "head": "a8a7a3966a622c992e9058094627a768c16a363a",
+  "scope": {
+    "productionSources": [
+      "src/app/core/data-access/supabase/supabase.service.ts"
+    ],
+    "applicationWideCoverage": false,
+    "sharedCoverageDirectoryWritten": false,
+    "target": "Each lines/statements/functions/branches metric >=98% for this real service using focused tests; root owns full-suite reporting."
+  },
+  "baseline": {
+    "tests": 78,
+    "metrics": {
+      "lines": {
+        "total": 516,
+        "covered": 321,
+        "skipped": 0,
+        "pct": 62.2
+      },
+      "statements": {
+        "total": 655,
+        "covered": 393,
+        "skipped": 0,
+        "pct": 60
+      },
+      "functions": {
+        "total": 154,
+        "covered": 95,
+        "skipped": 0,
+        "pct": 61.68
+      },
+      "branches": {
+        "total": 600,
+        "covered": 363,
+        "skipped": 0,
+        "pct": 60.5
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": "Unknown"
+      }
+    },
+    "note": "Fresh scoped baseline; the root full-report service baseline66.08/63.96/65.58/63.00 included additional consumer specs and is a different test scope."
+  },
+  "final": {
+    "tests": 133,
+    "testFiles": 9,
+    "newTests": 55,
+    "metrics": {
+      "lines": {
+        "total": 516,
+        "covered": 516,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 655,
+        "covered": 654,
+        "skipped": 0,
+        "pct": 99.84
+      },
+      "functions": {
+        "total": 154,
+        "covered": 154,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 600,
+        "covered": 589,
+        "skipped": 0,
+        "pct": 98.16
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": "Unknown"
+      }
+    },
+    "allFourMetricsAtLeast98": true
+  },
+  "commands": [
+    {
+      "stage": "focused baseline",
+      "command": "node_modules/.bin/ng test --watch=false --include='src/app/core/data-access/supabase/*.spec.ts' --progress=false --coverage --coverage-include='src/app/core/data-access/supabase/supabase.service.ts' --coverage-reporters=json-summary --coverage-reporters=json --coverage-reporters=text-summary --runner-config=docs/testing-evidence/design-v2/frontend-supabase-parallel-vitest.mjs",
+      "exit": 0,
+      "log": "docs/testing-evidence/design-v2/frontend-supabase-parallel-baseline.log",
+      "sha256": "437f0a548b1ce330e4a69d652d649bc679f4db622222c78878aa1ce52c47fb1d",
+      "tests": 78
+    },
+    {
+      "stage": "approved null-boolean regression RED",
+      "command": "node_modules/.bin/ng test --watch=false --include='src/app/core/data-access/supabase/service-boundary-recovery.spec.ts' --progress=false",
+      "exit": 1,
+      "log": "docs/testing-evidence/design-v2/frontend-supabase-parallel-null-availability-red.log",
+      "sha256": "3ee8dcc8cf31ecc4723450bbfec4a4b9510e836427229c2b27c3d892625e6451",
+      "tests": {
+        "passed": 43,
+        "failed": 2
+      }
+    },
+    {
+      "stage": "approved fix GREEN scoped coverage",
+      "command": "node_modules/.bin/ng test --watch=false --include='src/app/core/data-access/supabase/*.spec.ts' --progress=false --coverage --coverage-include='src/app/core/data-access/supabase/supabase.service.ts' --coverage-reporters=json-summary --coverage-reporters=json --coverage-reporters=text-summary --runner-config=docs/testing-evidence/design-v2/frontend-supabase-parallel-vitest.mjs",
+      "exit": 0,
+      "log": "docs/testing-evidence/design-v2/frontend-supabase-parallel-null-availability-green.log",
+      "sha256": "e014e0eae7ee021a922c8050e0e8cd3e28f8e28e204c057766c6b7d282002e65",
+      "tests": 125
+    },
+    {
+      "stage": "remove generated hoisting warning",
+      "command": "node_modules/.bin/ng test --watch=false --include='src/app/core/data-access/supabase/sdk-factory-boundary.spec.ts' --progress=false",
+      "exit": 0,
+      "log": "docs/testing-evidence/design-v2/frontend-supabase-parallel-factory-no-hoist.log",
+      "sha256": "c5dc30e97e6b6d9ef1fc215a54fa234f886e19fc35b6dbe28b442b0553fb0164",
+      "tests": 2
+    },
+    {
+      "stage": "final focused coverage",
+      "command": "node_modules/.bin/ng test --watch=false --include='src/app/core/data-access/supabase/*.spec.ts' --progress=false --coverage --coverage-include='src/app/core/data-access/supabase/supabase.service.ts' --coverage-reporters=json-summary --coverage-reporters=json --coverage-reporters=text-summary --runner-config=docs/testing-evidence/design-v2/frontend-supabase-parallel-vitest.mjs",
+      "exit": 0,
+      "log": "docs/testing-evidence/design-v2/frontend-supabase-parallel-final.log",
+      "sha256": "d58df5ee16deead27291f15d47e972da02ba24df78937d69bcde7c1a6a0b42cd",
+      "tests": 133
+    },
+    {
+      "stage": "new spec lint",
+      "command": "node_modules/.bin/eslint src/app/core/data-access/supabase/sdk-factory-boundary.spec.ts src/app/core/data-access/supabase/sdk-transport-boundary.spec.ts src/app/core/data-access/supabase/service-boundary-recovery.spec.ts",
+      "exit": 0,
+      "log": "docs/testing-evidence/design-v2/frontend-supabase-parallel-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "changes": {
+    "specs": [
+      {
+        "path": "src/app/core/data-access/supabase/sdk-factory-boundary.spec.ts",
+        "sha256": "8a2769b9fd00af18b40477ff0ca70464f02229023bbe20ade35eaaf6a2c651c0"
+      },
+      {
+        "path": "src/app/core/data-access/supabase/sdk-transport-boundary.spec.ts",
+        "sha256": "0076e5b3106f49937aa05d07d7c3f337214e216426c3345a512e8cbd75fe8bf1"
+      },
+      {
+        "path": "src/app/core/data-access/supabase/service-boundary-recovery.spec.ts",
+        "sha256": "7bacc5cd796744c1d8b90a1d8d9c9fbd09ba9efcdaf6de923a8c9e46b3cdd56f"
+      }
+    ],
+    "production": [
+      {
+        "path": "src/app/core/data-access/supabase/supabase.service.ts",
+        "sha256": "53f68b9918c20be6c1690d26a13865e2db8d6177e02aa2130bfc5afed76d472d",
+        "rootApproval": "Root reviewed the failing Promise<boolean> contracts and approved only the two null-to-false return expressions.",
+        "description": "hasHistoryForToday and hasRecentStatsSnapshot return false for successful null data rather than violating their boolean contract. Empty/nonempty and permission-error outcomes remain covered."
+      }
+    ]
+  },
+  "behaviorEvidence": [
+    "Session creation versus existing identity, no collaboration catalog upload, realtime auth readiness and errors.",
+    "Backup/profile/cache owner filters, cancellation before delete, deduplicated key scoping, error data suppression and explicit retry.",
+    "Actual installed Supabase SDK with intercepted transport verifies URL serialization, owner/key scopes, catalog RPC ordering and permission-error recovery without hosted calls.",
+    "Artist read batching205 identities; catalog artist/album/track deduplication, snake/camel aliases, preserved artwork/defaults, Spotify URL sanitization and dependency/FK partial failures.",
+    "Listening history actor isolation, metadata dependency order, listen deduplication, missing input, session-refresh errors, saved relation mapping and timezone-aware today cutoff.",
+    "Full and detail snapshots bind owner/range/id, restore ranked tracks/artists/genres, ignore deleted relations, support legacy metadata and reject missing saved dates.",
+    "Snapshot writes collect independent top/track/album artist credits, preserve sparse identity rankings, avoid false completion after absent range inventory; existing serial write/conflict tests retained."
+  ],
+  "uncovered": {
+    "statements": [
+      {
+        "start": {
+          "line": 261,
+          "column": 58
+        },
+        "end": {
+          "line": 261,
+          "column": null
+        }
+      }
+    ],
+    "branches": [
+      {
+        "type": "if",
+        "line": 57,
+        "location": {
+          "start": {},
+          "end": {}
+        }
+      },
+      {
+        "type": "if",
+        "line": 121,
+        "location": {
+          "start": {},
+          "end": {}
+        }
+      },
+      {
+        "type": "binary-expr",
+        "line": 232,
+        "location": {
+          "start": {
+            "line": 232,
+            "column": 35
+          },
+          "end": {
+            "line": 232,
+            "column": 38
+          }
+        }
+      },
+      {
+        "type": "cond-expr",
+        "line": 242,
+        "location": {
+          "start": {
+            "line": 242,
+            "column": 91
+          },
+          "end": {
+            "line": 242,
+            "column": null
+          }
+        }
+      },
+      {
+        "type": "if",
+        "line": 261,
+        "location": {
+          "start": {
+            "line": 261,
+            "column": 4
+          },
+          "end": {
+            "line": 261,
+            "column": null
+          }
+        }
+      },
+      {
+        "type": "binary-expr",
+        "line": 261,
+        "location": {
+          "start": {
+            "line": 261,
+            "column": 30
+          },
+          "end": {
+            "line": 261,
+            "column": 58
+          }
+        }
+      },
+      {
+        "type": "if",
+        "line": 319,
+        "location": {
+          "start": {},
+          "end": {}
+        }
+      },
+      {
+        "type": "if",
+        "line": 484,
+        "location": {
+          "start": {},
+          "end": {}
+        }
+      },
+      {
+        "type": "binary-expr",
+        "line": 484,
+        "location": {
+          "start": {
+            "line": 484,
+            "column": 39
+          },
+          "end": {
+            "line": 484,
+            "column": 72
+          }
+        }
+      },
+      {
+        "type": "if",
+        "line": 627,
+        "location": {
+          "start": {},
+          "end": {}
+        }
+      },
+      {
+        "type": "binary-expr",
+        "line": 627,
+        "location": {
+          "start": {
+            "line": 627,
+            "column": 39
+          },
+          "end": {
+            "line": 627,
+            "column": 72
+          }
+        }
+      }
+    ],
+    "note": "The remaining denominator entries are recorded without ignores or source exclusions. They include private helper defenses already guarded by public callers, non-positive legacy genre total fallback and superseded-client rejection protection."
+  },
+  "artifacts": [
+    {
+      "path": "docs/testing-evidence/design-v2/frontend-supabase-parallel-vitest.mjs",
+      "sha256": "9e25858714025de59109cb31ba551ba712ebb7d742ea8505f68030c686eeaa98"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/frontend-supabase-parallel-baseline-summary.json",
+      "sha256": "1e4040931041fb245005eb67dc79b134a72337fbb31bcc1e93bab97f84195454"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/frontend-supabase-parallel-coverage/coverage-summary.json",
+      "sha256": "7620dfe8fb9432dbad7e0f6851377d85c3b31f141c0f15fa63bf7d9b750be721"
+    },
+    {
+      "path": "docs/testing-evidence/design-v2/frontend-supabase-parallel-coverage/coverage-final.json",
+      "sha256": "269c6e7f605e0ddc2b50f0397a09d21ff509ffaba343cb842606b9a915e3e503"
+    }
+  ],
+  "limitations": [
+    "Focused coverage is not application-wide coverage and is not merged with browser or SDK integration percentages. Root must run combined full CI and final app coverage.",
+    "Synthetic SDK/fetch and in-memory fixtures verify the frontend service contract. They do not prove hosted RLS/RPC implementations, database cascades, deployed auth behavior or real provider transport.",
+    "No production services, credentials, notifications, browser local account state, deployments, commits or branch mutations were used."
+  ]
+}

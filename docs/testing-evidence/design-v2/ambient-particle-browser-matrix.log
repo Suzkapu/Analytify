@@ -1,0 +1,219 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-ambient.spec.ts --workers=1 --output=docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:34464) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:34464) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 28 tests using 1 worker
+
+(node:34819) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-ambient.spec.ts:16:5 › one ambient renderer persists through overlays, routes, and shell modes (2.4s)
+  ✓   2 [desktop] › e2e/design-v2-ambient.spec.ts:52:5 › v2 ambient layer is decorative, fixed-glow, particle-scroll-responsive, and reflow-safe (2.1s)
+  ✓   3 [desktop] › e2e/design-v2-ambient.spec.ts:108:7 › route content and focus survive with native transitions enabled (1.7s)
+  ✓   4 [desktop] › e2e/design-v2-ambient.spec.ts:108:7 › route content and focus survive with native transitions unavailable (1.8s)
+  ✘   5 [desktop] › e2e/design-v2-ambient.spec.ts:146:5 › v2 ambient layer remains static with reduced motion (6.0s)
+(node:35544) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   6 [desktop] › e2e/design-v2-ambient.spec.ts:168:5 › reduced motion suppresses native route snapshot animations without losing navigation (1.6s)
+  ✓   7 [desktop] › e2e/design-v2-ambient.spec.ts:197:5 › canonical particle phases loop independently through a complete native timeline (1.6s)
+(node:35832) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   8 [mobile] › e2e/design-v2-ambient.spec.ts:16:5 › one ambient renderer persists through overlays, routes, and shell modes (2.8s)
+  ✓   9 [mobile] › e2e/design-v2-ambient.spec.ts:52:5 › v2 ambient layer is decorative, fixed-glow, particle-scroll-responsive, and reflow-safe (2.4s)
+  ✓  10 [mobile] › e2e/design-v2-ambient.spec.ts:108:7 › route content and focus survive with native transitions enabled (2.0s)
+  ✓  11 [mobile] › e2e/design-v2-ambient.spec.ts:108:7 › route content and focus survive with native transitions unavailable (1.7s)
+  ✘  12 [mobile] › e2e/design-v2-ambient.spec.ts:146:5 › v2 ambient layer remains static with reduced motion (6.0s)
+(node:36711) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  13 [mobile] › e2e/design-v2-ambient.spec.ts:168:5 › reduced motion suppresses native route snapshot animations without losing navigation (1.7s)
+  ✓  14 [mobile] › e2e/design-v2-ambient.spec.ts:197:5 › canonical particle phases loop independently through a complete native timeline (2.1s)
+(node:37120) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  15 [firefox-stats] › e2e/design-v2-ambient.spec.ts:16:5 › one ambient renderer persists through overlays, routes, and shell modes (3.0s)
+  ✓  16 [firefox-stats] › e2e/design-v2-ambient.spec.ts:52:5 › v2 ambient layer is decorative, fixed-glow, particle-scroll-responsive, and reflow-safe (2.4s)
+  ✓  17 [firefox-stats] › e2e/design-v2-ambient.spec.ts:108:7 › route content and focus survive with native transitions enabled (1.7s)
+  ✓  18 [firefox-stats] › e2e/design-v2-ambient.spec.ts:108:7 › route content and focus survive with native transitions unavailable (1.7s)
+  ✘  19 [firefox-stats] › e2e/design-v2-ambient.spec.ts:146:5 › v2 ambient layer remains static with reduced motion (5.9s)
+(node:38367) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  20 [firefox-stats] › e2e/design-v2-ambient.spec.ts:168:5 › reduced motion suppresses native route snapshot animations without losing navigation (2.4s)
+  ✓  21 [firefox-stats] › e2e/design-v2-ambient.spec.ts:197:5 › canonical particle phases loop independently through a complete native timeline (1.8s)
+(node:38885) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  22 [webkit-stats] › e2e/design-v2-ambient.spec.ts:16:5 › one ambient renderer persists through overlays, routes, and shell modes (5.0s)
+  ✓  23 [webkit-stats] › e2e/design-v2-ambient.spec.ts:52:5 › v2 ambient layer is decorative, fixed-glow, particle-scroll-responsive, and reflow-safe (3.2s)
+  ✓  24 [webkit-stats] › e2e/design-v2-ambient.spec.ts:108:7 › route content and focus survive with native transitions enabled (2.8s)
+  ✓  25 [webkit-stats] › e2e/design-v2-ambient.spec.ts:108:7 › route content and focus survive with native transitions unavailable (3.6s)
+  ✘  26 [webkit-stats] › e2e/design-v2-ambient.spec.ts:146:5 › v2 ambient layer remains static with reduced motion (6.3s)
+(node:40397) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  27 [webkit-stats] › e2e/design-v2-ambient.spec.ts:168:5 › reduced motion suppresses native route snapshot animations without losing navigation (2.4s)
+  ✓  28 [webkit-stats] › e2e/design-v2-ambient.spec.ts:197:5 › canonical particle phases loop independently through a complete native timeline (4.0s)
+
+
+  1) [desktop] › e2e/design-v2-ambient.spec.ts:146:5 › v2 ambient layer remains static with reduced motion 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('.ambient-dots')
+    Expected: "none"
+    Received: "matrix(1, 0, 0, 1, 0, 0)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('.ambient-dots') with timeout 5000ms
+      - waiting for locator('.ambient-dots')
+        14 × locator resolved to <span class="ambient-dots" _ngcontent-ng-c1785187920="">…</span>
+           - unexpected value "matrix(1, 0, 0, 1, 0, 0)"
+
+
+      160 |     y: (element as HTMLElement).style.getPropertyValue('--ambient-primary-y')
+      161 |   }))).toEqual(initial);
+    > 162 |   await expect(page.locator('.ambient-dots')).toHaveCSS('transform', 'none');
+          |                                               ^
+      163 |   expect(await page.locator('.ambient-dot').evaluateAll(elements => elements.map(element => ({
+      164 |     animation: getComputedStyle(element).animationName, active: element.getAnimations().length
+      165 |   })))).toEqual(Array.from({length: 26}, () => ({animation: 'none', active: 0})));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-ambient.spec.ts:162:47
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-v2-ambie-0e097--static-with-reduced-motion-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-v2-ambie-0e097--static-with-reduced-motion-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-v2-ambie-0e097--static-with-reduced-motion-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-v2-ambie-0e097--static-with-reduced-motion-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › e2e/design-v2-ambient.spec.ts:146:5 › v2 ambient layer remains static with reduced motion 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('.ambient-dots')
+    Expected: "none"
+    Received: "matrix(1, 0, 0, 1, 0, 0)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('.ambient-dots') with timeout 5000ms
+      - waiting for locator('.ambient-dots')
+        14 × locator resolved to <span class="ambient-dots" _ngcontent-ng-c1785187920="">…</span>
+           - unexpected value "matrix(1, 0, 0, 1, 0, 0)"
+
+
+      160 |     y: (element as HTMLElement).style.getPropertyValue('--ambient-primary-y')
+      161 |   }))).toEqual(initial);
+    > 162 |   await expect(page.locator('.ambient-dots')).toHaveCSS('transform', 'none');
+          |                                               ^
+      163 |   expect(await page.locator('.ambient-dot').evaluateAll(elements => elements.map(element => ({
+      164 |     animation: getComputedStyle(element).animationName, active: element.getAnimations().length
+      165 |   })))).toEqual(Array.from({length: 26}, () => ({animation: 'none', active: 0})));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-ambient.spec.ts:162:47
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-v2-ambie-0e097--static-with-reduced-motion-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-v2-ambie-0e097--static-with-reduced-motion-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-v2-ambie-0e097--static-with-reduced-motion-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-v2-ambie-0e097--static-with-reduced-motion-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [firefox-stats] › e2e/design-v2-ambient.spec.ts:146:5 › v2 ambient layer remains static with reduced motion 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('.ambient-dots')
+    Expected: "none"
+    Received: "matrix(1, 0, 0, 1, 0, 0)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('.ambient-dots') with timeout 5000ms
+      - waiting for locator('.ambient-dots')
+        14 × locator resolved to <span class="ambient-dots" _ngcontent-ng-c1785187920="">…</span>
+           - unexpected value "matrix(1, 0, 0, 1, 0, 0)"
+
+
+      160 |     y: (element as HTMLElement).style.getPropertyValue('--ambient-primary-y')
+      161 |   }))).toEqual(initial);
+    > 162 |   await expect(page.locator('.ambient-dots')).toHaveCSS('transform', 'none');
+          |                                               ^
+      163 |   expect(await page.locator('.ambient-dot').evaluateAll(elements => elements.map(element => ({
+      164 |     animation: getComputedStyle(element).animationName, active: element.getAnimations().length
+      165 |   })))).toEqual(Array.from({length: 26}, () => ({animation: 'none', active: 0})));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-ambient.spec.ts:162:47
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-v2-ambie-0e097--static-with-reduced-motion-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-v2-ambie-0e097--static-with-reduced-motion-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-v2-ambie-0e097--static-with-reduced-motion-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-v2-ambie-0e097--static-with-reduced-motion-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [webkit-stats] › e2e/design-v2-ambient.spec.ts:146:5 › v2 ambient layer remains static with reduced motion 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('.ambient-dots')
+    Expected: "none"
+    Received: "matrix(1, 0, 0, 1, 0, 0)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('.ambient-dots') with timeout 5000ms
+      - waiting for locator('.ambient-dots')
+        14 × locator resolved to <span class="ambient-dots" _ngcontent-ng-c1785187920="">…</span>
+           - unexpected value "matrix(1, 0, 0, 1, 0, 0)"
+
+
+      160 |     y: (element as HTMLElement).style.getPropertyValue('--ambient-primary-y')
+      161 |   }))).toEqual(initial);
+    > 162 |   await expect(page.locator('.ambient-dots')).toHaveCSS('transform', 'none');
+          |                                               ^
+      163 |   expect(await page.locator('.ambient-dot').evaluateAll(elements => elements.map(element => ({
+      164 |     animation: getComputedStyle(element).animationName, active: element.getAnimations().length
+      165 |   })))).toEqual(Array.from({length: 26}, () => ({animation: 'none', active: 0})));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-ambient.spec.ts:162:47
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-v2-ambie-0e097--static-with-reduced-motion-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-v2-ambie-0e097--static-with-reduced-motion-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-v2-ambie-0e097--static-with-reduced-motion-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-v2-ambie-0e097--static-with-reduced-motion-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [desktop] › e2e/design-v2-ambient.spec.ts:146:5 › v2 ambient layer remains static with reduced motion 
+    [mobile] › e2e/design-v2-ambient.spec.ts:146:5 › v2 ambient layer remains static with reduced motion 
+    [firefox-stats] › e2e/design-v2-ambient.spec.ts:146:5 › v2 ambient layer remains static with reduced motion 
+    [webkit-stats] › e2e/design-v2-ambient.spec.ts:146:5 › v2 ambient layer remains static with reduced motion 
+  24 passed (1.6m)

@@ -1,0 +1,57 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-glows.spec.ts --project=desktop --grep=scene Library --workers=1 --output=docs/testing-evidence/design-v2/glow-scenes-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:69132) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:69132) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:69655) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene Library preserves native assets and responsive geometry (6.5s)
+
+
+  1) [desktop] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene Library preserves native assets and responsive geometry 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('app-ambient-background').locator('.ambient-primary img, .ambient-secondary img')
+    Expected: 2
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('app-ambient-background').locator('.ambient-primary img, .ambient-secondary img') with timeout 5000ms
+      - waiting for locator('app-ambient-background').locator('.ambient-primary img, .ambient-secondary img')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      16 |     await page.goto(`/new/${path}`);
+      17 |     const ambient = page.locator('app-ambient-background');
+    > 18 |     await expect(ambient.locator('.ambient-primary img, .ambient-secondary img')).toHaveCount(2);
+         |                                                                                   ^
+      19 |     await expect.poll(() => ambient.locator('img').evaluateAll(images => images.every(image => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
+      20 |     const geometry: unknown[] = [];
+      21 |     for (const width of [1440, 1920, 1024, 768, 761, 760, 390, 360, 320]) for (const height of [480, 1000]) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-glows.spec.ts:18:83
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/glow-scenes-red-artifacts/design-v2-glows-canonical--c45a1-ets-and-responsive-geometry-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/glow-scenes-red-artifacts/design-v2-glows-canonical--c45a1-ets-and-responsive-geometry-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/glow-scenes-red-artifacts/design-v2-glows-canonical--c45a1-ets-and-responsive-geometry-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/glow-scenes-red-artifacts/design-v2-glows-canonical--c45a1-ets-and-responsive-geometry-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene Library preserves native assets and responsive geometry 

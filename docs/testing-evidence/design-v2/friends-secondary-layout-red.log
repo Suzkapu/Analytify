@@ -1,0 +1,187 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config playwright.friends.config.ts --project desktop --grep Friends invitations and responsive geometry \(reduce\) --output docs/testing-evidence/design-v2/friends-secondary-layout-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:47216) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:47216) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:47465) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-friends.spec.ts:138:7 › Friends invitations and responsive geometry (reduce) (21.7s)
+
+
+  1) [desktop] › e2e/design-v2-friends.spec.ts:138:7 › Friends invitations and responsive geometry (reduce) 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('v2-friends-page').locator('.qr-identity .identity')
+    Expected: "12px"
+    Received: "4px"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "soft toHaveCSS" locator('v2-friends-page').locator('.qr-identity .identity') with timeout 5000ms
+      - waiting for locator('v2-friends-page').locator('.qr-identity .identity')
+        14 × locator resolved to <div class="identity" _ngcontent-ng-c965801823="">…</div>
+           - unexpected value "4px"
+
+
+      189 |     await expect(copy).toHaveCSS('font-weight', '600');
+      190 |     await expect(copy).toHaveCSS('line-height', '20px');
+    > 191 |     await expect.soft(panel.locator('.qr-identity .identity')).toHaveCSS('gap', '12px');
+          |                                                                ^
+      192 |     const creations = writes.filter(write => write.name === 'create_friend_invitation');
+      193 |     expect(creations).toHaveLength(3); expect(creations[2].body.p_claim_token).toMatch(/^[a-f0-9]{64}$/);
+      194 |     expect(creations[2].body.p_claim_token).not.toBe(creations[0].body.p_claim_token);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:191:64
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Array [
+    -   180,
+    -   112,
+    +   153,
+    +   109,
+      ]
+
+      200 |       await page.setViewportSize({width, height: 900});
+      201 |       const actions = await panel.locator('.friends-card .actions').evaluate(element => [...element.children].map(child => child.getBoundingClientRect().width));
+    > 202 |       expect.soft(actions).toEqual(width === 1440 ? [180, 112] : [160, 112]);
+          |                            ^
+      203 |     }
+      204 |     await panel.getByRole('link', {name: 'View link & QR'}).click(); await expect(qr).toBeVisible();
+      205 |     expect(writes.filter(write => write.name === 'create_friend_invitation')).toHaveLength(3);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:202:28
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Array [
+    -   160,
+    -   112,
+    +   153,
+    +   109,
+      ]
+
+      200 |       await page.setViewportSize({width, height: 900});
+      201 |       const actions = await panel.locator('.friends-card .actions').evaluate(element => [...element.children].map(child => child.getBoundingClientRect().width));
+    > 202 |       expect.soft(actions).toEqual(width === 1440 ? [180, 112] : [160, 112]);
+          |                            ^
+      203 |     }
+      204 |     await panel.getByRole('link', {name: 'View link & QR'}).click(); await expect(qr).toBeVisible();
+      205 |     expect(writes.filter(write => write.name === 'create_friend_invitation')).toHaveLength(3);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:202:28
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('v2-friends-page').locator('.friends-card > p')
+    Expected: "16px"
+    Received: "14px"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "soft toHaveCSS" locator('v2-friends-page').locator('.friends-card > p') with timeout 5000ms
+      - waiting for locator('v2-friends-page').locator('.friends-card > p')
+        14 × locator resolved to <p _ngcontent-ng-c965801823="">You can share playlists and invite each other aft…</p>
+           - unexpected value "14px"
+
+
+      213 |     await panel.getByRole('button', {name: 'Retry', exact: true}).press('Enter');
+      214 |     await expect(panel.getByRole('heading', {name: 'Incoming friend wants to be your friend', exact: true})).toBeVisible();
+    > 215 |     await expect.soft(panel.locator('.friends-card > p')).toHaveCSS('font-size', '16px');
+          |                                                           ^
+      216 |     await expect.soft(panel.locator('.friends-card > p')).toHaveCSS('line-height', '24px');
+      217 |     for (const width of [1440, 390]) {
+      218 |       await page.setViewportSize({width, height: 900});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:215:59
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('v2-friends-page').locator('.friends-card > p')
+    Expected: "24px"
+    Received: "20px"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "soft toHaveCSS" locator('v2-friends-page').locator('.friends-card > p') with timeout 5000ms
+      - waiting for locator('v2-friends-page').locator('.friends-card > p')
+        14 × locator resolved to <p _ngcontent-ng-c965801823="">You can share playlists and invite each other aft…</p>
+           - unexpected value "20px"
+
+
+      214 |     await expect(panel.getByRole('heading', {name: 'Incoming friend wants to be your friend', exact: true})).toBeVisible();
+      215 |     await expect.soft(panel.locator('.friends-card > p')).toHaveCSS('font-size', '16px');
+    > 216 |     await expect.soft(panel.locator('.friends-card > p')).toHaveCSS('line-height', '24px');
+          |                                                           ^
+      217 |     for (const width of [1440, 390]) {
+      218 |       await page.setViewportSize({width, height: 900});
+      219 |       const actions = await panel.locator('.friends-card .actions').evaluate(element => [...element.children].map(child => child.getBoundingClientRect().width));
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:216:59
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Array [
+    -   200,
+    -   120,
+    +   107,
+    +   107,
+      ]
+
+      218 |       await page.setViewportSize({width, height: 900});
+      219 |       const actions = await panel.locator('.friends-card .actions').evaluate(element => [...element.children].map(child => child.getBoundingClientRect().width));
+    > 220 |       expect.soft(actions).toEqual(width === 1440 ? [200, 120] : [155, 157]);
+          |                            ^
+      221 |     }
+      222 |     expect(writes.filter(write => write.name === 'receive_friend_invitation').map(write => write.body))
+      223 |       .toEqual([{p_claim_token: incomingToken}, {p_claim_token: incomingToken}]);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:220:28
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Array [
+    -   155,
+    -   157,
+    +   107,
+    +   107,
+      ]
+
+      218 |       await page.setViewportSize({width, height: 900});
+      219 |       const actions = await panel.locator('.friends-card .actions').evaluate(element => [...element.children].map(child => child.getBoundingClientRect().width));
+    > 220 |       expect.soft(actions).toEqual(width === 1440 ? [200, 120] : [155, 157]);
+          |                            ^
+      221 |     }
+      222 |     expect(writes.filter(write => write.name === 'receive_friend_invitation').map(write => write.body))
+      223 |       .toEqual([{p_claim_token: incomingToken}, {p_claim_token: incomingToken}]);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:220:28
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-secondary-layout-red-artifacts/design-v2-friends-Friends--b37f4-responsive-geometry-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-secondary-layout-red-artifacts/design-v2-friends-Friends--b37f4-responsive-geometry-reduce--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-secondary-layout-red-artifacts/design-v2-friends-Friends--b37f4-responsive-geometry-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-secondary-layout-red-artifacts/design-v2-friends-Friends--b37f4-responsive-geometry-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-friends.spec.ts:138:7 › Friends invitations and responsive geometry (reduce) 

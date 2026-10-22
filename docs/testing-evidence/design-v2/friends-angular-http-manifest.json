@@ -1,0 +1,210 @@
+{
+  "date": "2026-10-21",
+  "status": "Selected actual Angular adapter/SDK/HTTP/database contract verified; no production application changes",
+  "scope": "Optional --angular-contract extension to existing disposable FriendsHTTP runner, six realAngular injection tests outside normal frontend discovery, dedicated TypeScript/Vitest/lint configuration, negative fixture-isolation check",
+  "priorRunnerSha256": "004d98125a19ed17685c61fa945fcfae260d592af37d40c052eefda56c39ce2f",
+  "priorRunnerSnapshot": "friends-angular-http-prior-runner.mjs.txt",
+  "currentRunnerSha256": "59b719692757b8748b8ef6e276efe67eff40ca12b5ce822670525315a2509590",
+  "versions": {
+    "postgres": "postgres (PostgreSQL) 18.6",
+    "postgrest": "PostgREST 16.5",
+    "supabaseJs": "2.117.2"
+  },
+  "runtimes": {
+    "cache": ".extra_files/isolated-friends-runtime",
+    "ignored": true,
+    "sourceManifest": "friends-http-runtime.json",
+    "samePinnedArchivesVerified": true,
+    "binarySha256": {
+      ".extra_files/isolated-friends-runtime/postgres/usr/bin/postgres": "a0c86df4b4b9ddf6139ea965a254f780b7026024678b256953d769194ba608cd",
+      ".extra_files/isolated-friends-runtime/postgres/usr/bin/initdb": "2efa3841cbf4b628a2305b0c449a779a91d0740a34eadaa4c4e3e16bc58ec51c",
+      ".extra_files/isolated-friends-runtime/postgres/usr/bin/pg_ctl": "a2b13254967cd98eb52d3e176211a4fb5c49722cce5123a93c9be066ac5ee255",
+      ".extra_files/isolated-friends-runtime/postgres/usr/bin/psql": "9e1fcf0f4515666ec2a09a6f4fbe1d6cc6b6eaffc2efc3388b0e3797bfc573c3",
+      ".extra_files/isolated-friends-runtime/postgrest/postgrest": "cc218dc89e882ae2b828b3e8d08a1cffd29f4fa126a0869b038ac9e3a12c357d"
+    },
+    "actualDatabaseAndSecretFiles": "Temporary /tmp workspace, removed after each run; no persistent database cache",
+    "hostPackagesChanged": false,
+    "limitation": "Pinned native PostgreSQL requires compatible host libraries. Cache is local/ignored, not a universal CI portable-runtime claim.",
+    "archives": [
+      {
+        "path": ".extra_files/isolated-friends-runtime/postgrest.tar.xz",
+        "source": "https://github.com/PostgREST/postgrest/releases/download/v16.5/postgrest-v16.5-linux-static-x86-64.tar.xz",
+        "sha256": "5099e7ada38f9f6846cd87c14c5f158b7c165f1e9959665ad412e61f4dceba95"
+      },
+      {
+        "path": ".extra_files/isolated-friends-runtime/postgresql.pkg.tar.zst",
+        "source": "https://archive.archlinux.org/packages/p/postgresql/postgresql-18.6-2-x86_64.pkg.tar.zst",
+        "sha256": "9bb57a88e9caf2dc4d9a56e71c79e520072955f99e4f144c35cc8b5059f72e45"
+      },
+      {
+        "path": ".extra_files/isolated-friends-runtime/postgresql-libs.pkg.tar.zst",
+        "source": "https://archive.archlinux.org/packages/p/postgresql-libs/postgresql-libs-18.6-2-x86_64.pkg.tar.zst",
+        "sha256": "160ee929177c8e1f30bf54fe451dbed3d9a020beeb1a016e1cf1ae264a1e8930"
+      }
+    ]
+  },
+  "final": {
+    "command": "ANALYTIFY_TEST_POSTGRES_ROOT=$PWD/.extra_files/isolated-friends-runtime/postgres ANALYTIFY_TEST_POSTGREST_ROOT=$PWD/.extra_files/isolated-friends-runtime/postgrest node scripts/test-isolated-friends-http-contract.mjs --angular-contract",
+    "exit": 0,
+    "log": "friends-angular-http-final.log",
+    "result": "friends-angular-http-final-result.json",
+    "existingHttpOutcomeGroups": 12,
+    "angularTestsPassed": 6,
+    "angularFilesPassed": 1,
+    "angularTestsSkipped": 0,
+    "independentGrants": "Actual fixture rows compared byte-for-byte before/after Angular child; raw-table permissions unchanged",
+    "cleanup": {
+      "gatewayClosed": true,
+      "postgrestStopped": true,
+      "postgresStopped": true,
+      "workspaceRemoved": true
+    }
+  },
+  "normalModeRegression": {
+    "exit": 0,
+    "log": "friends-angular-http-final-normal.log",
+    "result": "friends-angular-http-final-normal-result.json",
+    "outcomeGroups": 12,
+    "cleanup": {
+      "gatewayClosed": true,
+      "postgrestStopped": true,
+      "postgresStopped": true,
+      "workspaceRemoved": true
+    }
+  },
+  "checks": [
+    {
+      "name": "DedicatedTypeScript",
+      "exit": 0,
+      "log": "friends-angular-http-final-types.log"
+    },
+    {
+      "name": "DedicatedTypeScriptLint",
+      "exit": 0,
+      "log": "friends-angular-http-final-lint.log"
+    },
+    {
+      "name": "NodeSyntax",
+      "exit": 0,
+      "files": [
+        "scripts/test-isolated-friends-http-contract.mjs",
+        "integration/friends-http/verify-isolation.mjs",
+        "integration/friends-http/vitest.config.mjs",
+        "integration/friends-http/eslint.config.mjs"
+      ]
+    },
+    {
+      "name": "OwnedFixtureIsolation",
+      "exit": 0,
+      "log": "friends-angular-http-isolation.log",
+      "result": "friends-angular-http-isolation-result.json",
+      "actualBusinessRequests": 0
+    },
+    {
+      "name": "TestDiscovery",
+      "result": "friends-angular-http-discovery.json",
+      "normalFrontendSpecFiles": 170,
+      "dedicatedIncludeFiles": 1,
+      "newProductionExclusions": false
+    },
+    {
+      "name": "NativeCleanupAudit",
+      "liveOwnedRuntimeProcesses": [],
+      "remainingOwnedTemporaryWorkspaces": []
+    }
+  ],
+  "history": [
+    {
+      "log": "friends-angular-http-missing-env.log",
+      "exit": 1,
+      "classification": "Expected dedicated suite fail-closed without runner context; no tests skipped/configured as skipped"
+    },
+    {
+      "log": "friends-angular-http-handshake.log",
+      "exit": 0,
+      "classification": "Smallest actual Angular+cached SDK session+realHTTP handshake, one Angular test plus unchanged12HTTPgroups"
+    },
+    {
+      "log": "friends-angular-http-expanded.log",
+      "exit": 1,
+      "classification": "Fixture-authoring mistake: expected authenticated raw Stats-tableSELECT privilege which actual selected schema intentionally denies. No app defect or permission gate changed; runner fixture connection now checks actual independent grant snapshots around entire Angular suite"
+    },
+    {
+      "log": "friends-angular-http-types-red.log",
+      "exit": 2,
+      "classification": "Dedicated config rootDir needed workspace scope for actual imported sources, corrected without weakening compiler checks"
+    },
+    {
+      "log": "friends-angular-http-corrected.log",
+      "exit": 0,
+      "classification": "Six actualAngular cases after corrected grant audit/config"
+    },
+    {
+      "log": "friends-angular-http-verified.log",
+      "exit": 0,
+      "classification": "Six cases including nonempty cross-actor lateHTTP result/currentcachedsession recovery before fixture nonce hardening"
+    }
+  ],
+  "limitations": [
+    "Synthetic signed JWTs and memory-stored SDKsessions are fixtures; realSDK.getSession is used without a mock, and realPostgREST verifies their signatures",
+    "SpotifyAuth identity adapter and SupabaseService.getClient provider are narrow test fixtures; actualFriendsService and SessionLifecycle are injected through Angular",
+    "No hostedAuth issuance/refresh/revocation/provider/OAuth, realtime, fullmigrationchain, productionbackend compatibility or browserUI claim",
+    "The previous hostedintegration skip is not resolved; CIruntimeprovisioning/registration remains open",
+    "No coverage percentages generated or added together; application production inventory and normal test discovery unchanged",
+    "Negative fixture challenge intentionally fails Angular before business calls; it is not a successful product workflow or configured disabled test"
+  ],
+  "hashes": {
+    "docs/testing-evidence/design-v2/friends-angular-http-corrected-result.json": "1be96dea8608c5e181f859a5f7700c079acf624d6f3fdd32f3274a8a6cb4129f",
+    "docs/testing-evidence/design-v2/friends-angular-http-corrected.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-angular-http-corrected.log": "76199180ef5656854fd6c97774c1f10a31beedd596808155f38f3f6c66cd56f6",
+    "docs/testing-evidence/design-v2/friends-angular-http-discovery.json": "76cdb698c48e5b615e2446e2554bb4f351920625d0235ef8f4bdb278818ceba9",
+    "docs/testing-evidence/design-v2/friends-angular-http-expanded.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/friends-angular-http-expanded.log": "a55eb3ce43f34c4027a45834eb694d384d5dab9b039d9f175d4a0a117a2db749",
+    "docs/testing-evidence/design-v2/friends-angular-http-final-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-angular-http-final-lint.log": "67eb00dc6d32936689778a54340073835c288ad7d2bdcab308841e40a9b8e962",
+    "docs/testing-evidence/design-v2/friends-angular-http-final-normal-result.json": "a60bce775fa6366c9edc20dc6a043615c2b43bcc2bf300c3dd63eb2be757d3a6",
+    "docs/testing-evidence/design-v2/friends-angular-http-final-normal.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-angular-http-final-normal.log": "a60bce775fa6366c9edc20dc6a043615c2b43bcc2bf300c3dd63eb2be757d3a6",
+    "docs/testing-evidence/design-v2/friends-angular-http-final-result.json": "ee8f061b12e6963501995fea394df4bac748459a22635461fc71926c2dcf2a49",
+    "docs/testing-evidence/design-v2/friends-angular-http-final-types.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-angular-http-final-types.log": "52238db1551312f78733e1e8d37d029bcd3f8afade8de7a1fd5ca175d1fd4519",
+    "docs/testing-evidence/design-v2/friends-angular-http-final.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-angular-http-final.log": "00dc3d7ec0c527139bba48b507f4f38a35fb670e4b1b946944376da7a564b8ca",
+    "docs/testing-evidence/design-v2/friends-angular-http-handshake-result.json": "b7ec036ebeaa984c63ca48bc1ca7aead8b3bc93a881afc11f36e68bc9ad8e1ab",
+    "docs/testing-evidence/design-v2/friends-angular-http-handshake.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-angular-http-handshake.log": "d941bf28313a8aa99151bbed6acc9e243e9e1afd5a88f8601eb776495c25068d",
+    "docs/testing-evidence/design-v2/friends-angular-http-isolation-result.json": "cb41caf45db6ebea49a2135c58a198c5303e573dc235c263db9c4b31359b1f5f",
+    "docs/testing-evidence/design-v2/friends-angular-http-isolation.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-angular-http-isolation.log": "cb41caf45db6ebea49a2135c58a198c5303e573dc235c263db9c4b31359b1f5f",
+    "docs/testing-evidence/design-v2/friends-angular-http-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-angular-http-lint.log": "67eb00dc6d32936689778a54340073835c288ad7d2bdcab308841e40a9b8e962",
+    "docs/testing-evidence/design-v2/friends-angular-http-missing-env.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/friends-angular-http-missing-env.log": "733c9d812a3d0fb8518e21674d445b3160063dddafeeb9f0087f42fc6744e155",
+    "docs/testing-evidence/design-v2/friends-angular-http-normal-regression-result.json": "59893d135bf1d8213ed52a421f8223e3b03875621a3a2cca3d9b0585a0e7f273",
+    "docs/testing-evidence/design-v2/friends-angular-http-normal-regression.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-angular-http-normal-regression.log": "59893d135bf1d8213ed52a421f8223e3b03875621a3a2cca3d9b0585a0e7f273",
+    "docs/testing-evidence/design-v2/friends-angular-http-prior-runner.mjs.txt": "004d98125a19ed17685c61fa945fcfae260d592af37d40c052eefda56c39ce2f",
+    "docs/testing-evidence/design-v2/friends-angular-http-types-red.exit": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+    "docs/testing-evidence/design-v2/friends-angular-http-types-red.log": "19fca3c6a78a67fe9cb0e72edf9b50b7ce55baaf0f284958b28226d582997bf8",
+    "docs/testing-evidence/design-v2/friends-angular-http-types.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-angular-http-types.log": "52238db1551312f78733e1e8d37d029bcd3f8afade8de7a1fd5ca175d1fd4519",
+    "docs/testing-evidence/design-v2/friends-angular-http-verified-result.json": "1be96dea8608c5e181f859a5f7700c079acf624d6f3fdd32f3274a8a6cb4129f",
+    "docs/testing-evidence/design-v2/friends-angular-http-verified.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-angular-http-verified.log": "71f152d8f1add1a61fcc86b3c3158f2b99d6e38cfbae134c5e867822fa374fe5",
+    "integration/friends-http/README.md": "f671c6ee6c9ac1e03cd97a02b1245ac168bd6753653afc28110deb2b094a23bc",
+    "integration/friends-http/eslint.config.mjs": "05a6c2f8e65c8100ccf22a4f59d633cd5d15f7608bca602947478e5e9d2712b6",
+    "integration/friends-http/friends-http.service.spec.ts": "5a2a03f95c62b4d410b72bd5d86050cda829b462a7fe29ae5d91ec07744b6752",
+    "integration/friends-http/tsconfig.spec.json": "480a4ccb196c4827d2a91e4f48dbe32da54bad535ba7f725aad155d00d793dc6",
+    "integration/friends-http/verify-isolation.mjs": "7e65d2e9b8d3ce8824b96adedde5664e614efa4bcff3a9dfe55035fbf227dfc7",
+    "integration/friends-http/vitest.config.mjs": "3887b13fed7c910925f09d0ac1ba6cbc006fd71eff8e6c3d2c8a71986c90e343",
+    "package-lock.json": "590a76c573c94f5dc9aecf28f61738179f020ae567e22c15d2dcc437012d638e",
+    "scripts/test-isolated-friends-http-contract.mjs": "59b719692757b8748b8ef6e276efe67eff40ca12b5ce822670525315a2509590",
+    "src/app/core/auth/session-lifecycle.service.ts": "b874c0afde0273c8bf3aaf1ef3f62461f931aa987ba6f91962405cf0ad0b8484",
+    "src/app/core/friends/friends.service.ts": "30b06317ef42529a1f1949b0b59f40b2be4cdd76431d43df75d1b04431688e3e",
+    "supabase/migrations/20260801000000_foundational_schema.sql": "2ddb1def6b431674bc06bace7edbc55177c957f6689371f894c7f8861b8bc95e",
+    "supabase/migrations/20260801181500_playlist_sharing.sql": "2744dfdc7236e2c8d95df0b5d73cda7465daf4ad4ca8d6f5bf1c1a2c5c16a8d6",
+    "supabase/migrations/20260902190000_stats_spy_mode.sql": "110d2f98b0647ec6bb998c22a9ece4583dd52543752f44e0f9978e857f5cbcb7",
+    "supabase/migrations/20260905153000_lock_spotify_profile_identity.sql": "dc6d6dd600184d58ecd8e12a6cf440c84b1db4a10d29d134de626af1bc4c6716",
+    "supabase/migrations/20261011162823_design_v2_single_use_friend_invitations.sql": "ec192d691fee40f7f860ae9418c140c43d4a46bdf671b3c6b846b8155726d4db"
+  }
+}

@@ -1,0 +1,100 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.navigation.config.ts --output=docs/testing-evidence/design-v2/sidebar-static-final-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214
+[WebServer] (node:97574) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:97574) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 24 tests using 1 worker
+
+(node:98085) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (no-preference) (9.9s)
+  ✓   2 [desktop] › e2e/design-v2-navigation.spec.ts:108:7 › Device shortcut read and write recovery (no-preference) (7.3s)
+  ✓   3 [desktop] › e2e/design-v2-navigation.spec.ts:213:7 › Device shortcuts persist and keep navigation reachable (no-preference) (13.7s)
+  ✓   4 [desktop] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (reduce) (11.5s)
+  ✓   5 [desktop] › e2e/design-v2-navigation.spec.ts:108:7 › Device shortcut read and write recovery (reduce) (8.4s)
+  ✓   6 [desktop] › e2e/design-v2-navigation.spec.ts:213:7 › Device shortcuts persist and keep navigation reachable (reduce) (16.0s)
+(node:102858) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [mobile] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (no-preference) (17.3s)
+  ✓   8 [mobile] › e2e/design-v2-navigation.spec.ts:108:7 › Device shortcut read and write recovery (no-preference) (9.3s)
+  ✓   9 [mobile] › e2e/design-v2-navigation.spec.ts:213:7 › Device shortcuts persist and keep navigation reachable (no-preference) (24.4s)
+  ✓  10 [mobile] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (reduce) (12.6s)
+  ✓  11 [mobile] › e2e/design-v2-navigation.spec.ts:108:7 › Device shortcut read and write recovery (reduce) (7.5s)
+  ✓  12 [mobile] › e2e/design-v2-navigation.spec.ts:213:7 › Device shortcuts persist and keep navigation reachable (reduce) (12.9s)
+(node:109200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  13 [firefox-stats] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (no-preference) (13.0s)
+  ✓  14 [firefox-stats] › e2e/design-v2-navigation.spec.ts:108:7 › Device shortcut read and write recovery (no-preference) (7.5s)
+  ✓  15 [firefox-stats] › e2e/design-v2-navigation.spec.ts:213:7 › Device shortcuts persist and keep navigation reachable (no-preference) (15.7s)
+  ✓  16 [firefox-stats] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (reduce) (9.2s)
+  ✓  17 [firefox-stats] › e2e/design-v2-navigation.spec.ts:108:7 › Device shortcut read and write recovery (reduce) (6.5s)
+  ✓  18 [firefox-stats] › e2e/design-v2-navigation.spec.ts:213:7 › Device shortcuts persist and keep navigation reachable (reduce) (13.5s)
+(node:113727) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  19 [webkit-stats] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (no-preference) (32.4s)
+(node:115907) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  20 [webkit-stats] › e2e/design-v2-navigation.spec.ts:108:7 › Device shortcut read and write recovery (no-preference) (14.7s)
+  ✘  21 [webkit-stats] › e2e/design-v2-navigation.spec.ts:213:7 › Device shortcuts persist and keep navigation reachable (no-preference) (31.3s)
+(node:119635) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  22 [webkit-stats] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (reduce) (10.4s)
+  ✓  23 [webkit-stats] › e2e/design-v2-navigation.spec.ts:108:7 › Device shortcut read and write recovery (reduce) (7.2s)
+  ✓  24 [webkit-stats] › e2e/design-v2-navigation.spec.ts:213:7 › Device shortcuts persist and keep navigation reachable (reduce) (12.8s)
+
+
+  1) [webkit-stats] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (no-preference) 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.press: Target page, context or browser has been closed
+
+      92 |     await sidebar.getByRole('button', {name: 'Expand navigation sidebar', exact: true}).press('Enter');
+      93 |     await sidebar.screenshot({path: info.outputPath('sidebar-expanded.png'), animations: 'disabled'});
+    > 94 |     await sidebar.getByRole('button', {name: 'Collapse navigation sidebar', exact: true}).press('Space');
+         |                                                                                           ^
+      95 |     await sidebar.screenshot({path: info.outputPath('sidebar-compact.png'), animations: 'disabled'});
+      96 |     await expectNoBlockingAxeViolations(page);
+      97 |     await page.setViewportSize({width: 390, height: 900}); await expect(sidebar).toBeHidden();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-navigation.spec.ts:94:91
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/sidebar-static-final-artifacts/design-v2-navigation-Deskt-c4f20-independence-no-preference--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/sidebar-static-final-artifacts/design-v2-navigation-Deskt-c4f20-independence-no-preference--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/sidebar-static-final-artifacts/design-v2-navigation-Deskt-c4f20-independence-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/sidebar-static-final-artifacts/design-v2-navigation-Deskt-c4f20-independence-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [webkit-stats] › e2e/design-v2-navigation.spec.ts:213:7 › Device shortcuts persist and keep navigation reachable (no-preference) 
+
+    Test timeout of 30000ms exceeded.
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/sidebar-static-final-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/sidebar-static-final-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/sidebar-static-final-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/sidebar-static-final-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [webkit-stats] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (no-preference) 
+    [webkit-stats] › e2e/design-v2-navigation.spec.ts:213:7 › Device shortcuts persist and keep navigation reachable (no-preference) 
+  22 passed (6.0m)

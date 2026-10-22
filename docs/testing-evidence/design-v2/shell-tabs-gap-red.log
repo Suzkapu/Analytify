@@ -1,0 +1,48 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.navigation.config.ts --project=desktop --grep Canonical app header, gutters and document footer \(no-preference\) --output=docs/testing-evidence/design-v2/shell-tabs-gap-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214
+[WebServer] (node:67925) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:67925) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:68190) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-navigation.spec.ts:75:7 › Canonical app header, gutters and document footer (no-preference) (2.2s)
+
+
+  1) [desktop] › e2e/design-v2-navigation.spec.ts:75:7 › Canonical app header, gutters and document footer (no-preference) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 16
+    Received: 20
+
+      104 |       expect(sample.heading.x).toBe(mobile ? 16 : 256 + 32);
+      105 |       expect(sample.heading.y).toBe(mobile ? 72 + 16 : 32);
+    > 106 |       expect(sample.profile.y - sample.tabs.bottom).toBe(mobile ? 12 : 16);
+          |                                                     ^
+      107 |       expect(sample.footer.y).toBeGreaterThanOrEqual(sample.body.bottom + 16);
+      108 |       expect(sample.footer.bottom).toBe(sample.documentHeight - (mobile ? 86 : 0));
+      109 |       expect(sample.footer).toMatchObject({background: 'rgba(0, 0, 0, 0)', borderTop: '0px', paddingLeft: mobile ? '16px' : '40px', paddingRight: mobile ? '16px' : '40px'});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-navigation.spec.ts:106:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/shell-tabs-gap-red-artifacts/design-v2-navigation-Canon-2835d-ument-footer-no-preference--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/shell-tabs-gap-red-artifacts/design-v2-navigation-Canon-2835d-ument-footer-no-preference--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/shell-tabs-gap-red-artifacts/design-v2-navigation-Canon-2835d-ument-footer-no-preference--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/shell-tabs-gap-red-artifacts/design-v2-navigation-Canon-2835d-ument-footer-no-preference--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-navigation.spec.ts:75:7 › Canonical app header, gutters and document footer (no-preference) 

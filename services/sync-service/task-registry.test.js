@@ -58,3 +58,7 @@ test('allows Song League playlist refreshes every day when Friday-only schedulin
     song_league_playlist_fridays_only: false
   }, new Date('2026-09-01T12:00:00.000Z')), true);
 });
+
+test('registry builds every executable task and shares one Stats implementation across ranges',()=>{
+ const {createTaskRegistry}=require('./task-registry');const registry=createTaskRegistry({supabase:{},spotify:{}});assert.deepEqual(Object.keys(registry).sort(),Object.keys(TASK_DEFINITIONS).sort());assert.ok(Object.values(registry).every(handler=>typeof handler==='function'));assert.equal(registry.stats_short_term,registry.stats_medium_term);assert.equal(registry.stats_short_term,registry.stats_long_term);
+});

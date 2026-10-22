@@ -39,7 +39,7 @@ describe('shell account through actual Spotify HTTP and admin service boundaries
     rpc = vi.fn(() => {const request = deferred<{data: boolean; error: null}>(); adminRequests.push(request); return request.promise;});
     TestBed.configureTestingModule({providers: [
       provideHttpClient(), provideHttpClientTesting(),
-      {provide: SpotifyAuthService, useValue: {logout$: logout, getUserId: () => spotifyId,
+      {provide: SpotifyAuthService, useValue: {sessionExiting: () => false, logout$: logout, getUserId: () => spotifyId,
         getSupabaseUserId: () => cloudId, isBackupActive: () => false, hasCloudIdentity: () => Boolean(cloudId)}},
       {provide: StorageService, useValue: {getItem: (key: string) => cache.get(key) ?? null, setItem: vi.fn()}},
       {provide: SupabaseService, useValue: {getClient: async () => ({rpc})}},

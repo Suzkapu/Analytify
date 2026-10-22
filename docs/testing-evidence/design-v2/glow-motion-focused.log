@@ -1,0 +1,50 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-glows.spec.ts --project=desktop --grep=actual route changes --workers=1 --output=docs/testing-evidence/design-v2/glow-motion-focused-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:76377) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:76377) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:76582) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-glows.spec.ts:58:5 › actual route changes move glows smoothly and preserve the independent particle timeline (30.4s)
+
+
+  1) [desktop] › e2e/design-v2-glows.spec.ts:58:5 › actual route changes move glows smoothly and preserve the independent particle timeline 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('complementary', { name: 'Desktop sidebar' }).getByRole('link', { name: 'Recently Played', exact: true })
+
+
+      87 |   // Interrupt the first move through another real destination, before its
+      88 |   // completion can overwrite the latest route's canonical target.
+    > 89 |   await sidebar.getByRole('link', {name: 'Recently Played', exact: true}).click();
+         |                                                                           ^
+      90 |   await expect(page).toHaveURL(/\/history$/);
+      91 |   await expect.poll(() => page.evaluate(() => (window as any).__glowSettled)).toBe(true);
+      92 |   expect(await page.locator('.ambient-dot').first().evaluate(element => element.getAnimations()[0] === (window as any).__glowParticle
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-glows.spec.ts:89:75
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/glow-motion-focused-artifacts/design-v2-glows-actual-rou-e63a9-dependent-particle-timeline-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/glow-motion-focused-artifacts/design-v2-glows-actual-rou-e63a9-dependent-particle-timeline-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/glow-motion-focused-artifacts/design-v2-glows-actual-rou-e63a9-dependent-particle-timeline-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/glow-motion-focused-artifacts/design-v2-glows-actual-rou-e63a9-dependent-particle-timeline-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-glows.spec.ts:58:5 › actual route changes move glows smoothly and preserve the independent particle timeline 

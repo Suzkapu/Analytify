@@ -1,0 +1,28 @@
+Check supabase/functions/spotify-credentials/handler-profile.test.ts
+running 5 tests from ./supabase/functions/spotify-credentials/handler-profile.test.ts
+verified profile writes server identity, sanitized display and safe image; anonymous profiles keep their cloud alias ... ok (95ms)
+profile image allowlist and missing display data preserve the existing profile or use safe defaults ... ok (27ms)
+profile binds requested identity, access credential, refresh credential and existing registration to the same Spotify account ... ok (7ms)
+credential storage encrypts rotated and retained refresh credentials and clears legacy plaintext only after encrypted persistence ... FAILED (3ms)
+profile and credential persistence failures never report success or leak internal details ... ok (14ms)
+
+ ERRORS 
+
+credential storage encrypts rotated and retained refresh credentials and clears legacy plaintext only after encrypted persistence => ./supabase/functions/spotify-credentials/handler-profile.test.ts:68:6
+error: AssertionError: Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+    assert.equal(tokenRequest.body.client_id, connectionMode === 'hosted' ? 'a'.repeat(32) : 'b'.repeat(32));
+           ^
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/spotify-credentials/handler-profile.test.ts:78:12
+
+ FAILURES 
+
+credential storage encrypts rotated and retained refresh credentials and clears legacy plaintext only after encrypted persistence => ./supabase/functions/spotify-credentials/handler-profile.test.ts:68:6
+
+FAILED | 4 passed | 1 failed (151ms)
+
+error: Test failed

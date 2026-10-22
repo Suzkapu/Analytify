@@ -1,0 +1,2871 @@
+npm notice run spoti-front@0.0.0 verify:ci
+npm notice run npm run content:check && npm run architecture:check && npm run retention:check && npm run share-refresh:check && npm run song-league-invites:check && npm run song-league-rules:check && npm run song-league-notifications:check && npm run push-security:check && npm run cloud-capabilities:check && npm run catalog-security:check && npm run dataset-integrity:check && npm run song-league-sync:check && npm run stats-calendars:check && npm run stats-sharing:check && npm run stats-history-search:check && npm run loading-feedback:check && npm run accessibility:check && npm run lint && npm run performance:check && npm run design-v2-parity:check && npm run design-v2-quality:check && npm run api-usage:check && npm run admin:check && npm run deployment-pipeline:check && npm run supply-chain:check && npm run edge-dependencies:check && npm run storage-policy:check && npm run privacy-notice:check && npm run spotify-policy:check && npm run data-retention:check && npm run sync-service:check && npm run edge-functions:check && npm run typecheck && npm run typecheck:tests && npm run test:ci && npm run build:production
+npm notice run spoti-front@0.0.0 content:check
+npm notice run node --test scripts/content-copy.test.mjs
+✔ scripts/content-copy.test.mjs (64.52812ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 73.123747
+npm notice run spoti-front@0.0.0 architecture:check
+npm notice run node scripts/check-architecture.mjs
+Architecture boundaries are valid.
+npm notice run spoti-front@0.0.0 retention:check
+npm notice run node scripts/check-playlist-share-retention.mjs
+Playlist-share retention contracts are present.
+npm notice run spoti-front@0.0.0 share-refresh:check
+npm notice run node scripts/check-playlist-share-refresh.mjs
+Playlist-share refresh performance contracts are present.
+npm notice run spoti-front@0.0.0 song-league-invites:check
+npm notice run node scripts/check-song-league-invites.mjs
+Song League invite links are truthful, token-safe, visible, and revocable.
+npm notice run spoti-front@0.0.0 song-league-rules:check
+npm notice run node scripts/check-song-league-rules.mjs
+Song League supports two members while preserving discovery validation.
+npm notice run spoti-front@0.0.0 song-league-notifications:check
+npm notice run node --test supabase/functions/song-league-notifications/delivery-state.test.mjs && node scripts/check-song-league-notifications.mjs
+✔ supabase/functions/song-league-notifications/delivery-state.test.mjs (304.316465ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 311.691608
+Song League PWA notification contracts and encrypted Web Push request are valid.
+npm notice run spoti-front@0.0.0 push-security:check
+npm notice run node scripts/check-push-security.mjs
+Web Push SSRF and shared-device lifecycle contracts are valid.
+npm notice run spoti-front@0.0.0 cloud-capabilities:check
+npm notice run node scripts/check-cloud-capabilities.mjs
+Cloud identity, backup, and scheduled Spotify capabilities are separated.
+npm notice run spoti-front@0.0.0 catalog-security:check
+npm notice run node scripts/check-catalog-security.mjs
+Spotify catalog is browser-read-only and trusted-worker writable.
+npm notice run spoti-front@0.0.0 dataset-integrity:check
+npm notice run node scripts/check-dataset-integrity.mjs
+Stats and catalog replacements are atomic, idempotent, and compare-and-swap guarded.
+npm notice run spoti-front@0.0.0 song-league-sync:check
+npm notice run node scripts/check-song-league-sync-security.mjs
+Song League playlist sync uses one lease-bound, revision-safe mutation authority.
+npm notice run spoti-front@0.0.0 stats-calendars:check
+npm notice run node scripts/check-stats-calendars.mjs
+Both stats comparison sides use the shared availability calendar.
+npm notice run spoti-front@0.0.0 stats-sharing:check
+npm notice run node scripts/check-stats-sharing.mjs
+Stats sharing consent and isolation checks passed.
+npm notice run spoti-front@0.0.0 stats-history-search:check
+npm notice run node scripts/check-stats-history-search.mjs
+Historical Top Songs, Top Artists, and Top Genres search contracts are valid.
+npm notice run spoti-front@0.0.0 loading-feedback:check
+npm notice run node scripts/check-loading-feedback.mjs
+Loading feedback is immediate, non-blocking, and preserves parallel loaders.
+npm notice run spoti-front@0.0.0 accessibility:check
+npm notice run node scripts/check-accessible-dialogs.mjs && node --test scripts/interaction-cursor.test.mjs
+All custom modals use the shared accessible dialog behavior.
+✔ scripts/interaction-cursor.test.mjs (73.000285ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 80.831311
+npm notice run spoti-front@0.0.0 lint
+npm notice run eslint .
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/coordinator-parallel-coverage/block-navigation.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/coordinator-parallel-coverage/prettify.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/coordinator-parallel-coverage/sorter.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-auth-parallel-coverage/block-navigation.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-auth-parallel-coverage/prettify.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-auth-parallel-coverage/sorter.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-image-healing-parallel-coverage/block-navigation.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-image-healing-parallel-coverage/prettify.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-image-healing-parallel-coverage/sorter.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-loader-parallel-coverage/block-navigation.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-loader-parallel-coverage/prettify.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-loader-parallel-coverage/sorter.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-loader-parallel-followup-coverage/block-navigation.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-loader-parallel-followup-coverage/prettify.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-loader-parallel-followup-coverage/sorter.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/participant-spotify-parallel-coverage/block-navigation.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/participant-spotify-parallel-coverage/prettify.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/participant-spotify-parallel-coverage/sorter.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/sharing-parallel-coverage/block-navigation.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/sharing-parallel-coverage/prettify.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/sharing-parallel-coverage/sorter.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/accessibility.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-account-deletion.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-account-scope.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-ambient.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-backup-status-cancellation.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-calendar-refresh-retry.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-chromium-performance.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-compare-room.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-confirmation-navigation.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-glows.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-insights.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-library.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-navigation.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-performance.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-quality.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-account-data.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-notifications.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-startup.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-settings-updates.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-sharing.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-shell-account-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-song-league.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-cloud-fallback.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-composition.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-load.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-current-refresh.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-date-labels.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-date-loading.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-flames.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-genres.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-history.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-period-controls.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-search-copy.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-search-switch.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-typography.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/fixtures.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/native-transitions.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/stats-calendar.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/playwright.config.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/playwright.friends.config.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/playwright.navigation.config.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/app-routing.module.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/app-routing.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/app.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/app.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/app.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/admin/admin.guard.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/admin/admin.guard.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/admin/admin.models.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/admin/admin.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/admin/admin.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/auth-return-url.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/auth-return-url.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/auth.guards.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/backup-activation-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/backup-status-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/cloud-identity.guard.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/personal-spotify-recovery.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/personal-spotify-recovery.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/redirect-logged-in.guard.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/session-lifecycle.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/session-lifecycle.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/spotify-auth-refresh-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/spotify-auth-sdk-refresh-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/spotify-auth.guard.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/spotify-auth.interceptor.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/spotify-auth.interceptor.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/spotify-auth.models.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/spotify-auth.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/spotify-auth.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-guest-playlist-source.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-guest-playlist-source.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-playlist-source.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-playlist-source.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room-coordinator.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room-coordinator.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room-guest.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room-guest.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room-integrity.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room-integrity.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room-transport.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room-transport.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room.models.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/participant-spotify.boundaries.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/participant-spotify.cancellation.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/participant-spotify.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/participant-spotify.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/playlist-intersection.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/playlist-intersection.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/spotify-request-context.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/transient-participant-auth.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compliance/spotify-policy-gate.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/core.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/spotify/spotify-data.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/spotify/spotify-data.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/local-preference-durability.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/local-preference-read-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/stats-history-read-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/storage-bulk-hydration-races.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/storage-persistence-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/storage.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/storage/storage.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/supabase/edge-function-error.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/supabase/edge-function-error.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/supabase/sdk-factory-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/supabase/sdk-transport-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/supabase/service-boundary-recovery.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/supabase/stats-past-search-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/supabase/stats-snapshot-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/supabase/stats-snapshot-write-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/supabase/supabase.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/data-access/supabase/supabase.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/diagnostics/app-logger.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/diagnostics/app-logger.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/friends/friends.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/friends/friends.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/legal/terms-acceptance.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/legal/terms-acceptance.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/design-navigation.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/design-navigation.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/design-navigation.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/design-navigation.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/design-path.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/design-path.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/design-selective-preloading.strategy.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/design-selective-preloading.strategy.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/design-v2-mobile-shortcut-preferences.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/design-v2-mobile-shortcut-preferences.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/design-v2-navigation.model.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/design-v2-navigation.model.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/design-v2-route-data.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/design-v2-route-data.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/mobile-shortcut-policy.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/mobile-shortcut-policy.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/preview-return-path.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/preview-return-path.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/spotify-url.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/navigation/spotify-url.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/notification-session-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/notifications/push-notification.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/performance/async-load.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/performance/async-load.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/settings/site-settings.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sharing/playlist-share-auto-sync.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sharing/playlist-share-auto-sync.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sharing/playlist-sharing-names.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sharing/playlist-sharing-names.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sharing/playlist-sharing.models.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sharing/playlist-sharing.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sharing/playlist-sharing.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sharing/stats-sharing-session-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sharing/stats-sharing-transport-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sharing/stats-sharing.models.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sharing/stats-sharing.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sharing/stats-sharing.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/song-league/song-league-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/song-league/song-league-creation-owner.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/song-league/song-league.models.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/song-league/song-league.models.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/song-league/song-league.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/song-league/song-league.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/image-healing/image-healing-ownership.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/image-healing/image-healing-response-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/image-healing/image-healing.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/image-healing/image-healing.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/playlist-loader/playlist-loader-incremental-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/playlist-loader/playlist-loader-lifecycle-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/playlist-loader/playlist-loader.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/playlist-loader/playlist-loader.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/playlist-loader/playlist-source-manifest.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/playlist-loader/playlist-source-manifest.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/sync-schedule-policy.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/sync-schedule-policy.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/design-v2-routing.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/auth/callback/callback.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/auth/callback/callback.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/auth/callback/callback.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/auth/login-page/login-page.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/auth/login-page/login-page.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/auth/login-page/login-page.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/auth/personal-spotify/cloud-access.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/auth/personal-spotify/cloud-access.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/auth/personal-spotify/personal-spotify-callback.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/auth/personal-spotify/personal-spotify-callback.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/auth/personal-spotify/personal-spotify-connect.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/auth/personal-spotify/personal-spotify-connect.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/auth/personal-spotify/personal-spotify.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/compare-room/compare-room-callback.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/compare-room/compare-room-callback.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/compare-room/compare-room-callback.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/compare-room/compare-room-join.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/compare-room/compare-room-join.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/compare-room/compare-room-join.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/compare-room/compare-room-shell.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/compare-room/compare-room-shell.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/compare-room/compare-room-view-model.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/compare-room/compare-room-view-model.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/compare-room/compare-room.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/friends/friends.routes.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/friends/v2-friends-layout.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/friends/v2-friends-layout.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/friends/v2-friends-page.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/friends/v2-friends-page.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/friends/v2-friends.controller.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/friends/v2-friends.controller.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/insights-view-model.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/insights-view-model.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/listening-history/listening-history.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/listening-history/listening-history.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/listening-history/listening-history.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/listening-history/v2-listening-history.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/listening-history/v2-listening-history.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-calendar-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-detail-state-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-metadata-state-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-past-search-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/user-stats.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/user-stats.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/user-stats.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/v2-stats-current-recovery.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/v2-stats-date-labels.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/v2-stats-search-copy.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/v2-stats-snapshot-workflow.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/v2-user-stats.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/v2-user-stats.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/legal/legal/legal.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/legal/legal/legal.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/legal/legal/legal.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/artist-details/artist-details.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/artist-details/artist-details.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/artist-details/artist-details.controller.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/artist-details/artist-details.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/design-v2/v2-analysis-page.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/design-v2/v2-analysis-page.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/design-v2/v2-artist-details-page.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/design-v2/v2-artist-details-page.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/design-v2/v2-playlists-page.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/design-v2/v2-playlists-page.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/design-v2/v2-songs-page.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/design-v2/v2-songs-page.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/playlist-analysis/playlist-analysis.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/playlist-analysis/playlist-analysis.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/playlist-analysis/playlist-analysis.controller.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/playlist-analysis/playlist-analysis.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/playlists/playlists.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/playlists/playlists.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/playlists/playlists.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/songs/songs-controller-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/songs/songs.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/songs/songs.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/songs/songs.controller.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/songs/songs.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-notification-settings.controller.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-settings-account-data.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-settings-account-data.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-settings-install.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-settings-install.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-settings-navigation.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-settings-navigation.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-settings-notifications.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-settings-notifications.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-settings-page.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-settings-page.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-settings-updates.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-settings-updates.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-update-settings.controller.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/settings/v2-update-settings.controller.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/shared-playlists/shared-playlist-claim.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/shared-playlists/shared-playlist-detail.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/shared-playlists/shared-playlist-detail.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/shared-playlists/shared-playlist-detail.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/shared-playlists/shared-playlists.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/shared-playlists/shared-playlists.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/shared-playlists/shared-playlists.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/shared-playlists/sharing-view-model.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/shared-playlists/sharing-view-model.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/shared-playlists/stats-request-claim.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/shared-playlists/stats-request-claim.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/shared-playlists/stats-share-claim.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/shared-playlists/stats-share-claim.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/song-league/song-league-claim.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/song-league/song-league-claim.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/song-league/song-league-detail.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/song-league/song-league-detail.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/song-league/song-league-home.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/song-league/song-league-home.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/song-league/song-league-rules.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/song-league/song-league-rules.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/song-league/song-league-view-model.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/song-league/song-league-view-model.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/song-league/song-league.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/integration/supabase-loading.integration.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ambient/ambient-background.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ambient/ambient-background.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ambient/ambient-background.math.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ambient/ambient-background.math.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ambient/ambient-background.state.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ambient/ambient-background.state.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/design-v2-shell/design-v2-account-actions.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/design-v2-shell/design-v2-account-actions.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/design-v2-shell/design-v2-overlay.service.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/design-v2-shell/design-v2-overlay.service.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/design-v2-shell/design-v2-shell.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/header/blocked-users-dialog.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/header/notification-settings-dialog.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/header/notification-settings-dialog.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/header/settings-sheet-view-model.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/header/settings-sheet-view-model.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/layout/header/sync-task-status-dialog.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/pipes/safe-spotify-url.pipe.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/shared.module.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/design-v2-primitives.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/design-v2-primitives.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/design-v2-status.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/design-v2-status.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/genre-chart.model.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/genre-chart.model.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/index.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-current-stats-feedback.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-current-stats-feedback.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-friends-feedback.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-friends-feedback.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-genre-rankings.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-genre-rankings.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-inline-status.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-inline-status.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-interval-popup.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-interval-popup.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-navigation-drawer.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-navigation-drawer.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-navigation-panel.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-navigation-panel.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-preference-row.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-preference-row.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-rank-history-plot.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-rank-history-plot.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-rank-history-popup.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-rank-history-popup.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-ranking-flame.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-ranking-flame.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-search-past-toggle.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-search-past-toggle.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-settings-navigation.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-settings-navigation.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-shortcut-choice.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-shortcut-choice.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-snapshot-calendar.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-snapshot-calendar.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-snapshot-date-field.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-snapshot-date-field.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-snapshot-feedback.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-snapshot-feedback.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-stats-ranking-row.component.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-stats-ranking-row.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui/accessible-dialog.directive.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui/accessible-dialog.directive.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui/image-fallback.directive.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui/image-fallback.directive.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui/metric-card/metric-card.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui/page-state/page-state.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui/section-heading/section-heading.component.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui/shared-ui.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/environments/environment.browser-testing.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/environments/environment.development.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/environments/environment.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/environments/environment.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/environments/spotify-scopes.spec.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/environments/spotify-scopes.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/main.browser-testing.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/main.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+/mnt/Storage/ProgrammingProjects/Analytify/src/test-setup.ts
+  0:0  error  Parsing error: No tsconfigRootDir was set, and multiple candidate TSConfigRootDirs are present:
+ - /mnt/Storage/ProgrammingProjects/Analytify
+ - /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http
+You'll need to explicitly set tsconfigRootDir in your parser options.
+See: https://tseslint.com/parser-tsconfigrootdir
+
+✖ 410 problems (389 errors, 21 warnings)
+  0 errors and 21 warnings potentially fixable with the `--fix` option.
+

@@ -1,0 +1,232 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/auth/spotify-auth-refresh-boundary.spec.ts --runner-config=docs/testing-evidence/design-v2/frontend-auth-parallel-vitest.config.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-auth-parallel-vitest.config.mjs
+Application bundle generation complete. [2.451 seconds] - 2026-10-17T14:11:18.838Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/auth/spotify-auth-refresh-boundary.spec.ts > Spotify refresh and restored-session ownership boundaries > cannot discard replacement-account credentials after the old personal refresh returns invalid_grant
+AssertionError: expected Error: Spotify authorization expired. Rec… to match object { name: 'AbortError' }
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1283:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/spotify-auth-refresh-boundary.spec.ts:73:19
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171) {
+  showDiff: true,
+  expected: { name: 'AbortError' },
+  actual: Error: Spotify authorization expired. Reconnect Spotify.
+      at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/spotify-auth.service.ts:633:46
+      at Observable.init [as _subscribe] (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/rxjs/dist/cjs/internal/observable/throwError.js:8:64)
+      at Observable._trySubscribe (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/rxjs/dist/cjs/internal/Observable.js:41:25)
+      at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/rxjs/dist/cjs/internal/Observable.js:35:31
+      at Object.errorContext (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/rxjs/dist/cjs/internal/util/errorContext.js:22:9)
+      at Observable.subscribe (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/rxjs/dist/cjs/internal/Observable.js:26:24)
+      at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/rxjs/dist/cjs/internal/operators/switchMap.js:17:63
+      at OperatorSubscriber._this._next (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/rxjs/dist/cjs/internal/operators/OperatorSubscriber.js:33:21)
+      at OperatorSubscriber.Subscriber.next (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/rxjs/dist/cjs/internal/Subscriber.js:51:18)
+      at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/rxjs/dist/cjs/internal/observable/innerFrom.js:120:28
+}
+
+stderr | src/app/core/auth/spotify-auth-refresh-boundary.spec.ts > Spotify refresh and restored-session ownership boundaries > cannot send terminal credential cleanup through a replacement session after deferred SDK readiness
+AssertionError: expected Error: Spotify authorization expired. Rec… to match object { name: 'AbortError' }
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1283:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/spotify-auth-refresh-boundary.spec.ts:89:19
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171) {
+  showDiff: true,
+  expected: { name: 'AbortError' },
+  actual: Error: Spotify authorization expired. Reconnect Spotify.
+      at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/spotify-auth.service.ts:633:46
+      at Observable.init [as _subscribe] (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/rxjs/dist/cjs/internal/observable/throwError.js:8:64)
+      at Observable._trySubscribe (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/rxjs/dist/cjs/internal/Observable.js:41:25)
+      at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/rxjs/dist/cjs/internal/Observable.js:35:31
+      at Object.errorContext (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/rxjs/dist/cjs/internal/util/errorContext.js:22:9)
+      at Observable.subscribe (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/rxjs/dist/cjs/internal/Observable.js:26:24)
+      at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/rxjs/dist/cjs/internal/operators/switchMap.js:17:63
+      at OperatorSubscriber._this._next (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/rxjs/dist/cjs/internal/operators/OperatorSubscriber.js:33:21)
+      at OperatorSubscriber.Subscriber.next (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/rxjs/dist/cjs/internal/Subscriber.js:51:18)
+      at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/rxjs/dist/cjs/internal/observable/innerFrom.js:120:28
+}
+
+ ❯ |SpotiFront| src/app/core/auth/spotify-auth-refresh-boundary.spec.ts (42 tests | 2 failed) 423ms
+     × cannot discard replacement-account credentials after the old personal refresh returns invalid_grant 32ms
+     × cannot send terminal credential cleanup through a replacement session after deferred SDK readiness 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/spotify-auth-refresh-boundary.spec.ts > Spotify refresh and restored-session ownership boundaries > cannot discard replacement-account credentials after the old personal refresh returns invalid_grant
+AssertionError: expected Map{ …(4) } to deeply equal Map{ …(8) }
+
+- Expected
++ Received
+
+  Map {
+-   "cloudIdentityReady" => "true",
+    "personalSpotifyClientId" => "12345678901234567890123456789012",
+-   "spotifyAccessToken" => "access-owner-B",
+    "spotifyConnectionMode" => "personal_pkce",
+-   "spotifyRefreshToken" => "refresh-owner-B",
+-   "spotifyTokenExpiresAt" => "1792249879837",
+    "spotifyUserId" => "owner-B",
+    "supabaseUserId" => "cloud-owner-B",
+  }
+
+ ❯ src/app/core/auth/spotify-auth-refresh-boundary.spec.ts:71:25
+     69|     oldRequest.flush({error: 'invalid_grant'}, {status: 400, statusTex…
+     70|     const error = await outcome;
+     71|     expect.soft(values).toEqual(replacement);
+       |                         ^
+     72|     expect.soft(client.functions.invoke).not.toHaveBeenCalled();
+     73|     expect(error).toMatchObject({name: 'AbortError'});
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/spotify-auth-refresh-boundary.spec.ts > Spotify refresh and restored-session ownership boundaries > cannot discard replacement-account credentials after the old personal refresh returns invalid_grant
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "spotify-credentials",
+      Object {
+        "body": Object {
+          "action": "delete_credentials",
+          "profileUserId": "cloud-owner-B",
+        },
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/core/auth/spotify-auth-refresh-boundary.spec.ts:72:46
+     70|     const error = await outcome;
+     71|     expect.soft(values).toEqual(replacement);
+     72|     expect.soft(client.functions.invoke).not.toHaveBeenCalled();
+       |                                              ^
+     73|     expect(error).toMatchObject({name: 'AbortError'});
+     74|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/spotify-auth-refresh-boundary.spec.ts > Spotify refresh and restored-session ownership boundaries > cannot discard replacement-account credentials after the old personal refresh returns invalid_grant
+AssertionError: expected Error: Spotify authorization expired. Rec… to match object { name: 'AbortError' }
+
+- Expected
++ Received
+
+- {
+-   "name": "AbortError",
++ Error {
++   "message": "Spotify authorization expired. Reconnect Spotify.",
+  }
+
+ ❯ src/app/core/auth/spotify-auth-refresh-boundary.spec.ts:73:19
+     71|     expect.soft(values).toEqual(replacement);
+     72|     expect.soft(client.functions.invoke).not.toHaveBeenCalled();
+     73|     expect(error).toMatchObject({name: 'AbortError'});
+       |                   ^
+     74|   });
+     75|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/spotify-auth-refresh-boundary.spec.ts > Spotify refresh and restored-session ownership boundaries > cannot send terminal credential cleanup through a replacement session after deferred SDK readiness
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "spotify-credentials",
+      Object {
+        "body": Object {
+          "action": "delete_credentials",
+          "profileUserId": "cloud-owner-A",
+        },
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/core/auth/spotify-auth-refresh-boundary.spec.ts:87:46
+     85|     ready.resolve(client);
+     86|     const error = await outcome;
+     87|     expect.soft(client.functions.invoke).not.toHaveBeenCalled();
+       |                                              ^
+     88|     expect.soft(values).toEqual(replacement);
+     89|     expect(error).toMatchObject({name: 'AbortError'});
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/spotify-auth-refresh-boundary.spec.ts > Spotify refresh and restored-session ownership boundaries > cannot send terminal credential cleanup through a replacement session after deferred SDK readiness
+AssertionError: expected Error: Spotify authorization expired. Rec… to match object { name: 'AbortError' }
+
+- Expected
++ Received
+
+- {
+-   "name": "AbortError",
++ Error {
++   "message": "Spotify authorization expired. Reconnect Spotify.",
+  }
+
+ ❯ src/app/core/auth/spotify-auth-refresh-boundary.spec.ts:89:19
+     87|     expect.soft(client.functions.invoke).not.toHaveBeenCalled();
+     88|     expect.soft(values).toEqual(replacement);
+     89|     expect(error).toMatchObject({name: 'AbortError'});
+       |                   ^
+     90|   });
+     91|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 40 passed (42)
+   Start at  16:11:18
+   Duration  1.26s (transform 140ms, setup 232ms, import 155ms, tests 423ms, environment 333ms)
+

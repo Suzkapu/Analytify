@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, fromEvent, takeUntil } from 'rxjs';
+import {SessionGeneration, SessionLifecycleService} from '@core/auth/session-lifecycle.service';
 import { SpotifyDataService } from '@core/data-access/spotify/spotify-data.service';
 import { SpotifyAuthService } from '@core/auth/spotify-auth.service';
 import { StorageService } from '@core/data-access/storage/storage.service';
@@ -14,6 +15,7 @@ const PLACEHOLDER_URL = 'https://misc.scdn.co/liked-songs/liked-songs-300.png';
   providedIn: 'root'
 })
 export class ImageHealingService {
+  private recoveryOwner?: {generation: SessionGeneration; spotifyId: string | null; cloudId: string | null};
   private artistHealingInFlight = new Set<string>();
   private artistHealingAttempted = new Set<string>();
   private failedArtistImageUrls = new Map<string, Set<string>>();
@@ -22,14 +24,33 @@ export class ImageHealingService {
     private spotifyDataService: SpotifyDataService,
     private authService: SpotifyAuthService,
     private storageService: StorageService,
-    private supabaseService: SupabaseService
+    private supabaseService: SupabaseService,
+    private sessionLifecycle: SessionLifecycleService
   ) {}
+
+  private captureOwner() {
+    const owner = {generation: this.sessionLifecycle.capture(), spotifyId: this.authService.getUserId(), cloudId: this.authService.getSupabaseUserId()};
+    if (this.recoveryOwner?.generation.id !== owner.generation.id || this.recoveryOwner.spotifyId !== owner.spotifyId || this.recoveryOwner.cloudId !== owner.cloudId) {
+      this.artistHealingInFlight.clear();
+      this.artistHealingAttempted.clear();
+      this.failedArtistImageUrls.clear();
+      this.recoveryOwner = owner;
+    }
+    return owner;
+  }
+
+  private ownsRecovery(owner: {generation: SessionGeneration; spotifyId: string | null; cloudId: string | null}): boolean {
+    return this.sessionLifecycle.isCurrent(owner.generation) && !this.authService.sessionExiting()
+      && this.authService.getUserId() === owner.spotifyId && this.authService.getSupabaseUserId() === owner.cloudId;
+  }
 
   private isPlaceholder(url: string | null | undefined): boolean {
     return !url || url === PLACEHOLDER_URL;
   }
 
   markArtistImageFailed(artistId: string, imageUrl: string | null | undefined): void {
+    const owner = this.captureOwner();
+    if (!this.ownsRecovery(owner)) return;
     if (!artistId || !imageUrl || imageUrl === PLACEHOLDER_URL) return;
     const failedUrls = this.failedArtistImageUrls.get(artistId) || new Set<string>();
     failedUrls.add(imageUrl);
@@ -51,6 +72,8 @@ export class ImageHealingService {
    */
   healArtistImages(artists: any[], cacheKey?: string): void {
     if (!Array.isArray(artists) || artists.length === 0) return;
+    const owner = this.captureOwner();
+    if (!this.ownsRecovery(owner)) return;
 
     const missingIds = Array.from(new Set<string>(
       artists
@@ -81,18 +104,19 @@ export class ImageHealingService {
       this.artistHealingAttempted.add(id);
     });
 
-    void this.healArtistImagesFromSources(artists, missingIds, cacheKey)
+    void this.healArtistImagesFromSources(artists, missingIds, owner, cacheKey)
       .catch(error => {
         console.warn('[ImageHealingService] Artist image recovery failed:', error);
       })
       .finally(() => {
-        missingIds.forEach(id => this.artistHealingInFlight.delete(id));
+        if (this.ownsRecovery(owner)) missingIds.forEach(id => this.artistHealingInFlight.delete(id));
       });
   }
 
   private async healArtistImagesFromSources(
     artists: any[],
     missingIds: string[],
+    owner: {generation: SessionGeneration; spotifyId: string | null; cloudId: string | null},
     cacheKey?: string
   ): Promise<void> {
     console.log(
@@ -100,6 +124,7 @@ export class ImageHealingService {
     );
 
     const applyProfiles = (profiles: any[]): boolean => {
+      if (!this.ownsRecovery(owner)) return false;
       const profileMap = new Map<string, any>();
       profiles.forEach(profile => {
         if (profile?.id) profileMap.set(profile.id, profile);
@@ -107,6 +132,7 @@ export class ImageHealingService {
 
       let changed = false;
       artists.forEach(artist => {
+        if (!artist?.id) return;
         const profile = profileMap.get(artist.id);
         const imageUrl = profile?.images?.[0]?.url;
         if (
@@ -127,33 +153,37 @@ export class ImageHealingService {
     };
 
     const databaseArtists = await this.supabaseService.loadArtistsByIds(missingIds);
+    if (!this.ownsRecovery(owner)) return;
     let changed = applyProfiles(databaseArtists);
-    if (changed && cacheKey) {
+    if (changed && cacheKey && this.ownsRecovery(owner)) {
       this.storageService.setItem(cacheKey, JSON.stringify(artists));
     }
 
     const unresolvedIds = missingIds.filter(id => {
-      const artist = artists.find(candidate => candidate.id === id);
+      const artist = artists.find(candidate => candidate?.id === id);
       return this.isPlaceholder(artist?.images?.[0]?.url);
     });
 
     const spotifyArtists: any[] = [];
     for (let offset = 0; offset < unresolvedIds.length; offset += 50) {
+      if (!this.ownsRecovery(owner)) return;
       const batch = unresolvedIds.slice(offset, offset + 50);
       const response = await firstValueFrom(
-        this.spotifyDataService.getArtistsByIds(batch)
+        this.spotifyDataService.getArtistsByIds(batch).pipe(takeUntil(fromEvent(owner.generation.signal, 'abort')))
       );
+      if (!this.ownsRecovery(owner)) return;
       const profiles = response?.artists || [];
       spotifyArtists.push(...profiles);
       changed = applyProfiles(profiles) || changed;
     }
 
-    if (changed && cacheKey) {
+    if (changed && cacheKey && this.ownsRecovery(owner)) {
       this.storageService.setItem(cacheKey, JSON.stringify(artists));
     }
 
-    const supabaseUserId = this.authService.getSupabaseUserId();
+    const supabaseUserId = owner.cloudId;
     if (
+      this.ownsRecovery(owner) &&
       spotifyArtists.length > 0 &&
       this.authService.isBackupActive() &&
       supabaseUserId
@@ -168,6 +198,8 @@ export class ImageHealingService {
    */
   healTrackImages(tracks: any[], cacheKey?: string): void {
     if (!Array.isArray(tracks) || tracks.length === 0) return;
+    const owner = this.captureOwner();
+    if (!this.ownsRecovery(owner)) return;
 
     const missing = tracks.filter(track => {
       if (!track?.id) return false;
@@ -183,16 +215,20 @@ export class ImageHealingService {
 
     const missingIds = missing.map(track => track.id);
     for (let offset = 0; offset < missingIds.length; offset += 50) {
+      if (!this.ownsRecovery(owner)) return;
       const batch = missingIds.slice(offset, offset + 50);
-      this.spotifyDataService.getTracksByIds(batch).subscribe({
+      this.spotifyDataService.getTracksByIds(batch).pipe(takeUntil(fromEvent(owner.generation.signal, 'abort'))).subscribe({
         next: (response: any) => {
+          if (!this.ownsRecovery(owner)) return;
+          const requestedIds = new Set(batch);
           const trackMap = new Map<string, any>();
           (response.tracks || []).forEach((track: any) => {
-            if (track) trackMap.set(track.id, track);
+            if (track && requestedIds.has(track.id)) trackMap.set(track.id, track);
           });
 
           let changed = false;
           tracks.forEach(track => {
+            if (!track?.id) return;
             const fullTrack = trackMap.get(track.id);
             const imageUrl = fullTrack?.album?.images?.[0]?.url;
             if (!fullTrack || this.isPlaceholder(imageUrl)) return;
@@ -205,12 +241,12 @@ export class ImageHealingService {
 
           if (!changed) return;
 
-          if (cacheKey) {
+          if (cacheKey && this.ownsRecovery(owner)) {
             this.storageService.setItem(cacheKey, JSON.stringify(tracks));
           }
 
-          const supabaseUserId = this.authService.getSupabaseUserId();
-          if (this.authService.isBackupActive() && supabaseUserId) {
+          const supabaseUserId = owner.cloudId;
+          if (this.ownsRecovery(owner) && this.authService.isBackupActive() && supabaseUserId) {
             const tracksForSync = batch
               .map(id => trackMap.get(id))
               .filter(track => !!track);

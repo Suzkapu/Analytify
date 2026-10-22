@@ -1,0 +1,103 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-ambient.spec.ts e2e/design-v2-stats-search-switch.spec.ts e2e/design-v2-calendar-refresh-retry.spec.ts --grep static with reduced|reduced motion suppresses|selection follows|cached calendar Retry --output=docs/testing-evidence/design-v2/sidebar-motion-regression-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200
+[WebServer] (node:98655) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:98655) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 20 tests using 2 workers
+
+(node:100141) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:100142) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-ambient.spec.ts:110:5 › v2 ambient layer remains static with reduced motion (2.7s)
+  ✓   2 [desktop] › e2e/design-v2-ambient.spec.ts:129:5 › reduced motion suppresses native route snapshot animations without losing navigation (5.1s)
+[WebServer] 7:26:28 PM [vite] (client) [console.error] [Analytify][0007][+01292ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 7:26:28 PM [vite] (client) [console.warn] [Analytify][0008][+01293ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+[WebServer] 7:26:30 PM [vite] (client) [console.error] [Analytify][0007][+01194ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 7:26:30 PM [vite] (client) [console.warn] [Analytify][0008][+01198ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+  ✓   3 [desktop] › e2e/design-v2-calendar-refresh-retry.spec.ts:6:71 › cached calendar Retry keeps focus and eligible dates through a real metadata request, motion no-preference (9.8s)
+  ✓   4 [desktop] › e2e/design-v2-calendar-refresh-retry.spec.ts:6:71 › cached calendar Retry keeps focus and eligible dates through a real metadata request, motion reduce (9.2s)
+(node:101279) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   5 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:98:5 › selection follows the native 220ms timeline and responds to reduced motion (5.5s)
+(node:101573) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   6 [mobile] › e2e/design-v2-ambient.spec.ts:110:5 › v2 ambient layer remains static with reduced motion (2.7s)
+[WebServer] 7:26:45 PM [vite] (client) [console.error] [Analytify][0007][+01435ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 7:26:45 PM [vite] (client) [console.warn] [Analytify][0008][+01438ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+  ✓   8 [mobile] › e2e/design-v2-ambient.spec.ts:129:5 › reduced motion suppresses native route snapshot animations without losing navigation (5.5s)
+[WebServer] 7:26:50 PM [vite] (client) [console.error] [Analytify][0007][+01210ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 7:26:50 PM [vite] (client) [console.warn] [Analytify][0008][+01212ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+[WebServer] 7:26:50 PM [vite] (client) [console.error] [Analytify][0009][+01217ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 7:26:50 PM [vite] (client) [console.warn] [Analytify][0010][+01218ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+  ✓   7 [mobile] › e2e/design-v2-calendar-refresh-retry.spec.ts:6:71 › cached calendar Retry keeps focus and eligible dates through a real metadata request, motion no-preference (10.2s)
+  ✓  10 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:98:5 › selection follows the native 220ms timeline and responds to reduced motion (5.2s)
+  ✓   9 [mobile] › e2e/design-v2-calendar-refresh-retry.spec.ts:6:71 › cached calendar Retry keeps focus and eligible dates through a real metadata request, motion reduce (9.4s)
+(node:102664) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:102671) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  11 [firefox-stats] › e2e/design-v2-ambient.spec.ts:110:5 › v2 ambient layer remains static with reduced motion (5.6s)
+[WebServer] 7:27:09 PM [vite] (client) [console.error] [Analytify][0007][+01097ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 7:27:09 PM [vite] (client) [console.warn] [Analytify][0008][+01103ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+[WebServer] 7:27:09 PM [vite] (client) [console.error] [Analytify][0009][+01114ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 7:27:09 PM [vite] (client) [console.warn] [Analytify][0010][+01116ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+  ✓  12 [firefox-stats] › e2e/design-v2-ambient.spec.ts:129:5 › reduced motion suppresses native route snapshot animations without losing navigation (9.7s)
+[WebServer] 7:27:13 PM [vite] (client) [console.error] [Analytify][0007][+00828ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 7:27:13 PM [vite] (client) [console.warn] [Analytify][0008][+00830ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+[WebServer] 7:27:13 PM [vite] (client) [console.error] [Analytify][0009][+00843ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 7:27:13 PM [vite] (client) [console.warn] [Analytify][0010][+00846ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+  ✓  13 [firefox-stats] › e2e/design-v2-calendar-refresh-retry.spec.ts:6:71 › cached calendar Retry keeps focus and eligible dates through a real metadata request, motion no-preference (14.1s)
+  ✓  14 [firefox-stats] › e2e/design-v2-calendar-refresh-retry.spec.ts:6:71 › cached calendar Retry keeps focus and eligible dates through a real metadata request, motion reduce (11.1s)
+(node:104865) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  15 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:98:5 › selection follows the native 220ms timeline and responds to reduced motion (5.3s)
+(node:105140) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  16 [webkit-stats] › e2e/design-v2-ambient.spec.ts:110:5 › v2 ambient layer remains static with reduced motion (3.2s)
+[WebServer] 7:27:32 PM [vite] (client) [console.error] [Analytify][0007][+01374ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 7:27:32 PM [vite] (client) [console.warn] [Analytify][0008][+01377ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+[WebServer] 7:27:33 PM [vite] (client) [console.error] [Analytify][0009][+01491ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 7:27:33 PM [vite] (client) [console.warn] [Analytify][0010][+01493ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+  ✓  17 [webkit-stats] › e2e/design-v2-ambient.spec.ts:129:5 › reduced motion suppresses native route snapshot animations without losing navigation (7.5s)
+[WebServer] 7:27:39 PM [vite] (client) [console.error] [Analytify][0007][+01645ms][Supabase][ERROR] Error loading stats snapshots metadata {"message":"Isolated metadata refresh failure"}
+[WebServer] 7:27:39 PM [vite] (client) [console.warn] [Analytify][0008][+01651ms][Personal Stats][WARN] Failed to load history snapshots from Supabase {"message":"Isolated metadata refresh failure"}
+  ✓  19 [webkit-stats] › e2e/design-v2-calendar-refresh-retry.spec.ts:6:71 › cached calendar Retry keeps focus and eligible dates through a real metadata request, motion reduce (17.1s)
+  ✓  18 [webkit-stats] › e2e/design-v2-calendar-refresh-retry.spec.ts:6:71 › cached calendar Retry keeps focus and eligible dates through a real metadata request, motion no-preference (25.1s)
+  ✘  20 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:98:5 › selection follows the native 220ms timeline and responds to reduced motion (7.4s)
+
+
+  1) [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:98:5 › selection follows the native 220ms timeline and responds to reduced motion 
+
+    Error: locator.evaluate: TypeError: undefined is not an object (evaluating 'animation.pause')
+
+      108 |   // Capture native CSS transitions immediately, before Playwright polling can
+      109 |   // consume this short timeline. Resume once to prove the native clock runs.
+    > 110 |   const timing = await toggle.evaluate(element => {
+          |                               ^
+      111 |     const thumb = element.querySelector('.thumb')!;
+      112 |     const animation = thumb.getAnimations().find(item => (item as CSSTransition).transitionProperty === 'transform')!;
+      113 |     animation.pause();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-stats-search-switch.spec.ts:110:31
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/sidebar-motion-regression-artifacts/design-v2-stats-search-swi-fbc12--responds-to-reduced-motion-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/sidebar-motion-regression-artifacts/design-v2-stats-search-swi-fbc12--responds-to-reduced-motion-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/sidebar-motion-regression-artifacts/design-v2-stats-search-swi-fbc12--responds-to-reduced-motion-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/sidebar-motion-regression-artifacts/design-v2-stats-search-swi-fbc12--responds-to-reduced-motion-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:98:5 › selection follows the native 220ms timeline and responds to reduced motion 
+  19 passed (2.0m)

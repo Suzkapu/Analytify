@@ -1,0 +1,189 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-17",
+  "branch": "codex/design-v2",
+  "checkpoint": "a8a7a3966a622c992e9058094627a768c16a363a",
+  "status": "Static sidebar/service-boundary milestone. Full migration incomplete; current changes uncommitted.",
+  "commands": [
+    {
+      "command": "npm run verify:ci",
+      "exit": 0,
+      "passed": 1632,
+      "failed": 0,
+      "note": "154 frontend files;1 documented hosted-contract skip;215worker/81edge pass. Before reduced-motion CSS fix and next auth/Songs additions.",
+      "log": "docs/testing-evidence/design-v2/sidebar-services-ci-final.log",
+      "logSha256": "b4321a3566e6ae3f56bc48b96fd438b1c358382999e0fe920deb5e931f21bffe"
+    },
+    {
+      "command": "npm run build:production",
+      "exit": 0,
+      "passed": null,
+      "failed": 0,
+      "note": "After CSS fix; production build/index/preload/bundle pass.",
+      "log": "docs/testing-evidence/design-v2/sidebar-motion-build.log",
+      "logSha256": "83eb7236f4df01d44c949dda93424ae31f46809ad78b54fe4721683b2165e3a7"
+    },
+    {
+      "command": "playwright Navigation original24 matrix",
+      "exit": 1,
+      "passed": 22,
+      "failed": 2,
+      "note": "Both failures WebKit normal-motion cumulative30s deadlines; retained.",
+      "log": "docs/testing-evidence/design-v2/sidebar-static-final.log",
+      "logSha256": "784ee7d88396c62a45f44aed431635f0714d9b21138c818c255b7eee71c3c9cc"
+    },
+    {
+      "command": "playwright ambient/Stats switch/calendar selected20 cases",
+      "exit": 1,
+      "passed": 19,
+      "failed": 1,
+      "note": "WebKit220ms transition expired before capture; retained.",
+      "log": "docs/testing-evidence/design-v2/sidebar-motion-regression.log",
+      "logSha256": "314c870ce4aee03ed7c67dca3223b512602cd60ae9d180f484cdbd5c9f86cc11"
+    },
+    {
+      "command": "playwright affected Stats native transition capture across4projects",
+      "exit": 0,
+      "passed": 4,
+      "failed": 0,
+      "note": "transitionrun capture; all native timeline/focus/reduced-motion assertions retained.",
+      "log": "docs/testing-evidence/design-v2/sidebar-switch-capture.log",
+      "logSha256": "7656e2875af2d06e26a8d182804afe24f59ec019e76c82ab4f9114f5ea147c78"
+    },
+    {
+      "command": "playwright --config=playwright.navigation.config.ts --project=webkit",
+      "exit": 1,
+      "passed": 0,
+      "failed": null,
+      "note": "No tests ran; wrong configured project name.",
+      "log": "docs/testing-evidence/design-v2/sidebar-split-project-name-error.log",
+      "logSha256": "6912bafadf9d6978d9b1cf46b7c3debd1d28250289b8c7944a356471ccadce83"
+    },
+    {
+      "command": "playwright --config=playwright.navigation.config.ts --project=webkit-stats",
+      "exit": 0,
+      "passed": 8,
+      "failed": 0,
+      "note": "All8 split cases; prior test hash before explicit save-enabled wait.",
+      "log": "docs/testing-evidence/design-v2/sidebar-split-webkit.log",
+      "logSha256": "7cf9e6ea91ac3f3f09198ffff30eda50556066dfe78dc196f5361cac547325a3"
+    },
+    {
+      "command": "playwright --config=playwright.navigation.config.ts --project=desktop --project=mobile --project=firefox-stats",
+      "exit": 1,
+      "passed": 23,
+      "failed": 1,
+      "note": "Empty-case initial press occurred during optimistic save busy state; retained.",
+      "log": "docs/testing-evidence/design-v2/sidebar-split-other.log",
+      "logSha256": "8f87697df6b2890e76b1d709801d41988bac3ccd5aad4a3d79984d46779f442f"
+    },
+    {
+      "command": "playwright --config=playwright.navigation.config.ts --grep Empty shortcut persistence",
+      "exit": 0,
+      "passed": 8,
+      "failed": 0,
+      "note": "All affected cases across4projects; await enabled before actual keyboard action, every assertion preserved.",
+      "log": "docs/testing-evidence/design-v2/sidebar-split-empty.log",
+      "logSha256": "f5c8adc9edd88397bd97df6722124bc469ce43575e5a11b83030406b9040c437"
+    },
+    {
+      "command": "npx eslint e2e/design-v2-navigation.spec.ts",
+      "exit": 0,
+      "passed": null,
+      "failed": 0,
+      "note": "Final Navigation test source.",
+      "log": "docs/testing-evidence/design-v2/sidebar-split-lint.log",
+      "logSha256": "71dffe0220eaf89b724f0bd818140cb9d0e561bd7dc58464816d0338fa4dc2e9"
+    }
+  ],
+  "browser": {
+    "scheduledCases": 32,
+    "passingEvidence": "24 unchanged sidebar/recovery/five-choice cases plus8 corrected empty/menu/focus cases, across multiple scoped runs; not a single final matrix EXIT0.",
+    "timeoutMs": 30000,
+    "retries": 0,
+    "engines": [
+      "Chromium desktop",
+      "Chromium mobile",
+      "Firefox",
+      "WebKit"
+    ],
+    "motion": [
+      "normal",
+      "reduced"
+    ],
+    "geometry": "128 desktop sidebar width/height/state samples,80 shortcut resize samples,96 drawer resize samples; exact size/overflow/profile anchors, native IndexedDB persistence/fault recovery, keyboard/focus/axe/network boundaries.",
+    "sourceSnapshot": "docs/testing-evidence/design-v2/sidebar-browser-source-snapshot.json",
+    "sourceSnapshotSha256": "a74a31083afa3b228cdce7329177e9754c1184e2674cf73fd26175e5a292f099"
+  },
+  "coverage": {
+    "frontend": {
+      "metrics": {
+        "lines": 80.66,
+        "statements": 78.72,
+        "functions": 78.35,
+        "branches": 68.94
+      },
+      "all98": false
+    },
+    "worker": {
+      "metrics": {
+        "lines": 99.66,
+        "statements": 99.72,
+        "functions": 100,
+        "branches": 98.48
+      },
+      "all98": true
+    },
+    "edge": {
+      "metrics": {
+        "lines": 99.86,
+        "statements": 99.77,
+        "functions": 100,
+        "branches": 99.74
+      },
+      "all98": true
+    }
+  },
+  "frontendCoverageScope": "All167 production sources in last full CI; preserved snapshot precedes next auth/Songs additions. Separate final98 gate EXIT1.",
+  "reports": {
+    "docs/testing-evidence/design-v2/sidebar-frontend-coverage-summary.json": "8408dbcad5637cddc6d24dbab68026befa704ccd3cc50d5b66f586a8276a016f"
+  },
+  "figma": {
+    "fileKey": "5v8ckmlbfhMDWwP5sTdSXd",
+    "sidebarSet": "869:73478",
+    "expanded": "62:2590",
+    "compact": "869:73447",
+    "drawer": "105:3505",
+    "desktopSettings": "27:1209",
+    "mobileNavigation": "688:41515",
+    "evidence": [
+      "navigation-next-shell-context-0.json",
+      "navigation-next-shell-context-1.json",
+      "sidebar-shell-canonical-0.json",
+      "sidebar-shell-canonical-1.json"
+    ],
+    "parity": "Expanded/compact rail screenshots visually inspected against canonical renders; widths256/98, surface240/82,32px exact logo and stable49px center. Provisional motion untouched. No whole-page visual golden approval."
+  },
+  "testHashes": {
+    "e2e/design-v2-navigation.spec.ts": "cb223cc17199fa67a1a3229669d710c02d5a29446abfa07ed5d6585666422e48",
+    "e2e/design-v2-stats-search-switch.spec.ts": "c0b7f9bcef01c9343ab215757aea3cbe7251a74aeb27f8c794cf58b7d4f3d465",
+    "playwright.navigation.config.ts": "75dddc5f606fdb2e47259deea1a11f51928b5aa58f5f799c15969475f85ed726",
+    "playwright.config.ts": "a138aa5178c2a38b82eedcb8688a0c83c0d9d45938e92b5ae530b97503a29b54",
+    "scripts/prepare-portable-webkit.mjs": "7d500ed0a28a1953d50144e2704bdb0ac85a2859f52c05ca15a8f6d7fd1e3dd9"
+  },
+  "serviceEvidence": [
+    "worker-parallel-manifest.json",
+    "edge-parallel-evidence.json",
+    "frontend-storage-parallel-manifest.json",
+    "frontend-supabase-parallel-evidence.json"
+  ],
+  "limitations": [
+    "Header/mobile brand header/gutters/footer remain to migrate.",
+    "Full frontend all98 gate fails; remaining retained features and canonical approved visual matrix incomplete.",
+    "Hosted isolated Auth/PostgREST/full retained migration chain unverified; one documented hosted test skip remains.",
+    "Earlier reduced-motion DOM-update timeout remains unresolved; clean subsequent runs are not a fix.",
+    "Local Node26.11.1/Deno2.9.7; pinned remote CI not executed.",
+    "Auth/Songs regression fix work starts after browser freeze; requires fresh source-specific verification."
+  ],
+  "boundaries": "No commits, merge, push, deployment, shared service/database/data or stable URL service-worker change."
+}

@@ -1,0 +1,48 @@
+{
+  "runnerSha256": "45f2027e3760fc08cfa8c38fc31ebe0f4ba5081fa3c4fe5d0916ee35fffd0657",
+  "version": "postgres (PostgreSQL) 18.6",
+  "isolation": {
+    "freshCluster": true,
+    "tcpListeners": false,
+    "socketPermissions": "0700",
+    "syntheticProfilesOnly": true
+  },
+  "migrations": [
+    {
+      "path": "supabase/migrations/20260801000000_foundational_schema.sql",
+      "sha256": "2ddb1def6b431674bc06bace7edbc55177c957f6689371f894c7f8861b8bc95e"
+    },
+    {
+      "path": "supabase/migrations/20260905153000_lock_spotify_profile_identity.sql",
+      "sha256": "dc6d6dd600184d58ecd8e12a6cf440c84b1db4a10d29d134de626af1bc4c6716"
+    },
+    {
+      "path": "supabase/migrations/20260801181500_playlist_sharing.sql",
+      "sha256": "2744dfdc7236e2c8d95df0b5d73cda7465daf4ad4ca8d6f5bf1c1a2c5c16a8d6"
+    },
+    {
+      "path": "supabase/migrations/20260902190000_stats_spy_mode.sql",
+      "sha256": "110d2f98b0647ec6bb998c22a9ece4583dd52543752f44e0f9978e857f5cbcb7"
+    },
+    {
+      "path": "supabase/migrations/20261011162823_design_v2_single_use_friend_invitations.sql",
+      "sha256": "507d8fb35cfe38d1b0b87f645222d567dabfd6922bb3d3a06a4d368ea2ed02ca"
+    }
+  ],
+  "outcomes": [
+    "Creation and lost-response retry produce one pending invitation with a hashed secret",
+    "Malformed tokens, anonymous/missing actors, unverified profiles and token takeover are rejected",
+    "Read-only preview exposes only inviter presentation; self response, non-owner revoke and raw table access are denied",
+    "Acceptance creates one mutual connection, consumes the link and safely replays only the same decision/recipient",
+    "Either participant can remove; unrelated removal and old acceptance replay cannot restore membership or alter existing grants",
+    "A genuinely new invitation reconnects without duplicates; the other participant can remove too",
+    "Revoked requests stay revoked across creation retry; a declined single-use invitation cannot create a friendship",
+    "Bounded owner-only invitation pages contain no bearer token or token hash",
+    "Two native sessions waiting on one invitation yield exactly one accepted recipient",
+    "Revocation committed while acceptance waits prevents acceptance and preserves real independent grants",
+    "Concurrent same-recipient retries agree; revocation after committed acceptance leaves the friendship intact",
+    "A real transaction failure rolls back invitation consumption and allows successful recovery",
+    "Concurrent creation respects the 20-pending-request bound; revocation releases capacity without restoring old tokens"
+  ],
+  "limitations": "Selected native SQL contracts. Auth users/uid and verified-profile column are explicit prerequisites; no hosted JWT/Auth, PostgREST, full migration chain, pending-request delivery, Angular route or UI parity is certified."
+}

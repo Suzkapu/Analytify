@@ -1,0 +1,56 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.navigation.config.ts --project=mobile --grep=no-preference
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214
+[WebServer] (node:221506) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:221506) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:221738) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [mobile] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (no-preference) (2.2s)
+
+
+  1) [mobile] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (no-preference) 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('v2-settings-navigation-preferences').getByRole('status')
+    Expected: "4 of 5 shortcuts selected"
+    Error: strict mode violation: locator('v2-settings-navigation-preferences').getByRole('status') resolved to 2 elements:
+        1) <section role="status" aria-busy="true" class="v2-inline-status" _ngcontent-ng-c1522599058="">…</section> aka getByText('Saving navigation preferencesYour selection applies now. Wait for this device')
+        2) <p role="status" _ngcontent-ng-c4099037600="">4 of 5 shortcuts selected</p> aka getByText('of 5 shortcuts selected')
+
+    Call log:
+      - Expect "toHaveText" locator('v2-settings-navigation-preferences').getByRole('status') with timeout 5000ms
+      - waiting for locator('v2-settings-navigation-preferences').getByRole('status')
+
+
+      24 |     await expect(bar.getByRole('link')).toHaveText(['Playlists', 'Stats', 'History']);
+      25 |     await choice('Friends').press('Enter');
+    > 26 |     await expect(panel.getByRole('status')).toHaveText('4 of 5 shortcuts selected');
+         |                                             ^
+      27 |     await choice('Song Leagues').press('Enter');
+      28 |     await expect(panel.getByRole('status')).toHaveText('5 of 5 shortcuts selected');
+      29 |     await expect(bar.getByRole('link')).toHaveText(['Playlists', 'Stats', 'History', 'Friends', 'Song Leagues']);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-navigation.spec.ts:26:45
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/navigation-browser-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/navigation-browser-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/navigation-browser-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/navigation-browser-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [mobile] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (no-preference) 

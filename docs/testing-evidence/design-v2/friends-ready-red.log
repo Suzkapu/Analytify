@@ -1,0 +1,48 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts --grep Friends ready content preserves canonical --project=desktop --workers=1 --output=docs/testing-evidence/design-v2/friends-ready-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:21856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:22085) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-friends.spec.ts:90:5 › Friends ready content preserves canonical card geometry during resizing (2.2s)
+
+
+  1) [desktop] › e2e/design-v2-friends.spec.ts:90:5 › Friends ready content preserves canonical card geometry during resizing 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 12
+    Received: 16
+
+      121 |       expect(row.height).toBe(reference.rows[0].height);
+      122 |       expect(row.width).toBe(sample.width === 320 ? 288 : reference.rows[0].width);
+    > 123 |       if (index) expect(row.y - sample.rows[index - 1].y - sample.rows[index - 1].height).toBe(reference.gap);
+          |                                                                                           ^
+      124 |     }
+      125 |   }
+      126 |   await expectNoBlockingAxeViolations(page);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:123:91
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-ready-red-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-ready-red-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-ready-red-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-ready-red-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-friends.spec.ts:90:5 › Friends ready content preserves canonical card geometry during resizing 

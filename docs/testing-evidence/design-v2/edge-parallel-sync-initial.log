@@ -1,0 +1,31 @@
+Check supabase/functions/song-league-playlist-sync/handler.test.ts
+running 10 tests from ./supabase/functions/song-league-playlist-sync/handler.test.ts
+playlist synchronization refreshes credentials, writes private metadata and preserves every track in batches ... ok (89ms)
+synced revisions skip Spotify and stale round/window/error state forces a refresh ... ok (10ms)
+ordinary callers update only their own existing or explicitly requested playlist; workers can target one member ... FAILED (3ms)
+encrypted hosted and personal credentials are decrypted, rotated and migrated without exposing plaintext ... ok (14ms)
+playlist recovery uses only owned exact markers and creates a destination only when no reusable playlist exists ... ok (20ms)
+deleted Spotify destinations are recreated once while other errors remain recoverable failures ... ok (4ms)
+source revision races rerun against the latest payload with at most three passes ... ok (16ms)
+lost leases, stale reservations and completion races report per-member failures and always release the league lease ... ok (17ms)
+query and persistence failures are reported at the correct global or member boundary ... ok (22ms)
+one failed member does not prevent another member from synchronizing ... ok (3ms)
+
+ ERRORS 
+
+ordinary callers update only their own existing or explicitly requested playlist; workers can target one member => ./supabase/functions/song-league-playlist-sync/handler.test.ts:62:6
+error: AssertionError: Expected values to be strictly equal:
+
+500 !== 200
+
+    assert.equal(result.response.status, 200);
+           ^
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/song-league-playlist-sync/handler.test.ts:66:12
+
+ FAILURES 
+
+ordinary callers update only their own existing or explicitly requested playlist; workers can target one member => ./supabase/functions/song-league-playlist-sync/handler.test.ts:62:6
+
+FAILED | 9 passed | 1 failed (207ms)
+
+error: Test failed

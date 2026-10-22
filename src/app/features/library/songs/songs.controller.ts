@@ -58,6 +58,8 @@ export class SongsController implements OnInit, OnDestroy {
   totalUniqueArtists: number = 0;
   private loaderSubscription: Subscription | null = null;
   private playlistLoadSequence = 0;
+  private loadedPlaylistId: string | null = null;
+  private readonly routeSubscription: Subscription;
   private readonly cloudPriorityWindowMs = 750;
   private readonly windowScrollHandler = () => this.onWindowScroll();
 
@@ -72,7 +74,7 @@ export class SongsController implements OnInit, OnDestroy {
     @Optional() private designNavigation?: DesignNavigationService,
     @Optional() private changeDetector?: ChangeDetectorRef
   ) {
-    this.route.params.subscribe(async (params) => {
+    this.routeSubscription = this.route.params.subscribe(async (params) => {
       this.playlistId = params['id'];
       this.sortAscending = this.getDefaultSortDirection(this.trackSortKey);
       const userId = this.authService.getUserId() || 'anonymous';
@@ -189,22 +191,23 @@ export class SongsController implements OnInit, OnDestroy {
   }
 
   async loadArtistsFromPlaylist() {
+    this.loaderSubscription?.unsubscribe();
+    this.loaderSubscription = null;
+    if (this.loadedPlaylistId !== this.playlistId) {
+      this.selectedAlbum = null;
+      this.loadedPlaylistId = this.playlistId;
+    }
     this.isLoading = this.artists.length === 0;
     const loadSequence = ++this.playlistLoadSequence;
     const playlistId = this.playlistId;
-    const isCurrentLoad = () =>
-      loadSequence === this.playlistLoadSequence && playlistId === this.playlistId;
     const userId = this.authService.getUserId() || 'anonymous';
+    const isCurrentLoad = () =>
+      loadSequence === this.playlistLoadSequence && playlistId === this.playlistId &&
+      userId === (this.authService.getUserId() || 'anonymous');
     const storageKey = `${userId}_${playlistId}`;
     const isBackupActive = this.authService.isBackupActive();
     await this.storageService.hydrateItems?.([storageKey]);
     if (!isCurrentLoad()) return;
-
-    // Unsubscribe from any previous loader task
-    if (this.loaderSubscription) {
-      this.loaderSubscription.unsubscribe();
-      this.loaderSubscription = null;
-    }
 
     // Check if there is an active background task running for this playlist
     const activeTask = this.playlistLoaderService.getLoadingTask(playlistId);
@@ -371,7 +374,20 @@ export class SongsController implements OnInit, OnDestroy {
   }
 
   private subscribeToLoaderTask(task: any, silent: boolean = false) {
-    this.loaderSubscription = task.progress$.subscribe((progress: any) => {
+    this.loaderSubscription?.unsubscribe();
+    const subscription = new Subscription();
+    this.loaderSubscription = subscription;
+    const playlistId = this.playlistId;
+    const userId = this.authService.getUserId() || 'anonymous';
+    const loadSequence = this.playlistLoadSequence;
+    subscription.add(task.progress$.subscribe((progress: any) => {
+      if (loadSequence !== this.playlistLoadSequence || playlistId !== this.playlistId ||
+          userId !== (this.authService.getUserId() || 'anonymous') ||
+          this.playlistLoaderService.getLoadingTask(playlistId) !== task) {
+        subscription.unsubscribe();
+        if (this.loaderSubscription === subscription) this.loaderSubscription = null;
+        return;
+      }
       if (!silent) {
         this.isLoading = (progress.isLoadingTracks || progress.isLoadingArtists) && !progress.isRefreshing && progress.artists.length === 0;
         this.isLoadingTracks = progress.isLoadingTracks;
@@ -390,28 +406,26 @@ export class SongsController implements OnInit, OnDestroy {
         this.isLoadingTracks = false;
         this.isLoadingArtists = false;
         this.isRefreshing = false;
-        const userId = this.authService.getUserId() || 'anonymous';
-        const storedArtists = this.storageService.getItem(`${userId}_${this.playlistId}`);
+        const storedArtists = this.storageService.getItem(`${userId}_${playlistId}`);
         if (storedArtists) {
           this.artists = JSON.parse(storedArtists);
           this.filterArtists();
           this.healVisibleArtistImages();
         }
-        this.playlistLoaderService.clearLoadingTask(this.playlistId);
-        if (this.loaderSubscription) {
-          this.loaderSubscription.unsubscribe();
-          this.loaderSubscription = null;
-        }
+        this.playlistLoaderService.clearLoadingTask(playlistId);
+        subscription.unsubscribe();
+        if (this.loaderSubscription === subscription) this.loaderSubscription = null;
       } else if (!silent) {
         this.artists = (this.artists.length === 0 || !progress.isRefreshing) ? progress.artists : this.artists;
         this.filterArtists();
       }
       this.changeDetector?.markForCheck();
-    });
+    }));
   }
 
   ngOnDestroy() {
     this.playlistLoadSequence++;
+    this.routeSubscription.unsubscribe();
     window.removeEventListener('scroll', this.windowScrollHandler);
     if (this.loaderSubscription) {
       this.loaderSubscription.unsubscribe();

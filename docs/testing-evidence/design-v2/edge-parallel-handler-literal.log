@@ -1,0 +1,16 @@
+Check supabase/functions/_shared/handler-boundaries.test.ts
+running 11 tests from ./supabase/functions/_shared/handler-boundaries.test.ts
+credentials handler rejects invalid HTTP, origins and oversized requests before business writes ... ok (87ms)
+sync handler rejects invalid HTTP, origins and oversized requests before business writes ... ok (8ms)
+notifications handler rejects invalid HTTP, origins and oversized requests before business writes ... ok (7ms)
+credentials resolution is bounded and does not disclose user credentials ... ok (3ms)
+credential profile permissions reject wrong sessions before Spotify requests ... ok (12ms)
+credential removal clears only the session profile and reports partial failure ... ok (3ms)
+account deletion is restricted to anonymous owners and exposes backend failures safely ... ok (4ms)
+sync validates inputs and rejects fan-out or cross-user requests from ordinary callers ... ok (4ms)
+sync refuses a busy lease and releases an acquired lease when the league disappears ... ok (1ms)
+notifications validate actions, admin permissions and trusted-worker schedules ... ok (5ms)
+notification worker drains an empty queue with explicit or current time and propagates claim failures ... ok (3ms)
+
+ok | 11 passed | 0 failed (146ms)
+

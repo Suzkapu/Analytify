@@ -1,0 +1,51 @@
+npm notice run spoti-front@0.0.0 deployment-pipeline:check
+npm notice run node --test scripts/production-index-validator.test.mjs scripts/activate-release.test.mjs scripts/activate-release-rehearsal.test.mjs scripts/security-headers.test.mjs scripts/inject-nginx-security-include.test.mjs scripts/nginx-http2.test.mjs scripts/deployment-freshness.test.mjs scripts/deployment-policy.test.mjs && bash -n scripts/preflight-oracle-ssh.sh
+✔ activation rehearsal restores both releases after none failure (38.531253ms)
+✔ activation rehearsal restores both releases after worker failure (117.588679ms)
+✔ activation rehearsal restores both releases after web failure (44.005136ms)
+✔ worker activation allows slow credential migration and reports service failures (0.980663ms)
+✔ worker keeps home directories private and deploys from var lib (0.341679ms)
+✔ worker service applies compatible process, kernel, device, and capability confinement (5.035614ms)
+✔ activation audits the installed worker sandbox after its health check passes (0.244727ms)
+✔ remote control commands retry transient DNS and transport failures (0.296935ms)
+✔ a rapidly superseded commit cannot deploy after newer main (89.438473ms)
+✔ feature refs can never pass the production freshness gate (2.458416ms)
+✔ only main can start a production deployment (5.326468ms)
+✔ verification is secret-free and production secrets are environment scoped (0.244096ms)
+✔ verified build is handed to a serialized cancelable production job (0.252392ms)
+✔ the exact tested worker is digested and deployed without registry access (0.24603ms)
+✔ CI declares and installs one exact package-manager release (0.135343ms)
+✔ production waits for same-commit advisory and CodeQL gates (0.25146ms)
+✔ each deployment script checks freshness before its first remote mutation (0.130824ms)
+✔ Oracle identity is pinned and verified before Supabase can mutate production (0.163997ms)
+✔ Edge request controls are configured through production-scoped secrets (0.207968ms)
+✔ the installer renderer combines negotiated HTTP2 with security policy (40.490556ms)
+✔ security policy is installed in application and internal-redirect locations (34.660006ms)
+✔ existing includes are not duplicated while uncovered locations are repaired (28.292842ms)
+✔ an existing server_tokens directive is preserved without duplication (30.757581ms)
+✔ installer refuses to guess when the application location is missing (31.369635ms)
+✔ modern Nginx uses one server directive and preserves nested locations (1.696171ms)
+✔ older Nginx enables HTTP/2 on both TLS listeners only (0.351447ms)
+✔ unknown builds, missing module, unrelated hosts and explicit settings remain untouched (3.700388ms)
+✔ malformed matching server blocks fail before installation (0.510153ms)
+✔ accepts local generated module preload hints (1.211135ms)
+✔ rejects missing, remote, duplicate, or absent preload artifacts (0.338864ms)
+✔ accepts a directly active stylesheet and responsive viewport (0.932243ms)
+✔ rejects an index without a device-width viewport (0.317504ms)
+✔ rejects Angular print-only CSS activation that strict CSP blocks (0.176059ms)
+✔ rejects a stylesheet link whose hashed artifact is missing (0.190125ms)
+✔ live cache validation rejects stale metadata and conflicting asset directives (28.369495ms)
+✔ immutable caching matches only successful hashed build assets (0.447556ms)
+✔ static application assets negotiate gzip without enabling API JSON compression (0.841553ms)
+✔ cache policy is commit-scoped during transport and restored with nginx configuration (0.218589ms)
+✔ versioned nginx configuration supplies the required browser defenses (1.043381ms)
+✔ live validation reports missing or weakened headers (0.521195ms)
+✔ online PWA navigations refresh response security headers from the server (0.132437ms)
+ℹ tests 41
+ℹ suites 0
+ℹ pass 41
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 262.313357

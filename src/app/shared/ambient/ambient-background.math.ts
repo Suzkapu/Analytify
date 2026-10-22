@@ -14,28 +14,19 @@ export type AmbientShellMode = 'app' | 'focus' | 'public';
 
 const clamp01 = (value: number): number => Math.min(1, Math.max(0, value));
 
-/** Stable FNV-1a based phase. Semantic route keys are inputs, never coordinate lookups. */
-export const ambientPhaseForKey = (key: string): number => {
-  let hash = 2166136261;
-  for (const character of key.trim().toLocaleLowerCase() || 'default') {
-    hash ^= character.codePointAt(0) ?? 0;
-    hash = Math.imul(hash, 16777619);
-  }
-  return (hash >>> 0) / 0xffffffff;
-};
-
-export const ambientTargetForKey = (key: string): AmbientVector => {
-  const phase = ambientPhaseForKey(key) * Math.PI * 2;
-  return {
-    primaryX: clamp01(.28 + Math.sin(phase) * .16),
-    primaryY: clamp01(.18 + Math.cos(phase * 1.17) * .12),
-    secondaryX: clamp01(.72 + Math.cos(phase * .83) * .16),
-    secondaryY: clamp01(.42 + Math.sin(phase * 1.31) * .16),
-    dotsX: Math.sin(phase * .67) * .5,
-    dotsY: Math.cos(phase * .71) * .5,
-    intensity: 1,
-    dotIntensity: 1
+/** Canonical529:21518 ellipse centers. Asset dimensions remain intrinsic. */
+export const ambientTargetForKey = (key: string, mobile = false): AmbientVector => {
+  const scene = key.trim().toLowerCase();
+  const centers: Record<string, readonly number[]> = {
+    library: [.25, .15, .84, .58],
+    insights: [.68, .3, .16, .72],
+    social: [.4, .76, .83, .22],
+    league: mobile
+      ? [320 / 390, 110 / (2600 / 3), 45 / 390, 710 / (2600 / 3)]
+      : [1120 / 1440, 145 / 810, 210 / 1440, 695 / 810]
   };
+  const [primaryX, primaryY, secondaryX, secondaryY] = Object.hasOwn(centers, scene) ? centers[scene] : centers['library'];
+  return {primaryX, primaryY, secondaryX, secondaryY, dotsX: 0, dotsY: 0, intensity: 1, dotIntensity: 1};
 };
 
 export const normalizedScrollProgress = (
@@ -53,20 +44,20 @@ export const ambientTargetWithScroll = (
   progress: number,
   motionScale = 1
 ): AmbientVector => {
-  const centered = (clamp01(progress) - .5) * Math.min(1, Math.max(0, motionScale));
+  const offset = clamp01(progress) * Math.min(1, Math.max(0, motionScale));
   return {
-    primaryX: clamp01(route.primaryX + centered * .035),
-    primaryY: clamp01(route.primaryY + centered * .1),
-    secondaryX: clamp01(route.secondaryX - centered * .045),
-    secondaryY: clamp01(route.secondaryY + centered * .07),
-    dotsX: route.dotsX + centered * 1.8,
-    dotsY: route.dotsY - centered * 2.4,
+    primaryX: route.primaryX,
+    primaryY: route.primaryY,
+    secondaryX: route.secondaryX,
+    secondaryY: route.secondaryY,
+    dotsX: route.dotsX + offset * 1.8,
+    dotsY: route.dotsY - offset * 2.4,
     intensity: route.intensity,
     dotIntensity: route.dotIntensity
   };
 };
 
-/** Generic overlay composition: side and depth are normalized inputs, never page coordinates. */
+/** Overlay dimming preserves the route's glow coordinates; only particles may shift. */
 export const ambientTargetWithInteraction = (
   target: AmbientVector,
   overlay: AmbientOverlayState,
@@ -76,10 +67,10 @@ export const ambientTargetWithInteraction = (
   const side = overlay === 'tools' ? -1 : overlay === 'account' ? 1 : 0;
   const shellIntensity = shellMode === 'app' ? 1 : shellMode === 'public' ? .86 : .76;
   return {
-    primaryX: clamp01(target.primaryX + side * depth * .025),
-    primaryY: clamp01(target.primaryY + depth * .018),
-    secondaryX: clamp01(target.secondaryX + side * depth * .018),
-    secondaryY: clamp01(target.secondaryY - depth * .024),
+    primaryX: target.primaryX,
+    primaryY: target.primaryY,
+    secondaryX: target.secondaryX,
+    secondaryY: target.secondaryY,
     dotsX: target.dotsX + side * depth * .22,
     dotsY: target.dotsY + depth * .12,
     intensity: shellIntensity * (1 - depth * .16),

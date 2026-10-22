@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {CompareTrack} from '@core/compare-room/compare-room.models';
+import {SessionGeneration, SessionLifecycleService} from '@core/auth/session-lifecycle.service';
 import {
   CreatedPlaylistShare,
   PlaylistShare,
@@ -13,14 +14,23 @@ import {
   SharedPlaylistStats
 } from './playlist-sharing.models';
 
+interface PublicationOwner {
+  generation: SessionGeneration;
+  userId: string;
+}
+
 @Injectable({providedIn: 'root'})
 export class PlaylistSharingService {
-  constructor(private supabase: SupabaseService) {}
+  constructor(private supabase: SupabaseService, private sessionLifecycle: SessionLifecycleService) {}
 
   async createShare(publication: PlaylistSharePublication): Promise<CreatedPlaylistShare> {
+    const generation = this.sessionLifecycle.capture();
     const token = this.createClaimToken();
-    const profile = await this.loadCurrentProfile();
-    const {data: uploadData, error: uploadError} = await (await this.supabase.getClient()).rpc('begin_playlist_share_create_upload', {
+    const owner = {generation, userId: await this.currentAuthUserId()};
+    const profile = await this.loadCurrentProfile(owner);
+    const client = await this.publicationClient(owner);
+    this.assertPublicationGeneration(owner);
+    const {data: uploadData, error: uploadError} = await client.rpc('begin_playlist_share_create_upload', {
       p_source_playlist_id: publication.sourcePlaylistId,
       p_playlist_name: publication.playlistName,
       p_playlist_description: publication.playlistDescription,
@@ -28,15 +38,19 @@ export class PlaylistSharingService {
       p_owner_display_name: profile.displayName,
       p_owner_image_url: profile.imageUrl,
       p_claim_token: token
-    });
+    }).abortSignal(owner.generation.signal);
+    await this.publicationClient(owner);
     if (uploadError) throw uploadError;
     const uploadId = String(uploadData || '');
     if (!uploadId) throw new Error('Supabase did not start the playlist upload.');
-    await this.appendUploadChunks(uploadId, publication.tracks);
-    const {data, error} = await (await this.supabase.getClient()).rpc('commit_playlist_share_create_upload', {
+    await this.appendUploadChunks(uploadId, publication.tracks, owner);
+    const commitClient = await this.publicationClient(owner);
+    this.assertPublicationGeneration(owner);
+    const {data, error} = await commitClient.rpc('commit_playlist_share_create_upload', {
       p_upload_id: uploadId,
       p_expected_track_count: publication.tracks.length
-    });
+    }).abortSignal(owner.generation.signal);
+    await this.publicationClient(owner);
     if (error) throw error;
     const shareId = String(data || '');
     if (!shareId) throw new Error('Supabase did not return a playlist share ID.');
@@ -141,18 +155,28 @@ export class PlaylistSharingService {
     const first = await this.loadShareTrackPage(shareId, 0, pageSize, options.signal, true);
     rows.push(...first.rows);
     const total = first.count ?? first.rows.length;
+    const partialError = (cause: unknown) => Object.assign(
+      new Error('Some shared playlist songs could not be loaded. Please retry.'),
+      {cause, partialTracks: rows.map(row => row.track)}
+    );
     options.onPage?.(first.rows.map(row => row.track), rows.length, total);
-    if (first.rows.length < pageSize) return rows.map(row => row.track);
+    if (first.rows.length < pageSize) {
+      if (first.count !== null && rows.length !== total) {
+        throw partialError(new Error('The shared playlist source count changed while loading.'));
+      }
+      return rows.map(row => row.track);
+    }
 
     const offsets = first.count == null
       ? [pageSize]
       : Array.from({length: Math.ceil(total / pageSize) - 1}, (_, index) => (index + 1) * pageSize);
-    for (let cursor = 0; cursor < offsets.length; cursor += concurrency) {
+    for (let cursor = 0; cursor < offsets.length;) {
       this.throwIfAborted(options.signal);
       const batchOffsets = offsets.slice(cursor, cursor + concurrency);
       const settled = await Promise.allSettled(batchOffsets.map(offset =>
         this.loadShareTrackPage(shareId, offset, pageSize, options.signal, false)
       ));
+      this.throwIfAborted(options.signal);
       const failed = settled.find(result => result.status === 'rejected') as PromiseRejectedResult | undefined;
       settled.forEach(result => {
         if (result.status !== 'fulfilled') return;
@@ -160,9 +184,7 @@ export class PlaylistSharingService {
         options.onPage?.(result.value.rows.map(row => row.track), rows.length, total);
       });
       if (failed) {
-        const error = new Error('Some shared playlist songs could not be loaded. Please retry.');
-        Object.assign(error, {cause: failed.reason, partialTracks: rows.map(row => row.track)});
-        throw error;
+        throw partialError(failed.reason);
       }
       if (first.count == null) {
         const last = settled[settled.length - 1];
@@ -170,6 +192,10 @@ export class PlaylistSharingService {
           offsets.push(batchOffsets[batchOffsets.length - 1] + pageSize);
         }
       }
+      cursor += batchOffsets.length;
+    }
+    if (first.count !== null && rows.length !== total) {
+      throw partialError(new Error('The shared playlist source count changed while loading.'));
     }
     return rows.sort((left, right) => left.position - right.position).map(row => row.track);
   }
@@ -179,32 +205,43 @@ export class PlaylistSharingService {
     expectedRevision: number,
     publication: PlaylistSharePublication
   ): Promise<number> {
-    const {data: uploadData, error: uploadError} = await (await this.supabase.getClient()).rpc('begin_playlist_share_refresh_upload', {
+    const generation = this.sessionLifecycle.capture();
+    const owner = {generation, userId: await this.currentAuthUserId()};
+    const client = await this.publicationClient(owner);
+    this.assertPublicationGeneration(owner);
+    const {data: uploadData, error: uploadError} = await client.rpc('begin_playlist_share_refresh_upload', {
       p_share_id: shareId,
       p_expected_revision: expectedRevision,
       p_playlist_name: publication.playlistName,
       p_playlist_description: publication.playlistDescription,
       p_playlist_image_url: publication.playlistImageUrl
-    });
+    }).abortSignal(owner.generation.signal);
+    await this.publicationClient(owner);
     if (uploadError) throw uploadError;
     const uploadId = String(uploadData || '');
     if (!uploadId) throw new Error('Supabase did not start the playlist upload.');
-    await this.appendUploadChunks(uploadId, publication.tracks);
-    const {data, error} = await (await this.supabase.getClient()).rpc('commit_playlist_share_refresh_upload', {
+    await this.appendUploadChunks(uploadId, publication.tracks, owner);
+    const commitClient = await this.publicationClient(owner);
+    this.assertPublicationGeneration(owner);
+    const {data, error} = await commitClient.rpc('commit_playlist_share_refresh_upload', {
       p_upload_id: uploadId,
       p_expected_track_count: publication.tracks.length
-    });
+    }).abortSignal(owner.generation.signal);
+    await this.publicationClient(owner);
     if (error) throw error;
     return Number(data || 0);
   }
 
-  private async appendUploadChunks(uploadId: string, tracks: CompareTrack[]): Promise<void> {
+  private async appendUploadChunks(uploadId: string, tracks: CompareTrack[], owner: PublicationOwner): Promise<void> {
     for (const chunk of this.chunkTracks(tracks)) {
-      const {error} = await (await this.supabase.getClient()).rpc('append_playlist_share_upload_chunk', {
+      const client = await this.publicationClient(owner);
+      this.assertPublicationGeneration(owner);
+      const {error} = await client.rpc('append_playlist_share_upload_chunk', {
         p_upload_id: uploadId,
         p_offset: chunk.offset,
         p_tracks: chunk.tracks
-      });
+      }).abortSignal(owner.generation.signal);
+      await this.publicationClient(owner);
       if (error) throw error;
     }
   }
@@ -438,17 +475,38 @@ export class PlaylistSharingService {
     throw new DOMException('Shared playlist loading was cancelled.', 'AbortError');
   }
 
-  private async loadCurrentProfile(): Promise<{displayName: string; imageUrl: string}> {
-    const userId = await this.currentAuthUserId();
-    const {data} = await (await this.supabase.getClient())
+  private async loadCurrentProfile(owner: PublicationOwner): Promise<{displayName: string; imageUrl: string}> {
+    const client = await this.publicationClient(owner);
+    this.assertPublicationGeneration(owner);
+    const {data} = await client
       .from('users')
       .select('display_name, profile_pic_url')
-      .eq('id', userId)
+      .eq('id', owner.userId)
       .maybeSingle();
+    await this.publicationClient(owner);
     return {
       displayName: data?.display_name || 'Spotify user',
       imageUrl: data?.profile_pic_url || ''
     };
+  }
+
+  private assertPublicationGeneration(owner: PublicationOwner): void {
+    if (!this.sessionLifecycle.isCurrent(owner.generation)) {
+      throw new DOMException('Playlist publication was cancelled.', 'AbortError');
+    }
+  }
+
+  private async publicationClient(owner: PublicationOwner) {
+    this.assertPublicationGeneration(owner);
+    const client = await this.supabase.getClient();
+    this.assertPublicationGeneration(owner);
+    const {data, error} = await client.auth.getSession();
+    this.assertPublicationGeneration(owner);
+    if (error) throw error;
+    if (data.session?.user.id !== owner.userId) {
+      throw new DOMException('Playlist publication was cancelled.', 'AbortError');
+    }
+    return client;
   }
 
   private createClaimToken(): string {

@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-15",
+  "branch": "codex/design-v2",
+  "checkpoint": "a8a7a3966a622c992e9058094627a768c16a363a",
+  "status": "Verified parallel service-coverage and canonical drawer milestone; full migration incomplete. Changes uncommitted.",
+  "finalCombinedCI": {
+    "command": "npm run verify:ci",
+    "exit": 0,
+    "log": "docs/testing-evidence/design-v2/parallel-final-ci.log",
+    "frontend": {
+      "passed": 1539,
+      "skipped": 1,
+      "files": 148,
+      "skipReason": "documented isolated hosted-service contract; still a completion gap"
+    },
+    "workerPassed": 215,
+    "edgePassed": 81,
+    "initialJavaScriptBytes": 779607,
+    "requiredReleaseSecurityPolicyTypeLintBuildChecks": "all pass; existing style/CommonJS/localStorage/QR fixture warnings retained"
+  },
+  "coverage": {
+    "frontend": {
+      "sources": 166,
+      "missingSources": 0,
+      "metrics": {
+        "lines": {
+          "total": 11124,
+          "covered": 8639,
+          "skipped": 0,
+          "pct": 77.66
+        },
+        "statements": {
+          "total": 13096,
+          "covered": 9881,
+          "skipped": 0,
+          "pct": 75.45
+        },
+        "functions": {
+          "total": 2738,
+          "covered": 2039,
+          "skipped": 0,
+          "pct": 74.47
+        },
+        "branches": {
+          "total": 8523,
+          "covered": 5560,
+          "skipped": 0,
+          "pct": 65.23
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "all98": false,
+      "reportSha256": "1971f38bea0a6eeec1b8d621de0661e9752487084ab0dff57acb1461d1ef1a88",
+      "scope": "Fresh full frontend report from final combined CI."
+    },
+    "worker": {
+      "sources": 17,
+      "metrics": {
+        "lines": {
+          "total": 891,
+          "covered": 888,
+          "skipped": 0,
+          "pct": 99.66
+        },
+        "statements": {
+          "total": 1110,
+          "covered": 1107,
+          "skipped": 0,
+          "pct": 99.72
+        },
+        "functions": {
+          "total": 197,
+          "covered": 197,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 927,
+          "covered": 913,
+          "skipped": 0,
+          "pct": 98.48
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "all98": true,
+      "tests": 215,
+      "manifest": "docs/testing-evidence/design-v2/worker-parallel-manifest.json",
+      "rootVerifiedAllHashes": true
+    },
+    "edge": {
+      "sources": 12,
+      "metrics": {
+        "lines": {
+          "total": 762,
+          "covered": 761,
+          "skipped": 0,
+          "pct": 99.86
+        },
+        "statements": {
+          "total": 901,
+          "covered": 899,
+          "skipped": 0,
+          "pct": 99.77
+        },
+        "functions": {
+          "total": 113,
+          "covered": 113,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 797,
+          "covered": 795,
+          "skipped": 0,
+          "pct": 99.74
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "all98": true,
+      "allFilesEachMetricAtLeast98": true,
+      "tests": 81,
+      "manifest": "docs/testing-evidence/design-v2/edge-parallel-evidence.json",
+      "rootVerifiedAllHashes": true
+    }
+  },
+  "ciIntegration": {
+    "worker": "node scripts/check-sync-worker-package.mjs && node --test --test-isolation=none services/sync-service/spotify-url-validator.test.js services/sync-service/date-utils.test.js services/sync-service/task-registry.test.js services/sync-service/scheduler.test.js services/sync-service/credential-store.test.js services/sync-service/spotify-client.test.js services/sync-service/push-dispatcher.test.js services/sync-service/health-server.test.js services/sync-service/catalog-repository.test.js services/sync-service/tasks/history-task.test.js services/sync-service/tasks/stats-task.test.js services/sync-service/tasks/shared-playlists-task.test.js services/sync-service/tasks/song-league-playlists-task.test.js services/sync-service/config.test.js services/sync-service/index.test.js services/sync-service/scheduler-boundaries.test.js services/sync-service/tasks/shared-playlists-boundaries.test.js services/sync-service/worker-runtime-health.test.js",
+    "edge": "deno check --config supabase/functions/deno.json supabase/functions/spotify-credentials/index.ts supabase/functions/song-league-playlist-sync/index.ts supabase/functions/song-league-notifications/index.ts && deno test --config supabase/functions/deno.json supabase/functions/_shared/bounded-fetch.test.ts supabase/functions/_shared/request-security.test.ts supabase/functions/_shared/spotify-credential-crypto.test.ts supabase/functions/spotify-credentials/profile-verification.test.ts supabase/functions/spotify-credentials/personal-recovery.test.ts supabase/functions/song-league-playlist-sync/recovery.test.ts supabase/functions/song-league-notifications/push-endpoint.test.ts supabase/functions/_shared/handler-boundaries.test.ts supabase/functions/spotify-credentials/handler-profile.test.ts supabase/functions/spotify-credentials/handler-recovery.test.ts supabase/functions/song-league-playlist-sync/handler.test.ts supabase/functions/song-league-notifications/handler.test.ts supabase/functions/song-league-notifications/delivery-state.test.ts supabase/functions/song-league-notifications/web-push.test.ts",
+    "coverageGates": {
+      "worker": "node scripts/run-application-coverage.mjs worker && node scripts/check-application-coverage-inventory.mjs worker --final",
+      "edge": "node scripts/run-application-coverage.mjs edge && node scripts/check-application-coverage-inventory.mjs edge --final"
+    },
+    "note": "Normal CI now explicitly registers all added test entrypoints. Existing preview coverage steps now enforce all four98% metrics for worker and edge. Frontend completion target remains98; its existing interim gates were not weakened."
+  },
+  "figma": {
+    "drawerNode": "105:3505",
+    "specificationBeforeImplementation": true,
+    "evidence": "docs/testing-evidence/design-v2/navigation-drawer-result.json",
+    "nativeCases": 8,
+    "drawerResizeSamples": 96,
+    "projects": [
+      "Chromium desktop",
+      "Chromium mobile",
+      "Firefox",
+      "WebKit"
+    ],
+    "motion": [
+      "normal",
+      "reduced"
+    ],
+    "reviewedFinalScreenshot": "navigation-drawer-final-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--mobile/navigation-drawer.png",
+    "scope": "Drawer rendering/workflow only, exact canonical local logo, shared PrimeIcons/tokens; no approved full-page golden changes. Header/sidebar/gutters/footer and provisional sidebar motion remain open."
+  },
+  "affectedExistingBrowserRegression": {
+    "initial": {
+      "log": "docs/testing-evidence/design-v2/navigation-drawer-ambient.log",
+      "passed": 9,
+      "failedToLaunch": 3,
+      "cause": "Host libicudata.so.74 missing from default WebKit process; product assertions did not run for those3 cases."
+    },
+    "webkitAfterPortableRuntime": {
+      "log": "docs/testing-evidence/design-v2/navigation-drawer-ambient-webkit.log",
+      "passed": 4,
+      "exit": 0,
+      "includesAdditionalReducedMotionCase": true
+    },
+    "remainingReducedMotion": {
+      "log": "docs/testing-evidence/design-v2/navigation-drawer-ambient-reduced.log",
+      "passed": 3,
+      "exit": 0
+    },
+    "uniquePassingCases": 16,
+    "scope": "Persistent ambient renderer, routing, main focus, enabled/unavailable native transitions and suppressed reduced-motion snapshots across all4 projects. Zero retries/skips."
+  },
+  "productionChanges": {
+    "frontend": "Canonical modal navigation drawer replaces old floating More popup; Menu label, grouped destinations, current route and permission-gated Administration, account-owned Settings profile, short-window scrolling, native keyboard/focus/reduced motion.",
+    "worker": "index.js releases acquired runtime/health on failures and own signal listeners; original failure retained on cleanup error. Genuine six-regression RED preserved.",
+    "edge": "No production source changes."
+  },
+  "sourceHashes": {
+    "package.json": "ff8c553770dd10475204a2e44b55e6948336e39936af712e70b0708aa86fb5bc",
+    "playwright.config.ts": "a138aa5178c2a38b82eedcb8688a0c83c0d9d45938e92b5ae530b97503a29b54",
+    "playwright.friends.config.ts": "c7bb4d05e574e04c8e0e81727d34c76f2fd8032bfaa22b63dac6868285467504",
+    "playwright.navigation.config.ts": "75dddc5f606fdb2e47259deea1a11f51928b5aa58f5f799c15969475f85ed726",
+    "services/sync-service/index.js": "9b1b4cd14527bf10ea929d8c360b3aa220f3a73b2eba5b1760c105bed657d80d",
+    "src/app/shared/ui-v2/v2-navigation-drawer.component.ts": "36b2c7159f516c629ebcc06c8ae2ff8b72cf1a9960c7e82473cad129f017b274",
+    "src/app/shared/ui-v2/v2-navigation-drawer.component.scss": "6b33ae7386bca887ca55a2c7fd36ca6acd973fc15d47a503fb8e2e126207659c",
+    "src/app/shared/ui-v2/v2-navigation-drawer.component.spec.ts": "17f60e07e2c90485ba5492f8a382018c2f95be996c6aa64ad14024f2956e7aa3",
+    "src/app/shared/layout/design-v2-shell/design-v2-shell.component.ts": "ef59e09669845361d420350f8e97f2fef6a1827fbc5241846d07314ca9f624e1",
+    "src/app/shared/layout/design-v2-shell/design-v2-shell.component.html": "94235328dc5b895d6e8e21ad7aae76e81922c266439ac8d47ce44bccb58873dc",
+    "e2e/design-v2-navigation.spec.ts": "52881fc953c739de03d74c66dd809fb1c8ce05f6457362cc788584c5a1c16fcf",
+    "e2e/design-v2-ambient.spec.ts": "c391015c2e3c567d54c271ecb332fdb9502d072f169d72a8ac8397ded31ea38e",
+    "e2e/accessibility.spec.ts": "550ee08b4d7652f825879c24485a3be58bf11a001060a8021f772a0276b61af5",
+    "src/assets/design-v2/product-logo.png": "028c149c576d74d0f06d139a5f1eaf463805f1483774da6e76dbaee1d4ad20db"
+  },
+  "limitations": [
+    "Full goal remains active and incomplete: frontend all98 gates fail at77.66/75.45/74.47/65.23.",
+    "Remaining retained-feature implementation/Figma parity and approved full visual matrix still required.",
+    "Historical reduced-motion DOM-update timeout remains unresolved; current clean runs are not proof of a fix.",
+    "Hosted isolated Auth/PostgREST/provider contracts and complete retained migration chain remain unverified; synthetic service boundaries do not prove deployed policies.",
+    "Local Node26.11.1/Deno2.9.7 results; remote CI configured Node24.15.0/Deno2.9.6 was not run.",
+    "No new commit, merge, push, deployment, shared service/database or stable URL service-worker change."
+  ]
+}

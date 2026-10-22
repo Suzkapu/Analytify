@@ -1,0 +1,41 @@
+npm notice run spoti-front@0.0.0 test:ci
+npm notice run ng test --watch=false --coverage --progress=false && node scripts/check-coverage-thresholds.mjs && node scripts/check-design-v2-coverage.mjs && node scripts/check-application-coverage-inventory.mjs frontend
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [8.215 seconds] - 2026-10-12T16:52:38.978Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+      Coverage enabled with v8
+
+Warning: A vi.mock("qrcode") call in "/mnt/Storage/ProgrammingProjects/Analytify/spec-app-features-friends-v2-friends-page.component.js" is not at the top level of the module. Although it appears nested, it will be hoisted and executed before any tests run. Move it to the top level to reflect its actual execution order. This will become an error in a future version.
+See: https://vitest.dev/guide/mocking/modules#how-it-works
+
+ Test Files  145 passed (145)
+      Tests  1493 passed | 1 skipped (1494)
+   Start at  18:52:39
+   Duration  53.15s (transform 2.67s, setup 39.83s, import 16.79s, tests 47.40s, environment 55.72s)
+
+ % Coverage report from v8
+
+=============================== Coverage summary ===============================
+Statements   : 75.07% ( 9736/12969 )
+Branches     : 64.76% ( 5480/8462 )
+Functions    : 74.04% ( 1997/2697 )
+Lines        : 77.36% ( 8536/11033 )
+================================================================================
+Coverage thresholds passed.
+file:///mnt/Storage/ProgrammingProjects/Analytify/scripts/check-design-v2-coverage.mjs:16
+if (failures.length) throw new Error(`Design v2 coverage regressed:\n${failures.join('\n')}`);
+                           ^
+
+Error: Design v2 coverage regressed:
+src/app/features/friends/v2-friends-page.component.ts: 3 uncovered statements, maximum 0
+src/app/features/friends/v2-friends-page.component.ts: 9 uncovered branches, maximum 0
+src/app/features/friends/v2-friends.controller.ts: 3 uncovered statements, maximum 0
+src/app/features/friends/v2-friends.controller.ts: 7 uncovered branches, maximum 0
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/scripts/check-design-v2-coverage.mjs:16:28
+    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+    at async node:internal/modules/esm/loader:650:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+
+Node.js v26.11.1

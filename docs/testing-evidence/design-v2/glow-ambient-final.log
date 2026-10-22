@@ -1,0 +1,73 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-glows.spec.ts e2e/design-v2-ambient.spec.ts --workers=1 --output=docs/testing-evidence/design-v2/glow-ambient-final-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:89356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:89356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 52 tests using 1 worker
+
+(node:89554) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-ambient.spec.ts:16:5 › one ambient renderer persists through overlays, routes, and shell modes (2.4s)
+  ✓   2 [desktop] › e2e/design-v2-ambient.spec.ts:52:5 › v2 ambient layer is decorative, fixed-glow, particle-scroll-responsive, and reflow-safe (2.2s)
+  ✓   3 [desktop] › e2e/design-v2-ambient.spec.ts:108:7 › route content and focus survive with native transitions enabled (1.7s)
+  ✓   4 [desktop] › e2e/design-v2-ambient.spec.ts:108:7 › route content and focus survive with native transitions unavailable (1.6s)
+  ✓   5 [desktop] › e2e/design-v2-ambient.spec.ts:146:5 › v2 ambient layer remains static with reduced motion (904ms)
+  ✓   6 [desktop] › e2e/design-v2-ambient.spec.ts:168:5 › reduced motion suppresses native route snapshot animations without losing navigation (1.7s)
+  ✓   7 [desktop] › e2e/design-v2-ambient.spec.ts:197:5 › canonical particle phases loop independently through a complete native timeline (1.6s)
+  ✓   8 [desktop] › e2e/design-v2-ambient.spec.ts:255:5 › particle cohort keeps its phase across desktop mobile desktop resizing (1.2s)
+  ✓   9 [desktop] › e2e/design-v2-glows.spec.ts:7:7 › canonical glow scene Library preserves native assets and responsive geometry (3.1s)
+  ✓  10 [desktop] › e2e/design-v2-glows.spec.ts:7:7 › canonical glow scene Insights preserves native assets and responsive geometry (3.2s)
+  ✓  11 [desktop] › e2e/design-v2-glows.spec.ts:7:7 › canonical glow scene Social preserves native assets and responsive geometry (3.2s)
+  ✓  12 [desktop] › e2e/design-v2-glows.spec.ts:7:7 › canonical glow scene League preserves native assets and responsive geometry (3.2s)
+  ✓  13 [desktop] › e2e/design-v2-glows.spec.ts:65:5 › actual route changes move glows smoothly and preserve the independent particle timeline (4.5s)
+(node:92004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  14 [mobile] › e2e/design-v2-ambient.spec.ts:16:5 › one ambient renderer persists through overlays, routes, and shell modes (3.5s)
+  ✓  15 [mobile] › e2e/design-v2-ambient.spec.ts:52:5 › v2 ambient layer is decorative, fixed-glow, particle-scroll-responsive, and reflow-safe (2.9s)
+  ✓  16 [mobile] › e2e/design-v2-ambient.spec.ts:108:7 › route content and focus survive with native transitions enabled (3.2s)
+  ✓  17 [mobile] › e2e/design-v2-ambient.spec.ts:108:7 › route content and focus survive with native transitions unavailable (2.2s)
+  ✓  18 [mobile] › e2e/design-v2-ambient.spec.ts:146:5 › v2 ambient layer remains static with reduced motion (1.3s)
+  ✓  19 [mobile] › e2e/design-v2-ambient.spec.ts:168:5 › reduced motion suppresses native route snapshot animations without losing navigation (1.9s)
+  ✓  20 [mobile] › e2e/design-v2-ambient.spec.ts:197:5 › canonical particle phases loop independently through a complete native timeline (2.6s)
+  ✓  21 [mobile] › e2e/design-v2-ambient.spec.ts:255:5 › particle cohort keeps its phase across desktop mobile desktop resizing (2.4s)
+  ✓  22 [mobile] › e2e/design-v2-glows.spec.ts:7:7 › canonical glow scene Library preserves native assets and responsive geometry (4.0s)
+  ✓  23 [mobile] › e2e/design-v2-glows.spec.ts:7:7 › canonical glow scene Insights preserves native assets and responsive geometry (4.3s)
+  ✓  24 [mobile] › e2e/design-v2-glows.spec.ts:7:7 › canonical glow scene Social preserves native assets and responsive geometry (3.9s)
+  ✓  25 [mobile] › e2e/design-v2-glows.spec.ts:7:7 › canonical glow scene League preserves native assets and responsive geometry (4.4s)
+  ✓  26 [mobile] › e2e/design-v2-glows.spec.ts:65:5 › actual route changes move glows smoothly and preserve the independent particle timeline (6.7s)
+(node:95531) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  27 [firefox-stats] › e2e/design-v2-ambient.spec.ts:16:5 › one ambient renderer persists through overlays, routes, and shell modes (5.5s)
+  ✓  28 [firefox-stats] › e2e/design-v2-ambient.spec.ts:52:5 › v2 ambient layer is decorative, fixed-glow, particle-scroll-responsive, and reflow-safe (5.2s)
+  ✓  29 [firefox-stats] › e2e/design-v2-ambient.spec.ts:108:7 › route content and focus survive with native transitions enabled (3.8s)
+  ✓  30 [firefox-stats] › e2e/design-v2-ambient.spec.ts:108:7 › route content and focus survive with native transitions unavailable (3.3s)
+  ✓  31 [firefox-stats] › e2e/design-v2-ambient.spec.ts:146:5 › v2 ambient layer remains static with reduced motion (1.6s)
+  ✓  32 [firefox-stats] › e2e/design-v2-ambient.spec.ts:168:5 › reduced motion suppresses native route snapshot animations without losing navigation (2.7s)
+  ✓  33 [firefox-stats] › e2e/design-v2-ambient.spec.ts:197:5 › canonical particle phases loop independently through a complete native timeline (3.8s)
+  ✓  34 [firefox-stats] › e2e/design-v2-ambient.spec.ts:255:5 › particle cohort keeps its phase across desktop mobile desktop resizing (1.9s)
+  ✓  35 [firefox-stats] › e2e/design-v2-glows.spec.ts:7:7 › canonical glow scene Library preserves native assets and responsive geometry (5.0s)
+  ✓  36 [firefox-stats] › e2e/design-v2-glows.spec.ts:7:7 › canonical glow scene Insights preserves native assets and responsive geometry (7.5s)
+  ✓  37 [firefox-stats] › e2e/design-v2-glows.spec.ts:7:7 › canonical glow scene Social preserves native assets and responsive geometry (5.5s)
+  ✓  38 [firefox-stats] › e2e/design-v2-glows.spec.ts:7:7 › canonical glow scene League preserves native assets and responsive geometry (5.4s)
+  ✓  39 [firefox-stats] › e2e/design-v2-glows.spec.ts:65:5 › actual route changes move glows smoothly and preserve the independent particle timeline (6.1s)
+(node:100246) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  40 [webkit-stats] › e2e/design-v2-ambient.spec.ts:16:5 › one ambient renderer persists through overlays, routes, and shell modes (8.5s)
+  ✓  41 [webkit-stats] › e2e/design-v2-ambient.spec.ts:52:5 › v2 ambient layer is decorative, fixed-glow, particle-scroll-responsive, and reflow-safe (5.4s)
+  ✓  42 [webkit-stats] › e2e/design-v2-ambient.spec.ts:108:7 › route content and focus survive with native transitions enabled (5.9s)
+  ✓  43 [webkit-stats] › e2e/design-v2-ambient.spec.ts:108:7 › route content and focus survive with native transitions unavailable (4.9s)
+  ✓  44 [webkit-stats] › e2e/design-v2-ambient.spec.ts:146:5 › v2 ambient layer remains static with reduced motion (1.8s)
+  ✓  45 [webkit-stats] › e2e/design-v2-ambient.spec.ts:168:5 › reduced motion suppresses native route snapshot animations without losing navigation (2.6s)
+  ✓  46 [webkit-stats] › e2e/design-v2-ambient.spec.ts:197:5 › canonical particle phases loop independently through a complete native timeline (6.3s)
+  ✓  47 [webkit-stats] › e2e/design-v2-ambient.spec.ts:255:5 › particle cohort keeps its phase across desktop mobile desktop resizing (3.5s)
+  ✓  48 [webkit-stats] › e2e/design-v2-glows.spec.ts:7:7 › canonical glow scene Library preserves native assets and responsive geometry (5.7s)
+  ✓  49 [webkit-stats] › e2e/design-v2-glows.spec.ts:7:7 › canonical glow scene Insights preserves native assets and responsive geometry (5.2s)
+  ✓  50 [webkit-stats] › e2e/design-v2-glows.spec.ts:7:7 › canonical glow scene Social preserves native assets and responsive geometry (3.5s)
+  ✓  51 [webkit-stats] › e2e/design-v2-glows.spec.ts:7:7 › canonical glow scene League preserves native assets and responsive geometry (4.6s)
+  ✓  52 [webkit-stats] › e2e/design-v2-glows.spec.ts:65:5 › actual route changes move glows smoothly and preserve the independent particle timeline (8.6s)
+
+  52 passed (3.5m)

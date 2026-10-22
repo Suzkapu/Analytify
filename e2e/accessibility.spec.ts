@@ -103,7 +103,7 @@ test('v2 focus routes keep minimal chrome and one skip target', async ({page}) =
   await expect(page.getByRole('main')).toHaveCount(1);
   await expect(page.getByRole('link', {name: 'Analytify playlists'})).toBeVisible();
   await expect(page.getByRole('navigation', {name: 'Main navigation'})).toHaveCount(0);
-  await expect(page.getByRole('button', {name: 'Open More tools'})).toHaveCount(0);
+  await expect(page.getByRole('button', {name: 'Open navigation menu'})).toHaveCount(0);
   await expect(page.getByRole('link', {name: 'Skip to main content'})).toHaveCount(1);
   await expectNoBlockingAxeViolations(page);
 });

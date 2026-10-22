@@ -12,6 +12,7 @@ import {
 @Injectable()
 export class AmbientBackgroundState {
   private readonly routeKeyState = signal('default');
+  private readonly mobileViewport = signal(false);
   private readonly scrollProgressState = signal(0);
   private readonly reducedMotionState = signal(false);
   private readonly coarsePointerState = signal(false);
@@ -26,7 +27,7 @@ export class AmbientBackgroundState {
   readonly paused = this.pausedState.asReadonly();
   readonly overlayState = this.overlayStateValue.asReadonly();
   readonly shellMode = this.shellModeState.asReadonly();
-  readonly routeTarget = computed(() => ambientTargetForKey(this.routeKeyState()));
+  readonly routeTarget = computed(() => ambientTargetForKey(this.routeKeyState(), this.mobileViewport()));
   readonly target = computed<AmbientVector>(() => {
     const route = this.routeTarget();
     const scrolled = this.reducedMotionState()
@@ -35,6 +36,7 @@ export class AmbientBackgroundState {
     return ambientTargetWithInteraction(scrolled, this.overlayStateValue(), this.shellModeState());
   });
 
+  setViewportWidth(width: number): void { this.mobileViewport.set(width <= 760); }
   setRouteKey(key: string): void { this.routeKeyState.set(key.trim() || 'default'); }
   setScrollMetrics(scrollTop: number, scrollHeight: number, viewportHeight: number): void {
     this.scrollProgressState.set(normalizedScrollProgress(scrollTop, scrollHeight, viewportHeight));

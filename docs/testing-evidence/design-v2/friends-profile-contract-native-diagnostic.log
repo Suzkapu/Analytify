@@ -1,0 +1,31 @@
+2026-10-11 18:24:12.743 CEST [27] LOG:  starting PostgreSQL 18.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 16.2.1 20260810, 64-bit
+2026-10-11 18:24:12.743 CEST [27] LOG:  could not bind Unix address "/tmp/analytify-profile-contract-TL8VvO/socket/.s.PGSQL.5432": Operation not permitted
+2026-10-11 18:24:12.743 CEST [27] WARNING:  could not create Unix-domain socket in directory "/tmp/analytify-profile-contract-TL8VvO/socket"
+2026-10-11 18:24:12.743 CEST [27] FATAL:  could not create any Unix-domain sockets
+2026-10-11 18:24:12.744 CEST [27] LOG:  database system is shut down
+
+node:internal/errors:999
+  const err = new Error(message);
+              ^
+
+Error: Command failed: /tmp/analytify-postgres-runtime/root/usr/bin/pg_ctl -D /tmp/analytify-profile-contract-TL8VvO/data -l /tmp/analytify-profile-contract-TL8VvO/postgres.log -o -c listen_addresses='' -c unix_socket_directories='/tmp/analytify-profile-contract-TL8VvO/socket' -c unix_socket_permissions=0700 -w start
+pg_ctl: could not start server
+Examine the log output.
+
+    at genericNodeError (node:internal/errors:999:15)
+    at wrappedFn (node:internal/errors:544:14)
+    at ChildProcess.exithandler (node:child_process:420:12)
+    at ChildProcess.emit (node:events:514:20)
+    at maybeClose (node:internal/child_process:1156:16)
+    at Socket.<anonymous> (node:internal/child_process:526:11)
+    at Socket.emit (node:events:514:20)
+    at Pipe.<anonymous> (node:net:362:12) {
+  code: 1,
+  killed: false,
+  signal: null,
+  cmd: "/tmp/analytify-postgres-runtime/root/usr/bin/pg_ctl -D /tmp/analytify-profile-contract-TL8VvO/data -l /tmp/analytify-profile-contract-TL8VvO/postgres.log -o -c listen_addresses='' -c unix_socket_directories='/tmp/analytify-profile-contract-TL8VvO/socket' -c unix_socket_permissions=0700 -w start",
+  stdout: 'waiting for server to start.... stopped waiting\n',
+  stderr: 'pg_ctl: could not start server\nExamine the log output.\n'
+}
+
+Node.js v26.11.1

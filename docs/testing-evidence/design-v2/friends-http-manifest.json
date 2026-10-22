@@ -1,0 +1,140 @@
+{
+  "date": "2026-10-20",
+  "status": "Selected real Friends HTTP/JWT/RLS/concurrency contract passed; hosted/full-stack gates remain incomplete.",
+  "scope": "New independent disposable runner and new friends-http-* evidence only; no app, migration, shared config or previous harness edits.",
+  "command": "ANALYTIFY_TEST_POSTGRES_ROOT=/tmp/analytify-friends-http-runtime/postgres ANALYTIFY_TEST_POSTGREST_ROOT=/tmp/analytify-friends-http-runtime/postgrest ANALYTIFY_FRIEND_HTTP_EVIDENCE=docs/testing-evidence/design-v2/friends-http-verified-result.json node scripts/test-isolated-friends-http-contract.mjs",
+  "prerequisites": {
+    "runtimeManifest": "friends-http-runtime.json",
+    "versions": {
+      "postgres": "postgres (PostgreSQL) 18.6",
+      "postgrest": "PostgREST 16.5",
+      "supabaseJs": "2.117.2"
+    },
+    "runtimeArguments": "Only local absolute directories accepted; no database URL accepted. PostgreSQL binds only private0700 Unix socket; PostgREST/gateway bind127.0.0.1 ephemeral ports.",
+    "databaseFixtures": "auth.users/auth.uid using modern request.jwt.claims JSON plus verified_spotify_id are explicit synthetic prerequisites, not the whole migration chain.",
+    "sdk": "Installed supabase-js uses its actual HTTP RPC builder/auth-header transport. Normal Auth getSession remains local anonymous state; an explicit synthetic Authorization JWT is verified by real PostgREST. No Auth/provider server is present."
+  },
+  "history": [
+    {
+      "log": "friends-http-handshake.log",
+      "exit": 1,
+      "classification": "Infrastructure startup failure before any contract ran; no PostgreSQL server diagnostic retained in that initial runner revision."
+    },
+    {
+      "log": "friends-http-handshake-local.log",
+      "result": "friends-http-handshake-local-result.json",
+      "exit": 0,
+      "classification": "Smallest actual local SDK/PostgREST/JWT/users-RLS handshake, then cleanup."
+    },
+    {
+      "log": "friends-http-contract.log",
+      "exit": 1,
+      "classification": "Fixture expected non-owner revoke SQLSTATE22023/HTTP400; actual migration explicitly42501/403. Corrected expectation from source, no application gate/behavior weakened."
+    },
+    {
+      "log": "friends-http-contract-corrected.log",
+      "result": "friends-http-contract-corrected-result.json",
+      "exit": 0,
+      "classification": "12 selected outcome groups passed."
+    },
+    {
+      "log": "friends-http-final.log",
+      "result": "friends-http-final-result.json",
+      "exit": 0,
+      "classification": "12 outcome groups plus bounded cleanup/least-privilege checks passed before final explicit network-loss/race-loser status assertions."
+    }
+  ],
+  "final": {
+    "log": "friends-http-verified.log",
+    "result": "friends-http-verified-result.json",
+    "exit": 0,
+    "outcomeGroups": 12,
+    "outcomes": [
+      "Real SDK HTTP RPC reaches PostgREST with a verified synthetic JWT actor; users RLS exposes only the actor profile.",
+      "Signed anonymous/missing-actor/unverified/forged/expired JWT requests are denied with real HTTP/SQLSTATE codes; private schema is not exposed and raw table grants are absent.",
+      "Real users table RLS allows the actor operational toggle, silently denies another actor row, and column grants reject identity replacement.",
+      "Dropping a committed real HTTP creation response and retrying the same secret produces exactly one hashed pending invitation; malformed secrets/token takeover/non-owner revoke are rejected.",
+      "Receiving reserves exactly one recipient without friendship; exact incoming/preview DTOs contain no secret, and another actor cannot claim or answer the saved request.",
+      "Saved request acceptance and uncertain same-decision retries create one mutual versioned connection with exact Friends DTOs and preserve real independent Stats/playlist grants.",
+      "Removal retries cannot revive old acceptance or remove a later reconnection; the other participant can remove the current version and independent grants remain byte-for-byte unchanged.",
+      "Sender revocation and recipient decline remove incoming pending requests; both are replay-safe and prevent later acceptance.",
+      "Two actual HTTP/SDK receive requests observed waiting on a native row lock reserve exactly one recipient.",
+      "Two actual HTTP accept requests waiting on the same native invitation row produce one accepted recipient and one denied contender.",
+      "Owner revocation committed while actual HTTP acceptance waits prevents late acceptance and preserves independent grants.",
+      "HTTP RPC pagination rejects invalid bounds, owner invitation DTOs omit secrets, and a previously denied synthetic actor recovers after the verified-profile prerequisite is established."
+    ],
+    "cleanup": {
+      "gatewayClosed": true,
+      "postgrestStopped": true,
+      "postgresStopped": true,
+      "workspaceRemoved": true
+    }
+  },
+  "checks": [
+    {
+      "command": "npx eslint scripts/test-isolated-friends-http-contract.mjs",
+      "log": "friends-http-verified-lint.log",
+      "exit": 0
+    },
+    {
+      "command": "node --check scripts/test-isolated-friends-http-contract.mjs",
+      "log": "friends-http-verified-syntax.log",
+      "exit": 0
+    },
+    {
+      "command": "Node subprocess asserts that a postgresql:// argument is rejected before runtime initialization",
+      "log": "friends-http-input-isolation.log",
+      "exit": 0
+    }
+  ],
+  "integrity": "Pinned official archives validated with recorded SHA256 before /tmp extraction. Final script/source/migration/package/report/log hashes below. Historical runner hashes remain associated only with their historical result scopes.",
+  "limitations": [
+    "No hosted Auth login/token issuance/refresh/logout, Spotify OAuth/provider, Realtime, full retained migration chain, deployed backend compatibility, Angular service injection, browser/UI parity or notification delivery is certified.",
+    "Private tables are not exposed through PostgREST, and authenticated raw-table grants are absent. Users SELECT/UPDATE RLS is exercised over real HTTP; privileged Friends RPCs enforce actor/recipient ownership inside SECURITY DEFINER functions. These are separate assertions, not a blanket claim that raw private-table RLS was traversed over HTTP.",
+    "Locally generated synthetic JWTs test actual cryptographic verification, role switching and SQL claim mapping. They do not test real Auth session issuance/expiry refresh/revocation/provider behavior.",
+    "Selected actual foundational/profile-lock/sharing/stats/Friends migrations are applied with explicit prerequisites. Full retained migration-chain and deployed Supabase compatibility remain unverified.",
+    "No browser, Angular FriendsService injection, hosted Realtime, notification delivery, production/shared endpoint or data was exercised. Existing hosted-service skipped test is not resolved by this selected contract.",
+    "Runtime archives remain ephemeral under /tmp; all owned service processes, fresh cluster/socket/config/JWT secret and workspace were removed after verification. No host packages or shared backend changes."
+  ],
+  "hashes": {
+    "scripts/test-isolated-friends-http-contract.mjs": "004d98125a19ed17685c61fa945fcfae260d592af37d40c052eefda56c39ce2f",
+    "src/app/core/friends/friends.service.ts": "30b06317ef42529a1f1949b0b59f40b2be4cdd76431d43df75d1b04431688e3e",
+    "package-lock.json": "590a76c573c94f5dc9aecf28f61738179f020ae567e22c15d2dcc437012d638e",
+    "supabase/migrations/20260801000000_foundational_schema.sql": "2ddb1def6b431674bc06bace7edbc55177c957f6689371f894c7f8861b8bc95e",
+    "supabase/migrations/20260905153000_lock_spotify_profile_identity.sql": "dc6d6dd600184d58ecd8e12a6cf440c84b1db4a10d29d134de626af1bc4c6716",
+    "supabase/migrations/20260801181500_playlist_sharing.sql": "2744dfdc7236e2c8d95df0b5d73cda7465daf4ad4ca8d6f5bf1c1a2c5c16a8d6",
+    "supabase/migrations/20260902190000_stats_spy_mode.sql": "110d2f98b0647ec6bb998c22a9ece4583dd52543752f44e0f9978e857f5cbcb7",
+    "supabase/migrations/20261011162823_design_v2_single_use_friend_invitations.sql": "ec192d691fee40f7f860ae9418c140c43d4a46bdf671b3c6b846b8155726d4db",
+    "docs/testing-evidence/design-v2/friends-http-contract-corrected-result.json": "b6e9331f025c68b055a18c258795b699f62f1890369c847cb8a8ed2c5b18236a",
+    "docs/testing-evidence/design-v2/friends-http-contract-corrected.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-http-contract-corrected.log": "b6e9331f025c68b055a18c258795b699f62f1890369c847cb8a8ed2c5b18236a",
+    "docs/testing-evidence/design-v2/friends-http-contract.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/friends-http-contract.log": "b28826bd7baa537112cee1d8aa2f6e77ca6c35f73dc51e43b00f84fcc5b51464",
+    "docs/testing-evidence/design-v2/friends-http-final-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-http-final-lint.log": "f50c95cccc4316d98e150a09a731e38ba72e4ef5aa7dd7e67589774a05d7ee5a",
+    "docs/testing-evidence/design-v2/friends-http-final-result.json": "05d6a23e6b24dfaf394189400d6264ce9f881d1bcaa618802c0f7830d0328454",
+    "docs/testing-evidence/design-v2/friends-http-final-syntax.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-http-final-syntax.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/testing-evidence/design-v2/friends-http-final.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-http-final.log": "05d6a23e6b24dfaf394189400d6264ce9f881d1bcaa618802c0f7830d0328454",
+    "docs/testing-evidence/design-v2/friends-http-handshake-local-result.json": "1e65371460b0ed9757c62f234683a4a5bd54cb95b68f0c746bca1b3805f9fa40",
+    "docs/testing-evidence/design-v2/friends-http-handshake-local.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-http-handshake-local.log": "1e65371460b0ed9757c62f234683a4a5bd54cb95b68f0c746bca1b3805f9fa40",
+    "docs/testing-evidence/design-v2/friends-http-handshake.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/friends-http-handshake.log": "b49ffa2408f1b7fc12f6444904a928cec5075b311c9435d5c871a984c3446f80",
+    "docs/testing-evidence/design-v2/friends-http-input-isolation.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-http-input-isolation.log": "20317c751f167a10127b62b33a06a40ea3d6f4bd1461c6a15bc3e5c16c22162e",
+    "docs/testing-evidence/design-v2/friends-http-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-http-lint.log": "f50c95cccc4316d98e150a09a731e38ba72e4ef5aa7dd7e67589774a05d7ee5a",
+    "docs/testing-evidence/design-v2/friends-http-runtime.json": "336439a05dfc25087c1e5ccf12bd0ab1f0fd46e9252cea5f5421828d07e97e69",
+    "docs/testing-evidence/design-v2/friends-http-syntax.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-http-syntax.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/testing-evidence/design-v2/friends-http-verified-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-http-verified-lint.log": "f50c95cccc4316d98e150a09a731e38ba72e4ef5aa7dd7e67589774a05d7ee5a",
+    "docs/testing-evidence/design-v2/friends-http-verified-result.json": "0941e380ab50699db32f2eeffe9f681a4289b791ffd62dcf8dee34c33dc436ad",
+    "docs/testing-evidence/design-v2/friends-http-verified-syntax.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-http-verified-syntax.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/testing-evidence/design-v2/friends-http-verified.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-http-verified.log": "0941e380ab50699db32f2eeffe9f681a4289b791ffd62dcf8dee34c33dc436ad"
+  }
+}

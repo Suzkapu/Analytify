@@ -3,6 +3,19 @@ import { TestBed } from '@angular/core/testing';
 import { SupabaseService } from '@core/data-access/supabase/supabase.service';
 import { StatsSharingService } from './stats-sharing.service';
 
+
+function signalAwareRpc(rpc: (...args: any[]) => any) {
+  return (...args: any[]) => {
+    const result = Promise.resolve(rpc(...args));
+    return Object.assign(result, {abortSignal: (signal: AbortSignal) => new Promise((resolve, reject) => {
+      const cancel = () => reject(signal.reason);
+      if (signal.aborted) {cancel(); return;}
+      signal.addEventListener('abort', cancel, {once: true});
+      void result.then(resolve, reject).finally(() => signal.removeEventListener('abort', cancel));
+    })});
+  };
+}
+
 describe('StatsSharingService', () => {
     let service: StatsSharingService;
     let rpc: Mock;
@@ -23,7 +36,7 @@ describe('StatsSharingService', () => {
         };
         channel.subscribe.mockReturnValue(channel);
         removeChannel = vi.fn().mockName('removeChannel').mockResolvedValue('ok');
-        const client = { rpc, channel: () => channel, removeChannel };
+        const client = { rpc: signalAwareRpc(rpc), channel: () => channel, removeChannel };
         getClient = vi.fn().mockResolvedValue(client);
 
         TestBed.configureTestingModule({
@@ -61,7 +74,7 @@ describe('StatsSharingService', () => {
         rpc.mockResolvedValue({ data: [], error: null });
         const result = service.listAccessRequests();
         expect(rpc).not.toHaveBeenCalled();
-        resolveClient({ rpc });
+        resolveClient({ rpc: signalAwareRpc(rpc) });
         await expect(result).resolves.toEqual([]);
         expect(rpc).toHaveBeenCalledWith('list_stats_access_requests');
     });

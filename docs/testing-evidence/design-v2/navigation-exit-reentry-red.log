@@ -1,0 +1,67 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/auth/spotify-auth.service.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.293 seconds] - 2026-10-15T18:12:45.732Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/auth/spotify-auth.service.spec.ts > SpotifyAuthService > does not let a preference refresh reacquire the account while real logout drains, then reloads the same account after login
+AssertionError: expected [ 'playlists', 'stats', 'history' ] to be null
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/spotify-auth.service.spec.ts:115:45
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [ 'playlists', 'stats', 'history' ],
+  expected: null,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+ ❯ |SpotiFront| src/app/core/auth/spotify-auth.service.spec.ts (30 tests | 1 failed) 139ms
+     × does not let a preference refresh reacquire the account while real logout drains, then reloads the same account after login 19ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/spotify-auth.service.spec.ts > SpotifyAuthService > does not let a preference refresh reacquire the account while real logout drains, then reloads the same account after login
+AssertionError: expected [ 'playlists', 'stats', 'history' ] to be null
+
+- Expected:
+null
+
++ Received:
+[
+  "playlists",
+  "stats",
+  "history",
+]
+
+ ❯ src/app/core/auth/spotify-auth.service.spec.ts:115:45
+    113|             expect(service.getUserId()).not.toBeNull();
+    114|             await preferences.reload(); await preferences.retry(); awa…
+    115|             expect(preferences.selection()).toBeNull();
+       |                                             ^
+    116|             expect(storage.hydrateItems).toHaveBeenCalledOnce();
+    117|         } finally {finish(); await exiting;}
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 29 passed (30)
+   Start at  20:12:45
+   Duration  883ms (transform 130ms, setup 209ms, import 136ms, tests 139ms, environment 300ms)
+

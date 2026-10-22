@@ -1,0 +1,155 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.navigation.config.ts --grep Canonical app header, gutters and document footer \(reduce\) --output=docs/testing-evidence/design-v2/shell-component-visual-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:92040) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:92040) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:92288) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop] › e2e/design-v2-navigation.spec.ts:75:7 › Canonical app header, gutters and document footer (reduce) (3.3s)
+(node:92596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [mobile] › e2e/design-v2-navigation.spec.ts:75:7 › Canonical app header, gutters and document footer (reduce) (4.3s)
+(node:92978) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [firefox-stats] › e2e/design-v2-navigation.spec.ts:75:7 › Canonical app header, gutters and document footer (reduce) (4.2s)
+(node:93514) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  4 [webkit-stats] › e2e/design-v2-navigation.spec.ts:75:7 › Canonical app header, gutters and document footer (reduce) (3.4s)
+
+
+  1) [mobile] › e2e/design-v2-navigation.spec.ts:75:7 › Canonical app header, gutters and document footer (reduce) 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: getByRole('contentinfo')
+      Expected an image 3108px by 126px, received 1184px by 48px. 311694 pixels (ratio 0.80 of all image pixels) are different.
+
+      Snapshot: shell-footer-desktop.png
+
+    Call log:
+      - Expect "toHaveScreenshot(shell-footer-desktop.png)" getByRole('contentinfo') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for getByRole('contentinfo')
+        - locator resolved to <footer class="v2-footer" _ngcontent-ng-c1467389000="">…</footer>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - Expected an image 3108px by 126px, received 1184px by 48px. 311694 pixels (ratio 0.80 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for getByRole('contentinfo')
+        - locator resolved to <footer class="v2-footer" _ngcontent-ng-c1467389000="">…</footer>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - Expected an image 3108px by 126px, received 1184px by 48px. 311694 pixels (ratio 0.80 of all image pixels) are different.
+
+
+      125 |     // the review ledger records their hashes. Full-page parity remains open.
+      126 |     const visual = {animations: 'disabled' as const, style: '.ambient-dots {transform:none !important;}'};
+    > 127 |     if (motion === 'reduce') await expect(page.getByRole('contentinfo')).toHaveScreenshot('shell-footer-desktop.png', visual);
+          |                                                                          ^
+      128 |     await page.setViewportSize({width: 390, height: 900});
+      129 |     await page.screenshot({path: info.outputPath('shell-mobile.png'), fullPage: true, animations: 'disabled'});
+      130 |     if (motion === 'reduce') {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-navigation.spec.ts:127:74
+
+    attachment #1: shell-footer-desktop (image/png) ────────────────────────────────────────────────
+    Expected: e2e/design-v2-navigation.spec.ts-snapshots/shell-footer-desktop-mobile-linux.png
+    Received: docs/testing-evidence/design-v2/shell-component-visual-artifacts/design-v2-navigation-Canon-02e8c-and-document-footer-reduce--mobile/shell-footer-desktop-actual.png
+    Diff:     docs/testing-evidence/design-v2/shell-component-visual-artifacts/design-v2-navigation-Canon-02e8c-and-document-footer-reduce--mobile/shell-footer-desktop-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/shell-component-visual-artifacts/design-v2-navigation-Canon-02e8c-and-document-footer-reduce--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/shell-component-visual-artifacts/design-v2-navigation-Canon-02e8c-and-document-footer-reduce--mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/shell-component-visual-artifacts/design-v2-navigation-Canon-02e8c-and-document-footer-reduce--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/shell-component-visual-artifacts/design-v2-navigation-Canon-02e8c-and-document-footer-reduce--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [webkit-stats] › e2e/design-v2-navigation.spec.ts:75:7 › Canonical app header, gutters and document footer (reduce) 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: getByRole('contentinfo')
+      Expected an image 2368px by 96px, received 1184px by 48px. 166955 pixels (ratio 0.74 of all image pixels) are different.
+
+      Snapshot: shell-footer-desktop.png
+
+    Call log:
+      - Expect "toHaveScreenshot(shell-footer-desktop.png)" getByRole('contentinfo') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for getByRole('contentinfo')
+        - locator resolved to <footer class="v2-footer" _ngcontent-ng-c1467389000="">…</footer>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - Expected an image 2368px by 96px, received 1184px by 48px. 166955 pixels (ratio 0.74 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for getByRole('contentinfo')
+        - locator resolved to <footer class="v2-footer" _ngcontent-ng-c1467389000="">…</footer>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - Expected an image 2368px by 96px, received 1184px by 48px. 166955 pixels (ratio 0.74 of all image pixels) are different.
+
+
+      125 |     // the review ledger records their hashes. Full-page parity remains open.
+      126 |     const visual = {animations: 'disabled' as const, style: '.ambient-dots {transform:none !important;}'};
+    > 127 |     if (motion === 'reduce') await expect(page.getByRole('contentinfo')).toHaveScreenshot('shell-footer-desktop.png', visual);
+          |                                                                          ^
+      128 |     await page.setViewportSize({width: 390, height: 900});
+      129 |     await page.screenshot({path: info.outputPath('shell-mobile.png'), fullPage: true, animations: 'disabled'});
+      130 |     if (motion === 'reduce') {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-navigation.spec.ts:127:74
+
+    attachment #1: shell-footer-desktop (image/png) ────────────────────────────────────────────────
+    Expected: e2e/design-v2-navigation.spec.ts-snapshots/shell-footer-desktop-webkit-stats-linux.png
+    Received: docs/testing-evidence/design-v2/shell-component-visual-artifacts/design-v2-navigation-Canon-02e8c-and-document-footer-reduce--webkit-stats/shell-footer-desktop-actual.png
+    Diff:     docs/testing-evidence/design-v2/shell-component-visual-artifacts/design-v2-navigation-Canon-02e8c-and-document-footer-reduce--webkit-stats/shell-footer-desktop-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/shell-component-visual-artifacts/design-v2-navigation-Canon-02e8c-and-document-footer-reduce--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/shell-component-visual-artifacts/design-v2-navigation-Canon-02e8c-and-document-footer-reduce--webkit-stats/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/shell-component-visual-artifacts/design-v2-navigation-Canon-02e8c-and-document-footer-reduce--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/shell-component-visual-artifacts/design-v2-navigation-Canon-02e8c-and-document-footer-reduce--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [mobile] › e2e/design-v2-navigation.spec.ts:75:7 › Canonical app header, gutters and document footer (reduce) 
+    [webkit-stats] › e2e/design-v2-navigation.spec.ts:75:7 › Canonical app header, gutters and document footer (reduce) 
+  2 passed (26.4s)

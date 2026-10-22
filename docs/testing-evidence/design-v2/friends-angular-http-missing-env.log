@@ -1,0 +1,31 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --ts-config=integration/friends-http/tsconfig.spec.json --include=/mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http/friends-http.service.spec.ts --runner-config=integration/friends-http/vitest.config.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http/vitest.config.mjs
+Application bundle generation complete. [2.121 seconds] - 2026-10-21T18:59:20.288Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| integration/friends-http/friends-http.service.spec.ts [ integration/friends-http/friends-http.service.spec.ts ]
+Error: Run this contract through the isolated Friends HTTP runner.
+ ❯ integration/friends-http/friends-http.service.spec.ts integration/friends-http/friends-http.service.spec.ts:18:28
+     16| // outside that runner instead of adding a skipped test to the fronten…
+     17| const encodedContext = process.env['ANALYTIFY_FRIEND_HTTP_CONTEXT'];
+     18| if (!encodedContext) throw new Error('Run this contract through the is…
+       |                            ^
+     19| const context = JSON.parse(encodedContext) as ContractContext;
+     20| const origin = new URL(context.origin);
+ ❯ __require chunk-M65JKFVJ.js:46:52
+ ❯ integration/friends-http/friends-http.service.spec.ts:3614:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  20:59:20
+   Duration  734ms (transform 106ms, setup 217ms, import 0ms, tests 0ms, environment 298ms)
+

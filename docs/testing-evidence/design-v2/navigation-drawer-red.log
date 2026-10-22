@@ -1,0 +1,68 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.771 seconds] - 2026-10-15T18:43:07.054Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > uses the canonical Menu label and preserves Spotify attribution
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:53 (2.117.2) 2026-10-15T18:43:09.960Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > opens the grouped canonical drawer and navigates through its current-route and Settings links
+GoTrueClient@sb-tmmhylpexbubyznlizfs-auth-token:54 (2.117.2) 2026-10-15T18:43:09.975Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+ ❯ |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts (66 tests | 2 failed) 1993ms
+     × uses the canonical Menu label and preserves Spotify attribution 14ms
+     × opens the grouped canonical drawer and navigates through its current-route and Settings links 19ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > uses the canonical Menu label and preserves Spotify attribution
+AssertionError: expected 'More' to be 'Menu' // Object.is equality
+
+Expected: "Menu"
+Received: "More"
+
+ ❯ src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts:627:76
+    625|     const harness = await RouterTestingHarness.create('/playlists');
+    626|     const element = harness.fixture.nativeElement as HTMLElement;
+    627|     expect(element.querySelector('.v2-tools-button')?.textContent?.tri…
+       |                                                                            ^
+    628|     expect(element.textContent).not.toContain('Workspace');
+    629|     expect(element.querySelector('.v2-footer')?.textContent).toContain…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > opens the grouped canonical drawer and navigates through its current-route and Settings links
+AssertionError: expected null not to be null
+ ❯ src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts:638:24
+    636|     (element.querySelector('.v2-tools-button') as HTMLButtonElement).c…
+    637|     const dialog = element.querySelector('[role="dialog"][aria-label="…
+    638|     expect(dialog).not.toBeNull();
+       |                        ^
+    639|     expect([...dialog.querySelectorAll('.navigation-group__title')].ma…
+    640|       .toEqual(['Library', 'Listening', 'Social', 'Tools']);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 64 passed (66)
+   Start at  20:43:07
+   Duration  2.98s (transform 196ms, setup 295ms, import 237ms, tests 1.99s, environment 338ms)
+

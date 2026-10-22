@@ -1,0 +1,52 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/core/sharing/playlist-sharing*.spec.ts --runner-config=docs/testing-evidence/design-v2/sharing-parallel-vitest.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/sharing-parallel-vitest.mjs
+❯ Building...
+✔ Building...
+Application bundle generation complete. [4.733 seconds] - 2026-10-20T17:37:50.285Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts > Playlist sharing actual SDK transport boundaries > does not dispatch a captured publication after logout interrupts actual SDK access-token readiness
+GoTrueClient@sb-sharing-auth-token:61 (2.117.2) 2026-10-20T17:37:52.606Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+ ❯ |SpotiFront| src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts (62 tests | 1 failed) 640ms
+     × does not dispatch a captured publication after logout interrupts actual SDK access-token readiness 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts > Playlist sharing actual SDK transport boundaries > does not dispatch a captured publication after logout interrupts actual SDK access-token readiness
+AssertionError: expected [ '/rest/v1/users', …(1) ] to deeply equal [ '/rest/v1/users' ]
+
+- Expected
++ Received
+
+  [
+    "/rest/v1/users",
++   "/rest/v1/rpc/begin_playlist_share_create_upload",
+  ]
+
+ ❯ src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts:512:24
+    510|     token.resolve('old-session-token');
+    511|     await expect(operation).rejects.toMatchObject({name: 'AbortError'}…
+    512|     expect(dispatched).toEqual(['/rest/v1/users']);
+       |                        ^
+    513|   });
+    514|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 80 passed (81)
+   Start at  19:37:50
+   Duration  3.57s (transform 177ms, setup 791ms, import 209ms, tests 784ms, environment 1.27s)
+

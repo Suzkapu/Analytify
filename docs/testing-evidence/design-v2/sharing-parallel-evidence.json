@@ -1,0 +1,260 @@
+{
+  "date": "2026-10-21",
+  "status": "Approved paging, publication ownership and SDK dispatch fixes verified; source/specs frozen; unresolved contracts remain explicit",
+  "baseline": {
+    "source": "coverage/SpotiFront/coverage-summary.json",
+    "lines": 84.15,
+    "statements": 72.88,
+    "functions": 75.4,
+    "branches": 57.36
+  },
+  "previousMilestone": {
+    "date": "2026-10-20",
+    "status": "approved3pagingfixes implemented;3genuinepublicationidentityREDs await root review; no finalcoverageclaim",
+    "baseline": {
+      "source": "coverage/SpotiFront/coverage-summary.json",
+      "lines": 84.15,
+      "statements": 72.88,
+      "functions": 75.4,
+      "branches": 57.36
+    },
+    "productionSourceBeforeFixesSha256": "69b67d331980b1c781c74fc5d39579d296baf710da669f21db52819d4e876bbe",
+    "productionEdits": [
+      "Dynamic pagination cursor advances by actual batch length",
+      "Exactcount shortfirst/finalpage becomes explicitpartialerror retainingvalidtracks",
+      "Caller abort prioritized after concurrentpage settlement beforegenericpartialerror"
+    ],
+    "runs": [
+      {
+        "log": "docs/testing-evidence/design-v2/sharing-parallel-initial.log",
+        "passed": 53,
+        "failed": 0,
+        "files": 3
+      },
+      {
+        "log": "docs/testing-evidence/design-v2/sharing-parallel-confirmed-red.log",
+        "passed": 55,
+        "failed": 4,
+        "files": 3
+      },
+      {
+        "log": "docs/testing-evidence/design-v2/sharing-parallel-expanded-red.log",
+        "passed": 62,
+        "failed": 4,
+        "files": 3
+      },
+      {
+        "log": "docs/testing-evidence/design-v2/sharing-parallel-paging-green-identity-red.log",
+        "passed": 65,
+        "failed": 1,
+        "files": 3
+      },
+      {
+        "log": "docs/testing-evidence/design-v2/sharing-parallel-upload-owner-red.log",
+        "passed": 65,
+        "failed": 3,
+        "files": 3
+      }
+    ],
+    "genuineRegressions": [
+      "No-count pagination stops100/103withconcurrency4",
+      "Exactcount60with55tracksreportedcomplete",
+      "Later-pagecallerabortwrappedasgenericpartialerror",
+      "Profileawaitaccountchange stillcreatesoldactorsnapshotthroughsuccessorclient",
+      "Beginackaccountchange stillappendsandcommits",
+      "Firstchunkackaccountchange stillsendssecondchunkandcommit"
+    ],
+    "initialScopedCoverage": {
+      "total": {
+        "lines": {
+          "total": 183,
+          "covered": 175,
+          "skipped": 0,
+          "pct": 95.62
+        },
+        "statements": {
+          "total": 236,
+          "covered": 218,
+          "skipped": 0,
+          "pct": 92.37
+        },
+        "functions": {
+          "total": 61,
+          "covered": 57,
+          "skipped": 0,
+          "pct": 93.44
+        },
+        "branches": {
+          "total": 197,
+          "covered": 164,
+          "skipped": 0,
+          "pct": 83.24
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": "Unknown"
+        }
+      },
+      "/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sharing/playlist-sharing.service.ts": {
+        "lines": {
+          "total": 183,
+          "covered": 175,
+          "skipped": 0,
+          "pct": 95.62
+        },
+        "functions": {
+          "total": 61,
+          "covered": 57,
+          "skipped": 0,
+          "pct": 93.44
+        },
+        "statements": {
+          "total": 236,
+          "covered": 218,
+          "skipped": 0,
+          "pct": 92.37
+        },
+        "branches": {
+          "total": 197,
+          "covered": 164,
+          "skipped": 0,
+          "pct": 83.24
+        }
+      }
+    },
+    "lintExit": 0,
+    "typesExit": 0,
+    "limitations": [
+      "No finalcoverage:initialscoped53GREEN predatesproductionpagingfixes/latercases",
+      "3genuineidentityREDs remain",
+      "SameSpotifycopy contract tests verifylease/revision/destinationparameters;actualSpotify effects ownedbyautosync+ParticipantSpotify sources",
+      "InstalledSDKqueries/RPCs strictsyntheticfetch;getUsercontrolledidentityboundary;realtimechannelcontrolledcollaborator;nohosteddata/notifications",
+      "Initial503partialpagefixturetriggeredinstalledSDKautomaticretry/timeout;changedto403permissionfaultandretainedfailedfixturelog",
+      "Uncertaincreatecommitretryduplicatesremainssource-inspectedgap:callerpreservesnotoken/operation,servicecreatesfreshtoken,servercommitinserts+deletesupload;noidempotencyredesignimplemented"
+    ]
+  },
+  "final": {
+    "log": "docs/testing-evidence/design-v2/sharing-parallel-signal-final.log",
+    "exit": 0,
+    "testsPassed": 159,
+    "filesPassed": 10,
+    "skipped": 0,
+    "coverage": {
+      "lines": {
+        "total": 223,
+        "covered": 223,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 277,
+        "covered": 277,
+        "skipped": 0,
+        "pct": 100
+      },
+      "functions": {
+        "total": 64,
+        "covered": 64,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 211,
+        "covered": 207,
+        "skipped": 0,
+        "pct": 98.1
+      }
+    },
+    "scope": "PlaylistSharingService only; same final behavior, final indentation-only edit followed by current fullCI2108 pass. Actual installed SDK uses strict synthetic transport, not hosted Auth/backend."
+  },
+  "sourceChanges": [
+    "Advance dynamic pagination by actual batch offsets, retain every no-count page",
+    "Reject exact-count truncation with partialTracks instead of returning incomplete success",
+    "Preserve caller AbortError after concurrent page settlement",
+    "Capture shared SessionLifecycle generation and validated owner before publication; cached SDKsession checks across profile/begin/append/commit awaits",
+    "Immediately check lifecycle after async helper handover before mutation dispatch",
+    "Use captured generation AbortSignal on all5actual publicationRPCbuilders, stopping old writes during SDKtoken readiness",
+    "Reject stale acknowledgements without exposing claimURL/revision or rolling back acknowledged writes"
+  ],
+  "genuineRedRegressions": [
+    "No-count pagination stops100/103withconcurrency4",
+    "Exactcount60with55tracksreportedcomplete",
+    "Later-pagecallerabortwrappedasgenericpartialerror",
+    "Profileawaitaccountchange stillcreatesoldactorsnapshotthroughsuccessorclient",
+    "Beginackaccountchange stillappendsandcommits",
+    "Firstchunkackaccountchange stillsendssecondchunkandcommit",
+    "Actual SDK public accessToken latch: session ends while beginRPC waits; old request still dispatched before fix",
+    "Queued session invalidation at helper-to-caller handover: synchronous dispatch guard required"
+  ],
+  "fixtures": "Existing playlist-sharing.service.spec.ts gained local getSession identity and awaitable RPC.abortSignal builder contracts; existing assertions preserved. New companions use actual SessionLifecycle and real installed SDK transport with synthetic responses.",
+  "checks": {
+    "lintExit": 0,
+    "typesExit": 0,
+    "currentFullCi": "navigation-friends-contract-final-ci.log/.exit:2108frontend passes/1documented hostedskip, all170files"
+  },
+  "limitations": [
+    "Four remaining branch arms documented by scoped report; no artificial private-state cases or exclusions",
+    "Unknown-outcome create retry can duplicate a committed share: fresh token per call, caller retains none, commit deletes upload. Not solved by these guards",
+    "Exact row-count completeness is not proof of same snapshot revision across pages",
+    "Acknowledged stale commits cannot be undone; no claim/revision is exposed to successor and no automatic rollback is added",
+    "getSession normally reads local cache but SDK may refresh expired tokens; only repeated getUser HTTP perchunk is avoided",
+    "No hostedAuth/provider/realtime/Spotifyplaylist/fullsharingbackend contract certified"
+  ],
+  "sha256": {
+    "docs/testing-evidence/design-v2/sharing-parallel-affected-final.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/sharing-parallel-affected-final.log": "c9642f378718aad9d5d47aebec3adc2e00adcec5924d91a4fbc5e5f1f8c966af",
+    "docs/testing-evidence/design-v2/sharing-parallel-authoring-callable.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/sharing-parallel-authoring-callable.log": "6f5cca3506e91c489e4f8ab50a49184cda09506174e93fd891c22eae020143da",
+    "docs/testing-evidence/design-v2/sharing-parallel-authoring-types.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/sharing-parallel-authoring-types.log": "ea90f0fa8d1c89ea2de70469b707668b5d156078206e53b8627106946ac81ecf",
+    "docs/testing-evidence/design-v2/sharing-parallel-confirmed-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/sharing-parallel-confirmed-red.log": "8518c3c73d3ae7f61099e021e1ccd9be10cf1661b666151286a0f223c7965960",
+    "docs/testing-evidence/design-v2/sharing-parallel-coverage/coverage-summary.json": "bbb92102f0e21f4a492b0b0630f69c96caf20d9c05b866bc24a9f258dd51e155",
+    "docs/testing-evidence/design-v2/sharing-parallel-coverage/lcov.info": "257f356a5b3adc7652500f7a389bea57c198b480f8c1b1ad62cd52d6e3e4b51a",
+    "docs/testing-evidence/design-v2/sharing-parallel-expanded-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/sharing-parallel-expanded-red.log": "01c19315ebc0b1dba8104ed6ee41a68c060080e9bfca4fbdd2f10969f92a9a42",
+    "docs/testing-evidence/design-v2/sharing-parallel-final-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/sharing-parallel-final-lint.log": "bc9e0eabba457b5362e192c548761dbed50dd0a3776e8fefc7efe3dcd06fa86d",
+    "docs/testing-evidence/design-v2/sharing-parallel-final-types.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/sharing-parallel-final-types.log": "4899da4c92726b9f8650082e7201b7694d83648e2725a098f1997133ea86809b",
+    "docs/testing-evidence/design-v2/sharing-parallel-final.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/sharing-parallel-final.log": "8064626c511c448317c36a7896dd3fb5a205e0dfb041243151081f2d1ef538b5",
+    "docs/testing-evidence/design-v2/sharing-parallel-frozen-final.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/sharing-parallel-frozen-final.log": "2b07e04e7af32e054aa9231fcf2f975fc9545b155b6ea666c753ee0b9affd50a",
+    "docs/testing-evidence/design-v2/sharing-parallel-guard-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/sharing-parallel-guard-lint.log": "bc9e0eabba457b5362e192c548761dbed50dd0a3776e8fefc7efe3dcd06fa86d",
+    "docs/testing-evidence/design-v2/sharing-parallel-guard-types.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/sharing-parallel-guard-types.log": "4899da4c92726b9f8650082e7201b7694d83648e2725a098f1997133ea86809b",
+    "docs/testing-evidence/design-v2/sharing-parallel-handover-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/sharing-parallel-handover-red.log": "cddda0ec6e4b753897db49745bd9b20faa71d047317894f0e76afdd0bced4445",
+    "docs/testing-evidence/design-v2/sharing-parallel-identity-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/sharing-parallel-identity-green.log": "707e30789c21d0150bd329d0938c11f482b2da5d1c4bc003dd3de2ce3f97e745",
+    "docs/testing-evidence/design-v2/sharing-parallel-initial.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/sharing-parallel-initial.log": "9aa27c3cb0612e03ece317a6332ee30813393be6343fdec79a23442717aab5a2",
+    "docs/testing-evidence/design-v2/sharing-parallel-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/sharing-parallel-lint.log": "4c2ab438273d91dfbd95b725d192fd4b8663695dceacfd3f364205bfa5acf801",
+    "docs/testing-evidence/design-v2/sharing-parallel-ownership-pages-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/sharing-parallel-ownership-pages-red.log": "9352f0935a8bfbaa8d7e380663e22bc17ef26bfef156ca40aeecb987b1c16d4e",
+    "docs/testing-evidence/design-v2/sharing-parallel-paging-green-identity-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/sharing-parallel-paging-green-identity-red.log": "cfee4b34cf3b0b90c7af014b7f1faeffabaabf45649e477d33b40711d3a3dc6e",
+    "docs/testing-evidence/design-v2/sharing-parallel-signal-final.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/sharing-parallel-signal-final.log": "f00c4c034991963556c3eb7018d2d1f6587ee5c24fcab5425bb746cf69d5e9e0",
+    "docs/testing-evidence/design-v2/sharing-parallel-token-dispatch-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/sharing-parallel-token-dispatch-red.log": "ec6993af8c3ab9196285a123d9406a57acd4846a48bfe13ca1a22107882a4cbd",
+    "docs/testing-evidence/design-v2/sharing-parallel-token-latch-authoring.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/sharing-parallel-token-latch-authoring.log": "dd27355951cc2fbc09c2d4b607e962f57f7e5174d030d19ba89878c445c5cc47",
+    "docs/testing-evidence/design-v2/sharing-parallel-types.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/sharing-parallel-types.log": "4899da4c92726b9f8650082e7201b7694d83648e2725a098f1997133ea86809b",
+    "docs/testing-evidence/design-v2/sharing-parallel-upload-owner-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/sharing-parallel-upload-owner-red.log": "65b1954440256d037ec7375732ffe7f5c37d23f355e45efd3908b1545f04e314",
+    "docs/testing-evidence/design-v2/sharing-parallel-vitest.mjs": "4f50bb704972693d484a0df5f7de7d4f26d59ddb505e8b8c00fa21c5e8eafceb",
+    "package-lock.json": "590a76c573c94f5dc9aecf28f61738179f020ae567e22c15d2dcc437012d638e",
+    "src/app/core/auth/session-lifecycle.service.ts": "b874c0afde0273c8bf3aaf1ef3f62461f931aa987ba6f91962405cf0ad0b8484",
+    "src/app/core/sharing/playlist-sharing-names.spec.ts": "aa1cd7cf7eb5f9d1f90b63773c064c2ae07e22248679c979d340c3e00a1e93bd",
+    "src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts": "057900ebdc33b7489667cbd2cdbbd4fd47bc1dbdeabd77fd59bc0823c7f67483",
+    "src/app/core/sharing/playlist-sharing.service.spec.ts": "991129f83ca947b88ca4bb24a957775111ede2f0fbe9b7c981c0a7240ff2bf09",
+    "src/app/core/sharing/playlist-sharing.service.ts": "495070931cf00c5a0a5bf66655923740b22ec68def88b7a5ade2a6ecbcdcc1ac"
+  }
+}

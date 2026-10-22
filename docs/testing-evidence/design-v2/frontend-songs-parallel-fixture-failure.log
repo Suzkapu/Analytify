@@ -1,0 +1,105 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/library/songs/*.spec.ts --include=src/app/features/library/design-v2/v2-songs-page.component.spec.ts --runner-config=docs/testing-evidence/design-v2/frontend-songs-parallel-vitest.mjs --coverage --coverage-include=src/app/features/library/songs/songs.controller.ts --coverage-reporters=json-summary --coverage-reporters=json --coverage-reporters=text-summary
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-songs-parallel-vitest.mjs
+Application bundle generation complete. [4.769 seconds] - 2026-10-17T14:11:50.973Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+      Coverage enabled with v8
+
+ ❯ |SpotiFront| src/app/features/library/songs/songs-controller-boundary.spec.ts (69 tests | 1 failed) 292ms
+     × repairs a negative cached-track count through a fresh task 3ms
+stderr | src/app/features/library/design-v2/v2-songs-page.component.spec.ts > V2SongsPageComponent > notifies OnPush views after asynchronous route loading and loader progress
+AssertionError: expected false to be true // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/design-v2/v2-songs-page.component.spec.ts:84:40
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23) {
+  actual: false,
+  expected: true,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+ ❯ |SpotiFront| src/app/features/library/design-v2/v2-songs-page.component.spec.ts (12 tests | 1 failed) 577ms
+     × notifies OnPush views after asynchronous route loading and loader progress 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/library/design-v2/v2-songs-page.component.spec.ts > V2SongsPageComponent > notifies OnPush views after asynchronous route loading and loader progress
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/app/features/library/design-v2/v2-songs-page.component.spec.ts:84:40
+     82|     (controller as any).subscribeToLoaderTask({progress$});
+     83|     progress$.next({artists: [], isComplete: false, isLoadingTracks: t…
+     84|     expect(controller.isLoadingTracks).toBe(true);
+       |                                        ^
+     85|     expect(markForCheck).toHaveBeenCalledTimes(2);
+     86|     controller.viewStyle = 'songs';
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/features/library/songs/songs-controller-boundary.spec.ts > Songs missing metadata ordering boundaries > repairs a negative cached-track count through a fresh task
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/app/features/library/songs/songs-controller-boundary.spec.ts:232:123
+    230|   });
+    231|   it('repairs a negative cached-track count through a fresh task',asyn…
+    232|     const f=fixture();f.cache('A',undefined,{_CachedTrackCount:'-1'});…
+       |                                                                                                                           ^
+    233|   });
+    234|   it('keeps a nameless cache and anonymous preference updates usable w…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: this.playlistLoaderService.getLoadingTask is not a function
+ ❯ Object.next src/app/features/library/songs/songs.controller.ts:386:38
+ ❯ ConsumerObserver.next node_modules/rxjs/dist/cjs/internal/Subscriber.js:113:33
+ ❯ SafeSubscriber.Subscriber._next node_modules/rxjs/dist/cjs/internal/Subscriber.js:80:26
+ ❯ SafeSubscriber.Subscriber.next node_modules/rxjs/dist/cjs/internal/Subscriber.js:51:18
+ ❯ node_modules/rxjs/dist/cjs/internal/Subject.js:69:34
+ ❯ Object.errorContext node_modules/rxjs/dist/cjs/internal/util/errorContext.js:22:9
+ ❯ Subject.next node_modules/rxjs/dist/cjs/internal/Subject.js:59:24
+ ❯ src/app/features/library/design-v2/v2-songs-page.component.spec.ts:83:15
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+
+This error originated in "src/app/features/library/design-v2/v2-songs-page.component.spec.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  2 failed | 86 passed (88)
+     Errors  1 error
+   Start at  16:11:51
+   Duration  2.42s (transform 681ms, setup 1.14s, import 1.19s, tests 1.54s, environment 1.37s)
+

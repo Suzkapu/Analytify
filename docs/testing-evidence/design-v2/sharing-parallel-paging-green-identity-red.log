@@ -1,0 +1,112 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/core/sharing/playlist-sharing*.spec.ts --runner-config=docs/testing-evidence/design-v2/sharing-parallel-vitest.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/sharing-parallel-vitest.mjs
+❯ Building...
+✔ Building...
+Application bundle generation complete. [2.304 seconds] - 2026-10-20T17:31:15.606Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts > Playlist sharing actual SDK transport boundaries > does not publish an account A snapshot into a replacement account while its profile request is pending
+GoTrueClient@sb-sharing-auth-token:39 (2.117.2) 2026-10-20T17:31:16.641Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+ ❯ |SpotiFront| src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts (47 tests | 1 failed) 216ms
+     × does not publish an account A snapshot into a replacement account while its profile request is pending 60ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts > Playlist sharing actual SDK transport boundaries > does not publish an account A snapshot into a replacement account while its profile request is pending
+AssertionError: expected [ { …(3) }, { …(3) }, { …(3) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "body": {
++       "p_claim_token": "9a857e29d20c4d19c15312a96290d1597faca271d78be8b1e0fdc38d577fc398",
++       "p_owner_display_name": "Old account A",
++       "p_owner_image_url": "account-a.jpg",
++       "p_playlist_description": "",
++       "p_playlist_image_url": "",
++       "p_playlist_name": "Published",
++       "p_source_playlist_id": "source",
++     },
++     "init": {
++       "body": "{\"p_source_playlist_id\":\"source\",\"p_playlist_name\":\"Published\",\"p_playlist_description\":\"\",\"p_playlist_image_url\":\"\",\"p_owner_display_name\":\"Old account A\",\"p_owner_image_url\":\"account-a.jpg\",\"p_claim_token\":\"9a857e29d20c4d19c15312a96290d1597faca271d78be8b1e0fdc38d577fc398\"}",
++       "headers": Headers {},
++       "method": "POST",
++       "signal": undefined,
++     },
++     "url": "https://sharing.fixture.invalid/rest/v1/rpc/begin_playlist_share_create_upload",
++   },
++   {
++     "body": {
++       "p_offset": 0,
++       "p_tracks": [
++         {
++           "albumName": "",
++           "artists": [
++             {
++               "id": "artist",
++               "name": "Artist",
++             },
++           ],
++           "id": "one",
++           "imageUrl": "",
++           "name": "one",
++           "playlistIndex": 1,
++           "spotifyUrl": "",
++           "uri": "spotify:track:one",
++         },
++       ],
++       "p_upload_id": "upload",
++     },
++     "init": {
++       "body": "{\"p_upload_id\":\"upload\",\"p_offset\":0,\"p_tracks\":[{\"id\":\"one\",\"uri\":\"spotify:track:one\",\"name\":\"one\",\"artists\":[{\"id\":\"artist\",\"name\":\"Artist\"}],\"albumName\":\"\",\"imageUrl\":\"\",\"spotifyUrl\":\"\",\"playlistIndex\":1}]}",
++       "headers": Headers {},
++       "method": "POST",
++       "signal": undefined,
++     },
++     "url": "https://sharing.fixture.invalid/rest/v1/rpc/append_playlist_share_upload_chunk",
++   },
++   {
++     "body": {
++       "p_expected_track_count": 1,
++       "p_upload_id": "upload",
++     },
++     "init": {
++       "body": "{\"p_upload_id\":\"upload\",\"p_expected_track_count\":1}",
++       "headers": Headers {},
++       "method": "POST",
++       "signal": undefined,
++     },
++     "url": "https://sharing.fixture.invalid/rest/v1/rpc/commit_playlist_share_create_upload",
++   },
++ ]
+
+ ❯ src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts:261:74
+    259|     profile.resolve(json([{display_name: 'Old account A', profile_pic_…
+    260|     await creating.catch(() => undefined);
+    261|     expect(requests.filter(item => item.url.pathname.includes('/rpc/')…
+       |                                                                          ^
+    262|   });
+    263|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 65 passed (66)
+   Start at  19:31:15
+   Duration  2.38s (transform 97ms, setup 607ms, import 122ms, tests 361ms, environment 968ms)
+

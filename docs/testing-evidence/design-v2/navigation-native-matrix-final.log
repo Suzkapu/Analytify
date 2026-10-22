@@ -1,0 +1,63 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.navigation.config.ts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214
+[WebServer] (node:19039) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:19039) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:19364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (no-preference) (7.4s)
+  ✓  2 [desktop] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (reduce) (4.9s)
+(node:20239) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [mobile] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (no-preference) (5.6s)
+  ✓  4 [mobile] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (reduce) (5.5s)
+(node:21079) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 [firefox-stats] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (no-preference) (7.0s)
+  ✓  6 [firefox-stats] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (reduce) (5.0s)
+(node:22183) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  7 [webkit-stats] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (no-preference) (1ms)
+(node:22238) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  8 [webkit-stats] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (reduce) (1ms)
+
+
+  1) [webkit-stats] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (no-preference) 
+
+    Error: browserType.launch: Failed to launch webkit because executable doesn't exist at /tmp/analytify-webkit-libs/run-webkit.sh
+
+    Error Context: docs/testing-evidence/design-v2/navigation-browser-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--webkit-stats/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/navigation-browser-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/navigation-browser-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [webkit-stats] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (reduce) 
+
+    Error: browserType.launch: Failed to launch webkit because executable doesn't exist at /tmp/analytify-webkit-libs/run-webkit.sh
+
+    Error Context: docs/testing-evidence/design-v2/navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--webkit-stats/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [webkit-stats] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (no-preference) 
+    [webkit-stats] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (reduce) 
+  6 passed (48.0s)

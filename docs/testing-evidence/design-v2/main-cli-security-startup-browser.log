@@ -1,0 +1,25 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=/tmp/analytify-cli-startup-browsers.config.ts e2e/design-v2-settings-startup.spec.ts --workers=1 --reporter=list --output=docs/testing-evidence/design-v2/main-cli-security-startup-browser-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4213
+[WebServer] (node:182567) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:182567) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:182693) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop] › e2e/design-v2-settings-startup.spec.ts:6:5 › first Login renders directly and later Legal navigation retains native transitions (4.0s)
+(node:183261) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [mobile] › e2e/design-v2-settings-startup.spec.ts:6:5 › first Login renders directly and later Legal navigation retains native transitions (3.5s)
+(node:183398) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [firefox-stats] › e2e/design-v2-settings-startup.spec.ts:6:5 › first Login renders directly and later Legal navigation retains native transitions (2.7s)
+(node:183673) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  4 [webkit-stats] › e2e/design-v2-settings-startup.spec.ts:6:5 › first Login renders directly and later Legal navigation retains native transitions (2.8s)
+
+  4 passed (24.7s)

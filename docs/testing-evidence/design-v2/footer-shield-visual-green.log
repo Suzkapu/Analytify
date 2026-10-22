@@ -1,0 +1,25 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.navigation.config.ts --grep=Canonical app header.*reduce --output=docs/testing-evidence/design-v2/footer-shield-visual-green-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:50804) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:50804) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:51043) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop] › e2e/design-v2-navigation.spec.ts:75:7 › Canonical app header, gutters and document footer (reduce) (3.5s)
+(node:51326) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [mobile] › e2e/design-v2-navigation.spec.ts:75:7 › Canonical app header, gutters and document footer (reduce) (4.4s)
+(node:51670) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [firefox-stats] › e2e/design-v2-navigation.spec.ts:75:7 › Canonical app header, gutters and document footer (reduce) (4.5s)
+(node:52205) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  4 [webkit-stats] › e2e/design-v2-navigation.spec.ts:75:7 › Canonical app header, gutters and document footer (reduce) (4.7s)
+
+  4 passed (28.1s)

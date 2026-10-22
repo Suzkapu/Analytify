@@ -1,0 +1,167 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/auth/spotify-auth-refresh-boundary.spec.ts --runner-config=docs/testing-evidence/design-v2/frontend-auth-parallel-vitest.config.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-auth-parallel-vitest.config.mjs
+Application bundle generation complete. [2.771 seconds] - 2026-10-17T14:12:59.708Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/auth/spotify-auth-refresh-boundary.spec.ts > Spotify refresh and restored-session ownership boundaries > refreshes the replacement account independently while an old account refresh remains pending
+AssertionError: expected 'unexpected-B' to be 'refreshed-B' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/spotify-auth-refresh-boundary.spec.ts:130:46
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: 'unexpected-B',
+  expected: 'refreshed-B',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+ ❯ |SpotiFront| src/app/core/auth/spotify-auth-refresh-boundary.spec.ts (43 tests | 1 failed) 414ms
+     × refreshes the replacement account independently while an old account refresh remains pending 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/spotify-auth-refresh-boundary.spec.ts > Spotify refresh and restored-session ownership boundaries > refreshes the replacement account independently while an old account refresh remains pending
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/app/core/auth/spotify-auth-refresh-boundary.spec.ts:119:27
+    117|     const replacement = firstValueFrom(auth.refreshToken());
+    118|     const requests = http.match(tokenUrl);
+    119|     expect.soft(requests).toHaveLength(1);
+       |                           ^
+    120|     if (requests[0]) expect(new URLSearchParams(requests[0].request.bo…
+    121|     oldRequest.flush({access_token: 'obsolete-A', refresh_token: 'obso…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/spotify-auth-refresh-boundary.spec.ts > Spotify refresh and restored-session ownership boundaries > refreshes the replacement account independently while an old account refresh remains pending
+AssertionError: expected [ TestRequest{ …(3) } ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/app/core/auth/spotify-auth-refresh-boundary.spec.ts:125:29
+    123|     const sharedReplacement = firstValueFrom(auth.refreshToken());
+    124|     const unexpected = http.match(tokenUrl);
+    125|     expect.soft(unexpected).toHaveLength(0);
+       |                             ^
+    126|     requests[0]?.flush({access_token: 'refreshed-B', refresh_token: 'r…
+    127|     for (const request of unexpected) request.flush({access_token: 'un…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/spotify-auth-refresh-boundary.spec.ts > Spotify refresh and restored-session ownership boundaries > refreshes the replacement account independently while an old account refresh remains pending
+AssertionError: expected { access_token: 'obsolete-A', …(1) } to deeply equal { access_token: 'refreshed-B', …(1) }
+
+- Expected
++ Received
+
+  {
+-   "access_token": "refreshed-B",
+-   "refresh_token": "rotated-B",
++   "access_token": "obsolete-A",
++   "refresh_token": "obsolete-A-refresh",
+  }
+
+ ❯ src/app/core/auth/spotify-auth-refresh-boundary.spec.ts:128:36
+    126|     requests[0]?.flush({access_token: 'refreshed-B', refresh_token: 'r…
+    127|     for (const request of unexpected) request.flush({access_token: 'un…
+    128|     expect.soft(await replacement).toEqual({access_token: 'refreshed-B…
+       |                                    ^
+    129|     expect.soft(await sharedReplacement).toEqual({access_token: 'refre…
+    130|     expect(values.get('spotifyAccessToken')).toBe('refreshed-B');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/spotify-auth-refresh-boundary.spec.ts > Spotify refresh and restored-session ownership boundaries > refreshes the replacement account independently while an old account refresh remains pending
+AssertionError: expected { access_token: 'unexpected-B' } to deeply equal { access_token: 'refreshed-B', …(1) }
+
+- Expected
++ Received
+
+  {
+-   "access_token": "refreshed-B",
+-   "refresh_token": "rotated-B",
++   "access_token": "unexpected-B",
+  }
+
+ ❯ src/app/core/auth/spotify-auth-refresh-boundary.spec.ts:129:42
+    127|     for (const request of unexpected) request.flush({access_token: 'un…
+    128|     expect.soft(await replacement).toEqual({access_token: 'refreshed-B…
+    129|     expect.soft(await sharedReplacement).toEqual({access_token: 'refre…
+       |                                          ^
+    130|     expect(values.get('spotifyAccessToken')).toBe('refreshed-B');
+    131|     expect(values.get('spotifyRefreshToken')).toBe('rotated-B');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/auth/spotify-auth-refresh-boundary.spec.ts > Spotify refresh and restored-session ownership boundaries > refreshes the replacement account independently while an old account refresh remains pending
+AssertionError: expected 'unexpected-B' to be 'refreshed-B' // Object.is equality
+
+Expected: "refreshed-B"
+Received: "unexpected-B"
+
+ ❯ src/app/core/auth/spotify-auth-refresh-boundary.spec.ts:130:46
+    128|     expect.soft(await replacement).toEqual({access_token: 'refreshed-B…
+    129|     expect.soft(await sharedReplacement).toEqual({access_token: 'refre…
+    130|     expect(values.get('spotifyAccessToken')).toBe('refreshed-B');
+       |                                              ^
+    131|     expect(values.get('spotifyRefreshToken')).toBe('rotated-B');
+    132|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 42 passed (43)
+   Start at  16:12:59
+   Duration  1.35s (transform 165ms, setup 249ms, import 174ms, tests 414ms, environment 383ms)
+

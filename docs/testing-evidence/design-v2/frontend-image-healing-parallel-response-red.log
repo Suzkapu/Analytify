@@ -1,0 +1,103 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/sync/image-healing/*response-boundary.spec.ts --runner-config=docs/testing-evidence/design-v2/frontend-image-healing-parallel-vitest.config.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-image-healing-parallel-vitest.config.mjs
+Application bundle generation complete. [2.347 seconds] - 2026-10-19T17:44:40.077Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stdout | src/app/core/sync/image-healing/image-healing-response-boundary.spec.ts > Image recovery accepts only requested track identities > ignores an unsolicited-only aggregate response without replacing a valid cached cover
+[Analytify][0001][+00000ms][Image Recovery][STEP] 1 track(s) with missing album covers. Re-fetching.
+
+stdout | src/app/core/sync/image-healing/image-healing-response-boundary.spec.ts > Image recovery accepts only requested track identities > repairs requested rows from a mixed aggregate while preserving unsolicited valid cached rows
+[Analytify][0002][+00000ms][Image Recovery][STEP] 2 track(s) with missing album covers. Re-fetching.
+
+ ❯ |SpotiFront| src/app/core/sync/image-healing/image-healing-response-boundary.spec.ts (2 tests | 2 failed) 40ms
+     × ignores an unsolicited-only aggregate response without replacing a valid cached cover 33ms
+     × repairs requested rows from a mixed aggregate while preserving unsolicited valid cached rows 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/sync/image-healing/image-healing-response-boundary.spec.ts > Image recovery accepts only requested track identities > ignores an unsolicited-only aggregate response without replacing a valid cached cover
+AssertionError: expected [ { id: 'missing-a', …(1) }, …(1) ] to deeply equal [ { id: 'missing-a', …(1) }, …(1) ]
+
+- Expected
++ Received
+
+@@ -7,13 +7,13 @@
+    },
+    {
+      "album": {
+        "images": [
+          {
+-           "url": "https://fixture/current-b",
++           "url": "https://fixture/unsolicited-b",
+          },
+        ],
+      },
+-     "albumCover": "https://fixture/current-b",
++     "albumCover": "https://fixture/unsolicited-b",
+      "id": "ready-b",
+    },
+  ]
+
+ ❯ src/app/core/sync/image-healing/image-healing-response-boundary.spec.ts:38:18
+     36|     h.http.expectOne(request => request.url.endsWith('/tracks/missing-…
+     37|     h.http.verify();
+     38|     expect(rows).toEqual(original);
+       |                  ^
+     39|     expect(h.writes.size).toBe(0);
+     40|     expect(h.cloud.syncTracks).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/core/sync/image-healing/image-healing-response-boundary.spec.ts > Image recovery accepts only requested track identities > repairs requested rows from a mixed aggregate while preserving unsolicited valid cached rows
+AssertionError: expected { id: 'ready-b', …(2) } to deeply equal { id: 'ready-b', …(2) }
+
+- Expected
++ Received
+
+  {
+    "album": {
+      "images": [
+        {
+-         "url": "https://fixture/current-b",
++         "url": "https://fixture/unsolicited-b",
+        },
+      ],
+    },
+-   "albumCover": "https://fixture/current-b",
++   "albumCover": "https://fixture/unsolicited-b",
+    "id": "ready-b",
+  }
+
+ ❯ src/app/core/sync/image-healing/image-healing-response-boundary.spec.ts:55:21
+     53|     expect(rows[0]).toEqual(completeTrack('missing-a', 'https://fixtur…
+     54|     expect(rows[1]).toEqual({id: 'missing-c', album: {images: []}});
+     55|     expect(rows[2]).toEqual(completeTrack('ready-b', 'https://fixture/…
+       |                     ^
+     56|     expect(JSON.parse(h.writes.get('tracks')!)).toEqual(rows);
+     57|     expect(h.cloud.syncTracks).toHaveBeenCalledExactlyOnceWith([accept…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  19:44:40
+   Duration  822ms (transform 123ms, setup 224ms, import 133ms, tests 40ms, environment 313ms)
+

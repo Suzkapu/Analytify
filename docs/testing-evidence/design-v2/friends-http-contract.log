@@ -1,0 +1,55 @@
+2026-10-20 19:29:23.614 CEST [30557] LOG:  starting PostgreSQL 18.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 16.2.1 20260810, 64-bit
+2026-10-20 19:29:23.614 CEST [30557] LOG:  listening on Unix socket "/tmp/analytify-friends-http-xF4qcJ/socket/.s.PGSQL.5432"
+2026-10-20 19:29:23.617 CEST [30563] LOG:  database system was shut down at 2026-10-20 19:29:23 CEST
+2026-10-20 19:29:23.619 CEST [30557] LOG:  database system is ready to accept connections
+2026-10-20 19:29:23.991 CEST [30635] ERROR:  permission denied for function list_friends
+2026-10-20 19:29:23.991 CEST [30635] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT "public"."list_friends"() pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "list_friends".* FROM "pgrst_source" AS "list_friends"   ) _postgrest_t
+2026-10-20 19:29:23.995 CEST [30635] ERROR:  Authentication is required.
+2026-10-20 19:29:23.995 CEST [30635] CONTEXT:  PL/pgSQL function private.require_friend_actor() line 4 at RAISE
+	PL/pgSQL function public.list_friends(integer,integer) line 2 during statement block local variable initialization
+2026-10-20 19:29:23.995 CEST [30635] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT "public"."list_friends"() pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "list_friends".* FROM "pgrst_source" AS "list_friends"   ) _postgrest_t
+2026-10-20 19:29:23.999 CEST [30635] ERROR:  A verified Spotify profile is required.
+2026-10-20 19:29:23.999 CEST [30635] CONTEXT:  PL/pgSQL function private.require_friend_actor() line 6 at RAISE
+	PL/pgSQL function public.list_friends(integer,integer) line 2 during statement block local variable initialization
+2026-10-20 19:29:23.999 CEST [30635] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT "public"."list_friends"() pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "list_friends".* FROM "pgrst_source" AS "list_friends"   ) _postgrest_t
+2026-10-20 19:29:24.064 CEST [30635] ERROR:  permission denied for table users
+2026-10-20 19:29:24.064 CEST [30635] STATEMENT:  WITH pgrst_source AS (UPDATE "public"."users" SET "spotify_id" = "pgrst_body"."spotify_id" FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "spotify_id" FROM json_to_record(pgrst_payload.json_data) AS _("spotify_id" character varying(255)) ) pgrst_body  WHERE  "public"."users"."id" = $2 RETURNING 1) SELECT '' AS total_result_set, pg_catalog.count(_postgrest_t) AS page_total, array[]::text[] AS header, ''::text AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT * FROM pgrst_source) _postgrest_t
+2026-10-20 19:29:24.127 CEST [30635] ERROR:  A secure invitation token is required.
+2026-10-20 19:29:24.127 CEST [30635] CONTEXT:  PL/pgSQL function public.create_friend_invitation(text) line 5 at RAISE
+2026-10-20 19:29:24.127 CEST [30635] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_claim_token" FROM json_to_record(pgrst_payload.json_data) AS _("p_claim_token" text) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."create_friend_invitation"("p_claim_token" := pgrst_body."p_claim_token") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "create_friend_invitation".* FROM "pgrst_source" AS "create_friend_invitation"   ) _postgrest_t
+2026-10-20 19:29:24.129 CEST [30635] ERROR:  A secure invitation token is required.
+2026-10-20 19:29:24.129 CEST [30635] CONTEXT:  PL/pgSQL function public.create_friend_invitation(text) line 5 at RAISE
+2026-10-20 19:29:24.129 CEST [30635] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_claim_token" FROM json_to_record(pgrst_payload.json_data) AS _("p_claim_token" text) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."create_friend_invitation"("p_claim_token" := pgrst_body."p_claim_token") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "create_friend_invitation".* FROM "pgrst_source" AS "create_friend_invitation"   ) _postgrest_t
+2026-10-20 19:29:24.131 CEST [30635] ERROR:  A secure invitation token is required.
+2026-10-20 19:29:24.131 CEST [30635] CONTEXT:  PL/pgSQL function public.create_friend_invitation(text) line 5 at RAISE
+2026-10-20 19:29:24.131 CEST [30635] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_claim_token" FROM json_to_record(pgrst_payload.json_data) AS _("p_claim_token" text) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."create_friend_invitation"("p_claim_token" := pgrst_body."p_claim_token") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "create_friend_invitation".* FROM "pgrst_source" AS "create_friend_invitation"   ) _postgrest_t
+2026-10-20 19:29:24.134 CEST [30635] ERROR:  A secure invitation token is required.
+2026-10-20 19:29:24.134 CEST [30635] CONTEXT:  PL/pgSQL function public.create_friend_invitation(text) line 5 at RAISE
+2026-10-20 19:29:24.134 CEST [30635] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_claim_token" FROM json_to_record(pgrst_payload.json_data) AS _("p_claim_token" text) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."create_friend_invitation"("p_claim_token" := pgrst_body."p_claim_token") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "create_friend_invitation".* FROM "pgrst_source" AS "create_friend_invitation"   ) _postgrest_t
+2026-10-20 19:29:24.138 CEST [30635] ERROR:  This invitation is unavailable.
+2026-10-20 19:29:24.138 CEST [30635] CONTEXT:  PL/pgSQL function public.create_friend_invitation(text) line 12 at RAISE
+2026-10-20 19:29:24.138 CEST [30635] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_claim_token" FROM json_to_record(pgrst_payload.json_data) AS _("p_claim_token" text) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."create_friend_invitation"("p_claim_token" := pgrst_body."p_claim_token") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "create_friend_invitation".* FROM "pgrst_source" AS "create_friend_invitation"   ) _postgrest_t
+2026-10-20 19:29:24.143 CEST [30635] ERROR:  This invitation is unavailable.
+2026-10-20 19:29:24.143 CEST [30635] CONTEXT:  PL/pgSQL function public.revoke_friend_invitation(uuid) line 6 at RAISE
+2026-10-20 19:29:24.143 CEST [30635] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_invitation_id" FROM json_to_record(pgrst_payload.json_data) AS _("p_invitation_id" uuid) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."revoke_friend_invitation"("p_invitation_id" := pgrst_body."p_invitation_id") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "revoke_friend_invitation".* FROM "pgrst_source" AS "revoke_friend_invitation"   ) _postgrest_t
+
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'42501' !== '22023'
+
+    at denied (file:///mnt/Storage/ProgrammingProjects/Analytify/scripts/test-isolated-friends-http-contract.mjs:169:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///mnt/Storage/ProgrammingProjects/Analytify/scripts/test-isolated-friends-http-contract.mjs:220:5 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: '42501',
+  expected: '22023',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v26.11.1

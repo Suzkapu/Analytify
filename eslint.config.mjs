@@ -43,7 +43,7 @@ export default tseslint.config(
     }
   },
   {
-    files: ['e2e/**/*.ts', 'playwright.config.ts'],
+    files: ['e2e/**/*.ts', 'playwright*.config.ts', 'integration/friends-http/**/*.ts'],
     extends: [eslint.configs.recommended, ...tseslint.configs.recommended],
     languageOptions: {globals: {process: 'readonly'}},
     rules: {'@typescript-eslint/no-explicit-any': 'off'}

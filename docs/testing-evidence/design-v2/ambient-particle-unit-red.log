@@ -1,0 +1,45 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/shared/ambient/*.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [1.369 seconds] - 2026-10-19T17:49:38.242Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:31461) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:31455) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:31454) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ |SpotiFront| src/app/shared/ambient/ambient-background.component.spec.ts (15 tests | 1 failed) 207ms
+     × mounts the canonical particle layer once with 26 independently positioned dots 13ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/ambient/ambient-background.component.spec.ts > AmbientBackgroundComponent > mounts the canonical particle layer once with 26 independently positioned dots
+AssertionError: expected  to have a length of 26 but got +0
+
+- Expected
++ Received
+
+- 26
++ 0
+
+ ❯ src/app/shared/ambient/ambient-background.component.spec.ts:110:85
+    108|   it('mounts the canonical particle layer once with 26 independently p…
+    109|     fixture.detectChanges();
+    110|     expect((fixture.nativeElement as HTMLElement).querySelectorAll('.a…
+       |                                                                                     ^
+    111|   });
+    112|
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 27 passed (28)
+   Start at  19:49:38
+   Duration  926ms (transform 112ms, setup 696ms, import 78ms, tests 244ms, environment 1.00s)
+

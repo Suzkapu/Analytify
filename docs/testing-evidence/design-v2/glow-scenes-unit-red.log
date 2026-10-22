@@ -1,0 +1,95 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/shared/ambient/*.spec.ts --include=src/app/app-routing.module.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [5.107 seconds] - 2026-10-19T18:12:20.686Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:69316) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69317) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69330) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:69323) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ |SpotiFront| src/app/shared/ambient/ambient-background.math.spec.ts (7 tests | 2 failed) 38ms
+     × normalizes canonical scene aliases and uses Library for account/admin/unknown keys 20ms
+     × uses the canonical normalized glow centers for every desktop scene 3ms
+ ❯ |SpotiFront| src/app/app-routing.module.spec.ts (9 tests | 1 failed) 127ms
+     × selects the canonical background scene for actual product route families 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/app-routing.module.spec.ts > canonical application routes > selects the canonical background scene for actual product route families
+AssertionError: expected 'social' to be 'league' // Object.is equality
+
+Expected: "league"
+Received: "social"
+
+ ❯ src/app/app-routing.module.spec.ts:52:55
+     50|     for (const [path, scene] of [['playlists', 'library'], ['stats', '…
+     51|       ['friends', 'social'], ['compare-room', 'social'], ['song-league…
+     52|       expect(routeByPath(path)?.data?.['ambientKey']).toBe(scene);
+       |                                                       ^
+     53|     }
+     54|   });
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |SpotiFront| src/app/shared/ambient/ambient-background.math.spec.ts > ambient background math > normalizes canonical scene aliases and uses Library for account/admin/unknown keys
+AssertionError: expected { primaryX: 0.20725002797883188, …(7) } to deeply equal { primaryX: 0.21528785745871307, …(7) }
+
+- Expected
++ Received
+
+  {
+    "dotIntensity": 1,
+    "dotsX": 0,
+    "dotsY": 0,
+    "intensity": 1,
+-   "primaryX": 0.21528785745871307,
+-   "primaryY": 0.11732225362704767,
+-   "secondaryX": 0.5628334752927213,
+-   "secondaryY": 0.26021169660179655,
++   "primaryX": 0.20725002797883188,
++   "primaryY": 0.12411223999937558,
++   "secondaryX": 0.5616170576883268,
++   "secondaryY": 0.2600367898456516,
+  }
+
+ ❯ src/app/shared/ambient/ambient-background.math.spec.ts:14:123
+     12|   it('normalizes canonical scene aliases and uses Library for account/…
+     13|     const library = ambientTargetForKey('library');
+     14|     for (const key of ['', '  ', ' LIBRARY ', 'default', 'account', 'a…
+       |                                                                                                                           ^
+     15|   });
+     16|
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |SpotiFront| src/app/shared/ambient/ambient-background.math.spec.ts > ambient background math > uses the canonical normalized glow centers for every desktop scene
+AssertionError: expected 0.21528785745871307 to be close to 0.25, received difference is 0.03471214254128693, but expected 5e-8
+ ❯ src/app/shared/ambient/ambient-background.math.spec.ts:23:139
+     21|     ] as const) {
+     22|       const target = ambientTargetForKey(key);
+     23|       for (const [index, property] of (['primaryX', 'primaryY', 'secon…
+       |                                                                                                                                           ^
+     24|     }
+     25|   });
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  3 failed | 35 passed (38)
+   Start at  20:12:20
+   Duration  1.42s (transform 623ms, setup 1.24s, import 675ms, tests 520ms, environment 1.70s)
+

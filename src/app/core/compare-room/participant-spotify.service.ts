@@ -127,7 +127,8 @@ export class ParticipantSpotifyService {
     const markedDescription = this.withOperationMarker(description, operationId);
     let recovery: ComparePlaylistRecovery | undefined;
     try {
-      const profile = options.accountId ? null : await this.get<any>('/me', accessToken);
+      options.signal?.throwIfAborted();
+      const profile = options.accountId ? null : await this.get<any>('/me', accessToken, 0, options.signal);
       const accountId = String(options.accountId || profile?.id || '');
       if (!accountId) throw new Error('Spotify did not return an account ID.');
 
@@ -141,6 +142,7 @@ export class ParticipantSpotifyService {
         recovery = {source: 'local-mapping', recovered: true};
       } else {
         playlist = await this.discoverOwnedOperationPlaylist(accessToken, accountId, operationId, options.signal);
+        options.signal?.throwIfAborted();
         if (playlist) {
           recovery = {source: 'spotify-discovery', recovered: true};
           this.rememberOperationMapping(accountId, operationId, operationFingerprint, playlist);
@@ -163,6 +165,7 @@ export class ParticipantSpotifyService {
         playlist = await this.discoverOwnedOperationPlaylist(
           accessToken, accountId, operationId, options.signal, stalePlaylistId
         );
+        options.signal?.throwIfAborted();
         if (playlist) {
           recovery = {source: 'spotify-discovery', recovered: true, stalePlaylistId};
           this.rememberOperationMapping(accountId, operationId, operationFingerprint, playlist);
@@ -241,8 +244,10 @@ export class ParticipantSpotifyService {
         addedTracks += batch.length;
       }
     } catch (error) {
-      if (error && typeof error === 'object') Object.assign(error, {addedTracks});
-      throw error;
+      const failure = error && typeof error === 'object' ? error
+        : new Error(typeof error === 'string' ? error : 'Spotify playlist update failed.', {cause: error});
+      Object.assign(failure, {addedTracks});
+      throw failure;
     }
     return addedTracks;
   }
@@ -259,7 +264,8 @@ export class ParticipantSpotifyService {
     let total = 1;
     while (offset < total) {
       signal?.throwIfAborted();
-      const page = await this.get<any>(`/me/playlists?limit=50&offset=${offset}`, accessToken);
+      const page = await this.get<any>(`/me/playlists?limit=50&offset=${offset}`, accessToken, 0, signal);
+      signal?.throwIfAborted();
       const items = Array.isArray(page?.items) ? page.items : [];
       const match = items.find((item: any) =>
         item?.id !== excludedPlaylistId &&
@@ -373,6 +379,7 @@ export class ParticipantSpotifyService {
     const effectiveDescription = operationId ? this.withOperationMarker(description, operationId) : description;
     let recovery: ComparePlaylistRecovery | undefined;
     try {
+      signal?.throwIfAborted();
       if (operation && operationId) {
         const mapped = this.findOperationMapping(operation.accountId, operationId);
         if (!playlistId && mapped && mapped.fingerprint !== operation.fingerprint) {
@@ -386,6 +393,7 @@ export class ParticipantSpotifyService {
           const discovered = await this.discoverOwnedOperationPlaylist(
             accessToken, operation.accountId, operationId, signal
           );
+          signal?.throwIfAborted();
           if (discovered) {
             playlistId = discovered.id;
             playlistUrl = discovered.external_urls?.spotify;
@@ -414,6 +422,7 @@ export class ParticipantSpotifyService {
             const discovered = await this.discoverOwnedOperationPlaylist(
               accessToken, operation.accountId, operationId, signal, stalePlaylistId
             );
+            signal?.throwIfAborted();
             if (discovered) {
               playlistId = discovered.id;
               playlistUrl = discovered.external_urls?.spotify;
@@ -461,6 +470,7 @@ export class ParticipantSpotifyService {
         const discovered = await this.discoverOwnedOperationPlaylist(
           accessToken, operation.accountId, operationId, signal, stalePlaylistId
         );
+        signal?.throwIfAborted();
         if (discovered) {
           playlistId = discovered.id;
           playlistUrl = discovered.external_urls?.spotify;
@@ -609,11 +619,13 @@ export class ParticipantSpotifyService {
     });
   }
 
-  private async get<T>(path: string, accessToken: string, attempt = 0): Promise<T> {
+  private async get<T>(path: string, accessToken: string, attempt = 0, signal?: AbortSignal): Promise<T> {
     try {
-      return await firstValueFrom(this.http.get<T>(`${environment.spotifyUrl}${path}`, this.options(accessToken)));
+      return await firstValueFrom(this.withAbort(
+        this.http.get<T>(`${environment.spotifyUrl}${path}`, this.options(accessToken)), signal
+      ));
     } catch (error) {
-      return this.retry<T>(() => this.get<T>(path, accessToken, attempt + 1), error, attempt);
+      return this.retry<T>(() => this.get<T>(path, accessToken, attempt + 1, signal), error, attempt, signal);
     }
   }
 

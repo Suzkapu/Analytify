@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-16T17:14:25.229Z",
+  "branch": "codex/design-v2",
+  "head": "a8a7a3966a622c992e9058094627a768c16a363a",
+  "scope": {
+    "production": [
+      "src/app/core/data-access/storage/storage.service.ts"
+    ],
+    "tests": [
+      "src/app/core/data-access/storage/local-preference-durability.spec.ts",
+      "src/app/core/data-access/storage/local-preference-read-boundary.spec.ts",
+      "src/app/core/data-access/storage/stats-history-read-boundary.spec.ts",
+      "src/app/core/data-access/storage/storage-bulk-hydration-races.spec.ts",
+      "src/app/core/data-access/storage/storage-persistence-boundary.spec.ts",
+      "src/app/core/data-access/storage/storage.service.spec.ts"
+    ],
+    "meaning": "StorageService-only coverage using storage-only tests; not a full frontend application coverage report.",
+    "sharedReportUntouched": "coverage/SpotiFront"
+  },
+  "baseline": {
+    "command": "node node_modules/@angular/cli/bin/ng.js test --watch=false --include='src/app/core/data-access/storage/*spec.ts' --progress=false --coverage --runner-config=/tmp/frontend-storage-vitest.config.mjs --coverage-include=src/app/core/data-access/storage/storage.service.ts",
+    "exitCode": 0,
+    "files": 4,
+    "tests": 35,
+    "metrics": {
+      "lines": 57.9,
+      "statements": 57.08,
+      "functions": 57.25,
+      "branches": 46.97
+    },
+    "log": "docs/testing-evidence/design-v2/frontend-storage-parallel-baseline.log",
+    "productionSourceSha256": "9577b384a9ccc7246683f5b2a112de34f520e409ce5954db810d41b3fce299f2",
+    "note": "Combined full frontend report exercises extra storage behavior and was separately reported by root as60.71/59.65/58.77/53.02. These percentages are not interchangeable."
+  },
+  "reproduction": {
+    "command": "node node_modules/@angular/cli/bin/ng.js test --watch=false --include='src/app/core/data-access/storage/storage-bulk-hydration-races.spec.ts' --progress=false",
+    "exitCode": 1,
+    "tests": 3,
+    "failed": 3,
+    "log": "docs/testing-evidence/design-v2/frontend-storage-parallel-hydration-red.log",
+    "defect": "Bulk feature hydration lacked account-generation, clear-epoch and per-key-mutation guards, so a delayed IDB response restored old-user/cleared/removed rows and overwrote newer values.",
+    "approvedFix": "Root reviewed the three failing regressions and explicitly approved minimal production changes to hydrateAllFeatureData."
+  },
+  "final": {
+    "command": "node node_modules/@angular/cli/bin/ng.js test --watch=false --include='src/app/core/data-access/storage/*spec.ts' --progress=false --coverage --runner-config=/tmp/frontend-storage-vitest.config.mjs --coverage-include=src/app/core/data-access/storage/storage.service.ts --coverage-reporters=json --coverage-reporters=json-summary --coverage-reporters=text-summary",
+    "exitCode": 0,
+    "files": 6,
+    "tests": 69,
+    "passed": 69,
+    "failed": 0,
+    "skipped": 0,
+    "metrics": {
+      "lines": {
+        "total": 403,
+        "covered": 402,
+        "skipped": 0,
+        "pct": 99.75
+      },
+      "functions": {
+        "total": 131,
+        "covered": 130,
+        "skipped": 0,
+        "pct": 99.23
+      },
+      "statements": {
+        "total": 476,
+        "covered": 475,
+        "skipped": 0,
+        "pct": 99.78
+      },
+      "branches": {
+        "total": 230,
+        "covered": 226,
+        "skipped": 0,
+        "pct": 98.26
+      }
+    },
+    "gatesPass": true,
+    "log": "docs/testing-evidence/design-v2/frontend-storage-parallel-final.log",
+    "assertion": "Each StorageService line/statement/function/branch percentage is at least98."
+  },
+  "runnerConfig": {
+    "path": "/tmp/frontend-storage-vitest.config.mjs",
+    "content": "export default {test:{maxWorkers:2,coverage:{reportsDirectory:'/tmp/frontend-storage-parallel-coverage',reporter:['json','json-summary','text-summary']}}};\n",
+    "purpose": "Temporary targeted runner config routes report artifacts away from shared frontend output. No shared/root configuration was changed."
+  },
+  "productionBehavior": [
+    "Capture session generation, cache epoch and local mutation revisions before opening the database.",
+    "Reject obsolete reads after opening and when getAll responds.",
+    "Merge only missing keys whose local revisions are unchanged, preserving current values and deletions.",
+    "Return the count of actually merged keys; successful explicit backup hydration remains supported."
+  ],
+  "behavioralEvidence": [
+    "Metadata/feature separation persists actual rows at an independent controlled IDB request/transaction boundary; bootstrap reopens metadata and lazy hydration restores only requested payloads.",
+    "Version4 legal acceptance migration, legacy feature-store separation, fresh DB stores/index creation and no redundant version4 legal migration.",
+    "Bootstrap reuse, no-IDB memory fallback, database-open retry, request/transaction failures and graceful development migration failures.",
+    "Development identity migration preserves preexisting preferences, deduplicates history by timestamp/range and keeps base/other owners untouched.",
+    "Stats history owner/range reads, timestamp ordering, save errors/retry, explicit-ID deletion deduplication, per-owner clear and all-history clear.",
+    "Per-owner/key cloud write sequencing with independent-key concurrency, retry after rejection, and logout dropping queued local/cloud writes.",
+    "Durable metadata commit cleans stale feature-store copy; active preference and Stats transactions abort on session invalidation and drain cleanly.",
+    "HydrateItems uses batches of at most4, stops before next batch after session replacement, preserves strict/tolerant failure semantics and prevents removed/cleared/newer-key resurrection.",
+    "Bulk hydration discards stale session/clear reads, preserves newer/removed/preexisting keys, retries freshly, and skips reads if session/epoch changes while the database opens."
+  ],
+  "nativeBrowserComplement": {
+    "file": "e2e/design-v2-navigation.spec.ts",
+    "status": "Existing native IndexedDB persistence/quota/strict-read/profile-ownership tests maintained by root. This agent did not rerun browser tests and does not claim controlled Vitest IDB fixtures are native IndexedDB."
+  },
+  "changedFiles": [
+    "src/app/core/data-access/storage/storage.service.ts",
+    "src/app/core/data-access/storage/local-preference-durability.spec.ts",
+    "src/app/core/data-access/storage/local-preference-read-boundary.spec.ts",
+    "src/app/core/data-access/storage/storage-persistence-boundary.spec.ts",
+    "src/app/core/data-access/storage/storage-bulk-hydration-races.spec.ts"
+  ],
+  "sourceHashes": {
+    "src/app/core/data-access/storage/storage.service.ts": "f42b99a71a2e410068e73a431a0bd8c1f967d266896d628ad3566d9bcb868a8a",
+    "src/app/core/data-access/storage/local-preference-durability.spec.ts": "be55442679ef8c1a6f725c8edf1f444329e375e92031f1f6729c5777dac61d7a",
+    "src/app/core/data-access/storage/local-preference-read-boundary.spec.ts": "cbf36482121bb1b692073e20e338f0ad310913c915604a9f0a04d409594c8fae",
+    "src/app/core/data-access/storage/stats-history-read-boundary.spec.ts": "88ea69eeb5b85eec384b7d6ffb6d9ded96861350ce12e06a52f7583afb610c9a",
+    "src/app/core/data-access/storage/storage-bulk-hydration-races.spec.ts": "425df1c1d164bc875935696df2c9600ce1bc934cc96205497e9ff0d90203ce33",
+    "src/app/core/data-access/storage/storage-persistence-boundary.spec.ts": "956458c447e9896d19d64def0864cc6bcdba2219095b1d06e1468b57c334f3e4",
+    "src/app/core/data-access/storage/storage.service.spec.ts": "e5fdd9df03351eb1f14bc603b688c113be57109d0b645bac5ff170dea356b713"
+  },
+  "reportHashes": {
+    "docs/testing-evidence/design-v2/frontend-storage-parallel-coverage-summary.json": "c55c1e371211c5cca58b8e5e87fb91de95119843a0df59310467be84bca8054e",
+    "docs/testing-evidence/design-v2/frontend-storage-parallel-coverage-final.json": "463c818b1e76019713ddc851ba47af0fe025f6058197f89e1e8b0ed6a11fa30d"
+  },
+  "remaining": {
+    "statements": [
+      {
+        "line": 121
+      }
+    ],
+    "functions": [
+      {
+        "name": "(anonymous_99)",
+        "line": 606
+      }
+    ],
+    "branches": [
+      {
+        "line": 116,
+        "type": "binary-expr",
+        "counts": [
+          11,
+          0
+        ]
+      },
+      {
+        "line": 191,
+        "type": "binary-expr",
+        "counts": [
+          3,
+          0
+        ]
+      },
+      {
+        "line": 288,
+        "type": "binary-expr",
+        "counts": [
+          4,
+          0
+        ]
+      },
+      {
+        "line": 640,
+        "type": "binary-expr",
+        "counts": [
+          7,
+          0
+        ]
+      }
+    ],
+    "interpretation": "Four uncovered branches are defensive getAll-result fallbacks; native IndexedDB getAll supplies an array even when empty. Uncovered queue predecessor rejection handler is guarded by its predecessor queue catch. All remain in denominator; no exclusions/ignores introduced."
+  },
+  "checks": [
+    {
+      "command": "git diff --check -- src/app/core/data-access/storage",
+      "exitCode": 0
+    }
+  ],
+  "limitations": [
+    "Full frontend/worker/edge application gates, full CI, browser workflows and design verification are root-owned and cannot be inferred from this file-targeted report.",
+    "IDB fixtures exercise real StorageService with isolated controlled platform boundaries; native-browser transport is complementary evidence, not merged into branch coverage.",
+    "No hosted endpoint, real credential/data, notification, shared release, deployment, branch operation, commit or shared configuration was used."
+  ]
+}

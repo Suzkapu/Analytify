@@ -1,0 +1,420 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-glows.spec.ts --grep canonical glow scene --workers=1 --output=docs/testing-evidence/design-v2/glow-visual-green-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:85694) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:85694) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 16 tests using 1 worker
+
+(node:86074) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   1 [desktop] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene Library preserves native assets and responsive geometry (3.7s)
+(node:86400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   2 [desktop] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene Insights preserves native assets and responsive geometry (3.6s)
+(node:86738) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   3 [desktop] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene Social preserves native assets and responsive geometry (3.8s)
+(node:87055) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   4 [desktop] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene League preserves native assets and responsive geometry (3.8s)
+(node:87405) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   5 [mobile] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene Library preserves native assets and responsive geometry (4.3s)
+(node:87760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   6 [mobile] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene Insights preserves native assets and responsive geometry (4.9s)
+
+
+  1) [desktop] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene Library preserves native assets and responsive geometry 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: locator('app-ambient-background')
+      359310 pixels (ratio 0.31 of all image pixels) are different.
+
+      Snapshot: glow-library-desktop.png
+
+    Call log:
+      - Expect "toHaveScreenshot(glow-library-desktop.png)" locator('app-ambient-background') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('app-ambient-background')
+        - locator resolved to <app-ambient-background aria-hidden="true" _nghost-ng-c1024644701="" _ngcontent-ng-c1778716678="">…</app-ambient-background>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - 359310 pixels (ratio 0.31 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for locator('app-ambient-background')
+        - locator resolved to <app-ambient-background aria-hidden="true" _nghost-ng-c1024644701="" _ngcontent-ng-c1778716678="">…</app-ambient-background>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - 359310 pixels (ratio 0.31 of all image pixels) are different.
+
+
+      55 |     for (const [name, viewport] of [['desktop', {width: 1440, height: 810}], ['mobile', {width: 390, height: 867}]] as const) {
+      56 |       await page.setViewportSize(viewport);
+    > 57 |       await expect(ambient).toHaveScreenshot(`glow-${scene.toLowerCase()}-${name}.png`, {scale: 'css', animations: 'disabled', threshold: .01, maxDiffPixels: 0,
+         |                             ^
+      58 |         style: '.design-v2 > :not(app-ambient-background), .ambient-dots {visibility:hidden !important;}'});
+      59 |     }
+      60 |   });
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-glows.spec.ts:57:29
+
+    attachment #1: glow-library-desktop (image/png) ────────────────────────────────────────────────
+    Expected: e2e/design-v2-glows.spec.ts-snapshots/glow-library-desktop-desktop-linux.png
+    Received: docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c45a1-ets-and-responsive-geometry-desktop/glow-library-desktop-actual.png
+    Diff:     docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c45a1-ets-and-responsive-geometry-desktop/glow-library-desktop-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c45a1-ets-and-responsive-geometry-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c45a1-ets-and-responsive-geometry-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c45a1-ets-and-responsive-geometry-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c45a1-ets-and-responsive-geometry-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene Insights preserves native assets and responsive geometry 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: locator('app-ambient-background')
+      312452 pixels (ratio 0.27 of all image pixels) are different.
+
+      Snapshot: glow-insights-desktop.png
+
+    Call log:
+      - Expect "toHaveScreenshot(glow-insights-desktop.png)" locator('app-ambient-background') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('app-ambient-background')
+        - locator resolved to <app-ambient-background aria-hidden="true" _nghost-ng-c1024644701="" _ngcontent-ng-c1778716678="">…</app-ambient-background>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - 312452 pixels (ratio 0.27 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for locator('app-ambient-background')
+        - locator resolved to <app-ambient-background aria-hidden="true" _nghost-ng-c1024644701="" _ngcontent-ng-c1778716678="">…</app-ambient-background>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - 312452 pixels (ratio 0.27 of all image pixels) are different.
+
+
+      55 |     for (const [name, viewport] of [['desktop', {width: 1440, height: 810}], ['mobile', {width: 390, height: 867}]] as const) {
+      56 |       await page.setViewportSize(viewport);
+    > 57 |       await expect(ambient).toHaveScreenshot(`glow-${scene.toLowerCase()}-${name}.png`, {scale: 'css', animations: 'disabled', threshold: .01, maxDiffPixels: 0,
+         |                             ^
+      58 |         style: '.design-v2 > :not(app-ambient-background), .ambient-dots {visibility:hidden !important;}'});
+      59 |     }
+      60 |   });
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-glows.spec.ts:57:29
+
+    attachment #1: glow-insights-desktop (image/png) ───────────────────────────────────────────────
+    Expected: e2e/design-v2-glows.spec.ts-snapshots/glow-insights-desktop-desktop-linux.png
+    Received: docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c3150-ets-and-responsive-geometry-desktop/glow-insights-desktop-actual.png
+    Diff:     docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c3150-ets-and-responsive-geometry-desktop/glow-insights-desktop-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c3150-ets-and-responsive-geometry-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c3150-ets-and-responsive-geometry-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c3150-ets-and-responsive-geometry-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c3150-ets-and-responsive-geometry-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [desktop] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene Social preserves native assets and responsive geometry 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: locator('app-ambient-background')
+      671406 pixels (ratio 0.58 of all image pixels) are different.
+
+      Snapshot: glow-social-desktop.png
+
+    Call log:
+      - Expect "toHaveScreenshot(glow-social-desktop.png)" locator('app-ambient-background') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('app-ambient-background')
+        - locator resolved to <app-ambient-background aria-hidden="true" _nghost-ng-c1024644701="" _ngcontent-ng-c1778716678="">…</app-ambient-background>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - 671406 pixels (ratio 0.58 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for locator('app-ambient-background')
+        - locator resolved to <app-ambient-background aria-hidden="true" _nghost-ng-c1024644701="" _ngcontent-ng-c1778716678="">…</app-ambient-background>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - 671406 pixels (ratio 0.58 of all image pixels) are different.
+
+
+      55 |     for (const [name, viewport] of [['desktop', {width: 1440, height: 810}], ['mobile', {width: 390, height: 867}]] as const) {
+      56 |       await page.setViewportSize(viewport);
+    > 57 |       await expect(ambient).toHaveScreenshot(`glow-${scene.toLowerCase()}-${name}.png`, {scale: 'css', animations: 'disabled', threshold: .01, maxDiffPixels: 0,
+         |                             ^
+      58 |         style: '.design-v2 > :not(app-ambient-background), .ambient-dots {visibility:hidden !important;}'});
+      59 |     }
+      60 |   });
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-glows.spec.ts:57:29
+
+    attachment #1: glow-social-desktop (image/png) ─────────────────────────────────────────────────
+    Expected: e2e/design-v2-glows.spec.ts-snapshots/glow-social-desktop-desktop-linux.png
+    Received: docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--d2f40-ets-and-responsive-geometry-desktop/glow-social-desktop-actual.png
+    Diff:     docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--d2f40-ets-and-responsive-geometry-desktop/glow-social-desktop-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--d2f40-ets-and-responsive-geometry-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--d2f40-ets-and-responsive-geometry-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--d2f40-ets-and-responsive-geometry-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--d2f40-ets-and-responsive-geometry-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [desktop] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene League preserves native assets and responsive geometry 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: locator('app-ambient-background')
+      730104 pixels (ratio 0.63 of all image pixels) are different.
+
+      Snapshot: glow-league-desktop.png
+
+    Call log:
+      - Expect "toHaveScreenshot(glow-league-desktop.png)" locator('app-ambient-background') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('app-ambient-background')
+        - locator resolved to <app-ambient-background aria-hidden="true" _nghost-ng-c1024644701="" _ngcontent-ng-c1778716678="">…</app-ambient-background>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - 730104 pixels (ratio 0.63 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for locator('app-ambient-background')
+        - locator resolved to <app-ambient-background aria-hidden="true" _nghost-ng-c1024644701="" _ngcontent-ng-c1778716678="">…</app-ambient-background>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - 730104 pixels (ratio 0.63 of all image pixels) are different.
+
+
+      55 |     for (const [name, viewport] of [['desktop', {width: 1440, height: 810}], ['mobile', {width: 390, height: 867}]] as const) {
+      56 |       await page.setViewportSize(viewport);
+    > 57 |       await expect(ambient).toHaveScreenshot(`glow-${scene.toLowerCase()}-${name}.png`, {scale: 'css', animations: 'disabled', threshold: .01, maxDiffPixels: 0,
+         |                             ^
+      58 |         style: '.design-v2 > :not(app-ambient-background), .ambient-dots {visibility:hidden !important;}'});
+      59 |     }
+      60 |   });
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-glows.spec.ts:57:29
+
+    attachment #1: glow-league-desktop (image/png) ─────────────────────────────────────────────────
+    Expected: e2e/design-v2-glows.spec.ts-snapshots/glow-league-desktop-desktop-linux.png
+    Received: docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--6f99a-ets-and-responsive-geometry-desktop/glow-league-desktop-actual.png
+    Diff:     docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--6f99a-ets-and-responsive-geometry-desktop/glow-league-desktop-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--6f99a-ets-and-responsive-geometry-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--6f99a-ets-and-responsive-geometry-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--6f99a-ets-and-responsive-geometry-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--6f99a-ets-and-responsive-geometry-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [mobile] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene Library preserves native assets and responsive geometry 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: locator('app-ambient-background')
+      359310 pixels (ratio 0.31 of all image pixels) are different.
+
+      Snapshot: glow-library-desktop.png
+
+    Call log:
+      - Expect "toHaveScreenshot(glow-library-desktop.png)" locator('app-ambient-background') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('app-ambient-background')
+        - locator resolved to <app-ambient-background aria-hidden="true" _nghost-ng-c1024644701="" _ngcontent-ng-c1778716678="">…</app-ambient-background>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - 359310 pixels (ratio 0.31 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for locator('app-ambient-background')
+        - locator resolved to <app-ambient-background aria-hidden="true" _nghost-ng-c1024644701="" _ngcontent-ng-c1778716678="">…</app-ambient-background>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - 359310 pixels (ratio 0.31 of all image pixels) are different.
+
+
+      55 |     for (const [name, viewport] of [['desktop', {width: 1440, height: 810}], ['mobile', {width: 390, height: 867}]] as const) {
+      56 |       await page.setViewportSize(viewport);
+    > 57 |       await expect(ambient).toHaveScreenshot(`glow-${scene.toLowerCase()}-${name}.png`, {scale: 'css', animations: 'disabled', threshold: .01, maxDiffPixels: 0,
+         |                             ^
+      58 |         style: '.design-v2 > :not(app-ambient-background), .ambient-dots {visibility:hidden !important;}'});
+      59 |     }
+      60 |   });
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-glows.spec.ts:57:29
+
+    attachment #1: glow-library-desktop (image/png) ────────────────────────────────────────────────
+    Expected: e2e/design-v2-glows.spec.ts-snapshots/glow-library-desktop-mobile-linux.png
+    Received: docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c45a1-ets-and-responsive-geometry-mobile/glow-library-desktop-actual.png
+    Diff:     docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c45a1-ets-and-responsive-geometry-mobile/glow-library-desktop-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c45a1-ets-and-responsive-geometry-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c45a1-ets-and-responsive-geometry-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c45a1-ets-and-responsive-geometry-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c45a1-ets-and-responsive-geometry-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [mobile] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene Insights preserves native assets and responsive geometry 
+
+    Test was interrupted.
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: locator('app-ambient-background')
+      312452 pixels (ratio 0.27 of all image pixels) are different.
+
+      Snapshot: glow-insights-desktop.png
+
+    Call log:
+      - Expect "toHaveScreenshot(glow-insights-desktop.png)" locator('app-ambient-background') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('app-ambient-background')
+        - locator resolved to <app-ambient-background aria-hidden="true" _nghost-ng-c1024644701="" _ngcontent-ng-c1778716678="">…</app-ambient-background>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - 312452 pixels (ratio 0.27 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for locator('app-ambient-background')
+        - locator resolved to <app-ambient-background aria-hidden="true" _nghost-ng-c1024644701="" _ngcontent-ng-c1778716678="">…</app-ambient-background>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - 312452 pixels (ratio 0.27 of all image pixels) are different.
+
+
+      55 |     for (const [name, viewport] of [['desktop', {width: 1440, height: 810}], ['mobile', {width: 390, height: 867}]] as const) {
+      56 |       await page.setViewportSize(viewport);
+    > 57 |       await expect(ambient).toHaveScreenshot(`glow-${scene.toLowerCase()}-${name}.png`, {scale: 'css', animations: 'disabled', threshold: .01, maxDiffPixels: 0,
+         |                             ^
+      58 |         style: '.design-v2 > :not(app-ambient-background), .ambient-dots {visibility:hidden !important;}'});
+      59 |     }
+      60 |   });
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-glows.spec.ts:57:29
+
+    attachment #1: glow-insights-desktop (image/png) ───────────────────────────────────────────────
+    Expected: e2e/design-v2-glows.spec.ts-snapshots/glow-insights-desktop-mobile-linux.png
+    Received: docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c3150-ets-and-responsive-geometry-mobile/glow-insights-desktop-actual.png
+    Diff:     docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c3150-ets-and-responsive-geometry-mobile/glow-insights-desktop-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c3150-ets-and-responsive-geometry-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c3150-ets-and-responsive-geometry-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c3150-ets-and-responsive-geometry-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/glow-visual-green-artifacts/design-v2-glows-canonical--c3150-ets-and-responsive-geometry-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5 failed
+    [desktop] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene Library preserves native assets and responsive geometry 
+    [desktop] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene Insights preserves native assets and responsive geometry 
+    [desktop] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene Social preserves native assets and responsive geometry 
+    [desktop] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene League preserves native assets and responsive geometry 
+    [mobile] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene Library preserves native assets and responsive geometry 
+  1 interrupted
+    [mobile] › e2e/design-v2-glows.spec.ts:6:7 › canonical glow scene Insights preserves native assets and responsive geometry 
+  10 did not run

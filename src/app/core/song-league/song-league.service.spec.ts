@@ -41,9 +41,12 @@ describe('SongLeagueService', () => {
         channel.subscribe.mockReturnValue(channel);
         removeChannel = vi.fn().mockName('removeChannel').mockResolvedValue(undefined);
         const client = {
-            rpc,
+            rpc: (...args: any[]) => {
+                const response = rpc(...args);
+                return Object.assign(response, {abortSignal: () => response});
+            },
             functions: { invoke },
-            auth: { getUser: vi.fn().mockName('getUser').mockResolvedValue({
+            auth: { getSession: vi.fn().mockResolvedValue({data: {session: {user: {id: 'member-id'}}}, error: null}), getUser: vi.fn().mockName('getUser').mockResolvedValue({
                 data: { user: { id: 'member-id' } }, error: null
             }) },
             channel: vi.fn().mockName('channel').mockReturnValue(channel),

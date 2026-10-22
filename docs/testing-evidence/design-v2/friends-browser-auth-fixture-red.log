@@ -1,0 +1,55 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts --project=desktop --grep=no-preference
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214
+[WebServer] (node:54410) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:54410) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:54677) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) (7.0s)
+
+
+  1) [desktop] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('v2-friends-page').getByText('Friend request from Paulzgi', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('v2-friends-page').getByText('Friend request from Paulzgi', { exact: true }) with timeout 5000ms
+      - waiting for locator('v2-friends-page').getByText('Friend request from Paulzgi', { exact: true })
+
+
+      53 |     const panel = page.locator('v2-friends-page');
+      54 |     await expect(panel.getByRole('heading', {name: 'Your friends', exact: true})).toBeVisible();
+    > 55 |     await expect(panel.getByText('Friend request from Paulzgi', {exact: true})).toBeVisible();
+         |                                                                                 ^
+      56 |     await expectNativeTransitionsSettled(page);
+      57 |     await expectNoBlockingAxeViolations(page);
+      58 |     await panel.getByRole('button', {name: 'Decline', exact: true}).press('Enter');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:55:81
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-browser-artifacts/design-v2-friends-Friends--59a98-ive-recovery-no-preference--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-friends.spec.ts:7:7 › Friends native workflow and responsive recovery (no-preference) 

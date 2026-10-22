@@ -63,6 +63,11 @@ export class PlaylistLoadTask {
   completedArtistIds = new Set<string>();
   refreshingArtists: any[] = [];
   private activeSub = new Subscription();
+  private cancelled = false;
+
+  get isCancelled(): boolean {
+    return this.cancelled;
+  }
   
   progress$ = new BehaviorSubject<PlaylistLoadProgress>(this.getProgress());
 
@@ -76,7 +81,16 @@ export class PlaylistLoadTask {
   }
 
   cancel() {
+    if (this.cancelled) return;
+    this.cancelled = true;
     this.activeSub.unsubscribe();
+    if (this.isComplete) return;
+    this.error = new DOMException('Playlist loading was cancelled.', 'AbortError');
+    this.isLoadingTracks = false;
+    this.isLoadingArtists = false;
+    this.isRefreshing = false;
+    this.isComplete = true;
+    this.emitUpdate();
   }
 
   getProgress(): PlaylistLoadProgress {
@@ -256,7 +270,7 @@ export class PlaylistLoaderService {
     const currentProgress = task.progress$.value;
     if (currentProgress.isComplete) {
       const succeeded = !currentProgress.error && !this.isPlaylistSourceDirty(userId, playlistId);
-      this.clearLoadingTask(playlistId);
+      if (this.tasks.get(playlistId) === task) this.clearLoadingTask(playlistId);
       return succeeded;
     }
 
@@ -266,7 +280,7 @@ export class PlaylistLoaderService {
         if (!progress.isComplete) return;
         subscription?.unsubscribe();
         const succeeded = !progress.error && !this.isPlaylistSourceDirty(userId, playlistId);
-        this.clearLoadingTask(playlistId);
+        if (this.tasks.get(playlistId) === task) this.clearLoadingTask(playlistId);
         resolve(succeeded);
       });
     });
@@ -330,15 +344,16 @@ export class PlaylistLoaderService {
   clearLoadingTask(playlistId: string) {
     const task = this.tasks.get(playlistId);
     if (task) {
-      task.cancel();
       this.tasks.delete(playlistId);
+      task.cancel();
     }
   }
 
   clearAllTasks() {
-    this.tasks.forEach(task => task.cancel());
+    const cancelledTasks = [...this.tasks.values()];
     this.tasks.clear();
     this.incrementalChecksThisSession.clear();
+    cancelledTasks.forEach(task => task.cancel());
   }
 
   private triggerApiLoad(task: PlaylistLoadTask, userId: string, isBackgroundRefresh: boolean, isDailyFullSync: boolean = false) {
@@ -978,6 +993,7 @@ export class PlaylistLoaderService {
 
     if (missingIds.length > 0) {
       const profiles = await this.supabaseService.loadArtistsByIds(missingIds);
+      if (task.isCancelled) return;
       const profileMap = new Map<string, any>(
         profiles.filter(profile => profile?.id).map(profile => [profile.id, profile])
       );
@@ -1085,6 +1101,7 @@ export class PlaylistLoaderService {
   }
 
   private checkCompletion(task: PlaylistLoadTask, userId: string | null) {
+    if (task.isCancelled) return;
     if (!task.isLoadingTracks && task.completedArtistIds.size >= task.totalUniqueArtists) {
       task.isLoadingArtists = false;
       

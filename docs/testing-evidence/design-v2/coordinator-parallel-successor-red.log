@@ -1,0 +1,289 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/core/compare-room/compare-room-coordinator*.spec.ts --runner-config=docs/testing-evidence/design-v2/coordinator-parallel-vitest.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/coordinator-parallel-vitest.mjs
+❯ Building...
+✔ Building...
+Application bundle generation complete. [2.902 seconds] - 2026-10-19T18:09:54.459Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+Warning: A vi.mock("qrcode") call in "/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts" is not at the top level of the module. Although it appears nested, it will be hoisted and executed before any tests run. Move it to the top level to reflect its actual execution order. This will become an error in a future version.
+See: https://vitest.dev/guide/mocking/modules#how-it-works
+stderr | src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts > Compare coordinator retained workflow boundaries > does not reconnect or restore a host after closing a room whose creation acknowledgement is pending
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "",
+      [Function anonymous],
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts:226:35
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts > Compare coordinator retained workflow boundaries > preserves a successor room when an earlier remote close acknowledgement finishes late
+AssertionError: expected '' to be '8OuBs3B5wFuRVcepm0W_DHq2OUuOgNyL' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts:266:35
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23) {
+  actual: '',
+  expected: '8OuBs3B5wFuRVcepm0W_DHq2OUuOgNyL',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+ ❯ |SpotiFront| src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts (19 tests | 6 failed) 170ms
+     × does not publish a proposal for selections replaced while the actual integrity hash is pending 4ms
+     × does not reconnect or restore a host after closing a room whose creation acknowledgement is pending 2ms
+     × rejects late guest updates immediately when its claimed invitation is cancelled before remote acknowledgement 3ms
+     × does not recreate an invitation slot when its remote creation resolves after room close 54ms
+     × preserves a successor room when an earlier remote close acknowledgement finishes late 2ms
+     × ignores a prior room callback after a successor accepts the same guest slot id 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts > Compare coordinator retained workflow boundaries > does not publish a proposal for selections replaced while the actual integrity hash is pending
+AssertionError: expected { id: 'b08qyC8p37pf8OuP', …(9) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "contentHash": "a07ad8a58043523fdca2d088c1a898d2fb836bae56971d5c13383aa1fff2aa32",
+  "description": "Shared-songs merge for host, second · 1 unique tracks · Created with Analytify.",
+  "descriptionsByParticipant": {
+    "host": "Shared-songs merge with 2 participants. 1 of 1 unique usable tracks from your 1 selected playlist included (100%). 1 unique tracks in the result. Created with Analytify.",
+    "second": "Shared-songs merge with 2 participants. 1 of 1 unique usable tracks from your 1 selected playlist included (100%). 1 unique tracks in the result. Created with Analytify.",
+  },
+  "id": "b08qyC8p37pf8OuP",
+  "mode": "intersection",
+  "name": "Shared songs — host, second",
+  "participantNames": [
+    "host",
+    "second",
+  ],
+  "participantStats": [
+    {
+      "includedPercentage": 100,
+      "includedTrackCount": 1,
+      "participantId": "host",
+      "selectedPlaylistCount": 1,
+      "selectedTrackCount": 1,
+    },
+    {
+      "includedPercentage": 100,
+      "includedTrackCount": 1,
+      "participantId": "second",
+      "selectedPlaylistCount": 1,
+      "selectedTrackCount": 1,
+    },
+  ],
+  "trackCount": 1,
+  "tracks": [
+    {
+      "albumName": "",
+      "artists": [
+        {
+          "id": "artist",
+          "name": "Artist",
+        },
+      ],
+      "id": "shared",
+      "imageUrl": "",
+      "name": "shared",
+      "playlistIndex": 1,
+      "spotifyUrl": "",
+      "uri": "spotify:track:shared",
+    },
+  ],
+}
+
+ ❯ src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts:213:37
+    211|     service.updateLocalParticipant(participant('second', ['new-selecti…
+    212|     await preparing;
+    213|     expect(service.proposal$.value).toBeNull();
+       |                                     ^
+    214|     expect(service.sharedTracks$.value).toEqual([]);
+    215|     expect(service.participants$.value.find(item => item.id === 'secon…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts > Compare coordinator retained workflow boundaries > does not reconnect or restore a host after closing a room whose creation acknowledgement is pending
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "",
+      [Function anonymous],
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts:226:35
+    224|     acknowledgement.resolve();
+    225|     await creating.catch(() => undefined);
+    226|     expect(transport.connect).not.toHaveBeenCalled();
+       |                                   ^
+    227|     expect(transport.touchPresence).not.toHaveBeenCalled();
+    228|     expect(service.participants$.value).toEqual([]);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts > Compare coordinator retained workflow boundaries > rejects late guest updates immediately when its claimed invitation is cancelled before remote acknowledgement
+AssertionError: expected [ 'host', 'guest' ] to deeply equal [ 'host' ]
+
+- Expected
++ Received
+
+  [
+    "host",
++   "guest",
+  ]
+
+ ❯ src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts:241:33
+    239|     const visibleWhilePending = service.participants$.value.map(item =…
+    240|     acknowledgement.resolve(); await cancelling;
+    241|     expect(visibleWhilePending).toEqual(['host']);
+       |                                 ^
+    242|     expect(service.participants$.value.map(item => item.id)).toEqual([…
+    243|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts > Compare coordinator retained workflow boundaries > does not recreate an invitation slot when its remote creation resolves after room close
+AssertionError: expected [ { id: 'Q0ql4TYpLSy1Lg', …(3) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "id": "Q0ql4TYpLSy1Lg",
++     "joinUrl": "http://localhost:3000/new/compare-room/join/IFerTxJTCH-c_ZZv64y-Fh6pr8NZCpnK#invitation=Q0ql4TYpLSy1Lg&secret=AzfYuqpyQtcwFLX2n1IMvywP3LYtUTuX",
++     "qrDataUrl": "data:image/png;base64,isolated-qr-fixture",
++     "secret": "AzfYuqpyQtcwFLX2n1IMvywP3LYtUTuX",
++   },
++ ]
+
+ ❯ src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts:254:40
+    252|     acknowledgement.resolve();
+    253|     await inviting.catch(() => undefined);
+    254|     expect(service.invitations$.value).toEqual([]);
+       |                                        ^
+    255|     expect(service.currentRoomId).toBe('');
+    256|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts > Compare coordinator retained workflow boundaries > preserves a successor room when an earlier remote close acknowledgement finishes late
+AssertionError: expected '' to be '8OuBs3B5wFuRVcepm0W_DHq2OUuOgNyL' // Object.is equality
+
+- Expected
++ Received
+
+- 8OuBs3B5wFuRVcepm0W_DHq2OUuOgNyL
+
+ ❯ src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts:266:35
+    264|     const successorId = service.currentRoomId;
+    265|     acknowledgement.resolve(); await closing;
+    266|     expect(service.currentRoomId).toBe(successorId);
+       |                                   ^
+    267|     expect(service.participants$.value.map(item => item.id)).toEqual([…
+    268|     expect(transport.disconnect).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  |SpotiFront| src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts > Compare coordinator retained workflow boundaries > ignores a prior room callback after a successor accepts the same guest slot id
+AssertionError: expected [ 'new-host' ] to deeply equal [ 'new-host', 'guest' ]
+
+- Expected
++ Received
+
+  [
+    "new-host",
+-   "guest",
+  ]
+
+ ❯ src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts:279:62
+    277|     const currentIds = service.participants$.value.map(item => item.id…
+    278|     oldCallback({id: 999, senderParticipantId: 'guest', senderRole: 'g…
+    279|     expect(service.participants$.value.map(item => item.id)).toEqual(c…
+       |                                                              ^
+    280|     expect(service.error$.value).toBeNull();
+    281|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  6 failed | 20 passed (26)
+   Start at  20:09:54
+   Duration  1.89s (transform 122ms, setup 495ms, import 162ms, tests 200ms, environment 782ms)
+

@@ -1,0 +1,36 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/shared/ambient/ambient-background.math.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [1.017 seconds] - 2026-10-19T18:15:08.862Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:71757) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ |SpotiFront| src/app/shared/ambient/ambient-background.math.spec.ts (7 tests | 1 failed) 11ms
+     × normalizes canonical scene aliases and uses Library for account/admin/unknown keys 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/ambient/ambient-background.math.spec.ts > ambient background math > normalizes canonical scene aliases and uses Library for account/admin/unknown keys
+TypeError: function is not iterable (cannot read property Symbol(Symbol.iterator))
+ ❯ ambientTargetForKey src/app/shared/ambient/ambient-background.math.ts:28:56
+ ❯ src/app/shared/ambient/ambient-background.math.spec.ts:14:125
+     12|   it('normalizes canonical scene aliases and uses Library for account/…
+     13|     const library = ambientTargetForKey('library');
+     14|     for (const key of ['', '  ', ' LIBRARY ', 'default', 'account', 'a…
+       |                                                                                                                             ^
+     15|   });
+     16|
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  20:15:09
+   Duration  664ms (transform 37ms, setup 221ms, import 9ms, tests 11ms, environment 312ms)
+

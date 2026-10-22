@@ -1,0 +1,141 @@
+{
+  "fileKey": "5v8ckmlbfhMDWwP5sTdSXd",
+  "page": "7:2",
+  "inspectedAt": "2026-10-11",
+  "nodes": [
+    {
+      "id": "473:29338",
+      "name": "Dialog / Remove friend · Suzkapu",
+      "text": [
+        "Remove Suzkapu?",
+        "Removes this person from your friends. You can send a new friend request later.",
+        "This prototype demonstrates the decision. It does not change your account.",
+        "Remove friend",
+        "Cancel"
+      ],
+      "actions": [
+        {
+          "id": "473:29342",
+          "name": "Action / Remove",
+          "types": [
+            "CLOSE",
+            "SET_VARIABLE",
+            "SET_VARIABLE",
+            "SET_VARIABLE",
+            "SET_VARIABLE",
+            "SET_VARIABLE",
+            "SET_VARIABLE"
+          ]
+        },
+        {
+          "id": "473:29343",
+          "name": "Action / Cancel",
+          "types": [
+            "CLOSE"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "473:29396",
+      "name": "Dialog / Remove friend · Daniel_P",
+      "text": [
+        "Remove Daniel_P?",
+        "Removes this person from your friends. You can send a new friend request later.",
+        "This prototype demonstrates the decision. It does not change your account.",
+        "Remove friend",
+        "Cancel"
+      ],
+      "actions": [
+        {
+          "id": "473:29400",
+          "name": "Action / Remove",
+          "types": [
+            "CLOSE",
+            "SET_VARIABLE",
+            "SET_VARIABLE",
+            "SET_VARIABLE",
+            "SET_VARIABLE",
+            "SET_VARIABLE",
+            "SET_VARIABLE"
+          ]
+        },
+        {
+          "id": "473:29401",
+          "name": "Action / Cancel",
+          "types": [
+            "CLOSE"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "473:29454",
+      "name": "Dialog / Remove friend · Alex",
+      "text": [
+        "Remove Alex?",
+        "Removes this person from your friends. You can send a new friend request later.",
+        "This prototype demonstrates the decision. It does not change your account.",
+        "Remove friend",
+        "Cancel"
+      ],
+      "actions": [
+        {
+          "id": "473:29458",
+          "name": "Action / Remove",
+          "types": [
+            "CLOSE",
+            "SET_VARIABLE",
+            "SET_VARIABLE",
+            "SET_VARIABLE",
+            "SET_VARIABLE",
+            "SET_VARIABLE",
+            "SET_VARIABLE"
+          ]
+        },
+        {
+          "id": "473:29459",
+          "name": "Action / Cancel",
+          "types": [
+            "CLOSE"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "473:29512",
+      "name": "Dialog / Remove friend · Paulzgi",
+      "text": [
+        "Remove Paulzgi?",
+        "Removes this person from your friends. You can send a new friend request later.",
+        "This prototype demonstrates the decision. It does not change your account.",
+        "Remove friend",
+        "Cancel"
+      ],
+      "actions": [
+        {
+          "id": "473:29516",
+          "name": "Action / Remove",
+          "types": [
+            "CLOSE",
+            "SET_VARIABLE",
+            "SET_VARIABLE",
+            "SET_VARIABLE",
+            "SET_VARIABLE",
+            "SET_VARIABLE",
+            "SET_VARIABLE"
+          ]
+        },
+        {
+          "id": "473:29517",
+          "name": "Action / Cancel",
+          "types": [
+            "CLOSE"
+          ]
+        }
+      ]
+    }
+  ],
+  "finding": "Removal changes friend membership and prototype selection variables only; all four dialogs put Cancel after Remove friend. Independent private-data grant revocation is not specified.",
+  "limitations": "Canonical text/action inspection only; no live removal workflow or visual parity certified."
+}

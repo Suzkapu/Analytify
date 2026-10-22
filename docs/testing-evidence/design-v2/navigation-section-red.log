@@ -1,0 +1,57 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.navigation.config.ts --grep Navigation preferences match canonical section --project=desktop --workers=1 --output=docs/testing-evidence/design-v2/navigation-section-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:26156) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26156) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:26462) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-navigation.spec.ts:41:5 › Navigation preferences match canonical section typography and responsive layout (1.9s)
+
+
+  1) [desktop] › e2e/design-v2-navigation.spec.ts:41:5 › Navigation preferences match canonical section typography and responsive layout 
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "fontSize": "20px",
+        "fontWeight": "600",
+        "height": 24,
+    -   "lineHeight": "28px",
+    +   "lineHeight": "24px",
+        "overflow": false,
+      }
+
+      55 |     // Canonical688:41748 uses Section20/600/28 in a24px text box.
+      56 |     // The reference is external to the implementation's component stylesheet.
+    > 57 |     expect(sample).toMatchObject({fontSize: '20px', fontWeight: '600', lineHeight: '28px', height: 24, overflow: false});
+         |                    ^
+      58 |     samples.push(sample);
+      59 |   }
+      60 |   for (const [name, width] of [['desktop', 1440], ['mobile', 390]] as const) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-navigation.spec.ts:57:20
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/navigation-section-red-artifacts/design-v2-navigation-Navig-a71b4-raphy-and-responsive-layout-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/navigation-section-red-artifacts/design-v2-navigation-Navig-a71b4-raphy-and-responsive-layout-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/navigation-section-red-artifacts/design-v2-navigation-Navig-a71b4-raphy-and-responsive-layout-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/navigation-section-red-artifacts/design-v2-navigation-Navig-a71b4-raphy-and-responsive-layout-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-navigation.spec.ts:41:5 › Navigation preferences match canonical section typography and responsive layout 

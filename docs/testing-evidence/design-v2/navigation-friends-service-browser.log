@@ -1,0 +1,41 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-sharing.spec.ts e2e/design-v2-song-league.spec.ts --workers=1 --output=docs/testing-evidence/design-v2/navigation-friends-service-browser-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:13143) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13143) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 20 tests using 1 worker
+
+(node:13343) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-sharing.spec.ts:13:5 › v2 Private Sharing keeps Playlists and Stats as linkable native navigation (2.8s)
+  ✓   2 [desktop] › e2e/design-v2-sharing.spec.ts:33:5 › v2 Private Sharing reflows at 320 CSS pixels (1.3s)
+  ✓   3 [desktop] › e2e/design-v2-song-league.spec.ts:9:5 › v2 Song League home stays in the v2 shell and keeps rules on demand (2.0s)
+  ✓   4 [desktop] › e2e/design-v2-song-league.spec.ts:20:5 › v2 Song League reflows at 320 CSS pixels without a floating content obstruction (1.3s)
+  ✓   5 [desktop] › e2e/design-v2-song-league.spec.ts:29:5 › v2 invite route never falls back to a legacy shell (1.3s)
+(node:13963) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   6 [mobile] › e2e/design-v2-sharing.spec.ts:13:5 › v2 Private Sharing keeps Playlists and Stats as linkable native navigation (2.8s)
+  ✓   7 [mobile] › e2e/design-v2-sharing.spec.ts:33:5 › v2 Private Sharing reflows at 320 CSS pixels (1.5s)
+  ✓   8 [mobile] › e2e/design-v2-song-league.spec.ts:9:5 › v2 Song League home stays in the v2 shell and keeps rules on demand (2.1s)
+  ✓   9 [mobile] › e2e/design-v2-song-league.spec.ts:20:5 › v2 Song League reflows at 320 CSS pixels without a floating content obstruction (1.5s)
+  ✓  10 [mobile] › e2e/design-v2-song-league.spec.ts:29:5 › v2 invite route never falls back to a legacy shell (1.4s)
+(node:14651) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  11 [firefox-stats] › e2e/design-v2-sharing.spec.ts:13:5 › v2 Private Sharing keeps Playlists and Stats as linkable native navigation (3.6s)
+  ✓  12 [firefox-stats] › e2e/design-v2-sharing.spec.ts:33:5 › v2 Private Sharing reflows at 320 CSS pixels (1.2s)
+  ✓  13 [firefox-stats] › e2e/design-v2-song-league.spec.ts:9:5 › v2 Song League home stays in the v2 shell and keeps rules on demand (2.0s)
+  ✓  14 [firefox-stats] › e2e/design-v2-song-league.spec.ts:20:5 › v2 Song League reflows at 320 CSS pixels without a floating content obstruction (1.2s)
+  ✓  15 [firefox-stats] › e2e/design-v2-song-league.spec.ts:29:5 › v2 invite route never falls back to a legacy shell (1.2s)
+(node:15658) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  16 [webkit-stats] › e2e/design-v2-sharing.spec.ts:13:5 › v2 Private Sharing keeps Playlists and Stats as linkable native navigation (5.0s)
+  ✓  17 [webkit-stats] › e2e/design-v2-sharing.spec.ts:33:5 › v2 Private Sharing reflows at 320 CSS pixels (2.0s)
+  ✓  18 [webkit-stats] › e2e/design-v2-song-league.spec.ts:9:5 › v2 Song League home stays in the v2 shell and keeps rules on demand (3.6s)
+  ✓  19 [webkit-stats] › e2e/design-v2-song-league.spec.ts:20:5 › v2 Song League reflows at 320 CSS pixels without a floating content obstruction (1.9s)
+  ✓  20 [webkit-stats] › e2e/design-v2-song-league.spec.ts:29:5 › v2 invite route never falls back to a legacy shell (2.2s)
+
+  20 passed (52.5s)

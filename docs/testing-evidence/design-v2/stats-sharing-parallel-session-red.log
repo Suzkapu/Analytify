@@ -1,0 +1,79 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/sharing/stats-sharing-session-boundary.spec.ts --runner-config=docs/testing-evidence/design-v2/stats-sharing-parallel-vitest.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/stats-sharing-parallel-vitest.mjs
+Application bundle generation complete. [2.280 seconds] - 2026-10-21T19:16:55.127Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/core/sharing/stats-sharing-session-boundary.spec.ts (2 tests | 2 failed) 34ms
+     × does not dispatch an old consent answer after logout while client readiness is suspended 28ms
+     × does not dispatch a revoked-session action after the SDK resumes its token lookup 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/sharing/stats-sharing-session-boundary.spec.ts > Stats Sharing session suspension boundary > does not dispatch an old consent answer after logout while client readiness is suspended
+AssertionError: expected [ { …(2) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "authorization": "Bearer synthetic-new-owner",
++     "rpc": "/rest/v1/rpc/answer_stats_access_request",
++   },
++ ]
+
+ ❯ src/app/core/sharing/stats-sharing-session-boundary.spec.ts:37:18
+     35|     releaseClient(client);
+     36|     const outcome = await result;
+     37|     expect(sent).toEqual([]);
+       |                  ^
+     38|     expect(outcome.error).toBeDefined();
+     39|   });
+ ❯ fulfilled chunk-EFV3TZQO.js:74:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/core/sharing/stats-sharing-session-boundary.spec.ts > Stats Sharing session suspension boundary > does not dispatch a revoked-session action after the SDK resumes its token lookup
+AssertionError: expected [ 'Bearer synthetic-new-owner' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "Bearer synthetic-new-owner",
++ ]
+
+ ❯ src/app/core/sharing/stats-sharing-session-boundary.spec.ts:69:18
+     67|     releaseToken('synthetic-new-owner');
+     68|     const outcome = await result;
+     69|     expect(sent).toEqual([]);
+       |                  ^
+     70|     expect(outcome.error).toBeDefined();
+     71|   });
+ ❯ fulfilled chunk-EFV3TZQO.js:74:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  21:16:55
+   Duration  773ms (transform 76ms, setup 229ms, import 68ms, tests 34ms, environment 320ms)
+

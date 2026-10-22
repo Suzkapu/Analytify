@@ -1,0 +1,134 @@
+npm notice run spoti-front@0.0.0 verify:ci
+npm notice run npm run content:check && npm run architecture:check && npm run retention:check && npm run share-refresh:check && npm run song-league-invites:check && npm run song-league-rules:check && npm run song-league-notifications:check && npm run push-security:check && npm run cloud-capabilities:check && npm run catalog-security:check && npm run dataset-integrity:check && npm run song-league-sync:check && npm run stats-calendars:check && npm run stats-sharing:check && npm run stats-history-search:check && npm run loading-feedback:check && npm run accessibility:check && npm run lint && npm run performance:check && npm run design-v2-parity:check && npm run design-v2-quality:check && npm run api-usage:check && npm run admin:check && npm run deployment-pipeline:check && npm run supply-chain:check && npm run edge-dependencies:check && npm run storage-policy:check && npm run privacy-notice:check && npm run spotify-policy:check && npm run data-retention:check && npm run sync-service:check && npm run edge-functions:check && npm run typecheck && npm run typecheck:tests && npm run test:ci && npm run build:production
+npm notice run spoti-front@0.0.0 content:check
+npm notice run node --test scripts/content-copy.test.mjs
+✔ README leads with user features and sends development details to CONTRIBUTING (2.646339ms)
+✔ logged-out copy plainly describes the currently enabled Spotify features (1.404231ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 54.492561
+npm notice run spoti-front@0.0.0 architecture:check
+npm notice run node scripts/check-architecture.mjs
+Architecture boundaries are valid.
+npm notice run spoti-front@0.0.0 retention:check
+npm notice run node scripts/check-playlist-share-retention.mjs
+Playlist-share retention contracts are present.
+npm notice run spoti-front@0.0.0 share-refresh:check
+npm notice run node scripts/check-playlist-share-refresh.mjs
+Playlist-share refresh performance contracts are present.
+npm notice run spoti-front@0.0.0 song-league-invites:check
+npm notice run node scripts/check-song-league-invites.mjs
+Song League invite links are truthful, token-safe, visible, and revocable.
+npm notice run spoti-front@0.0.0 song-league-rules:check
+npm notice run node scripts/check-song-league-rules.mjs
+Song League supports two members while preserving discovery validation.
+npm notice run spoti-front@0.0.0 song-league-notifications:check
+npm notice run node --test supabase/functions/song-league-notifications/delivery-state.test.mjs && node scripts/check-song-league-notifications.mjs
+✔ surfaces an error when a successful push cannot be marked sent (1.073894ms)
+✔ surfaces an error when a failed push cannot be marked for retry (0.206916ms)
+✔ surfaces an error when an expired subscription cannot be removed (0.69697ms)
+✔ the shared expired-subscription cleanup rejects failed admin-test writes (0.165239ms)
+✔ updates the dedicated new-song delivery table (0.161962ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 315.384442
+Song League PWA notification contracts and encrypted Web Push request are valid.
+npm notice run spoti-front@0.0.0 push-security:check
+npm notice run node scripts/check-push-security.mjs
+Web Push SSRF and shared-device lifecycle contracts are valid.
+npm notice run spoti-front@0.0.0 cloud-capabilities:check
+npm notice run node scripts/check-cloud-capabilities.mjs
+Cloud identity, backup, and scheduled Spotify capabilities are separated.
+npm notice run spoti-front@0.0.0 catalog-security:check
+npm notice run node scripts/check-catalog-security.mjs
+Spotify catalog is browser-read-only and trusted-worker writable.
+npm notice run spoti-front@0.0.0 dataset-integrity:check
+npm notice run node scripts/check-dataset-integrity.mjs
+Stats and catalog replacements are atomic, idempotent, and compare-and-swap guarded.
+npm notice run spoti-front@0.0.0 song-league-sync:check
+npm notice run node scripts/check-song-league-sync-security.mjs
+Song League playlist sync uses one lease-bound, revision-safe mutation authority.
+npm notice run spoti-front@0.0.0 stats-calendars:check
+npm notice run node scripts/check-stats-calendars.mjs
+Both stats comparison sides use the shared availability calendar.
+npm notice run spoti-front@0.0.0 stats-sharing:check
+npm notice run node scripts/check-stats-sharing.mjs
+Stats sharing consent and isolation checks passed.
+npm notice run spoti-front@0.0.0 stats-history-search:check
+npm notice run node scripts/check-stats-history-search.mjs
+Historical Top Songs, Top Artists, and Top Genres search contracts are valid.
+npm notice run spoti-front@0.0.0 loading-feedback:check
+npm notice run node scripts/check-loading-feedback.mjs
+Loading feedback is immediate, non-blocking, and preserves parallel loaders.
+npm notice run spoti-front@0.0.0 accessibility:check
+npm notice run node scripts/check-accessible-dialogs.mjs && node --test scripts/interaction-cursor.test.mjs
+All custom modals use the shared accessible dialog behavior.
+✔ interactive controls expose a pointer without overriding text selection (1.2753ms)
+✔ disabled and aria-disabled controls expose a blocked cursor (0.48722ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 54.146826
+npm notice run spoti-front@0.0.0 lint
+npm notice run eslint .
+npm notice run spoti-front@0.0.0 performance:check
+npm notice run node scripts/check-performance-contracts.mjs
+Startup and statistics performance contracts are valid.
+npm notice run spoti-front@0.0.0 design-v2-parity:check
+npm notice run node scripts/check-design-v2-parity.mjs
+Design v2 UI parity inventory and single-renderer contract are complete.
+npm notice run spoti-front@0.0.0 design-v2-quality:check
+npm notice run node --test scripts/design-v2-test-policy.test.mjs scripts/router-transition-policy.test.mjs scripts/native-transition-observer.test.mjs && node scripts/check-design-v2-quality.mjs
+✔ bounds concurrent test environments without weakening deadlines or coverage (1.666441ms)
+✔ includes Insights, new v2 helpers, shared primitives, ambient, and design navigation (0.238705ms)
+✔ requires evidence for every source, including a newly added file (0.271757ms)
+✔ a new source must have no uncovered code in any metric (0.719433ms)
+✔ absolute uncovered counts cannot be diluted by adding covered code (0.225752ms)
+✔ supports absolute Windows and Unix report paths (0.170257ms)
+✔ fails closed for malformed coverage counters (0.173975ms)
+✔ isolates the browser fixture entry point and disables its service worker (0.450832ms)
+✔ documents only the two non-production browser fixture exclusions (226.042195ms)
+✔ requires the dedicated Friends browser suite in preview CI (0.283229ms)
+(node:23582) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/native-transitions.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /mnt/Storage/ProgrammingProjects/Analytify/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ superseding an animation still requires every DOM update and finished promise to complete (1.263548ms)
+✔ timeouts, failed DOM callbacks, unknown skips and rejection of the latest transition fail recovery (0.239247ms)
+✔ uncaptured errors and incomplete DOM/finished records cannot appear settled (0.194673ms)
+✔ recognizes the actual configured public provider feature (6.484633ms)
+✔ rejects removed motion, first-render animation and misleading text (3.121326ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 493.560501
+file:///mnt/Storage/ProgrammingProjects/Analytify/scripts/check-design-v2-quality.mjs:16
+  throw new Error(`Design v2 behavior is missing unit coverage:\n${missingSpecs.map(path => `- ${path}`).join('\n')}`);
+        ^
+
+Error: Design v2 behavior is missing unit coverage:
+- src/app/shared/ui-v2/v2-shortcut-choice.component.ts
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/scripts/check-design-v2-quality.mjs:16:9
+    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+    at async node:internal/modules/esm/loader:650:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+
+Node.js v26.11.1

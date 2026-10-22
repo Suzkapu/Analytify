@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-21",
+  "initial": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"mutatedNodeIds\":[\"25:29\"],\"priorDescription\":\"Mobile shortcut bar: Settings &gt; Navigation selects 0–5 tools. Default Playlists, Stats, History. Hidden entirely with 0 selected, releasing viewport height. Preferences persist across prototype page navigation. Website implementation should persist the choice per user/device. The top Menu button stays available.\",\"description\":\"Mobile shortcut bar: Settings &amp;gt; Navigation selects 0–5 tools. Default Playlists, Stats, History. Hidden entirely with 0 selected, releasing viewport height. Preferences persist across prototype page navigation. Website implementation should persist the choice per user/device. The top Menu button stays available. Responsive application contract: Settings &gt; Navigation is discovered only on mobile; desktop Settings keeps its existing four tabs and has no new Navigation affordance. If an already-open Navigation route is resized to desktop, retain its preference content in the shared desktop shell without a mobile bar or reserved bar space. Use the same semantic preference typography, 12px stack gaps and 48px full-width choice controls within the existing 32px desktop / 16px mobile page gutters. Returning to mobile restores the visible Navigation tab and shortcut bar according to the saved selection. This is continuity of one responsive route, not a separate desktop setting.\",\"visualOrPrototypeChanges\":false}"
+      }
+    ],
+    "structuredContent": null,
+    "isError": false
+  },
+  "normalized": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"mutatedNodeIds\":[\"25:29\"],\"description\":\"Mobile shortcut bar: Settings &gt; Navigation selects 0–5 tools. Default Playlists, Stats, History. Hidden entirely with 0 selected, releasing viewport height. Preferences persist across prototype page navigation. Website implementation should persist the choice per user/device. The top Menu button stays available. Responsive application contract: Settings &gt; Navigation is discovered only on mobile; desktop Settings keeps its existing four tabs and has no new Navigation affordance. If an already-open Navigation route is resized to desktop, retain its preference content in the shared desktop shell without a mobile bar or reserved bar space. Use the same semantic preference typography, 12px stack gaps and 48px full-width choice controls within the existing 32px desktop / 16px mobile page gutters. Returning to mobile restores the visible Navigation tab and shortcut bar according to the saved selection. This is continuity of one responsive route, not a separate desktop setting.\",\"plainTextPreserved\":true,\"visualOrPrototypeChanges\":false}"
+      }
+    ],
+    "structuredContent": null,
+    "isError": false
+  },
+  "scope": "Description only on existing canonical Mobile navigation25:29; mobile-only discovery retained, desktop is resize continuity, not a new feature; no visuals/prototypes/sidebar changes",
+  "sourceEvidence": [
+    "src/app/features/settings/v2-settings-page.component.ts:mobileOnly true",
+    "src/app/shared/ui-v2/v2-settings-navigation.component.ts",
+    "e2e/design-v2-navigation.spec.ts",
+    "Canonical Settings section442:19541 has Desktop Account27:1209, Notifications27:1234, Updates44:1757, Data90:4895; only Mobile Navigation688:41515"
+  ],
+  "note": "Second description-only edit decodes getter entities before setter to preserve original plain text; no duplicated escaping."
+}

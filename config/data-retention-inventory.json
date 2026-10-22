@@ -3,6 +3,17 @@
   "reviewCadenceDays": 90,
   "resources": [
     {
+      "id": "friendships-and-invitations",
+      "owner": "Friendship participants",
+      "purpose": "Mutual social membership, single-use invitation decisions and replay protection independent of private-data grants.",
+      "retention": "Pending invitations remain until answered or revoked. Active connections and minimal invitation decisions/removal markers remain for the participating profile lifetime to prevent old requests from restoring removed friendships; no listening data, playlist payload or raw bearer token is retained.",
+      "erasure": "Removal immediately hides the connection from both participants; revocation immediately rejects the pending link. Deleting either related public.users profile cascades its invitation/connection rows. No automatic inactive-account deletion or separate sharing-grant revocation.",
+      "relations": [
+        "private.friend_invitations",
+        "private.friendships"
+      ]
+    },
+    {
       "id": "identity-and-preferences",
       "owner": "Application operator",
       "purpose": "Account identity, consent, credentials, notification choices and per-user synchronization state.",

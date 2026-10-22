@@ -1,0 +1,53 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/core/compare-room/compare-room-coordinator*.spec.ts --runner-config=docs/testing-evidence/design-v2/coordinator-parallel-vitest.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/coordinator-parallel-vitest.mjs
+❯ Building...
+✔ Building...
+Application bundle generation complete. [2.190 seconds] - 2026-10-19T18:23:04.601Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+Warning: A vi.mock("qrcode") call in "/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts" is not at the top level of the module. Although it appears nested, it will be hoisted and executed before any tests run. Move it to the top level to reflect its actual execution order. This will become an error in a future version.
+See: https://vitest.dev/guide/mocking/modules#how-it-works
+ ❯ |SpotiFront| src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts (29 tests | 2 failed) 210ms
+     × rejects delayed completion after guest permission withdrawal: pending invitation revoke 5ms
+     × rejects delayed completion after guest permission withdrawal: explicit participant removal 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts > Compare coordinator retained workflow boundaries > rejects delayed completion after guest permission withdrawal: pending invitation revoke
+ FAIL  |SpotiFront| src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts > Compare coordinator retained workflow boundaries > rejects delayed completion after guest permission withdrawal: explicit participant removal
+AssertionError: expected [ 'host', 'guest' ] to deeply equal [ 'host' ]
+
+- Expected
++ Received
+
+  [
+    "host",
++   "guest",
+  ]
+
+ ❯ src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts:383:36
+    381|     const idsAfterLateCompletion = service.participants$.value.map(ite…
+    382|     acknowledgement.resolve(); await finishRemoval;
+    383|     expect(idsAfterLateCompletion).toEqual(['host']);
+       |                                    ^
+    384|     expect(service.participants$.value.map(item => item.id)).toEqual([…
+    385|     expect(service.canPrepareResult()).toBe(false);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 34 passed (36)
+   Start at  20:23:04
+   Duration  1.69s (transform 120ms, setup 416ms, import 152ms, tests 233ms, environment 671ms)
+

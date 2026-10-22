@@ -1,0 +1,63 @@
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [6.108 seconds] - 2026-10-16T17:34:46.329Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/library/songs/songs-controller-boundary.spec.ts (52 tests | 2 failed | 49 skipped) 60ms
+     × cannot clear a replacement task registered for the same playlist 43ms
+     × cannot start an old actor task after hydration finishes in a different account 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/library/songs/songs-controller-boundary.spec.ts > Songs route and loader ownership regressions at service handover > cannot clear a replacement task registered for the same playlist
+AssertionError: expected 'Stale task' to be 'Replacement A' // Object.is equality
+
+Expected: "Replacement A"
+Received: "Stale task"
+
+ ❯ src/app/features/library/songs/songs-controller-boundary.spec.ts:163:305
+
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/features/library/songs/songs-controller-boundary.spec.ts > Songs route and loader ownership regressions at service handover > cannot start an old actor task after hydration finishes in a different account
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "owner",
+      "A",
+      false,
+      true,
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/library/songs/songs-controller-boundary.spec.ts:166:258
+
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed | 49 skipped (52)
+   Start at  19:34:46
+   Duration  2.20s (transform 430ms, setup 533ms, import 556ms, tests 60ms, environment 782ms)
+

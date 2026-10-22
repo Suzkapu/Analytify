@@ -1,0 +1,48 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-ambient.spec.ts --project=desktop --grep=cohort keeps --workers=1 --output=docs/testing-evidence/design-v2/ambient-resize-cohort-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:48583) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:48583) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:48881) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-ambient.spec.ts:255:5 › particle cohort keeps its phase across desktop mobile desktop resizing (1.2s)
+
+
+  1) [desktop] › e2e/design-v2-ambient.spec.ts:255:5 › particle cohort keeps its phase across desktop mobile desktop resizing 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      272 |       phaseDifference: Math.abs(Number(first.currentTime) - Number(extra.currentTime)), advanced: Number(first.currentTime) >= Number((window as any).__particleResize.time)};
+      273 |   });
+    > 274 |   expect(result.sameFirst).toBe(true); expect(result.sameExtra).toBe(true);
+          |                                                                 ^
+      275 |   expect(result.phaseDifference).toBeLessThan(1); expect(result.advanced).toBe(true);
+      276 | });
+      277 |
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-ambient.spec.ts:274:65
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/ambient-resize-cohort-red-artifacts/design-v2-ambient-particle-4c045-top-mobile-desktop-resizing-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/ambient-resize-cohort-red-artifacts/design-v2-ambient-particle-4c045-top-mobile-desktop-resizing-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/ambient-resize-cohort-red-artifacts/design-v2-ambient-particle-4c045-top-mobile-desktop-resizing-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/ambient-resize-cohort-red-artifacts/design-v2-ambient-particle-4c045-top-mobile-desktop-resizing-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-ambient.spec.ts:255:5 › particle cohort keeps its phase across desktop mobile desktop resizing 

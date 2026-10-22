@@ -1,0 +1,297 @@
+{
+  "date": "2026-10-19",
+  "status": "Progress; full migration/98completion gates remain unmet",
+  "branch": "codex/design-v2",
+  "lastCheckpoint": "a8a7a3966a622c992e9058094627a768c16a363a",
+  "newCommit": false,
+  "sourceSnapshot": "docs/testing-evidence/design-v2/shell-motion-source-snapshot.json",
+  "frozenSourcePathsVerified": 190,
+  "sourceMismatches": [],
+  "runtime": {
+    "node": "26.11.1",
+    "deno": "2.9.7",
+    "environment": "localLinux; remote pinned runtimes/CI not executed"
+  },
+  "coverage": {
+    "frontend": {
+      "metrics": {
+        "lines": {
+          "total": 11212,
+          "covered": 9594,
+          "skipped": 0,
+          "pct": 85.56
+        },
+        "statements": {
+          "total": 13208,
+          "covered": 11023,
+          "skipped": 0,
+          "pct": 83.45
+        },
+        "functions": {
+          "total": 2744,
+          "covered": 2276,
+          "skipped": 0,
+          "pct": 82.94
+        },
+        "branches": {
+          "total": 8620,
+          "covered": 6511,
+          "skipped": 0,
+          "pct": 75.53
+        }
+      },
+      "allMetricsAtLeast98": false,
+      "freshness": "Fresh final whole-frontend run"
+    },
+    "worker": {
+      "metrics": {
+        "lines": {
+          "total": 891,
+          "covered": 888,
+          "skipped": 0,
+          "pct": 99.66
+        },
+        "statements": {
+          "total": 1110,
+          "covered": 1107,
+          "skipped": 0,
+          "pct": 99.72
+        },
+        "functions": {
+          "total": 197,
+          "covered": 197,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 927,
+          "covered": 913,
+          "skipped": 0,
+          "pct": 98.48
+        }
+      },
+      "allMetricsAtLeast98": true,
+      "freshness": "Retained existing report, current source/test/report hashes independently revalidated; tests rerun in final CI"
+    },
+    "edge": {
+      "metrics": {
+        "lines": {
+          "total": 762,
+          "covered": 761,
+          "skipped": 0,
+          "pct": 99.86
+        },
+        "statements": {
+          "total": 901,
+          "covered": 899,
+          "skipped": 0,
+          "pct": 99.77
+        },
+        "functions": {
+          "total": 113,
+          "covered": 113,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 797,
+          "covered": 795,
+          "skipped": 0,
+          "pct": 99.74
+        }
+      },
+      "allMetricsAtLeast98": true,
+      "freshness": "Retained existing report, current source/test/report hashes independently revalidated; tests rerun in final CI"
+    }
+  },
+  "frontendInventory": {
+    "productionSources": 167,
+    "omittedProductionSources": 0,
+    "reportEntriesIncludingNonapplicationModules": 171
+  },
+  "commands": [
+    {
+      "command": "npm run verify:ci",
+      "scope": "1866 frontend passes/one documented isolated-hosted skip/164 files;215worker;81edge; required local gates/build",
+      "log": "docs/testing-evidence/design-v2/shell-motion-final-ci.log",
+      "exitFile": "docs/testing-evidence/design-v2/shell-motion-final-ci.exit",
+      "exit": 0
+    },
+    {
+      "command": "ANALYTIFY_WEBKIT_EXECUTABLE=.extra_files/portable-webkit/run-webkit.sh npx playwright test --config=playwright.friends.config.ts",
+      "scope": "16cases pass before particle-only/source and footer-icon corrections; actual Settings signout/Back/QR/invitation/dialog workflows",
+      "log": "docs/testing-evidence/design-v2/shell-friends-regression.log",
+      "exitFile": "docs/testing-evidence/design-v2/shell-friends-regression.exit",
+      "exit": 0
+    },
+    {
+      "command": "npx playwright test e2e/design-v2-ambient.spec.ts --workers=1",
+      "scope": "24pass/4reduced-motion failures before scoped selector correction",
+      "log": "docs/testing-evidence/design-v2/ambient-particle-browser-matrix.log",
+      "exitFile": "docs/testing-evidence/design-v2/ambient-particle-browser-matrix.exit",
+      "exit": 1
+    },
+    {
+      "command": "npx playwright test e2e/design-v2-ambient.spec.ts --grep=\"remains static with reduced motion\" --workers=1",
+      "scope": "all4affectedcases pass after CSS correction",
+      "log": "docs/testing-evidence/design-v2/ambient-particle-browser-reduced.log",
+      "exitFile": "docs/testing-evidence/design-v2/ambient-particle-browser-reduced.exit",
+      "exit": 0
+    },
+    {
+      "command": "npx playwright test e2e/design-v2-ambient.spec.ts --project=desktop --grep=\"cohort keeps\" --workers=1",
+      "scope": "genuine native cancelled-animation identity RED",
+      "log": "docs/testing-evidence/design-v2/ambient-resize-cohort-red.log",
+      "exitFile": "docs/testing-evidence/design-v2/ambient-resize-cohort-red.exit",
+      "exit": 1
+    },
+    {
+      "command": "npx playwright test e2e/design-v2-ambient.spec.ts --grep=\"cohort keeps\" --workers=1",
+      "scope": "all4resizecohortcases pass with persistent native animation identity and phase",
+      "log": "docs/testing-evidence/design-v2/ambient-resize-cohort-green.log",
+      "exitFile": "docs/testing-evidence/design-v2/ambient-resize-cohort-green.exit",
+      "exit": 0
+    },
+    {
+      "command": "npx ng test --watch=false --progress=false --include=src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts",
+      "scope": "67pass/1canonical decorative-asset RED",
+      "log": "docs/testing-evidence/design-v2/footer-shield-unit-red.log",
+      "exitFile": "docs/testing-evidence/design-v2/footer-shield-unit-red.exit",
+      "exit": 1
+    },
+    {
+      "command": "npx ng test --watch=false --progress=false --include=src/app/shared/layout/design-v2-shell/*.spec.ts --include=src/app/shared/ui-v2/v2-navigation-panel.component.spec.ts",
+      "scope": "103pass/5files",
+      "log": "docs/testing-evidence/design-v2/footer-shield-unit-green.log",
+      "exitFile": "docs/testing-evidence/design-v2/footer-shield-unit-green.exit",
+      "exit": 0
+    },
+    {
+      "command": "npx playwright test --config=playwright.navigation.config.ts --grep=\"Canonical app header.*reduce\"",
+      "scope": "4expected old-icon baseline differences after exact geometry/loading checks; all candidates captured before review",
+      "log": "docs/testing-evidence/design-v2/footer-shield-visual-red.log",
+      "exitFile": "docs/testing-evidence/design-v2/footer-shield-visual-red.exit",
+      "exit": 1
+    },
+    {
+      "command": "npx playwright test --config=playwright.navigation.config.ts --grep=\"Canonical app header.*reduce\"",
+      "scope": "all4cases/12component baselines pass after reviewed4desktop-footer replacements;8oldheader/mobile baselines retained",
+      "log": "docs/testing-evidence/design-v2/footer-shield-visual-green.log",
+      "exitFile": "docs/testing-evidence/design-v2/footer-shield-visual-green.exit",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/check-application-coverage-inventory.mjs frontend --final",
+      "scope": "actual EXIT1; frontend target unmet",
+      "log": "docs/testing-evidence/design-v2/shell-motion-frontend-final98.log",
+      "exitFile": "docs/testing-evidence/design-v2/shell-motion-frontend-final98.exit",
+      "exit": 1
+    },
+    {
+      "command": "node scripts/check-application-coverage-inventory.mjs worker --final",
+      "scope": "all17sources included/everymetric98",
+      "log": "docs/testing-evidence/design-v2/shell-motion-worker-final98.log",
+      "exitFile": "docs/testing-evidence/design-v2/shell-motion-worker-final98.exit",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/check-application-coverage-inventory.mjs edge --final",
+      "scope": "all12sources included/everymetric98",
+      "log": "docs/testing-evidence/design-v2/shell-motion-edge-final98.log",
+      "exitFile": "docs/testing-evidence/design-v2/shell-motion-edge-final98.exit",
+      "exit": 0
+    }
+  ],
+  "nativeScheduling": {
+    "ambient": 32,
+    "navigation": 48,
+    "friends": 16,
+    "scope": "Actual Playwright listings; all4projects. Ambient32have passing evidence across scoped runs, not one fabricated final32EXIT0. Navigation48historical scoped passing evidence +current4componentvisualcases; Friends16current pre-particle regression passes."
+  },
+  "figma": {
+    "fileKey": "5v8ckmlbfhMDWwP5sTdSXd",
+    "canonicalPage": "7:2",
+    "nodes": [
+      "266:18224",
+      "529:21518",
+      "25:17",
+      "120:9239",
+      "120:3944",
+      "222:11668"
+    ],
+    "evidence": "Canonical scene-independent26/12ellipse phase geometry at7timeline samples in2viewports perbrowser; continuous24s native CSS loop; route/overlay/resize animation identity, hidden pause unit boundary and reduced Still=A. Actual footer SVG20x20 with18x18slot;144short/tall geometry samples and12reviewedcomponentbaselines. Component descriptions only updated before dependent motion code; no user sidebar prototype edits.",
+    "limitations": "Exact canonical glow shape/color/size/scene layout and whole-page visual approval remain incomplete; particle checks are native timeline seeking plus natural advancement, not a wall-clock24secondvideo signoff. Hidden visibility lifecycle is tested at native-event/component boundary, not genuine OS-tab backgrounding in everybrowser."
+  },
+  "remaining": [
+    "Frontend every-metric98 unmet; Loader/ImageHealing per-file branch targets also remain below98",
+    "Canonical glow shape/color/size/layout and whole-page visual/motion parity",
+    "Isolated hosted Friends transport/full hosted migration contracts; one documented test skip remains",
+    "All remaining retained feature workflows from original plan, including future main Song League reconciliation",
+    "Prior historical reduced-motion DOM-update timeout diagnosis remains unresolved; subsequent passes do not prove a fix",
+    "Final committed-state/remote-runtime/CI verification not achieved; working changes intentionally uncommitted"
+  ],
+  "boundaries": "No merge/push/deployment/shared backend or database/stable release/service-worker scope changes. No production data/real notifications. Unrelated local work preserved. Blocked-user management/admin runtime health remain excluded.",
+  "nextSlice": "Finish canonical route-glow rendering/scene mapping and full shared-shell visual parity using exported current geometry; then close isolated Friends contracts before unrelated redesign.",
+  "sha256": {
+    "docs/testing-evidence/design-v2/ambient-particle-browser-matrix.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/ambient-particle-browser-matrix.log": "28c443949c729b3814af8ca5980df5ffc3425c54af9dcccc84331e37dbda7f43",
+    "docs/testing-evidence/design-v2/ambient-particle-browser-reduced.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/ambient-particle-browser-reduced.log": "db0540c19971a59bffc44aec7b707d1a40695a0cc80fda83f18ccdd1f4a26cb9",
+    "docs/testing-evidence/design-v2/ambient-particle-handoff-contract.json": "50ec20642fb31221abdac4c5cd7af3f36794cc4012fd8b352c453593b8696191",
+    "docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-canonica-4cbc4--a-complete-native-timeline-desktop/canonical-particle-timeline.json": "aeac326dde656b04baf69b62eeae87d432c00e58adc9dff631e1ced02c3c4bb7",
+    "docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-canonica-4cbc4--a-complete-native-timeline-firefox-stats/canonical-particle-timeline.json": "76a988e3c0c7d463772c5d3fbeb5c8a288528cb0724420999ded2c1376f740c4",
+    "docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-canonica-4cbc4--a-complete-native-timeline-mobile/canonical-particle-timeline.json": "aeac326dde656b04baf69b62eeae87d432c00e58adc9dff631e1ced02c3c4bb7",
+    "docs/testing-evidence/design-v2/ambient-particle-matrix-artifacts/design-v2-ambient-canonica-4cbc4--a-complete-native-timeline-webkit-stats/canonical-particle-timeline.json": "aeac326dde656b04baf69b62eeae87d432c00e58adc9dff631e1ced02c3c4bb7",
+    "docs/testing-evidence/design-v2/ambient-particle-scheduling.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/ambient-particle-scheduling.log": "743b3037cd7223ba67da66ba38106ca62e0d81cc1eb6be2eede94267b72b4ef9",
+    "docs/testing-evidence/design-v2/ambient-resize-cohort-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/ambient-resize-cohort-green.log": "b0f7999f5fdb39762d96fe478003cca55b20a3dbface27d20cca902890a31882",
+    "docs/testing-evidence/design-v2/ambient-resize-cohort-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/ambient-resize-cohort-red.log": "d296f51f94182f29ce15f6d71de8782909237409e2f343432f6dd74a73786205",
+    "docs/testing-evidence/design-v2/ambient-route-glow-canonical-geometry.json": "b22ac4eea5538e59a98e859c0bf341da775848c78e4cb1cc6290ee704d929c07",
+    "docs/testing-evidence/design-v2/footer-shield-canonical-context.json": "aca66575d48df7cc5c1f475c9bc49441045a278d224aaaf00b43d334e713e87d",
+    "docs/testing-evidence/design-v2/footer-shield-unit-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/footer-shield-unit-green.log": "4dd2f15d86582e7368816f2450aec7530ae72f97a7c822e3fb6054f713ed909f",
+    "docs/testing-evidence/design-v2/footer-shield-unit-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/footer-shield-unit-red.log": "893ed28fc0c0f5042ad93945164075f9dafe61d0771e9c0c04f3bec4b6b49e11",
+    "docs/testing-evidence/design-v2/footer-shield-visual-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/footer-shield-visual-green.log": "e8713c7bde688e5edd04a2297a44327d72e7454f058e4d3bcf2e28ae420195e5",
+    "docs/testing-evidence/design-v2/footer-shield-visual-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/footer-shield-visual-red.log": "5eb0d3d88d7c7f73d7d94118305a784496756cd6e5aa045dbf5d833ab11b2858",
+    "docs/testing-evidence/design-v2/footer-shield-visual-review.json": "9255015a754c95dbe86fbe7c1e0b15eeab2a879643b2587cde19e93c2c26daa3",
+    "docs/testing-evidence/design-v2/frontend-image-healing-parallel-manifest.json": "aecfccd3f05f94e19bb654527816bad50e0a1e548daec5fbc10bccb343595823",
+    "docs/testing-evidence/design-v2/frontend-loader-parallel-evidence.json": "9486b50ffd6cf89788f4f102178d8f9aa326f63b11889d875fe01625d8507d4b",
+    "docs/testing-evidence/design-v2/shell-ambient-particle-geometry.json": "beea36a74b552f6ce300950be935e0388ea018fbd1207538458b720a8010cc5c",
+    "docs/testing-evidence/design-v2/shell-ambient-prototype-phases.json": "9bfb452eead78b28e689687b21e5663f046016561a8078c765103af03b3ad64d",
+    "docs/testing-evidence/design-v2/shell-component-visual-review.json": "4a42bea21357644ce64fd7d8cbe3351f6b1a4a9c15b9b8138bc149fc1b21869c",
+    "docs/testing-evidence/design-v2/shell-friends-regression.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/shell-friends-regression.log": "f17d6c33f019a0061e5fe0f224c1a36b03ded1ba2db995a456fe217e7eace772",
+    "docs/testing-evidence/design-v2/shell-motion-backend-revalidation.json": "b21cd5b97e11eeb6eaa8c746b3eb593a4c5c233f4afa06cca1e0e819d0d57671",
+    "docs/testing-evidence/design-v2/shell-motion-edge-final98.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/shell-motion-edge-final98.log": "855b394795851de46882ec2ec0e5adb2484de43ed7368df1769b791a5f3ab2e1",
+    "docs/testing-evidence/design-v2/shell-motion-final-ci.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/shell-motion-final-ci.log": "051ea799024a5dbfdece157129442207e81411f5d977d11febe3939b6c9cfd32",
+    "docs/testing-evidence/design-v2/shell-motion-friends-scheduling.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/shell-motion-friends-scheduling.log": "5f947e98cdaff4cf7e3d7c02e38078ff9ac6a4e114c2e01930e89425882fb93b",
+    "docs/testing-evidence/design-v2/shell-motion-frontend-coverage-summary.json": "dddd5d0787f9055e0ea80d15f6b937e346cf9776f59f61cfc01409cf44f558ac",
+    "docs/testing-evidence/design-v2/shell-motion-frontend-final98.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/shell-motion-frontend-final98.log": "e33a436d7b7214c84517d8b6e784c36540067108f538b6fc2ca9b6f5471f115a",
+    "docs/testing-evidence/design-v2/shell-motion-navigation-scheduling.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/shell-motion-navigation-scheduling.log": "bd9d6375c747f5edd0cedf67559ab94b4d32afe9b6ce0b471118f97dd0ec73af",
+    "docs/testing-evidence/design-v2/shell-motion-source-snapshot.json": "bbe3389f1f5551918f257ba8e535849173401dbcc2c784b93d4d7954515afb09",
+    "docs/testing-evidence/design-v2/shell-motion-worker-final98.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/shell-motion-worker-final98.log": "c5810ab7c2913b354b2a5face1724d4140fb2a1d04ce8994d87affa54d03af2f",
+    "e2e/design-v2-navigation.spec.ts-snapshots/shell-footer-desktop-desktop-linux.png": "e2de14e8ae5910ba644c70ba4489c27471880d054a8f1b66140392efdc642c95",
+    "e2e/design-v2-navigation.spec.ts-snapshots/shell-footer-desktop-firefox-stats-linux.png": "bf861a104254038f82c594b58151f227b76fecfcc31fd2bbf7246fa630d93fe2",
+    "e2e/design-v2-navigation.spec.ts-snapshots/shell-footer-desktop-mobile-linux.png": "53cc6b884b21a214251e4771133f90e3c551106c6fd77e7edf0a8534833e361a",
+    "e2e/design-v2-navigation.spec.ts-snapshots/shell-footer-desktop-webkit-stats-linux.png": "10f19f74c17cff4ce6b45f11dc4f5b7869cb7a41891f66be0da38afb1aa2cef1",
+    "e2e/design-v2-navigation.spec.ts-snapshots/shell-footer-mobile-desktop-linux.png": "d7659e4250b2824a2945103ecb5901e2508ec7a548cd65fc6663f6e2786f0bdc",
+    "e2e/design-v2-navigation.spec.ts-snapshots/shell-footer-mobile-firefox-stats-linux.png": "35a6f5434064eaff9b11a567c6d0fa141e1d1b8050ccdd17b814193560a5a3a7",
+    "e2e/design-v2-navigation.spec.ts-snapshots/shell-footer-mobile-mobile-linux.png": "a80b5b54436625c9a7ae7b59db9bbe093ed9d9105b4cb70145d8af31088691e1",
+    "e2e/design-v2-navigation.spec.ts-snapshots/shell-footer-mobile-webkit-stats-linux.png": "b2f236c3ef5ba1ea095e3fc5ca783b13142e6799aec1fa8509be2640f51ae5df",
+    "e2e/design-v2-navigation.spec.ts-snapshots/shell-header-mobile-desktop-linux.png": "416f69d6c6eabba88b8a796d242d64b55125410d2699585dbd98dd3eb213b71f",
+    "e2e/design-v2-navigation.spec.ts-snapshots/shell-header-mobile-firefox-stats-linux.png": "65b7445870bd09ef6c00daea3b43d103ca52d677447c9d00dffa933a62cd37be",
+    "e2e/design-v2-navigation.spec.ts-snapshots/shell-header-mobile-mobile-linux.png": "d2b88f2779999dbcb6dc40d7764db5053293554ede20501389d0850709203e84",
+    "e2e/design-v2-navigation.spec.ts-snapshots/shell-header-mobile-webkit-stats-linux.png": "a22fb282d47e4c39766480a3459f07605c170b139e9362a08f687da59f69354a"
+  }
+}

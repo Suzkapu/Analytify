@@ -1,0 +1,1788 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/core/sharing/playlist-sharing*.spec.ts --runner-config=docs/testing-evidence/design-v2/sharing-parallel-vitest.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/sharing-parallel-vitest.mjs
+❯ Building...
+✔ Building...
+Application bundle generation complete. [2.480 seconds] - 2026-10-20T17:30:19.171Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts > Playlist sharing actual SDK transport boundaries > continues pagination without an exact total until the first short page
+GoTrueClient@sb-sharing-auth-token:34 (2.117.2) 2026-10-20T17:30:20.470Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts > Playlist sharing actual SDK transport boundaries > does not report a short exact-count page as a complete source snapshot
+GoTrueClient@sb-sharing-auth-token:37 (2.117.2) 2026-10-20T17:30:20.486Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts > Playlist sharing actual SDK transport boundaries > preserves cancellation semantics when an in-flight later page completes after navigation abort
+GoTrueClient@sb-sharing-auth-token:38 (2.117.2) 2026-10-20T17:30:20.497Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts > Playlist sharing actual SDK transport boundaries > does not publish an account A snapshot into a replacement account while its profile request is pending
+GoTrueClient@sb-sharing-auth-token:39 (2.117.2) 2026-10-20T17:30:20.557Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+ ❯ |SpotiFront| src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts (47 tests | 4 failed) 270ms
+     × continues pagination without an exact total until the first short page 12ms
+     × does not report a short exact-count page as a complete source snapshot 11ms
+     × preserves cancellation semantics when an in-flight later page completes after navigation abort 59ms
+     × does not publish an account A snapshot into a replacement account while its profile request is pending 55ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts > Playlist sharing actual SDK transport boundaries > continues pagination without an exact total until the first short page
+AssertionError: expected [ 't-0', 't-1', 't-2', 't-3', …(96) ] to deeply equal [ 't-0', 't-1', 't-2', 't-3', …(99) ]
+
+- Expected
++ Received
+
+@@ -97,9 +97,6 @@
+    "t-95",
+    "t-96",
+    "t-97",
+    "t-98",
+    "t-99",
+-   "t-100",
+-   "t-101",
+-   "t-102",
+  ]
+
+ ❯ src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts:202:41
+    200|     };
+    201|     const result = await service.loadShareTracks('share', {pageSize: 5…
+    202|     expect(result.map(item => item.id)).toEqual(Array.from({length: 10…
+       |                                         ^
+    203|     expect(requests.map(item => Number(item.url.searchParams.get('offs…
+    204|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |SpotiFront| src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts > Playlist sharing actual SDK transport boundaries > does not report a short exact-count page as a complete source snapshot
+AssertionError: promise resolved "[ { id: 't-0', …(7) }, …(54) ]" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+[
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-0",
+    "imageUrl": "",
+    "name": "t-0",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-0",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-1",
+    "imageUrl": "",
+    "name": "t-1",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-1",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-2",
+    "imageUrl": "",
+    "name": "t-2",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-2",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-3",
+    "imageUrl": "",
+    "name": "t-3",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-3",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-4",
+    "imageUrl": "",
+    "name": "t-4",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-4",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-5",
+    "imageUrl": "",
+    "name": "t-5",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-5",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-6",
+    "imageUrl": "",
+    "name": "t-6",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-6",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-7",
+    "imageUrl": "",
+    "name": "t-7",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-7",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-8",
+    "imageUrl": "",
+    "name": "t-8",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-8",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-9",
+    "imageUrl": "",
+    "name": "t-9",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-9",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-10",
+    "imageUrl": "",
+    "name": "t-10",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-10",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-11",
+    "imageUrl": "",
+    "name": "t-11",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-11",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-12",
+    "imageUrl": "",
+    "name": "t-12",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-12",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-13",
+    "imageUrl": "",
+    "name": "t-13",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-13",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-14",
+    "imageUrl": "",
+    "name": "t-14",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-14",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-15",
+    "imageUrl": "",
+    "name": "t-15",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-15",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-16",
+    "imageUrl": "",
+    "name": "t-16",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-16",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-17",
+    "imageUrl": "",
+    "name": "t-17",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-17",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-18",
+    "imageUrl": "",
+    "name": "t-18",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-18",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-19",
+    "imageUrl": "",
+    "name": "t-19",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-19",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-20",
+    "imageUrl": "",
+    "name": "t-20",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-20",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-21",
+    "imageUrl": "",
+    "name": "t-21",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-21",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-22",
+    "imageUrl": "",
+    "name": "t-22",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-22",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-23",
+    "imageUrl": "",
+    "name": "t-23",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-23",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-24",
+    "imageUrl": "",
+    "name": "t-24",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-24",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-25",
+    "imageUrl": "",
+    "name": "t-25",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-25",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-26",
+    "imageUrl": "",
+    "name": "t-26",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-26",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-27",
+    "imageUrl": "",
+    "name": "t-27",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-27",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-28",
+    "imageUrl": "",
+    "name": "t-28",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-28",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-29",
+    "imageUrl": "",
+    "name": "t-29",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-29",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-30",
+    "imageUrl": "",
+    "name": "t-30",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-30",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-31",
+    "imageUrl": "",
+    "name": "t-31",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-31",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-32",
+    "imageUrl": "",
+    "name": "t-32",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-32",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-33",
+    "imageUrl": "",
+    "name": "t-33",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-33",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-34",
+    "imageUrl": "",
+    "name": "t-34",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-34",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-35",
+    "imageUrl": "",
+    "name": "t-35",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-35",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-36",
+    "imageUrl": "",
+    "name": "t-36",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-36",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-37",
+    "imageUrl": "",
+    "name": "t-37",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-37",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-38",
+    "imageUrl": "",
+    "name": "t-38",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-38",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-39",
+    "imageUrl": "",
+    "name": "t-39",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-39",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-40",
+    "imageUrl": "",
+    "name": "t-40",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-40",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-41",
+    "imageUrl": "",
+    "name": "t-41",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-41",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-42",
+    "imageUrl": "",
+    "name": "t-42",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-42",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-43",
+    "imageUrl": "",
+    "name": "t-43",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-43",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-44",
+    "imageUrl": "",
+    "name": "t-44",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-44",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-45",
+    "imageUrl": "",
+    "name": "t-45",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-45",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-46",
+    "imageUrl": "",
+    "name": "t-46",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-46",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-47",
+    "imageUrl": "",
+    "name": "t-47",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-47",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-48",
+    "imageUrl": "",
+    "name": "t-48",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-48",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-49",
+    "imageUrl": "",
+    "name": "t-49",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-49",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-50",
+    "imageUrl": "",
+    "name": "t-50",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-50",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-51",
+    "imageUrl": "",
+    "name": "t-51",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-51",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-52",
+    "imageUrl": "",
+    "name": "t-52",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-52",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-53",
+    "imageUrl": "",
+    "name": "t-53",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-53",
+  },
+  {
+    "albumName": "",
+    "artists": [
+      {
+        "id": "artist",
+        "name": "Artist",
+      },
+    ],
+    "id": "t-54",
+    "imageUrl": "",
+    "name": "t-54",
+    "playlistIndex": 1,
+    "spotifyUrl": "",
+    "uri": "spotify:track:t-54",
+  },
+]
+
+ ❯ src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts:236:24
+    234|     };
+    235|     const result = service.loadShareTracks('share', {pageSize: 50});
+    236|     await expect(result).rejects.toMatchObject({partialTracks: expect.…
+       |                        ^
+    237|   });
+    238|
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts:229:91
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |SpotiFront| src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts > Playlist sharing actual SDK transport boundaries > preserves cancellation semantics when an in-flight later page completes after navigation abort
+AssertionError: expected Error: Some shared playlist songs could n… { partialTracks: [ …(50) ] } to match object { name: 'AbortError' }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
++ Error {
++   "message": "Some shared playlist songs could not be loaded. Please retry.",
++   "cause": DOMException {},
++   "partialTracks": [
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-0",
++       "imageUrl": "",
++       "name": "t-0",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-0",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-1",
++       "imageUrl": "",
++       "name": "t-1",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-1",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-2",
++       "imageUrl": "",
++       "name": "t-2",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-2",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-3",
++       "imageUrl": "",
++       "name": "t-3",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-3",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-4",
++       "imageUrl": "",
++       "name": "t-4",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-4",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-5",
++       "imageUrl": "",
++       "name": "t-5",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-5",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-6",
++       "imageUrl": "",
++       "name": "t-6",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-6",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-7",
++       "imageUrl": "",
++       "name": "t-7",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-7",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-8",
++       "imageUrl": "",
++       "name": "t-8",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-8",
++     },
+      {
+-   "name": "AbortError",
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-9",
++       "imageUrl": "",
++       "name": "t-9",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-9",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-10",
++       "imageUrl": "",
++       "name": "t-10",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-10",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-11",
++       "imageUrl": "",
++       "name": "t-11",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-11",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-12",
++       "imageUrl": "",
++       "name": "t-12",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-12",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-13",
++       "imageUrl": "",
++       "name": "t-13",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-13",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-14",
++       "imageUrl": "",
++       "name": "t-14",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-14",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-15",
++       "imageUrl": "",
++       "name": "t-15",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-15",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-16",
++       "imageUrl": "",
++       "name": "t-16",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-16",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-17",
++       "imageUrl": "",
++       "name": "t-17",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-17",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-18",
++       "imageUrl": "",
++       "name": "t-18",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-18",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-19",
++       "imageUrl": "",
++       "name": "t-19",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-19",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-20",
++       "imageUrl": "",
++       "name": "t-20",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-20",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-21",
++       "imageUrl": "",
++       "name": "t-21",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-21",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-22",
++       "imageUrl": "",
++       "name": "t-22",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-22",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-23",
++       "imageUrl": "",
++       "name": "t-23",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-23",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-24",
++       "imageUrl": "",
++       "name": "t-24",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-24",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-25",
++       "imageUrl": "",
++       "name": "t-25",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-25",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-26",
++       "imageUrl": "",
++       "name": "t-26",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-26",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-27",
++       "imageUrl": "",
++       "name": "t-27",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-27",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-28",
++       "imageUrl": "",
++       "name": "t-28",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-28",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-29",
++       "imageUrl": "",
++       "name": "t-29",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-29",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-30",
++       "imageUrl": "",
++       "name": "t-30",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-30",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-31",
++       "imageUrl": "",
++       "name": "t-31",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-31",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-32",
++       "imageUrl": "",
++       "name": "t-32",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-32",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-33",
++       "imageUrl": "",
++       "name": "t-33",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-33",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-34",
++       "imageUrl": "",
++       "name": "t-34",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-34",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-35",
++       "imageUrl": "",
++       "name": "t-35",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-35",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-36",
++       "imageUrl": "",
++       "name": "t-36",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-36",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-37",
++       "imageUrl": "",
++       "name": "t-37",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-37",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-38",
++       "imageUrl": "",
++       "name": "t-38",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-38",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-39",
++       "imageUrl": "",
++       "name": "t-39",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-39",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-40",
++       "imageUrl": "",
++       "name": "t-40",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-40",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-41",
++       "imageUrl": "",
++       "name": "t-41",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-41",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-42",
++       "imageUrl": "",
++       "name": "t-42",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-42",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-43",
++       "imageUrl": "",
++       "name": "t-43",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-43",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-44",
++       "imageUrl": "",
++       "name": "t-44",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-44",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-45",
++       "imageUrl": "",
++       "name": "t-45",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-45",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-46",
++       "imageUrl": "",
++       "name": "t-46",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-46",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-47",
++       "imageUrl": "",
++       "name": "t-47",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-47",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-48",
++       "imageUrl": "",
++       "name": "t-48",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-48",
++     },
++     {
++       "albumName": "",
++       "artists": [
++         {
++           "id": "artist",
++           "name": "Artist",
++         },
++       ],
++       "id": "t-49",
++       "imageUrl": "",
++       "name": "t-49",
++       "playlistIndex": 1,
++       "spotifyUrl": "",
++       "uri": "spotify:track:t-49",
++     },
++   ],
+  }
+
+ ❯ src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts:250:25
+    248|     controller.abort();
+    249|     secondPage.resolve(json([{position: 50, track: track('late')}], 20…
+    250|     await expect(loading).rejects.toMatchObject({name: 'AbortError'});
+       |                         ^
+    251|   });
+    252|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |SpotiFront| src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts > Playlist sharing actual SDK transport boundaries > does not publish an account A snapshot into a replacement account while its profile request is pending
+AssertionError: expected [ { …(3) }, { …(3) }, { …(3) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "body": {
++       "p_claim_token": "e124829635442874e91e0cd1a57c58b772186bb1223a3f33dc36dcd0174ab850",
++       "p_owner_display_name": "Old account A",
++       "p_owner_image_url": "account-a.jpg",
++       "p_playlist_description": "",
++       "p_playlist_image_url": "",
++       "p_playlist_name": "Published",
++       "p_source_playlist_id": "source",
++     },
++     "init": {
++       "body": "{\"p_source_playlist_id\":\"source\",\"p_playlist_name\":\"Published\",\"p_playlist_description\":\"\",\"p_playlist_image_url\":\"\",\"p_owner_display_name\":\"Old account A\",\"p_owner_image_url\":\"account-a.jpg\",\"p_claim_token\":\"e124829635442874e91e0cd1a57c58b772186bb1223a3f33dc36dcd0174ab850\"}",
++       "headers": Headers {},
++       "method": "POST",
++       "signal": undefined,
++     },
++     "url": "https://sharing.fixture.invalid/rest/v1/rpc/begin_playlist_share_create_upload",
++   },
++   {
++     "body": {
++       "p_offset": 0,
++       "p_tracks": [
++         {
++           "albumName": "",
++           "artists": [
++             {
++               "id": "artist",
++               "name": "Artist",
++             },
++           ],
++           "id": "one",
++           "imageUrl": "",
++           "name": "one",
++           "playlistIndex": 1,
++           "spotifyUrl": "",
++           "uri": "spotify:track:one",
++         },
++       ],
++       "p_upload_id": "upload",
++     },
++     "init": {
++       "body": "{\"p_upload_id\":\"upload\",\"p_offset\":0,\"p_tracks\":[{\"id\":\"one\",\"uri\":\"spotify:track:one\",\"name\":\"one\",\"artists\":[{\"id\":\"artist\",\"name\":\"Artist\"}],\"albumName\":\"\",\"imageUrl\":\"\",\"spotifyUrl\":\"\",\"playlistIndex\":1}]}",
++       "headers": Headers {},
++       "method": "POST",
++       "signal": undefined,
++     },
++     "url": "https://sharing.fixture.invalid/rest/v1/rpc/append_playlist_share_upload_chunk",
++   },
++   {
++     "body": {
++       "p_expected_track_count": 1,
++       "p_upload_id": "upload",
++     },
++     "init": {
++       "body": "{\"p_upload_id\":\"upload\",\"p_expected_track_count\":1}",
++       "headers": Headers {},
++       "method": "POST",
++       "signal": undefined,
++     },
++     "url": "https://sharing.fixture.invalid/rest/v1/rpc/commit_playlist_share_create_upload",
++   },
++ ]
+
+ ❯ src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts:261:74
+    259|     profile.resolve(json([{display_name: 'Old account A', profile_pic_…
+    260|     await creating.catch(() => undefined);
+    261|     expect(requests.filter(item => item.url.pathname.includes('/rpc/')…
+       |                                                                          ^
+    262|   });
+    263|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  4 failed | 62 passed (66)
+   Start at  19:30:19
+   Duration  3.05s (transform 119ms, setup 816ms, import 156ms, tests 451ms, environment 1.23s)
+

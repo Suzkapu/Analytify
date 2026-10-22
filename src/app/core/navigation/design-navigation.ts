@@ -9,6 +9,10 @@ export type LogicalRouteId =
   | 'analysis'
   | 'stats'
   | 'history'
+  | 'friends'
+  | 'friendsAdd'
+  | 'friendsInvitations'
+  | 'friendInvitation'
   | 'admin'
   | 'songLeague'
   | 'songLeagueJoin'
@@ -48,6 +52,10 @@ const ROUTES: Record<LogicalRouteId, readonly string[]> = {
   analysis: ['analysis', ':id'],
   stats: ['stats', ':userId?'],
   history: ['history'],
+  friends: ['friends'],
+  friendsAdd: ['friends', 'add'],
+  friendsInvitations: ['friends', 'invitations'],
+  friendInvitation: ['friends', 'invite', ':token'],
   admin: ['admin'],
   songLeague: ['song-league', ':leagueId?'],
   songLeagueJoin: ['song-league', 'join', ':token'],

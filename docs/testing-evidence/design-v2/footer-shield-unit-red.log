@@ -1,0 +1,49 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [3.114 seconds] - 2026-10-19T17:57:05.610Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:45111) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45111) TimeoutNaNWarning: NaN is not a number.
+Timeout duration was set to 1.
+ ❯ |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts (68 tests | 1 failed) 2983ms
+     × uses the canonical shared product header and legal action without duplicate account navigation 302ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > uses the canonical shared product header and legal action without duplicate account navigation
+AssertionError: expected undefined to be 'true' // Object.is equality
+
+- Expected:
+"true"
+
++ Received:
+undefined
+
+ ❯ src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts:34:49
+     32|     expect(legal.getAttribute('href')).toBe('/legal');
+     33|     const shield = legal.querySelector('.v2-footer-shield') as HTMLEle…
+     34|     expect(shield?.getAttribute('aria-hidden')).toBe('true');
+       |                                                 ^
+     35|     expect(shield?.querySelector('img')?.getAttribute('src')).toBe('as…
+     36|     expect(shield?.querySelector('img')?.getAttribute('alt')).toBe('');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 67 passed (68)
+   Start at  19:57:05
+   Duration  3.92s (transform 185ms, setup 242ms, import 257ms, tests 2.98s, environment 322ms)
+

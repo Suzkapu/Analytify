@@ -76,13 +76,37 @@ describe('AmbientBackgroundComponent', () => {
     const element = fixture.nativeElement as HTMLElement;
     const initial = element.style.getPropertyValue('--ambient-primary-x');
     expect(element.getAttribute('aria-hidden')).toBe('true');
-    expect(element.querySelectorAll('span').length).toBe(3);
+    expect(element.children.length).toBe(3);
+    expect(element.querySelectorAll('.ambient-dot')).toHaveLength(26);
 
     fixture.componentRef.setInput('ambientKey', 'insights');
     fixture.detectChanges();
     runFrames(30);
     expect(fixture.componentInstance).toBe(component);
     expect(element.style.getPropertyValue('--ambient-primary-x')).not.toBe(initial);
+  });
+
+  it('settles at the exact canonical destination after an interrupted route change', () => {
+    fixture.componentRef.setInput('ambientKey', 'library'); fixture.detectChanges();
+    const dot = (fixture.nativeElement as HTMLElement).querySelector('.ambient-dot');
+    fixture.componentRef.setInput('ambientKey', 'insights'); fixture.detectChanges(); runFrames(20);
+    fixture.componentRef.setInput('ambientKey', 'social'); fixture.detectChanges(); runFrames(250);
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.style.getPropertyValue('--ambient-primary-x')).toBe('40.0000%');
+    expect(element.style.getPropertyValue('--ambient-secondary-y')).toBe('22.0000%');
+    expect(element.querySelector('.ambient-dot')).toBe(dot);
+    expect(frames.size).toBe(0);
+  });
+
+  it('refreshes the League viewport layout immediately while reduced motion suppresses frames', () => {
+    reduced.dispatch(true);
+    fixture.componentRef.setInput('ambientKey', 'league'); fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.style.getPropertyValue('--ambient-primary-x')).toBe('77.7778%');
+    vi.stubGlobal('innerWidth', 390); window.dispatchEvent(new Event('resize'));
+    expect(element.style.getPropertyValue('--ambient-primary-x')).toBe('82.0513%');
+    expect(element.style.getPropertyValue('--ambient-secondary-y')).toBe('81.9231%');
+    expect(frames.size).toBe(0);
   });
 
   it('mounts an initially hidden reduced-motion touch page without rendering errors or scheduled animation', () => {
@@ -103,6 +127,11 @@ describe('AmbientBackgroundComponent', () => {
     expect(frames.size).toBe(0);
     reduced.dispatch(false);
     expect(frames.size).toBe(1);
+  });
+
+  it('mounts the canonical particle layer once with 26 independently positioned dots', () => {
+    fixture.detectChanges();
+    expect((fixture.nativeElement as HTMLElement).querySelectorAll('.ambient-dot')).toHaveLength(26);
   });
 
   it('switches to a static target when reduced motion becomes active', () => {
@@ -141,11 +170,13 @@ describe('AmbientBackgroundComponent', () => {
     hidden = true;
     document.dispatchEvent(new Event('visibilitychange'));
     expect(fixture.componentInstance.state.paused()).toBe(true);
+    expect((fixture.nativeElement as HTMLElement).style.getPropertyValue('--ambient-particle-play-state')).toBe('paused');
     expect(frames.size).toBe(0);
 
     hidden = false;
     document.dispatchEvent(new Event('visibilitychange'));
     expect(fixture.componentInstance.state.paused()).toBe(false);
+    expect((fixture.nativeElement as HTMLElement).style.getPropertyValue('--ambient-particle-play-state')).toBe('running');
     expect(frames.size).toBe(1);
   });
 

@@ -1,4 +1,5 @@
 import {Injectable, OnDestroy, computed, inject, signal} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {SessionGeneration, SessionLifecycleService} from '@core/auth/session-lifecycle.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
@@ -29,6 +30,10 @@ export class DesignV2MobileShortcutPreferencesService implements OnDestroy {
   private revision = 0;
   private destroyed = false;
 
+  constructor() {
+    this.auth.logout$.pipe(takeUntilDestroyed()).subscribe(() => {this.revision++; this.clear();});
+  }
+
   load(): Promise<void> {
     const cache = this.cache();
     if (cache && this.ownerCurrent(cache.owner)) return Promise.resolve();
@@ -37,7 +42,7 @@ export class DesignV2MobileShortcutPreferencesService implements OnDestroy {
   }
 
   reload(): Promise<void> {
-    if (this.destroyed) return Promise.resolve();
+    if (this.destroyed || this.auth.sessionExiting()) return Promise.resolve();
     const actor = this.auth.getUserId();
     if (!actor) {this.revision++; this.clear(); return Promise.resolve();}
     const cache = this.cache();
@@ -112,7 +117,7 @@ export class DesignV2MobileShortcutPreferencesService implements OnDestroy {
   }
 
   private ownerCurrent(owner: PreferenceOwner): boolean {
-    return !this.destroyed && owner.actor === this.auth.getUserId() && this.lifecycle.isCurrent(owner.generation);
+    return !this.destroyed && !this.auth.sessionExiting() && owner.actor === this.auth.getUserId() && this.lifecycle.isCurrent(owner.generation);
   }
 
   private current(owner: PreferenceOwner, revision: number): boolean {

@@ -1,0 +1,30 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "const imgAnalytifyProductLogo = \"https://www.figma.com/api/mcp/asset/934b4435-2927-4e20-a63f-28289f3f53ed.png\";\nconst imgAnalytifyIconBars = \"https://www.figma.com/api/mcp/asset/10ace091-fa56-43d6-872f-b0b6763f580c.svg\";\n\nexport default function AnalytifyMobileHeader({ className }: { className?: string }) {\n  return (\n    <div className={className || \"bg-[var(--v2-color-background-raised,#0b100d)] content-stretch flex h-[72px] items-center justify-between px-[16px] relative w-[390px]\"} data-node-id=\"25:17\" data-name=\"Analytify/Mobile header\">\n      <div className=\"content-stretch flex gap-[var(--v2-space-2,8px)] items-center overflow-clip relative shrink-0\" data-node-id=\"29:1150\" data-name=\"Brand\">\n        <button className=\"block cursor-pointer relative shrink-0 size-[32px]\" data-node-id=\"27:1580\" data-name=\"Analytify product logo\">\n          <img alt=\"\" className=\"absolute inset-0 max-w-none object-contain pointer-events-none size-full\" src={imgAnalytifyProductLogo} />\n        </button>\n        <p className=\"[word-break:break-word] font-['Outfit:SemiBold'] font-semibold leading-[28px] relative shrink-0 text-[20px] text-[color:var(--v2-color-text,#f5f7f5)] whitespace-nowrap\" data-node-id=\"25:18\">\n          Analytify\n        </p>\n      </div>\n      <button className=\"content-stretch cursor-pointer flex gap-[var(--v2-space-2,8px)] items-center relative shrink-0 w-[100px]\" data-node-id=\"25:19\" data-name=\"Menu\">\n        <div className=\"content-stretch flex gap-[var(--v2-space-3,12px)] h-[48px] items-center overflow-clip p-[var(--v2-space-3,12px)] relative rounded-[var(--v2-radius-control,12px)] shrink-0 w-[100px]\" data-node-id=\"63:4097\" data-name=\"Open navigation menu\">\n          <div className=\"relative shrink-0 size-[20px]\" data-node-id=\"I63:4097;62:2394\" data-name=\"Analytify/Icon / list\">\n            <img alt=\"\" className=\"absolute block inset-0 max-w-none size-full\" src={imgAnalytifyIconBars} />\n          </div>\n          <p className=\"[word-break:break-word] flex-[1_0_0] font-['Outfit:SemiBold'] font-semibold leading-[20px] min-w-px relative text-[14px] text-[color:var(--v2-color-text,#f5f7f5)] text-left\" data-node-id=\"I63:4097;62:2401\">\n            Menu\n          </p>\n        </div>\n      </button>\n    </div>\n  );\n}"
+    },
+    {
+      "type": "text",
+      "text": "SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.\n1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens\n2. Convert React syntax to the target framework/library\n3. Transform all Tailwind classes to the target styling system while preserving exact visual design\n4. Follow the project's existing patterns and conventions\nDO NOT install any Tailwind as a dependency unless the user instructs you to do so.\n"
+    },
+    {
+      "type": "text",
+      "text": "Node ids have been added to the code as data attributes, e.g. `data-node-id=\"1:2\"`."
+    },
+    {
+      "type": "text",
+      "text": "These styles are contained in the design: Analytify/Section: Font(family: \"Outfit\", style: SemiBold, size: 20, weight: 600, lineHeight: 28, letterSpacing: 0), Analytify/Label: Font(family: \"Outfit\", style: SemiBold, size: 14, weight: 600, lineHeight: 20, letterSpacing: 0)."
+    },
+    {
+      "type": "text",
+      "text": "Component descriptions: The following components have usage descriptions or documentation links defined in Figma. These descriptions provide important context about the intended usage, best practices, and any constraints for each component. Follow these guidelines when implementing or using these components.\n\n## Analytify/Mobile header\n**Node ID:** 25:17\n\nPersistent mobile app header: 72px high, 16px horizontal padding, exact32px product logo and20px/600 brand,100x48px Menu action. Menu opens the existing expanded navigation drawer and stays reachable with0 shortcuts. Desktop app frames use the full-height sidebar and no duplicate top header. Account, logout, Cloud Backup and data actions remain available through sidebar/drawer Settings and its Account/Data tabs. Focus/public routes hide app navigation; retain their own header treatment.\n\n## Analytify/Icon / bars\n**Node ID:** 62:2381\n\nPrimeIcons bars from the app icon library."
+    },
+    {
+      "type": "text",
+      "text": "The generated code contains image and SVG URL constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These URLs are temporary download sources and expire after 7 days. Download each asset into the project with curl -L, then replace its URL in the generated code with a reference to the downloaded asset. Never use the temporary URLs as runtime image sources."
+    }
+  ],
+  "structuredContent": null,
+  "isError": false
+}

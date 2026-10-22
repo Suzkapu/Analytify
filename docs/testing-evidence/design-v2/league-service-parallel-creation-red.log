@@ -1,0 +1,42 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/song-league/song-league-boundary.spec.ts --runner-config=docs/testing-evidence/design-v2/league-service-parallel-vitest.mjs --filter=retains the newer uncertain creation identity
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/league-service-parallel-vitest.mjs
+Application bundle generation complete. [2.717 seconds] - 2026-10-20T17:28:56.077Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/core/song-league/song-league-boundary.spec.ts (68 tests | 1 failed | 67 skipped) 70ms
+     × retains the newer uncertain creation identity when an older distinct creation succeeds 68ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/song-league/song-league-boundary.spec.ts > Song League overlapping creation recovery > retains the newer uncertain creation identity when an older distinct creation succeeds
+AssertionError: expected 'c15f292a9ceb9d40b48a57942d1cc0ca64b08…' to be '4b95125e061cee4e280d911642c40e10da9e8…' // Object.is equality
+
+Expected: "4b95125e061cee4e280d911642c40e10da9e8b22208ac4640e7dc0d51f940546"
+Received: "c15f292a9ceb9d40b48a57942d1cc0ca64b0882dd94305f130820c95a4cc39f6"
+
+ ❯ src/app/core/song-league/song-league-boundary.spec.ts:274:54
+    272|     secondResponse.resolve({data: null, error: new Error('Acknowledgem…
+    273|     await f.service.createLeague('Second', 'UTC');
+    274|     expect(f.rpc.mock.calls[2][1].p_idempotency_key).toBe(secondIdenti…
+       |                                                      ^
+    275|     expect(f.rpc.mock.calls[2][1].p_invite_token).toBe(secondIdentity.…
+    276|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 67 skipped (68)
+   Start at  19:28:56
+   Duration  944ms (transform 158ms, setup 249ms, import 172ms, tests 70ms, environment 327ms)
+

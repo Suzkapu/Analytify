@@ -12,6 +12,23 @@ Analytify keeps data only while it has a stated product, safety, or operational 
 - Pending abuse reports remain until reviewed. Blocks remain until the blocker removes them or the account is deleted.
 - Closed leagues remain until their owner explicitly deletes them, preserving historical results.
 
+## Development Friends state
+
+The Design v2 Friends contract adds two private tables in its isolated-backend
+migration. Pending invitations have no automatic expiry: the sender may revoke
+one at any time. Acceptance or decline consumes a link for one person. Active
+friendships remain until removal or profile deletion. Removal immediately hides
+membership from both participants.
+
+Minimal invitation decision and removal records contain participant identifiers,
+a token hash and timestamps, with no bearer secrets or copied listening/playlist
+data. They remain for the related profiles' lifetime so delayed retries cannot
+recreate a revoked invitation or restore a removed friendship. Deleting a related
+`public.users` profile cascades its rows. These actions do not revoke independent
+private-data grants. This is local development schema and permission evidence;
+no shared backend deployment, hosted erasure workflow or hosted transport has
+been verified for Friends.
+
 ## Erasure and backups
 
 User-facing delete controls remove live data and database cascades remove dependent records. Analytify does not expose deleted live rows from backups. Infrastructure backups are encrypted, retained for no more than 30 days, and used only for disaster recovery—not to restore an individual deleted record. If a disaster restore occurs, deletion and revocation records must be reapplied before the service returns to normal access.

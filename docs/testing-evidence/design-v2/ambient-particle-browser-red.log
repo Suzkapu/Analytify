@@ -1,0 +1,57 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-ambient.spec.ts --project=desktop --grep=complete native timeline --workers=1 --output=docs/testing-evidence/design-v2/ambient-particle-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:31578) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:31578) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:31812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-ambient.spec.ts:185:5 › canonical particle phases loop independently through a complete native timeline (6.0s)
+
+
+  1) [desktop] › e2e/design-v2-ambient.spec.ts:185:5 › canonical particle phases loop independently through a complete native timeline 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.ambient-dot:visible')
+    Expected: 26
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.ambient-dot:visible') with timeout 5000ms
+      - waiting for locator('.ambient-dot:visible')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      193 |     await page.setViewportSize(viewport);
+      194 |     const mobile = viewport.width <= 760;
+    > 195 |     await expect(page.locator('.ambient-dot:visible')).toHaveCount(mobile ? 12 : 26);
+          |                                                        ^
+      196 |     const timing = await page.locator('.ambient-dot:visible').evaluateAll(elements => elements.map(element => {
+      197 |       const animation = element.getAnimations()[0];
+      198 |       const effect = animation.effect!.getTiming();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-ambient.spec.ts:195:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/ambient-particle-red-artifacts/design-v2-ambient-canonica-4cbc4--a-complete-native-timeline-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/ambient-particle-red-artifacts/design-v2-ambient-canonica-4cbc4--a-complete-native-timeline-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/ambient-particle-red-artifacts/design-v2-ambient-canonica-4cbc4--a-complete-native-timeline-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/ambient-particle-red-artifacts/design-v2-ambient-canonica-4cbc4--a-complete-native-timeline-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-ambient.spec.ts:185:5 › canonical particle phases loop independently through a complete native timeline 

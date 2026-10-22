@@ -1,49 +1,32 @@
 <div class="design-v2" data-design-variant="new"
   [attr.data-page]="pageContext().pageId" [attr.data-ambient]="pageContext().ambientKey"
-  [attr.data-chrome]="pageContext().chromeMode">
+  [attr.data-chrome]="pageContext().chromeMode" [class.has-mobile-shortcuts]="mobileNavigation().length > 0"
+  [class.sidebar-compact]="sidebarCompact()">
   <a class="v2-skip-link" href="#v2-main-content">Skip to main content</a>
   <app-ambient-background [ambientKey]="pageContext().ambientKey"
     [overlayState]="ambientOverlayState()" [shellMode]="pageContext().chromeMode" />
 
+  @if (pageContext().chromeMode === 'app') {
+    <aside class="v2-sidebar" aria-label="Desktop sidebar">
+      <v2-navigation-panel [mode]="sidebarCompact() ? 'compact' : 'expanded'" [currentUrl]="currentUrl()"
+        [displayName]="displayName()" [profilePicUrl]="profilePicUrl()" [isAdmin]="isAdmin()"
+        (brandActivated)="sidebarCompact.set(!sidebarCompact())" (profileImageFailed)="profileImageFailed()" />
+    </aside>
+  }
+
   <header class="v2-header">
     <div class="v2-header__inner">
       <a class="v2-brand" [routerLink]="navigation.commands('playlists')" aria-label="Analytify playlists">
-        <img src="assets/Analytify-96.webp" width="38" height="38" alt="">
+        <img [src]="pageContext().chromeMode === 'app' ? 'assets/design-v2/product-logo.png' : 'assets/Analytify-96.webp'" [width]="pageContext().chromeMode === 'app' ? 32 : 38" [height]="pageContext().chromeMode === 'app' ? 32 : 38" alt="">
         <span>Analytify</span>
       </a>
 
-      @if (pageContext().chromeMode === 'app') {
-      <nav class="v2-desktop-nav" aria-label="Main navigation">
-        @for (item of primaryNavigation; track item.id) {
-          <a class="v2-nav-link" [routerLink]="linkFor(item)" [class.is-active]="isActive(item)"
-            [attr.aria-current]="isActive(item) ? 'page' : null">
-            <i class="pi {{ item.icon }}" aria-hidden="true"></i>
-            <span>{{ item.label }}</span>
-          </a>
-        }
-      </nav>
-      }
-
-      <div class="v2-mobile-title">
-        @if (pageContext().showBack) {
-          <button type="button" class="v2-icon-button" aria-label="Go back" (click)="back()">
-            <i class="pi pi-arrow-left" aria-hidden="true"></i>
-          </button>
-        }
-        <span>{{ pageContext().title }}</span>
-      </div>
-
       <div class="v2-header-actions">
         @if (pageContext().chromeMode === 'app') {
-          <button type="button" class="v2-tools-button" aria-label="Open More tools"
+          <button type="button" class="v2-tools-button" v2Button="tertiary" aria-label="Open navigation menu"
             aria-haspopup="dialog" [attr.aria-expanded]="toolsOpen()" (click)="toggleTools()">
-            <i class="pi pi-th-large" aria-hidden="true"></i>
-            <span>More</span>
-          </button>
-          <button type="button" class="v2-account-button" aria-label="Open account and data settings"
-            aria-haspopup="dialog" [attr.aria-expanded]="accountOpen()" (click)="toggleAccount()">
-            @if (profilePicUrl()) { <img [src]="profilePicUrl()" (error)="profileImageFailed()" alt=""> }
-            @else { <i class="pi pi-user" aria-hidden="true"></i> }
+            <i class="pi pi-bars" aria-hidden="true"></i>
+            <span>Menu</span>
           </button>
         }
       </div>
@@ -56,9 +39,9 @@
     <router-outlet></router-outlet>
   </main>
 
-  @if (pageContext().chromeMode === 'app') {
-  <nav class="v2-mobile-nav" aria-label="Primary navigation">
-    @for (item of mobileNavigation; track item.id) {
+  @if (pageContext().chromeMode === 'app' && mobileNavigation().length > 0) {
+  <nav class="v2-mobile-nav" aria-label="Primary navigation" [style.grid-template-columns]="'repeat(' + mobileNavigation().length + ', minmax(0, 1fr))'">
+    @for (item of mobileNavigation(); track item.id) {
       <a class="v2-mobile-nav__link" [routerLink]="linkFor(item)" [class.is-active]="isActive(item)"
         [attr.aria-current]="isActive(item) ? 'page' : null">
         <i class="pi {{ item.icon }}" aria-hidden="true"></i>
@@ -69,43 +52,17 @@
   }
 
   <footer class="v2-footer">
-    <span><i class="pi pi-spotify" aria-hidden="true"></i> Powered by Spotify</span>
+    <span>@if (pageContext().chromeMode !== 'app') {<i class="pi pi-spotify" aria-hidden="true"></i> }Powered by Spotify</span>
     <span>Artwork and metadata belong to their owners.</span>
-    <a [routerLink]="navigation.commands('legal')">Legal &amp; privacy</a>
+    @if (pageContext().chromeMode === 'app') {
+      <a v2Button="tertiary" [routerLink]="navigation.commands('legal')"><span class="v2-footer-shield" aria-hidden="true"><img src="assets/design-v2/footer-shield.svg" width="20" height="20" alt=""></span>Legal &amp; privacy</a>
+    } @else {<a [routerLink]="navigation.commands('legal')">Legal &amp; privacy</a>}
   </footer>
 
   <div class="v2-overlay-host" [class.is-active]="toolsOpen() || accountOpen() || clearDataStep() !== 'none' || backupConfirmationOpen() || overlays.active()">
     @if (toolsOpen()) {
-      <button type="button" class="v2-overlay-backdrop" aria-label="Close More tools" (click)="closeTools()"></button>
-      <section class="v2-tools-dialog" role="dialog" aria-modal="true" aria-labelledby="v2-tools-title"
-        aria-describedby="v2-tools-description"
-        appAccessibleDialog (modalEscape)="closeTools()">
-        <div class="v2-tools-dialog__heading">
-          <div>
-            <span class="v2-eyebrow">Explore together</span>
-            <h2 id="v2-tools-title">More</h2>
-          </div>
-          <button appModalInitialFocus type="button" class="v2-icon-button" aria-label="Close More tools"
-            (click)="closeTools()">
-            <i class="pi pi-times" aria-hidden="true"></i>
-          </button>
-        </div>
-        <p id="v2-tools-description" class="v2-tools-description">Open a shared Analytify tool.</p>
-        <nav class="v2-tool-links" aria-label="Social and sharing tools">
-          @for (item of toolNavigation; track item.id) {
-            <a [routerLink]="linkFor(item)" (click)="closeTools()">
-              <i class="pi {{ item.icon }}" aria-hidden="true"></i>
-              <span>{{ item.label }}</span>
-              <i class="pi pi-arrow-right" aria-hidden="true"></i>
-            </a>
-          }
-          @if (isAdmin()) {
-            <a [routerLink]="navigation.commands('admin')" (click)="closeTools()">
-              <i class="pi pi-shield" aria-hidden="true"></i><span>Administration</span><i class="pi pi-arrow-right" aria-hidden="true"></i>
-            </a>
-          }
-        </nav>
-      </section>
+      <v2-navigation-drawer [currentUrl]="currentUrl()" [displayName]="displayName()" [profilePicUrl]="profilePicUrl()"
+        [isAdmin]="isAdmin()" (dismissed)="closeTools()" (profileImageFailed)="profileImageFailed()" />
     }
 
     @if (accountOpen()) {

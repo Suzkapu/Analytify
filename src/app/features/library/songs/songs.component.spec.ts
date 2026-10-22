@@ -61,14 +61,18 @@ describe('SongsComponent', () => {
         task.isLoadingTracks = true;
         task.isLoadingArtists = true;
         task.emitUpdate();
+        let registeredTask: PlaylistLoadTask | undefined;
         const loader = {
             readSourceManifest: () => null,
             isPlaylistSourceDirty: () => false,
             isCachedPlaylistComplete: () => false,
             resolveExpectedPlaylistTotal: () => 0,
-            getLoadingTask: () => undefined,
+            getLoadingTask: () => registeredTask,
             sourceManifestKey: () => 'manifest',
-            startLoadingTask: vi.fn().mockName('startLoadingTask').mockReturnValue(task)
+            startLoadingTask: vi.fn().mockName('startLoadingTask').mockImplementation(() => {
+                registeredTask = task;
+                return task;
+            })
         };
         const firstOpen = new SongsComponent({ params } as any, { navigate: vi.fn().mockName('navigate') } as any, auth as any, storage as any, loader as any, {} as any, { runOutsideAngular: (callback: () => void) => callback() } as any);
 

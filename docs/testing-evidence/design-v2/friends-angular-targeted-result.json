@@ -1,0 +1,58 @@
+{
+  "command": "npx ng test --watch=false --progress=false --include=src/app/core/friends/friends.service.spec.ts --include=src/app/features/friends/v2-friends.controller.spec.ts --include=src/app/features/friends/v2-friends-page.component.spec.ts --include=src/app/shared/ui-v2/v2-friends-feedback.component.spec.ts --include=src/app/core/navigation/design-v2-navigation.model.spec.ts",
+  "exitCode": 0,
+  "passed": 50,
+  "testFiles": 5,
+  "sourceAndLogHashes": {
+    "docs/testing-evidence/design-v2/friends-angular-targeted.log": "708388db1a9276977e8ae7fd52947a2677d7e9f4317da2fe3b94b3eecc4ed7bb",
+    "src/app/core/friends/friends.service.spec.ts": "f24b543689fabfc2d70a5af2af5e6081e85bc46121badea0eb899810934e71cb",
+    "src/app/core/friends/friends.service.ts": "30b06317ef42529a1f1949b0b59f40b2be4cdd76431d43df75d1b04431688e3e",
+    "src/app/core/navigation/design-navigation.ts": "6432ac18f9f61ba557274bf0db9859b7dcd3b37f35da9efea5aba7437ea249ca",
+    "src/app/core/navigation/design-v2-navigation.model.spec.ts": "65649cffed2cb149359044569929fa3cb1a6846a030dd21f331073294db6a768",
+    "src/app/core/navigation/design-v2-navigation.model.ts": "fcac99a154cb152cc724abed9dc4be7d5813a36ceeb21c0dad68d3d1ca765e76",
+    "src/app/design-v2-routing.module.ts": "89cf44583e9c69daa9ec05b85839fb6c71771e01774ebfef27ff9f4beb4ca734",
+    "src/app/features/friends/friends.routes.ts": "ca607c6968d98230f5b2e00261764b0c0d31f1a404fe3e4e8591d0c4432fa6b2",
+    "src/app/features/friends/v2-friends-layout.component.ts": "312e7e7401d2c688c70d5881a86001650400731089c164f4183e79544051f0d4",
+    "src/app/features/friends/v2-friends-page.component.html": "dff5a4a7ae2f1f9197a54d38b45240e86c53a1fb763abc2f5740208929d08a24",
+    "src/app/features/friends/v2-friends-page.component.scss": "0ddd8da1d0164b7e814e21190270b29916944c7be6d196cd54d506c17475b046",
+    "src/app/features/friends/v2-friends-page.component.spec.ts": "e10b3b1e6e77efac05a0402d9e8ccf72800df97d9c8bc24ced5d9fc35a8f565f",
+    "src/app/features/friends/v2-friends-page.component.ts": "9e6e607580691c11a15f8266e28b07c8a8a20a0617340389c46a250ec9cb8734",
+    "src/app/features/friends/v2-friends.controller.spec.ts": "3f3279f6396b2d9a5279d375dc5220d397f323d09c52f4015df62f7ff2769606",
+    "src/app/features/friends/v2-friends.controller.ts": "45f7de1871f5752a0a02db27ee61bd522f1118e3b1171c0472d1c0d2774de348",
+    "src/app/shared/ui-v2/v2-friends-feedback.component.scss": "efcb546096aed6dc242b2d9b38b48dc473703e4f9f421f38fbc87e7b6d891bbe",
+    "src/app/shared/ui-v2/v2-friends-feedback.component.spec.ts": "33d18bc5f0a81d737ae33e2b75c28d9598bab5b00f990126b3c92496b8a47e9e",
+    "src/app/shared/ui-v2/v2-friends-feedback.component.ts": "1528f386aecfbc83f59243d01b88c8d7c4d67be4a58dabd96553236e8f308ab3"
+  },
+  "limitations": [
+    "Mounted Angular routes use mocked RPC and QR boundaries; native QR decoding and hosted Auth/PostgREST remain unverified.",
+    "Friends backend disabled by default pending isolated configuration.",
+    "Running browser geometry, accessibility, motion and Figma parity remain incomplete.",
+    "No new full-suite coverage measurement for added sources; prior frontend percentage is historical.",
+    "Angular/Vitest emits a hoisting warning for the top-level QR module mock; review this integration before a future Vitest upgrade."
+  ],
+  "canonicalReviewImageSha256": "b505bcb2241e463f25748b3495559ab2c02744d51a58c8aa0461fa88c5442ca3",
+  "nativeRemovalContract": "friends-removal-native-result.json",
+  "verifiedAt": "2026-10-12 Europe/Vienna",
+  "checks": {
+    "applicationTypecheck": {
+      "command": "npx tsc -p tsconfig.app.json --noEmit",
+      "exitCode": 0
+    },
+    "testTypecheck": {
+      "command": "npx tsc -p tsconfig.spec.json --noEmit",
+      "exitCode": 0
+    },
+    "scopedLint": {
+      "scope": "Friends production/tests, feedback production/test, changed navigation and router files",
+      "exitCode": 0
+    }
+  },
+  "regressionFailure": {
+    "exitCode": 1,
+    "passed": 18,
+    "failed": 1,
+    "rawLogRetained": false,
+    "cause": "Static disabled attribute conflicted with the shared button directive input; explicit boolean binding preserves native disabled state.",
+    "evidenceLimit": "Observed in prior turn; temporary failing log is no longer available. Current passing raw log is retained."
+  }
+}

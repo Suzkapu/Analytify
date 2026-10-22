@@ -67,9 +67,11 @@ describe('V2SongsPageComponent', () => {
   it('notifies OnPush views after asynchronous route loading and loader progress', async () => {
     const params = new Subject<Record<string, string>>();
     const markForCheck = vi.fn();
+    const progress$ = new Subject<any>();
+    const task = {progress$};
     const controller = new SongsController({params} as any, {} as any,
       {getUserId: () => 'user', isAuthenticated: () => false} as any,
-      {getItem: () => null} as any, {} as any, {} as any,
+      {getItem: () => null} as any, {getLoadingTask: () => task} as any, {} as any,
       {run: (callback: () => void) => callback()} as any, undefined, {markForCheck} as any);
     let finish!: () => void;
     vi.spyOn(controller, 'loadArtistsFromPlaylist').mockImplementation(() => new Promise<void>(resolve => {finish = resolve;}));
@@ -78,8 +80,7 @@ describe('V2SongsPageComponent', () => {
     finish();
     await Promise.resolve();
     expect(markForCheck).toHaveBeenCalledOnce();
-    const progress$ = new Subject<any>();
-    (controller as any).subscribeToLoaderTask({progress$});
+    (controller as any).subscribeToLoaderTask(task);
     progress$.next({artists: [], isComplete: false, isLoadingTracks: true});
     expect(controller.isLoadingTracks).toBe(true);
     expect(markForCheck).toHaveBeenCalledTimes(2);

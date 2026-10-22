@@ -1,0 +1,87 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.navigation.config.ts --project=desktop --project=mobile --project=firefox-stats --output=docs/testing-evidence/design-v2/sidebar-split-other-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214
+[WebServer] (node:17853) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:17853) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 24 tests using 1 worker
+
+(node:18188) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (no-preference) (3.9s)
+  ✓   2 [desktop] › e2e/design-v2-navigation.spec.ts:111:7 › Device shortcut read and write recovery (no-preference) (3.2s)
+  ✓   3 [desktop] › e2e/design-v2-navigation.spec.ts:216:7 › Device shortcut limits, responsive geometry and five-choice persistence (no-preference) (3.5s)
+  ✘   4 [desktop] › e2e/design-v2-navigation.spec.ts:279:7 › Empty shortcut persistence, reachable menu and focus recovery (no-preference) (6.7s)
+(node:19529) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   5 [desktop] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (reduce) (3.3s)
+  ✓   6 [desktop] › e2e/design-v2-navigation.spec.ts:111:7 › Device shortcut read and write recovery (reduce) (2.9s)
+  ✓   7 [desktop] › e2e/design-v2-navigation.spec.ts:216:7 › Device shortcut limits, responsive geometry and five-choice persistence (reduce) (3.1s)
+  ✓   8 [desktop] › e2e/design-v2-navigation.spec.ts:279:7 › Empty shortcut persistence, reachable menu and focus recovery (reduce) (4.5s)
+(node:20495) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 [mobile] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (no-preference) (4.7s)
+  ✓  10 [mobile] › e2e/design-v2-navigation.spec.ts:111:7 › Device shortcut read and write recovery (no-preference) (3.4s)
+  ✓  11 [mobile] › e2e/design-v2-navigation.spec.ts:216:7 › Device shortcut limits, responsive geometry and five-choice persistence (no-preference) (3.2s)
+  ✓  12 [mobile] › e2e/design-v2-navigation.spec.ts:279:7 › Empty shortcut persistence, reachable menu and focus recovery (no-preference) (5.4s)
+  ✓  13 [mobile] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (reduce) (3.8s)
+  ✓  14 [mobile] › e2e/design-v2-navigation.spec.ts:111:7 › Device shortcut read and write recovery (reduce) (3.0s)
+  ✓  15 [mobile] › e2e/design-v2-navigation.spec.ts:216:7 › Device shortcut limits, responsive geometry and five-choice persistence (reduce) (3.0s)
+  ✓  16 [mobile] › e2e/design-v2-navigation.spec.ts:279:7 › Empty shortcut persistence, reachable menu and focus recovery (reduce) (4.5s)
+(node:22678) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  17 [firefox-stats] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (no-preference) (5.2s)
+  ✓  18 [firefox-stats] › e2e/design-v2-navigation.spec.ts:111:7 › Device shortcut read and write recovery (no-preference) (3.2s)
+  ✓  19 [firefox-stats] › e2e/design-v2-navigation.spec.ts:216:7 › Device shortcut limits, responsive geometry and five-choice persistence (no-preference) (3.6s)
+  ✓  20 [firefox-stats] › e2e/design-v2-navigation.spec.ts:279:7 › Empty shortcut persistence, reachable menu and focus recovery (no-preference) (5.5s)
+  ✓  21 [firefox-stats] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (reduce) (3.2s)
+  ✓  22 [firefox-stats] › e2e/design-v2-navigation.spec.ts:111:7 › Device shortcut read and write recovery (reduce) (2.9s)
+  ✓  23 [firefox-stats] › e2e/design-v2-navigation.spec.ts:216:7 › Device shortcut limits, responsive geometry and five-choice persistence (reduce) (3.1s)
+  ✓  24 [firefox-stats] › e2e/design-v2-navigation.spec.ts:279:7 › Empty shortcut persistence, reachable menu and focus recovery (reduce) (4.5s)
+
+
+  1) [desktop] › e2e/design-v2-navigation.spec.ts:279:7 › Empty shortcut persistence, reachable menu and focus recovery (no-preference) 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('v2-settings-navigation-preferences').getByRole('button', { name: 'Playlists', exact: true })
+    Expected: "false"
+    Received: "true"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('v2-settings-navigation-preferences').getByRole('button', { name: 'Playlists', exact: true }) with timeout 5000ms
+      - waiting for locator('v2-settings-navigation-preferences').getByRole('button', { name: 'Playlists', exact: true })
+        14 × locator resolved to <button type="button" aria-pressed="true" class="shortcut-choice" _ngcontent-ng-c2842143387="">…</button>
+           - unexpected value "true"
+
+
+      292 |     for (const label of ['Playlists', 'Stats', 'History', 'Friends', 'Song Leagues']) {
+      293 |       await choice(label).press('Enter');
+    > 294 |       await expect(choice(label)).toHaveAttribute('aria-pressed', 'false');
+          |                                   ^
+      295 |       await expect(choice(label)).toBeEnabled();
+      296 |     }
+      297 |     await expect(count).toHaveText('0 of 5 shortcuts selected');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-navigation.spec.ts:294:35
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/sidebar-split-other-artifacts/design-v2-navigation-Empty-59c17-cus-recovery-no-preference--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/sidebar-split-other-artifacts/design-v2-navigation-Empty-59c17-cus-recovery-no-preference--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/sidebar-split-other-artifacts/design-v2-navigation-Empty-59c17-cus-recovery-no-preference--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/sidebar-split-other-artifacts/design-v2-navigation-Empty-59c17-cus-recovery-no-preference--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-navigation.spec.ts:279:7 › Empty shortcut persistence, reachable menu and focus recovery (no-preference) 
+  23 passed (1.7m)

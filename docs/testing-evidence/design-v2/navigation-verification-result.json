@@ -1,0 +1,2645 @@
+{
+  "date": "2026-10-15",
+  "checkpoint": "a8a7a39",
+  "uncommitted": true,
+  "completed": false,
+  "fullCi": {
+    "command": "npm run verify:ci",
+    "exitCode": 0,
+    "log": "navigation-exit-phase-ci-final.log",
+    "exitFile": "navigation-exit-phase-ci-final.exit",
+    "frontend": {
+      "passed": 1534,
+      "skipped": 1,
+      "files": 147
+    },
+    "workerChecks": 107,
+    "denoChecks": 26,
+    "initialJavaScriptBytes": 773839,
+    "zeroUncoveredBudgets": 48
+  },
+  "targeted": {
+    "passed": 128,
+    "files": 6,
+    "log": "navigation-exit-phase-final-targeted.log",
+    "additionalBoundary": {
+      "passed": 21,
+      "log": "navigation-exit-shell-boundary.log"
+    },
+    "scope": "Selected counts are not summed into the whole-suite count."
+  },
+  "perFile": {
+    "src/app/features/settings/v2-settings-navigation.component.ts": {
+      "lines": {
+        "total": 17,
+        "covered": 17,
+        "skipped": 0,
+        "pct": 100
+      },
+      "functions": {
+        "total": 8,
+        "covered": 8,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 20,
+        "covered": 20,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 6,
+        "covered": 6,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "src/app/shared/ui-v2/v2-shortcut-choice.component.ts": {
+      "lines": {
+        "total": 7,
+        "covered": 7,
+        "skipped": 0,
+        "pct": 100
+      },
+      "functions": {
+        "total": 2,
+        "covered": 2,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 9,
+        "covered": 9,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 2,
+        "covered": 2,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "src/app/core/navigation/design-v2-mobile-shortcut-preferences.service.ts": {
+      "lines": {
+        "total": 80,
+        "covered": 80,
+        "skipped": 0,
+        "pct": 100
+      },
+      "functions": {
+        "total": 20,
+        "covered": 20,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 122,
+        "covered": 122,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 80,
+        "covered": 80,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "src/app/features/friends/v2-friends.controller.ts": {
+      "lines": {
+        "total": 122,
+        "covered": 122,
+        "skipped": 0,
+        "pct": 100
+      },
+      "functions": {
+        "total": 45,
+        "covered": 45,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 176,
+        "covered": 176,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 137,
+        "covered": 137,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "src/app/features/friends/v2-friends-page.component.ts": {
+      "lines": {
+        "total": 101,
+        "covered": 101,
+        "skipped": 0,
+        "pct": 100
+      },
+      "functions": {
+        "total": 25,
+        "covered": 25,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 147,
+        "covered": 147,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 126,
+        "covered": 126,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "src/app/core/auth/spotify-auth.service.ts": {
+      "lines": {
+        "total": 683,
+        "covered": 506,
+        "skipped": 0,
+        "pct": 74.08
+      },
+      "functions": {
+        "total": 146,
+        "covered": 106,
+        "skipped": 0,
+        "pct": 72.6
+      },
+      "statements": {
+        "total": 752,
+        "covered": 539,
+        "skipped": 0,
+        "pct": 71.67
+      },
+      "branches": {
+        "total": 465,
+        "covered": 270,
+        "skipped": 0,
+        "pct": 58.06
+      }
+    }
+  },
+  "suites": {
+    "frontend": {
+      "sourceCount": 165,
+      "missing": [],
+      "total": {
+        "lines": {
+          "total": 11107,
+          "covered": 8622,
+          "skipped": 0,
+          "pct": 77.62
+        },
+        "statements": {
+          "total": 13076,
+          "covered": 9861,
+          "skipped": 0,
+          "pct": 75.41
+        },
+        "functions": {
+          "total": 2733,
+          "covered": 2034,
+          "skipped": 0,
+          "pct": 74.42
+        },
+        "branches": {
+          "total": 8521,
+          "covered": 5558,
+          "skipped": 0,
+          "pct": 65.22
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "sources": {
+        "src/app/app-routing.module.ts": "dc3b62a98d0189d94b24f4bed790f2f0fefa00e6948bf783c82ec0f16a5750c7",
+        "src/app/app.component.ts": "724c1c6c0f4bbf3d56e4cb668f43d98f12053e166ef10985333885081de3f7e9",
+        "src/app/app.module.ts": "71991d481a62890f7a31ffb33c18aa23b545ced5d3e9f507efdac93347be2b5b",
+        "src/app/core/admin/admin.guard.ts": "f1b065f5ba5394540b6a0cd22d1f3d0d02091fc1fd2bbed54f75e30e7bc5699f",
+        "src/app/core/admin/admin.service.ts": "5f61db8eb76cdc45a9f3bd8b241c8658a7a6b677fa32a375c05b3325ef4115b7",
+        "src/app/core/auth/auth-return-url.service.ts": "f0271f6a14905b18411580a4ffa635c17c59d6e928f6d194f788bcecd2f25a08",
+        "src/app/core/auth/cloud-identity.guard.ts": "248a4b234116936ba634acd3c64ba5ea52c9b772bf4b45f50d45eaf17a2db5e5",
+        "src/app/core/auth/personal-spotify-recovery.ts": "4deb1854ae341714fdf32793b1c40edeeebe69a990cd69ccbd35a2516f756812",
+        "src/app/core/auth/redirect-logged-in.guard.ts": "a850d355539cffee1ab383e6d57b5a27346252f372d6b2dae1455cd14ab67928",
+        "src/app/core/auth/session-lifecycle.service.ts": "b874c0afde0273c8bf3aaf1ef3f62461f931aa987ba6f91962405cf0ad0b8484",
+        "src/app/core/auth/spotify-auth.guard.ts": "25761735cb5b44418442dfe2533a829ca1f285cfef9cd4dd8c7c694d8d8b27d9",
+        "src/app/core/auth/spotify-auth.interceptor.ts": "1cbe32377f602f5538b3b50d8142afbfacc119d238a07b3126d9683145759f7c",
+        "src/app/core/auth/spotify-auth.service.ts": "91712d1f5c34c9c32064fd7090c77b464b59d677521e130d9a0f3b94db04a22d",
+        "src/app/core/compare-room/compare-guest-playlist-source.service.ts": "ed108ca3edc6c5eb1d750fdff48252b0bc75d99df6278fae23cf5a74fc186e11",
+        "src/app/core/compare-room/compare-playlist-source.service.ts": "0c09dfb8c775c26f39eb34111f962f97ba74b93d7eca6f78ef8a3efed9130ffe",
+        "src/app/core/compare-room/compare-room-coordinator.service.ts": "458ba94726ca1046bc6f4305aa5d2f1461388e4af671f16bf6982638c20f2e97",
+        "src/app/core/compare-room/compare-room-guest.service.ts": "063cce58e63c8145e46c9dee07363c58aa1460e20c98679408a38dcc1dea1650",
+        "src/app/core/compare-room/compare-room-integrity.ts": "56cd3b46d651ce283f08030b3d624fa7aa236d67be1a1069c08178e75a19cbc5",
+        "src/app/core/compare-room/compare-room-transport.service.ts": "f1e58f161b399b1966d4b81a2789e258415b59a8a39abed259b3614f3014d8ec",
+        "src/app/core/compare-room/participant-spotify.service.ts": "3195fb42528a23db0df741abc2fb2464bd430f773f14ccdcc9e48b2003037a89",
+        "src/app/core/compare-room/playlist-intersection.service.ts": "e69f27872defb548b1be45fd831cd3430169f9e5b1783ae4140a5298e49544f3",
+        "src/app/core/compare-room/spotify-request-context.ts": "633ca92644b595c03170c2b81a39d44e5eea8c7a771c491be10c50966ec90f82",
+        "src/app/core/compare-room/transient-participant-auth.service.ts": "5fcd06c611429013c16cdb61ba995d4401231ce9cb54f81c969e775eb14fe4d0",
+        "src/app/core/compliance/spotify-policy-gate.ts": "c7e73e210de9cb5c079e12b7019766696c9c1a1ea5bd03cc5c1c0f540e73ebe2",
+        "src/app/core/core.module.ts": "abb8f655d1d02dc85ddc9ba584f3b8b46e02eb57e2b3e0ac28faa955388b0068",
+        "src/app/core/data-access/spotify/spotify-data.service.ts": "43b598ab27aaabc48d569adac77067d77507d152fcc568665592b1f72d78318b",
+        "src/app/core/data-access/storage/storage.service.ts": "9577b384a9ccc7246683f5b2a112de34f520e409ce5954db810d41b3fce299f2",
+        "src/app/core/data-access/supabase/edge-function-error.ts": "202e1238579794fc0868971b0098e1f1e9b45b5dd9a5704793fc4d2c1ec2cd95",
+        "src/app/core/data-access/supabase/supabase.service.ts": "f694fd09fada1106828e8cf9adf5344f6047d153768bef822612bd6b58e3a8a1",
+        "src/app/core/diagnostics/app-logger.ts": "85b73546ccb9f1aed3dd2c7e88527418e8cac1a5f129da811f2c7a7a19aca43f",
+        "src/app/core/friends/friends.service.ts": "30b06317ef42529a1f1949b0b59f40b2be4cdd76431d43df75d1b04431688e3e",
+        "src/app/core/legal/terms-acceptance.service.ts": "b9cd252a2482bd3ae209ecd8c824bc0da6ac7f0503d59006e25b1be546e9f06d",
+        "src/app/core/navigation/design-navigation.service.ts": "8861ae0134499931ab3ba609fad1d34d5ae0366b0dd1659291154defc05fda4d",
+        "src/app/core/navigation/design-navigation.ts": "6432ac18f9f61ba557274bf0db9859b7dcd3b37f35da9efea5aba7437ea249ca",
+        "src/app/core/navigation/design-path.ts": "a20a2819cb6d84d8fc6eff40964e05e5e07578367509517bad8df88fe8a15305",
+        "src/app/core/navigation/design-selective-preloading.strategy.ts": "f9e2e3871d77c2697dc4143e44bbeb9d62c30fee776eda673743d5546d50aa15",
+        "src/app/core/navigation/design-v2-mobile-shortcut-preferences.service.ts": "b93d84635e2b12f003bd618d1b5165f21e93acaa0371a5935ac314d282093c1c",
+        "src/app/core/navigation/design-v2-navigation.model.ts": "fcac99a154cb152cc724abed9dc4be7d5813a36ceeb21c0dad68d3d1ca765e76",
+        "src/app/core/navigation/design-v2-route-data.ts": "b7e56d5375ac075623927463a5c8126071a92805fba0a6785aa967395618963a",
+        "src/app/core/navigation/mobile-shortcut-policy.ts": "25358cc6cc1aff95e4a38d3aad2b46e636225da751bc83ab4c1d2a7c17736858",
+        "src/app/core/navigation/preview-return-path.ts": "2a876cb798c401b1ff116d8a05c00a836f9a124f156f9c03dc120bdb2f562498",
+        "src/app/core/navigation/spotify-url.ts": "e622a5a3ba83c7817ab7a7e79364c3e4db353db365c753a3811befb6fefd36d8",
+        "src/app/core/notifications/push-notification.service.ts": "3954ca47ca14ae1bef6f031773bdc628e2d379adaa0377f4109796d6f07385a5",
+        "src/app/core/performance/async-load.ts": "497a9bb258fc4bd7b4f4ff74e8f0bc7763080a3c352d80a596f606cd55040887",
+        "src/app/core/settings/site-settings.service.ts": "d43d51af7a8fa6af1166b16091d092dfda6557a72469ef697e217bbcb932eae7",
+        "src/app/core/sharing/playlist-share-auto-sync.service.ts": "6ccf05960306c587b18ec1c9a3d1762d527216ea01bee5016d9d5c9c57c3530e",
+        "src/app/core/sharing/playlist-sharing-names.ts": "0e565909074a91ae838415cc8e65edb44d8e7f24862a90cf6a5fd7110ab9c712",
+        "src/app/core/sharing/playlist-sharing.models.ts": "7f7557b55b9f9035a872ba0f764eebde35beacf37d886ca292987b955f6d4d5f",
+        "src/app/core/sharing/playlist-sharing.service.ts": "69b67d331980b1c781c74fc5d39579d296baf710da669f21db52819d4e876bbe",
+        "src/app/core/sharing/stats-sharing.service.ts": "a9439b793acdcf46f6a99a813e3e04d8ba90939dad1b4ed52006e51dec7b2833",
+        "src/app/core/song-league/song-league.models.ts": "cdc7c483cf44d4a5893c6f9524c342f688984398e8ad2df2117b59e2388719df",
+        "src/app/core/song-league/song-league.service.ts": "56a23960b9ddf28e41d12b96bd3031e14a074a33871ef5442864ecf68ec5a107",
+        "src/app/core/sync/image-healing/image-healing.service.ts": "c2c0c2d5f00fe4abe55b30f801d4e58d9c94468ed6273bca240a93e780c50f42",
+        "src/app/core/sync/playlist-loader/playlist-loader.service.ts": "a40ad807eb9222be08d5b91ee10fcbaa971b070fc301cf4eb16974f046d2f286",
+        "src/app/core/sync/playlist-loader/playlist-source-manifest.ts": "fdd5e0086da9492cc38b520ea08cf58da6cf18a4833401d24976047371828bd4",
+        "src/app/core/sync/sync-schedule-policy.ts": "33b4927b8e705b9306dc7d065105041193b86cb0d436c930f2c705ead74a6993",
+        "src/app/design-v2-routing.module.ts": "a41fb604b3b564fe4f169b7ecb2ef801c9b8ddcbe05f7792dab4e739943d0fc7",
+        "src/app/features/admin/admin.component.ts": "51d3a631ffd92446e3cbd2dd5b432fa3e585fae7e0cf7e5bb98aac315cecaef4",
+        "src/app/features/admin/admin.module.ts": "fe5996d4f99346655fb459ac732b0c29e57ee9b88f9980479da509fb13221112",
+        "src/app/features/auth/callback/callback.component.ts": "0f8b2e1c4c51e6082c75539d5fb84b36421fbd2f0dc37f1e12e581991db685c2",
+        "src/app/features/auth/callback/callback.module.ts": "0fb22b04d6773923e3f3a77cd2bd3f0bba287f4ad373d7a9caf1e11e03ee6d7f",
+        "src/app/features/auth/login-page/login-page.component.ts": "dbe0c9de0349b572fc1f198b0212b0b7a60ed3fdb9235068bb61618b466fec76",
+        "src/app/features/auth/login-page/login-page.module.ts": "27400ef4b9d782166b80a4fccf620f63d170f4a44d02c8d13f74c6d1260a7590",
+        "src/app/features/auth/personal-spotify/cloud-access.component.ts": "842bc4061945563ddd84350ce831755670ba6fa7d9a37bc8ea9ea9665cbc358f",
+        "src/app/features/auth/personal-spotify/personal-spotify-callback.component.ts": "dda989fd1ae784e3ccc47cba79156b626c2c7d42e55afe2cf02e004536370b32",
+        "src/app/features/auth/personal-spotify/personal-spotify-connect.component.ts": "7cd11d8f361ac2266b20d06e8fc8b5e11d2a2201705a0cd5d516423d1d23735a",
+        "src/app/features/auth/personal-spotify/personal-spotify.module.ts": "8d5725b00b1450a6254f68e2c42d4ef9d496897ca20ec40e52e2f0e3bccdc389",
+        "src/app/features/compare-room/compare-room-callback.component.ts": "5d58467a1e32a5b3a9d3598567c331266b96445ea8ff97e063f4cbb2e048ea23",
+        "src/app/features/compare-room/compare-room-callback.module.ts": "88b4e8fb70179054e523e505342d32158274b4823c1e6c0a7234d7b42cd4de4d",
+        "src/app/features/compare-room/compare-room-join.component.ts": "a7457f9d6e614e5f4babbc2a4fba739af071e8c60b8096097c6e312976c356cf",
+        "src/app/features/compare-room/compare-room-join.module.ts": "343503072701fc61c5c03e103b5d6d2eb430f04256f930a83e350963d8bc3861",
+        "src/app/features/compare-room/compare-room-shell.component.ts": "17f6948f41ca696eb542e1fc02364f144c302914ae60b78063bcd49678e1f388",
+        "src/app/features/compare-room/compare-room-view-model.ts": "d7932c29b7d3f14c085aedd96d174a9fe3f5f82263b225b63846b34085e347ee",
+        "src/app/features/compare-room/compare-room.module.ts": "e5466b70dc458ba2dabc08a72ca8c67b383bf92baa96eb6339f08cbf817ec09f",
+        "src/app/features/friends/friends.routes.ts": "ca607c6968d98230f5b2e00261764b0c0d31f1a404fe3e4e8591d0c4432fa6b2",
+        "src/app/features/friends/v2-friends-layout.component.ts": "312e7e7401d2c688c70d5881a86001650400731089c164f4183e79544051f0d4",
+        "src/app/features/friends/v2-friends-page.component.ts": "ca445634406462ef123eabe032a4840d3a7e7f81c835a42cc180d86f81d05e2f",
+        "src/app/features/friends/v2-friends.controller.ts": "1f067cff9545fbea8f7082bba37d3795cd4e7e4214164bde46db4af3ccba2fd4",
+        "src/app/features/insights/insights-view-model.ts": "57c6455f8e2f068103e155aa387ee375e68cda3af6e971c6eb6b0ee2a5e921fc",
+        "src/app/features/insights/listening-history/listening-history.component.ts": "9733fafb8552c63474b9fee53f0cc68c37194f581747caf582a1d57b6602c281",
+        "src/app/features/insights/listening-history/listening-history.module.ts": "3c134fee03bd0179166b71cac1d5e418403c2da472aba8b9dd2f7457b8952249",
+        "src/app/features/insights/listening-history/v2-listening-history.component.ts": "57e9112f9a88491eb9420cf24032a4e878cd449cc9229e49b18d2a62fadf6a21",
+        "src/app/features/insights/user-stats/user-stats.component.ts": "751bd37a3679d8d53de1ed7d6d0a77ba5e998ad04caa65ce7fad700d5c7678ba",
+        "src/app/features/insights/user-stats/user-stats.module.ts": "039e2d300da56707819b021c0ec23af5b40ed9fe1cd7d13071e0adecb050c1ea",
+        "src/app/features/insights/user-stats/v2-user-stats.component.ts": "a4df7141947043857250719975cd3b6a7860df1265daf4b4d0efe64d98593d2c",
+        "src/app/features/legal/legal/legal.component.ts": "c466610493183788b947270c98ac508f4aaa62f6b603906ccc8c05b159518e8b",
+        "src/app/features/legal/legal/legal.module.ts": "37e153f9c8c948cfa4f9fb16c668b7626f80ac49de073295f40b46eccc5cf995",
+        "src/app/features/library/artist-details/artist-details.component.ts": "d1938c2e64218e9c8524bfcf6fd43d78605d61dabd1f62e511b9e81bdc0ee68c",
+        "src/app/features/library/artist-details/artist-details.controller.ts": "0238e368babdb1d8ad576521edd699c109d08d8bde851a8e249e40a07f5baf13",
+        "src/app/features/library/artist-details/artist-details.module.ts": "4dddd978be95dfda6b55f6d4e0b2970dd3ef66cd1bcacfd9c9c3a29d330c8dbf",
+        "src/app/features/library/design-v2/v2-analysis-page.component.ts": "353b96423d5f879f1a898b54689054bbe911e7fbf440b60681646bb4ab19d8ec",
+        "src/app/features/library/design-v2/v2-artist-details-page.component.ts": "9ea268dd5a2786e7d34b14732d45d2a2d5bd11941d899960959dcb653368af49",
+        "src/app/features/library/design-v2/v2-playlists-page.component.ts": "1349e844e97155a7da34f922d23d77b3e2fbc4da34c018ec5dc321c0a4134fce",
+        "src/app/features/library/design-v2/v2-songs-page.component.ts": "3644c4211bc90d7e6443c660e11cc742036d795dffa4d87e8bc51f1cbcb28882",
+        "src/app/features/library/playlist-analysis/playlist-analysis.component.ts": "2971e6274645f90242c9831e8ad52d1c05783a2f05921c44443d504793642178",
+        "src/app/features/library/playlist-analysis/playlist-analysis.controller.ts": "5a6aa4bd4b19876180d7c7c9fd412d2903dd9b5f4bb5813ce4d558f3c3773491",
+        "src/app/features/library/playlist-analysis/playlist-analysis.module.ts": "25d8b5cd71561c8a9f8a1e34886077c8b401a6ef48f06f73d87080a6bdfa13be",
+        "src/app/features/library/playlists/playlists.component.ts": "6b7b15bb02bad31b87b6dfbb695152e9a08cd4bc1bc1bf006cd876a6ac217805",
+        "src/app/features/library/playlists/playlists.module.ts": "2ea24e2bcc0d0993f0f20b51b66f14be4baa72a35d3416385cefc58b1c458d78",
+        "src/app/features/library/songs/songs.component.ts": "6e32e197cc2fd95b277956ba37f0b96481facea3b5741b3449a5cb765627270d",
+        "src/app/features/library/songs/songs.controller.ts": "cfd5925fa128ea5b6c588366417934c7975982180da9084ed78acdbbccddf378",
+        "src/app/features/library/songs/songs.module.ts": "e1e3292401acf63ad4c3fafc7f592ddb65b6a68694d9683e57c470556be34d55",
+        "src/app/features/settings/v2-notification-settings.controller.ts": "21106fe0dfc14649214db70739e66e41852362c77f768783c93de167591f2b25",
+        "src/app/features/settings/v2-settings-account-data.component.ts": "c219316aa96eafc55fbd1f832f633d00beba330dc2c619e4f83b071c4d3527b6",
+        "src/app/features/settings/v2-settings-install.component.ts": "b91a685aa953b7a86fe5a177649ed046f19c578a7c3406f4c4415d02576a283c",
+        "src/app/features/settings/v2-settings-navigation.component.ts": "717de210e84978b3bf8c8ecf0cd0dbcc260f64690fc34b45f5984eaaffe7bdfe",
+        "src/app/features/settings/v2-settings-notifications.component.ts": "2ea46cd9ce002fdc9fab4015ad19e179d6b8c9d6186911a15094cb383af3a1b8",
+        "src/app/features/settings/v2-settings-page.component.ts": "c9dff620848604449cf0930a6e17b58da40462d6dc11b22f9e8fb4b1eb3ec288",
+        "src/app/features/settings/v2-settings-updates.component.ts": "56c6c07e8cebebe9fe795b66f6f184fe8ff2efd4e04636a9671fba5a45546928",
+        "src/app/features/settings/v2-update-settings.controller.ts": "aacd72dce36cc33df8b3770f908748602707ad72cc9a6a2ffa3e27b701c99501",
+        "src/app/features/shared-playlists/shared-playlist-claim.component.ts": "74887a986c47bfd21bf6b257722353c9c0fce1ddd604d4f3ef4b449625cf20f6",
+        "src/app/features/shared-playlists/shared-playlist-detail.component.ts": "cf08b150cee9e724541ee2fa6348a57258dccf61b01a631214dc66b18476b882",
+        "src/app/features/shared-playlists/shared-playlist-detail.module.ts": "c213fbd5f49d3a5de5b59699eae2e4fef5eb2bbe819cac1214b517236bace096",
+        "src/app/features/shared-playlists/shared-playlists.component.ts": "0006d1d94aae481cf12230093ddb175c709ed298f66892a32e1d1d944f660226",
+        "src/app/features/shared-playlists/shared-playlists.module.ts": "2af7ca14b302858d9db1110a147c0f729fafe46efcdc03051e1093303cf7e944",
+        "src/app/features/shared-playlists/sharing-view-model.ts": "da888ff9d8882c260ffd5baa37e009f26b679aba4c395a53bebbba1f4b9b3c4a",
+        "src/app/features/shared-playlists/stats-request-claim.component.ts": "536781ca04dc46526b02105b2aa93919158be29d7318be626ca10e0eba175990",
+        "src/app/features/shared-playlists/stats-share-claim.component.ts": "94180edf8b3294f2ea237eb6f06bbc06bf09abf3b6d2871656ecf3b119d20c0a",
+        "src/app/features/song-league/song-league-claim.component.ts": "2e6444361e1888d6969b4183dabd915286a02aff5bc7f170158cd2c90a2406fe",
+        "src/app/features/song-league/song-league-detail.component.ts": "b5a9369a98673d8e04831e60a19eab6250afd8d8f07ea33ef6087958ab15ce70",
+        "src/app/features/song-league/song-league-home.component.ts": "9e0f0fc862ff9a9a740bd0ee0f8bae9fba0bf0f0e33464605294ab0f9a9ca688",
+        "src/app/features/song-league/song-league-rules.component.ts": "a4b8ea476670381cac8a194652e9ed37fe13c626412e7fb870b491bf1574329e",
+        "src/app/features/song-league/song-league-view-model.ts": "89159c76b7c9348c5bbfc615b710f637d3352f051048621a6bf35c71387052f8",
+        "src/app/features/song-league/song-league.module.ts": "71a715ac794649102ae77a5562fd5ab50ee3ed18f6f2a1a20f0f8370c0322ab2",
+        "src/app/shared/ambient/ambient-background.component.ts": "a1fb82659ad6e0923d9907375a434f658eed60e5e8f90f6411d564a6a31da373",
+        "src/app/shared/ambient/ambient-background.math.ts": "97ac038cf229d40cc22e08395c98edb470cace6695b4c5c8d4bebdfe8a497b7e",
+        "src/app/shared/ambient/ambient-background.state.ts": "c065e6143f6cde843bbe73753833437c48e5796322b08a0103ab3f0276d7d2e4",
+        "src/app/shared/layout/design-v2-shell/design-v2-account-actions.ts": "e1fe0bc387352d05147c6eac5de1d7d917cd9956a10610084e15e95a9c1c2ca8",
+        "src/app/shared/layout/design-v2-shell/design-v2-overlay.service.ts": "d8d4ff803f16a2741709b0eac07db541c2d61eedc919525d0e077694ddbaa9f2",
+        "src/app/shared/layout/design-v2-shell/design-v2-shell.component.ts": "11f04629736407b391254ccaa8567ed0d777503c2cf5d6a36433bd69e830b0e8",
+        "src/app/shared/layout/header/blocked-users-dialog.component.ts": "b89bf809de44289fda2908765a54e7c64201d04fe98703e9541949f29f623ca0",
+        "src/app/shared/layout/header/notification-settings-dialog.component.ts": "75a5ac6b1f1a4cc3a893f036beeae55d7f1ac462b377f4006913c53b11df175f",
+        "src/app/shared/layout/header/settings-sheet-view-model.ts": "7526a7645bc6cf8d20712f603e3d24fde77a4e1192ee4cdca79ed46da460e50d",
+        "src/app/shared/layout/header/sync-task-status-dialog.component.ts": "167b0604a93bc227e65cd96dc882f85db26c2ab8ba0559cc7bd79bb702b16f02",
+        "src/app/shared/pipes/safe-spotify-url.pipe.ts": "c03f0f7b8a548336e875ed472bb749b9b33301fa1371607605ca0ab3c8898480",
+        "src/app/shared/shared.module.ts": "c223de6eb8f83eea3a3cee851d24603fde158624d589a3462ef7107b3bd625db",
+        "src/app/shared/ui/accessible-dialog.directive.ts": "46be4e93f71fdc6ad67c1a47976c83fd261ed231cf20391169bdd7eb42c9c93f",
+        "src/app/shared/ui/image-fallback.directive.ts": "48956eaa60e395dbb4d89e43c4a6dbd1187e7ee6bdf0f8b0a998964385f23f76",
+        "src/app/shared/ui/metric-card/metric-card.component.ts": "b6c12e09298969e06699751637f3c7af52bb712500e32ed94e8fe79da2bdaa33",
+        "src/app/shared/ui/page-state/page-state.component.ts": "2c15a53a31ccd8b03c867a92eb3f6736923a4707cd5e20060bf3bf64cd398ddd",
+        "src/app/shared/ui/section-heading/section-heading.component.ts": "18aaddfbdb11fa477d8bd408c2069bcf4b4051b533470e26050f628c21e7ddb1",
+        "src/app/shared/ui-v2/design-v2-primitives.ts": "6a650dd8caad0d9ed011cc573bfaa417138ea2b2a81d7ce9d074bc06716a389e",
+        "src/app/shared/ui-v2/design-v2-status.ts": "ece1696584f80814ced22f80ed2ba9acd75017739cc632dbfebedf36497a2001",
+        "src/app/shared/ui-v2/genre-chart.model.ts": "f054eb1129ff78f17f9cd0b75a1a3e425a20f9b8fea456cd4be165ef8f50c5ea",
+        "src/app/shared/ui-v2/index.ts": "a5193bd90430cb46ce24984c260a01eddbe23a3c7b59cd83681a617467797c98",
+        "src/app/shared/ui-v2/v2-current-stats-feedback.component.ts": "9bc1aa9b91725d3df03125f68f5ed30beed79492917c98bd569c50a2c350a782",
+        "src/app/shared/ui-v2/v2-friends-feedback.component.ts": "a5e7f6d28ecc40c1ce562f9113372f99c79d6284e9a5281592ecf7437a4a7f21",
+        "src/app/shared/ui-v2/v2-genre-rankings.component.ts": "3abf2c816568c7987af4761ff56b4eb71b88a43d42574dba14ff0273e490cb80",
+        "src/app/shared/ui-v2/v2-inline-status.component.ts": "70b61ccd0150470630b7828c38de8ff152b14ad5f5a257aa0c142375b069643f",
+        "src/app/shared/ui-v2/v2-interval-popup.component.ts": "98ee9db4248bd07ae3972cccefb0e85b18a10364e0edb92291dd3262e4380b8f",
+        "src/app/shared/ui-v2/v2-preference-row.component.ts": "c70ecbfb3d92ab9d4a44ee2ddb922734a37fa39618f569f13bba0ab472dbda87",
+        "src/app/shared/ui-v2/v2-rank-history-plot.component.ts": "11a20ab5e3876315d8a3fba590efab4dedd77b3a772a84c888f5b70e1e593e6c",
+        "src/app/shared/ui-v2/v2-rank-history-popup.component.ts": "1707649d6b06a08f1000eda02c71f60be4d9fe450b7a0874d7422d89bb8f7704",
+        "src/app/shared/ui-v2/v2-ranking-flame.component.ts": "22c7437037c88c9b01548e1cc5dbd04dfff608f7e6032c95cfe4511a21f9a922",
+        "src/app/shared/ui-v2/v2-search-past-toggle.component.ts": "d3d773c2905a9732ab838c5579939bf8d935495c6066c41b5fa049a9d7db6a5c",
+        "src/app/shared/ui-v2/v2-settings-navigation.component.ts": "8c48be154e26847291fa70e1581df8cdf78090361e775b4971f1403b08db9311",
+        "src/app/shared/ui-v2/v2-shortcut-choice.component.ts": "956f6eaa0b037f91389df544e88512515c70b3ce7d526b9ecf60ad00e444c0e4",
+        "src/app/shared/ui-v2/v2-snapshot-calendar.component.ts": "9c75d3de17dd9b15de3f477cb0c8348f4a8cf8e439f03f36c4c682eb6509adbd",
+        "src/app/shared/ui-v2/v2-snapshot-date-field.component.ts": "a81fa001f6870f42614eca2fdf47e3d8cbe93a39c88432975f1d354f217580e4",
+        "src/app/shared/ui-v2/v2-snapshot-feedback.component.ts": "14dc67bcac7493545e5d287457e425e5e9928a66098b385f46336feac994e447",
+        "src/app/shared/ui-v2/v2-stats-ranking-row.component.ts": "d6a124a1812f0a8f5f8d690064cba3210cbb4aed6d8c3397dfd16bb578dff0b6",
+        "src/environments/environment.development.ts": "31971c80e59ea35b06b177f0195d257a6d9e60acf7d77a3122605bbee4199a7d",
+        "src/environments/environment.ts": "8b4fec7da63ee6ff0dd0e5b86efab82984946815785002d9336a0520a5ac36ba",
+        "src/environments/spotify-scopes.ts": "61f0ff5ff3b0123f176345e73da52668b646fc58cbbbfef0b0a607f8473a9984",
+        "src/main.ts": "6d9b540a2af1e6e3f123fd5fa3db758366c32260372355b9e7eb0f8d84707732"
+      },
+      "exclusions": [
+        {
+          "path": "src/app/app-routing.module.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/app.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/admin/admin.guard.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/admin/admin.models.ts",
+          "reason": "type-only source (AST checked)"
+        },
+        {
+          "path": "src/app/core/admin/admin.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/auth/auth-return-url.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/auth/auth.guards.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/auth/backup-status-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/auth/session-lifecycle.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/auth/spotify-auth.interceptor.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/auth/spotify-auth.models.ts",
+          "reason": "type-only source (AST checked)"
+        },
+        {
+          "path": "src/app/core/auth/spotify-auth.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-guest-playlist-source.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-playlist-source.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-room-coordinator.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-room-guest.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-room-integrity.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-room-transport.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/compare-room.models.ts",
+          "reason": "type-only source (AST checked)"
+        },
+        {
+          "path": "src/app/core/compare-room/participant-spotify.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/compare-room/playlist-intersection.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/spotify/spotify-data.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/storage/local-preference-durability.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/storage/local-preference-read-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/storage/stats-history-read-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/storage/storage.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/supabase/edge-function-error.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/supabase/stats-metadata-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/supabase/stats-past-search-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/supabase/stats-snapshot-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/supabase/stats-snapshot-write-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/data-access/supabase/supabase.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/diagnostics/app-logger.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/friends/friends.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/legal/terms-acceptance.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-navigation.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-navigation.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-path.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-selective-preloading.strategy.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-v2-mobile-shortcut-preferences.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-v2-navigation.model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/design-v2-route-data.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/mobile-shortcut-policy.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/preview-return-path.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/navigation/spotify-url.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/notifications/notification-session-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/notifications/push-notification.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/performance/async-load.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sharing/playlist-share-auto-sync.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sharing/playlist-sharing-names.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sharing/playlist-sharing.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sharing/stats-sharing.models.ts",
+          "reason": "type-only source (AST checked)"
+        },
+        {
+          "path": "src/app/core/sharing/stats-sharing.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/song-league/song-league.models.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/song-league/song-league.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sync/playlist-loader/playlist-loader.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sync/playlist-loader/playlist-source-manifest.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/core/sync/sync-schedule-policy.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/admin/admin.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/auth/callback/callback.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/auth/login-page/login-page.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/auth/personal-spotify/cloud-access.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/auth/personal-spotify/personal-spotify-callback.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/auth/personal-spotify/personal-spotify-connect.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/compare-room/compare-room-callback.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/compare-room/compare-room-join.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/compare-room/compare-room-shell.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/compare-room/compare-room-view-model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/friends/v2-friends-layout.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/friends/v2-friends-page.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/friends/v2-friends.controller.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/insights-view-model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/listening-history/listening-history.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/listening-history/v2-listening-history.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/stats-calendar-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/stats-current-fallback-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/stats-current-load-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/stats-date-loading-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/stats-detail-state-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/stats-metadata-loading-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/stats-metadata-state-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/stats-past-search-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/user-stats.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/v2-stats-current-recovery.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/v2-stats-date-labels.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/v2-stats-search-copy.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/v2-stats-snapshot-workflow.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/insights/user-stats/v2-user-stats.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/legal/legal/legal.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/artist-details/artist-details.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/design-v2/v2-analysis-page.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/design-v2/v2-artist-details-page.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/design-v2/v2-playlists-page.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/design-v2/v2-songs-page.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/playlist-analysis/playlist-analysis.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/playlists/playlists.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/library/songs/songs.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/settings/v2-notification-settings.controller.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/settings/v2-settings-account-data.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/settings/v2-settings-install.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/settings/v2-settings-navigation.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/settings/v2-settings-notifications.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/settings/v2-settings-page.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/settings/v2-settings-updates.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/settings/v2-update-settings.controller.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/shared-playlists/shared-playlist-detail.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/shared-playlists/shared-playlists.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/shared-playlists/sharing-view-model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/shared-playlists/stats-request-claim.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/shared-playlists/stats-share-claim.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/song-league/song-league-claim.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/song-league/song-league-detail.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/song-league/song-league-home.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/song-league/song-league-rules.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/features/song-league/song-league-view-model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/integration/supabase-loading.integration.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ambient/ambient-background.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ambient/ambient-background.math.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ambient/ambient-background.state.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/layout/design-v2-shell/design-v2-account-actions.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/layout/design-v2-shell/design-v2-overlay.service.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/layout/design-v2-shell/shell-account-boundary.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/layout/header/notification-settings-dialog.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/layout/header/settings-sheet-view-model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/layout/header/sync-task-status-dialog.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui/accessible-dialog.directive.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui/image-fallback.directive.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui/shared-ui.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/design-v2-primitives.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/design-v2-status.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/genre-chart.model.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-current-stats-feedback.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-friends-feedback.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-genre-rankings.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-inline-status.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-interval-popup.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-preference-row.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-rank-history-plot.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-rank-history-popup.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-ranking-flame.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-search-past-toggle.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-settings-navigation.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-shortcut-choice.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-snapshot-calendar.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-snapshot-date-field.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-snapshot-feedback.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/app/shared/ui-v2/v2-stats-ranking-row.component.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/environments/environment.browser-testing.ts",
+          "reason": "dedicated loopback browser-test bootstrap/configuration; absent from production build"
+        },
+        {
+          "path": "src/environments/environment.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/environments/spotify-scopes.spec.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "src/main.browser-testing.ts",
+          "reason": "dedicated loopback browser-test bootstrap/configuration; absent from production build"
+        },
+        {
+          "path": "src/test-setup.ts",
+          "reason": "test environment setup"
+        }
+      ],
+      "reportSha256": "ad7c77b49671b3610b1832c7be09fee1842dc0f33c3c38d33bb18ba1acc05171",
+      "fresh": true
+    },
+    "worker": {
+      "sourceCount": 17,
+      "missing": [],
+      "total": {
+        "lines": {
+          "total": 877,
+          "covered": 623,
+          "skipped": 0,
+          "pct": 71.03
+        },
+        "statements": {
+          "total": 1095,
+          "covered": 716,
+          "skipped": 0,
+          "pct": 65.38
+        },
+        "functions": {
+          "total": 197,
+          "covered": 125,
+          "skipped": 0,
+          "pct": 63.45
+        },
+        "branches": {
+          "total": 918,
+          "covered": 579,
+          "skipped": 0,
+          "pct": 63.07
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "sources": {
+        "services/sync-service/catalog-repository.js": "843eda3224caa7e4e01ee3c58651c0791cbeee2856dc2a2cd6b099ad0d85356e",
+        "services/sync-service/config.js": "b8a2413a59c3d5b3407d2aa63bfd950ecfdf90b00d824b09e83865a7b55e537d",
+        "services/sync-service/credential-store.js": "73801b8cdeee66f37d6513b8288162fbf5fa1163fb8b734ff3c1ba601dd73f24",
+        "services/sync-service/daily-pull.js": "73286f72d4a4f1630f70c8bd43f7d92d0138ef5b5c71a2ebc394a0017fdd44db",
+        "services/sync-service/date-utils.js": "6110f409f42edfe30ce15a98ec0eb851a0ddca16154242066617abda7484f451",
+        "services/sync-service/health-server.js": "dffeb1ad12ae1c0177de6cdfafe2a99561034b416ddf7a39e23dadb34e231c19",
+        "services/sync-service/index.js": "5823eacb8d28fa9bdfbecd3b47c5cb7fd4a9f9a27a2b55c9a371de3dc5165355",
+        "services/sync-service/push-dispatcher.js": "b3ff320c7de61c19863dc3e26cc644f3bca11e5b5d32cef35e393a557d698543",
+        "services/sync-service/scheduler.js": "67aecdf66969c3136293942cd426f4830909e5bd52d6bcc523601e8b30d327dc",
+        "services/sync-service/spotify-client.js": "d0e935e2c5221a8563e076154ead95c83e2c74141d9a3c56127d0a4585f1541c",
+        "services/sync-service/spotify-url-validator.js": "a505545cb3c870705f7a556b4a009acb623c2eff2a32dedbfc03255b87849e11",
+        "services/sync-service/task-registry.js": "7a6e21a9ee1e1e5dc82a1b3db18ed8ba9a945fd4f94aba7b83075375d9f614cd",
+        "services/sync-service/tasks/history-task.js": "4c7407436abe288b9deb2af2dda47e20927f70b1721e5b8a0e6d001552778b03",
+        "services/sync-service/tasks/shared-playlists-task.js": "70ec79e304efc8baba7b622be1834548d8a75f71520297594910b5d7b1d7a10c",
+        "services/sync-service/tasks/song-league-playlists-task.js": "aa611c17298f4fc40f50958730fb97181b51cff738577b8578cf08a23e0f3ff0",
+        "services/sync-service/tasks/stats-task.js": "a2c69216c8a269b297f99b8c283adaec4fad8319673487b9cbd7aa6d1987896b",
+        "services/sync-service/worker-runtime-health.js": "3666f247f178ac84733dbd91c01a0be4a1d64cc793346c6a73d9f80ef4473f28"
+      },
+      "exclusions": [
+        {
+          "path": "services/sync-service/catalog-repository.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/credential-store.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/date-utils.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/health-server.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/push-dispatcher.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/scheduler.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/spotify-client.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/spotify-url-validator.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/task-registry.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/tasks/history-task.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/tasks/shared-playlists-task.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/tasks/song-league-playlists-task.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/tasks/stats-task.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/worker-runtime-health.test.js",
+          "reason": "test source"
+        }
+      ],
+      "reportSha256": "fbd66e3b42ec71b38a5c3bd49f9ddc61d0400f2430403278a4740e91c3d9a951",
+      "fresh": false,
+      "unchangedReportReconfirmed": true
+    },
+    "edge": {
+      "sourceCount": 12,
+      "missing": [],
+      "total": {
+        "lines": {
+          "total": 763,
+          "covered": 200,
+          "skipped": 0,
+          "pct": 26.21
+        },
+        "statements": {
+          "total": 902,
+          "covered": 219,
+          "skipped": 0,
+          "pct": 24.27
+        },
+        "functions": {
+          "total": 113,
+          "covered": 48,
+          "skipped": 0,
+          "pct": 42.47
+        },
+        "branches": {
+          "total": 797,
+          "covered": 160,
+          "skipped": 0,
+          "pct": 20.07
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "sources": {
+        "supabase/functions/_shared/bounded-fetch.ts": "6661fed0ffce6cfd42afed9fe90ffe047d748dd485fbb973cd19ab8b13300d2e",
+        "supabase/functions/_shared/request-security.ts": "d03bb7fe8206ea328984aa811d2402ea98a1f01a35254bf2f411936a428039f2",
+        "supabase/functions/_shared/spotify-credential-crypto.ts": "2285f5e80532a9c58c1bf4938cbbe3060da64969e927559303903f320edc9417",
+        "supabase/functions/song-league-notifications/delivery-state.ts": "d406a45b0296b98ca7593be94cb78b17f40f97345440e5ff963bd0074308421c",
+        "supabase/functions/song-league-notifications/index.ts": "3a3961835049e2de6471d2a96b95ed149f81c0475739e5dd1004f9a43c442ab9",
+        "supabase/functions/song-league-notifications/push-endpoint.ts": "7c5995c8d5f842b75e8bedb84696d182a1ded7af36b9702e8efd44feea7cebda",
+        "supabase/functions/song-league-notifications/web-push.ts": "ac50a53d5ebdce3728a1726a74ecc372709e3d7cdd1b56bf6bd845a4e06b4c0e",
+        "supabase/functions/song-league-playlist-sync/index.ts": "8a3bf546a0a1880171559075626fd9436ee7977bbcca8e40e5fe240aa62f6b28",
+        "supabase/functions/song-league-playlist-sync/recovery.ts": "4f105ee8919c5132978210af2c6e71fe7d638e2c0bbe5b7ca795b890a04c0175",
+        "supabase/functions/spotify-credentials/index.ts": "f9ef05c3c48ca5608cacd0eacabbc12ab2d7fd1ed16f648e5e29e26e956f1ccf",
+        "supabase/functions/spotify-credentials/personal-recovery.ts": "eeaf3510d41c2ddc95722eaf04d55500bafa0833a60376c8ccdd501762df59cf",
+        "supabase/functions/spotify-credentials/profile-verification.ts": "3b3e4519e61f9f2e188c0af77ed7fe6176e69c22310f4d32934b3a11c105849b"
+      },
+      "exclusions": [
+        {
+          "path": "supabase/functions/_shared/bounded-fetch.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/_shared/request-security.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/_shared/spotify-credential-crypto.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/song-league-notifications/delivery-state.test.mjs",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/song-league-notifications/push-endpoint.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/song-league-playlist-sync/recovery.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/spotify-credentials/personal-recovery.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/spotify-credentials/profile-verification.test.ts",
+          "reason": "test source"
+        }
+      ],
+      "reportSha256": "f1280c4aedbf5ff1f0d62cf4ac211baceee254422971901cc50e387aa8a78f7e",
+      "fresh": false,
+      "unchangedReportReconfirmed": true
+    }
+  },
+  "canonical": {
+    "screen": "688:41515",
+    "feedback": "999:32270",
+    "menuDefinition": "105:3505",
+    "screenshot": "navigation-mobile-canonical.png",
+    "scope": "Partial state/component parity. PrimeIcons match the canonical library descriptions. Existing shell/header/sidebar/gutter/footer differences are not certified.",
+    "highFidelity": "navigation-high-fidelity-context.json",
+    "errorStates": {
+      "context": "navigation-error-canonical-context.json",
+      "screenshots": [
+        "navigation-error-canonical-0.png",
+        "navigation-error-canonical-1.png"
+      ],
+      "red": "navigation-retry-icon-red.log",
+      "fix": "Restore the canonical decorative PrimeIcons sync glyph; preserve exact action and feedback geometry.",
+      "comparison": "Post-fix read/save error captures inspected against canonical states. Full-page shell/sidebar/header/gutter/footer and approved visual goldens remain incomplete."
+    }
+  },
+  "browser": {
+    "navigation": [
+      {
+        "passed": 16,
+        "exitCode": 0,
+        "log": "navigation-recovery-matrix.log",
+        "scope": "All happy/recovery engine/motion cases after the auth fix, before the Retry icon correction."
+      },
+      {
+        "passed": 8,
+        "exitCode": 0,
+        "log": "navigation-recovery-final.log",
+        "scope": "Only affected read/write error workflows reverified after the canonical Retry icon/geometry correction."
+      }
+    ],
+    "geometrySamples": 80,
+    "actualIndexedDbReload": true,
+    "scheduled": "navigation-browser-scheduling.json",
+    "friends": {
+      "passed": 8,
+      "exitCode": 0,
+      "log": "friends-exit-phase-browser.log",
+      "scope": "Affected real-shell confirming-read/session-exit/Back phases after auth/controller exit guards; prior16-case invitation/geometry run remains historical evidence.",
+      "sessions": [
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-exit-phase-artifacts/design-v2-friends-Friends--cce0a-on-and-session-exit-reduce--desktop/friends-session.json",
+          "motion": "reduce",
+          "authLogouts": 1
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-exit-phase-artifacts/design-v2-friends-Friends--cce0a-on-and-session-exit-reduce--firefox-stats/friends-session.json",
+          "motion": "reduce",
+          "authLogouts": 1
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-exit-phase-artifacts/design-v2-friends-Friends--cce0a-on-and-session-exit-reduce--mobile/friends-session.json",
+          "motion": "reduce",
+          "authLogouts": 1
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-exit-phase-artifacts/design-v2-friends-Friends--cce0a-on-and-session-exit-reduce--webkit-stats/friends-session.json",
+          "motion": "reduce",
+          "authLogouts": 1
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-exit-phase-artifacts/design-v2-friends-Friends--cea52-session-exit-no-preference--desktop/friends-session.json",
+          "motion": "no-preference",
+          "authLogouts": 1
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-exit-phase-artifacts/design-v2-friends-Friends--cea52-session-exit-no-preference--firefox-stats/friends-session.json",
+          "motion": "no-preference",
+          "authLogouts": 1
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-exit-phase-artifacts/design-v2-friends-Friends--cea52-session-exit-no-preference--mobile/friends-session.json",
+          "motion": "no-preference",
+          "authLogouts": 1
+        },
+        {
+          "artifact": "docs/testing-evidence/design-v2/friends-exit-phase-artifacts/design-v2-friends-Friends--cea52-session-exit-no-preference--webkit-stats/friends-session.json",
+          "motion": "no-preference",
+          "authLogouts": 1
+        }
+      ]
+    },
+    "navigationArtifacts": {
+      "navigation-browser-artifacts/.last-run.json": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--desktop/navigation-read-error.png": "7275c1fd5a047c63a168e6e4653095b1e3d1b33df06cd5920eb578d52a7d75c1",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--desktop/navigation-recovery.json": "96a40bda7a88929a2b5b3ee831fe4f888a0e99c256baaf1d8bfdfbd32fd0abc0",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--desktop/navigation-write-error.png": "9f6cb341f7afc27e3b75557171dd5ce1e7e56890d001208205e42b96295708c7",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--firefox-stats/navigation-read-error.png": "50c3e11b7c2545e37a1704438c00269e923ff0eb85d6d37ed2d556a24e772f27",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--firefox-stats/navigation-recovery.json": "96a40bda7a88929a2b5b3ee831fe4f888a0e99c256baaf1d8bfdfbd32fd0abc0",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--firefox-stats/navigation-write-error.png": "f8d1093d4b12ec22f3bbd43952b82518eeef2dcbef00c3c453c1048c43378fc0",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--mobile/navigation-read-error.png": "d4b7bdd2c2a6942af68a9a0ba6e855957fd74ed873c980347f52e59b0f62f58c",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--mobile/navigation-recovery.json": "96a40bda7a88929a2b5b3ee831fe4f888a0e99c256baaf1d8bfdfbd32fd0abc0",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--mobile/navigation-write-error.png": "30219cb7221f6e99914b5d3a7608c2674ec1916938df8a47002c562f53fa637d",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--webkit-stats/navigation-read-error.png": "4b9e9d633a9816699615cf4807822b4d65da0d39ea09763048156acd8e4ddf9e",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--webkit-stats/navigation-recovery.json": "96a40bda7a88929a2b5b3ee831fe4f888a0e99c256baaf1d8bfdfbd32fd0abc0",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--webkit-stats/navigation-write-error.png": "099264cf2f00d48e8400bf3e87ad6d7cf383e7eb104de857af4950ce1dae43ec",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--desktop/navigation-read-error.png": "1974c2edd9838ec27ab02adc0e24c6babbd6840efea29a706ce8b5734ee2f04f",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--desktop/navigation-recovery.json": "29dae8a990909f7eb7349ade65d02ad770337763a3d5172a4097e32eeb0a584b",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--desktop/navigation-write-error.png": "9aa1ec898d46c5fd81cbda3d393fcdf79bea4beae1898c27daf1a6e19b0e224b",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--firefox-stats/navigation-read-error.png": "151b712a0a26ff3e0196fd43f7b4dbe111dd81fe906babc8a1cab5a85ef9fb9f",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--firefox-stats/navigation-recovery.json": "29dae8a990909f7eb7349ade65d02ad770337763a3d5172a4097e32eeb0a584b",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--firefox-stats/navigation-write-error.png": "663d1ec59a6ec3e7ffea99693a4e100564aeec762d7859f667c6d32a4b1ea7c5",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--mobile/navigation-read-error.png": "6aa596b0d7439ef12c642557ebac925189bb32cfb8b4d6061a94c15650455c60",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--mobile/navigation-recovery.json": "29dae8a990909f7eb7349ade65d02ad770337763a3d5172a4097e32eeb0a584b",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--mobile/navigation-write-error.png": "b29e97aae84b23c84c04212e4d3cb42beb6eac755e3f75e4abe73f7de128eac4",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--webkit-stats/navigation-read-error.png": "e69a6b847fda5f56f0a96f17ef8cb0fdba5391c69b70afd98556fe93fcf03909",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--webkit-stats/navigation-recovery.json": "29dae8a990909f7eb7349ade65d02ad770337763a3d5172a4097e32eeb0a584b",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--webkit-stats/navigation-write-error.png": "cff401ee25af6f64895da9eccbc7a031d0bf018bb1e6d6873c73ab39f82110dd",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--desktop/navigation-native.json": "3d208c3078ef70cdc84baa3c5118d7bc8675b74ff2eb788bd44d85bb81f171fc",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--desktop/navigation-selected.png": "f986d209f871f945fcc3f71e575ed0eeccc8da49c80a82efaa110297af4fa953",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--firefox-stats/navigation-native.json": "0fdf0993a02098e13fc5867b06628266d6c471317fd75fec58feab54af4c614d",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--firefox-stats/navigation-selected.png": "5b65f7198d51207d06d9e0dca687c6c91816edb76235d2b3010c0217c7964ecb",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--mobile/navigation-native.json": "715b37a58772e53c67762c665031a30764f057cf45c556f56d1e0d706768cacf",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--mobile/navigation-selected.png": "da1c030fdd0e53356961b2e8b2913b598ffee39500b5aafa4017ddd85b187672",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--webkit-stats/navigation-native.json": "85fc731775ec08a3d97e46b4e0bd6f32251199b260b0408086875a5b924bc4d6",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--webkit-stats/navigation-selected.png": "0b1da9f6397aedd0e3f62ade2212a930b69caefc3b1d27975ef3226ac179d273",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--desktop/navigation-native.json": "ed74cba202810f5c88ba564e3396e168262cbc335e734efdbf7b1fd76a6cc749",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--desktop/navigation-selected.png": "723c0586e85819ec28dc964011bd7a1539204231078b965faf98de4a3a2268a9",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--firefox-stats/navigation-native.json": "5bc22d1639831e400a59f7979e9042de22e16c14a38a26a0a12693af6f55001e",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--firefox-stats/navigation-selected.png": "a1e8ea9b7eb0c15ff53ca1c840ae9de00186e45dd16c1299da1af49fdd57c44f",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--mobile/navigation-native.json": "ed74cba202810f5c88ba564e3396e168262cbc335e734efdbf7b1fd76a6cc749",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--mobile/navigation-selected.png": "11813064b34b60345f4c7381fef5e3ca30e0ce62697d9e37aff9231790bc6e6c",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--webkit-stats/navigation-native.json": "ed74cba202810f5c88ba564e3396e168262cbc335e734efdbf7b1fd76a6cc749",
+      "navigation-browser-artifacts/design-v2-navigation-Devic-24e75-on-reachable-no-preference--webkit-stats/navigation-selected.png": "b82aa37519432a2edc33dd6190609d0e42e9ea04c3b9e367d06f7aa922ee3736",
+      "navigation-recovery-final-artifacts/.last-run.json": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--desktop/navigation-read-error.png": "8da230f68611eb50472e8c7baca3c485de0ad6688981bfa7091c9dcba70f6647",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--desktop/navigation-recovery.json": "7ac31d7a32f23e62ba909cda8bce754ef3341563489c819e0a191dbef3c20ae3",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--desktop/navigation-write-error.png": "344481a582e7b4af31fc93ad031aa8f23ee6eb958918c58f4a8d6472295b5c5a",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--firefox-stats/navigation-read-error.png": "257a59ccda21f91540bb3d621aacabed42c16d274a7276956513e8376bab6a3e",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--firefox-stats/navigation-recovery.json": "7ac31d7a32f23e62ba909cda8bce754ef3341563489c819e0a191dbef3c20ae3",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--firefox-stats/navigation-write-error.png": "2c589b8af01d3924acefe60ad61f99e0524f3ff0130a34b224700e99da541584",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--mobile/navigation-read-error.png": "ae5ffdc91cb017fc9b8b98d2ef1bd7348db79a52f2b31d321bfa80a19e5b5a22",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--mobile/navigation-recovery.json": "7ac31d7a32f23e62ba909cda8bce754ef3341563489c819e0a191dbef3c20ae3",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--mobile/navigation-write-error.png": "ceff8f9c5e92c5f11bc5e1e72e035cd349c75f4716a21322218a58be1b4a7436",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--webkit-stats/navigation-read-error.png": "8b991b7f24103ed4c6b919e1f0d1c301de63dd0d670d15183cb55c6edf3b87b8",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--webkit-stats/navigation-recovery.json": "7ac31d7a32f23e62ba909cda8bce754ef3341563489c819e0a191dbef3c20ae3",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--webkit-stats/navigation-write-error.png": "79a9555ec19d355d3f00e573997bf7e270270e7140e4541351936c8ad305ad51",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--desktop/navigation-read-error.png": "145fe97050b7445b1156e001a7b51ba940208e6af90ce0cee3852c7ec8db576e",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--desktop/navigation-recovery.json": "733d38a5c58194dffd32c2372a7300715a87d5902c786eb854475b9bbdcf77a0",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--desktop/navigation-write-error.png": "4c0ebf11a20b0ed926fbe0252d4053e822b6c59c9005325dd0f2c6d8b3b362e0",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--firefox-stats/navigation-read-error.png": "0f4cf701bdcbdd001a458f7ab437a94f1bd66340f79a472615bee82997e20199",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--firefox-stats/navigation-recovery.json": "733d38a5c58194dffd32c2372a7300715a87d5902c786eb854475b9bbdcf77a0",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--firefox-stats/navigation-write-error.png": "5877c4a3ed020703139120f2b2c42fe69635be1829f4c83a6bc642af2c999a05",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--mobile/navigation-read-error.png": "dafc2eb531e97c2d0f0998438e3a7c6e396d37e832517ffcb32342aefb3689a1",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--mobile/navigation-recovery.json": "733d38a5c58194dffd32c2372a7300715a87d5902c786eb854475b9bbdcf77a0",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--mobile/navigation-write-error.png": "0898c0d1b0eb911db5a820889285fbd10286fb1acb3a4b08f4e91820d062db8d",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--webkit-stats/navigation-read-error.png": "0333ee415cd2a8657cdb7695a8d68aa64bdf2ddd7c31a595e32901be177c4e0c",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--webkit-stats/navigation-recovery.json": "733d38a5c58194dffd32c2372a7300715a87d5902c786eb854475b9bbdcf77a0",
+      "navigation-recovery-final-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--webkit-stats/navigation-write-error.png": "ddd5970a421b01551889533bc2e2b42200da4dee3c3c466f44fa32d0278832ed"
+    },
+    "friendsArtifacts": "friends-browser-result.json",
+    "recoveryCases": [
+      {
+        "artifact": "docs/testing-evidence/design-v2/navigation-recovery-final-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--desktop/navigation-recovery.json",
+        "motion": "no-preference",
+        "feedbackGeometry": [
+          {
+            "viewport": 600,
+            "width": 576,
+            "height": 138,
+            "right": 588,
+            "title": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 320,
+            "width": 296,
+            "height": 178,
+            "right": 308,
+            "title": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 600,
+            "width": 576,
+            "height": 138,
+            "right": 588,
+            "title": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 320,
+            "width": 296,
+            "height": 158,
+            "right": 308,
+            "title": {
+              "width": 262,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          }
+        ]
+      },
+      {
+        "artifact": "docs/testing-evidence/design-v2/navigation-recovery-final-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--firefox-stats/navigation-recovery.json",
+        "motion": "no-preference",
+        "feedbackGeometry": [
+          {
+            "viewport": 600,
+            "width": 576,
+            "height": 138,
+            "right": 588,
+            "title": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 320,
+            "width": 296,
+            "height": 178,
+            "right": 308,
+            "title": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 600,
+            "width": 576,
+            "height": 138,
+            "right": 588,
+            "title": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 320,
+            "width": 296,
+            "height": 158,
+            "right": 308,
+            "title": {
+              "width": 262,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          }
+        ]
+      },
+      {
+        "artifact": "docs/testing-evidence/design-v2/navigation-recovery-final-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--mobile/navigation-recovery.json",
+        "motion": "no-preference",
+        "feedbackGeometry": [
+          {
+            "viewport": 600,
+            "width": 576,
+            "height": 138,
+            "right": 588,
+            "title": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 320,
+            "width": 296,
+            "height": 178,
+            "right": 308,
+            "title": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 600,
+            "width": 576,
+            "height": 138,
+            "right": 588,
+            "title": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 320,
+            "width": 296,
+            "height": 158,
+            "right": 308,
+            "title": {
+              "width": 262,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          }
+        ]
+      },
+      {
+        "artifact": "docs/testing-evidence/design-v2/navigation-recovery-final-artifacts/design-v2-navigation-Devic-1daff-ite-recovery-no-preference--webkit-stats/navigation-recovery.json",
+        "motion": "no-preference",
+        "feedbackGeometry": [
+          {
+            "viewport": 600,
+            "width": 576,
+            "height": 138,
+            "right": 588,
+            "title": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 320,
+            "width": 296,
+            "height": 178,
+            "right": 308,
+            "title": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 600,
+            "width": 576,
+            "height": 138,
+            "right": 588,
+            "title": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 320,
+            "width": 296,
+            "height": 158,
+            "right": 308,
+            "title": {
+              "width": 262,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          }
+        ]
+      },
+      {
+        "artifact": "docs/testing-evidence/design-v2/navigation-recovery-final-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--desktop/navigation-recovery.json",
+        "motion": "reduce",
+        "feedbackGeometry": [
+          {
+            "viewport": 600,
+            "width": 576,
+            "height": 138,
+            "right": 588,
+            "title": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 320,
+            "width": 296,
+            "height": 178,
+            "right": 308,
+            "title": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 600,
+            "width": 576,
+            "height": 138,
+            "right": 588,
+            "title": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 320,
+            "width": 296,
+            "height": 158,
+            "right": 308,
+            "title": {
+              "width": 262,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          }
+        ]
+      },
+      {
+        "artifact": "docs/testing-evidence/design-v2/navigation-recovery-final-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--firefox-stats/navigation-recovery.json",
+        "motion": "reduce",
+        "feedbackGeometry": [
+          {
+            "viewport": 600,
+            "width": 576,
+            "height": 138,
+            "right": 588,
+            "title": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 320,
+            "width": 296,
+            "height": 178,
+            "right": 308,
+            "title": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 600,
+            "width": 576,
+            "height": 138,
+            "right": 588,
+            "title": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 320,
+            "width": 296,
+            "height": 158,
+            "right": 308,
+            "title": {
+              "width": 262,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          }
+        ]
+      },
+      {
+        "artifact": "docs/testing-evidence/design-v2/navigation-recovery-final-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--mobile/navigation-recovery.json",
+        "motion": "reduce",
+        "feedbackGeometry": [
+          {
+            "viewport": 600,
+            "width": 576,
+            "height": 138,
+            "right": 588,
+            "title": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 320,
+            "width": 296,
+            "height": 178,
+            "right": 308,
+            "title": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 600,
+            "width": 576,
+            "height": 138,
+            "right": 588,
+            "title": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 320,
+            "width": 296,
+            "height": 158,
+            "right": 308,
+            "title": {
+              "width": 262,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          }
+        ]
+      },
+      {
+        "artifact": "docs/testing-evidence/design-v2/navigation-recovery-final-artifacts/design-v2-navigation-Devic-1e8f7--and-write-recovery-reduce--webkit-stats/navigation-recovery.json",
+        "motion": "reduce",
+        "feedbackGeometry": [
+          {
+            "viewport": 600,
+            "width": 576,
+            "height": 138,
+            "right": 588,
+            "title": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 320,
+            "width": 296,
+            "height": 178,
+            "right": 308,
+            "title": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 600,
+            "width": 576,
+            "height": 138,
+            "right": 588,
+            "title": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 542,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          },
+          {
+            "viewport": 320,
+            "width": 296,
+            "height": 158,
+            "right": 308,
+            "title": {
+              "width": 262,
+              "height": 20,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "description": {
+              "width": 262,
+              "height": 40,
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20px"
+            },
+            "action": {
+              "width": 260,
+              "height": 48,
+              "fontSize": "14px",
+              "fontWeight": "600",
+              "lineHeight": "20px"
+            },
+            "icon": {
+              "width": 18,
+              "height": 18,
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "18px"
+            }
+          }
+        ]
+      }
+    ],
+    "feedbackGeometrySamples": 32,
+    "errorGeometryContract": "At600px:576x138 cards; at320px:296px wide wrapping,260x48 action,18x18 sync icon,14px/600/20px action/title,14px/400/20px description."
+  },
+  "limits": [
+    "Every whole-suite98 metric remains below target.",
+    "One documented isolated hosted-contract skip; hosted Friends Auth/PostgREST and identity replacement/realtime unverified.",
+    "Earlier reduced-motion DOM-update timeout remains unresolved.",
+    "Full canonical sidebar/menu/header/footer and approved visual/motion comparisons remain open.",
+    "The pre-drain regression uses the real auth/session lifecycle with an isolated held task; actual hosted OAuth/provider and backend signout/realtime remain unverified."
+  ],
+  "next": "Complete canonical responsive shell/menu/sidebar/header/footer parity, retained feature workflows and all-suite98 gates; preserve unresolved historical native DOM-update timeout and hosted transport gaps.",
+  "final98": {
+    "frontend": {
+      "lines": {
+        "actual": 77.62,
+        "target": 98,
+        "passed": false
+      },
+      "statements": {
+        "actual": 75.41,
+        "target": 98,
+        "passed": false
+      },
+      "functions": {
+        "actual": 74.42,
+        "target": 98,
+        "passed": false
+      },
+      "branches": {
+        "actual": 65.22,
+        "target": 98,
+        "passed": false
+      }
+    },
+    "worker": {
+      "lines": {
+        "actual": 71.03,
+        "target": 98,
+        "passed": false
+      },
+      "statements": {
+        "actual": 65.38,
+        "target": 98,
+        "passed": false
+      },
+      "functions": {
+        "actual": 63.45,
+        "target": 98,
+        "passed": false
+      },
+      "branches": {
+        "actual": 63.07,
+        "target": 98,
+        "passed": false
+      }
+    },
+    "edge": {
+      "lines": {
+        "actual": 26.21,
+        "target": 98,
+        "passed": false
+      },
+      "statements": {
+        "actual": 24.27,
+        "target": 98,
+        "passed": false
+      },
+      "functions": {
+        "actual": 42.47,
+        "target": 98,
+        "passed": false
+      },
+      "branches": {
+        "actual": 20.07,
+        "target": 98,
+        "passed": false
+      }
+    }
+  },
+  "sourceHashes": {
+    "playwright.config.ts": "164b424031b04f7b87a2f2be32a036b8600933c39fda8e7727d497f69720abc9",
+    "playwright.friends.config.ts": "581ba4be0acbcdc0ee6fb12d90364c8c2923c66c58ed82ce896c01596de78c0d",
+    "playwright.navigation.config.ts": "75dddc5f606fdb2e47259deea1a11f51928b5aa58f5f799c15969475f85ed726",
+    "e2e/design-v2-navigation.spec.ts": "31a09ed8da780f9a57613ce9f77eea40583ca6c1ab184ba0062b70ba28797f85",
+    "e2e/design-v2-friends.spec.ts": "a44b45ed68299a06d69f3d1e97b5f571e679ba3e9dbffdfb74db87c494407a42",
+    ".github/workflows/preview.yml": "dba0882f676a50c571154316f20bc25dbdf546cc3b12a2ec2aa3bbf4d79a6a61",
+    "src/app/shared/ui-v2/v2-shortcut-choice.component.spec.ts": "3734dcea59adcee30ff8cad1e054b52a3927c1f867ee656a3ea6e2cd05e1864f",
+    "src/app/features/settings/v2-settings-navigation.component.spec.ts": "bf8d25d7a3a839d61274e70fac147a0331857c27ca79c27b2e54be8a54cab137",
+    "src/app/core/auth/spotify-auth.service.ts": "91712d1f5c34c9c32064fd7090c77b464b59d677521e130d9a0f3b94db04a22d",
+    "src/app/core/navigation/design-v2-mobile-shortcut-preferences.service.ts": "b93d84635e2b12f003bd618d1b5165f21e93acaa0371a5935ac314d282093c1c",
+    "src/app/features/friends/v2-friends.controller.ts": "1f067cff9545fbea8f7082bba37d3795cd4e7e4214164bde46db4af3ccba2fd4",
+    "src/app/features/settings/v2-settings-navigation.component.ts": "717de210e84978b3bf8c8ecf0cd0dbcc260f64690fc34b45f5984eaaffe7bdfe"
+  },
+  "finalGateCommand": {
+    "command": "npm run test:coverage:final",
+    "exitCode": 1,
+    "log": "navigation-exit-final98.log",
+    "scope": "Stops at frontend lines; each of12 metric outcomes is separately recorded in final98."
+  },
+  "previousProductionHashes": {
+    "src/app/core/auth/spotify-auth.service.ts": "e70881574d0e4467d8a2bbf43cf75fa96419c46cfc5bc5acfc6c50796986cece",
+    "src/app/core/navigation/design-v2-mobile-shortcut-preferences.service.ts": "35b88fcc89040f9ad33d61e4f1ca4340ca292f79c5593597df75f7db2b453c11",
+    "src/app/features/friends/v2-friends.controller.ts": "f35eb14b11e6aca9b90d6f20afac4dc5a9aeb8130582c2060430947fcac1c4d9",
+    "src/app/features/settings/v2-settings-navigation.component.ts": "c6d2fda036a13157ee139d8be7b40810162014db7417195b954da6fc5d3a4718"
+  },
+  "productionChangesSincePriorEvidence": [
+    "src/app/core/auth/spotify-auth.service.ts",
+    "src/app/core/navigation/design-v2-mobile-shortcut-preferences.service.ts",
+    "src/app/features/friends/v2-friends.controller.ts",
+    "src/app/features/settings/v2-settings-navigation.component.ts"
+  ],
+  "sessionExit": {
+    "red": {
+      "passed": 29,
+      "failed": 1,
+      "log": "navigation-exit-reentry-red.log",
+      "cause": "Real auth logout was still draining while Navigation reload/retry/load reacquired the old account."
+    },
+    "fix": "Count active logout/cache-clear/consent exits and release on completion/failure; account-owned Navigation/Friends reads and actions stay blocked while exiting. Same-account later login remains supported.",
+    "canonical": "navigation-exit-phase-canonical.json",
+    "contracts": [
+      "Real lifecycle drain plus same-account relogin",
+      "Overlapping exits remain blocked until all complete",
+      "Cache clear failure and consent rejection release the phase",
+      "Non-consent continuation does not enter exit phase",
+      "Mounted window focus and subscriber-ordering re-entry cannot restore cached choices"
+    ],
+    "fullCiFailure": {
+      "log": "navigation-exit-phase-ci.log",
+      "passed": 1514,
+      "failed": 20,
+      "skipped": 1,
+      "cause": "One shell-account auth fake lacked the new public sessionExiting state; fixture contract restored with all assertions intact."
+    }
+  },
+  "subsequentDrawerEvidence": "docs/testing-evidence/design-v2/navigation-drawer-result.json",
+  "scopeNote": "This manifest retains the preceding session-recovery verification source scope. Later drawer integration and fresh coverage/CI are recorded in subsequentDrawerEvidence."
+}

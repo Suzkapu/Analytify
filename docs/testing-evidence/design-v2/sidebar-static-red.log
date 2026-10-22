@@ -1,0 +1,38 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [6.890 seconds] - 2026-10-16T17:10:01.041Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts (67 tests | 1 failed) 4222ms
+     × keeps desktop sidebar collapse independent of mobile menu expansion and child navigation 708ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts > DesignV2ShellComponent > keeps desktop sidebar collapse independent of mobile menu expansion and child navigation
+AssertionError: expected null not to be null
+ ❯ src/app/shared/layout/design-v2-shell/design-v2-shell.component.spec.ts:28:25
+     26|     const element = harness.fixture.nativeElement as HTMLElement;
+     27|     const sidebar = element.querySelector('.v2-sidebar') as HTMLElemen…
+     28|     expect(sidebar).not.toBeNull();
+       |                         ^
+     29|     const toggle = sidebar.querySelector('button[aria-expanded]') as H…
+     30|     expect(toggle.getAttribute('aria-expanded')).toBe('true');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 66 passed (67)
+   Start at  19:10:01
+   Duration  6.41s (transform 436ms, setup 547ms, import 559ms, tests 4.22s, environment 816ms)
+

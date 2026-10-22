@@ -24,7 +24,10 @@ function boundary() {
       delete: (entryKey: string) => {changes.push(() => disk.delete(`${name}:${entryKey}`)); return {};}
     }),
     complete: () => {changes.forEach(apply => apply()); tx.oncomplete?.();},
-    abort: () => {tx.onabort?.();}
+    abort: () => {
+      tx.request?.onerror?.({target: {error: new DOMException('Isolated request cancelled.', 'AbortError')}});
+      tx.onabort?.();
+    }
     };
     transactions.push(tx);
     return tx;
@@ -137,4 +140,38 @@ describe('Durable local device preference', () => {
     expect(transactions).toHaveLength(0);
     expect(service.getItem(key)).toBeNull();
   });
+});
+
+it('durably commits metadata in the metadata store while cleaning up its feature-store copy', async () => {
+  const {service, disk, transactions} = boundary();
+  disk.set('featureData:termsAcceptance', 'legacy');
+  const saved = service.setLocalItemDurably('termsAcceptance', 'accepted');
+  await vi.waitFor(() => expect(transactions).toHaveLength(1));
+  transactions[0].complete(); await saved;
+  expect(service.getItem('termsAcceptance')).toBe('accepted');
+  expect(disk.get('appData:termsAcceptance')).toBe('accepted');
+  expect(disk.has('featureData:termsAcceptance')).toBe(false);
+});
+
+for (const operation of ['write', 'remove']) it(`aborts an in-flight fire-and-forget ${operation} when logout drains`, async () => {
+  const {service, lifecycle, transactions, disk} = boundary();
+  if (operation === 'write') service.setItem(key, 'old-session', false);
+  else service.removeItem(key);
+  await vi.waitFor(() => expect(transactions).toHaveLength(1));
+  const abort = vi.spyOn(transactions[0], 'abort');
+  await lifecycle.invalidateAndDrain();
+  expect(abort).toHaveBeenCalledOnce();
+  expect(disk.has(`featureData:${key}`)).toBe(false);
+});
+
+
+it('aborts a pending Stats write during logout and drains its cancellation without publishing a row', async () => {
+  const {service, lifecycle, transactions, disk} = boundary();
+  const saved = service.saveStatsHistory({userId: 'old-owner', range: 'short_term', timestamp: 10});
+  await vi.waitFor(() => expect(transactions).toHaveLength(1));
+  const abort = vi.spyOn(transactions[0], 'abort');
+  await lifecycle.invalidateAndDrain();
+  await expect(saved).resolves.toBeUndefined();
+  expect(abort).toHaveBeenCalledOnce();
+  expect(disk.size).toBe(0);
 });

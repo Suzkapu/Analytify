@@ -1,0 +1,63 @@
+{
+  "inspectedAt": "2026-10-11",
+  "ref": "origin/main",
+  "commit": "98a22af02eccd900f82423e9b88cb7fd8d0bdd19",
+  "scope": "Read-only inspection after user reported latest Song League changes; no merge/cherry-pick/working-branch switch.",
+  "commits": [
+    "67448b0",
+    "a015497",
+    "3703194"
+  ],
+  "contract": [
+    "One discovery in each league-local Friday-to-Friday week, any day; reset at Friday midnight, including DST boundaries.",
+    "Scoring starts the next local day. Late picks expire with the original Friday cohort and therefore have less than four weeks; permanent points preserved.",
+    "Thursday and following Friday use distinct allowances; frozen round baselines and discovery rules preserved.",
+    "Every accepted pick increments playlist revision and makes all active members playlist tasks due; retries any day for required feature tasks, optional admin Friday setting retained.",
+    "Spotify approval/ownership, lease and revision safeguards remain required."
+  ],
+  "figma": {
+    "node": "996:32242",
+    "name": "Stable main \u2014 Any-day league pick contract",
+    "verifiedTextMatches": true,
+    "scope": "Stable-main-only contract frame. Canonical Design v2 League UI not updated by that release."
+  },
+  "sources": [
+    {
+      "path": "docs/song-league-any-day-picks.md",
+      "sha256": "93215126c366c1dc68eefcf99c1d2c0fefef948c360340d98264ef14bd0ca2f4"
+    },
+    {
+      "path": "src/app/features/song-league/song-league-detail.component.ts",
+      "sha256": "026485ef746ec1999706129f5afdcbb4bcc259cf3732cbddf95291ebe973c878"
+    },
+    {
+      "path": "services/sync-service/task-registry.js",
+      "sha256": "3424e931da96f9bef271b727707c4cd4ebfcd76d1c76459f4741567b0dac76d8"
+    },
+    {
+      "path": "supabase/functions/song-league-playlist-sync/index.ts",
+      "sha256": "ed3c252a04146863d7f02ac131a72fd50323e5e1d00508ec0bac1c8faea31048"
+    },
+    {
+      "path": "supabase/migrations/20261011093125_song_league_any_day_picks.sql",
+      "sha256": "3cb5793aa29d9e6ddb09b9e638a7a99213182b2a37277dfe3c38030521da664a"
+    },
+    {
+      "path": "supabase/tests/song_league_any_day_picks.test.sql",
+      "sha256": "9986fb5e46c11db460f3420b206e1ebd48ab70c5b61d7a13223d78e1cefe544f"
+    },
+    {
+      "path": "package.json",
+      "sha256": "1d2598870c2385e0db99e65c337b8041abf3fbb9840fc072dd8c6d807c281fce"
+    }
+  ],
+  "next": "Characterize the new semantics and reconcile canonical Design v2 League states and service/worker/edge changes when the League feature slice is resumed. Do not restore Friday-only picking from older parity claims.",
+  "limitations": "Source/Figma contract inspection; main test claims are not rerun or treated as current Design v2 verification.",
+  "securityDependencyGap": {
+    "designV2DeclaredCli": "~22.1.8",
+    "designV2LockedAndInstalledCli": "22.1.9",
+    "mainDeclaredCli": "~22.2.2",
+    "status": "Resolved for declared/locked/installed CLI22.2.2; fresh1429/1-skip CI and three-engine native preferences passed. Song League logic reconciliation remains separate and unfinished.",
+    "resolvedVersion": "22.2.2"
+  }
+}

@@ -1,0 +1,138 @@
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [8.255 seconds] - 2026-10-16T17:30:08.004Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/library/songs/songs-controller-boundary.spec.ts (4 tests | 4 failed) 80ms
+     × detaches playlist A progress before awaiting playlist B hydration 46ms
+     × closes playlist A album selection when playlist B takes over 13ms
+     × does not react to route changes after destruction 9ms
+     × unsubscribes an already-complete task even when its BehaviorSubject emits synchronously 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/library/songs/songs-controller-boundary.spec.ts > Songs route and loader ownership regressions > detaches playlist A progress before awaiting playlist B hydration
+AssertionError: expected 'Stale A' not to be 'Stale A' // Object.is equality
+ ❯ src/app/features/library/songs/songs-controller-boundary.spec.ts:28:43
+     26|     f.controller.playlistId='B';const pending=f.controller.loadArtists…
+     27|     a.playlistName='Stale A';a.isComplete=true;a.emitUpdate();
+     28|     expect(f.controller.playlistName).not.toBe('Stale A');expect(f.loa…
+       |                                           ^
+     29|     hydration.resolve();await pending;f.controller.ngOnDestroy();
+     30|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |SpotiFront| src/app/features/library/songs/songs-controller-boundary.spec.ts > Songs route and loader ownership regressions > closes playlist A album selection when playlist B takes over
+AssertionError: expected { id: 'A-album', tracks: [ { …(4) } ] } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "id": "A-album",
+  "tracks": [
+    {
+      "album": {
+        "id": "album",
+        "name": "Album",
+      },
+      "artists": [
+        {
+          "id": "artist",
+          "name": "Artist",
+        },
+      ],
+      "id": "A-song",
+      "name": "A-song",
+    },
+  ],
+}
+
+ ❯ src/app/features/library/songs/songs-controller-boundary.spec.ts:33:58
+     31|   it('closes playlist A album selection when playlist B takes over',as…
+     32|     const f=fixture();f.cache('A');f.cache('B');await f.load('A');f.co…
+     33|     await f.load('B');expect(f.controller.selectedAlbum).toBeNull();f.…
+       |                                                          ^
+     34|   });
+     35|   it('does not react to route changes after destruction',async()=>{
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |SpotiFront| src/app/features/library/songs/songs-controller-boundary.spec.ts > Songs route and loader ownership regressions > does not react to route changes after destruction
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Array [
+        "owner_after-destroy",
+      ],
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/library/songs/songs-controller-boundary.spec.ts:37:40
+     35|   it('does not react to route changes after destruction',async()=>{
+     36|     const f=fixture();f.controller.ngOnDestroy();f.params.next({id:'af…
+     37|     expect(f.storage.hydrateItems).not.toHaveBeenCalled();expect(f.loa…
+       |                                        ^
+     38|   });
+     39|   it('unsubscribes an already-complete task even when its BehaviorSubj…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |SpotiFront| src/app/features/library/songs/songs-controller-boundary.spec.ts > Songs route and loader ownership regressions > unsubscribes an already-complete task even when its BehaviorSubject emits synchronously
+AssertionError: expected [ SafeSubscriber{ …(6) } ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/app/features/library/songs/songs-controller-boundary.spec.ts:41:56
+     39|   it('unsubscribes an already-complete task even when its BehaviorSubj…
+     40|     const f=fixture();const task=new PlaylistLoadTask('A');task.isComp…
+     41|     await f.load('A');expect(task.progress$.observers).toHaveLength(0)…
+       |                                                        ^
+     42|   });
+     43| });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed (4)
+   Start at  19:30:08
+   Duration  3.57s (transform 645ms, setup 770ms, import 784ms, tests 80ms, environment 1.56s)
+

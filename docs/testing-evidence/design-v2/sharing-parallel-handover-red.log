@@ -1,0 +1,92 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/core/sharing/playlist-sharing*.spec.ts --runner-config=docs/testing-evidence/design-v2/sharing-parallel-vitest.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/sharing-parallel-vitest.mjs
+❯ Building...
+✔ Building...
+Application bundle generation complete. [2.482 seconds] - 2026-10-20T17:39:08.888Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts > Playlist sharing actual SDK transport boundaries > does not dispatch a captured publication after logout interrupts actual SDK access-token readiness
+GoTrueClient@sb-sharing-auth-token:61 (2.117.2) 2026-10-20T17:39:10.567Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+stderr | src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts > Playlist sharing actual SDK transport boundaries > does not open a publication RPC when logout is queued between cached session verification and the mutation caller
+GoTrueClient@sb-sharing-auth-token:62 (2.117.2) 2026-10-20T17:39:10.571Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+ ❯ |SpotiFront| src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts (63 tests | 2 failed) 654ms
+     × does not dispatch a captured publication after logout interrupts actual SDK access-token readiness 4ms
+     × does not open a publication RPC when logout is queued between cached session verification and the mutation caller 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts > Playlist sharing actual SDK transport boundaries > does not dispatch a captured publication after logout interrupts actual SDK access-token readiness
+AssertionError: expected [ '/rest/v1/users', …(1) ] to deeply equal [ '/rest/v1/users' ]
+
+- Expected
++ Received
+
+  [
+    "/rest/v1/users",
++   "/rest/v1/rpc/begin_playlist_share_create_upload",
+  ]
+
+ ❯ src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts:512:24
+    510|     token.resolve('old-session-token');
+    511|     await expect(operation).rejects.toMatchObject({name: 'AbortError'}…
+    512|     expect(dispatched).toEqual(['/rest/v1/users']);
+       |                        ^
+    513|   });
+    514|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts > Playlist sharing actual SDK transport boundaries > does not open a publication RPC when logout is queued between cached session verification and the mutation caller
+AssertionError: expected "rpc" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st rpc call:
+
+    Array [
+      "begin_playlist_share_refresh_upload",
+      Object {
+        "p_expected_revision": 4,
+        "p_playlist_description": "",
+        "p_playlist_image_url": "",
+        "p_playlist_name": "Published",
+        "p_share_id": "share",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/core/sharing/playlist-sharing-transport-boundary.spec.ts:526:21
+    524|     reply = () => json('unexpected stale mutation');
+    525|     await expect(service.refreshShare('share', 4, publication())).reje…
+    526|     expect(rpc).not.toHaveBeenCalled();
+       |                     ^
+    527|     expect(requests).toEqual([]);
+    528|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  2 failed | 80 passed (82)
+   Start at  19:39:09
+   Duration  3.11s (transform 122ms, setup 694ms, import 152ms, tests 806ms, environment 1.06s)
+

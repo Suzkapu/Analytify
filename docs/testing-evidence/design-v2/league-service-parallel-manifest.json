@@ -1,0 +1,226 @@
+{
+  "date": "2026-10-20",
+  "branch": "codex/design-v2",
+  "baseCommit": "a8a7a3966a622c992e9058094627a768c16a363a",
+  "committed": false,
+  "scope": "Current SongLeagueService source only; existing27 tests plus87 companion cases,114 total. No UI/worker/edge/SQL changes. Actual installed SDK transport tests remain isolated.",
+  "baseline": {
+    "testsPassed": 27,
+    "filesPassed": 1,
+    "exit": 0,
+    "lines": 68.54,
+    "statements": 59.2,
+    "functions": 64.47,
+    "branches": 35.98,
+    "log": "league-service-parallel-baseline.log"
+  },
+  "characterization": [
+    "Propagates server authorization failures for21 public RPC operations; verifies narrow mutation contracts and no success after empty acknowledgement.",
+    "Token-free invitation metadata, own/owner rejoin states, nullable lifecycle subjects, close/claim success, metadata-sync-before-submission and failures.",
+    "Installed real Supabase PostgREST client executes list/dashboard URL serialization against a fail-on-unconfigured intercepted fetch; no external transport. Open/closed filters, fixed clock recent cutoff, permanent/recent totals, ties, nullable datasets, per-table403 and unavailable league.",
+    "Spotify observable success/errors, invalid/malicious-host track destinations, local/missing track identities, missing metadata, daily snapshot failures/retry.",
+    "Concurrent per-user/day stats coalescing across leagues with separate membership authorization, independent timezone dates, rank-weighted top15 genres/full denominator, explicit percentage and incomplete pages.",
+    "Realtime cleanup once, callback suppression after disposal, failed cleanup recovery, UUID fallback and late initialization rejection suppression."
+  ],
+  "genuineRegression": {
+    "problem": "Single pending creation slot loses idempotency/invitation identity when different normalized form submissions overlap or a user returns to an uncertain prior form; older duplicate successes can clear newer pending attempts.",
+    "redRuns": [
+      {
+        "log": "league-service-parallel-creation-red.log",
+        "exit": 1,
+        "failed": 1,
+        "filteredOut": 67
+      },
+      {
+        "log": "league-service-parallel-creation-symmetric-red.log",
+        "exit": 1,
+        "failed": 3,
+        "filteredOut": 72
+      }
+    ],
+    "approvedFix": "Map by existing normalized[name,timezone,maxMembers] fingerprint; delete only captured object for that fingerprint on confirmed success. API, returned values, errors, RPC parameters and key generation retained.",
+    "restrictions": "UI isCreating gate prevents duplicate submits within one home component instance, but not across instance remounts; sequential uncertainA\u2192successB\u2192retryA also reproduces without concurrency."
+  },
+  "final": {
+    "command": "npx ng test --watch=false --progress=false --include='src/app/core/song-league/*service*.spec.ts' --include='src/app/core/song-league/song-league-boundary.spec.ts' --include='src/app/core/song-league/song-league-creation-owner.spec.ts' --runner-config=docs/testing-evidence/design-v2/league-service-parallel-vitest.mjs --coverage --coverage-include='src/app/core/song-league/song-league.service.ts' --coverage-reporters=json-summary --coverage-reporters=json --coverage-reporters=text-summary",
+    "exit": 0,
+    "filesPassed": 3,
+    "testsPassed": 114,
+    "skipped": 0,
+    "log": "league-service-parallel-owner-final.log",
+    "coverage": {
+      "lines": {
+        "total": 242,
+        "covered": 242,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 308,
+        "covered": 308,
+        "skipped": 0,
+        "pct": 100
+      },
+      "functions": {
+        "total": 79,
+        "covered": 79,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 280,
+        "covered": 274,
+        "skipped": 0,
+        "pct": 97.85
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": "Unknown"
+      }
+    },
+    "coverageSnapshot": "league-service-parallel-owner-coverage-summary.json"
+  },
+  "checks": {
+    "eslint": {
+      "exit": 0,
+      "log": "league-service-parallel-owner-lint.log"
+    },
+    "typescriptSpecNoEmit": {
+      "exit": 0,
+      "log": "league-service-parallel-owner-types.log"
+    }
+  },
+  "remainingBranchArms": [
+    {
+      "line": 46,
+      "reason": "Abort-listener owner-generation guard false arm: current generation is synchronously invalidated before successor activation."
+    },
+    {
+      "line": 427,
+      "reason": "Refresh cleanup identity cannot differ through public API while same key is coalesced."
+    },
+    {
+      "line": 506,
+      "reason": "Genre entries have strictly positive weights, so mapped zero denominator fallback cannot occur."
+    },
+    {
+      "line": 507,
+      "reason": "Same positive-weight invariant for simple percentage."
+    },
+    {
+      "line": 518,
+      "reason": "Intl.DateTimeFormat configured year/month/day missing-part fallback; no fabricated Intl monkey patch."
+    },
+    {
+      "line": 619,
+      "reason": "Every dashboard member breakdown is inserted before standings; missing map entry is defensive fallback."
+    }
+  ],
+  "mainAudit": "league-service-parallel-main-audit.json",
+  "limitations": [
+    "Current scoped branches97.85 are below98; six defensive invariant arms retained without exclusions/ignore annotations/private fabricated tests. Global frontend target remains separate and unmet until measured.",
+    "Distinct uncertain forms/actors remain in memory for the current generation until confirmed success; no within-generation size/expiry limit. Generation abort clears all immediately and secrets are not persisted.",
+    "Actor-scoping concern from prior milestone is addressed in this follow-up. Local SDK identity is a cancellation/ownership boundary, not a replacement for server auth/authorization. An already-dispatched accepted creation cannot be undone by client cancellation; stale response is suppressed and no rollback is attempted.",
+    "Controlled permission failures verify propagation, not hosted RLS/eligibility/scoring enforcement. No real notifications or production calls/data.",
+    "Main any-day-pick source semantics were verified read-only at exactremote SHA; development controller/worker/edge/SQL reconciliation remains separate. No Figma/browser/fullfeature parity claim."
+  ],
+  "hashes": {
+    "docs/testing-evidence/design-v2/league-service-parallel-baseline.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/league-service-parallel-baseline.log": "22d479b0c4ae17a74c8d25839eb6a1b81c4c3b1250493bc5b43d34f94bb8b01e",
+    "docs/testing-evidence/design-v2/league-service-parallel-coverage/coverage-final.json": "a3e4fc22b460841c4a66824827f5e50570cf79e4fed93e862884bedc0facccc8",
+    "docs/testing-evidence/design-v2/league-service-parallel-coverage/coverage-summary.json": "48f647190da3ae0e3e88dcb5ae1136c4c9a77aaf36d1ce1c40999d615781505a",
+    "docs/testing-evidence/design-v2/league-service-parallel-creation-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/league-service-parallel-creation-red.log": "fe3a069833765bc1b02520a88787e270ad07243c168c2c7c3d2bfb4196770403",
+    "docs/testing-evidence/design-v2/league-service-parallel-creation-symmetric-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/league-service-parallel-creation-symmetric-red.log": "5116b716239773fecc0cdae123a5105fbd41d7a5b8aa3a4ecf2316a96376f288",
+    "docs/testing-evidence/design-v2/league-service-parallel-expansion.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/league-service-parallel-expansion.log": "68c5039e6baa52fccbb12ac39a773f2cedf61b93436cfd89bde64c2e107c05c3",
+    "docs/testing-evidence/design-v2/league-service-parallel-final-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/league-service-parallel-final-lint.log": "d4d37254d76dfe5eff5c86a1a152cb94a6a74d9378644393c01b29782cc157d8",
+    "docs/testing-evidence/design-v2/league-service-parallel-final-types.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/league-service-parallel-final-types.log": "d15ea3a52b46df9153cdf448f94f3318dc93089281df467c32839192cf8b00df",
+    "docs/testing-evidence/design-v2/league-service-parallel-final.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/league-service-parallel-final.log": "068bc837801e09664175b354ad601e1d7b703fe940bccc78f31544691a2bfc55",
+    "docs/testing-evidence/design-v2/league-service-parallel-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/league-service-parallel-lint.log": "9aede175557cd078a5080a0918613dbc8dd6f766c37291b4bba5eeced59d2185",
+    "docs/testing-evidence/design-v2/league-service-parallel-main-audit.json": "f7a2d58a43eaf6ddbc80663c2b3eeecd0ef2af027b0ea72228a38efe47a52a29",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-before-sdk-error-characterization.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-before-sdk-error-characterization.log": "b62e6c67ffc4d26b171e727a262b10074ddb7ed4bf87fffa10e798294b60a115",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-coverage-final.json": "a3e4fc22b460841c4a66824827f5e50570cf79e4fed93e862884bedc0facccc8",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-coverage-summary.json": "48f647190da3ae0e3e88dcb5ae1136c4c9a77aaf36d1ce1c40999d615781505a",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-dispatch-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-dispatch-red.log": "662cc7ec51c06edeb2affea5902e4cbad146b36e5d41a8f126f15c59b73fb1b8",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-final.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-final.log": "1ff509b1211feb53d9154b9d0b2b8ad74d9baef9696e24b47241853c2ff5d9bf",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-fixture-types.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-fixture-types.log": "024c391017ec965b78802817181f12a7ea95c160c257cca998e77765bdf580eb",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-green.log": "abc66b5744cbea87116150c378111789aa3cc31ede7fae69e4ab634bc8a49587",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-handover-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-handover-red.log": "5cb93965f8f58f5f68ce2532690ccd036fde2a04d1a7aa6c194d21b10b3f03fb",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-lint.log": "1e07c744b22183a5c305f9da40be066c2748d4d1f3c8ff0bae5ca562c436ca0c",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-missing-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-missing-red.log": "8ceed961a5c72e883a4ad37d41ab228643fb2ff926ec54d0767332af1dd9d594",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-red.log": "ce6fe3a4d3474ff053d445e085d200e7f5fe2f95b2423032dff9deb7c75405e3",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-types-before-fixture-correction.exit": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-types-before-fixture-correction.log": "fe1d5123104faebfcbbe795d9b127e8f0bed3e595e4cb818c93c3c8a6d156d9b",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-types.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/league-service-parallel-owner-types.log": "d15ea3a52b46df9153cdf448f94f3318dc93089281df467c32839192cf8b00df",
+    "docs/testing-evidence/design-v2/league-service-parallel-remote-main-escalated.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/league-service-parallel-remote-main-escalated.log": "0f6db950fd296a803095ab16538ad2f1e97ccb9f9e6d9e2e2b2205af59b2b4e2",
+    "docs/testing-evidence/design-v2/league-service-parallel-remote-main.exit": "56292515f7d3a7110811eb8de26b3f75f82a0766aa5a1fd66ebcfcb84fe6d5ff",
+    "docs/testing-evidence/design-v2/league-service-parallel-remote-main.log": "54afcc3ede752cfc276ce13db73223e236c1d00e02b65e7d086dae18413ebacb",
+    "docs/testing-evidence/design-v2/league-service-parallel-types.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/league-service-parallel-types.log": "d15ea3a52b46df9153cdf448f94f3318dc93089281df467c32839192cf8b00df",
+    "docs/testing-evidence/design-v2/league-service-parallel-vitest.mjs": "e07b2ae80da4806fdf46b5d0fb1f17a327f80b026c2e75f326d0f00ae91dca66",
+    "src/app/core/song-league/song-league-boundary.spec.ts": "4af4a3de5ae0a3990a6b89c7a599fd24094eb4b15140469758baf6fd457d466f",
+    "src/app/core/song-league/song-league-creation-owner.spec.ts": "f9647fe2d56ac42e14a8a218a99a2aa282ab6194ca3e236f23d7e7df4b8b094b",
+    "src/app/core/song-league/song-league.service.spec.ts": "d36563ee62c92c01616ba3ed797cd251982be9e13950571edff4005d2e523fe0",
+    "src/app/core/song-league/song-league.service.ts": "9201a78583834bc42a605ba7bf2c79ce43159c5d076e68cf09ff346296a88354"
+  },
+  "previousMilestone": {
+    "testsPassed": 102,
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 98.12,
+    "log": "league-service-parallel-final.log",
+    "supersededBy": "Owner/session follow-up below; previous metrics do not describe current source."
+  },
+  "ownerSessionFollowup": {
+    "redEvidence": [
+      {
+        "log": "league-service-parallel-owner-red.log",
+        "exit": 1,
+        "failed": 8,
+        "filteredOut": 0
+      },
+      {
+        "log": "league-service-parallel-owner-handover-red.log",
+        "exit": 1,
+        "failed": 1,
+        "filteredOut": 8
+      },
+      {
+        "log": "league-service-parallel-owner-missing-red.log",
+        "exit": 1,
+        "failed": 1,
+        "filteredOut": 9
+      },
+      {
+        "log": "league-service-parallel-owner-dispatch-red.log",
+        "exit": 1,
+        "failed": 1,
+        "filteredOut": 10
+      }
+    ],
+    "fix": "Reuse shared SessionLifecycleService; pending map keyed by captured generation+local SDK user+normalized form. Session abort immediately clears pending intents. Guard generation before/after SDK readiness and local getSession, including caller handovers. Validate same owner after RPC; stale/missing postoperation owner AbortError; initial missing login retains login error. Attach generation.signal via actual PostgREST RPC.abortSignal to prevent delayed-token old-generation dispatch. No remote getUser auth requests, whole sessions or access tokens retained.",
+    "behavior": "A\u2192B\u2192A within current generation uses independent raw invite/idempotency secrets and retains only A own uncertain intent. Same-user logout/relogin creates new keys. Old generation acknowledgement exposes no old invitation. Actual SDK access-token latch cancelled by logout dispatches no mutation. Current-session SDK read errors retain original identity.",
+    "fixtureChanges": "Existing RPC test fakes now support the real builder abortSignal contract and local getSession; direct constructor fixtures receive shared lifecycle. Existing assertions retained.",
+    "failedFixtureAttempt": "Generic vi.fn ReturnType inferred callable/constructable union; one owner fake adapter call failed TypeScript compilation. Corrected to Mock<(...args)=>Promise<any>>, preserved compiler/type failure logs. No production workaround."
+  }
+}

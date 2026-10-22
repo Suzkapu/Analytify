@@ -1,0 +1,93 @@
+{
+  "date": "2026-10-21",
+  "status": "Navigation component parity and responsive continuity verified; desktop destination intentionally remains mobile-only discovery",
+  "canonical": {
+    "frame": "688:41515",
+    "sectionHeading": "688:41748",
+    "font": "Outfit20/600/28 in24pxtext box",
+    "responsiveDescription": "25:29; navigation-responsive-handoff.json"
+  },
+  "change": "Correct line-height24\u219228 while preserving canonical24pxtext box and downstream stack geometry",
+  "verification": [
+    {
+      "name": "NativeTypographyRED",
+      "exit": 1,
+      "detail": "Expected28pxline-height, actual24px; before source correction"
+    },
+    {
+      "name": "nativeTypographyGeometry",
+      "exit": 0,
+      "passed": 4,
+      "samples": 12,
+      "detail": "4projects\u00d71440/390/320widths; styles/height/nooverflow;8diagnosticcaptures"
+    },
+    {
+      "name": "reviewedMobileVisualAndAffectedSelectionMatrix",
+      "exit": 0,
+      "passed": 12,
+      "detail": "4newmobilecomponentbaselines manuallyreviewedbeforecopy;8existingnormal/reducedpreferencecases preserved"
+    },
+    {
+      "name": "lint",
+      "exit": 0
+    },
+    {
+      "name": "FriendsBrowserRegression",
+      "exit": 0,
+      "passed": 16,
+      "detail": "All4projects normal/reduced, invitation/QR/dialog geometry/keyboard/axe/permissions/recovery/actualSDKheldlogout"
+    },
+    {
+      "name": "DesktopMobileContinuityVisual",
+      "exit": 0,
+      "passed": 4,
+      "detail": "Eight manually reviewed desktop/mobile component baselines; desktop Navigation destination hidden, mobile aria-current restored",
+      "log": "navigation-continuity-visual.log"
+    }
+  ],
+  "broaderEvidence": "navigation-friends-contract-final-ci: 2108 frontend,215 worker,81 edge passed before later Friends grouping, Angular HTTP bridge and Stats companion/fix changes",
+  "limitations": [
+    "Component visual approval covers default three selected preferences and resize continuity; no desktop Navigation destination was added.",
+    "Later Friends/shared icon styles and Stats changes await a current combined CI.",
+    "Real Friends HTTP and Angular composition verified separately; hosted Auth/OAuth/Realtime/full migration chain remain unverified.",
+    "No final commit; a8a7a39 remains last checkpoint."
+  ],
+  "sha256": {
+    "src/app/features/settings/v2-settings-navigation.component.ts": "ec42eb12710c3f9799fc8a63fd22fdddf71080d994cb41378dfad7a4596f4e7a",
+    "e2e/design-v2-navigation.spec.ts": "40e72b3b07c0e8367d92f7b7513db191cf0b1caeac694b259cbc514f49d17add",
+    "docs/testing-evidence/design-v2/navigation-section-red.log": "5b62b832faed89769b99c15e420668e7c0d10434fe1ced605b1de251c8220b15",
+    "docs/testing-evidence/design-v2/navigation-section-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/navigation-section-green.log": "d63276a498975554a292212460b328255d28219ecf6adba1ca81c340fcb44943",
+    "docs/testing-evidence/design-v2/navigation-section-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/navigation-section-visual.log": "835c5272658507889f11102a0284a871c5ce57aeecdb033d277dc31bd7cb656e",
+    "docs/testing-evidence/design-v2/navigation-section-visual.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/navigation-section-lint.log": "1f0599bda32aab5a8c4de33cf08b950d1654c22445d6a133634449822a6bb9e3",
+    "docs/testing-evidence/design-v2/navigation-section-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/glow-friends-regression.log": "5d39d0356701f35258e936740927d50f3d8498c23ab9db6715470568893402b7",
+    "docs/testing-evidence/design-v2/glow-friends-regression.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/navigation-preferences-visual-review.json": "846cfb38bf7997efd751ffce024349dc4156f862dfe21ff5521f614f3e7d56b7",
+    "docs/testing-evidence/design-v2/glow-navigation-fresh-canonical-context.json": "1e4ebfc139368ab63aada6b2ab2d8a483625776e14ac8ac2b9d2f698bbcc981e",
+    "e2e/design-v2-navigation.spec.ts-snapshots/navigation-preferences-mobile-desktop-linux.png": "cafc5a200cb04937b2441658bec5b0560559b40a40704cd824747703d7cd7332",
+    "e2e/design-v2-navigation.spec.ts-snapshots/navigation-preferences-mobile-firefox-stats-linux.png": "6eedb68b87b833860033d572b3b573fc5afb9504cd12a2af4657750699848783",
+    "e2e/design-v2-navigation.spec.ts-snapshots/navigation-preferences-mobile-mobile-linux.png": "a993c511308e1c348ad15ad1cb9bc6c8a0e23185a078438ab1171d838d192f34",
+    "e2e/design-v2-navigation.spec.ts-snapshots/navigation-preferences-mobile-webkit-stats-linux.png": "e7b350290b76ec9a6802c868851b6a3b44973880b714c41e663c020c8231f802",
+    "docs/testing-evidence/design-v2/navigation-responsive-handoff.json": "2a4804ac81156d66abdff180cec0be12ee31153b1bc79696ce5f93ae24ba504a",
+    "docs/testing-evidence/design-v2/navigation-continuity-visual.log": "1526f659a892010d0f6d633337c7bd26ee0eaf358f4bea25f791b87c298be82a",
+    "docs/testing-evidence/design-v2/navigation-continuity-visual.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "e2e/design-v2-navigation.spec.ts-snapshots/navigation-preferences-desktop-desktop-linux.png": "d6d741684725742acda05a92628cd61c604fb321f5815b3ecd3b20e95f38274b",
+    "e2e/design-v2-navigation.spec.ts-snapshots/navigation-preferences-desktop-firefox-stats-linux.png": "016ec517f18f4cd441969a3506a804b7f9814c8f70cb5c73a54e6081522141d9",
+    "e2e/design-v2-navigation.spec.ts-snapshots/navigation-preferences-desktop-mobile-linux.png": "d6d741684725742acda05a92628cd61c604fb321f5815b3ecd3b20e95f38274b",
+    "e2e/design-v2-navigation.spec.ts-snapshots/navigation-preferences-desktop-webkit-stats-linux.png": "ca6d455391ac32de9045bf2cbf7c14435a769fcd3738e335906a0e003a39b2e5"
+  },
+  "priorScope": {
+    "date": "2026-10-20",
+    "status": "Scoped mobile Navigation component parity verified; desktop canonical screen remains missing",
+    "limitations": [
+      "Only mobile preferences component has approved newbaseline; desktopdiagnostics notcanonicalparity",
+      "No final current-tree combinedCI after this heading andparallel service changes yet",
+      "Friends browser has synthetic transports; real FriendsHTTP verified separately in friends-http-manifest.json",
+      "No finalcommit; a8a7a39 remainslastcheckpoint"
+    ],
+    "broaderEvidence": "glow-services-result.json: prior52ambient/glow and48Navigationcases, full1958frontendCI before heading/laterparallel service changes"
+  }
+}

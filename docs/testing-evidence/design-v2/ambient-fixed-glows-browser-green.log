@@ -1,0 +1,45 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test e2e/design-v2-ambient.spec.ts --workers=1 --output=docs/testing-evidence/design-v2/ambient-fixed-glows-green-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4200 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:15599) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:15599) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 24 tests using 1 worker
+
+(node:15910) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-ambient.spec.ts:15:5 › one ambient renderer persists through overlays, routes, and shell modes (2.2s)
+  ✓   2 [desktop] › e2e/design-v2-ambient.spec.ts:38:5 › v2 ambient layer is decorative, fixed-glow, particle-scroll-responsive, and reflow-safe (2.3s)
+  ✓   3 [desktop] › e2e/design-v2-ambient.spec.ts:94:7 › route content and focus survive with native transitions enabled (1.7s)
+  ✓   4 [desktop] › e2e/design-v2-ambient.spec.ts:94:7 › route content and focus survive with native transitions unavailable (1.7s)
+  ✓   5 [desktop] › e2e/design-v2-ambient.spec.ts:132:5 › v2 ambient layer remains static with reduced motion (901ms)
+  ✓   6 [desktop] › e2e/design-v2-ambient.spec.ts:151:5 › reduced motion suppresses native route snapshot animations without losing navigation (1.5s)
+(node:16833) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [mobile] › e2e/design-v2-ambient.spec.ts:15:5 › one ambient renderer persists through overlays, routes, and shell modes (2.9s)
+  ✓   8 [mobile] › e2e/design-v2-ambient.spec.ts:38:5 › v2 ambient layer is decorative, fixed-glow, particle-scroll-responsive, and reflow-safe (2.6s)
+  ✓   9 [mobile] › e2e/design-v2-ambient.spec.ts:94:7 › route content and focus survive with native transitions enabled (2.0s)
+  ✓  10 [mobile] › e2e/design-v2-ambient.spec.ts:94:7 › route content and focus survive with native transitions unavailable (1.7s)
+  ✓  11 [mobile] › e2e/design-v2-ambient.spec.ts:132:5 › v2 ambient layer remains static with reduced motion (945ms)
+  ✓  12 [mobile] › e2e/design-v2-ambient.spec.ts:151:5 › reduced motion suppresses native route snapshot animations without losing navigation (1.6s)
+(node:17727) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  13 [firefox-stats] › e2e/design-v2-ambient.spec.ts:15:5 › one ambient renderer persists through overlays, routes, and shell modes (3.3s)
+  ✓  14 [firefox-stats] › e2e/design-v2-ambient.spec.ts:38:5 › v2 ambient layer is decorative, fixed-glow, particle-scroll-responsive, and reflow-safe (2.3s)
+  ✓  15 [firefox-stats] › e2e/design-v2-ambient.spec.ts:94:7 › route content and focus survive with native transitions enabled (1.6s)
+  ✓  16 [firefox-stats] › e2e/design-v2-ambient.spec.ts:94:7 › route content and focus survive with native transitions unavailable (1.5s)
+  ✓  17 [firefox-stats] › e2e/design-v2-ambient.spec.ts:132:5 › v2 ambient layer remains static with reduced motion (821ms)
+  ✓  18 [firefox-stats] › e2e/design-v2-ambient.spec.ts:151:5 › reduced motion suppresses native route snapshot animations without losing navigation (1.4s)
+(node:18834) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  19 [webkit-stats] › e2e/design-v2-ambient.spec.ts:15:5 › one ambient renderer persists through overlays, routes, and shell modes (4.0s)
+  ✓  20 [webkit-stats] › e2e/design-v2-ambient.spec.ts:38:5 › v2 ambient layer is decorative, fixed-glow, particle-scroll-responsive, and reflow-safe (3.0s)
+  ✓  21 [webkit-stats] › e2e/design-v2-ambient.spec.ts:94:7 › route content and focus survive with native transitions enabled (3.0s)
+  ✓  22 [webkit-stats] › e2e/design-v2-ambient.spec.ts:94:7 › route content and focus survive with native transitions unavailable (2.6s)
+  ✓  23 [webkit-stats] › e2e/design-v2-ambient.spec.ts:132:5 › v2 ambient layer remains static with reduced motion (1.3s)
+  ✓  24 [webkit-stats] › e2e/design-v2-ambient.spec.ts:151:5 › reduced motion suppresses native route snapshot animations without losing navigation (2.0s)
+
+  24 passed (1.0m)

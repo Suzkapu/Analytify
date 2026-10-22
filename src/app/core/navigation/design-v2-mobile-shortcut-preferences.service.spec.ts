@@ -1,5 +1,6 @@
 import {TestBed} from '@angular/core/testing';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {Subject} from 'rxjs';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
 import {SessionLifecycleService} from '@core/auth/session-lifecycle.service';
 import {StorageService} from '@core/data-access/storage/storage.service';
@@ -17,18 +18,46 @@ describe('Per-user device shortcut preferences', () => {
   let lifecycle: SessionLifecycleService;
   let service: DesignV2MobileShortcutPreferencesService;
   let values: Map<string, string>;
+  let logout: Subject<void>;
+  let exiting: boolean;
   let storage: {hydrateItems: ReturnType<typeof vi.fn>; getItem: ReturnType<typeof vi.fn>; setLocalItemDurably: ReturnType<typeof vi.fn>};
   beforeEach(() => {
-    actor = 'owner-A'; values = new Map(); lifecycle = new SessionLifecycleService();
+    actor = 'owner-A'; values = new Map(); lifecycle = new SessionLifecycleService(); logout = new Subject<void>(); exiting = false;
     storage = {
       hydrateItems: vi.fn().mockResolvedValue(0),
       getItem: vi.fn((entry: string) => values.get(entry) ?? null),
       setLocalItemDurably: vi.fn(async (entry: string, value: string) => {values.set(entry, value);})
     };
     TestBed.configureTestingModule({providers: [DesignV2MobileShortcutPreferencesService,
-      {provide: SpotifyAuthService, useValue: {getUserId: () => actor}},
+      {provide: SpotifyAuthService, useValue: {sessionExiting: () => exiting, logout$: logout, getUserId: () => actor}},
       {provide: SessionLifecycleService, useValue: lifecycle}, {provide: StorageService, useValue: storage}]});
     service = TestBed.inject(DesignV2MobileShortcutPreferencesService);
+  });
+
+  it('blocks cached actions and reads as soon as exit starts, before logout subscribers run', async () => {
+    await service.load(); exiting = true;
+    await service.toggle('friends'); await service.reload(); await service.load(); await service.retry();
+    expect(service.selection()).toBeNull();
+    expect(storage.setLocalItemDurably).not.toHaveBeenCalled();
+    expect(storage.hydrateItems).toHaveBeenCalledOnce();
+    exiting = false; await service.load();
+    expect(service.selection()).toEqual(['playlists', 'stats', 'history']);
+  });
+
+  it('clears cached shortcuts and a pending draft on logout before actor storage changes', async () => {
+    await service.load();
+    const held = deferred<void>(); storage.setLocalItemDurably.mockReturnValueOnce(held.promise);
+    const saving = service.toggle('friends');
+    expect(service.selection()).toContain('friends');
+    logout.next();
+    expect(service.selection()).toBeNull();
+    expect(service.feedback()).toBe('');
+    held.reject(new Error('Old save failed')); await saving;
+    expect(service.selection()).toBeNull();
+    expect(service.error()).toBe('');
+    actor = 'owner-B'; values.set(key('owner-B'), '[]'); await service.load(); await service.retry();
+    expect(service.selection()).toEqual([]);
+    expect(storage.setLocalItemDurably).toHaveBeenCalledTimes(1);
   });
 
   it('loads defaults only after a successful strict device read', async () => {

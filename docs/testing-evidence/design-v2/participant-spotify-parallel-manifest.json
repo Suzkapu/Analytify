@@ -1,0 +1,174 @@
+{
+  "date": "2026-10-19",
+  "status": "Scoped service corrections and characterization complete; application-wide completion is not claimed.",
+  "scope": {
+    "production": [
+      "src/app/core/compare-room/participant-spotify.service.ts"
+    ],
+    "newSpecs": [
+      "src/app/core/compare-room/participant-spotify.boundaries.spec.ts",
+      "src/app/core/compare-room/participant-spotify.cancellation.spec.ts"
+    ],
+    "existingSpec": "src/app/core/compare-room/participant-spotify.service.spec.ts",
+    "sourceBeforeFixSha256": "3195fb42528a23db0df741abc2fb2464bd430f773f14ccdcc9e48b2003037a89"
+  },
+  "commands": {
+    "baseline": "npx ng test --watch=false --progress=false --include='src/app/core/compare-room/participant-spotify.service.spec.ts' --runner-config=docs/testing-evidence/design-v2/participant-spotify-parallel-vitest.config.mjs --coverage --coverage-include=src/app/core/compare-room/participant-spotify.service.ts",
+    "cancellationRed": "npx ng test --watch=false --progress=false --include='src/app/core/compare-room/participant-spotify.cancellation.spec.ts' --runner-config=docs/testing-evidence/design-v2/participant-spotify-parallel-vitest.config.mjs",
+    "final": "npx ng test --watch=false --progress=false --include='src/app/core/compare-room/participant-spotify*.spec.ts' --runner-config=docs/testing-evidence/design-v2/participant-spotify-parallel-vitest.config.mjs --coverage --coverage-include=src/app/core/compare-room/participant-spotify.service.ts",
+    "lint": "npx eslint src/app/core/compare-room/participant-spotify.service.ts src/app/core/compare-room/participant-spotify.boundaries.spec.ts src/app/core/compare-room/participant-spotify.cancellation.spec.ts",
+    "types": "npx tsc --noEmit -p tsconfig.spec.json"
+  },
+  "baseline": {
+    "log": "participant-spotify-parallel-baseline.log",
+    "exit": 0,
+    "passed": 14,
+    "coverage": {
+      "lines": 76.17,
+      "statements": 74.51,
+      "functions": 85.24,
+      "branches": 60.5
+    },
+    "limitation": "Existing companion scope only, not prior full-suite percentage; subsequent scoped run overwrote report directory."
+  },
+  "runs": [
+    {
+      "log": "participant-spotify-parallel-characterization.log",
+      "exit": 0,
+      "passed": 30
+    },
+    {
+      "log": "participant-spotify-parallel-expanded.log",
+      "exit": 0,
+      "passed": 53,
+      "coverage": {
+        "lines": 100,
+        "statements": 99.03,
+        "functions": 95.08,
+        "branches": 97.05
+      }
+    },
+    {
+      "log": "participant-spotify-parallel-cancellation-red.log",
+      "exit": 1,
+      "failed": 2,
+      "errors": 0,
+      "cases": [
+        "Pre-aborted save incorrectly starts account profile GET",
+        "In-flight owned recovery discovery remains subscribed after abort and publishes late operation mapping"
+      ]
+    },
+    {
+      "log": "participant-spotify-parallel-progress-red.log",
+      "exit": 1,
+      "failed": 3,
+      "errors": 0,
+      "cases": [
+        "Existing two cancellation regressions",
+        "Primitive cancellation after acknowledged100-track replacement incorrectly reports0 added tracks"
+      ]
+    }
+  ],
+  "changes": [
+    "Honor caller abort at save entry, during profile/discovery GET and retry cooldown, and after discovery before stale mapping publication.",
+    "Preserve acknowledged private playlist creation mappings across cancellation so exact same-ID retry prevents duplicate/orphan creations.",
+    "Normalize primitive/null track mutation failures to Error with original cause and acknowledged batch count; preserve original object/Error/HttpErrorResponse identity."
+  ],
+  "coveredBoundaries": [
+    "Strict public playlist reference authority/path/query/fragment/credential validation and metadata read permissions.",
+    "Transient participant Authorization/context headers, owned/collaborative filtering, sparse/malformed pagination and Liked Songs.",
+    "Track normalization, Spotify URI reconstruction, cache positions, deduplication and unavailable/episode/incomplete rows.",
+    "GET/POST/PUT429 delay/retry ceilings and cancellation during rate-limit cooldown.",
+    "Private creation, operation marker description limits, account identity, invalid response rejection and fingerprint conflict protection.",
+    "Public-seeded corrupt operation mapping recovery, account/owner matching, pagination and stale metadata/items404 discovery/recreation.",
+    "Private operation sync creation, saved metadata idempotence, empty replacement, first/append batches and partial failure counts.",
+    "Cancelled profile/discovery/create mutations, no post-cancel discovery mapping writes, acknowledged-create same-ID recovery and string/null abort reason progress."
+  ],
+  "final": {
+    "log": "participant-spotify-parallel-green.log",
+    "exit": 0,
+    "files": 3,
+    "passed": 64,
+    "newCases": 50,
+    "skipped": 0,
+    "errors": 0,
+    "coverage": {
+      "lines": {
+        "total": 286,
+        "covered": 286,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 318,
+        "covered": 318,
+        "skipped": 0,
+        "pct": 100
+      },
+      "functions": {
+        "total": 61,
+        "covered": 61,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 240,
+        "covered": 238,
+        "skipped": 0,
+        "pct": 99.16
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": "Unknown"
+      }
+    }
+  },
+  "checks": [
+    {
+      "log": "participant-spotify-parallel-lint.log",
+      "exit": 0
+    },
+    {
+      "log": "participant-spotify-parallel-types.log",
+      "exit": 0
+    }
+  ],
+  "remainingUncovered": [
+    "Line499 success-return playlistId || undefined fallback after successful playlist-ID validation.",
+    "Line694 describeError unknown non-Error fallback."
+  ],
+  "limitations": [
+    "Controlled Angular HTTP testing transport and in-memory storage; no hosted Spotify account/data, real notifications or native network used.",
+    "No Comparison UI redesign, new endpoint, relinking feature or obsolete caller restoration.",
+    "Existing companion tests remain unchanged, including legacy private mapping fixture access; new tests exercise public methods and transport/storage boundaries only.",
+    "Full CI/application-wide coverage and browser verification remain root responsibilities; this isolated report does not replace them.",
+    "No skips, exclusions, ignore annotations, gate changes, shared config/report/progress edits, commits or deployments."
+  ],
+  "hashes": {
+    "src/app/core/compare-room/participant-spotify.service.ts": "37aaa9101fbb90e9053f7a5681eae443db96fce5e92f0bd1ef85d1280b93857d",
+    "src/app/core/compare-room/participant-spotify.service.spec.ts": "4481930bf00df51cd729648cae3bb5810481b3af5f51c984a138445d91fbef23",
+    "src/app/core/compare-room/participant-spotify.boundaries.spec.ts": "360cc05665601fba6f75c4b68fc660f0960c362a1cffb4d762d4d8c9a2457f0d",
+    "src/app/core/compare-room/participant-spotify.cancellation.spec.ts": "fcc6465b417d9bb1f7db61797a4de2f77741053553189044017840a57a7c3b19",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-baseline.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-baseline.log": "1f0c320840c15655c46727ffa8fbae94e95eb1618e45eca309ff02b044f8d155",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-cancellation-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-cancellation-red.log": "b84a78a2b24a686e106ba06d919784d58b8fd20564ede0594b9c8b3f2c7a4a0a",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-characterization.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-characterization.log": "19bd5e90145b5f42c7d6107261b8c508406df9e3f89566b070917fa76553a8c2",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-expanded.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-expanded.log": "9c28be11037bea0bfb6989fc08d963c5b539a48d56df67c7da2a781ad3f52e18",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-green.log": "61c5539c3733d205f26322ec077b897199a465cb626cc0007f14dbdf8c5579bb",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-lint.log": "03aa61f9bc3bd0e55e637c1c11deaa72cfa9b69551fe62517e60c22b45d53a3d",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-progress-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-progress-red.log": "a80238f43527a244c491043ddbc09e3a351383a8485293900caf36b4efce30b1",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-types.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-types.log": "cef5dd024756998b2f374aba5f69ecfd22105bbdc289cc9e4adf0518988e97a3",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-vitest.config.mjs": "028d717e42183b69615982f62de7b31fb51a9dfafd923df34ff8446240c342b4",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-coverage/coverage-summary.json": "02fa753100b54ea20dc5c55880c279bd287c2a6bcaef8a549771183f476a4b45",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-coverage/lcov.info": "8d945e113ea575bf5080cdbe321bcdbbb08fef98ab156b16489d9a2b77170864"
+  }
+}

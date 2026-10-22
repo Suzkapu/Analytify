@@ -1,0 +1,273 @@
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http/vitest.config.mjs
+Application bundle generation complete. [2.738 seconds] - 2026-10-21T19:03:23.887Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ✓ |SpotiFront| integration/friends-http/friends-http.service.spec.ts > real Angular Friends adapter on the disposable HTTP stack > loads an actual SDK cached session and the actor-owned empty Friends inventory 24ms
+ × |SpotiFront| integration/friends-http/friends-http.service.spec.ts > real Angular Friends adapter on the disposable HTTP stack > runs recipient-owned acceptance and versioned removal/reconnection without changing independent grants 17ms
+   → expected { code: '42501', details: null, …(2) } to be null
+ ✓ |SpotiFront| integration/friends-http/friends-http.service.spec.ts > real Angular Friends adapter on the disposable HTTP stack > keeps revoked and declined pending requests unavailable across exact retries 46ms
+ ✓ |SpotiFront| integration/friends-http/friends-http.service.spec.ts > real Angular Friends adapter on the disposable HTTP stack > requires explicit isolated-backend readiness before any actual transport 2ms
+ ✓ |SpotiFront| integration/friends-http/friends-http.service.spec.ts > real Angular Friends adapter on the disposable HTTP stack > cancels at real adapter readiness and recovers in the next same-owner generation 5ms
+ ✓ |SpotiFront| integration/friends-http/friends-http.service.spec.ts > real Angular Friends adapter on the disposable HTTP stack > rejects a real HTTP response delivered after session invalidation, then recovers 7ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  21:03:24
+   Duration  937ms (transform 145ms, setup 281ms, import 147ms, tests 104ms, environment 300ms)
+
+(node:23440) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| integration/friends-http/friends-http.service.spec.ts > real Angular Friends adapter on the disposable HTTP stack > runs recipient-owned acceptance and versioned removal/reconnection without changing independent grants
+AssertionError: expected { code: '42501', details: null, …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "code": "42501",
+  "details": null,
+  "hint": null,
+  "message": "permission denied for table stats_access_requests",
+}
+
+ ❯ integration/friends-http/friends-http.service.spec.ts:78:23
+     76|   const stats = await client.from('stats_access_requests').select('*')…
+     77|   const playlists = await client.from('playlist_shares').select('*').e…
+     78|   expect(stats.error).toBeNull(); expect(playlists.error).toBeNull();
+       |                       ^
+     79|   expect(stats.data).toHaveLength(1); expect(playlists.data).toHaveLen…
+     80|   return {stats: stats.data, playlists: playlists.data};
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+2026-10-21 21:03:20.064 CEST [22929] LOG:  starting PostgreSQL 18.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 16.2.1 20260810, 64-bit
+2026-10-21 21:03:20.064 CEST [22929] LOG:  listening on Unix socket "/tmp/analytify-friends-http-5mNnxI/socket/.s.PGSQL.5432"
+2026-10-21 21:03:20.067 CEST [22935] LOG:  database system was shut down at 2026-10-21 21:03:20 CEST
+2026-10-21 21:03:20.068 CEST [22929] LOG:  database system is ready to accept connections
+2026-10-21 21:03:20.387 CEST [23016] ERROR:  permission denied for function list_friends
+2026-10-21 21:03:20.387 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT "public"."list_friends"() pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "list_friends".* FROM "pgrst_source" AS "list_friends"   ) _postgrest_t
+2026-10-21 21:03:20.391 CEST [23016] ERROR:  Authentication is required.
+2026-10-21 21:03:20.391 CEST [23016] CONTEXT:  PL/pgSQL function private.require_friend_actor() line 4 at RAISE
+	PL/pgSQL function public.list_friends(integer,integer) line 2 during statement block local variable initialization
+2026-10-21 21:03:20.391 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT "public"."list_friends"() pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "list_friends".* FROM "pgrst_source" AS "list_friends"   ) _postgrest_t
+2026-10-21 21:03:20.395 CEST [23016] ERROR:  A verified Spotify profile is required.
+2026-10-21 21:03:20.395 CEST [23016] CONTEXT:  PL/pgSQL function private.require_friend_actor() line 6 at RAISE
+	PL/pgSQL function public.list_friends(integer,integer) line 2 during statement block local variable initialization
+2026-10-21 21:03:20.395 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT "public"."list_friends"() pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "list_friends".* FROM "pgrst_source" AS "list_friends"   ) _postgrest_t
+2026-10-21 21:03:20.436 CEST [23016] ERROR:  permission denied for table users
+2026-10-21 21:03:20.436 CEST [23016] STATEMENT:  WITH pgrst_source AS (UPDATE "public"."users" SET "spotify_id" = "pgrst_body"."spotify_id" FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "spotify_id" FROM json_to_record(pgrst_payload.json_data) AS _("spotify_id" character varying(255)) ) pgrst_body  WHERE  "public"."users"."id" = $2 RETURNING 1) SELECT '' AS total_result_set, pg_catalog.count(_postgrest_t) AS page_total, array[]::text[] AS header, ''::text AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT * FROM pgrst_source) _postgrest_t
+2026-10-21 21:03:20.487 CEST [23016] ERROR:  A secure invitation token is required.
+2026-10-21 21:03:20.487 CEST [23016] CONTEXT:  PL/pgSQL function public.create_friend_invitation(text) line 5 at RAISE
+2026-10-21 21:03:20.487 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_claim_token" FROM json_to_record(pgrst_payload.json_data) AS _("p_claim_token" text) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."create_friend_invitation"("p_claim_token" := pgrst_body."p_claim_token") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "create_friend_invitation".* FROM "pgrst_source" AS "create_friend_invitation"   ) _postgrest_t
+2026-10-21 21:03:20.489 CEST [23016] ERROR:  A secure invitation token is required.
+2026-10-21 21:03:20.489 CEST [23016] CONTEXT:  PL/pgSQL function public.create_friend_invitation(text) line 5 at RAISE
+2026-10-21 21:03:20.489 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_claim_token" FROM json_to_record(pgrst_payload.json_data) AS _("p_claim_token" text) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."create_friend_invitation"("p_claim_token" := pgrst_body."p_claim_token") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "create_friend_invitation".* FROM "pgrst_source" AS "create_friend_invitation"   ) _postgrest_t
+2026-10-21 21:03:20.491 CEST [23016] ERROR:  A secure invitation token is required.
+2026-10-21 21:03:20.491 CEST [23016] CONTEXT:  PL/pgSQL function public.create_friend_invitation(text) line 5 at RAISE
+2026-10-21 21:03:20.491 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_claim_token" FROM json_to_record(pgrst_payload.json_data) AS _("p_claim_token" text) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."create_friend_invitation"("p_claim_token" := pgrst_body."p_claim_token") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "create_friend_invitation".* FROM "pgrst_source" AS "create_friend_invitation"   ) _postgrest_t
+2026-10-21 21:03:20.492 CEST [23016] ERROR:  A secure invitation token is required.
+2026-10-21 21:03:20.492 CEST [23016] CONTEXT:  PL/pgSQL function public.create_friend_invitation(text) line 5 at RAISE
+2026-10-21 21:03:20.492 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_claim_token" FROM json_to_record(pgrst_payload.json_data) AS _("p_claim_token" text) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."create_friend_invitation"("p_claim_token" := pgrst_body."p_claim_token") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "create_friend_invitation".* FROM "pgrst_source" AS "create_friend_invitation"   ) _postgrest_t
+2026-10-21 21:03:20.494 CEST [23016] ERROR:  This invitation is unavailable.
+2026-10-21 21:03:20.494 CEST [23016] CONTEXT:  PL/pgSQL function public.create_friend_invitation(text) line 12 at RAISE
+2026-10-21 21:03:20.494 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_claim_token" FROM json_to_record(pgrst_payload.json_data) AS _("p_claim_token" text) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."create_friend_invitation"("p_claim_token" := pgrst_body."p_claim_token") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "create_friend_invitation".* FROM "pgrst_source" AS "create_friend_invitation"   ) _postgrest_t
+2026-10-21 21:03:20.497 CEST [23016] ERROR:  This invitation is unavailable.
+2026-10-21 21:03:20.497 CEST [23016] CONTEXT:  PL/pgSQL function public.revoke_friend_invitation(uuid) line 6 at RAISE
+2026-10-21 21:03:20.497 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_invitation_id" FROM json_to_record(pgrst_payload.json_data) AS _("p_invitation_id" uuid) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."revoke_friend_invitation"("p_invitation_id" := pgrst_body."p_invitation_id") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "revoke_friend_invitation".* FROM "pgrst_source" AS "revoke_friend_invitation"   ) _postgrest_t
+2026-10-21 21:03:20.514 CEST [23016] ERROR:  This invitation is unavailable.
+2026-10-21 21:03:20.514 CEST [23016] CONTEXT:  PL/pgSQL function public.receive_friend_invitation(text) line 11 at RAISE
+2026-10-21 21:03:20.514 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_claim_token" FROM json_to_record(pgrst_payload.json_data) AS _("p_claim_token" text) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."receive_friend_invitation"("p_claim_token" := pgrst_body."p_claim_token") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "receive_friend_invitation".* FROM "pgrst_source" AS "receive_friend_invitation"   ) _postgrest_t
+2026-10-21 21:03:20.517 CEST [23016] ERROR:  This invitation is unavailable.
+2026-10-21 21:03:20.517 CEST [23016] CONTEXT:  PL/pgSQL function private.decide_friend_invitation(uuid,boolean,boolean) line 12 at RAISE
+	PL/pgSQL function public.respond_friend_request(uuid,boolean) line 3 at RETURN
+2026-10-21 21:03:20.517 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_invitation_id", "p_accept" FROM json_to_record(pgrst_payload.json_data) AS _("p_invitation_id" uuid, "p_accept" boolean) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."respond_friend_request"("p_invitation_id" := pgrst_body."p_invitation_id", "p_accept" := pgrst_body."p_accept") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "respond_friend_request".* FROM "pgrst_source" AS "respond_friend_request"   ) _postgrest_t
+2026-10-21 21:03:20.580 CEST [23016] ERROR:  This invitation is unavailable.
+2026-10-21 21:03:20.580 CEST [23016] CONTEXT:  PL/pgSQL function private.decide_friend_invitation(uuid,boolean,boolean) line 12 at RAISE
+	PL/pgSQL function public.respond_friend_request(uuid,boolean) line 3 at RETURN
+2026-10-21 21:03:20.580 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_invitation_id", "p_accept" FROM json_to_record(pgrst_payload.json_data) AS _("p_invitation_id" uuid, "p_accept" boolean) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."respond_friend_request"("p_invitation_id" := pgrst_body."p_invitation_id", "p_accept" := pgrst_body."p_accept") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "respond_friend_request".* FROM "pgrst_source" AS "respond_friend_request"   ) _postgrest_t
+2026-10-21 21:03:20.638 CEST [23068] ERROR:  This invitation is unavailable.
+2026-10-21 21:03:20.638 CEST [23068] CONTEXT:  PL/pgSQL function public.receive_friend_invitation(text) line 11 at RAISE
+2026-10-21 21:03:20.638 CEST [23068] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_claim_token" FROM json_to_record(pgrst_payload.json_data) AS _("p_claim_token" text) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."receive_friend_invitation"("p_claim_token" := pgrst_body."p_claim_token") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "receive_friend_invitation".* FROM "pgrst_source" AS "receive_friend_invitation"   ) _postgrest_t
+2026-10-21 21:03:20.670 CEST [23068] ERROR:  This invitation has already been answered.
+2026-10-21 21:03:20.670 CEST [23068] CONTEXT:  PL/pgSQL function private.decide_friend_invitation(uuid,boolean,boolean) line 16 at RAISE
+	PL/pgSQL function public.respond_friend_invitation(text,boolean) line 10 at RETURN
+2026-10-21 21:03:20.670 CEST [23068] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_claim_token", "p_accept" FROM json_to_record(pgrst_payload.json_data) AS _("p_claim_token" text, "p_accept" boolean) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."respond_friend_invitation"("p_claim_token" := pgrst_body."p_claim_token", "p_accept" := pgrst_body."p_accept") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "respond_friend_invitation".* FROM "pgrst_source" AS "respond_friend_invitation"   ) _postgrest_t
+2026-10-21 21:03:20.712 CEST [23016] ERROR:  This invitation is unavailable.
+2026-10-21 21:03:20.712 CEST [23016] CONTEXT:  PL/pgSQL function private.decide_friend_invitation(uuid,boolean,boolean) line 12 at RAISE
+	PL/pgSQL function public.respond_friend_request(uuid,boolean) line 3 at RETURN
+2026-10-21 21:03:20.712 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_invitation_id", "p_accept" FROM json_to_record(pgrst_payload.json_data) AS _("p_invitation_id" uuid, "p_accept" boolean) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."respond_friend_request"("p_invitation_id" := pgrst_body."p_invitation_id", "p_accept" := pgrst_body."p_accept") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "respond_friend_request".* FROM "pgrst_source" AS "respond_friend_request"   ) _postgrest_t
+2026-10-21 21:03:20.734 CEST [23068] ERROR:  Invalid friends page.
+2026-10-21 21:03:20.734 CEST [23068] CONTEXT:  PL/pgSQL function public.list_friends(integer,integer) line 5 at RAISE
+2026-10-21 21:03:20.734 CEST [23068] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_limit", "p_offset" FROM json_to_record(pgrst_payload.json_data) AS _("p_limit" integer, "p_offset" integer) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."list_friends"("p_limit" := pgrst_body."p_limit", "p_offset" := pgrst_body."p_offset") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "list_friends".* FROM "pgrst_source" AS "list_friends"   ) _postgrest_t
+2026-10-21 21:03:20.736 CEST [23016] ERROR:  Invalid friends page.
+2026-10-21 21:03:20.736 CEST [23016] CONTEXT:  PL/pgSQL function public.list_friends(integer,integer) line 5 at RAISE
+2026-10-21 21:03:20.736 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_limit", "p_offset" FROM json_to_record(pgrst_payload.json_data) AS _("p_limit" integer, "p_offset" integer) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."list_friends"("p_limit" := pgrst_body."p_limit", "p_offset" := pgrst_body."p_offset") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "list_friends".* FROM "pgrst_source" AS "list_friends"   ) _postgrest_t
+2026-10-21 21:03:20.738 CEST [23068] ERROR:  Invalid friends page.
+2026-10-21 21:03:20.738 CEST [23068] CONTEXT:  PL/pgSQL function public.list_friends(integer,integer) line 5 at RAISE
+2026-10-21 21:03:20.738 CEST [23068] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_limit", "p_offset" FROM json_to_record(pgrst_payload.json_data) AS _("p_limit" integer, "p_offset" integer) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."list_friends"("p_limit" := pgrst_body."p_limit", "p_offset" := pgrst_body."p_offset") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "list_friends".* FROM "pgrst_source" AS "list_friends"   ) _postgrest_t
+2026-10-21 21:03:20.740 CEST [23016] ERROR:  Invalid friends page.
+2026-10-21 21:03:20.740 CEST [23016] CONTEXT:  PL/pgSQL function public.list_friends(integer,integer) line 5 at RAISE
+2026-10-21 21:03:20.740 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_limit", "p_offset" FROM json_to_record(pgrst_payload.json_data) AS _("p_limit" integer, "p_offset" integer) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."list_friends"("p_limit" := pgrst_body."p_limit", "p_offset" := pgrst_body."p_offset") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "list_friends".* FROM "pgrst_source" AS "list_friends"   ) _postgrest_t
+2026-10-21 21:03:20.742 CEST [23068] ERROR:  Invalid invitation page.
+2026-10-21 21:03:20.742 CEST [23068] CONTEXT:  PL/pgSQL function public.list_friend_invitations(integer,integer) line 5 at RAISE
+2026-10-21 21:03:20.742 CEST [23068] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_limit", "p_offset" FROM json_to_record(pgrst_payload.json_data) AS _("p_limit" integer, "p_offset" integer) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."list_friend_invitations"("p_limit" := pgrst_body."p_limit", "p_offset" := pgrst_body."p_offset") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "list_friend_invitations".* FROM "pgrst_source" AS "list_friend_invitations"   ) _postgrest_t
+2026-10-21 21:03:20.744 CEST [23016] ERROR:  Invalid invitation page.
+2026-10-21 21:03:20.744 CEST [23016] CONTEXT:  PL/pgSQL function public.list_friend_invitations(integer,integer) line 5 at RAISE
+2026-10-21 21:03:20.744 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_limit", "p_offset" FROM json_to_record(pgrst_payload.json_data) AS _("p_limit" integer, "p_offset" integer) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."list_friend_invitations"("p_limit" := pgrst_body."p_limit", "p_offset" := pgrst_body."p_offset") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "list_friend_invitations".* FROM "pgrst_source" AS "list_friend_invitations"   ) _postgrest_t
+2026-10-21 21:03:20.746 CEST [23068] ERROR:  Invalid invitation page.
+2026-10-21 21:03:20.746 CEST [23068] CONTEXT:  PL/pgSQL function public.list_friend_invitations(integer,integer) line 5 at RAISE
+2026-10-21 21:03:20.746 CEST [23068] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_limit", "p_offset" FROM json_to_record(pgrst_payload.json_data) AS _("p_limit" integer, "p_offset" integer) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."list_friend_invitations"("p_limit" := pgrst_body."p_limit", "p_offset" := pgrst_body."p_offset") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "list_friend_invitations".* FROM "pgrst_source" AS "list_friend_invitations"   ) _postgrest_t
+2026-10-21 21:03:20.748 CEST [23016] ERROR:  Invalid invitation page.
+2026-10-21 21:03:20.748 CEST [23016] CONTEXT:  PL/pgSQL function public.list_friend_invitations(integer,integer) line 5 at RAISE
+2026-10-21 21:03:20.748 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_limit", "p_offset" FROM json_to_record(pgrst_payload.json_data) AS _("p_limit" integer, "p_offset" integer) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."list_friend_invitations"("p_limit" := pgrst_body."p_limit", "p_offset" := pgrst_body."p_offset") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "list_friend_invitations".* FROM "pgrst_source" AS "list_friend_invitations"   ) _postgrest_t
+2026-10-21 21:03:20.751 CEST [23068] ERROR:  Invalid request page.
+2026-10-21 21:03:20.751 CEST [23068] CONTEXT:  PL/pgSQL function public.list_friend_requests(integer,integer) line 5 at RAISE
+2026-10-21 21:03:20.751 CEST [23068] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_limit", "p_offset" FROM json_to_record(pgrst_payload.json_data) AS _("p_limit" integer, "p_offset" integer) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."list_friend_requests"("p_limit" := pgrst_body."p_limit", "p_offset" := pgrst_body."p_offset") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "list_friend_requests".* FROM "pgrst_source" AS "list_friend_requests"   ) _postgrest_t
+2026-10-21 21:03:20.753 CEST [23016] ERROR:  Invalid request page.
+2026-10-21 21:03:20.753 CEST [23016] CONTEXT:  PL/pgSQL function public.list_friend_requests(integer,integer) line 5 at RAISE
+2026-10-21 21:03:20.753 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_limit", "p_offset" FROM json_to_record(pgrst_payload.json_data) AS _("p_limit" integer, "p_offset" integer) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."list_friend_requests"("p_limit" := pgrst_body."p_limit", "p_offset" := pgrst_body."p_offset") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "list_friend_requests".* FROM "pgrst_source" AS "list_friend_requests"   ) _postgrest_t
+2026-10-21 21:03:20.758 CEST [23068] ERROR:  Invalid request page.
+2026-10-21 21:03:20.758 CEST [23068] CONTEXT:  PL/pgSQL function public.list_friend_requests(integer,integer) line 5 at RAISE
+2026-10-21 21:03:20.758 CEST [23068] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_limit", "p_offset" FROM json_to_record(pgrst_payload.json_data) AS _("p_limit" integer, "p_offset" integer) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."list_friend_requests"("p_limit" := pgrst_body."p_limit", "p_offset" := pgrst_body."p_offset") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "list_friend_requests".* FROM "pgrst_source" AS "list_friend_requests"   ) _postgrest_t
+2026-10-21 21:03:20.761 CEST [23016] ERROR:  Invalid request page.
+2026-10-21 21:03:20.761 CEST [23016] CONTEXT:  PL/pgSQL function public.list_friend_requests(integer,integer) line 5 at RAISE
+2026-10-21 21:03:20.761 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_limit", "p_offset" FROM json_to_record(pgrst_payload.json_data) AS _("p_limit" integer, "p_offset" integer) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."list_friend_requests"("p_limit" := pgrst_body."p_limit", "p_offset" := pgrst_body."p_offset") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "list_friend_requests".* FROM "pgrst_source" AS "list_friend_requests"   ) _postgrest_t
+2026-10-21 21:03:24.894 CEST [23068] ERROR:  permission denied for table stats_access_requests
+2026-10-21 21:03:24.894 CEST [23068] STATEMENT:  WITH pgrst_source AS ( SELECT "public"."stats_access_requests".* FROM "public"."stats_access_requests" WHERE  "public"."stats_access_requests"."owner_user_id" = $1    )  SELECT null::bigint AS total_result_set, pg_catalog.count(_postgrest_t) AS page_total, coalesce(json_agg(_postgrest_t), '[]') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM ( SELECT * FROM pgrst_source ) _postgrest_t
+2026-10-21 21:03:24.928 CEST [23016] ERROR:  This invitation is unavailable.
+2026-10-21 21:03:24.928 CEST [23016] CONTEXT:  PL/pgSQL function private.decide_friend_invitation(uuid,boolean,boolean) line 12 at RAISE
+	PL/pgSQL function public.respond_friend_request(uuid,boolean) line 3 at RETURN
+2026-10-21 21:03:24.928 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_invitation_id", "p_accept" FROM json_to_record(pgrst_payload.json_data) AS _("p_invitation_id" uuid, "p_accept" boolean) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."respond_friend_request"("p_invitation_id" := pgrst_body."p_invitation_id", "p_accept" := pgrst_body."p_accept") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "respond_friend_request".* FROM "pgrst_source" AS "respond_friend_request"   ) _postgrest_t
+2026-10-21 21:03:24.947 CEST [23016] ERROR:  This invitation has already been answered.
+2026-10-21 21:03:24.947 CEST [23016] CONTEXT:  PL/pgSQL function private.decide_friend_invitation(uuid,boolean,boolean) line 16 at RAISE
+	PL/pgSQL function public.respond_friend_request(uuid,boolean) line 3 at RETURN
+2026-10-21 21:03:24.947 CEST [23016] STATEMENT:  WITH pgrst_source AS (SELECT pgrst_call.pgrst_scalar FROM (SELECT $1 AS json_data) pgrst_payload, LATERAL (SELECT "p_invitation_id", "p_accept" FROM json_to_record(pgrst_payload.json_data) AS _("p_invitation_id" uuid, "p_accept" boolean) LIMIT 1) pgrst_body , LATERAL (SELECT "public"."respond_friend_request"("p_invitation_id" := pgrst_body."p_invitation_id", "p_accept" := pgrst_body."p_accept") pgrst_scalar) pgrst_call) SELECT null::bigint AS total_result_set, 1 AS page_total, coalesce(json_agg(_postgrest_t.pgrst_scalar)->0, 'null') AS body, nullif(current_setting('response.headers', true), '') AS response_headers, nullif(current_setting('response.status', true), '') AS response_status, '' AS response_inserted FROM (SELECT "respond_friend_request".* FROM "pgrst_source" AS "respond_friend_request"   ) _postgrest_t
+
+file:///mnt/Storage/ProgrammingProjects/Analytify/scripts/test-isolated-friends-http-contract.mjs:364
+      process.stdout.write(error.stdout || ''); process.stderr.write(error.stderr || ''); throw new Error('Angular Friends HTTP contract failed.', {cause: error});
+                                                                                                ^
+
+Error: Angular Friends HTTP contract failed.
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/scripts/test-isolated-friends-http-contract.mjs:364:97
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///mnt/Storage/ProgrammingProjects/Analytify/scripts/test-isolated-friends-http-contract.mjs:358:19 {
+  [cause]: Error: Command failed: /usr/bin/node /mnt/Storage/ProgrammingProjects/Analytify/node_modules/@angular/cli/bin/ng.js test --watch=false --progress=false --ts-config=integration/friends-http/tsconfig.spec.json --include=/mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http/friends-http.service.spec.ts --runner-config=integration/friends-http/vitest.config.mjs
+  (node:23440) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+  (Use `node --trace-warnings ...` to show where the warning was created)
+  
+  ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+  
+   FAIL  |SpotiFront| integration/friends-http/friends-http.service.spec.ts > real Angular Friends adapter on the disposable HTTP stack > runs recipient-owned acceptance and versioned removal/reconnection without changing independent grants
+  AssertionError: expected { code: '42501', details: null, …(2) } to be null
+  
+  - Expected:
+  null
+  
+  + Received:
+  {
+    "code": "42501",
+    "details": null,
+    "hint": null,
+    "message": "permission denied for table stats_access_requests",
+  }
+  
+   ❯ integration/friends-http/friends-http.service.spec.ts:78:23
+       76|   const stats = await client.from('stats_access_requests').select('*')…
+       77|   const playlists = await client.from('playlist_shares').select('*').e…
+       78|   expect(stats.error).toBeNull(); expect(playlists.error).toBeNull();
+         |                       ^
+       79|   expect(stats.data).toHaveLength(1); expect(playlists.data).toHaveLen…
+       80|   return {stats: stats.data, playlists: playlists.data};
+   ❯ fulfilled chunk-M65JKFVJ.js:93:24
+   ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+   ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+   ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+   ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+   ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+   ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+  
+  ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+  
+  
+      at genericNodeError (node:internal/errors:999:15)
+      at wrappedFn (node:internal/errors:544:14)
+      at ChildProcess.exithandler (node:child_process:420:12)
+      at ChildProcess.emit (node:events:514:20)
+      at maybeClose (node:internal/child_process:1156:16)
+      at ChildProcess._handle.onexit (node:internal/child_process:334:5) {
+    code: 1,
+    killed: false,
+    signal: null,
+    cmd: '/usr/bin/node /mnt/Storage/ProgrammingProjects/Analytify/node_modules/@angular/cli/bin/ng.js test --watch=false --progress=false --ts-config=integration/friends-http/tsconfig.spec.json --include=/mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http/friends-http.service.spec.ts --runner-config=integration/friends-http/vitest.config.mjs',
+    stdout: 'Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/integration/friends-http/vitest.config.mjs\n' +
+      'Application bundle generation complete. [2.738 seconds] - 2026-10-21T19:03:23.887Z\n' +
+      '\n' +
+      '\n' +
+      ' RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify\n' +
+      '\n' +
+      ' ✓ |SpotiFront| integration/friends-http/friends-http.service.spec.ts > real Angular Friends adapter on the disposable HTTP stack > loads an actual SDK cached session and the actor-owned empty Friends inventory 24ms\n' +
+      ' × |SpotiFront| integration/friends-http/friends-http.service.spec.ts > real Angular Friends adapter on the disposable HTTP stack > runs recipient-owned acceptance and versioned removal/reconnection without changing independent grants 17ms\n' +
+      "   → expected { code: '42501', details: null, …(2) } to be null\n" +
+      ' ✓ |SpotiFront| integration/friends-http/friends-http.service.spec.ts > real Angular Friends adapter on the disposable HTTP stack > keeps revoked and declined pending requests unavailable across exact retries 46ms\n' +
+      ' ✓ |SpotiFront| integration/friends-http/friends-http.service.spec.ts > real Angular Friends adapter on the disposable HTTP stack > requires explicit isolated-backend readiness before any actual transport 2ms\n' +
+      ' ✓ |SpotiFront| integration/friends-http/friends-http.service.spec.ts > real Angular Friends adapter on the disposable HTTP stack > cancels at real adapter readiness and recovers in the next same-owner generation 5ms\n' +
+      ' ✓ |SpotiFront| integration/friends-http/friends-http.service.spec.ts > real Angular Friends adapter on the disposable HTTP stack > rejects a real HTTP response delivered after session invalidation, then recovers 7ms\n' +
+      '\n' +
+      ' Test Files  1 failed (1)\n' +
+      '      Tests  1 failed | 5 passed (6)\n' +
+      '   Start at  21:03:24\n' +
+      '   Duration  937ms (transform 145ms, setup 281ms, import 147ms, tests 104ms, environment 300ms)\n' +
+      '\n',
+    stderr: '(node:23440) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.\n' +
+      '(Use `node --trace-warnings ...` to show where the warning was created)\n' +
+      '\n' +
+      '⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯\n' +
+      '\n' +
+      ' FAIL  |SpotiFront| integration/friends-http/friends-http.service.spec.ts > real Angular Friends adapter on the disposable HTTP stack > runs recipient-owned acceptance and versioned removal/reconnection without changing independent grants\n' +
+      "AssertionError: expected { code: '42501', details: null, …(2) } to be null\n" +
+      '\n' +
+      '- Expected:\n' +
+      'null\n' +
+      '\n' +
+      '+ Received:\n' +
+      '{\n' +
+      '  "code": "42501",\n' +
+      '  "details": null,\n' +
+      '  "hint": null,\n' +
+      '  "message": "permission denied for table stats_access_requests",\n' +
+      '}\n' +
+      '\n' +
+      ' ❯ integration/friends-http/friends-http.service.spec.ts:78:23\n' +
+      "     76|   const stats = await client.from('stats_access_requests').select('*')…\n" +
+      "     77|   const playlists = await client.from('playlist_shares').select('*').e…\n" +
+      '     78|   expect(stats.error).toBeNull(); expect(playlists.error).toBeNull();\n' +
+      '       |                       ^\n' +
+      '     79|   expect(stats.data).toHaveLength(1); expect(playlists.data).toHaveLen…\n' +
+      '     80|   return {stats: stats.data, playlists: playlists.data};\n' +
+      ' ❯ fulfilled chunk-M65JKFVJ.js:93:24\n' +
+      ' ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158\n' +
+      ' ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35\n' +
+      ' ❯ node_modules/zone.js/fesm2015/zone.js:2083:30\n' +
+      ' ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171\n' +
+      ' ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37\n' +
+      ' ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23\n' +
+      '\n' +
+      '⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\n' +
+      '\n'
+  }
+}
+
+Node.js v26.11.1

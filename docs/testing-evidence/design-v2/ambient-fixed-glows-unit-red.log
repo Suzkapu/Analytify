@@ -1,0 +1,46 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/shared/ambient/*.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [1.573 seconds] - 2026-10-19T17:42:29.711Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:13556) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:13562) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:13555) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ |SpotiFront| src/app/shared/ambient/ambient-background.math.spec.ts (6 tests | 1 failed) 15ms
+     × moves only particles on scroll and preserves the canonical route glow coordinates 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/ambient/ambient-background.math.spec.ts > ambient background math > moves only particles on scroll and preserves the canonical route glow coordinates
+AssertionError: expected 0.11066794590335223 to be 0.12816794590335223 // Object.is equality
+
+- Expected
++ Received
+
+- 0.12816794590335223
++ 0.11066794590335223
+
+ ❯ src/app/shared/ambient/ambient-background.math.spec.ts:45:24
+     43|     expect(top).not.toEqual(bottom);
+     44|     for (const key of ['primaryX', 'primaryY', 'secondaryX', 'secondar…
+     45|       expect(top[key]).toBe(route[key]);
+       |                        ^
+     46|       expect(bottom[key]).toBe(route[key]);
+     47|     }
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 26 passed (27)
+   Start at  19:42:29
+   Duration  1.03s (transform 126ms, setup 797ms, import 91ms, tests 285ms, environment 1.12s)
+

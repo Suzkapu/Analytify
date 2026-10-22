@@ -28,6 +28,16 @@
 }
 .v2-skip-link:focus { transform: translateY(0); }
 
+.v2-sidebar {position: fixed; z-index: 110; inset: 0 auto 0 0; display: none; width: 256px; border: 1px solid transparent;}
+@media (min-width: 761px) {
+  .design-v2[data-chrome='app'] {padding-left: 256px;}
+  .design-v2[data-chrome='app'].sidebar-compact {padding-left: 98px;}
+  .v2-sidebar {display: block;}
+  .sidebar-compact .v2-sidebar {width: 98px;}
+  .design-v2[data-chrome='app'] .v2-desktop-nav {display: none;}
+  .design-v2[data-chrome='app'] .v2-header__inner {grid-template-columns: 1fr auto; gap: 16px;}
+}
+
 .v2-header {
   position: sticky;
   z-index: 100;
@@ -289,6 +299,8 @@
   .v2-mobile-nav__link.is-active { color: #35e783; background: rgba(53, 231, 131, .1); }
   .v2-tools-dialog { top: auto; right: 8px; bottom: calc(86px + env(safe-area-inset-bottom)); left: 8px; width: auto; }
   .v2-footer { align-items: flex-start; padding-bottom: calc(92px + env(safe-area-inset-bottom)); flex-direction: column; gap: 7px; }
+  .design-v2:not(.has-mobile-shortcuts) .v2-main { padding-bottom: 24px; }
+  .design-v2:not(.has-mobile-shortcuts) .v2-footer { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
 }
 
 @media (max-width: 340px) {
@@ -300,4 +312,62 @@
 @media (prefers-reduced-motion: reduce) {
   .v2-skip-link,
   .v2-nav-link { transition: none; }
+}
+
+// App shell follows canonical Settings27:1209 and mobile header25:17.
+// Focus/public route treatment remains independent.
+.design-v2[data-chrome='app'] {
+  display: flex;
+  flex-direction: column;
+  --v2-page-gutter: var(--v2-space-8);
+  --v2-header-height: 0px;
+  .v2-header { display: none; }
+  .v2-main { flex: 1 0 auto; min-height: 0; padding-block: var(--v2-space-8); }
+  .v2-footer {
+    flex: none;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    min-height: 48px;
+    padding: 0 var(--v2-space-10);
+    gap: var(--v2-space-2);
+    border: 0;
+    background: transparent;
+    color: var(--v2-color-text-muted);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    > span { max-width: 100%; overflow-wrap: anywhere; }
+    a { flex: none; width: 160px; height: 48px; min-height: 48px; padding: 0 var(--v2-space-4); white-space: nowrap; color: var(--v2-color-text); font-size: 14px; font-weight: 600; line-height: 20px; }
+    a:hover, a:focus-visible { border-color: var(--v2-color-accent); }
+    .v2-footer-shield { position: relative; flex: none; width: 18px; height: 18px; }
+    .v2-footer-shield img { position: absolute; left: 0; top: 0; display: block; max-width: none; }
+  }
+}
+@media (max-width: 760px) {
+  .design-v2[data-chrome='app'] {
+    --v2-page-gutter: var(--v2-space-4);
+    --v2-header-height: 72px;
+    &.has-mobile-shortcuts { padding-bottom: calc(86px + env(safe-area-inset-bottom)); }
+    .v2-header { display: block; flex: none; min-height: 72px; border: 0; background: var(--v2-color-background-raised); backdrop-filter: none; }
+    .v2-header__inner { min-height: 72px; padding: 0 var(--v2-space-4); gap: var(--v2-space-2); }
+    .v2-brand { display: inline-flex; gap: var(--v2-space-2); font-size: 20px; font-weight: 600; line-height: 28px; letter-spacing: normal; }
+    .v2-brand img { width: 32px; height: 32px; border-radius: 0; }
+    .v2-tools-button { width: 100px; height: 48px; min-height: 48px; padding: var(--v2-space-3); gap: var(--v2-space-3); border: 0; background: transparent; font-size: 14px; font-weight: 600; line-height: 20px; }
+    .v2-tools-button:hover { background: var(--v2-color-surface); }
+    .v2-tools-button i { font-size: 20px; width: 20px; height: 20px; flex: none; }
+    .v2-tools-button span { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
+    .v2-main { padding: var(--v2-space-4); }
+    .v2-footer { flex-direction: row; align-items: center; padding: var(--v2-space-4); }
+    .v2-footer > span:first-child { min-width: 121px; flex-shrink: 0; white-space: nowrap; }
+    .v2-footer a { width: 129px; justify-content: flex-start; }
+    .v2-footer .v2-footer-shield { display: none; }
+  }
+}
+
+// The stable interface's global !important focus ring must not override the
+// canonical focus token on the new app header/footer controls.
+.design-v2[data-chrome='app'] .v2-header button:focus-visible,
+.design-v2[data-chrome='app'] .v2-footer a:focus-visible {
+  outline: 2px solid var(--v2-color-focus) !important;
+  outline-offset: 3px;
 }

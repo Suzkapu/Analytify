@@ -1,0 +1,27 @@
+Check supabase/functions/_shared/bounded-fetch.test.ts
+Check supabase/functions/_shared/request-security.test.ts
+Check supabase/functions/_shared/spotify-credential-crypto.test.ts
+TS2775 [ERROR]: Assertions require every name in the call target to be declared with an explicit type annotation.
+  check.equal(normalizeSpotifyCredentialKeyRing(key, '', '').writeVersion, 1);
+  ~~~~~~~~~~~
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/spotify-credential-crypto.test.ts:71:3
+
+    'check' needs an explicit type annotation.
+      const {default: check} = await import('node:assert/strict');
+                      ~~~~~
+        at file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/spotify-credential-crypto.test.ts:64:19
+
+TS2775 [ERROR]: Assertions require every name in the call target to be declared with an explicit type annotation.
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/spotify-credential-crypto.test.ts:74:3
+
+    'check' needs an explicit type annotation.
+      const {default: check} = await import('node:assert/strict');
+                      ~~~~~
+        at file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/_shared/spotify-credential-crypto.test.ts:64:19
+
+Found 2 errors.
+
+error: Type checking failed.
+
+  [33minfo:[39m The program failed type-checking, but it still might work correctly.
+  [36mhint:[39m Re-run with [4m--no-check[24m to skip type-checking.

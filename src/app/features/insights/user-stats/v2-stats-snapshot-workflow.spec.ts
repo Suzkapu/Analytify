@@ -13,7 +13,7 @@ import {V2UserStatsComponent} from './v2-user-stats.component';
 const timestamp = new Date(2026, 9, 3, 12).getTime(), id = String(timestamp);
 const song = {id: 'song', name: 'Selected song', artists: [{name: 'Artist'}], album: {images: []}};
 async function settle() {for (let i = 0; i < 12; i++) await Promise.resolve();}
-afterEach(() => {vi.restoreAllMocks(); TestBed.resetTestingModule();});
+afterEach(() => {vi.useRealTimers(); vi.restoreAllMocks(); TestBed.resetTestingModule();});
 async function setup() {
   // Startup is outside this contract; exercise the real controller selection and SDK boundary.
   vi.spyOn(V2UserStatsComponent.prototype, 'loadStats').mockResolvedValue(undefined);
@@ -43,6 +43,7 @@ async function setup() {
 describe('Stats selected-date recovery through the rendered page', () => {
   it('uses the rendered switch to cancel busy historical search and rejects duplicate/stale permission events', async () => {
     const {fixture, component, sdk, account, element, render} = await setup();
+    vi.useFakeTimers({toFake: ['setTimeout', 'clearTimeout']});
     account.backup = true; render();
     let complete!: (value: any[]) => void;
     sdk.searchPastTopItems.mockReturnValueOnce(new Promise(resolve => complete = resolve));
@@ -52,7 +53,9 @@ describe('Stats selected-date recovery through the rendered page', () => {
     expect(control.getAttribute('aria-checked')).toBe('true');
     expect(component.isSearchingPastStats).toBe(true);
     component.changePastSearchEnabled(true); // Repeated desired state must not invert it.
-    await new Promise(resolve => setTimeout(resolve, 330)); await settle(); render();
+    await vi.advanceTimersByTimeAsync(299); await settle(); render();
+    expect(sdk.searchPastTopItems).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(1); await settle(); render();
     expect(sdk.searchPastTopItems).toHaveBeenCalledExactlyOnceWith('short_term', 'track', 'former');
     expect(control.disabled).toBe(false);
     control.click(); render();

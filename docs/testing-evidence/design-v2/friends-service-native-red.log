@@ -1,0 +1,36 @@
+2026-10-11 18:29:11.488 CEST [174547] LOG:  starting PostgreSQL 18.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 16.2.1 20260810, 64-bit
+2026-10-11 18:29:11.488 CEST [174547] LOG:  listening on Unix socket "/tmp/analytify-friends-contract-1tHP0O/socket/.s.PGSQL.5432"
+2026-10-11 18:29:11.491 CEST [174553] LOG:  database system was shut down at 2026-10-11 18:29:11 CEST
+2026-10-11 18:29:11.492 CEST [174547] LOG:  database system is ready to accept connections
+2026-10-11 18:29:11.662 CEST [174570] ERROR:  function public.create_friend_invitation(unknown) does not exist at character 98
+2026-10-11 18:29:11.662 CEST [174570] HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+2026-10-11 18:29:11.662 CEST [174570] STATEMENT:  set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.create_friend_invitation('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+
+node:internal/errors:999
+  const err = new Error(message);
+              ^
+
+Error: Command failed: /tmp/analytify-postgres-runtime/root/usr/bin/psql -X -h /tmp/analytify-friends-contract-1tHP0O/socket -U analytify_test -d postgres -v ON_ERROR_STOP=1 -qAt -c set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.create_friend_invitation('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+ERROR:  function public.create_friend_invitation(unknown) does not exist
+LINE 1: ...ub='11111111-1111-4111-8111-111111111111'; select public.cre...
+                                                             ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+    at genericNodeError (node:internal/errors:999:15)
+    at wrappedFn (node:internal/errors:544:14)
+    at ChildProcess.exithandler (node:child_process:420:12)
+    at ChildProcess.emit (node:events:514:20)
+    at maybeClose (node:internal/child_process:1156:16)
+    at ChildProcess._handle.onexit (node:internal/child_process:334:5) {
+  code: 1,
+  killed: false,
+  signal: null,
+  cmd: "/tmp/analytify-postgres-runtime/root/usr/bin/psql -X -h /tmp/analytify-friends-contract-1tHP0O/socket -U analytify_test -d postgres -v ON_ERROR_STOP=1 -qAt -c set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.create_friend_invitation('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')",
+  stdout: '',
+  stderr: 'ERROR:  function public.create_friend_invitation(unknown) does not exist\n' +
+    "LINE 1: ...ub='11111111-1111-4111-8111-111111111111'; select public.cre...\n" +
+    '                                                             ^\n' +
+    'HINT:  No function matches the given name and argument types. You might need to add explicit type casts.\n'
+}
+
+Node.js v26.11.1

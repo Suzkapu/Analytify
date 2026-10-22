@@ -30,3 +30,11 @@ test('worker delegates every Spotify mutation to the authoritative Edge Function
   ]);
   assert.deepEqual(result, {updated: 2, skipped: 4});
 });
+
+test('league delegation handles empty mappings, empty totals and service failures for the requested owner',async()=>{
+ for(const scenario of ['empty','null','totals','mapping','transport','application']){
+  const invocations=[];const supabase={from(){return {select(){return this;},async eq(column,id){assert.equal(column,'user_id');assert.equal(id,'owner');return {data:scenario==='empty'?[]:scenario==='null'?null:[{league_id:'league'}],error:scenario==='mapping'?new Error('mapping failed'):null};}};},functions:{async invoke(name,args){invocations.push(args);return {data:scenario==='application'?{error:'application failed'}:null,error:scenario==='transport'?new Error('transport failed'):null};}}};
+  const run=createSongLeaguePlaylistsTask({supabase});if(['mapping','transport','application'].includes(scenario))await assert.rejects(run({user:{id:'owner'}}),/failed/);else assert.deepEqual(await run({user:{id:'owner'}}),{updated:0,skipped:0});
+  assert.equal(invocations.length,['empty','null','mapping'].includes(scenario)?0:1);
+ }
+});

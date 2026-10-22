@@ -13,31 +13,57 @@
   contain: strict;
   overflow: hidden;
   pointer-events: none;
-  background: linear-gradient(180deg, var(--v2-color-background-raised) 0%, var(--v2-color-background) 100%);
+  background: var(--v2-color-background);
 }
 
-:host > span { position: absolute; inset: -12%; pointer-events: none; }
+:host > span { position: absolute; pointer-events: none; }
+.ambient-primary, .ambient-secondary {
+  height: 1050px;
+  transform: translate(-50%, -50%);
+  opacity: var(--ambient-intensity);
+}
 .ambient-primary {
-  opacity: calc(.48 * var(--ambient-intensity));
-  background: radial-gradient(circle at var(--ambient-primary-x) var(--ambient-primary-y), rgba(42, 219, 118, .23), transparent min(38vw, 34rem));
+  left: var(--ambient-primary-x); top: var(--ambient-primary-y); width: 1400px;
 }
 .ambient-secondary {
-  opacity: calc(.42 * var(--ambient-intensity));
-  background: radial-gradient(circle at var(--ambient-secondary-x) var(--ambient-secondary-y), rgba(26, 117, 80, .21), transparent min(34vw, 31rem));
+  left: var(--ambient-secondary-x); top: var(--ambient-secondary-y); width: 1280px;
 }
-.ambient-dots {
-  opacity: calc(.18 * var(--ambient-dot-intensity));
-  background-image: radial-gradient(circle, rgba(120, 255, 179, .55) 0 1px, transparent 1.5px);
-  background-size: 72px 72px;
+.ambient-primary picture, .ambient-secondary picture,
+.ambient-primary img, .ambient-secondary img { display: block; max-width: none; }
+:host > .ambient-dots {
+  inset: 0;
+  opacity: var(--ambient-dot-intensity);
   transform: translate3d(var(--ambient-dots-x), var(--ambient-dots-y), 0);
 }
+.ambient-dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--ambient-dot-size);
+  height: var(--ambient-dot-size);
+  border-radius: 50%;
+  background: var(--v2-color-accent);
+  opacity: var(--ambient-dot-opacity);
+  transform: translate3d(var(--ambient-a-x), var(--ambient-a-y), 0);
+  animation: ambient-particle-loop 24s ease-in-out infinite;
+  animation-play-state: var(--ambient-particle-play-state, running);
+}
+@keyframes ambient-particle-loop {
+  0%, 100% { transform: translate3d(var(--ambient-a-x), var(--ambient-a-y), 0); }
+  33.333333% { transform: translate3d(var(--ambient-b-x), var(--ambient-b-y), 0); }
+  66.666667% { transform: translate3d(var(--ambient-c-x), var(--ambient-c-y), 0); }
+}
 
-@media (max-width: 760px), (pointer: coarse) {
-  .ambient-primary,
-  .ambient-secondary { opacity: calc(.34 * var(--ambient-intensity)); }
-  .ambient-dots { opacity: calc(.12 * var(--ambient-dot-intensity)); background-size: 88px 88px; }
+@media (max-width: 760px) {
+  .ambient-primary, .ambient-secondary { height: 760px; }
+  .ambient-primary { width: 720px; }
+  .ambient-secondary { width: 630px; }
+  .ambient-dot { opacity: var(--ambient-dot-mobile-opacity); }
+  // Keep the shared timeline alive so returning desktop dots retain its phase.
+  .ambient-dot:nth-child(n + 13) { visibility: hidden; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ambient-dots { transform: none; }
+  .ambient-dot { animation: none; }
+  :host > .ambient-dots { transform: none; }
 }

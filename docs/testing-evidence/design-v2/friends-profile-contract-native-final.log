@@ -1,0 +1,29 @@
+{
+  "runnerSha256": "6b20b53c6fd923eaad3a900e2b31328418ee37d711baf3831622b8a881ffac4c",
+  "version": "postgres (PostgreSQL) 18.6",
+  "isolation": {
+    "freshCluster": true,
+    "tcpListeners": false,
+    "socketPermissions": "0700",
+    "syntheticProfilesOnly": true
+  },
+  "migrations": [
+    {
+      "path": "supabase/migrations/20260801000000_foundational_schema.sql",
+      "sha256": "2ddb1def6b431674bc06bace7edbc55177c957f6689371f894c7f8861b8bc95e"
+    },
+    {
+      "path": "supabase/migrations/20260905153000_lock_spotify_profile_identity.sql",
+      "sha256": "dc6d6dd600184d58ecd8e12a6cf440c84b1db4a10d29d134de626af1bc4c6716"
+    }
+  ],
+  "outcomes": [
+    "Profile creation ignores user-editable Spotify identity/name metadata",
+    "Actor A can read its own profile and cannot enumerate actor B",
+    "Own backup toggle commits; cross-actor update leaves the other profile unchanged",
+    "Spotify identity replacement rejected by real PostgreSQL permissions",
+    "Forged profile insertion rejected by real PostgreSQL permissions",
+    "Anonymous profile enumeration rejected by real PostgreSQL permissions"
+  ],
+  "limitations": "Selected real profile migrations only. auth.users and auth.uid are explicit fixtures; no hosted Auth/JWT, PostgREST, friendship API, full migration chain or production contract is certified."
+}

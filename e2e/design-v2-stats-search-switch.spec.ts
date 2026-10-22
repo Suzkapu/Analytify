@@ -103,14 +103,26 @@ test('selection follows the native 220ms timeline and responds to reduced motion
   const toggle = page.getByRole('switch', {name: 'Search past rankings'});
   await toggle.press('Tab');
   await toggle.focus();
+  await toggle.evaluate(element => {
+    const thumb = element.querySelector('.thumb') as HTMLElement & {capturedTransition?: CSSTransition};
+    const capture = (event: TransitionEvent) => {
+      if (event.target !== thumb || event.propertyName !== 'transform') return;
+      const animation = thumb.getAnimations().find(item => (item as CSSTransition).transitionProperty === 'transform') as CSSTransition | undefined;
+      if (!animation) throw new Error('Native thumb transition did not expose its transform animation.');
+      animation.pause(); thumb.capturedTransition = animation;
+      thumb.removeEventListener('transitionrun', capture);
+    };
+    thumb.addEventListener('transitionrun', capture);
+  });
   await toggle.press('Space');
   await expect(toggle).toHaveAttribute('aria-checked', 'true');
-  // Capture native CSS transitions immediately, before Playwright polling can
-  // consume this short timeline. Resume once to prove the native clock runs.
+  await expect.poll(() => toggle.locator('.thumb').evaluate(element =>
+    !!(element as HTMLElement & {capturedTransition?: CSSTransition}).capturedTransition)).toBe(true);
+  // Capture at native transitionrun, before cross-process polling can consume
+  // its220ms lifetime. Resume once to prove the native clock still runs.
   const timing = await toggle.evaluate(element => {
-    const thumb = element.querySelector('.thumb')!;
-    const animation = thumb.getAnimations().find(item => (item as CSSTransition).transitionProperty === 'transform')!;
-    animation.pause();
+    const thumb = element.querySelector('.thumb') as HTMLElement & {capturedTransition?: CSSTransition};
+    const animation = thumb.capturedTransition!;
     animation.currentTime = 55;
     const matrix = new DOMMatrixReadOnly(getComputedStyle(thumb).transform);
     const effect = animation.effect!.getTiming();

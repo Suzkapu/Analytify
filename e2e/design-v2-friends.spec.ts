@@ -1,0 +1,330 @@
+import {test, expect} from './fixtures';
+import {mockSpotify, seedAuthenticatedBrowser, expectNoBlockingAxeViolations} from './helpers/authenticated-browser';
+import {observeNativeTransitions, expectNativeTransitionsSettled, expectNativeNavigationRecovery} from './helpers/native-transitions';
+import {readFile, writeFile} from 'node:fs/promises';
+
+import type {Page} from '@playwright/test';
+
+async function setupFriends(page: Page, motion: 'no-preference' | 'reduce', revokedToken?: string, friendNames?: readonly string[]) {
+  await observeNativeTransitions(page);
+  await page.emulateMedia({reducedMotion: motion}); await mockSpotify(page);
+  const actor = 'de111111-1111-4111-8111-111111111111';
+  const friend = {userId: '22222222-2222-4222-8222-222222222222', displayName: 'Suzkapu', imageUrl: '', connectedAt: '2026-10-11', connectionVersion: '33333333-3333-4333-8333-333333333333'};
+  let friends = friendNames ? friendNames.map((displayName, index) => ({...friend, displayName,
+    userId: `${index + 2}2222222-2222-4222-8222-222222222222`,
+    connectionVersion: `${index + 3}3333333-3333-4333-8333-333333333333`
+  })) : [friend];
+  let requests = [{requestId: '44444444-4444-4444-8444-444444444444', inviterUserId: friend.userId, displayName: 'Paulzgi', imageUrl: '', createdAt: '2026-10-11'}];
+  let invitations: {id: string; status: string; createdAt: string}[] = [];
+  const writes: {name: string; body: Record<string, unknown>}[] = [];
+  let failReceive = !revokedToken;
+  let createAttempts = 0;
+  let authLogouts = 0;
+  let releaseLogout: (() => void) | undefined;
+  let revokeDuringConfirmation = false;
+  let releaseInbox: (() => void) | undefined;
+  const unexpected: string[] = []; const runtimeErrors: string[] = [];
+  page.on('pageerror', error => runtimeErrors.push(error.message));
+  await page.route('http://127.0.0.1:54321/**', async route => {
+    const path = new URL(route.request().url()).pathname;
+    if (path === '/auth/v1/user') return route.fulfill({json: {id: actor, aud: 'authenticated', role: 'authenticated', app_metadata: {}, user_metadata: {}}});
+    if (path === '/auth/v1/logout') {
+      authLogouts++;
+      await new Promise<void>(resolve => {releaseLogout = resolve;});
+      return route.fulfill({status: 204, body: ''});
+    }
+    if (path === '/rest/v1/users') return route.fulfill({json: null});
+    const name = path.split('/').at(-1)!;
+    if (name === 'get_public_site_settings') return route.fulfill({json: {}});
+    if (name === 'is_app_admin') return route.fulfill({json: false});
+    if (name === 'list_friends') return route.fulfill({json: friends});
+    if (name === 'list_friend_requests') {
+      if (revokeDuringConfirmation) {
+        await new Promise<void>(resolve => {releaseInbox = resolve;});
+        revokeDuringConfirmation = false;
+        requests = [];
+      }
+      return route.fulfill({json: requests});
+    }
+    if (name === 'list_friend_invitations') return route.fulfill({json: invitations});
+    const body = route.request().postDataJSON();
+    if (name === 'receive_friend_invitation') {
+      writes.push({name, body});
+      if (failReceive) {
+        failReceive = false;
+        return route.fulfill({status: 503, json: {message: 'Synthetic transport interruption'}});
+      }
+      const incoming = {requestId: '77777777-7777-4777-8777-777777777777', inviterUserId: '66666666-6666-4666-8666-666666666666', displayName: 'Incoming friend', imageUrl: '', createdAt: '2026-10-12'};
+      requests = [incoming];
+      if (revokedToken) revokeDuringConfirmation = true;
+      return route.fulfill({json: {id: incoming.requestId, inviterUserId: incoming.inviterUserId, displayName: incoming.displayName, imageUrl: ''}});
+    }
+    if (name === 'respond_friend_request') {
+      writes.push({name, body}); requests = [];
+      return route.fulfill({json: {id: body.p_invitation_id, status: body.p_accept ? 'accepted' : 'declined', isConnected: body.p_accept}});
+    }
+    if (name === 'create_friend_invitation') {
+      writes.push({name, body});
+      createAttempts++;
+      if (createAttempts === 1) return route.fulfill({status: 503, json: {message: 'Synthetic unconfirmed creation'}});
+      const invitation = {id: '55555555-5555-4555-8555-555555555555', status: createAttempts === 2 ? 'accepted' : 'pending', createdAt: '2026-10-12'};
+      invitations = [invitation]; return route.fulfill({json: invitation});
+    }
+    if (name === 'revoke_friend_invitation') {
+      writes.push({name, body}); invitations = []; return route.fulfill({json: null});
+    }
+    if (name === 'remove_friend') {
+      writes.push({name, body}); friends = []; return route.fulfill({json: null});
+    }
+    unexpected.push(`${route.request().method()} ${path}`); return route.abort('blockedbyclient');
+  });
+  await seedAuthenticatedBrowser(page, {cloudIdentity: true});
+  await page.evaluate(actorId => {
+    const exp = Math.floor(Date.now() / 1000) + 3600;
+    const encode = (value: object) => btoa(JSON.stringify(value)).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
+    localStorage.setItem('sb-127-auth-token', JSON.stringify({access_token: `${encode({alg: 'HS256', typ: 'JWT'})}.${encode({sub: actorId, role: 'authenticated', exp})}.fixture-signature`, refresh_token: 'synthetic-refresh-only', token_type: 'bearer', expires_at: exp, expires_in: 3600, user: {id: actorId, aud: 'authenticated', role: 'authenticated', app_metadata: {}, user_metadata: {}}}));
+  }, actor);
+  await page.goto(revokedToken ? '/new/friends/invite/' + revokedToken : '/new/friends');
+  const panel = page.locator('v2-friends-page');
+  return {panel, writes, unexpected, runtimeErrors, counters: () => ({authLogouts}),
+    inboxRelease: () => releaseInbox, releaseInbox: () => releaseInbox?.(), releaseLogout: () => releaseLogout?.()};
+}
+
+test('Friends ready content preserves canonical card geometry during resizing', async ({page}, info) => {
+  const {panel, writes, unexpected, runtimeErrors} = await setupFriends(page, 'reduce', undefined, ['Suzkapu', 'Daniel_P', 'Alex']);
+  await expect(panel.locator('.friend-row')).toHaveCount(3);
+  await expectNativeTransitionsSettled(page);
+  const envelope = JSON.parse(await readFile('docs/testing-evidence/design-v2/friends-row-current-canonical.json', 'utf8'));
+  const canonical = JSON.parse(envelope.content.find((item: {type: string}) => item.type === 'text').text);
+  const pointerCanonical = JSON.parse(await readFile('docs/testing-evidence/design-v2/friends-touch-canonical.json', 'utf8'));
+  const samples = [];
+  for (const width of [1440, 390, 320]) for (const height of [480, 1000]) {
+    await page.setViewportSize({width, height});
+    const sample = await panel.evaluate(element => ({width: innerWidth, height: innerHeight, scrollWidth: document.documentElement.scrollWidth,
+      coarsePointer: matchMedia('(pointer: coarse)').matches,
+      rows: [...element.querySelectorAll('.friend-row')].map(row => {
+        const bounds = row.getBoundingClientRect();
+        const action = row.querySelector<HTMLElement>('[aria-haspopup="menu"]')!;
+        const actionBounds = action.getBoundingClientRect();
+        return {x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height,
+          action: {width: actionBounds.width, height: actionBounds.height, borderColor: getComputedStyle(action).borderColor}};
+      })}));
+    samples.push(sample);
+  }
+  for (const [name, viewport] of [['desktop', {width: 1440, height: 810}], ['mobile', {width: 390, height: 867}]] as const) {
+    await page.setViewportSize(viewport);
+    await panel.screenshot({path: info.outputPath(`candidate-friends-ready-${name}.png`), animations: 'disabled', scale: 'css'});
+  }
+  await writeFile(info.outputPath('friends-ready-geometry.json'), JSON.stringify({canonical, pointerVariants: pointerCanonical.variants, samples}, null, 2));
+  for (const sample of samples) {
+    const reference = canonical.find((item: {viewport: string}) => item.viewport === (sample.width <= 760 ? 'mobile' : 'desktop'));
+    const pointerReference = pointerCanonical.variants.find((item: {variants: {State: string; Pointer: string}}) =>
+      item.variants.State === 'Default' && item.variants.Pointer === (sample.coarsePointer ? 'Coarse' : 'Fine'));
+    expect(sample.scrollWidth).toBeLessThanOrEqual(sample.width);
+    for (const [index, row] of sample.rows.entries()) {
+      expect(row.height).toBe(pointerReference.height);
+      expect(row.action.width).toBe(pointerReference.action[0].width);
+      expect(row.action.height).toBe(pointerReference.action[0].height);
+      expect(row.action.borderColor).toBe('rgb(107, 125, 113)');
+      expect(row.width).toBe(sample.width === 320 ? 288 : reference.rows[0].width);
+      if (index) expect(row.y - sample.rows[index - 1].y - sample.rows[index - 1].height).toBe(reference.gap);
+    }
+  }
+  await expectNoBlockingAxeViolations(page);
+  expect(writes).toEqual([]); expect(unexpected).toEqual([]); expect(runtimeErrors).toEqual([]);
+});
+
+for (const motion of ['no-preference', 'reduce'] as const) {
+  test(`Friends invitations and responsive geometry (${motion})`, async ({page}, info) => {
+    const {panel, writes, unexpected, runtimeErrors} = await setupFriends(page, motion);
+    await expect(panel.getByRole('heading', {name: 'Your friends', exact: true})).toBeVisible();
+    await expect(panel.getByText('Friend request from Paulzgi', {exact: true})).toBeVisible();
+    await expectNativeTransitionsSettled(page);
+    await expectNoBlockingAxeViolations(page);
+    await panel.getByRole('button', {name: 'Decline', exact: true}).press('Enter');
+    await expect(panel.getByText('Friend request from Paulzgi', {exact: true})).toHaveCount(0);
+    expect(writes).toEqual([{name: 'respond_friend_request', body: {p_invitation_id: '44444444-4444-4444-8444-444444444444', p_accept: false}}]);
+    const manage = panel.getByRole('button', {name: 'Manage friend Suzkapu'});
+    await manage.press('Enter'); await panel.getByRole('menuitem', {name: 'Remove friend'}).press('Enter');
+    const dialog = panel.getByRole('dialog', {name: 'Remove Suzkapu?'});
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole('button')).toHaveText(['Remove friend', 'Cancel']);
+    await expect(dialog).toHaveAccessibleDescription('Removes this person from your friends. You can send a new friend request later.');
+    await expect(dialog.getByRole('button', {name: 'Cancel', exact: true})).toBeFocused();
+    await page.keyboard.press('Tab'); await expect(dialog.getByRole('button', {name: 'Remove friend', exact: true})).toBeFocused();
+    await page.keyboard.press('Shift+Tab'); await expect(dialog.getByRole('button', {name: 'Cancel', exact: true})).toBeFocused();
+    const geometry = [];
+    for (const height of [480, 1000]) for (const width of [320, 360, 390, 767, 768, 1024, 1440, 1920]) {
+      await page.setViewportSize({width, height});
+      await expect(dialog).toBeVisible();
+      const sample = await dialog.evaluate(element => {
+        const rect = element.getBoundingClientRect();
+        return {width: innerWidth, height: innerHeight, scrollWidth: document.documentElement.scrollWidth, x: rect.x, y: rect.y, right: rect.right, bottom: rect.bottom,
+          backdropFilter: getComputedStyle(document.querySelector('.confirmation-backdrop')!).backdropFilter};
+      });
+      expect(sample.scrollWidth).toBeLessThanOrEqual(width);
+      expect(sample.x).toBeGreaterThanOrEqual(0); expect(sample.right).toBeLessThanOrEqual(width);
+      expect(sample.y).toBeGreaterThanOrEqual(0); expect(sample.bottom).toBeLessThanOrEqual(height);
+      expect(sample.backdropFilter).toBe('blur(12px)'); geometry.push(sample);
+    }
+    await page.keyboard.press('Escape'); await expect(dialog).toHaveCount(0); await expect(manage).toBeFocused();
+    expect(writes).toHaveLength(1);
+    if (info.project.name === 'mobile') await page.setViewportSize({width: 390, height: 900});
+    await panel.getByRole('link', {name: 'Add friend', exact: true}).click();
+    const qr = panel.getByRole('img', {name: 'Scan to open this single-person friend invitation'});
+    await expect(panel.getByRole('alert')).toContainText('could not be confirmed');
+    await panel.getByRole('button', {name: 'Retry', exact: true}).press('Enter');
+    await expect(panel.getByRole('status')).toContainText('Your invitation is no longer active');
+    await expect(qr).toHaveCount(0);
+    const consumedCreations = writes.filter(write => write.name === 'create_friend_invitation');
+    expect(consumedCreations).toHaveLength(2);
+    expect(consumedCreations[1].body).toEqual(consumedCreations[0].body);
+    await expectNoBlockingAxeViolations(page);
+    await panel.screenshot({path: info.outputPath('friends-owner-inactive.png'), animations: 'disabled'});
+    await panel.getByRole('button', {name: 'Create new invitation', exact: true}).press('Enter');
+    await expect(qr).toBeVisible();
+    await expect(qr).toHaveJSProperty('naturalWidth', 176); await expect(qr).toHaveJSProperty('naturalHeight', 176);
+    const copy = panel.getByRole('button', {name: 'Copy link', exact: true});
+    await expect(copy).toHaveCSS('font-size', '14px');
+    await expect(copy).toHaveCSS('font-weight', '600');
+    await expect(copy).toHaveCSS('line-height', '20px');
+    await expect.soft(panel.locator('.qr-identity .identity')).toHaveCSS('gap', '12px');
+    const creations = writes.filter(write => write.name === 'create_friend_invitation');
+    expect(creations).toHaveLength(3); expect(creations[2].body.p_claim_token).toMatch(/^[a-f0-9]{64}$/);
+    expect(creations[2].body.p_claim_token).not.toBe(creations[0].body.p_claim_token);
+    const expectedUrl = `http://127.0.0.1:4214/new/friends/invite/${creations[2].body.p_claim_token}`;
+    await expect(panel.locator('.invitation-url')).toHaveText(expectedUrl);
+    await panel.getByRole('link', {name: 'Invitations', exact: true}).click();
+    await expect(panel.getByRole('link', {name: 'View link & QR'})).toBeVisible();
+    for (const width of [1440, 390]) {
+      await page.setViewportSize({width, height: 900});
+      const actions = await panel.locator('.friends-card .actions').evaluate(element => [...element.children].map(child => child.getBoundingClientRect().width));
+      expect.soft(actions).toEqual(width === 1440 ? [180, 112] : [160, 112]);
+    }
+    await panel.getByRole('link', {name: 'View link & QR'}).click(); await expect(qr).toBeVisible();
+    expect(writes.filter(write => write.name === 'create_friend_invitation')).toHaveLength(3);
+    await expectNativeTransitionsSettled(page); await expectNoBlockingAxeViolations(page);
+    await page.setViewportSize({width: info.project.name === 'mobile' ? 390 : 1440, height: 900});
+    await page.evaluate(() => document.fonts.ready);
+    await panel.screenshot({path: info.outputPath('friends-add.png'), animations: 'disabled'});
+    const incomingToken = 'b'.repeat(64);
+    await page.goto('/new/friends/invite/' + incomingToken);
+    await expect(panel.getByRole('alert')).toContainText('could not be confirmed');
+    await panel.getByRole('button', {name: 'Retry', exact: true}).press('Enter');
+    await expect(panel.getByRole('heading', {name: 'Incoming friend wants to be your friend', exact: true})).toBeVisible();
+    await expect.soft(panel.locator('.friends-card > p')).toHaveCSS('font-size', '16px');
+    await expect.soft(panel.locator('.friends-card > p')).toHaveCSS('line-height', '24px');
+    for (const width of [1440, 390]) {
+      await page.setViewportSize({width, height: 900});
+      const actions = await panel.locator('.friends-card .actions').evaluate(element => [...element.children].map(child => child.getBoundingClientRect().width));
+      expect.soft(actions).toEqual(width === 1440 ? [200, 120] : [155, 157]);
+    }
+    expect(writes.filter(write => write.name === 'receive_friend_invitation').map(write => write.body))
+      .toEqual([{p_claim_token: incomingToken}, {p_claim_token: incomingToken}]);
+    expect(writes.filter(write => write.name === 'respond_friend_request')).toHaveLength(1);
+    await expectNoBlockingAxeViolations(page);
+    await panel.screenshot({path: info.outputPath('friends-review-recovered.png'), animations: 'disabled'});
+    const accept = motion === 'no-preference';
+    await panel.getByRole('button', {name: accept ? 'Accept' : 'Decline', exact: true}).press('Enter');
+    await expect(panel.getByRole('heading', {name: 'Incoming friend wants to be your friend', exact: true})).toHaveCount(0);
+    await expect(panel.getByRole('status')).toContainText(accept ? 'Friend request accepted' : 'Friend request declined');
+    const actionStyle = await panel.getByRole('button', {name: 'View friends', exact: true}).evaluate(element => {
+      const rect = element.getBoundingClientRect(), style = getComputedStyle(element);
+      return {width: rect.width, height: rect.height, fontSize: style.fontSize, fontWeight: style.fontWeight, lineHeight: style.lineHeight};
+    });
+    expect(actionStyle).toEqual({width: 260, height: 48, fontSize: '14px', fontWeight: '600', lineHeight: '20px'});
+    expect(writes.at(-1)).toEqual({name: 'respond_friend_request', body: {p_invitation_id: '77777777-7777-4777-8777-777777777777', p_accept: accept}});
+    await expectNoBlockingAxeViolations(page);
+    await panel.screenshot({path: info.outputPath('friends-outcome.png'), animations: 'disabled'});
+    await panel.getByRole('button', {name: 'View friends', exact: true}).press('Enter');
+    await expect(panel.getByRole('heading', {name: 'Your friends', exact: true})).toBeVisible();
+    expect(writes.filter(write => write.name === 'respond_friend_request')).toHaveLength(2);
+    await panel.getByRole('link', {name: 'Invitations', exact: true}).click();
+    await expect(panel.locator('.invitation-icon')).toHaveCSS('background-color', 'rgb(6, 19, 11)');
+    const revoke = panel.getByRole('button', {name: 'Revoke', exact: true});
+    await revoke.press('Enter');
+    const revokeDialog = panel.getByRole('dialog', {name: 'Revoke friend invitation?', exact: true});
+    await expect(revokeDialog).toHaveAccessibleDescription('Disables this invitation’s private link and QR code. Existing friendships are unchanged.');
+    await expect(revokeDialog.getByRole('button')).toHaveText(['Revoke invitation', 'Cancel']);
+    await expect(revokeDialog.getByRole('button', {name: 'Cancel', exact: true})).toBeFocused();
+    expect(writes.filter(write => write.name === 'revoke_friend_invitation')).toEqual([]);
+    const revokeGeometry = [];
+    for (const width of [320, 390, 768, 1440]) for (const height of [480, 1000]) {
+      await page.setViewportSize({width, height});
+      const sample = await revokeDialog.evaluate(element => {
+        const bounds = element.getBoundingClientRect();
+        return {width: innerWidth, height: innerHeight, x: bounds.x, y: bounds.y, right: bounds.right, bottom: bounds.bottom,
+          scrollWidth: document.documentElement.scrollWidth, backdropFilter: getComputedStyle(document.querySelector('.confirmation-backdrop')!).backdropFilter};
+      });
+      expect(sample.x).toBeGreaterThanOrEqual(0); expect(sample.y).toBeGreaterThanOrEqual(0);
+      expect(sample.right).toBeLessThanOrEqual(width); expect(sample.bottom).toBeLessThanOrEqual(height);
+      expect(sample.scrollWidth).toBeLessThanOrEqual(width); expect(sample.backdropFilter).toBe('blur(12px)');
+      revokeGeometry.push(sample);
+    }
+    await expectNoBlockingAxeViolations(page);
+    await page.keyboard.press('Tab'); await expect(revokeDialog.getByRole('button', {name: 'Revoke invitation', exact: true})).toBeFocused();
+    await page.keyboard.press('Shift+Tab'); await expect(revokeDialog.getByRole('button', {name: 'Cancel', exact: true})).toBeFocused();
+    await page.keyboard.press('Escape'); await expect(revokeDialog).toHaveCount(0); await expect(revoke).toBeFocused();
+    expect(writes.filter(write => write.name === 'revoke_friend_invitation')).toEqual([]);
+    await revoke.press('Enter'); await revokeDialog.getByRole('button', {name: 'Cancel', exact: true}).press('Enter');
+    await expect(revoke).toBeFocused(); expect(writes.filter(write => write.name === 'revoke_friend_invitation')).toEqual([]);
+    await revoke.press('Enter'); await revokeDialog.getByRole('button', {name: 'Revoke invitation', exact: true}).press('Enter');
+    await expect(revokeDialog).toHaveCount(0); await expect(revoke).toHaveCount(0);
+    expect(writes.filter(write => write.name === 'revoke_friend_invitation')).toEqual([{name: 'revoke_friend_invitation', body: {p_invitation_id: '55555555-5555-4555-8555-555555555555'}}]);
+    await panel.getByRole('link', {name: 'Friends', exact: true}).click();
+    await expect(panel.getByText('Suzkapu', {exact: true})).toBeVisible();
+    await expectNativeTransitionsSettled(page);
+    await writeFile(info.outputPath('friends-native.json'), JSON.stringify({motion, geometry, revokeGeometry, writeNames: writes.map(write => write.name), unexpected, runtimeErrors}, null, 2));
+    expect(unexpected).toEqual([]); expect(runtimeErrors).toEqual([]);
+  });
+  test(`Friends confirming-read revocation and session exit (${motion})`, async ({page}, info) => {
+    // The sender revokes after receive succeeds but before the confirming inbox read.
+    const revokedToken = 'd'.repeat(64);
+    const {panel, writes, unexpected, runtimeErrors, counters, inboxRelease, releaseInbox, releaseLogout} = await setupFriends(page, motion, revokedToken);
+    try {
+      await expect.poll(() => typeof inboxRelease()).toBe('function');
+      await expect(panel.getByRole('status')).toContainText('Updating your request');
+      await expect(panel.getByRole('button', {name: 'Accept', exact: true})).toHaveCount(0);
+      await expect(panel.getByRole('button', {name: 'Decline', exact: true})).toHaveCount(0);
+    } finally {releaseInbox();}
+    await expect(panel.getByRole('alert')).toContainText('This invitation is unavailable');
+    await expect(panel.getByRole('button', {name: 'Retry', exact: true})).toHaveCount(0);
+    await expect(panel.getByRole('heading', {name: 'Incoming friend wants to be your friend', exact: true})).toHaveCount(0);
+    await expectNativeTransitionsSettled(page);
+    await expectNoBlockingAxeViolations(page);
+    expect(writes.filter(write => write.name === 'receive_friend_invitation' && write.body['p_claim_token'] === revokedToken)).toHaveLength(1);
+    expect(writes.filter(write => write.name === 'respond_friend_request')).toHaveLength(0);
+    await panel.screenshot({path: info.outputPath('friends-review-revoked.png'), animations: 'disabled'});
+    // Canonical account actions live in Settings. Leaving Friends must destroy
+    // its secret state; Back during a held real SDK signout must stay protected.
+    if ((page.viewportSize()?.width ?? 0) > 760) {
+      await page.getByRole('complementary', {name: 'Desktop sidebar'}).getByRole('link', {name: 'Settings', exact: true}).press('Enter');
+    } else {
+      await page.getByRole('button', {name: 'Open navigation menu', exact: true}).press('Enter');
+      await page.getByRole('dialog', {name: 'Navigation menu', exact: true}).getByRole('link', {name: 'Settings', exact: true}).press('Enter');
+    }
+    await expect(page).toHaveURL(/\/new\/settings\/account$/);
+    await expect(panel).toHaveCount(0);
+    await page.getByRole('button', {name: 'Log out', exact: true}).press('Enter');
+    try {
+      await expect.poll(() => counters().authLogouts).toBe(1);
+      await page.goBack();
+      await expect(page).toHaveURL(/\/new\/login(?:[/?#]|$)/);
+      await expect(panel.locator('.invitation-url, .qr-slot img, .friend-row')).toHaveCount(0);
+    } finally {releaseLogout();}
+    await expect(page).toHaveURL(/\/new\/login(?:[/?#]|$)/);
+    await expect(panel.locator('.invitation-url, .qr-slot img')).toHaveCount(0);
+    expect(counters().authLogouts).toBe(1);
+    await page.goBack();
+    await expect(page).toHaveURL(/\/new\/login(?:[/?#]|$)/);
+    await expect(panel.locator('.invitation-url, .qr-slot img')).toHaveCount(0);
+    expect(counters().authLogouts).toBe(1);
+    try {await expectNativeNavigationRecovery(page);}
+    finally {
+      const transitions = await page.evaluate(() => (window as unknown as {analytifyNativeTransitionProbe: unknown}).analytifyNativeTransitionProbe);
+      await writeFile(info.outputPath('friends-transitions.json'), JSON.stringify(transitions, null, 2));
+    }
+    await writeFile(info.outputPath('friends-session.json'), JSON.stringify({motion, ...counters(), writeNames: writes.map(write => write.name), unexpected, runtimeErrors}, null, 2));
+    expect(unexpected).toEqual([]); expect(runtimeErrors).toEqual([]);
+  });
+}

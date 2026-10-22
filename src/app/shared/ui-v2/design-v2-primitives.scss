@@ -28,7 +28,7 @@
 .v2-button--icon:hover { border-color: var(--v2-color-accent); background: var(--v2-color-selection); }
 .v2-button--tertiary { color: var(--v2-color-text-muted); }
 .v2-button--danger { border-color: color-mix(in srgb, var(--v2-color-danger) 55%, transparent); color: var(--v2-color-danger); background: var(--v2-color-danger-surface); }
-.v2-button--icon { width: var(--v2-control-height, 44px); padding: 0; border-color: var(--v2-color-border); }
+.v2-button--icon { width: var(--v2-icon-control-width, var(--v2-control-height, 44px)); padding: 0; border-color: var(--v2-icon-control-border, var(--v2-color-border)); }
 .v2-button:active:not(:disabled) { transform: translateY(1px); }
 .v2-button:disabled,
 .v2-button[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
@@ -54,16 +54,19 @@
 .v2-page__toolbar { margin-bottom: var(--v2-space-6); }
 .v2-page__sections { display: grid; gap: var(--v2-space-8); }
 // Canonical page heading139:7724 and body rhythm; adopted per feature slice.
+.v2-page--canonical { width: 100%; }
 .v2-page--canonical .v2-page__header { align-items: start; margin-bottom: var(--v2-space-4); }
 .v2-page--canonical .v2-page__copy { flex: 1; }
 .v2-page--canonical .v2-page__title-row { display: flex; align-items: center; gap: var(--v2-space-3); }
 .v2-page--canonical h1 { flex: 1; min-width: 0; overflow-wrap: anywhere; font-size: 36px; font-weight: 700; line-height: 44px; letter-spacing: normal; }
 .v2-page--canonical .v2-page__description { max-width: none; margin: var(--v2-space-2) 0 0; font-size: 16px; line-height: 24px; }
+.v2-page--canonical .v2-page__tabs { margin-bottom: var(--v2-space-4); }
 .v2-page--canonical .v2-page__sections { gap: var(--v2-space-4); }
 .v2-page__back.v2-button { flex: none; width: 92px; height: 44px; min-height: 44px; gap: var(--v2-space-2); padding: 0 var(--v2-space-3); border-color: var(--v2-color-border); background: transparent; font-size: 14px; font-weight: 500; line-height: 20px; }
 @media (max-width: 760px) {
   .v2-page--canonical .v2-page__header { margin-bottom: var(--v2-space-3); }
   .v2-page--canonical h1 { font-size: 28px; line-height: 36px; }
+  .v2-page--canonical .v2-page__tabs { margin-bottom: var(--v2-space-3); }
   .v2-page--canonical .v2-page__sections { gap: var(--v2-space-3); }
   .v2-page--hide-mobile-description .v2-page__description { display: none; }
 }

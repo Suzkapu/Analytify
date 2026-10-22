@@ -15,6 +15,7 @@ export const DESIGN_V2_NAVIGATION: readonly DesignV2NavigationItem[] = [
   {id: 'playlists', label: 'Playlists', icon: 'pi-list', destination: 'playlists', group: 'main', mobilePrimary: true},
   {id: 'stats', label: 'Stats', icon: 'pi-chart-bar', destination: 'stats', group: 'main', mobilePrimary: true},
   {id: 'history', label: 'History', icon: 'pi-history', destination: 'history', group: 'main', mobilePrimary: true},
+  {id: 'friends', label: 'Friends', icon: 'pi-user', destination: 'friends', group: 'tools', mobilePrimary: false},
   {id: 'song-league', label: 'Song Leagues', icon: 'pi-star', destination: 'songLeague', group: 'tools', mobilePrimary: false},
   {id: 'compare-room', label: 'Compare Room', icon: 'pi-clone', destination: 'compareRoom', group: 'tools', mobilePrimary: false},
   {id: 'private-sharing', label: 'Private Sharing', icon: 'pi-share-alt', destination: 'sharedPlaylists', group: 'tools', mobilePrimary: false}

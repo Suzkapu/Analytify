@@ -321,3 +321,22 @@ test('does not infer a missing checkpoint from rows that may belong to a partial
   assert.equal(harness.apiPaths.length, 2);
   assert.equal(harness.checkpoint.high_water_mark, '2026-08-02T13:00:00.000Z');
 });
+
+const {beforeCursor}=require('./history-task');
+test('history pagination extracts explicit and URL cursors and rejects malformed links',()=>{
+ assert.equal(beforeCursor({cursors:{before:0}}),'0');assert.equal(beforeCursor({cursors:{before:null},next:'https://api.spotify.com/recent?before=123'}),'123');assert.equal(beforeCursor({next:'http://['}),null);assert.equal(beforeCursor({}),null);
+ for(const maxPagesPerRun of [0,-1,1.5])assert.throws(()=>createHistoryTask({maxPagesPerRun}),/positive integer/);
+});
+test('history drops malformed plays, handles empty responses and never moves its watermark backwards',async()=>{
+ for(const items of [[],null,[null,{},play('bad','invalid'),play('old','2026-01-01T00:00:00Z')]]){
+  const h=createHarness({checkpoint:{high_water_mark:'2026-10-15T00:00:00.000Z'},pages:{initial:{items}}});const result=await h.run();assert.equal(result.highWaterMark,'2026-10-15T00:00:00.000Z');assert.equal(result.truncated,false);assert.equal(h.storedRows.size,Array.isArray(items)&&items.length?1:0);
+ }
+ const h=createHarness({pages:{initial:{items:[null,{},play('bad','invalid')],next:'next'}}});await assert.rejects(h.run(),/did not provide a before cursor/);
+});
+test('history rejects repeated cursors rather than looping and preserves its resumable checkpoint',async()=>{
+ const h=createHarness({checkpoint:{high_water_mark:'invalid',pending_before_cursor:'same'},pages:{same:{items:[play('valid','2026-10-15T00:00:00Z')],next:'next',cursors:{before:'same'}}}});await assert.rejects(h.run(),/same before cursor twice/);assert.equal(h.checkpoint.pending_before_cursor,'same');
+ const empty=createHarness({pages:{initial:{items:[]}}});assert.equal((await empty.run()).highWaterMark,null);
+});
+test('checkpoint read failures prevent Spotify history requests',async()=>{
+ let calls=0;const run=createHistoryTask({supabase:{from(){return {select(){return this;},eq(){return this;},async maybeSingle(){return {error:new Error('checkpoint unavailable')};}};}},spotify:{accessToken:async()=> 'fixture',api:async()=>{calls++;}},catalog:{}});await assert.rejects(run({user:{id:'owner'}}),/checkpoint unavailable/);assert.equal(calls,0);
+});

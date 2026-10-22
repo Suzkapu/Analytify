@@ -1,0 +1,139 @@
+2026-10-11 18:47:07.759 CEST [184119] LOG:  starting PostgreSQL 18.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 16.2.1 20260810, 64-bit
+2026-10-11 18:47:07.759 CEST [184119] LOG:  listening on Unix socket "/tmp/analytify-friends-contract-1olu0u/socket/.s.PGSQL.5432"
+2026-10-11 18:47:07.761 CEST [184125] LOG:  database system was shut down at 2026-10-11 18:47:07 CEST
+2026-10-11 18:47:07.763 CEST [184119] LOG:  database system is ready to accept connections
+2026-10-11 18:47:08.007 CEST [184154] ERROR:  A secure invitation token is required.
+2026-10-11 18:47:08.007 CEST [184154] CONTEXT:  PL/pgSQL function public.create_friend_invitation(text) line 5 at RAISE
+2026-10-11 18:47:08.007 CEST [184154] STATEMENT:  set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.create_friend_invitation(null)
+2026-10-11 18:47:08.015 CEST [184156] ERROR:  A secure invitation token is required.
+2026-10-11 18:47:08.015 CEST [184156] CONTEXT:  PL/pgSQL function public.create_friend_invitation(text) line 5 at RAISE
+2026-10-11 18:47:08.015 CEST [184156] STATEMENT:  set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.create_friend_invitation('')
+2026-10-11 18:47:08.024 CEST [184158] ERROR:  A secure invitation token is required.
+2026-10-11 18:47:08.024 CEST [184158] CONTEXT:  PL/pgSQL function public.create_friend_invitation(text) line 5 at RAISE
+2026-10-11 18:47:08.024 CEST [184158] STATEMENT:  set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.create_friend_invitation('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+2026-10-11 18:47:08.032 CEST [184160] ERROR:  A secure invitation token is required.
+2026-10-11 18:47:08.032 CEST [184160] CONTEXT:  PL/pgSQL function public.create_friend_invitation(text) line 5 at RAISE
+2026-10-11 18:47:08.032 CEST [184160] STATEMENT:  set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.create_friend_invitation('gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg')
+2026-10-11 18:47:08.041 CEST [184162] ERROR:  A secure invitation token is required.
+2026-10-11 18:47:08.041 CEST [184162] CONTEXT:  PL/pgSQL function public.create_friend_invitation(text) line 5 at RAISE
+2026-10-11 18:47:08.041 CEST [184162] STATEMENT:  set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.create_friend_invitation('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+2026-10-11 18:47:08.050 CEST [184164] ERROR:  This invitation is unavailable.
+2026-10-11 18:47:08.050 CEST [184164] CONTEXT:  PL/pgSQL function public.create_friend_invitation(text) line 12 at RAISE
+2026-10-11 18:47:08.050 CEST [184164] STATEMENT:  set role authenticated; set request.jwt.claim.sub='22222222-2222-4222-8222-222222222222'; select public.create_friend_invitation('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+2026-10-11 18:47:08.057 CEST [184166] ERROR:  permission denied for function create_friend_invitation
+2026-10-11 18:47:08.057 CEST [184166] STATEMENT:  set role anon; select public.create_friend_invitation('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+2026-10-11 18:47:08.064 CEST [184168] ERROR:  Authentication is required.
+2026-10-11 18:47:08.064 CEST [184168] CONTEXT:  PL/pgSQL function private.require_friend_actor() line 4 at RAISE
+	PL/pgSQL function public.list_friends(integer,integer) line 2 during statement block local variable initialization
+2026-10-11 18:47:08.064 CEST [184168] STATEMENT:  set role authenticated; select public.list_friends()
+2026-10-11 18:47:08.080 CEST [184172] ERROR:  A verified Spotify profile is required.
+2026-10-11 18:47:08.080 CEST [184172] CONTEXT:  PL/pgSQL function private.require_friend_actor() line 6 at RAISE
+	PL/pgSQL function public.list_friends(integer,integer) line 2 during statement block local variable initialization
+2026-10-11 18:47:08.080 CEST [184172] STATEMENT:  set role authenticated; set request.jwt.claim.sub='33333333-3333-4333-8333-333333333333'; select public.list_friends()
+2026-10-11 18:47:08.115 CEST [184180] ERROR:  This invitation is unavailable.
+2026-10-11 18:47:08.115 CEST [184180] CONTEXT:  PL/pgSQL function public.preview_friend_invitation(text) line 10 at RAISE
+2026-10-11 18:47:08.115 CEST [184180] STATEMENT:  set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.preview_friend_invitation('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+2026-10-11 18:47:08.124 CEST [184182] ERROR:  This invitation is unavailable.
+2026-10-11 18:47:08.124 CEST [184182] CONTEXT:  PL/pgSQL function public.respond_friend_invitation(text,boolean) line 10 at RAISE
+2026-10-11 18:47:08.124 CEST [184182] STATEMENT:  set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.respond_friend_invitation('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',true)
+2026-10-11 18:47:08.133 CEST [184184] ERROR:  A valid invitation decision is required.
+2026-10-11 18:47:08.133 CEST [184184] CONTEXT:  PL/pgSQL function public.respond_friend_invitation(text,boolean) line 5 at RAISE
+2026-10-11 18:47:08.133 CEST [184184] STATEMENT:  set role authenticated; set request.jwt.claim.sub='22222222-2222-4222-8222-222222222222'; select public.respond_friend_invitation('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',null)
+2026-10-11 18:47:08.142 CEST [184186] ERROR:  This invitation is unavailable.
+2026-10-11 18:47:08.142 CEST [184186] CONTEXT:  PL/pgSQL function public.revoke_friend_invitation(uuid) line 6 at RAISE
+2026-10-11 18:47:08.142 CEST [184186] STATEMENT:  set role authenticated; set request.jwt.claim.sub='22222222-2222-4222-8222-222222222222'; select public.revoke_friend_invitation('389c3d31-e6fc-4cde-b82f-e3f00fff146f')
+2026-10-11 18:47:08.148 CEST [184188] ERROR:  permission denied for schema private at character 39
+2026-10-11 18:47:08.148 CEST [184188] STATEMENT:  set role authenticated; select * from private.friend_invitations
+2026-10-11 18:47:08.154 CEST [184190] ERROR:  permission denied for schema private at character 39
+2026-10-11 18:47:08.154 CEST [184190] STATEMENT:  set role authenticated; select * from private.friendships
+2026-10-11 18:47:08.236 CEST [184208] ERROR:  This invitation has already been answered.
+2026-10-11 18:47:08.236 CEST [184208] CONTEXT:  PL/pgSQL function public.respond_friend_invitation(text,boolean) line 14 at RAISE
+2026-10-11 18:47:08.236 CEST [184208] STATEMENT:  set role authenticated; set request.jwt.claim.sub='33333333-3333-4333-8333-333333333333'; select public.respond_friend_invitation('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',true)
+2026-10-11 18:47:08.245 CEST [184210] ERROR:  This invitation has already been answered.
+2026-10-11 18:47:08.245 CEST [184210] CONTEXT:  PL/pgSQL function public.respond_friend_invitation(text,boolean) line 14 at RAISE
+2026-10-11 18:47:08.245 CEST [184210] STATEMENT:  set role authenticated; set request.jwt.claim.sub='22222222-2222-4222-8222-222222222222'; select public.respond_friend_invitation('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',false)
+2026-10-11 18:47:08.255 CEST [184212] ERROR:  This invitation is unavailable.
+2026-10-11 18:47:08.255 CEST [184212] CONTEXT:  PL/pgSQL function public.preview_friend_invitation(text) line 10 at RAISE
+2026-10-11 18:47:08.255 CEST [184212] STATEMENT:  set role authenticated; set request.jwt.claim.sub='33333333-3333-4333-8333-333333333333'; select public.preview_friend_invitation('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+2026-10-11 18:47:08.456 CEST [184279] ERROR:  This invitation is unavailable.
+2026-10-11 18:47:08.456 CEST [184279] CONTEXT:  PL/pgSQL function public.respond_friend_invitation(text,boolean) line 10 at RAISE
+2026-10-11 18:47:08.456 CEST [184279] STATEMENT:  set role authenticated; set request.jwt.claim.sub='22222222-2222-4222-8222-222222222222'; select public.respond_friend_invitation('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',true)
+2026-10-11 18:47:08.467 CEST [184281] ERROR:  This invitation is unavailable.
+2026-10-11 18:47:08.467 CEST [184281] CONTEXT:  PL/pgSQL function public.preview_friend_invitation(text) line 10 at RAISE
+2026-10-11 18:47:08.467 CEST [184281] STATEMENT:  set role authenticated; set request.jwt.claim.sub='22222222-2222-4222-8222-222222222222'; select public.preview_friend_invitation('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+2026-10-11 18:47:08.506 CEST [184289] ERROR:  This invitation has already been answered.
+2026-10-11 18:47:08.506 CEST [184289] CONTEXT:  PL/pgSQL function public.respond_friend_invitation(text,boolean) line 14 at RAISE
+2026-10-11 18:47:08.506 CEST [184289] STATEMENT:  set role authenticated; set request.jwt.claim.sub='33333333-3333-4333-8333-333333333333'; select public.respond_friend_invitation('ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',true)
+2026-10-11 18:47:08.515 CEST [184291] ERROR:  Invalid friends page.
+2026-10-11 18:47:08.515 CEST [184291] CONTEXT:  PL/pgSQL function public.list_friends(integer,integer) line 5 at RAISE
+2026-10-11 18:47:08.515 CEST [184291] STATEMENT:  set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.list_friends(0,0)
+2026-10-11 18:47:08.523 CEST [184293] ERROR:  Invalid invitation page.
+2026-10-11 18:47:08.523 CEST [184293] CONTEXT:  PL/pgSQL function public.list_friend_invitations(integer,integer) line 5 at RAISE
+2026-10-11 18:47:08.523 CEST [184293] STATEMENT:  set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.list_friend_invitations(0,0)
+2026-10-11 18:47:08.532 CEST [184295] ERROR:  Invalid friends page.
+2026-10-11 18:47:08.532 CEST [184295] CONTEXT:  PL/pgSQL function public.list_friends(integer,integer) line 5 at RAISE
+2026-10-11 18:47:08.532 CEST [184295] STATEMENT:  set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.list_friends(101,0)
+2026-10-11 18:47:08.541 CEST [184297] ERROR:  Invalid invitation page.
+2026-10-11 18:47:08.541 CEST [184297] CONTEXT:  PL/pgSQL function public.list_friend_invitations(integer,integer) line 5 at RAISE
+2026-10-11 18:47:08.541 CEST [184297] STATEMENT:  set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.list_friend_invitations(101,0)
+2026-10-11 18:47:08.550 CEST [184299] ERROR:  Invalid friends page.
+2026-10-11 18:47:08.550 CEST [184299] CONTEXT:  PL/pgSQL function public.list_friends(integer,integer) line 5 at RAISE
+2026-10-11 18:47:08.550 CEST [184299] STATEMENT:  set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.list_friends(null,0)
+2026-10-11 18:47:08.558 CEST [184301] ERROR:  Invalid invitation page.
+2026-10-11 18:47:08.558 CEST [184301] CONTEXT:  PL/pgSQL function public.list_friend_invitations(integer,integer) line 5 at RAISE
+2026-10-11 18:47:08.558 CEST [184301] STATEMENT:  set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.list_friend_invitations(null,0)
+2026-10-11 18:47:08.567 CEST [184303] ERROR:  Invalid friends page.
+2026-10-11 18:47:08.567 CEST [184303] CONTEXT:  PL/pgSQL function public.list_friends(integer,integer) line 5 at RAISE
+2026-10-11 18:47:08.567 CEST [184303] STATEMENT:  set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.list_friends(1,-1)
+2026-10-11 18:47:08.575 CEST [184305] ERROR:  Invalid invitation page.
+2026-10-11 18:47:08.575 CEST [184305] CONTEXT:  PL/pgSQL function public.list_friend_invitations(integer,integer) line 5 at RAISE
+2026-10-11 18:47:08.575 CEST [184305] STATEMENT:  set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.list_friend_invitations(1,-1)
+2026-10-11 18:47:08.584 CEST [184307] ERROR:  Invalid friends page.
+2026-10-11 18:47:08.584 CEST [184307] CONTEXT:  PL/pgSQL function public.list_friends(integer,integer) line 5 at RAISE
+2026-10-11 18:47:08.584 CEST [184307] STATEMENT:  set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.list_friends(1,null)
+2026-10-11 18:47:08.592 CEST [184309] ERROR:  Invalid invitation page.
+2026-10-11 18:47:08.592 CEST [184309] CONTEXT:  PL/pgSQL function public.list_friend_invitations(integer,integer) line 5 at RAISE
+2026-10-11 18:47:08.592 CEST [184309] STATEMENT:  set role authenticated; set request.jwt.claim.sub='11111111-1111-4111-8111-111111111111'; select public.list_friend_invitations(1,null)
+2026-10-11 18:47:08.648 CEST [184324] ERROR:  This invitation has already been answered.
+2026-10-11 18:47:08.648 CEST [184324] CONTEXT:  PL/pgSQL function public.respond_friend_invitation(text,boolean) line 14 at RAISE
+2026-10-11 18:47:08.648 CEST [184324] STATEMENT:  set application_name='friend-c'; set role authenticated; set request.jwt.claim.sub='33333333-3333-4333-8333-333333333333'; select public.respond_friend_invitation('1111111111111111111111111111111111111111111111111111111111111111',true)
+2026-10-11 18:47:08.703 CEST [184334] ERROR:  This invitation is unavailable.
+2026-10-11 18:47:08.703 CEST [184334] CONTEXT:  PL/pgSQL function public.respond_friend_invitation(text,boolean) line 10 at RAISE
+2026-10-11 18:47:08.703 CEST [184334] STATEMENT:  set application_name='friend-after-revoke'; set role authenticated; set request.jwt.claim.sub='22222222-2222-4222-8222-222222222222'; select public.respond_friend_invitation('2222222222222222222222222222222222222222222222222222222222222222',true)
+2026-10-11 18:47:08.802 CEST [184363] ERROR:  division by zero
+2026-10-11 18:47:08.802 CEST [184363] STATEMENT:  set role authenticated; set request.jwt.claim.sub='22222222-2222-4222-8222-222222222222'; begin; select public.respond_friend_invitation('5555555555555555555555555555555555555555555555555555555555555555',true); select 1/0; commit;
+2026-10-11 18:47:08.884 CEST [184411] ERROR:  Revoke a pending invitation before creating another.
+2026-10-11 18:47:08.884 CEST [184411] CONTEXT:  PL/pgSQL function public.create_friend_invitation(text) line 15 at RAISE
+2026-10-11 18:47:08.884 CEST [184411] STATEMENT:  set role authenticated; set request.jwt.claim.sub='33333333-3333-4333-8333-333333333333'; select public.create_friend_invitation('6666666666666666666666666666666666666666666666666666666666666666')
+2026-10-11 18:47:08.947 CEST [184425] ERROR:  function public.receive_friend_invitation(unknown) does not exist at character 98
+2026-10-11 18:47:08.947 CEST [184425] HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+2026-10-11 18:47:08.947 CEST [184425] STATEMENT:  set role authenticated; set request.jwt.claim.sub='22222222-2222-4222-8222-222222222222'; select public.receive_friend_invitation('7777777777777777777777777777777777777777777777777777777777777777')
+
+node:internal/errors:999
+  const err = new Error(message);
+              ^
+
+Error: Command failed: /tmp/analytify-postgres-runtime/root/usr/bin/psql -X -h /tmp/analytify-friends-contract-1olu0u/socket -U analytify_test -d postgres -v ON_ERROR_STOP=1 -qAt -c set role authenticated; set request.jwt.claim.sub='22222222-2222-4222-8222-222222222222'; select public.receive_friend_invitation('7777777777777777777777777777777777777777777777777777777777777777')
+ERROR:  function public.receive_friend_invitation(unknown) does not exist
+LINE 1: ...ub='22222222-2222-4222-8222-222222222222'; select public.rec...
+                                                             ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+    at genericNodeError (node:internal/errors:999:15)
+    at wrappedFn (node:internal/errors:544:14)
+    at ChildProcess.exithandler (node:child_process:420:12)
+    at ChildProcess.emit (node:events:514:20)
+    at maybeClose (node:internal/child_process:1156:16)
+    at ChildProcess._handle.onexit (node:internal/child_process:334:5) {
+  code: 1,
+  killed: false,
+  signal: null,
+  cmd: "/tmp/analytify-postgres-runtime/root/usr/bin/psql -X -h /tmp/analytify-friends-contract-1olu0u/socket -U analytify_test -d postgres -v ON_ERROR_STOP=1 -qAt -c set role authenticated; set request.jwt.claim.sub='22222222-2222-4222-8222-222222222222'; select public.receive_friend_invitation('7777777777777777777777777777777777777777777777777777777777777777')",
+  stdout: '',
+  stderr: 'ERROR:  function public.receive_friend_invitation(unknown) does not exist\n' +
+    "LINE 1: ...ub='22222222-2222-4222-8222-222222222222'; select public.rec...\n" +
+    '                                                             ^\n' +
+    'HINT:  No function matches the given name and argument types. You might need to add explicit type casts.\n'
+}
+
+Node.js v26.11.1

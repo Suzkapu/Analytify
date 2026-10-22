@@ -1,0 +1,59 @@
+{
+  "checkedAt": "2026-10-20",
+  "branch": "codex/design-v2",
+  "HEAD": "a8a7a3966a622c992e9058094627a768c16a363a",
+  "localMain": "a467ddb15f4f507cac822772b5c044c0f7a6db44",
+  "originMain": "98a22af02eccd900f82423e9b88cb7fd8d0bdd19",
+  "actualRemoteMain": "98a22af02eccd900f82423e9b88cb7fd8d0bdd19",
+  "freshness": "Read-only git ls-remote succeeded with approved network execution; actual remote main matches origin/main. Local main is stale. No fetch/merge/reset/cherry-pick/checkout performed. Remote state may subsequently change.",
+  "mainFeatureCommit": "67448b0d2f90d246dc4bb6a79d5e2441e4c5701e",
+  "mainSemantics": [
+    "One recommendation per member per league-local Friday-to-Friday week, accepted any day.",
+    "Next-local-day scoring start; expiry stays the same Friday cohort ending Saturday midnight after four scoring weeks. Late picks have less scoring time. Thursday does not consume Friday allowance.",
+    "Permanent points, strict discovery validation/frozen baseline and unique round/member constraint retained.",
+    "Each acceptance increments playlist revision and makes active-member existing playlist sync tasks due; feature-required retries any day. Optional administrator-only Friday scheduling retained.",
+    "Playlist ownership/leases/revisions/written-approval safeguards retained."
+  ],
+  "developmentDrift": [
+    "Controller still Friday-gated with sameLeagueDay/alreadySubmittedToday, labels Starts Saturday; main sameLeagueWeek/alreadySubmittedThisWeek, any-day gate and Starts tomorrow.",
+    "Home/detail/rules copy remains Friday-only and four-week wording.",
+    "Development lacks migration20261011093125_song_league_any_day_picks.sql, main note docs/song-league-any-day-picks.md and main SQL test supabase/tests/song_league_any_day_picks.test.sql.",
+    "Worker lacks requiredField bypass before optional Friday gating.",
+    "Edge playlist description still This Friday picks rather than active picks; no scheduling logic change in that edge diff."
+  ],
+  "canonicalFigmaReferenceInMainNote": "https://www.figma.com/design/5v8ckmlbfhMDWwP5sTdSXd/Analytify?node-id=996-32242",
+  "scopeLimit": "Read-only source audit only; no execution of main SQL, backend verification, or full Figma-node inspection. Reconciliation belongs to later League UI slice.",
+  "files": {
+    "src/app/core/song-league/song-league.service.ts": {
+      "currentSHA256": "56a23960b9ddf28e41d12b96bd3031e14a074a33871ef5442864ecf68ec5a107",
+      "originMainSHA256": "56a23960b9ddf28e41d12b96bd3031e14a074a33871ef5442864ecf68ec5a107"
+    },
+    "services/sync-service/task-registry.js": {
+      "currentSHA256": "7a6e21a9ee1e1e5dc82a1b3db18ed8ba9a945fd4f94aba7b83075375d9f614cd",
+      "originMainSHA256": "3424e931da96f9bef271b727707c4cd4ebfcd76d1c76459f4741567b0dac76d8"
+    },
+    "supabase/functions/song-league-playlist-sync/index.ts": {
+      "currentSHA256": "8a3bf546a0a1880171559075626fd9436ee7977bbcca8e40e5fe240aa62f6b28",
+      "originMainSHA256": "ed3c252a04146863d7f02ac131a72fd50323e5e1d00508ec0bac1c8faea31048"
+    },
+    "src/app/features/song-league/song-league-detail.component.ts": {
+      "currentSHA256": "b5a9369a98673d8e04831e60a19eab6250afd8d8f07ea33ef6087958ab15ce70",
+      "originMainSHA256": "026485ef746ec1999706129f5afdcbb4bcc259cf3732cbddf95291ebe973c878"
+    },
+    "src/app/features/song-league/song-league-detail.component.html": {
+      "currentSHA256": "e03fd13dc40d102ab129468a5d81fab9a6e2bafb91022c7ecd110e6767522a82",
+      "originMainSHA256": "3321d8219c363f37584ed4e65fa61c4ee225dac1cac1d4683aeca57b8e26db8e"
+    },
+    "src/app/features/song-league/song-league-home.component.html": {
+      "currentSHA256": "8f565415a19c37c5f1f4f4fe887692a544fc5f330058ea6a7fee96a1a176fb9e",
+      "originMainSHA256": "dc869ee15636094a52a640865d945bebb47ca603c368fd2f32bbc81a4699ebdb"
+    },
+    "src/app/features/song-league/song-league-rules.component.html": {
+      "currentSHA256": "10a285fd488d2616247cdf249ae61e5e21dbecab35fc8d57fbcaa96cf3e5a9cd",
+      "originMainSHA256": "02ba03a58cce03d1775ea52a51e18c4e41d60922048e07f82629b0e13cb2cae4"
+    }
+  },
+  "phase": "Read-only audit before the separately approved local creation-recovery fix",
+  "serviceIdenticalToOriginMainAtAuditTime": true,
+  "subsequentLocalChange": "Only approved pending-creation identity map fix; no main feature/controller/worker/edge/SQL port."
+}

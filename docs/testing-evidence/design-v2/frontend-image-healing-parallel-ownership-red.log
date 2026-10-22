@@ -1,0 +1,219 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/sync/image-healing/*ownership.spec.ts --runner-config=docs/testing-evidence/design-v2/frontend-image-healing-parallel-vitest.config.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-image-healing-parallel-vitest.config.mjs
+Application bundle generation complete. [3.325 seconds] - 2026-10-17T14:19:46.284Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stdout | src/app/core/sync/image-healing/image-healing-ownership.spec.ts > Image recovery ownership regressions > does not persist an old account artist response into the replacement account
+[Analytify][0001][+00006ms][Image Recovery][STEP] Recovering 1 missing artist image(s) from Supabase, then Spotify.
+
+stderr | src/app/core/sync/image-healing/image-healing-ownership.spec.ts > Image recovery ownership regressions > does not persist an old account artist response into the replacement account
+AssertionError: expected [ { owner: 'account-b', …(2) }, …(1) ] to deeply equal []
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/image-healing/image-healing-ownership.spec.ts:27:22
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [
+    {
+      owner: 'account-b',
+      key: 'visible-artists',
+      value: '[{"id":"artist-a","images":[{"url":"https://fixture/old-account-image"}]}]'
+    },
+    {
+      owner: 'account-b',
+      key: 'visible-artists',
+      value: '[{"id":"artist-a","images":[{"url":"https://fixture/old-account-image"}]}]'
+    }
+  ],
+  expected: [],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stdout | src/app/core/sync/image-healing/image-healing-ownership.spec.ts > Image recovery ownership regressions > does not upload or publish an old account track response after account replacement
+[Analytify][0002][+00023ms][Image Recovery][STEP] 1 track(s) with missing album covers. Re-fetching.
+
+stderr | src/app/core/sync/image-healing/image-healing-ownership.spec.ts > Image recovery ownership regressions > does not upload or publish an old account track response after account replacement
+AssertionError: expected [ { owner: 'account-b', …(1) } ] to deeply equal []
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/image-healing/image-healing-ownership.spec.ts:42:23
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [ { owner: 'account-b', rows: [Array] } ],
+  expected: [],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stdout | src/app/core/sync/image-healing/image-healing-ownership.spec.ts > Image recovery ownership regressions > repairs a valid artist when a partially populated cache also contains a null row
+[Analytify][0003][+00026ms][Image Recovery][STEP] Recovering 1 missing artist image(s) from Supabase, then Spotify.
+
+stderr | src/app/core/sync/image-healing/image-healing-ownership.spec.ts > Image recovery ownership regressions > repairs a valid artist when a partially populated cache also contains a null row
+[Analytify][0004][+00026ms][Image Recovery][WARN] Artist image recovery failed {
+  name: 'TypeError',
+  message: "Cannot read properties of null (reading 'id')",
+  stack: "TypeError: Cannot read properties of null (reading 'id')\n" +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/image-healing/image-healing.service.ts:110:47\n' +
+    '    at Array.forEach (<anonymous>)\n' +
+    '    at applyProfiles (/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/image-healing/image-healing.service.ts:109:15)\n' +
+    '    at ImageHealingService2.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/image-healing/image-healing.service.ts:130:19)\n' +
+    '    at Generator.next (<anonymous>)\n' +
+    '    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)\n' +
+    '    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)\n' +
+    '    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)\n' +
+    '    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30\n' +
+    '    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)'
+}
+AssertionError: expected [] to deeply equal [ Array(1) ]
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sync/image-healing/image-healing-ownership.spec.ts:53:28
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [],
+  expected: [ { url: 'https://fixture/recovered' } ],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+ ❯ |SpotiFront| src/app/core/sync/image-healing/image-healing-ownership.spec.ts (3 tests | 3 failed) 25ms
+     × does not persist an old account artist response into the replacement account 18ms
+     × does not upload or publish an old account track response after account replacement 3ms
+     × repairs a valid artist when a partially populated cache also contains a null row 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/sync/image-healing/image-healing-ownership.spec.ts > Image recovery ownership regressions > does not persist an old account artist response into the replacement account
+AssertionError: expected [ { owner: 'account-b', …(2) }, …(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "key": "visible-artists",
++     "owner": "account-b",
++     "value": "[{\"id\":\"artist-a\",\"images\":[{\"url\":\"https://fixture/old-account-image\"}]}]",
++   },
++   {
++     "key": "visible-artists",
++     "owner": "account-b",
++     "value": "[{\"id\":\"artist-a\",\"images\":[{\"url\":\"https://fixture/old-account-image\"}]}]",
++   },
++ ]
+
+ ❯ src/app/core/sync/image-healing/image-healing-ownership.spec.ts:27:22
+     25|     finish([{id: 'artist-a', images: [{url: 'https://fixture/old-accou…
+     26|     await settled();
+     27|     expect(h.writes).toEqual([]);
+       |                      ^
+     28|     expect(rows[0].images).toEqual([]);
+     29|     expect(h.uploads).toEqual([]);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |SpotiFront| src/app/core/sync/image-healing/image-healing-ownership.spec.ts > Image recovery ownership regressions > does not upload or publish an old account track response after account replacement
+AssertionError: expected [ { owner: 'account-b', …(1) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "owner": "account-b",
++     "rows": [
++       {
++         "album": {
++           "images": [
++             {
++               "url": "https://fixture/old-account-image",
++             },
++           ],
++         },
++         "id": "track-a",
++       },
++     ],
++   },
++ ]
+
+ ❯ src/app/core/sync/image-healing/image-healing-ownership.spec.ts:42:23
+     40|     request.complete();
+     41|     await settled();
+     42|     expect(h.uploads).toEqual([]);
+       |                       ^
+     43|     expect(h.writes).toEqual([]);
+     44|     expect(rows[0].album.images).toEqual([]);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |SpotiFront| src/app/core/sync/image-healing/image-healing-ownership.spec.ts > Image recovery ownership regressions > repairs a valid artist when a partially populated cache also contains a null row
+AssertionError: expected [] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+- [
+-   {
+-     "url": "https://fixture/recovered",
+-   },
+- ]
++ []
+
+ ❯ src/app/core/sync/image-healing/image-healing-ownership.spec.ts:53:28
+     51|     h.service.healArtistImages(rows, 'visible-artists');
+     52|     await settled();
+     53|     expect(rows[1].images).toEqual([{url: 'https://fixture/recovered'}…
+       |                            ^
+     54|     expect(JSON.parse(h.writes[0].value)).toEqual(rows);
+     55|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  16:19:46
+   Duration  983ms (transform 146ms, setup 260ms, import 162ms, tests 25ms, environment 379ms)
+

@@ -1,0 +1,57 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.navigation.config.ts --project=desktop --grep Desktop sidebar.*reduce --output=docs/testing-evidence/design-v2/sidebar-motion-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214
+[WebServer] (node:96421) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:96421) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:96706) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (reduce) (8.8s)
+
+
+  1) [desktop] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (reduce) 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('.design-v2')
+    Expected: "none"
+    Received: "all"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('.design-v2') with timeout 5000ms
+      - waiting for locator('.design-v2')
+        14 × locator resolved to <div data-chrome="app" data-page="settings" data-ambient="account" data-design-variant="new" _ngcontent-ng-c2817084706="" class="design-v2 has-mobile-shortcuts">…</div>
+           - unexpected value "all"
+
+
+      47 |     const sidebar = page.getByRole('complementary', {name: 'Desktop sidebar'});
+      48 |     if (motion === 'reduce') {
+    > 49 |       await expect(page.locator('.design-v2')).toHaveCSS('transition-property', 'none');
+         |                                                ^
+      50 |       await expect(sidebar).toHaveCSS('transition-property', 'none');
+      51 |     }
+      52 |     const geometry = [];
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-navigation.spec.ts:49:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/sidebar-motion-red-artifacts/design-v2-navigation-Deskt-f8687-mobile-independence-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/sidebar-motion-red-artifacts/design-v2-navigation-Deskt-f8687-mobile-independence-reduce--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/sidebar-motion-red-artifacts/design-v2-navigation-Deskt-f8687-mobile-independence-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/sidebar-motion-red-artifacts/design-v2-navigation-Deskt-f8687-mobile-independence-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-navigation.spec.ts:42:7 › Desktop sidebar keeps geometry and mobile independence (reduce) 

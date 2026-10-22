@@ -1,0 +1,57 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.navigation.config.ts --project=desktop --grep=reduce
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214
+[WebServer] (node:229611) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:229611) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:229910) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (reduce) (9.9s)
+
+
+  1) [desktop] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (reduce) 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  locator('v2-settings-navigation-preferences').getByRole('status').filter({ hasText: /^\d of 5 shortcuts selected$/ })
+    Expected: "1 of 5 shortcuts selected"
+    Received: "0 of 5 shortcuts selected"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" locator('v2-settings-navigation-preferences').getByRole('status').filter({ hasText: /^\d of 5 shortcuts selected$/ }) with timeout 5000ms
+      - waiting for locator('v2-settings-navigation-preferences').getByRole('status').filter({ hasText: /^\d of 5 shortcuts selected$/ })
+        12 × locator resolved to <p role="status" _ngcontent-ng-c4099037600="">0 of 5 shortcuts selected</p>
+           - unexpected value "0 of 5 shortcuts selected"
+
+
+      86 |     await expect(count).toHaveText('1 of 5 shortcuts selected');
+      87 |     await page.reload();
+    > 88 |     await expect(count).toHaveText('1 of 5 shortcuts selected');
+         |                         ^
+      89 |     await expect(bar.getByRole('link', {includeHidden: true})).toHaveText(['Friends']);
+      90 |     await expectNativeTransitionsSettled(page); await expectNoBlockingAxeViolations(page);
+      91 |     await page.evaluate(() => document.fonts.ready);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-navigation.spec.ts:88:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (reduce) 

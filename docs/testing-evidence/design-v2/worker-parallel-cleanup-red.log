@@ -1,0 +1,132 @@
+✔ startup records release identity, migrates and rotates before exposing a scheduler (2.888209ms)
+✔ one-shot service records readiness, pass success and always shuts down after success (0.844569ms)
+✔ startup failure closes readiness endpoint: {"releaseError":true} (0.841543ms)
+✔ startup failure closes readiness endpoint: {"start":"startup failed"} (0.962389ms)
+✔ startup failure closes readiness endpoint: {"markReady":"ready failed"} (0.444962ms)
+✔ one-shot pass failure persists failure and propagates to the caller (1.572961ms)
+✔ shutdown still closes health if runtime stop fails (0.504744ms)
+✔ watch mode stops cleanly on SIGINT after a failed pass (0.473295ms)
+✔ watch mode stops cleanly on SIGTERM after a failed pass (0.402062ms)
+✔ watch mode recovers on the next pass with a minimum wait after an overlong pass (0.637452ms)
+✔ direct entrypoint reports fatal startup errors with a failing exit code (3.207877ms)
+✔ compatibility entrypoint invokes one-shot mode and propagates a fatal exit status (0.669823ms)
+✖ failed startup/pass releases acquired resources exactly once: {"passError":true} (1.258703ms)
+✖ failed startup/pass releases acquired resources exactly once: {"markReady":"ready failed"} (0.429774ms)
+✖ failed startup/pass releases acquired resources exactly once: {"migrateError":true} (0.399397ms)
+✖ failed startup/pass releases acquired resources exactly once: {"rotationError":true} (0.506407ms)
+✖ cleanup failures retain original pass failure and still close readiness (0.497511ms)
+✔ migration cleanup failure retains the original startup error (0.292937ms)
+✔ successful runs surface readiness close failure (0.3047ms)
+✖ repeated in-process runs remove their own signal listeners without touching unrelated listeners (0.551731ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 14
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 35.474821
+
+✖ failing tests:
+
+test at services/sync-service/index.test.js:67:111
+✖ failed startup/pass releases acquired resources exactly once: {"passError":true} (1.258703ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/index.test.js:68:97)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at services/sync-service/index.test.js:67:111
+✖ failed startup/pass releases acquired resources exactly once: {"markReady":"ready failed"} (0.429774ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/index.test.js:68:97)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at services/sync-service/index.test.js:67:111
+✖ failed startup/pass releases acquired resources exactly once: {"migrateError":true} (0.399397ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/index.test.js:68:97)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at services/sync-service/index.test.js:67:111
+✖ failed startup/pass releases acquired resources exactly once: {"rotationError":true} (0.506407ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/index.test.js:68:97)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at services/sync-service/index.test.js:70:1
+✖ cleanup failures retain original pass failure and still close readiness (0.497511ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/index.test.js:71:156)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at services/sync-service/index.test.js:79:1
+✖ repeated in-process runs remove their own signal listeners without touching unrelated listeners (0.551731ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 4
+  
+      at TestContext.<anonymous> (/mnt/Storage/ProgrammingProjects/Analytify/services/sync-service/index.test.js:80:105)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 4,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

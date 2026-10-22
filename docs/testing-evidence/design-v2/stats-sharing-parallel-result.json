@@ -1,0 +1,89 @@
+{
+  "scope": "Stats Sharing active RPC boundaries; legacy block management and Realtime unchanged",
+  "sources": {
+    "src/app/core/sharing/stats-sharing.service.ts": "977923feec9e1da1a4570665e38f6cfb72afce05c5e0648d75c0b388b2b8347e",
+    "src/app/core/sharing/stats-sharing.service.spec.ts": "814a0044b74a8ff605afc159fc5d7ea7a9cb470aab9d5ce5e444ce5828c74297",
+    "src/app/core/sharing/stats-sharing-transport-boundary.spec.ts": "cb13cc608662a089ae5f444cff01b94acea3cc01fc8146f87175d4928d8bc741",
+    "src/app/core/sharing/stats-sharing-session-boundary.spec.ts": "5b1382eae868870a91231541b399790ca9f6d903896035e1dc424812f846945b",
+    "src/app/features/insights/user-stats/stats-shared-recipient-boundary.spec.ts": "0e2fd2a0bbb1430e29513946ab5eaf9ff53da3b86c22fd162f24280facfdea21",
+    "docs/testing-evidence/design-v2/stats-sharing-parallel-vitest.mjs": "aee1f839532fb3aad59b47ff2d04ab62ab50a41df12a8c644b640856d363e2e6"
+  },
+  "reports": {
+    "docs/testing-evidence/design-v2/stats-sharing-parallel-coverage/coverage-summary.json": "d9e9818dd17a6143cc4957c40810ff4ed59b8bc5f69ca42e5d63d5808210fb62",
+    "docs/testing-evidence/design-v2/stats-sharing-parallel-coverage/coverage-final.json": "67e5b3bc9dbf84571bb482e011214c340fb3a809a9fa13718870816ecc6535de"
+  },
+  "coverage": {
+    "lines": {
+      "total": 100,
+      "covered": 100,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 157,
+      "covered": 154,
+      "skipped": 0,
+      "pct": 98.08
+    },
+    "functions": {
+      "total": 52,
+      "covered": 52,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 153,
+      "covered": 145,
+      "skipped": 0,
+      "pct": 94.77
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": "Unknown"
+    }
+  },
+  "commands": {
+    "baseline": {
+      "exit": 0,
+      "passed": 15,
+      "files": 1
+    },
+    "acceptance-red": {
+      "exit": 1,
+      "passed": 45,
+      "failed": 1
+    },
+    "lifecycle-red": {
+      "exit": 1,
+      "failed": 2
+    },
+    "scoped-final": {
+      "exit": 0,
+      "passed": 81,
+      "files": 4
+    },
+    "recipient-regression": {
+      "exit": 0,
+      "passed": 263,
+      "files": 17
+    },
+    "eslint": {
+      "exit": 0
+    },
+    "typecheck-tests": {
+      "exit": 0
+    },
+    "stats-sharing-contract": {
+      "exit": 0
+    }
+  },
+  "sdkVersion": "2.117.2",
+  "limitations": [
+    "No hosted Auth/Realtime/SQL/RLS test",
+    "Scoped branch94.77% does not meet98% gate; no exclusions used",
+    "Global final application coverage and combinedCI belong to parent",
+    "Realtime service itself lacks lifecycle registration/callback binding; component destruction cleanup has existing regression tests"
+  ]
+}

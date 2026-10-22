@@ -29,6 +29,8 @@ export function productionSourceInventory() {
       const reason = /\.(test|spec)\./.test(path) ? 'test source'
         : /\.d\.ts$/.test(path) ? 'declaration file'
         : path === 'src/test-setup.ts' ? 'test environment setup'
+        : ['src/main.browser-testing.ts', 'src/environments/environment.browser-testing.ts'].includes(path)
+          ? 'dedicated loopback browser-test bootstrap/configuration; absent from production build'
         : path.endsWith('.ts') && declarationOnly(path) ? 'type-only source (AST checked)' : null;
       if (reason) exclusions.push({path, reason});
       return !reason;

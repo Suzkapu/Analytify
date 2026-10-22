@@ -1,0 +1,14 @@
+Check supabase/functions/song-league-notifications/delivery-state.test.ts
+Check supabase/functions/song-league-notifications/web-push.test.ts
+running 4 tests from ./supabase/functions/song-league-notifications/delivery-state.test.ts
+push delivery marks every delivery type sent only after the transport completes ... ok (1ms)
+expired subscriptions are removed without falsely marking a delivery sent or retryable ... ok (224µs)
+push errors retry below the attempt limit, exhaust at the boundary and truncate private transport details ... ok (683µs)
+sent, retry and subscription cleanup persistence failures propagate to the caller ... ok (763µs)
+running 3 tests from ./supabase/functions/song-league-notifications/web-push.test.ts
+web push sends a verifiable VAPID JWT and payload decryptable by the subscribed browser only ... ok (40ms)
+web push rejects invalid destinations and signing keys without opening transport ... ok (2ms)
+web push consumes no response payload and returns classified HTTP failures, bounded response errors and cancellation recovery ... ok (18ms)
+
+ok | 7 passed | 0 failed (125ms)
+

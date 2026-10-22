@@ -33,7 +33,7 @@ describe('canonical application routes', () => {
   it('keeps every product and public route in the canonical shell', () => {
     expect(shell.children?.map(route => route.path)).toEqual([
       '', 'login', 'callback', 'spotify', 'playlists', 'songs/:id', 'artistDetails/:id',
-      'analysis/:id', 'stats/:userId', 'stats', 'history', 'settings/install', 'settings/updates/:id', 'settings', 'admin', 'song-league', 'shared-playlists',
+      'analysis/:id', 'stats/:userId', 'stats', 'history', 'settings/install', 'settings/updates/:id', 'settings', 'admin', 'song-league', 'friends', 'shared-playlists',
       'legal', 'compare-room/callback', 'compare-room/join/:roomId', 'compare-room', '**'
     ]);
     for (const route of shell.children?.filter(candidate => candidate.loadChildren || candidate.loadComponent) ?? []) {
@@ -43,6 +43,13 @@ describe('canonical application routes', () => {
         pageWidth: expect.stringMatching(/^(reading|form|default|dashboard|wide|full)$/),
         ambientKey: expect.any(String), preload: expect.any(Boolean)
       }));
+    }
+  });
+
+  it('selects the canonical background scene for actual product route families', () => {
+    for (const [path, scene] of [['playlists', 'library'], ['stats', 'insights'], ['history', 'insights'],
+      ['friends', 'social'], ['compare-room', 'social'], ['song-league', 'league'], ['settings', 'account']] as const) {
+      expect(routeByPath(path)?.data?.['ambientKey']).toBe(scene);
     }
   });
 
@@ -79,9 +86,18 @@ describe('canonical application routes', () => {
     expect(routeByPath('song-league')?.canActivate)
       .toEqual([spotifyAuthGuard, cloudIdentityGuard, spotifyRestrictedFeatureGuard]);
     expect(routeByPath('shared-playlists')?.canActivate).toEqual([spotifyAuthGuard, cloudIdentityGuard]);
+    expect(routeByPath('friends')?.canActivate).toEqual([spotifyAuthGuard, cloudIdentityGuard]);
     for (const path of ['stats', 'history', 'compare-room', 'compare-room/callback', 'compare-room/join/:roomId']) {
       expect(routeByPath(path)?.canActivate).toContain(spotifyRestrictedFeatureGuard);
     }
+  });
+
+  it('loads recipient-owned Friends routes without requiring Cloud Backup', async () => {
+    const friends = routeByPath('friends');
+    expect(friends?.data?.['cloudBackup']).toBe(false);
+    expect(await friends?.loadChildren?.()).toBe((await import('./features/friends/friends.routes')).FRIENDS_ROUTES);
+    const routes = (await import('./features/friends/friends.routes')).FRIENDS_ROUTES;
+    expect(routes[0].children?.map(route => route.path)).toEqual(['', 'add', 'invitations', 'invite/:token']);
   });
 
   it('protects Settings and lazily resolves its implemented Account/Data destinations', async () => {
@@ -95,6 +111,9 @@ describe('canonical application routes', () => {
     expect(await account?.loadComponent?.()).toBe(panels.V2SettingsAccountComponent);
     expect(await data?.loadComponent?.()).toBe(panels.V2SettingsDataComponent);
     const notifications = settings?.children?.find(route => route.path === 'notifications');
+    const navigation = settings?.children?.find(route => route.path === 'navigation');
+    expect(navigation?.loadComponent).toBeTypeOf('function');
+    expect(await navigation?.loadComponent?.()).toBe((await import('./features/settings/v2-settings-navigation.component')).V2SettingsNavigationComponent);
     expect(await notifications?.loadComponent?.()).toBe((await import('./features/settings/v2-settings-notifications.component')).V2SettingsNotificationsComponent);
     const install = routeByPath('settings/install');
     const updates = settings?.children?.find(route => route.path === 'updates');

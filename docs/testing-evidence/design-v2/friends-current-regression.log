@@ -1,0 +1,41 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config playwright.friends.config.ts --output docs/testing-evidence/design-v2/friends-current-regression-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:50532) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:50532) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 20 tests using 1 worker
+
+(node:50761) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-friends.spec.ts:93:5 › Friends ready content preserves canonical card geometry during resizing (2.8s)
+  ✓   2 [desktop] › e2e/design-v2-friends.spec.ts:138:7 › Friends invitations and responsive geometry (no-preference) (9.1s)
+  ✓   3 [desktop] › e2e/design-v2-friends.spec.ts:280:7 › Friends confirming-read revocation and session exit (no-preference) (3.5s)
+  ✓   4 [desktop] › e2e/design-v2-friends.spec.ts:138:7 › Friends invitations and responsive geometry (reduce) (7.4s)
+  ✓   5 [desktop] › e2e/design-v2-friends.spec.ts:280:7 › Friends confirming-read revocation and session exit (reduce) (2.6s)
+(node:52572) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   6 [mobile] › e2e/design-v2-friends.spec.ts:93:5 › Friends ready content preserves canonical card geometry during resizing (2.8s)
+  ✓   7 [mobile] › e2e/design-v2-friends.spec.ts:138:7 › Friends invitations and responsive geometry (no-preference) (10.1s)
+  ✓   8 [mobile] › e2e/design-v2-friends.spec.ts:280:7 › Friends confirming-read revocation and session exit (no-preference) (3.5s)
+  ✓   9 [mobile] › e2e/design-v2-friends.spec.ts:138:7 › Friends invitations and responsive geometry (reduce) (8.2s)
+  ✓  10 [mobile] › e2e/design-v2-friends.spec.ts:280:7 › Friends confirming-read revocation and session exit (reduce) (3.0s)
+(node:54462) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  11 [firefox-stats] › e2e/design-v2-friends.spec.ts:93:5 › Friends ready content preserves canonical card geometry during resizing (3.5s)
+  ✓  12 [firefox-stats] › e2e/design-v2-friends.spec.ts:138:7 › Friends invitations and responsive geometry (no-preference) (12.8s)
+  ✓  13 [firefox-stats] › e2e/design-v2-friends.spec.ts:280:7 › Friends confirming-read revocation and session exit (no-preference) (3.7s)
+  ✓  14 [firefox-stats] › e2e/design-v2-friends.spec.ts:138:7 › Friends invitations and responsive geometry (reduce) (8.7s)
+  ✓  15 [firefox-stats] › e2e/design-v2-friends.spec.ts:280:7 › Friends confirming-read revocation and session exit (reduce) (2.9s)
+(node:57576) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  16 [webkit-stats] › e2e/design-v2-friends.spec.ts:93:5 › Friends ready content preserves canonical card geometry during resizing (3.2s)
+  ✓  17 [webkit-stats] › e2e/design-v2-friends.spec.ts:138:7 › Friends invitations and responsive geometry (no-preference) (29.7s)
+  ✓  18 [webkit-stats] › e2e/design-v2-friends.spec.ts:280:7 › Friends confirming-read revocation and session exit (no-preference) (9.2s)
+  ✓  19 [webkit-stats] › e2e/design-v2-friends.spec.ts:138:7 › Friends invitations and responsive geometry (reduce) (11.0s)
+  ✓  20 [webkit-stats] › e2e/design-v2-friends.spec.ts:280:7 › Friends confirming-read revocation and session exit (reduce) (4.0s)
+
+  20 passed (2.6m)

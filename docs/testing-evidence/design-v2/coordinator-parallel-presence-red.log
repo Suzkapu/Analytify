@@ -1,0 +1,66 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/core/compare-room/compare-room-coordinator*.spec.ts --runner-config=docs/testing-evidence/design-v2/coordinator-parallel-vitest.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/coordinator-parallel-vitest.mjs
+❯ Building...
+✔ Building...
+Application bundle generation complete. [2.195 seconds] - 2026-10-19T18:10:56.358Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+Warning: A vi.mock("qrcode") call in "/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts" is not at the top level of the module. Although it appears nested, it will be hoisted and executed before any tests run. Move it to the top level to reflect its actual execution order. This will become an error in a future version.
+See: https://vitest.dev/guide/mocking/modules#how-it-works
+stderr | src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts > Compare coordinator retained workflow boundaries > does not publish an old presence failure into a successor room
+AssertionError: expected 'old presence expired' to be null
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts:349:34
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23) {
+  actual: 'old presence expired',
+  expected: null,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+ ❯ |SpotiFront| src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts (25 tests | 1 failed) 174ms
+     × does not publish an old presence failure into a successor room 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts > Compare coordinator retained workflow boundaries > does not publish an old presence failure into a successor room
+AssertionError: expected 'old presence expired' to be null
+
+- Expected:
+null
+
++ Received:
+"old presence expired"
+
+ ❯ src/app/core/compare-room/compare-room-coordinator-boundary.spec.ts:349:34
+    347|     presence.reject(new Error('old presence expired'));
+    348|     await Promise.resolve();
+    349|     expect(service.error$.value).toBeNull();
+       |                                  ^
+    350|     expect(service.participants$.value.map(item => item.id)).toEqual([…
+    351|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 31 passed (32)
+   Start at  20:10:56
+   Duration  1.64s (transform 112ms, setup 435ms, import 137ms, tests 197ms, environment 642ms)
+

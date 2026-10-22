@@ -1,0 +1,128 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/friends/v2-friends.controller.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.796 seconds] - 2026-10-12T17:25:25.935Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/features/friends/v2-friends.controller.spec.ts > Friends workflow ownership and recovery > invalidates a revoked review after refresh without disabling unrelated friendship actions
+AssertionError: expected { id: 'request-A', …(3) } to be null
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/friends/v2-friends.controller.spec.ts:36:34
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: {
+    id: 'request-A',
+    inviterUserId: 'sender-A',
+    displayName: 'Sender',
+    imageUrl: ''
+  },
+  expected: null,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/friends/v2-friends.controller.spec.ts > Friends workflow ownership and recovery > does not publish a received preview when revocation wins the confirming inbox read
+AssertionError: expected { id: 'request-A', …(3) } to be null
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/friends/v2-friends.controller.spec.ts:48:34
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: {
+    id: 'request-A',
+    inviterUserId: 'sender-A',
+    displayName: 'Sender',
+    imageUrl: ''
+  },
+  expected: null,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+ ❯ |SpotiFront| src/app/features/friends/v2-friends.controller.spec.ts (21 tests | 2 failed) 79ms
+     × invalidates a revoked review after refresh without disabling unrelated friendship actions 28ms
+     × does not publish a received preview when revocation wins the confirming inbox read 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends.controller.spec.ts > Friends workflow ownership and recovery > invalidates a revoked review after refresh without disabling unrelated friendship actions
+AssertionError: expected { id: 'request-A', …(3) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "displayName": "Sender",
+  "id": "request-A",
+  "imageUrl": "",
+  "inviterUserId": "sender-A",
+}
+
+ ❯ src/app/features/friends/v2-friends.controller.spec.ts:36:34
+     34|     backend.listRequests.mockResolvedValue([]);
+     35|     await controller.reload();
+     36|     expect(controller.preview()).toBeNull();
+       |                                  ^
+     37|     expect(controller.feedback()).toBe('unavailable');
+     38|     await controller.respond('request-A', true);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends.controller.spec.ts > Friends workflow ownership and recovery > does not publish a received preview when revocation wins the confirming inbox read
+AssertionError: expected { id: 'request-A', …(3) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "displayName": "Sender",
+  "id": "request-A",
+  "imageUrl": "",
+  "inviterUserId": "sender-A",
+}
+
+ ❯ src/app/features/friends/v2-friends.controller.spec.ts:48:34
+     46|     backend.listRequests.mockResolvedValue([]);
+     47|     await controller.receive('b'.repeat(64));
+     48|     expect(controller.preview()).toBeNull();
+       |                                  ^
+     49|     expect(controller.feedback()).toBe('unavailable');
+     50|     await controller.retry();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 19 passed (21)
+   Start at  19:25:26
+   Duration  936ms (transform 133ms, setup 260ms, import 140ms, tests 79ms, environment 331ms)
+

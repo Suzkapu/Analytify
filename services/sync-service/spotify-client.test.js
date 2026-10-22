@@ -83,3 +83,38 @@ test('classifies invalid_grant refresh responses as terminal credentials without
   }), error => error.kind === 'credential_invalid');
   assert.equal(calls, 1);
 });
+
+const {ExternalRequestError,spotifyErrorCode}=require('./spotify-client');
+test('error parsers reject malformed responses and clamp invalid retry values',()=>{
+ assert.equal(spotifyErrorCode(''),null);assert.equal(spotifyErrorCode('{'),null);assert.equal(spotifyErrorCode('{"error":{}}'),null);assert.equal(spotifyErrorCode('{"error":"invalid_grant"}'),'invalid_grant');
+ assert.equal(retryAfterMilliseconds(null),null);assert.equal(retryAfterMilliseconds('invalid'),null);assert.equal(retryAfterMilliseconds('-2'),0);assert.equal(retryAfterMilliseconds('Thu, 01 Jan 1970 00:00:00 GMT',1000),0);assert.equal(new ExternalRequestError('fixture').kind,'permanent');
+});
+test('hosted token refresh uses hosted credentials and rejects absent access tokens',async()=>{
+ let body;
+ const client=createSpotifyClient({spotifyClientId:'hosted',spotifyClientSecret:'test-secret'},{fetch:async(url,options)=>{body=new URLSearchParams(options.body);return response(200,'{"access_token":"access","refresh_token":"unchanged"}');}});
+ assert.equal(await client.accessToken({refreshToken:'unchanged'}),'access');assert.equal(body.get('client_secret'),'test-secret');
+ await assert.rejects(client.accessToken(null),/credential is missing/);
+ await assert.rejects(createSpotifyClient({}).accessToken({refreshToken:'fixture'}),/Client ID is missing/);
+ for(const reply of ['','{}','null']){const empty=createSpotifyClient({spotifyClientId:'hosted'},{fetch:async()=>response(200,reply)});await assert.rejects(empty.accessToken({refreshToken:'fixture'}),/did not return an access token/);}
+});
+test('external cancellation during fetch aborts the active request without retrying',async()=>{
+ const controller=new AbortController();let attempts=0;
+ const client=createSpotifyClient({}, {fetch:async(url,options)=>{attempts++;controller.abort('stop');throw options.signal.reason;}});
+ await assert.rejects(client.api('/me','fixture',{signal:controller.signal}),error=>error.kind==='cancelled');assert.equal(attempts,1);
+});
+test('cancellation during retry delay prevents another request',async()=>{
+ const controller=new AbortController();let attempts=0;
+ const client=createSpotifyClient({}, {fetch:async()=>{attempts++;throw 'offline';},sleep:async()=>controller.abort(),random:()=>0});
+ await assert.rejects(client.request('https://fixture.invalid',{signal:controller.signal}),error=>error.kind==='cancelled');assert.equal(attempts,1);
+});
+test('transient transport errors retry boundedly and a final HTTP error preserves status',async()=>{
+ let attempts=0;const waits=[];const client=createSpotifyClient({spotifyMaxAttempts:2},{fetch:async()=>{attempts++;throw new Error('offline');},sleep:async ms=>waits.push(ms),random:()=>0,now:()=>0});
+ await assert.rejects(client.request('https://fixture.invalid'),error=>error.kind==='transient'&&/offline/.test(error.message));assert.equal(attempts,2);assert.deepEqual(waits,[375]);
+ const http=createSpotifyClient({spotifyMaxAttempts:2},{fetch:async()=>response(503,''),sleep:async()=>{},now:()=>0});await assert.rejects(http.request('https://fixture.invalid'),error=>error.status===503);
+ const malformed=createSpotifyClient({}, {fetch:async()=>response(400,'malformed')});await assert.rejects(malformed.request('https://accounts.spotify.com/api/token'),error=>error.kind==='permanent');
+});
+test('default sleep and random recover from a transient response and API headers preserve overrides',async t=>{
+ let attempts=0,headers;const timeout=t.mock.method(global,'setTimeout',(fn,ms)=>{if(ms!==15000)queueMicrotask(fn);return 1;});t.mock.method(global,'clearTimeout',()=>{});
+ const client=createSpotifyClient({}, {fetch:async(url,opts)=>{headers=opts.headers;return response(++attempts===1?503:200,'');}});
+ assert.equal(await client.api('/me','test',{headers:{'Content-Type':'custom'}}),null);assert.equal(headers.Authorization,'Bearer test');assert.equal(headers['Content-Type'],'custom');assert.match(headers['Accept-Language'],/en-GB/);assert.equal(attempts,2);
+});

@@ -95,3 +95,34 @@ Deno.test('public failures contain correlation IDs but not internal details', as
   });
   assert.equal(response.headers.get('X-Correlation-ID'), 'correlation-test');
 });
+
+Deno.test('preflight allows only supported headers and returns stable public retry metadata', async () => {
+  const request = new Request('https://fixture.invalid', {method: 'OPTIONS', headers: {origin: 'http://localhost:4200', 'Access-Control-Request-Method': 'post', 'Access-Control-Request-Headers': 'Authorization, Content-Type'}});
+  validatePreflight(request, requestContext(request));
+  const invalid = new Request(request, {headers: {origin: 'http://localhost:4200', 'Access-Control-Request-Headers': 'Authorization, X-Untrusted'}});
+  assert.throws(() => validatePreflight(invalid, requestContext(invalid)), (e: unknown) => e instanceof PublicRequestError && e.code === 'headers_not_allowed');
+  const response = publicError(requestContext(request), new PublicRequestError(429, 'rate_limited', 'Please retry.', 17));
+  assert.equal(response.headers.get('Retry-After'), '17');
+});
+Deno.test('JSON bodies support empty and chunked requests while rejecting invalid lengths, encoding and malformed data', async () => {
+  const create = (body?: string, headers: Record<string, string> = {}) => new Request('https://fixture.invalid', {method: 'POST', headers: {'content-type': 'application/json', ...headers}, body});
+  assert.deepEqual(await boundedJsonBody(create()), {});
+  assert.deepEqual(await boundedJsonBody(create('')), {});
+  assert.deepEqual(await boundedJsonBody(create('{"fixture":true}', {'Content-Encoding': 'identity'})), {fixture: true});
+  for (const length of ['-1', 'NaN', '1.5', '9007199254740992']) await assert.rejects(() => boundedJsonBody(create('{}', {'content-length': length})), (e: unknown) => e instanceof PublicRequestError && e.code === 'invalid_content_length');
+  for (const contentType of ['', 'text/plain', 'application/json; charset=latin1']) await assert.rejects(() => boundedJsonBody(create('{}', {'content-type': contentType})), (e: unknown) => e instanceof PublicRequestError && e.status === 415);
+  const noType = new Request('https://fixture.invalid', {method: 'POST'});
+  await assert.rejects(() => boundedJsonBody(noType), (e: unknown) => e instanceof PublicRequestError && e.status === 415);
+  for (const body of ['null', '3', '{bad']) await assert.rejects(() => boundedJsonBody(create(body)), (e: unknown) => e instanceof PublicRequestError && e.code === 'invalid_json');
+});
+Deno.test('durable limits fail closed on missing hash configuration, storage failure and empty responses', async () => {
+  const original = Deno.env.get;
+  Deno.env.get = () => undefined;
+  try {
+    const request = new Request('https://fixture.invalid', {headers: {'cf-connecting-ip': 'x'.repeat(129)}});
+    const client = {rpc: () => Promise.resolve({data: null, error: null})};
+    await assert.rejects(() => enforceRateLimit(client, request, 'fixture', null, 1, 1), /not configured securely/);
+    for (const error of [{message: 'fixture'}, {}]) await assert.rejects(() => enforceRateLimit({rpc: () => Promise.resolve({data: null, error})}, request, 'fixture', null, 1, 1, 'fixture-key-at-least-32-characters-long'), /rate limit storage failed/);
+    for (const data of [null, [], {allowed: false}, {allowed: false, retry_after_seconds: -4}]) await assert.rejects(() => enforceRateLimit({rpc: () => Promise.resolve({data, error: null})}, request, 'fixture', null, 1, 1, 'fixture-key-at-least-32-characters-long'), (e: unknown) => e instanceof PublicRequestError && e.retryAfterSeconds === 1);
+  } finally {Deno.env.get = original;}
+});

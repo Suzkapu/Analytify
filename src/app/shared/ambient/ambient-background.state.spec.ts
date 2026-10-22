@@ -27,6 +27,19 @@ describe('AmbientBackgroundState', () => {
     expect(state.routeKey()).toBe('insights');
   });
 
+  it('selects the independent League mobile layout at the responsive boundary, including reduced motion', () => {
+    state.setRouteKey('league'); state.setReducedMotion(true);
+    state.setViewportWidth(761);
+    expect(state.target().primaryX).toBeCloseTo(1120 / 1440, 7);
+    state.setViewportWidth(760);
+    expect(state.target().primaryX).toBeCloseTo(320 / 390, 7);
+    expect(state.target().secondaryY).toBeCloseTo(710 / (2600 / 3), 7);
+    state.setScrollMetrics(800, 1600, 800);
+    expect(state.target().primaryX).toBeCloseTo(320 / 390, 7);
+    state.setViewportWidth(1920);
+    expect(state.target().primaryX).toBeCloseTo(1120 / 1440, 7);
+  });
+
   it('uses scroll progress, with reduced movement for coarse pointers', () => {
     state.setRouteKey('social');
     state.setScrollMetrics(1000, 2000, 1000);
@@ -34,7 +47,7 @@ describe('AmbientBackgroundState', () => {
     state.setCoarsePointer(true);
     const coarseMotion = state.target();
     const route = state.routeTarget();
-    expect(Math.abs(coarseMotion.primaryY - route.primaryY)).toBeLessThan(Math.abs(fullMotion.primaryY - route.primaryY));
+    expect(Math.abs(coarseMotion.dotsY - route.dotsY)).toBeLessThan(Math.abs(fullMotion.dotsY - route.dotsY));
   });
 
   it('keeps reduced-motion output static regardless of scroll', () => {

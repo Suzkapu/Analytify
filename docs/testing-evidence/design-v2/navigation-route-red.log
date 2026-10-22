@@ -1,0 +1,42 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/app-routing.module.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [5.633 seconds] - 2026-10-12T18:05:18.582Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/app-routing.module.spec.ts (8 tests | 1 failed) 137ms
+     × protects Settings and lazily resolves its implemented Account/Data destinations 26ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/app-routing.module.spec.ts > canonical application routes > protects Settings and lazily resolves its implemented Account/Data destinations
+AssertionError: expected undefined to be type of 'function'
+
+Expected: "function"
+Received: "undefined"
+
+ ❯ src/app/app-routing.module.spec.ts:108:39
+    106|     const notifications = settings?.children?.find(route => route.path…
+    107|     const navigation = settings?.children?.find(route => route.path ==…
+    108|     expect(navigation?.loadComponent).toBeTypeOf('function');
+       |                                       ^
+    109|     expect(await notifications?.loadComponent?.()).toBe((await import(…
+    110|     const install = routeByPath('settings/install');
+ ❯ fulfilled chunk-5S6XLBTS.js:97:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  20:05:18
+   Duration  1.11s (transform 219ms, setup 264ms, import 242ms, tests 137ms, environment 343ms)
+

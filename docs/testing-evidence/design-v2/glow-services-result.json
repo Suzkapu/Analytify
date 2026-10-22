@@ -1,0 +1,255 @@
+{
+  "date": "2026-10-20 Europe/Vienna",
+  "status": "Completed canonical ambient-glow slice verification; full migration remains incomplete",
+  "branch": "codex/design-v2",
+  "lastCommit": "a8a7a3966a622c992e9058094627a768c16a363a",
+  "newCommit": false,
+  "sourceSnapshot": "docs/testing-evidence/design-v2/glow-services-source-snapshot.json",
+  "frozenPaths": 239,
+  "sourceMismatches": [],
+  "coverage": {
+    "frontend": {
+      "metrics": {
+        "lines": {
+          "total": 11262,
+          "covered": 9811,
+          "skipped": 0,
+          "pct": 87.11
+        },
+        "statements": {
+          "total": 13265,
+          "covered": 11278,
+          "skipped": 0,
+          "pct": 85.02
+        },
+        "functions": {
+          "total": 2747,
+          "covered": 2320,
+          "skipped": 0,
+          "pct": 84.45
+        },
+        "branches": {
+          "total": 8651,
+          "covered": 6699,
+          "skipped": 0,
+          "pct": 77.43
+        }
+      },
+      "allMetricsAtLeast98": false,
+      "sourceCount": 167,
+      "freshness": "Fresh1958-test frontend run; snapshot defines source/test scope"
+    },
+    "worker": {
+      "metrics": {
+        "lines": {
+          "total": 891,
+          "covered": 888,
+          "skipped": 0,
+          "pct": 99.66
+        },
+        "statements": {
+          "total": 1110,
+          "covered": 1107,
+          "skipped": 0,
+          "pct": 99.72
+        },
+        "functions": {
+          "total": 197,
+          "covered": 197,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 927,
+          "covered": 913,
+          "skipped": 0,
+          "pct": 98.48
+        }
+      },
+      "allMetricsAtLeast98": true,
+      "sourceCount": 17,
+      "freshness": "Retained report;62source/test/report hashes revalidated, current215/81tests rerun in fullCI"
+    },
+    "edge": {
+      "metrics": {
+        "lines": {
+          "total": 762,
+          "covered": 761,
+          "skipped": 0,
+          "pct": 99.86
+        },
+        "statements": {
+          "total": 901,
+          "covered": 899,
+          "skipped": 0,
+          "pct": 99.77
+        },
+        "functions": {
+          "total": 113,
+          "covered": 113,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 797,
+          "covered": 795,
+          "skipped": 0,
+          "pct": 99.74
+        }
+      },
+      "allMetricsAtLeast98": true,
+      "sourceCount": 12,
+      "freshness": "Retained report;62source/test/report hashes revalidated, current215/81tests rerun in fullCI"
+    }
+  },
+  "commands": [
+    {
+      "command": "ANALYTIFY_WEBKIT_EXECUTABLE=<local portable runtime> npx playwright test e2e/design-v2-glows.spec.ts e2e/design-v2-ambient.spec.ts --workers=1",
+      "scope": "52passed across4projects;32strict reviewed background snapshots/288scene samples; existing32ambient cases and4interrupted-navigation cases",
+      "log": "docs/testing-evidence/design-v2/glow-ambient-final.log",
+      "exitFile": "docs/testing-evidence/design-v2/glow-ambient-final.exit",
+      "exit": 0
+    },
+    {
+      "command": "npm run verify:ci",
+      "scope": "1958frontend passed/1documented hosted skip/167files;215worker;81edge; unchanged release/security/policy/lint/types/build/index/preload/bundles",
+      "log": "docs/testing-evidence/design-v2/glow-services-final-ci.log",
+      "exitFile": "docs/testing-evidence/design-v2/glow-services-final-ci.exit",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/check-application-coverage-inventory.mjs frontend --final",
+      "log": "docs/testing-evidence/design-v2/glow-services-frontend-final98.log",
+      "exitFile": "docs/testing-evidence/design-v2/glow-services-frontend-final98.exit",
+      "exit": 1
+    },
+    {
+      "command": "node scripts/check-application-coverage-inventory.mjs worker --final",
+      "log": "docs/testing-evidence/design-v2/glow-services-worker-final98.log",
+      "exitFile": "docs/testing-evidence/design-v2/glow-services-worker-final98.exit",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/check-application-coverage-inventory.mjs edge --final",
+      "log": "docs/testing-evidence/design-v2/glow-services-edge-final98.log",
+      "exitFile": "docs/testing-evidence/design-v2/glow-services-edge-final98.exit",
+      "exit": 0
+    },
+    {
+      "command": "npx playwright test --config=playwright.navigation.config.ts --grep=\"Canonical app header.*reduce\" --workers=1",
+      "scope": "4passed/12unchanged header/footer reviewed baselines;144geometrysamples",
+      "log": "docs/testing-evidence/design-v2/glow-shell-candidates.log",
+      "exitFile": "docs/testing-evidence/design-v2/glow-shell-candidates.exit",
+      "exit": 0
+    },
+    {
+      "command": "npx playwright test --config=playwright.navigation.config.ts --grep-invert=\"Canonical app header.*reduce\" --workers=1",
+      "scope": "remaining44scheduledNavigationcases passed before section typography correction",
+      "log": "docs/testing-evidence/design-v2/glow-navigation-regression.log",
+      "exitFile": "docs/testing-evidence/design-v2/glow-navigation-regression.exit",
+      "exit": 0
+    }
+  ],
+  "initialJavaScriptBytes": 854221,
+  "figma": {
+    "fileKey": "5v8ckmlbfhMDWwP5sTdSXd",
+    "componentSet": "529:21518",
+    "individualAssets": [
+      "529:21387",
+      "529:21388",
+      "529:21474",
+      "529:21475"
+    ],
+    "scope": "Exact native SVG sizes/baked opacity/colors, scene centers, Library fallback/own-key validation, League desktop/mobile route mapping, resize/scroll/overlay invariance and existing damped interruption/reduced motion;32reviewed ambient-only baseline images, no full page/card approval.",
+    "mutation": "Only component description clarified responsive application contract before code; no visual/prototype/sidebar changes."
+  },
+  "comparisonServices": {
+    "coordinator": {
+      "tests": 45,
+      "metricsLSFB": [
+        100,
+        99.67,
+        100,
+        95.32
+      ],
+      "genuineRedRegressions": 10,
+      "remaining": "8branch paths explicitly recorded; no98branch claim"
+    },
+    "participantSpotify": {
+      "tests": 64,
+      "metricsLSFB": [
+        100,
+        100,
+        100,
+        99.16
+      ],
+      "genuineRedRegressions": 3
+    }
+  },
+  "remaining": [
+    "Frontend all4metrics below98",
+    "All48priorNavigationcases nowhave scopedPASS; Friendsregressionstillpending. Newheadingstyle/spec and laterSharing/League work lie outside this frozenCI snapshot",
+    "Remaining full canonical page/state visual parity and retained-feature workflows",
+    "Isolated real Friends HTTP/Auth/provider contracts; documented hosted test skip",
+    "New parallel Sharing/League characterization is outside this frozenCI scope",
+    "Latest main Song League lifecycle changes require later planned reconciliation",
+    "Final committed-state/remote pinned runtime/CI unverified; changes intentionally uncommitted"
+  ],
+  "nextSlice": "Finish selected Navigation/Friends regressions and visual details, then isolated Friends real transport. Continue independent service characterization with scoped evidence.",
+  "boundaries": "No commit/merge/push/deployment/shared backend/database/stable services/service-worker scope mutation. Synthetic data only; no real notifications. Unrelated work preserved.",
+  "sha256": {
+    "docs/testing-evidence/design-v2/ambient-route-glow-canonical-geometry.json": "b22ac4eea5538e59a98e859c0bf341da775848c78e4cb1cc6290ee704d929c07",
+    "docs/testing-evidence/design-v2/coordinator-parallel-evidence.json": "1475aef59889408a19649f7f21424dccb8247c9673d8369302c490ef2b8dff30",
+    "docs/testing-evidence/design-v2/glow-ambient-final.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/glow-ambient-final.log": "a147e82196d083a9942cb9767074cc9f5a76b2b44b181f35830010b4db5c7a98",
+    "docs/testing-evidence/design-v2/glow-component-visual-review.json": "049c89265fb6e13db32b7421adeaec4851d3dca8ed86e66da34f74ef538d1bed",
+    "docs/testing-evidence/design-v2/glow-responsive-handoff.json": "9fb38149933482d194e91d7e161bf478235f027b420cad379027e2b47de7ec29",
+    "docs/testing-evidence/design-v2/glow-services-backend-revalidation.json": "57bc37b09c2a310d2ad23242e9cced054654c2d2363954726f06f7df491e2b22",
+    "docs/testing-evidence/design-v2/glow-services-edge-final98.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/glow-services-edge-final98.log": "855b394795851de46882ec2ec0e5adb2484de43ed7368df1769b791a5f3ab2e1",
+    "docs/testing-evidence/design-v2/glow-services-final-ci.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/glow-services-final-ci.log": "618b0913ba058943ddb947074e81d3a8aef3eaf5c3f81e00625225c64b18a55e",
+    "docs/testing-evidence/design-v2/glow-services-frontend-final98.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/glow-services-frontend-final98.log": "9001f5f93053c5602c0003aac34f662d5dd9356772df6eb098dc75a8fab828e4",
+    "docs/testing-evidence/design-v2/glow-services-source-snapshot.json": "0ffee12450aff807e27bd26158bae729e0b263393fc96d5ac403a2f68bf5be07",
+    "docs/testing-evidence/design-v2/glow-services-worker-final98.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/glow-services-worker-final98.log": "c5810ab7c2913b354b2a5face1724d4140fb2a1d04ce8994d87affa54d03af2f",
+    "docs/testing-evidence/design-v2/participant-spotify-parallel-manifest.json": "7125ab7d025f2c3b778653b530b2749e77bfcf32e0dfab31cf0a0ef252810a3b",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-insights-desktop-desktop-linux.png": "059fe20f3de7b733d789f7775e269b94e0da8d5074d6d1627a84e8fc30fa7ca1",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-insights-desktop-firefox-stats-linux.png": "3769237050bf505de0f8258dc5bb8fa19da839c612247102e1092b3a6e5e9da4",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-insights-desktop-mobile-linux.png": "059fe20f3de7b733d789f7775e269b94e0da8d5074d6d1627a84e8fc30fa7ca1",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-insights-desktop-webkit-stats-linux.png": "db5acca534a260c21e2b5d5027203f7b67366ad9e61ba1e7e977cf3945df940e",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-insights-mobile-desktop-linux.png": "e0cf4b7f607263484aa7098eb304c991b09f9904e228b8d738637c024711c79d",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-insights-mobile-firefox-stats-linux.png": "fe2fbcb22d375f34beb6067443c37a08e7ee06d2fcad4a919642a7b728017d55",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-insights-mobile-mobile-linux.png": "e0cf4b7f607263484aa7098eb304c991b09f9904e228b8d738637c024711c79d",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-insights-mobile-webkit-stats-linux.png": "550c1ed6b7522a13594ed3553bcd27886f270e8b0eac86079f429973533ac024",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-league-desktop-desktop-linux.png": "67cd487382f3f88c54926db3907985aff9fc57b71fb1108ed19885c1176e9036",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-league-desktop-firefox-stats-linux.png": "55d9dd70899d5a292eec4ad98f32f5ae918d9f5116f1b8c4163aea322a290c04",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-league-desktop-mobile-linux.png": "67cd487382f3f88c54926db3907985aff9fc57b71fb1108ed19885c1176e9036",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-league-desktop-webkit-stats-linux.png": "adfa89b30fccdef1206c9e46a1bf9f33daa8e38077ca196292caf71aadb4ef4f",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-league-mobile-desktop-linux.png": "f8ddff14564f86ac71801fb628a85cac622526246e09946ffd6c8ae436dcd1fc",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-league-mobile-firefox-stats-linux.png": "0e3dfa0935713e9f13312d21c836d230f5855cc380f5ad2d22128c5a6222fae1",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-league-mobile-mobile-linux.png": "f8ddff14564f86ac71801fb628a85cac622526246e09946ffd6c8ae436dcd1fc",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-league-mobile-webkit-stats-linux.png": "2ffb02ac0c49e55ececb134347fe07f513772c6e67f9449553e624ebf7ae1db5",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-library-desktop-desktop-linux.png": "c59d094766dd6d5ea10df3e405db36e46c21845def9a757c820b8d825f581338",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-library-desktop-firefox-stats-linux.png": "3b513bbc2a781413fff5419e9c41ee4926d979848d382a6f0e0c1678833c2e48",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-library-desktop-mobile-linux.png": "c59d094766dd6d5ea10df3e405db36e46c21845def9a757c820b8d825f581338",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-library-desktop-webkit-stats-linux.png": "32b4d64d524bcc8980ed6f7e624e0af0e87040a26972d03417aa3852cd521dc8",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-library-mobile-desktop-linux.png": "9b786b4fa08c51e8bbe54eff2dd468e732181983d763d771a03eaaee656ab6e0",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-library-mobile-firefox-stats-linux.png": "cb9bd1a6472d5e7336a113285ad5416444544af8d05f62e6ddcdfa8355ccd611",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-library-mobile-mobile-linux.png": "9b786b4fa08c51e8bbe54eff2dd468e732181983d763d771a03eaaee656ab6e0",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-library-mobile-webkit-stats-linux.png": "67ca3888d2c0178c4b6c1a75ce28bc34514ebb7f06ea74e8d29b75568db34e6a",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-social-desktop-desktop-linux.png": "53b5e2126f85873ac2dd014346c3a57de5df6c5dddd10efc1abc6c9d78423d67",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-social-desktop-firefox-stats-linux.png": "ba3298313255c016400f47b95ce2ff7ea859bb441175a0194b750802954979ce",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-social-desktop-mobile-linux.png": "53b5e2126f85873ac2dd014346c3a57de5df6c5dddd10efc1abc6c9d78423d67",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-social-desktop-webkit-stats-linux.png": "62ce2b566c4330d317f68f3d556d170ce9ceb96cdee6d63dc440f0cedf3d07ab",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-social-mobile-desktop-linux.png": "7293a69d0a76b21070b7d9e5793d4a0926beb851441ece2168232573fc4a5593",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-social-mobile-firefox-stats-linux.png": "9fe79a0806d6088f03730f0b235687026c62858d5d0ffb027c42196ad422ab7c",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-social-mobile-mobile-linux.png": "7293a69d0a76b21070b7d9e5793d4a0926beb851441ece2168232573fc4a5593",
+    "e2e/design-v2-glows.spec.ts-snapshots/glow-social-mobile-webkit-stats-linux.png": "b51ffe4059d75d7156aa01b0b3f7ad065909ba850733432a580c0a959db785b6",
+    "docs/testing-evidence/design-v2/glow-shell-candidates.log": "ee9b3b26b6c5b1fe4206d6dad2f453315f66e84895ceab4e973ade892ad16889",
+    "docs/testing-evidence/design-v2/glow-shell-candidates.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/glow-navigation-regression.log": "ebf04c817367ebab32933e429c904c986e34b1293ea050cf63e8d5df8c57adec",
+    "docs/testing-evidence/design-v2/glow-navigation-regression.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  }
+}

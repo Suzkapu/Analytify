@@ -1,0 +1,357 @@
+{
+  "date": "2026-10-17",
+  "scope": "All10auth spec files; scoped coverage of AuthService and personal recovery helper only. This is not whole frontend coverage.",
+  "baseCommit": "a8a7a3966a622c992e9058094627a768c16a363a",
+  "beforeAuthSourceSha256": "91712d1f5c34c9c32064fd7090c77b464b59d677521e130d9a0f3b94db04a22d",
+  "productionFix": "Generation-bound personal refresh invalid_grant cleanup: reject obsolete generation before credential mutation, guard deferred SDK readiness before credential deletion, recheck generation after cleanup. No other auth production paths changed in this task. Refresh observable cache now belongs to a captured generation, and old stream completion/error/finalization can only clear the exact observable it owns; replacement account refresh remains independent and coalesced.",
+  "red": {
+    "log": "frontend-auth-parallel-ownership-red.log",
+    "exit": 1,
+    "testsPassed": 40,
+    "testsFailed": 2,
+    "effects": "Old A invalid_grant removes replacement B credentials and invokes delete_credentials for B; deferred readiness invokes old A deletion under replacement session."
+  },
+  "retainedEarlierFailures": [
+    {
+      "log": "frontend-auth-parallel-red.log",
+      "exit": 1,
+      "reason": "Same two genuine REDs, first assertion reports obsolete generation error."
+    },
+    {
+      "log": "frontend-auth-parallel-green.log",
+      "exit": 1,
+      "reason": "New backup test used dotted index signature access; corrected test brackets only."
+    }
+  ],
+  "verification": {
+    "log": "frontend-auth-parallel-final.log",
+    "exit": 0,
+    "files": 10,
+    "passed": 144,
+    "failed": 0,
+    "skipped": 0,
+    "coverageInclude": [
+      "src/app/core/auth/spotify-auth.service.ts",
+      "src/app/core/auth/personal-spotify-recovery.ts"
+    ],
+    "notes": [
+      "No coverage exclusions, ignore annotations, disabled tests or weakened gates introduced.",
+      "Actual installed Supabase SDK refresh under fully intercepted isolated.invalid transport; no hosted credentials/data/notifications.",
+      "Backup activation tests call public service methods with controlled storage and cloud boundaries; no private upload-method mocking."
+    ],
+    "lintLog": "frontend-auth-parallel-final-lint.log",
+    "lintExit": 0,
+    "typecheckLog": "frontend-auth-parallel-typecheck.log",
+    "typecheckExit": 0,
+    "typecheckCommand": "npm run typecheck:tests",
+    "command": "npx ng test --watch=false --progress=false --include='src/app/core/auth/*.spec.ts' --runner-config=docs/testing-evidence/design-v2/frontend-auth-parallel-vitest.config.mjs --coverage --coverage-include=src/app/core/auth/spotify-auth.service.ts --coverage-include=src/app/core/auth/personal-spotify-recovery.ts",
+    "intermediatePassingRun": {
+      "log": "frontend-auth-parallel-verified.log",
+      "passed": 143,
+      "note": "Before final owner-cache fix; coverage only recorded in log and superseded by final scoped report."
+    }
+  },
+  "coverage": {
+    "total": {
+      "lines": {
+        "total": 706,
+        "covered": 666,
+        "skipped": 0,
+        "pct": 94.33
+      },
+      "statements": {
+        "total": 781,
+        "covered": 723,
+        "skipped": 0,
+        "pct": 92.57
+      },
+      "functions": {
+        "total": 148,
+        "covered": 141,
+        "skipped": 0,
+        "pct": 95.27
+      },
+      "branches": {
+        "total": 495,
+        "covered": 411,
+        "skipped": 0,
+        "pct": 83.03
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": "Unknown"
+      }
+    },
+    "/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/personal-spotify-recovery.ts": {
+      "lines": {
+        "total": 15,
+        "covered": 15,
+        "skipped": 0,
+        "pct": 100
+      },
+      "functions": {
+        "total": 2,
+        "covered": 2,
+        "skipped": 0,
+        "pct": 100
+      },
+      "statements": {
+        "total": 18,
+        "covered": 18,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 20,
+        "covered": 20,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "/mnt/Storage/ProgrammingProjects/Analytify/src/app/core/auth/spotify-auth.service.ts": {
+      "lines": {
+        "total": 691,
+        "covered": 651,
+        "skipped": 0,
+        "pct": 94.21
+      },
+      "functions": {
+        "total": 146,
+        "covered": 139,
+        "skipped": 0,
+        "pct": 95.2
+      },
+      "statements": {
+        "total": 763,
+        "covered": 705,
+        "skipped": 0,
+        "pct": 92.39
+      },
+      "branches": {
+        "total": 475,
+        "covered": 391,
+        "skipped": 0,
+        "pct": 82.31
+      }
+    }
+  },
+  "remainingGaps": [
+    {
+      "source": "src/app/core/auth/personal-spotify-recovery.ts",
+      "uncoveredLines": [],
+      "uncoveredFunctions": [],
+      "uncoveredBranchLocations": []
+    },
+    {
+      "source": "src/app/core/auth/spotify-auth.service.ts",
+      "uncoveredLines": [
+        85,
+        91,
+        111,
+        303,
+        304,
+        323,
+        326,
+        327,
+        334,
+        335,
+        337,
+        432,
+        445,
+        449,
+        493,
+        506,
+        510,
+        586,
+        807,
+        818,
+        820,
+        838,
+        857,
+        872,
+        878,
+        905,
+        961,
+        995,
+        1007,
+        1013,
+        1040,
+        1223,
+        1265,
+        1272,
+        1273,
+        1274,
+        1281,
+        1282,
+        1283,
+        1361
+      ],
+      "uncoveredFunctions": [
+        {
+          "name": "(anonymous_5)",
+          "line": 88
+        },
+        {
+          "name": "(anonymous_8)",
+          "line": 110
+        },
+        {
+          "name": "(anonymous_40)",
+          "line": 444
+        },
+        {
+          "name": "(anonymous_51)",
+          "line": 505
+        },
+        {
+          "name": "(anonymous_75)",
+          "line": 701
+        },
+        {
+          "name": "deleteAnonymousCloudAccount",
+          "line": 1271
+        },
+        {
+          "name": "loadCurrentSpotifyProfile",
+          "line": 1280
+        }
+      ],
+      "uncoveredBranchLocations": [
+        "84,1,0,0",
+        "87,2,1,0",
+        "90,3,0,0",
+        "97,4,1,0",
+        "106,5,0,0",
+        "170,14,2,0",
+        "234,21,1,0",
+        "302,33,0,0",
+        "322,36,0,0",
+        "325,37,0,0",
+        "326,38,0,0",
+        "326,38,1,0",
+        "335,39,0,0",
+        "335,39,1,0",
+        "346,41,1,0",
+        "349,43,1,0",
+        "431,59,0,0",
+        "490,66,1,0",
+        "492,68,0,0",
+        "576,83,1,0",
+        "584,86,1,0",
+        "585,87,0,0",
+        "590,88,0,0",
+        "674,101,1,0",
+        "677,102,1,0",
+        "692,106,0,0",
+        "770,119,0,0",
+        "771,120,1,0",
+        "806,124,0,0",
+        "806,125,1,0",
+        "817,128,0,0",
+        "817,129,1,0",
+        "819,130,0,0",
+        "837,132,0,0",
+        "871,134,0,0",
+        "893,135,0,0",
+        "901,138,0,0",
+        "916,141,1,0",
+        "934,147,1,0",
+        "935,148,1,0",
+        "936,149,1,0",
+        "943,151,1,0",
+        "960,152,1,0",
+        "974,153,0,0",
+        "991,155,0,0",
+        "994,156,0,0",
+        "1000,157,0,0",
+        "1001,158,1,0",
+        "1004,160,1,0",
+        "1004,161,1,0",
+        "1011,162,0,0",
+        "1012,163,0,0",
+        "1017,165,1,0",
+        "1030,166,0,0",
+        "1037,168,0,0",
+        "1046,170,0,0",
+        "1065,172,1,0",
+        "1077,176,1,0",
+        "1092,178,1,0",
+        "1109,184,1,0",
+        "1131,188,1,0",
+        "1146,194,1,0",
+        "1197,201,1,0",
+        "1198,203,1,0",
+        "1201,204,0,0",
+        "1207,207,1,0",
+        "1207,207,2,0",
+        "1222,208,0,0",
+        "1245,213,0,0",
+        "1249,217,0,0",
+        "1259,219,2,0",
+        "1261,220,0,0",
+        "1261,221,1,0",
+        "1264,222,0,0",
+        "1264,223,1,0",
+        "1273,224,0,0",
+        "1273,224,1,0",
+        "1282,225,0,0",
+        "1282,225,1,0",
+        "1302,228,0,0",
+        "1342,235,0,0",
+        "1360,238,0,0",
+        "1360,239,1,0",
+        "1360,239,2,0"
+      ]
+    }
+  ],
+  "sha256": {
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-coverage/coverage-summary.json": "449fd3a5367c519f3c01e607d57588c87fd795f9ccfdfe891d60aa694aefb2b7",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-coverage/lcov.info": "d7c2b90777c022d6030d9b6879cee965b2c3b45922b98a8cfbdcbf1351daae60",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-final-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-final-lint.log": "6f1ba868b8a821536facfd38e120eec9c0804eff8f118dfb0f265161befff2a5",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-final.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-final.log": "be60646d3b0a71c74105585ea198a2db45ba51e0a5b121678221d63d73038345",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-green.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-green.log": "30611bff7f139cbabfed1caadc8ee07d5fc525d1c15aed4008c6b9759fc76f60",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-lint.log": "6f1ba868b8a821536facfd38e120eec9c0804eff8f118dfb0f265161befff2a5",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-ownership-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-ownership-red.log": "00bc3be92523fcdb891ed5893db0051d12d42e6fc13d0bf09942901350a8f731",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-red.log": "d10355438a9e80faff3d28323e6bc85a10b4db25b79d65e1279f33f1234de519",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-refresh-owner-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-refresh-owner-red.log": "3abce33f22e4f57369d8b5be63c32e40e6ceae8f83c2b3865fdb2c24072639db",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-typecheck.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-typecheck.log": "ecb06bda5b0ff231e6e421ac0d6a304f62d43281ad2077d1b66c50bad2db6419",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-verified.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-verified.log": "99afd055912f85e1d35c4ff9d0d43cca4c26e59ae44f0483c211791c3c7357ac",
+    "docs/testing-evidence/design-v2/frontend-auth-parallel-vitest.config.mjs": "65d3cc052dcf53d7b06dcd6b514a543d6b824ef8ad975304b0c220a4bb7a72a8",
+    "src/app/core/auth/auth-return-url.service.spec.ts": "b7dea1949d711030f2c3ce2a99447e4aad5a9af209e4daa14c7ff663051324c4",
+    "src/app/core/auth/auth.guards.spec.ts": "2c25a3fb2cc6ce81a248a300a56bd112e0a0e189b671dddf9ae81bac48896559",
+    "src/app/core/auth/backup-activation-boundary.spec.ts": "bf8d683c0b3cc05c0709b2b29b829833faac2b297ef71afe4253bee2e754aaae",
+    "src/app/core/auth/backup-status-boundary.spec.ts": "5fd381b5ab019dd4d3d21c2edbf9ff56fc6f74aa4cd06984016c83e454a1f16c",
+    "src/app/core/auth/personal-spotify-recovery.spec.ts": "e24fdc272481d149d7596f1ec4dfb772ebbb76e86694e6e6df67f62d032c7f83",
+    "src/app/core/auth/personal-spotify-recovery.ts": "4deb1854ae341714fdf32793b1c40edeeebe69a990cd69ccbd35a2516f756812",
+    "src/app/core/auth/session-lifecycle.service.spec.ts": "5743820d56ca9116dce85c904a3a7232e26af31352f29d8721a18f00ca8e2069",
+    "src/app/core/auth/spotify-auth-refresh-boundary.spec.ts": "abe32445aee32709ae0690e049071a2abec429efde3fed875cfe9f902de6f516",
+    "src/app/core/auth/spotify-auth-sdk-refresh-boundary.spec.ts": "f03f79842d47f815a597eba039eb2bcf3ff8d98627674b2f0590a914b9ede7d5",
+    "src/app/core/auth/spotify-auth.interceptor.spec.ts": "e49029340f8e58a45ad86248a3bc3308fff7a63435a56d73cceb56f15b0934dc",
+    "src/app/core/auth/spotify-auth.service.spec.ts": "1115fa55c1d4bf1a3b8cf031763ce953fd8e417866ed040c4fca792e0a2c5f6a",
+    "src/app/core/auth/spotify-auth.service.ts": "f22a708da20a4853ef89bd09635f7c98c781221c024bf1c4da9cfbd474fd0266"
+  },
+  "additionalRed": {
+    "log": "frontend-auth-parallel-refresh-owner-red.log",
+    "exit": 1,
+    "testsPassed": 42,
+    "testsFailed": 1,
+    "sourceScope": "After terminal cleanup fix, before generation-owned refresh cache fix",
+    "effects": "Replacement B refresh subscribed to A pending result instead of making B token exchange; A finalization then allowed duplicate B request."
+  },
+  "limitations": [
+    "AuthService remains below98% in every metric; remaining uncovered lines/functions/branches are listed. No whole-frontend98 claim.",
+    "Actual SDK transport is controlled; hosted auth, real Spotify and production credential endpoint are not called.",
+    "This scoped verification does not replace full release/security gates or root browser regression after final production edits."
+  ]
+}

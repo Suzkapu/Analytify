@@ -1,0 +1,55 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.navigation.config.ts --project=desktop --grep=reduce
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214
+[WebServer] (node:228530) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:228530) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:228754) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (reduce) (6.8s)
+
+
+  1) [desktop] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (reduce) 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: getByRole('navigation', { name: 'Primary navigation', exact: true, includeHidden: true }).getByRole('link', { name: 'Friends', exact: true, includeHidden: true })
+    Expected: "/new/friends"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" getByRole('navigation', { name: 'Primary navigation', exact: true, includeHidden: true }).getByRole('link', { name: 'Friends', exact: true, includeHidden: true }) with timeout 5000ms
+      - waiting for getByRole('navigation', { name: 'Primary navigation', exact: true, includeHidden: true }).getByRole('link', { name: 'Friends', exact: true, includeHidden: true })
+
+
+      30 |     await expect(count).toHaveText('5 of 5 shortcuts selected');
+      31 |     await expect(bar.getByRole('link', {includeHidden: true})).toHaveText(['Playlists', 'Stats', 'History', 'Friends', 'Song Leagues']);
+    > 32 |     await expect(bar.getByRole('link', {name: 'Friends', exact: true, includeHidden: true})).toHaveAttribute('href', '/new/friends');
+         |                                                                                              ^
+      33 |     await expect(choice('Private Sharing')).toBeEnabled();
+      34 |     await choice('Private Sharing').press('Enter');
+      35 |     await expect(panel.getByText('Five shortcuts selected. Remove one before adding another.', {exact: true})).toBeVisible();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-navigation.spec.ts:32:94
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/navigation-browser-artifacts/design-v2-navigation-Devic-2185c-avigation-reachable-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-navigation.spec.ts:7:7 › Device shortcuts persist and keep navigation reachable (reduce) 

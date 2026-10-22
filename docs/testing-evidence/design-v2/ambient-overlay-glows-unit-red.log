@@ -1,0 +1,46 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/shared/ambient/*.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [1.399 seconds] - 2026-10-19T17:45:18.326Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:21213) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21207) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21206) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ |SpotiFront| src/app/shared/ambient/ambient-background.math.spec.ts (6 tests | 1 failed) 12ms
+     × composes deterministic overlay depth without moving route glows, and shell mode intensity 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/ambient/ambient-background.math.spec.ts > ambient background math > composes deterministic overlay depth without moving route glows, and shell mode intensity
+AssertionError: expected 0.19978785745871308 to be 0.21528785745871307 // Object.is equality
+
+- Expected
++ Received
+
+- 0.21528785745871307
++ 0.19978785745871308
+
+ ❯ src/app/shared/ambient/ambient-background.math.spec.ts:72:109
+     70|     expect(tools).toEqual(ambientTargetWithInteraction(route, 'tools',…
+     71|     for (const overlay of [tools, account, modal]) {
+     72|       for (const key of ['primaryX', 'primaryY', 'secondaryX', 'second…
+       |                                                                                                             ^
+     73|     }
+     74|     expect(tools.dotsX).toBeLessThan(route.dotsX);
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 26 passed (27)
+   Start at  19:45:18
+   Duration  976ms (transform 134ms, setup 765ms, import 87ms, tests 274ms, environment 1.02s)
+

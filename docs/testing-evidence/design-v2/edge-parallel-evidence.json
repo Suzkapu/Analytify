@@ -1,0 +1,615 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-15T18:53:58.048Z",
+  "branch": "codex/design-v2",
+  "head": "a8a7a3966a622c992e9058094627a768c16a363a",
+  "workingTree": "Existing unrelated work preserved; no commits or production changes by edge agent.",
+  "runtime": {
+    "deno": "2.9.7",
+    "v8": "15.0.245.2-rusty",
+    "typescript": "6.0.3",
+    "node": "26.11.1"
+  },
+  "commands": [
+    {
+      "command": "npm run test:coverage:edge",
+      "stage": "baseline sandboxed",
+      "exit": 1,
+      "log": "docs/testing-evidence/design-v2/edge-parallel-baseline.log",
+      "note": "All 26 tests passed; report subprocess failed with sandbox EPERM. No fresh report claimed.",
+      "logSha256": "98f7b4a4c0f5274490eb97e0b35db9e0932dc25049c37593c938ce4079d4c4cf"
+    },
+    {
+      "command": "npm run test:coverage:edge",
+      "stage": "baseline with local-subprocess permission",
+      "exit": 0,
+      "log": "docs/testing-evidence/design-v2/edge-parallel-baseline-elevated.log",
+      "tests": 26,
+      "metrics": {
+        "lines": 26.21,
+        "statements": 24.27,
+        "functions": 42.47,
+        "branches": 20.07
+      },
+      "logSha256": "7c91f402e5060ddb42b8882e6374b486a50607a49bd49040724a4963bcc37a4d"
+    },
+    {
+      "command": "npm run test:coverage:edge",
+      "stage": "notification fixture order regression",
+      "exit": 1,
+      "log": "docs/testing-evidence/design-v2/edge-parallel-notification-order-red.log",
+      "note": "Parallel encryption exposed arrival-order assumption in test transport. Corrected fixture binds failure by delivery-specific endpoint.",
+      "logSha256": "3b5e1b4d895551faf07f610f6c80130f2fcc33e2ad04211ba023849b6840e2f5"
+    },
+    {
+      "command": "npm run test:coverage:edge",
+      "stage": "final with local-subprocess permission",
+      "exit": 0,
+      "log": "docs/testing-evidence/design-v2/edge-parallel-final-coverage.log",
+      "tests": 81,
+      "logSha256": "255099027c311fd0aa27110c332f7aaf4c5eeb429eaeff414a1b46fb1317fbf9"
+    },
+    {
+      "command": "node scripts/check-application-coverage-inventory.mjs edge --final",
+      "stage": "final inventory and 98% gate",
+      "exit": 0,
+      "log": "docs/testing-evidence/design-v2/edge-parallel-final-inventory.log",
+      "logSha256": "855b394795851de46882ec2ec0e5adb2484de43ed7368df1769b791a5f3ab2e1"
+    }
+  ],
+  "coverage": {
+    "metrics": {
+      "lines": {
+        "total": 762,
+        "covered": 761,
+        "skipped": 0,
+        "pct": 99.86
+      },
+      "statements": {
+        "total": 901,
+        "covered": 899,
+        "skipped": 0,
+        "pct": 99.77
+      },
+      "functions": {
+        "total": 113,
+        "covered": 113,
+        "skipped": 0,
+        "pct": 100
+      },
+      "branches": {
+        "total": 797,
+        "covered": 795,
+        "skipped": 0,
+        "pct": 99.74
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "productionSources": 12,
+    "allMetricsAtLeast98": true,
+    "allFilesEachMetricAtLeast98": true,
+    "sources": [
+      {
+        "path": "supabase/functions/_shared/bounded-fetch.ts",
+        "sha256": "6661fed0ffce6cfd42afed9fe90ffe047d748dd485fbb973cd19ab8b13300d2e",
+        "metrics": {
+          "lines": {
+            "total": 43,
+            "covered": 43,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 7,
+            "covered": 7,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 57,
+            "covered": 57,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 51,
+            "covered": 51,
+            "skipped": 0,
+            "pct": 100
+          }
+        }
+      },
+      {
+        "path": "supabase/functions/_shared/request-security.ts",
+        "sha256": "d03bb7fe8206ea328984aa811d2402ea98a1f01a35254bf2f411936a428039f2",
+        "metrics": {
+          "lines": {
+            "total": 91,
+            "covered": 91,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 19,
+            "covered": 19,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 104,
+            "covered": 104,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 97,
+            "covered": 97,
+            "skipped": 0,
+            "pct": 100
+          }
+        }
+      },
+      {
+        "path": "supabase/functions/_shared/spotify-credential-crypto.ts",
+        "sha256": "2285f5e80532a9c58c1bf4938cbbe3060da64969e927559303903f320edc9417",
+        "metrics": {
+          "lines": {
+            "total": 45,
+            "covered": 45,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 12,
+            "covered": 12,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 49,
+            "covered": 49,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 36,
+            "covered": 36,
+            "skipped": 0,
+            "pct": 100
+          }
+        }
+      },
+      {
+        "path": "supabase/functions/song-league-notifications/delivery-state.ts",
+        "sha256": "d406a45b0296b98ca7593be94cb78b17f40f97345440e5ff963bd0074308421c",
+        "metrics": {
+          "lines": {
+            "total": 20,
+            "covered": 20,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 5,
+            "covered": 5,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 23,
+            "covered": 23,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 24,
+            "covered": 24,
+            "skipped": 0,
+            "pct": 100
+          }
+        }
+      },
+      {
+        "path": "supabase/functions/song-league-notifications/index.ts",
+        "sha256": "3a3961835049e2de6471d2a96b95ed149f81c0475739e5dd1004f9a43c442ab9",
+        "metrics": {
+          "lines": {
+            "total": 77,
+            "covered": 77,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 9,
+            "covered": 9,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 93,
+            "covered": 93,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 76,
+            "covered": 76,
+            "skipped": 0,
+            "pct": 100
+          }
+        }
+      },
+      {
+        "path": "supabase/functions/song-league-notifications/push-endpoint.ts",
+        "sha256": "7c5995c8d5f842b75e8bedb84696d182a1ded7af36b9702e8efd44feea7cebda",
+        "metrics": {
+          "lines": {
+            "total": 11,
+            "covered": 11,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 1,
+            "covered": 1,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 11,
+            "covered": 11,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 10,
+            "covered": 10,
+            "skipped": 0,
+            "pct": 100
+          }
+        }
+      },
+      {
+        "path": "supabase/functions/song-league-notifications/web-push.ts",
+        "sha256": "ac50a53d5ebdce3728a1726a74ecc372709e3d7cdd1b56bf6bd845a4e06b4c0e",
+        "metrics": {
+          "lines": {
+            "total": 56,
+            "covered": 56,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 12,
+            "covered": 12,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 63,
+            "covered": 63,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 12,
+            "covered": 12,
+            "skipped": 0,
+            "pct": 100
+          }
+        }
+      },
+      {
+        "path": "supabase/functions/song-league-playlist-sync/index.ts",
+        "sha256": "8a3bf546a0a1880171559075626fd9436ee7977bbcca8e40e5fe240aa62f6b28",
+        "metrics": {
+          "lines": {
+            "total": 196,
+            "covered": 195,
+            "skipped": 0,
+            "pct": 99.48
+          },
+          "functions": {
+            "total": 19,
+            "covered": 19,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 236,
+            "covered": 235,
+            "skipped": 0,
+            "pct": 99.57
+          },
+          "branches": {
+            "total": 215,
+            "covered": 215,
+            "skipped": 0,
+            "pct": 100
+          }
+        }
+      },
+      {
+        "path": "supabase/functions/song-league-playlist-sync/recovery.ts",
+        "sha256": "4f105ee8919c5132978210af2c6e71fe7d638e2c0bbe5b7ca795b890a04c0175",
+        "metrics": {
+          "lines": {
+            "total": 15,
+            "covered": 15,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 4,
+            "covered": 4,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 17,
+            "covered": 17,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 14,
+            "covered": 14,
+            "skipped": 0,
+            "pct": 100
+          }
+        }
+      },
+      {
+        "path": "supabase/functions/spotify-credentials/index.ts",
+        "sha256": "f9ef05c3c48ca5608cacd0eacabbc12ab2d7fd1ed16f648e5e29e26e956f1ccf",
+        "metrics": {
+          "lines": {
+            "total": 193,
+            "covered": 193,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 13,
+            "covered": 13,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 230,
+            "covered": 229,
+            "skipped": 0,
+            "pct": 99.56
+          },
+          "branches": {
+            "total": 247,
+            "covered": 245,
+            "skipped": 0,
+            "pct": 99.19
+          }
+        }
+      },
+      {
+        "path": "supabase/functions/spotify-credentials/personal-recovery.ts",
+        "sha256": "eeaf3510d41c2ddc95722eaf04d55500bafa0833a60376c8ccdd501762df59cf",
+        "metrics": {
+          "lines": {
+            "total": 6,
+            "covered": 6,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 4,
+            "covered": 4,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 8,
+            "covered": 8,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 7,
+            "covered": 7,
+            "skipped": 0,
+            "pct": 100
+          }
+        }
+      },
+      {
+        "path": "supabase/functions/spotify-credentials/profile-verification.ts",
+        "sha256": "3b3e4519e61f9f2e188c0af77ed7fe6176e69c22310f4d32934b3a11c105849b",
+        "metrics": {
+          "lines": {
+            "total": 9,
+            "covered": 9,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 8,
+            "covered": 8,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 10,
+            "covered": 10,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 8,
+            "covered": 8,
+            "skipped": 0,
+            "pct": 100
+          }
+        }
+      }
+    ],
+    "uncovered": [
+      {
+        "path": "supabase/functions/song-league-playlist-sync/index.ts",
+        "statements": [
+          {
+            "start": {
+              "line": 443,
+              "column": 16
+            },
+            "end": {
+              "line": 443,
+              "column": null
+            }
+          }
+        ],
+        "branches": []
+      },
+      {
+        "path": "supabase/functions/spotify-credentials/index.ts",
+        "statements": [
+          {
+            "start": {
+              "line": 60,
+              "column": 26
+            },
+            "end": {
+              "line": 60,
+              "column": null
+            }
+          }
+        ],
+        "branches": [
+          {
+            "start": {
+              "line": 60,
+              "column": 2
+            },
+            "end": {
+              "line": 60,
+              "column": null
+            }
+          },
+          {
+            "start": {
+              "line": 166,
+              "column": 36
+            },
+            "end": {
+              "line": 166,
+              "column": null
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "testSources": [
+    {
+      "path": "supabase/functions/_shared/bounded-fetch.test.ts",
+      "sha256": "0ad74795ad4fa7fb6d2c567293578d1ba0233150ed6a7a2ad4e3e5e15d75ecc5"
+    },
+    {
+      "path": "supabase/functions/_shared/handler-boundaries.test.ts",
+      "sha256": "ed29ba18cac522d043644bf6e62ed4ac72ada8f2bf4b53968912463287aa4c5e"
+    },
+    {
+      "path": "supabase/functions/_shared/handler-fixture.test.ts",
+      "sha256": "9a43f5c1506aafcbc5bfe2bee7fd721aef5a7090bfe22acd1dc3aff12d19ff2b"
+    },
+    {
+      "path": "supabase/functions/_shared/request-security.test.ts",
+      "sha256": "10231fcdae168f50b53d8e434a50015ac19734d3feef15f03a0f73ceb5dd4383"
+    },
+    {
+      "path": "supabase/functions/_shared/spotify-credential-crypto.test.ts",
+      "sha256": "afe8e1d01f26a2343180fa320af3bb017b4f0f5c24c942981e730db2f739d950"
+    },
+    {
+      "path": "supabase/functions/song-league-notifications/delivery-state.test.ts",
+      "sha256": "67673c6d16d1e0bba6f62e659198a2567979b9c357a2cee3b48735af9d88b647"
+    },
+    {
+      "path": "supabase/functions/song-league-notifications/handler.test.ts",
+      "sha256": "7b17586ee24c86d21df00d1ae2f6c51f904b0d7f28ac65a05e62e0fac80666f3"
+    },
+    {
+      "path": "supabase/functions/song-league-notifications/push-endpoint.test.ts",
+      "sha256": "2ac4579754d45bd280575918983050b2b19702e3c9a2d8e06060d2081fc4072f"
+    },
+    {
+      "path": "supabase/functions/song-league-notifications/web-push.test.ts",
+      "sha256": "402f94dc10226f1479c744a723983594cd69d25b0d05fdea04f12d3a48af2be1"
+    },
+    {
+      "path": "supabase/functions/song-league-playlist-sync/handler.test.ts",
+      "sha256": "7c65d6e99fa2e16f142c7ba358a489400e482d3513d66f01daefb157cea42e1f"
+    },
+    {
+      "path": "supabase/functions/song-league-playlist-sync/recovery.test.ts",
+      "sha256": "623962e4c25644c5b5110c449305d8fdc7e1227c5ed1bb672436d0316262a9f2"
+    },
+    {
+      "path": "supabase/functions/spotify-credentials/handler-profile.test.ts",
+      "sha256": "fa392d73243c40b7b8b1bf40fef542a447a02f744429244b2e7d42c0a1f234ce"
+    },
+    {
+      "path": "supabase/functions/spotify-credentials/handler-recovery.test.ts",
+      "sha256": "acf0c27815d66db3eecb06db3f243084c2fd0bda0bf412407b52153149772959"
+    },
+    {
+      "path": "supabase/functions/spotify-credentials/personal-recovery.test.ts",
+      "sha256": "4dcb8fb14a6a4fbe50af65eb2022fcaa32f613a63efb4ce454f072475b21ffe4"
+    },
+    {
+      "path": "supabase/functions/spotify-credentials/profile-verification.test.ts",
+      "sha256": "b2e9f50bd9de87d5a4a0baa36c67d5692102c17e8e12f2dc565b4cc933212485"
+    }
+  ],
+  "reports": [
+    {
+      "path": "coverage/edge/coverage-summary.json",
+      "sha256": "6f2dead3bfd0313b68b06c6c9d015b44878111afcba8a25f9dfca57ab0779bb9"
+    },
+    {
+      "path": "coverage/edge/coverage-final.json",
+      "sha256": "de19a2c5a3538091c6979b23f6d99b362ae933972fc1eec98ff09cd642e156f9"
+    },
+    {
+      "path": "coverage/edge/lcov.info",
+      "sha256": "0484fbfa5b2d81403d25d84b3a9031df72e24bc78fdf58675301bfab03fef3e6"
+    },
+    {
+      "path": "coverage/edge/source-inventory.json",
+      "sha256": "499a375c8c8b9e323cd1ec05f064f79103a2541a572d9b24f913252a3b32bbd8"
+    }
+  ],
+  "behaviorEvidence": [
+    "Real Deno handlers and installed Supabase SDK with intercepted Deno.serve, synthetic environment and fully intercepted fetch; fixtures reject unconfigured transport.",
+    "Credential ownership and action/input permissions, verified identity matching, safe profile defaults/images, personal recovery identity promotion, reviewed merge conflicts, encrypted hosted/personal credential rotation, partial database failure and sanitized errors.",
+    "Playlist lease contention/loss, source revision races and bounded reruns, member isolation and partial failure, current revision skips, reservation recovery by owned marker, missing/deleted destination recreation, 205-track batching and encrypted-token migration.",
+    "Notification admin/worker permissions, all three delivery queues, concurrent batches, expiration cleanup, bounded retry/exhaustion and persistence errors.",
+    "Web push real ECDH/HKDF/AES-GCM round-trip with receiver private key; JWT ES256 signature/audience/expiry verification, invalid destinations/keys, oversized response cancellation, HTTP failures.",
+    "Shared request streaming bounds, content lengths/types/encoding, preflight/header policy, rate-limit storage/hash failures; bounded HTTP retry-after/date/network/deadline/cancellation paths and encryption key-ring validation."
+  ],
+  "limitations": [
+    "Synthetic transport does not verify hosted database RPC implementations, deployed policies, actual Spotify/browser push provider transport or delivery receipt. No live requests, real credentials or notifications used.",
+    "Remaining unexecuted defensive paths are recorded from the fresh report: missing effective personal client identifier after prior validation; promotion fallback error after the installed SDK shapes its response; exception-only failure-record cleanup while SDK normally returns error results. No coverage ignores/exclusions or weakened gates were added."
+  ],
+  "ciEntrypointsRegisteredByRoot": [
+    "supabase/functions/_shared/handler-boundaries.test.ts",
+    "supabase/functions/spotify-credentials/handler-profile.test.ts",
+    "supabase/functions/spotify-credentials/handler-recovery.test.ts",
+    "supabase/functions/song-league-playlist-sync/handler.test.ts",
+    "supabase/functions/song-league-notifications/handler.test.ts",
+    "supabase/functions/song-league-notifications/delivery-state.test.ts",
+    "supabase/functions/song-league-notifications/web-push.test.ts"
+  ]
+}

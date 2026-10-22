@@ -1,11 +1,24 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
+import {availableParallelism} from 'node:os';
+import {readFileSync} from 'node:fs';
+import {productionSourceInventory} from './design-v2-source-inventory.mjs';
 import {coverageRegressions, isDesignV2BehaviorSource} from './design-v2-test-policy.mjs';
 
 const source = 'src/app/features/insights/user-stats/v2-user-stats.component.ts';
 const entry = (total, covered) => Object.fromEntries(
   ['statements', 'branches', 'functions', 'lines'].map(metric => [metric, {total, covered}])
 );
+
+test('bounds concurrent test environments without weakening deadlines or coverage', async () => {
+  const runner = (await import('../vitest.base.config.mjs')).default;
+  const options = JSON.parse(readFileSync('angular.json', 'utf8')).projects.SpotiFront.architect.test.options;
+  assert.equal(options.runnerConfig, 'vitest.base.config.mjs');
+  assert.equal(runner.test.maxWorkers, Math.min(4, availableParallelism()));
+  for (const option of ['testTimeout', 'hookTimeout', 'isolate', 'coverage', 'exclude']) {
+    assert.equal(runner.test[option], undefined, option);
+  }
+});
 
 test('includes Insights, new v2 helpers, shared primitives, ambient, and design navigation', () => {
   for (const path of [source, 'src/app/shared/ui-v2/design-v2-primitives.ts',
@@ -44,4 +57,39 @@ test('fails closed for malformed coverage counters', () => {
   for (const value of [entry(-1, 0), entry(1, 2), entry(1, 0.5), {}]) {
     assert.equal(coverageRegressions([source], {[source]: value}, {}).length, 4);
   }
+});
+
+test('isolates the browser fixture entry point and disables its service worker', () => {
+  const architect = JSON.parse(readFileSync('angular.json', 'utf8')).projects.SpotiFront.architect;
+  assert.equal(architect.build.options.browser, 'src/main.ts');
+  assert.equal(architect.build.defaultConfiguration, 'production');
+  assert.equal(architect.serve.defaultConfiguration, 'development');
+  for (const name of ['production', 'development', 'testing']) {
+    const configuration = architect.build.configurations[name];
+    assert.equal(configuration.browser, undefined, name);
+    assert.ok(!JSON.stringify(configuration).includes('browser-testing'), name);
+  }
+  const fixture = architect.build.configurations['browser-testing'];
+  assert.equal(fixture.browser, 'src/main.browser-testing.ts');
+  assert.equal(fixture.serviceWorker, false);
+  assert.deepEqual(fixture.fileReplacements, [{replace: 'src/environments/environment.ts', with: 'src/environments/environment.browser-testing.ts'}]);
+});
+
+test('documents only the two non-production browser fixture exclusions', () => {
+  const inventory = productionSourceInventory().frontend;
+  const fixtures = ['src/main.browser-testing.ts', 'src/environments/environment.browser-testing.ts'];
+  assert.deepEqual(inventory.exclusions.filter(item => /loopback browser-test/.test(item.reason)).map(item => item.path).sort(), fixtures.sort());
+  for (const path of fixtures) assert.ok(!inventory.sources.includes(path));
+  for (const path of ['src/main.ts', 'src/environments/environment.ts', 'src/app/core/friends/friends.service.ts', 'src/app/features/friends/v2-friends-page.component.ts']) {
+    assert.ok(inventory.sources.includes(path), path);
+  }
+});
+
+test('requires the dedicated Friends browser suite in preview CI', () => {
+  const workflow = readFileSync('.github/workflows/preview.yml', 'utf8');
+  assert.match(workflow, /run: npx playwright test --config=playwright\.friends\.config\.ts/);
+  assert.match(workflow, /docs\/testing-evidence\/design-v2\/friends-browser-artifacts/);
+  const configuration = readFileSync('playwright.friends.config.ts', 'utf8');
+  assert.match(configuration, /testMatch: 'design-v2-friends\.spec\.ts'/);
+  assert.match(configuration, /testIgnore: \[\]/);
 });
