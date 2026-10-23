@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-23",
+  "scope": "Ubuntu24.04 preinstalled PostgreSQL16 provisioning adapter and exact pinned static PostgREST16.5; no database bootstrap duplication",
+  "verification": {
+    "nodeTests": {
+      "command": "node --test scripts/provision-isolated-friends-runtime.test.mjs",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "execution": "Outside sandbox after Node child-process CLI test could not execute inside sandbox; no test skips or assertion changes."
+    },
+    "lint": {
+      "command": "npx eslint scripts/provision-isolated-friends-runtime.mjs scripts/provision-isolated-friends-runtime.test.mjs",
+      "exitCode": 0
+    },
+    "syntax": {
+      "command": "node --check scripts/provision-isolated-friends-runtime.mjs",
+      "exitCode": 0
+    },
+    "realPostgrest": {
+      "archiveAndBinaryHash": "MATCH historical pins",
+      "actualVersion": "PostgREST 16.5",
+      "network": false,
+      "temporaryExtraction": "cleaned"
+    },
+    "ubuntuPG16": "NOT RUN: unavailable on this CachyOS host",
+    "existingFullContract": "NOT RUN in this slice; existing runner unchanged by this agent"
+  },
+  "upstreamSources": [
+    "https://raw.githubusercontent.com/actions/runner-images/main/images/ubuntu/Ubuntu2404-Readme.md",
+    "https://raw.githubusercontent.com/actions/runner-images/main/images/ubuntu/scripts/build/install-postgresql.sh"
+  ],
+  "observedRunnerImage": "20261012.334.1 with PostgreSQL16.15; native installation may receive patch updates; four binaries must report matching16.x and actual version recorded in runtime output",
+  "security": [
+    "CLI accepts only optional --offline",
+    "No external database/cache/runtime overrides",
+    "Exact official HTTPS download/redirect allowlist and SHA256 before extraction/execution",
+    "No reuse of extracted executable cache",
+    "Root-owned nonwritable native file/ancestor trust and exact installation paths",
+    "Symlink/non-user-owned/writable cache rejected",
+    "Missing pgcrypto fails",
+    "No host service startup or package installation",
+    "Owned mkdtemp cleanup on failure; successful executable workspace retained for runner then discarded with ephemeral CIjob"
+  ],
+  "limitations": [
+    "No actual Ubuntu24.04/PostgreSQL16 run yet",
+    "PG16 selectedSQL compatibility remains execution evidence gap",
+    "No immutable pin of Ubuntu preinstalled patch version: records version and rejects major/mixed drift; image24.04 runner label is explicit",
+    "HostedAuth/OAuth/Realtime/full migration-chain/production parity not proved",
+    "No pipeline registration done by this agent"
+  ],
+  "sha256": {
+    "scripts/provision-isolated-friends-runtime.mjs": "9ece620b84e70d20df93e73ba8823b555582bcaf97fcb28a0a1b07b4818e49e7",
+    "scripts/provision-isolated-friends-runtime.test.mjs": "78b233e0c81a35ca638301cc204294c6c9ed4946d2f2f7c126708ab795ec3328",
+    "docs/testing-evidence/design-v2/friends-http-ci-provision-tests.log": "9782f0ee2138b40d9837b6b8d9fdc206122414af72a2ff00d162cd20afb60b3d",
+    "docs/testing-evidence/design-v2/friends-http-ci-postgrest-rehearsal.log": "7bf360069f696d8bb8b2d7e3254b484d6c045173ba70024d108fcb4c56bd0f48",
+    "docs/testing-evidence/design-v2/friends-http-ci-lint.log": "5974c8dea6c7b57a82ec56b0cba34791f857b72378ad9038572b797df3f66d20",
+    "docs/testing-evidence/design-v2/friends-http-ci-insertion.md": "818c5d1c03610010e0700682c5daa5b1f5f393ae4771c3083630faec044dd74a",
+    "docs/testing-evidence/design-v2/friends-http-runtime.json": "336439a05dfc25087c1e5ccf12bd0ab1f0fd46e9252cea5f5421828d07e97e69"
+  }
+}

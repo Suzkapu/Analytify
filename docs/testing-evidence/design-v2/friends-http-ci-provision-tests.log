@@ -1,0 +1,21 @@
+✔ PostgREST provenance matches the previously verified official release archive and binary (23.574391ms)
+✔ accepts only offline flag and Linux x64 Ubuntu24.04; refuses external backends and runtime overrides (7.058443ms)
+✔ cache refuses symlink root and ancestor while retaining an unrelated sentinel (31.087683ms)
+✔ cache refuses a world-writable cache without changing its contents (9.642412ms)
+✔ verified extraction refuses changed or symlinked cache bytes before invoking tar (12.336768ms)
+✔ checksum-verified local archive extracts data into its owned destination (50.740675ms)
+✔ system executable trust rejects symlinks, non-root ownership, writable ancestors and non-files (9.032041ms)
+✔ preinstalled PostgreSQL probe checks all four binaries and pgcrypto assets without service startup (11.050583ms)
+✔ PostgreSQL probe fails closed for wrong/mixed versions, missing binaries and missing extension assets (26.352383ms)
+✔ download fails closed for HTTP errors and redirects leaving official HTTPS hosts (83.818508ms)
+✔ official redirect bytes remain untrusted until the exact checksum is verified (24.529997ms)
+✔ archive size bound rejects oversized network input (12.686942ms)
+✔ CLI refuses external connection arguments before inspecting host or writing a cache (240.085354ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 806.939081

@@ -141,7 +141,6 @@ export class V2FriendsPageComponent implements OnInit, OnDestroy {
   }
   requestRemoval(friend: Friend): void {if (this.controller.canAct()) {this.revoking.set(null); this.removing.set(friend);}}
   requestRevocation(invitation: FriendInvitation): void {if (this.controller.canAct()) {this.removing.set(null); this.revoking.set(invitation);}}
-  cancelRemoval(): void {this.removing.set(null);}
   cancelConfirmation(): void {this.removing.set(null); this.revoking.set(null);}
   async confirmPendingAction(): Promise<void> {
     const invitation = this.revoking();

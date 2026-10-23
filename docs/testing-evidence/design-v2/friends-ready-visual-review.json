@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-23",
+  "scope": "Ready content component only; excludes shell/footer, other Friends states and service correctness.",
+  "canonical": [
+    "192:11403",
+    "192:11528",
+    "191:11425",
+    "1060:32428"
+  ],
+  "review": "Viewed all eight candidates in labelled desktop/mobile sheets before copying. Compared fresh canonical Ready screenshot/context and Pointer variants: names/order, headings/body, tabs and mobile secondary padding, 12px row gaps,88px menu actions,70px Fine/74px Coarse heights, exact icon assets, request actions and privacy caption. Fine at narrow width retains70px; Coarse at desktop width retains74px. No previous baseline replaced; no automatic update used.",
+  "sheets": [
+    "friends-ready-tab-review-desktop.png",
+    "friends-ready-tab-review-mobile.png"
+  ],
+  "images": [
+    {
+      "candidate": "docs/testing-evidence/design-v2/friends-ready-tab-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-desktop/candidate-friends-ready-desktop.png",
+      "baseline": "e2e/design-v2-friends.spec.ts-snapshots/friends-ready-desktop-desktop-linux.png",
+      "sha256": "1882ba4c73328c9508c9b6eb39fa9dacc359e1e695d0182c818bc000b8698512"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/friends-ready-tab-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-desktop/candidate-friends-ready-mobile.png",
+      "baseline": "e2e/design-v2-friends.spec.ts-snapshots/friends-ready-mobile-desktop-linux.png",
+      "sha256": "4c51a80813951bf396f15d089309c9ea3e2dea3a539975cf6e2649feecfe16b7"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/friends-ready-tab-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-firefox-stats/candidate-friends-ready-desktop.png",
+      "baseline": "e2e/design-v2-friends.spec.ts-snapshots/friends-ready-desktop-firefox-stats-linux.png",
+      "sha256": "bc3319a68a9dd6cba70ef2eeae9db65d4616dcc7ad1140ade93c0bb6c0bd1874"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/friends-ready-tab-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-firefox-stats/candidate-friends-ready-mobile.png",
+      "baseline": "e2e/design-v2-friends.spec.ts-snapshots/friends-ready-mobile-firefox-stats-linux.png",
+      "sha256": "7cf1560c5ed5a9b54d1fd6cf5afc0bdd6c67ccbdf5cc3c4e3523d33aeecd2cda"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/friends-ready-tab-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-mobile/candidate-friends-ready-desktop.png",
+      "baseline": "e2e/design-v2-friends.spec.ts-snapshots/friends-ready-desktop-mobile-linux.png",
+      "sha256": "b76d63097523c99d794b4c524f26a3f94b5f3ef0826338a1faa2905f334ac37d"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/friends-ready-tab-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-mobile/candidate-friends-ready-mobile.png",
+      "baseline": "e2e/design-v2-friends.spec.ts-snapshots/friends-ready-mobile-mobile-linux.png",
+      "sha256": "c7a47d8e1e960e9d5f09d9c044f06cd575cc6f966bf5fef00b8d42b6e6039c14"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/friends-ready-tab-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-webkit-stats/candidate-friends-ready-desktop.png",
+      "baseline": "e2e/design-v2-friends.spec.ts-snapshots/friends-ready-desktop-webkit-stats-linux.png",
+      "sha256": "397d15e585b15ffacdea8e8c15a402d94af41ee7c2dc44a47cc6db07834016bd"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/friends-ready-tab-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-webkit-stats/candidate-friends-ready-mobile.png",
+      "baseline": "e2e/design-v2-friends.spec.ts-snapshots/friends-ready-mobile-webkit-stats-linux.png",
+      "sha256": "2755943039dd693d42d988d69e5d6bc8b00be8c63622621fb96657201c5bad2e"
+    }
+  ],
+  "verification": {
+    "geometryCases": 4,
+    "visualCases": 4,
+    "snapshots": 8,
+    "differentPixelsAllowed": 0,
+    "unitCoverage": "separate; not inferred from browser checks"
+  },
+  "sourceAndEvidenceHashes": {
+    "e2e/design-v2-friends.spec.ts": "042fcff0b8a060dd4924968b1d03e3f914418f170617f5aa86040ae64aa7aa8f",
+    "src/app/features/friends/v2-friends-page.component.html": "b82830ef3bb8ea89fc359abe801b18b69f30273129527338002c5d31deac11d0",
+    "src/app/features/friends/v2-friends-page.component.scss": "f28dcd7d5fe5fdb5f2eef428add6698c7321b282f04f9ed966efc83f37cbed0d",
+    "src/app/features/friends/v2-friends-page.component.ts": "e2c8309fb592e0750b244e408cae2135dd310855af9e01e631d6d7d9d14efc68",
+    "src/app/shared/ui-v2/design-v2-primitives.ts": "edff91b7cbd8d06ee19c7c650ae23bc9522587b9049dbd84d0bbf1d646698d5d",
+    "src/app/shared/ui-v2/design-v2-primitives.scss": "4fd3ffb7ed24b5d2e16f7e2513b2b45d5bffbb6e4f8b7768694fb3865814399d",
+    "docs/testing-evidence/design-v2/friends-ready-tab.log": "09a7abe416506134a2d1a3cfe88c3cb7b19ef2a10084d401dc8707355b7509c5",
+    "docs/testing-evidence/design-v2/friends-ready-tab.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-ready-visual.log": "d23506257379c880e1fe2329400438554a12c7ad38e480b60917c810bf61b5cb",
+    "docs/testing-evidence/design-v2/friends-ready-visual.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/testing-evidence/design-v2/friends-secondary-parity-ready-tab-sizing.json": "1388ba79f3b53acb7e340e35df78439904c015ef81e310e2bae8640f5f2a1c90",
+    "docs/testing-evidence/design-v2/friends-touch-canonical.json": "5154ebb98c336975f7dafafc047633440ee9aae0a255dc28f26ed8c1ca3049e4"
+  }
+}

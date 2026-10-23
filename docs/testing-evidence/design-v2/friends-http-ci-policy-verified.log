@@ -1,0 +1,43 @@
+✔ a rapidly superseded commit cannot deploy after newer main (422.002862ms)
+✔ feature refs can never pass the production freshness gate (9.883833ms)
+✔ only main can start a production deployment (7.690194ms)
+✔ verification is secret-free and production secrets are environment scoped (0.871309ms)
+✔ verified build is handed to a serialized cancelable production job (0.623305ms)
+✔ the exact tested worker is digested and deployed without registry access (0.593991ms)
+✔ CI declares and installs one exact package-manager release (0.297747ms)
+✔ production waits for same-commit advisory and CodeQL gates (0.411329ms)
+✔ each deployment script checks freshness before its first remote mutation (0.303337ms)
+✔ Oracle identity is pinned and verified before Supabase can mutate production (0.282939ms)
+✔ Edge request controls are configured through production-scoped secrets (1.61546ms)
+✔ bounds concurrent test environments without weakening deadlines or coverage (7.058792ms)
+✔ includes Insights, new v2 helpers, shared primitives, ambient, and design navigation (0.548245ms)
+✔ requires evidence for every source, including a newly added file (0.505665ms)
+✔ a new source must have no uncovered code in any metric (1.226392ms)
+✔ absolute uncovered counts cannot be diluted by adding covered code (0.457004ms)
+✔ supports absolute Windows and Unix report paths (0.31597ms)
+✔ fails closed for malformed coverage counters (0.332051ms)
+✔ isolates the browser fixture entry point and disables its service worker (2.016619ms)
+✔ documents only the two non-production browser fixture exclusions (1522.602364ms)
+✔ requires the dedicated Friends browser suite in preview CI (1.55144ms)
+✔ requires isolated real Friends HTTP verification before preview deployment (1.46586ms)
+✔ PostgREST provenance matches the previously verified official release archive and binary (18.918459ms)
+✔ accepts only offline flag and Linux x64 Ubuntu24.04; refuses external backends and runtime overrides (4.341945ms)
+✔ cache refuses symlink root and ancestor while retaining an unrelated sentinel (9.913649ms)
+✔ cache refuses a world-writable cache without changing its contents (3.737947ms)
+✔ verified extraction refuses changed or symlinked cache bytes before invoking tar (6.344398ms)
+✔ checksum-verified local archive extracts data into its owned destination (34.632679ms)
+✔ system executable trust rejects symlinks, non-root ownership, writable ancestors and non-files (3.22604ms)
+✔ preinstalled PostgreSQL probe checks all four binaries and pgcrypto assets without service startup (2.860386ms)
+✔ PostgreSQL probe fails closed for wrong/mixed versions, missing binaries and missing extension assets (2.049371ms)
+✔ download fails closed for HTTP errors and redirects leaving official HTTPS hosts (77.460986ms)
+✔ official redirect bytes remain untrusted until the exact checksum is verified (16.571302ms)
+✔ archive size bound rejects oversized network input (15.10945ms)
+✔ CLI refuses external connection arguments before inspecting host or writing a cache (139.906217ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 35
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2352.731313

@@ -1,0 +1,93 @@
+{
+  "date": "2026-10-23",
+  "branch": "codex/design-v2",
+  "checkpoint": "5cf06aa499f9b6ec974454488e2a6dcebe403a49",
+  "previousServiceSha256": "977923feec9e1da1a4570665e38f6cfb72afce05c5e0648d75c0b388b2b8347e",
+  "sources": {
+    "src/app/core/sharing/stats-sharing.service.ts": "d0d0703c376e45b881abe10c00eddeae8dd6e84755358950130fc030091628d4",
+    "src/app/core/sharing/stats-sharing-realtime-boundary.spec.ts": "378380a0d6e8ca88b12d6d036dd305d8e30e3e3cf9afd542cd5c5952f6c445af",
+    "docs/testing-evidence/design-v2/stats-sharing-realtime-vitest.mjs": "a378a61f4cf57677c0a1c177eec9f78bc7207cbabf761690b86ae40cdbdc8bfd"
+  },
+  "evidence": {
+    "docs/testing-evidence/design-v2/stats-sharing-realtime-contract.log": "8e10feaabd764d7743282a0df99c501a34a133d484ae56197bce967f482596ed",
+    "docs/testing-evidence/design-v2/stats-sharing-realtime-coverage/coverage-final.json": "04530be4a38ef7889d1583c39495101af2abedb875f7717005756f33d284312b",
+    "docs/testing-evidence/design-v2/stats-sharing-realtime-coverage/coverage-summary.json": "0a243e7a964516447a7ee7dd54c266447af9824249e48043796bcd243594ac95",
+    "docs/testing-evidence/design-v2/stats-sharing-realtime-green.log": "26611141a02458f7b2a51068067ebe6c296e056de82c314461c359ffd7fa3066",
+    "docs/testing-evidence/design-v2/stats-sharing-realtime-lint.log": "3fa6fed2cf3cdf104a3ac987b0256b2f4a6fe52cfbf971f3d033b5e5cf9e2c92",
+    "docs/testing-evidence/design-v2/stats-sharing-realtime-red.log": "bf8189d2d0186065c930c3cd163d7bd404900195c06486ad539f85758ba5d6ef",
+    "docs/testing-evidence/design-v2/stats-sharing-realtime-regression.log": "2210cdb818088b57c815519b05208ce431f3c0fb03cf355222a8be9658305b40",
+    "docs/testing-evidence/design-v2/stats-sharing-realtime-report.md": "dee15ff50880ad28810bf3cc781b4c74c75e06ba433311219bafa54f9441f10e",
+    "docs/testing-evidence/design-v2/stats-sharing-realtime-types.log": "ecb06bda5b0ff231e6e421ac0d6a304f62d43281ad2077d1b66c50bad2db6419"
+  },
+  "coverage": {
+    "lines": {
+      "total": 108,
+      "covered": 108,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 165,
+      "covered": 162,
+      "skipped": 0,
+      "pct": 98.18
+    },
+    "functions": {
+      "total": 53,
+      "covered": 53,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 155,
+      "covered": 147,
+      "skipped": 0,
+      "pct": 94.83
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": "Unknown"
+    }
+  },
+  "sdkVersion": "2.117.2",
+  "checks": {
+    "red": {
+      "exit": 1,
+      "passed": 3,
+      "failed": 4,
+      "files": 1
+    },
+    "focused-green": {
+      "exit": 0,
+      "passed": 7,
+      "files": 1
+    },
+    "affected-regression": {
+      "exit": 0,
+      "passed": 116,
+      "files": 6
+    },
+    "test-typecheck": {
+      "exit": 0
+    },
+    "targeted-eslint": {
+      "exit": 0
+    },
+    "stats-sharing-contract": {
+      "exit": 0
+    },
+    "scoped-diffcheck": {
+      "exit": 0
+    }
+  },
+  "limitations": [
+    "Service-only branch coverage94.83 does not pass98gate",
+    "No hosted Auth/WebSocket/SQL/RLS/notification/external service usage",
+    "Earlier fullCI source was977923fe; new source requires parent combinedCI",
+    "Remote removeChannel completion is asynchronous; returned failure status retains existing no-retry behavior",
+    "No browser/Figma or worker/edge measurements in this slice"
+  ],
+  "liveCommands": []
+}

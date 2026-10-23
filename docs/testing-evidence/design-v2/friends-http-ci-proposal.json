@@ -1,0 +1,38 @@
+{
+  "status": "proposal awaiting review; Ubuntu PostgreSQL16 rehearsal not run",
+  "runnerSource": "https://raw.githubusercontent.com/actions/runner-images/main/images/ubuntu/Ubuntu2404-Readme.md",
+  "sourceReadDate": "2026-10-23",
+  "observedImage": "20261012.334.1",
+  "observedPostgreSQL": "16.15",
+  "observedService": "disabled by default; proposal does not start it",
+  "recommendedRunner": "ubuntu-24.04 explicitly, because ubuntu-latest is scheduled to change in November2026",
+  "postgresProvisioning": "Use existing /usr/lib/postgresql/16/bin binaries through task-local usr/bin symlinks after version/regular-file/trusted-path and pgcrypto prerequisite validation; do not install packages or start host service. Existing runner creates its own socket-only database.",
+  "postgrestProvisioning": "Verified official static16.5 archive SHA2565099e7ada38f9f6846cd87c14c5f158b7c165f1e9959665ad412e61f4dceba95. Extract into fresh owned ignored-cache directory. Never trust an existing extracted executable.",
+  "selectedSQLReview": {
+    "files": [
+      "20260801000000_foundational_schema.sql",
+      "20260905153000_lock_spotify_profile_identity.sql",
+      "20260801181500_playlist_sharing.sql",
+      "20260902190000_stats_spy_mode.sql",
+      "20261011162823_design_v2_single_use_friend_invitations.sql"
+    ],
+    "requirements": [
+      "pgcrypto in extensions schema",
+      "PLpgSQL",
+      "JSONB",
+      "RLS",
+      "row locks",
+      "gen_random_uuid",
+      "security definer functions with explicit search_path"
+    ],
+    "finding": "No PostgreSQL17/18-only syntax identified; static inspection is not a successful PostgreSQL16 run."
+  },
+  "localRehearsalAvailability": "Current shared CachyOS host has only previously verified cached PostgreSQL18.6 native packages and no PostgreSQL16 or container executable. Cannot claim Ubuntu/PG16 execution.",
+  "boundaries": [
+    "verify job only",
+    "no deploy edits",
+    "no external database URLs",
+    "no production data or notifications",
+    "no hosted Auth/OAuth/Realtime/full migration chain claim"
+  ]
+}

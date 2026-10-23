@@ -1,6 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {SupabaseClient} from '@supabase/supabase-js';
 import {SessionGeneration, SessionLifecycleService} from '@core/auth/session-lifecycle.service';
+import {createScopedLogger} from '@core/diagnostics/app-logger';
 import {environment} from '@env/environment';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {
@@ -14,6 +15,8 @@ import {
   StatsAccessStatus,
   StatsShareableUser
 } from './stats-sharing.models';
+
+const logger = createScopedLogger('Stats Sharing');
 
 @Injectable({providedIn: 'root'})
 export class StatsSharingService {
@@ -252,20 +255,27 @@ export class StatsSharingService {
   }
 
   async subscribeToAccessChanges(onChange: () => void): Promise<() => void> {
+    const generation = this.lifecycle.capture();
     const client = await this.supabase.getClient();
+    this.assertCurrent(generation);
     let disposed = false;
     const suffix = crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`;
     const channel = client
       .channel(`stats-access-updates:${suffix}`)
       .on('postgres_changes', {
         event: '*', schema: 'public', table: 'stats_access_requests'
-      }, () => { if (!disposed) onChange(); })
+      }, () => { if (!disposed && this.lifecycle.isCurrent(generation)) onChange(); })
       .subscribe();
-    return () => {
+    const cleanup = () => {
       if (disposed) return;
       disposed = true;
-      void client.removeChannel(channel);
+      generation.signal.removeEventListener('abort', cleanup);
+      void client.removeChannel(channel).catch(error => {
+        logger.warn('Could not remove realtime subscription.', error);
+      });
     };
+    generation.signal.addEventListener('abort', cleanup, {once: true});
+    return cleanup;
   }
 
   private async callRpc(build: (client: SupabaseClient) => ReturnType<SupabaseClient['rpc']>) {

@@ -1,0 +1,641 @@
+{
+  "comparisons": {
+    "desktopParentSiblingUnchanged": true,
+    "mobileParentSiblingUnchanged": true,
+    "desktopBindingUnchanged": true,
+    "mobileBindingUnchanged": true,
+    "desktopCtaUnchanged": true,
+    "mobileCtaUnchanged": true
+  },
+  "final": [
+    {
+      "empty": {
+        "id": "194:12384",
+        "name": "Friends / Empty state",
+        "width": 1120,
+        "height": 122,
+        "x": 0,
+        "y": 508,
+        "visible": false,
+        "sizing": "FIXED",
+        "vertical": "HUG",
+        "binding": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:191:11402"
+        }
+      },
+      "children": [
+        {
+          "id": "194:12385",
+          "name": "Your friends will appear here.",
+          "width": 1086,
+          "height": 28,
+          "x": 17,
+          "y": 17,
+          "visible": true,
+          "sizing": "FILL",
+          "vertical": "HUG"
+        },
+        {
+          "id": "194:12386",
+          "name": "Action / Add your first friend",
+          "width": 1086,
+          "height": 48,
+          "x": 17,
+          "y": 57,
+          "visible": true,
+          "sizing": "FILL",
+          "vertical": "FIXED"
+        }
+      ],
+      "context": {
+        "parent": {
+          "id": "192:11411",
+          "name": "Template / Page content",
+          "width": 1120,
+          "height": 528,
+          "x": 32,
+          "y": 124,
+          "visible": true,
+          "sizing": "FILL",
+          "vertical": "HUG"
+        },
+        "children": [
+          {
+            "id": "194:12332",
+            "name": "Friends navigation / Friends · Invitations",
+            "width": 1120,
+            "height": 48,
+            "x": 0,
+            "y": 0,
+            "visible": true,
+            "sizing": "FILL",
+            "vertical": "HUG"
+          },
+          {
+            "id": "194:12339",
+            "name": "Action / Add friend",
+            "width": 160,
+            "height": 48,
+            "x": 0,
+            "y": 64,
+            "visible": true,
+            "sizing": "FIXED",
+            "vertical": "FIXED"
+          },
+          {
+            "id": "194:12389",
+            "name": "Friend request / Paulzgi",
+            "width": 1120,
+            "height": 114,
+            "x": 0,
+            "y": 128,
+            "visible": true,
+            "sizing": "FILL",
+            "vertical": "HUG",
+            "binding": {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:191:11400"
+            }
+          },
+          {
+            "id": "194:12342",
+            "name": "Friends / Your connections",
+            "width": 1120,
+            "height": 234,
+            "x": 0,
+            "y": 258,
+            "visible": true,
+            "sizing": "FILL",
+            "vertical": "HUG"
+          },
+          {
+            "id": "194:12379",
+            "name": "Feedback / Friend removed",
+            "width": 1136,
+            "height": 100,
+            "x": 0,
+            "y": 314,
+            "visible": false,
+            "sizing": "FIXED",
+            "vertical": "HUG",
+            "binding": {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:191:11401"
+            }
+          },
+          {
+            "id": "194:12398",
+            "name": "Friendship does not grant access to your playlists or listening data. You choose what to share.",
+            "width": 1120,
+            "height": 20,
+            "x": 0,
+            "y": 508,
+            "visible": true,
+            "sizing": "FILL",
+            "vertical": "HUG"
+          }
+        ]
+      },
+      "bindings": {
+        "itemSpacing": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:45"
+        },
+        "paddingLeft": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:47"
+        },
+        "paddingTop": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:47"
+        },
+        "paddingRight": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:47"
+        },
+        "paddingBottom": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:47"
+        },
+        "visible": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:191:11402"
+        },
+        "topLeftRadius": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:63"
+        },
+        "topRightRadius": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:63"
+        },
+        "bottomLeftRadius": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:63"
+        },
+        "bottomRightRadius": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:63"
+        },
+        "fills": [
+          {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:9"
+          }
+        ],
+        "strokes": [
+          {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:35"
+          }
+        ]
+      },
+      "cta": [
+        {
+          "id": "194:12386",
+          "properties": {
+            "Label#24:4": {
+              "type": "TEXT",
+              "value": "Add your first friend"
+            },
+            "Icon#227:5": {
+              "type": "INSTANCE_SWAP",
+              "value": "227:11786",
+              "preferredValues": []
+            },
+            "Show icon#227:0": {
+              "type": "BOOLEAN",
+              "value": true
+            },
+            "State": {
+              "value": "Default",
+              "type": "VARIANT",
+              "boundVariables": {}
+            }
+          },
+          "reactions": [
+            {
+              "action": {
+                "type": "NODE",
+                "destinationId": "192:11619",
+                "navigation": "NAVIGATE",
+                "transition": {
+                  "type": "SMART_ANIMATE",
+                  "easing": {
+                    "type": "EASE_IN_AND_OUT"
+                  },
+                  "duration": 0.8999999761581421
+                },
+                "resetVideoPosition": false,
+                "resetScrollPosition": true,
+                "resetInteractiveComponents": false
+              },
+              "actions": [
+                {
+                  "type": "NODE",
+                  "destinationId": "192:11619",
+                  "navigation": "NAVIGATE",
+                  "transition": {
+                    "type": "SMART_ANIMATE",
+                    "easing": {
+                      "type": "EASE_IN_AND_OUT"
+                    },
+                    "duration": 0.8999999761581421
+                  },
+                  "resetVideoPosition": false,
+                  "resetScrollPosition": true,
+                  "resetInteractiveComponents": false
+                }
+              ],
+              "trigger": {
+                "type": "ON_CLICK"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "empty": {
+        "id": "194:12537",
+        "name": "Friends / Empty state",
+        "width": 358,
+        "height": 122,
+        "x": 0,
+        "y": 504,
+        "visible": false,
+        "sizing": "FIXED",
+        "vertical": "HUG",
+        "binding": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:191:11402"
+        }
+      },
+      "children": [
+        {
+          "id": "194:12538",
+          "name": "Your friends will appear here.",
+          "width": 324,
+          "height": 28,
+          "x": 17,
+          "y": 17,
+          "visible": true,
+          "sizing": "FILL",
+          "vertical": "HUG"
+        },
+        {
+          "id": "194:12539",
+          "name": "Action / Add your first friend",
+          "width": 324,
+          "height": 48,
+          "x": 17,
+          "y": 57,
+          "visible": true,
+          "sizing": "FILL",
+          "vertical": "FIXED"
+        }
+      ],
+      "context": {
+        "parent": {
+          "id": "192:11534",
+          "name": "Template / Page content",
+          "width": 358,
+          "height": 544,
+          "x": 16,
+          "y": 120,
+          "visible": true,
+          "sizing": "FILL",
+          "vertical": "HUG"
+        },
+        "children": [
+          {
+            "id": "194:12485",
+            "name": "Friends navigation / Friends · Invitations",
+            "width": 358,
+            "height": 48,
+            "x": 0,
+            "y": 0,
+            "visible": true,
+            "sizing": "FILL",
+            "vertical": "HUG"
+          },
+          {
+            "id": "194:12492",
+            "name": "Action / Add friend",
+            "width": 160,
+            "height": 48,
+            "x": 0,
+            "y": 60,
+            "visible": true,
+            "sizing": "FIXED",
+            "vertical": "FIXED"
+          },
+          {
+            "id": "194:12542",
+            "name": "Friend request / Paulzgi",
+            "width": 358,
+            "height": 114,
+            "x": 0,
+            "y": 120,
+            "visible": true,
+            "sizing": "FILL",
+            "vertical": "HUG",
+            "binding": {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:191:11400"
+            }
+          },
+          {
+            "id": "194:12495",
+            "name": "Friends / Your connections",
+            "width": 358,
+            "height": 246,
+            "x": 0,
+            "y": 246,
+            "visible": true,
+            "sizing": "FILL",
+            "vertical": "HUG"
+          },
+          {
+            "id": "194:12532",
+            "name": "Feedback / Friend removed",
+            "width": 358,
+            "height": 100,
+            "x": 0,
+            "y": 306,
+            "visible": false,
+            "sizing": "FIXED",
+            "vertical": "HUG",
+            "binding": {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:191:11401"
+            }
+          },
+          {
+            "id": "194:12551",
+            "name": "Friendship does not grant access to your playlists or listening data. You choose what to share.",
+            "width": 358,
+            "height": 40,
+            "x": 0,
+            "y": 504,
+            "visible": true,
+            "sizing": "FILL",
+            "vertical": "HUG"
+          }
+        ]
+      },
+      "bindings": {
+        "itemSpacing": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:45"
+        },
+        "paddingLeft": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:47"
+        },
+        "paddingTop": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:47"
+        },
+        "paddingRight": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:47"
+        },
+        "paddingBottom": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:47"
+        },
+        "visible": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:191:11402"
+        },
+        "topLeftRadius": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:63"
+        },
+        "topRightRadius": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:63"
+        },
+        "bottomLeftRadius": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:63"
+        },
+        "bottomRightRadius": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:24:63"
+        },
+        "fills": [
+          {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:9"
+          }
+        ],
+        "strokes": [
+          {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:35"
+          }
+        ]
+      },
+      "cta": [
+        {
+          "id": "194:12539",
+          "properties": {
+            "Label#24:4": {
+              "type": "TEXT",
+              "value": "Add your first friend"
+            },
+            "Icon#227:5": {
+              "type": "INSTANCE_SWAP",
+              "value": "227:11786",
+              "preferredValues": []
+            },
+            "Show icon#227:0": {
+              "type": "BOOLEAN",
+              "value": true
+            },
+            "State": {
+              "value": "Default",
+              "type": "VARIANT",
+              "boundVariables": {}
+            }
+          },
+          "reactions": [
+            {
+              "action": {
+                "type": "NODE",
+                "destinationId": "192:11744",
+                "navigation": "NAVIGATE",
+                "transition": {
+                  "type": "SMART_ANIMATE",
+                  "easing": {
+                    "type": "EASE_IN_AND_OUT"
+                  },
+                  "duration": 0.8999999761581421
+                },
+                "resetVideoPosition": false,
+                "resetScrollPosition": true,
+                "resetInteractiveComponents": false
+              },
+              "actions": [
+                {
+                  "type": "NODE",
+                  "destinationId": "192:11744",
+                  "navigation": "NAVIGATE",
+                  "transition": {
+                    "type": "SMART_ANIMATE",
+                    "easing": {
+                      "type": "EASE_IN_AND_OUT"
+                    },
+                    "duration": 0.8999999761581421
+                  },
+                  "resetVideoPosition": false,
+                  "resetScrollPosition": true,
+                  "resetInteractiveComponents": false
+                }
+              ],
+              "trigger": {
+                "type": "ON_CLICK"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "mutatedIds": [
+    "194:12384",
+    "194:12385",
+    "194:12386",
+    "194:12537",
+    "194:12538",
+    "194:12539"
+  ],
+  "settled": {
+    "desktopBefore": {
+      "id": "194:12384",
+      "name": "Friends / Empty state",
+      "width": 1136,
+      "height": 122,
+      "x": 0,
+      "y": 508,
+      "visible": true,
+      "sizing": "FIXED",
+      "vertical": "HUG",
+      "children": [
+        {
+          "id": "194:12385",
+          "name": "Your friends will appear here.",
+          "width": 1102,
+          "height": 28,
+          "x": 17,
+          "y": 17,
+          "visible": true,
+          "sizing": "FILL",
+          "vertical": "HUG"
+        },
+        {
+          "id": "194:12386",
+          "name": "Action / Add your first friend",
+          "width": 1102,
+          "height": 48,
+          "x": 17,
+          "y": 57,
+          "visible": true,
+          "sizing": "FILL",
+          "vertical": "FIXED"
+        }
+      ]
+    },
+    "desktopAfter": {
+      "id": "194:12384",
+      "name": "Friends / Empty state",
+      "width": 1120,
+      "height": 122,
+      "x": 0,
+      "y": 508,
+      "visible": true,
+      "sizing": "FILL",
+      "vertical": "HUG",
+      "children": [
+        {
+          "id": "194:12385",
+          "name": "Your friends will appear here.",
+          "width": 1086,
+          "height": 28,
+          "x": 17,
+          "y": 17,
+          "visible": true,
+          "sizing": "FILL",
+          "vertical": "HUG"
+        },
+        {
+          "id": "194:12386",
+          "name": "Action / Add your first friend",
+          "width": 1086,
+          "height": 48,
+          "x": 17,
+          "y": 57,
+          "visible": true,
+          "sizing": "FILL",
+          "vertical": "FIXED"
+        }
+      ]
+    },
+    "mobile": {
+      "id": "194:12537",
+      "name": "Friends / Empty state",
+      "width": 358,
+      "height": 122,
+      "x": 0,
+      "y": 504,
+      "visible": true,
+      "sizing": "FILL",
+      "vertical": "HUG",
+      "children": [
+        {
+          "id": "194:12538",
+          "name": "Your friends will appear here.",
+          "width": 324,
+          "height": 28,
+          "x": 17,
+          "y": 17,
+          "visible": true,
+          "sizing": "FILL",
+          "vertical": "HUG"
+        },
+        {
+          "id": "194:12539",
+          "name": "Action / Add your first friend",
+          "width": 324,
+          "height": 48,
+          "x": 17,
+          "y": 57,
+          "visible": true,
+          "sizing": "FILL",
+          "vertical": "FIXED"
+        }
+      ]
+    }
+  },
+  "screenshots": [
+    {
+      "name": "desktop-before-full"
+    },
+    {
+      "name": "desktop-after-full",
+      "width": 1120,
+      "height": 122,
+      "sizing": "FILL"
+    },
+    {
+      "name": "mobile-after-full",
+      "width": 358,
+      "height": 122,
+      "sizing": "FILL"
+    }
+  ],
+  "note": "Hidden nodes' layoutSizingHorizontal getter reports FIXED even when visible resolved sizing is FILL. The visible evaluation demonstrates both original mobile and normalized desktop FILL behavior; final hidden variable binding restored exactly."
+}

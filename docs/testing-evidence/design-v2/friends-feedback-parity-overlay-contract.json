@@ -1,0 +1,184 @@
+{
+  "overlays": [
+    {
+      "id": "70:5858",
+      "overlayPositionType": "CENTER",
+      "overlayBackground": {
+        "type": "NONE"
+      },
+      "overlayBackgroundInteraction": "NONE",
+      "effects": [],
+      "cornerRadius": 24,
+      "layoutSizingHorizontal": "FIXED",
+      "layoutSizingVertical": "HUG"
+    },
+    {
+      "id": "473:29338",
+      "overlayPositionType": "CENTER",
+      "overlayBackground": {
+        "type": "NONE"
+      },
+      "overlayBackgroundInteraction": "NONE",
+      "effects": [],
+      "cornerRadius": 24,
+      "layoutSizingHorizontal": "FIXED",
+      "layoutSizingVertical": "HUG"
+    }
+  ],
+  "retry": {
+    "id": "1008:32323",
+    "reactions": [],
+    "icon": {
+      "id": "I1008:32323;227:11813",
+      "width": 18,
+      "height": 18,
+      "children": [
+        {
+          "id": "I1008:32323;227:11813;62:2359",
+          "type": "VECTOR",
+          "width": 11.258991241455078,
+          "height": 3.955491065979004,
+          "x": 3.2130088806152344,
+          "y": 2.8933560848236084
+        },
+        {
+          "id": "I1008:32323;227:11813;62:2360",
+          "type": "VECTOR",
+          "width": 3.8160006999969482,
+          "height": 3.815991163253784,
+          "x": 10.970999717712402,
+          "y": 2.700000047683716
+        },
+        {
+          "id": "I1008:32323;227:11813;62:2361",
+          "type": "VECTOR",
+          "width": 11.258991241455078,
+          "height": 3.955500364303589,
+          "x": 3.5280091762542725,
+          "y": 11.151089668273926
+        },
+        {
+          "id": "I1008:32323;227:11813;62:2362",
+          "type": "VECTOR",
+          "width": 3.815991163253784,
+          "height": 3.815910577774048,
+          "x": 3.2130088806152344,
+          "y": 11.484270095825195
+        }
+      ]
+    }
+  },
+  "actions": [
+    {
+      "id": "194:12449",
+      "reactions": [
+        {
+          "action": {
+            "type": "NODE",
+            "destinationId": "70:5858",
+            "navigation": "OVERLAY",
+            "transition": {
+              "type": "DISSOLVE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.15000000596046448
+            },
+            "resetVideoPosition": false,
+            "resetScrollPosition": false
+          },
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "70:5858",
+              "navigation": "OVERLAY",
+              "transition": {
+                "type": "DISSOLVE",
+                "easing": {
+                  "type": "EASE_OUT"
+                },
+                "duration": 0.15000000596046448
+              },
+              "resetVideoPosition": false,
+              "resetScrollPosition": false
+            }
+          ],
+          "trigger": {
+            "type": "ON_CLICK"
+          }
+        }
+      ]
+    },
+    {
+      "id": "698:40824",
+      "reactions": [
+        {
+          "action": {
+            "type": "SET_VARIABLE",
+            "variableId": "VariableID:698:40808",
+            "variableValue": {
+              "value": false,
+              "type": "BOOLEAN",
+              "resolvedType": "BOOLEAN"
+            }
+          },
+          "actions": [
+            {
+              "type": "SET_VARIABLE",
+              "variableId": "VariableID:698:40808",
+              "variableValue": {
+                "value": false,
+                "type": "BOOLEAN",
+                "resolvedType": "BOOLEAN"
+              }
+            },
+            {
+              "type": "SET_VARIABLE",
+              "variableId": "VariableID:698:40809",
+              "variableValue": {
+                "value": false,
+                "type": "BOOLEAN",
+                "resolvedType": "BOOLEAN"
+              }
+            },
+            {
+              "type": "SET_VARIABLE",
+              "variableId": "VariableID:698:40810",
+              "variableValue": {
+                "value": false,
+                "type": "BOOLEAN",
+                "resolvedType": "BOOLEAN"
+              }
+            },
+            {
+              "type": "SET_VARIABLE",
+              "variableId": "VariableID:698:40811",
+              "variableValue": {
+                "value": false,
+                "type": "BOOLEAN",
+                "resolvedType": "BOOLEAN"
+              }
+            },
+            {
+              "type": "NODE",
+              "destinationId": "473:29338",
+              "navigation": "OVERLAY",
+              "transition": {
+                "type": "DISSOLVE",
+                "easing": {
+                  "type": "EASE_OUT"
+                },
+                "duration": 0.15000000596046448
+              },
+              "resetVideoPosition": false,
+              "resetScrollPosition": false
+            }
+          ],
+          "trigger": {
+            "type": "ON_CLICK"
+          }
+        }
+      ]
+    }
+  ]
+}

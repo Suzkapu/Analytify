@@ -1,0 +1,58 @@
+{
+  "phase": "Original RED preserved; parent combined mounted regression GREEN",
+  "sources": {
+    "src/app/features/friends/v2-friends-empty-state.spec.ts": "cbd03629dcb1e09cf48cc1019dcb733b0a6c707d3c5a7bdfdbf197b1ece17f25",
+    "docs/testing-evidence/design-v2/friends-empty-test-vitest.mjs": "6669b714356c7c68c25485817553c57a9a2a9f9ce5e7f73e9d045faf70771eea"
+  },
+  "baselineProductionSources": {
+    "src/app/features/friends/v2-friends-page.component.html": "d83501e15fd2596d003651946027c3b0310b50f720fab91bfbd0e25be2711e25",
+    "src/app/features/friends/v2-friends-page.component.ts": "e2c8309fb592e0750b244e408cae2135dd310855af9e01e631d6d7d9d14efc68",
+    "src/app/features/friends/v2-friends.controller.ts": "1f067cff9545fbea8f7082bba37d3795cd4e7e4214164bde46db4af3ccba2fd4",
+    "src/app/features/friends/friends.routes.ts": "ca607c6968d98230f5b2e00261764b0c0d31f1a404fe3e4e8591d0c4432fa6b2"
+  },
+  "canonicalReferences": {
+    "desktop": "194:12384",
+    "mobile": "194:12537",
+    "heading": "Your friends will appear here.",
+    "action": "Add your first friend",
+    "body": null,
+    "evidencePath": "docs/testing-evidence/design-v2/friends-empty-canonical-normalization.json"
+  },
+  "checks": {
+    "red": {
+      "exit": 1,
+      "passed": 3,
+      "failed": 3,
+      "files": 1
+    },
+    "eslint": {
+      "exit": 0
+    },
+    "test-typecheck": {
+      "exit": 0
+    }
+  },
+  "logs": {
+    "docs/testing-evidence/design-v2/friends-empty-test-red.log": "32091e28306c079b347908a4b6dc96ca621efe0b7a98bf262b7a8627b1c2da89",
+    "docs/testing-evidence/design-v2/friends-empty-test-lint.log": "4ecd8e0d4e650ed6acb6e7afae2219da7cbf83e647ae1d482be253b8d6c1c2e0",
+    "docs/testing-evidence/design-v2/friends-empty-test-types.log": "ecb06bda5b0ff231e6e421ac0d6a304f62d43281ad2077d1b66c50bad2db6419"
+  },
+  "limitations": [
+    "GREEN awaits parent canonicalUIimplementation",
+    "No browser geometry/style/QRdecoding/hostedcontract/coverageclaim"
+  ],
+  "liveCommands": [],
+  "parentVerification": {
+    "cases": 43,
+    "files": 2,
+    "exit": 0,
+    "log": "friends-empty-mounted-green.log",
+    "scope": "New six empty cases plus37existing mounted component cases; native geometry/pixels are separate.",
+    "hashes": {
+      "docs/testing-evidence/design-v2/friends-empty-mounted-green.log": "c374dd9dc84de387ca91cff10afdf8becfc7e40b7485fca8797d2e767ede5a1e",
+      "docs/testing-evidence/design-v2/friends-empty-mounted-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "src/app/features/friends/v2-friends-page.component.html": "8925dea92caa6a16b938c329417832c807171ef59a6fd40488de77f70e1eb71f",
+      "src/app/features/friends/v2-friends-page.component.ts": "e2c8309fb592e0750b244e408cae2135dd310855af9e01e631d6d7d9d14efc68"
+    }
+  }
+}

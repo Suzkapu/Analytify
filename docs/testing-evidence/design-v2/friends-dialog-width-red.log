@@ -1,0 +1,48 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config playwright.friends.config.ts --project desktop --grep Friends invitations and responsive geometry \(reduce\) --output docs/testing-evidence/design-v2/friends-dialog-width-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:187297) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:187297) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:187996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (reduce) (9.9s)
+
+
+  1) [desktop] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (reduce) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 272
+    Received: 288
+
+      233 |       expect(sample.x).toBeGreaterThanOrEqual(0); expect(sample.right).toBeLessThanOrEqual(width);
+      234 |       expect(sample.y).toBeGreaterThanOrEqual(0); expect(sample.bottom).toBeLessThanOrEqual(height);
+    > 235 |       expect(sample.right - sample.x).toBe(272);
+          |                                       ^
+      236 |       expect(sample.backdropFilter).toBe('blur(12px)'); geometry.push(sample);
+      237 |     }
+      238 |     await page.keyboard.press('Escape'); await expect(dialog).toHaveCount(0); await expect(manage).toBeFocused();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:235:39
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-dialog-width-red-artifacts/design-v2-friends-Friends--b37f4-responsive-geometry-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-dialog-width-red-artifacts/design-v2-friends-Friends--b37f4-responsive-geometry-reduce--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-dialog-width-red-artifacts/design-v2-friends-Friends--b37f4-responsive-geometry-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-dialog-width-red-artifacts/design-v2-friends-Friends--b37f4-responsive-geometry-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (reduce) 

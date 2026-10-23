@@ -27,7 +27,12 @@
           <div class="identity"><h2>{{ friend.displayName }}</h2><p>Connected</p></div>
           <v2-overflow-menu [label]="'Manage friend ' + friend.displayName" iconUrl="assets/design-v2/friends-member-menu.svg" [items]="[{id: 'remove', label: 'Remove friend', danger: true, disabled: !controller.canAct()}]" (itemSelected)="requestRemoval(friend)" />
         </article>
-      } @empty {<p role="status">Your friends will appear here.</p>}
+      } @empty {
+        <section class="friends-card empty-friends" role="status">
+          <h2 class="section-title">Your friends will appear here.</h2>
+          <a v2Button="primary" [routerLink]="navigation.commands('friendsAdd')"><span class="icon people" aria-hidden="true"></span>Add your first friend</a>
+        </section>
+      }
       </div>
       <p class="privacy-note">Friendship does not grant access to your playlists or listening data. You choose what to share.</p>
     } @else if (view() === 'invitations') {
@@ -81,7 +86,7 @@
     <section class="confirmation" role="dialog" aria-modal="true" aria-labelledby="friend-confirmation-title" aria-describedby="friend-confirmation-description" appAccessibleDialog (modalEscape)="cancelConfirmation()">
       <h2 id="friend-confirmation-title">{{ pending.title }}</h2>
       <p id="friend-confirmation-description">{{ pending.description }}</p>
-      <button type="button" v2Button="danger" [disabled]="!controller.canAct()" (click)="confirmPendingAction()"><span class="icon trash" aria-hidden="true"></span>{{ pending.action }}</button>
+      <button type="button" v2Button="danger" [disabled]="!controller.canAct()" (click)="confirmPendingAction()">@if (!revoking()) {<span class="icon trash" aria-hidden="true"></span>}{{ pending.action }}</button>
       <button type="button" v2Button="secondary" appModalInitialFocus (click)="cancelConfirmation()">Cancel</button>
     </section>
   </div>

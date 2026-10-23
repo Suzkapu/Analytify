@@ -1,0 +1,88 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/friends/v2-friends-empty-state.spec.ts --runner-config=docs/testing-evidence/design-v2/friends-empty-test-vitest.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/friends-empty-test-vitest.mjs
+Application bundle generation complete. [18.300 seconds] - 2026-10-22T22:37:06.867Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+Warning: A vi.mock("qrcode") call in "/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/friends/v2-friends-empty-state.spec.ts" is not at the top level of the module. Although it appears nested, it will be hoisted and executed before any tests run. Move it to the top level to reflect its actual execution order. This will become an error in a future version.
+See: https://vitest.dev/guide/mocking/modules#how-it-works
+ ❯ |SpotiFront| src/app/features/friends/v2-friends-empty-state.spec.ts (6 tests | 3 failed) 1846ms
+     × uses the canonical heading and one keyboard-focusable Add first friend navigation action 748ms
+     × opens the actual Add route and creates an invitation only after the explicit empty action 115ms
+     × updates the empty state after an explicit incoming request decision (accept=false) 318ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-empty-state.spec.ts > Canonical Friends empty state through mounted routes > uses the canonical heading and one keyboard-focusable Add first friend navigation action
+AssertionError: expected [] to include 'Your friends will appear here.'
+ ❯ src/app/features/friends/v2-friends-empty-state.spec.ts:72:91
+     70|   it('uses the canonical heading and one keyboard-focusable Add first …
+     71|     const h = await setup();
+     72|     expect([...h.element().querySelectorAll('h2')].map(item => item.te…
+       |                                                                                           ^
+     73|     const action = link(h.element(), EMPTY_ACTION);
+     74|     expect(action.getAttribute('href')).toBe('/friends/add');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-empty-state.spec.ts > Canonical Friends empty state through mounted routes > opens the actual Add route and creates an invitation only after the explicit empty action
+AssertionError: Add your first friend navigation link: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ link src/app/features/friends/v2-friends-empty-state.spec.ts:57:47
+     55| function link(element: HTMLElement, label: string): HTMLAnchorElement {
+     56|   const matches = [...element.querySelectorAll<HTMLAnchorElement>('a')…
+     57|   expect(matches, `${label} navigation link`).toHaveLength(1);
+       |                                               ^
+     58|   return matches[0];
+     59| }
+ ❯ src/app/features/friends/v2-friends-empty-state.spec.ts:89:5
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-empty-state.spec.ts > Canonical Friends empty state through mounted routes > updates the empty state after an explicit incoming request decision (accept=false)
+AssertionError: Add your first friend navigation link: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ link src/app/features/friends/v2-friends-empty-state.spec.ts:57:47
+     55| function link(element: HTMLElement, label: string): HTMLAnchorElement {
+     56|   const matches = [...element.querySelectorAll<HTMLAnchorElement>('a')…
+     57|   expect(matches, `${label} navigation link`).toHaveLength(1);
+       |                                               ^
+     58|   return matches[0];
+     59| }
+ ❯ src/app/features/friends/v2-friends-empty-state.spec.ts:143:14
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 3 passed (6)
+   Start at  00:37:07
+   Duration  5.62s (transform 977ms, setup 902ms, import 1.29s, tests 1.85s, environment 1.00s)
+

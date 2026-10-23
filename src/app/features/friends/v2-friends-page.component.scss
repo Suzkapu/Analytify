@@ -15,6 +15,8 @@ p { color: var(--v2-color-text-muted); }
 .friend-row { flex-direction: row; align-items: center; padding: var(--v2-space-3); }
 .friend-row v2-overflow-menu { --v2-icon-control-width: 88px; --v2-icon-control-border: var(--v2-color-border-control); }
 .friends-list { display: grid; gap: var(--v2-space-3); min-width: 0; }
+.empty-friends .v2-button { min-height: var(--v2-touch-control-height); }
+.empty-friends .people { color: var(--v2-color-text-muted); }
 .avatar { display: grid; place-items: center; width: 40px; height: 40px; flex: none; overflow: hidden; border-radius: var(--v2-radius-pill); background: var(--v2-color-selection); color: var(--v2-color-accent); font-size: 14px; font-weight: 600; }
 .avatar img { width: 40px; height: 40px; object-fit: cover; }
 .identity { display: flex; flex: 1; flex-direction: column; gap: var(--v2-space-1); min-width: 0; }
@@ -32,21 +34,24 @@ p { color: var(--v2-color-text-muted); }
 .qr-identity .identity { gap: var(--v2-space-3); }
 .pending-invitation .actions > :first-child { width: 180px; }
 .pending-invitation .actions > :last-child { width: 112px; }
+.pending-invitation .v2-button--danger { background: var(--v2-color-surface-raised); border-color: var(--v2-color-danger); }
 .review > p { font-size: 16px; line-height: 24px; }
 .review .actions > :first-child { width: 200px; border: 0; }
 .review .actions > :last-child { width: 120px; }
 .qr-slot { width: 176px; height: 176px; flex: none; }
 .qr-slot img { display: block; }
 .invitation-url { overflow-wrap: anywhere; user-select: all; }
-.confirmation-layer { position: fixed; inset: 0; z-index: 1100; display: grid; place-items: center; padding: var(--v2-space-4); }
+.confirmation-layer { position: fixed; inset: 0; z-index: 1100; display: grid; place-items: center; padding: var(--v2-space-4); animation: friend-confirmation-enter 150ms ease-out; }
+@keyframes friend-confirmation-enter { from { opacity: 0; } to { opacity: 1; } }
 .confirmation-backdrop { position: absolute; inset: 0; border: 0; background: rgba(0, 0, 0, .55); backdrop-filter: blur(12px); }
-.confirmation { position: relative; display: flex; flex-direction: column; gap: var(--v2-space-4); box-sizing: border-box; width: min(384px, 100%); max-height: 100%; overflow-y: auto; padding: var(--v2-space-6); border: 1px solid var(--v2-color-border); border-radius: var(--v2-radius-panel); background: var(--v2-color-background-raised); }
+.confirmation { position: relative; display: flex; flex-direction: column; gap: var(--v2-space-4); box-sizing: border-box; width: min(272px, 100%); max-height: 100%; overflow-y: auto; padding: var(--v2-space-6); border: 1px solid var(--v2-color-border); border-radius: var(--v2-radius-panel); background: var(--v2-color-background-raised); }
+.confirmation .v2-button--danger { background: var(--v2-color-surface-raised); border-color: var(--v2-color-danger); }
 .confirmation h2 { font-size: 20px; line-height: 28px; }
 .confirmation p { font-size: 16px; line-height: 24px; }
 @media (max-width: 767px) {
-  .friends-tabs .v2-button--secondary { padding-inline: var(--v2-space-2); }
+  .friends-tabs a:nth-child(2) { padding-inline: var(--v2-space-2); }
   .qr-identity { flex-direction: column; align-items: flex-start; }
   .pending-invitation .actions > :first-child { width: 160px; }
   .review .actions > button { flex: 1 1 0; width: auto; }
 }
-@media (prefers-reduced-motion: reduce) { .friends-tabs a, .friends-card button, .confirmation button { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .friends-tabs a, .friends-card button, .confirmation button { transition: none; } .confirmation-layer { animation: none; } }

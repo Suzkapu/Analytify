@@ -93,3 +93,16 @@ test('requires the dedicated Friends browser suite in preview CI', () => {
   assert.match(configuration, /testMatch: 'design-v2-friends\.spec\.ts'/);
   assert.match(configuration, /testIgnore: \[\]/);
 });
+
+test('requires isolated real Friends HTTP verification before preview deployment', () => {
+  const workflow = readFileSync('.github/workflows/preview.yml', 'utf8');
+  const job = workflow.match(/^  friends-http-contract:\n([\s\S]*?)(?=^  [\w-]+:\n|(?![\s\S]))/m)?.[1];
+  assert.ok(job, 'A dedicated isolated HTTP contract job is required.');
+  assert.match(job, /runs-on: ubuntu-24\.04/);
+  assert.match(job, /node scripts\/provision-isolated-friends-runtime\.mjs/);
+  assert.match(job, /node scripts\/test-isolated-friends-http-contract\.mjs --angular-contract/);
+  assert.match(job, /node integration\/friends-http\/verify-isolation\.mjs/);
+  assert.doesNotMatch(job, /continue-on-error|--handshake-only|secrets\./);
+  assert.match(job, /if: always\(\)/);
+  assert.match(workflow, /deploy:\n\s+needs: \[verify, friends-http-contract\]/);
+});

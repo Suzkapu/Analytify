@@ -96,6 +96,22 @@ describe('Mounted canonical Friends workflows', () => {
     component().requestRemoval(friend); await settle();
     expect(element().querySelector('[role="dialog"]')?.textContent).toContain('Remove Suzkapu?');
   });
+  it('does not submit invitation revocation while its authoritative inventory is refreshing', async () => {
+    const {component, backend, element, settle} = await setup('/friends/invitations');
+    button(element(), 'Revoke').click(); await settle();
+    let finish!: (value: typeof friend[]) => void;
+    backend.listFriends.mockImplementationOnce(() => new Promise(resolve => {finish = resolve;}));
+    const refresh = component().controller.reload(); await settle();
+    expect(button(element(), 'Revoke invitation').disabled).toBe(true);
+    await component().confirmPendingAction();
+    expect(backend.revokeInvitation).not.toHaveBeenCalled();
+    expect(element().querySelector('[role="dialog"]')).not.toBeNull();
+    finish([friend]); await refresh; await settle();
+    button(element(), 'Revoke invitation').click(); await settle();
+    expect(backend.revokeInvitation).toHaveBeenCalledExactlyOnceWith('old-invitation');
+    expect(element().querySelector('[role="dialog"]')).toBeNull();
+  });
+
   it('does not prepare or render a replacement invitation after leaving during its creation', async () => {
     const {component, backend, element, harness, settle} = await setup('/friends/add', backend => {
       backend.createInvitation.mockResolvedValueOnce({...newInvitation, status: 'accepted'});

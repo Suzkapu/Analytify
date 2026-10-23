@@ -1,0 +1,162 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/core/sharing/stats-sharing-realtime-boundary.spec.ts --runner-config=docs/testing-evidence/design-v2/stats-sharing-realtime-vitest.mjs
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/stats-sharing-realtime-vitest.mjs
+Application bundle generation complete. [4.889 seconds] - 2026-10-22T22:21:03.901Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/sharing/stats-sharing-realtime-boundary.spec.ts > Stats Realtime public session ownership > does not register an old session subscription after delayed client readiness
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "stats-access-updates:ef209a53-50b0-4054-b913-89d3be8378a1",
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sharing/stats-sharing-realtime-boundary.spec.ts:71:27
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/core/sharing/stats-sharing-realtime-boundary.spec.ts > Stats Realtime public session ownership > removes the active channel and suppresses queued callbacks when the session ends
+AssertionError: expected "vi.fn()" to be called 1 times, but got 2 times
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sharing/stats-sharing-realtime-boundary.spec.ts:83:22
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: 2,
+  expected: 1,
+  showDiff: false,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/core/sharing/stats-sharing-realtime-boundary.spec.ts > Stats Realtime public session ownership > does not reload the retained sharing caller from an old session event while the page is still mounted
+AssertionError: expected "vi.fn()" to be called 1 times, but got 2 times
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/sharing/stats-sharing-realtime-boundary.spec.ts:117:40
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: 2,
+  expected: 1,
+  showDiff: false,
+  operator: 'strictEqual'
+}
+
+ ❯ |SpotiFront| src/app/core/sharing/stats-sharing-realtime-boundary.spec.ts (7 tests | 4 failed) 1197ms
+     × does not register an old session subscription after delayed client readiness 41ms
+     × removes the active channel and suppresses queued callbacks when the session ends 6ms
+     × does not reload the retained sharing caller from an old session event while the page is still mounted 5ms
+     × keeps a failed asynchronous removal locally disposed and reports the cleanup failure 1013ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/sharing/stats-sharing-realtime-boundary.spec.ts > Stats Realtime public session ownership > does not register an old session subscription after delayed client readiness
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "stats-access-updates:ef209a53-50b0-4054-b913-89d3be8378a1",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/core/sharing/stats-sharing-realtime-boundary.spec.ts:71:27
+     69|     const outcome = await result;
+     70|     outcome.cleanup?.();
+     71|     expect(h.channel).not.toHaveBeenCalled();
+       |                           ^
+     72|     expect(outcome.error).toBeInstanceOf(Error);
+     73|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |SpotiFront| src/app/core/sharing/stats-sharing-realtime-boundary.spec.ts > Stats Realtime public session ownership > removes the active channel and suppresses queued callbacks when the session ends
+AssertionError: expected "vi.fn()" to be called 1 times, but got 2 times
+ ❯ src/app/core/sharing/stats-sharing-realtime-boundary.spec.ts:83:22
+     81|     await h.lifecycle.invalidateAndDrain();
+     82|     h.registrations[0].emit();
+     83|     expect(onChange).toHaveBeenCalledTimes(1);
+       |                      ^
+     84|     expect(h.removeChannel).toHaveBeenCalledExactlyOnceWith(h.registra…
+     85|     cleanup();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |SpotiFront| src/app/core/sharing/stats-sharing-realtime-boundary.spec.ts > Stats Realtime public session ownership > does not reload the retained sharing caller from an old session event while the page is still mounted
+AssertionError: expected "vi.fn()" to be called 1 times, but got 2 times
+ ❯ src/app/core/sharing/stats-sharing-realtime-boundary.spec.ts:117:40
+    115|     await h.lifecycle.invalidateAndDrain();
+    116|     h.registrations[0].emit();
+    117|     expect(sharing.listReceivedShares).toHaveBeenCalledTimes(before);
+       |                                        ^
+    118|     component.ngOnDestroy();
+    119|     expect(h.removeChannel).toHaveBeenCalledExactlyOnceWith(h.registra…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |SpotiFront| src/app/core/sharing/stats-sharing-realtime-boundary.spec.ts > Stats Realtime public session ownership > keeps a failed asynchronous removal locally disposed and reports the cleanup failure
+AssertionError: expected "warn" to be called at least once
+ ❯ src/app/core/sharing/stats-sharing-realtime-boundary.spec.ts:148:44
+    146|     cleanup();
+    147|     h.registrations[0].emit();
+    148|     await vi.waitFor(() => expect(warning).toHaveBeenCalled());
+       |                                            ^
+    149|     cleanup();
+    150|     await h.lifecycle.invalidateAndDrain();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 3 passed (7)
+   Start at  00:21:04
+   Duration  2.90s (transform 577ms, setup 437ms, import 572ms, tests 1.20s, environment 483ms)
+

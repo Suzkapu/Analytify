@@ -1,0 +1,2818 @@
+{
+  "set": {
+    "id": "1008:32348",
+    "name": "Analytify/Friends feedback",
+    "description": "Friends request lifecycle feedback. Loading gates actions; refreshing preserves cached content; busy prevents duplicate intent. Load failures retry reads. Mutation timeouts are unconfirmed: reconcile and retry the same single-use request. Unavailable invites require a new link. Verified Spotify identity is required. Announce loading/busy politely and failures as alerts; reduced motion removes decorative transitions. Owner unavailable requires explicit creation, never an automatic second invitation. Accepted/Declined are request-owned confirmed outcomes; success never grants private-data access.",
+    "definitions": {
+      "State": {
+        "type": "VARIANT",
+        "defaultValue": "Loading",
+        "variantOptions": [
+          "Loading",
+          "Refreshing",
+          "Busy",
+          "Load error",
+          "Change error",
+          "Unavailable",
+          "Profile required",
+          "Link unavailable",
+          "Owner unavailable",
+          "Accepted",
+          "Declined"
+        ]
+      }
+    }
+  },
+  "variants": [
+    {
+      "id": "1008:32308",
+      "name": "State=Loading",
+      "type": "COMPONENT",
+      "width": 576,
+      "height": 82,
+      "visible": true,
+      "layoutMode": "VERTICAL",
+      "layoutSizingHorizontal": "FIXED",
+      "layoutSizingVertical": "HUG",
+      "itemSpacing": 8,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 16,
+      "paddingBottom": 16,
+      "fills": [
+        {
+          "color": {
+            "r": 0.0941176488995552,
+            "g": 0.125490203499794,
+            "b": 0.09803921729326248
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:11"
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "color": {
+            "r": 0.46666666865348816,
+            "g": 0.7215686440467834,
+            "b": 1
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:31"
+          }
+        }
+      ],
+      "children": [
+        {
+          "id": "1008:32309",
+          "name": "Loading friends…",
+          "type": "TEXT",
+          "width": 542,
+          "height": 20,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.46666666865348816,
+                "g": 0.7215686440467834,
+                "b": 1
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:31"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Loading friends…",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1008:32310",
+          "name": "Enable a category to set up notifications. Install Analytify for more ",
+          "type": "TEXT",
+          "width": 542,
+          "height": 20,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.6352941393852234,
+                "g": 0.6784313917160034,
+                "b": 0.6509804129600525
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:17"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Your friends and incoming requests will appear here.",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1008:32311",
+          "name": "Action / Enable device notifications",
+          "type": "INSTANCE",
+          "width": 260,
+          "height": 48,
+          "visible": false,
+          "layoutMode": "HORIZONTAL",
+          "layoutSizingHorizontal": "FIXED",
+          "layoutSizingVertical": "FIXED",
+          "itemSpacing": 8,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+          "paddingTop": 0,
+          "paddingBottom": 0,
+          "fills": [
+            {
+              "color": {
+                "r": 0.2078431397676468,
+                "g": 0.9058823585510254,
+                "b": 0.5137255191802979
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:21"
+              }
+            }
+          ],
+          "strokes": []
+        }
+      ]
+    },
+    {
+      "id": "1008:32312",
+      "name": "State=Refreshing",
+      "type": "COMPONENT",
+      "width": 576,
+      "height": 82,
+      "visible": true,
+      "layoutMode": "VERTICAL",
+      "layoutSizingHorizontal": "FIXED",
+      "layoutSizingVertical": "HUG",
+      "itemSpacing": 8,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 16,
+      "paddingBottom": 16,
+      "fills": [
+        {
+          "color": {
+            "r": 0.0941176488995552,
+            "g": 0.125490203499794,
+            "b": 0.09803921729326248
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:11"
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "color": {
+            "r": 0.46666666865348816,
+            "g": 0.7215686440467834,
+            "b": 1
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:31"
+          }
+        }
+      ],
+      "children": [
+        {
+          "id": "1008:32313",
+          "name": "Refreshing friends…",
+          "type": "TEXT",
+          "width": 542,
+          "height": 20,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.46666666865348816,
+                "g": 0.7215686440467834,
+                "b": 1
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:31"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Refreshing friends…",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1008:32314",
+          "name": "Enable a category to set up notifications. Install Analytify for more ",
+          "type": "TEXT",
+          "width": 542,
+          "height": 20,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.6352941393852234,
+                "g": 0.6784313917160034,
+                "b": 0.6509804129600525
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:17"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Your current friends stay visible while we check for updates.",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1008:32315",
+          "name": "Action / Enable device notifications",
+          "type": "INSTANCE",
+          "width": 260,
+          "height": 48,
+          "visible": false,
+          "layoutMode": "HORIZONTAL",
+          "layoutSizingHorizontal": "FIXED",
+          "layoutSizingVertical": "FIXED",
+          "itemSpacing": 8,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+          "paddingTop": 0,
+          "paddingBottom": 0,
+          "fills": [
+            {
+              "color": {
+                "r": 0.2078431397676468,
+                "g": 0.9058823585510254,
+                "b": 0.5137255191802979
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:21"
+              }
+            }
+          ],
+          "strokes": []
+        }
+      ]
+    },
+    {
+      "id": "1008:32316",
+      "name": "State=Busy",
+      "type": "COMPONENT",
+      "width": 576,
+      "height": 102,
+      "visible": true,
+      "layoutMode": "VERTICAL",
+      "layoutSizingHorizontal": "FIXED",
+      "layoutSizingVertical": "HUG",
+      "itemSpacing": 8,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 16,
+      "paddingBottom": 16,
+      "fills": [
+        {
+          "color": {
+            "r": 0.0941176488995552,
+            "g": 0.125490203499794,
+            "b": 0.09803921729326248
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:11"
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "color": {
+            "r": 0.46666666865348816,
+            "g": 0.7215686440467834,
+            "b": 1
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:31"
+          }
+        }
+      ],
+      "children": [
+        {
+          "id": "1008:32317",
+          "name": "Updating your request…",
+          "type": "TEXT",
+          "width": 542,
+          "height": 20,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.46666666865348816,
+                "g": 0.7215686440467834,
+                "b": 1
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:31"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Updating your request…",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1008:32318",
+          "name": "Enable a category to set up notifications. Install Analytify for more ",
+          "type": "TEXT",
+          "width": 542,
+          "height": 40,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.6352941393852234,
+                "g": 0.6784313917160034,
+                "b": 0.6509804129600525
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:17"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Please wait while we confirm this action. Other request actions are temporarily unavailable.",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1008:32319",
+          "name": "Action / Enable device notifications",
+          "type": "INSTANCE",
+          "width": 260,
+          "height": 48,
+          "visible": false,
+          "layoutMode": "HORIZONTAL",
+          "layoutSizingHorizontal": "FIXED",
+          "layoutSizingVertical": "FIXED",
+          "itemSpacing": 8,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+          "paddingTop": 0,
+          "paddingBottom": 0,
+          "fills": [
+            {
+              "color": {
+                "r": 0.2078431397676468,
+                "g": 0.9058823585510254,
+                "b": 0.5137255191802979
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:21"
+              }
+            }
+          ],
+          "strokes": []
+        }
+      ]
+    },
+    {
+      "id": "1008:32320",
+      "name": "State=Load error",
+      "type": "COMPONENT",
+      "width": 576,
+      "height": 158,
+      "visible": true,
+      "layoutMode": "VERTICAL",
+      "layoutSizingHorizontal": "FIXED",
+      "layoutSizingVertical": "HUG",
+      "itemSpacing": 8,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 16,
+      "paddingBottom": 16,
+      "fills": [
+        {
+          "color": {
+            "r": 0.0941176488995552,
+            "g": 0.125490203499794,
+            "b": 0.09803921729326248
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:11"
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "color": {
+            "r": 0.46666666865348816,
+            "g": 0.7215686440467834,
+            "b": 1
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:31"
+          }
+        }
+      ],
+      "children": [
+        {
+          "id": "1008:32321",
+          "name": "Friends could not be loaded",
+          "type": "TEXT",
+          "width": 542,
+          "height": 20,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.46666666865348816,
+                "g": 0.7215686440467834,
+                "b": 1
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:31"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Friends could not be loaded",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1008:32322",
+          "name": "Enable a category to set up notifications. Install Analytify for more ",
+          "type": "TEXT",
+          "width": 542,
+          "height": 40,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.6352941393852234,
+                "g": 0.6784313917160034,
+                "b": 0.6509804129600525
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:17"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Retry to load your friends and requests. No friend action is available until your account is confirmed.",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1008:32323",
+          "name": "Action / Enable device notifications",
+          "type": "INSTANCE",
+          "width": 260,
+          "height": 48,
+          "visible": true,
+          "layoutMode": "HORIZONTAL",
+          "layoutSizingHorizontal": "FIXED",
+          "layoutSizingVertical": "FIXED",
+          "itemSpacing": 8,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+          "paddingTop": 0,
+          "paddingBottom": 0,
+          "fills": [
+            {
+              "color": {
+                "r": 0.2078431397676468,
+                "g": 0.9058823585510254,
+                "b": 0.5137255191802979
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:21"
+              }
+            }
+          ],
+          "strokes": []
+        }
+      ]
+    },
+    {
+      "id": "1008:32330",
+      "name": "State=Change error",
+      "type": "COMPONENT",
+      "width": 576,
+      "height": 158,
+      "visible": true,
+      "layoutMode": "VERTICAL",
+      "layoutSizingHorizontal": "FIXED",
+      "layoutSizingVertical": "HUG",
+      "itemSpacing": 8,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 16,
+      "paddingBottom": 16,
+      "fills": [
+        {
+          "color": {
+            "r": 0.0941176488995552,
+            "g": 0.125490203499794,
+            "b": 0.09803921729326248
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:11"
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "color": {
+            "r": 0.46666666865348816,
+            "g": 0.7215686440467834,
+            "b": 1
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:31"
+          }
+        }
+      ],
+      "children": [
+        {
+          "id": "1008:32331",
+          "name": "Your change could not be confirmed",
+          "type": "TEXT",
+          "width": 542,
+          "height": 20,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.46666666865348816,
+                "g": 0.7215686440467834,
+                "b": 1
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:31"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Your change could not be confirmed",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1008:32332",
+          "name": "Enable a category to set up notifications. Install Analytify for more ",
+          "type": "TEXT",
+          "width": 542,
+          "height": 40,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.6352941393852234,
+                "g": 0.6784313917160034,
+                "b": 0.6509804129600525
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:17"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Retry the same request to confirm the result. Your invitation stays private and does not share listening data.",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1008:32333",
+          "name": "Action / Enable device notifications",
+          "type": "INSTANCE",
+          "width": 260,
+          "height": 48,
+          "visible": true,
+          "layoutMode": "HORIZONTAL",
+          "layoutSizingHorizontal": "FIXED",
+          "layoutSizingVertical": "FIXED",
+          "itemSpacing": 8,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+          "paddingTop": 0,
+          "paddingBottom": 0,
+          "fills": [
+            {
+              "color": {
+                "r": 0.2078431397676468,
+                "g": 0.9058823585510254,
+                "b": 0.5137255191802979
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:21"
+              }
+            }
+          ],
+          "strokes": []
+        }
+      ]
+    },
+    {
+      "id": "1008:32340",
+      "name": "State=Unavailable",
+      "type": "COMPONENT",
+      "width": 576,
+      "height": 102,
+      "visible": true,
+      "layoutMode": "VERTICAL",
+      "layoutSizingHorizontal": "FIXED",
+      "layoutSizingVertical": "HUG",
+      "itemSpacing": 8,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 16,
+      "paddingBottom": 16,
+      "fills": [
+        {
+          "color": {
+            "r": 0.0941176488995552,
+            "g": 0.125490203499794,
+            "b": 0.09803921729326248
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:11"
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "color": {
+            "r": 0.46666666865348816,
+            "g": 0.7215686440467834,
+            "b": 1
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:31"
+          }
+        }
+      ],
+      "children": [
+        {
+          "id": "1008:32341",
+          "name": "This invitation is unavailable",
+          "type": "TEXT",
+          "width": 542,
+          "height": 20,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.46666666865348816,
+                "g": 0.7215686440467834,
+                "b": 1
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:31"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "This invitation is unavailable",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1008:32342",
+          "name": "Enable a category to set up notifications. Install Analytify for more ",
+          "type": "TEXT",
+          "width": 542,
+          "height": 40,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.6352941393852234,
+                "g": 0.6784313917160034,
+                "b": 0.6509804129600525
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:17"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "It may have been revoked or answered, or belong to another account. Ask your friend for a new invitation.",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1008:32343",
+          "name": "Action / Enable device notifications",
+          "type": "INSTANCE",
+          "width": 260,
+          "height": 48,
+          "visible": false,
+          "layoutMode": "HORIZONTAL",
+          "layoutSizingHorizontal": "FIXED",
+          "layoutSizingVertical": "FIXED",
+          "itemSpacing": 8,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+          "paddingTop": 0,
+          "paddingBottom": 0,
+          "fills": [
+            {
+              "color": {
+                "r": 0.2078431397676468,
+                "g": 0.9058823585510254,
+                "b": 0.5137255191802979
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:21"
+              }
+            }
+          ],
+          "strokes": []
+        }
+      ]
+    },
+    {
+      "id": "1008:32344",
+      "name": "State=Profile required",
+      "type": "COMPONENT",
+      "width": 576,
+      "height": 82,
+      "visible": true,
+      "layoutMode": "VERTICAL",
+      "layoutSizingHorizontal": "FIXED",
+      "layoutSizingVertical": "HUG",
+      "itemSpacing": 8,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 16,
+      "paddingBottom": 16,
+      "fills": [
+        {
+          "color": {
+            "r": 0.0941176488995552,
+            "g": 0.125490203499794,
+            "b": 0.09803921729326248
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:11"
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "color": {
+            "r": 0.46666666865348816,
+            "g": 0.7215686440467834,
+            "b": 1
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:31"
+          }
+        }
+      ],
+      "children": [
+        {
+          "id": "1008:32345",
+          "name": "Confirm your Spotify account",
+          "type": "TEXT",
+          "width": 542,
+          "height": 20,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.46666666865348816,
+                "g": 0.7215686440467834,
+                "b": 1
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:31"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Confirm your Spotify account",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1008:32346",
+          "name": "Enable a category to set up notifications. Install Analytify for more ",
+          "type": "TEXT",
+          "width": 542,
+          "height": 20,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.6352941393852234,
+                "g": 0.6784313917160034,
+                "b": 0.6509804129600525
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:17"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Connect your verified Spotify account before viewing friends or answering invitations.",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1008:32347",
+          "name": "Action / Enable device notifications",
+          "type": "INSTANCE",
+          "width": 260,
+          "height": 48,
+          "visible": false,
+          "layoutMode": "HORIZONTAL",
+          "layoutSizingHorizontal": "FIXED",
+          "layoutSizingVertical": "FIXED",
+          "itemSpacing": 8,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+          "paddingTop": 0,
+          "paddingBottom": 0,
+          "fills": [
+            {
+              "color": {
+                "r": 0.2078431397676468,
+                "g": 0.9058823585510254,
+                "b": 0.5137255191802979
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:21"
+              }
+            }
+          ],
+          "strokes": []
+        }
+      ]
+    },
+    {
+      "id": "1009:32386",
+      "name": "State=Link unavailable",
+      "type": "COMPONENT",
+      "width": 576,
+      "height": 102,
+      "visible": true,
+      "layoutMode": "VERTICAL",
+      "layoutSizingHorizontal": "FIXED",
+      "layoutSizingVertical": "HUG",
+      "itemSpacing": 8,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 16,
+      "paddingBottom": 16,
+      "fills": [
+        {
+          "color": {
+            "r": 0.0941176488995552,
+            "g": 0.125490203499794,
+            "b": 0.09803921729326248
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:11"
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "color": {
+            "r": 0.46666666865348816,
+            "g": 0.7215686440467834,
+            "b": 1
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:31"
+          }
+        }
+      ],
+      "children": [
+        {
+          "id": "1009:32387",
+          "name": "Link unavailable in this session",
+          "type": "TEXT",
+          "width": 542,
+          "height": 20,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.46666666865348816,
+                "g": 0.7215686440467834,
+                "b": 1
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:31"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Link unavailable in this session",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1009:32388",
+          "name": "Enable a category to set up notifications. Install Analytify for more ",
+          "type": "TEXT",
+          "width": 542,
+          "height": 40,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.6352941393852234,
+                "g": 0.6784313917160034,
+                "b": 0.6509804129600525
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:17"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "This invitation was created in another session. You can revoke it and create a new invitation to share from here.",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1009:32389",
+          "name": "Action / Enable device notifications",
+          "type": "INSTANCE",
+          "width": 260,
+          "height": 48,
+          "visible": false,
+          "layoutMode": "HORIZONTAL",
+          "layoutSizingHorizontal": "FIXED",
+          "layoutSizingVertical": "FIXED",
+          "itemSpacing": 8,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+          "paddingTop": 0,
+          "paddingBottom": 0,
+          "fills": [
+            {
+              "color": {
+                "r": 0.2078431397676468,
+                "g": 0.9058823585510254,
+                "b": 0.5137255191802979
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:21"
+              }
+            }
+          ],
+          "strokes": []
+        }
+      ]
+    },
+    {
+      "id": "1014:32392",
+      "name": "State=Owner unavailable",
+      "type": "COMPONENT",
+      "width": 576,
+      "height": 158,
+      "visible": true,
+      "layoutMode": "VERTICAL",
+      "layoutSizingHorizontal": "FIXED",
+      "layoutSizingVertical": "HUG",
+      "itemSpacing": 8,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 16,
+      "paddingBottom": 16,
+      "fills": [
+        {
+          "color": {
+            "r": 0.0941176488995552,
+            "g": 0.125490203499794,
+            "b": 0.09803921729326248
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:11"
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "color": {
+            "r": 0.46666666865348816,
+            "g": 0.7215686440467834,
+            "b": 1
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:31"
+          }
+        }
+      ],
+      "children": [
+        {
+          "id": "1014:32393",
+          "name": "Title / Owner unavailable",
+          "type": "TEXT",
+          "width": 542,
+          "height": 20,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.46666666865348816,
+                "g": 0.7215686440467834,
+                "b": 1
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:31"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Your invitation is no longer active",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1014:32394",
+          "name": "Description / Owner unavailable",
+          "type": "TEXT",
+          "width": 542,
+          "height": 40,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.6352941393852234,
+                "g": 0.6784313917160034,
+                "b": 0.6509804129600525
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:17"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "It was answered or revoked. Create a new invitation when you want to invite someone else.",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1014:32395",
+          "name": "Action / Create new invitation",
+          "type": "INSTANCE",
+          "width": 260,
+          "height": 48,
+          "visible": true,
+          "layoutMode": "HORIZONTAL",
+          "layoutSizingHorizontal": "FIXED",
+          "layoutSizingVertical": "FIXED",
+          "itemSpacing": 8,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+          "paddingTop": 0,
+          "paddingBottom": 0,
+          "fills": [
+            {
+              "color": {
+                "r": 0.2078431397676468,
+                "g": 0.9058823585510254,
+                "b": 0.5137255191802979
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:21"
+              }
+            }
+          ],
+          "strokes": [],
+          "reactions": [
+            {
+              "trigger": {
+                "type": "ON_CLICK"
+              },
+              "actions": [
+                {
+                  "type": "NODE",
+                  "destinationId": "192:11619",
+                  "navigation": "NAVIGATE"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1014:32415",
+      "name": "State=Accepted",
+      "type": "COMPONENT",
+      "width": 576,
+      "height": 158,
+      "visible": true,
+      "layoutMode": "VERTICAL",
+      "layoutSizingHorizontal": "FIXED",
+      "layoutSizingVertical": "HUG",
+      "itemSpacing": 8,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 16,
+      "paddingBottom": 16,
+      "fills": [
+        {
+          "color": {
+            "r": 0.0941176488995552,
+            "g": 0.125490203499794,
+            "b": 0.09803921729326248
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:11"
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "color": {
+            "r": 0.46666666865348816,
+            "g": 0.7215686440467834,
+            "b": 1
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:31"
+          }
+        }
+      ],
+      "children": [
+        {
+          "id": "1014:32416",
+          "name": "Title / Accepted",
+          "type": "TEXT",
+          "width": 542,
+          "height": 20,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.46666666865348816,
+                "g": 0.7215686440467834,
+                "b": 1
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:31"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Friend request accepted",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1014:32417",
+          "name": "Description / Accepted",
+          "type": "TEXT",
+          "width": 542,
+          "height": 40,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.6352941393852234,
+                "g": 0.6784313917160034,
+                "b": 0.6509804129600525
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:17"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "You can choose what to share with friends. Accepting this request does not grant access to your playlists or listening data.",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1014:32418",
+          "name": "Action / View friends",
+          "type": "INSTANCE",
+          "width": 260,
+          "height": 48,
+          "visible": true,
+          "layoutMode": "HORIZONTAL",
+          "layoutSizingHorizontal": "FIXED",
+          "layoutSizingVertical": "FIXED",
+          "itemSpacing": 8,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+          "paddingTop": 0,
+          "paddingBottom": 0,
+          "fills": [
+            {
+              "color": {
+                "r": 0.2078431397676468,
+                "g": 0.9058823585510254,
+                "b": 0.5137255191802979
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:21"
+              }
+            }
+          ],
+          "strokes": [],
+          "reactions": [
+            {
+              "trigger": {
+                "type": "ON_CLICK"
+              },
+              "actions": [
+                {
+                  "type": "NODE",
+                  "destinationId": "192:11403",
+                  "navigation": "NAVIGATE"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1014:32438",
+      "name": "State=Declined",
+      "type": "COMPONENT",
+      "width": 576,
+      "height": 158,
+      "visible": true,
+      "layoutMode": "VERTICAL",
+      "layoutSizingHorizontal": "FIXED",
+      "layoutSizingVertical": "HUG",
+      "itemSpacing": 8,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 16,
+      "paddingBottom": 16,
+      "fills": [
+        {
+          "color": {
+            "r": 0.0941176488995552,
+            "g": 0.125490203499794,
+            "b": 0.09803921729326248
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:11"
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "color": {
+            "r": 0.46666666865348816,
+            "g": 0.7215686440467834,
+            "b": 1
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:31"
+          }
+        }
+      ],
+      "children": [
+        {
+          "id": "1014:32439",
+          "name": "Title / Declined",
+          "type": "TEXT",
+          "width": 542,
+          "height": 20,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.46666666865348816,
+                "g": 0.7215686440467834,
+                "b": 1
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:31"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Friend request declined",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1014:32440",
+          "name": "Description / Declined",
+          "type": "TEXT",
+          "width": 542,
+          "height": 40,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.6352941393852234,
+                "g": 0.6784313917160034,
+                "b": 0.6509804129600525
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:17"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "This invitation cannot be used again. Your existing friends and sharing permissions are unchanged.",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "1014:32441",
+          "name": "Action / View friends",
+          "type": "INSTANCE",
+          "width": 260,
+          "height": 48,
+          "visible": true,
+          "layoutMode": "HORIZONTAL",
+          "layoutSizingHorizontal": "FIXED",
+          "layoutSizingVertical": "FIXED",
+          "itemSpacing": 8,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+          "paddingTop": 0,
+          "paddingBottom": 0,
+          "fills": [
+            {
+              "color": {
+                "r": 0.2078431397676468,
+                "g": 0.9058823585510254,
+                "b": 0.5137255191802979
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:21"
+              }
+            }
+          ],
+          "strokes": [],
+          "reactions": [
+            {
+              "trigger": {
+                "type": "ON_CLICK"
+              },
+              "actions": [
+                {
+                  "type": "NODE",
+                  "destinationId": "192:11403",
+                  "navigation": "NAVIGATE"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "reviewInstances": [
+    {
+      "id": "1008:32351",
+      "name": "Analytify/Friends feedback",
+      "width": 576,
+      "height": 82,
+      "componentProperties": {
+        "State": {
+          "value": "Loading",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "1008:32355",
+      "name": "Analytify/Friends feedback",
+      "width": 358,
+      "height": 82,
+      "componentProperties": {
+        "State": {
+          "value": "Loading",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "1008:32360",
+      "name": "Analytify/Friends feedback",
+      "width": 576,
+      "height": 82,
+      "componentProperties": {
+        "State": {
+          "value": "Refreshing",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "1008:32364",
+      "name": "Analytify/Friends feedback",
+      "width": 358,
+      "height": 102,
+      "componentProperties": {
+        "State": {
+          "value": "Refreshing",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "1008:32369",
+      "name": "Analytify/Friends feedback",
+      "width": 576,
+      "height": 102,
+      "componentProperties": {
+        "State": {
+          "value": "Busy",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "1008:32373",
+      "name": "Analytify/Friends feedback",
+      "width": 358,
+      "height": 102,
+      "componentProperties": {
+        "State": {
+          "value": "Busy",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "1008:32378",
+      "name": "Analytify/Friends feedback",
+      "width": 576,
+      "height": 158,
+      "componentProperties": {
+        "State": {
+          "value": "Load error",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "I1008:32378;1008:32323",
+      "name": "Action / Enable device notifications",
+      "width": 260,
+      "height": 48,
+      "componentProperties": {
+        "Show icon#227:0": {
+          "type": "BOOLEAN",
+          "value": true
+        },
+        "Icon#227:5": {
+          "type": "INSTANCE_SWAP",
+          "value": "62:2363",
+          "preferredValues": []
+        },
+        "Label#24:4": {
+          "type": "TEXT",
+          "value": "Retry"
+        },
+        "State": {
+          "value": "Default",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "I1008:32378;1008:32323;227:11813",
+      "name": "Action icon",
+      "width": 18,
+      "height": 18,
+      "componentProperties": {}
+    },
+    {
+      "id": "1008:32388",
+      "name": "Analytify/Friends feedback",
+      "width": 358,
+      "height": 158,
+      "componentProperties": {
+        "State": {
+          "value": "Load error",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "I1008:32388;1008:32323",
+      "name": "Action / Enable device notifications",
+      "width": 260,
+      "height": 48,
+      "componentProperties": {
+        "Show icon#227:0": {
+          "type": "BOOLEAN",
+          "value": true
+        },
+        "Icon#227:5": {
+          "type": "INSTANCE_SWAP",
+          "value": "62:2363",
+          "preferredValues": []
+        },
+        "Label#24:4": {
+          "type": "TEXT",
+          "value": "Retry"
+        },
+        "State": {
+          "value": "Default",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "I1008:32388;1008:32323;227:11813",
+      "name": "Action icon",
+      "width": 18,
+      "height": 18,
+      "componentProperties": {}
+    },
+    {
+      "id": "1008:32399",
+      "name": "Analytify/Friends feedback",
+      "width": 576,
+      "height": 158,
+      "componentProperties": {
+        "State": {
+          "value": "Change error",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "I1008:32399;1008:32333",
+      "name": "Action / Enable device notifications",
+      "width": 260,
+      "height": 48,
+      "componentProperties": {
+        "Show icon#227:0": {
+          "type": "BOOLEAN",
+          "value": true
+        },
+        "Icon#227:5": {
+          "type": "INSTANCE_SWAP",
+          "value": "62:2363",
+          "preferredValues": []
+        },
+        "Label#24:4": {
+          "type": "TEXT",
+          "value": "Retry"
+        },
+        "State": {
+          "value": "Default",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "I1008:32399;1008:32333;227:11813",
+      "name": "Action icon",
+      "width": 18,
+      "height": 18,
+      "componentProperties": {}
+    },
+    {
+      "id": "1008:32409",
+      "name": "Analytify/Friends feedback",
+      "width": 358,
+      "height": 178,
+      "componentProperties": {
+        "State": {
+          "value": "Change error",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "I1008:32409;1008:32333",
+      "name": "Action / Enable device notifications",
+      "width": 260,
+      "height": 48,
+      "componentProperties": {
+        "Show icon#227:0": {
+          "type": "BOOLEAN",
+          "value": true
+        },
+        "Icon#227:5": {
+          "type": "INSTANCE_SWAP",
+          "value": "62:2363",
+          "preferredValues": []
+        },
+        "Label#24:4": {
+          "type": "TEXT",
+          "value": "Retry"
+        },
+        "State": {
+          "value": "Default",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "I1008:32409;1008:32333;227:11813",
+      "name": "Action icon",
+      "width": 18,
+      "height": 18,
+      "componentProperties": {}
+    },
+    {
+      "id": "1008:32420",
+      "name": "Analytify/Friends feedback",
+      "width": 576,
+      "height": 102,
+      "componentProperties": {
+        "State": {
+          "value": "Unavailable",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "1008:32424",
+      "name": "Analytify/Friends feedback",
+      "width": 358,
+      "height": 122,
+      "componentProperties": {
+        "State": {
+          "value": "Unavailable",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "1008:32429",
+      "name": "Analytify/Friends feedback",
+      "width": 576,
+      "height": 82,
+      "componentProperties": {
+        "State": {
+          "value": "Profile required",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "1008:32433",
+      "name": "Analytify/Friends feedback",
+      "width": 358,
+      "height": 102,
+      "componentProperties": {
+        "State": {
+          "value": "Profile required",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "1009:32391",
+      "name": "Analytify/Friends feedback",
+      "width": 576,
+      "height": 102,
+      "componentProperties": {
+        "State": {
+          "value": "Link unavailable",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "1009:32395",
+      "name": "Analytify/Friends feedback",
+      "width": 358,
+      "height": 122,
+      "componentProperties": {
+        "State": {
+          "value": "Link unavailable",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "1014:32403",
+      "name": "Analytify/Friends feedback",
+      "width": 576,
+      "height": 158,
+      "componentProperties": {
+        "State": {
+          "value": "Owner unavailable",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "I1014:32403;1014:32395",
+      "name": "Action / Create new invitation · Desktop",
+      "width": 260,
+      "height": 48,
+      "componentProperties": {
+        "Show icon#227:0": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Icon#227:5": {
+          "type": "INSTANCE_SWAP",
+          "value": "62:2363",
+          "preferredValues": []
+        },
+        "Label#24:4": {
+          "type": "TEXT",
+          "value": "Create new invitation"
+        },
+        "State": {
+          "value": "Default",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "1014:32409",
+      "name": "Analytify/Friends feedback",
+      "width": 358,
+      "height": 158,
+      "componentProperties": {
+        "State": {
+          "value": "Owner unavailable",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "I1014:32409;1014:32395",
+      "name": "Action / Create new invitation · Mobile",
+      "width": 260,
+      "height": 48,
+      "componentProperties": {
+        "Show icon#227:0": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Icon#227:5": {
+          "type": "INSTANCE_SWAP",
+          "value": "62:2363",
+          "preferredValues": []
+        },
+        "Label#24:4": {
+          "type": "TEXT",
+          "value": "Create new invitation"
+        },
+        "State": {
+          "value": "Default",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "1014:32426",
+      "name": "Analytify/Friends feedback",
+      "width": 576,
+      "height": 158,
+      "componentProperties": {
+        "State": {
+          "value": "Accepted",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "I1014:32426;1014:32418",
+      "name": "Action / View friends · Desktop",
+      "width": 260,
+      "height": 48,
+      "componentProperties": {
+        "Show icon#227:0": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Icon#227:5": {
+          "type": "INSTANCE_SWAP",
+          "value": "62:2363",
+          "preferredValues": []
+        },
+        "Label#24:4": {
+          "type": "TEXT",
+          "value": "View friends"
+        },
+        "State": {
+          "value": "Default",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "1014:32432",
+      "name": "Analytify/Friends feedback",
+      "width": 358,
+      "height": 178,
+      "componentProperties": {
+        "State": {
+          "value": "Accepted",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "I1014:32432;1014:32418",
+      "name": "Action / View friends · Mobile",
+      "width": 260,
+      "height": 48,
+      "componentProperties": {
+        "Show icon#227:0": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Icon#227:5": {
+          "type": "INSTANCE_SWAP",
+          "value": "62:2363",
+          "preferredValues": []
+        },
+        "Label#24:4": {
+          "type": "TEXT",
+          "value": "View friends"
+        },
+        "State": {
+          "value": "Default",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "1014:32449",
+      "name": "Analytify/Friends feedback",
+      "width": 576,
+      "height": 158,
+      "componentProperties": {
+        "State": {
+          "value": "Declined",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "I1014:32449;1014:32441",
+      "name": "Action / View friends · Desktop",
+      "width": 260,
+      "height": 48,
+      "componentProperties": {
+        "Show icon#227:0": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Icon#227:5": {
+          "type": "INSTANCE_SWAP",
+          "value": "62:2363",
+          "preferredValues": []
+        },
+        "Label#24:4": {
+          "type": "TEXT",
+          "value": "View friends"
+        },
+        "State": {
+          "value": "Default",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "1014:32455",
+      "name": "Analytify/Friends feedback",
+      "width": 358,
+      "height": 158,
+      "componentProperties": {
+        "State": {
+          "value": "Declined",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "I1014:32455;1014:32441",
+      "name": "Action / View friends · Mobile",
+      "width": 260,
+      "height": 48,
+      "componentProperties": {
+        "Show icon#227:0": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Icon#227:5": {
+          "type": "INSTANCE_SWAP",
+          "value": "62:2363",
+          "preferredValues": []
+        },
+        "Label#24:4": {
+          "type": "TEXT",
+          "value": "View friends"
+        },
+        "State": {
+          "value": "Default",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    }
+  ],
+  "dialogs": [
+    {
+      "id": "70:5858",
+      "name": "Prototype / Confirm · Revoke",
+      "type": "FRAME",
+      "width": 272,
+      "height": 322,
+      "visible": true,
+      "layoutMode": "VERTICAL",
+      "layoutSizingHorizontal": "FIXED",
+      "layoutSizingVertical": "HUG",
+      "itemSpacing": 16,
+      "paddingLeft": 24,
+      "paddingRight": 24,
+      "paddingTop": 24,
+      "paddingBottom": 24,
+      "fills": [
+        {
+          "color": {
+            "r": 0.04313725605607033,
+            "g": 0.062745101749897,
+            "b": 0.05098039284348488
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:7"
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "color": {
+            "r": 0.20392157137393951,
+            "g": 0.25882354378700256,
+            "b": 0.22745098173618317
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:35"
+          }
+        }
+      ],
+      "children": [
+        {
+          "id": "70:5859",
+          "name": "Revoke friend invitation?",
+          "type": "TEXT",
+          "width": 222,
+          "height": 56,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.9607843160629272,
+                "g": 0.9686274528503418,
+                "b": 0.9607843160629272
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:15"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Revoke friend invitation?",
+          "font": [
+            {
+              "fontSize": 20,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 28
+              }
+            }
+          ]
+        },
+        {
+          "id": "70:5860",
+          "name": "This affects only the selected item or person. Review the scope before",
+          "type": "TEXT",
+          "width": 222,
+          "height": 72,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.6352941393852234,
+                "g": 0.6784313917160034,
+                "b": 0.6509804129600525
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:17"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Disables this invitation’s private link and QR code. Existing friendships are unchanged.",
+          "font": [
+            {
+              "fontSize": 16,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 24
+              }
+            }
+          ]
+        },
+        {
+          "id": "70:5861",
+          "name": "This prototype demonstrates the decision. It does not change your acco",
+          "type": "TEXT",
+          "width": 224,
+          "height": 60,
+          "visible": false,
+          "layoutSizingHorizontal": "FIXED",
+          "layoutSizingVertical": "FIXED",
+          "fills": [
+            {
+              "color": {
+                "r": 0.5568627715110779,
+                "g": 0.6078431606292725,
+                "b": 0.572549045085907
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:19"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "This prototype demonstrates the decision. It does not change your account.",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "70:5864",
+          "name": "Action / Revoke",
+          "type": "INSTANCE",
+          "width": 222,
+          "height": 48,
+          "visible": true,
+          "layoutMode": "HORIZONTAL",
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "FIXED",
+          "itemSpacing": 8,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+          "paddingTop": 0,
+          "paddingBottom": 0,
+          "fills": [
+            {
+              "color": {
+                "r": 0.0941176488995552,
+                "g": 0.125490203499794,
+                "b": 0.09803921729326248
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:11"
+              }
+            }
+          ],
+          "strokes": [
+            {
+              "color": {
+                "r": 1,
+                "g": 0.45490196347236633,
+                "b": 0.4901960790157318
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:27"
+              }
+            }
+          ],
+          "reactions": [
+            {
+              "trigger": {
+                "type": "ON_CLICK"
+              },
+              "actions": [
+                {
+                  "type": "CLOSE"
+                },
+                {
+                  "type": "SET_VARIABLE"
+                },
+                {
+                  "type": "SET_VARIABLE"
+                },
+                {
+                  "type": "SET_VARIABLE"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "70:5862",
+          "name": "Action / Cancel",
+          "type": "INSTANCE",
+          "width": 222,
+          "height": 48,
+          "visible": true,
+          "layoutMode": "HORIZONTAL",
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "FIXED",
+          "itemSpacing": 8,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+          "paddingTop": 0,
+          "paddingBottom": 0,
+          "fills": [
+            {
+              "color": {
+                "r": 0.07058823853731155,
+                "g": 0.0941176488995552,
+                "b": 0.0784313753247261
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:9"
+              }
+            }
+          ],
+          "strokes": [
+            {
+              "color": {
+                "r": 0.41960784792900085,
+                "g": 0.4901960790157318,
+                "b": 0.4431372582912445
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:37"
+              }
+            }
+          ],
+          "reactions": [
+            {
+              "trigger": {
+                "type": "ON_CLICK"
+              },
+              "actions": [
+                {
+                  "type": "CLOSE"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "473:29338",
+      "name": "Dialog / Remove friend · Suzkapu",
+      "type": "FRAME",
+      "width": 272,
+      "height": 294,
+      "visible": true,
+      "layoutMode": "VERTICAL",
+      "layoutSizingHorizontal": "FIXED",
+      "layoutSizingVertical": "HUG",
+      "itemSpacing": 16,
+      "paddingLeft": 24,
+      "paddingRight": 24,
+      "paddingTop": 24,
+      "paddingBottom": 24,
+      "fills": [
+        {
+          "color": {
+            "r": 0.04313725605607033,
+            "g": 0.062745101749897,
+            "b": 0.05098039284348488
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:7"
+          }
+        }
+      ],
+      "strokes": [
+        {
+          "color": {
+            "r": 0.20392157137393951,
+            "g": 0.25882354378700256,
+            "b": 0.22745098173618317
+          },
+          "opacity": 1,
+          "variable": {
+            "type": "VARIABLE_ALIAS",
+            "id": "VariableID:24:35"
+          }
+        }
+      ],
+      "children": [
+        {
+          "id": "473:29339",
+          "name": "Remove Suzkapu?",
+          "type": "TEXT",
+          "width": 222,
+          "height": 28,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.9607843160629272,
+                "g": 0.9686274528503418,
+                "b": 0.9607843160629272
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:15"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Remove Suzkapu?",
+          "font": [
+            {
+              "fontSize": 20,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 28
+              }
+            }
+          ]
+        },
+        {
+          "id": "473:29340",
+          "name": "This affects only the selected item or person. Review the scope before",
+          "type": "TEXT",
+          "width": 222,
+          "height": 72,
+          "visible": true,
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "HUG",
+          "fills": [
+            {
+              "color": {
+                "r": 0.6352941393852234,
+                "g": 0.6784313917160034,
+                "b": 0.6509804129600525
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:17"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "Removes this person from your friends. You can send a new friend request later.",
+          "font": [
+            {
+              "fontSize": 16,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 24
+              }
+            }
+          ]
+        },
+        {
+          "id": "473:29341",
+          "name": "This prototype demonstrates the decision. It does not change your acco",
+          "type": "TEXT",
+          "width": 224,
+          "height": 60,
+          "visible": false,
+          "layoutSizingHorizontal": "FIXED",
+          "layoutSizingVertical": "FIXED",
+          "fills": [
+            {
+              "color": {
+                "r": 0.5568627715110779,
+                "g": 0.6078431606292725,
+                "b": 0.572549045085907
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:19"
+              }
+            }
+          ],
+          "strokes": [],
+          "characters": "This prototype demonstrates the decision. It does not change your account.",
+          "font": [
+            {
+              "fontSize": 14,
+              "lineHeight": {
+                "unit": "PIXELS",
+                "value": 20
+              }
+            }
+          ]
+        },
+        {
+          "id": "473:29342",
+          "name": "Action / Remove",
+          "type": "INSTANCE",
+          "width": 222,
+          "height": 48,
+          "visible": true,
+          "layoutMode": "HORIZONTAL",
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "FIXED",
+          "itemSpacing": 8,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+          "paddingTop": 0,
+          "paddingBottom": 0,
+          "fills": [
+            {
+              "color": {
+                "r": 0.0941176488995552,
+                "g": 0.125490203499794,
+                "b": 0.09803921729326248
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:11"
+              }
+            }
+          ],
+          "strokes": [
+            {
+              "color": {
+                "r": 1,
+                "g": 0.45490196347236633,
+                "b": 0.4901960790157318
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:27"
+              }
+            }
+          ],
+          "reactions": [
+            {
+              "trigger": {
+                "type": "ON_CLICK"
+              },
+              "actions": [
+                {
+                  "type": "CLOSE"
+                },
+                {
+                  "type": "SET_VARIABLE"
+                },
+                {
+                  "type": "SET_VARIABLE"
+                },
+                {
+                  "type": "SET_VARIABLE"
+                },
+                {
+                  "type": "SET_VARIABLE"
+                },
+                {
+                  "type": "SET_VARIABLE"
+                },
+                {
+                  "type": "SET_VARIABLE"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "473:29343",
+          "name": "Action / Cancel · initial keyboard focus",
+          "type": "INSTANCE",
+          "width": 222,
+          "height": 48,
+          "visible": true,
+          "layoutMode": "HORIZONTAL",
+          "layoutSizingHorizontal": "FILL",
+          "layoutSizingVertical": "FIXED",
+          "itemSpacing": 8,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+          "paddingTop": 0,
+          "paddingBottom": 0,
+          "fills": [
+            {
+              "color": {
+                "r": 0.07058823853731155,
+                "g": 0.0941176488995552,
+                "b": 0.0784313753247261
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:9"
+              }
+            }
+          ],
+          "strokes": [
+            {
+              "color": {
+                "r": 0.41960784792900085,
+                "g": 0.4901960790157318,
+                "b": 0.4431372582912445
+              },
+              "opacity": 1,
+              "variable": {
+                "type": "VARIABLE_ALIAS",
+                "id": "VariableID:24:37"
+              }
+            }
+          ],
+          "reactions": [
+            {
+              "trigger": {
+                "type": "ON_CLICK"
+              },
+              "actions": [
+                {
+                  "type": "CLOSE"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

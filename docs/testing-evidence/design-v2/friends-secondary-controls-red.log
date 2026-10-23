@@ -1,0 +1,224 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config playwright.friends.config.ts --project desktop --grep secondary content has deterministic --output docs/testing-evidence/design-v2/friends-secondary-controls-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:174560) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:174560) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:174884) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-friends.spec.ts:149:5 › Friends secondary content has deterministic canonical visual candidates (30.8s)
+
+
+  1) [desktop] › e2e/design-v2-friends.spec.ts:149:5 › Friends secondary content has deterministic canonical visual candidates 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Array [
+        Object {
+    -     "paddingLeft": 16,
+    -     "width": 181,
+    +     "paddingLeft": 8,
+    +     "width": 173,
+        },
+        Object {
+          "paddingLeft": 8,
+    -     "width": 165,
+    +     "width": 173,
+        },
+      ]
+
+      170 |       const tabs = await panel.locator('.friends-tabs a').evaluateAll(elements => elements.map(element => ({width: element.getBoundingClientRect().width,
+      171 |         paddingLeft: parseFloat(getComputedStyle(element).paddingLeft)})));
+    > 172 |       expect.soft(tabs).toEqual(reference.children.map((child: {width: number; paddingLeft: number}) => ({width: child.width, paddingLeft: child.paddingLeft})));
+          |                         ^
+      173 |       if (state === 'invitations') {
+      174 |         const revoke = panel.getByRole('button', {name: 'Revoke', exact: true});
+      175 |         await expect.soft(revoke).toHaveCSS('background-color', 'rgb(24, 32, 25)');
+        at capture (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:172:25)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:189:3
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('v2-friends-page').getByRole('button', { name: 'Revoke', exact: true })
+    Expected: "rgb(24, 32, 25)"
+    Received: "rgba(255, 116, 125, 0.12)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "soft toHaveCSS" locator('v2-friends-page').getByRole('button', { name: 'Revoke', exact: true }) with timeout 5000ms
+      - waiting for locator('v2-friends-page').getByRole('button', { name: 'Revoke', exact: true })
+        14 × locator resolved to <button type="button" v2button="danger" _ngcontent-ng-c1345351098="" class="v2-button v2-button--danger">…</button>
+           - unexpected value "rgba(255, 116, 125, 0.12)"
+
+
+      173 |       if (state === 'invitations') {
+      174 |         const revoke = panel.getByRole('button', {name: 'Revoke', exact: true});
+    > 175 |         await expect.soft(revoke).toHaveCSS('background-color', 'rgb(24, 32, 25)');
+          |                                   ^
+      176 |         await expect.soft(revoke).toHaveCSS('border-color', 'rgb(255, 116, 125)');
+      177 |       }
+      178 |       await expectNoBlockingAxeViolations(page);
+        at capture (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:175:35)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:192:3
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('v2-friends-page').getByRole('button', { name: 'Revoke', exact: true })
+    Expected: "rgb(255, 116, 125)"
+    Received: "color(srgb 1 0.454902 0.490196 / 0.55)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "soft toHaveCSS" locator('v2-friends-page').getByRole('button', { name: 'Revoke', exact: true }) with timeout 5000ms
+      - waiting for locator('v2-friends-page').getByRole('button', { name: 'Revoke', exact: true })
+        14 × locator resolved to <button type="button" v2button="danger" _ngcontent-ng-c1345351098="" class="v2-button v2-button--danger">…</button>
+           - unexpected value "color(srgb 1 0.454902 0.490196 / 0.55)"
+
+
+      174 |         const revoke = panel.getByRole('button', {name: 'Revoke', exact: true});
+      175 |         await expect.soft(revoke).toHaveCSS('background-color', 'rgb(24, 32, 25)');
+    > 176 |         await expect.soft(revoke).toHaveCSS('border-color', 'rgb(255, 116, 125)');
+          |                                   ^
+      177 |       }
+      178 |       await expectNoBlockingAxeViolations(page);
+      179 |       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+        at capture (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:176:35)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:192:3
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 4
+    + Received  + 4
+
+      Array [
+        Object {
+    -     "paddingLeft": 16,
+    -     "width": 182,
+    +     "paddingLeft": 8,
+    +     "width": 166,
+        },
+        Object {
+    -     "paddingLeft": 8,
+    -     "width": 164,
+    +     "paddingLeft": 16,
+    +     "width": 180,
+        },
+      ]
+
+      170 |       const tabs = await panel.locator('.friends-tabs a').evaluateAll(elements => elements.map(element => ({width: element.getBoundingClientRect().width,
+      171 |         paddingLeft: parseFloat(getComputedStyle(element).paddingLeft)})));
+    > 172 |       expect.soft(tabs).toEqual(reference.children.map((child: {width: number; paddingLeft: number}) => ({width: child.width, paddingLeft: child.paddingLeft})));
+          |                         ^
+      173 |       if (state === 'invitations') {
+      174 |         const revoke = panel.getByRole('button', {name: 'Revoke', exact: true});
+      175 |         await expect.soft(revoke).toHaveCSS('background-color', 'rgb(24, 32, 25)');
+        at capture (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:172:25)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:192:3
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('v2-friends-page').getByRole('button', { name: 'Revoke', exact: true })
+    Expected: "rgb(24, 32, 25)"
+    Received: "rgba(255, 116, 125, 0.12)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "soft toHaveCSS" locator('v2-friends-page').getByRole('button', { name: 'Revoke', exact: true }) with timeout 5000ms
+      - waiting for locator('v2-friends-page').getByRole('button', { name: 'Revoke', exact: true })
+        14 × locator resolved to <button type="button" v2button="danger" _ngcontent-ng-c1345351098="" class="v2-button v2-button--danger">…</button>
+           - unexpected value "rgba(255, 116, 125, 0.12)"
+
+
+      173 |       if (state === 'invitations') {
+      174 |         const revoke = panel.getByRole('button', {name: 'Revoke', exact: true});
+    > 175 |         await expect.soft(revoke).toHaveCSS('background-color', 'rgb(24, 32, 25)');
+          |                                   ^
+      176 |         await expect.soft(revoke).toHaveCSS('border-color', 'rgb(255, 116, 125)');
+      177 |       }
+      178 |       await expectNoBlockingAxeViolations(page);
+        at capture (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:175:35)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:192:3
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('v2-friends-page').getByRole('button', { name: 'Revoke', exact: true })
+    Expected: "rgb(255, 116, 125)"
+    Received: "color(srgb 1 0.454902 0.490196 / 0.55)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "soft toHaveCSS" locator('v2-friends-page').getByRole('button', { name: 'Revoke', exact: true }) with timeout 5000ms
+      - waiting for locator('v2-friends-page').getByRole('button', { name: 'Revoke', exact: true })
+        14 × locator resolved to <button type="button" v2button="danger" _ngcontent-ng-c1345351098="" class="v2-button v2-button--danger">…</button>
+           - unexpected value "color(srgb 1 0.454902 0.490196 / 0.55)"
+
+
+      174 |         const revoke = panel.getByRole('button', {name: 'Revoke', exact: true});
+      175 |         await expect.soft(revoke).toHaveCSS('background-color', 'rgb(24, 32, 25)');
+    > 176 |         await expect.soft(revoke).toHaveCSS('border-color', 'rgb(255, 116, 125)');
+          |                                   ^
+      177 |       }
+      178 |       await expectNoBlockingAxeViolations(page);
+      179 |       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+        at capture (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:176:35)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:192:3
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Array [
+        Object {
+    -     "paddingLeft": 16,
+    -     "width": 181,
+    +     "paddingLeft": 8,
+    +     "width": 173,
+        },
+        Object {
+          "paddingLeft": 8,
+    -     "width": 165,
+    +     "width": 173,
+        },
+      ]
+
+      170 |       const tabs = await panel.locator('.friends-tabs a').evaluateAll(elements => elements.map(element => ({width: element.getBoundingClientRect().width,
+      171 |         paddingLeft: parseFloat(getComputedStyle(element).paddingLeft)})));
+    > 172 |       expect.soft(tabs).toEqual(reference.children.map((child: {width: number; paddingLeft: number}) => ({width: child.width, paddingLeft: child.paddingLeft})));
+          |                         ^
+      173 |       if (state === 'invitations') {
+      174 |         const revoke = panel.getByRole('button', {name: 'Revoke', exact: true});
+      175 |         await expect.soft(revoke).toHaveCSS('background-color', 'rgb(24, 32, 25)');
+        at capture (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:172:25)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:197:3
+
+    Test timeout of 30000ms exceeded.
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-secondary-controls-red-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-secondary-controls-red-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-desktop/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-secondary-controls-red-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-secondary-controls-red-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-secondary-controls-red-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-friends.spec.ts:149:5 › Friends secondary content has deterministic canonical visual candidates 

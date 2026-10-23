@@ -1,4 +1,4 @@
-import {expect, type Page} from '@playwright/test';
+import {expect, test, type Page} from '@playwright/test';
 
 interface TransitionRecord {id: number; stage: string; error?: string;}
 interface TransitionSnapshot {pending: number; starts: number; errors: string[]; records: TransitionRecord[];}
@@ -41,10 +41,16 @@ export async function observeNativeTransitions(page: Page): Promise<void> {
 }
 
 export async function expectNativeTransitionsSettled(page: Page): Promise<void> {
-  await expect.poll(() => page.evaluate(() => {
-    const probe = (window as Window & {analytifyNativeTransitionProbe: {pending: number; errors: string[]}}).analytifyNativeTransitionProbe;
-    return {pending: probe.pending, errors: probe.errors};
-  })).toEqual({pending: 0, errors: []});
+  try {
+    await expect.poll(() => page.evaluate(() => {
+      const probe = (window as Window & {analytifyNativeTransitionProbe: {pending: number; errors: string[]}}).analytifyNativeTransitionProbe;
+      return {pending: probe.pending, errors: probe.errors};
+    })).toEqual({pending: 0, errors: []});
+  } catch (error) {
+    const probe = await page.evaluate(() => (window as unknown as {analytifyNativeTransitionProbe: unknown}).analytifyNativeTransitionProbe);
+    await test.info().attach('native-transition-failure', {body: JSON.stringify(probe, null, 2), contentType: 'application/json'});
+    throw error;
+  }
 }
 
 /** Use only when the workflow deliberately starts navigation before the prior animation finishes. */

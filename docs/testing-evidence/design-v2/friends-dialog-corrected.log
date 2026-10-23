@@ -1,0 +1,95 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config playwright.friends.config.ts --project desktop --project mobile --grep Friends invitations and responsive geometry|Friends owner revocation confirmation --output docs/testing-evidence/design-v2/friends-dialog-corrected-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:205704) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:205704) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:206003) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (no-preference) (24.7s)
+(node:207511) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [desktop] › e2e/design-v2-friends.spec.ts:322:7 › Friends owner revocation confirmation (no-preference) (14.2s)
+  ✓  3 [desktop] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (reduce) (17.2s)
+  ✓  4 [desktop] › e2e/design-v2-friends.spec.ts:322:7 › Friends owner revocation confirmation (reduce) (8.5s)
+(node:210057) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  5 [mobile] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (no-preference) (33.5s)
+(node:212504) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  6 [mobile] › e2e/design-v2-friends.spec.ts:322:7 › Friends owner revocation confirmation (no-preference) (12.9s)
+  ✓  7 [mobile] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (reduce) (18.8s)
+  ✓  8 [mobile] › e2e/design-v2-friends.spec.ts:322:7 › Friends owner revocation confirmation (reduce) (11.0s)
+
+
+  1) [desktop] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (no-preference) 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+      Object {
+    -   "errors": Array [],
+    +   "errors": Array [
+    +     "TimeoutError: Transition was aborted because of timeout in DOM update. DOM update timed out",
+    +   ],
+        "pending": 0,
+      }
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+       at helpers/native-transitions.ts:47
+
+      45 |     const probe = (window as Window & {analytifyNativeTransitionProbe: {pending: number; errors: string[]}}).analytifyNativeTransitionProbe;
+      46 |     return {pending: probe.pending, errors: probe.errors};
+    > 47 |   })).toEqual({pending: 0, errors: []});
+         |       ^
+      48 | }
+      49 |
+      50 | /** Use only when the workflow deliberately starts navigation before the prior animation finishes. */
+        at expectNativeTransitionsSettled (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/native-transitions.ts:47:7)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:282:41
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-dialog-corrected-artifacts/design-v2-friends-Friends--e7fa7-ive-geometry-no-preference--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-dialog-corrected-artifacts/design-v2-friends-Friends--e7fa7-ive-geometry-no-preference--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-dialog-corrected-artifacts/design-v2-friends-Friends--e7fa7-ive-geometry-no-preference--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-dialog-corrected-artifacts/design-v2-friends-Friends--e7fa7-ive-geometry-no-preference--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (no-preference) 
+
+    Test timeout of 30000ms exceeded.
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-dialog-corrected-artifacts/design-v2-friends-Friends--e7fa7-ive-geometry-no-preference--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-dialog-corrected-artifacts/design-v2-friends-Friends--e7fa7-ive-geometry-no-preference--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-dialog-corrected-artifacts/design-v2-friends-Friends--e7fa7-ive-geometry-no-preference--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-dialog-corrected-artifacts/design-v2-friends-Friends--e7fa7-ive-geometry-no-preference--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (no-preference) 
+    [mobile] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (no-preference) 
+  6 passed (2.9m)

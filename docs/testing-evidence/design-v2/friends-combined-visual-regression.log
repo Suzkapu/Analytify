@@ -1,0 +1,193 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config playwright.friends.config.ts --output docs/testing-evidence/design-v2/friends-combined-visual-regression-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:189860) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:189860) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 24 tests using 1 worker
+
+(node:190103) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-friends.spec.ts:93:5 › Friends ready content preserves canonical card geometry during resizing (10.8s)
+  ✓   2 [desktop] › e2e/design-v2-friends.spec.ts:149:5 › Friends secondary content has deterministic canonical visual candidates (22.5s)
+  ✓   3 [desktop] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (no-preference) (27.7s)
+  ✓   4 [desktop] › e2e/design-v2-friends.spec.ts:355:7 › Friends confirming-read revocation and session exit (no-preference) (9.6s)
+  ✘   5 [desktop] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (reduce) (10.8s)
+(node:195059) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   6 [desktop] › e2e/design-v2-friends.spec.ts:355:7 › Friends confirming-read revocation and session exit (reduce) (11.5s)
+(node:195888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [mobile] › e2e/design-v2-friends.spec.ts:93:5 › Friends ready content preserves canonical card geometry during resizing (8.0s)
+  ✓   8 [mobile] › e2e/design-v2-friends.spec.ts:149:5 › Friends secondary content has deterministic canonical visual candidates (17.9s)
+  ✘   9 [mobile] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (no-preference) (40.6s)
+(node:200348) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 [mobile] › e2e/design-v2-friends.spec.ts:355:7 › Friends confirming-read revocation and session exit (no-preference) (12.1s)
+  ✘  11 [mobile] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (reduce) (12.7s)
+(node:201851) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  12 [mobile] › e2e/design-v2-friends.spec.ts:355:7 › Friends confirming-read revocation and session exit (reduce) (13.4s)
+(node:202769) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  13 [firefox-stats] › e2e/design-v2-friends.spec.ts:93:5 › Friends ready content preserves canonical card geometry during resizing (12.9s)
+  ✘  14 [firefox-stats] › e2e/design-v2-friends.spec.ts:149:5 › Friends secondary content has deterministic canonical visual candidates (17.8s)
+
+
+  1) [desktop] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (reduce) 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('v2-friends-page').locator('.confirmation-layer')
+    Expected: "0s"
+    Received: "1e-05s"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('v2-friends-page').locator('.confirmation-layer') with timeout 5000ms
+      - waiting for locator('v2-friends-page').locator('.confirmation-layer')
+        14 × locator resolved to <div class="confirmation-layer" _ngcontent-ng-c1345351098="">…</div>
+           - unexpected value "1e-05s"
+
+
+      216 |     const dialog = panel.getByRole('dialog', {name: 'Remove Suzkapu?'});
+      217 |     await expect(dialog).toBeVisible();
+    > 218 |     await expect(panel.locator('.confirmation-layer')).toHaveCSS('animation-duration', motion === 'reduce' ? '0s' : '0.15s');
+          |                                                        ^
+      219 |     await expect(dialog.locator('.icon.trash')).toHaveCount(1);
+      220 |     await expect(dialog.getByRole('button')).toHaveText(['Remove friend', 'Cancel']);
+      221 |     await expect(dialog).toHaveAccessibleDescription('Removes this person from your friends. You can send a new friend request later.');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:218:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-combined-visual-regression-artifacts/design-v2-friends-Friends--b37f4-responsive-geometry-reduce--desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-combined-visual-regression-artifacts/design-v2-friends-Friends--b37f4-responsive-geometry-reduce--desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-combined-visual-regression-artifacts/design-v2-friends-Friends--b37f4-responsive-geometry-reduce--desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-combined-visual-regression-artifacts/design-v2-friends-Friends--b37f4-responsive-geometry-reduce--desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (no-preference) 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.evaluate: Target page, context or browser has been closed
+
+       at helpers/native-transitions.ts:44
+
+      42 |
+      43 | export async function expectNativeTransitionsSettled(page: Page): Promise<void> {
+    > 44 |   await expect.poll(() => page.evaluate(() => {
+         |                                ^
+      45 |     const probe = (window as Window & {analytifyNativeTransitionProbe: {pending: number; errors: string[]}}).analytifyNativeTransitionProbe;
+      46 |     return {pending: probe.pending, errors: probe.errors};
+      47 |   })).toEqual({pending: 0, errors: []});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/native-transitions.ts:44:32
+        at expectNativeTransitionsSettled (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/native-transitions.ts:44:3)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:351:5
+
+    Error Context: docs/testing-evidence/design-v2/friends-combined-visual-regression-artifacts/design-v2-friends-Friends--e7fa7-ive-geometry-no-preference--mobile/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-combined-visual-regression-artifacts/design-v2-friends-Friends--e7fa7-ive-geometry-no-preference--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-combined-visual-regression-artifacts/design-v2-friends-Friends--e7fa7-ive-geometry-no-preference--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (reduce) 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('v2-friends-page').locator('.confirmation-layer')
+    Expected: "0s"
+    Received: "1e-05s"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('v2-friends-page').locator('.confirmation-layer') with timeout 5000ms
+      - waiting for locator('v2-friends-page').locator('.confirmation-layer')
+        14 × locator resolved to <div class="confirmation-layer" _ngcontent-ng-c1345351098="">…</div>
+           - unexpected value "1e-05s"
+
+
+      216 |     const dialog = panel.getByRole('dialog', {name: 'Remove Suzkapu?'});
+      217 |     await expect(dialog).toBeVisible();
+    > 218 |     await expect(panel.locator('.confirmation-layer')).toHaveCSS('animation-duration', motion === 'reduce' ? '0s' : '0.15s');
+          |                                                        ^
+      219 |     await expect(dialog.locator('.icon.trash')).toHaveCount(1);
+      220 |     await expect(dialog.getByRole('button')).toHaveText(['Remove friend', 'Cancel']);
+      221 |     await expect(dialog).toHaveAccessibleDescription('Removes this person from your friends. You can send a new friend request later.');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:218:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-combined-visual-regression-artifacts/design-v2-friends-Friends--b37f4-responsive-geometry-reduce--mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-combined-visual-regression-artifacts/design-v2-friends-Friends--b37f4-responsive-geometry-reduce--mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-combined-visual-regression-artifacts/design-v2-friends-Friends--b37f4-responsive-geometry-reduce--mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-combined-visual-regression-artifacts/design-v2-friends-Friends--b37f4-responsive-geometry-reduce--mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [firefox-stats] › e2e/design-v2-friends.spec.ts:149:5 › Friends secondary content has deterministic canonical visual candidates 
+
+    Test was interrupted.
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('v2-friends-page').getByRole('alert')
+    Expected substring: "could not be confirmed"
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" locator('v2-friends-page').getByRole('alert') with timeout 5000ms
+      - waiting for locator('v2-friends-page').getByRole('alert')
+      - 
+
+
+      193 |   await capture('invitations');
+      194 |   await page.goto('/new/friends/invite/' + 'b'.repeat(64));
+    > 195 |   await expect(panel.getByRole('alert')).toContainText('could not be confirmed');
+          |                                          ^
+      196 |   await panel.getByRole('button', {name: 'Retry', exact: true}).click();
+      197 |   await expect(panel.getByRole('heading', {name: 'Incoming friend wants to be your friend', exact: true})).toBeVisible();
+      198 |   await capture('review');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:195:42
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-combined-visual-regression-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-combined-visual-regression-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-combined-visual-regression-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-combined-visual-regression-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [desktop] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (reduce) 
+    [mobile] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (no-preference) 
+    [mobile] › e2e/design-v2-friends.spec.ts:205:7 › Friends invitations and responsive geometry (reduce) 
+  1 interrupted
+    [firefox-stats] › e2e/design-v2-friends.spec.ts:149:5 › Friends secondary content has deterministic canonical visual candidates 
+  10 did not run
+  10 passed (4.6m)
