@@ -6,7 +6,12 @@ export default defineConfig({
   testMatch: 'design-v2-friends.spec.ts',
   testIgnore: [],
   workers: 1,
-  projects: base.projects?.map(project => ({...project, testIgnore: []})),
+  // Full Chromium's modern headless renderer preserves the bundled font's
+  // fractional advances. Legacy headless-shell full hinting changes wrapping.
+  // See docs/testing-evidence/design-v2/friends-font-quantization-result.json.
+  projects: base.projects?.map(project => ({...project, testIgnore: [],
+    use: {...project.use, ...(['desktop', 'mobile'].includes(project.name ?? '') ? {channel: 'chromium'} : {})}
+  })),
   outputDir: 'docs/testing-evidence/design-v2/friends-browser-artifacts',
   use: {...base.use, baseURL: 'http://127.0.0.1:4214/new/'},
   webServer: {

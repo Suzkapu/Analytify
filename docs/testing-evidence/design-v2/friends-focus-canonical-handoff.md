@@ -1,0 +1,13 @@
+# Friends focus recovery handoff
+
+The canonical shared [Friends feedback component set](https://www.figma.com/design/5v8ckmlbfhMDWwP5sTdSXd/Analytify?node-id=1008-32348) now documents focus recovery for all eleven lifecycle variants. The exact original and resulting descriptions and affected variant IDs are retained in `friends-focus-canonical-contract.json`.
+
+This change follows actual browser evidence: Retry lost focus to BODY during loading and after inventory recovery, and a confirmed request decision also left BODY focused. It is a description-only interaction correction, made before dependent application implementation. It does not claim the browser defect is fixed.
+
+When a person explicitly activates Retry, Create new invitation, View friends or a request decision, keep their trigger focused while it remains usable. If it becomes removed or unavailable, focus the pending feedback region with `tabindex="-1"`. Let a retained region carry focus through its resulting error or outcome. If that owned region disappears, recover to the existing shell main region. Route navigation retains the existing shell main focus behavior. Recovery must stop as soon as the person moves focus elsewhere; initial loading and unsolicited refresh must never autofocus. Use focus without unexpected scrolling and without causing another data operation.
+
+The implementation should test pending, recovered, failed and confirmed states, keyboard continuation, ownership after the user moves elsewhere, and no focus theft on background refresh. A retained usable trigger should not be moved just because feedback appeared. The shell already focuses `#v2-main-content` after route navigation; this contract uses that stable target rather than inventing a separate page heading rule.
+
+Only component-set description `1008:32348` was mutated. No layout, text, fills, variables, prototype reactions, animation, sidebar, reference instances or QA copies were changed. Since rendered properties were untouched, an additional unchanged screenshot would not add visual evidence.
+
+The subsequent real mounted confirmation case exposed BODY focus after acknowledged friend removal deleted the restored menu trigger. Before the dependent correction, the same canonical description was extended for Remove/Revoke: Cancel/Escape restores the opening control; confirmed mutation may initially restore that known control, then recovers to stable main if it disappears (or pending feedback while unavailable). This limited restoration ownership must still be relinquished on deliberate focus movement elsewhere. Exact extension before/after is retained in `friends-focus-canonical-confirmation.json`. No global dialog behavior or rendered design was changed.

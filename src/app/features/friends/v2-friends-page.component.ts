@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, effect, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, HostListener, OnDestroy, OnInit, afterEveryRender, computed, effect, inject, signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {Friend, FriendInvitation} from '@core/friends/friends.service';
@@ -29,6 +29,10 @@ export class V2FriendsPageComponent implements OnInit, OnDestroy {
   readonly account = inject(DESIGN_V2_ACCOUNT_ACTIONS, {optional: true});
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private focusOwner: HTMLElement | null = null;
+  private confirmationTrigger: HTMLElement | null = null;
+  private confirmedReturnFocus: HTMLElement | null = null;
   private readonly routeData = toSignal(this.route.data, {initialValue: this.route.snapshot.data});
   private readonly routeParams = toSignal(this.route.paramMap, {initialValue: this.route.snapshot.paramMap});
   readonly view = computed<FriendsView>(() => (this.routeData()['friendsView'] as FriendsView) || 'friends');
@@ -57,6 +61,8 @@ export class V2FriendsPageComponent implements OnInit, OnDestroy {
   private presentationRevision = 0;
 
   constructor() {
+    this.host.nativeElement.addEventListener('click', this.trackActionFocus, {capture: true});
+    afterEveryRender(() => this.recoverActionFocus());
     effect(() => {
       if (this.controller.feedback() === 'profile-required') {
         this.presentationRevision++; this.qrResult.set(null); this.localFailure.set(null);
@@ -71,8 +77,38 @@ export class V2FriendsPageComponent implements OnInit, OnDestroy {
       if (!this.preparing() && this.controller.canAct() && (add || review)) void this.prepare();
     });
   }
+  /** Recover only an explicitly activated control; background updates never take focus. */
+  private readonly trackActionFocus = (event: MouseEvent): void => {
+    const control = (event.target as Element | null)?.closest<HTMLElement>('button, a');
+    if (control && this.host.nativeElement.contains(control)) this.focusOwner = control;
+  };
+  @HostListener('document:focusin', ['$event'])
+  relinquishActionFocus(event: FocusEvent): void {
+    if (this.focusOwner && event.target !== this.focusOwner) {
+      // A confirmed dialog restores its opening control before the mutation's
+      // read may remove it. Keep that one known handoff; user movement ends ownership.
+      this.focusOwner = event.target === this.confirmedReturnFocus ? this.confirmedReturnFocus : null;
+    }
+    this.confirmedReturnFocus = null;
+  }
+  private recoverActionFocus(): void {
+    const owner = this.focusOwner;
+    if (!owner || this.destroyed) return;
+    const active = document.activeElement;
+    if (active !== owner && active !== document.body) {this.focusOwner = null; this.confirmedReturnFocus = null; return;}
+    if (owner.isConnected && !owner.matches(':disabled')) return;
+    this.confirmedReturnFocus = null;
+    const feedback = this.host.nativeElement.querySelector<HTMLElement>('v2-friends-feedback > section');
+    const destination = feedback || this.host.nativeElement.closest('main');
+    this.focusOwner = feedback;
+    if (destination) {destination.tabIndex = -1; destination.focus({preventScroll: true});}
+  }
   async ngOnInit(): Promise<void> {await this.prepare();}
-  ngOnDestroy(): void {this.destroyed = true; this.presentationRevision++; this.qrResult.set(null);}
+  ngOnDestroy(): void {
+    this.destroyed = true; this.focusOwner = null; this.confirmationTrigger = null; this.confirmedReturnFocus = null;
+    this.host.nativeElement.removeEventListener('click', this.trackActionFocus, {capture: true});
+    this.presentationRevision++; this.qrResult.set(null);
+  }
   async prepare(): Promise<void> {
     if (this.preparing() || this.destroyed) return;
     this.preparing.set(true);
@@ -112,7 +148,8 @@ export class V2FriendsPageComponent implements OnInit, OnDestroy {
     if (this.localBusy()) return;
     if (this.localFailure() === 'qr') {await this.generateQr(); return;}
     if (this.localFailure() === 'copy') {await this.copyLink(); return;}
-    await this.controller.retry(); await this.prepare();
+    await this.controller.retry();
+    if (this.controller.canAct()) await this.prepare();
   }
   invitationUrl(): string {
     const created = this.controller.createdInvitation();
@@ -139,19 +176,21 @@ export class V2FriendsPageComponent implements OnInit, OnDestroy {
     catch {if (this.presentationCurrent(url, revision)) this.localFailure.set('copy');}
     finally {if (!this.destroyed && revision === this.presentationRevision) this.localBusy.set(false);}
   }
-  requestRemoval(friend: Friend): void {if (this.controller.canAct()) {this.revoking.set(null); this.removing.set(friend);}}
-  requestRevocation(invitation: FriendInvitation): void {if (this.controller.canAct()) {this.removing.set(null); this.revoking.set(invitation);}}
-  cancelConfirmation(): void {this.removing.set(null); this.revoking.set(null);}
+  requestRemoval(friend: Friend): void {if (this.controller.canAct()) {this.confirmationTrigger = document.activeElement as HTMLElement | null; this.revoking.set(null); this.removing.set(friend);}}
+  requestRevocation(invitation: FriendInvitation): void {if (this.controller.canAct()) {this.confirmationTrigger = document.activeElement as HTMLElement | null; this.removing.set(null); this.revoking.set(invitation);}}
+  cancelConfirmation(): void {this.confirmedReturnFocus = null; this.confirmationTrigger = null; this.removing.set(null); this.revoking.set(null);}
   async confirmPendingAction(): Promise<void> {
     const invitation = this.revoking();
     if (!invitation) {await this.confirmRemoval(); return;}
     if (!this.controller.canAct()) return;
+    this.confirmedReturnFocus = this.confirmationTrigger; this.confirmationTrigger = null;
     this.revoking.set(null);
     await this.controller.revoke(invitation.id);
   }
   async confirmRemoval(): Promise<void> {
     const friend = this.removing();
     if (!friend || !this.controller.canAct()) return;
+    this.confirmedReturnFocus = this.confirmationTrigger; this.confirmationTrigger = null;
     this.removing.set(null);
     await this.controller.remove(friend.userId, friend.connectionVersion);
   }

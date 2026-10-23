@@ -1,0 +1,24 @@
+{
+  "scope": "Native transition observer diagnostic instrumentation only; no application fix or browser verification",
+  "checks": {
+    "contract": "PASS after recorded RED",
+    "observerRouterPolicy": "2 PASS, 0 fail",
+    "strictHelperTypes": "PASS",
+    "diffCheck": "PASS"
+  },
+  "commands": [
+    "node docs/testing-evidence/design-v2/friends-transition-probe-contract.mjs",
+    "node --test scripts/native-transition-observer.test.mjs scripts/router-transition-policy.test.mjs",
+    "node_modules/.bin/tsc --ignoreConfig --noEmit --strict --skipLibCheck --target ES2022 --module ES2022 --moduleResolution bundler e2e/helpers/native-transitions.ts",
+    "git diff --check"
+  ],
+  "hashes": {
+    "e2e/helpers/native-transitions.ts": "76f03ceedaf46eec3b045a258b423111b9ff8dd42fb32fab9a58181c279788bf",
+    "docs/testing-evidence/design-v2/friends-transition-probe-contract.mjs": "e01ee95853bb16e47df4c4e73b931181ac1aa950357b645fa5ae4385537e82d2"
+  },
+  "limitations": [
+    "The actual intermittent native transition timeout remains unresolved.",
+    "Native callback settlement timestamps reflect updateCallbackDone promise observation, preserving original return identity and thenable assimilation.",
+    "No browser jobs run; root owns browser verification."
+  ]
+}

@@ -1,0 +1,134 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/friends/v2-friends-focus-recovery.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [3.894 seconds] - 2026-10-23T15:28:00.759Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/friends/v2-friends-focus-recovery.spec.ts (7 tests | 4 failed) 591ms
+     × keeps recovered focus on retained failure feedback with a usable Retry 46ms
+     × does not steal focus moved elsewhere during a pending Retry (failure=true) 32ms
+     × keeps focus on the retained confirmed review outcome (accept=true) 39ms
+     × keeps focus on the retained confirmed review outcome (accept=false) 36ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-focus-recovery.spec.ts > Mounted Friends action focus ownership (canonical 1008:32348) > keeps recovered focus on retained failure feedback with a usable Retry
+AssertionError: expected null to be <section …(6)>…(2)</section> // Object.is equality
+
+- Expected:
+<section
+  _ngcontent-a-c3529466589=""
+  aria-busy="true"
+  aria-live="polite"
+  class="feedback"
+  role="status"
+  tabindex="-1"
+>
+  <h3
+    _ngcontent-a-c3529466589=""
+  >
+    Loading friends…
+  </h3>
+  <p
+    _ngcontent-a-c3529466589=""
+  >
+    Your friends and incoming requests will appear here.
+  </p>
+  <!--container-->
+  <!--container-->
+  <!--container-->
+</section>
+
++ Received:
+null
+
+ ❯ src/app/features/friends/v2-friends-focus-recovery.spec.ts:112:26
+    110|     expect(document.activeElement).toBe(pending);
+    111|     retry.reject(new Error('still offline')); await h.settle();
+    112|     expect(h.feedback()).toBe(pending);
+       |                          ^
+    113|     expect(pending.getAttribute('role')).toBe('alert');
+    114|     expect(pending.textContent).toContain('Friends could not be loaded…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-focus-recovery.spec.ts > Mounted Friends action focus ownership (canonical 1008:32348) > does not steal focus moved elsewhere during a pending Retry (failure=true)
+AssertionError: expected "vi.fn()" to be called 2 times, but got 3 times
+ ❯ src/app/features/friends/v2-friends-focus-recovery.spec.ts:132:35
+    130|     await h.settle();
+    131|     expect(document.activeElement).toBe(h.other);
+    132|     expect(h.service.listFriends).toHaveBeenCalledTimes(2);
+       |                                   ^
+    133|   });
+    134|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-focus-recovery.spec.ts > Mounted Friends action focus ownership (canonical 1008:32348) > keeps focus on the retained confirmed review outcome (accept=true)
+AssertionError: expected 'Friend request acceptedYou can choose…' to contain 'You are now friends'
+
+Expected: "You are now friends"
+Received: "Friend request acceptedYou can choose what to share with friends. Accepting this request does not grant access to your playlists or listening data.View friends"
+
+ ❯ src/app/features/friends/v2-friends-focus-recovery.spec.ts:150:33
+    148|     await h.settle();
+    149|     expect(h.feedback()).toBe(pending);
+    150|     expect(pending.textContent).toContain(accept ? 'You are now friend…
+       |                                 ^
+    151|     expect(document.activeElement).toBe(pending);
+    152|     expect(pending.getAttribute('role')).toBe('status');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-focus-recovery.spec.ts > Mounted Friends action focus ownership (canonical 1008:32348) > keeps focus on the retained confirmed review outcome (accept=false)
+AssertionError: expected 'Friend request declinedThis invitatio…' to contain 'Friend invitation declined'
+
+Expected: "Friend invitation declined"
+Received: "Friend request declinedThis invitation cannot be used again. Your existing friends and sharing permissions are unchanged.View friends"
+
+ ❯ src/app/features/friends/v2-friends-focus-recovery.spec.ts:150:33
+    148|     await h.settle();
+    149|     expect(h.feedback()).toBe(pending);
+    150|     expect(pending.textContent).toContain(accept ? 'You are now friend…
+       |                                 ^
+    151|     expect(document.activeElement).toBe(pending);
+    152|     expect(pending.getAttribute('role')).toBe('status');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 3 passed (7)
+   Start at  17:28:00
+   Duration  2.03s (transform 233ms, setup 364ms, import 368ms, tests 591ms, environment 522ms)
+

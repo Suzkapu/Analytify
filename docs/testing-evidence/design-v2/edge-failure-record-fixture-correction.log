@@ -1,0 +1,33 @@
+Check supabase/functions/song-league-playlist-sync/failure-record-boundary.test.ts
+running 2 tests from ./supabase/functions/song-league-playlist-sync/failure-record-boundary.test.ts
+League sync preserves the primary member failure and reports unavailable failure persistence (postgrest-error) ... FAILED (100ms)
+League sync preserves the primary member failure and reports unavailable failure persistence (transport-error) ... FAILED (6ms)
+
+ ERRORS 
+
+League sync preserves the primary member failure and reports unavailable failure persistence (postgrest-error) => ./supabase/functions/song-league-playlist-sync/failure-record-boundary.test.ts:28:8
+error: AssertionError: The input did not match the regular expression /Reconnect Spotify/. Input:
+
+'This playlist could not be updated. Please try again later.'
+
+    assert.match(result.value.results[0].error, /Reconnect Spotify/);
+           ^
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/song-league-playlist-sync/failure-record-boundary.test.ts:34:12
+
+League sync preserves the primary member failure and reports unavailable failure persistence (transport-error) => ./supabase/functions/song-league-playlist-sync/failure-record-boundary.test.ts:28:8
+error: AssertionError: The input did not match the regular expression /Reconnect Spotify/. Input:
+
+'This playlist could not be updated. Please try again later.'
+
+    assert.match(result.value.results[0].error, /Reconnect Spotify/);
+           ^
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/supabase/functions/song-league-playlist-sync/failure-record-boundary.test.ts:34:12
+
+ FAILURES 
+
+League sync preserves the primary member failure and reports unavailable failure persistence (postgrest-error) => ./supabase/functions/song-league-playlist-sync/failure-record-boundary.test.ts:28:8
+League sync preserves the primary member failure and reports unavailable failure persistence (transport-error) => ./supabase/functions/song-league-playlist-sync/failure-record-boundary.test.ts:28:8
+
+FAILED | 0 passed | 2 failed (108ms)
+
+error: Test failed

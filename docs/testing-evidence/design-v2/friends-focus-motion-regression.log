@@ -1,0 +1,45 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts --grep cold loading|does not steal|removal dialog responsive|invitations and responsive --output=docs/testing-evidence/design-v2/friends-focus-motion-regression-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:21905) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21905) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 24 tests using 1 worker
+
+(node:22118) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries (4.4s)
+  ✓   2 [desktop] › e2e/design-v2-friends.spec.ts:340:5 › Friends pending decision does not steal deliberately moved keyboard focus (2.4s)
+  ✓   3 [desktop] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (no-preference) (4.6s)
+  ✓   4 [desktop] › e2e/design-v2-friends.spec.ts:400:7 › Friends invitations and responsive geometry (no-preference) (8.7s)
+  ✓   5 [desktop] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (reduce) (3.9s)
+  ✓   6 [desktop] › e2e/design-v2-friends.spec.ts:400:7 › Friends invitations and responsive geometry (reduce) (8.0s)
+(node:24315) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [mobile] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries (4.6s)
+  ✓   8 [mobile] › e2e/design-v2-friends.spec.ts:340:5 › Friends pending decision does not steal deliberately moved keyboard focus (2.5s)
+  ✓   9 [mobile] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (no-preference) (5.8s)
+  ✓  10 [mobile] › e2e/design-v2-friends.spec.ts:400:7 › Friends invitations and responsive geometry (no-preference) (9.4s)
+  ✓  11 [mobile] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (reduce) (5.8s)
+  ✓  12 [mobile] › e2e/design-v2-friends.spec.ts:400:7 › Friends invitations and responsive geometry (reduce) (9.5s)
+(node:26886) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  13 [firefox-stats] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries (5.8s)
+  ✓  14 [firefox-stats] › e2e/design-v2-friends.spec.ts:340:5 › Friends pending decision does not steal deliberately moved keyboard focus (1.9s)
+  ✓  15 [firefox-stats] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (no-preference) (4.8s)
+  ✓  16 [firefox-stats] › e2e/design-v2-friends.spec.ts:400:7 › Friends invitations and responsive geometry (no-preference) (11.1s)
+  ✓  17 [firefox-stats] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (reduce) (4.2s)
+  ✓  18 [firefox-stats] › e2e/design-v2-friends.spec.ts:400:7 › Friends invitations and responsive geometry (reduce) (8.7s)
+(node:29790) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  19 [webkit-stats] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries (5.4s)
+  ✓  20 [webkit-stats] › e2e/design-v2-friends.spec.ts:340:5 › Friends pending decision does not steal deliberately moved keyboard focus (2.8s)
+  ✓  21 [webkit-stats] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (no-preference) (8.2s)
+  ✓  22 [webkit-stats] › e2e/design-v2-friends.spec.ts:400:7 › Friends invitations and responsive geometry (no-preference) (19.5s)
+  ✓  23 [webkit-stats] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (reduce) (4.6s)
+  ✓  24 [webkit-stats] › e2e/design-v2-friends.spec.ts:400:7 › Friends invitations and responsive geometry (reduce) (10.3s)
+
+  24 passed (2.9m)

@@ -1,0 +1,135 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/friends/v2-friends-focus-recovery.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [4.703 seconds] - 2026-10-23T15:28:41.797Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/friends/v2-friends-focus-recovery.spec.ts (8 tests | 3 failed) 768ms
+     × keeps recovered focus on retained failure feedback with a usable Retry 55ms
+     × does not steal focus moved elsewhere during a pending Retry (failure=true) 44ms
+     × relinquishes ownership after the person moves elsewhere even if that control later blurs 54ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-focus-recovery.spec.ts > Mounted Friends action focus ownership (canonical 1008:32348) > keeps recovered focus on retained failure feedback with a usable Retry
+AssertionError: expected null to be <section …(6)>…(2)</section> // Object.is equality
+
+- Expected:
+<section
+  _ngcontent-a-c3529466589=""
+  aria-busy="true"
+  aria-live="polite"
+  class="feedback"
+  role="status"
+  tabindex="-1"
+>
+  <h3
+    _ngcontent-a-c3529466589=""
+  >
+    Loading friends…
+  </h3>
+  <p
+    _ngcontent-a-c3529466589=""
+  >
+    Your friends and incoming requests will appear here.
+  </p>
+  <!--container-->
+  <!--container-->
+  <!--container-->
+</section>
+
++ Received:
+null
+
+ ❯ src/app/features/friends/v2-friends-focus-recovery.spec.ts:112:26
+    110|     expect(document.activeElement).toBe(pending);
+    111|     retry.reject(new Error('still offline')); await h.settle();
+    112|     expect(h.feedback()).toBe(pending);
+       |                          ^
+    113|     expect(pending.getAttribute('role')).toBe('alert');
+    114|     expect(pending.textContent).toContain('Friends could not be loaded…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-focus-recovery.spec.ts > Mounted Friends action focus ownership (canonical 1008:32348) > does not steal focus moved elsewhere during a pending Retry (failure=true)
+AssertionError: expected "vi.fn()" to be called 2 times, but got 3 times
+ ❯ src/app/features/friends/v2-friends-focus-recovery.spec.ts:132:35
+    130|     await h.settle();
+    131|     expect(document.activeElement).toBe(h.other);
+    132|     expect(h.service.listFriends).toHaveBeenCalledTimes(2);
+       |                                   ^
+    133|   });
+    134|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-focus-recovery.spec.ts > Mounted Friends action focus ownership (canonical 1008:32348) > relinquishes ownership after the person moves elsewhere even if that control later blurs
+AssertionError: expected <main id="v2-main-content" …(1)>…(2)</main> to be <body>…(1)</body> // Object.is equality
+
+- Expected
++ Received
+
+@@ -1,15 +1,5 @@
+- <body>
+-   <div
+-     id="root5"
+-     ng-version="22.2.1"
+-   >
+-     <button
+-       id="other-task"
+-     >
+-       Another task
+-     </button>
+  <main
+    id="v2-main-content"
+    tabindex="-1"
+  >
+    <router-outlet />
+@@ -201,7 +191,5 @@
+      </v2-friends-page>
+      <!--container-->
+    </v2-friends-layout>
+    <!--container-->
+  </main>
+-   </div>
+- </body>
+
+ ❯ src/app/features/friends/v2-friends-focus-recovery.spec.ts:146:36
+    144|     expect(document.activeElement).toBe(document.body);
+    145|     retry.resolve([]); await h.settle();
+    146|     expect(document.activeElement).toBe(document.body);
+       |                                    ^
+    147|     expect(h.service.listFriends).toHaveBeenCalledTimes(2);
+    148|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 5 passed (8)
+   Start at  17:28:42
+   Duration  2.42s (transform 274ms, setup 437ms, import 422ms, tests 768ms, environment 591ms)
+

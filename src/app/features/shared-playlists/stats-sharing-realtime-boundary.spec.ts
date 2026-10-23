@@ -5,7 +5,7 @@ import {afterEach, describe, expect, it, vi} from 'vitest';
 import {SessionLifecycleService} from '@core/auth/session-lifecycle.service';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {SharedPlaylistsComponent} from '@features/shared-playlists/shared-playlists.component';
-import {StatsSharingService} from './stats-sharing.service';
+import {StatsSharingService} from '@core/sharing/stats-sharing.service';
 
 function deferred<T>() {
   let resolve!: (value: T) => void;

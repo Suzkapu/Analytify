@@ -432,13 +432,14 @@ Deno.serve(async (request: Request) => {
               : 'This playlist could not be updated. Please try again later.';
             if (reservationCreated) {
               try {
-                await admin.rpc('record_song_league_playlist_sync_failure', {
+                const {error: failureError} = await admin.rpc('record_song_league_playlist_sync_failure', {
                   p_league_id: leagueId,
                   p_user_id: member.user_id,
                   p_expected_applied_revision: expectedAppliedRevision,
                   p_lease_token: leaseToken,
                   p_last_error: message
                 });
+                if (failureError) throw failureError;
               } catch (failureError) {
                 logInternalError(context, `playlist sync failure state ${member.user_id}`, failureError);
               }

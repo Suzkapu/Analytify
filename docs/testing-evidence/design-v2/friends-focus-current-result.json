@@ -1,0 +1,121 @@
+{
+  "checkpoint": "cb20aecb",
+  "status": "behavioral-regression-pass-new-typography-parity-failure-open",
+  "browserCommand": "ANALYTIFY_WEBKIT_EXECUTABLE=\"$PWD/.extra_files/portable-webkit/run-webkit.sh\" npx playwright test --config=playwright.friends.config.ts --output=docs/testing-evidence/design-v2/friends-focus-final-browser-artifacts",
+  "browserLog": "friends-focus-final-browser.log",
+  "limitations": [
+    "Historical intermittent native transition timeout remains causally unresolved despite passing current56 cases",
+    "Primary browser config retains legacy headless renderer; new typography case2FAIL pending intentional modern renderer adoption and affected visual reviews",
+    "Frontend final98% gate fails in every metric",
+    "Remote Ubuntu24/PostgreSQL16 isolated contract job not run",
+    "Remaining retained feature migrations and full completion audit still required"
+  ],
+  "browser": {
+    "exitCode": 0,
+    "passed": 56,
+    "projects": [
+      "desktop",
+      "mobile",
+      "firefox-stats",
+      "webkit-stats"
+    ],
+    "reviewedSnapshots": 40,
+    "baselinesChanged": false
+  },
+  "mounted": {
+    "passed": 55,
+    "manifest": "friends-focus-mounted-result.json"
+  },
+  "canonical": [
+    "1008:32348",
+    "friends-focus-canonical-contract.json",
+    "friends-focus-canonical-confirmation.json"
+  ],
+  "combinedCi": {
+    "initialLog": "friends-focus-current-ci.log",
+    "initialExit": 1,
+    "finding": "Core realtime test imports feature caller; relocated test to feature integration layer without weakening architecture rule",
+    "currentLog": "friends-focus-final-ci.log",
+    "status": "passed",
+    "correctedExit": 1,
+    "correctedFrontendPassed": 2236,
+    "correctedSkipped": 1,
+    "findingAfterRelocation": "Strict zero-uncovered-branch budget found ordinary page-copy click; added real user interaction without changing source/gate",
+    "exitCode": 0,
+    "frontendPassed": 2236,
+    "skipped": 1,
+    "workerPassed": 215,
+    "edgePassed": 81,
+    "behavioralBudgetPassed": true,
+    "includedFrontendSources": 167,
+    "initialJavaScriptBytes": 854494
+  },
+  "browserSourceHashes": {
+    "src/app/features/friends/v2-friends-page.component.ts": "fe315445d84602b126d01bb307e951fc63602e3d899db252634f9d1db7447a58",
+    "src/app/features/friends/v2-friends-focus-recovery.spec.ts": "3b4db65cb907d675c6f4b20a8665ffdf8f54680cdcf2f12a0f3425f9e987a7f0",
+    "e2e/design-v2-friends.spec.ts": "3f41a44b4b87d34ddb42cd5eb6195f9bf9e9c50f70b196c1398490722026a959",
+    "e2e/helpers/native-transitions.ts": "76f03ceedaf46eec3b045a258b423111b9ff8dd42fb32fab9a58181c279788bf",
+    "playwright.friends.config.ts": "02efef70ed40b51a3da3d37ec10862e5b61312f9b74c46ac038aac63319a10e4"
+  },
+  "browserProductionHashesStillMatch": true,
+  "unitSpecAfterBrowser": {
+    "sha256": "22fe188aa388c24bc3102ffe6dbf50c15c5efd61600795024f93755a1e269405",
+    "change": "Added ordinary page-heading click before initial/background no-focus-steal checks; no production/browser source changes"
+  },
+  "frontendCoverage": {
+    "lines": 88.26,
+    "statements": 86.95,
+    "functions": 86.25,
+    "branches": 81.48,
+    "final98Exit": 1,
+    "summary": "friends-focus-frontend-final-coverage.json",
+    "final98Log": "friends-focus-frontend-final98-current.log"
+  },
+  "confirmationNative": {
+    "log": "friends-confirmation-focus-native.log",
+    "status": "passed",
+    "abortedSetup": "friends-confirmation-focus-native-aborted.log",
+    "abortedReason": "Stopped before cases executed to correct expected test RPC field to actual p_connection_version; not an application failure",
+    "exitCode": 0,
+    "passed": 16,
+    "currentBrowserSpecSha256": "49b6019dd81cc4adf12667077280de0dde03831e4e975d2b052a4e493511cdfa",
+    "visualStatus": "candidates not approved: Revoke272x346 versus saved canonical272x322 requires fresh Figma investigation"
+  },
+  "newTypographyCheck": {
+    "log": "friends-dialog-font.log",
+    "exitCode": 1,
+    "passed": 2,
+    "failed": 2,
+    "failureProjects": [
+      "desktop",
+      "mobile"
+    ],
+    "currentScheduledFriendsCases": 60,
+    "fontReadyChangesMetrics": false,
+    "canonicalFirstLineWidths": {
+      "chromium": 226,
+      "firefox": 221.25,
+      "webkit": 221.23243713378906
+    },
+    "canonicalEvidence": "friends-dialog-fresh-parity-review.md",
+    "status": "cause-proven-modern-app-diagnostic-pass-primary-config-adoption-and-baseline-review-pending",
+    "cause": "Legacy headless-shell full hinting quantizes glyph advances; full Chromium modern headless default preserves fractional canonical metrics",
+    "diagnosticSlight": {
+      "log": "friends-dialog-font-slight.log",
+      "passed": 4,
+      "exitCode": 0
+    },
+    "diagnosticModern": {
+      "log": "friends-dialog-modern-chrome.log",
+      "passed": 2,
+      "exitCode": 0
+    }
+  },
+  "latestBrowserSpecSha256": "4bf0199f106f20cdf4c605fd7369f085e3c7479b5b508c1150642787d2fa4b5e",
+  "diagnosticLint": {
+    "log": "friends-renderer-diagnostics-lint.log",
+    "exitCode": 0,
+    "e2eSpec": "checked without errors",
+    "diagnosticConfigFiles": "ignored by existing ESLint scope; two warnings retained; exercised by actual Playwright runtime, no separate strict typecheck claimed"
+  }
+}

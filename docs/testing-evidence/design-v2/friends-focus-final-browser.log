@@ -1,0 +1,77 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts --output=docs/testing-evidence/design-v2/friends-focus-final-browser-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:38166) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:38166) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 56 tests using 1 worker
+
+(node:38484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-friends.spec.ts:108:5 › Friends ready content preserves canonical card geometry during resizing (4.0s)
+  ✓   2 [desktop] › e2e/design-v2-friends.spec.ts:164:5 › Friends secondary content has deterministic canonical visual candidates (8.8s)
+  ✓   3 [desktop] › e2e/design-v2-friends.spec.ts:219:5 › Friends invitation navigation recovers during immediate viewport resizing (3.9s)
+  ✓   4 [desktop] › e2e/design-v2-friends.spec.ts:244:5 › Friends empty content preserves canonical geometry and starts only an explicit invitation (3.6s)
+  ✓   5 [desktop] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries (4.0s)
+  ✓   6 [desktop] › e2e/design-v2-friends.spec.ts:340:5 › Friends pending decision does not steal deliberately moved keyboard focus (2.3s)
+  ✓   7 [desktop] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (no-preference) (4.1s)
+  ✓   8 [desktop] › e2e/design-v2-friends.spec.ts:400:7 › Friends invitations and responsive geometry (no-preference) (8.8s)
+  ✓   9 [desktop] › e2e/design-v2-friends.spec.ts:483:7 › Friends owner revocation confirmation (no-preference) (4.3s)
+  ✓  10 [desktop] › e2e/design-v2-friends.spec.ts:528:7 › Friends confirming-read revocation and session exit (no-preference) (4.7s)
+  ✓  11 [desktop] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (reduce) (3.9s)
+  ✓  12 [desktop] › e2e/design-v2-friends.spec.ts:400:7 › Friends invitations and responsive geometry (reduce) (7.5s)
+  ✓  13 [desktop] › e2e/design-v2-friends.spec.ts:483:7 › Friends owner revocation confirmation (reduce) (3.8s)
+  ✓  14 [desktop] › e2e/design-v2-friends.spec.ts:528:7 › Friends confirming-read revocation and session exit (reduce) (3.9s)
+(node:43006) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  15 [mobile] › e2e/design-v2-friends.spec.ts:108:5 › Friends ready content preserves canonical card geometry during resizing (4.2s)
+  ✓  16 [mobile] › e2e/design-v2-friends.spec.ts:164:5 › Friends secondary content has deterministic canonical visual candidates (9.4s)
+  ✓  17 [mobile] › e2e/design-v2-friends.spec.ts:219:5 › Friends invitation navigation recovers during immediate viewport resizing (4.1s)
+  ✓  18 [mobile] › e2e/design-v2-friends.spec.ts:244:5 › Friends empty content preserves canonical geometry and starts only an explicit invitation (4.0s)
+  ✓  19 [mobile] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries (4.2s)
+  ✓  20 [mobile] › e2e/design-v2-friends.spec.ts:340:5 › Friends pending decision does not steal deliberately moved keyboard focus (2.5s)
+  ✓  21 [mobile] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (no-preference) (5.6s)
+  ✓  22 [mobile] › e2e/design-v2-friends.spec.ts:400:7 › Friends invitations and responsive geometry (no-preference) (9.3s)
+  ✓  23 [mobile] › e2e/design-v2-friends.spec.ts:483:7 › Friends owner revocation confirmation (no-preference) (5.3s)
+  ✓  24 [mobile] › e2e/design-v2-friends.spec.ts:528:7 › Friends confirming-read revocation and session exit (no-preference) (4.7s)
+  ✓  25 [mobile] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (reduce) (5.3s)
+  ✓  26 [mobile] › e2e/design-v2-friends.spec.ts:400:7 › Friends invitations and responsive geometry (reduce) (8.2s)
+  ✓  27 [mobile] › e2e/design-v2-friends.spec.ts:483:7 › Friends owner revocation confirmation (reduce) (4.8s)
+  ✓  28 [mobile] › e2e/design-v2-friends.spec.ts:528:7 › Friends confirming-read revocation and session exit (reduce) (4.0s)
+(node:47873) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  29 [firefox-stats] › e2e/design-v2-friends.spec.ts:108:5 › Friends ready content preserves canonical card geometry during resizing (6.2s)
+  ✓  30 [firefox-stats] › e2e/design-v2-friends.spec.ts:164:5 › Friends secondary content has deterministic canonical visual candidates (11.9s)
+  ✓  31 [firefox-stats] › e2e/design-v2-friends.spec.ts:219:5 › Friends invitation navigation recovers during immediate viewport resizing (4.5s)
+  ✓  32 [firefox-stats] › e2e/design-v2-friends.spec.ts:244:5 › Friends empty content preserves canonical geometry and starts only an explicit invitation (4.2s)
+  ✓  33 [firefox-stats] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries (4.5s)
+  ✓  34 [firefox-stats] › e2e/design-v2-friends.spec.ts:340:5 › Friends pending decision does not steal deliberately moved keyboard focus (2.0s)
+  ✓  35 [firefox-stats] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (no-preference) (5.1s)
+  ✓  36 [firefox-stats] › e2e/design-v2-friends.spec.ts:400:7 › Friends invitations and responsive geometry (no-preference) (11.4s)
+  ✓  37 [firefox-stats] › e2e/design-v2-friends.spec.ts:483:7 › Friends owner revocation confirmation (no-preference) (5.4s)
+  ✓  38 [firefox-stats] › e2e/design-v2-friends.spec.ts:528:7 › Friends confirming-read revocation and session exit (no-preference) (6.3s)
+  ✓  39 [firefox-stats] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (reduce) (5.7s)
+  ✓  40 [firefox-stats] › e2e/design-v2-friends.spec.ts:400:7 › Friends invitations and responsive geometry (reduce) (16.3s)
+  ✓  41 [firefox-stats] › e2e/design-v2-friends.spec.ts:483:7 › Friends owner revocation confirmation (reduce) (7.5s)
+  ✓  42 [firefox-stats] › e2e/design-v2-friends.spec.ts:528:7 › Friends confirming-read revocation and session exit (reduce) (5.4s)
+(node:55637) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  43 [webkit-stats] › e2e/design-v2-friends.spec.ts:108:5 › Friends ready content preserves canonical card geometry during resizing (4.7s)
+  ✓  44 [webkit-stats] › e2e/design-v2-friends.spec.ts:164:5 › Friends secondary content has deterministic canonical visual candidates (11.4s)
+  ✓  45 [webkit-stats] › e2e/design-v2-friends.spec.ts:219:5 › Friends invitation navigation recovers during immediate viewport resizing (10.0s)
+  ✓  46 [webkit-stats] › e2e/design-v2-friends.spec.ts:244:5 › Friends empty content preserves canonical geometry and starts only an explicit invitation (4.2s)
+  ✓  47 [webkit-stats] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries (5.3s)
+  ✓  48 [webkit-stats] › e2e/design-v2-friends.spec.ts:340:5 › Friends pending decision does not steal deliberately moved keyboard focus (2.7s)
+  ✓  49 [webkit-stats] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (no-preference) (8.7s)
+  ✓  50 [webkit-stats] › e2e/design-v2-friends.spec.ts:400:7 › Friends invitations and responsive geometry (no-preference) (19.8s)
+  ✓  51 [webkit-stats] › e2e/design-v2-friends.spec.ts:483:7 › Friends owner revocation confirmation (no-preference) (13.7s)
+  ✓  52 [webkit-stats] › e2e/design-v2-friends.spec.ts:528:7 › Friends confirming-read revocation and session exit (no-preference) (10.5s)
+  ✓  53 [webkit-stats] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (reduce) (4.8s)
+  ✓  54 [webkit-stats] › e2e/design-v2-friends.spec.ts:400:7 › Friends invitations and responsive geometry (reduce) (10.1s)
+  ✓  55 [webkit-stats] › e2e/design-v2-friends.spec.ts:483:7 › Friends owner revocation confirmation (reduce) (4.6s)
+  ✓  56 [webkit-stats] › e2e/design-v2-friends.spec.ts:528:7 › Friends confirming-read revocation and session exit (reduce) (5.9s)
+
+  56 passed (6.3m)

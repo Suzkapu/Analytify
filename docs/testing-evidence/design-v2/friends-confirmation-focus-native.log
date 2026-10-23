@@ -1,0 +1,37 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts --grep removal dialog responsive|owner revocation confirmation --output=docs/testing-evidence/design-v2/friends-confirmation-focus-native-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:81678) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:81678) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 16 tests using 1 worker
+
+(node:81944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (no-preference) (5.1s)
+  ✓   2 [desktop] › e2e/design-v2-friends.spec.ts:490:7 › Friends owner revocation confirmation (no-preference) (5.1s)
+  ✓   3 [desktop] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (reduce) (4.5s)
+  ✓   4 [desktop] › e2e/design-v2-friends.spec.ts:490:7 › Friends owner revocation confirmation (reduce) (4.0s)
+(node:83169) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   5 [mobile] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (no-preference) (6.1s)
+  ✓   6 [mobile] › e2e/design-v2-friends.spec.ts:490:7 › Friends owner revocation confirmation (no-preference) (5.9s)
+  ✓   7 [mobile] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (reduce) (5.6s)
+  ✓   8 [mobile] › e2e/design-v2-friends.spec.ts:490:7 › Friends owner revocation confirmation (reduce) (5.1s)
+(node:84526) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 [firefox-stats] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (no-preference) (7.2s)
+  ✓  10 [firefox-stats] › e2e/design-v2-friends.spec.ts:490:7 › Friends owner revocation confirmation (no-preference) (5.6s)
+  ✓  11 [firefox-stats] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (reduce) (4.6s)
+  ✓  12 [firefox-stats] › e2e/design-v2-friends.spec.ts:490:7 › Friends owner revocation confirmation (reduce) (4.1s)
+(node:86083) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  13 [webkit-stats] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (no-preference) (12.9s)
+  ✓  14 [webkit-stats] › e2e/design-v2-friends.spec.ts:490:7 › Friends owner revocation confirmation (no-preference) (15.7s)
+  ✓  15 [webkit-stats] › e2e/design-v2-friends.spec.ts:359:7 › Friends removal dialog responsive geometry (reduce) (5.4s)
+  ✓  16 [webkit-stats] › e2e/design-v2-friends.spec.ts:490:7 › Friends owner revocation confirmation (reduce) (5.1s)
+
+  16 passed (2.0m)

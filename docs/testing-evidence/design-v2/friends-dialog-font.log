@@ -1,0 +1,89 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts --grep confirmation typography --output=docs/testing-evidence/design-v2/friends-dialog-font-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:90162) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90162) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:90344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-friends.spec.ts:358:5 › Friends confirmation typography matches canonical after font readiness (2.9s)
+(node:90607) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [mobile] › e2e/design-v2-friends.spec.ts:358:5 › Friends confirmation typography matches canonical after font readiness (3.2s)
+(node:90918) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [firefox-stats] › e2e/design-v2-friends.spec.ts:358:5 › Friends confirmation typography matches canonical after font readiness (3.7s)
+(node:91390) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  4 [webkit-stats] › e2e/design-v2-friends.spec.ts:358:5 › Friends confirmation typography matches canonical after font readiness (3.1s)
+
+
+  1) [desktop] › e2e/design-v2-friends.spec.ts:358:5 › Friends confirmation typography matches canonical after font readiness 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 322
+    Received: 346
+
+      382 |   expect(after.dialogWidth).toBe(272); expect(after.bodyWidth).toBe(222);
+      383 |   expect(after.fontSize).toBe('16px'); expect(after.lineHeight).toBe('24px');
+    > 384 |   expect(after.dialogHeight).toBe(322); expect(after.bodyHeight).toBe(72);
+          |                              ^
+      385 | });
+      386 |
+      387 | for (const motion of ['no-preference', 'reduce'] as const) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:384:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-dialog-font-artifacts/design-v2-friends-Friends--24845-onical-after-font-readiness-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-dialog-font-artifacts/design-v2-friends-Friends--24845-onical-after-font-readiness-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-dialog-font-artifacts/design-v2-friends-Friends--24845-onical-after-font-readiness-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-dialog-font-artifacts/design-v2-friends-Friends--24845-onical-after-font-readiness-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › e2e/design-v2-friends.spec.ts:358:5 › Friends confirmation typography matches canonical after font readiness 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 322
+    Received: 346
+
+      382 |   expect(after.dialogWidth).toBe(272); expect(after.bodyWidth).toBe(222);
+      383 |   expect(after.fontSize).toBe('16px'); expect(after.lineHeight).toBe('24px');
+    > 384 |   expect(after.dialogHeight).toBe(322); expect(after.bodyHeight).toBe(72);
+          |                              ^
+      385 | });
+      386 |
+      387 | for (const motion of ['no-preference', 'reduce'] as const) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:384:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-dialog-font-artifacts/design-v2-friends-Friends--24845-onical-after-font-readiness-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-dialog-font-artifacts/design-v2-friends-Friends--24845-onical-after-font-readiness-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-dialog-font-artifacts/design-v2-friends-Friends--24845-onical-after-font-readiness-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-dialog-font-artifacts/design-v2-friends-Friends--24845-onical-after-font-readiness-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › e2e/design-v2-friends.spec.ts:358:5 › Friends confirmation typography matches canonical after font readiness 
+    [mobile] › e2e/design-v2-friends.spec.ts:358:5 › Friends confirmation typography matches canonical after font readiness 
+  2 passed (31.5s)

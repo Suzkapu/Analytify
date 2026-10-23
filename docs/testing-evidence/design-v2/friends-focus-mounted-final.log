@@ -1,0 +1,72 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/friends/v2-friends-focus-recovery.spec.ts --include=src/app/features/friends/v2-friends-page.component.spec.ts --include=src/app/features/friends/v2-friends-empty-state.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [4.647 seconds] - 2026-10-23T15:34:40.225Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+Warning: A vi.mock("qrcode") call in "/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/friends/v2-friends-page.component.spec.ts" is not at the top level of the module. Although it appears nested, it will be hoisted and executed before any tests run. Move it to the top level to reflect its actual execution order. This will become an error in a future version.
+See: https://vitest.dev/guide/mocking/modules#how-it-works
+Warning: A vi.mock("qrcode") call in "/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/friends/v2-friends-empty-state.spec.ts" is not at the top level of the module. Although it appears nested, it will be hoisted and executed before any tests run. Move it to the top level to reflect its actual execution order. This will become an error in a future version.
+See: https://vitest.dev/guide/mocking/modules#how-it-works
+ ❯ |SpotiFront| src/app/features/friends/v2-friends-focus-recovery.spec.ts (12 tests | 1 failed) 1023ms
+     × recovers removed confirmation trigger only while focus remains owned (user moved=false) 112ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-focus-recovery.spec.ts > Mounted Friends action focus ownership (canonical 1008:32348) > recovers removed confirmation trigger only while focus remains owned (user moved=false)
+AssertionError: expected <body>…(1)</body> to be <main id="v2-main-content" …(1)>…(2)</main> // Object.is equality
+
+- Expected
++ Received
+
+@@ -1,5 +1,15 @@
++ <body>
++   <div
++     id="root10"
++     ng-version="22.2.1"
++   >
++     <button
++       id="other-task"
++     >
++       Another task
++     </button>
+      <main
+        id="v2-main-content"
+        tabindex="-1"
+      >
+        <router-outlet />
+@@ -191,5 +201,7 @@
+          </v2-friends-page>
+          <!--container-->
+        </v2-friends-layout>
+        <!--container-->
+      </main>
++   </div>
++ </body>
+
+ ❯ src/app/features/friends/v2-friends-focus-recovery.spec.ts:198:36
+    196|     expect(manage.isConnected).toBe(false);
+    197|     expect(h.element.querySelector('[aria-label="Manage friend Suzkapu…
+    198|     expect(document.activeElement).toBe(moved ? h.other : h.main);
+       |                                    ^
+    199|   });
+    200| });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:463:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 54 passed (55)
+   Start at  17:34:40
+   Duration  4.34s (transform 835ms, setup 1.18s, import 1.48s, tests 4.49s, environment 1.71s)
+

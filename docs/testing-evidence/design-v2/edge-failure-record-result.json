@@ -1,0 +1,156 @@
+{
+  "date": "2026-10-23",
+  "checkpoint": "cb20aec",
+  "scope": "Supported failure-state persistence errors through actual Edge handler and pinned Supabase2.116.0 SDK, synthetic fetch boundaries only.",
+  "productionChanges": [
+    "supabase/functions/song-league-playlist-sync/index.ts"
+  ],
+  "cases": [
+    "Primary Spotify token HTTP400, then failure-record PostgREST HTTP400 error envelope.",
+    "Primary Spotify token HTTP400, then failure-record network TypeError normalized by actual SDK."
+  ],
+  "publicContract": "HTTP200, okfalse, failed1, synced0, genericmembererror; no internal secondary failure details in response. Exactly one recording attempt and league lease release.",
+  "fixtureCorrection": "Initial test incorrectly expected reconnect-specific public wording for a token refresh error. Corrected to existing generic public contract before asserting the actual defect; initial output retained as edge-failure-record-fixture-correction.log.",
+  "limitations": [
+    "100percent statements/branches not achieved; remaining1statement/2branches stay included without artificial SDK-return mocks.",
+    "No real services, sockets, credentials, notifications or deployment.",
+    "Fresh83-test Edge coverage supersedes retained15October Edge report and earlier backend revalidation; archived old report hashes remain reproducible.",
+    "CI entrypoint registration by root verified via currentpackagehash and curated83PASS."
+  ],
+  "redBaseline": {
+    "command": "deno test --config supabase/functions/deno.json supabase/functions/song-league-playlist-sync/failure-record-boundary.test.ts",
+    "exit": 1,
+    "passed": 0,
+    "failed": 2,
+    "failure": "Both cases fail exclusively because secondary failure-state persistence error is not independently logged. Earlier public response, primary logging, release, no-completion/no-playlist-write assertions pass.",
+    "hashes": {
+      "supabase/functions/song-league-playlist-sync/index.ts": "8a3bf546a0a1880171559075626fd9436ee7977bbcca8e40e5fe240aa62f6b28",
+      "supabase/functions/song-league-playlist-sync/failure-record-boundary.test.ts": "f31fff3c8a7085e3ea22fa99f7e5bf322a12a4a568ac8873a1e2de76e4735f41",
+      "supabase/functions/_shared/handler-fixture.test.ts": "9a43f5c1506aafcbc5bfe2bee7fd721aef5a7090bfe22acd1dc3aff12d19ff2b",
+      "supabase/functions/deno.lock": "c7073848a84c7897bb267aa2ea2c63b81c5b9e073812168eebd909e123d84d7c",
+      "docs/testing-evidence/design-v2/edge-failure-record-red.log": "b91a17b968ca135e5c6f2273f26a2240a5911073218fc83553022707cc51eb56"
+    }
+  },
+  "status": "Approved minimal development fix verified; no deployment.",
+  "approval": "Root explicitly approved and applied the minimal failureRPC.error check, preserving original catch/logger and public behavior.",
+  "commands": [
+    {
+      "command": "deno test --config supabase/functions/deno.json supabase/functions/song-league-playlist-sync/failure-record-boundary.test.ts",
+      "exit": 0,
+      "passed": 2,
+      "failed": 0,
+      "log": "docs/testing-evidence/design-v2/edge-failure-record-green.log"
+    },
+    {
+      "command": "npm run edge-functions:check",
+      "exit": 0,
+      "passed": 83,
+      "failed": 0,
+      "log": "docs/testing-evidence/design-v2/edge-failure-record-curated.log"
+    },
+    {
+      "command": "npm run test:coverage:edge",
+      "exit": 0,
+      "passed": 83,
+      "failed": 0,
+      "log": "docs/testing-evidence/design-v2/edge-failure-record-coverage.log"
+    }
+  ],
+  "currentMetrics": {
+    "lines": {
+      "total": 763,
+      "covered": 763,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 903,
+      "covered": 902,
+      "skipped": 0,
+      "pct": 99.88
+    },
+    "functions": {
+      "total": 113,
+      "covered": 113,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 799,
+      "covered": 797,
+      "skipped": 0,
+      "pct": 99.74
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "productionSourceCount": 12,
+  "sourceHashes": {
+    "supabase/functions/_shared/bounded-fetch.ts": "6661fed0ffce6cfd42afed9fe90ffe047d748dd485fbb973cd19ab8b13300d2e",
+    "supabase/functions/_shared/request-security.ts": "d03bb7fe8206ea328984aa811d2402ea98a1f01a35254bf2f411936a428039f2",
+    "supabase/functions/_shared/spotify-credential-crypto.ts": "2285f5e80532a9c58c1bf4938cbbe3060da64969e927559303903f320edc9417",
+    "supabase/functions/song-league-notifications/delivery-state.ts": "d406a45b0296b98ca7593be94cb78b17f40f97345440e5ff963bd0074308421c",
+    "supabase/functions/song-league-notifications/index.ts": "3a3961835049e2de6471d2a96b95ed149f81c0475739e5dd1004f9a43c442ab9",
+    "supabase/functions/song-league-notifications/push-endpoint.ts": "7c5995c8d5f842b75e8bedb84696d182a1ded7af36b9702e8efd44feea7cebda",
+    "supabase/functions/song-league-notifications/web-push.ts": "ac50a53d5ebdce3728a1726a74ecc372709e3d7cdd1b56bf6bd845a4e06b4c0e",
+    "supabase/functions/song-league-playlist-sync/index.ts": "84d7f45bbaf585c3868056852a45649daecd81db3d11d4c1eef5bc0af3b10b27",
+    "supabase/functions/song-league-playlist-sync/recovery.ts": "4f105ee8919c5132978210af2c6e71fe7d638e2c0bbe5b7ca795b890a04c0175",
+    "supabase/functions/spotify-credentials/index.ts": "f9ef05c3c48ca5608cacd0eacabbc12ab2d7fd1ed16f648e5e29e26e956f1ccf",
+    "supabase/functions/spotify-credentials/personal-recovery.ts": "eeaf3510d41c2ddc95722eaf04d55500bafa0833a60376c8ccdd501762df59cf",
+    "supabase/functions/spotify-credentials/profile-verification.ts": "3b3e4519e61f9f2e188c0af77ed7fe6176e69c22310f4d32934b3a11c105849b"
+  },
+  "currentInputHashes": {
+    "package.json": "9e3573e3f98ca3a703c7906253a4c9ffd939a67a25d8dc9da8ae750b27a0651e",
+    "supabase/functions/deno.json": "82acc74e68b36dbe8566755a71c6ad0d57ce4792fe299bdae0b32e024eb40056",
+    "supabase/functions/deno.lock": "c7073848a84c7897bb267aa2ea2c63b81c5b9e073812168eebd909e123d84d7c",
+    "supabase/functions/song-league-playlist-sync/failure-record-boundary.test.ts": "f31fff3c8a7085e3ea22fa99f7e5bf322a12a4a568ac8873a1e2de76e4735f41",
+    "supabase/functions/_shared/handler-fixture.test.ts": "9a43f5c1506aafcbc5bfe2bee7fd721aef5a7090bfe22acd1dc3aff12d19ff2b",
+    "scripts/run-application-coverage.mjs": "dd925016efbda1c3139bd3865c0cbb2428627fdeb4551f1fcd2ff02a6807a287",
+    "scripts/report-edge-v8-coverage.mjs": "1341ad19af082eb5ae17ee3c208be1bdfbc7836bec12d9384913207160e7956a",
+    "scripts/report-worker-v8-coverage.mjs": "9af1fe668b42fe5032211ba387470edf5d30c8606bcea91e1fd1d8f082ba289f",
+    "scripts/design-v2-source-inventory.mjs": "90d8dc1b13172e053e8c3ad474204a89029508e2ae028da7060cfc9e87c73888",
+    "scripts/check-application-coverage-inventory.mjs": "54facf461daf4ba4540540987b0740e3002577f7661576927d319e32e5c19509"
+  },
+  "reportHashes": {
+    "coverage/edge/coverage-summary.json": "27cfdfbced7f3555380d72ae9b172d5c1e6b4062e362e3ec536394713ea67058",
+    "coverage/edge/coverage-final.json": "b6644e70febde9bed894cca2419a9ef09087aa829964f61b8b69a14eb9dac556",
+    "coverage/edge/source-inventory.json": "4e792d7c804c09f75292dd9ba56d210441e55e6e1d836f4fbec6003e1b3ddda7",
+    "coverage/edge/lcov.info": "a35d6ca3d2834b4bb46ba48c77da46dc4494f58dbdb2632c67d2a11e45f9d5c7"
+  },
+  "logHashes": {
+    "docs/testing-evidence/design-v2/edge-failure-record-green.log": "3c1bfa6bee8cf4b8f3117d729e82716836eb41aa8be001f86a880509683f0289",
+    "docs/testing-evidence/design-v2/edge-failure-record-curated.log": "627bb1d4579cbc73a4fa32053153143b0ac88623ec0363ede998aa06cf87c1c1",
+    "docs/testing-evidence/design-v2/edge-failure-record-coverage.log": "fe06ffac0d8a41e80b23f04a32d51312c80c7bbd445c3638d5e7d25b7358aad5"
+  },
+  "previousReportArchives": {
+    "docs/testing-evidence/design-v2/edge-failure-record-before-coverage-summary.json": "6f2dead3bfd0313b68b06c6c9d015b44878111afcba8a25f9dfca57ab0779bb9",
+    "docs/testing-evidence/design-v2/edge-failure-record-before-coverage-final.json": "de19a2c5a3538091c6979b23f6d99b362ae933972fc1eec98ff09cd642e156f9",
+    "docs/testing-evidence/design-v2/edge-failure-record-before-source-inventory.json": "499a375c8c8b9e323cd1ec05f064f79103a2541a572d9b24f913252a3b32bbd8",
+    "docs/testing-evidence/design-v2/edge-failure-record-before-lcov.info": "0484fbfa5b2d81403d25d84b3a9031df72e24bc78fdf58675301bfab03fef3e6"
+  },
+  "remainingGaps": {
+    "statements": [
+      {
+        "path": "supabase/functions/spotify-credentials/index.ts",
+        "line": 60,
+        "description": "Client ID guard dominated by required hosted environment or validated personal client ID."
+      }
+    ],
+    "branches": [
+      {
+        "path": "supabase/functions/spotify-credentials/index.ts",
+        "line": 60,
+        "description": "Missing effective client ID after validation."
+      },
+      {
+        "path": "supabase/functions/spotify-credentials/index.ts",
+        "line": 166,
+        "description": "Missing promoted user with no SDK Auth error; pinned normal success/error contract does not establish such state."
+      }
+    ]
+  }
+}

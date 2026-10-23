@@ -1,0 +1,68 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/friends/v2-friends-focus-recovery.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [3.880 seconds] - 2026-10-23T15:35:11.438Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/friends/v2-friends-focus-recovery.spec.ts (12 tests | 1 failed) 815ms
+     × recovers removed confirmation trigger only while focus remains owned (user moved=false) 80ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-focus-recovery.spec.ts > Mounted Friends action focus ownership (canonical 1008:32348) > recovers removed confirmation trigger only while focus remains owned (user moved=false)
+AssertionError: expected <body>…(1)</body> to be <main id="v2-main-content" …(1)>…(2)</main> // Object.is equality
+
+- Expected
++ Received
+
+@@ -1,5 +1,15 @@
++ <body>
++   <div
++     id="root10"
++     ng-version="22.2.1"
++   >
++     <button
++       id="other-task"
++     >
++       Another task
++     </button>
+      <main
+        id="v2-main-content"
+        tabindex="-1"
+      >
+        <router-outlet />
+@@ -191,5 +201,7 @@
+          </v2-friends-page>
+          <!--container-->
+        </v2-friends-layout>
+        <!--container-->
+      </main>
++   </div>
++ </body>
+
+ ❯ src/app/features/friends/v2-friends-focus-recovery.spec.ts:199:36
+    197|     expect(manage.isConnected).toBe(false);
+    198|     expect(h.element.querySelector('[aria-label="Manage friend Suzkapu…
+    199|     expect(document.activeElement).toBe(moved ? h.other : h.main);
+       |                                    ^
+    200|   });
+    201| });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:463:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 passed (12)
+   Start at  17:35:11
+   Duration  2.24s (transform 241ms, setup 364ms, import 374ms, tests 815ms, environment 515ms)
+

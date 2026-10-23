@@ -1,0 +1,61 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts --project=desktop --grep action icons retain --output=docs/testing-evidence/design-v2/friends-modern-remaining-icons-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:49657) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:49657) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:49883) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-friends.spec.ts:108:5 › Friends action icons retain canonical active and secondary semantic paints (2.1s)
+
+
+  1) [desktop] › e2e/design-v2-friends.spec.ts:108:5 › Friends action icons retain canonical active and secondary semantic paints 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+        "addPeople": "rgb(162, 173, 166)",
+        "addPlus": "rgb(162, 173, 166)",
+    -   "confirmationTrash": "rgb(162, 173, 166)",
+    +   "confirmationTrash": "rgb(255, 116, 125)",
+        "copy": "rgb(6, 19, 11)",
+        "readyPeople": "rgb(6, 19, 11)",
+        "readyPlus": "rgb(162, 173, 166)",
+        "revokeTrash": "rgb(255, 116, 125)",
+    -   "viewQr": "rgb(162, 173, 166)",
+    +   "viewQr": "rgb(245, 247, 245)",
+      }
+
+      131 |   const paints = {readyPeople, readyPlus, addPeople, addPlus, copy, viewQr, revokeTrash, confirmationTrash};
+      132 |   await writeFile(info.outputPath('friends-icon-paints.json'), JSON.stringify(paints, null, 2));
+    > 133 |   expect(paints).toEqual({readyPeople: 'rgb(6, 19, 11)', readyPlus: 'rgb(162, 173, 166)', addPeople: 'rgb(162, 173, 166)', addPlus: 'rgb(162, 173, 166)', copy: 'rgb(6, 19, 11)', viewQr: 'rgb(162, 173, 166)', revokeTrash: 'rgb(255, 116, 125)', confirmationTrash: 'rgb(162, 173, 166)'});
+          |                  ^
+      134 |   expect(writes.filter(write => write.name === 'create_friend_invitation')).toHaveLength(3);
+      135 |   expect(writes.some(write => write.name === 'remove_friend' || write.name === 'revoke_friend_invitation')).toBe(false);
+      136 |   expect(unexpected).toEqual([]); expect(runtimeErrors).toEqual([]);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:133:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-remaining-icons-red-artifacts/design-v2-friends-Friends--15935-d-secondary-semantic-paints-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-modern-remaining-icons-red-artifacts/design-v2-friends-Friends--15935-d-secondary-semantic-paints-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-remaining-icons-red-artifacts/design-v2-friends-Friends--15935-d-secondary-semantic-paints-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-modern-remaining-icons-red-artifacts/design-v2-friends-Friends--15935-d-secondary-semantic-paints-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-friends.spec.ts:108:5 › Friends action icons retain canonical active and secondary semantic paints 

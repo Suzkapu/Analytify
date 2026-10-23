@@ -1,0 +1,125 @@
+{
+  "scope": "Mounted Friends focus ownership through real routed components inside a focusable main, controlled FriendsService promise boundaries, actual DOM focus; no browser claims",
+  "canonical": "1008:32348",
+  "command": "npx ng test --watch=false --include=src/app/features/friends/v2-friends-focus-recovery.spec.ts --progress=false",
+  "red": {
+    "log": "friends-focus-mounted-boundaries.log",
+    "exitCode": 1,
+    "passed": 5,
+    "failed": 3,
+    "findings": [
+      "Failed explicit Retry silently starts a second recovery read via prepare; expected two total listFriends calls, actual three",
+      "The silent successful third read removes retained load-error feedback",
+      "Focus owner is not relinquished when a person focuses elsewhere then blurs before next render; completion reclaims focus to main"
+    ]
+  },
+  "earlierAttempts": [
+    {
+      "log": "friends-focus-mounted-initial.log",
+      "passed": 1,
+      "failed": 6,
+      "limitation": "Activation helper lacked preactivation key/pointer boundary; do not treat as product regression"
+    },
+    {
+      "log": "friends-focus-mounted-keyboard.log",
+      "passed": 3,
+      "failed": 4,
+      "limitation": "Two failures were incorrect test copy assumptions corrected to canonical request accepted/declined; two product failures retained"
+    }
+  ],
+  "green": {
+    "log": "friends-focus-mounted-confirmed-green.log",
+    "exitCode": 0,
+    "passed": 55,
+    "failed": 0,
+    "files": 3,
+    "newFocusCases": 12,
+    "existingPageCases": 37,
+    "existingEmptyCases": 6,
+    "command": "npx ng test --watch=false --include=src/app/features/friends/v2-friends-focus-recovery.spec.ts --include=src/app/features/friends/v2-friends-page.component.spec.ts --include=src/app/features/friends/v2-friends-empty-state.spec.ts --progress=false"
+  },
+  "verification": {
+    "lint": {
+      "command": "npx eslint src/app/features/friends/v2-friends-focus-recovery.spec.ts",
+      "log": "friends-focus-mounted-lint-confirmed.log",
+      "exitCode": 0
+    },
+    "testTypes": {
+      "command": "npx tsc -p tsconfig.spec.json --noEmit",
+      "log": "friends-focus-mounted-types-confirmed.log",
+      "exitCode": 0
+    }
+  },
+  "limitations": [
+    "DOM emulator requires explicit Enter keydown followed by click; native keyboard synthesis remains browser test responsibility",
+    "No screenshots, service contracts or coverage threshold claims"
+  ],
+  "hashes": {
+    "src/app/features/friends/v2-friends-page.component.ts": "fe315445d84602b126d01bb307e951fc63602e3d899db252634f9d1db7447a58",
+    "src/app/features/friends/v2-friends-focus-recovery.spec.ts": "3b4db65cb907d675c6f4b20a8665ffdf8f54680cdcf2f12a0f3425f9e987a7f0",
+    "docs/testing-evidence/design-v2/friends-focus-mounted-confirmed-green.log": "3852939b0f3811fa2ca03175c48c83a54f33e5fb57e3dd56d46aaa7a410bb5f3",
+    "docs/testing-evidence/design-v2/friends-focus-mounted-boundaries.log": "4d2bd69735fdfe1bfd0c630a4c23bb402fa3d82eb5f419e24b569d183da06cfc",
+    "docs/testing-evidence/design-v2/friends-focus-mounted-click-only-red.log": "39d8a1f72daea3de4f9a8c27312a32906eb947c5a7520a789f59fa905f262f3b",
+    "docs/testing-evidence/design-v2/friends-focus-mounted-confirmation-red.log": "af1d3d81f877693da3dd24a5d62f99888910786f26d710e96a0f8f6b34eeb462"
+  },
+  "warnings": [
+    "Existing page and empty specs emit Vitest qrcode mock-hoisting warnings; no test skipped or disabled."
+  ],
+  "additionalRed": [
+    {
+      "log": "friends-focus-mounted-click-only-red.log",
+      "exitCode": 1,
+      "passed": 9,
+      "failed": 1,
+      "finding": "Focused native click-only Retry leaves BODY during held loading without pointer/key precursor"
+    },
+    {
+      "log": "friends-focus-mounted-confirmation-red.log",
+      "exitCode": 1,
+      "passed": 10,
+      "failed": 1,
+      "finding": "After real menu/dialog confirmation, acknowledged removal deletes restored trigger and leaves BODY; click-only now passes with root capture listener"
+    },
+    {
+      "log": "friends-focus-mounted-final.log",
+      "exitCode": 1,
+      "passed": 54,
+      "failed": 1,
+      "finding": "First root confirmation-handoff correction leaves BODY after confirmed row deletion; moved-elsewhere case passes"
+    },
+    {
+      "log": "friends-focus-mounted-confirmation-diagnostic.log",
+      "exitCode": 1,
+      "passed": 11,
+      "failed": 1,
+      "finding": "Explicit intermediate assertion verifies original Manage trigger receives focus while held mutation is pending; final deletion still loses focus"
+    }
+  ],
+  "historicalGreen": {
+    "log": "friends-focus-mounted-green.log",
+    "exitCode": 0,
+    "passed": 52,
+    "failed": 0,
+    "files": 3,
+    "newFocusCases": 9,
+    "existingPageCases": 37,
+    "existingEmptyCases": 6,
+    "command": "npx ng test --watch=false --include=src/app/features/friends/v2-friends-focus-recovery.spec.ts --include=src/app/features/friends/v2-friends-page.component.spec.ts --include=src/app/features/friends/v2-friends-empty-state.spec.ts --progress=false",
+    "scopeNote": "Earlier nine-case source; predates expanded twelve-case verification recorded in current green result."
+  },
+  "confirmationDiagnosis": {
+    "log": "friends-focus-mounted-handoff-diagnostic.log",
+    "json": "friends-focus-mounted-handoff-diagnostic.json",
+    "cause": "Preliminary afterEveryRender ran while confirm button remained connected, clearing confirmedReturnFocus before actual dialog teardown restored the known opening trigger; focusin then incorrectly relinquished ownership. Root retained the known handoff until actual restoration or explicit ownership termination.",
+    "instrumentation": "Temporary private state spies preserved original receiver/calls; removed from final test source. Assertions remain public DOM focus and service boundary behavior."
+  },
+  "parentCurrentVerification": {
+    "command": "npm run verify:ci",
+    "log": "friends-focus-final-ci.log",
+    "exitCode": 0,
+    "frontendPassed": 2236,
+    "skip": 1,
+    "newOrdinaryContentClick": "Added heading click to initial/background focus case; strict branch budget now passes without source or gate changes",
+    "currentSpecSha256": "22fe188aa388c24bc3102ffe6dbf50c15c5efd61600795024f93755a1e269405"
+  }
+}

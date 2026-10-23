@@ -1,0 +1,554 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts --grep canonical card geometry|deterministic canonical visual --output=docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:39047) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:39047) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:39250) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-friends.spec.ts:125:5 › Friends ready content preserves canonical card geometry during resizing (2.6s)
+(node:39518) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [desktop] › e2e/design-v2-friends.spec.ts:181:5 › Friends secondary content has deterministic canonical visual candidates (3.8s)
+(node:39927) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 [mobile] › e2e/design-v2-friends.spec.ts:125:5 › Friends ready content preserves canonical card geometry during resizing (2.9s)
+(node:40314) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  4 [mobile] › e2e/design-v2-friends.spec.ts:181:5 › Friends secondary content has deterministic canonical visual candidates (3.9s)
+(node:40736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  5 [firefox-stats] › e2e/design-v2-friends.spec.ts:125:5 › Friends ready content preserves canonical card geometry during resizing (3.2s)
+(node:41162) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  6 [firefox-stats] › e2e/design-v2-friends.spec.ts:181:5 › Friends secondary content has deterministic canonical visual candidates (4.9s)
+(node:41817) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  7 [webkit-stats] › e2e/design-v2-friends.spec.ts:125:5 › Friends ready content preserves canonical card geometry during resizing (2.8s)
+(node:42087) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  8 [webkit-stats] › e2e/design-v2-friends.spec.ts:181:5 › Friends secondary content has deterministic canonical visual candidates (4.2s)
+
+
+  1) [desktop] › e2e/design-v2-friends.spec.ts:125:5 › Friends ready content preserves canonical card geometry during resizing 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: locator('v2-friends-page')
+      6628 pixels (ratio 0.03 of all image pixels) are different.
+
+      Snapshot: friends-ready-mobile.png
+
+    Call log:
+      - Expect "toHaveScreenshot(friends-ready-mobile.png)" locator('v2-friends-page') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - 6628 pixels (ratio 0.03 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - 6628 pixels (ratio 0.03 of all image pixels) are different.
+
+
+      151 |     await page.evaluate(() => document.fonts.ready);
+      152 |     await panel.screenshot({path: info.outputPath(`candidate-friends-ready-${name}.png`), animations: 'disabled', scale: 'css'});
+    > 153 |     await expect(panel).toHaveScreenshot(`friends-ready-${name}.png`, {animations: 'disabled', scale: 'css', threshold: .1, maxDiffPixels: 0});
+          |                         ^
+      154 |   }
+      155 |   await writeFile(info.outputPath('friends-ready-geometry.json'), JSON.stringify({canonical, pointerVariants: pointerCanonical.variants, samples}, null, 2));
+      156 |   for (const sample of samples) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:153:25
+
+    attachment #1: friends-ready-mobile (image/png) ────────────────────────────────────────────────
+    Expected: e2e/design-v2-friends.spec.ts-snapshots/friends-ready-mobile-desktop-linux.png
+    Received: docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-desktop/friends-ready-mobile-actual.png
+    Diff:     docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-desktop/friends-ready-mobile-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-friends.spec.ts:181:5 › Friends secondary content has deterministic canonical visual candidates 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: locator('v2-friends-page')
+      6855 pixels (ratio 0.03 of all image pixels) are different.
+
+      Snapshot: friends-add-mobile.png
+
+    Call log:
+      - Expect "toHaveScreenshot(friends-add-mobile.png)" locator('v2-friends-page') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - 6855 pixels (ratio 0.03 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - 6855 pixels (ratio 0.03 of all image pixels) are different.
+
+
+      211 |       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      212 |       await panel.screenshot({path: info.outputPath(`candidate-friends-${state}-${name}.png`), animations: 'disabled', scale: 'css'});
+    > 213 |       await expect(panel).toHaveScreenshot(`friends-${state}-${name}.png`, {animations: 'disabled', scale: 'css', threshold: .1, maxDiffPixels: 0});
+          |                           ^
+      214 |     }
+      215 |   };
+      216 |   await panel.getByRole('link', {name: 'Add friend', exact: true}).click();
+        at capture (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:213:27)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:222:3
+
+    attachment #1: friends-add-mobile (image/png) ──────────────────────────────────────────────────
+    Expected: e2e/design-v2-friends.spec.ts-snapshots/friends-add-mobile-desktop-linux.png
+    Received: docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-desktop/friends-add-mobile-actual.png
+    Diff:     docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-desktop/friends-add-mobile-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile] › e2e/design-v2-friends.spec.ts:125:5 › Friends ready content preserves canonical card geometry during resizing 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: locator('v2-friends-page')
+      6617 pixels (ratio 0.03 of all image pixels) are different.
+
+      Snapshot: friends-ready-mobile.png
+
+    Call log:
+      - Expect "toHaveScreenshot(friends-ready-mobile.png)" locator('v2-friends-page') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - 6617 pixels (ratio 0.03 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - 6617 pixels (ratio 0.03 of all image pixels) are different.
+
+
+      151 |     await page.evaluate(() => document.fonts.ready);
+      152 |     await panel.screenshot({path: info.outputPath(`candidate-friends-ready-${name}.png`), animations: 'disabled', scale: 'css'});
+    > 153 |     await expect(panel).toHaveScreenshot(`friends-ready-${name}.png`, {animations: 'disabled', scale: 'css', threshold: .1, maxDiffPixels: 0});
+          |                         ^
+      154 |   }
+      155 |   await writeFile(info.outputPath('friends-ready-geometry.json'), JSON.stringify({canonical, pointerVariants: pointerCanonical.variants, samples}, null, 2));
+      156 |   for (const sample of samples) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:153:25
+
+    attachment #1: friends-ready-mobile (image/png) ────────────────────────────────────────────────
+    Expected: e2e/design-v2-friends.spec.ts-snapshots/friends-ready-mobile-mobile-linux.png
+    Received: docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-mobile/friends-ready-mobile-actual.png
+    Diff:     docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-mobile/friends-ready-mobile-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [mobile] › e2e/design-v2-friends.spec.ts:181:5 › Friends secondary content has deterministic canonical visual candidates 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: locator('v2-friends-page')
+      6855 pixels (ratio 0.03 of all image pixels) are different.
+
+      Snapshot: friends-add-mobile.png
+
+    Call log:
+      - Expect "toHaveScreenshot(friends-add-mobile.png)" locator('v2-friends-page') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - 6855 pixels (ratio 0.03 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - 6855 pixels (ratio 0.03 of all image pixels) are different.
+
+
+      211 |       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      212 |       await panel.screenshot({path: info.outputPath(`candidate-friends-${state}-${name}.png`), animations: 'disabled', scale: 'css'});
+    > 213 |       await expect(panel).toHaveScreenshot(`friends-${state}-${name}.png`, {animations: 'disabled', scale: 'css', threshold: .1, maxDiffPixels: 0});
+          |                           ^
+      214 |     }
+      215 |   };
+      216 |   await panel.getByRole('link', {name: 'Add friend', exact: true}).click();
+        at capture (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:213:27)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:222:3
+
+    attachment #1: friends-add-mobile (image/png) ──────────────────────────────────────────────────
+    Expected: e2e/design-v2-friends.spec.ts-snapshots/friends-add-mobile-mobile-linux.png
+    Received: docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-mobile/friends-add-mobile-actual.png
+    Diff:     docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-mobile/friends-add-mobile-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [firefox-stats] › e2e/design-v2-friends.spec.ts:125:5 › Friends ready content preserves canonical card geometry during resizing 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: locator('v2-friends-page')
+      52 pixels (ratio 0.01 of all image pixels) are different.
+
+      Snapshot: friends-ready-mobile.png
+
+    Call log:
+      - Expect "toHaveScreenshot(friends-ready-mobile.png)" locator('v2-friends-page') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - 52 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - 52 pixels (ratio 0.01 of all image pixels) are different.
+
+
+      151 |     await page.evaluate(() => document.fonts.ready);
+      152 |     await panel.screenshot({path: info.outputPath(`candidate-friends-ready-${name}.png`), animations: 'disabled', scale: 'css'});
+    > 153 |     await expect(panel).toHaveScreenshot(`friends-ready-${name}.png`, {animations: 'disabled', scale: 'css', threshold: .1, maxDiffPixels: 0});
+          |                         ^
+      154 |   }
+      155 |   await writeFile(info.outputPath('friends-ready-geometry.json'), JSON.stringify({canonical, pointerVariants: pointerCanonical.variants, samples}, null, 2));
+      156 |   for (const sample of samples) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:153:25
+
+    attachment #1: friends-ready-mobile (image/png) ────────────────────────────────────────────────
+    Expected: e2e/design-v2-friends.spec.ts-snapshots/friends-ready-mobile-firefox-stats-linux.png
+    Received: docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-firefox-stats/friends-ready-mobile-actual.png
+    Diff:     docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-firefox-stats/friends-ready-mobile-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-firefox-stats/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [firefox-stats] › e2e/design-v2-friends.spec.ts:181:5 › Friends secondary content has deterministic canonical visual candidates 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: locator('v2-friends-page')
+      105 pixels (ratio 0.01 of all image pixels) are different.
+
+      Snapshot: friends-add-mobile.png
+
+    Call log:
+      - Expect "toHaveScreenshot(friends-add-mobile.png)" locator('v2-friends-page') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - 105 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - 105 pixels (ratio 0.01 of all image pixels) are different.
+
+
+      211 |       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      212 |       await panel.screenshot({path: info.outputPath(`candidate-friends-${state}-${name}.png`), animations: 'disabled', scale: 'css'});
+    > 213 |       await expect(panel).toHaveScreenshot(`friends-${state}-${name}.png`, {animations: 'disabled', scale: 'css', threshold: .1, maxDiffPixels: 0});
+          |                           ^
+      214 |     }
+      215 |   };
+      216 |   await panel.getByRole('link', {name: 'Add friend', exact: true}).click();
+        at capture (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:213:27)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:222:3
+
+    attachment #1: friends-add-mobile (image/png) ──────────────────────────────────────────────────
+    Expected: e2e/design-v2-friends.spec.ts-snapshots/friends-add-mobile-firefox-stats-linux.png
+    Received: docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-firefox-stats/friends-add-mobile-actual.png
+    Diff:     docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-firefox-stats/friends-add-mobile-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-firefox-stats/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [webkit-stats] › e2e/design-v2-friends.spec.ts:125:5 › Friends ready content preserves canonical card geometry during resizing 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: locator('v2-friends-page')
+      34 pixels (ratio 0.01 of all image pixels) are different.
+
+      Snapshot: friends-ready-mobile.png
+
+    Call log:
+      - Expect "toHaveScreenshot(friends-ready-mobile.png)" locator('v2-friends-page') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - 34 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - 34 pixels (ratio 0.01 of all image pixels) are different.
+
+
+      151 |     await page.evaluate(() => document.fonts.ready);
+      152 |     await panel.screenshot({path: info.outputPath(`candidate-friends-ready-${name}.png`), animations: 'disabled', scale: 'css'});
+    > 153 |     await expect(panel).toHaveScreenshot(`friends-ready-${name}.png`, {animations: 'disabled', scale: 'css', threshold: .1, maxDiffPixels: 0});
+          |                         ^
+      154 |   }
+      155 |   await writeFile(info.outputPath('friends-ready-geometry.json'), JSON.stringify({canonical, pointerVariants: pointerCanonical.variants, samples}, null, 2));
+      156 |   for (const sample of samples) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:153:25
+
+    attachment #1: friends-ready-mobile (image/png) ────────────────────────────────────────────────
+    Expected: e2e/design-v2-friends.spec.ts-snapshots/friends-ready-mobile-webkit-stats-linux.png
+    Received: docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-webkit-stats/friends-ready-mobile-actual.png
+    Diff:     docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-webkit-stats/friends-ready-mobile-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-webkit-stats/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [webkit-stats] › e2e/design-v2-friends.spec.ts:181:5 › Friends secondary content has deterministic canonical visual candidates 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: locator('v2-friends-page')
+      80 pixels (ratio 0.01 of all image pixels) are different.
+
+      Snapshot: friends-add-mobile.png
+
+    Call log:
+      - Expect "toHaveScreenshot(friends-add-mobile.png)" locator('v2-friends-page') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - 80 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - 80 pixels (ratio 0.01 of all image pixels) are different.
+
+
+      211 |       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      212 |       await panel.screenshot({path: info.outputPath(`candidate-friends-${state}-${name}.png`), animations: 'disabled', scale: 'css'});
+    > 213 |       await expect(panel).toHaveScreenshot(`friends-${state}-${name}.png`, {animations: 'disabled', scale: 'css', threshold: .1, maxDiffPixels: 0});
+          |                           ^
+      214 |     }
+      215 |   };
+      216 |   await panel.getByRole('link', {name: 'Add friend', exact: true}).click();
+        at capture (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:213:27)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:222:3
+
+    attachment #1: friends-add-mobile (image/png) ──────────────────────────────────────────────────
+    Expected: e2e/design-v2-friends.spec.ts-snapshots/friends-add-mobile-webkit-stats-linux.png
+    Received: docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-webkit-stats/friends-add-mobile-actual.png
+    Diff:     docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-webkit-stats/friends-add-mobile-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-webkit-stats/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-modern-corrected-mobile-candidates-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8 failed
+    [desktop] › e2e/design-v2-friends.spec.ts:125:5 › Friends ready content preserves canonical card geometry during resizing 
+    [desktop] › e2e/design-v2-friends.spec.ts:181:5 › Friends secondary content has deterministic canonical visual candidates 
+    [mobile] › e2e/design-v2-friends.spec.ts:125:5 › Friends ready content preserves canonical card geometry during resizing 
+    [mobile] › e2e/design-v2-friends.spec.ts:181:5 › Friends secondary content has deterministic canonical visual candidates 
+    [firefox-stats] › e2e/design-v2-friends.spec.ts:125:5 › Friends ready content preserves canonical card geometry during resizing 
+    [firefox-stats] › e2e/design-v2-friends.spec.ts:181:5 › Friends secondary content has deterministic canonical visual candidates 
+    [webkit-stats] › e2e/design-v2-friends.spec.ts:125:5 › Friends ready content preserves canonical card geometry during resizing 
+    [webkit-stats] › e2e/design-v2-friends.spec.ts:181:5 › Friends secondary content has deterministic canonical visual candidates 

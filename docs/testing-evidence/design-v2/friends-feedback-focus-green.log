@@ -1,0 +1,186 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts --grep cold loading --output=docs/testing-evidence/design-v2/friends-feedback-focus-green-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:17230) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:17230) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:17602) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries (8.7s)
+(node:18050) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [mobile] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries (9.0s)
+(node:18658) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 [firefox-stats] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries (9.7s)
+(node:19527) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  4 [webkit-stats] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries (9.2s)
+
+
+  1) [desktop] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('v2-friends-page').locator('v2-friends-feedback').getByRole('status')
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" locator('v2-friends-page').locator('v2-friends-feedback').getByRole('status') with timeout 5000ms
+      - waiting for locator('v2-friends-page').locator('v2-friends-feedback').getByRole('status')
+        14 × locator resolved to <section role="status" class="feedback" aria-busy="true" aria-live="polite" _ngcontent-ng-c3529466589="">…</section>
+           - unexpected value "inactive"
+
+
+      307 |     await expect(retry).toHaveCount(0);
+      308 |     focusSamples.push({state: 'retry-pending', focus: await focus()});
+    > 309 |     await expect(feedback.getByRole('status')).toBeFocused();
+          |                                                ^
+      310 |     fixture.releaseFriendsRead();
+      311 |     const request = panel.getByRole('region', {name: 'Friend request from Paulzgi', exact: true});
+      312 |     await expect(request).toBeVisible(); await expect(panel.locator('.friend-row')).toHaveCount(1);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:309:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-feedback-focus-green-artifacts/design-v2-friends-Friends--eebea-ns-preserve-data-boundaries-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-feedback-focus-green-artifacts/design-v2-friends-Friends--eebea-ns-preserve-data-boundaries-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-feedback-focus-green-artifacts/design-v2-friends-Friends--eebea-ns-preserve-data-boundaries-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-feedback-focus-green-artifacts/design-v2-friends-Friends--eebea-ns-preserve-data-boundaries-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('v2-friends-page').locator('v2-friends-feedback').getByRole('status')
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" locator('v2-friends-page').locator('v2-friends-feedback').getByRole('status') with timeout 5000ms
+      - waiting for locator('v2-friends-page').locator('v2-friends-feedback').getByRole('status')
+        14 × locator resolved to <section role="status" class="feedback" aria-busy="true" aria-live="polite" _ngcontent-ng-c3529466589="">…</section>
+           - unexpected value "inactive"
+
+
+      307 |     await expect(retry).toHaveCount(0);
+      308 |     focusSamples.push({state: 'retry-pending', focus: await focus()});
+    > 309 |     await expect(feedback.getByRole('status')).toBeFocused();
+          |                                                ^
+      310 |     fixture.releaseFriendsRead();
+      311 |     const request = panel.getByRole('region', {name: 'Friend request from Paulzgi', exact: true});
+      312 |     await expect(request).toBeVisible(); await expect(panel.locator('.friend-row')).toHaveCount(1);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:309:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-feedback-focus-green-artifacts/design-v2-friends-Friends--eebea-ns-preserve-data-boundaries-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-feedback-focus-green-artifacts/design-v2-friends-Friends--eebea-ns-preserve-data-boundaries-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-feedback-focus-green-artifacts/design-v2-friends-Friends--eebea-ns-preserve-data-boundaries-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-feedback-focus-green-artifacts/design-v2-friends-Friends--eebea-ns-preserve-data-boundaries-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [firefox-stats] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('v2-friends-page').locator('v2-friends-feedback').getByRole('status')
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" locator('v2-friends-page').locator('v2-friends-feedback').getByRole('status') with timeout 5000ms
+      - waiting for locator('v2-friends-page').locator('v2-friends-feedback').getByRole('status')
+        14 × locator resolved to <section role="status" class="feedback" aria-busy="true" aria-live="polite" _ngcontent-ng-c3529466589="">…</section>
+           - unexpected value "inactive"
+
+
+      307 |     await expect(retry).toHaveCount(0);
+      308 |     focusSamples.push({state: 'retry-pending', focus: await focus()});
+    > 309 |     await expect(feedback.getByRole('status')).toBeFocused();
+          |                                                ^
+      310 |     fixture.releaseFriendsRead();
+      311 |     const request = panel.getByRole('region', {name: 'Friend request from Paulzgi', exact: true});
+      312 |     await expect(request).toBeVisible(); await expect(panel.locator('.friend-row')).toHaveCount(1);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:309:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-feedback-focus-green-artifacts/design-v2-friends-Friends--eebea-ns-preserve-data-boundaries-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-feedback-focus-green-artifacts/design-v2-friends-Friends--eebea-ns-preserve-data-boundaries-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-feedback-focus-green-artifacts/design-v2-friends-Friends--eebea-ns-preserve-data-boundaries-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-feedback-focus-green-artifacts/design-v2-friends-Friends--eebea-ns-preserve-data-boundaries-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [webkit-stats] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('v2-friends-page').locator('v2-friends-feedback').getByRole('status')
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" locator('v2-friends-page').locator('v2-friends-feedback').getByRole('status') with timeout 5000ms
+      - waiting for locator('v2-friends-page').locator('v2-friends-feedback').getByRole('status')
+        14 × locator resolved to <section role="status" class="feedback" aria-busy="true" aria-live="polite" _ngcontent-ng-c3529466589="">…</section>
+           - unexpected value "inactive"
+
+
+      307 |     await expect(retry).toHaveCount(0);
+      308 |     focusSamples.push({state: 'retry-pending', focus: await focus()});
+    > 309 |     await expect(feedback.getByRole('status')).toBeFocused();
+          |                                                ^
+      310 |     fixture.releaseFriendsRead();
+      311 |     const request = panel.getByRole('region', {name: 'Friend request from Paulzgi', exact: true});
+      312 |     await expect(request).toBeVisible(); await expect(panel.locator('.friend-row')).toHaveCount(1);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:309:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-feedback-focus-green-artifacts/design-v2-friends-Friends--eebea-ns-preserve-data-boundaries-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-feedback-focus-green-artifacts/design-v2-friends-Friends--eebea-ns-preserve-data-boundaries-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-feedback-focus-green-artifacts/design-v2-friends-Friends--eebea-ns-preserve-data-boundaries-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-feedback-focus-green-artifacts/design-v2-friends-Friends--eebea-ns-preserve-data-boundaries-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [desktop] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries 
+    [mobile] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries 
+    [firefox-stats] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries 
+    [webkit-stats] › e2e/design-v2-friends.spec.ts:283:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries 

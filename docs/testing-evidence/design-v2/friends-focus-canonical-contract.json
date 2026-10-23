@@ -1,0 +1,28 @@
+{
+  "fileKey": "5v8ckmlbfhMDWwP5sTdSXd",
+  "pageId": "7:2",
+  "sessionId": "e32c96ec-90f7-4438-99d7-983245e01423",
+  "date": "2026-10-23",
+  "triggerEvidence": "friends-feedback-boundary-artifacts/design-v2-friends-Friends--eebea-ns-preserve-data-boundaries-desktop/friends-feedback-focus.json",
+  "mutatedNodeIds": [
+    "1008:32348"
+  ],
+  "id": "1008:32348",
+  "name": "Analytify/Friends feedback",
+  "before": "Friends request lifecycle feedback. Loading gates actions; refreshing preserves cached content; busy prevents duplicate intent. Load failures retry reads. Mutation timeouts are unconfirmed: reconcile and retry the same single-use request. Unavailable invites require a new link. Verified Spotify identity is required. Announce loading/busy politely and failures as alerts; reduced motion removes decorative transitions. Owner unavailable requires explicit creation, never an automatic second invitation. Accepted/Declined are request-owned confirmed outcomes; success never grants private-data access.",
+  "after": "Friends request lifecycle feedback. Loading gates actions; refreshing preserves cached content; busy prevents duplicate intent. Load failures retry reads. Mutation timeouts are unconfirmed: reconcile and retry the same single-use request. Unavailable invites require a new link. Verified Spotify identity is required. Announce loading/busy politely and failures as alerts; reduced motion removes decorative transitions. Owner unavailable requires explicit creation, never an automatic second invitation. Accepted/Declined are request-owned confirmed outcomes; success never grants private-data access.\n\nKeyboard focus recovery: After an explicit Retry, Create new invitation, View friends, or request decision, preserve the focused trigger while it remains usable. If that trigger is removed or becomes unavailable, move focus to the visible pending feedback region (programmatically focusable, outside the normal Tab sequence). Keep focus on that region through its error or confirmed-outcome state. If the focused region disappears after recovery, move focus to the stable page main region. Use the existing main-region focus behavior for route navigation. Apply this recovery only while focus is still owned by the initiating action or its recovery region; never reclaim focus after the person moves elsewhere. Initial loading and background refresh announce state without autofocus. Focus transfer must not cause an unexpected scroll or start another request.",
+  "variantIds": [
+    "1008:32308",
+    "1008:32312",
+    "1008:32316",
+    "1008:32320",
+    "1008:32330",
+    "1008:32340",
+    "1008:32344",
+    "1009:32386",
+    "1014:32392",
+    "1014:32415",
+    "1014:32438"
+  ],
+  "scope": "Description only; no visual, motion, layout, variable, reaction, or sidebar changes"
+}

@@ -1,0 +1,262 @@
+{
+  "date": "2026-10-23",
+  "checkpoint": "cb20aec",
+  "suite": "worker",
+  "scope": "Meaningful remaining-gap boundary tests; no production edits, exclusions, ignore annotations, gate changes, commits or deployments. Aim100percent where supported by real contracts;98percent minimum remains.",
+  "commands": [
+    {
+      "command": "node --test --test-isolation=none services/sync-service/worker-completion-boundaries.test.js",
+      "exit": 0,
+      "passed": 3,
+      "log": "docs/testing-evidence/design-v2/worker-completion-focused.log"
+    },
+    {
+      "command": "npm run test:coverage:worker",
+      "exit": 0,
+      "passed": 218,
+      "failed": 0,
+      "skipped": 0,
+      "log": "docs/testing-evidence/design-v2/worker-completion-coverage.log"
+    },
+    {
+      "command": "node_modules/.bin/eslint services/sync-service/worker-completion-boundaries.test.js",
+      "exit": 0,
+      "log": "docs/testing-evidence/design-v2/worker-completion-lint.log"
+    }
+  ],
+  "metrics": {
+    "lines": {
+      "total": 891,
+      "covered": 888,
+      "skipped": 0,
+      "pct": 99.66
+    },
+    "statements": {
+      "total": 1110,
+      "covered": 1107,
+      "skipped": 0,
+      "pct": 99.72
+    },
+    "functions": {
+      "total": 197,
+      "covered": 197,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 927,
+      "covered": 916,
+      "skipped": 0,
+      "pct": 98.81
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "productionSources": 17,
+  "newlyCoveredBranches": [
+    "Spotify URL missing-path authorityEnd<0 path rejects origin-only entity URLs.",
+    "Decoded null optional second ranking page retains primary data.",
+    "Decoded missing-items optional overflow page retains primary data."
+  ],
+  "sourceHashes": {
+    "services/sync-service/catalog-repository.js": "843eda3224caa7e4e01ee3c58651c0791cbeee2856dc2a2cd6b099ad0d85356e",
+    "services/sync-service/config.js": "b8a2413a59c3d5b3407d2aa63bfd950ecfdf90b00d824b09e83865a7b55e537d",
+    "services/sync-service/credential-store.js": "73801b8cdeee66f37d6513b8288162fbf5fa1163fb8b734ff3c1ba601dd73f24",
+    "services/sync-service/daily-pull.js": "73286f72d4a4f1630f70c8bd43f7d92d0138ef5b5c71a2ebc394a0017fdd44db",
+    "services/sync-service/date-utils.js": "6110f409f42edfe30ce15a98ec0eb851a0ddca16154242066617abda7484f451",
+    "services/sync-service/health-server.js": "dffeb1ad12ae1c0177de6cdfafe2a99561034b416ddf7a39e23dadb34e231c19",
+    "services/sync-service/index.js": "9b1b4cd14527bf10ea929d8c360b3aa220f3a73b2eba5b1760c105bed657d80d",
+    "services/sync-service/push-dispatcher.js": "b3ff320c7de61c19863dc3e26cc644f3bca11e5b5d32cef35e393a557d698543",
+    "services/sync-service/scheduler.js": "67aecdf66969c3136293942cd426f4830909e5bd52d6bcc523601e8b30d327dc",
+    "services/sync-service/spotify-client.js": "d0e935e2c5221a8563e076154ead95c83e2c74141d9a3c56127d0a4585f1541c",
+    "services/sync-service/spotify-url-validator.js": "a505545cb3c870705f7a556b4a009acb623c2eff2a32dedbfc03255b87849e11",
+    "services/sync-service/task-registry.js": "7a6e21a9ee1e1e5dc82a1b3db18ed8ba9a945fd4f94aba7b83075375d9f614cd",
+    "services/sync-service/tasks/history-task.js": "4c7407436abe288b9deb2af2dda47e20927f70b1721e5b8a0e6d001552778b03",
+    "services/sync-service/tasks/shared-playlists-task.js": "70ec79e304efc8baba7b622be1834548d8a75f71520297594910b5d7b1d7a10c",
+    "services/sync-service/tasks/song-league-playlists-task.js": "aa611c17298f4fc40f50958730fb97181b51cff738577b8578cf08a23e0f3ff0",
+    "services/sync-service/tasks/stats-task.js": "a2c69216c8a269b297f99b8c283adaec4fad8319673487b9cbd7aa6d1987896b",
+    "services/sync-service/worker-runtime-health.js": "3666f247f178ac84733dbd91c01a0be4a1d64cc793346c6a73d9f80ef4473f28"
+  },
+  "testHashes": {
+    "services/sync-service/worker-completion-boundaries.test.js": "e2d9c491d57fd1248bcc6f4c5d449425b31fa394c11240989420ba06e90bbad4"
+  },
+  "currentReportHashes": {
+    "coverage/worker/coverage-summary.json": "47bb7f057fb31dfae6f1a583020d9dd950df32e703e10d95c7d3b2ef7660925c",
+    "coverage/worker/coverage-final.json": "ff42b6bd0ce921a2e43747726520f15c28adf9833cb8c6a2e9a88d51a891435b",
+    "coverage/worker/source-inventory.json": "f7217896c38a695bdc45103d033866936133672661659ea079fc22a34e65dd70"
+  },
+  "retainedPreviousReportArchives": {
+    "docs/testing-evidence/design-v2/worker-completion-before-coverage-summary.json": "c6171b036d25f04fe75b3af3108ad1a261a68a05ea329a1b6a1c542d10708152",
+    "docs/testing-evidence/design-v2/worker-completion-before-coverage-final.json": "ef8a55d8ceb1c036cd508b1971c3d1d7ae865fe1bd20d571fae449f6e2b002aa",
+    "docs/testing-evidence/design-v2/worker-completion-before-source-inventory.json": "f232e63974f9de1139ae8cd080627295dc2c70e6183b7cf43f81d293535d2c9f"
+  },
+  "remainingUncovered": [
+    {
+      "path": "services/sync-service/catalog-repository.js",
+      "statements": [],
+      "branches": [
+        {
+          "line": 165,
+          "type": "binary-expr",
+          "counts": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "path": "services/sync-service/credential-store.js",
+      "statements": [],
+      "branches": [
+        {
+          "line": 153,
+          "type": "binary-expr",
+          "counts": [
+            6,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "path": "services/sync-service/scheduler.js",
+      "statements": [],
+      "branches": [
+        {
+          "line": 112,
+          "type": "binary-expr",
+          "counts": [
+            23,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "path": "services/sync-service/spotify-client.js",
+      "statements": [
+        {
+          "line": 97
+        }
+      ],
+      "branches": []
+    },
+    {
+      "path": "services/sync-service/spotify-url-validator.js",
+      "statements": [
+        {
+          "line": 18
+        },
+        {
+          "line": 21
+        }
+      ],
+      "branches": [
+        {
+          "line": 20,
+          "type": "if",
+          "counts": [
+            0,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "path": "services/sync-service/worker-runtime-health.js",
+      "statements": [],
+      "branches": [
+        {
+          "line": 7,
+          "type": "binary-expr",
+          "counts": [
+            2,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "path": "services/sync-service/tasks/shared-playlists-task.js",
+      "statements": [],
+      "branches": [
+        {
+          "line": 148,
+          "type": "binary-expr",
+          "counts": [
+            14,
+            0
+          ]
+        },
+        {
+          "line": 155,
+          "type": "binary-expr",
+          "counts": [
+            14,
+            0
+          ]
+        },
+        {
+          "line": 167,
+          "type": "binary-expr",
+          "counts": [
+            8,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "path": "services/sync-service/tasks/stats-task.js",
+      "statements": [],
+      "branches": [
+        {
+          "line": 89,
+          "type": "binary-expr",
+          "counts": [
+            45,
+            0
+          ]
+        },
+        {
+          "line": 141,
+          "type": "binary-expr",
+          "counts": [
+            28,
+            0
+          ]
+        },
+        {
+          "line": 143,
+          "type": "binary-expr",
+          "counts": [
+            43,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "100percent not achieved; remaining3statements and11branches are retained in denominator. See worker-completion-gap-audit.md for source/caller analysis.",
+    "Fresh worker report supersedes worker portion of backend-coverage-current-revalidation.json; that artifact remains historical pre-new-tests evidence. Edge remains unchanged.",
+    "New companion is auto-discovered by coverage runner and now registered by root in curated sync-service:check; see parentRegistrationProof for218PASS.",
+    "HTTP transport, catalog and database boundaries use deterministic synthetic fixtures; no real service data or notifications."
+  ],
+  "auditSha256": "8b58b36c2c17860b62096f400833512d8b409a1d6f0c0360486af683fc2a17c9",
+  "parentRegistrationProof": {
+    "packageJsonSha256": "47194015a65ec830a22a6b7b8ecd67889dc6ed82abec1e86cb97291927e72e6f",
+    "entrypoint": "sync-service:check",
+    "registeredCompanion": "services/sync-service/worker-completion-boundaries.test.js",
+    "parentCommand": "npm run sync-service:check",
+    "parentResult": "218 passed, 0 failed, 0 skipped",
+    "parentLog": "docs/testing-evidence/design-v2/worker-completion-curated.log",
+    "parentLogSha256": "938eae418bb3e822db1707ee9a2fb9445ce263ed0a122ff2e30af668e6baaaa8",
+    "verification": "Read-only registration/log inspection; no rerun by this agent."
+  }
+}

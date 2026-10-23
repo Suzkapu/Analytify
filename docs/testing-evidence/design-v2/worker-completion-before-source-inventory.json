@@ -1,0 +1,95 @@
+{
+  "sources": [
+    "services/sync-service/catalog-repository.js",
+    "services/sync-service/config.js",
+    "services/sync-service/credential-store.js",
+    "services/sync-service/daily-pull.js",
+    "services/sync-service/date-utils.js",
+    "services/sync-service/health-server.js",
+    "services/sync-service/index.js",
+    "services/sync-service/push-dispatcher.js",
+    "services/sync-service/scheduler.js",
+    "services/sync-service/spotify-client.js",
+    "services/sync-service/spotify-url-validator.js",
+    "services/sync-service/task-registry.js",
+    "services/sync-service/tasks/history-task.js",
+    "services/sync-service/tasks/shared-playlists-task.js",
+    "services/sync-service/tasks/song-league-playlists-task.js",
+    "services/sync-service/tasks/stats-task.js",
+    "services/sync-service/worker-runtime-health.js"
+  ],
+  "exclusions": [
+    {
+      "path": "services/sync-service/catalog-repository.test.js",
+      "reason": "test source"
+    },
+    {
+      "path": "services/sync-service/config.test.js",
+      "reason": "test source"
+    },
+    {
+      "path": "services/sync-service/credential-store.test.js",
+      "reason": "test source"
+    },
+    {
+      "path": "services/sync-service/date-utils.test.js",
+      "reason": "test source"
+    },
+    {
+      "path": "services/sync-service/health-server.test.js",
+      "reason": "test source"
+    },
+    {
+      "path": "services/sync-service/index.test.js",
+      "reason": "test source"
+    },
+    {
+      "path": "services/sync-service/push-dispatcher.test.js",
+      "reason": "test source"
+    },
+    {
+      "path": "services/sync-service/scheduler-boundaries.test.js",
+      "reason": "test source"
+    },
+    {
+      "path": "services/sync-service/scheduler.test.js",
+      "reason": "test source"
+    },
+    {
+      "path": "services/sync-service/spotify-client.test.js",
+      "reason": "test source"
+    },
+    {
+      "path": "services/sync-service/spotify-url-validator.test.js",
+      "reason": "test source"
+    },
+    {
+      "path": "services/sync-service/task-registry.test.js",
+      "reason": "test source"
+    },
+    {
+      "path": "services/sync-service/tasks/history-task.test.js",
+      "reason": "test source"
+    },
+    {
+      "path": "services/sync-service/tasks/shared-playlists-boundaries.test.js",
+      "reason": "test source"
+    },
+    {
+      "path": "services/sync-service/tasks/shared-playlists-task.test.js",
+      "reason": "test source"
+    },
+    {
+      "path": "services/sync-service/tasks/song-league-playlists-task.test.js",
+      "reason": "test source"
+    },
+    {
+      "path": "services/sync-service/tasks/stats-task.test.js",
+      "reason": "test source"
+    },
+    {
+      "path": "services/sync-service/worker-runtime-health.test.js",
+      "reason": "test source"
+    }
+  ]
+}

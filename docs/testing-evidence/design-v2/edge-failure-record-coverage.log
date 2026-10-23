@@ -1,0 +1,145 @@
+npm notice run spoti-front@0.0.0 test:coverage:edge
+npm notice run node scripts/run-application-coverage.mjs edge && node scripts/check-application-coverage-inventory.mjs edge --final
+Check supabase/functions/song-league-playlist-sync/failure-record-boundary.test.ts
+Check supabase/functions/song-league-playlist-sync/handler.test.ts
+Check supabase/functions/song-league-playlist-sync/recovery.test.ts
+Check supabase/functions/song-league-notifications/delivery-state.test.ts
+Check supabase/functions/song-league-notifications/handler.test.ts
+Check supabase/functions/song-league-notifications/push-endpoint.test.ts
+Check supabase/functions/song-league-notifications/web-push.test.ts
+Check supabase/functions/spotify-credentials/handler-profile.test.ts
+Check supabase/functions/spotify-credentials/handler-recovery.test.ts
+Check supabase/functions/spotify-credentials/personal-recovery.test.ts
+Check supabase/functions/spotify-credentials/profile-verification.test.ts
+Check supabase/functions/_shared/bounded-fetch.test.ts
+Check supabase/functions/_shared/handler-boundaries.test.ts
+Check supabase/functions/_shared/handler-fixture.test.ts
+Check supabase/functions/_shared/request-security.test.ts
+Check supabase/functions/_shared/spotify-credential-crypto.test.ts
+running 2 tests from ./supabase/functions/song-league-playlist-sync/failure-record-boundary.test.ts
+League sync preserves the primary member failure and reports unavailable failure persistence (postgrest-error) ... ok (79ms)
+League sync preserves the primary member failure and reports unavailable failure persistence (transport-error) ... ok (5ms)
+running 13 tests from ./supabase/functions/song-league-playlist-sync/handler.test.ts
+playlist synchronization refreshes credentials, writes private metadata and preserves every track in batches ... ok (78ms)
+synced revisions skip Spotify and stale round/window/error state forces a refresh ... ok (10ms)
+ordinary callers update only their own existing or explicitly requested playlist; workers can target one member ... ok (13ms)
+encrypted hosted and personal credentials are decrypted, rotated and migrated without exposing plaintext ... ok (9ms)
+playlist recovery uses only owned exact markers and creates a destination only when no reusable playlist exists ... ok (12ms)
+deleted Spotify destinations are recreated once while other errors remain recoverable failures ... ok (2ms)
+source revision races rerun against the latest payload with at most three passes ... ok (8ms)
+lost leases, stale reservations and completion races report per-member failures and always release the league lease ... ok (14ms)
+query and persistence failures are reported at the correct global or member boundary ... ok (25ms)
+one failed member does not prevent another member from synchronizing ... ok (2ms)
+empty member, credential and mapping responses remain bounded and do not invoke Spotify for missing targets ... ok (9ms)
+personal credentials without a client identifier and malformed token responses fail safely per member ... ok (9ms)
+a disappeared latest payload revision requests another bounded synchronization pass ... ok (3ms)
+running 5 tests from ./supabase/functions/song-league-playlist-sync/recovery.test.ts
+the recovery marker survives playlist description updates ... ok (471µs)
+recovery accepts only a marker match owned by the connected Spotify user ... ok (138µs)
+recovery requires the exact operation marker ... ok (105µs)
+playlist replacement retains every track in Spotify-sized batches ... ok (182µs)
+recovery handles unavailable pages and missing destination URLs without borrowing another user playlist ... ok (620µs)
+running 4 tests from ./supabase/functions/song-league-notifications/delivery-state.test.ts
+push delivery marks every delivery type sent only after the transport completes ... ok (1ms)
+expired subscriptions are removed without falsely marking a delivery sent or retryable ... ok (193µs)
+push errors retry below the attempt limit, exhaust at the boundary and truncate private transport details ... ok (577µs)
+sent, retry and subscription cleanup persistence failures propagate to the caller ... ok (749µs)
+running 4 tests from ./supabase/functions/song-league-notifications/handler.test.ts
+admin notification tests require an authenticated administrator and persist expired-device removal ... ok (123ms)
+worker delivery processes all three queue types, totals partial failure and retires expired subscriptions ... ok (14ms)
+admin notification batches preserve successful devices when another subscription has expired ... ok (8ms)
+notification worker treats null claim data as no deliveries ... ok (1ms)
+running 2 tests from ./supabase/functions/song-league-notifications/push-endpoint.test.ts
+accepts supported browser push providers ... ok (554µs)
+rejects SSRF, lookalike, credential, port, and redirect-style endpoints ... ok (760µs)
+running 3 tests from ./supabase/functions/song-league-notifications/web-push.test.ts
+web push sends a verifiable VAPID JWT and payload decryptable by the subscribed browser only ... ok (13ms)
+web push rejects invalid destinations and signing keys without opening transport ... ok (2ms)
+web push consumes no response payload and returns classified HTTP failures, bounded response errors and cancellation recovery ... ok (14ms)
+running 6 tests from ./supabase/functions/spotify-credentials/handler-profile.test.ts
+verified profile writes server identity, sanitized display and safe image; anonymous profiles keep their cloud alias ... ok (86ms)
+profile image allowlist and missing display data preserve the existing profile or use safe defaults ... ok (27ms)
+profile binds requested identity, access credential, refresh credential and existing registration to the same Spotify account ... ok (8ms)
+credential storage encrypts rotated and retained refresh credentials and clears legacy plaintext only after encrypted persistence ... ok (12ms)
+profile and credential persistence failures never report success or leak internal details ... ok (17ms)
+credential verification handles malformed Spotify JSON and missing client configuration without saving credentials ... ok (6ms)
+running 4 tests from ./supabase/functions/spotify-credentials/handler-recovery.test.ts
+personal recovery refuses malformed inputs and independently verified mismatched accounts without identity writes ... ok (86ms)
+personal recovery preserves existing identity or promotes an anonymous one and returns only the fixture login hash ... ok (15ms)
+recovery refreshes an existing schedule with encrypted tokens while preserving profile defaults ... ok (6ms)
+recovery surfaces every durable failure without claiming completion or leaking private backend details ... ok (21ms)
+running 3 tests from ./supabase/functions/spotify-credentials/personal-recovery.test.ts
+personal recovery accepts only bounded Spotify account identifiers ... ok (533µs)
+personal recovery aliases are deterministic and reveal no Spotify ID ... ok (683µs)
+personal recovery requires both token paths to verify the claimed account ... ok (174µs)
+running 3 tests from ./supabase/functions/spotify-credentials/profile-verification.test.ts
+matches only Spotify identities returned by the verified profile ... ok (1ms)
+allows a verified anonymous personal-app identity alongside a hosted profile ... ok (68µs)
+allows an unverified placeholder to be replaced after server verification ... ok (66µs)
+running 7 tests from ./supabase/functions/_shared/bounded-fetch.test.ts
+boundedFetch honors Retry-After before retrying ... ok (8ms)
+boundedFetch never retries an unsafe request unless explicitly allowed ... ok (157µs)
+boundedFetch classifies an expired deadline ... ok (7ms)
+boundedFetch handles absent, invalid, negative and date Retry-After values within its elapsed budget ... ok (689µs)
+boundedFetch cancellation propagates before transport and while the transport is pending ... ok (657µs)
+boundedFetch recovers network failures, exhausts retry budgets and preserves typed errors ... ok (692µs)
+boundedFetch supports its default sleep and zero-delay server-directed recovery ... ok (2ms)
+running 11 tests from ./supabase/functions/_shared/handler-boundaries.test.ts
+credentials handler rejects invalid HTTP, origins and oversized requests before business writes ... ok (78ms)
+sync handler rejects invalid HTTP, origins and oversized requests before business writes ... ok (5ms)
+notifications handler rejects invalid HTTP, origins and oversized requests before business writes ... ok (3ms)
+credentials resolution is bounded and does not disclose user credentials ... ok (2ms)
+credential profile permissions reject wrong sessions before Spotify requests ... ok (11ms)
+credential removal clears only the session profile and reports partial failure ... ok (3ms)
+account deletion is restricted to anonymous owners and exposes backend failures safely ... ok (4ms)
+sync validates inputs and rejects fan-out or cross-user requests from ordinary callers ... ok (5ms)
+sync refuses a busy lease and releases an acquired lease when the league disappears ... ok (1ms)
+notifications validate actions, admin permissions and trusted-worker schedules ... ok (6ms)
+notification worker drains an empty queue with explicit or current time and propagates claim failures ... ok (4ms)
+running 0 tests from ./supabase/functions/_shared/handler-fixture.test.ts
+running 12 tests from ./supabase/functions/_shared/request-security.test.ts
+CORS reflects only an explicitly allowed origin ... ok (7ms)
+preflight rejects unsupported methods and headers ... ok (390µs)
+streaming JSON parsing rejects undeclared oversized bodies ... ok (1ms)
+JSON parsing rejects arrays and malformed bodies with a stable error ... ok (289µs)
+bearer tokens have a strict size and syntax bound ... ok (1ms)
+worker access requires the exact service secret, not an unsigned role claim ... ok (163µs)
+request bodies reject compressed or ambiguous media types before parsing ... ok (259µs)
+durable limits count calls and expose only a bounded retry delay ... ok (771µs)
+public failures contain correlation IDs but not internal details ... ok (2ms)
+preflight allows only supported headers and returns stable public retry metadata ... ok (710µs)
+JSON bodies support empty and chunked requests while rejecting invalid lengths, encoding and malformed data ... ok (1ms)
+durable limits fail closed on missing hash configuration, storage failure and empty responses ... ok (1ms)
+running 4 tests from ./supabase/functions/_shared/spotify-credential-crypto.test.ts
+credential key ring reads mixed versions and writes only the active version ... ok (1ms)
+credential decryption fails closed for retired keys and corrupt ciphertext ... ok (648µs)
+malformed key rings and unavailable write keys fail before credential encryption ... ok (1ms)
+versioned environment key rings can rotate without retaining the legacy single-key setting ... ok (144µs)
+
+ok | 83 passed | 0 failed (2s)
+
+| File                                        | Branch % | Function % | Line % |
+| ------------------------------------------- | -------- | ---------- | ------ |
+| _shared/bounded-fetch.ts                    |    100.0 |      100.0 |  100.0 |
+| _shared/request-security.ts                 |    100.0 |      100.0 |  100.0 |
+| _shared/spotify-credential-crypto.ts        |    100.0 |      100.0 |  100.0 |
+| song-league-notifications/delivery-state.ts |    100.0 |      100.0 |  100.0 |
+| song-league-notifications/index.ts          |    100.0 |      100.0 |  100.0 |
+| song-league-notifications/push-endpoint.ts  |    100.0 |      100.0 |  100.0 |
+| song-league-notifications/web-push.ts       |    100.0 |      100.0 |  100.0 |
+| song-league-playlist-sync/index.ts          |     99.7 |      100.0 |   99.8 |
+| song-league-playlist-sync/recovery.ts       |    100.0 |      100.0 |  100.0 |
+| spotify-credentials/index.ts                |     99.4 |      100.0 |   99.7 |
+| spotify-credentials/personal-recovery.ts    |    100.0 |      100.0 |  100.0 |
+| spotify-credentials/profile-verification.ts |    100.0 |      100.0 |  100.0 |
+| All files                                   |     99.7 |      100.0 |   99.9 |
+Lcov coverage report has been generated at file:///mnt/Storage/ProgrammingProjects/Analytify/coverage/edge/raw-3pvmFg/lcov.info
+HTML coverage report has been generated at file:///mnt/Storage/ProgrammingProjects/Analytify/coverage/edge/raw-3pvmFg/html/index.html
+
+=============================== Coverage summary ===============================
+Statements   : 99.88% ( 902/903 )
+Branches     : 99.74% ( 797/799 )
+Functions    : 100% ( 113/113 )
+Lines        : 100% ( 763/763 )
+================================================================================
+edge: all 12 production sources included; every metric meets 98%.

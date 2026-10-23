@@ -1,0 +1,51 @@
+{
+  "review": "Root viewed both labelled boards and fresh Ready/Figma semantic metadata; empty compared existing full-bound canonical exports confirmed unchanged by fresh read. Approved only Ready and empty desktop-width captures for both pointer projects. Add remains pending exact icon paint audit. No automatic snapshot updates.",
+  "references": [
+    "friends-modern-canonical-ready-desktop.png",
+    "friends-modern-canonical-review.md",
+    "friends-empty-canonical-desktop-after-full.png"
+  ],
+  "records": [
+    {
+      "state": "ready",
+      "viewport": "desktop1440",
+      "project": "desktop",
+      "candidate": "docs/testing-evidence/design-v2/friends-modern-renderer-red-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-desktop/candidate-friends-ready-desktop.png",
+      "baseline": "e2e/design-v2-friends.spec.ts-snapshots/friends-ready-desktop-desktop-linux.png",
+      "previousSha256": "1882ba4c73328c9508c9b6eb39fa9dacc359e1e695d0182c818bc000b8698512",
+      "approvedSha256": "07c432b51351d1c32f621c6497063bf6786172555802daffc93271df4259f6fb",
+      "approvalStatus": "withdrawn-pending-icon-fix"
+    },
+    {
+      "state": "ready",
+      "viewport": "desktop1440",
+      "project": "mobile",
+      "candidate": "docs/testing-evidence/design-v2/friends-modern-renderer-red-artifacts/design-v2-friends-Friends--42478-rd-geometry-during-resizing-mobile/candidate-friends-ready-desktop.png",
+      "baseline": "e2e/design-v2-friends.spec.ts-snapshots/friends-ready-desktop-mobile-linux.png",
+      "previousSha256": "b76d63097523c99d794b4c524f26a3f94b5f3ef0826338a1faa2905f334ac37d",
+      "approvedSha256": "d4b2aa48579d345aba6e0ccda6c322ef1ed84b8ea9fe2ea6e4c788f72c620ef9",
+      "approvalStatus": "withdrawn-pending-icon-fix"
+    },
+    {
+      "state": "empty",
+      "viewport": "desktop1440",
+      "project": "desktop",
+      "candidate": "docs/testing-evidence/design-v2/friends-modern-renderer-red-artifacts/design-v2-friends-Friends--e45a4-only-an-explicit-invitation-desktop/candidate-friends-empty-desktop.png",
+      "baseline": "e2e/design-v2-friends.spec.ts-snapshots/friends-empty-desktop-desktop-linux.png",
+      "previousSha256": "07c4bd19a58c6d89e876b0fa08542f0cbb7440fdeaec81a06e7f1c3f238c6af9",
+      "approvedSha256": "6ac8803fd19dd4505fce01e0c22df3212881981114ef5f8fffe5936241a9f3b5",
+      "approvalStatus": "approved"
+    },
+    {
+      "state": "empty",
+      "viewport": "desktop1440",
+      "project": "mobile",
+      "candidate": "docs/testing-evidence/design-v2/friends-modern-renderer-red-artifacts/design-v2-friends-Friends--e45a4-only-an-explicit-invitation-mobile/candidate-friends-empty-desktop.png",
+      "baseline": "e2e/design-v2-friends.spec.ts-snapshots/friends-empty-desktop-mobile-linux.png",
+      "previousSha256": "07c4bd19a58c6d89e876b0fa08542f0cbb7440fdeaec81a06e7f1c3f238c6af9",
+      "approvedSha256": "6ac8803fd19dd4505fce01e0c22df3212881981114ef5f8fffe5936241a9f3b5",
+      "approvalStatus": "approved"
+    }
+  ],
+  "correction": "Ready approval withdrawn after exact canonical paint audit identified white Add friend plus instead of muted. Empty desktop approvals retained; Ready images must be recaptured/reviewed after real UI correction."
+}

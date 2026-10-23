@@ -1,0 +1,1024 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-23",
+  "checkpoint": "cb20aec",
+  "branch": "codex/design-v2",
+  "scope": "Read-only current-worktree revalidation of retained 15 October worker and edge coverage. Hash computations and inventory/report comparisons only; no tests or coverage execution.",
+  "authoritativeArtifacts": {
+    "docs/testing-evidence/design-v2/worker-parallel-manifest.json": {
+      "sha256": "6ac026277cf0c24214ae5414d3fe0265ce37966d463af4acedd893e756b45875"
+    },
+    "docs/testing-evidence/design-v2/edge-parallel-evidence.json": {
+      "sha256": "9f0d3659143c008b9ff02690baacf8506e0ffdfcc713be0a3b3c0d4d9a8c13de"
+    },
+    "docs/testing-evidence/design-v2/friends-stats-final-ci-source-snapshot.json": {
+      "sha256": "fd9e82665f62bc0a6815d71c2d8f2c54c85d6ed058450753667b0128f425fc50"
+    }
+  },
+  "hashChecks": {
+    "workerProduction": {
+      "services/sync-service/catalog-repository.js": {
+        "expectedSha256": "843eda3224caa7e4e01ee3c58651c0791cbeee2856dc2a2cd6b099ad0d85356e",
+        "actualSha256": "843eda3224caa7e4e01ee3c58651c0791cbeee2856dc2a2cd6b099ad0d85356e",
+        "matches": true
+      },
+      "services/sync-service/config.js": {
+        "expectedSha256": "b8a2413a59c3d5b3407d2aa63bfd950ecfdf90b00d824b09e83865a7b55e537d",
+        "actualSha256": "b8a2413a59c3d5b3407d2aa63bfd950ecfdf90b00d824b09e83865a7b55e537d",
+        "matches": true
+      },
+      "services/sync-service/credential-store.js": {
+        "expectedSha256": "73801b8cdeee66f37d6513b8288162fbf5fa1163fb8b734ff3c1ba601dd73f24",
+        "actualSha256": "73801b8cdeee66f37d6513b8288162fbf5fa1163fb8b734ff3c1ba601dd73f24",
+        "matches": true
+      },
+      "services/sync-service/daily-pull.js": {
+        "expectedSha256": "73286f72d4a4f1630f70c8bd43f7d92d0138ef5b5c71a2ebc394a0017fdd44db",
+        "actualSha256": "73286f72d4a4f1630f70c8bd43f7d92d0138ef5b5c71a2ebc394a0017fdd44db",
+        "matches": true
+      },
+      "services/sync-service/date-utils.js": {
+        "expectedSha256": "6110f409f42edfe30ce15a98ec0eb851a0ddca16154242066617abda7484f451",
+        "actualSha256": "6110f409f42edfe30ce15a98ec0eb851a0ddca16154242066617abda7484f451",
+        "matches": true
+      },
+      "services/sync-service/health-server.js": {
+        "expectedSha256": "dffeb1ad12ae1c0177de6cdfafe2a99561034b416ddf7a39e23dadb34e231c19",
+        "actualSha256": "dffeb1ad12ae1c0177de6cdfafe2a99561034b416ddf7a39e23dadb34e231c19",
+        "matches": true
+      },
+      "services/sync-service/index.js": {
+        "expectedSha256": "9b1b4cd14527bf10ea929d8c360b3aa220f3a73b2eba5b1760c105bed657d80d",
+        "actualSha256": "9b1b4cd14527bf10ea929d8c360b3aa220f3a73b2eba5b1760c105bed657d80d",
+        "matches": true
+      },
+      "services/sync-service/push-dispatcher.js": {
+        "expectedSha256": "b3ff320c7de61c19863dc3e26cc644f3bca11e5b5d32cef35e393a557d698543",
+        "actualSha256": "b3ff320c7de61c19863dc3e26cc644f3bca11e5b5d32cef35e393a557d698543",
+        "matches": true
+      },
+      "services/sync-service/scheduler.js": {
+        "expectedSha256": "67aecdf66969c3136293942cd426f4830909e5bd52d6bcc523601e8b30d327dc",
+        "actualSha256": "67aecdf66969c3136293942cd426f4830909e5bd52d6bcc523601e8b30d327dc",
+        "matches": true
+      },
+      "services/sync-service/spotify-client.js": {
+        "expectedSha256": "d0e935e2c5221a8563e076154ead95c83e2c74141d9a3c56127d0a4585f1541c",
+        "actualSha256": "d0e935e2c5221a8563e076154ead95c83e2c74141d9a3c56127d0a4585f1541c",
+        "matches": true
+      },
+      "services/sync-service/spotify-url-validator.js": {
+        "expectedSha256": "a505545cb3c870705f7a556b4a009acb623c2eff2a32dedbfc03255b87849e11",
+        "actualSha256": "a505545cb3c870705f7a556b4a009acb623c2eff2a32dedbfc03255b87849e11",
+        "matches": true
+      },
+      "services/sync-service/task-registry.js": {
+        "expectedSha256": "7a6e21a9ee1e1e5dc82a1b3db18ed8ba9a945fd4f94aba7b83075375d9f614cd",
+        "actualSha256": "7a6e21a9ee1e1e5dc82a1b3db18ed8ba9a945fd4f94aba7b83075375d9f614cd",
+        "matches": true
+      },
+      "services/sync-service/tasks/history-task.js": {
+        "expectedSha256": "4c7407436abe288b9deb2af2dda47e20927f70b1721e5b8a0e6d001552778b03",
+        "actualSha256": "4c7407436abe288b9deb2af2dda47e20927f70b1721e5b8a0e6d001552778b03",
+        "matches": true
+      },
+      "services/sync-service/tasks/shared-playlists-task.js": {
+        "expectedSha256": "70ec79e304efc8baba7b622be1834548d8a75f71520297594910b5d7b1d7a10c",
+        "actualSha256": "70ec79e304efc8baba7b622be1834548d8a75f71520297594910b5d7b1d7a10c",
+        "matches": true
+      },
+      "services/sync-service/tasks/song-league-playlists-task.js": {
+        "expectedSha256": "aa611c17298f4fc40f50958730fb97181b51cff738577b8578cf08a23e0f3ff0",
+        "actualSha256": "aa611c17298f4fc40f50958730fb97181b51cff738577b8578cf08a23e0f3ff0",
+        "matches": true
+      },
+      "services/sync-service/tasks/stats-task.js": {
+        "expectedSha256": "a2c69216c8a269b297f99b8c283adaec4fad8319673487b9cbd7aa6d1987896b",
+        "actualSha256": "a2c69216c8a269b297f99b8c283adaec4fad8319673487b9cbd7aa6d1987896b",
+        "matches": true
+      },
+      "services/sync-service/worker-runtime-health.js": {
+        "expectedSha256": "3666f247f178ac84733dbd91c01a0be4a1d64cc793346c6a73d9f80ef4473f28",
+        "actualSha256": "3666f247f178ac84733dbd91c01a0be4a1d64cc793346c6a73d9f80ef4473f28",
+        "matches": true
+      }
+    },
+    "workerTestsAndHelper": {
+      "services/sync-service/catalog-repository.test.js": {
+        "expectedSha256": "bd3582417612148dec1e81ce3e3fe4499b82a6b08e07ad2eb5521fd5d4f0b502",
+        "actualSha256": "bd3582417612148dec1e81ce3e3fe4499b82a6b08e07ad2eb5521fd5d4f0b502",
+        "matches": true
+      },
+      "services/sync-service/credential-store.test.js": {
+        "expectedSha256": "6faa9a96aad9cf7d96ab89a612b776e4466c88b4802553546a5df9ca0e90139a",
+        "actualSha256": "6faa9a96aad9cf7d96ab89a612b776e4466c88b4802553546a5df9ca0e90139a",
+        "matches": true
+      },
+      "services/sync-service/health-server.test.js": {
+        "expectedSha256": "3b705424026fdb66f6f5be291e628a9bc658d3fcb4ec15ecc10564b38194a879",
+        "actualSha256": "3b705424026fdb66f6f5be291e628a9bc658d3fcb4ec15ecc10564b38194a879",
+        "matches": true
+      },
+      "services/sync-service/push-dispatcher.test.js": {
+        "expectedSha256": "446ad363936f9144279a3fedbd375587a36628491061c89643a9f47cb518f6b2",
+        "actualSha256": "446ad363936f9144279a3fedbd375587a36628491061c89643a9f47cb518f6b2",
+        "matches": true
+      },
+      "services/sync-service/spotify-client.test.js": {
+        "expectedSha256": "33ef6b88c8d5098a4c09ed398e671649789fff74a0bdfc6b5cd7b8d65fd508ec",
+        "actualSha256": "33ef6b88c8d5098a4c09ed398e671649789fff74a0bdfc6b5cd7b8d65fd508ec",
+        "matches": true
+      },
+      "services/sync-service/task-registry.test.js": {
+        "expectedSha256": "f8dfc1282920d327cf19c351707aadb1d123102836fc793bd0ef2a1fa7dddf21",
+        "actualSha256": "f8dfc1282920d327cf19c351707aadb1d123102836fc793bd0ef2a1fa7dddf21",
+        "matches": true
+      },
+      "services/sync-service/tasks/history-task.test.js": {
+        "expectedSha256": "5c18c914076ff865264aa769b8abe3ab9569c2bc6fa90909f8a8a868fccb87c6",
+        "actualSha256": "5c18c914076ff865264aa769b8abe3ab9569c2bc6fa90909f8a8a868fccb87c6",
+        "matches": true
+      },
+      "services/sync-service/tasks/song-league-playlists-task.test.js": {
+        "expectedSha256": "ab6d7dd981421acb0c094907fbd9e2a993d0ca5a238cfa45c5560f838a9a667a",
+        "actualSha256": "ab6d7dd981421acb0c094907fbd9e2a993d0ca5a238cfa45c5560f838a9a667a",
+        "matches": true
+      },
+      "services/sync-service/worker-runtime-health.test.js": {
+        "expectedSha256": "1581a06c40776086ab2c16ca7cbf0a6d7421cef62b37242bdf22121cf9346d8d",
+        "actualSha256": "1581a06c40776086ab2c16ca7cbf0a6d7421cef62b37242bdf22121cf9346d8d",
+        "matches": true
+      },
+      "services/sync-service/config.test.js": {
+        "expectedSha256": "05a1149e1b11a7ae17b9397cd6e6771d9aba1a41576294ac44015db33ca97d6d",
+        "actualSha256": "05a1149e1b11a7ae17b9397cd6e6771d9aba1a41576294ac44015db33ca97d6d",
+        "matches": true
+      },
+      "services/sync-service/index.test.js": {
+        "expectedSha256": "3e9d6dafa022792fb623500026ac1ab15f29f09f199095fd81f06cd98849c32b",
+        "actualSha256": "3e9d6dafa022792fb623500026ac1ab15f29f09f199095fd81f06cd98849c32b",
+        "matches": true
+      },
+      "services/sync-service/scheduler-boundaries.test.js": {
+        "expectedSha256": "0297d2014f689b133605a9374c99375229192052c52fd7f30508b67238a41f8c",
+        "actualSha256": "0297d2014f689b133605a9374c99375229192052c52fd7f30508b67238a41f8c",
+        "matches": true
+      },
+      "services/sync-service/tasks/shared-playlists-boundaries.test.js": {
+        "expectedSha256": "d943d9e36f1d08a0868dce436dee4c90aea905ea8e6b74339f0af1da80f62c25",
+        "actualSha256": "d943d9e36f1d08a0868dce436dee4c90aea905ea8e6b74339f0af1da80f62c25",
+        "matches": true
+      },
+      "services/sync-service/test-support/load-isolated.cjs": {
+        "expectedSha256": "ca11d62d049e780b026de1e0a16316f696623df10ead349f819a3ca171539534",
+        "actualSha256": "ca11d62d049e780b026de1e0a16316f696623df10ead349f819a3ca171539534",
+        "matches": true
+      }
+    },
+    "workerReports": {
+      "coverage/worker/coverage-summary.json": {
+        "expectedSha256": "c6171b036d25f04fe75b3af3108ad1a261a68a05ea329a1b6a1c542d10708152",
+        "actualSha256": "c6171b036d25f04fe75b3af3108ad1a261a68a05ea329a1b6a1c542d10708152",
+        "matches": true
+      },
+      "coverage/worker/coverage-final.json": {
+        "expectedSha256": "ef8a55d8ceb1c036cd508b1971c3d1d7ae865fe1bd20d571fae449f6e2b002aa",
+        "actualSha256": "ef8a55d8ceb1c036cd508b1971c3d1d7ae865fe1bd20d571fae449f6e2b002aa",
+        "matches": true
+      },
+      "coverage/worker/source-inventory.json": {
+        "expectedSha256": "f232e63974f9de1139ae8cd080627295dc2c70e6183b7cf43f81d293535d2c9f",
+        "actualSha256": "f232e63974f9de1139ae8cd080627295dc2c70e6183b7cf43f81d293535d2c9f",
+        "matches": true
+      }
+    },
+    "edgeProduction": {
+      "supabase/functions/_shared/bounded-fetch.ts": {
+        "expectedSha256": "6661fed0ffce6cfd42afed9fe90ffe047d748dd485fbb973cd19ab8b13300d2e",
+        "actualSha256": "6661fed0ffce6cfd42afed9fe90ffe047d748dd485fbb973cd19ab8b13300d2e",
+        "matches": true
+      },
+      "supabase/functions/_shared/request-security.ts": {
+        "expectedSha256": "d03bb7fe8206ea328984aa811d2402ea98a1f01a35254bf2f411936a428039f2",
+        "actualSha256": "d03bb7fe8206ea328984aa811d2402ea98a1f01a35254bf2f411936a428039f2",
+        "matches": true
+      },
+      "supabase/functions/_shared/spotify-credential-crypto.ts": {
+        "expectedSha256": "2285f5e80532a9c58c1bf4938cbbe3060da64969e927559303903f320edc9417",
+        "actualSha256": "2285f5e80532a9c58c1bf4938cbbe3060da64969e927559303903f320edc9417",
+        "matches": true
+      },
+      "supabase/functions/song-league-notifications/delivery-state.ts": {
+        "expectedSha256": "d406a45b0296b98ca7593be94cb78b17f40f97345440e5ff963bd0074308421c",
+        "actualSha256": "d406a45b0296b98ca7593be94cb78b17f40f97345440e5ff963bd0074308421c",
+        "matches": true
+      },
+      "supabase/functions/song-league-notifications/index.ts": {
+        "expectedSha256": "3a3961835049e2de6471d2a96b95ed149f81c0475739e5dd1004f9a43c442ab9",
+        "actualSha256": "3a3961835049e2de6471d2a96b95ed149f81c0475739e5dd1004f9a43c442ab9",
+        "matches": true
+      },
+      "supabase/functions/song-league-notifications/push-endpoint.ts": {
+        "expectedSha256": "7c5995c8d5f842b75e8bedb84696d182a1ded7af36b9702e8efd44feea7cebda",
+        "actualSha256": "7c5995c8d5f842b75e8bedb84696d182a1ded7af36b9702e8efd44feea7cebda",
+        "matches": true
+      },
+      "supabase/functions/song-league-notifications/web-push.ts": {
+        "expectedSha256": "ac50a53d5ebdce3728a1726a74ecc372709e3d7cdd1b56bf6bd845a4e06b4c0e",
+        "actualSha256": "ac50a53d5ebdce3728a1726a74ecc372709e3d7cdd1b56bf6bd845a4e06b4c0e",
+        "matches": true
+      },
+      "supabase/functions/song-league-playlist-sync/index.ts": {
+        "expectedSha256": "8a3bf546a0a1880171559075626fd9436ee7977bbcca8e40e5fe240aa62f6b28",
+        "actualSha256": "8a3bf546a0a1880171559075626fd9436ee7977bbcca8e40e5fe240aa62f6b28",
+        "matches": true
+      },
+      "supabase/functions/song-league-playlist-sync/recovery.ts": {
+        "expectedSha256": "4f105ee8919c5132978210af2c6e71fe7d638e2c0bbe5b7ca795b890a04c0175",
+        "actualSha256": "4f105ee8919c5132978210af2c6e71fe7d638e2c0bbe5b7ca795b890a04c0175",
+        "matches": true
+      },
+      "supabase/functions/spotify-credentials/index.ts": {
+        "expectedSha256": "f9ef05c3c48ca5608cacd0eacabbc12ab2d7fd1ed16f648e5e29e26e956f1ccf",
+        "actualSha256": "f9ef05c3c48ca5608cacd0eacabbc12ab2d7fd1ed16f648e5e29e26e956f1ccf",
+        "matches": true
+      },
+      "supabase/functions/spotify-credentials/personal-recovery.ts": {
+        "expectedSha256": "eeaf3510d41c2ddc95722eaf04d55500bafa0833a60376c8ccdd501762df59cf",
+        "actualSha256": "eeaf3510d41c2ddc95722eaf04d55500bafa0833a60376c8ccdd501762df59cf",
+        "matches": true
+      },
+      "supabase/functions/spotify-credentials/profile-verification.ts": {
+        "expectedSha256": "3b3e4519e61f9f2e188c0af77ed7fe6176e69c22310f4d32934b3a11c105849b",
+        "actualSha256": "3b3e4519e61f9f2e188c0af77ed7fe6176e69c22310f4d32934b3a11c105849b",
+        "matches": true
+      }
+    },
+    "edgeTestsAndHelper": {
+      "supabase/functions/_shared/bounded-fetch.test.ts": {
+        "expectedSha256": "0ad74795ad4fa7fb6d2c567293578d1ba0233150ed6a7a2ad4e3e5e15d75ecc5",
+        "actualSha256": "0ad74795ad4fa7fb6d2c567293578d1ba0233150ed6a7a2ad4e3e5e15d75ecc5",
+        "matches": true
+      },
+      "supabase/functions/_shared/handler-boundaries.test.ts": {
+        "expectedSha256": "ed29ba18cac522d043644bf6e62ed4ac72ada8f2bf4b53968912463287aa4c5e",
+        "actualSha256": "ed29ba18cac522d043644bf6e62ed4ac72ada8f2bf4b53968912463287aa4c5e",
+        "matches": true
+      },
+      "supabase/functions/_shared/handler-fixture.test.ts": {
+        "expectedSha256": "9a43f5c1506aafcbc5bfe2bee7fd721aef5a7090bfe22acd1dc3aff12d19ff2b",
+        "actualSha256": "9a43f5c1506aafcbc5bfe2bee7fd721aef5a7090bfe22acd1dc3aff12d19ff2b",
+        "matches": true
+      },
+      "supabase/functions/_shared/request-security.test.ts": {
+        "expectedSha256": "10231fcdae168f50b53d8e434a50015ac19734d3feef15f03a0f73ceb5dd4383",
+        "actualSha256": "10231fcdae168f50b53d8e434a50015ac19734d3feef15f03a0f73ceb5dd4383",
+        "matches": true
+      },
+      "supabase/functions/_shared/spotify-credential-crypto.test.ts": {
+        "expectedSha256": "afe8e1d01f26a2343180fa320af3bb017b4f0f5c24c942981e730db2f739d950",
+        "actualSha256": "afe8e1d01f26a2343180fa320af3bb017b4f0f5c24c942981e730db2f739d950",
+        "matches": true
+      },
+      "supabase/functions/song-league-notifications/delivery-state.test.ts": {
+        "expectedSha256": "67673c6d16d1e0bba6f62e659198a2567979b9c357a2cee3b48735af9d88b647",
+        "actualSha256": "67673c6d16d1e0bba6f62e659198a2567979b9c357a2cee3b48735af9d88b647",
+        "matches": true
+      },
+      "supabase/functions/song-league-notifications/handler.test.ts": {
+        "expectedSha256": "7b17586ee24c86d21df00d1ae2f6c51f904b0d7f28ac65a05e62e0fac80666f3",
+        "actualSha256": "7b17586ee24c86d21df00d1ae2f6c51f904b0d7f28ac65a05e62e0fac80666f3",
+        "matches": true
+      },
+      "supabase/functions/song-league-notifications/push-endpoint.test.ts": {
+        "expectedSha256": "2ac4579754d45bd280575918983050b2b19702e3c9a2d8e06060d2081fc4072f",
+        "actualSha256": "2ac4579754d45bd280575918983050b2b19702e3c9a2d8e06060d2081fc4072f",
+        "matches": true
+      },
+      "supabase/functions/song-league-notifications/web-push.test.ts": {
+        "expectedSha256": "402f94dc10226f1479c744a723983594cd69d25b0d05fdea04f12d3a48af2be1",
+        "actualSha256": "402f94dc10226f1479c744a723983594cd69d25b0d05fdea04f12d3a48af2be1",
+        "matches": true
+      },
+      "supabase/functions/song-league-playlist-sync/handler.test.ts": {
+        "expectedSha256": "7c65d6e99fa2e16f142c7ba358a489400e482d3513d66f01daefb157cea42e1f",
+        "actualSha256": "7c65d6e99fa2e16f142c7ba358a489400e482d3513d66f01daefb157cea42e1f",
+        "matches": true
+      },
+      "supabase/functions/song-league-playlist-sync/recovery.test.ts": {
+        "expectedSha256": "623962e4c25644c5b5110c449305d8fdc7e1227c5ed1bb672436d0316262a9f2",
+        "actualSha256": "623962e4c25644c5b5110c449305d8fdc7e1227c5ed1bb672436d0316262a9f2",
+        "matches": true
+      },
+      "supabase/functions/spotify-credentials/handler-profile.test.ts": {
+        "expectedSha256": "fa392d73243c40b7b8b1bf40fef542a447a02f744429244b2e7d42c0a1f234ce",
+        "actualSha256": "fa392d73243c40b7b8b1bf40fef542a447a02f744429244b2e7d42c0a1f234ce",
+        "matches": true
+      },
+      "supabase/functions/spotify-credentials/handler-recovery.test.ts": {
+        "expectedSha256": "acf0c27815d66db3eecb06db3f243084c2fd0bda0bf412407b52153149772959",
+        "actualSha256": "acf0c27815d66db3eecb06db3f243084c2fd0bda0bf412407b52153149772959",
+        "matches": true
+      },
+      "supabase/functions/spotify-credentials/personal-recovery.test.ts": {
+        "expectedSha256": "4dcb8fb14a6a4fbe50af65eb2022fcaa32f613a63efb4ce454f072475b21ffe4",
+        "actualSha256": "4dcb8fb14a6a4fbe50af65eb2022fcaa32f613a63efb4ce454f072475b21ffe4",
+        "matches": true
+      },
+      "supabase/functions/spotify-credentials/profile-verification.test.ts": {
+        "expectedSha256": "b2e9f50bd9de87d5a4a0baa36c67d5692102c17e8e12f2dc565b4cc933212485",
+        "actualSha256": "b2e9f50bd9de87d5a4a0baa36c67d5692102c17e8e12f2dc565b4cc933212485",
+        "matches": true
+      }
+    },
+    "edgeReports": {
+      "coverage/edge/coverage-summary.json": {
+        "expectedSha256": "6f2dead3bfd0313b68b06c6c9d015b44878111afcba8a25f9dfca57ab0779bb9",
+        "actualSha256": "6f2dead3bfd0313b68b06c6c9d015b44878111afcba8a25f9dfca57ab0779bb9",
+        "matches": true
+      },
+      "coverage/edge/coverage-final.json": {
+        "expectedSha256": "de19a2c5a3538091c6979b23f6d99b362ae933972fc1eec98ff09cd642e156f9",
+        "actualSha256": "de19a2c5a3538091c6979b23f6d99b362ae933972fc1eec98ff09cd642e156f9",
+        "matches": true
+      },
+      "coverage/edge/lcov.info": {
+        "expectedSha256": "0484fbfa5b2d81403d25d84b3a9031df72e24bc78fdf58675301bfab03fef3e6",
+        "actualSha256": "0484fbfa5b2d81403d25d84b3a9031df72e24bc78fdf58675301bfab03fef3e6",
+        "matches": true
+      },
+      "coverage/edge/source-inventory.json": {
+        "expectedSha256": "499a375c8c8b9e323cd1ec05f064f79103a2541a572d9b24f913252a3b32bbd8",
+        "actualSha256": "499a375c8c8b9e323cd1ec05f064f79103a2541a572d9b24f913252a3b32bbd8",
+        "matches": true
+      }
+    },
+    "combinedCiInputs": {
+      "package-lock.json": {
+        "expectedSha256": "590a76c573c94f5dc9aecf28f61738179f020ae567e22c15d2dcc437012d638e",
+        "actualSha256": "590a76c573c94f5dc9aecf28f61738179f020ae567e22c15d2dcc437012d638e",
+        "matches": true
+      },
+      "package.json": {
+        "expectedSha256": "ff8c553770dd10475204a2e44b55e6948336e39936af712e70b0708aa86fb5bc",
+        "actualSha256": "ff8c553770dd10475204a2e44b55e6948336e39936af712e70b0708aa86fb5bc",
+        "matches": true
+      },
+      "scripts/check-application-coverage-inventory.mjs": {
+        "expectedSha256": "54facf461daf4ba4540540987b0740e3002577f7661576927d319e32e5c19509",
+        "actualSha256": "54facf461daf4ba4540540987b0740e3002577f7661576927d319e32e5c19509",
+        "matches": true
+      },
+      "scripts/design-v2-source-inventory.mjs": {
+        "expectedSha256": "90d8dc1b13172e053e8c3ad474204a89029508e2ae028da7060cfc9e87c73888",
+        "actualSha256": "90d8dc1b13172e053e8c3ad474204a89029508e2ae028da7060cfc9e87c73888",
+        "matches": true
+      },
+      "scripts/report-edge-v8-coverage.mjs": {
+        "expectedSha256": "1341ad19af082eb5ae17ee3c208be1bdfbc7836bec12d9384913207160e7956a",
+        "actualSha256": "1341ad19af082eb5ae17ee3c208be1bdfbc7836bec12d9384913207160e7956a",
+        "matches": true
+      },
+      "scripts/report-worker-v8-coverage.mjs": {
+        "expectedSha256": "9af1fe668b42fe5032211ba387470edf5d30c8606bcea91e1fd1d8f082ba289f",
+        "actualSha256": "9af1fe668b42fe5032211ba387470edf5d30c8606bcea91e1fd1d8f082ba289f",
+        "matches": true
+      },
+      "scripts/run-application-coverage.mjs": {
+        "expectedSha256": "dd925016efbda1c3139bd3865c0cbb2428627fdeb4551f1fcd2ff02a6807a287",
+        "actualSha256": "dd925016efbda1c3139bd3865c0cbb2428627fdeb4551f1fcd2ff02a6807a287",
+        "matches": true
+      },
+      "services/sync-service/README.md": {
+        "expectedSha256": "c47d7ad034346bd300d0e133879fef5da3ce7a3982c84ab1e20e7156e67a02a8",
+        "actualSha256": "c47d7ad034346bd300d0e133879fef5da3ce7a3982c84ab1e20e7156e67a02a8",
+        "matches": true
+      },
+      "services/sync-service/catalog-repository.js": {
+        "expectedSha256": "843eda3224caa7e4e01ee3c58651c0791cbeee2856dc2a2cd6b099ad0d85356e",
+        "actualSha256": "843eda3224caa7e4e01ee3c58651c0791cbeee2856dc2a2cd6b099ad0d85356e",
+        "matches": true
+      },
+      "services/sync-service/catalog-repository.test.js": {
+        "expectedSha256": "bd3582417612148dec1e81ce3e3fe4499b82a6b08e07ad2eb5521fd5d4f0b502",
+        "actualSha256": "bd3582417612148dec1e81ce3e3fe4499b82a6b08e07ad2eb5521fd5d4f0b502",
+        "matches": true
+      },
+      "services/sync-service/config.js": {
+        "expectedSha256": "b8a2413a59c3d5b3407d2aa63bfd950ecfdf90b00d824b09e83865a7b55e537d",
+        "actualSha256": "b8a2413a59c3d5b3407d2aa63bfd950ecfdf90b00d824b09e83865a7b55e537d",
+        "matches": true
+      },
+      "services/sync-service/config.test.js": {
+        "expectedSha256": "05a1149e1b11a7ae17b9397cd6e6771d9aba1a41576294ac44015db33ca97d6d",
+        "actualSha256": "05a1149e1b11a7ae17b9397cd6e6771d9aba1a41576294ac44015db33ca97d6d",
+        "matches": true
+      },
+      "services/sync-service/credential-store.js": {
+        "expectedSha256": "73801b8cdeee66f37d6513b8288162fbf5fa1163fb8b734ff3c1ba601dd73f24",
+        "actualSha256": "73801b8cdeee66f37d6513b8288162fbf5fa1163fb8b734ff3c1ba601dd73f24",
+        "matches": true
+      },
+      "services/sync-service/credential-store.test.js": {
+        "expectedSha256": "6faa9a96aad9cf7d96ab89a612b776e4466c88b4802553546a5df9ca0e90139a",
+        "actualSha256": "6faa9a96aad9cf7d96ab89a612b776e4466c88b4802553546a5df9ca0e90139a",
+        "matches": true
+      },
+      "services/sync-service/daily-pull.js": {
+        "expectedSha256": "73286f72d4a4f1630f70c8bd43f7d92d0138ef5b5c71a2ebc394a0017fdd44db",
+        "actualSha256": "73286f72d4a4f1630f70c8bd43f7d92d0138ef5b5c71a2ebc394a0017fdd44db",
+        "matches": true
+      },
+      "services/sync-service/date-utils.js": {
+        "expectedSha256": "6110f409f42edfe30ce15a98ec0eb851a0ddca16154242066617abda7484f451",
+        "actualSha256": "6110f409f42edfe30ce15a98ec0eb851a0ddca16154242066617abda7484f451",
+        "matches": true
+      },
+      "services/sync-service/date-utils.test.js": {
+        "expectedSha256": "d262c47f5037eb99edffac0ea3a866d4bf57c66660d0fa189e343dd6e48f2948",
+        "actualSha256": "d262c47f5037eb99edffac0ea3a866d4bf57c66660d0fa189e343dd6e48f2948",
+        "matches": true
+      },
+      "services/sync-service/health-server.js": {
+        "expectedSha256": "dffeb1ad12ae1c0177de6cdfafe2a99561034b416ddf7a39e23dadb34e231c19",
+        "actualSha256": "dffeb1ad12ae1c0177de6cdfafe2a99561034b416ddf7a39e23dadb34e231c19",
+        "matches": true
+      },
+      "services/sync-service/health-server.test.js": {
+        "expectedSha256": "3b705424026fdb66f6f5be291e628a9bc658d3fcb4ec15ecc10564b38194a879",
+        "actualSha256": "3b705424026fdb66f6f5be291e628a9bc658d3fcb4ec15ecc10564b38194a879",
+        "matches": true
+      },
+      "services/sync-service/index.js": {
+        "expectedSha256": "9b1b4cd14527bf10ea929d8c360b3aa220f3a73b2eba5b1760c105bed657d80d",
+        "actualSha256": "9b1b4cd14527bf10ea929d8c360b3aa220f3a73b2eba5b1760c105bed657d80d",
+        "matches": true
+      },
+      "services/sync-service/index.test.js": {
+        "expectedSha256": "3e9d6dafa022792fb623500026ac1ab15f29f09f199095fd81f06cd98849c32b",
+        "actualSha256": "3e9d6dafa022792fb623500026ac1ab15f29f09f199095fd81f06cd98849c32b",
+        "matches": true
+      },
+      "services/sync-service/package-lock.json": {
+        "expectedSha256": "3a842ca7e2cacb4eda19bdb94de14b77fc886108fe2a00011c6135d8be8bfe9f",
+        "actualSha256": "3a842ca7e2cacb4eda19bdb94de14b77fc886108fe2a00011c6135d8be8bfe9f",
+        "matches": true
+      },
+      "services/sync-service/package.json": {
+        "expectedSha256": "71a9d97aeddd6ab75c37173f0cc244b7144aba0cb5c772b252076469d4303772",
+        "actualSha256": "71a9d97aeddd6ab75c37173f0cc244b7144aba0cb5c772b252076469d4303772",
+        "matches": true
+      },
+      "services/sync-service/push-dispatcher.js": {
+        "expectedSha256": "b3ff320c7de61c19863dc3e26cc644f3bca11e5b5d32cef35e393a557d698543",
+        "actualSha256": "b3ff320c7de61c19863dc3e26cc644f3bca11e5b5d32cef35e393a557d698543",
+        "matches": true
+      },
+      "services/sync-service/push-dispatcher.test.js": {
+        "expectedSha256": "446ad363936f9144279a3fedbd375587a36628491061c89643a9f47cb518f6b2",
+        "actualSha256": "446ad363936f9144279a3fedbd375587a36628491061c89643a9f47cb518f6b2",
+        "matches": true
+      },
+      "services/sync-service/scheduler-boundaries.test.js": {
+        "expectedSha256": "0297d2014f689b133605a9374c99375229192052c52fd7f30508b67238a41f8c",
+        "actualSha256": "0297d2014f689b133605a9374c99375229192052c52fd7f30508b67238a41f8c",
+        "matches": true
+      },
+      "services/sync-service/scheduler.js": {
+        "expectedSha256": "67aecdf66969c3136293942cd426f4830909e5bd52d6bcc523601e8b30d327dc",
+        "actualSha256": "67aecdf66969c3136293942cd426f4830909e5bd52d6bcc523601e8b30d327dc",
+        "matches": true
+      },
+      "services/sync-service/scheduler.test.js": {
+        "expectedSha256": "ef11cf2321369b75254e1aba6f935755c1632deaa784040a26cd611c10b5fef0",
+        "actualSha256": "ef11cf2321369b75254e1aba6f935755c1632deaa784040a26cd611c10b5fef0",
+        "matches": true
+      },
+      "services/sync-service/spotify-client.js": {
+        "expectedSha256": "d0e935e2c5221a8563e076154ead95c83e2c74141d9a3c56127d0a4585f1541c",
+        "actualSha256": "d0e935e2c5221a8563e076154ead95c83e2c74141d9a3c56127d0a4585f1541c",
+        "matches": true
+      },
+      "services/sync-service/spotify-client.test.js": {
+        "expectedSha256": "33ef6b88c8d5098a4c09ed398e671649789fff74a0bdfc6b5cd7b8d65fd508ec",
+        "actualSha256": "33ef6b88c8d5098a4c09ed398e671649789fff74a0bdfc6b5cd7b8d65fd508ec",
+        "matches": true
+      },
+      "services/sync-service/spotify-url-validator.js": {
+        "expectedSha256": "a505545cb3c870705f7a556b4a009acb623c2eff2a32dedbfc03255b87849e11",
+        "actualSha256": "a505545cb3c870705f7a556b4a009acb623c2eff2a32dedbfc03255b87849e11",
+        "matches": true
+      },
+      "services/sync-service/spotify-url-validator.test.js": {
+        "expectedSha256": "d88ee86f2b7b779ca23d054aeae80f8c7311e3f335de08f71d83fb51b6f7b552",
+        "actualSha256": "d88ee86f2b7b779ca23d054aeae80f8c7311e3f335de08f71d83fb51b6f7b552",
+        "matches": true
+      },
+      "services/sync-service/task-registry.js": {
+        "expectedSha256": "7a6e21a9ee1e1e5dc82a1b3db18ed8ba9a945fd4f94aba7b83075375d9f614cd",
+        "actualSha256": "7a6e21a9ee1e1e5dc82a1b3db18ed8ba9a945fd4f94aba7b83075375d9f614cd",
+        "matches": true
+      },
+      "services/sync-service/task-registry.test.js": {
+        "expectedSha256": "f8dfc1282920d327cf19c351707aadb1d123102836fc793bd0ef2a1fa7dddf21",
+        "actualSha256": "f8dfc1282920d327cf19c351707aadb1d123102836fc793bd0ef2a1fa7dddf21",
+        "matches": true
+      },
+      "services/sync-service/tasks/history-task.js": {
+        "expectedSha256": "4c7407436abe288b9deb2af2dda47e20927f70b1721e5b8a0e6d001552778b03",
+        "actualSha256": "4c7407436abe288b9deb2af2dda47e20927f70b1721e5b8a0e6d001552778b03",
+        "matches": true
+      },
+      "services/sync-service/tasks/history-task.test.js": {
+        "expectedSha256": "5c18c914076ff865264aa769b8abe3ab9569c2bc6fa90909f8a8a868fccb87c6",
+        "actualSha256": "5c18c914076ff865264aa769b8abe3ab9569c2bc6fa90909f8a8a868fccb87c6",
+        "matches": true
+      },
+      "services/sync-service/tasks/shared-playlists-boundaries.test.js": {
+        "expectedSha256": "d943d9e36f1d08a0868dce436dee4c90aea905ea8e6b74339f0af1da80f62c25",
+        "actualSha256": "d943d9e36f1d08a0868dce436dee4c90aea905ea8e6b74339f0af1da80f62c25",
+        "matches": true
+      },
+      "services/sync-service/tasks/shared-playlists-task.js": {
+        "expectedSha256": "70ec79e304efc8baba7b622be1834548d8a75f71520297594910b5d7b1d7a10c",
+        "actualSha256": "70ec79e304efc8baba7b622be1834548d8a75f71520297594910b5d7b1d7a10c",
+        "matches": true
+      },
+      "services/sync-service/tasks/shared-playlists-task.test.js": {
+        "expectedSha256": "57e2d8152a7d8dcf540ae7aef2d40d1c609ba5a665ef9e0024f8dec4b82caf28",
+        "actualSha256": "57e2d8152a7d8dcf540ae7aef2d40d1c609ba5a665ef9e0024f8dec4b82caf28",
+        "matches": true
+      },
+      "services/sync-service/tasks/song-league-playlists-task.js": {
+        "expectedSha256": "aa611c17298f4fc40f50958730fb97181b51cff738577b8578cf08a23e0f3ff0",
+        "actualSha256": "aa611c17298f4fc40f50958730fb97181b51cff738577b8578cf08a23e0f3ff0",
+        "matches": true
+      },
+      "services/sync-service/tasks/song-league-playlists-task.test.js": {
+        "expectedSha256": "ab6d7dd981421acb0c094907fbd9e2a993d0ca5a238cfa45c5560f838a9a667a",
+        "actualSha256": "ab6d7dd981421acb0c094907fbd9e2a993d0ca5a238cfa45c5560f838a9a667a",
+        "matches": true
+      },
+      "services/sync-service/tasks/stats-task.js": {
+        "expectedSha256": "a2c69216c8a269b297f99b8c283adaec4fad8319673487b9cbd7aa6d1987896b",
+        "actualSha256": "a2c69216c8a269b297f99b8c283adaec4fad8319673487b9cbd7aa6d1987896b",
+        "matches": true
+      },
+      "services/sync-service/tasks/stats-task.test.js": {
+        "expectedSha256": "5f72b7f6393d1b55602ff2c2a748419b53de5850f794be9a00d030463f5d04ef",
+        "actualSha256": "5f72b7f6393d1b55602ff2c2a748419b53de5850f794be9a00d030463f5d04ef",
+        "matches": true
+      },
+      "services/sync-service/test-support/load-isolated.cjs": {
+        "expectedSha256": "ca11d62d049e780b026de1e0a16316f696623df10ead349f819a3ca171539534",
+        "actualSha256": "ca11d62d049e780b026de1e0a16316f696623df10ead349f819a3ca171539534",
+        "matches": true
+      },
+      "services/sync-service/worker-runtime-health.js": {
+        "expectedSha256": "3666f247f178ac84733dbd91c01a0be4a1d64cc793346c6a73d9f80ef4473f28",
+        "actualSha256": "3666f247f178ac84733dbd91c01a0be4a1d64cc793346c6a73d9f80ef4473f28",
+        "matches": true
+      },
+      "services/sync-service/worker-runtime-health.test.js": {
+        "expectedSha256": "1581a06c40776086ab2c16ca7cbf0a6d7421cef62b37242bdf22121cf9346d8d",
+        "actualSha256": "1581a06c40776086ab2c16ca7cbf0a6d7421cef62b37242bdf22121cf9346d8d",
+        "matches": true
+      },
+      "supabase/functions/_shared/bounded-fetch.test.ts": {
+        "expectedSha256": "0ad74795ad4fa7fb6d2c567293578d1ba0233150ed6a7a2ad4e3e5e15d75ecc5",
+        "actualSha256": "0ad74795ad4fa7fb6d2c567293578d1ba0233150ed6a7a2ad4e3e5e15d75ecc5",
+        "matches": true
+      },
+      "supabase/functions/_shared/bounded-fetch.ts": {
+        "expectedSha256": "6661fed0ffce6cfd42afed9fe90ffe047d748dd485fbb973cd19ab8b13300d2e",
+        "actualSha256": "6661fed0ffce6cfd42afed9fe90ffe047d748dd485fbb973cd19ab8b13300d2e",
+        "matches": true
+      },
+      "supabase/functions/_shared/handler-boundaries.test.ts": {
+        "expectedSha256": "ed29ba18cac522d043644bf6e62ed4ac72ada8f2bf4b53968912463287aa4c5e",
+        "actualSha256": "ed29ba18cac522d043644bf6e62ed4ac72ada8f2bf4b53968912463287aa4c5e",
+        "matches": true
+      },
+      "supabase/functions/_shared/handler-fixture.test.ts": {
+        "expectedSha256": "9a43f5c1506aafcbc5bfe2bee7fd721aef5a7090bfe22acd1dc3aff12d19ff2b",
+        "actualSha256": "9a43f5c1506aafcbc5bfe2bee7fd721aef5a7090bfe22acd1dc3aff12d19ff2b",
+        "matches": true
+      },
+      "supabase/functions/_shared/request-security.test.ts": {
+        "expectedSha256": "10231fcdae168f50b53d8e434a50015ac19734d3feef15f03a0f73ceb5dd4383",
+        "actualSha256": "10231fcdae168f50b53d8e434a50015ac19734d3feef15f03a0f73ceb5dd4383",
+        "matches": true
+      },
+      "supabase/functions/_shared/request-security.ts": {
+        "expectedSha256": "d03bb7fe8206ea328984aa811d2402ea98a1f01a35254bf2f411936a428039f2",
+        "actualSha256": "d03bb7fe8206ea328984aa811d2402ea98a1f01a35254bf2f411936a428039f2",
+        "matches": true
+      },
+      "supabase/functions/_shared/spotify-credential-crypto.test.ts": {
+        "expectedSha256": "afe8e1d01f26a2343180fa320af3bb017b4f0f5c24c942981e730db2f739d950",
+        "actualSha256": "afe8e1d01f26a2343180fa320af3bb017b4f0f5c24c942981e730db2f739d950",
+        "matches": true
+      },
+      "supabase/functions/_shared/spotify-credential-crypto.ts": {
+        "expectedSha256": "2285f5e80532a9c58c1bf4938cbbe3060da64969e927559303903f320edc9417",
+        "actualSha256": "2285f5e80532a9c58c1bf4938cbbe3060da64969e927559303903f320edc9417",
+        "matches": true
+      },
+      "supabase/functions/deno.json": {
+        "expectedSha256": "82acc74e68b36dbe8566755a71c6ad0d57ce4792fe299bdae0b32e024eb40056",
+        "actualSha256": "82acc74e68b36dbe8566755a71c6ad0d57ce4792fe299bdae0b32e024eb40056",
+        "matches": true
+      },
+      "supabase/functions/deno.lock": {
+        "expectedSha256": "c7073848a84c7897bb267aa2ea2c63b81c5b9e073812168eebd909e123d84d7c",
+        "actualSha256": "c7073848a84c7897bb267aa2ea2c63b81c5b9e073812168eebd909e123d84d7c",
+        "matches": true
+      },
+      "supabase/functions/song-league-notifications/delivery-state.test.mjs": {
+        "expectedSha256": "8bb2731388798618bd0a3ea020cb529c4901170f1a1eb3aa67c15f62f16800e5",
+        "actualSha256": "8bb2731388798618bd0a3ea020cb529c4901170f1a1eb3aa67c15f62f16800e5",
+        "matches": true
+      },
+      "supabase/functions/song-league-notifications/delivery-state.test.ts": {
+        "expectedSha256": "67673c6d16d1e0bba6f62e659198a2567979b9c357a2cee3b48735af9d88b647",
+        "actualSha256": "67673c6d16d1e0bba6f62e659198a2567979b9c357a2cee3b48735af9d88b647",
+        "matches": true
+      },
+      "supabase/functions/song-league-notifications/delivery-state.ts": {
+        "expectedSha256": "d406a45b0296b98ca7593be94cb78b17f40f97345440e5ff963bd0074308421c",
+        "actualSha256": "d406a45b0296b98ca7593be94cb78b17f40f97345440e5ff963bd0074308421c",
+        "matches": true
+      },
+      "supabase/functions/song-league-notifications/handler.test.ts": {
+        "expectedSha256": "7b17586ee24c86d21df00d1ae2f6c51f904b0d7f28ac65a05e62e0fac80666f3",
+        "actualSha256": "7b17586ee24c86d21df00d1ae2f6c51f904b0d7f28ac65a05e62e0fac80666f3",
+        "matches": true
+      },
+      "supabase/functions/song-league-notifications/index.ts": {
+        "expectedSha256": "3a3961835049e2de6471d2a96b95ed149f81c0475739e5dd1004f9a43c442ab9",
+        "actualSha256": "3a3961835049e2de6471d2a96b95ed149f81c0475739e5dd1004f9a43c442ab9",
+        "matches": true
+      },
+      "supabase/functions/song-league-notifications/push-endpoint.test.ts": {
+        "expectedSha256": "2ac4579754d45bd280575918983050b2b19702e3c9a2d8e06060d2081fc4072f",
+        "actualSha256": "2ac4579754d45bd280575918983050b2b19702e3c9a2d8e06060d2081fc4072f",
+        "matches": true
+      },
+      "supabase/functions/song-league-notifications/push-endpoint.ts": {
+        "expectedSha256": "7c5995c8d5f842b75e8bedb84696d182a1ded7af36b9702e8efd44feea7cebda",
+        "actualSha256": "7c5995c8d5f842b75e8bedb84696d182a1ded7af36b9702e8efd44feea7cebda",
+        "matches": true
+      },
+      "supabase/functions/song-league-notifications/web-push.test.ts": {
+        "expectedSha256": "402f94dc10226f1479c744a723983594cd69d25b0d05fdea04f12d3a48af2be1",
+        "actualSha256": "402f94dc10226f1479c744a723983594cd69d25b0d05fdea04f12d3a48af2be1",
+        "matches": true
+      },
+      "supabase/functions/song-league-notifications/web-push.ts": {
+        "expectedSha256": "ac50a53d5ebdce3728a1726a74ecc372709e3d7cdd1b56bf6bd845a4e06b4c0e",
+        "actualSha256": "ac50a53d5ebdce3728a1726a74ecc372709e3d7cdd1b56bf6bd845a4e06b4c0e",
+        "matches": true
+      },
+      "supabase/functions/song-league-playlist-sync/handler.test.ts": {
+        "expectedSha256": "7c65d6e99fa2e16f142c7ba358a489400e482d3513d66f01daefb157cea42e1f",
+        "actualSha256": "7c65d6e99fa2e16f142c7ba358a489400e482d3513d66f01daefb157cea42e1f",
+        "matches": true
+      },
+      "supabase/functions/song-league-playlist-sync/index.ts": {
+        "expectedSha256": "8a3bf546a0a1880171559075626fd9436ee7977bbcca8e40e5fe240aa62f6b28",
+        "actualSha256": "8a3bf546a0a1880171559075626fd9436ee7977bbcca8e40e5fe240aa62f6b28",
+        "matches": true
+      },
+      "supabase/functions/song-league-playlist-sync/recovery.test.ts": {
+        "expectedSha256": "623962e4c25644c5b5110c449305d8fdc7e1227c5ed1bb672436d0316262a9f2",
+        "actualSha256": "623962e4c25644c5b5110c449305d8fdc7e1227c5ed1bb672436d0316262a9f2",
+        "matches": true
+      },
+      "supabase/functions/song-league-playlist-sync/recovery.ts": {
+        "expectedSha256": "4f105ee8919c5132978210af2c6e71fe7d638e2c0bbe5b7ca795b890a04c0175",
+        "actualSha256": "4f105ee8919c5132978210af2c6e71fe7d638e2c0bbe5b7ca795b890a04c0175",
+        "matches": true
+      },
+      "supabase/functions/spotify-credentials/handler-profile.test.ts": {
+        "expectedSha256": "fa392d73243c40b7b8b1bf40fef542a447a02f744429244b2e7d42c0a1f234ce",
+        "actualSha256": "fa392d73243c40b7b8b1bf40fef542a447a02f744429244b2e7d42c0a1f234ce",
+        "matches": true
+      },
+      "supabase/functions/spotify-credentials/handler-recovery.test.ts": {
+        "expectedSha256": "acf0c27815d66db3eecb06db3f243084c2fd0bda0bf412407b52153149772959",
+        "actualSha256": "acf0c27815d66db3eecb06db3f243084c2fd0bda0bf412407b52153149772959",
+        "matches": true
+      },
+      "supabase/functions/spotify-credentials/index.ts": {
+        "expectedSha256": "f9ef05c3c48ca5608cacd0eacabbc12ab2d7fd1ed16f648e5e29e26e956f1ccf",
+        "actualSha256": "f9ef05c3c48ca5608cacd0eacabbc12ab2d7fd1ed16f648e5e29e26e956f1ccf",
+        "matches": true
+      },
+      "supabase/functions/spotify-credentials/personal-recovery.test.ts": {
+        "expectedSha256": "4dcb8fb14a6a4fbe50af65eb2022fcaa32f613a63efb4ce454f072475b21ffe4",
+        "actualSha256": "4dcb8fb14a6a4fbe50af65eb2022fcaa32f613a63efb4ce454f072475b21ffe4",
+        "matches": true
+      },
+      "supabase/functions/spotify-credentials/personal-recovery.ts": {
+        "expectedSha256": "eeaf3510d41c2ddc95722eaf04d55500bafa0833a60376c8ccdd501762df59cf",
+        "actualSha256": "eeaf3510d41c2ddc95722eaf04d55500bafa0833a60376c8ccdd501762df59cf",
+        "matches": true
+      },
+      "supabase/functions/spotify-credentials/profile-verification.test.ts": {
+        "expectedSha256": "b2e9f50bd9de87d5a4a0baa36c67d5692102c17e8e12f2dc565b4cc933212485",
+        "actualSha256": "b2e9f50bd9de87d5a4a0baa36c67d5692102c17e8e12f2dc565b4cc933212485",
+        "matches": true
+      },
+      "supabase/functions/spotify-credentials/profile-verification.ts": {
+        "expectedSha256": "3b3e4519e61f9f2e188c0af77ed7fe6176e69c22310f4d32934b3a11c105849b",
+        "actualSha256": "3b3e4519e61f9f2e188c0af77ed7fe6176e69c22310f4d32934b3a11c105849b",
+        "matches": true
+      }
+    }
+  },
+  "checkedCounts": {
+    "workerProduction": 17,
+    "workerTestsAndHelper": 14,
+    "workerReports": 3,
+    "edgeProduction": 12,
+    "edgeTestsAndHelper": 15,
+    "edgeReports": 4,
+    "combinedCiInputs": 76
+  },
+  "allCheckedHashesMatch": true,
+  "suites": {
+    "worker": {
+      "productionSourceCount": 17,
+      "sources": [
+        "services/sync-service/catalog-repository.js",
+        "services/sync-service/config.js",
+        "services/sync-service/credential-store.js",
+        "services/sync-service/daily-pull.js",
+        "services/sync-service/date-utils.js",
+        "services/sync-service/health-server.js",
+        "services/sync-service/index.js",
+        "services/sync-service/push-dispatcher.js",
+        "services/sync-service/scheduler.js",
+        "services/sync-service/spotify-client.js",
+        "services/sync-service/spotify-url-validator.js",
+        "services/sync-service/task-registry.js",
+        "services/sync-service/tasks/history-task.js",
+        "services/sync-service/tasks/shared-playlists-task.js",
+        "services/sync-service/tasks/song-league-playlists-task.js",
+        "services/sync-service/tasks/stats-task.js",
+        "services/sync-service/worker-runtime-health.js"
+      ],
+      "inventoryMatchesIncludingExclusions": true,
+      "missingSources": [],
+      "extraReportedSources": [],
+      "rawMapFileCount": 17,
+      "rawDenominators": {
+        "statements": 1110,
+        "functions": 197,
+        "branches": 927
+      },
+      "metrics": {
+        "lines": {
+          "total": 891,
+          "covered": 888,
+          "skipped": 0,
+          "pct": 99.66
+        },
+        "statements": {
+          "total": 1110,
+          "covered": 1107,
+          "skipped": 0,
+          "pct": 99.72
+        },
+        "functions": {
+          "total": 197,
+          "covered": 197,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 927,
+          "covered": 913,
+          "skipped": 0,
+          "pct": 98.48
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "exclusions": [
+        {
+          "path": "services/sync-service/catalog-repository.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/config.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/credential-store.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/date-utils.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/health-server.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/index.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/push-dispatcher.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/scheduler-boundaries.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/scheduler.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/spotify-client.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/spotify-url-validator.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/task-registry.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/tasks/history-task.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/tasks/shared-playlists-boundaries.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/tasks/shared-playlists-task.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/tasks/song-league-playlists-task.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/tasks/stats-task.test.js",
+          "reason": "test source"
+        },
+        {
+          "path": "services/sync-service/worker-runtime-health.test.js",
+          "reason": "test source"
+        }
+      ]
+    },
+    "edge": {
+      "productionSourceCount": 12,
+      "sources": [
+        "supabase/functions/_shared/bounded-fetch.ts",
+        "supabase/functions/_shared/request-security.ts",
+        "supabase/functions/_shared/spotify-credential-crypto.ts",
+        "supabase/functions/song-league-notifications/delivery-state.ts",
+        "supabase/functions/song-league-notifications/index.ts",
+        "supabase/functions/song-league-notifications/push-endpoint.ts",
+        "supabase/functions/song-league-notifications/web-push.ts",
+        "supabase/functions/song-league-playlist-sync/index.ts",
+        "supabase/functions/song-league-playlist-sync/recovery.ts",
+        "supabase/functions/spotify-credentials/index.ts",
+        "supabase/functions/spotify-credentials/personal-recovery.ts",
+        "supabase/functions/spotify-credentials/profile-verification.ts"
+      ],
+      "inventoryMatchesIncludingExclusions": true,
+      "missingSources": [],
+      "extraReportedSources": [],
+      "rawMapFileCount": 12,
+      "rawDenominators": {
+        "statements": 901,
+        "functions": 113,
+        "branches": 797
+      },
+      "metrics": {
+        "lines": {
+          "total": 762,
+          "covered": 761,
+          "skipped": 0,
+          "pct": 99.86
+        },
+        "statements": {
+          "total": 901,
+          "covered": 899,
+          "skipped": 0,
+          "pct": 99.77
+        },
+        "functions": {
+          "total": 113,
+          "covered": 113,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 797,
+          "covered": 795,
+          "skipped": 0,
+          "pct": 99.74
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "exclusions": [
+        {
+          "path": "supabase/functions/_shared/bounded-fetch.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/_shared/handler-boundaries.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/_shared/handler-fixture.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/_shared/request-security.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/_shared/spotify-credential-crypto.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/song-league-notifications/delivery-state.test.mjs",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/song-league-notifications/delivery-state.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/song-league-notifications/handler.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/song-league-notifications/push-endpoint.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/song-league-notifications/web-push.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/song-league-playlist-sync/handler.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/song-league-playlist-sync/recovery.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/spotify-credentials/handler-profile.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/spotify-credentials/handler-recovery.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/spotify-credentials/personal-recovery.test.ts",
+          "reason": "test source"
+        },
+        {
+          "path": "supabase/functions/spotify-credentials/profile-verification.test.ts",
+          "reason": "test source"
+        }
+      ]
+    }
+  },
+  "reproduction": {
+    "workingDirectory": "/mnt/Storage/ProgrammingProjects/Analytify",
+    "instructions": "Run the following Python source, or load this JSON and exec its reproduction.python field. It prints the current audit without modifying files.",
+    "python": "import json, pathlib, hashlib, subprocess\nbase = pathlib.Path('docs/testing-evidence/design-v2')\nsha = lambda p: hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()\nworker = json.loads((base / 'worker-parallel-manifest.json').read_text())\nedge = json.loads((base / 'edge-parallel-evidence.json').read_text())\nsnapshot = json.loads((base / 'friends-stats-final-ci-source-snapshot.json').read_text())['sourceHashes']\ngroups = {\n 'workerProduction': worker['sourceHashes'],\n 'workerTestsAndHelper': worker['testHashes'],\n 'workerReports': worker['final']['reportHashes'],\n 'edgeProduction': {e['path']: e['sha256'] for e in edge['coverage']['sources']},\n 'edgeTestsAndHelper': {e['path']: e['sha256'] for e in edge['testSources']},\n 'edgeReports': {e['path']: e['sha256'] for e in edge['reports']},\n 'combinedCiInputs': {p: h for p,h in snapshot.items() if p.startswith(('services/sync-service/', 'supabase/functions/')) or p in ['scripts/design-v2-source-inventory.mjs', 'scripts/run-application-coverage.mjs', 'scripts/report-worker-v8-coverage.mjs', 'scripts/report-edge-v8-coverage.mjs', 'scripts/check-application-coverage-inventory.mjs', 'package.json', 'package-lock.json']}\n}\nchecks = {name: {p: {'expectedSha256': h, 'actualSha256': sha(p), 'matches': sha(p) == h} for p,h in entries.items()} for name,entries in groups.items()}\nnode = \"import {productionSourceInventory} from './scripts/design-v2-source-inventory.mjs'; console.log(JSON.stringify(productionSourceInventory()));\"\ninventory = json.loads(subprocess.check_output(['node', '--input-type=module', '-e', node], text=True))\nsuites = {}\nfor suite in ['worker', 'edge']:\n retained = json.loads(pathlib.Path(f'coverage/{suite}/source-inventory.json').read_text())\n report = json.loads(pathlib.Path(f'coverage/{suite}/coverage-summary.json').read_text())\n raw = json.loads(pathlib.Path(f'coverage/{suite}/coverage-final.json').read_text())\n sources = inventory[suite]['sources']\n reported = [str(pathlib.Path(p).relative_to(pathlib.Path.cwd())) for p in report if p != 'total']\n suites[suite] = {'productionSourceCount': len(sources), 'sources': sources, 'inventoryMatchesIncludingExclusions': inventory[suite] == retained, 'missingSources': sorted(set(sources)-set(reported)), 'extraReportedSources': sorted(set(reported)-set(sources)), 'rawMapFileCount': len(raw), 'rawDenominators': {'statements': sum(len(v['s']) for v in raw.values()), 'functions': sum(len(v['f']) for v in raw.values()), 'branches': sum(sum(len(x) for x in v['b'].values()) for v in raw.values())}, 'metrics': report['total'], 'exclusions': inventory[suite]['exclusions']}\nresult = {'hashChecks': checks, 'checkedCounts': {name: len(entries) for name,entries in checks.items()}, 'allCheckedHashesMatch': all(c['matches'] for entries in checks.values() for c in entries.values()), 'suites': suites}\nprint(json.dumps(result, indent=2))\n"
+  },
+  "limitations": [
+    "Coverage was measured on 15 October 2026, not on 23 October; this audit confirms current source/report identity and inventory consistency.",
+    "Combined-CI input snapshot is dated21 October2026; all76 selected backend/tool/config/package hashes currently match it.",
+    "Service transports in retained tests are deterministic fixtures. Hosted production contracts, real notifications and deployments were not exercised.",
+    "Coverage thresholds do not prove correctness or reconciliation with newer main League semantics.",
+    "No source/config/test changes, tests, browser jobs, or coverage reruns were performed by this audit."
+  ]
+}

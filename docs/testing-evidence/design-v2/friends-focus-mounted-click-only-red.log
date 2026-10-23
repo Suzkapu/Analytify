@@ -1,0 +1,180 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/friends/v2-friends-focus-recovery.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [3.943 seconds] - 2026-10-23T15:31:32.184Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/friends/v2-friends-focus-recovery.spec.ts (10 tests | 1 failed) 691ms
+     × recovers a removed Retry to pending feedback and then the stable main after successful recovery (click-only) 41ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/friends/v2-friends-focus-recovery.spec.ts > Mounted Friends action focus ownership (canonical 1008:32348) > recovers a removed Retry to pending feedback and then the stable main after successful recovery (click-only)
+AssertionError: expected <body>…(1)</body> to be <section …(5)>…(2)</section> // Object.is equality
+
+- Expected
++ Received
+
+@@ -1,5 +1,116 @@
++ <body>
++   <div
++     id="root3"
++     ng-version="22.2.1"
++   >
++     <button
++       id="other-task"
++     >
++       Another task
++     </button>
++     <main
++       id="v2-main-content"
++       tabindex="-1"
++     >
++       <router-outlet />
++       <v2-friends-layout>
++         <router-outlet />
++         <v2-friends-page
++           _nghost-a-c1912245521=""
++         >
++           <v2-page
++             _ngcontent-a-c1912245521=""
++             appearance="canonical"
++           >
++             <div
++               class="v2-page v2-page--canonical"
++             >
++               <header
++                 class="v2-page__header"
++               >
++                 <div
++                   class="v2-page__copy"
++                 >
++                   <!--container-->
++                   <div
++                     class="v2-page__title-row"
++                   >
++                     <h1>
++                       Your friends
++                     </h1>
++                     <!--container-->
++                   </div>
++                   <p
++                     class="v2-page__description"
++                   >
++                     Share playlists, invite friends and discover music together.
++                   </p>
++                   <!--container-->
++                 </div>
++                 <div
++                   aria-label="Page actions"
++                   class="v2-page__actions"
++                 />
++               </header>
++               <div
++                 class="v2-page__tabs"
++               />
++               <div
++                 class="v2-page__toolbar"
++               />
++               <div
++                 class="v2-page__sections"
++               >
++                 <nav
++                   _ngcontent-a-c1912245521=""
++                   aria-label="Friends navigation"
++                   class="friends-tabs"
++                 >
++                   <a
++                     _ngcontent-a-c1912245521=""
++                     aria-current="page"
++                     class="v2-button v2-button--primary"
++                     href="/friends"
++                   >
++                     <span
++                       _ngcontent-a-c1912245521=""
++                       aria-hidden="true"
++                       class="icon people"
++                     />
++                     Friends
++                   </a>
++                   <a
++                     _ngcontent-a-c1912245521=""
++                     class="v2-button v2-button--secondary"
++                     href="/friends/invitations"
++                   >
++                     <span
++                       _ngcontent-a-c1912245521=""
++                       aria-hidden="true"
++                       class="invitation-icon"
++                     />
++                     Invitations
++                   </a>
++                 </nav>
++                 <a
++                   _ngcontent-a-c1912245521=""
++                   class="add-friend v2-button v2-button--secondary"
++                   href="/friends/add"
++                   v2button="secondary"
++                 >
++                   <span
++                     _ngcontent-a-c1912245521=""
++                     aria-hidden="true"
++                     class="icon plus"
++                   />
++                   Add friend
++                 </a>
++                 <v2-friends-feedback
++                   _ngcontent-a-c1912245521=""
++                   _nghost-a-c3529466589=""
++                 >
+                    <section
+                      _ngcontent-a-c3529466589=""
+                      aria-busy="true"
+                      aria-live="polite"
+                      class="feedback"
+@@ -17,5 +128,19 @@
+                      </p>
+                      <!--container-->
+                      <!--container-->
+                      <!--container-->
+                    </section>
++                 </v2-friends-feedback>
++                 <!--container-->
++                 <!--container-->
++               </div>
++             </div>
++           </v2-page>
++           <!--container-->
++         </v2-friends-page>
++         <!--container-->
++       </v2-friends-layout>
++       <!--container-->
++     </main>
++   </div>
++ </body>
+
+ ❯ src/app/features/friends/v2-friends-focus-recovery.spec.ts:96:36
+     94|     expect(pending.textContent).toContain('Loading friends');
+     95|     expect(pending.tabIndex).toBe(-1);
+     96|     expect(document.activeElement).toBe(pending);
+       |                                    ^
+     97|     expect(h.element.querySelector('button')?.textContent).not.toBe('R…
+     98|     retry.resolve([]); await h.settle();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  17:31:32
+   Duration  2.13s (transform 237ms, setup 370ms, import 371ms, tests 691ms, environment 525ms)
+

@@ -1,0 +1,82 @@
+{
+  "sources": [
+    "supabase/functions/_shared/bounded-fetch.ts",
+    "supabase/functions/_shared/request-security.ts",
+    "supabase/functions/_shared/spotify-credential-crypto.ts",
+    "supabase/functions/song-league-notifications/delivery-state.ts",
+    "supabase/functions/song-league-notifications/index.ts",
+    "supabase/functions/song-league-notifications/push-endpoint.ts",
+    "supabase/functions/song-league-notifications/web-push.ts",
+    "supabase/functions/song-league-playlist-sync/index.ts",
+    "supabase/functions/song-league-playlist-sync/recovery.ts",
+    "supabase/functions/spotify-credentials/index.ts",
+    "supabase/functions/spotify-credentials/personal-recovery.ts",
+    "supabase/functions/spotify-credentials/profile-verification.ts"
+  ],
+  "exclusions": [
+    {
+      "path": "supabase/functions/_shared/bounded-fetch.test.ts",
+      "reason": "test source"
+    },
+    {
+      "path": "supabase/functions/_shared/handler-boundaries.test.ts",
+      "reason": "test source"
+    },
+    {
+      "path": "supabase/functions/_shared/handler-fixture.test.ts",
+      "reason": "test source"
+    },
+    {
+      "path": "supabase/functions/_shared/request-security.test.ts",
+      "reason": "test source"
+    },
+    {
+      "path": "supabase/functions/_shared/spotify-credential-crypto.test.ts",
+      "reason": "test source"
+    },
+    {
+      "path": "supabase/functions/song-league-notifications/delivery-state.test.mjs",
+      "reason": "test source"
+    },
+    {
+      "path": "supabase/functions/song-league-notifications/delivery-state.test.ts",
+      "reason": "test source"
+    },
+    {
+      "path": "supabase/functions/song-league-notifications/handler.test.ts",
+      "reason": "test source"
+    },
+    {
+      "path": "supabase/functions/song-league-notifications/push-endpoint.test.ts",
+      "reason": "test source"
+    },
+    {
+      "path": "supabase/functions/song-league-notifications/web-push.test.ts",
+      "reason": "test source"
+    },
+    {
+      "path": "supabase/functions/song-league-playlist-sync/handler.test.ts",
+      "reason": "test source"
+    },
+    {
+      "path": "supabase/functions/song-league-playlist-sync/recovery.test.ts",
+      "reason": "test source"
+    },
+    {
+      "path": "supabase/functions/spotify-credentials/handler-profile.test.ts",
+      "reason": "test source"
+    },
+    {
+      "path": "supabase/functions/spotify-credentials/handler-recovery.test.ts",
+      "reason": "test source"
+    },
+    {
+      "path": "supabase/functions/spotify-credentials/personal-recovery.test.ts",
+      "reason": "test source"
+    },
+    {
+      "path": "supabase/functions/spotify-credentials/profile-verification.test.ts",
+      "reason": "test source"
+    }
+  ]
+}
