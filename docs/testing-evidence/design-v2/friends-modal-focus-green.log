@@ -1,0 +1,71 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts --grep Friends confirmation typography --output=docs/testing-evidence/design-v2/friends-modal-focus-green-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:153361) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:153361) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:159577) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop] › e2e/design-v2-friends.spec.ts:389:5 › Friends confirmation typography and keyboard focus match canonical after font readiness (2.9s)
+(node:163319) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [mobile] › e2e/design-v2-friends.spec.ts:389:5 › Friends confirmation typography and keyboard focus match canonical after font readiness (2.9s)
+(node:166064) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 [firefox-stats] › e2e/design-v2-friends.spec.ts:389:5 › Friends confirmation typography and keyboard focus match canonical after font readiness (3.4s)
+(node:167905) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  4 [webkit-stats] › e2e/design-v2-friends.spec.ts:389:5 › Friends confirmation typography and keyboard focus match canonical after font readiness (2.5s)
+
+
+  1) [firefox-stats] › e2e/design-v2-friends.spec.ts:389:5 › Friends confirmation typography and keyboard focus match canonical after font readiness 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 5
+    + Received  + 5
+
+      Object {
+    -   "color": "rgb(159, 255, 200)",
+    -   "offset": "-2px",
+    -   "style": "solid",
+    -   "visible": true,
+    -   "width": "2px",
+    +   "color": "rgb(245, 247, 245)",
+    +   "offset": "0px",
+    +   "style": "none",
+    +   "visible": false,
+    +   "width": "3px",
+      }
+
+      422 |   });
+      423 |   await writeFile(info.outputPath('friends-dialog-focus-paint.json'), JSON.stringify(focusPaint, null, 2));
+    > 424 |   expect(focusPaint).toEqual({visible: true, width: '2px', offset: '-2px', color: 'rgb(159, 255, 200)', style: 'solid'});
+          |                      ^
+      425 | });
+      426 |
+      427 | for (const motion of ['no-preference', 'reduce'] as const) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:424:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modal-focus-green-artifacts/design-v2-friends-Friends--06bfe-onical-after-font-readiness-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-modal-focus-green-artifacts/design-v2-friends-Friends--06bfe-onical-after-font-readiness-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modal-focus-green-artifacts/design-v2-friends-Friends--06bfe-onical-after-font-readiness-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-modal-focus-green-artifacts/design-v2-friends-Friends--06bfe-onical-after-font-readiness-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [firefox-stats] › e2e/design-v2-friends.spec.ts:389:5 › Friends confirmation typography and keyboard focus match canonical after font readiness 
+  3 passed (29.6s)

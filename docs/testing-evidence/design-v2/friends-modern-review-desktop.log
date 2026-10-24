@@ -1,0 +1,286 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts --grep Friends secondary content --output=docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:60835) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:60835) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:61075) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-friends.spec.ts:195:5 › Friends secondary content has deterministic canonical visual candidates (7.0s)
+(node:61747) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [mobile] › e2e/design-v2-friends.spec.ts:195:5 › Friends secondary content has deterministic canonical visual candidates (7.9s)
+(node:62408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 [firefox-stats] › e2e/design-v2-friends.spec.ts:195:5 › Friends secondary content has deterministic canonical visual candidates (8.3s)
+(node:63293) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  4 [webkit-stats] › e2e/design-v2-friends.spec.ts:195:5 › Friends secondary content has deterministic canonical visual candidates (8.1s)
+
+
+  1) [desktop] › e2e/design-v2-friends.spec.ts:195:5 › Friends secondary content has deterministic canonical visual candidates 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: locator('v2-friends-page')
+      6117 pixels (ratio 0.02 of all image pixels) are different.
+
+      Snapshot: friends-review-desktop.png
+
+    Call log:
+      - Expect "toHaveScreenshot(friends-review-desktop.png)" locator('v2-friends-page') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - 6117 pixels (ratio 0.02 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - 6117 pixels (ratio 0.02 of all image pixels) are different.
+
+
+      225 |       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      226 |       await panel.screenshot({path: info.outputPath(`candidate-friends-${state}-${name}.png`), animations: 'disabled', scale: 'css'});
+    > 227 |       await expect(panel).toHaveScreenshot(`friends-${state}-${name}.png`, {animations: 'disabled', scale: 'css', threshold: .1, maxDiffPixels: 0});
+          |                           ^
+      228 |     }
+      229 |   };
+      230 |   await panel.getByRole('link', {name: 'Add friend', exact: true}).click();
+        at capture (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:227:27)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:244:3
+
+    attachment #1: friends-review-desktop (image/png) ──────────────────────────────────────────────
+    Expected: e2e/design-v2-friends.spec.ts-snapshots/friends-review-desktop-desktop-linux.png
+    Received: docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-desktop/friends-review-desktop-actual.png
+    Diff:     docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-desktop/friends-review-desktop-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › e2e/design-v2-friends.spec.ts:195:5 › Friends secondary content has deterministic canonical visual candidates 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: locator('v2-friends-page')
+      6117 pixels (ratio 0.02 of all image pixels) are different.
+
+      Snapshot: friends-review-desktop.png
+
+    Call log:
+      - Expect "toHaveScreenshot(friends-review-desktop.png)" locator('v2-friends-page') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - 6117 pixels (ratio 0.02 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - 6117 pixels (ratio 0.02 of all image pixels) are different.
+
+
+      225 |       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      226 |       await panel.screenshot({path: info.outputPath(`candidate-friends-${state}-${name}.png`), animations: 'disabled', scale: 'css'});
+    > 227 |       await expect(panel).toHaveScreenshot(`friends-${state}-${name}.png`, {animations: 'disabled', scale: 'css', threshold: .1, maxDiffPixels: 0});
+          |                           ^
+      228 |     }
+      229 |   };
+      230 |   await panel.getByRole('link', {name: 'Add friend', exact: true}).click();
+        at capture (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:227:27)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:244:3
+
+    attachment #1: friends-review-desktop (image/png) ──────────────────────────────────────────────
+    Expected: e2e/design-v2-friends.spec.ts-snapshots/friends-review-desktop-mobile-linux.png
+    Received: docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-mobile/friends-review-desktop-actual.png
+    Diff:     docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-mobile/friends-review-desktop-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [firefox-stats] › e2e/design-v2-friends.spec.ts:195:5 › Friends secondary content has deterministic canonical visual candidates 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: locator('v2-friends-page')
+      105 pixels (ratio 0.01 of all image pixels) are different.
+
+      Snapshot: friends-review-desktop.png
+
+    Call log:
+      - Expect "toHaveScreenshot(friends-review-desktop.png)" locator('v2-friends-page') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - 105 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - 105 pixels (ratio 0.01 of all image pixels) are different.
+
+
+      225 |       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      226 |       await panel.screenshot({path: info.outputPath(`candidate-friends-${state}-${name}.png`), animations: 'disabled', scale: 'css'});
+    > 227 |       await expect(panel).toHaveScreenshot(`friends-${state}-${name}.png`, {animations: 'disabled', scale: 'css', threshold: .1, maxDiffPixels: 0});
+          |                           ^
+      228 |     }
+      229 |   };
+      230 |   await panel.getByRole('link', {name: 'Add friend', exact: true}).click();
+        at capture (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:227:27)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:244:3
+
+    attachment #1: friends-review-desktop (image/png) ──────────────────────────────────────────────
+    Expected: e2e/design-v2-friends.spec.ts-snapshots/friends-review-desktop-firefox-stats-linux.png
+    Received: docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-firefox-stats/friends-review-desktop-actual.png
+    Diff:     docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-firefox-stats/friends-review-desktop-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-firefox-stats/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [webkit-stats] › e2e/design-v2-friends.spec.ts:195:5 › Friends secondary content has deterministic canonical visual candidates 
+
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Locator: locator('v2-friends-page')
+      77 pixels (ratio 0.01 of all image pixels) are different.
+
+      Snapshot: friends-review-desktop.png
+
+    Call log:
+      - Expect "toHaveScreenshot(friends-review-desktop.png)" locator('v2-friends-page') with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - 77 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - waiting for locator('v2-friends-page')
+        - locator resolved to <v2-friends-page _nghost-ng-c798132010="">…</v2-friends-page>
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+      - captured a stable screenshot
+      - 77 pixels (ratio 0.01 of all image pixels) are different.
+
+
+      225 |       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      226 |       await panel.screenshot({path: info.outputPath(`candidate-friends-${state}-${name}.png`), animations: 'disabled', scale: 'css'});
+    > 227 |       await expect(panel).toHaveScreenshot(`friends-${state}-${name}.png`, {animations: 'disabled', scale: 'css', threshold: .1, maxDiffPixels: 0});
+          |                           ^
+      228 |     }
+      229 |   };
+      230 |   await panel.getByRole('link', {name: 'Add friend', exact: true}).click();
+        at capture (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:227:27)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:244:3
+
+    attachment #1: friends-review-desktop (image/png) ──────────────────────────────────────────────
+    Expected: e2e/design-v2-friends.spec.ts-snapshots/friends-review-desktop-webkit-stats-linux.png
+    Received: docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-webkit-stats/friends-review-desktop-actual.png
+    Diff:     docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-webkit-stats/friends-review-desktop-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-webkit-stats/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-modern-review-desktop-artifacts/design-v2-friends-Friends--1f39c-canonical-visual-candidates-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [desktop] › e2e/design-v2-friends.spec.ts:195:5 › Friends secondary content has deterministic canonical visual candidates 
+    [mobile] › e2e/design-v2-friends.spec.ts:195:5 › Friends secondary content has deterministic canonical visual candidates 
+    [firefox-stats] › e2e/design-v2-friends.spec.ts:195:5 › Friends secondary content has deterministic canonical visual candidates 
+    [webkit-stats] › e2e/design-v2-friends.spec.ts:195:5 › Friends secondary content has deterministic canonical visual candidates 

@@ -1,0 +1,127 @@
+TAP version 13
+# Subtest: manual Friends workflow has exactly one isolated job and read-only repository permissions
+ok 1 - manual Friends workflow has exactly one isolated job and read-only repository permissions
+  ---
+  duration_ms: 3.340186
+  type: 'test'
+  ...
+# Subtest: manual job preserves the existing real-contract verification and failure behavior exactly
+ok 2 - manual job preserves the existing real-contract verification and failure behavior exactly
+  ---
+  duration_ms: 0.773965
+  type: 'test'
+  ...
+# Subtest: manual workflow uses only pinned reviewed actions and retains evidence on failure
+ok 3 - manual workflow uses only pinned reviewed actions and retains evidence on failure
+  ---
+  duration_ms: 0.374249
+  type: 'test'
+  ...
+# Subtest: PostgREST provenance matches the previously verified official release archive and binary
+ok 4 - PostgREST provenance matches the previously verified official release archive and binary
+  ---
+  duration_ms: 5.256404
+  type: 'test'
+  ...
+# Subtest: accepts only offline flag and Linux x64 Ubuntu24.04; refuses external backends and runtime overrides
+ok 5 - accepts only offline flag and Linux x64 Ubuntu24.04; refuses external backends and runtime overrides
+  ---
+  duration_ms: 1.98175
+  type: 'test'
+  ...
+# Subtest: cache refuses symlink root and ancestor while retaining an unrelated sentinel
+ok 6 - cache refuses symlink root and ancestor while retaining an unrelated sentinel
+  ---
+  duration_ms: 5.226679
+  type: 'test'
+  ...
+# Subtest: cache refuses a world-writable cache without changing its contents
+ok 7 - cache refuses a world-writable cache without changing its contents
+  ---
+  duration_ms: 2.283694
+  type: 'test'
+  ...
+# Subtest: verified extraction refuses changed or symlinked cache bytes before invoking tar
+ok 8 - verified extraction refuses changed or symlinked cache bytes before invoking tar
+  ---
+  duration_ms: 4.747284
+  type: 'test'
+  ...
+# Subtest: checksum-verified local archive extracts data into its owned destination
+ok 9 - checksum-verified local archive extracts data into its owned destination
+  ---
+  duration_ms: 14.915037
+  type: 'test'
+  ...
+# Subtest: system executable trust rejects symlinks, non-root ownership, writable ancestors and non-files
+ok 10 - system executable trust rejects symlinks, non-root ownership, writable ancestors and non-files
+  ---
+  duration_ms: 1.904596
+  type: 'test'
+  ...
+# Subtest: preinstalled PostgreSQL probe checks all four binaries and pgcrypto assets without service startup
+ok 11 - preinstalled PostgreSQL probe checks all four binaries and pgcrypto assets without service startup
+  ---
+  duration_ms: 1.086899
+  type: 'test'
+  ...
+# Subtest: PostgreSQL probe fails closed for wrong/mixed versions, missing binaries and missing extension assets
+ok 12 - PostgreSQL probe fails closed for wrong/mixed versions, missing binaries and missing extension assets
+  ---
+  duration_ms: 1.640172
+  type: 'test'
+  ...
+# Subtest: download fails closed for HTTP errors and redirects leaving official HTTPS hosts
+ok 13 - download fails closed for HTTP errors and redirects leaving official HTTPS hosts
+  ---
+  duration_ms: 36.554651
+  type: 'test'
+  ...
+# Subtest: official redirect bytes remain untrusted until the exact checksum is verified
+ok 14 - official redirect bytes remain untrusted until the exact checksum is verified
+  ---
+  duration_ms: 5.535536
+  type: 'test'
+  ...
+# Subtest: archive size bound rejects oversized network input
+ok 15 - archive size bound rejects oversized network input
+  ---
+  duration_ms: 2.437902
+  type: 'test'
+  ...
+# Subtest: CLI refuses external connection arguments before inspecting host or writing a cache
+not ok 16 - CLI refuses external connection arguments before inspecting host or writing a cache
+  ---
+  duration_ms: 70.999713
+  type: 'test'
+  location: '/mnt/Storage/ProgrammingProjects/Analytify/scripts/provision-isolated-friends-runtime.test.mjs:131:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /Only --offline/. Input:
+    
+    ''
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: ''
+  operator: 'match'
+  stack: |-
+    Object.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/scripts/provision-isolated-friends-runtime.test.mjs:134:41)
+    expectedException (node:assert:547:17)
+    expectsError (node:assert:672:21)
+    strict.rejects (node:assert:738:3)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async TestContext.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/scripts/provision-isolated-friends-runtime.test.mjs:133:3)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 15
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 193.630997

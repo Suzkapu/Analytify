@@ -1,0 +1,93 @@
+{
+  "checkpoint": "53e3e914",
+  "changes": [
+    "Design v2 buttons use canonical2px inside #9FFFC8 focus instead of legacy3px translucent outer ring; stable/global legacy rule unchanged.",
+    "Real Tab traversal activates Revoke before asserting initial Cancel focus paint.",
+    "Remove/Revoke exact canonical dimensions asserted at all existing responsive samples.",
+    "Eight manually reviewed dialog goldens now enforced with unchanged strict0diff/.1threshold."
+  ],
+  "verification": {
+    "focusRed": {
+      "passed": 0,
+      "failed": 1,
+      "exit": 1
+    },
+    "firstStyleRun": {
+      "passed": 3,
+      "failed": 1,
+      "exit": 1,
+      "failure": "Firefox programmatic locator trigger focus did not enter :focus-visible; native Tab path retains all exact style assertions."
+    },
+    "nativeTabFocus": {
+      "passed": 4,
+      "exit": 0
+    },
+    "dialogCandidates": {
+      "passed": 8,
+      "exit": 0
+    },
+    "strictModalMotionAndFocus": {
+      "passed": 20,
+      "exit": 0,
+      "strictGoldens": 8,
+      "projects": [
+        "desktop",
+        "mobile",
+        "firefox-stats",
+        "webkit-stats"
+      ],
+      "motion": [
+        "no-preference",
+        "reduce"
+      ]
+    },
+    "staleRevokeMounted": {
+      "passed": 2,
+      "exit": 0
+    },
+    "scopedLint": 0,
+    "qualityContracts": 0,
+    "parityStaticCheck": 0
+  },
+  "limitations": [
+    "Full64-case Friends matrix/40content comparisons passed earlier frozen build; current20-case run verifies affected dialogs/focus after avatar/shared-style changes, not the combined64again.",
+    "FullCI2237frontend/218worker/83edge passed before shared focus CSS and stale-revoke companion; final feature-boundary CI remains required.",
+    "Primary focused actions need explicit canonical paint verification with feedback-state browser work.",
+    "Eleven feedback variants lack strict browser visual acceptance; no isolated hosted contract completion.",
+    "Whole frontend remains below98% for every metric."
+  ],
+  "sourceSha256": {
+    "src/app/shared/ui-v2/design-v2-primitives.scss": "8779fae24859aa628e49a503623eb12f65ff6cc3f95eacf5e4a5ce0078be2e46",
+    "src/app/features/friends/v2-friends-page.component.ts": "60661d527a7618254682aef8fd8631344662a51eae252622268e3af4fbb32862",
+    "src/app/features/friends/v2-friends-page.component.html": "4b2f0ab1903e3c40b9828c71d930b323b8de27d98a9a228a977d2bf477a11128",
+    "src/app/features/friends/v2-friends-page.component.scss": "b1fb7032a9ea2dcd46ab7ff698e519ef296bae3a5a82fd0823a676a528b07f7e",
+    "e2e/design-v2-friends.spec.ts": "930918d8d113cc7bf098705688fb5e69ff2d8b9ba1e6c28aba32b8aefb1eed3a",
+    "playwright.friends.config.ts": "48a9b284edaeb267e46f0356837ae9aa5c5d7cea125c5601286a613bea4bab46",
+    "src/app/features/friends/v2-friends-avatar-recovery.spec.ts": "cb9711a84f98996d35fa784e35be2f55b0566c35da7e6991077745094596281c",
+    "src/app/features/friends/v2-friends-revoke-refresh.spec.ts": "f033e1cc4c58f8ad07ed0790a6c1e0389c5356c1a31ca75c1b2708534323f891"
+  },
+  "evidenceSha256": {
+    "friends-modal-focus-red.log": "cf3634c1aa103c61841e44207a59d32315433df1a09d83d2f9e63643af4121a6",
+    "friends-modal-focus-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "friends-modal-focus-green.log": "6135d7d0a7480702b2588f79712741de1c79c1c5cb612a2cad067c5d1f4efa64",
+    "friends-modal-focus-green.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "friends-modal-focus-native-tab.log": "4bdcd9b7587cabe860cdf5126cfed0c199fa57dddb129629c7e7b266b25f52c3",
+    "friends-modal-focus-native-tab.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "friends-modal-canonical-candidates.log": "758bf281f6d5e117fa202af3180d77b218a516376368b0a7889572a31c5dcffc",
+    "friends-modal-canonical-candidates.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "friends-modal-strict-regression.log": "eb45c98c5b950358766f044a5a245ad5e307a0e28b40b970fec8a7484516019f",
+    "friends-modal-strict-regression.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "friends-modal-current-lint.log": "c9202668306f78cc58604cb1b84be32454d53f06d5917496a04c9be0ed5fb006",
+    "friends-modal-current-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "friends-modal-quality.log": "e713731f5d1a056f40154c869d3317259d0da34ddfd8df3ffa306e76a632eef5",
+    "friends-modal-quality.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "friends-modal-parity.log": "2d69bbc23ae8640f5731fe3141133abd3c4bf6d61e6ca3377d7c4299e7faad30",
+    "friends-modal-parity.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "friends-revoke-refresh-test.log": "9c1c505538e506ad10703ce38a5e8fa9cfdcf8b910cc9d83326db0c5489bb7ad",
+    "friends-revoke-refresh-test.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "friends-revoke-refresh-lint.log": "a407af057b51d362b718e8b51dbb36bdf5325a39caf6ef4ad4c40df658f84a79",
+    "friends-revoke-refresh-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "friends-modal-canonical-visual-review.json": "5403263bf8f20a8858a2ae1e9c5db2ab1556916569c5f9f20b7477b7813ef1c0",
+    "friends-modal-focus-canonical-read.json": "d86d4f194475f3b4d684c8b768fc415e2f9e3580bf87da721206c85d4e9d5620"
+  }
+}

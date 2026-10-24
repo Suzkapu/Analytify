@@ -1,0 +1,68 @@
+{
+  "scope": "Real standalone V2FriendsFeedbackComponent with production shell SCSS and global build/font styles; no application guard bypass, state injection or production changes. Profile-required defensive component state only, not a reachable protected-page workflow.",
+  "command": "ANALYTIFY_WEBKIT_EXECUTABLE=\"$PWD/.extra_files/portable-webkit/run-webkit.sh\" npm run test:native-components",
+  "verification": {
+    "smallest": "1 Chromium test passed",
+    "firstMatrix": "5 passed, 1 WebKit font-readiness measurement failed; retained log.",
+    "currentMatrix": "6 passed across chromium modern channel, firefox and portable webkit",
+    "canonicalDimensions": [
+      {
+        "width": 576,
+        "height": 82,
+        "node": "1008:32429"
+      },
+      {
+        "width": 358,
+        "height": 102,
+        "node": "1008:32433"
+      }
+    ],
+    "assertions": [
+      "Exact alert dimensions",
+      "Assertive role and live region",
+      "No button or link actions",
+      "Production background/border/body/title paints",
+      "Production Outfit font readiness"
+    ],
+    "coverage": "Separate native visual suite does not replace or alter frontend coverage denominator.",
+    "visualApproval": "Candidate images only; no screenshot assertion or approved baseline yet."
+  },
+  "dependencyAudit": {
+    "directAdded": {
+      "@vitest/browser-playwright": "4.1.11"
+    },
+    "lockPackagesAdded": {
+      "node_modules/@blazediff/core": "1.9.1",
+      "node_modules/@polka/url": "1.0.0-next.29",
+      "node_modules/@vitest/browser": "4.1.11",
+      "node_modules/@vitest/browser-playwright": "4.1.11",
+      "node_modules/@vitest/browser/node_modules/magic-string": "0.30.21",
+      "node_modules/@vitest/browser/node_modules/pngjs": "7.0.0",
+      "node_modules/sirv": "3.0.2",
+      "node_modules/totalist": "3.0.1"
+    },
+    "existingPackagesChanged": [],
+    "packagesRemoved": [],
+    "scriptsExecutedOnInstall": false
+  },
+  "sha256": {
+    "angular.json": "0119f5ce5de9af6922ae61c2679b070e1bc9bc889d70e92ccca6917ef76fb1e2",
+    "package.json": "15c8612090d9b02ab408edb2965eeff095df84bed367d7ca2314d6ad44928bfb",
+    "package-lock.json": "2a6f1557c4d5cebb148872a3569baf06f78ad69c5953eefdd6bae3f2f5747271",
+    "tsconfig.native-components.json": "3cb607d11c1af3c5752f23c3d85d54945a33b258b9af06517babb7ac5dea7e86",
+    "vitest.native-components.config.mjs": "b36a6f47c7b99a58a65d2e6c8ce47867e9afe2554beee05298c71fe707c20756",
+    "e2e/components/friends-feedback.native.ts": "924d3c8690bcd90bd223614c6cb8d21af171cc465f3dd2e7fd34427b2a7b6fbe",
+    "docs/testing-evidence/design-v2/friends-native-component-profile-chromium-358-candidate.png": "e735cf8d24461b47a195cbe1a0119b64fbee2b540eb3522cffcb7244abe4bce5",
+    "docs/testing-evidence/design-v2/friends-native-component-profile-chromium-576-candidate.png": "3c3e53dd15807e684fb678f5ae697d060de1a10f9a3f7bcca83b0e4c3af835bb",
+    "docs/testing-evidence/design-v2/friends-native-component-profile-firefox-358-candidate.png": "d54308e8ee052ee7234bd85a170ca1c6799cf9f54fae5659e15b034131cd8870",
+    "docs/testing-evidence/design-v2/friends-native-component-profile-firefox-576-candidate.png": "ed01c199c22172b53aa732d688b64b884bb31ed4b4293b5b689778fc5eb7cd93",
+    "docs/testing-evidence/design-v2/friends-native-component-profile-webkit-358-candidate.png": "a4dc1e6dc267bcf1a8a5099ebefd50480bdfca5becd84835dd82556b9b2795cf",
+    "docs/testing-evidence/design-v2/friends-native-component-profile-webkit-576-candidate.png": "775804d1d28fc90be09bd2597dc54cf39da6aac9c47a39cc2b6599e950733c84"
+  },
+  "limitations": [
+    "Local native component proof only; not full page, permissions or service contract validation.",
+    "Portable WebKit executable is environment-specific; ordinary installed Playwright WebKit is used when environment override is absent.",
+    "Initial restricted install was interrupted (exit130) before bounded network-enabled installation succeeded.",
+    "No CI workflow scheduling changed in this task."
+  ]
+}

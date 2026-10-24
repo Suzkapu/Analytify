@@ -6,12 +6,19 @@ on:
   pull_request:
     branches: [codex/design-v2]
   workflow_dispatch:
+    inputs:
+      friends_contract_only:
+        description: Run only isolated Friends contracts without deployment
+        type: boolean
+        required: true
+        default: true
 
 permissions:
   contents: read
 
 jobs:
   verify:
+    if: github.event_name != 'workflow_dispatch' || !inputs.friends_contract_only
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -54,6 +61,8 @@ jobs:
       - run: npm run accessibility:browser
       - name: Verify isolated Friends browser workflows
         run: npx playwright test --config=playwright.friends.config.ts
+      - name: Verify native Angular feedback components
+        run: npm run test:native-components
       - name: Verify isolated device Navigation preferences
         run: npx playwright test --config=playwright.navigation.config.ts
       - name: Preserve test evidence
@@ -67,6 +76,7 @@ jobs:
             playwright-report
             docs/testing-evidence/design-v2/friends-browser-artifacts
             docs/testing-evidence/design-v2/navigation-browser-artifacts
+            e2e/components/__screenshots__
           retention-days: 7
       - name: Record preview artifact identity
         run: node -e 'require("node:fs").writeFileSync("dist/spoti-front/version.json",JSON.stringify({commit:process.env.GITHUB_SHA,branch:"codex/design-v2",mount:"/new/"}))'
@@ -104,7 +114,7 @@ jobs:
           retention-days: 7
   deploy:
     needs: [verify, friends-http-contract]
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/codex/design-v2'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/codex/design-v2' && (github.event_name != 'workflow_dispatch' || !inputs.friends_contract_only)
     runs-on: ubuntu-latest
     # Serialize Nginx configuration writes with stable releases, without ever
     # replacing their frontend artifacts or running their backend deployment.

@@ -194,7 +194,7 @@ export class V2FriendsPageComponent implements OnInit, OnDestroy {
     this.removing.set(null);
     await this.controller.remove(friend.userId, friend.connectionVersion);
   }
-  imageFailed(id: string): void {this.brokenImages.update(items => [...items, id]);}
+  imageFailed(url: string): void {this.brokenImages.update(items => [...items, url]);}
   private needsReceive(token: string): boolean {
     return this.preparedToken !== token || (this.controller.feedback() !== 'unavailable' && !this.controller.preview() && !this.controller.answered());
   }

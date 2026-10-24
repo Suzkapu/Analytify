@@ -1,0 +1,187 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts --grep Friends uncertain creation|Friends confirmed (accepted|declined)|Friends acknowledged decision|Friends saved invitation|Friends invitation revoked before|Friends unverified personal|Friends cold loading --output=docs/testing-evidence/design-v2/friends-feedback-matrix-candidates-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:48973) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:48973) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 32 tests using 1 worker
+
+(node:49956) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-friends.spec.ts:188:5 › Friends uncertain creation and terminal owner feedback require explicit recovery (4.9s)
+  ✓   2 [desktop] › e2e/design-v2-friends.spec.ts:207:41 › Friends confirmed accepted feedback stays request-owned (4.9s)
+  ✓   3 [desktop] › e2e/design-v2-friends.spec.ts:207:41 › Friends confirmed declined feedback stays request-owned (5.1s)
+  ✓   4 [desktop] › e2e/design-v2-friends.spec.ts:226:5 › Friends acknowledged decision retries only the failed inventory while showing cached content (4.2s)
+  ✓   5 [desktop] › e2e/design-v2-friends.spec.ts:249:5 › Friends saved invitation explains unavailable session link without revealing a secret (4.4s)
+  ✓   6 [desktop] › e2e/design-v2-friends.spec.ts:262:5 › Friends invitation revoked before confirming read shows unavailable feedback (4.4s)
+  ✘   7 [desktop] › e2e/design-v2-friends.spec.ts:276:5 › Friends unverified personal connection is gated before private inventory access (2.6s)
+(node:53039) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   8 [desktop] › e2e/design-v2-friends.spec.ts:495:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries (6.1s)
+(node:53574) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 [mobile] › e2e/design-v2-friends.spec.ts:188:5 › Friends uncertain creation and terminal owner feedback require explicit recovery (5.4s)
+  ✓  10 [mobile] › e2e/design-v2-friends.spec.ts:207:41 › Friends confirmed accepted feedback stays request-owned (5.2s)
+  ✓  11 [mobile] › e2e/design-v2-friends.spec.ts:207:41 › Friends confirmed declined feedback stays request-owned (5.1s)
+  ✓  12 [mobile] › e2e/design-v2-friends.spec.ts:226:5 › Friends acknowledged decision retries only the failed inventory while showing cached content (4.0s)
+  ✓  13 [mobile] › e2e/design-v2-friends.spec.ts:249:5 › Friends saved invitation explains unavailable session link without revealing a secret (4.2s)
+  ✓  14 [mobile] › e2e/design-v2-friends.spec.ts:262:5 › Friends invitation revoked before confirming read shows unavailable feedback (4.4s)
+  ✘  15 [mobile] › e2e/design-v2-friends.spec.ts:276:5 › Friends unverified personal connection is gated before private inventory access (3.3s)
+(node:56248) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  16 [mobile] › e2e/design-v2-friends.spec.ts:495:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries (6.7s)
+(node:56803) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  17 [firefox-stats] › e2e/design-v2-friends.spec.ts:188:5 › Friends uncertain creation and terminal owner feedback require explicit recovery (7.4s)
+  ✓  18 [firefox-stats] › e2e/design-v2-friends.spec.ts:207:41 › Friends confirmed accepted feedback stays request-owned (4.6s)
+  ✓  19 [firefox-stats] › e2e/design-v2-friends.spec.ts:207:41 › Friends confirmed declined feedback stays request-owned (4.2s)
+  ✓  20 [firefox-stats] › e2e/design-v2-friends.spec.ts:226:5 › Friends acknowledged decision retries only the failed inventory while showing cached content (3.6s)
+  ✓  21 [firefox-stats] › e2e/design-v2-friends.spec.ts:249:5 › Friends saved invitation explains unavailable session link without revealing a secret (4.3s)
+  ✓  22 [firefox-stats] › e2e/design-v2-friends.spec.ts:262:5 › Friends invitation revoked before confirming read shows unavailable feedback (3.7s)
+  ✘  23 [firefox-stats] › e2e/design-v2-friends.spec.ts:276:5 › Friends unverified personal connection is gated before private inventory access (2.1s)
+(node:59336) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  24 [firefox-stats] › e2e/design-v2-friends.spec.ts:495:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries (7.8s)
+(node:60150) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  25 [webkit-stats] › e2e/design-v2-friends.spec.ts:188:5 › Friends uncertain creation and terminal owner feedback require explicit recovery (8.7s)
+  ✓  26 [webkit-stats] › e2e/design-v2-friends.spec.ts:207:41 › Friends confirmed accepted feedback stays request-owned (5.8s)
+  ✓  27 [webkit-stats] › e2e/design-v2-friends.spec.ts:207:41 › Friends confirmed declined feedback stays request-owned (6.2s)
+  ✓  28 [webkit-stats] › e2e/design-v2-friends.spec.ts:226:5 › Friends acknowledged decision retries only the failed inventory while showing cached content (5.2s)
+  ✓  29 [webkit-stats] › e2e/design-v2-friends.spec.ts:249:5 › Friends saved invitation explains unavailable session link without revealing a secret (4.7s)
+  ✓  30 [webkit-stats] › e2e/design-v2-friends.spec.ts:262:5 › Friends invitation revoked before confirming read shows unavailable feedback (4.6s)
+  ✘  31 [webkit-stats] › e2e/design-v2-friends.spec.ts:276:5 › Friends unverified personal connection is gated before private inventory access (3.0s)
+(node:63129) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  32 [webkit-stats] › e2e/design-v2-friends.spec.ts:495:5 › Friends cold loading, keyboard retry and busy decisions preserve data boundaries (9.7s)
+
+
+  1) [desktop] › e2e/design-v2-friends.spec.ts:276:5 › Friends unverified personal connection is gated before private inventory access 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "/new/friends"
+    Received: "/friends"
+
+      277 |   const {panel, writes, unexpected, runtimeErrors, counters} = await setupFriends(page, 'reduce', undefined, undefined, [], {unverifiedPersonalConnection: true});
+      278 |   await expect(page).toHaveURL(/\/new\/spotify\/cloud-access\?/);
+    > 279 |   expect(new URL(page.url()).searchParams.get('returnUrl')).toBe('/new/friends');
+          |                                                             ^
+      280 |   await expect(page.getByRole('heading', {name: 'Enable this workspace feature', exact: true})).toBeVisible();
+      281 |   await expect(panel).toHaveCount(0);
+      282 |   expect(counters().friendsReads).toBe(0); expect(writes).toEqual([]);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:279:61
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-feedback-matrix-candidates-artifacts/design-v2-friends-Friends--05bb3-re-private-inventory-access-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-feedback-matrix-candidates-artifacts/design-v2-friends-Friends--05bb3-re-private-inventory-access-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-feedback-matrix-candidates-artifacts/design-v2-friends-Friends--05bb3-re-private-inventory-access-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-feedback-matrix-candidates-artifacts/design-v2-friends-Friends--05bb3-re-private-inventory-access-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › e2e/design-v2-friends.spec.ts:276:5 › Friends unverified personal connection is gated before private inventory access 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "/new/friends"
+    Received: "/friends"
+
+      277 |   const {panel, writes, unexpected, runtimeErrors, counters} = await setupFriends(page, 'reduce', undefined, undefined, [], {unverifiedPersonalConnection: true});
+      278 |   await expect(page).toHaveURL(/\/new\/spotify\/cloud-access\?/);
+    > 279 |   expect(new URL(page.url()).searchParams.get('returnUrl')).toBe('/new/friends');
+          |                                                             ^
+      280 |   await expect(page.getByRole('heading', {name: 'Enable this workspace feature', exact: true})).toBeVisible();
+      281 |   await expect(panel).toHaveCount(0);
+      282 |   expect(counters().friendsReads).toBe(0); expect(writes).toEqual([]);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:279:61
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-feedback-matrix-candidates-artifacts/design-v2-friends-Friends--05bb3-re-private-inventory-access-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-feedback-matrix-candidates-artifacts/design-v2-friends-Friends--05bb3-re-private-inventory-access-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-feedback-matrix-candidates-artifacts/design-v2-friends-Friends--05bb3-re-private-inventory-access-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-feedback-matrix-candidates-artifacts/design-v2-friends-Friends--05bb3-re-private-inventory-access-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [firefox-stats] › e2e/design-v2-friends.spec.ts:276:5 › Friends unverified personal connection is gated before private inventory access 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "/new/friends"
+    Received: "/friends"
+
+      277 |   const {panel, writes, unexpected, runtimeErrors, counters} = await setupFriends(page, 'reduce', undefined, undefined, [], {unverifiedPersonalConnection: true});
+      278 |   await expect(page).toHaveURL(/\/new\/spotify\/cloud-access\?/);
+    > 279 |   expect(new URL(page.url()).searchParams.get('returnUrl')).toBe('/new/friends');
+          |                                                             ^
+      280 |   await expect(page.getByRole('heading', {name: 'Enable this workspace feature', exact: true})).toBeVisible();
+      281 |   await expect(panel).toHaveCount(0);
+      282 |   expect(counters().friendsReads).toBe(0); expect(writes).toEqual([]);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:279:61
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-feedback-matrix-candidates-artifacts/design-v2-friends-Friends--05bb3-re-private-inventory-access-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-feedback-matrix-candidates-artifacts/design-v2-friends-Friends--05bb3-re-private-inventory-access-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-feedback-matrix-candidates-artifacts/design-v2-friends-Friends--05bb3-re-private-inventory-access-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-feedback-matrix-candidates-artifacts/design-v2-friends-Friends--05bb3-re-private-inventory-access-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [webkit-stats] › e2e/design-v2-friends.spec.ts:276:5 › Friends unverified personal connection is gated before private inventory access 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "/new/friends"
+    Received: "/friends"
+
+      277 |   const {panel, writes, unexpected, runtimeErrors, counters} = await setupFriends(page, 'reduce', undefined, undefined, [], {unverifiedPersonalConnection: true});
+      278 |   await expect(page).toHaveURL(/\/new\/spotify\/cloud-access\?/);
+    > 279 |   expect(new URL(page.url()).searchParams.get('returnUrl')).toBe('/new/friends');
+          |                                                             ^
+      280 |   await expect(page.getByRole('heading', {name: 'Enable this workspace feature', exact: true})).toBeVisible();
+      281 |   await expect(panel).toHaveCount(0);
+      282 |   expect(counters().friendsReads).toBe(0); expect(writes).toEqual([]);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:279:61
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-feedback-matrix-candidates-artifacts/design-v2-friends-Friends--05bb3-re-private-inventory-access-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-feedback-matrix-candidates-artifacts/design-v2-friends-Friends--05bb3-re-private-inventory-access-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-feedback-matrix-candidates-artifacts/design-v2-friends-Friends--05bb3-re-private-inventory-access-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-feedback-matrix-candidates-artifacts/design-v2-friends-Friends--05bb3-re-private-inventory-access-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [desktop] › e2e/design-v2-friends.spec.ts:276:5 › Friends unverified personal connection is gated before private inventory access 
+    [mobile] › e2e/design-v2-friends.spec.ts:276:5 › Friends unverified personal connection is gated before private inventory access 
+    [firefox-stats] › e2e/design-v2-friends.spec.ts:276:5 › Friends unverified personal connection is gated before private inventory access 
+    [webkit-stats] › e2e/design-v2-friends.spec.ts:276:5 › Friends unverified personal connection is gated before private inventory access 
+  28 passed (3.1m)

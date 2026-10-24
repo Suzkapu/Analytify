@@ -1,0 +1,71 @@
+{
+  "approval": "Root explicitly approved all six existing candidates after manual comparison against fresh canonical exports in friends-native-profile-visual-review.png. This task manually copies those exact approved files; no regeneration or update command.",
+  "installedApiEvidence": [
+    "@vitest/browser/dist/index.js:2074 default path resolver and 2081 config merge",
+    "@vitest/browser/dist/index.js:2273 missing reference update behavior",
+    "vitest/dist/chunks/reporters.d.DtoKVV2s.d.ts:2865 update supports none",
+    "@vitest/browser/context.d.ts ScreenshotMatcherOptions and comparator options"
+  ],
+  "resolver": "root/e2e/components/__screenshots__/friends-feedback.native.ts/{arg}-{browserName}-{platform}{ext}; arg=profile-required-{width}, ext=.png",
+  "gates": {
+    "update": "none",
+    "allowedMismatchedPixels": 0,
+    "allowedMismatchedPixelRatio": 0,
+    "threshold": 0.1
+  },
+  "baselines": [
+    {
+      "candidate": "docs/testing-evidence/design-v2/friends-native-component-profile-chromium-576-candidate.png",
+      "baseline": "e2e/components/__screenshots__/friends-feedback.native.ts/profile-required-576-chromium-linux.png",
+      "sha256": "3c3e53dd15807e684fb678f5ae697d060de1a10f9a3f7bcca83b0e4c3af835bb",
+      "baselineSha256": "3c3e53dd15807e684fb678f5ae697d060de1a10f9a3f7bcca83b0e4c3af835bb"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/friends-native-component-profile-chromium-358-candidate.png",
+      "baseline": "e2e/components/__screenshots__/friends-feedback.native.ts/profile-required-358-chromium-linux.png",
+      "sha256": "e735cf8d24461b47a195cbe1a0119b64fbee2b540eb3522cffcb7244abe4bce5",
+      "baselineSha256": "e735cf8d24461b47a195cbe1a0119b64fbee2b540eb3522cffcb7244abe4bce5"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/friends-native-component-profile-firefox-576-candidate.png",
+      "baseline": "e2e/components/__screenshots__/friends-feedback.native.ts/profile-required-576-firefox-linux.png",
+      "sha256": "ed01c199c22172b53aa732d688b64b884bb31ed4b4293b5b689778fc5eb7cd93",
+      "baselineSha256": "ed01c199c22172b53aa732d688b64b884bb31ed4b4293b5b689778fc5eb7cd93"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/friends-native-component-profile-firefox-358-candidate.png",
+      "baseline": "e2e/components/__screenshots__/friends-feedback.native.ts/profile-required-358-firefox-linux.png",
+      "sha256": "d54308e8ee052ee7234bd85a170ca1c6799cf9f54fae5659e15b034131cd8870",
+      "baselineSha256": "d54308e8ee052ee7234bd85a170ca1c6799cf9f54fae5659e15b034131cd8870"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/friends-native-component-profile-webkit-576-candidate.png",
+      "baseline": "e2e/components/__screenshots__/friends-feedback.native.ts/profile-required-576-webkit-linux.png",
+      "sha256": "775804d1d28fc90be09bd2597dc54cf39da6aac9c47a39cc2b6599e950733c84",
+      "baselineSha256": "775804d1d28fc90be09bd2597dc54cf39da6aac9c47a39cc2b6599e950733c84"
+    },
+    {
+      "candidate": "docs/testing-evidence/design-v2/friends-native-component-profile-webkit-358-candidate.png",
+      "baseline": "e2e/components/__screenshots__/friends-feedback.native.ts/profile-required-358-webkit-linux.png",
+      "sha256": "a4dc1e6dc267bcf1a8a5099ebefd50480bdfca5becd84835dd82556b9b2795cf",
+      "baselineSha256": "a4dc1e6dc267bcf1a8a5099ebefd50480bdfca5becd84835dd82556b9b2795cf"
+    }
+  ],
+  "sourceSha256": {
+    "e2e/components/friends-feedback.native.ts": "76ccd747fdb7104761bb10954612e3cda25dad8f6158b3d69673acd41610f8b2",
+    "vitest.native-components.config.mjs": "ef81ced942a1a54350e714d7e5749e58a10e82b0589f3445a0e14772a305ed7f"
+  },
+  "verification": {
+    "command": "ANALYTIFY_WEBKIT_EXECUTABLE=\"$PWD/.extra_files/portable-webkit/run-webkit.sh\" npm run test:native-components",
+    "casesPassed": 6,
+    "filesPassed": 3,
+    "strictScreenshotAssertions": 6,
+    "lintExit": 0,
+    "typesExit": 0,
+    "logs": {
+      "docs/testing-evidence/design-v2/friends-native-component-strict.log": "c6591a404d065a7943d5b5427291e9e8e953c2714c6014e66a6c3418db11800b",
+      "docs/testing-evidence/design-v2/friends-native-component-strict-lint.log": "8b227a94e38735f7621b56aacd8bb8aef57d11b73c4d38140701a7970a9f0d84",
+      "docs/testing-evidence/design-v2/friends-native-component-strict-types.log": "21ed078e5c064393a910e459092dd0dcff1284ae6f5313717c624500b0ea2b12"
+    }
+  }
+}

@@ -10,6 +10,40 @@ const entry = (total, covered) => Object.fromEntries(
   ['statements', 'branches', 'functions', 'lines'].map(metric => [metric, {total, covered}])
 );
 
+test('keeps native component checks separate from ordinary unit coverage', () => {
+  const architect = JSON.parse(readFileSync('angular.json', 'utf8')).projects.SpotiFront.architect;
+  const native = architect['native-components'];
+  assert.equal(native.builder, '@angular/build:unit-test');
+  assert.equal(native.options.runner, 'vitest');
+  assert.equal(native.options.runnerConfig, 'vitest.native-components.config.mjs');
+  assert.deepEqual(native.options.include, ['../e2e/components/*.native.ts']);
+  assert.equal(native.options.watch, false);
+  assert.equal(native.options.coverageExclude, undefined);
+  assert.equal(architect.test.options.runnerConfig, 'vitest.base.config.mjs');
+  assert.deepEqual(architect.test.options.coverageInclude, ['src/**/*.ts']);
+});
+
+test('native visual checks reject updates and compare all three browser engines strictly', async () => {
+  const {test: configuration} = (await import('../vitest.native-components.config.mjs')).default;
+  assert.equal(configuration.update, 'none');
+  assert.equal(configuration.browser.enabled, true);
+  assert.equal(configuration.browser.headless, true);
+  assert.deepEqual(configuration.browser.instances.map(instance => instance.browser), ['chromium', 'firefox', 'webkit']);
+  assert.deepEqual(configuration.browser.expect.toMatchScreenshot.comparatorOptions,
+    {allowedMismatchedPixels: 0, allowedMismatchedPixelRatio: 0, threshold: 0.1});
+  const source = readFileSync('e2e/components/friends-feedback.native.ts', 'utf8');
+  assert.match(source, /expect\.element\(alert\)\.toMatchScreenshot/);
+});
+
+test('preview verification requires native component checks after installing browser engines', () => {
+  const workflow = readFileSync('.github/workflows/preview.yml', 'utf8');
+  const verify = workflow.split(/\n  friends-http-contract:/)[0];
+  const native = verify.indexOf('run: npm run test:native-components');
+  assert.ok(native > verify.indexOf('npx playwright install --with-deps chromium firefox webkit'));
+  assert.ok(native < verify.indexOf('Record preview artifact identity'));
+  assert.match(workflow, /deploy:\s*\n\s+needs: \[verify, friends-http-contract\]/);
+});
+
 test('bounds concurrent test environments without weakening deadlines or coverage', async () => {
   const runner = (await import('../vitest.base.config.mjs')).default;
   const options = JSON.parse(readFileSync('angular.json', 'utf8')).projects.SpotiFront.architect.test.options;

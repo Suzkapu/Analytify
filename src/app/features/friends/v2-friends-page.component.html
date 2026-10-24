@@ -21,7 +21,7 @@
       @for (friend of inventory.friends; track friend.userId) {
         <article class="friends-card friend-row">
           <span class="avatar" aria-hidden="true">
-            @if (friend.imageUrl && !brokenImages().includes(friend.userId)) {<img [src]="friend.imageUrl" alt="" (error)="imageFailed(friend.userId)">}
+            @if (friend.imageUrl && !brokenImages().includes(friend.imageUrl)) {<img [src]="friend.imageUrl" alt="" (error)="imageFailed(friend.imageUrl)">}
             @else { {{ friend.displayName.slice(0, 1).toUpperCase() }} }
           </span>
           <div class="identity"><h2>{{ friend.displayName }}</h2><p>Connected</p></div>

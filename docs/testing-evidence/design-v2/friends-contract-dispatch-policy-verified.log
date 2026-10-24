@@ -1,0 +1,112 @@
+TAP version 13
+# Subtest: registered preview dispatch defaults to a required boolean test-only mode
+ok 1 - registered preview dispatch defaults to a required boolean test-only mode
+  ---
+  duration_ms: 4.801153
+  type: 'test'
+  ...
+# Subtest: actual job conditions prevent test-only deployment and preserve ordinary release boundaries
+ok 2 - actual job conditions prevent test-only deployment and preserve ordinary release boundaries
+  ---
+  duration_ms: 16.402084
+  type: 'test'
+  ...
+# Subtest: test-only mode preserves the real isolated contract and failure behavior
+ok 3 - test-only mode preserves the real isolated contract and failure behavior
+  ---
+  duration_ms: 1.308506
+  type: 'test'
+  ...
+# Subtest: isolated job uses only pinned reviewed actions and retains evidence on failure
+ok 4 - isolated job uses only pinned reviewed actions and retains evidence on failure
+  ---
+  duration_ms: 1.302615
+  type: 'test'
+  ...
+# Subtest: PostgREST provenance matches the previously verified official release archive and binary
+ok 5 - PostgREST provenance matches the previously verified official release archive and binary
+  ---
+  duration_ms: 8.519533
+  type: 'test'
+  ...
+# Subtest: accepts only offline flag and Linux x64 Ubuntu24.04; refuses external backends and runtime overrides
+ok 6 - accepts only offline flag and Linux x64 Ubuntu24.04; refuses external backends and runtime overrides
+  ---
+  duration_ms: 3.190353
+  type: 'test'
+  ...
+# Subtest: cache refuses symlink root and ancestor while retaining an unrelated sentinel
+ok 7 - cache refuses symlink root and ancestor while retaining an unrelated sentinel
+  ---
+  duration_ms: 8.141145
+  type: 'test'
+  ...
+# Subtest: cache refuses a world-writable cache without changing its contents
+ok 8 - cache refuses a world-writable cache without changing its contents
+  ---
+  duration_ms: 3.561076
+  type: 'test'
+  ...
+# Subtest: verified extraction refuses changed or symlinked cache bytes before invoking tar
+ok 9 - verified extraction refuses changed or symlinked cache bytes before invoking tar
+  ---
+  duration_ms: 5.748744
+  type: 'test'
+  ...
+# Subtest: checksum-verified local archive extracts data into its owned destination
+ok 10 - checksum-verified local archive extracts data into its owned destination
+  ---
+  duration_ms: 20.513439
+  type: 'test'
+  ...
+# Subtest: system executable trust rejects symlinks, non-root ownership, writable ancestors and non-files
+ok 11 - system executable trust rejects symlinks, non-root ownership, writable ancestors and non-files
+  ---
+  duration_ms: 1.747636
+  type: 'test'
+  ...
+# Subtest: preinstalled PostgreSQL probe checks all four binaries and pgcrypto assets without service startup
+ok 12 - preinstalled PostgreSQL probe checks all four binaries and pgcrypto assets without service startup
+  ---
+  duration_ms: 0.894181
+  type: 'test'
+  ...
+# Subtest: PostgreSQL probe fails closed for wrong/mixed versions, missing binaries and missing extension assets
+ok 13 - PostgreSQL probe fails closed for wrong/mixed versions, missing binaries and missing extension assets
+  ---
+  duration_ms: 1.18797
+  type: 'test'
+  ...
+# Subtest: download fails closed for HTTP errors and redirects leaving official HTTPS hosts
+ok 14 - download fails closed for HTTP errors and redirects leaving official HTTPS hosts
+  ---
+  duration_ms: 45.023697
+  type: 'test'
+  ...
+# Subtest: official redirect bytes remain untrusted until the exact checksum is verified
+ok 15 - official redirect bytes remain untrusted until the exact checksum is verified
+  ---
+  duration_ms: 5.692959
+  type: 'test'
+  ...
+# Subtest: archive size bound rejects oversized network input
+ok 16 - archive size bound rejects oversized network input
+  ---
+  duration_ms: 2.800093
+  type: 'test'
+  ...
+# Subtest: CLI refuses external connection arguments before inspecting host or writing a cache
+ok 17 - CLI refuses external connection arguments before inspecting host or writing a cache
+  ---
+  duration_ms: 70.875303
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 240.521873

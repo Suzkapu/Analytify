@@ -1,0 +1,62 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts --project=desktop --grep Friends uncertain creation|Friends confirmed (accepted|declined)|Friends acknowledged decision|Friends saved invitation|Friends invitation revoked before|Friends unverified personal --output=docs/testing-evidence/design-v2/friends-feedback-remaining-desktop-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:41001) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:41001) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 7 tests using 1 worker
+
+(node:41270) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop] › e2e/design-v2-friends.spec.ts:188:5 › Friends uncertain creation and terminal owner feedback require explicit recovery (4.8s)
+  ✓  2 [desktop] › e2e/design-v2-friends.spec.ts:207:41 › Friends confirmed accepted feedback stays request-owned (4.5s)
+  ✓  3 [desktop] › e2e/design-v2-friends.spec.ts:207:41 › Friends confirmed declined feedback stays request-owned (4.7s)
+  ✓  4 [desktop] › e2e/design-v2-friends.spec.ts:226:5 › Friends acknowledged decision retries only the failed inventory while showing cached content (3.8s)
+  ✓  5 [desktop] › e2e/design-v2-friends.spec.ts:249:5 › Friends saved invitation explains unavailable session link without revealing a secret (3.6s)
+  ✓  6 [desktop] › e2e/design-v2-friends.spec.ts:262:5 › Friends invitation revoked before confirming read shows unavailable feedback (3.7s)
+  ✘  7 [desktop] › e2e/design-v2-friends.spec.ts:276:5 › Friends unverified personal connection requests profile confirmation without reading private inventory (7.2s)
+
+
+  1) [desktop] › e2e/design-v2-friends.spec.ts:276:5 › Friends unverified personal connection requests profile confirmation without reading private inventory 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('v2-friends-page').locator('v2-friends-feedback').getByRole('alert')
+    Expected substring: "Confirm your Spotify account"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" locator('v2-friends-page').locator('v2-friends-feedback').getByRole('alert') with timeout 5000ms
+      - waiting for locator('v2-friends-page').locator('v2-friends-feedback').getByRole('alert')
+
+
+      277 |   const {panel, writes, unexpected, runtimeErrors, counters} = await setupFriends(page, 'reduce', undefined, undefined, [], {profileRequired: true});
+      278 |   const feedback = panel.locator('v2-friends-feedback');
+    > 279 |   await expect(feedback.getByRole('alert')).toContainText('Confirm your Spotify account');
+          |                                             ^
+      280 |   await expect(panel.locator('.friend-row, .request, .invitation-url, .qr-slot img')).toHaveCount(0);
+      281 |   await captureRemainingFeedbackCandidate(page, feedback, info, 'profile-required');
+      282 |   expect(counters().friendsReads).toBe(0); expect(writes).toEqual([]);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:279:45
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-feedback-remaining-desktop-artifacts/design-v2-friends-Friends--f9bb0-t-reading-private-inventory-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-feedback-remaining-desktop-artifacts/design-v2-friends-Friends--f9bb0-t-reading-private-inventory-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-feedback-remaining-desktop-artifacts/design-v2-friends-Friends--f9bb0-t-reading-private-inventory-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-feedback-remaining-desktop-artifacts/design-v2-friends-Friends--f9bb0-t-reading-private-inventory-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-friends.spec.ts:276:5 › Friends unverified personal connection requests profile confirmation without reading private inventory 
+  6 passed (47.4s)

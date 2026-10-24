@@ -1,0 +1,128 @@
+{
+  "checkpoint": "53e3e914",
+  "browser": {
+    "command": "ANALYTIFY_WEBKIT_EXECUTABLE=\"$PWD/.extra_files/portable-webkit/run-webkit.sh\" npx playwright test --config=playwright.friends.config.ts --output=docs/testing-evidence/design-v2/friends-modern-final-browser-artifacts",
+    "exit": 0,
+    "passed": 64,
+    "projects": [
+      "desktop",
+      "mobile",
+      "firefox-stats",
+      "webkit-stats"
+    ],
+    "strictContentSnapshots": 40,
+    "sourceHashesFile": "friends-modern-browser-source-hashes.json",
+    "log": "friends-modern-final-browser.log",
+    "limits": [
+      "Frozen browser build predates subsequent avatar source correction and keyboard-focus characterization.",
+      "Modal screenshots remain candidates; fresh canonical focus audit found external legacy outline mismatch.",
+      "No strict feedback-state goldens yet.",
+      "No isolated hosted service-contract completion claim."
+    ]
+  },
+  "reviewSha256": {
+    "friends-modern-empty-visual-review.json": "70fb593af75d398b9d055cb5949f9e46412c10f62893f98e31af0708410c2ae3",
+    "friends-modern-corrected-desktop-visual-review.json": "dfac81248b8ac667b0e47aa51ae17864a5f3a0209868ee072916c070d24d2f30",
+    "friends-modern-corrected-mobile-visual-review.json": "a89b3312567d6799ea295caf32613048baff936e83fa5fffe74719f34a728d52",
+    "friends-modern-invitations-corrected-desktop-visual-review.json": "a8d2ab6de751e8aa707cdd96c7d10241b78e17a962cccd6527196abb4b320d93",
+    "friends-modern-invitations-mobile-visual-review.json": "bbcbe8bd7446ad185d0a8921caa3022481e3c906c100e7359ccb58e69fcd4ee1",
+    "friends-modern-review-desktop-visual-review.json": "5c5c42c4d26d7c439ce62b68688f70da6e404f18e80b265832bc6ff819ed027f",
+    "friends-modern-review-mobile-visual-review.json": "f09936e45e1c701203ceb3093cc69e4eaae1690894278fb5aa03a515a4a69050"
+  },
+  "snapshotSha256": {
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-add-desktop-desktop-linux.png": "4a7825ee392b3b3bbbfd66de2065cec6ad3fc09b49b1d1891d46c51fbf1b1c32",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-add-desktop-firefox-stats-linux.png": "adaf8764ca56241919bd472c92b6f2415386c42926f6d47132c55cdae68925bd",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-add-desktop-mobile-linux.png": "4a7825ee392b3b3bbbfd66de2065cec6ad3fc09b49b1d1891d46c51fbf1b1c32",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-add-desktop-webkit-stats-linux.png": "e55ab3a4a16dcba77495938b658c279515ce16b5283912f4a7060f71b12b2610",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-add-mobile-desktop-linux.png": "c454838621532e4f15eb3dfbc961d94e65dfd2de8ca4abc8c238b172f6e751c4",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-add-mobile-firefox-stats-linux.png": "2289fce40b23408a166e6d6fea9e76e9d32a01d015783c87768880fedd543aa3",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-add-mobile-mobile-linux.png": "e4e8c508677721f879c8795d07d3c5252574f1e52ac9819e0ecbb7da63faba24",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-add-mobile-webkit-stats-linux.png": "2ceb2f8a038d10b140fb1c786b992206d8f2ab800a472e88860417741bfc1904",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-empty-desktop-desktop-linux.png": "6ac8803fd19dd4505fce01e0c22df3212881981114ef5f8fffe5936241a9f3b5",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-empty-desktop-firefox-stats-linux.png": "fb149fbd6be5bb4925f0a26bbb88340d16db00b50bd9148c0d7ec7308ca563cf",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-empty-desktop-mobile-linux.png": "6ac8803fd19dd4505fce01e0c22df3212881981114ef5f8fffe5936241a9f3b5",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-empty-desktop-webkit-stats-linux.png": "a14d82658e4c9521a89d2c641c446b59938d2ea9ee4b680e44556dd4b0520a97",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-empty-mobile-desktop-linux.png": "f7f35c0a8d3716539fc9afc1b7e127f436b0a9c74bbfd972c0065a491020a391",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-empty-mobile-firefox-stats-linux.png": "57591ab81f93c33a5022509d417ebbea338fa98b7da877ce18870f53dca13a7a",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-empty-mobile-mobile-linux.png": "655ea149584f18cad6b01e1b33f9cc66e46137f6b59901c631321a872bd7f0fb",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-empty-mobile-webkit-stats-linux.png": "41011a93d73c5ced027778f4b9e3989af6aa9ba78df0fc9fada4662ef291c6ba",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-invitations-desktop-desktop-linux.png": "7a1dc00aa98f024fc5bbd07a09249a9f3f8428a49ccae1ecbfc7cd6296f4c6b1",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-invitations-desktop-firefox-stats-linux.png": "35f19ecd6dd89745a848e88c2209ce25186da55dee40c1b9bc7f4cf0f32552ce",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-invitations-desktop-mobile-linux.png": "7a1dc00aa98f024fc5bbd07a09249a9f3f8428a49ccae1ecbfc7cd6296f4c6b1",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-invitations-desktop-webkit-stats-linux.png": "c58f0071d58bb5e4820075ed0c1b534fd7231111d23418edac21cd0da7efc926",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-invitations-mobile-desktop-linux.png": "221da0c01fa95cd24e24b24927f9e7983159667d75a2432c592238a3d9a6b92b",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-invitations-mobile-firefox-stats-linux.png": "4f567d4027b6fd87b4e348be8453d404ed52cda3b07819cd4c2ade41f0cc0a7c",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-invitations-mobile-mobile-linux.png": "a996ea59af9cc2c74b234a84a4d4eb9f82aaeabfeb830e2701c61e294376e8ae",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-invitations-mobile-webkit-stats-linux.png": "d45860d72eaef78200618b91e7a838d0ff94247f2f1279d47a704253e0318e41",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-ready-desktop-desktop-linux.png": "dda8f9b1f6b14e768f44c4dea14db4b025f6c1edd58d0a759cab16eeff9f0266",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-ready-desktop-firefox-stats-linux.png": "7a1a2877ed62f8bc2459e0b8c5f2f4eef17d4cffe42b20b6a8713849012d3ef5",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-ready-desktop-mobile-linux.png": "6ef91f7155ed3e68e67bcaf65c60e0236525198a7824b7921731517e312c1139",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-ready-desktop-webkit-stats-linux.png": "933faa8bad16665ffa27841bdc249583c6579cfed2136f2c4e1c0673ce1f0a85",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-ready-mobile-desktop-linux.png": "8c26174b3607205e6b6d831f0c4883cbc25e83a025fa6cffaf81af3e1df4bbb9",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-ready-mobile-firefox-stats-linux.png": "4616a175119911e4964be0b17d07dd58cd198146eafbea1e053cefde6f434165",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-ready-mobile-mobile-linux.png": "e1a145f5ecb0658af1e23f1b5da9202f8ce5b44848da94f886795ac6ddf55f86",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-ready-mobile-webkit-stats-linux.png": "ceb1c6970b6ab8cc4e149fbe91a64cc0da3980880b4018ca9b544a81976a69a3",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-review-desktop-desktop-linux.png": "9eb3b801fac1f6650453848f421a12d0c30bf0e8c409ffd449ab7691f17df82d",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-review-desktop-firefox-stats-linux.png": "de8d204a089df238a21a098c8dd0da45b93864b6305839147eaba78c5cd9ef1d",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-review-desktop-mobile-linux.png": "9eb3b801fac1f6650453848f421a12d0c30bf0e8c409ffd449ab7691f17df82d",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-review-desktop-webkit-stats-linux.png": "a9d8ced0e660db5b4bade065380002201c20931e22621faeffb210449f8fe810",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-review-mobile-desktop-linux.png": "b283b35ded4932577f8957a535dc3f2532512014a1b09e66126858a977288abf",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-review-mobile-firefox-stats-linux.png": "9e704aec33cb3493ca8a789c0ed4a84b58e9e2f37d83efaecb7689cbd6093ebd",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-review-mobile-mobile-linux.png": "ff14a3fc85f4645a4b9a0a894ac906aecb58be80a130afce2dc660b290c0ae1c",
+    "e2e/design-v2-friends.spec.ts-snapshots/friends-review-mobile-webkit-stats-linux.png": "8b4dec93340dbce5566ede4d05319c5ee123b99b269a199f3684107bb78ccb03"
+  },
+  "evidenceSha256": {
+    "friends-modern-final-browser.log": "ec6643f4628fcc1946c1506f6366b31b6817aa6564ddcdb26dff28790de9fc74",
+    "friends-modern-final-browser.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "friends-modern-browser-source-hashes.json": "778731d29fc898857914be6e6fafbd6534d60e15fe59b3f584c5c8993fb6fb92",
+    "friends-modal-focus-canonical-read.json": "d86d4f194475f3b4d684c8b768fc415e2f9e3580bf87da721206c85d4e9d5620",
+    "friends-modern-current-ci.log": "6070256f2bab3a9e9c59a49441b46d5a6f2f0bc884ae11703e491b1f33eafad1",
+    "friends-modern-current-ci.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "friends-modern-frontend-coverage-summary.json": "19838d195d1453f126f809ce1691728cc2c88720a319f643037a23547d10a31d",
+    "friends-modern-frontend-final98.log": "ef2c34cf8258090e9c2f6de47e0d5224b4ae91988da4061873953d4872280c70",
+    "friends-modern-frontend-final98.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  },
+  "localCI": {
+    "command": "npm run verify:ci",
+    "log": "friends-modern-current-ci.log",
+    "exit": 0,
+    "frontendPassed": 2237,
+    "frontendDocumentedHostedSkip": 1,
+    "workerPassed": 218,
+    "edgePassed": 83,
+    "productionSourcesIncluded": 167,
+    "frontendCoverage": {
+      "lines": {
+        "total": 11388,
+        "covered": 10052,
+        "skipped": 0,
+        "pct": 88.26
+      },
+      "statements": {
+        "total": 13439,
+        "covered": 11686,
+        "skipped": 0,
+        "pct": 86.95
+      },
+      "functions": {
+        "total": 2780,
+        "covered": 2398,
+        "skipped": 0,
+        "pct": 86.25
+      },
+      "branches": {
+        "total": 8726,
+        "covered": 7110,
+        "skipped": 0,
+        "pct": 81.48
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "limitation": "CI completed before subsequent shared button-focus CSS correction and modal focus assertions. Application/avatar source was current; shared focus style requires affected browser verification and later feature-boundary CI."
+  }
+}

@@ -168,6 +168,19 @@
               "src/environments/environment.browser-testing.ts"
             ]
           }
+        },
+        "native-components": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "tsconfig.native-components.json",
+            "buildTarget": ":build:development",
+            "runner": "vitest",
+            "runnerConfig": "vitest.native-components.config.mjs",
+            "include": [
+              "../e2e/components/*.native.ts"
+            ],
+            "watch": false
+          }
         }
       }
     }

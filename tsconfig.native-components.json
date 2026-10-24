@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {"outDir": "./out-tsc/native-components", "types": ["vitest/globals", "@vitest/browser-playwright"]},
+  "include": ["e2e/components/*.native.ts"]
+}

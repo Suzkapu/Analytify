@@ -28,7 +28,7 @@
     "content:check": "node --test scripts/content-copy.test.mjs",
     "performance:check": "node scripts/check-performance-contracts.mjs",
     "design-v2-parity:check": "node scripts/check-design-v2-parity.mjs",
-    "design-v2-quality:check": "node --test scripts/design-v2-test-policy.test.mjs scripts/router-transition-policy.test.mjs scripts/native-transition-observer.test.mjs && node scripts/check-design-v2-quality.mjs",
+    "design-v2-quality:check": "node --test scripts/design-v2-test-policy.test.mjs scripts/friends-contract-workflow.test.mjs scripts/router-transition-policy.test.mjs scripts/native-transition-observer.test.mjs && node scripts/check-design-v2-quality.mjs",
     "api-usage:check": "node scripts/check-api-on-demand.mjs",
     "admin:check": "node scripts/check-admin-control-plane.mjs && node --test scripts/operational-policy.test.mjs",
     "deployment-pipeline:check": "node --test scripts/production-index-validator.test.mjs scripts/activate-release.test.mjs scripts/activate-release-rehearsal.test.mjs scripts/security-headers.test.mjs scripts/inject-nginx-security-include.test.mjs scripts/nginx-http2.test.mjs scripts/deployment-freshness.test.mjs scripts/deployment-policy.test.mjs && bash -n scripts/preflight-oracle-ssh.sh",
@@ -53,7 +53,8 @@
     "test:coverage:worker": "node scripts/run-application-coverage.mjs worker && node scripts/check-application-coverage-inventory.mjs worker --final",
     "test:coverage:edge": "node scripts/run-application-coverage.mjs edge && node scripts/check-application-coverage-inventory.mjs edge --final",
     "test:coverage:final": "node scripts/check-application-coverage-inventory.mjs frontend --final && node scripts/check-application-coverage-inventory.mjs worker --final && node scripts/check-application-coverage-inventory.mjs edge --final",
-    "test:coverage:instrumentation": "node --test scripts/report-worker-v8-coverage.test.mjs"
+    "test:coverage:instrumentation": "node --test scripts/report-worker-v8-coverage.test.mjs",
+    "test:native-components": "ng run SpotiFront:native-components"
   },
   "license": "AGPL-3.0-only",
   "private": true,
@@ -87,6 +88,7 @@
     "@playwright/test": "^1.63.0",
     "@types/node": "^26.6.2",
     "@types/qrcode": "^1.5.6",
+    "@vitest/browser-playwright": "4.1.11",
     "@vitest/coverage-v8": "^4.1.11",
     "angular-eslint": "^22.5.0",
     "chokidar": "^5.0.0",

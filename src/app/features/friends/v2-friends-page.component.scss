@@ -29,6 +29,7 @@ p { color: var(--v2-color-text-muted); }
 .copy-icon { --friend-icon: url('../../../assets/design-v2/friends-copy.svg'); }
 .qr-icon { --friend-icon: url('../../../assets/design-v2/friends-qr.svg'); }
 .trash { --friend-icon: url('../../../assets/design-v2/friends-trash.svg'); }
+.pending-invitation .qr-icon, .confirmation .trash { color: var(--v2-color-text-muted); }
 .invitation-icon { display: block; flex: none; width: 18px; height: 18px; background: var(--v2-color-text-muted); mask: url('../../../assets/design-v2/friends-invitations.svg') center / contain no-repeat; }
 .friends-tabs .v2-button--primary .invitation-icon { background: var(--v2-color-accent-ink); }
 .qr-identity { display: flex; align-items: center; gap: var(--v2-space-3); }

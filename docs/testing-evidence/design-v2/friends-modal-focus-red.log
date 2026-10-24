@@ -1,0 +1,59 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts --grep Friends confirmation typography --project=desktop --output=docs/testing-evidence/design-v2/friends-modal-focus-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:127738) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:127738) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:130682) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-friends.spec.ts:389:5 › Friends confirmation typography and keyboard focus match canonical after font readiness (7.1s)
+
+
+  1) [desktop] › e2e/design-v2-friends.spec.ts:389:5 › Friends confirmation typography and keyboard focus match canonical after font readiness 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "color": "rgb(159, 255, 200)",
+    -   "offset": "-2px",
+    +   "color": "rgba(50, 223, 120, 0.48)",
+    +   "offset": "3px",
+        "style": "solid",
+        "visible": true,
+    -   "width": "2px",
+    +   "width": "3px",
+      }
+
+      422 |   });
+      423 |   await writeFile(info.outputPath('friends-dialog-focus-paint.json'), JSON.stringify(focusPaint, null, 2));
+    > 424 |   expect(focusPaint).toEqual({visible: true, width: '2px', offset: '-2px', color: 'rgb(159, 255, 200)', style: 'solid'});
+          |                      ^
+      425 | });
+      426 |
+      427 | for (const motion of ['no-preference', 'reduce'] as const) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-friends.spec.ts:424:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modal-focus-red-artifacts/design-v2-friends-Friends--06bfe-onical-after-font-readiness-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/friends-modal-focus-red-artifacts/design-v2-friends-Friends--06bfe-onical-after-font-readiness-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/friends-modal-focus-red-artifacts/design-v2-friends-Friends--06bfe-onical-after-font-readiness-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/friends-modal-focus-red-artifacts/design-v2-friends-Friends--06bfe-onical-after-font-readiness-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-friends.spec.ts:389:5 › Friends confirmation typography and keyboard focus match canonical after font readiness 

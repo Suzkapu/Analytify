@@ -1,0 +1,106 @@
+TAP version 13
+# Subtest: manual Friends workflow has exactly one isolated job and read-only repository permissions
+ok 1 - manual Friends workflow has exactly one isolated job and read-only repository permissions
+  ---
+  duration_ms: 3.20814
+  type: 'test'
+  ...
+# Subtest: manual job preserves the existing real-contract verification and failure behavior exactly
+ok 2 - manual job preserves the existing real-contract verification and failure behavior exactly
+  ---
+  duration_ms: 0.76611
+  type: 'test'
+  ...
+# Subtest: manual workflow uses only pinned reviewed actions and retains evidence on failure
+ok 3 - manual workflow uses only pinned reviewed actions and retains evidence on failure
+  ---
+  duration_ms: 0.363669
+  type: 'test'
+  ...
+# Subtest: PostgREST provenance matches the previously verified official release archive and binary
+ok 4 - PostgREST provenance matches the previously verified official release archive and binary
+  ---
+  duration_ms: 5.930694
+  type: 'test'
+  ...
+# Subtest: accepts only offline flag and Linux x64 Ubuntu24.04; refuses external backends and runtime overrides
+ok 5 - accepts only offline flag and Linux x64 Ubuntu24.04; refuses external backends and runtime overrides
+  ---
+  duration_ms: 2.145276
+  type: 'test'
+  ...
+# Subtest: cache refuses symlink root and ancestor while retaining an unrelated sentinel
+ok 6 - cache refuses symlink root and ancestor while retaining an unrelated sentinel
+  ---
+  duration_ms: 7.32132
+  type: 'test'
+  ...
+# Subtest: cache refuses a world-writable cache without changing its contents
+ok 7 - cache refuses a world-writable cache without changing its contents
+  ---
+  duration_ms: 3.921833
+  type: 'test'
+  ...
+# Subtest: verified extraction refuses changed or symlinked cache bytes before invoking tar
+ok 8 - verified extraction refuses changed or symlinked cache bytes before invoking tar
+  ---
+  duration_ms: 4.981461
+  type: 'test'
+  ...
+# Subtest: checksum-verified local archive extracts data into its owned destination
+ok 9 - checksum-verified local archive extracts data into its owned destination
+  ---
+  duration_ms: 18.280993
+  type: 'test'
+  ...
+# Subtest: system executable trust rejects symlinks, non-root ownership, writable ancestors and non-files
+ok 10 - system executable trust rejects symlinks, non-root ownership, writable ancestors and non-files
+  ---
+  duration_ms: 1.897392
+  type: 'test'
+  ...
+# Subtest: preinstalled PostgreSQL probe checks all four binaries and pgcrypto assets without service startup
+ok 11 - preinstalled PostgreSQL probe checks all four binaries and pgcrypto assets without service startup
+  ---
+  duration_ms: 1.062604
+  type: 'test'
+  ...
+# Subtest: PostgreSQL probe fails closed for wrong/mixed versions, missing binaries and missing extension assets
+ok 12 - PostgreSQL probe fails closed for wrong/mixed versions, missing binaries and missing extension assets
+  ---
+  duration_ms: 1.229826
+  type: 'test'
+  ...
+# Subtest: download fails closed for HTTP errors and redirects leaving official HTTPS hosts
+ok 13 - download fails closed for HTTP errors and redirects leaving official HTTPS hosts
+  ---
+  duration_ms: 40.779752
+  type: 'test'
+  ...
+# Subtest: official redirect bytes remain untrusted until the exact checksum is verified
+ok 14 - official redirect bytes remain untrusted until the exact checksum is verified
+  ---
+  duration_ms: 7.745492
+  type: 'test'
+  ...
+# Subtest: archive size bound rejects oversized network input
+ok 15 - archive size bound rejects oversized network input
+  ---
+  duration_ms: 3.093165
+  type: 'test'
+  ...
+# Subtest: CLI refuses external connection arguments before inspecting host or writing a cache
+ok 16 - CLI refuses external connection arguments before inspecting host or writing a cache
+  ---
+  duration_ms: 97.607819
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 236.974859

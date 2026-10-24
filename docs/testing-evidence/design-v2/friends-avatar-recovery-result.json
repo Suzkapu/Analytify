@@ -1,0 +1,37 @@
+{
+  "checkpoint": "53e3e914",
+  "change": "Remember failed image URL rather than permanently suppressing a friend ID; authoritative replacement URL can render. Same failed URL retains initial fallback.",
+  "red": {
+    "exit": 1,
+    "passed": 0,
+    "failed": 1
+  },
+  "green": {
+    "pageFocusAvatarPassed": 50,
+    "emptyStatePassed": 6,
+    "strengthenedSameUrlPassed": 1,
+    "note": "The strengthened one-case run repeats the avatar case and is not added to56 distinct affected cases."
+  },
+  "limits": [
+    "Mounted Angular/jsdom service-boundary verification; not a new native image-network regression.",
+    "URLs remain suppressed for the mounted page lifetime; account replacement retry policy is not changed.",
+    "Initial50-case command named non-existent empty spec; corrected6-case check is separate."
+  ],
+  "sourceSha256": {
+    "src/app/features/friends/v2-friends-page.component.ts": "60661d527a7618254682aef8fd8631344662a51eae252622268e3af4fbb32862",
+    "src/app/features/friends/v2-friends-page.component.html": "4b2f0ab1903e3c40b9828c71d930b323b8de27d98a9a228a977d2bf477a11128",
+    "src/app/features/friends/v2-friends-avatar-recovery.spec.ts": "cb9711a84f98996d35fa784e35be2f55b0566c35da7e6991077745094596281c"
+  },
+  "evidenceSha256": {
+    "friends-avatar-recovery-red.log": "8374692e80013d7e3a7ff13e95956263084ad61df4f14ce918fc06c8bcd219b4",
+    "friends-avatar-recovery-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "friends-avatar-recovery-green.log": "4aeee60179faf7c09d721f540e36edec13358a0124d633ec96fd96a82189a649",
+    "friends-avatar-recovery-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "friends-avatar-recovery-same-url-green.log": "389cb32ef75f101a0f43714eb6d21072a04269baeefc617cbf7e6ac94808f527",
+    "friends-avatar-recovery-same-url-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "friends-avatar-empty-regression.log": "4456fb842eb0b7208e1473f3fea023e8781c0bcccb5f549b658cf6710a55ac5b",
+    "friends-avatar-empty-regression.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "friends-avatar-lint.log": "780c37b93264de1de8f87704d1865c6eec9284b9e508bad5a7a0dce7ea0dc989",
+    "friends-avatar-lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  }
+}

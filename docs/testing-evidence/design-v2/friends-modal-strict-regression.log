@@ -1,0 +1,41 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.friends.config.ts --grep Friends removal dialog responsive geometry|Friends owner revocation confirmation|Friends confirmation typography --output=docs/testing-evidence/design-v2/friends-modal-strict-regression-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:182359) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:182359) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 20 tests using 1 worker
+
+(node:182589) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-friends.spec.ts:389:5 › Friends confirmation typography and keyboard focus match canonical after font readiness (1.9s)
+  ✓   2 [desktop] › e2e/design-v2-friends.spec.ts:431:7 › Friends removal dialog responsive geometry (no-preference) (3.3s)
+  ✓   3 [desktop] › e2e/design-v2-friends.spec.ts:564:7 › Friends owner revocation confirmation (no-preference) (3.6s)
+  ✓   4 [desktop] › e2e/design-v2-friends.spec.ts:431:7 › Friends removal dialog responsive geometry (reduce) (3.3s)
+  ✓   5 [desktop] › e2e/design-v2-friends.spec.ts:564:7 › Friends owner revocation confirmation (reduce) (3.0s)
+(node:183791) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   6 [mobile] › e2e/design-v2-friends.spec.ts:389:5 › Friends confirmation typography and keyboard focus match canonical after font readiness (2.0s)
+  ✓   7 [mobile] › e2e/design-v2-friends.spec.ts:431:7 › Friends removal dialog responsive geometry (no-preference) (4.0s)
+  ✓   8 [mobile] › e2e/design-v2-friends.spec.ts:564:7 › Friends owner revocation confirmation (no-preference) (4.0s)
+  ✓   9 [mobile] › e2e/design-v2-friends.spec.ts:431:7 › Friends removal dialog responsive geometry (reduce) (3.8s)
+  ✓  10 [mobile] › e2e/design-v2-friends.spec.ts:564:7 › Friends owner revocation confirmation (reduce) (3.5s)
+(node:185110) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  11 [firefox-stats] › e2e/design-v2-friends.spec.ts:389:5 › Friends confirmation typography and keyboard focus match canonical after font readiness (2.4s)
+  ✓  12 [firefox-stats] › e2e/design-v2-friends.spec.ts:431:7 › Friends removal dialog responsive geometry (no-preference) (3.7s)
+  ✓  13 [firefox-stats] › e2e/design-v2-friends.spec.ts:564:7 › Friends owner revocation confirmation (no-preference) (3.7s)
+  ✓  14 [firefox-stats] › e2e/design-v2-friends.spec.ts:431:7 › Friends removal dialog responsive geometry (reduce) (3.1s)
+  ✓  15 [firefox-stats] › e2e/design-v2-friends.spec.ts:564:7 › Friends owner revocation confirmation (reduce) (2.7s)
+(node:186538) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  16 [webkit-stats] › e2e/design-v2-friends.spec.ts:389:5 › Friends confirmation typography and keyboard focus match canonical after font readiness (2.1s)
+  ✓  17 [webkit-stats] › e2e/design-v2-friends.spec.ts:431:7 › Friends removal dialog responsive geometry (no-preference) (8.8s)
+  ✓  18 [webkit-stats] › e2e/design-v2-friends.spec.ts:564:7 › Friends owner revocation confirmation (no-preference) (9.0s)
+  ✓  19 [webkit-stats] › e2e/design-v2-friends.spec.ts:431:7 › Friends removal dialog responsive geometry (reduce) (3.6s)
+  ✓  20 [webkit-stats] › e2e/design-v2-friends.spec.ts:564:7 › Friends owner revocation confirmation (reduce) (3.4s)
+
+  20 passed (1.4m)

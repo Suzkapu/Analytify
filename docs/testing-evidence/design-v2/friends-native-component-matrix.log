@@ -1,0 +1,50 @@
+npm notice run spoti-front@0.0.0 test:native-components
+npm notice run ng run SpotiFront:native-components
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.native-components.config.mjs
+❯ Building...
+✔ Building...
+Application bundle generation complete. [3.476 seconds] - 2026-10-24T06:28:56.585Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+8:28:56 AM [vite] (client) Re-optimizing dependencies because vite config has changed
+ DEPRECATED  /mnt/Storage/ProgrammingProjects/Analytify/e2e/components/friends-feedback.native.ts tries to load a deprecated "@vitest/browser/context" module. This import will stop working in the next major version. Please, use "vitest/browser" instead.
+ ❯ |webkit| e2e/components/friends-feedback.native.ts (2 tests | 1 failed) 537ms
+     × renders the real profile-required alert at 576 px 399ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |webkit| e2e/components/friends-feedback.native.ts > native defensive Friends feedback > renders the real profile-required alert at 576 px
+AssertionError: expected 102 to be 82 // Object.is equality
+
+Failure screenshot:
+  - e2e/components/__screenshots__/friends-feedback.native.ts/native-defensive-Friends-feedback-renders-the-real-profile-required-alert-at-576-px-1.png
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 82[39m
+[31m+ 102[39m
+
+ ❯ e2e/components/friends-feedback.native.ts:28:54
+     26|     expect(alert.getAttribute('aria-live')).toBe('assertive');
+     27|     expect(alert.getBoundingClientRect().width).toBe(width);
+     28|     expect(alert.getBoundingClientRect().height).toBe(height);
+       |                                                      ^
+     29|     const style = getComputedStyle(alert);
+     30|     expect(style.backgroundColor).toBe('rgb(24, 32, 25)');
+ ❯ fulfilled chunk-EFV3TZQO.js:68:28
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:41
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:33
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:47
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 5 passed (6)
+   Start at  08:28:56
+   Duration  5.61s (transform 0ms, setup 2.82s, import 469ms, tests 1.36s, environment 0ms)
+
