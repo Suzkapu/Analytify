@@ -28,16 +28,21 @@ export async function trustedSystemFile(path, inspect = lstat, canonical = realp
   }
 }
 export async function inspectPostgres(run = execute, trust = trustedSystemFile) {
+  const assets = {control: '/usr/share/postgresql/16/extension/pgcrypto.control', library: '/usr/lib/postgresql/16/lib/pgcrypto.so'};
+  const trustErrors = [];
+  for (const path of [...postgresCommands.map(name => join(POSTGRES_BIN, name)), ...Object.values(assets)]) {
+    try {await trust(path);}
+    catch (error) {trustErrors.push(new Error(`${path}: ${error.message}`, {cause: error}));}
+  }
+  if (trustErrors.length) throw new AggregateError(trustErrors, `Preinstalled PostgreSQL trust checks failed:\n${trustErrors.map(error => error.message).join('\n')}`);
   const versions = {};
   for (const name of postgresCommands) {
-    const path = join(POSTGRES_BIN, name); await trust(path);
+    const path = join(POSTGRES_BIN, name);
     versions[name] = (await run(path, ['--version'], {timeout: 5000})).stdout.trim();
     assert(/^.*\(PostgreSQL\) 16\.\d+(?:\s|$)/.test(versions[name]), `Expected preinstalled PostgreSQL16: ${name}`);
   }
   const versionNumbers = Object.values(versions).map(value => value.match(/16\.\d+/)[0]);
   assert(new Set(versionNumbers).size === 1, 'PostgreSQL binaries must have matching versions.');
-  const assets = {control: '/usr/share/postgresql/16/extension/pgcrypto.control', library: '/usr/lib/postgresql/16/lib/pgcrypto.so'};
-  for (const path of Object.values(assets)) await trust(path);
   return {versions, assets};
 }
 export function validatePlatform(platform = process.platform, architecture = process.arch) {

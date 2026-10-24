@@ -135,3 +135,28 @@ test('CLI refuses external connection arguments before inspecting host or writin
     assert.equal(error.code, 1); assert.match(error.stderr, /Only --offline/); assert.equal(error.stdout, ''); return true;
   });
 });
+
+
+test('PostgreSQL probe reports every independent trust failure before executing any binary', async () => {
+  const checked = [], executed = [];
+  const paths = ['postgres', 'initdb', 'pg_ctl', 'psql'].map(name => join(POSTGRES_BIN, name));
+  paths.push('/usr/share/postgresql/16/extension/pgcrypto.control', '/usr/lib/postgresql/16/lib/pgcrypto.so');
+  await assert.rejects(inspectPostgres(async path => {executed.push(path);}, async path => {
+    checked.push(path);
+    throw new Error(`unsafe fixture ${path}`);
+  }), error => {
+    assert(error instanceof AggregateError);
+    assert.equal(error.errors.length, 6);
+    for (const path of paths) assert(error.message.includes(`unsafe fixture ${path}`));
+    return true;
+  });
+  assert.deepEqual(checked, paths);
+  assert.deepEqual(executed, []);
+  checked.length = 0;
+  await assert.rejects(inspectPostgres(async path => {executed.push(path);}, async path => {
+    checked.push(path);
+    if (path.endsWith('pgcrypto.so')) throw new Error('unsafe final asset');
+  }), /unsafe final asset/);
+  assert.deepEqual(checked, paths);
+  assert.deepEqual(executed, []);
+});

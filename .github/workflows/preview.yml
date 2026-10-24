@@ -100,6 +100,7 @@ jobs:
           test "$RUNNER_ENVIRONMENT" = github-hosted
           test "$ImageOS" = ubuntu24
           friends_share_directories=(
+            /usr/share
             /usr/share/postgresql
             /usr/share/postgresql/16
             /usr/share/postgresql/16/extension

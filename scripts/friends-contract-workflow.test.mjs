@@ -75,7 +75,7 @@ test('hosted runner hardens only the fixed PostgreSQL share chain and control be
   assert.match(repair, /test "\$\(realpath -- "\$friends_control"\)" = "\$friends_control"/);
   assert.match(repair, /test "\$\(stat -c %u -- "\$friends_control"\)" -eq 0/);
   const directories = repair.match(/friends_share_directories=\(\n([\s\S]*?)\n          \)/)?.[1].trim().split(/\s+/);
-  assert.deepEqual(directories, ['/usr/share/postgresql', '/usr/share/postgresql/16', '/usr/share/postgresql/16/extension']);
+  assert.deepEqual(directories, ['/usr/share', '/usr/share/postgresql', '/usr/share/postgresql/16', '/usr/share/postgresql/16/extension']);
   assert.match(repair, /for friends_directory in "\$\{friends_share_directories\[@\]\}"; do/);
   assert.match(repair, /test -d "\$friends_directory"/);
   assert.match(repair, /test ! -L "\$friends_directory"/);
