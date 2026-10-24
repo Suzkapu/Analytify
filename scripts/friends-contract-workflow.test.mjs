@@ -62,3 +62,22 @@ test('isolated job uses only pinned reviewed actions and retains evidence on fai
   assert.match(workflow, /- name: Preserve isolated contract evidence\n        if: always\(\)/);
   assert.match(workflow, /path: docs\/testing-evidence\/design-v2\/friends-http-ci-artifacts\n          retention-days: 7/);
 });
+
+test('hosted runner repairs only the known writable pgcrypto control before dependencies run', () => {
+  const job = jobBody('friends-http-contract');
+  const repair = job.match(/- name: Restrict preinstalled pgcrypto control permissions\n        run: \|\n([\s\S]*?)(?=      - )/)?.[1];
+  assert.ok(repair, 'The observed root-owned mode777 control file must be hardened, never accepted by a weaker trust guard.');
+  assert.match(repair, /test "\$RUNNER_ENVIRONMENT" = github-hosted/);
+  assert.match(repair, /test "\$ImageOS" = ubuntu24/);
+  assert.match(repair, /friends_control=\/usr\/share\/postgresql\/16\/extension\/pgcrypto\.control/);
+  assert.match(repair, /test -f "\$friends_control"/);
+  assert.match(repair, /test ! -L "\$friends_control"/);
+  assert.match(repair, /test "\$\(realpath -- "\$friends_control"\)" = "\$friends_control"/);
+  assert.match(repair, /test "\$\(stat -c %u -- "\$friends_control"\)" -eq 0/);
+  assert.equal((repair.match(/sudo /g) || []).length, 1);
+  assert.match(repair, /sudo chmod go-w -- "\$friends_control"/);
+  assert.doesNotMatch(repair, /chmod -R|chown|apt|systemctl|\|\|/);
+  assert.ok(job.indexOf(repair) < job.indexOf('run: npm ci'));
+  const provisioner = readFileSync(new URL('./provision-isolated-friends-runtime.mjs', import.meta.url), 'utf8');
+  assert.match(provisioner, /metadata\.uid === 0 && !\(metadata\.mode & 0o022\)/);
+});
