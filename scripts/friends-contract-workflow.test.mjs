@@ -63,10 +63,10 @@ test('isolated job uses only pinned reviewed actions and retains evidence on fai
   assert.match(workflow, /path: docs\/testing-evidence\/design-v2\/friends-http-ci-artifacts\n          retention-days: 7/);
 });
 
-test('hosted runner repairs only the known writable pgcrypto control before dependencies run', () => {
+test('hosted runner hardens only the fixed PostgreSQL share chain and control before dependencies run', () => {
   const job = jobBody('friends-http-contract');
-  const repair = job.match(/- name: Restrict preinstalled pgcrypto control permissions\n        run: \|\n([\s\S]*?)(?=      - )/)?.[1];
-  assert.ok(repair, 'The observed root-owned mode777 control file must be hardened, never accepted by a weaker trust guard.');
+  const repair = job.match(/- name: Restrict preinstalled PostgreSQL share permissions\n        run: \|\n([\s\S]*?)(?=      - )/)?.[1];
+  assert.ok(repair, 'The observed writable PostgreSQL paths must be hardened, never accepted by a weaker trust guard.');
   assert.match(repair, /test "\$RUNNER_ENVIRONMENT" = github-hosted/);
   assert.match(repair, /test "\$ImageOS" = ubuntu24/);
   assert.match(repair, /friends_control=\/usr\/share\/postgresql\/16\/extension\/pgcrypto\.control/);
@@ -74,8 +74,19 @@ test('hosted runner repairs only the known writable pgcrypto control before depe
   assert.match(repair, /test ! -L "\$friends_control"/);
   assert.match(repair, /test "\$\(realpath -- "\$friends_control"\)" = "\$friends_control"/);
   assert.match(repair, /test "\$\(stat -c %u -- "\$friends_control"\)" -eq 0/);
+  const directories = repair.match(/friends_share_directories=\(\n([\s\S]*?)\n          \)/)?.[1].trim().split(/\s+/);
+  assert.deepEqual(directories, ['/usr/share/postgresql', '/usr/share/postgresql/16', '/usr/share/postgresql/16/extension']);
+  assert.match(repair, /for friends_directory in "\$\{friends_share_directories\[@\]\}"; do/);
+  assert.match(repair, /test -d "\$friends_directory"/);
+  assert.match(repair, /test ! -L "\$friends_directory"/);
+  assert.match(repair, /test "\$\(realpath -- "\$friends_directory"\)" = "\$friends_directory"/);
+  assert.match(repair, /test "\$\(stat -c %u -- "\$friends_directory"\)" -eq 0/);
   assert.equal((repair.match(/sudo /g) || []).length, 1);
-  assert.match(repair, /sudo chmod go-w -- "\$friends_control"/);
+  assert.match(repair, /sudo chmod go-w -- "\$\{friends_share_directories\[@\]\}" "\$friends_control"/);
+  assert.equal((repair.match(/stat -c '%n uid=%u mode=%a' -- "\$\{friends_share_directories\[@\]\}" "\$friends_control"/g) || []).length, 2);
+  assert.ok(repair.indexOf('test "$RUNNER_ENVIRONMENT"') < repair.indexOf('sudo chmod'));
+  assert.ok(repair.indexOf('test "$ImageOS"') < repair.indexOf('sudo chmod'));
+  assert.ok(repair.indexOf('test "$(stat -c %u -- "$friends_control")" -eq 0') < repair.indexOf('sudo chmod'));
   assert.doesNotMatch(repair, /chmod -R|chown|apt|systemctl|\|\|/);
   assert.ok(job.indexOf(repair) < job.indexOf('run: npm ci'));
   const provisioner = readFileSync(new URL('./provision-isolated-friends-runtime.mjs', import.meta.url), 'utf8');
