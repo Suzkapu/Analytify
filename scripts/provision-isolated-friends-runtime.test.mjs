@@ -75,7 +75,8 @@ test('system executable trust rejects symlinks, non-root ownership, writable anc
   for (const overrides of [{uid: 1000}, {mode: 0o100777}, {isFile: () => false}]) {
     await assert.rejects(trustedSystemFile(path, async current => metadata(current === path, current === path ? overrides : {}), async value => value));
   }
-  await assert.rejects(trustedSystemFile(path, async current => metadata(current === path, current === '/usr/lib' ? {mode: 0o40777} : {}), async value => value), /writable/);
+  await assert.rejects(trustedSystemFile(path, async current => metadata(current === path, current === '/usr/lib' ? {mode: 0o40777} : {}), async value => value),
+    /not group\/world writable: \/usr\/lib \(uid=0, mode=777\)/);
 });
 
 test('preinstalled PostgreSQL probe checks all four binaries and pgcrypto assets without service startup', async () => {

@@ -21,7 +21,8 @@ export async function trustedSystemFile(path, inspect = lstat, canonical = realp
   let current = path;
   while (true) {
     const metadata = await inspect(current);
-    assert(metadata.uid === 0 && !(metadata.mode & 0o022), 'Preinstalled runtime paths must be root-owned and not group/world writable.');
+    assert(metadata.uid === 0 && !(metadata.mode & 0o022),
+      `Preinstalled runtime paths must be root-owned and not group/world writable: ${current} (uid=${metadata.uid}, mode=${(metadata.mode & 0o7777).toString(8)}).`);
     assert(current === path ? metadata.isFile() : metadata.isDirectory(), 'Preinstalled runtime paths must contain only regular files/directories.');
     const parent = dirname(current); if (parent === current) break; current = parent;
   }
